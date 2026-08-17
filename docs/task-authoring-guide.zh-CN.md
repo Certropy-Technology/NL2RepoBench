@@ -11,6 +11,16 @@
 
 配套的最小可运行题目位于 [`examples/harbor/ministats`](../examples/harbor/ministats/README.md)。
 
+本手册与[工程化改造长期路线图](engineering-roadmap.zh-CN.md)共同构成出题规范。路线图规定目标架构和迁移阶段；本手册规定单题如何达到发布门禁。两者冲突时，以路线图中已批准的 schema、metric contract 和 lifecycle 规则为准。
+
+### 0. 事实源与发布边界
+
+新题必须先建立 canonical authoring manifest。`authoring/<task-id>/` 是唯一可编辑事实源，Harbor task 和旧 `test_files/<task-id>/` 都是单向、确定性生成物；禁止长期维护三套目录的双向同步。
+
+公开仓库只保存不含 secret/private bytes 的 manifest、schema、content digest 和公开 provenance。private tests、Oracle、license evidence 或受限依赖放在访问受控的私有 Git、对象存储或 registry 中，公开 manifest 只保存 opaque artifact ref、digest、size、visibility 和 provenance classification。
+
+生产执行以 Harbor Task/Dataset/Job/Trial 为准。旧 OpenHands harness 只用于历史结果复现和 parity 对照，不作为新数据集的正式执行后端。
+
 ## 1. 先明确题目测什么
 
 NL2RepoBench 测的是从 0 到 1 的完整仓库生成，不是已有仓库修复，也不是补一个函数：
@@ -67,7 +77,7 @@ config.json
 
 ## 3. 单题标准目录与权威数据
 
-无论最终是否使用 Harbor，每道题都应有一份不可混淆的 authoring truth：
+每道题都必须有一份不可混淆的 canonical authoring truth。无论最终是否使用 Harbor，生产侧都不能把发布视图当作事实源：
 
 ```text
 authoring/<task-id>/
@@ -76,8 +86,7 @@ authoring/<task-id>/
   api-inventory.json        # AST 提取的 public API/signature 清单
   test-plan.json            # test -> API/behavior 映射及固定分母
   environment/              # 可复现的 build definition
-  private-tests/            # 冻结上游测试，仅出题/评测侧可见
-  oracle/                   # 冻结上游实现或等价 reference solution，仅私有
+  private-artifact.refs.json # private tests/Oracle 的 opaque refs、digest 和权限信息
   review.md                 # 人工审核、偏差、例外和签字
 ```
 
@@ -88,9 +97,25 @@ authoring/<task-id>/
 | `start.md` | 公开规格 | 必须能独立实现，不得依赖隐藏 README 或聊天补充 |
 | `test_case_count.txt` | 分数分母 | 从冻结环境自动 collection，不手填 |
 | `test_commands.json` | 安装和测试命令 | 所有命令逐条检查退出码；测试命令需保留 collection error |
-| `test_files.json` | Agent 不能覆盖的测试路径 | 由上游测试清单生成，并防止父子路径遗漏 |
+| `test_files.json` | legacy runner 用来移除的测试路径 | 由上游测试清单生成，并防止父子路径遗漏；不是新题的事实源 |
 
-建议保留 authoring truth，再自动生成当前格式或 Harbor task。不要让 `start.md`、镜像和隐藏测试分别手工演化。
+新题禁止直接编辑 `test_files/` 作为事实源。legacy exporter 可以为历史复现生成这四个文件，但 CI 必须检查生成结果与 manifest 的内容 hash 一致。
+
+### 3.1 必需 metadata 与 schema
+
+每题至少关联以下版本化记录：
+
+- `TaskManifest`：task ID/version、difficulty/category/tags、公开 instruction ref、运行约束和 artifact refs；
+- `SourceLock`：upstream URL、完整 commit、submodules、license evidence 和 source hash；
+- `EnvironmentLock`：OS、Python、系统包、基础镜像 digest、build/runtime/test dependency locks；
+- `DependencyBundle`：离线 wheelhouse 或等价依赖闭包、文件 hash 和生成记录；
+- `TestManifest`：测试 bundle、命令、冻结 collection 数、测试框架和 test hash；
+- `MetricContract`：passed/failed/error/skipped/xfail/collection mismatch 的精确定义；
+- `ReviewRecord`、`ControlRecord` 和 `TaskLifecycleRecord`。
+
+所有 schema 必须包含 `schema_version`、稳定 ID、canonical serialization、content hash、required/optional 定义、migration 和跨记录引用检查。`unknown`、`missing` 和空值不能混用。
+
+private artifact 必须通过统一的 `PrivateArtifactResolver` 物化：运行时注入凭证，校验 digest/size，返回只读临时内容，记录无 secret 的审计，并在构建后清理。无权限、对象缺失或 digest 不匹配必须 fail closed。
 
 ## 4. 批量出题流程
 
@@ -111,6 +136,10 @@ test_count: 86
 last_upstream_update: 2026-06-01
 difficulty: easy
 category: utility-library
+task_version: "1.0.0"
+image_digest: "sha256:..."
+metric_contract: fixed-test-pass-rate-v1
+status: discovered
 ```
 
 自动门禁：
@@ -135,18 +164,21 @@ category: utility-library
 3. 运行完整上游测试，保存命令、stdout、stderr、JUnit、collected count 和 wall time。
 4. 只修环境问题，不修改功能源码来迎合测试。
 5. 对 README、LICENSE 存在性等与功能无关的构建约束，可在镜像中预置空文件或做可审计的 packaging relaxation。
-6. 固定最终 Dockerfile、lockfile 和 image digest。Oracle 必须在这个最终镜像中达到 1.0。
+6. 固定最终 Dockerfile、`EnvironmentLock`、`DependencyBundle` 和 image digest。Oracle 必须在这个最终镜像中达到 1.0。
+7. verifier 必须在清空 pip cache 的 `no-network` 环境中完成安装、collection 和测试；不能依赖运行时公网下载。
 
 基线记录必须区分：
 
 ```text
-source failure      上游冻结代码本身不通过
-environment failure Python/OS/dependency/system package 不兼容
-test failure        真实功能断言失败
-infrastructure      image pull、disk、timeout、container runtime 等失败
+source              冻结上游实现自身失败
+spec                公开规格不足、矛盾或泄漏
+environment         OS/Python/依赖/构建不兼容
+verifier            collection、评分、隔离或 artifact 错误
+model               环境和题目有效，但 agent 未完成实现
+infrastructure      image pull、disk、timeout、container runtime 等故障
 ```
 
-只有第一项为零、环境稳定且全量测试通过，候选题才能进入写题。
+“测试断言失败”是证据，不是独立的主分类；只有 source 为零、环境稳定且全量测试通过，候选题才能进入写题。
 
 ### 阶段 C：反向理解与 API Inventory
 
@@ -245,7 +277,7 @@ Oracle 失败时按顺序排查：environment、artifact 路径、安装命令�
 2. 另一名审核人做 hidden-test-to-spec traceability review。
 3. 至少选择 5 到 10 个候选题，用 2 到 3 个能力层次不同的 agent/model 做 pilot。
 4. 对每个失败标注 `model`, `spec`, `environment`, `verifier`, `infra`。
-5. 只有 `spec/environment/verifier` 问题允许改题；模型不会规划或实现不是改简单的理由。
+5. 只有 `spec/environment/verifier` 问题允许改题；模型不会规划或实现不是改简单的理由。基础设施故障只按 retry policy 重试，不改变题目内容。
 6. 改动 instruction、测试、镜像或 metric 后必须提升题目版本并重跑所有控制。
 
 ### 阶段 H：发布门禁
@@ -262,6 +294,7 @@ Oracle 失败时按顺序排查：environment、artifact 路径、安装命令�
 - 结果中保存 lock、reward、JUnit、stdout/stderr、artifact manifest 和 trajectory coverage；
 - 两名审核人完成签字；
 - 题目 ID、版本和内容 hash 唯一。
+- `TaskLifecycleRecord` 已进入 `published`，并且 publish transaction 同时写入 dataset entry；`blocked`/`excluded` 必须保存 owner、reason、evidence 和 approval refs。
 
 ## 5. 大量出题时的流水线
 
@@ -285,6 +318,8 @@ discover
 
 每个 stage 只消费上一阶段的版本化 artifact，并输出 manifest。建议 CI 至少提供这些命令：
 
+下面是目标 CLI 契约；当前 checkout 尚未实现这些命令，不得在汇报中写成“已经可用”。
+
 ```text
 validate-manifest <task>
 validate-spec <task>
@@ -296,18 +331,29 @@ validate-harbor-task <task>
 publish-task <task>
 ```
 
+每个 stage 应记录统一的 `StageResult`：
+
+```text
+stage_name/version, status, input_hash, output_hash,
+owner, worker_id, claim_id, lease_expires_at,
+retry_count, max_retries, backoff, next_retry_at,
+failure_class, logs, tool_versions
+```
+
+同一 task/stage 的执行必须使用 claim/lease/heartbeat；只有 `infrastructure` failure 可自动 retry，并且必须有最大次数和退避。修改 instruction 只失效 downstream stages，不重跑 source freeze。两个 worker 竞争同一 task/stage 时只能一个获得 claim。
+
 批量 dashboard 不只显示 reward，还应显示：
 
 - Oracle/empty/stub 分数；
 - frozen/actual collected count；
 - spec 覆盖的 API 比例和 test traceability 比例；
-- environment/verifier/infra failure rate；
+- environment/verifier/infrastructure failure rate；
 - Agent 正常结束、超时和崩溃比例；
 - trajectory、tokens、cost 的 coverage，而不是把缺失值记成 0。
 
-## 6. 与 Harbor 的匹配结论
+## 6. 与 Harbor 的原生适配结论
 
-结论：**概念和执行模型高度匹配，但不是把现有四个文件改名就能获得可信的等价结果。需要一个 dataset adapter，并做原 harness 与 Harbor 的 parity validation。**
+结论：**新数据集应以 Harbor 为正式执行后端，但不是把现有四个文件改名就能获得可信的原生适配。需要 canonical manifest 到 Harbor bundle 的单向确定性 compiler，并做原 harness 与 Harbor 的 parity validation。**
 
 映射关系：
 
@@ -320,7 +366,7 @@ publish-task <task>
 | `test_commands.json` | `tests/test.sh` |
 | `test_case_count.txt` | verifier 内冻结的 expected total |
 | pass rate | `/logs/verifier/reward.json` 的 `reward` |
-| 104 题列表 | Harbor Dataset |
+| canonical DatasetManifest | Harbor Dataset |
 | ThreadPoolExecutor | Job 的 trial concurrency |
 | OpenHands 0.56 | Harbor 内置 `openhands` agent，做论文复现时需 pin 版本和参数 |
 | workspace/result/log | Trial artifacts、result、agent/verifier logs、lock |
@@ -348,7 +394,9 @@ Separate verifier environment
   /logs/verifier/reward.json
 ```
 
-不能直接使用 shared verifier 的理由不是它一定会提前泄漏 `/tests`，而是正式 benchmark 还需要隔离测试依赖、grader、secrets 和 Agent 留下的进程/环境变更；独立镜像的边界更清楚。
+不能直接使用 shared verifier 的理由不是它一定会提前泄漏 `/tests`，而是正式 benchmark 还需要隔离测试依赖、grader、secrets 和 Agent 留下的进程/环境变更；独立镜像的边界更清楚。Harbor compiler 必须解析 `EnvironmentLock`、`DependencyBundle` 和授权 private refs；无凭证、错误 digest 或对象缺失时 fail closed。
+
+private asset leakage scan 的范围必须包括 agent image 的每个 OCI layer、最终 filesystem、SBOM/build provenance、build context 清单和导出的 agent artifacts，并保存机器可读报告。必须有“COPY hidden fixture 后删除”的负向测试，证明下层 layer 泄漏会被拒绝。
 
 ### 需要保持一致的实验变量
 
@@ -372,7 +420,7 @@ Harbor 的 timeout 是 wall-clock 控制，论文主实验称不限制 interacti
 4. 解释完所有系统性差异后再批量生成 104 题。
 5. Harbor 适配器、原始数据和 metric contract 分别版本化。
 
-截至 2026-08-17，Harbor 官方仓库 main commit `f03db62fd2ed2ed1f79aefe024cfcbc68a0d759e` 的包版本为 `0.21.0`，默认 task schema 为 `1.4`；本机已安装 CLI 是 `0.15.0`。本仓库示例按前者编写，不能用旧 CLI 的失败证明示例无效。升级或使用固定 Harbor checkout 后再跑 E2E。
+Harbor 版本、task schema、agent adapter 和所有基础镜像 digest 必须写入并实际解析校验的 `toolchain.lock`。当前 `examples/harbor/ministats` 使用 mutable `python:3.12-slim` base tag，只能作为 E2E demo；在 digest pin 完成前，不得把它作为 production-publishable golden fixture。不要用 mutable Harbor main、Git branch 或 image tag 作为发布依赖。
 
 参考：[Harbor 文档](https://www.harborframework.com/docs)、[Task Structure](https://www.harborframework.com/docs/tasks)、[Agents](https://www.harborframework.com/docs/agents)、[Harbor GitHub](https://github.com/laude-institute/harbor)。
 
@@ -388,4 +436,4 @@ Harbor 的 timeout 是 wall-clock 控制，论文主实验称不限制 interacti
 - `solution/solve.sh` 提供 Oracle；
 - `README.md` 给出 Oracle 和真实 agent 的运行方式。
 
-它故意很小，适合先验证基础设施。生产题应替换成冻结的真实开源项目和原始上游测试，但沿用同样的隔离、reward 和验证边界。
+它故意很小，适合先验证基础设施。生产题应替换成冻结的真实开源项目和原始上游测试，但沿用同样的隔离、reward 和验证边界。正式迁移前还要补齐 digest-pinned image、offline dependency closure、metadata manifest、通用 verifier 和控制实验；该示例本身不代表 104 题已完成 Harbor 迁移。
