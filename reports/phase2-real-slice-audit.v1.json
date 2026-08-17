@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "status": "blocked",
+  "candidates": [
+    {
+      "task_id": "autorccar",
+      "difficulty": "easy",
+      "expected_test_count": 13,
+      "instruction_sha256": "5889b68892c91afe558271bd308f93916aa760bea85e39c8c1087ad96f64ada3",
+      "legacy_verifier_image": "ghcr.io/multimodal-art-projection/nl2repobench/autorccar@sha256:fe7beae3a27817f6140f0129202cbb127cf687a1dd288a72318647edec12a72e",
+      "blockers": [
+        "source revision and source digest are unknown",
+        "license evidence is missing",
+        "Oracle bundle is missing",
+        "test bundle provenance is represented only by a legacy image",
+        "expected count comes from a legacy file rather than a frozen collection record",
+        "offline dependency lock is missing"
+      ]
+    },
+    {
+      "task_id": "aiofiles",
+      "difficulty": "medium",
+      "expected_test_count": 211,
+      "instruction_sha256": "2b5671ee2dde81f977c03cf7894494a5f7d68241979ab8c39b0ed570938c55d0",
+      "legacy_verifier_image": "ghcr.io/multimodal-art-projection/nl2repobench/aiofiles@sha256:c2c5990b82801b434d40d0be1fb21ae8b914a2336ff2486ebc7ea622924e4e7a",
+      "blockers": [
+        "source revision and source digest are unknown",
+        "license evidence is missing",
+        "Oracle bundle is missing",
+        "test bundle provenance is represented only by a legacy image",
+        "expected count comes from a legacy file rather than a frozen collection record",
+        "offline dependency lock is missing"
+      ]
+    },
+    {
+      "task_id": "boltons",
+      "difficulty": "hard",
+      "expected_test_count": 423,
+      "instruction_sha256": "76f13a49d801f1e16192635d6f293066e7e158a883c3cbc0d74e84047a997e76",
+      "legacy_verifier_image": "ghcr.io/multimodal-art-projection/nl2repobench/boltons@sha256:770deb94e716b3a1592900ab389ac628f7b2a41d360e55bdb633bbff4c948e52",
+      "blockers": [
+        "source revision and source digest are unknown",
+        "license evidence is missing",
+        "Oracle bundle is missing",
+        "test bundle provenance is represented only by a legacy image",
+        "expected count comes from a legacy file rather than a frozen collection record",
+        "offline dependency lock is missing"
+      ]
+    }
+  ]
+}
