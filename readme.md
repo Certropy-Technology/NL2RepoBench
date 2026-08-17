@@ -7,6 +7,7 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 ## Task Authoring
 
 - [中文出题、质量门禁与 Harbor 接入手册](docs/task-authoring-guide.zh-CN.md)
+- [工程化改造长期路线图](docs/engineering-roadmap.zh-CN.md)
 - [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
 
 ## Running the Code

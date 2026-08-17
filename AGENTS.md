@@ -8,9 +8,10 @@
 
 1. `AGENTS.md`：工作方式、门禁和汇报格式。
 2. `docs/task-authoring-guide.zh-CN.md`：出题原理、质量门禁、评分风险和 Harbor 迁移设计。
-3. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的已验证 E2E 示例。
-4. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
-5. 实际代码：`main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
+3. `docs/engineering-roadmap.zh-CN.md`：目标架构、metadata schema、实施阶段和 legacy 退出计划。
+4. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的已验证 E2E 示例。
+5. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
+6. 实际代码：`main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
 
 当前 checkout 有 104 道发布题，位于 `test_files/<task-id>/`，共声明 25,640 个测试。每题现有发布视图固定为：
 
