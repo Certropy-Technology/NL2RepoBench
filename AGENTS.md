@@ -9,9 +9,10 @@
 1. `AGENTS.md`：工作方式、门禁和汇报格式。
 2. `docs/task-authoring-guide.zh-CN.md`：出题原理、质量门禁、评分风险和 Harbor 迁移设计。
 3. `docs/engineering-roadmap.zh-CN.md`：目标架构、metadata schema、实施阶段和 legacy 退出计划。
-4. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的已验证 E2E 示例。
-5. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
-6. 实际代码：`main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
+4. `docs/metadata-core.zh-CN.md`：现代 uv 技术栈、声明式 catalog、schema 和 Phase 1 CLI。
+5. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的已验证 E2E 示例。
+6. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
+7. 实际代码：`src/nl2repobench/` 优先；legacy 兼容代码包括 `main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
 
 当前 checkout 有 104 道发布题，位于 `test_files/<task-id>/`，共声明 25,640 个测试。每题现有发布视图固定为：
 
@@ -69,7 +70,7 @@ dataset_score = mean(task_score for every valid task)
 1. 首批只做 5 到 10 题 pilot，覆盖 Easy、Medium、Hard 和不同项目形态。
 2. pilot 稳定后，每批建议 10 到 20 题；并发受 Docker、磁盘、API rate limit 和 reviewer 数量约束。
 3. 不同 task 可以并发；同一 task 的 source freeze、spec、tests 和 verifier 不允许多个 writer 并发修改。
-4. 并行 worker 只写各自 `authoring/<task-id>/` 或独立 worktree。共享索引、dataset manifest、`config.json` 和发布目录由一个 integrator 串行更新。
+4. 并行 worker 只写各自 `catalog/tasks/<task-id>/` 或独立 worktree。canonical manifest、共享索引、dataset manifest、`config.json` 和发布目录由 compiler/integrator 串行更新。
 5. 每个 stage 只消费上一阶段已版本化 artifact。失败后从最后一个可信 stage 恢复，不从头盲目重做。
 6. LLM 可起草规格和 traceability，但不能自行批准 license、Oracle、测试覆盖或最终发布门禁。
 
@@ -108,21 +109,19 @@ discover
 | `piloted` | 多 agent/model 结果 | 难度和失败归因合理，无系统性 spec/env/verifier 问题 |
 | `published` | version、content hash、dataset entry | 所有门禁完整，发布内容不可变 |
 
-建议保留以下 authoring truth；不要直接把 `test_files/` 当作唯一源数据：
+Human 只编辑声明式 catalog；canonical manifest 是 compiler 的机器输出，`test_files/` 是 legacy projection：
 
 ```text
-authoring/<task-id>/
-├── source.lock.json
-├── instruction.md
-├── api-inventory.json
-├── test-plan.json
-├── environment/
-├── private-tests/
-├── oracle/
-└── review.md
+catalog/
+├── datasets/<dataset-id>/dataset.toml
+└── tasks/<task-id>/
+    ├── task.toml
+    └── instruction.md
+
+catalog source -> canonical manifest -> Harbor bundle / legacy projection
 ```
 
-若仓库暂时没有生成器，允许人工从 authoring truth 生成发布视图，但必须在 review 中记录映射和内容 hash。不要声称不存在的 `validate-*` 或 `publish-*` 脚本已经可用。
+禁止人工修改 generated `manifest.json`、Harbor bundle 或 `test_files/` 来绕过 catalog。当前可用命令以 `uv run nl2repo --help` 为准；不要声称路线图中的未实现命令已经可用。
 
 ## 6. Candidate 与 Ground Truth 门禁
 

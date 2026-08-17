@@ -11,7 +11,7 @@
 
 本路线图采用以下核心决策：
 
-- **Authoring Manifest 是唯一事实源。** Harbor task 和旧 `test_files/` 都是单向生成物。
+- **Declarative catalog 是唯一 Human 编辑入口。** canonical manifest 是 compiler 生成的机器契约，Harbor task 和旧 `test_files/` 都是继续向下的单向生成物。
 - **Harbor 是新数据集的正式 execution backend。** 旧 OpenHands harness 冻结为兼容读取器和历史复现入口。
 - **公开仓库不保存 private tests 和 Oracle bytes。** 它们进入访问受控的私有仓库、对象存储或镜像 registry。
 - **先完成单机可靠性，再扩展分布式能力。** 第一版使用 SQLite WAL 保存状态和索引，文件系统或对象存储保存内容寻址 artifact。
@@ -24,7 +24,7 @@
 
 | 维度 | 当前状态 | 风险 | 目标状态 |
 | --- | --- | --- | --- |
-| 题目事实源 | `test_files/<task>/` 四个文件靠目录约定组合 | revision、license、image digest、traceability 缺失 | 版本化 `TaskManifest` + immutable artifact refs |
+| 题目事实源 | `test_files/<task>/` 四个文件靠目录约定组合 | revision、license、image digest、traceability 缺失 | Human-readable catalog + 版本化 `TaskManifest` + immutable artifact refs |
 | Metadata | 主要只有任务名、分母和测试命令 | 无法审计来源、版本、许可、难度和发布状态 | Dataset/Task/Source/Test/Metric/Review manifests |
 | 批量出题 | 没有 authoring CLI 或 stage runtime | 无恢复、缓存、失效传播和审批点 | 幂等 authoring DAG + durable state |
 | 批量运行 | 全局列表 + `ThreadPoolExecutor` | 无 claim、lease、heartbeat、resume、cancel | Experiment plan + Harbor Job/Trial + result normalizer |
@@ -42,6 +42,9 @@
 
 ```text
 Candidate sources
+      |
+      v
+Declarative catalog (TOML + Markdown)
       |
       v
 Authoring pipeline ----------------------+

@@ -8,7 +8,28 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 
 - [中文出题、质量门禁与 Harbor 接入手册](docs/task-authoring-guide.zh-CN.md)
 - [工程化改造长期路线图](docs/engineering-roadmap.zh-CN.md)
+- [Metadata Core 与声明式 Catalog](docs/metadata-core.zh-CN.md)
 - [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
+
+## Modern Core
+
+The authoring core is managed with `uv` and `pyproject.toml`; `uv.lock` is the
+reproducible dependency lock. The historical OpenHands/Docker runner has a
+separate `legacy/pyproject.toml` and `legacy/uv.lock`, so its host dependencies
+cannot pollute the metadata core.
+
+```bash
+uv sync
+uv run nl2repo doctor
+uv run nl2repo task import-legacy
+uv run nl2repo dataset validate authoring
+```
+
+The importer writes canonical task manifests, a SQLite state index, and
+content-addressed artifacts. Private command/test-path JSON is referenced by
+digest and is not embedded in public manifests. See
+[`docs/metadata-core.zh-CN.md`](docs/metadata-core.zh-CN.md) for the data model
+and migration contract.
 
 ## Running the Code
 

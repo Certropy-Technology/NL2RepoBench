@@ -15,7 +15,7 @@
 
 ### 0. 事实源与发布边界
 
-新题必须先建立 canonical authoring manifest。`authoring/<task-id>/` 是唯一可编辑事实源，Harbor task 和旧 `test_files/<task-id>/` 都是单向、确定性生成物；禁止长期维护三套目录的双向同步。
+新题必须先建立 Human-facing declarative source。`catalog/tasks/<task-id>/task.toml + instruction.md` 是唯一人工编辑入口；canonical manifest 是严格校验后的机器契约，Harbor task 和旧 `test_files/<task-id>/` 都是下游单向、确定性生成物。禁止反向修改 generated output 或长期维护双向同步。
 
 公开仓库只保存不含 secret/private bytes 的 manifest、schema、content digest 和公开 provenance。private tests、Oracle、license evidence 或受限依赖放在访问受控的私有 Git、对象存储或 registry 中，公开 manifest 只保存 opaque artifact ref、digest、size、visibility 和 provenance classification。
 
@@ -77,17 +77,18 @@ config.json
 
 ## 3. 单题标准目录与权威数据
 
-每道题都必须有一份不可混淆的 canonical authoring truth。无论最终是否使用 Harbor，生产侧都不能把发布视图当作事实源：
+每道题都必须有一份不可混淆的声明式 source。无论最终是否使用 Harbor，生产侧都不能把 compiled manifest 或发布视图当作 Human 编辑入口：
 
 ```text
-authoring/<task-id>/
-  source.lock.json          # upstream URL、commit/tag、license、Python、image digest
-  instruction.md            # 唯一公开给 Agent 的规格
-  api-inventory.json        # AST 提取的 public API/signature 清单
-  test-plan.json            # test -> API/behavior 映射及固定分母
-  environment/              # 可复现的 build definition
-  private-artifact.refs.json # private tests/Oracle 的 opaque refs、digest 和权限信息
-  review.md                 # 人工审核、偏差、例外和签字
+catalog/
+├── datasets/<dataset-id>/dataset.toml
+└── tasks/<task-id>/
+    ├── task.toml           # metadata、locks、artifact refs、metric、lifecycle
+    └── instruction.md      # 唯一公开给 Agent 的行为规格
+
+catalog source
+  -> canonical manifest + content-addressed artifacts
+  -> Harbor bundle / legacy projection
 ```
 
 当前 `test_files/<task>/` 的四个文件只是发布/运行视图：
@@ -99,7 +100,7 @@ authoring/<task-id>/
 | `test_commands.json` | 安装和测试命令 | 所有命令逐条检查退出码；测试命令需保留 collection error |
 | `test_files.json` | legacy runner 用来移除的测试路径 | 由上游测试清单生成，并防止父子路径遗漏；不是新题的事实源 |
 
-新题禁止直接编辑 `test_files/` 作为事实源。legacy exporter 可以为历史复现生成这四个文件，但 CI 必须检查生成结果与 manifest 的内容 hash 一致。
+新题禁止直接编辑 `test_files/`、canonical `manifest.json` 或 Harbor bundle。legacy exporter 可以为历史复现生成四文件，但 CI 必须检查所有 generated output 与 catalog 编译结果的 content hash 一致。声明式命令和字段说明见 [`metadata-core.zh-CN.md`](metadata-core.zh-CN.md)。
 
 ### 3.1 必需 metadata 与 schema
 
