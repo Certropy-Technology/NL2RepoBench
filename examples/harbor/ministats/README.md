@@ -1,5 +1,10 @@
 # Harbor E2E 示例：`ministats`
 
+> 本目录是 Phase 0 手工构建的历史 E2E。当前权威输入位于
+> `catalog/tasks/ministats/`，应使用 `uv run nl2repo harbor compile ...`
+> 生成 Harbor bundle。不要同时手工维护两份实现或把本目录视为 compiler 输出。
+> 本历史示例的 direct-import pytest 不满足 Phase 2 candidate/report trust boundary；安全控制实验只针对 compiler 生成的 subprocess-contract bundle。
+
 本题要求 Agent 从空的 `/workspace` 开始，构建一个小型、可安装的 Python 仓库。公开行为契约见 [`instruction.md`](instruction.md)。
 
 本示例面向 Harbor `0.21.0` 和 task schema `1.4`。本机安装的 Harbor `0.15.0` 版本过旧，无法使用该任务定义。

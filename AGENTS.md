@@ -10,9 +10,10 @@
 2. `docs/task-authoring-guide.zh-CN.md`：出题原理、质量门禁、评分风险和 Harbor 迁移设计。
 3. `docs/engineering-roadmap.zh-CN.md`：目标架构、metadata schema、实施阶段和 legacy 退出计划。
 4. `docs/metadata-core.zh-CN.md`：现代 uv 技术栈、声明式 catalog、schema 和 Phase 1 CLI。
-5. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的已验证 E2E 示例。
-6. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
-7. 实际代码：`src/nl2repobench/` 优先；legacy 兼容代码包括 `main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
+5. `docs/phase2-harbor-verifier.zh-CN.md`：Harbor compiler、通用 grader、控制实验和真实题 blocker。
+6. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的历史 E2E 示例。
+7. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
+8. 实际代码：`src/nl2repobench/` 优先；legacy 兼容代码包括 `main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
 
 当前 checkout 有 104 道发布题，位于 `test_files/<task-id>/`，共声明 25,640 个测试。每题现有发布视图固定为：
 
@@ -171,7 +172,7 @@ catalog source -> canonical manifest -> Harbor bundle / legacy projection
 
 ## 8. Verifier 与评分协议
 
-优先保留冻结 revision 的原始上游 pytest，只在 runner 层增加结构化报告和隔离。Verifier 必须：
+优先保留冻结 revision 的原始上游断言与行为覆盖，但 Harbor production verifier 不得让 root/trusted pytest 直接 import candidate。需要把上游测试适配为 `candidate_client` 的 subprocess contract；无法适配的题保持 `blocked`，不能退回 candidate 与 report writer 同进程。Verifier 必须：
 
 - 使用固定、自动 collection 得到的 `frozen_total`；
 - 生成 JUnit/JSON 等结构化结果，不依赖 pytest 控制台正则；
@@ -221,6 +222,12 @@ Oracle 失败时依次检查 environment、artifact 路径、安装、collection
 ```bash
 harbor run -p examples/harbor/ministats -a oracle
 harbor run -p examples/harbor/ministats -a openhands -m '<provider>/<model>'
+```
+
+本仓库 compiler/control 的固定入口由 `harbor-runner/uv.lock` 提供：
+
+```bash
+uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle
 ```
 
 新题先运行 Oracle，再运行 empty/nop 和 stub 控制，最后才运行真实 agent。不要仅因 Harbor 能执行就声称与旧 harness parity；必须在 Easy/Medium/Hard 的 5 到 10 题上比较 passed/total、setup errors、runtime、steps 和 termination reason。

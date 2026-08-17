@@ -37,6 +37,8 @@ uv run nl2repo schema export
 - `TestManifest`：冻结测试分母和测试 bundle/私有命令 refs；
 - `MetricContract`：固定分母评分语义；
 - `TaskLifecycleRecord`：状态、owner、reason、evidence 和审批 refs；
+- `HarborExecutionProfile`：description、keywords、timeout、network 和资源；
+- `oracle_bundle`：private reference solution tar；
 - `LegacyProjection`：历史四文件的输入路径，仅用于追溯。
 
 ## Human-facing Declarative Catalog

@@ -25,7 +25,9 @@ jobs:
       - name: Synchronize locked environment
         run: |
           uv lock --check
+          uv lock --project harbor-runner --check
           uv lock --project legacy --check
+          uv lock --project verifier --check
           uv sync --frozen
 
       - name: Lint
@@ -45,6 +47,16 @@ jobs:
           uv run nl2repo schema export --output /tmp/nl2repo-schemas
           diff -ru schemas/v1 /tmp/nl2repo-schemas
 
+      - name: Check verifier dependency export
+        run: |
+          uv export \
+            --project verifier \
+            --format requirements.txt \
+            --no-header \
+            --no-annotate \
+            --output-file /tmp/verifier-requirements.lock.txt
+          diff -u verifier/requirements.lock.txt /tmp/verifier-requirements.lock.txt
+
       - name: Compile declarative catalog
         run: |
           uv run nl2repo dataset compile \
@@ -53,6 +65,18 @@ jobs:
             --artifact-root /tmp/nl2repo-artifacts \
             --state-db /tmp/nl2repo-state.db
           uv run nl2repo dataset validate /tmp/nl2repo-catalog
+
+      - name: Compile Harbor development fixture
+        run: |
+          uv run --frozen --project harbor-runner harbor --version
+          uv run nl2repo harbor compile \
+            catalog/tasks/ministats \
+            --output /tmp/nl2repo-harbor \
+            --toolchain toolchain.lock.toml \
+            --allow-incomplete
+          bash -n \
+            /tmp/nl2repo-harbor/ministats/tests/test.sh \
+            /tmp/nl2repo-harbor/ministats/solution/solve.sh
 
       - name: Check legacy metadata baseline
         run: |

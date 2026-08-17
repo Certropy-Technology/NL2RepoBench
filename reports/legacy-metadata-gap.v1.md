@@ -24,6 +24,8 @@ uv run nl2repo task import-legacy \
 | `dependency_bundle.artifact` | 104 | Offline dependency closure is absent |
 | `tests.test_bundle` | 104 | Test bundle provenance is absent |
 | frozen collection evidence | 104 | Existing denominator is only a legacy file |
+| `harbor` | 104 | Harbor execution profile has not been authored |
+| `oracle_bundle` | 104 | No immutable reference implementation bundle |
 
 No legacy task currently satisfies the new publication metadata gate. This is
 expected: the importer records what the old format actually contains and does

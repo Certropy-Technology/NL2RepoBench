@@ -228,7 +228,7 @@ One boundary example when relevant
 
 ### 阶段 E：构造隐藏测试
 
-优先保留未修改的上游 pytest。必要修改只能发生在 runner 层，例如加入 `--continue-on-collection-errors` 或结构化报告插件，不改变断言语义。
+优先保留上游 pytest 的断言语义和行为覆盖。Phase 2 production runner 不允许 trusted pytest 直接 import candidate；需要把 import/API/CLI 调用改接 `candidate_client` subprocess contract，但不得因此改变输入、预期值或断言含义。无法适配状态对象、callback、native in-process 行为或复杂 fixture 的题保持 `blocked`，不能回退到 candidate 与 JUnit writer 同进程。
 
 测试分层建议：
 
@@ -437,4 +437,4 @@ Harbor 版本、task schema、agent adapter 和所有基础镜像 digest 必须�
 - `solution/solve.sh` 提供 Oracle；
 - `README.md` 给出 Oracle 和真实 agent 的运行方式。
 
-它故意很小，适合先验证基础设施。生产题应替换成冻结的真实开源项目和原始上游测试，但沿用同样的隔离、reward 和验证边界。正式迁移前还要补齐 digest-pinned image、offline dependency closure、metadata manifest、通用 verifier 和控制实验；该示例本身不代表 104 题已完成 Harbor 迁移。
+它故意很小，适合先验证基础设施。生产题应替换成冻结的真实开源项目和上游断言，经 subprocess adapter 保持语义后沿用同样的隔离、reward 和验证边界。正式迁移前还要补齐 digest-pinned image、offline dependency closure、metadata manifest、通用 verifier 和控制实验；该示例本身不代表 104 题已完成 Harbor 迁移。具体边界见 [`phase2-harbor-verifier.zh-CN.md`](phase2-harbor-verifier.zh-CN.md)。
