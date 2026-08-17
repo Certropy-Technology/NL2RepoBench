@@ -4,6 +4,11 @@
 
 NL2Repo is a benchmark designed to evaluate the performance of Large Language Models (LLMs) and coding agents on **long-horizon tasks** that require generating a **complete, runnable code repository from scratch (0-to-1)**. The benchmark consists of **104 distinct tasks**, each paired with its own testing environment.
 
+## Task Authoring
+
+- [中文出题、质量门禁与 Harbor 接入手册](docs/task-authoring-guide.zh-CN.md)
+- [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
+
 ## Running the Code
 
 The current setup runs OpenHands in **headless batch mode**. Model behavior is controlled via the `config.toml` file. If you need to change the model configuration, please modify `config.toml` **before** starting the run.
@@ -57,4 +62,3 @@ The runtime image can be customized. The default image is sufficient for running
   - **proNameList**: A list of task names, which must match the subdirectory names under `test_files`.
 
 - **max_pool_size**: The maximum number of concurrent threads. Once this limit is reached, additional tasks will be queued until resources become available.
-
