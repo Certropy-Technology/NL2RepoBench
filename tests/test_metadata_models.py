@@ -9,6 +9,7 @@ from nl2repobench.domain.models import (
     ArtifactRef,
     DependencyBundle,
     EnvironmentLock,
+    HarborExecutionProfile,
     ProvenanceStatus,
     SourceLock,
     TaskLifecycleRecord,
@@ -98,3 +99,14 @@ def test_conditional_schemas_accept_runtime_defaults() -> None:
     for model in (SourceLock, EnvironmentLock, DependencyBundle, TaskLifecycleRecord):
         validate_json_schema({}, model.model_json_schema())
         model.model_validate({})
+
+
+def test_harbor_profile_reserves_time_for_verifier_cleanup() -> None:
+    with pytest.raises(ValidationError, match="60s reserve"):
+        HarborExecutionProfile(
+            description="budget boundary",
+            keywords=("python", "pytest", "harbor"),
+            verifier_timeout_sec=100.0,
+            candidate_install_timeout_sec=20.0,
+            candidate_total_timeout_sec=20.0,
+        )
