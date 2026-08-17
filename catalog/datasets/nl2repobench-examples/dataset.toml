@@ -1,0 +1,6 @@
+schema_version = "1.0"
+dataset_id = "nl2repobench-examples"
+version = "0.1.0"
+description = "Synthetic tasks used to validate NL2RepoBench authoring infrastructure."
+metric_contract = "fixed-test-pass-rate-v1"
+tasks = ["ministats"]

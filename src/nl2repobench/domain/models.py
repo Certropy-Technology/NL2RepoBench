@@ -1,0 +1,486 @@
+"""Versioned Pydantic models for NL2RepoBench metadata.
+
+The models intentionally allow incomplete legacy imports by marking their
+provenance as ``unknown``. Publishing validation can then require known values
+without pretending that the old four-file format contained information it did
+not actually contain.
+"""
+
+from __future__ import annotations
+
+import re
+from enum import StrEnum
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler, model_validator
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import CoreSchema
+
+from .canonical import content_digest
+
+SCHEMA_VERSION: Literal["1.0"] = "1.0"
+SHA256_PATTERN = r"^sha256:[0-9a-f]{64}$"
+TASK_ID_PATTERN = r"^[A-Za-z0-9][A-Za-z0-9._-]*$"
+Difficulty = Literal["easy", "medium", "hard", "unknown"]
+
+
+class ProvenanceStatus(StrEnum):
+    KNOWN = "known"
+    UNKNOWN = "unknown"
+
+
+class TaskStatus(StrEnum):
+    DISCOVERED = "discovered"
+    FROZEN = "frozen"
+    INVENTORIED = "inventoried"
+    SPECIFIED = "specified"
+    PACKAGED = "packaged"
+    ORACLE_PASSED = "oracle-passed"
+    CONTROLS_PASSED = "controls-passed"
+    REVIEWED = "reviewed"
+    PILOTED = "piloted"
+    PUBLISHED = "published"
+    BLOCKED = "blocked"
+    EXCLUDED = "excluded"
+
+
+class FailureClass(StrEnum):
+    SOURCE = "source"
+    SPEC = "spec"
+    ENVIRONMENT = "environment"
+    VERIFIER = "verifier"
+    MODEL = "model"
+    INFRASTRUCTURE = "infrastructure"
+
+
+class Visibility(StrEnum):
+    PUBLIC = "public"
+    PRIVATE = "private"
+
+
+class RecordModel(BaseModel):
+    """Common strict model policy for persisted records."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    schema_version: Literal["1.0"] = SCHEMA_VERSION
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls,
+        core_schema: CoreSchema,
+        handler: GetJsonSchemaHandler,
+    ) -> JsonSchemaValue:
+        schema = handler(core_schema)
+        schema["x-nl2repobench-runtime-validation"] = True
+        schema["x-nl2repobench-model"] = cls.__name__
+        return schema
+
+    def content_digest(self) -> str:
+        """Hash this record without adding a self-referential hash field."""
+
+        return content_digest(self)
+
+
+class ArtifactRef(RecordModel):
+    """A content-addressed artifact without embedding its bytes."""
+
+    digest: Annotated[str, Field(pattern=SHA256_PATTERN)]
+    size_bytes: Annotated[int, Field(ge=0)]
+    media_type: str = "application/octet-stream"
+    uri: str
+    visibility: Visibility = Visibility.PUBLIC
+
+    @model_validator(mode="after")
+    def validate_content_addressed_uri(self) -> ArtifactRef:
+        if self.uri.startswith("artifact://"):
+            expected = f"artifact://{self.visibility.value}/{self.digest}"
+            if self.uri != expected:
+                raise ValueError(f"artifact URI must match visibility and digest: {expected}")
+        return self
+
+
+class SourceLock(RecordModel):
+    """Frozen upstream provenance, or an explicit unknown legacy record."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "if": {
+                        "required": ["status"],
+                        "properties": {"status": {"const": "known"}},
+                    },
+                    "then": {
+                        "required": [
+                            "upstream_url",
+                            "revision",
+                            "license_spdx",
+                            "source_digest",
+                        ],
+                        "properties": {
+                            "upstream_url": {"type": "string", "minLength": 1},
+                            "revision": {
+                                "type": "string",
+                                "pattern": "^(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})$",
+                            },
+                            "license_spdx": {"type": "string", "minLength": 1},
+                            "source_digest": {
+                                "type": "string",
+                                "pattern": SHA256_PATTERN,
+                            },
+                        },
+                    },
+                }
+            ]
+        }
+    )
+
+    status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
+    upstream_url: str | None = None
+    revision: str | None = None
+    license_spdx: str | None = None
+    source_digest: str | None = Field(default=None, pattern=SHA256_PATTERN)
+    submodules: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_known_provenance(self) -> SourceLock:
+        if self.status is ProvenanceStatus.KNOWN:
+            missing = [
+                name
+                for name, value in {
+                    "upstream_url": self.upstream_url,
+                    "revision": self.revision,
+                    "license_spdx": self.license_spdx,
+                    "source_digest": self.source_digest,
+                }.items()
+                if not value
+            ]
+            if missing:
+                raise ValueError(f"known source provenance is missing: {', '.join(missing)}")
+        if self.revision and not re.fullmatch(
+            r"(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})", self.revision
+        ):
+            raise ValueError("revision must be a complete 40- or 64-character Git commit")
+        return self
+
+
+class EnvironmentLock(RecordModel):
+    """Reproducible execution environment metadata."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "if": {
+                        "required": ["status"],
+                        "properties": {"status": {"const": "known"}},
+                    },
+                    "then": {
+                        "required": [
+                            "python_version",
+                            "os_name",
+                            "base_image",
+                            "base_image_digest",
+                        ],
+                        "properties": {
+                            "python_version": {"type": "string", "minLength": 1},
+                            "os_name": {"type": "string", "minLength": 1},
+                            "base_image": {"type": "string", "minLength": 1},
+                            "base_image_digest": {
+                                "type": "string",
+                                "pattern": SHA256_PATTERN,
+                            },
+                        },
+                    },
+                }
+            ]
+        }
+    )
+
+    status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
+    python_version: str | None = None
+    os_name: str | None = None
+    base_image: str | None = None
+    base_image_digest: str | None = Field(default=None, pattern=SHA256_PATTERN)
+    system_packages: tuple[str, ...] = ()
+    build_command: str | None = None
+    network_mode: Literal["public", "no-network", "allowlist"] | None = None
+
+    @model_validator(mode="after")
+    def validate_known_environment(self) -> EnvironmentLock:
+        if self.status is ProvenanceStatus.KNOWN:
+            missing = [
+                name
+                for name, value in {
+                    "python_version": self.python_version,
+                    "os_name": self.os_name,
+                    "base_image": self.base_image,
+                    "base_image_digest": self.base_image_digest,
+                }.items()
+                if not value
+            ]
+            if missing:
+                raise ValueError(f"known environment is missing: {', '.join(missing)}")
+        return self
+
+
+class DependencyBundle(RecordModel):
+    """Offline dependency closure used by an agent or verifier environment."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "if": {
+                        "required": ["status"],
+                        "properties": {"status": {"const": "known"}},
+                    },
+                    "then": {
+                        "required": ["artifact"],
+                        "properties": {"artifact": {"not": {"type": "null"}}},
+                    },
+                }
+            ]
+        }
+    )
+
+    status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
+    artifact: ArtifactRef | None = None
+    installer: Literal["uv", "pip", "system", "unknown"] = "unknown"
+    packages: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_known_bundle(self) -> DependencyBundle:
+        if self.status is ProvenanceStatus.KNOWN and self.artifact is None:
+            raise ValueError("known dependency bundle requires an artifact")
+        return self
+
+
+class TestManifest(RecordModel):
+    """Frozen test contract; hidden command bytes may be private artifacts."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "oneOf": [
+                        {
+                            "required": ["commands"],
+                            "properties": {"commands": {"minItems": 1}},
+                            "not": {"required": ["commands_artifact"]},
+                        },
+                        {
+                            "required": ["commands_artifact"],
+                            "properties": {"commands": {"maxItems": 0}},
+                        },
+                    ]
+                },
+                {"not": {"required": ["protected_paths", "protected_paths_artifact"]}},
+            ]
+        }
+    )
+
+    framework: Literal["pytest"] = "pytest"
+    expected_total: Annotated[int, Field(gt=0)]
+    expected_total_source: Literal["frozen-collection", "legacy-file", "unknown"] = "unknown"
+    commands: tuple[str, ...] = ()
+    commands_artifact: ArtifactRef | None = None
+    protected_paths: tuple[str, ...] = ()
+    protected_paths_artifact: ArtifactRef | None = None
+    test_bundle: ArtifactRef | None = None
+
+    @model_validator(mode="after")
+    def validate_command_source(self) -> TestManifest:
+        if not self.commands and self.commands_artifact is None:
+            raise ValueError("test commands must be embedded or referenced by an artifact")
+        if self.commands and self.commands_artifact is not None:
+            raise ValueError("test commands must not be embedded and referenced simultaneously")
+        if self.protected_paths and self.protected_paths_artifact is not None:
+            raise ValueError("protected paths must not be embedded and referenced simultaneously")
+        return self
+
+
+class MetricContract(RecordModel):
+    """Versioned score semantics shared by every task in a dataset."""
+
+    contract_id: str = "fixed-test-pass-rate-v1"
+    passed_statuses: tuple[Literal["passed"], ...] = ("passed",)
+    excluded_statuses: tuple[Literal["skipped", "xfail"], ...] = ("skipped",)
+    collection_mismatch: Literal["fail", "record-only"] = "fail"
+    formula: str = "clamp(passed / frozen_total, 0, 1)"
+
+
+class TaskMetadata(RecordModel):
+    """Search and reporting metadata. Unknown is explicit, not guessed."""
+
+    difficulty: Difficulty = "unknown"
+    category: str = "unknown"
+    tags: tuple[str, ...] = ()
+    language: str = "python"
+
+
+class TaskLifecycleRecord(RecordModel):
+    """Auditable task status and evidence references."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "if": {
+                        "required": ["status"],
+                        "properties": {"status": {"enum": ["blocked", "excluded"]}},
+                    },
+                    "then": {
+                        "required": ["reason"],
+                        "properties": {"reason": {"type": "string", "minLength": 1}},
+                    },
+                },
+                {
+                    "if": {
+                        "required": ["status"],
+                        "properties": {"status": {"const": "published"}},
+                    },
+                    "then": {
+                        "required": ["owner", "evidence", "approval_refs"],
+                        "properties": {
+                            "owner": {"type": "string", "minLength": 1},
+                            "evidence": {"minItems": 1},
+                            "approval_refs": {"minItems": 1},
+                        },
+                    },
+                },
+            ]
+        }
+    )
+
+    status: TaskStatus = TaskStatus.DISCOVERED
+    owner: str | None = None
+    reason: str | None = None
+    evidence: tuple[ArtifactRef, ...] = ()
+    approval_refs: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_terminal_reason(self) -> TaskLifecycleRecord:
+        if self.status in {TaskStatus.BLOCKED, TaskStatus.EXCLUDED} and not self.reason:
+            raise ValueError(f"{self.status} tasks require a reason")
+        if self.status is TaskStatus.PUBLISHED:
+            missing = []
+            if not self.owner:
+                missing.append("owner")
+            if not self.evidence:
+                missing.append("evidence")
+            if not self.approval_refs:
+                missing.append("approval_refs")
+            if missing:
+                raise ValueError(f"published lifecycle is missing: {', '.join(missing)}")
+        return self
+
+
+class LegacyProjection(RecordModel):
+    """Pointers to the four-file legacy input, never the canonical source."""
+
+    source_root: str
+    instruction_path: str
+    count_path: str
+    commands_path: str
+    protected_paths_path: str
+
+
+class TaskManifest(RecordModel):
+    """Canonical task record produced by authoring stages."""
+
+    task_id: Annotated[str, Field(pattern=TASK_ID_PATTERN)]
+    version: str = "1.0.0"
+    metadata: TaskMetadata = Field(default_factory=TaskMetadata)
+    instruction: ArtifactRef
+    source_lock: SourceLock = Field(default_factory=SourceLock)
+    environment_lock: EnvironmentLock = Field(default_factory=EnvironmentLock)
+    dependency_bundle: DependencyBundle = Field(default_factory=DependencyBundle)
+    tests: TestManifest
+    metric: MetricContract = Field(default_factory=MetricContract)
+    lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
+    legacy_projection: LegacyProjection | None = None
+
+    def publication_gaps(self) -> tuple[str, ...]:
+        """Return stable field paths that prevent a production publication."""
+
+        gaps: list[str] = []
+        if self.metadata.difficulty == "unknown":
+            gaps.append("metadata.difficulty")
+        if self.metadata.category == "unknown":
+            gaps.append("metadata.category")
+        if self.instruction.visibility is not Visibility.PUBLIC:
+            gaps.append("instruction.visibility=public")
+        if self.source_lock.status is not ProvenanceStatus.KNOWN:
+            gaps.append("source_lock.status=known")
+        if self.environment_lock.status is not ProvenanceStatus.KNOWN:
+            gaps.append("environment_lock.status=known")
+        if self.dependency_bundle.status is not ProvenanceStatus.KNOWN:
+            gaps.append("dependency_bundle.status=known")
+        if self.tests.expected_total_source != "frozen-collection":
+            gaps.append("tests.expected_total_source=frozen-collection")
+        if self.tests.test_bundle is None:
+            gaps.append("tests.test_bundle")
+        elif self.tests.test_bundle.visibility is not Visibility.PRIVATE:
+            gaps.append("tests.test_bundle.visibility=private")
+        if self.tests.commands_artifact is None:
+            gaps.append("tests.commands_artifact")
+        elif self.tests.commands_artifact.visibility is not Visibility.PRIVATE:
+            gaps.append("tests.commands_artifact.visibility=private")
+        if self.metric.contract_id != "fixed-test-pass-rate-v1":
+            gaps.append("metric.contract_id=fixed-test-pass-rate-v1")
+        return tuple(gaps)
+
+    @model_validator(mode="after")
+    def validate_published_manifest(self) -> TaskManifest:
+        if self.lifecycle.status is TaskStatus.PUBLISHED:
+            gaps = self.publication_gaps()
+            if gaps:
+                raise ValueError(f"published task is not publishable: {', '.join(gaps)}")
+        return self
+
+
+class TaskRef(RecordModel):
+    """Stable reference to a task manifest in a dataset."""
+
+    task_id: Annotated[str, Field(pattern=TASK_ID_PATTERN)]
+    version: str
+    manifest_digest: Annotated[str, Field(pattern=SHA256_PATTERN)]
+    manifest_uri: str
+
+
+class DatasetManifest(RecordModel):
+    """Dataset index compiled from immutable task manifest references."""
+
+    dataset_id: Annotated[str, Field(pattern=TASK_ID_PATTERN)]
+    version: str = "0.1.0"
+    description: str
+    metric_contract: str = "fixed-test-pass-rate-v1"
+    tasks: Annotated[tuple[TaskRef, ...], Field(min_length=1)]
+    source_format: str = "canonical"
+
+    @model_validator(mode="after")
+    def validate_unique_tasks(self) -> DatasetManifest:
+        task_ids = [task.task_id for task in self.tasks]
+        if len(task_ids) != len(set(task_ids)):
+            raise ValueError("dataset task IDs must be unique")
+        return self
+
+
+class MetadataGapTask(RecordModel):
+    """One task's explicit migration gaps, suitable for tabular reporting."""
+
+    task_id: Annotated[str, Field(pattern=TASK_ID_PATTERN)]
+    missing_fields: tuple[str, ...] = ()
+    warnings: tuple[str, ...] = ()
+
+
+class MetadataGapReport(RecordModel):
+    """Deterministic summary of information absent from a legacy task."""
+
+    dataset_id: str
+    task_count: Annotated[int, Field(ge=0)]
+    complete_task_count: Annotated[int, Field(ge=0)]
+    gap_counts: dict[str, int]
+    tasks: tuple[MetadataGapTask, ...]

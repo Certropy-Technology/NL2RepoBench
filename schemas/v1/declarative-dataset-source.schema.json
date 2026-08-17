@@ -1,0 +1,47 @@
+{
+  "additionalProperties": false,
+  "description": "Human-maintained dataset definition loaded from ``dataset.toml``.",
+  "properties": {
+    "dataset_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Dataset Id",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "metric_contract": {
+      "default": "fixed-test-pass-rate-v1",
+      "title": "Metric Contract",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tasks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tasks",
+      "type": "array"
+    },
+    "version": {
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_id",
+    "description",
+    "tasks"
+  ],
+  "title": "DeclarativeDatasetSource",
+  "type": "object",
+  "x-nl2repobench-model": "DeclarativeDatasetSource",
+  "x-nl2repobench-runtime-validation": true
+}

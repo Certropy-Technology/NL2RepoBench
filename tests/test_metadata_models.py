@@ -1,0 +1,100 @@
+from __future__ import annotations
+
+import pytest
+from jsonschema import ValidationError as JsonSchemaValidationError
+from jsonschema import validate as validate_json_schema
+from pydantic import ValidationError
+
+from nl2repobench.domain.models import (
+    ArtifactRef,
+    DependencyBundle,
+    EnvironmentLock,
+    ProvenanceStatus,
+    SourceLock,
+    TaskLifecycleRecord,
+    TaskManifest,
+    TaskStatus,
+    Visibility,
+)
+
+
+def test_canonical_digest_does_not_depend_on_field_order() -> None:
+    uri = "artifact://public/sha256:" + "a" * 64
+    left = ArtifactRef(digest="sha256:" + "a" * 64, size_bytes=3, uri=uri)
+    right = ArtifactRef.model_validate(
+        {"uri": uri, "size_bytes": 3, "digest": "sha256:" + "a" * 64}
+    )
+
+    assert left.content_digest() == right.content_digest()
+
+
+def test_known_source_requires_provenance() -> None:
+    with pytest.raises(ValidationError, match="known source provenance"):
+        SourceLock(status=ProvenanceStatus.KNOWN)
+
+
+def test_artifact_uri_cannot_downgrade_visibility() -> None:
+    with pytest.raises(ValidationError, match="must match visibility"):
+        ArtifactRef(
+            digest="sha256:" + "d" * 64,
+            size_bytes=1,
+            uri="artifact://private/sha256:" + "d" * 64,
+            visibility=Visibility.PUBLIC,
+        )
+
+
+def test_known_environment_requires_image_digest() -> None:
+    with pytest.raises(ValidationError, match="known environment"):
+        EnvironmentLock(
+            status=ProvenanceStatus.KNOWN,
+            python_version="3.12",
+            os_name="linux",
+            base_image="python:3.12-slim",
+        )
+
+
+def test_blocked_task_requires_reason() -> None:
+    with pytest.raises(ValidationError, match="require a reason"):
+        TaskLifecycleRecord(status=TaskStatus.BLOCKED)
+
+
+def test_published_lifecycle_requires_auditable_evidence() -> None:
+    with pytest.raises(ValidationError, match="published lifecycle is missing"):
+        TaskLifecycleRecord(status=TaskStatus.PUBLISHED)
+
+
+def test_manifest_explains_publication_gaps() -> None:
+    instruction = ArtifactRef(
+        digest="sha256:" + "c" * 64,
+        size_bytes=1,
+        uri="artifact://public/sha256:" + "c" * 64,
+        visibility=Visibility.PUBLIC,
+    )
+    manifest = TaskManifest.model_validate(
+        {
+            "task_id": "incomplete",
+            "instruction": instruction.model_dump(mode="json"),
+            "tests": {"expected_total": 1, "commands": ["pytest"]},
+        }
+    )
+
+    assert "source_lock.status=known" in manifest.publication_gaps()
+    assert "tests.test_bundle" in manifest.publication_gaps()
+
+
+def test_source_json_schema_enforces_known_provenance_fields() -> None:
+    schema = SourceLock.model_json_schema()
+
+    with pytest.raises(JsonSchemaValidationError):
+        validate_json_schema(
+            {"schema_version": "1.0", "status": "known"},
+            schema,
+        )
+    assert schema["x-nl2repobench-runtime-validation"] is True
+    assert schema["x-nl2repobench-model"] == "SourceLock"
+
+
+def test_conditional_schemas_accept_runtime_defaults() -> None:
+    for model in (SourceLock, EnvironmentLock, DependencyBundle, TaskLifecycleRecord):
+        validate_json_schema({}, model.model_json_schema())
+        model.model_validate({})

@@ -1,0 +1,44 @@
+schema_version = "1.0"
+task_id = "ministats"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "utility-library"
+tags = ["python", "packaging", "unicode", "cli"]
+language = "python"
+
+# ministats is a synthetic infrastructure example, so no upstream source is
+# claimed. Production tasks must replace this with immutable source provenance.
+[source]
+status = "unknown"
+
+# The current Harbor demo still uses a mutable base tag. This remains unknown
+# until the image is pinned by digest and recorded in toolchain.lock.
+[environment]
+status = "unknown"
+python_version = "3.12"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "uv"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 18
+expected_total_source = "frozen-collection"
+commands = ["python -m pytest --continue-on-collection-errors /tests/test_ministats.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "discovered"
+reason = "Synthetic E2E example; not production-publishable until image and dependency locks exist."

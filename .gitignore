@@ -1,1 +1,13 @@
 .pi-glla/
+.nl2repo/
+.venv/
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+**/__pycache__/
+*.py[cod]
+.DS_Store
+build/
+dist/
+htmlcov/

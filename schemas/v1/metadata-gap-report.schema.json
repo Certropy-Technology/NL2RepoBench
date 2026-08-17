@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "MetadataGapTask": {
+      "additionalProperties": false,
+      "description": "One task's explicit migration gaps, suitable for tabular reporting.",
+      "properties": {
+        "missing_fields": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Fields",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "warnings": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "task_id"
+      ],
+      "title": "MetadataGapTask",
+      "type": "object",
+      "x-nl2repobench-model": "MetadataGapTask",
+      "x-nl2repobench-runtime-validation": true
+    }
+  },
+  "additionalProperties": false,
+  "description": "Deterministic summary of information absent from a legacy task.",
+  "properties": {
+    "complete_task_count": {
+      "minimum": 0,
+      "title": "Complete Task Count",
+      "type": "integer"
+    },
+    "dataset_id": {
+      "title": "Dataset Id",
+      "type": "string"
+    },
+    "gap_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Gap Counts",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_count": {
+      "minimum": 0,
+      "title": "Task Count",
+      "type": "integer"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/MetadataGapTask"
+      },
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "dataset_id",
+    "task_count",
+    "complete_task_count",
+    "gap_counts",
+    "tasks"
+  ],
+  "title": "MetadataGapReport",
+  "type": "object",
+  "x-nl2repobench-model": "MetadataGapReport",
+  "x-nl2repobench-runtime-validation": true
+}

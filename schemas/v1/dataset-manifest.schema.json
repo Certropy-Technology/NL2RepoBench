@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "TaskRef": {
+      "additionalProperties": false,
+      "description": "Stable reference to a task manifest in a dataset.",
+      "properties": {
+        "manifest_digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Manifest Digest",
+          "type": "string"
+        },
+        "manifest_uri": {
+          "title": "Manifest Uri",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "version",
+        "manifest_digest",
+        "manifest_uri"
+      ],
+      "title": "TaskRef",
+      "type": "object",
+      "x-nl2repobench-model": "TaskRef",
+      "x-nl2repobench-runtime-validation": true
+    }
+  },
+  "additionalProperties": false,
+  "description": "Dataset index compiled from immutable task manifest references.",
+  "properties": {
+    "dataset_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Dataset Id",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "metric_contract": {
+      "default": "fixed-test-pass-rate-v1",
+      "title": "Metric Contract",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_format": {
+      "default": "canonical",
+      "title": "Source Format",
+      "type": "string"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/TaskRef"
+      },
+      "minItems": 1,
+      "title": "Tasks",
+      "type": "array"
+    },
+    "version": {
+      "default": "0.1.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_id",
+    "description",
+    "tasks"
+  ],
+  "title": "DatasetManifest",
+  "type": "object",
+  "x-nl2repobench-model": "DatasetManifest",
+  "x-nl2repobench-runtime-validation": true
+}
