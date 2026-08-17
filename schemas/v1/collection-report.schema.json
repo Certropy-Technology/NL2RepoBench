@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "CollectionError": {
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "nodeid": {
+          "title": "Nodeid",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nodeid",
+        "message"
+      ],
+      "title": "CollectionError",
+      "type": "object",
+      "x-nl2repobench-model": "CollectionError",
+      "x-nl2repobench-runtime-validation": true
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "collected": {
+      "minimum": 0,
+      "title": "Collected",
+      "type": "integer"
+    },
+    "collection_errors": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CollectionError"
+      },
+      "title": "Collection Errors",
+      "type": "array"
+    },
+    "nodeids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Nodeids",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "collected"
+  ],
+  "title": "CollectionReport",
+  "type": "object",
+  "x-nl2repobench-model": "CollectionReport",
+  "x-nl2repobench-runtime-validation": true
+}

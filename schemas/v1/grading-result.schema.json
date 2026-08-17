@@ -1,0 +1,244 @@
+{
+  "$defs": {
+    "CollectionError": {
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "nodeid": {
+          "title": "Nodeid",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nodeid",
+        "message"
+      ],
+      "title": "CollectionError",
+      "type": "object",
+      "x-nl2repobench-model": "CollectionError",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "CollectionReport": {
+      "additionalProperties": false,
+      "properties": {
+        "collected": {
+          "minimum": 0,
+          "title": "Collected",
+          "type": "integer"
+        },
+        "collection_errors": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CollectionError"
+          },
+          "title": "Collection Errors",
+          "type": "array"
+        },
+        "nodeids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Nodeids",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "collected"
+      ],
+      "title": "CollectionReport",
+      "type": "object",
+      "x-nl2repobench-model": "CollectionReport",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "FailureClass": {
+      "enum": [
+        "source",
+        "spec",
+        "environment",
+        "verifier",
+        "model",
+        "infrastructure"
+      ],
+      "title": "FailureClass",
+      "type": "string"
+    },
+    "TestCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "collected": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Collected",
+          "type": "integer"
+        },
+        "errors": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Errors",
+          "type": "integer"
+        },
+        "failed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Failed",
+          "type": "integer"
+        },
+        "passed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Passed",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "skipped": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Skipped",
+          "type": "integer"
+        }
+      },
+      "title": "TestCounts",
+      "type": "object",
+      "x-nl2repobench-model": "TestCounts",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "VerificationReason": {
+      "enum": [
+        "artifact-copy-failed",
+        "candidate-workspace-rejected",
+        "candidate-installation-failed",
+        "setup-command-failed",
+        "collection-report-missing",
+        "collection-report-malformed",
+        "collection-error",
+        "collection-mismatch",
+        "junit-missing",
+        "junit-malformed",
+        "junit-count-mismatch",
+        "pytest-abnormal-exit",
+        "pytest-report-mismatch",
+        "verifier-timeout",
+        "verifier-network-available",
+        "verifier-internal-error"
+      ],
+      "title": "VerificationReason",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "collection": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CollectionReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "counts": {
+      "$ref": "#/$defs/TestCounts"
+    },
+    "details": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Details",
+      "type": "array"
+    },
+    "expected_total": {
+      "exclusiveMinimum": 0,
+      "title": "Expected Total",
+      "type": "integer"
+    },
+    "failure_class": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FailureClass"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "failure_reason": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VerificationReason"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "metric_contract": {
+      "title": "Metric Contract",
+      "type": "string"
+    },
+    "pytest_exit_code": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Pytest Exit Code"
+    },
+    "reward": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Reward",
+      "type": "number"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "valid": {
+      "title": "Valid",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "metric_contract",
+    "valid",
+    "reward",
+    "expected_total",
+    "counts"
+  ],
+  "title": "GradingResult",
+  "type": "object",
+  "x-nl2repobench-model": "GradingResult",
+  "x-nl2repobench-runtime-validation": true
+}

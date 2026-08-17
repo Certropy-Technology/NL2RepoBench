@@ -266,6 +266,102 @@
       "x-nl2repobench-model": "EnvironmentLock",
       "x-nl2repobench-runtime-validation": true
     },
+    "HarborExecutionProfile": {
+      "additionalProperties": false,
+      "description": "Execution settings deterministically projected into Harbor task.toml.",
+      "properties": {
+        "agent_network_mode": {
+          "default": "public",
+          "enum": [
+            "public",
+            "no-network",
+            "allowlist"
+          ],
+          "title": "Agent Network Mode",
+          "type": "string"
+        },
+        "agent_timeout_sec": {
+          "default": 600.0,
+          "exclusiveMinimum": 0,
+          "title": "Agent Timeout Sec",
+          "type": "number"
+        },
+        "candidate_install_timeout_sec": {
+          "default": 90.0,
+          "exclusiveMinimum": 0,
+          "title": "Candidate Install Timeout Sec",
+          "type": "number"
+        },
+        "candidate_total_timeout_sec": {
+          "default": 300.0,
+          "exclusiveMinimum": 0,
+          "title": "Candidate Total Timeout Sec",
+          "type": "number"
+        },
+        "cpus": {
+          "default": 2,
+          "exclusiveMinimum": 0,
+          "title": "Cpus",
+          "type": "integer"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "keywords": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 3,
+          "title": "Keywords",
+          "type": "array"
+        },
+        "memory_mb": {
+          "default": 2048,
+          "minimum": 512,
+          "title": "Memory Mb",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "storage_mb": {
+          "default": 4096,
+          "minimum": 1024,
+          "title": "Storage Mb",
+          "type": "integer"
+        },
+        "verifier_network_mode": {
+          "const": "no-network",
+          "default": "no-network",
+          "title": "Verifier Network Mode",
+          "type": "string"
+        },
+        "verifier_timeout_sec": {
+          "default": 600.0,
+          "exclusiveMinimum": 0,
+          "title": "Verifier Timeout Sec",
+          "type": "number"
+        },
+        "workspace_artifact": {
+          "default": "/workspace",
+          "title": "Workspace Artifact",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "keywords"
+      ],
+      "title": "HarborExecutionProfile",
+      "type": "object",
+      "x-nl2repobench-model": "HarborExecutionProfile",
+      "x-nl2repobench-runtime-validation": true
+    },
     "LegacyProjection": {
       "additionalProperties": false,
       "description": "Pointers to the four-file legacy input, never the canonical source.",
@@ -822,6 +918,17 @@
     "environment_lock": {
       "$ref": "#/$defs/EnvironmentLock"
     },
+    "harbor": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HarborExecutionProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
     "instruction": {
       "$ref": "#/$defs/ArtifactRef"
     },
@@ -844,6 +951,17 @@
     },
     "metric": {
       "$ref": "#/$defs/MetricContract"
+    },
+    "oracle_bundle": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "schema_version": {
       "const": "1.0",

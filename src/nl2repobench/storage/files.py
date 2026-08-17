@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import tempfile
 from pathlib import Path
+from typing import IO
 
 from nl2repobench.domain.canonical import canonical_file_payload
 from nl2repobench.domain.models import TaskManifest, TaskStatus
@@ -39,6 +40,35 @@ def atomic_write(path: Path, data: bytes) -> None:
     try:
         with os.fdopen(descriptor, "wb") as handle:
             handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def atomic_copy(path: Path, source: IO[bytes], *, expected_size: int, max_size: int) -> None:
+    """Stream a bounded file to an atomic destination."""
+
+    if expected_size < 0 or expected_size > max_size:
+        raise UnsafePathError(f"file size {expected_size} exceeds limit {max_size}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_symlink():
+        raise UnsafePathError(f"generated file must not be a symlink: {path}")
+    descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}-", dir=path.parent)
+    written = 0
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            while chunk := source.read(min(1024 * 1024, max_size - written + 1)):
+                written += len(chunk)
+                if written > max_size:
+                    raise UnsafePathError(f"file exceeds limit {max_size}: {path}")
+                handle.write(chunk)
+            if written != expected_size:
+                raise UnsafePathError(
+                    f"file size {written} does not match declared {expected_size}: {path}"
+                )
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)

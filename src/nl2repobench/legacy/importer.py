@@ -219,6 +219,8 @@ class LegacyImporter:
             "dependency_bundle.artifact",
             "tests.test_bundle",
             "tests.expected_total_source=frozen-collection",
+            "harbor",
+            "oracle_bundle",
         ]
         if difficulty == "unknown":
             missing.append("metadata.difficulty")

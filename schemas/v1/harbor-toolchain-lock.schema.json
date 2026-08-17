@@ -1,0 +1,181 @@
+{
+  "$defs": {
+    "AuthoringRuntimeLock": {
+      "additionalProperties": false,
+      "properties": {
+        "python": {
+          "title": "Python",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "uv_version": {
+          "title": "Uv Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uv_version",
+        "python"
+      ],
+      "title": "AuthoringRuntimeLock",
+      "type": "object",
+      "x-nl2repobench-model": "AuthoringRuntimeLock",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "HarborVersionLock": {
+      "additionalProperties": false,
+      "properties": {
+        "lock_file": {
+          "title": "Lock File",
+          "type": "string"
+        },
+        "lock_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Lock Sha256",
+          "type": "string"
+        },
+        "runner": {
+          "title": "Runner",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_schema": {
+          "title": "Task Schema",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "task_schema",
+        "runner",
+        "lock_file",
+        "lock_sha256"
+      ],
+      "title": "HarborVersionLock",
+      "type": "object",
+      "x-nl2repobench-model": "HarborVersionLock",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "ImageLock": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_base": {
+          "title": "Agent Base",
+          "type": "string"
+        },
+        "platform": {
+          "const": "linux/amd64",
+          "default": "linux/amd64",
+          "title": "Platform",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "verifier_base": {
+          "title": "Verifier Base",
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_base",
+        "verifier_base"
+      ],
+      "title": "ImageLock",
+      "type": "object",
+      "x-nl2repobench-model": "ImageLock",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "VerifierRuntimeLock": {
+      "additionalProperties": false,
+      "properties": {
+        "defusedxml_version": {
+          "title": "Defusedxml Version",
+          "type": "string"
+        },
+        "pydantic_version": {
+          "title": "Pydantic Version",
+          "type": "string"
+        },
+        "pytest_version": {
+          "title": "Pytest Version",
+          "type": "string"
+        },
+        "requirements_lock": {
+          "title": "Requirements Lock",
+          "type": "string"
+        },
+        "requirements_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Requirements Sha256",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirements_lock",
+        "requirements_sha256",
+        "pytest_version",
+        "pydantic_version",
+        "defusedxml_version"
+      ],
+      "title": "VerifierRuntimeLock",
+      "type": "object",
+      "x-nl2repobench-model": "VerifierRuntimeLock",
+      "x-nl2repobench-runtime-validation": true
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "authoring": {
+      "$ref": "#/$defs/AuthoringRuntimeLock"
+    },
+    "harbor": {
+      "$ref": "#/$defs/HarborVersionLock"
+    },
+    "images": {
+      "$ref": "#/$defs/ImageLock"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "verifier": {
+      "$ref": "#/$defs/VerifierRuntimeLock"
+    }
+  },
+  "required": [
+    "harbor",
+    "images",
+    "verifier",
+    "authoring"
+  ],
+  "title": "HarborToolchainLock",
+  "type": "object",
+  "x-nl2repobench-model": "HarborToolchainLock",
+  "x-nl2repobench-runtime-validation": true
+}

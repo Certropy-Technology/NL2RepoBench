@@ -39,6 +39,20 @@ excluded_statuses = ["skipped"]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[harbor]
+description = "Build a small Unicode-aware text statistics package from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench", "pytest", "separate-verifier"]
+agent_timeout_sec = 600.0
+verifier_timeout_sec = 180.0
+candidate_install_timeout_sec = 15.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
 [lifecycle]
 status = "discovered"
 reason = "Synthetic E2E example; not production-publishable until image and dependency locks exist."

@@ -31,9 +31,12 @@ from nl2repobench.domain.models import (
     MetadataGapReport,
     TaskManifest,
 )
+from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
+from nl2repobench.harbor.models import HarborToolchainLock
 from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
-from nl2repobench.storage.artifacts import FileArtifactStore
+from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.state import StateStore
+from nl2repobench.verification.models import CollectionReport, GradingResult
 
 app = typer.Typer(
     name="nl2repo",
@@ -43,9 +46,11 @@ app = typer.Typer(
 task_app = typer.Typer(help="Inspect and import task manifests.", no_args_is_help=True)
 dataset_app = typer.Typer(help="Validate and inspect dataset manifests.", no_args_is_help=True)
 schema_app = typer.Typer(help="Export versioned JSON Schemas.", no_args_is_help=True)
+harbor_app = typer.Typer(help="Compile canonical tasks into Harbor bundles.", no_args_is_help=True)
 app.add_typer(task_app, name="task")
 app.add_typer(dataset_app, name="dataset")
 app.add_typer(schema_app, name="schema")
+app.add_typer(harbor_app, name="harbor")
 
 
 def _json_print(value: object) -> None:
@@ -67,6 +72,9 @@ def export_schemas(
         "metadata-gap-report.schema.json": MetadataGapReport,
         "declarative-task-source.schema.json": DeclarativeTaskSource,
         "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
+        "collection-report.schema.json": CollectionReport,
+        "grading-result.schema.json": GradingResult,
+        "harbor-toolchain-lock.schema.json": HarborToolchainLock,
     }
     output.mkdir(parents=True, exist_ok=True)
     paths: list[str] = []
@@ -99,6 +107,86 @@ def doctor() -> None:
             "cwd": str(Path.cwd()),
         }
     )
+
+
+@harbor_app.command("compile")
+def compile_harbor_task(
+    source: Annotated[
+        Path,
+        typer.Argument(help="Declarative task source directory."),
+    ],
+    output_root: Annotated[
+        Path,
+        typer.Option("--output", help="Generated Harbor task root."),
+    ] = Path("build/harbor"),
+    toolchain: Annotated[
+        Path,
+        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
+    ] = Path("toolchain.lock.toml"),
+    artifact_root: Annotated[
+        Path,
+        typer.Option("--artifact-root", help="Content-addressed private artifact root."),
+    ] = Path(".nl2repo/artifacts"),
+    allow_private: Annotated[
+        bool,
+        typer.Option("--allow-private", help="Authorize private test/Oracle bundle reads."),
+    ] = False,
+    allow_incomplete: Annotated[
+        bool,
+        typer.Option(
+            "--allow-incomplete",
+            help="Compile a synthetic development fixture with public local assets.",
+        ),
+    ] = False,
+) -> None:
+    """Compile one declarative task into a deterministic Harbor bundle."""
+
+    resolver = LocalArtifactResolver(
+        FileArtifactStore(artifact_root),
+        allow_private=allow_private,
+    )
+    try:
+        task_root = HarborCompiler(
+            toolchain,
+            artifact_resolver=resolver,
+        ).compile_task(source, output_root, allow_incomplete=allow_incomplete)
+    except (HarborCompileError, OSError, ValueError) as exc:
+        typer.echo(f"Harbor compile failed: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    _json_print(
+        {
+            "task": task_root.name,
+            "output": str(task_root),
+            "bundle_manifest": str(task_root / "bundle.manifest.json"),
+        }
+    )
+
+
+@harbor_app.command("prepare-control")
+def prepare_harbor_control(
+    task_root: Annotated[Path, typer.Argument(help="Compiled Harbor task directory.")],
+    kind: Annotated[str, typer.Argument(help="Control kind: stub or forgery.")],
+    output_root: Annotated[
+        Path,
+        typer.Option("--output", help="Directory for generated control bundles."),
+    ] = Path("build/controls"),
+    toolchain: Annotated[
+        Path,
+        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
+    ] = Path("toolchain.lock.toml"),
+) -> None:
+    """Prepare a control bundle that Harbor executes with the Oracle agent."""
+
+    try:
+        output = HarborCompiler(toolchain).prepare_control_bundle(
+            task_root,
+            kind,
+            output_root,
+        )
+    except (HarborCompileError, OSError, ValueError) as exc:
+        typer.echo(f"control preparation failed: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    _json_print({"kind": kind, "output": str(output)})
 
 
 @task_app.command("scaffold")

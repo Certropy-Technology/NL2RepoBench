@@ -16,9 +16,11 @@ from pydantic import Field, model_validator
 
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.models import (
+    ArtifactRef,
     DatasetManifest,
     DependencyBundle,
     EnvironmentLock,
+    HarborExecutionProfile,
     MetricContract,
     RecordModel,
     SourceLock,
@@ -62,6 +64,8 @@ class DeclarativeTaskSource(RecordModel):
     tests: TestManifest
     metric: MetricContract = Field(default_factory=MetricContract)
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
+    harbor: HarborExecutionProfile | None = None
+    oracle_bundle: ArtifactRef | None = None
 
     @model_validator(mode="after")
     def validate_paths(self) -> DeclarativeTaskSource:
@@ -158,6 +162,8 @@ class CatalogCompiler:
             tests=source.tests,
             metric=source.metric,
             lifecycle=source.lifecycle,
+            harbor=source.harbor,
+            oracle_bundle=source.oracle_bundle,
         )
         payload = canonical_json(manifest)
         output_dir = safe_child_directory(output_root, source.task_id)

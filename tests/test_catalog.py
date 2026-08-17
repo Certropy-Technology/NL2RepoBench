@@ -59,6 +59,11 @@ def _published_manifest(task_id: str) -> TaskManifest:
                 "commands_artifact": _artifact("6"),
                 "test_bundle": _artifact("7"),
             },
+            "harbor": {
+                "description": "Published task",
+                "keywords": ["python", "pytest", "nl2repobench"],
+            },
+            "oracle_bundle": _artifact("9"),
             "lifecycle": {
                 "status": "published",
                 "owner": "reviewer",

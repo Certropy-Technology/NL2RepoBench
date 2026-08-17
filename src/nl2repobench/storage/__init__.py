@@ -4,6 +4,7 @@ from .artifacts import ArtifactStoreError, FileArtifactStore, LocalArtifactResol
 from .files import (
     UnsafePathError,
     assert_manifest_writable,
+    atomic_copy,
     atomic_write,
     safe_child_directory,
 )
@@ -14,6 +15,7 @@ __all__ = [
     "FileArtifactStore",
     "LocalArtifactResolver",
     "UnsafePathError",
+    "atomic_copy",
     "assert_manifest_writable",
     "atomic_write",
     "safe_child_directory",

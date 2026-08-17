@@ -320,6 +320,38 @@ class TaskMetadata(RecordModel):
     language: str = "python"
 
 
+class HarborExecutionProfile(RecordModel):
+    """Execution settings deterministically projected into Harbor task.toml."""
+
+    description: str
+    keywords: Annotated[tuple[str, ...], Field(min_length=3, max_length=8)]
+    agent_timeout_sec: Annotated[float, Field(gt=0)] = 600.0
+    verifier_timeout_sec: Annotated[float, Field(gt=0)] = 600.0
+    candidate_install_timeout_sec: Annotated[float, Field(gt=0)] = 90.0
+    candidate_total_timeout_sec: Annotated[float, Field(gt=0)] = 300.0
+    agent_network_mode: Literal["public", "no-network", "allowlist"] = "public"
+    verifier_network_mode: Literal["no-network"] = "no-network"
+    cpus: Annotated[int, Field(gt=0)] = 2
+    memory_mb: Annotated[int, Field(ge=512)] = 2048
+    storage_mb: Annotated[int, Field(ge=1024)] = 4096
+    workspace_artifact: str = "/workspace"
+
+    @model_validator(mode="after")
+    def validate_candidate_time_budget(self) -> HarborExecutionProfile:
+        reserved_verifier_sec = 60.0
+        required = (
+            self.candidate_install_timeout_sec
+            + self.candidate_total_timeout_sec
+            + reserved_verifier_sec
+        )
+        if required >= self.verifier_timeout_sec:
+            raise ValueError(
+                "candidate install + call budgets + 60s reserve must be below "
+                "verifier_timeout_sec"
+            )
+        return self
+
+
 class TaskLifecycleRecord(RecordModel):
     """Auditable task status and evidence references."""
 
@@ -400,6 +432,8 @@ class TaskManifest(RecordModel):
     tests: TestManifest
     metric: MetricContract = Field(default_factory=MetricContract)
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
+    harbor: HarborExecutionProfile | None = None
+    oracle_bundle: ArtifactRef | None = None
     legacy_projection: LegacyProjection | None = None
 
     def publication_gaps(self) -> tuple[str, ...]:
@@ -430,6 +464,12 @@ class TaskManifest(RecordModel):
             gaps.append("tests.commands_artifact.visibility=private")
         if self.metric.contract_id != "fixed-test-pass-rate-v1":
             gaps.append("metric.contract_id=fixed-test-pass-rate-v1")
+        if self.harbor is None:
+            gaps.append("harbor")
+        if self.oracle_bundle is None:
+            gaps.append("oracle_bundle")
+        elif self.oracle_bundle.visibility is not Visibility.PRIVATE:
+            gaps.append("oracle_bundle.visibility=private")
         return tuple(gaps)
 
     @model_validator(mode="after")
