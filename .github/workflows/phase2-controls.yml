@@ -1,6 +1,20 @@
 name: phase2-controls
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "catalog/tasks/ministats/**"
+      - "harbor-runner/**"
+      - "scripts/run_phase2_ministats_controls.sh"
+      - "scripts/summarize_phase2_controls.py"
+      - "src/nl2repobench/harbor/**"
+      - "src/nl2repobench/domain/**"
+      - "src/nl2repobench/verification/**"
+      - "reports/phase2-ministats-controls.v1.json"
+      - "toolchain.lock.toml"
+      - "verifier/**"
+      - ".github/workflows/phase2-controls.yml"
   pull_request:
     paths:
       - "catalog/tasks/ministats/**"
