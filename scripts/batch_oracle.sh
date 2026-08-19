@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TASK_LIST="${1:-batch_tasks.txt}"
-OUTPUT_DIR="${2:-results/batch-oracle}"
+TASK_LIST="${1:-migration_tasks.txt}"
+OUTPUT_DIR="${2:-.nl2repo/runs/nl2repobench-harbor-pilot/oracle-$(date -u +%Y%m%dT%H%M%SZ)}"
 
 mkdir -p "$OUTPUT_DIR"
 
@@ -18,7 +18,7 @@ while IFS= read -r task_id; do
     [[ -z "$task_id" ]] && continue
     [[ "$task_id" =~ ^# ]] && continue
     
-    task_path="examples/harbor/$task_id"
+    task_path="catalog/tasks/$task_id/harbor"
     if [[ ! -d "$task_path" ]]; then
         echo "⏭️  Skipping $task_id (not found)"
         continue
@@ -41,9 +41,11 @@ while IFS= read -r task_id; do
         grading_file=$(find "../$result_dir" -name "grading.json" 2>/dev/null | head -1)
         if [[ -f "$grading_file" ]]; then
             reward=$(jq -r '.reward' "$grading_file")
-            echo "  📊 Reward: $reward"
+            valid=$(jq -r '.valid // true' "$grading_file")
+            reason=$(jq -r '.reason // ""' "$grading_file")
+            echo "  📊 Reward: $reward (valid=$valid reason=$reason)"
             
-            if (( $(echo "$reward > 0.8" | bc -l) )); then
+            if [[ "$valid" == "true" ]] && (( $(echo "$reward > 0.8" | bc -l) )); then
                 success=$((success + 1))
                 echo "  ✅ Success (reward > 0.8)"
             else

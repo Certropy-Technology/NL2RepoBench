@@ -11,6 +11,7 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 - [Metadata Core 与声明式 Catalog](docs/metadata-core.zh-CN.md)
 - [Phase 2 Harbor Compiler 与通用 Verifier](docs/phase2-harbor-verifier.zh-CN.md)
 - [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
+- [Harbor Pilot 任务结构与运行指南](docs/harbor-pilot.md)
 
 ## Modern Core
 
@@ -26,6 +27,12 @@ uv run nl2repo task import-legacy
 uv run nl2repo dataset validate authoring
 uv run nl2repo harbor compile catalog/tasks/ministats --allow-incomplete
 ```
+
+The current development Harbor pilot is catalog-backed at
+`catalog/datasets/nl2repobench-harbor-pilot/`. Task sources live under
+`catalog/tasks/<task-id>/`; Harbor assets are under each task's `harbor/`
+directory. `examples/harbor/` is reserved for the `ministats` infrastructure
+example. Run outputs belong under `.nl2repo/runs/` and are not dataset assets.
 
 The importer writes canonical task manifests, a SQLite state index, and
 content-addressed artifacts. Private command/test-path JSON is referenced by

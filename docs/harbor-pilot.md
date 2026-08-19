@@ -1,0 +1,138 @@
+# NL2RepoBench Harbor Pilot
+
+## What This Benchmark Measures
+
+NL2RepoBench evaluates whether an agent can create a complete, installable
+Python repository from a natural-language specification and an empty
+`/workspace`. The score is a fixed-test pass rate produced by a separate
+Harbor verifier.
+
+## Source Of Truth And Layout
+
+Human-edited task sources now live in the catalog:
+
+```text
+catalog/
+├── datasets/nl2repobench-harbor-pilot/
+│   └── dataset.toml
+└── tasks/<task-id>/
+    ├── task.toml             # catalog metadata and lifecycle
+    ├── instruction.md        # public agent specification
+    └── harbor/               # reviewed Harbor task assets
+        ├── task.toml
+        ├── environment/
+        ├── solution/
+        └── tests/
+```
+
+`examples/harbor/ministats/` is only the small infrastructure example.
+Benchmark task assets do not belong under `examples/harbor/`. Run outputs are
+stored under `.nl2repo/runs/` and are ignored by Git.
+
+## Why Legacy Images Are Used
+
+The original `test_files/<task-id>/` runner used frozen verifier images such as
+`ghcr.io/multimodal-art-projection/nl2repobench/ftfy:1.0`. Those images contain
+the historical test dependencies and test fixtures. The Harbor verifier uses
+the same image as its base, saves the fixtures before Harbor mounts the agent
+workspace, and injects the candidate source through a temporary `.pth` file.
+This avoids downloading build dependencies during verification and preserves
+the old environment contract.
+
+The verifier writes structured `reward.json` and `grading.json`. A result is
+valid only when the effective collection count matches the frozen denominator.
+Skipped tests are recorded separately and do not silently inflate the score.
+
+## Generate A Task
+
+```bash
+python scripts/convert_testfiles_to_harbor.py <task-id> \
+  --upstream-url https://github.com/<org>/<repo> \
+  --output catalog/tasks
+python scripts/batch_convert.sh migration_tasks.txt catalog/tasks
+python scripts/freeze_harbor_sources.py --root catalog/tasks --cache /tmp
+python scripts/gen_harbor_from_legacy.py
+```
+
+The converter preserves the exact legacy test paths. It does not assume every
+project has a `test/` directory; root test files, `src/` tests and nested
+project paths are retained.
+
+Validate catalog sources and the pilot dataset:
+
+```bash
+for task in aiofiles arguably boltons cerberus decouple ftfy humanize parse six; do
+  uv run nl2repo task validate-source catalog/tasks/$task
+done
+uv run nl2repo dataset compile \
+  catalog/datasets/nl2repobench-harbor-pilot/dataset.toml \
+  --output build/catalog/nl2repobench-harbor-pilot
+```
+
+## Oracle Gate
+
+Run a task directly through Harbor:
+
+```bash
+cd harbor-runner
+uv run --frozen harbor run \
+  -p ../catalog/tasks/ftfy/harbor \
+  -a oracle \
+  --jobs-dir ../.nl2repo/runs/oracle/ftfy
+```
+
+Only valid Oracle results are candidates for model evaluation. Environment,
+dependency, test-asset and verifier failures must be fixed or marked blocked;
+they must not be reported as model scores.
+
+## OpenHands Model Run
+
+Use the file-backed Harbor OpenHands SDK adapter for long specifications. It
+avoids the host `ARG_MAX` failure caused by passing a large instruction in the
+Docker command line and forwards the requested reasoning effort to the SDK.
+
+```bash
+TASK_ID=ftfy \
+MODEL=openai/gpt-5.6-sol \
+LLM_BASE_URL=https://z.open-api.ai/v1 \
+LLM_API_KEY="$GPT_KEY" \
+TIMEOUT_SECONDS=3600 \
+REASONING_EFFORT=max \
+scripts/run_harbor_model.sh
+```
+
+The Harbor task agent timeout and the outer command timeout are both one hour
+for the current pilot. The run directory is printed by the script and remains
+outside the task source.
+
+## Current Pilot State
+
+Valid Oracle baselines currently include:
+
+- `aiofiles`: 1.0 after legacy-image verifier repair;
+- `arguably`: 1.0;
+- `cerberus`: 1.0 after accounting for one skipped test;
+- `decouple`: 1.0;
+- `parse`: 1.0;
+- `six`: 1.0;
+- `ftfy`: 1.0 after restoring its CLI entry point in the verifier environment;
+- `jsonlines`: 1.0;
+- `freezegun`: 1.0 after accounting for skipped tests;
+- `tinydb`: 1.0.
+
+`boltons`, `humanize`, and `tenacity` remain blocked because their selected
+source revisions do not match the frozen legacy tests. `pytz` remains blocked
+because its source build requires generated timezone data while the legacy
+image stores the installed package as an egg. These are task/environment
+blockers, not model failures.
+
+## Reusable Rules
+
+1. Freeze the upstream commit and use the corresponding legacy test image.
+2. Preserve exact test paths and the original test selection.
+3. Keep verifier dependencies and fixtures out of the agent image.
+4. Validate Oracle before spending model budget.
+5. Record `valid`, collection, skipped, failure reason and reward together.
+6. Keep every run under `.nl2repo/runs/`, never inside `catalog/tasks`.
+7. Treat API gateway errors, setup failures and timeouts as infrastructure or
+   environment evidence, not model scores.

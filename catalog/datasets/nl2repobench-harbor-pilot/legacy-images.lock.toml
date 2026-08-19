@@ -1,0 +1,16 @@
+schema_version = "1.0"
+
+[images]
+aiofiles = "ghcr.io/multimodal-art-projection/nl2repobench/aiofiles@sha256:c2c5990b82801b434d40d0be1fb21ae8b914a2336ff2486ebc7ea622924e4e7a"
+arguably = "ghcr.io/multimodal-art-projection/nl2repobench/arguably@sha256:93563ba710a490978afdb11275583ac8357492bd41821a28d8b5fb9eccb84751"
+boltons = "ghcr.io/multimodal-art-projection/nl2repobench/boltons@sha256:770deb94e716b3a1592900ab389ac628f7b2a41d360e55bdb633bbff4c948e52"
+cerberus = "ghcr.io/multimodal-art-projection/nl2repobench/cerberus@sha256:b097a72dfc814cc9cd26a418a4a413e2ea6bafafbef6e567413976ed70fba946"
+decouple = "ghcr.io/multimodal-art-projection/nl2repobench/decouple@sha256:cb97d0b98c23641262708449c4de30d6294c90b139f7b01379c7e5b38ee553a6"
+ftfy = "ghcr.io/multimodal-art-projection/nl2repobench/ftfy@sha256:7b81cb54efc741a160aac403bdb672d6a724f0726cd9376d321d26efd4367afb"
+humanize = "ghcr.io/multimodal-art-projection/nl2repobench/humanize@sha256:18407d80e95c1a277a5e6fb66c1174b7f2b3699ec10125adc7d6e180f2f6a626"
+parse = "ghcr.io/multimodal-art-projection/nl2repobench/parse@sha256:b62739aff75c836823bf0140ae6db4d329beb74cf79cdb170ed5adb85966ee18"
+freezegun = "ghcr.io/multimodal-art-projection/nl2repobench/freezegun@sha256:c3525ea5c356aea4bd8e2ebef5f44db9fe9e1fbe40173ae270057d8c7641e3d5"
+jsonlines = "ghcr.io/multimodal-art-projection/nl2repobench/jsonlines@sha256:53d4f953222214651e979d00d81b8b10af86adec9a24982be0ce95e5ece2c246"
+tinydb = "ghcr.io/multimodal-art-projection/nl2repobench/tinydb@sha256:3db19fe6b19b93ed836def4c78e351fc95454018a3978057ffdf99e3bb2ff1cc"
+tenacity = "ghcr.io/multimodal-art-projection/nl2repobench/tenacity@sha256:d8de6dbe1756b785974c57baf2a033767a6fd0324ff2fd70c861940e6372cd2e"
+six = "ghcr.io/multimodal-art-projection/nl2repobench/six@sha256:403962b64fa09689196c6d29a82bf7a9525a95dbb4459f12cca4a920a056dc91"

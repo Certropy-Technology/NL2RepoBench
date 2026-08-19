@@ -1,0 +1,61 @@
+schema_version = "1.0"
+task_id = "ftfy"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = 'https://github.com/rspeer/python-ftfy'
+revision = '74dd0452b48286a3770013b3a02755313bd5575e'
+license_spdx = 'Apache-2.0'
+source_digest = 'sha256:c4bb6cb686c1f1e56cbe50dafcaf575512763acd4d7ebdda4dd3d4da41aad1ec'
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12"
+base_image = 'python:3.12-slim'
+base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 336
+expected_total_source = "unknown"
+commands = ["pip install  -e .", "pytest --continue-on-collection-errors tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the ftfy package from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."

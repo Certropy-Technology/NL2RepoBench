@@ -1,0 +1,37 @@
+schema_version = "1.4"
+artifacts = ["/workspace"]
+
+[task]
+name = "nl2repobench/six"
+version = "0.1.0"
+description = "Build the six package from an empty workspace."
+authors = [{ name = "NL2RepoBench" }]
+keywords = ["python", "repository-generation", "nl2repobench"]
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python"]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 200
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096

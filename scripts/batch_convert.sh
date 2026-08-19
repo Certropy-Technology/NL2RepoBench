@@ -2,7 +2,7 @@
 set -euo pipefail
 
 TASK_LIST="${1:-batch_tasks.txt}"
-OUTPUT_DIR="${2:-examples/harbor}"
+OUTPUT_DIR="${2:-catalog/tasks}"
 
 if [[ ! -f "$TASK_LIST" ]]; then
     echo "❌ Task list not found: $TASK_LIST"
@@ -34,6 +34,7 @@ while IFS= read -r task_id; do
     # Try to find upstream URL from known repositories
     upstream_url=""
     case "$task_id" in
+        aiofiles) upstream_url="https://github.com/Tinche/aiofiles" ;;
         boltons) upstream_url="https://github.com/mahmoud/boltons" ;;
         cerberus) upstream_url="https://github.com/pyeve/cerberus" ;;
         decouple) upstream_url="https://github.com/HBNetwork/python-decouple" ;;
@@ -63,15 +64,26 @@ while IFS= read -r task_id; do
             rm -rf "$tmp_dir"
             
             if git clone --depth 1 "$upstream_url" "$tmp_dir" 2>/dev/null; then
-                # Try common test directory names
-                for test_dir in tests test testing; do
-                    if [[ -d "$tmp_dir/$test_dir" ]]; then
-                        echo "  ✓ Found test directory: $test_dir"
-                        cp -r "$tmp_dir/$test_dir" "$OUTPUT_DIR/$task_id/tests/test"
-                        echo "  ✓ Copied tests to: $OUTPUT_DIR/$task_id/tests/test"
-                        break
+                mkdir -p "$OUTPUT_DIR/$task_id/harbor/tests/fixture"
+                while IFS= read -r rel; do
+                    [[ -z "$rel" ]] && continue
+                    if [[ ! -e "$tmp_dir/$rel" ]]; then
+                        echo "  ⚠️  Upstream path missing: $rel"
+                        continue
                     fi
-                done
+                    mkdir -p "$OUTPUT_DIR/$task_id/harbor/tests/fixture/$(dirname "$rel")"
+                    cp -a "$tmp_dir/$rel" "$OUTPUT_DIR/$task_id/harbor/tests/fixture/$rel"
+                    echo "  ✓ Copied $rel"
+                done < <(python3 - "$task_id" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+task = Path("test_files") / sys.argv[1]
+for path in json.loads((task / "test_files.json").read_text()):
+    print(path)
+PY
+                )
             else
                 echo "  ⚠️  Failed to clone upstream, will need manual test copy"
             fi

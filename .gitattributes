@@ -1,0 +1,4 @@
+# Legacy instructions are imported byte-for-byte for experiment parity. Their
+# historical Markdown contains trailing spaces that must not be normalized.
+catalog/tasks/*/instruction.md -whitespace
+catalog/tasks/*/harbor/instruction.md -whitespace

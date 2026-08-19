@@ -1,0 +1,17 @@
+schema_version = "1.0"
+dataset_id = "nl2repobench-harbor-pilot"
+version = "0.1.0"
+description = "Development Harbor pilot tasks migrated from the NL2RepoBench legacy task set."
+metric_contract = "fixed-test-pass-rate-v1"
+tasks = [
+  "aiofiles",
+  "arguably",
+  "cerberus",
+  "decouple",
+  "freezegun",
+  "ftfy",
+  "jsonlines",
+  "parse",
+  "six",
+  "tinydb",
+]

@@ -1,0 +1,72 @@
+{
+  "dataset_id": "nl2repobench-harbor-pilot",
+  "dataset_version": "0.1.0",
+  "harbor_version": "0.21.0",
+  "task_schema": "1.4",
+  "agent_timeout_sec": 3600,
+  "oracle": {
+    "aiofiles": {"reward": 1.0, "valid": true, "passed": 211, "expected": 211},
+    "arguably": {"reward": 1.0, "valid": true, "passed": 70, "expected": 70},
+    "cerberus": {"reward": 1.0, "valid": true, "passed": 248, "expected": 248},
+    "decouple": {"reward": 1.0, "valid": true, "passed": 67, "expected": 67},
+    "ftfy": {"reward": 1.0, "valid": true, "passed": 336, "expected": 336},
+    "parse": {"reward": 1.0, "valid": true, "passed": 96, "expected": 96},
+    "six": {"reward": 1.0, "valid": true, "passed": 200, "expected": 200},
+    "jsonlines": {"reward": 1.0, "valid": true, "passed": 27, "expected": 27},
+    "freezegun": {"reward": 1.0, "valid": true, "passed": 133, "expected": 133},
+    "tinydb": {"reward": 1.0, "valid": true, "passed": 204, "expected": 204}
+  },
+  "blocked": {
+    "boltons": "source-test revision drift: Oracle 407/423",
+    "humanize": "source-test revision drift: Oracle 573/607",
+    "tenacity": "source-test revision drift: Oracle 120/124",
+    "pytz": "offline source build requires generated zoneinfo data"
+  },
+  "model_runs": [
+    {
+      "task_id": "ftfy",
+      "model": "openai/gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "reward": 1.0,
+      "valid": true,
+      "termination": "completed"
+    },
+    {
+      "task_id": "parse",
+      "model": "openai/gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "reward": 1.0,
+      "valid": true,
+      "termination": "completed"
+    },
+    {
+      "task_id": "arguably",
+      "model": "anthropic/claude-fable-5",
+      "reasoning_effort": "max",
+      "reward": null,
+      "valid": false,
+      "termination": "invalid grading: candidate import failed before collection"
+    },
+    {
+      "task_id": "decouple",
+      "model": "openai/gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "reward": null,
+      "valid": false,
+      "termination": "infrastructure: API BadGateway"
+    },
+    {
+      "task_id": "six",
+      "model": "openai/gpt-5.6-sol",
+      "reasoning_effort": "max",
+      "reward": null,
+      "valid": false,
+      "termination": "provider error: duplicate function_call_output call_id"
+    }
+  ],
+  "notes": [
+    "Run artifacts remain under ignored .nl2repo/runs paths.",
+    "Provider/setup failures are not model scores.",
+    "The independent reviewer could not start because the local subagent configuration has an invalid runner.type."
+  ]
+}
