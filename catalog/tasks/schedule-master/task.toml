@@ -1,0 +1,69 @@
+schema_version = "1.0"
+task_id = "schedule-master"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "scheduling", "stateful-api", "timezones"]
+language = "python"
+
+# Release 1.2.2. `git archive --format=tar <revision>` is recorded here.
+# SPDX evidence: LICENSE.txt at this revision is the MIT license
+# (sha256:30a8352c318ce1b645acde0299697342d4380ed2637d7ca18a8ad25661e3b41b).
+[source]
+status = "known"
+upstream_url = "https://github.com/dbader/schedule"
+revision = "82a43db1b938d8fdf60103bd41f329e06c8d3651"
+license_spdx = "MIT"
+source_digest = "sha256:718fc6887ae9165aaf5f751780416ead8ce82844a2f615543f43acfaac7d4cff"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.3"
+os_name = "debian-12"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/schedule-master"
+base_image_digest = "sha256:903e864b08437cacb1dbf4305f6ecc1443d09c6af7a714e2d81c4c5fee2d6677"
+system_packages = ["tzdata"]
+network_mode = "no-network"
+
+# The immutable verifier image supplies pytest 8.4.1 and pytz 2025.2.
+# No standalone offline wheelhouse artifact exists for this legacy projection.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["pytest==8.4.1", "pytz==2025.2"]
+
+[tests]
+framework = "pytest"
+expected_total = 81
+expected_total_source = "frozen-collection"
+commands = ["pytest --continue-on-collection-errors test_schedule.py"]
+protected_paths = ["test_schedule.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the schedule in-process job scheduling library from an empty workspace."
+keywords = ["python", "scheduling", "timezones", "stateful-api", "repository-generation"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "Pinned source, verifier image, frozen test path, and collection count are resolved; Oracle gate pending."
