@@ -1,0 +1,66 @@
+schema_version = "1.0"
+task_id = "python-constraint"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "constraint-solving"
+tags = ["python", "constraint-satisfaction", "backtracking", "finite-domains"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-constraint/python-constraint"
+revision = "d91ba03d1fd6acc30d64fd9d513dc0523f697b5b"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:c15171bf0b6e8271e099566d5acef4c322e2d2efa13dd1f92cb3370b5f4675ff"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["gcc=4:14.2.0-1", "libc6-dev:amd64=2.41-12+deb13u3"]
+build_command = "python -m pip install --no-index --no-build-isolation --no-deps -e ."
+network_mode = "public"
+
+# Exact baseline packages are recorded, but no hash-locked offline wheelhouse
+# exists. Keep dependency provenance unknown until that artifact is frozen.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "Cython==3.2.9",
+  "Pygments==2.21.0",
+  "coverage==7.15.4",
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pep440==0.1.2",
+  "pluggy==1.6.0",
+  "poetry-core==2.4.1",
+  "py-cpuinfo==9.0.0",
+  "pytest==9.1.1",
+  "pytest-benchmark==5.2.3",
+  "pytest-cov==7.1.0",
+  "setuptools==84.0.0",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 52
+expected_total_source = "frozen-collection"
+commands = ["python -m pytest --no-cov --benchmark-json=/out/benchmark.json --junitxml=/out/junit.xml tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "The frozen upstream suite requires stateful in-process objects, callbacks, generators, doctests, and multiprocessing; the current JSON-only candidate_client cannot preserve those assertions across the separate-verifier boundary."
