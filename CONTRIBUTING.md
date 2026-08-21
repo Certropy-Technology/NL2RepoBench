@@ -185,6 +185,10 @@ python scripts/convert_testfiles_loop.py record icecream \
 python scripts/convert_testfiles_loop.py record icecream \
   --owner worker-a --status blocked \
   --reason 'frozen verifier image digest unavailable'
+
+# 新证据解决 blocker 后显式重新打开，并保留 reopen history
+python scripts/convert_testfiles_loop.py reopen icecream \
+  --reason 'registry retry resolved the pinned image digest'
 ```
 
 状态默认写入 `.nl2repo/conversion-loop/state.json`，不提交到 Git。不同 task 可以在

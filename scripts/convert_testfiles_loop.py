@@ -256,6 +256,37 @@ def command_validate(args: argparse.Namespace) -> int:
     return 1 if errors else 0
 
 
+def command_reopen(args: argparse.Namespace) -> int:
+    with locked_state(args.state) as state:
+        records = sync_state(state, args.legacy_root, args.catalog_root)
+        record = records.get(args.task_id)
+        if record is None:
+            raise ValueError(f"unknown legacy task: {args.task_id}")
+        if record["status"] != "blocked":
+            raise ValueError(f"{args.task_id} is not blocked")
+        history = record.setdefault("reopen_history", [])
+        if not isinstance(history, list):
+            raise ValueError(f"invalid reopen history: {args.task_id}")
+        history.append(
+            {
+                "previous_reason": record.get("reason"),
+                "reason": args.reason,
+                "reopened_at": now(),
+            }
+        )
+        record.update(
+            {
+                "status": "pending",
+                "owner": None,
+                "lease_expires_at": None,
+                "reason": args.reason,
+                "updated_at": now(),
+            }
+        )
+    print(json.dumps(record, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parent.parent)
@@ -285,6 +316,11 @@ def build_parser() -> argparse.ArgumentParser:
     validate = commands.add_parser("validate")
     validate.add_argument("task_id")
     validate.set_defaults(func=command_validate)
+
+    reopen = commands.add_parser("reopen")
+    reopen.add_argument("task_id")
+    reopen.add_argument("--reason", required=True)
+    reopen.set_defaults(func=command_reopen)
     return parser
 
 

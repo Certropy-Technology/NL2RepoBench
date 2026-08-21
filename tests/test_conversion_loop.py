@@ -77,3 +77,29 @@ def test_complete_bundle_requires_every_file(tmp_path) -> None:
     assert loop.complete_bundle(tmp_path / "demo")
     (tmp_path / "demo/harbor/tests/grade.py").unlink()
     assert not loop.complete_bundle(tmp_path / "demo")
+
+
+def test_reopen_preserves_blocker_history(tmp_path) -> None:
+    legacy = tmp_path / "test_files"
+    catalog = tmp_path / "catalog/tasks"
+    legacy_task(legacy, "demo")
+    state_path = tmp_path / "state.json"
+    with loop.locked_state(state_path) as state:
+        records = loop.sync_state(state, legacy, catalog)
+        records["demo"].update({"status": "blocked", "reason": "registry unavailable"})
+    args = type(
+        "Args",
+        (),
+        {
+            "state": state_path,
+            "legacy_root": legacy,
+            "catalog_root": catalog,
+            "task_id": "demo",
+            "reason": "registry retry succeeded",
+        },
+    )()
+
+    assert loop.command_reopen(args) == 0
+    record = json.loads(state_path.read_text(encoding="utf-8"))["tasks"]["demo"]
+    assert record["status"] == "pending"
+    assert record["reopen_history"][0]["previous_reason"] == "registry unavailable"
