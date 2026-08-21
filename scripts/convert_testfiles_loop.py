@@ -307,7 +307,7 @@ def parse_manifest_descriptor(data: str) -> tuple[str, str]:
 
 
 def probe_image(task_id: str, registry: str) -> dict[str, object]:
-    tagged_ref = f"{registry.rstrip('/')}/{task_id}:1.0"
+    tagged_ref = f"{registry.rstrip('/')}/{task_id.lower()}:1.0"
     completed = subprocess.run(
         ["docker", "manifest", "inspect", "--verbose", tagged_ref],
         capture_output=True,
