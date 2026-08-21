@@ -105,6 +105,53 @@ def test_reopen_preserves_blocker_history(tmp_path) -> None:
     assert record["reopen_history"][0]["previous_reason"] == "registry unavailable"
 
 
+def test_sync_does_not_overwrite_explicit_blocker_with_complete_bundle(tmp_path) -> None:
+    legacy = tmp_path / "test_files"
+    catalog = tmp_path / "catalog/tasks"
+    legacy_task(legacy, "demo")
+    complete_task(catalog, "demo")
+    state: dict[str, object] = {
+        "tasks": {
+            "demo": {
+                **loop.default_record("demo"),
+                "status": "blocked",
+                "reason": "hidden test boundary incomplete",
+            }
+        }
+    }
+
+    records = loop.sync_state(state, legacy, catalog)
+
+    assert records["demo"]["status"] == "blocked"
+
+
+def test_block_command_can_record_integrator_decision(tmp_path) -> None:
+    legacy = tmp_path / "test_files"
+    catalog = tmp_path / "catalog/tasks"
+    legacy_task(legacy, "demo")
+    state_path = tmp_path / "state.json"
+    with loop.locked_state(state_path) as state:
+        loop.sync_state(state, legacy, catalog)
+    args = type(
+        "Args",
+        (),
+        {
+            "state": state_path,
+            "legacy_root": legacy,
+            "catalog_root": catalog,
+            "task_id": "demo",
+            "owner": "integrator",
+            "reason": "no private test artifact",
+            "artifact": [],
+        },
+    )()
+
+    assert loop.command_block(args) == 0
+    record = json.loads(state_path.read_text(encoding="utf-8"))["tasks"]["demo"]
+    assert record["status"] == "blocked"
+    assert record["block_history"][0]["previous_status"] == "pending"
+
+
 def test_parse_manifest_descriptor_returns_digest_and_platform() -> None:
     data = json.dumps(
         {

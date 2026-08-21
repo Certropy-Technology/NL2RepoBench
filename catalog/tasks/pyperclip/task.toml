@@ -1,0 +1,62 @@
+schema_version = "1.0"
+task_id = "pyperclip"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "clipboard", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/asweigart/pyperclip"
+revision = "f5326bfd7c5448b40051dd261a7304657977b838"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:4e80effb92cd84116a2541bb5aa4df7d7832761c04600322f558265ba73c0275"
+
+[environment]
+status = "known"
+python_version = "3.10.11"
+os_name = "debian-11"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/pyperclip"
+base_image_digest = "sha256:a3cac678d154fc68b673495484f834c92daa4aa3db42e0008264a49c3f7d2769"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 2
+expected_total_source = "frozen-collection"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pyperclip package from an empty workspace."
+keywords = ["python", "clipboard", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+reason = "Oracle gate and offline dependency closure are not yet evidenced; do not publish or add to a dataset. See provenance.md."

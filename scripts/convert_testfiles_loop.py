@@ -107,7 +107,7 @@ def sync_state(
         record = records.setdefault(task_id, default_record(task_id))
         if not isinstance(record, dict):
             raise ValueError(f"invalid state record: {task_id}")
-        if complete_bundle(catalog_root / task_id):
+        if record["status"] in {"pending", "complete"} and complete_bundle(catalog_root / task_id):
             record.update(
                 {
                     "status": "complete",
@@ -288,6 +288,39 @@ def command_reopen(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_block(args: argparse.Namespace) -> int:
+    with locked_state(args.state) as state:
+        records = sync_state(state, args.legacy_root, args.catalog_root)
+        record = records.get(args.task_id)
+        if record is None:
+            raise ValueError(f"unknown legacy task: {args.task_id}")
+        if record["status"] == "running" and record.get("owner") != args.owner:
+            raise ValueError(f"{args.task_id} is claimed by another owner")
+        history = record.setdefault("block_history", [])
+        if not isinstance(history, list):
+            raise ValueError(f"invalid block history: {args.task_id}")
+        history.append(
+            {
+                "previous_status": record.get("status"),
+                "reason": args.reason,
+                "blocked_at": now(),
+                "owner": args.owner,
+            }
+        )
+        record.update(
+            {
+                "status": "blocked",
+                "owner": None,
+                "lease_expires_at": None,
+                "reason": args.reason,
+                "artifacts": args.artifact,
+                "updated_at": now(),
+            }
+        )
+    print(json.dumps(record, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
 def parse_manifest_descriptor(data: str) -> tuple[str, str]:
     parsed = json.loads(data)
     descriptor = parsed.get("Descriptor")
@@ -394,6 +427,13 @@ def build_parser() -> argparse.ArgumentParser:
     reopen.add_argument("task_id")
     reopen.add_argument("--reason", required=True)
     reopen.set_defaults(func=command_reopen)
+
+    block = commands.add_parser("block")
+    block.add_argument("task_id")
+    block.add_argument("--owner", required=True)
+    block.add_argument("--reason", required=True)
+    block.add_argument("--artifact", action="append", default=[])
+    block.set_defaults(func=command_block)
 
     probe = commands.add_parser("probe-images")
     probe.add_argument("--tasks", nargs="*")

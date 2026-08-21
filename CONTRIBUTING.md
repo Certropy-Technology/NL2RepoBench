@@ -189,6 +189,10 @@ python scripts/convert_testfiles_loop.py record icecream \
   --owner worker-a --status blocked \
   --reason 'frozen verifier image digest unavailable'
 
+# integrator 可以阻止已有 bundle，且不会被下一次 status 自动标记 complete
+python scripts/convert_testfiles_loop.py block pyperclip \
+  --owner integrator --reason 'effective test coverage is insufficient'
+
 # 新证据解决 blocker 后显式重新打开，并保留 reopen history
 python scripts/convert_testfiles_loop.py reopen icecream \
   --reason 'registry retry resolved the pinned image digest'
