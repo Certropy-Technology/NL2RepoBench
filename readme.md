@@ -4,6 +4,11 @@
 
 NL2Repo is a benchmark designed to evaluate the performance of Large Language Models (LLMs) and coding agents on **long-horizon tasks** that require generating a **complete, runnable code repository from scratch (0-to-1)**. The benchmark consists of **104 distinct tasks**, each paired with its own testing environment.
 
+## Getting Started
+
+- [QUICKSTART.md](QUICKSTART.md) — clone 后直接跑通 benchmark（含免 API key 的 Oracle 门禁）
+- [CONTRIBUTING.md](CONTRIBUTING.md) — 怎么出题、怎么跑 Bench、注意事项、OSS 归档结构
+
 ## Task Authoring
 
 - [中文出题、质量门禁与 Harbor 接入手册](docs/task-authoring-guide.zh-CN.md)
@@ -12,6 +17,7 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 - [Phase 2 Harbor Compiler 与通用 Verifier](docs/phase2-harbor-verifier.zh-CN.md)
 - [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
 - [Harbor Pilot 任务结构与运行指南](docs/harbor-pilot.md)
+- [运行数据 OSS 归档布局](docs/run-artifacts-oss.md)
 
 ## Modern Core
 
