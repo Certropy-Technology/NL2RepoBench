@@ -1,0 +1,65 @@
+schema_version = "1.0"
+task_id = "pysondb-v2"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "json", "database", "persistence", "cli", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pysonDB/pysonDB-v2"
+revision = "4399314ecdc3f394ccc92ecd440de4b0180b12a8"
+license_spdx = "MIT"
+submodules = []
+source_digest = "sha256:4a80fa0f2e29fa613bd946c536159a5769607c0bd6748d1feb7f65db71bf4f07"
+
+[environment]
+status = "known"
+python_version = "3.10.11"
+os_name = "debian-12"
+base_image = "python:3.10.11"
+base_image_digest = "sha256:fc1d7d6e1df26c603b5729e92fff684a56e9d1b8c6db263c6169a1f250e80787"
+system_packages = ["ca-certificates", "git"]
+build_command = "apt-get install --no-install-recommends ca-certificates git"
+network_mode = "public"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["prettytable==3.3.0", "pytest", "pytest-mock", "mypy", "pre-commit"]
+
+[tests]
+framework = "pytest"
+expected_total = 96
+expected_total_source = "frozen-collection"
+protected_paths = ["tests"]
+commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pysonDB-v2 JSON persistence package from an empty workspace."
+keywords = ["python", "json", "database", "persistence", "cli", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "Pinned verifier image, upstream source/license/archive locks, image-backed private tests, and a static 96-case denominator are recorded; Oracle and controls remain pending parent orchestration."

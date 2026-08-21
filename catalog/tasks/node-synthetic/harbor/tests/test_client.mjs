@@ -13,7 +13,9 @@ export function callCandidate(exportName, args) {
       "candidate",
       "--",
       "/usr/bin/prlimit",
-      "--as=536870912",
+      // Match the verifier's bounded Node address-space limit. 512 MiB is too
+      // small for Node 22's V8 CodeRange reservation.
+      "--as=805306368",
       "--cpu=60",
       "--nproc=32",
       "--nofile=128",
