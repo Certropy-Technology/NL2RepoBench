@@ -30,6 +30,55 @@ IMAGE_DIGESTS = {
     "freezegun": "c3525ea5c356aea4bd8e2ebef5f44db9fe9e1fbe40173ae270057d8c7641e3d5",
     "tinydb": "3db19fe6b19b93ed836def4c78e351fc95454018a3978057ffdf99e3bb2ff1cc",
     "tenacity": "d8de6dbe1756b785974c57baf2a033767a6fd0324ff2fd70c861940e6372cd2e",
+    "autopep8": "dbecf8fbccb83e9071ba33e16d127c2b0797c6f31372b9cbf40104b8ac9a66fe",
+    "bleach": "87cabcf36717c72b75f2b2bedef2fee3f70db75864e09bb6c3a950a4fcc34941",
+    "cookiecutter": "fb42f82d4a45d9ac9856dfd81b61daaa620ed081508968ad75315b7f29060cb8",
+    "pyjwt": "b9a14097413982736072aef5831c10df3370b0127477bc13d4f55a46161760de",
+    "deepdiff": "e643e3d13892f4bd3494eec93faa93799b259e38bdae44f4d3f39794d3c65173",
+    "docopt-ng": "d759e56c0c96c73e975f92d24a6464c3a99eb0832f94e4e5a4d092af37671c49",
+    "sortedcontainers": "6958cd0d6a2c6cf84e84f3638633a3fc70c9f9392fddfa9f6385a6d6de91517a",
+    "python-dotenv": "f604ad8f1f95679d3d78463ca6c23be1a4ca92f6a55769c2f5d60f4031dae0a0",
+    "asteval": "7c9fd70a06c18ab0d5d3f806bbef2edd8484e7f6c01375033caecdb03d29468d",
+    "more-Itertools": "a63479c4938b00cc4bc2ec636eed5c392325ac98dc11ce2f4212f9213b57dfde",
+    "pypinyin": "e6d86e2b150ea5ebe79ed78dff2a13f60f1a73cfe99e827ba100ce4da37d8f3e",
+    "typing_extensions": "43d768b2998bf39f873319f2ac1ba13f42490e3c16013f497175fea5a736814c",
+    "pathlib2": "82a6649dd844244a64005c198148649222cac6f8792358a506c1f86f7a0948ba",
+    "pytest-cov": "23e86c9c10233b812adfd98ec44c5847499c5e12e04e38f50dc90a3115513c18",
+    "schema": "39cc925630f3643f539c608e89942a01a8d9c208f2d358fa9d36aee9b49017a3",
+    "boto": "6a70abf3ae8807746d708ce0ab1de72e46f7b14e3f91d68c542a112523468c24",
+    "dictdatabase": "823bcedc503f2cef1b47abe39c3a582d977376bd4b0343f011637de40dd80c7e",
+    "flask-restful": "79d845aef38ea77517f3d4e6f7b38440d06c717d1cce2c1869bedaabe3856237",
+    "paillier": "914780b2b3429aa9bb1c441d3c223c380e389c529bcca436121674e37e0beb7a",
+    "cachier": "310c22efd29951e65bc94945448158fc8c79db716ae8954cbf0e5f1c3359d9cd",
+    "voluptuous": "9d1deaa58ac3e73dc8de4b8d3fdc5c574830637753d71e93ce5b5cdbad0c05fd",
+    "tablib": "03b7d18dbf1c726305b417964ad657cfd6d6a0817593cb0cb98c968f66e89f48",
+    "deslib": "a770394bb31e568ee05a607a6daf8b5d0b96d89e5ab45eac9fb4f6d48c0716f8",
+    "fastapi-users": "7d138cafb8b38642b53ab505c86e143ea257d808474314b41d7725bb9d259420",
+    "sqlparse": "fdc248879569aa72db0c14a15cafb5a57436879a530726d313de83b3c6061138",
+    "math-verify": "09eeca141f24aa13c6b33dae1c255f086b4916f41cbd8cb99ca0541d7c63ce02",
+    "databases": "dd74f0c7837985a4d6a122a9ddc7101f58cfdbc0114dd626a8a38ca841a12891",
+    "python-fsutil": "3094bacae5c910e6bdc2d72d76346bbef8d5fbbbc3e1b45594a0a708227e85b6",
+    "funcy": "76ebd62df511fa695050585d0d4a8222d742ba1a451349e683857815d0aa5189",
+    "python-pathspec": "8e05b4044ed04d3c6a39dd4a468be773baaed5fb06ce8fe6dd861d30198dcb43",
+    "markdownify": "65c016ba9b1503f1c33cb01a732dc877fb43ed1a65e700f5cbab721bb06c499b",
+    "python-slugify": "a5124fec018d540e2201a687ee16d5748be5ac9c38981cb7a9e746b0dc76a83c",
+    "tqdm": "75c3dba71f588b7022445fcefc59ba03163a8161ca5e4ba9dcc556a8f5403fa9",
+    "stamina": "21cbd1883da2af9c19dbf9ba0d4fe2a3780cc64279fa4e9bc8ae67d19e4122bf",
+    "rich-click": "8f091fb134fce469a442c928a3a8494510e3ff68c7e88b2c1378aff8c813d241",
+    "box": "216814b130e1822af7721203bc14c3aa0bcc100a643659db6d29ec07f9b3bd3f",
+    "mechanicalsoup": "54a9ee32015e3b67b09459f08ae752b7bd9f7920a78a2ffc5b2ba772ca8d60d6",
+    "emoji": "4b7b1ef33001317d8ebc54a7467e2ad1688d7a6d3ac0672911de770098037d0b",
+    "pdfplumber-stable": "5f1afa11a502918e9624cdc26b849d7c9351ec5ec0cd171c6118a8465e382f30",
+    "structlog": "ad5c6ff2b6ddd2a7f463b9e31dcd8c201e6f17092eb9c28cd77a4c62421d9d1b",
+    "stable-baselines3": "f099a531a115b93c5207db35ab49ff792f1c4e4d222a0991a41e19d0dc6b3295",
+    "gitingest": "bbd145dbf70464c96b4f085af13911b53e599ab79ca46e5c9c9a25a159a093a2",
+    "xlrd": "caa59581e78ccd3f66d20d1edd160ccd6b41e60f85647c112e912fb49cda5b41",
+    "fuzzywuzzy": "108be49ca52d07b24d49566a517556f906c6de4e3674f30fb992452efdd7c563",
+    "dbutils": "8794762c4581cb6862818baacd9f684a687ad275822b99d0257657b3b199e5f9",
+    "unidecode": "941e1824c14fd13d4d67c457badbd2eaf2ed39459ee75582e9f9bf31f340a795",
+    "unittest-parametrize": "fcc862e8f8ae0e6c279dc8075d4136f3713bdc72e5686626e284024e5259dacb",
+    "markupsafe": "9a385b240fa9430e853999c19e0bfe3a648287dd19f5c41e3d16ff18d3407d76",
+    "pyquery": "55b0be41dfafa65c0251ebbb524f2ed6ec2064524113c41e83037782b0705343",
 }
 
 TASKS: dict[str, dict[str, object]] = {
@@ -137,6 +186,294 @@ TASKS: dict[str, dict[str, object]] = {
         "pytest": "--continue-on-collection-errors tests",
         "expected": 124,
     },
+    "autopep8": {
+        "paths": ["test"],
+        "pytest": "--continue-on-collection-errors test",
+        "expected": 564,
+    },
+    "bleach": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 448,
+    },
+    "cookiecutter": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 377,  # 381 collected - 4 skipped (Windows-only tests)
+    },
+    "pyjwt": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 299,
+    },
+    "deepdiff": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 970,
+    },
+    "docopt-ng": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 614,
+    },
+    "sortedcontainers": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 299,
+    },
+    "python-dotenv": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 209,
+    },
+    "asteval": {
+        "paths": ["tests"],
+        "pytest": "-o addopts='' --continue-on-collection-errors tests",
+        "expected": 227,
+        "prepare": [
+            "mkdir -p /tmp/candidate/asteval",
+            "test -f /tmp/candidate/asteval/version.py || "
+            "echo \"version = '0.0.1'\" > /tmp/candidate/asteval/version.py",
+        ],
+    },
+    "more-Itertools": {
+        "image": "more-itertools",
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 682,
+    },
+    "pypinyin": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 964,
+    },
+    "typing_extensions": {
+        "paths": ["src/test_typing_extensions.py"],
+        "pytest": "--continue-on-collection-errors src",
+        "expected": 535,
+    },
+    "pathlib2": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 344,
+        "docker_prepare": ["python -m pip install --no-cache-dir six"],
+    },
+    "pytest-cov": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 184,
+    },
+    "schema": {
+        "paths": ["test_schema.py"],
+        "pytest": "--continue-on-collection-errors test_schema.py",
+        "expected": 118,
+    },
+    "boto": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 1009,
+        "docker_prepare": [
+            "python -m pip install --no-cache-dir "
+            "pytest 'botocore>=1.40.52,<1.41.0' 'jmespath>=0.7.1,<2.0.0' "
+            "'s3transfer>=0.14.0,<0.15.0'",
+        ],
+    },
+    "dictdatabase": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 594,
+    },
+    "flask-restful": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 362,
+        "docker_prepare": [
+            "python -m pip install --no-cache-dir pytest "
+            "'Flask==1.1.4' 'Werkzeug==1.0.1' 'Jinja2==2.11.3' "
+            "'MarkupSafe==2.0.1' 'itsdangerous==1.1.0' 'click==7.1.2' "
+            "aniso8601 six pytz mock blinker",
+        ],
+    },
+    "paillier": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 234,
+    },
+    "cachier": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 180,
+    },
+    "voluptuous": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 152,
+    },
+    "tablib": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 172,
+    },
+    "deslib": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 532,
+    },
+    "fastapi-users": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 556,
+    },
+    "sqlparse": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 462,
+    },
+    "math-verify": {
+        "paths": ["tests"],
+        "pytest": "-n 0 --continue-on-collection-errors tests/test_all.py -v -s",
+        "expected": 192,
+    },
+    "databases": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 154,
+    },
+    "python-fsutil": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 153,
+    },
+    "funcy": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 203,
+    },
+    "python-pathspec": {
+        "paths": [
+            "tests/test_01_util.py",
+            "tests/test_02_gitwildmatch.py",
+            "tests/test_03_pathspec.py",
+            "tests/test_04_gitignore.py",
+        ],
+        "pytest": (
+            "--continue-on-collection-errors tests/test_01_util.py "
+            "tests/test_02_gitwildmatch.py tests/test_03_pathspec.py "
+            "tests/test_04_gitignore.py"
+        ),
+        "expected": 119,
+    },
+    "markdownify": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 83,
+        "docker_prepare": [
+            "python -m pip install --no-cache-dir beautifulsoup4 six",
+        ],
+    },
+    "python-slugify": {
+        "paths": ["test.py"],
+        "pytest": "--continue-on-collection-errors test.py",
+        "expected": 82,
+    },
+    "tqdm": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 141,
+        "prepare": [
+            "mkdir -p /tmp/candidate/tqdm",
+            "echo \"__version__ = '0.0.1'\" > /tmp/candidate/tqdm/version.py",
+        ],
+    },
+    "stamina": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 129,
+    },
+    "rich-click": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 139,
+        "docker_prepare": [
+            "python -m pip install --no-cache-dir 'setuptools>=45' click rich",
+        ],
+    },
+    "box": {
+        "paths": ["test"],
+        "pytest": "--continue-on-collection-errors test",
+        "expected": 147,
+    },
+    "mechanicalsoup": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 127,
+    },
+    "emoji": {
+        "paths": ["tests", "utils/testutils.py"],
+        "pytest": "--continue-on-collection-errors tests utils/testutils.py",
+        "expected": 102,
+    },
+    "pdfplumber-stable": {
+        "image": "pdfplumber-stable",
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 171,
+    },
+    "structlog": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 828,
+        "docker_prepare": ["python -m pip install --no-cache-dir colorama"],
+    },
+    "stable-baselines3": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 798,
+    },
+    "gitingest": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 133,
+        "docker_prepare": [
+            "python -m pip install --no-cache-dir gitpython loguru strenum eval-type-backport",
+        ],
+    },
+    "xlrd": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 84,
+    },
+    "fuzzywuzzy": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 71,
+    },
+    "dbutils": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 140,
+    },
+    "unidecode": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 65,
+    },
+    "unittest-parametrize": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 26,
+    },
+    "markupsafe": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 39,
+    },
+    "pyquery": {
+        "paths": ["tests"],
+        "pytest": "--continue-on-collection-errors tests",
+        "expected": 74,
+        "docker_prepare": ["python -m pip install --no-cache-dir cssselect"],
+    },
 }
 
 GRADE_PY = r"""from __future__ import annotations
@@ -208,13 +545,14 @@ if __name__ == "__main__":
 
 
 def dockerfile(task: str, config: dict[str, object]) -> str:
+    image = str(config.get("image", task))
     save_paths = "\n".join(
         f"RUN mkdir -p /tests/fixture/$(dirname {path}) "
         f"&& cp -a /workspace/{path} /tests/fixture/{path}"
         for path in config["paths"]
     )
     prepare = "\n".join(f"RUN {command}" for command in config.get("docker_prepare", []))
-    return f"""FROM {REGISTRY}/{task}@sha256:{IMAGE_DIGESTS[task]}
+    return f"""FROM {REGISTRY}/{image}@sha256:{IMAGE_DIGESTS[task]}
 
 RUN python -c "import site; open('/opt/sitepkg', 'w').write(site.getsitepackages()[0])"
 RUN mkdir -p /tests/fixture

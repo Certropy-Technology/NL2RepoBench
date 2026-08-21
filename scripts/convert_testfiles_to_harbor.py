@@ -62,9 +62,21 @@ def create_catalog_task_toml(
     test_commands: list[str],
     difficulty: str = "medium",
     category: str = "python-library",
+    upstream_url: str | None = None,
+    upstream_revision: str | None = None,
+    source_digest: str | None = None,
+    python_version: str = "3.12",
 ) -> str:
     """Generate the human-facing declarative catalog source."""
     commands = json.dumps(test_commands or ["pytest tests"])
+    if upstream_url and upstream_revision and source_digest:
+        source = f'''status = "known"
+upstream_url = "{upstream_url}"
+revision = "{upstream_revision}"
+license_spdx = "unknown"
+source_digest = "{source_digest}"'''
+    else:
+        source = 'status = "unknown"'
     return f'''schema_version = "1.0"
 task_id = "{task_id}"
 version = "0.1.0"
@@ -77,11 +89,14 @@ tags = ["python", "repository-generation"]
 language = "python"
 
 [source]
-status = "unknown"
+{source}
 
 [environment]
-status = "unknown"
-python_version = "3.12"
+status = "known"
+python_version = "{python_version}"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 network_mode = "public"
 
 [dependencies]
@@ -382,15 +397,23 @@ WORKDIR /workspace
 """
 
 
-def create_solution_sh(task_id: str, upstream_url: str) -> str:
+def create_solution_sh(
+    task_id: str,
+    upstream_url: str,
+    upstream_revision: str | None = None,
+) -> str:
     """生成 Oracle solution"""
+    fetch_revision = upstream_revision or "HEAD"
     return f"""#!/usr/bin/env bash
 set -euo pipefail
 
 echo "=== Oracle: Copying upstream {task_id} source code ==="
 
-# Clone upstream repository
-git clone --depth 1 {upstream_url} /tmp/{task_id}-src
+# Fetch the immutable upstream revision used by this task.
+git init /tmp/{task_id}-src >/dev/null
+git -C /tmp/{task_id}-src remote add origin {upstream_url}
+git -C /tmp/{task_id}-src fetch --depth 1 origin {fetch_revision} >/dev/null
+git -C /tmp/{task_id}-src checkout --detach FETCH_HEAD >/dev/null
 
 # Copy entire source tree to workspace
 cd /tmp/{task_id}-src
@@ -412,6 +435,9 @@ def convert_task(
     source_dir: Path,
     output_dir: Path,
     upstream_url: str | None = None,
+    upstream_revision: str | None = None,
+    source_digest: str | None = None,
+    python_version: str = "3.12",
 ) -> None:
     """转换一个任务"""
     print(f"\n{'=' * 60}")
@@ -451,9 +477,6 @@ def convert_task(
     difficulty = task_difficulty(task_id)
     task_output = output_dir / task_id
     task_output.mkdir(parents=True, exist_ok=True)
-    (task_output / "environment").mkdir(exist_ok=True)
-    (task_output / "solution").mkdir(exist_ok=True)
-    (task_output / "tests").mkdir(exist_ok=True)
 
     # 生成文件
     print("  📝 Generating files...")
@@ -472,6 +495,10 @@ def convert_task(
             expected_total,
             test_commands,
             difficulty=difficulty,
+            upstream_url=upstream_url,
+            upstream_revision=upstream_revision,
+            source_digest=source_digest,
+            python_version=python_version,
         )
     )
     print("    ✓ task.toml")
@@ -487,7 +514,7 @@ def convert_task(
 
     # solution/solve.sh
     if upstream_url:
-        solve_sh = create_solution_sh(task_id, upstream_url)
+        solve_sh = create_solution_sh(task_id, upstream_url, upstream_revision)
         solve_sh_path = harbor_output / "solution" / "solve.sh"
         solve_sh_path.write_text(solve_sh)
         solve_sh_path.chmod(0o755)
@@ -561,6 +588,19 @@ def main():
         "--upstream-url",
         help="Upstream repository URL (for Oracle)",
     )
+    parser.add_argument(
+        "--upstream-revision",
+        help="Immutable upstream commit or tag used by the Oracle",
+    )
+    parser.add_argument(
+        "--source-digest",
+        help="SHA-256 digest of a deterministic source archive",
+    )
+    parser.add_argument(
+        "--python-version",
+        default="3.12",
+        help="Python version used by the frozen legacy image",
+    )
     args = parser.parse_args()
 
     source_dir = Path("test_files") / args.task_id
@@ -570,7 +610,15 @@ def main():
         print(f"❌ Source directory not found: {source_dir}")
         return 1
 
-    convert_task(args.task_id, source_dir, output_dir, args.upstream_url)
+    convert_task(
+        args.task_id,
+        source_dir,
+        output_dir,
+        args.upstream_url,
+        args.upstream_revision,
+        args.source_digest,
+        args.python_version,
+    )
     return 0
 
 

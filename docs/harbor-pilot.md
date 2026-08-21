@@ -61,7 +61,7 @@ project paths are retained.
 Validate catalog sources and the pilot dataset:
 
 ```bash
-for task in aiofiles arguably boltons cerberus decouple ftfy humanize parse six; do
+for task in aiofiles arguably autopep8 boto box bleach cerberus decouple deepdiff docopt-ng asteval emoji freezegun fastapi-users funcy fuzzywuzzy ftfy jsonlines parse pypinyin python-pathspec python-slugify schema six typing_extensions sortedcontainers more-Itertools math-verify mechanicalsoup paillier pdfplumber-stable sqlparse stamina tinydb tqdm rich-click; do
   uv run nl2repo task validate-source catalog/tasks/$task
 done
 uv run nl2repo dataset compile \
@@ -107,7 +107,9 @@ outside the task source.
 
 ## Current Pilot State
 
-Valid Oracle baselines currently include:
+Valid Oracle baselines currently include 37 active tasks in
+`catalog/datasets/nl2repobench-harbor-pilot/dataset.toml`. Representative
+fully gated baselines include:
 
 - `aiofiles`: 1.0 after legacy-image verifier repair;
 - `arguably`: 1.0;
@@ -119,6 +121,16 @@ Valid Oracle baselines currently include:
 - `jsonlines`: 1.0;
 - `freezegun`: 1.0 after accounting for skipped tests;
 - `tinydb`: 1.0.
+- `boto`: 1.0 after freezing the effective 1009-test denominator;
+- `deepdiff`: 1.0 (970 effective tests);
+- `docopt-ng`: 1.0 (614 tests);
+- `math-verify`: 1.0 (192 tests);
+- `mechanicalsoup`: 1.0 (127 effective tests, three independent runs);
+- `paillier`: 1.0 (234 tests);
+- `pypinyin`: 1.0 (964 effective tests, two explicit skipped cases);
+- `sqlparse`: 1.0 (462 effective tests, three independent runs);
+- `typing_extensions`: 1.0 (535 effective tests);
+- `unittest-parametrize`: 1.0 (26 tests).
 
 `boltons`, `humanize`, and `tenacity` remain blocked because their selected
 source revisions do not match the frozen legacy tests. `pytz` remains blocked

@@ -14,7 +14,12 @@ import json
 from pathlib import Path
 
 from harbor.agents.installed import openhands_sdk
-from harbor.agents.installed.base import with_prompt_template
+from harbor.agents.installed.base import (
+    ApiInternalServerError,
+    ApiOverloadedError,
+    ErrorPattern,
+    with_prompt_template,
+)
 from harbor.agents.installed.openhands_sdk import OpenHandsSDK
 from harbor.environments.base import BaseEnvironment
 from harbor.models.agent.context import AgentContext
@@ -38,7 +43,40 @@ runpy.run_path("/installed-agent/run_agent.py", run_name="__main__")
 
 
 class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor integration
-    """OpenHands SDK adapter that avoids a giant exec argument."""
+    """OpenHands SDK adapter that avoids a giant exec argument.
+
+    Extends the stock error taxonomy so gateway/proxy failures from the
+    OpenAI-compatible relay classify as retryable infrastructure errors
+    instead of the generic ``NonZeroAgentExitCodeError`` (which Harbor must
+    treat as a model failure).
+    """
+
+    ERROR_PATTERNS = [
+        *OpenHandsSDK.ERROR_PATTERNS,
+        ErrorPattern(
+            r"upstream request failed", ApiInternalServerError
+        ),
+        ErrorPattern(r"BadGatewayError|badgateway", ApiInternalServerError),
+        ErrorPattern(r"\"type\":\s*\"upstream_error\"", ApiOverloadedError),
+        # Anthropic transport-level disconnect: relay/proxy kills the stream
+        # before any response; must retry as infrastructure, not model failure.
+        ErrorPattern(
+            r"Server disconnected without sending a response",
+            ApiInternalServerError,
+        ),
+        ErrorPattern(
+            r"InternalServerError.*AnthropicException",
+            ApiInternalServerError,
+        ),
+        # LiteLLM sometimes wraps a completed/transport-broken relay response
+        # as a generic APIError or exposes the TLS EOF directly.  These are
+        # retryable gateway failures, not evidence that the candidate failed.
+        ErrorPattern(
+            r"APIError.*OpenAIException|OpenAIException.*UNEXPECTED_EOF",
+            ApiInternalServerError,
+        ),
+        ErrorPattern(r"UNEXPECTED_EOF_WHILE_READING", ApiInternalServerError),
+    ]
 
     @override
     @with_prompt_template
@@ -76,6 +114,16 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
             env["LLM_TEMPERATURE"] = str(self._temperature)
         if self._reasoning_effort is not None:
             env["LLM_REASONING_EFFORT"] = str(self._reasoning_effort)
+        # LLM-level retry/timeout knobs forwarded to the SDK runner.
+        for name in (
+            "LLM_NUM_RETRIES",
+            "LLM_RETRY_MIN_WAIT",
+            "LLM_RETRY_MAX_WAIT",
+            "LLM_TIMEOUT",
+        ):
+            value = self._get_env(name)
+            if value is not None:
+                env[name] = value
 
         # Keep the same MCP serialization contract as Harbor's bundled adapter.
         if self.mcp_servers:
@@ -116,6 +164,16 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
             + """    reasoning_effort = os.environ.get("LLM_REASONING_EFFORT")
     if reasoning_effort:
         llm_kwargs["reasoning_effort"] = reasoning_effort
+    retry_env_map = {
+        "LLM_NUM_RETRIES": ("num_retries", int),
+        "LLM_RETRY_MIN_WAIT": ("retry_min_wait", int),
+        "LLM_RETRY_MAX_WAIT": ("retry_max_wait", int),
+        "LLM_TIMEOUT": ("timeout", int),
+    }
+    for env_name, (kwarg, cast) in retry_env_map.items():
+        env_value = os.environ.get(env_name)
+        if env_value:
+            llm_kwargs[kwarg] = cast(env_value)
 """
         )
         if marker not in runner_source:

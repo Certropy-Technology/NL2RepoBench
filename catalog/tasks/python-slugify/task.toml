@@ -1,0 +1,61 @@
+schema_version = "1.0"
+task_id = "python-slugify"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/un33k/python-slugify"
+revision = "f85f9488520148d5f6899b5639199882b605e30a"
+license_spdx = "unknown"
+source_digest = "sha256:3a8e03ed6ac706a4528e50f213ebdd3d87036fe044c7da67fa1c558e4c6d4cdd"
+
+[environment]
+status = "known"
+python_version = "3.10"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "public"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 82
+expected_total_source = "unknown"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors test.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the python-slugify package from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."

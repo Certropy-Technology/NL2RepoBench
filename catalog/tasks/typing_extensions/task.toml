@@ -1,0 +1,61 @@
+schema_version = "1.0"
+task_id = "typing_extensions"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python/typing_extensions"
+revision = "42027aba3558c9d9133a90bca17f6fecaecc48d8"
+license_spdx = "unknown"
+source_digest = "sha256:34f3316e0c4d93aefe33a10ceb5ba35487f14b9e7751e00aed323b7c6856264f"
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "public"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 535
+expected_total_source = "unknown"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors src"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the typing_extensions package from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."

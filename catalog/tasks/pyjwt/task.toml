@@ -1,0 +1,59 @@
+schema_version = "1.0"
+task_id = "pyjwt"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jpadilla/pyjwt"
+revision = "3ebbb22f30f2b1b41727b269a08b427e9a85d6bb"
+license_spdx = "unknown"
+source_digest = "sha256:53c9b0c7157ce8c35797571c3b9a9883e2a148de0c42ea903ff2bf3b2df01edb"
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 299
+expected_total_source = "legacy-file"
+commands = ['pip install -e .', 'pytest --continue-on-collection-errors tests']
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the PyJWT library for JSON Web Token encoding/decoding from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "discovered"
+reason = "Imported legacy task; source and collection locks require freeze."

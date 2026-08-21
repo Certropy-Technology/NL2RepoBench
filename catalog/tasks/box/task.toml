@@ -1,0 +1,61 @@
+schema_version = "1.0"
+task_id = "box"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/cdgriffith/Box"
+revision = "b071107161228f32762ece8f6039b6906c2570db"
+license_spdx = "unknown"
+source_digest = "sha256:15dd87e04bb40e4107af2f570a69fa934bbcb767e91973e30ec48ec410e97c09"
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "public"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 147
+expected_total_source = "unknown"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors test"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the box package from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."

@@ -1,0 +1,249 @@
+# NL2RepoBench Quickstart
+
+Run the Harbor-based benchmark from a fresh clone.
+
+NL2RepoBench measures whether an LLM agent can build a complete, installable
+Python repository from a natural-language specification and an **empty**
+`/workspace`. Scoring is a fixed-test pass rate produced by a separate Harbor
+verifier that the agent never sees.
+
+## 1. Prerequisites
+
+| Requirement | Why | Check |
+| --- | --- | --- |
+| Docker (daemon running) | Harbor builds agent + verifier containers | `docker info` |
+| [uv](https://docs.astral.sh/uv/) | Python runner and lockfile execution | `uv --version` |
+| Git | Oracle clones frozen upstream revisions | `git --version` |
+| ~40 GB free disk | Legacy verifier images are large | `df -h .` |
+| Network access to `ghcr.io` | Pulls frozen verifier images | `docker pull hello-world` |
+
+An LLM API key is only needed for model runs (section 5). The Oracle gate in
+section 4 needs no API key.
+
+## 2. Clone And Install
+
+```bash
+git clone https://github.com/Certropy-Technology/NL2RepoBench
+cd NL2RepoBench
+
+# Authoring/validation CLI
+uv sync
+
+# Harbor runner (pinned via harbor-runner/uv.lock)
+uv sync --project harbor-runner
+```
+
+Verify both toolchains:
+
+```bash
+uv run nl2repo --help
+uv run --frozen --project harbor-runner harbor --version
+```
+
+## 3. What Is In The Repository
+
+```text
+catalog/
+├── datasets/nl2repobench-harbor-pilot/
+│   ├── dataset.toml     # the 37 active task IDs (authoritative)
+│   └── blocked.md       # 13 blocked candidates + why
+└── tasks/<task-id>/
+    ├── task.toml        # catalog metadata: upstream revision, digest, denominator
+    ├── instruction.md   # the ONLY input the agent sees
+    └── harbor/          # runnable Harbor task
+        ├── task.toml
+        ├── environment/Dockerfile   # agent container
+        ├── solution/solve.sh        # Oracle (clones frozen upstream)
+        └── tests/                   # hidden verifier + frozen tests
+```
+
+List the active tasks:
+
+```bash
+uv run python -c "
+import tomllib
+d = tomllib.load(open('catalog/datasets/nl2repobench-harbor-pilot/dataset.toml','rb'))
+print(len(d['tasks']), 'active tasks')
+print('\n'.join(sorted(d['tasks'])))
+"
+```
+
+Validate the catalog before trusting anything:
+
+```bash
+uv run nl2repo dataset compile \
+  catalog/datasets/nl2repobench-harbor-pilot/dataset.toml \
+  --output build/catalog/nl2repobench-harbor-pilot
+```
+
+Expected: `"task_count": 37` and a dataset digest.
+
+## 4. Run The Oracle Gate (no API key)
+
+The Oracle installs the frozen upstream source and must score exactly `1.0`.
+Run this first — it proves your Docker environment is healthy before you spend
+model budget.
+
+```bash
+cd harbor-runner
+uv run --frozen harbor run \
+  -p ../catalog/tasks/ftfy/harbor \
+  -a oracle \
+  --jobs-dir ../.nl2repo/runs/oracle/ftfy
+cd ..
+```
+
+Read the result:
+
+```bash
+find .nl2repo/runs/oracle/ftfy -name grading.json | tail -1 | xargs cat
+```
+
+Expected:
+
+```json
+{
+  "reward": 1.0,
+  "valid": true,
+  "passed": 336,
+  "expected": 336,
+  "reason": null
+}
+```
+
+`ftfy` takes about one minute after the image is cached. If `valid` is `false`,
+fix the environment before continuing; a broken Oracle invalidates every model
+score for that task.
+
+## 5. Run A Model
+
+Only tasks with a valid `1.0` Oracle should be scored. The runner script wraps
+Harbor with the file-backed OpenHands SDK adapter (required: large instructions
+exceed the host `ARG_MAX` if passed on the command line).
+
+```bash
+TASK_ID=ftfy \
+MODEL=openai/gpt-5.6-sol \
+LLM_BASE_URL=https://your-endpoint/v1 \
+LLM_API_KEY="$YOUR_KEY" \
+TIMEOUT_SECONDS=3600 \
+REASONING_EFFORT=max \
+RUN_ROOT=.nl2repo/runs/model \
+scripts/run_harbor_model.sh
+```
+
+Key environment variables:
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `TASK_ID` | required | task under `catalog/tasks/` |
+| `MODEL` | required | LiteLLM model id, e.g. `openai/gpt-5.6-sol` |
+| `LLM_BASE_URL` | required | OpenAI-compatible endpoint |
+| `LLM_API_KEY` | required | provider key (never commit it) |
+| `TIMEOUT_SECONDS` | `3600` | outer wall clock per trial |
+| `REASONING_EFFORT` | `max` | forwarded to the SDK |
+| `MAX_RETRIES` | `2` | Harbor retries, **infrastructure errors only** |
+| `RETRY_INFRA` | `1` | classify gateway 5xx/rate limit as retryable |
+
+Model failures are terminal by design. Only classified infrastructure errors
+(rate limit, gateway 5xx, overload, mid-stream disconnect) are retried, so a
+weak model is never silently rescued by a retry.
+
+## 6. Run Many Tasks
+
+One serial worker per model, with a `flock` guard so the same model never runs
+the same task twice:
+
+```bash
+TASKS='ftfy,parse,jsonlines,six' \
+MODEL=openai/gpt-5.6-sol \
+LLM_BASE_URL=https://your-endpoint/v1 \
+LLM_API_KEY="$YOUR_KEY" \
+RUN_ROOT=.nl2repo/runs/my-batch \
+RUN_PREFIX=gpt56 \
+scripts/run_model_queue.sh
+```
+
+Progress is appended to `$RUN_ROOT/queue.log`. To evaluate two models at once,
+start two queues with **different** `RUN_ROOT` values; each stays serial, so
+peak Docker load is two agent containers.
+
+## 7. Read The Scores
+
+```bash
+uv run python - <<'PY'
+from pathlib import Path
+import json
+
+root = Path('.nl2repo/runs/my-batch')
+latest = {}
+for p in root.rglob('grading.json'):
+    task = next((x for x in p.parts if x.startswith(('gpt56-', 'fable-'))), None)
+    if task and (task not in latest or p.stat().st_mtime > latest[task].stat().st_mtime):
+        latest[task] = p
+
+rewards = []
+for task, p in sorted(latest.items()):
+    d = json.loads(p.read_text())
+    flag = 'OK ' if d['valid'] else 'INVALID'
+    print(f"{flag} {task:28} {d['reward']:.4f}  {d['passed']}/{d['expected']}  {d['reason'] or ''}")
+    if d['valid']:
+        rewards.append(d['reward'])
+
+if rewards:
+    print(f"\nmacro-average over {len(rewards)} valid tasks: {sum(rewards)/len(rewards):.4f}")
+PY
+```
+
+Scoring contract:
+
+```text
+task_score    = clamp(passed / frozen_total, 0, 1)
+dataset_score = mean(task_score for every VALID task)
+```
+
+Always use the **macro average** across tasks. Never sum all passed tests and
+divide by all tests — that would weight large suites more heavily.
+
+`valid: false` means the run is not a model score. Common reasons:
+
+| `reason` | Meaning | Action |
+| --- | --- | --- |
+| `collection-mismatch` | collected − skipped ≠ frozen denominator | task/env problem, do not report as model score |
+| `junit-missing` | pytest never produced results | check install/verifier logs |
+| `installation-failed` | candidate package would not install | model failure evidence, but verify env first |
+| `pytest-abnormal-exit` | verifier crashed | infrastructure |
+
+## 8. Housekeeping
+
+Run outputs go to `.nl2repo/runs/` and are gitignored — never write them inside
+`catalog/tasks/`.
+
+If a run is interrupted, remove orphaned containers (this only touches Harbor
+containers with no live host process):
+
+```bash
+docker ps --filter "name=harbor__" --format '{{.ID}} {{.Names}}'
+docker rm -f $(docker ps -q --filter "name=harbor__")   # only when no run is active
+```
+
+## 9. Troubleshooting
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `Argument list too long` | instruction passed via argv | use `scripts/run_harbor_model.sh` (file-backed adapter) |
+| Oracle `valid: false` | env/denominator drift | check `pytest-stdout.txt` in the run dir; do not lower the denominator to force green |
+| `VerifierTimeoutError` | suite slower than `verifier.timeout_sec` | raise it in that task's `harbor/task.toml` |
+| 404 from provider | `/v1` duplicated in base URL | LiteLLM appends the path; check `LLM_BASE_URL` |
+| `no channel found` | relay outage | infrastructure, retry later; not a model score |
+
+## 10. Current Dataset State
+
+- 37 active tasks, each with a `1.0` Oracle baseline
+- 13 blocked candidates documented in
+  `catalog/datasets/nl2repobench-harbor-pilot/blocked.md`
+- Task sizes range from 26 to 1009 frozen tests
+
+Blocked candidates stay in the catalog for repair and audit but are excluded
+from scoring. Environment, verifier and infrastructure failures must never be
+reported as model results.
