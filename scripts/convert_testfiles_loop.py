@@ -17,6 +17,7 @@ import subprocess
 import tempfile
 import tomllib
 from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -287,6 +288,78 @@ def command_reopen(args: argparse.Namespace) -> int:
     return 0
 
 
+def parse_manifest_descriptor(data: str) -> tuple[str, str]:
+    parsed = json.loads(data)
+    descriptor = parsed.get("Descriptor")
+    if not isinstance(descriptor, dict):
+        raise ValueError("registry response is missing Descriptor")
+    digest = descriptor.get("digest")
+    platform = descriptor.get("platform")
+    if not isinstance(digest, str) or not digest.startswith("sha256:"):
+        raise ValueError("registry response has no sha256 manifest digest")
+    if not isinstance(platform, dict):
+        raise ValueError("registry response is missing platform")
+    os_name = platform.get("os")
+    architecture = platform.get("architecture")
+    if not isinstance(os_name, str) or not isinstance(architecture, str):
+        raise ValueError("registry response has an invalid platform")
+    return digest, f"{os_name}/{architecture}"
+
+
+def probe_image(task_id: str, registry: str) -> dict[str, object]:
+    tagged_ref = f"{registry.rstrip('/')}/{task_id}:1.0"
+    completed = subprocess.run(
+        ["docker", "manifest", "inspect", "--verbose", tagged_ref],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+    if completed.returncode:
+        return {
+            "task_id": task_id,
+            "status": "error",
+            "tagged_ref": tagged_ref,
+            "error": (completed.stderr or completed.stdout).strip(),
+        }
+    try:
+        digest, platform = parse_manifest_descriptor(completed.stdout)
+    except (json.JSONDecodeError, ValueError) as exc:
+        return {
+            "task_id": task_id,
+            "status": "error",
+            "tagged_ref": tagged_ref,
+            "error": str(exc),
+        }
+    return {
+        "task_id": task_id,
+        "status": "available",
+        "tagged_ref": tagged_ref,
+        "digest": digest,
+        "platform": platform,
+        "immutable_ref": f"{registry.rstrip('/')}/{task_id}@{digest}",
+    }
+
+
+def command_probe_images(args: argparse.Namespace) -> int:
+    with locked_state(args.state) as state:
+        records = sync_state(state, args.legacy_root, args.catalog_root)
+        selected = sorted(args.tasks or records)
+        unknown = sorted(set(selected) - set(records))
+        if unknown:
+            raise ValueError(f"unknown legacy tasks: {', '.join(unknown)}")
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        results = list(pool.map(lambda task_id: probe_image(task_id, args.registry), selected))
+    with locked_state(args.state) as state:
+        records = sync_state(state, args.legacy_root, args.catalog_root)
+        for result in results:
+            record = records[str(result["task_id"])]
+            record["verifier_image"] = result
+            record["updated_at"] = now()
+    print(json.dumps({"images": results}, ensure_ascii=False, indent=2, sort_keys=True))
+    return 1 if any(result["status"] == "error" for result in results) else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parent.parent)
@@ -321,6 +394,15 @@ def build_parser() -> argparse.ArgumentParser:
     reopen.add_argument("task_id")
     reopen.add_argument("--reason", required=True)
     reopen.set_defaults(func=command_reopen)
+
+    probe = commands.add_parser("probe-images")
+    probe.add_argument("--tasks", nargs="*")
+    probe.add_argument("--workers", type=int, default=6)
+    probe.add_argument(
+        "--registry",
+        default="ghcr.io/multimodal-art-projection/nl2repobench",
+    )
+    probe.set_defaults(func=command_probe_images)
     return parser
 
 
@@ -331,6 +413,8 @@ def main() -> int:
         parser.error("--limit must be positive")
     if getattr(args, "lease_seconds", 1) < 1:
         parser.error("--lease-seconds must be positive")
+    if getattr(args, "workers", 1) < 1:
+        parser.error("--workers must be positive")
     for name in ("repo_root", "legacy_root", "catalog_root", "state"):
         value = getattr(args, name)
         if not value.is_absolute():

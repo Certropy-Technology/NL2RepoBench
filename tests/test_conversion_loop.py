@@ -103,3 +103,18 @@ def test_reopen_preserves_blocker_history(tmp_path) -> None:
     record = json.loads(state_path.read_text(encoding="utf-8"))["tasks"]["demo"]
     assert record["status"] == "pending"
     assert record["reopen_history"][0]["previous_reason"] == "registry unavailable"
+
+
+def test_parse_manifest_descriptor_returns_digest_and_platform() -> None:
+    data = json.dumps(
+        {
+            "Descriptor": {
+                "digest": "sha256:" + "a" * 64,
+                "platform": {"os": "linux", "architecture": "amd64"},
+            }
+        }
+    )
+    assert loop.parse_manifest_descriptor(data) == (
+        "sha256:" + "a" * 64,
+        "linux/amd64",
+    )

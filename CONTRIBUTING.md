@@ -167,6 +167,9 @@ blocked 说明必须写在 `blocked.md`，否则 `dataset compile` 会失败。
 # 初始化/查看全量状态（幂等）
 python scripts/convert_testfiles_loop.py status
 
+# 不拉镜像层，批量解析 legacy verifier 的 immutable digest/platform
+python scripts/convert_testfiles_loop.py probe-images --workers 6
+
 # 为一个 writer claim 最多 5 道尚未转换的题
 python scripts/convert_testfiles_loop.py claim \
   --owner worker-a --limit 5 --lease-seconds 7200
