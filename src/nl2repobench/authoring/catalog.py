@@ -11,6 +11,7 @@ import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from typing import TYPE_CHECKING, cast
 
 from pydantic import Field, model_validator
 
@@ -33,11 +34,19 @@ from nl2repobench.domain.models import (
 )
 from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.files import (
+    UnsafePathError,
     assert_manifest_writable,
     atomic_write,
     safe_child_directory,
 )
 from nl2repobench.storage.state import StateStore
+
+if TYPE_CHECKING:
+    from nl2repobench.domain.models_v2 import (
+        DeclarativeTaskSourceV2,
+        TaskManifestV2,
+        TaskRefV2,
+    )
 
 
 class CatalogError(ValueError):
@@ -101,6 +110,13 @@ class CompiledTask:
     reference: TaskRef
 
 
+@dataclass(frozen=True)
+class CompiledTaskV2:
+    manifest: TaskManifestV2
+    path: Path
+    reference: TaskRefV2
+
+
 class CatalogCompiler:
     """Validate and deterministically compile declarative catalog sources."""
 
@@ -114,7 +130,7 @@ class CatalogCompiler:
         self.state_store = state_store
 
     @staticmethod
-    def load_task(source_dir: Path) -> DeclarativeTaskSource:
+    def load_task(source_dir: Path) -> DeclarativeTaskSource | DeclarativeTaskSourceV2:
         resolved_source = source_dir.resolve()
         path = source_dir / "task.toml"
         if path.is_symlink():
@@ -123,7 +139,16 @@ class CatalogCompiler:
             raise CatalogError(f"task.toml escapes task source directory: {path}")
         try:
             data = tomllib.loads(path.read_text(encoding="utf-8"))
-            source = DeclarativeTaskSource.model_validate(data)
+            schema_version = data.get("schema_version", "1.0")
+            source: DeclarativeTaskSource | DeclarativeTaskSourceV2
+            if schema_version == "2.0":
+                from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2
+
+                source = DeclarativeTaskSourceV2.model_validate(data)
+            elif schema_version == "1.0":
+                source = DeclarativeTaskSource.model_validate(data)
+            else:
+                raise ValueError(f"unsupported task source schema version: {schema_version}")
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
             raise CatalogError(f"invalid task source {path}: {exc}") from exc
         instruction = source_dir / source.instruction
@@ -143,8 +168,10 @@ class CatalogCompiler:
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
             raise CatalogError(f"invalid dataset source {path}: {exc}") from exc
 
-    def compile_task(self, source_dir: Path, output_root: Path) -> CompiledTask:
+    def compile_task(self, source_dir: Path, output_root: Path) -> CompiledTask | CompiledTaskV2:
         source = self.load_task(source_dir)
+        if source.schema_version == "2.0":
+            return self._compile_task_v2(source_dir, source, output_root)
         instruction_path = source_dir / source.instruction
         instruction_ref = self.artifact_store.put_file(
             instruction_path,
@@ -188,6 +215,75 @@ class CatalogCompiler:
         )
         return CompiledTask(manifest=manifest, path=manifest_path, reference=reference)
 
+    def _compile_task_v2(
+        self,
+        source_dir: Path,
+        source: DeclarativeTaskSourceV2,
+        output_root: Path,
+    ) -> CompiledTaskV2:
+        """Compile a Node source without sending it through v1 state/index code."""
+
+        from nl2repobench.domain.models_v2 import (
+            TaskManifestV2,
+            TaskRefV2,
+        )
+
+        instruction_path = source_dir / source.instruction
+        instruction_ref = self.artifact_store.put_file(
+            instruction_path,
+            media_type="text/markdown; charset=utf-8",
+            visibility=Visibility.PUBLIC,
+        )
+        manifest = TaskManifestV2(
+            task_id=source.task_id,
+            version=source.version,
+            metadata=source.metadata,
+            instruction=instruction_ref,
+            source_lock=source.source,
+            environment_lock=source.environment,
+            dependency_bundle=source.dependencies,
+            tests=source.tests,
+            metric=source.metric,
+            lifecycle=source.lifecycle,
+            harbor=source.harbor,
+            oracle_bundle=source.oracle_bundle,
+        )
+        payload = canonical_json(manifest)
+        output_dir = safe_child_directory(output_root, source.task_id)
+        manifest_path = output_dir / "manifest.json"
+        if manifest_path.exists() or manifest_path.is_symlink():
+            if manifest_path.is_symlink():
+                raise UnsafePathError(f"generated manifest must not be a symlink: {manifest_path}")
+            try:
+                existing = TaskManifestV2.model_validate_json(
+                    canonical_file_payload(manifest_path.read_bytes())
+                )
+            except (OSError, ValueError) as exc:
+                raise UnsafePathError(
+                    f"existing generated manifest is invalid: {manifest_path}"
+                ) from exc
+            if (
+                existing.lifecycle.status.value == "published"
+                and existing.content_digest() != manifest.content_digest()
+            ):
+                raise UnsafePathError(
+                    "published filesystem manifest is immutable: "
+                    f"{manifest.task_id}@{manifest.version}"
+                )
+        manifest_ref = self.artifact_store.put_bytes(
+            payload,
+            media_type="application/json",
+            visibility=Visibility.PUBLIC,
+        )
+        atomic_write(manifest_path, payload + b"\n")
+        reference = TaskRefV2(
+            task_id=manifest.task_id,
+            version=manifest.version,
+            manifest_digest=manifest_ref.digest,
+            manifest_uri=manifest_ref.uri,
+        )
+        return CompiledTaskV2(manifest=manifest, path=manifest_path, reference=reference)
+
     def compile_dataset(self, source_path: Path, output_root: Path) -> DatasetManifest:
         source = self.load_dataset(source_path)
         catalog_root = next(
@@ -204,6 +300,10 @@ class CatalogCompiler:
             if not task_dir.is_relative_to(tasks_root):
                 raise CatalogError(f"task source escapes catalog root: {task_id}")
             task_source = self.load_task(task_dir)
+            if task_source.schema_version == "2.0":
+                raise CatalogError(
+                    "v2 Node tasks require the separate nl2repobench-node-pilot-v1 dataset"
+                )
             if task_source.task_id != task_id:
                 raise CatalogError(
                     f"dataset task ID {task_id} does not match source {task_source.task_id}"
@@ -224,7 +324,7 @@ class CatalogCompiler:
             version=source.version,
             description=source.description,
             metric_contract=source.metric_contract,
-            tasks=tuple(task.reference for task in compiled),
+            tasks=tuple(cast(TaskRef, task.reference) for task in compiled),
             source_format="declarative-catalog",
         )
         output_root.mkdir(parents=True, exist_ok=True)

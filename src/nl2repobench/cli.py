@@ -63,19 +63,38 @@ def export_schemas(
         Path,
         typer.Option("--output", help="Directory for generated JSON Schemas."),
     ] = Path("schemas/v1"),
+    version: Annotated[
+        str,
+        typer.Option("--version", help="Schema family to export: 1.0 or 2.0."),
+    ] = "1.0",
 ) -> None:
-    """Export the machine-readable v1 schemas used by CI and other tools."""
+    """Export one immutable schema family without rewriting the other family."""
 
-    models: dict[str, type[BaseModel]] = {
-        "task-manifest.schema.json": TaskManifest,
-        "dataset-manifest.schema.json": DatasetManifest,
-        "metadata-gap-report.schema.json": MetadataGapReport,
-        "declarative-task-source.schema.json": DeclarativeTaskSource,
-        "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
-        "collection-report.schema.json": CollectionReport,
-        "grading-result.schema.json": GradingResult,
-        "harbor-toolchain-lock.schema.json": HarborToolchainLock,
-    }
+    if version == "1.0":
+        models: dict[str, type[BaseModel]] = {
+            "task-manifest.schema.json": TaskManifest,
+            "dataset-manifest.schema.json": DatasetManifest,
+            "metadata-gap-report.schema.json": MetadataGapReport,
+            "declarative-task-source.schema.json": DeclarativeTaskSource,
+            "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
+            "collection-report.schema.json": CollectionReport,
+            "grading-result.schema.json": GradingResult,
+            "harbor-toolchain-lock.schema.json": HarborToolchainLock,
+        }
+    elif version == "2.0":
+        from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2, TaskManifestV2
+        from nl2repobench.harbor.models_v2 import NodeHarborToolchainLockV2
+        from nl2repobench.verification.node_models import NodeGradingResultV2, NodeTestReportV2
+
+        models = {
+            "task-manifest.schema.json": TaskManifestV2,
+            "declarative-task-source.schema.json": DeclarativeTaskSourceV2,
+            "test-report.schema.json": NodeTestReportV2,
+            "grading-result.schema.json": NodeGradingResultV2,
+            "harbor-toolchain-lock.schema.json": NodeHarborToolchainLockV2,
+        }
+    else:
+        raise typer.BadParameter("version must be 1.0 or 2.0")
     output.mkdir(parents=True, exist_ok=True)
     paths: list[str] = []
     for filename, model in models.items():
@@ -86,7 +105,7 @@ def export_schemas(
             encoding="utf-8",
         )
         paths.append(str(path))
-    _json_print({"schema_version": "1.0", "files": paths})
+    _json_print({"schema_version": version, "files": paths})
 
 
 @app.command()
@@ -146,11 +165,22 @@ def compile_harbor_task(
         allow_private=allow_private,
     )
     try:
-        task_root = HarborCompiler(
-            toolchain,
-            artifact_resolver=resolver,
-        ).compile_task(source, output_root, allow_incomplete=allow_incomplete)
-    except (HarborCompileError, OSError, ValueError) as exc:
+        parsed_source = CatalogCompiler.load_task(source)
+        if parsed_source.schema_version == "2.0":
+            from nl2repobench.harbor.node_compiler import (
+                NodeHarborCompiler,
+            )
+
+            task_root = NodeHarborCompiler(
+                toolchain,
+                artifact_resolver=resolver,
+            ).compile_task(source, output_root, allow_incomplete=allow_incomplete)
+        else:
+            task_root = HarborCompiler(
+                toolchain,
+                artifact_resolver=resolver,
+            ).compile_task(source, output_root, allow_incomplete=allow_incomplete)
+    except (HarborCompileError, CatalogError, OSError, ValueError) as exc:
         typer.echo(f"Harbor compile failed: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     _json_print(

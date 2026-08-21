@@ -1,0 +1,151 @@
+{
+  "$defs": {
+    "NodeCollectionErrorV2": {
+      "additionalProperties": false,
+      "description": "A trusted runner collection failure that invalidates the result.",
+      "properties": {
+        "message": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "test_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Test Id"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "title": "NodeCollectionErrorV2",
+      "type": "object",
+      "x-nl2repobench-model": "NodeCollectionErrorV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "NodeTestCaseV2": {
+      "additionalProperties": false,
+      "description": "One frozen leaf test result; aggregate reporter fields are ignored.",
+      "properties": {
+        "details": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Details"
+        },
+        "duration_ms": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "number"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "error",
+            "skipped",
+            "todo"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "test_id": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Test Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "test_id",
+        "status"
+      ],
+      "title": "NodeTestCaseV2",
+      "type": "object",
+      "x-nl2repobench-model": "NodeTestCaseV2",
+      "x-nl2repobench-runtime-validation": true
+    }
+  },
+  "additionalProperties": false,
+  "description": "Verifier-owned JSON report for a ``node:test`` run.",
+  "properties": {
+    "collected": {
+      "minimum": 0,
+      "title": "Collected",
+      "type": "integer"
+    },
+    "collection_errors": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/NodeCollectionErrorV2"
+      },
+      "title": "Collection Errors",
+      "type": "array"
+    },
+    "framework": {
+      "const": "node:test",
+      "default": "node:test",
+      "title": "Framework",
+      "type": "string"
+    },
+    "report_format": {
+      "const": "node-test-json-v1",
+      "default": "node-test-json-v1",
+      "title": "Report Format",
+      "type": "string"
+    },
+    "runner_exit_code": {
+      "title": "Runner Exit Code",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tests": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/NodeTestCaseV2"
+      },
+      "title": "Tests",
+      "type": "array"
+    }
+  },
+  "required": [
+    "collected",
+    "runner_exit_code"
+  ],
+  "title": "NodeTestReportV2",
+  "type": "object",
+  "x-nl2repobench-model": "NodeTestReportV2",
+  "x-nl2repobench-runtime-validation": true
+}

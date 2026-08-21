@@ -1,0 +1,188 @@
+{
+  "$defs": {
+    "HarborVersionLock": {
+      "additionalProperties": false,
+      "properties": {
+        "lock_file": {
+          "title": "Lock File",
+          "type": "string"
+        },
+        "lock_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Lock Sha256",
+          "type": "string"
+        },
+        "runner": {
+          "title": "Runner",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_schema": {
+          "title": "Task Schema",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "task_schema",
+        "runner",
+        "lock_file",
+        "lock_sha256"
+      ],
+      "title": "HarborVersionLock",
+      "type": "object",
+      "x-nl2repobench-model": "HarborVersionLock",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "NodeImageLockV2": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_base": {
+          "title": "Agent Base",
+          "type": "string"
+        },
+        "platform": {
+          "const": "linux/amd64",
+          "default": "linux/amd64",
+          "title": "Platform",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "development-only",
+          "enum": [
+            "locked",
+            "development-only"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "verifier_base": {
+          "title": "Verifier Base",
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_base",
+        "verifier_base"
+      ],
+      "title": "NodeImageLockV2",
+      "type": "object",
+      "x-nl2repobench-model": "NodeImageLockV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "NodeRuntimeLockV2": {
+      "additionalProperties": false,
+      "properties": {
+        "executable": {
+          "default": "/usr/local/bin/node",
+          "title": "Executable",
+          "type": "string"
+        },
+        "libc": {
+          "enum": [
+            "glibc",
+            "musl"
+          ],
+          "title": "Libc",
+          "type": "string"
+        },
+        "npm_executable": {
+          "default": "/usr/local/bin/npm",
+          "title": "Npm Executable",
+          "type": "string"
+        },
+        "npm_version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
+          "title": "Npm Version",
+          "type": "string"
+        },
+        "runtime_version": {
+          "pattern": "^22\\.[0-9]+\\.[0-9]+$",
+          "title": "Runtime Version",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "runtime_version",
+        "npm_version",
+        "libc"
+      ],
+      "title": "NodeRuntimeLockV2",
+      "type": "object",
+      "x-nl2repobench-model": "NodeRuntimeLockV2",
+      "x-nl2repobench-runtime-validation": true
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "harbor": {
+      "$ref": "#/$defs/HarborVersionLock"
+    },
+    "images": {
+      "$ref": "#/$defs/NodeImageLockV2"
+    },
+    "node_report_schema": {
+      "const": "node-test-json-v1",
+      "default": "node-test-json-v1",
+      "title": "Node Report Schema",
+      "type": "string"
+    },
+    "python_grader": {
+      "default": "absent",
+      "enum": [
+        "absent",
+        "locked"
+      ],
+      "title": "Python Grader",
+      "type": "string"
+    },
+    "runtime": {
+      "$ref": "#/$defs/NodeRuntimeLockV2"
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "default": "development-only",
+      "enum": [
+        "locked",
+        "development-only"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "harbor",
+    "images",
+    "runtime"
+  ],
+  "title": "NodeHarborToolchainLockV2",
+  "type": "object",
+  "x-nl2repobench-model": "NodeHarborToolchainLockV2",
+  "x-nl2repobench-runtime-validation": true
+}

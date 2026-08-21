@@ -1,0 +1,943 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "description": "A content-addressed artifact without embedding its bytes.",
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "media_type": {
+          "default": "application/octet-stream",
+          "title": "Media Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "uri": {
+          "title": "Uri",
+          "type": "string"
+        },
+        "visibility": {
+          "$ref": "#/$defs/Visibility",
+          "default": "public"
+        }
+      },
+      "required": [
+        "digest",
+        "size_bytes",
+        "uri"
+      ],
+      "title": "ArtifactRef",
+      "type": "object",
+      "x-nl2repobench-model": "ArtifactRef",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "DependencyBundleV2": {
+      "additionalProperties": false,
+      "description": "Offline dependency closure with an explicit npm consumer contract.",
+      "properties": {
+        "artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "consumer": {
+          "enum": [
+            "candidate-runtime",
+            "verifier-runtime"
+          ],
+          "title": "Consumer",
+          "type": "string"
+        },
+        "ecosystem": {
+          "enum": [
+            "python",
+            "npm"
+          ],
+          "title": "Ecosystem",
+          "type": "string"
+        },
+        "install_mode": {
+          "const": "offline",
+          "default": "offline",
+          "title": "Install Mode",
+          "type": "string"
+        },
+        "lifecycle_scripts": {
+          "const": "ignore-scripts",
+          "default": "ignore-scripts",
+          "title": "Lifecycle Scripts",
+          "type": "string"
+        },
+        "lockfile_name": {
+          "enum": [
+            "requirements.lock.txt",
+            "package-lock.json"
+          ],
+          "title": "Lockfile Name",
+          "type": "string"
+        },
+        "lockfile_version": {
+          "title": "Lockfile Version",
+          "type": "string"
+        },
+        "package_manager": {
+          "enum": [
+            "uv",
+            "pip",
+            "npm"
+          ],
+          "title": "Package Manager",
+          "type": "string"
+        },
+        "package_manager_version": {
+          "title": "Package Manager Version",
+          "type": "string"
+        },
+        "packages": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Packages",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "known",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ecosystem",
+        "consumer",
+        "lockfile_name",
+        "lockfile_version",
+        "package_manager",
+        "package_manager_version"
+      ],
+      "title": "DependencyBundleV2",
+      "type": "object",
+      "x-nl2repobench-model": "DependencyBundleV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "EnvironmentLockV2": {
+      "additionalProperties": false,
+      "description": "Reproducible OS/runtime metadata for a v2 task.",
+      "properties": {
+        "base_image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Image"
+        },
+        "base_image_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Image Digest"
+        },
+        "network_mode": {
+          "anyOf": [
+            {
+              "enum": [
+                "public",
+                "no-network",
+                "allowlist"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Network Mode"
+        },
+        "os_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Os Name"
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RuntimeProfileV2"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "known",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "title": "EnvironmentLockV2",
+      "type": "object",
+      "x-nl2repobench-model": "EnvironmentLockV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "HarborExecutionProfile": {
+      "additionalProperties": false,
+      "description": "Execution settings deterministically projected into Harbor task.toml.",
+      "properties": {
+        "agent_network_mode": {
+          "default": "public",
+          "enum": [
+            "public",
+            "no-network",
+            "allowlist"
+          ],
+          "title": "Agent Network Mode",
+          "type": "string"
+        },
+        "agent_timeout_sec": {
+          "default": 600.0,
+          "exclusiveMinimum": 0,
+          "title": "Agent Timeout Sec",
+          "type": "number"
+        },
+        "candidate_install_timeout_sec": {
+          "default": 90.0,
+          "exclusiveMinimum": 0,
+          "title": "Candidate Install Timeout Sec",
+          "type": "number"
+        },
+        "candidate_total_timeout_sec": {
+          "default": 300.0,
+          "exclusiveMinimum": 0,
+          "title": "Candidate Total Timeout Sec",
+          "type": "number"
+        },
+        "cpus": {
+          "default": 2,
+          "exclusiveMinimum": 0,
+          "title": "Cpus",
+          "type": "integer"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "keywords": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 3,
+          "title": "Keywords",
+          "type": "array"
+        },
+        "memory_mb": {
+          "default": 2048,
+          "minimum": 512,
+          "title": "Memory Mb",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "storage_mb": {
+          "default": 4096,
+          "minimum": 1024,
+          "title": "Storage Mb",
+          "type": "integer"
+        },
+        "verifier_network_mode": {
+          "const": "no-network",
+          "default": "no-network",
+          "title": "Verifier Network Mode",
+          "type": "string"
+        },
+        "verifier_timeout_sec": {
+          "default": 600.0,
+          "exclusiveMinimum": 0,
+          "title": "Verifier Timeout Sec",
+          "type": "number"
+        },
+        "workspace_artifact": {
+          "default": "/workspace",
+          "title": "Workspace Artifact",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "keywords"
+      ],
+      "title": "HarborExecutionProfile",
+      "type": "object",
+      "x-nl2repobench-model": "HarborExecutionProfile",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "NodeMetricContractV2": {
+      "additionalProperties": false,
+      "description": "Fixed-denominator leaf-test score semantics for Node tasks.",
+      "properties": {
+        "collection_mismatch": {
+          "default": "fail",
+          "enum": [
+            "fail",
+            "record-only"
+          ],
+          "title": "Collection Mismatch",
+          "type": "string"
+        },
+        "contract_id": {
+          "const": "node-test-leaf-pass-rate-v1",
+          "default": "node-test-leaf-pass-rate-v1",
+          "title": "Contract Id",
+          "type": "string"
+        },
+        "denominator_statuses": {
+          "default": [
+            "passed",
+            "failed",
+            "error",
+            "skipped",
+            "todo"
+          ],
+          "items": {
+            "enum": [
+              "passed",
+              "failed",
+              "error",
+              "skipped",
+              "todo"
+            ],
+            "type": "string"
+          },
+          "title": "Denominator Statuses",
+          "type": "array"
+        },
+        "formula": {
+          "default": "clamp(passed / frozen_total, 0, 1)",
+          "title": "Formula",
+          "type": "string"
+        },
+        "passed_statuses": {
+          "default": [
+            "passed"
+          ],
+          "items": {
+            "const": "passed",
+            "type": "string"
+          },
+          "title": "Passed Statuses",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "NodeMetricContractV2",
+      "type": "object",
+      "x-nl2repobench-model": "NodeMetricContractV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "ProvenanceStatus": {
+      "enum": [
+        "known",
+        "unknown"
+      ],
+      "title": "ProvenanceStatus",
+      "type": "string"
+    },
+    "RuntimeProfileV2": {
+      "additionalProperties": false,
+      "description": "Exact runtime and package-manager identity for a v2 task.",
+      "properties": {
+        "architecture": {
+          "const": "linux/amd64",
+          "default": "linux/amd64",
+          "title": "Architecture",
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "python",
+            "node"
+          ],
+          "title": "Language",
+          "type": "string"
+        },
+        "libc": {
+          "enum": [
+            "glibc",
+            "musl"
+          ],
+          "title": "Libc",
+          "type": "string"
+        },
+        "package_manager": {
+          "enum": [
+            "uv",
+            "pip",
+            "npm",
+            "none"
+          ],
+          "title": "Package Manager",
+          "type": "string"
+        },
+        "package_manager_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Package Manager Version"
+        },
+        "runtime": {
+          "enum": [
+            "cpython",
+            "node"
+          ],
+          "title": "Runtime",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "language",
+        "runtime",
+        "version",
+        "package_manager",
+        "libc"
+      ],
+      "title": "RuntimeProfileV2",
+      "type": "object",
+      "x-nl2repobench-model": "RuntimeProfileV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "SourceLock": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "known"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "license_spdx": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "revision": {
+                "pattern": "^(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})$",
+                "type": "string"
+              },
+              "source_digest": {
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "upstream_url": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "upstream_url",
+              "revision",
+              "license_spdx",
+              "source_digest"
+            ]
+          }
+        }
+      ],
+      "description": "Frozen upstream provenance, or an explicit unknown legacy record.",
+      "properties": {
+        "license_spdx": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Spdx"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_digest": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Digest"
+        },
+        "status": {
+          "$ref": "#/$defs/ProvenanceStatus",
+          "default": "unknown"
+        },
+        "submodules": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Submodules",
+          "type": "array"
+        },
+        "upstream_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upstream Url"
+        }
+      },
+      "title": "SourceLock",
+      "type": "object",
+      "x-nl2repobench-model": "SourceLock",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "TaskLifecycleRecord": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "blocked",
+                  "excluded"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "published"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval_refs": {
+                "minItems": 1
+              },
+              "evidence": {
+                "minItems": 1
+              },
+              "owner": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "owner",
+              "evidence",
+              "approval_refs"
+            ]
+          }
+        }
+      ],
+      "description": "Auditable task status and evidence references.",
+      "properties": {
+        "approval_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Approval Refs",
+          "type": "array"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/TaskStatus",
+          "default": "discovered"
+        }
+      },
+      "title": "TaskLifecycleRecord",
+      "type": "object",
+      "x-nl2repobench-model": "TaskLifecycleRecord",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "TaskMetadataV2": {
+      "additionalProperties": false,
+      "description": "Node-specific discoverability metadata.",
+      "properties": {
+        "category": {
+          "default": "unknown",
+          "title": "Category",
+          "type": "string"
+        },
+        "difficulty": {
+          "default": "unknown",
+          "enum": [
+            "easy",
+            "medium",
+            "hard",
+            "unknown"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "language": {
+          "const": "node",
+          "default": "node",
+          "title": "Language",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tags": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        }
+      },
+      "title": "TaskMetadataV2",
+      "type": "object",
+      "x-nl2repobench-model": "TaskMetadataV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "TaskStatus": {
+      "enum": [
+        "discovered",
+        "frozen",
+        "inventoried",
+        "specified",
+        "packaged",
+        "oracle-passed",
+        "controls-passed",
+        "reviewed",
+        "piloted",
+        "published",
+        "blocked",
+        "excluded"
+      ],
+      "title": "TaskStatus",
+      "type": "string"
+    },
+    "TestManifestV2": {
+      "additionalProperties": false,
+      "description": "Frozen private ``node:test`` collection and report contract.",
+      "properties": {
+        "commands_artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "expected_total": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Total",
+          "type": "integer"
+        },
+        "expected_total_source": {
+          "const": "frozen-collection",
+          "default": "frozen-collection",
+          "title": "Expected Total Source",
+          "type": "string"
+        },
+        "framework": {
+          "const": "node:test",
+          "default": "node:test",
+          "title": "Framework",
+          "type": "string"
+        },
+        "report_format": {
+          "const": "node-test-json-v1",
+          "default": "node-test-json-v1",
+          "title": "Report Format",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "test_bundle": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "expected_total"
+      ],
+      "title": "TestManifestV2",
+      "type": "object",
+      "x-nl2repobench-model": "TestManifestV2",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "Visibility": {
+      "enum": [
+        "public",
+        "private"
+      ],
+      "title": "Visibility",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Canonical Node task record produced by the additive catalog path.",
+  "properties": {
+    "dependency_bundle": {
+      "$ref": "#/$defs/DependencyBundleV2"
+    },
+    "environment_lock": {
+      "$ref": "#/$defs/EnvironmentLockV2"
+    },
+    "harbor": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HarborExecutionProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "instruction": {
+      "$ref": "#/$defs/ArtifactRef"
+    },
+    "lifecycle": {
+      "$ref": "#/$defs/TaskLifecycleRecord"
+    },
+    "metadata": {
+      "$ref": "#/$defs/TaskMetadataV2"
+    },
+    "metric": {
+      "$ref": "#/$defs/NodeMetricContractV2"
+    },
+    "oracle_bundle": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "const": "2.0",
+      "default": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_lock": {
+      "$ref": "#/$defs/SourceLock"
+    },
+    "task_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "title": "Task Id",
+      "type": "string"
+    },
+    "tests": {
+      "$ref": "#/$defs/TestManifestV2"
+    },
+    "version": {
+      "default": "2.0.0",
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "instruction",
+    "dependency_bundle",
+    "tests"
+  ],
+  "title": "TaskManifestV2",
+  "type": "object",
+  "x-nl2repobench-model": "TaskManifestV2",
+  "x-nl2repobench-runtime-validation": true
+}

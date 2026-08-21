@@ -1,0 +1,24 @@
+schema_version = "2.0"
+status = "development-only"
+python_grader = "absent"
+node_report_schema = "node-test-json-v1"
+
+[harbor]
+version = "0.21.0"
+task_schema = "1.4"
+runner = "uv run --frozen --project harbor-runner harbor"
+lock_file = "harbor-runner/uv.lock"
+lock_sha256 = "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42"
+
+[images]
+agent_base = "node:22.23.1-bookworm-slim"
+verifier_base = "node:22.23.1-bookworm-slim"
+platform = "linux/amd64"
+status = "development-only"
+
+[runtime]
+runtime_version = "22.23.1"
+npm_version = "10.9.8"
+libc = "glibc"
+executable = "/usr/local/bin/node"
+npm_executable = "/usr/local/bin/npm"

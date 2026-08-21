@@ -70,6 +70,10 @@ class HarborCompiler:
                 FileArtifactStore(temporary_root / "artifacts")
             ).compile_task(source_dir, temporary_root / "canonical")
             manifest = compiled.manifest
+            if not isinstance(manifest, TaskManifest):
+                raise HarborCompileError(
+                    "schema_version=2.0 Node tasks require toolchain.node.lock.toml"
+                )
 
         gaps = manifest.publication_gaps()
         if gaps and not allow_incomplete:
