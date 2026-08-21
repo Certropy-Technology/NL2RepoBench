@@ -14,10 +14,6 @@ function run(command, commandArgs, cwd) {
     "--kill-after=5s",
     "90s",
     "/usr/bin/prlimit",
-    // Node 22 cannot initialize V8's CodeRange under a 512 MiB address-space
-    // limit. Keep a bounded limit while leaving enough virtual address space
-    // for the locked 1 GiB verifier container.
-    "--as=805306368",
     "--cpu=90",
     "--nproc=32",
     "--nofile=128",

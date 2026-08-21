@@ -1,4 +1,4 @@
-import { lstatSync, readFileSync, writeFileSync } from "node:fs";
+import { lstatSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const expected = Number(args[args.indexOf("--expected") + 1]);
@@ -13,6 +13,7 @@ const modelReasons = new Set([
   "candidate-call-failed",
 ]);
 function writeResult(result) {
+  mkdirSync(output, { recursive: true, mode: 0o700 });
   writeFileSync(`${output}/reward.json`, `${JSON.stringify({ reward: result.reward, test_pass_rate: result.reward }, null, 2)}\n`, { mode: 0o444 });
   writeFileSync(`${output}/grading.json`, `${JSON.stringify({ schema_version: "2.0", metric_contract: "node-test-leaf-pass-rate-v1", ...result })}\n`, { mode: 0o444 });
 }
@@ -55,4 +56,5 @@ if (report.collection_errors?.length) failure("node-collection-error");
 if (report.collected !== expected) failure("node-collection-mismatch");
 const expectedExit = counts.failed || counts.errors ? 1 : 0;
 if (report.runner_exit_code !== expectedExit) failure("node-report-exit-mismatch");
+counts.collected = report.collected;
 writeResult({ valid: true, reward: Math.max(0, Math.min(counts.passed / expected, 1)), expected_total: expected, counts, runner_exit_code: report.runner_exit_code, report });

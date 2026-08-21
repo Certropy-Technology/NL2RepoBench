@@ -303,7 +303,10 @@ set -uo pipefail
 mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json /logs/verifier/report.json
-rm -rf /tmp/candidate-source /tmp/candidate-site
+rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/npm-cache
+install -d -o candidate -g candidate -m 0700 /tmp/npm-cache
+cp -a /opt/npm-bundle/npm-cache/. /tmp/npm-cache/
+chown -R candidate:candidate /tmp/npm-cache
 
 if ! node /tests/runtime/node/copy_workspace.mjs \\
   --source /workspace \\
@@ -321,7 +324,7 @@ if ! runuser -u candidate -- \\
   /usr/local/bin/node /tests/runtime/node/install_candidate.mjs \\
     --source /tmp/candidate-source \\
     --target /tmp/candidate-site \\
-    --cache /opt/npm-bundle/npm-cache; then
+    --cache /tmp/npm-cache; then
   node /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason candidate-installation-failed \\

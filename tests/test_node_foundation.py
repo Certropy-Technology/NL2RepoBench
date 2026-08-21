@@ -730,3 +730,48 @@ test('fail', () => assert.equal(1, 2));
         for case in json.loads(report.read_text())["tests"]
     }
     assert statuses == {"pass": "passed", "skip": "skipped", "todo": "todo", "fail": "failed"}
+
+
+def test_node_runtime_grader_preserves_collected_count(tmp_path: Path) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not installed")
+    report = tmp_path / "report.json"
+    report.write_text(
+        json.dumps(
+            {
+                "schema_version": "2.0",
+                "framework": "node:test",
+                "report_format": "node-test-json-v1",
+                "collected": 2,
+                "tests": [
+                    {"schema_version": "2.0", "test_id": "a", "status": "passed", "duration_ms": 0},
+                    {"schema_version": "2.0", "test_id": "b", "status": "failed", "duration_ms": 0},
+                ],
+                "collection_errors": [],
+                "runner_exit_code": 1,
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    completed = subprocess.run(
+        [
+            node,
+            str(ROOT / "src/nl2repobench/verification/node/grade-report.mjs"),
+            "--expected",
+            "2",
+            "--report",
+            str(report),
+            "--runner-exit-code",
+            "1",
+            "--output",
+            str(output),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    grading = json.loads((output / "grading.json").read_text())
+    assert grading["counts"]["collected"] == 2

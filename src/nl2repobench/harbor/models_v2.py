@@ -1,7 +1,8 @@
 """Node/npm Harbor toolchain lock records.
 
-This lock is separate from ``toolchain.lock.toml``. The development fixture is
-explicitly unpinned because this checkout has no verified Node image digest.
+This lock is separate from ``toolchain.lock.toml``. The current development
+fixture records a verified Node image digest, but remains development-only until
+its private dependency and production-grader artifacts are locked.
 """
 
 from __future__ import annotations
