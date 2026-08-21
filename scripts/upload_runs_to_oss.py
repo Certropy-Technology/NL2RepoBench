@@ -83,6 +83,17 @@ def task_from_run_root(name: str) -> str:
     return stripped or name
 
 
+def task_from_prefixed_run(part: str, prefix: str) -> str:
+    """Resolve the longest known task prefix before retry/timestamp suffixes."""
+
+    candidate = part[len(prefix) :].removesuffix(".log")
+    matches = [task for task in TASKS if candidate == task or candidate.startswith(f"{task}-")]
+    if matches:
+        return max(matches, key=len)
+    candidate = re.sub(r"-(?:retry-)?\d{8}T\d{6}Z$", "", candidate)
+    return candidate
+
+
 def infer_model(run_root: str, rel_parts: tuple[str, ...]) -> str:
     haystack = "/".join((run_root, *rel_parts)).lower()
     if "fable" in haystack or "claude" in haystack:
@@ -115,7 +126,7 @@ def classify(run_root: Path, path: Path) -> tuple[str, str, str]:
         for prefix, model_name in MODEL_BY_PREFIX.items():
             if part.startswith(prefix):
                 model = model_name
-                task = part[len(prefix) :].removesuffix(".log")
+                task = task_from_prefixed_run(part, prefix)
                 trial_idx = i + 1
                 break
         if task:
