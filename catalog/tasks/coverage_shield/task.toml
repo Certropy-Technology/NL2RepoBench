@@ -1,0 +1,66 @@
+schema_version = "1.0"
+task_id = "coverage_shield"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "developer-tool"
+tags = ["python", "coverage", "cli", "git"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/JosephCrispell/coverage_shield"
+revision = "fd8b4511f6ec1c8a2730b9c82188d16d0d968cd3"
+license_spdx = "GPL-3.0"
+# Deterministic `git archive <revision>` digest used by the repository's
+# source-freeze tooling. The GitHub-generated tar.gz for the same commit was
+# independently observed as sha256:f928adfb67c932a1b39d0071fc05e3437152fde6db54a5178561734a01e5b736.
+source_digest = "sha256:e8cf4d502c1d2b0a0443ecdec1f57d55df5a49fff32052e4dfde0ba0acc3c3f0"
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "linux/amd64"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/coverage_shield"
+base_image_digest = "sha256:78b52f4c9cbf18b368a958cb3b933727c0a30b064b1fa33492e887129565f4c9"
+network_mode = "no-network"
+
+# The immutable verifier image contains the legacy dependency installation.
+# An offline wheelhouse has not been authored yet, so this remains explicit.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["coverage", "pandas", "seaborn", "pytest", "setuptools"]
+
+[tests]
+framework = "pytest"
+expected_total = 11
+expected_total_source = "legacy-file"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the coverage_shield Python coverage-badge tool from an empty workspace."
+keywords = ["python", "coverage", "repository-generation", "cli", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+reason = "Static migration only: the pinned verifier image corroborates 11 cached pytest node IDs, but no fresh collection or Oracle/control run was executed; its legacy direct-import verifier also lacks the Phase 2 candidate subprocess boundary."

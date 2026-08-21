@@ -1,0 +1,70 @@
+schema_version = "1.0"
+task_id = "autorccar"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "robotics-system"
+tags = ["python", "computer-vision", "robotics", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/hamuchiwa/AutoRCCar"
+revision = "c5776aebff517361fb5473c36fd9918ae90a1a0b"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:730b441114359e818cd90349868c1a23550c8afc2a8522aaaba71b5d919fb9d9"
+
+[environment]
+status = "known"
+python_version = "3.11.7"
+os_name = "debian-12"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/autorccar"
+base_image_digest = "sha256:fe7beae3a27817f6140f0129202cbb127cf687a1dd288a72318647edec12a72e"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "numpy",
+  "matplotlib",
+  "jupyter",
+  "scikit-learn",
+  "cython",
+  "pygame",
+  "pyserial",
+  "opencv-python",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 13
+expected_total_source = "legacy-file"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors test"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the AutoRCCar autonomous RC-car computer and sensor system from an empty workspace."
+keywords = ["python", "computer-vision", "robotics", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+reason = "Source repository, commit, BSD-2-Clause license, source archive digest, and verifier image digest are pinned. Publication remains blocked because the checkout lacks install metadata, the image fixture differs from upstream and imports an absent RCTest, the legacy denominator is 13 while the fixture inventory is 22 parametrized items, and offline dependency, Oracle, private test, and frozen collection artifacts are missing."
