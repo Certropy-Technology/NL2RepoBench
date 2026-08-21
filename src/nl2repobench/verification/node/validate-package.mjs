@@ -9,11 +9,14 @@ const listing = spawnSync("/usr/bin/tar", ["-tvzf", archive], {
   maxBuffer: 8 * 1024 * 1024,
 });
 if (listing.error || listing.status !== 0) process.exit(65);
+const seen = new Set();
 for (const line of listing.stdout.split(/\r?\n/)) {
   if (!line) continue;
   const name = line.slice(0, 10);
   const fields = line.trim().split(/\s+/);
   const path = fields.at(-1) ?? "";
+  if (seen.has(path)) process.exit(66);
+  seen.add(path);
   if (!path.startsWith("package/") || path.includes("../") || path.startsWith("/") || name[0] === "l" || name[0] === "h") {
     process.exit(66);
   }
@@ -33,5 +36,10 @@ try {
   process.exit(69);
 }
 if (!packageJson || typeof packageJson !== "object" || Array.isArray(packageJson)) process.exit(70);
-if (packageJson.scripts || packageJson.workspaces || packageJson.gypfile || packageJson.binary) process.exit(71);
+if (
+  Object.hasOwn(packageJson, "scripts")
+  || Object.hasOwn(packageJson, "workspaces")
+  || Object.hasOwn(packageJson, "gypfile")
+  || Object.hasOwn(packageJson, "binary")
+) process.exit(71);
 process.exit(0);
