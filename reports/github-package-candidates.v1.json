@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0",
+  "dataset_target": "next-generation-python-expansion",
+  "generated_at": "2026-08-21",
+  "oracle_min_reward": 0.8,
+  "status": "discovered",
+  "candidates": [
+    {
+      "task_id": "python-constraint",
+      "upstream_url": "https://github.com/python-constraint/python-constraint",
+      "revision": "d91ba03d1fd6acc30d64fd9d513dc0523f697b5b",
+      "license_spdx": "BSD-2-Clause",
+      "license_evidence": "https://github.com/python-constraint/python-constraint/blob/d91ba03d1fd6acc30d64fd9d513dc0523f697b5b/LICENSE",
+      "stars_at_discovery": 518,
+      "last_update_at_discovery": "2026-08-18",
+      "category": "constraint-solving",
+      "difficulty": "medium",
+      "recommendation": "freeze-pilot",
+      "risks": ["solver ordering", "backtracking runtime"]
+    },
+    {
+      "task_id": "parsy",
+      "upstream_url": "https://github.com/python-parsy/parsy",
+      "revision": "03deafa98a17adc27b1f650241701b2d21902b3e",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/python-parsy/parsy/blob/03deafa98a17adc27b1f650241701b2d21902b3e/LICENSE",
+      "stars_at_discovery": 450,
+      "last_update_at_discovery": "2026-06-22",
+      "category": "parser-combinators",
+      "difficulty": "easy",
+      "recommendation": "freeze-pilot",
+      "risks": ["confirm LOC meets selected dataset threshold", "small API surface"]
+    },
+    {
+      "task_id": "docstring-parser",
+      "upstream_url": "https://github.com/rr-/docstring_parser",
+      "revision": "8347d8fb347bd66e4bf5711d3df586357166944a",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/rr-/docstring_parser/blob/8347d8fb347bd66e4bf5711d3df586357166944a/LICENSE.md",
+      "stars_at_discovery": 260,
+      "last_update_at_discovery": "2026-06-30",
+      "category": "text-parsing",
+      "difficulty": "easy",
+      "recommendation": "freeze-pilot",
+      "risks": ["dialect coverage must be specified", "output model traceability"]
+    },
+    {
+      "task_id": "validators",
+      "upstream_url": "https://github.com/python-validators/validators",
+      "revision": "70de324322def13a49a93d222f798ec1ab700885",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/python-validators/validators/blob/70de324322def13a49a93d222f798ec1ab700885/LICENSE",
+      "stars_at_discovery": 1116,
+      "last_update_at_discovery": "2026-03-14",
+      "category": "validation",
+      "difficulty": "easy",
+      "recommendation": "freeze-pilot",
+      "risks": ["README contamination", "IDNA and URL dependency versions"]
+    },
+    {
+      "task_id": "simple-parsing",
+      "upstream_url": "https://github.com/lebrice/SimpleParsing",
+      "revision": "7a706bee8b258b548cb979c7321c1ba0cf8413e6",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/lebrice/SimpleParsing/blob/7a706bee8b258b548cb979c7321c1ba0cf8413e6/LICENSE",
+      "stars_at_discovery": 541,
+      "last_update_at_discovery": "2026-07-27",
+      "category": "typed-cli",
+      "difficulty": "medium",
+      "recommendation": "freeze-pilot",
+      "risks": ["argparse compatibility", "nested dataclass semantics"]
+    },
+    {
+      "task_id": "salib",
+      "upstream_url": "https://github.com/SALib/SALib",
+      "revision": "aa2c5545b3bfd0a982e9fad7625070a8ea340d38",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/SALib/SALib/blob/aa2c5545b3bfd0a982e9fad7625070a8ea340d38/LICENSE.md",
+      "stars_at_discovery": 1004,
+      "last_update_at_discovery": "2026-07-17",
+      "category": "scientific-analysis",
+      "difficulty": "medium",
+      "recommendation": "freeze-pilot",
+      "risks": ["floating-point tolerances", "random seeds", "scientific dependency closure"]
+    },
+    {
+      "task_id": "lark",
+      "upstream_url": "https://github.com/lark-parser/lark",
+      "revision": "9bae96161b45a5bf70011c75b1ef41228d3f4caa",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/lark-parser/lark/blob/9bae96161b45a5bf70011c75b1ef41228d3f4caa/LICENSE",
+      "stars_at_discovery": 5963,
+      "last_update_at_discovery": "2026-08-13",
+      "category": "parsing",
+      "difficulty": "hard",
+      "recommendation": "freeze-pilot",
+      "risks": ["large API inventory", "multiple parser backends", "optional regex dependency"]
+    },
+    {
+      "task_id": "coxeter",
+      "upstream_url": "https://github.com/glotzerlab/coxeter",
+      "revision": "9056679b197f0e835c04dd317cc1049359a0ee7c",
+      "license_spdx": "BSD-3-Clause",
+      "license_evidence": "https://github.com/glotzerlab/coxeter/blob/9056679b197f0e835c04dd317cc1049359a0ee7c/LICENSE",
+      "stars_at_discovery": 25,
+      "last_update_at_discovery": "2026-07-29",
+      "category": "computational-geometry",
+      "difficulty": "hard",
+      "recommendation": "freeze-pilot",
+      "risks": ["floating-point geometry", "degenerate shapes", "SciPy dependency"]
+    }
+  ],
+  "required_next_stage": [
+    "revalidate revision and license bytes",
+    "measure LOC and pytest collection",
+    "freeze dependency closure and Docker image",
+    "run three independent Oracle baselines",
+    "require valid stable collection and reward >= 0.80",
+    "run empty/stub/forgery/offline controls before publication"
+  ]
+}
