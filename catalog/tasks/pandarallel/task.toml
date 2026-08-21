@@ -1,0 +1,72 @@
+schema_version = "1.0"
+task_id = "pandarallel"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "pandas", "dataframe", "multiprocessing", "parallel-computing", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/nalepae/pandarallel"
+revision = "261a652cddb219ac353ff803e81646c08b72fc6f"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:e6248ba2a30d551242e03df5b83d71ff4ff63c4b9ada2ab8c3ba82b051e1b5cd"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.10.18"
+os_name = "debian-trixie"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/pandarallel"
+base_image_digest = "sha256:f25336a4bdcab50fb33ef2cb008c10634915e98e7dcbe167750a5190fc46ed38"
+network_mode = "no-network"
+
+# The immutable verifier image carries the tested pandas/multiprocessing
+# runtime. A standalone hash-locked wheelhouse is not part of this package.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "dill==0.4.0",
+  "numpy==2.2.6",
+  "pandas==2.3.2",
+  "psutil==7.0.0",
+  "pyarrow==21.0.0",
+  "pytest==8.4.1",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 217
+expected_total_source = "legacy-file"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pandarallel pandas parallelization package from an empty workspace."
+keywords = ["python", "pandas", "dataframe", "multiprocessing", "parallel-computing", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "Static provenance and image-backed Harbor assets are complete; runtime Oracle and control gates remain pending."

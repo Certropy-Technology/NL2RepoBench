@@ -1,0 +1,69 @@
+schema_version = "1.0"
+task_id = "pss"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-cli"
+tags = ["python", "cli", "source-search", "filesystem", "regex", "repository-generation", "separate-verifier"]
+language = "python"
+
+# Upstream is public-domain software with an Unlicense-style notice. The
+# bundled psslib/colorama copy has its own BSD license; see provenance.md.
+[source]
+status = "known"
+upstream_url = "https://github.com/eliben/pss"
+revision = "b40cf0b6f1b8f8cb965144317e9ab7902b5fcb0b"
+license_spdx = "Unlicense"
+source_digest = "sha256:2c86bef90a85c8d09fd0a66d64d183f9960bc46f1489fce629303a92b43bee9b"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.10.11"
+os_name = "debian-11"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/pss"
+base_image_digest = "sha256:38e0fcf6fb1a74781d6d57c524c750be9e56f0173193733c4a23cf6e8c8d1459"
+system_packages = ["ca-certificates", "git"]
+build_command = "pip install -e .; pip install colorama pytest; pytest"
+network_mode = "no-network"
+
+# The pinned verifier image supplies the frozen test runtime. A standalone
+# hash-locked wheelhouse is not part of this task-local package.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["colorama==0.4.6", "pytest==8.4.1"]
+
+[tests]
+framework = "pytest"
+expected_total = 46
+expected_total_source = "frozen-collection"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors test"]
+protected_paths = ["test"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the PSS recursive source-code search toolkit and command-line interface from an empty workspace."
+keywords = ["python", "cli", "source-search", "filesystem", "regex", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "The upstream source lock, immutable verifier image, image-pinned test overlay, frozen collection of 46 tests, and task-local Harbor assets are recorded. Oracle, empty/stub/forgery/offline controls, and dependency-bundle publication gates remain pending the parent."
