@@ -1,0 +1,64 @@
+schema_version = "1.0"
+task_id = "parsy"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "parser-combinators"
+tags = ["python", "parser-combinators", "repository-generation", "pytest", "stdlib"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-parsy/parsy"
+revision = "03deafa98a17adc27b1f650241701b2d21902b3e"
+license_spdx = "MIT"
+source_digest = "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b03df6f10f"
+
+# Evidence recorded in audit.md: git archive is an unprefixed tar archive;
+# LICENSE is 1132 bytes with SHA-256 3cd274c6ec7873e4f03693145819ec1fb82768d1386b7c59b4ff194c79853e06.
+# The frozen checkout has 719 source lines and declares zero runtime dependencies.
+[environment]
+status = "unknown"
+python_version = "3.12"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 88
+expected_total_source = "unknown"
+commands = ["python -m pytest --continue-on-collection-errors -q"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the parsy parser-combinator library from an empty workspace."
+keywords = ["python", "parser-combinators", "pytest", "separate-verifier", "no-network"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 30.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+reason = "Source and local collection evidence are recorded, but this lane has no authorized durable private artifact store for the hidden-test, verifier-command, offline-dependency, and Oracle bundles, and no task-specific subprocess scenario adapter for object- and callback-based API tests; Harbor/Docker execution is intentionally deferred."
