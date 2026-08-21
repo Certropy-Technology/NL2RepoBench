@@ -1,0 +1,61 @@
+schema_version = "1.0"
+task_id = "retrying"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "retry", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rholder/retrying"
+revision = "3a435e8ba85d85d7300a3609cb6f3ba8cb4bc170"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:de12f17823ab9b4d10e40e16afa94a77038c25df63b961279085948a3fffd6b3"
+
+[environment]
+status = "known"
+python_version = "3.10.11"
+os_name = "debian-12"
+base_image = "python:3.10.11"
+base_image_digest = "sha256:fc1d7d6e1df26c603b5729e92fff684a56e9d1b8c6db263c6169a1f250e80787"
+network_mode = "public"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["six>=1.7.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors test_retrying.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the retrying package from an empty workspace."
+keywords = ["python", "retry-library", "repository-generation", "nl2repobench", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "oracle-passed"
+reason = "Three independent Harbor Oracle runs: valid=true, collection=23/23, passed=23/23, reward=1.0."
