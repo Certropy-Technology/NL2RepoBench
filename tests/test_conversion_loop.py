@@ -152,6 +152,73 @@ def test_block_command_can_record_integrator_decision(tmp_path) -> None:
     assert record["block_history"][0]["previous_status"] == "pending"
 
 
+def test_block_can_reclaim_expired_writer_lease(tmp_path) -> None:
+    legacy = tmp_path / "test_files"
+    catalog = tmp_path / "catalog/tasks"
+    legacy_task(legacy, "demo")
+    state_path = tmp_path / "state.json"
+    with loop.locked_state(state_path) as state:
+        records = loop.sync_state(state, legacy, catalog)
+        records["demo"].update(
+            {
+                "status": "running",
+                "owner": "dead-worker",
+                "lease_expires_at": "2000-01-01T00:00:00+00:00",
+            }
+        )
+    args = type(
+        "Args",
+        (),
+        {
+            "state": state_path,
+            "legacy_root": legacy,
+            "catalog_root": catalog,
+            "task_id": "demo",
+            "owner": "integrator",
+            "reason": "worker completed without state handoff",
+            "artifact": [],
+        },
+    )()
+
+    assert loop.command_block(args) == 0
+    record = json.loads(state_path.read_text(encoding="utf-8"))["tasks"]["demo"]
+    assert record["status"] == "blocked"
+
+
+def test_block_takeover_records_explicit_integrator_override(tmp_path) -> None:
+    legacy = tmp_path / "test_files"
+    catalog = tmp_path / "catalog/tasks"
+    legacy_task(legacy, "demo")
+    state_path = tmp_path / "state.json"
+    with loop.locked_state(state_path) as state:
+        records = loop.sync_state(state, legacy, catalog)
+        records["demo"].update(
+            {
+                "status": "running",
+                "owner": "finished-worker",
+                "lease_expires_at": "2999-01-01T00:00:00+00:00",
+            }
+        )
+    args = type(
+        "Args",
+        (),
+        {
+            "state": state_path,
+            "legacy_root": legacy,
+            "catalog_root": catalog,
+            "task_id": "demo",
+            "owner": "integrator",
+            "reason": "worker handoff already completed",
+            "artifact": [],
+            "takeover": True,
+        },
+    )()
+
+    assert loop.command_block(args) == 0
+    record = json.loads(state_path.read_text(encoding="utf-8"))["tasks"]["demo"]
+    assert record["takeover_history"][0]["previous_owner"] == "finished-worker"
+
+
 def test_parse_manifest_descriptor_returns_digest_and_platform() -> None:
     data = json.dumps(
         {

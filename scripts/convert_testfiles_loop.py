@@ -289,13 +289,30 @@ def command_reopen(args: argparse.Namespace) -> int:
 
 
 def command_block(args: argparse.Namespace) -> int:
+    takeover = bool(getattr(args, "takeover", False))
     with locked_state(args.state) as state:
         records = sync_state(state, args.legacy_root, args.catalog_root)
         record = records.get(args.task_id)
         if record is None:
             raise ValueError(f"unknown legacy task: {args.task_id}")
-        if record["status"] == "running" and record.get("owner") != args.owner:
+        if (
+            record["status"] == "running"
+            and record.get("owner") != args.owner
+            and not lease_expired(record)
+            and not takeover
+        ):
             raise ValueError(f"{args.task_id} is claimed by another owner")
+        if record["status"] == "running" and record.get("owner") != args.owner and takeover:
+            takeover_history = record.setdefault("takeover_history", [])
+            if not isinstance(takeover_history, list):
+                raise ValueError(f"invalid takeover history: {args.task_id}")
+            takeover_history.append(
+                {
+                    "previous_owner": record.get("owner"),
+                    "taken_over_at": now(),
+                    "owner": args.owner,
+                }
+            )
         history = record.setdefault("block_history", [])
         if not isinstance(history, list):
             raise ValueError(f"invalid block history: {args.task_id}")
@@ -433,6 +450,11 @@ def build_parser() -> argparse.ArgumentParser:
     block.add_argument("--owner", required=True)
     block.add_argument("--reason", required=True)
     block.add_argument("--artifact", action="append", default=[])
+    block.add_argument(
+        "--takeover",
+        action="store_true",
+        help="Integrator-only explicit takeover of a running/orphaned writer lease.",
+    )
     block.set_defaults(func=command_block)
 
     probe = commands.add_parser("probe-images")
