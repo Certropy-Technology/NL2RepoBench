@@ -1,0 +1,72 @@
+schema_version = "1.0"
+task_id = "records"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "sql", "database", "tablib", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/kennethreitz/records"
+revision = "72efce67874d1b40ac2a35542127e8830da49707"
+license_spdx = "ISC"
+source_digest = "sha256:4e0a1b23d7d38f96182d2be29d915fa45165fddd8ec14f193acb5304a57b0e04"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "debian-12"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/records"
+base_image_digest = "sha256:03378b1619c4ddcfebb0f3941e8fd448fe2754cf9489f13594cb0b40551f5a2d"
+network_mode = "no-network"
+
+# The immutable verifier image contains the exact legacy dependency closure.
+# A standalone hash-locked wheelhouse is not part of this task-local package.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "SQLAlchemy==2.0.43",
+  "tablib==3.8.0",
+  "openpyxl==3.1.5",
+  "docopt==0.6.2",
+  "pytest==8.4.1",
+  "psycopg2-binary==2.9.10",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 31
+expected_total_source = "frozen-collection"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the Records human-friendly SQL query and export library from an empty workspace."
+keywords = ["python", "sql", "database", "tablib", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "Immutable verifier image, upstream source lock, license, frozen test collection, and image-backed Harbor assets are recorded; Oracle and controls remain pending parent orchestration."
