@@ -96,14 +96,15 @@ TASK_ID=ftfy \
 MODEL=openai/gpt-5.6-sol \
 LLM_BASE_URL=https://z.open-api.ai/v1 \
 LLM_API_KEY="$GPT_KEY" \
-TIMEOUT_SECONDS=3600 \
+AGENT_TIMEOUT_SECONDS=18000 \
 REASONING_EFFORT=max \
 scripts/run_harbor_model.sh
 ```
 
-The Harbor task agent timeout and the outer command timeout are both one hour
-for the current pilot. The run directory is printed by the script and remains
-outside the task source.
+The runner gives the agent phase five hours through Harbor's native timeout
+multiplier. It does not wrap the complete trial with GNU `timeout`, so image
+build/setup and the separate verifier keep their own task-defined budgets. The
+run directory is printed by the script and remains outside the task source.
 
 ## Current Pilot State
 

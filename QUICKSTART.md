@@ -126,7 +126,7 @@ TASK_ID=ftfy \
 MODEL=openai/gpt-5.6-sol \
 LLM_BASE_URL=https://your-endpoint/v1 \
 LLM_API_KEY="$YOUR_KEY" \
-TIMEOUT_SECONDS=3600 \
+AGENT_TIMEOUT_SECONDS=18000 \
 REASONING_EFFORT=max \
 RUN_ROOT=.nl2repo/runs/model \
 scripts/run_harbor_model.sh
@@ -140,7 +140,7 @@ Key environment variables:
 | `MODEL` | required | LiteLLM model id, e.g. `openai/gpt-5.6-sol` |
 | `LLM_BASE_URL` | required | OpenAI-compatible endpoint |
 | `LLM_API_KEY` | required | provider key (never commit it) |
-| `TIMEOUT_SECONDS` | `3600` | outer wall clock per trial |
+| `AGENT_TIMEOUT_SECONDS` | `18000` | Harbor-native agent phase budget; environment setup and verifier use their own budgets |
 | `REASONING_EFFORT` | `max` | forwarded to the SDK |
 | `MAX_RETRIES` | `2` | Harbor retries, **infrastructure errors only** |
 | `RETRY_INFRA` | `1` | classify gateway 5xx/rate limit as retryable |

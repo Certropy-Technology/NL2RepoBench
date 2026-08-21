@@ -156,6 +156,41 @@ uv run nl2repo dataset compile \
 不要把 blocked 候选放进 `tasks` 数组。`dataset.toml` 的 schema 不接受额外字段，
 blocked 说明必须写在 `blocked.md`，否则 `dataset compile` 会失败。
 
+### 批量转换现有 test_files
+
+`scripts/convert_testfiles_loop.py` 协调 104 道 legacy 题到 Harbor 的迁移。它不猜测
+上游仓库、revision、license 或 verifier image digest；这些事实由每题唯一 writer
+（人工或隔离 subagent）补齐。Loop 负责跳过完整 bundle、发放带 lease 的单题 claim、
+断点恢复，并在标记完成前检查 Harbor 必需文件、TOML、shell 和 catalog source。
+
+```bash
+# 初始化/查看全量状态（幂等）
+python scripts/convert_testfiles_loop.py status
+
+# 为一个 writer claim 最多 5 道尚未转换的题
+python scripts/convert_testfiles_loop.py claim \
+  --owner worker-a --limit 5 --lease-seconds 7200
+
+# 也可以只 claim 指定 pilot
+python scripts/convert_testfiles_loop.py claim \
+  --owner worker-a --limit 1 --tasks icecream
+
+# writer 完成后先验证，再由 integrator 记录终态
+python scripts/convert_testfiles_loop.py validate icecream
+python scripts/convert_testfiles_loop.py record icecream \
+  --owner worker-a --status complete \
+  --artifact catalog/tasks/icecream
+
+# 无法可信转换时保存 blocker，不创建半成品发布项
+python scripts/convert_testfiles_loop.py record icecream \
+  --owner worker-a --status blocked \
+  --reason 'frozen verifier image digest unavailable'
+```
+
+状态默认写入 `.nl2repo/conversion-loop/state.json`，不提交到 Git。不同 task 可以在
+独立 worktree 并行转换；同一 task 只能有一个有效 lease。`catalog/datasets/*` 仍由
+integrator 串行更新，转换 loop 不自动发布题目。
+
 ## 运行 Benchmark
 
 ### 单任务测试
@@ -168,7 +203,7 @@ TASK_ID=ftfy \
 MODEL=openai/gpt-5.6-sol \
 LLM_BASE_URL=https://your-endpoint/v1 \
 LLM_API_KEY="$YOUR_KEY" \
-TIMEOUT_SECONDS=3600 \
+AGENT_TIMEOUT_SECONDS=18000 \
 REASONING_EFFORT=max \
 RUN_ROOT=.nl2repo/runs/test-ftfy \
 scripts/run_harbor_model.sh
@@ -209,7 +244,7 @@ tail -f .nl2repo/runs/batch-gpt/queue.log
 
 | 参数 | 说明 | 推荐值 |
 |---|---|---|
-| `TIMEOUT_SECONDS` | Agent 外层超时（秒） | 3600 |
+| `AGENT_TIMEOUT_SECONDS` | Harbor 原生 Agent phase 超时（秒） | 18000（5 小时） |
 | `REASONING_EFFORT` | 透传给 SDK 的推理强度 | max |
 | `MAX_RETRIES` | Harbor 重试（**仅** infra 错误） | 3 |
 | `LLM_NUM_RETRIES` | SDK 内部 LLM 重试 | 10 |
@@ -389,7 +424,7 @@ ossutil cp -r oss://dingshang-sg/nl2repobench/harbor-tasks/ftfy/ ./ftfy/
 ### 运行 Benchmark
 
 1. **并发上限**：GPT/Claude API 有 rate limit，保守设置 `MAX_ACTIVE=2`。
-2. **超时配置**：agent 3600s，verifier 根据题目调整（`stable-baselines3` 需 1800s）。
+2. **超时配置**：Agent phase 默认 18000s（5 小时），通过 Harbor 原生 timeout multiplier 生效；verifier 保留每题独立预算（`stable-baselines3` 需 1800s）。不要用 GNU `timeout` 包裹完整 Harbor trial。
 3. **错误重试**：`ApiRateLimitError`、`ApiInternalServerError` 会自动重试（最多 10 次），其他错误立即停止。
 4. **密钥轮换**：本地跑完后，轮换用过的 API key（即使 Harbor 脱敏，日志可能有残留）。
 

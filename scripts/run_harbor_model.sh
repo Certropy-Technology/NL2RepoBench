@@ -6,7 +6,7 @@ TASK_ID="${TASK_ID:?set TASK_ID}"
 MODEL="${MODEL:?set MODEL, e.g. openai/gpt-5.6-sol}"
 LLM_BASE_URL="${LLM_BASE_URL:?set LLM_BASE_URL}"
 LLM_API_KEY="${LLM_API_KEY:?set LLM_API_KEY}"
-TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-3600}"
+AGENT_TIMEOUT_SECONDS="${AGENT_TIMEOUT_SECONDS:-18000}"
 REASONING_EFFORT="${REASONING_EFFORT:-max}"
 MAX_RETRIES="${MAX_RETRIES:-2}"
 RETRY_INFRA="${RETRY_INFRA:-1}"
@@ -19,14 +19,33 @@ RUN_ROOT="${RUN_ROOT:-.nl2repo/runs/model}"
 
 task_path="catalog/tasks/${TASK_ID}/harbor"
 job_dir="${RUN_ROOT}/${RUN_ID}"
+task_config="${task_path}/task.toml"
 
 [[ -d "$task_path" ]] || { echo "missing Harbor task: $task_path" >&2; exit 1; }
+[[ -f "$task_config" ]] || { echo "missing Harbor config: $task_config" >&2; exit 1; }
 mkdir -p "$job_dir"
+
+agent_timeout_multiplier="$(
+  python3 - "$task_config" "$AGENT_TIMEOUT_SECONDS" <<'PY'
+import sys
+import tomllib
+from pathlib import Path
+
+task_config = Path(sys.argv[1])
+target_seconds = float(sys.argv[2])
+with task_config.open("rb") as handle:
+    native_seconds = float(tomllib.load(handle)["agent"]["timeout_sec"])
+if target_seconds <= 0 or native_seconds <= 0:
+    raise SystemExit("agent timeout values must be positive")
+print(f"{target_seconds / native_seconds:.12g}")
+PY
+)"
 
 echo "task=$TASK_ID"
 echo "model=$MODEL"
 echo "reasoning_effort=$REASONING_EFFORT"
-echo "timeout_seconds=$TIMEOUT_SECONDS"
+echo "agent_timeout_seconds=$AGENT_TIMEOUT_SECONDS"
+echo "agent_timeout_multiplier=$agent_timeout_multiplier"
 echo "max_retries=$MAX_RETRIES retry_infra=$RETRY_INFRA"
 echo "llm_num_retries=$LLM_NUM_RETRIES llm_timeout=$LLM_TIMEOUT"
 echo "llm_retry_wait=$LLM_RETRY_MIN_WAIT-$LLM_RETRY_MAX_WAIT"
@@ -47,7 +66,7 @@ if [[ "$RETRY_INFRA" == "1" ]]; then
 fi
 
 cd harbor-runner
-exec env PYTHONPATH=../src:${PYTHONPATH:-} timeout "$TIMEOUT_SECONDS" \
+exec env PYTHONPATH=../src:${PYTHONPATH:-} \
   uv run --frozen harbor run \
   -p "../$task_path" \
   -a nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction \
@@ -59,5 +78,6 @@ exec env PYTHONPATH=../src:${PYTHONPATH:-} timeout "$TIMEOUT_SECONDS" \
   --ae "LLM_TIMEOUT=$LLM_TIMEOUT" \
   --ae "LLM_RETRY_MIN_WAIT=$LLM_RETRY_MIN_WAIT" \
   --ae "LLM_RETRY_MAX_WAIT=$LLM_RETRY_MAX_WAIT" \
+  --agent-timeout-multiplier "$agent_timeout_multiplier" \
   "${retry_args[@]}" \
   --jobs-dir "../$job_dir"

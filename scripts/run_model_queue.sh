@@ -33,7 +33,7 @@ for task in "${task_list[@]}"; do
     log "start[$task] $(date -Is)"
     TASK_ID="$task" \
         MODEL="$MODEL" \
-        TIMEOUT_SECONDS="${TIMEOUT_SECONDS:-3600}" \
+        AGENT_TIMEOUT_SECONDS="${AGENT_TIMEOUT_SECONDS:-18000}" \
         REASONING_EFFORT="${REASONING_EFFORT:-max}" \
         MAX_RETRIES="${MAX_RETRIES:-3}" \
         RETRY_INFRA=1 \
