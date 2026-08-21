@@ -1,0 +1,73 @@
+schema_version = "1.0"
+task_id = "graphneuralnetwork"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "machine-learning", "tensorflow", "graph-neural-network", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/shenweichen/GraphNeuralNetwork"
+revision = "ff3ac3838287d28bee6f6ef0302584c4f4858528"
+license_spdx = "MIT"
+source_digest = "sha256:87ed47cd36eb0c977d89a44a9d7b08c12f2c0817362e92401f152c3ed1e71183"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.10.11"
+os_name = "debian-bullseye"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/graphneuralnetwork"
+base_image_digest = "sha256:6388582535fd9c56af5a69eef057a136c3ec4ae54ae26156b6db843286d62152"
+network_mode = "no-network"
+
+# The immutable verifier image contains the native TensorFlow/scientific
+# dependency closure. A standalone wheelhouse is intentionally not published.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "networkx==2.8.8",
+  "numpy==2.1.3",
+  "scikit-learn==1.7.1",
+  "matplotlib==3.10.5",
+  "scipy==1.15.3",
+  "tensorflow==2.19.0",
+  "pytest==8.4.1",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 4
+expected_total_source = "frozen-collection"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the GraphNeuralNetwork TensorFlow graph-learning package from an empty workspace."
+keywords = ["python", "tensorflow", "graph-neural-network", "machine-learning", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 1800.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 900.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 4
+memory_mb = 8192
+storage_mb = 32768
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "Immutable verifier image, upstream source lock, MIT license evidence, normalized frozen collection of four items, and separate image-backed verifier are recorded; Oracle and controls remain pending parent orchestration."

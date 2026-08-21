@@ -1,0 +1,67 @@
+schema_version = "1.0"
+task_id = "autojump"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-cli"
+tags = ["python", "cli", "shell", "filesystem", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/wting/autojump"
+revision = "ee21082751da739c65fe0ec2d02ca95d4266aebc"
+license_spdx = "GPL-3.0-or-later"
+source_digest = "sha256:a91e88d3d72b8abd2328d1f990d6e360d27736b49375e5c1e3fd8db576752cd9"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["ca-certificates", "git"]
+build_command = "apt-get install --no-install-recommends ca-certificates git"
+network_mode = "public"
+
+# The immutable verifier image carries the legacy pytest and mock runtime.
+# A standalone hash-locked wheelhouse is not part of this task-local package.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["pytest==8.4.1", "mock==5.2.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands = ["python install.py", "pytest --continue-on-collection-errors tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the Autojump smart directory navigation utility from an empty workspace."
+keywords = ["python", "cli", "shell", "filesystem", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+reason = "Immutable verifier image, upstream source lock, GPL-3.0-or-later license evidence, frozen collection, and image-backed Harbor assets are recorded; Oracle and controls remain pending parent orchestration."
