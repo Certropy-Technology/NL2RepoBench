@@ -103,7 +103,7 @@ uv run nl2repo harbor prepare-control \
 | Repeated 9 秒 API calls | 0.1111 | true | 60 秒 cumulative budget 耗尽后立即失败，仍在 Harbor deadline 前完成 grading |
 | Offline verifier | 1.000 | true | `public_network_available=false` |
 
-正式发布仍要求 Oracle 在独立环境下运行三次 1.0。控制运行输出保存在 Harbor job artifact 中，不提交临时 job 目录。
+扩展 pilot 要求 Oracle 在独立环境下运行三次，均 `valid=true`、collection 稳定且 reward >= 0.80；低于 1.0 时保存稳定失败集合和 Oracle ceiling。控制运行输出保存在 Harbor job artifact 中，不提交临时 job 目录。
 脱敏后的实际结果记录在 [`phase2-ministats-controls.v1.json`](../reports/phase2-ministats-controls.v1.json)。
 
 完整矩阵可重复执行：

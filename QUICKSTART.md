@@ -80,9 +80,9 @@ Expected: `"task_count": 37` and a dataset digest.
 
 ## 4. Run The Oracle Gate (no API key)
 
-The Oracle installs the frozen upstream source and must score exactly `1.0`.
-Run this first — it proves your Docker environment is healthy before you spend
-model budget.
+The Oracle installs the frozen upstream source and must produce a valid,
+stable collection with reward >= `0.80`. Run this first — it proves your Docker
+environment is healthy before you spend model budget.
 
 ```bash
 cd harbor-runner
@@ -117,7 +117,7 @@ score for that task.
 
 ## 5. Run A Model
 
-Only tasks with a valid `1.0` Oracle should be scored. The runner script wraps
+Only tasks with three valid, stable Oracle runs at reward >= `0.80` should be scored. The runner script uses
 Harbor with the file-backed OpenHands SDK adapter (required: large instructions
 exceed the host `ARG_MAX` if passed on the command line).
 

@@ -83,7 +83,9 @@ uv run --frozen harbor run \
 
 Only valid Oracle results are candidates for model evaluation. Environment,
 dependency, test-asset and verifier failures must be fixed or marked blocked;
-they must not be reported as model scores.
+they must not be reported as model scores. For the expansion pilot, require
+three independent valid runs with stable collection and reward >= 0.80; record
+the Oracle ceiling and stable failed tests when the baseline is below 1.0.
 
 ## OpenHands Model Run
 

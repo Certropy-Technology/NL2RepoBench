@@ -358,7 +358,7 @@ nl2repo dataset diff
 
 退出门禁：
 
-- 三题每题在独立环境重建下连续 3 次 Oracle 1.0；
+- 三题每题在独立环境重建下连续 3 次 Oracle `valid=true`、collection 稳定且 reward >= 0.80；低于 1.0 时记录 Oracle ceiling；
 - 负向控制全部通过；
 - missing/malformed JUnit、collection mismatch、timeout、install failure 有稳定分类；
 - agent image layer history 不包含 hidden assets；

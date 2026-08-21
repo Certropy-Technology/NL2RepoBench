@@ -76,7 +76,7 @@ catalog/tasks/<task>/
 
 ### Oracle 门禁
 
-**Oracle 必须三次独立运行为 1.0**，才能加入 active dataset：
+**Oracle 必须三次独立运行均 `valid=true`、collection 稳定且 reward >= 0.80**，才能加入扩展 pilot dataset：
 
 ```bash
 cd harbor-runner
@@ -426,7 +426,7 @@ ossutil cp -r oss://dingshang-sg/nl2repobench/harbor-tasks/ftfy/ ./ftfy/
 2. **冻结测试分母**：`expected` = collected − skipped，自动计算后固化到 `task.toml`。
 3. **source digest 用 git archive**：`git archive <sha> | sha256sum`，确保可复现。
 4. **规格不能泄漏实现**：公开 `instruction.md` 只写行为契约，不给算法、内部 helper 或测试断言。
-5. **Oracle 三次门禁**：一次 1.0 不够，需要三次独立运行均为 1.0。
+5. **Oracle 三次门禁**：三次独立运行都必须 `valid=true`、collection 与固定分母一致且 reward >= 0.80；低于 1.0 时保存稳定失败集合和 Oracle ceiling。
 
 ### 运行 Benchmark
 
