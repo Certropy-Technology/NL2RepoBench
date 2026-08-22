@@ -1,5 +1,7 @@
 """Small fixture for the static Python inventory."""
 
+import requests  # noqa: F401
+
 __all__ = ["Parser"]
 
 
@@ -16,6 +18,3 @@ def helper(value: str) -> str:
 
 def dynamic(value: str) -> object:
     return eval(value, {})
-
-
-import requests
