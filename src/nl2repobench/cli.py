@@ -25,6 +25,7 @@ from nl2repobench.authoring.catalog import (
     scaffold_task,
     validate_compiled_dataset,
 )
+from nl2repobench.authoring.inventory import InventoryError, scan_python_source, write_inventory
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.models import (
     DatasetManifest,
@@ -51,14 +52,88 @@ task_app = typer.Typer(help="Inspect and import task manifests.", no_args_is_hel
 dataset_app = typer.Typer(help="Validate and inspect dataset manifests.", no_args_is_help=True)
 schema_app = typer.Typer(help="Export versioned JSON Schemas.", no_args_is_help=True)
 harbor_app = typer.Typer(help="Compile canonical tasks into Harbor bundles.", no_args_is_help=True)
+author_app = typer.Typer(help="Run deterministic authoring inventory stages.", no_args_is_help=True)
 app.add_typer(task_app, name="task")
 app.add_typer(dataset_app, name="dataset")
 app.add_typer(schema_app, name="schema")
 app.add_typer(harbor_app, name="harbor")
+app.add_typer(author_app, name="author")
 
 
 def _json_print(value: object) -> None:
     typer.echo(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2))
+
+
+@author_app.command("scan-source")
+def scan_authoring_source(
+    source: Annotated[
+        Path,
+        typer.Argument(help="Candidate source root; candidate code is parsed, never imported."),
+    ],
+    output: Annotated[
+        Path,
+        typer.Option("--output", help="Inventory JSON output path."),
+    ] = Path("authoring/api-inventory.json"),
+    language: Annotated[
+        str,
+        typer.Option("--language", help="Scanner language currently implemented: python."),
+    ] = "python",
+) -> None:
+    """Create a deterministic static API/test inventory for one source root."""
+
+    if language != "python":
+        typer.echo(
+            "no local scanner is registered for this language; use the language adapter tool",
+            err=True,
+        )
+        raise typer.Exit(code=2)
+    try:
+        inventory = scan_python_source(source)
+        write_inventory(inventory, output)
+    except (InventoryError, OSError) as exc:
+        typer.echo(f"source scan failed: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    _json_print(
+        {
+            "stage": "scan-source",
+            "language": inventory.language,
+            "output": str(output),
+            "source_digest": inventory.source_digest,
+            "metrics": inventory.to_dict()["metrics"],
+            "risk_flags": list(inventory.risk_flags),
+        }
+    )
+
+
+@author_app.command("scan-tests")
+def scan_authoring_tests(
+    source: Annotated[
+        Path,
+        typer.Argument(help="Candidate source root containing source and test files."),
+    ],
+    output: Annotated[
+        Path,
+        typer.Option("--output", help="Inventory JSON output path."),
+    ] = Path("authoring/test-inventory.json"),
+) -> None:
+    """Write the static test portion of the source inventory."""
+
+    try:
+        inventory = scan_python_source(source)
+        write_inventory(inventory, output)
+    except (InventoryError, OSError) as exc:
+        typer.echo(f"test scan failed: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    _json_print(
+        {
+            "stage": "scan-tests",
+            "language": inventory.language,
+            "output": str(output),
+            "source_digest": inventory.source_digest,
+            "test_count": inventory.metrics.test_count,
+            "test_files": inventory.metrics.test_files,
+        }
+    )
 
 
 @schema_app.command("export")

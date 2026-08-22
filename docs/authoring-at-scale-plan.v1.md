@@ -1,5 +1,9 @@
 # Python 与 Node/npm 批量出题计划
 
+> **Historical plan — superseded.** 当前批量出题请使用
+> [`authoring-pipeline-ast.zh-CN.md`](authoring-pipeline-ast.zh-CN.md)。本文保留旧批次的
+> 候选、门禁和结果背景，不再定义新的 AST、runtime adapter 或批量调度流程。
+
 本文定义下一阶段更高规模出题的可执行边界。Python 和 Node 是两个独立
 dataset/version；它们共享编排原则，但不共享 schema、grader、依赖闭包或分数。
 

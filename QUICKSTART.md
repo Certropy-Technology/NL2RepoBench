@@ -4,8 +4,10 @@ Run the Harbor-based benchmark from a fresh clone.
 
 For the full operator guide see
 [`docs/benchmark-operations-guide.zh-CN.md`](docs/benchmark-operations-guide.zh-CN.md).
-For high-throughput Python/Node authoring see
-[`docs/authoring-at-scale-plan.v1.md`](docs/authoring-at-scale-plan.v1.md).
+For high-throughput Python/Node authoring see the current
+[`docs/authoring-pipeline-ast.zh-CN.md`](docs/authoring-pipeline-ast.zh-CN.md).
+The older [`docs/authoring-at-scale-plan.v1.md`](docs/authoring-at-scale-plan.v1.md)
+is retained as historical background only.
 For trajectory retention see
 [`docs/trajectory-artifacts.zh-CN.md`](docs/trajectory-artifacts.zh-CN.md).
 

@@ -299,6 +299,10 @@ Oracle 失败时按顺序排查：environment、artifact 路径、安装命令�
 
 ## 5. 大量出题时的流水线
 
+> **当前执行入口已更新。** 本节保留基础质量门禁；批量生产、AST inventory、测试行为图、
+> 分层漏斗和 stage artifact 以 [`authoring-pipeline-ast.zh-CN.md`](authoring-pipeline-ast.zh-CN.md)
+> 为准。下方旧目标 CLI 尚未实现，不能当作已可用命令。
+
 推荐把批量生产拆成可重跑 stage，而不是多人直接编辑 `test_files/`：
 
 ```text
