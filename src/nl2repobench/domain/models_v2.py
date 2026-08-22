@@ -326,13 +326,3 @@ class TaskManifestV2(V2RecordModel):
         if self.metric.contract_id != "node-test-leaf-pass-rate-v1":
             gaps.append("metric.contract_id=node-test-leaf-pass-rate-v1")
         return tuple(gaps)
-
-
-# Short aliases make the v2 records convenient to import while retaining the
-# explicit suffix in canonical class names and schema titles.
-RuntimeProfile = RuntimeProfileV2
-EnvironmentLockNodeV2 = EnvironmentLockV2
-DependencyBundleNodeV2 = DependencyBundleV2
-NodeTestManifestV2 = TestManifestV2
-NodeMetricContract = NodeMetricContractV2
-TaskManifestNodeV2 = TaskManifestV2

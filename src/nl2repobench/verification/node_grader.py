@@ -270,8 +270,3 @@ def write_node_grading_outputs(result: NodeGradingResultV2, output_dir: Path) ->
         encoding="utf-8",
     )
     (output_dir / "grading.json").write_bytes(canonical_json(result) + b"\n")
-
-
-# A concise alias is useful for callers that name the report rather than the
-# framework in their integration code.
-grade_node_report = grade_node_test_report
