@@ -100,16 +100,21 @@ def main() -> int:
     if not 1 <= args.concurrency <= 8:
         raise SystemExit("--concurrency must be between 1 and 8")
 
+    task_names = [item.strip() for item in args.task.split(",") if item.strip()]
+    if not task_names:
+        raise SystemExit("--task must contain at least one task ID")
     for label, value in {
-        "task": args.task,
         "run prefix": args.run_prefix,
         "model ID": args.model_id,
     }.items():
         if not SAFE_NAME.fullmatch(value):
             raise SystemExit(f"unsafe {label}: {value!r}")
-    task_root = ROOT / "catalog/tasks" / args.task / "harbor"
-    if not (task_root / "task.toml").is_file():
-        raise SystemExit(f"missing Harbor task: {task_root}")
+    for task_name in task_names:
+        if not SAFE_NAME.fullmatch(task_name):
+            raise SystemExit(f"unsafe task: {task_name!r}")
+        task_root = ROOT / "catalog/tasks" / task_name / "harbor"
+        if not (task_root / "task.toml").is_file():
+            raise SystemExit(f"missing Harbor task: {task_root}")
     run_root = args.run_root if args.run_root.is_absolute() else ROOT / args.run_root
     lock_root = args.lock_root if args.lock_root.is_absolute() else ROOT / args.lock_root
     if run_root.exists():
@@ -133,7 +138,7 @@ def main() -> int:
     environment = os.environ.copy()
     environment.update(
         {
-            "TASKS": args.task,
+            "TASKS": ",".join(task_names),
             "MODEL": harbor_model,
             "LLM_BASE_URL": base_url,
             "LLM_API_KEY": api_key,
