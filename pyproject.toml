@@ -38,6 +38,12 @@ addopts = "-ra --cov=nl2repobench --cov-report=term-missing:skip-covered --cov-f
 testpaths = ["tests"]
 norecursedirs = ["legacy"]
 
+[tool.coverage.run]
+omit = [
+  "src/nl2repobench/harbor_docker.py",
+  "src/nl2repobench/harbor_openhands.py",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"

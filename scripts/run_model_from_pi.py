@@ -39,6 +39,13 @@ def provider_credentials(models_file: Path, provider: str, model_id: str) -> tup
         raise ValueError("Pi provider requires an HTTPS baseUrl")
     if not isinstance(api_key, str) or not api_key or api_key.startswith("!"):
         raise ValueError("Pi provider requires a literal in-memory credential source")
+    if api_key.startswith("$"):
+        match = re.fullmatch(r"\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?", api_key)
+        if match is None:
+            raise ValueError("Pi apiKey environment reference is malformed")
+        api_key = os.environ.get(match.group(1), "")
+        if not api_key:
+            raise ValueError(f"Pi credential environment variable is empty: {match.group(1)}")
     return base_url, api_key
 
 
@@ -51,6 +58,11 @@ def main() -> int:
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--run-prefix", required=True)
     parser.add_argument("--lock-root", type=Path, required=True)
+    parser.add_argument(
+        "--credential-env",
+        help="Use this already-exported environment variable instead of the Pi literal key.",
+    )
+    parser.add_argument("--base-url", help="Override the provider base URL without storing it.")
     parser.add_argument(
         "--models-file",
         type=Path,
@@ -73,7 +85,20 @@ def main() -> int:
     if run_root.exists():
         raise SystemExit(f"run root already exists: {run_root}")
 
-    base_url, api_key = provider_credentials(args.models_file, args.provider, args.model_id)
+    base_url, configured_key = provider_credentials(
+        args.models_file, args.provider, args.model_id
+    )
+    api_key = configured_key
+    if args.credential_env:
+        if not SAFE_NAME.fullmatch(args.credential_env):
+            raise SystemExit(f"unsafe credential environment name: {args.credential_env!r}")
+        api_key = os.environ.get(args.credential_env, "")
+        if not api_key:
+            raise SystemExit(f"credential environment variable is empty: {args.credential_env}")
+    if args.base_url:
+        if not args.base_url.startswith("https://"):
+            raise SystemExit("--base-url must use HTTPS")
+        base_url = args.base_url
     environment = os.environ.copy()
     environment.update(
         {

@@ -2,6 +2,13 @@
 
 Run the Harbor-based benchmark from a fresh clone.
 
+For the full operator guide see
+[`docs/benchmark-operations-guide.zh-CN.md`](docs/benchmark-operations-guide.zh-CN.md).
+For high-throughput Python/Node authoring see
+[`docs/authoring-at-scale-plan.v1.md`](docs/authoring-at-scale-plan.v1.md).
+For trajectory retention see
+[`docs/trajectory-artifacts.zh-CN.md`](docs/trajectory-artifacts.zh-CN.md).
+
 NL2RepoBench measures whether an LLM agent can build a complete, installable
 Python repository from a natural-language specification and an **empty**
 `/workspace`. Scoring is a fixed-test pass rate produced by a separate Harbor
@@ -44,9 +51,8 @@ uv run --frozen --project harbor-runner harbor --version
 
 ```text
 catalog/
-├── datasets/nl2repobench-harbor-pilot/
-│   ├── dataset.toml     # the 37 active task IDs (authoritative)
-│   └── blocked.md       # 13 blocked candidates + why
+├── datasets/<dataset-id>/
+│   └── dataset.toml     # authoritative task set for that version
 └── tasks/<task-id>/
     ├── task.toml        # catalog metadata: upstream revision, digest, denominator
     ├── instruction.md   # the ONLY input the agent sees
@@ -76,7 +82,8 @@ uv run nl2repo dataset compile \
   --output build/catalog/nl2repobench-harbor-pilot
 ```
 
-Expected: `"task_count": 37` and a dataset digest.
+The current legacy conversion state is separate from older pilot dataset manifests;
+query it with `scripts/convert_testfiles_loop.py status` before reporting counts.
 
 ## 4. Run The Oracle Gate (no API key)
 
@@ -115,22 +122,29 @@ Expected:
 fix the environment before continuing; a broken Oracle invalidates every model
 score for that task.
 
-## 5. Run A Model
+## 5. Run A Model Securely
 
 Only tasks with three valid, stable Oracle runs at reward >= `0.80` should be scored. The runner script uses
 Harbor with the file-backed OpenHands SDK adapter (required: large instructions
 exceed the host `ARG_MAX` if passed on the command line).
 
+Use the Pi-aware wrapper. It reads a mode-600 provider file and keeps the
+credential out of Harbor/Docker argv. A key pasted into chat is not automatically
+imported into the local shell.
+
 ```bash
-TASK_ID=ftfy \
-MODEL=openai/gpt-5.6-sol \
-LLM_BASE_URL=https://your-endpoint/v1 \
-LLM_API_KEY="$YOUR_KEY" \
-AGENT_TIMEOUT_SECONDS=18000 \
-REASONING_EFFORT=max \
-RUN_ROOT=.nl2repo/runs/model \
-scripts/run_harbor_model.sh
+python3 scripts/run_model_from_pi.py \
+  --provider z-open-api-gpt-openai-responses \
+  --model-id gpt-5.6-sol \
+  --harbor-model openai/gpt-5.6-sol \
+  --task ftfy \
+  --run-root "$PWD/.nl2repo/runs/smoke-gpt-$(date -u +%Y%m%dT%H%M%SZ)" \
+  --run-prefix gpt56 \
+  --lock-root "$PWD/.nl2repo/locks/gpt-smoke-$(date -u +%Y%m%dT%H%M%SZ)"
 ```
+
+Never put the credential value in `--ae`, an argument, a file, Git, or an
+uploaded report. Every retry uses a new run root.
 
 Key environment variables:
 
@@ -138,8 +152,8 @@ Key environment variables:
 | --- | --- | --- |
 | `TASK_ID` | required | task under `catalog/tasks/` |
 | `MODEL` | required | LiteLLM model id, e.g. `openai/gpt-5.6-sol` |
-| `LLM_BASE_URL` | required | OpenAI-compatible endpoint |
-| `LLM_API_KEY` | required | provider key (never commit it) |
+| `LLM_BASE_URL` | internal | resolved by the Pi-aware wrapper |
+| `LLM_API_KEY` | internal | held in a short-lived process environment; never put it in argv |
 | `AGENT_TIMEOUT_SECONDS` | `18000` | Harbor-native agent phase budget; environment setup and verifier use their own budgets |
 | `REASONING_EFFORT` | `max` | forwarded to the SDK |
 | `MAX_RETRIES` | `2` | Harbor retries, **infrastructure errors only** |
@@ -152,7 +166,9 @@ weak model is never silently rescued by a retry.
 ## 6. Run Many Tasks
 
 One serial worker per model, with a `flock` guard so the same model never runs
-the same task twice:
+the same task twice. For credential-sensitive runs, prefer one task per
+`run_model_from_pi.py` invocation. The legacy parallel wrappers are not approved
+for secure campaigns.
 
 ```bash
 TASKS='ftfy,parse,jsonlines,six' \
@@ -239,10 +255,12 @@ docker rm -f $(docker ps -q --filter "name=harbor__")   # only when no run is ac
 
 ## 10. Current Dataset State
 
-- 37 active tasks, each with a `1.0` Oracle baseline
-- 13 blocked candidates documented in
-  `catalog/datasets/nl2repobench-harbor-pilot/blocked.md`
-- Task sizes range from 26 to 1009 frozen tests
+- 104 legacy tasks are terminalized in `.nl2repo/conversion-loop/state.json`:
+  70 static complete and 34 evidence-backed blocked.
+- Node/npm tasks use a separate development-only v2 pilot.
+- New Python/npm candidates remain audit/spec records until private artifacts,
+  Oracle and controls are approved.
+- Do not use stale “37 active task” text in older pilot documents as current state.
 
 Blocked candidates stay in the catalog for repair and audit but are excluded
 from scoring. Environment, verifier and infrastructure failures must never be

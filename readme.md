@@ -18,6 +18,9 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 - [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
 - [Harbor Pilot 任务结构与运行指南](docs/harbor-pilot.md)
 - [运行数据 OSS 归档布局](docs/run-artifacts-oss.md)
+- [Benchmark 运行、出题与排障总手册](docs/benchmark-operations-guide.zh-CN.md)
+- [Python/Node 高规模出题计划](docs/authoring-at-scale-plan.v1.md)
+- [Harbor/OpenHands trajectory 产物说明](docs/trajectory-artifacts.zh-CN.md)
 
 ## Modern Core
 

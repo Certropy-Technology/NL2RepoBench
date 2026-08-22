@@ -215,7 +215,7 @@ Oracle 低于 0.80、`valid=false` 或三次结果不稳定时，依次检查 en
     └── <hidden tests>
 ```
 
-`task.toml` 必须填写 task name/version、3 到 8 个 keywords、difficulty/category/tags、metric contract、expected count、agent/verifier timeout、资源、network mode、artifact 和 separate verifier。Oracle、隐藏测试、judge prompt、API key 和 grader dependency 不得进入 agent image。
+`task.toml` 必须填写 task name/version、3 到 8 个 keywords、difficulty/category/tags、metric contract、expected count、agent/verifier timeout、资源、network mode、artifact 和 separate verifier。Oracle、隐藏测试、judge prompt 和 grader dependency 不得进入 agent image。
 
 先检查 CLI 版本。该仓库示例要求 Harbor `0.21.0` 和 schema `1.4`；旧的 `0.15.0` CLI 不兼容。实际命令为：
 
