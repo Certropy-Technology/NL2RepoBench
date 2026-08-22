@@ -1,0 +1,66 @@
+schema_version = "1.0"
+task_id = "simple-parsing"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "typed-cli"
+tags = ["python", "argparse", "dataclasses", "nested-config", "serialization", "pytest"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/lebrice/SimpleParsing"
+revision = "7a706bee8b258b548cb979c7321c1ba0cf8413e6"
+license_spdx = "MIT"
+source_digest = "sha256:ad8a0b99dc079b03ba3091671f451c7c593aff01371a6c7313777fd120445b2f"
+submodules = []
+
+# The source, wheel, and local test environment are revalidated in audit.md.
+# No immutable verifier image or production dependency artifact is claimed yet.
+[environment]
+status = "unknown"
+python_version = "3.12.11"
+os_name = "linux-amd64"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "uv"
+packages = [
+  "docstring-parser==0.16",
+  "typing-extensions==4.12.2",
+  "pyyaml==6.0.2",
+  "tomli==2.2.1",
+  "tomli-w==1.0.0",
+  "pytest==8.3.4",
+  "pytest-benchmark==5.1.0",
+  "pytest-cov==6.0.0",
+  "pytest-regressions==2.7.0",
+  "pytest-xdist==3.6.1",
+  "matplotlib==3.9.4",
+  "numpy==2.0.2",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 1375
+expected_total_source = "unknown"
+commands = ["python -m pytest -q"]
+
+# The collection count is an unverified worker observation: the source uses a
+# native [tool.pytest] table whose pytest 8.3.4 resolution was not preserved.
+# Regenerate exact item/JUnit evidence before using this as a denominator.
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+# xfail/xpass handling is intentionally unresolved while lifecycle=blocked;
+# no production metric may be derived from this provisional contract.
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Source, license, package metadata, and API inventory are revalidated, but the pytest 8.3.4 configuration and 1,375-item observation require an exact replay; xfail/xpass metric semantics, immutable environment, dependency artifacts, separate-verifier adapter, private tests/commands, and Oracle/control evidence are absent."

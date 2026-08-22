@@ -69,11 +69,11 @@ cd harbor-runner
 exec env PYTHONPATH=../src:${PYTHONPATH:-} \
   uv run --frozen harbor run \
   -p "../$task_path" \
+  -e nl2repobench.harbor_docker:StdinSecretDockerEnvironment \
   -a nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction \
   -m "$MODEL" \
   --ak "reasoning_effort=$REASONING_EFFORT" \
   --ae "LLM_BASE_URL=$LLM_BASE_URL" \
-  --ae "LLM_API_KEY=$LLM_API_KEY" \
   --ae "LLM_NUM_RETRIES=$LLM_NUM_RETRIES" \
   --ae "LLM_TIMEOUT=$LLM_TIMEOUT" \
   --ae "LLM_RETRY_MIN_WAIT=$LLM_RETRY_MIN_WAIT" \

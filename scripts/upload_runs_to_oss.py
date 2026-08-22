@@ -17,6 +17,8 @@ Credentials come from the environment and are never written to disk.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import sys
@@ -24,8 +26,10 @@ from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import oss2
+if TYPE_CHECKING:
+    import oss2
 
 ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
 BUCKET = "dingshang-sg"
@@ -87,6 +91,10 @@ def task_from_prefixed_run(part: str, prefix: str) -> str:
     """Resolve the longest known task prefix before retry/timestamp suffixes."""
 
     candidate = part[len(prefix) :].removesuffix(".log")
+    # Older campaign roots used names such as ``gpt56-new6-markupsafe``.
+    # Keep those historical artifacts attributable to the real task while new
+    # runs use the unambiguous ``gpt56-markupsafe`` form.
+    candidate = re.sub(r"^(?:new\d*|resume\d*)-", "", candidate)
     matches = [task for task in TASKS if candidate == task or candidate.startswith(f"{task}-")]
     if matches:
         return max(matches, key=len)
@@ -197,6 +205,13 @@ def iter_run_uploads(runs_dir: Path) -> Iterator[Upload]:
         for path in sorted(run_root.rglob("*")):
             if not path.is_file():
                 continue
+            if path == run_root / "queue.log":
+                yield Upload(
+                    local=path,
+                    key=f"{ROOT}/runs/_queue-logs/{run_root.name}--queue.log",
+                    size=path.stat().st_size,
+                )
+                continue
             model, task, rel = classify(run_root, path)
             key = f"{ROOT}/runs/{model}/{task}/{rel}"
             yield Upload(local=path, key=key, size=path.stat().st_size)
@@ -252,6 +267,21 @@ def run_uploads(bucket, items, workers, overwrite, label) -> Stats:
     return stats
 
 
+def write_manifest(items: list[Upload], destination: Path) -> None:
+    """Write a deterministic local manifest before any remote upload."""
+
+    rows = []
+    for item in sorted(items, key=lambda value: value.key):
+        digest = hashlib.sha256(item.local.read_bytes()).hexdigest()
+        rows.append({"key": item.key, "size": item.size, "sha256": digest})
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(
+        json.dumps({"schema_version": "1.0", "objects": rows}, sort_keys=True, indent=2)
+        + "\n",
+        encoding="utf-8",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--runs-dir", default=".nl2repo/runs", type=Path)
@@ -259,6 +289,11 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=12)
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        help="Write a local key/size/SHA-256 manifest before upload or dry-run output.",
+    )
     parser.add_argument("--skip-tasks", action="store_true")
     parser.add_argument("--skip-runs", action="store_true")
     parser.add_argument("--readme", type=Path)
@@ -270,6 +305,10 @@ def main() -> int:
     if not args.skip_runs and args.runs_dir.is_dir():
         items += list(iter_run_uploads(args.runs_dir))
 
+    if args.manifest:
+        write_manifest(items, args.manifest)
+        print(f"manifest={args.manifest} objects={len(items)}")
+
     if args.dry_run:
         print(f"objects={len(items)} bytes={sum(i.size for i in items) / 1e6:.1f}MB")
         for item in items[:20]:
@@ -277,6 +316,12 @@ def main() -> int:
         if len(items) > 20:
             print(f"  ... {len(items) - 20} more")
         return 0
+
+    try:
+        import oss2
+    except ImportError:
+        print("install the oss2 package before uploading", file=sys.stderr)
+        return 2
 
     key_id = os.environ.get("OSS_ACCESS_KEY_ID")
     key_secret = os.environ.get("OSS_ACCESS_KEY_SECRET")

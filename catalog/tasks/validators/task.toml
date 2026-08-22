@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "validators"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "validation"
+tags = ["python", "validation", "internationalization", "network-identifiers", "repository-generation", "pytest"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-validators/validators"
+revision = "70de324322def13a49a93d222f798ec1ab700885"
+license_spdx = "MIT"
+source_digest = "sha256:0706c0c18ad618adfc253d7e3630a9571018295139443044ec0dfa30e0876dc1"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = ">=3.9"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+    "pytest==8.3.2",
+    "eth-hash[pycryptodome]==0.7.0",
+    "pycryptodome==3.20.0",
+    "setuptools",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 895
+expected_total_source = "unknown"
+commands = ["python -m pytest --continue-on-collection-errors -q"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "The pinned source, MIT license bytes, public behavior specification, local collection shape, and source baselines are audited. Publication is blocked because no authorized private test/verifier command bundle, offline dependency artifact, final environment lock, Oracle bundle, or task-specific subprocess adapter exists for callable and rich-object API behavior; no Harbor assets are created."

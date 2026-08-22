@@ -1,0 +1,65 @@
+schema_version = "1.0"
+task_id = "salib"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "scientific-analysis"
+tags = ["python", "scientific-computing", "sensitivity-analysis", "numpy", "scipy", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/SALib/SALib"
+revision = "aa2c5545b3bfd0a982e9fad7625070a8ea340d38"
+license_spdx = "MIT"
+# Unprefixed `git archive --format=tar HEAD` from the exact checkout; see audit.md.
+source_digest = "sha256:484d5d062d3cedcd0a1ce13d3431e945e12177330badc39517ec0ee2c65337d0"
+
+# This is an audit probe, not a frozen verifier environment. No image digest is
+# asserted because Docker/image construction is intentionally out of scope.
+[environment]
+status = "unknown"
+python_version = "3.13.14"
+os_name = "linux/amd64"
+network_mode = "no-network"
+
+# SALib declares lower bounds and no committed lock or wheelhouse exists at the
+# pinned revision. The list records declared direct/runtime-test requirements,
+# not a resolved offline closure.
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "numpy>=2.0",
+  "scipy>=1.9.3",
+  "matplotlib>=3.5",
+  "pandas>=2.0",
+  "multiprocess",
+  "pathos>=0.3.2",
+  "pytest",
+  "pytest-cov",
+]
+
+[tests]
+framework = "pytest"
+# Observed in a temporary Python 3.13.14 environment; this is not yet the
+# frozen denominator for a production verifier.
+expected_total = 209
+expected_total_source = "unknown"
+commands = ["python -m pytest --continue-on-collection-errors -q tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+# xfail handling still needs an explicit verifier decision; the source suite
+# contains one xfail marker and no final metric artifact has been authored.
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Source and public collection were revalidated, but a hash-locked offline dependency closure and frozen verifier environment are absent; deterministic behavior is not proven because the suite contains unseeded random draws and scientific floating-point assertions, and callable/array/pandas/multiprocessing/CLI coverage requires a task-specific separate-verifier adapter. Do not publish or run Oracle."

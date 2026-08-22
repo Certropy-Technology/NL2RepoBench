@@ -41,6 +41,42 @@ sys.argv = [
 runpy.run_path("/installed-agent/run_agent.py", run_name="__main__")
 """
 
+REDACTING_STREAM = r"""
+    class _RedactingStream:
+        def __init__(self, stream, secret):
+            self._stream = stream
+            self._secret = secret
+
+        def write(self, data):
+            return self._stream.write(data.replace(self._secret, "[REDACTED]"))
+
+        def flush(self):
+            return self._stream.flush()
+
+        def __getattr__(self, name):
+            return getattr(self._stream, name)
+
+    sys.stdout = _RedactingStream(sys.stdout, api_key)
+    sys.stderr = _RedactingStream(sys.stderr, api_key)
+"""
+
+
+def _redact_tree(root: Path, secret: str) -> int:
+    needle = secret.encode("utf-8")
+    replacement = b"[REDACTED]"
+    changed = 0
+    if not needle:
+        return changed
+    for path in root.rglob("*"):
+        if path.is_symlink() or not path.is_file():
+            continue
+        data = path.read_bytes()
+        if needle not in data:
+            continue
+        path.write_bytes(data.replace(needle, replacement))
+        changed += 1
+    return changed
+
 
 class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor integration
     """OpenHands SDK adapter that avoids a giant exec argument.
@@ -90,7 +126,7 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
         if llm_api_key is None:
             raise ValueError("LLM_API_KEY environment variable must be set")
 
-        env: dict[str, str] = {"LLM_API_KEY": llm_api_key}
+        env: dict[str, str] = {}
         base_url = self._get_env("LLM_BASE_URL")
         if base_url is not None:
             env["LLM_BASE_URL"] = base_url
@@ -178,6 +214,29 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
         )
         if marker not in runner_source:
             raise RuntimeError("OpenHands SDK runner changed; reasoning patch is unsafe")
+        secret_marker = """    if not api_key:
+        print("Error: LLM_API_KEY environment variable not set", file=sys.stderr)
+        sys.exit(1)
+"""
+        if secret_marker not in runner_source:
+            raise RuntimeError("OpenHands SDK runner changed; secret redaction patch is unsafe")
+        llm_marker = """    llm = LLM(**llm_kwargs)
+"""
+        if llm_marker not in runner_source:
+            raise RuntimeError("OpenHands SDK runner changed; environment cleanup patch is unsafe")
+        runner_source = runner_source.replace(
+            secret_marker,
+            secret_marker + REDACTING_STREAM,
+            1,
+        ).replace(
+            llm_marker,
+            llm_marker
+            + """    os.environ.pop("LLM_API_KEY", None)
+    api_key = "[REDACTED]"
+    llm_kwargs["api_key"] = "[REDACTED]"
+""",
+            1,
+        )
         sdk_runner_file.write_text(
             runner_source.replace(marker, replacement, 1),
             encoding="utf-8",
@@ -206,4 +265,18 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
             '--trajectory-path="$TRAJECTORY_PATH" '
             "2>&1 | stdbuf -oL tee /logs/agent/openhands_sdk.txt"
         )
-        await self.exec_as_agent(environment, command=command, env=env)
+        secure_exec = getattr(environment, "exec_with_stdin_secret", None)
+        if not callable(secure_exec):
+            raise RuntimeError(
+                "The OpenHands adapter requires an environment with stdin-only secret delivery"
+            )
+        try:
+            result = await secure_exec(
+                command=f"set -o pipefail; {command}",
+                secret_env={"LLM_API_KEY": llm_api_key},
+                env=env,
+            )
+        finally:
+            _redact_tree(self.logs_dir, llm_api_key)
+        if result.return_code != 0:
+            raise self._classify_exec_error(command, result)
