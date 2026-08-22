@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
-def provider_credentials(models_file: Path, provider: str, model_id: str) -> tuple[str, str]:
+def provider_config(models_file: Path, provider: str, model_id: str) -> tuple[str, str, str]:
     mode = stat.S_IMODE(models_file.stat().st_mode)
     if mode & 0o077:
         raise ValueError(f"Pi models file must not be group/world accessible: mode {mode:o}")
@@ -34,7 +34,10 @@ def provider_credentials(models_file: Path, provider: str, model_id: str) -> tup
     if model_id not in model_ids:
         raise ValueError(f"Pi model {model_id!r} is not configured under {provider!r}")
     base_url = record.get("baseUrl")
+    api = record.get("api")
     api_key = record.get("apiKey")
+    if api not in {"anthropic-messages", "openai-completions", "openai-responses"}:
+        raise ValueError(f"unsupported Pi provider API: {api!r}")
     if not isinstance(base_url, str) or not base_url.startswith("https://"):
         raise ValueError("Pi provider requires an HTTPS baseUrl")
     if not isinstance(api_key, str) or not api_key or api_key.startswith("!"):
@@ -46,7 +49,25 @@ def provider_credentials(models_file: Path, provider: str, model_id: str) -> tup
         api_key = os.environ.get(match.group(1), "")
         if not api_key:
             raise ValueError(f"Pi credential environment variable is empty: {match.group(1)}")
+    return api, base_url, api_key
+
+
+def provider_credentials(models_file: Path, provider: str, model_id: str) -> tuple[str, str]:
+    """Return base URL and key while preserving the small test/helper API."""
+
+    _, base_url, api_key = provider_config(models_file, provider, model_id)
     return base_url, api_key
+
+
+def normalize_harbor_model(api: str, harbor_model: str) -> str:
+    """Align LiteLLM's provider prefix with the selected Pi API protocol."""
+
+    if api == "anthropic-messages":
+        if harbor_model.startswith("openai/"):
+            return "anthropic/" + harbor_model.removeprefix("openai/")
+        if not harbor_model.startswith("anthropic/"):
+            return "anthropic/" + harbor_model
+    return harbor_model
 
 
 def main() -> int:
@@ -85,9 +106,10 @@ def main() -> int:
     if run_root.exists():
         raise SystemExit(f"run root already exists: {run_root}")
 
-    base_url, configured_key = provider_credentials(
+    api, base_url, configured_key = provider_config(
         args.models_file, args.provider, args.model_id
     )
+    harbor_model = normalize_harbor_model(api, args.harbor_model)
     api_key = configured_key
     if args.credential_env:
         if not SAFE_NAME.fullmatch(args.credential_env):
@@ -103,7 +125,7 @@ def main() -> int:
     environment.update(
         {
             "TASKS": args.task,
-            "MODEL": args.harbor_model,
+            "MODEL": harbor_model,
             "LLM_BASE_URL": base_url,
             "LLM_API_KEY": api_key,
             "RUN_ROOT": str(run_root),
@@ -118,7 +140,7 @@ def main() -> int:
             "LLM_RETRY_MAX_WAIT": "120",
         }
     )
-    print(f"launch task={args.task} model={args.harbor_model} run_root={run_root}")
+    print(f"launch task={args.task} model={harbor_model} run_root={run_root}")
     completed = subprocess.run(
         [str(ROOT / "scripts/run_model_queue.sh")],
         cwd=ROOT,

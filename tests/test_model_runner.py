@@ -271,9 +271,10 @@ def test_pi_launcher_resolves_only_requested_provider_model(tmp_path: Path) -> N
     models.write_text(
         """{
   "providers": {
-    "relay": {
-      "baseUrl": "https://example.invalid/v1",
-      "apiKey": "sentinel-secret",
+        "relay": {
+          "baseUrl": "https://example.invalid/v1",
+          "api": "openai-responses",
+          "apiKey": "sentinel-secret",
       "models": [{"id": "test-model"}]
     }
   }
@@ -289,3 +290,17 @@ def test_pi_launcher_resolves_only_requested_provider_model(tmp_path: Path) -> N
     assert api_key == "sentinel-secret"
     with __import__("pytest").raises(ValueError, match="not configured"):
         launcher.provider_credentials(models, "relay", "another-model")
+
+
+def test_pi_launcher_aligns_model_prefix_with_provider_api() -> None:
+    launcher = _load_pi_launcher()
+
+    assert launcher.normalize_harbor_model(
+        "anthropic-messages", "openai/claude-fable-5"
+    ) == "anthropic/claude-fable-5"
+    assert launcher.normalize_harbor_model(
+        "anthropic-messages", "claude-fable-5"
+    ) == "anthropic/claude-fable-5"
+    assert launcher.normalize_harbor_model(
+        "openai-responses", "openai/gpt-5.6-sol"
+    ) == "openai/gpt-5.6-sol"
