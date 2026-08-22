@@ -16,27 +16,38 @@ revision = "03deafa98a17adc27b1f650241701b2d21902b3e"
 license_spdx = "MIT"
 source_digest = "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b03df6f10f"
 
-# Evidence recorded in audit.md: git archive is an unprefixed tar archive;
-# LICENSE is 1132 bytes with SHA-256 3cd274c6ec7873e4f03693145819ec1fb82768d1386b7c59b4ff194c79853e06.
-# The frozen checkout has 719 source lines and declares zero runtime dependencies.
+# Evidence in audit.md: this is an unprefixed git archive from the exact
+# revision; LICENSE is 1132 bytes with SHA-256
+# 3cd274c6ec7873e4f03693145819ec1fb82768d1386b7c59b4ff194c79853e06.
 [environment]
+# The source supports Python >=3.9, but no final task-specific interpreter,
+# OS, base-image digest, or image filesystem lock is established in this lane.
 status = "unknown"
-python_version = "3.12"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+python_version = ">=3.9"
+os_name = "unknown"
 network_mode = "no-network"
 
 [dependencies]
+# These are source-declared build/test requirements, not an offline closure.
+# Runtime dependencies remain empty; dependency provenance is still unknown.
 status = "unknown"
 installer = "pip"
-packages = []
+packages = [
+  "setuptools>=61.2",
+  "pytest==9.0.3",
+  "pytest-cov==4.0.0",
+  "coverage==6.3.2",
+]
 
 [tests]
 framework = "pytest"
+# 88 is a repeated source-only observation under CPython 3.12/3.13 and
+# pytest 9.0.3. It is not a final frozen denominator.
 expected_total = 88
 expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q"]
+# Provisional source-probe command only; production command bytes must come
+# from a private allowlisted commands_artifact when this task is reopened.
+commands = ["python -m pytest -p no:cacheprovider --continue-on-collection-errors -q"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -46,6 +57,7 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
+# Development profile only; this descriptor is not a runnable Harbor bundle.
 description = "Build the parsy parser-combinator library from an empty workspace."
 keywords = ["python", "parser-combinators", "pytest", "separate-verifier", "no-network"]
 agent_timeout_sec = 1800.0
@@ -61,4 +73,4 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Source and local collection evidence are recorded, but this lane has no authorized durable private artifact store for the hidden-test, verifier-command, offline-dependency, and Oracle bundles, and no task-specific subprocess scenario adapter for object- and callback-based API tests; Harbor/Docker execution is intentionally deferred."
+reason = "Exact revision, source archive, MIT license evidence, and source-only collection/baseline probes were revalidated, but no final task-specific environment lock, authorized private test bundle, allowlisted command-plan artifact, offline dependency closure, Oracle bundle, or reviewed child-side adapter exists; Harbor/Docker/Oracle execution remains intentionally deferred."

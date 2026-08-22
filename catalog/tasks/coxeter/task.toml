@@ -1,0 +1,69 @@
+schema_version = "1.0"
+task_id = "coxeter"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "computational-geometry"
+tags = ["python", "computational-geometry", "numpy", "scipy", "polyhedra", "floating-point", "property-based-tests", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/glotzerlab/coxeter"
+revision = "9056679b197f0e835c04dd317cc1049359a0ee7c"
+license_spdx = "BSD-3-Clause"
+# Unprefixed `git archive --format=tar HEAD`; repeated bytes match. See audit.md.
+source_digest = "sha256:ffbb73420cc80e12530d37cb2e197d687d432c83a764f2dd3f0d1d7a58c17b12"
+submodules = []
+
+[environment]
+# CI observations exist, but no final image, OS lock, or platform policy is
+# approved for this static pilot.
+status = "unknown"
+python_version = ">=3.9"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# These are the source-declared runtime/build/test requirements and one
+# observed generated closure, not a hash-locked offline bundle.
+status = "unknown"
+installer = "uv"
+packages = [
+  "numpy>=1.19.0",
+  "rowan>=1.2.0",
+  "scipy>1.0.0",
+  "setuptools",
+  "wheel",
+  "docutils",
+  "hypothesis[numpy]",
+  "matplotlib",
+  "miniball",
+  "plato-draw",
+  "pytest",
+  "pytest-cov",
+  "pytest-doctestplus",
+  "pytest-xdist",
+]
+
+[tests]
+framework = "pytest"
+# CPython 3.12/3.13 collect-only probes both found 2,943 nodes for `tests`.
+# This is deliberately provisional; it is not a frozen verifier denominator.
+expected_total = 2943
+expected_total_source = "unknown"
+commands = ["python -m pytest --continue-on-collection-errors -q tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Exact source, archive, root and vendored license evidence, package/API inventory, geometry-test collection, numerical-determinism review, and SciPy dependency observations are recorded. Publication is blocked because no final image or hash-locked offline dependency closure exists, collection contains skipped/xfail and warning-policy decisions, floating-point and randomized geometry behavior is not cross-platform deterministic, packaging needs a license/data review, and no coxeter-specific child-side JSON/state adapter exists for the separate candidate subprocess boundary. No hidden tests, private bytes, Docker, Oracle, secrets, or shared catalog edits are authorized in this static lane."

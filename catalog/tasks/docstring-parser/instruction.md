@@ -48,6 +48,28 @@ from docstring_parser import (
 
 `Style` is a backwards-compatible alias for `DocstringStyle`.
 
+The defining module paths used by the package are public too:
+
+```python
+from docstring_parser.common import (
+    ParseError,
+    Docstring,
+    DocstringMeta,
+    DocstringParam,
+    DocstringRaises,
+    DocstringReturns,
+    DocstringDeprecated,
+    DocstringExample,
+    DocstringStyle,
+    RenderingStyle,
+)
+from docstring_parser.parser import parse, parse_from_object, compose
+from docstring_parser.util import combine_docstrings
+```
+
+`DocstringExample` is only required from `docstring_parser.common`; it need not
+be re-exported at the package root.
+
 ### Enumerations and errors
 
 `DocstringStyle` has members `REST`, `GOOGLE`, `NUMPYDOC`, `EPYDOC`, and
@@ -93,9 +115,7 @@ class Docstring:
     style: DocstringStyle | None
 ```
 
-`DocstringExample` is available from `docstring_parser.common`; it need not be
-re-exported at the package root. The constructors accept the fields used by
-the parser:
+The constructors accept the fields used by the parser:
 
 ```python
 DocstringMeta(args, description)
@@ -187,6 +207,20 @@ Dialect formatting uses these conventions:
   `@raise`, and generic `@name args:` fields. Type fields precede their
   associated parameter or return field.
 
+For each dialect module below, the direct parser and composer signatures are:
+
+```python
+parse(text: str | None) -> Docstring
+compose(
+    docstring: Docstring,
+    rendering_style: RenderingStyle = RenderingStyle.COMPACT,
+    indent: str = "    ",
+) -> str
+```
+
+Unlike the top-level `compose`, a dialect-specific `compose` has no `style`
+argument.
+
 ## ReST parser
 
 The direct module API is `docstring_parser.rest.parse` and
@@ -222,7 +256,15 @@ The direct module API is `docstring_parser.google.parse`,
 
 `SectionType` has `SINGULAR`, `MULTIPLE`, and `SINGULAR_OR_MULTIPLE`.
 `Section(title, key, type)` is tuple-like and exposes those three fields.
-`GoogleParser(sections=None, title_colon=True)` recognizes default headings:
+The stateful parser API is:
+
+```python
+GoogleParser(sections=None, title_colon=True)
+GoogleParser.parse(text: str | None) -> Docstring
+GoogleParser.add_section(section: Section) -> None
+```
+
+It recognizes these default headings:
 
 - `Arguments`, `Args`, `Parameters`, `Params` -> parameters;
 - `Raises`, `Exceptions`, `Except` -> raises;
@@ -232,7 +274,7 @@ The direct module API is `docstring_parser.google.parse`,
 
 With `title_colon=True`, a heading requires its colon; with `False`, a
 heading is recognized without a colon (a colonized spelling is ordinary
-description text). A caller-provided section collection replaces the
+description text). A nonempty caller-provided section collection replaces the
 defaults, while `add_section(section)` adds or replaces one section for
 subsequent parses. Unknown headings remain description text.
 
@@ -240,9 +282,11 @@ Multiple sections use `name: description`. A parameter may be `name (type):
 description`, with a type spanning continuation lines. `, optional` and `?`
 mark optional parameters; a description ending in `. Defaults to VALUE.`
 provides the default. Return and yield entries expose type, description, and
-`is_generator`; raise entries expose exception type and description. Singular
-return, raise, and example sections may omit type/name. Invalid entries raise
-`ParseError`.
+`is_generator`; raise entries expose exception type and description. In a
+return or yield entry, simple PEP 604 unions such as `bytes | memoryview:` and
+`Alpha | Beta | Gamma:` are type declarations (with optional whitespace around
+`|`), not free-form singular descriptions. Singular return, raise, and example
+sections may omit type/name. Invalid entries raise `ParseError`.
 
 ## Numpydoc parser
 
@@ -250,9 +294,17 @@ The direct module API is `docstring_parser.numpydoc.parse`,
 `docstring_parser.numpydoc.compose`, `NumpydocParser`, `Section`, and
 `DEFAULT_SECTIONS`.
 
-`Section(title, key)` declares a section. `NumpydocParser(sections=None)` uses
-default declarations or a caller-provided collection; `add_section(section)`
-adds or replaces a section. Recognize these default heading aliases:
+`Section(title, key)` declares a section. The stateful parser API is:
+
+```python
+NumpydocParser(sections=None)
+NumpydocParser.parse(text: str | None) -> Docstring
+NumpydocParser.add_section(section: Section) -> None
+```
+
+It uses default declarations or a nonempty caller-provided collection;
+`add_section` adds or replaces a section. Recognize these default heading
+aliases:
 
 - `Parameters`, `Params`, `Arguments`, `Args` -> `param`;
 - `Other Parameters`, `Other Params`, `Other Arguments`, `Other Args` ->

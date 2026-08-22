@@ -60,4 +60,4 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Separate-verifier adapter, private test artifact, and offline candidate build dependency closure are not available; do not publish a Harbor bundle."
+reason = "Production compilation fails closed: the offline dependency closure, private test and command artifacts, Oracle bundle, and approved object-aware subprocess adapter are unavailable."
