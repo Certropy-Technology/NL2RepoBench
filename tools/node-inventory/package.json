@@ -1,0 +1,17 @@
+{
+  "name": "@nl2repobench/node-inventory",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static Node and TypeScript API inventory for authoring tooling",
+  "type": "module",
+  "engines": { "node": ">=22.0.0" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "scan:fixture": "node dist/cli.js test/fixture --output /tmp/node-inventory-fixture.json",
+    "test": "npm run build && node dist/self-test.js"
+  },
+  "dependencies": {
+    "@types/node": "22.15.21",
+    "typescript": "5.8.3"
+  }
+}

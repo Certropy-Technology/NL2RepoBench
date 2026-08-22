@@ -182,7 +182,7 @@ def scan_python_source(root: Path) -> ApiInventory:
         language="python",
         source_root=str(resolved_root),
         source_digest=digest,
-        scanner_identity="python-ast-stdlib-1",
+        scanner_identity="python-ast-stdlib",
         symbols=tuple(sorted(symbols, key=_symbol_sort_key)),
         imports=tuple(sorted(imports, key=lambda item: (item.module, item.line, item.imported))),
         tests=tuple(sorted(tests, key=lambda item: (item.module, item.line, item.name))),

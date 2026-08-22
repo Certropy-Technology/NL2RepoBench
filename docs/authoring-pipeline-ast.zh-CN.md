@@ -114,6 +114,22 @@ blind review -> 5–10 task pilot -> publish
 - dynamic `eval/Function/import()`、native addon、postinstall、network/process/fs 风险；
 - build output 是否由 source reproducibly 生成。
 
+当前可用的 Node/TypeScript scanner 位于 `tools/node-inventory/`，使用锁定的 TypeScript
+compiler API，不导入或执行 candidate：
+
+```bash
+cd tools/node-inventory
+npm ci --ignore-scripts --offline
+npm test
+npm run scan:fixture
+node dist/cli.js /path/to/frozen-node-source --output /tmp/api-inventory.json
+```
+
+它与 Python scanner 生成相同的核心字段（symbols/imports/tests/risk flags/metrics/
+completeness），Node 专属的 package exports、workspace、module system 和 lockfile 信息
+放在 details/package 字段。该工具只属于 authoring toolchain，不进入 candidate 或
+verifier image。
+
 ### Scanner 输出
 
 每个语言 scanner 输出同一个 `ApiInventory` 形状，语言专属字段放在 namespaced details：
