@@ -18,20 +18,20 @@ from nl2repobench.observability import (
     MAX_ARTIFACT_REFS,
     MAX_CONTEXT_ITEMS,
     MAX_CONTEXT_STRING_CHARS,
-    ArtifactRefV1,
+    Event,
     EventSink,
-    EventV1,
     FieldRedactor,
     JsonlStderrEventSink,
+    ObservationArtifact,
     Outcome,
-    ResultEnvelopeV1,
+    ResultEnvelope,
     run_process,
 )
 
 FIXED_TIMESTAMP = datetime(2025, 1, 2, 3, 4, 5, 678901, tzinfo=UTC)
 
 
-def _event(**overrides: object) -> EventV1:
+def _event(**overrides: object) -> Event:
     """Build a deterministic event while allowing one test to replace fields."""
 
     values: dict[str, object] = {
@@ -42,13 +42,13 @@ def _event(**overrides: object) -> EventV1:
         "outcome": Outcome.SUCCESS,
     }
     values.update(overrides)
-    return EventV1.model_validate(values)
+    return Event.model_validate(values)
 
 
 def test_event_and_result_envelope_have_deterministic_serialization_shape() -> None:
-    """Injected timestamps make the complete V1 JSON shape reproducible."""
+    """Injected timestamps make the complete JSON shape reproducible."""
 
-    artifact = ArtifactRefV1(
+    artifact = ObservationArtifact(
         name="compiler-log",
         uri="artifact://public/sha256:" + "a" * 64,
         digest="sha256:" + "a" * 64,
@@ -93,7 +93,7 @@ def test_event_and_result_envelope_have_deterministic_serialization_shape() -> N
         "kind": "event",
     }
 
-    envelope = ResultEnvelopeV1(
+    envelope = ResultEnvelope(
         timestamp=FIXED_TIMESTAMP,
         component="compiler",
         operation="compile-task",
@@ -162,7 +162,7 @@ def test_artifact_urls_reject_credentials_queries_and_fragments() -> None:
     )
     for uri in unsafe:
         with pytest.raises(ValidationError, match="artifact URI must not contain"):
-            ArtifactRefV1(name="report", uri=uri)
+            ObservationArtifact(name="report", uri=uri)
 
 
 def test_redactor_sanitizes_url_userinfo_and_secret_query_values() -> None:
@@ -191,7 +191,7 @@ def test_context_artifact_and_redacted_string_bounds() -> None:
     with pytest.raises(ValidationError, match="context mapping exceeds"):
         _event(context={f"key-{index}": index for index in range(MAX_CONTEXT_ITEMS + 1)})
 
-    artifact = ArtifactRefV1(name="log", uri="/logs/run.jsonl")
+    artifact = ObservationArtifact(name="log", uri="/logs/run.jsonl")
     with pytest.raises(ValidationError, match="at most"):
         _event(artifact_refs=(artifact,) * (MAX_ARTIFACT_REFS + 1))
 

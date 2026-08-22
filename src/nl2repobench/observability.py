@@ -1,4 +1,4 @@
-"""Versioned, bounded observability records and process execution helpers.
+"""Bounded observability records and process execution helpers.
 
 This module owns diagnostic events only. It deliberately does not define or
 modify benchmark manifests, task schemas, grading results, or compiler output.
@@ -42,7 +42,7 @@ from pydantic import (
 
 from nl2repobench.domain.models import FailureClass
 
-OBSERVABILITY_SCHEMA_VERSION: Literal["1.0"] = "1.0"
+OBSERVABILITY_SCHEMA: Literal["1.0"] = "1.0"
 REDACTED = "[REDACTED]"
 TRUNCATED = "...[truncated]"
 MAX_IDENTIFIER_CHARS = 128
@@ -181,7 +181,7 @@ class _ObservabilityModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
 
 
-class ArtifactRefV1(_ObservabilityModel):
+class ObservationArtifact(_ObservabilityModel):
     """A bounded diagnostic artifact reference with no inline URL credentials.
 
     Artifact references may point to local paths or stable URIs. URL userinfo,
@@ -190,7 +190,7 @@ class ArtifactRefV1(_ObservabilityModel):
     details in event context and let a sink redact them instead.
     """
 
-    schema_version: Literal["1.0"] = OBSERVABILITY_SCHEMA_VERSION
+    schema_version: Literal["1.0"] = OBSERVABILITY_SCHEMA
     name: Identifier
     uri: ArtifactUri
     digest: Digest | None = None
@@ -217,7 +217,7 @@ class ArtifactRefV1(_ObservabilityModel):
         return value
 
 
-class _ObservationV1(_ObservabilityModel):
+class _Observation(_ObservabilityModel):
     """Common typed metadata for one operation observation.
 
     ``duration_ms`` is an elapsed duration, never a wall-clock subtraction.
@@ -225,7 +225,7 @@ class _ObservationV1(_ObservabilityModel):
     ``run_process`` enforces it with ``time.monotonic_ns``.
     """
 
-    schema_version: Literal["1.0"] = OBSERVABILITY_SCHEMA_VERSION
+    schema_version: Literal["1.0"] = OBSERVABILITY_SCHEMA
     timestamp: datetime = Field(default_factory=_utc_now)
     component: Identifier
     operation: Identifier
@@ -239,7 +239,9 @@ class _ObservationV1(_ObservabilityModel):
     failure_class: FailureClass | None = None
     retryable: bool | None = None
     context: dict[str, JsonValue] = Field(default_factory=dict)
-    artifact_refs: Annotated[tuple[ArtifactRefV1, ...], Field(max_length=MAX_ARTIFACT_REFS)] = ()
+    artifact_refs: Annotated[
+        tuple[ObservationArtifact, ...], Field(max_length=MAX_ARTIFACT_REFS)
+    ] = ()
 
     @field_validator("timestamp")
     @classmethod
@@ -259,13 +261,13 @@ class _ObservationV1(_ObservabilityModel):
         return value
 
 
-class EventV1(_ObservationV1):
-    """A versioned diagnostic event emitted at an operation phase boundary."""
+class Event(_Observation):
+    """A diagnostic event emitted at an operation phase boundary."""
 
     kind: Literal["event"] = "event"
 
 
-class ResultEnvelopeV1(_ObservationV1):
+class ResultEnvelope(_Observation):
     """A bounded terminal operation result for diagnostic transport.
 
     This envelope is observability data, not a benchmark score or verifier
@@ -285,7 +287,7 @@ class ResultEnvelopeV1(_ObservationV1):
         return value
 
 
-class ProcessReportV1(_ObservationV1):
+class ProcessReport(_Observation):
     """A bounded subprocess outcome returned by ``run_process``.
 
     Normal exit status and terminating signal are separate fields. A timeout
@@ -307,7 +309,7 @@ class ProcessReportV1(_ObservationV1):
     stderr_truncated: bool = False
 
     @model_validator(mode="after")
-    def validate_process_outcome(self) -> ProcessReportV1:
+    def validate_process_outcome(self) -> ProcessReport:
         """Keep timeout, signal, and normal return-code states unambiguous."""
 
         if self.return_code is not None and self.signal is not None:
@@ -474,7 +476,7 @@ class EventSink:
     call paths. Subclasses own serialization and redaction boundaries.
     """
 
-    def emit(self, event: EventV1) -> None:
+    def emit(self, event: Event) -> None:
         """Discard ``event`` without writing to stdout, stderr, or storage."""
 
 
@@ -492,7 +494,7 @@ class JsonlStderrEventSink(EventSink):
         self._redactor = FieldRedactor(secret_values=secret_values)
         self._lock = threading.Lock()
 
-    def emit(self, event: EventV1) -> None:
+    def emit(self, event: Event) -> None:
         """Redact and serialize ``event`` as a compact deterministic JSONL record."""
 
         payload = self._redactor.redact(event.model_dump(mode="json"))
@@ -586,10 +588,10 @@ def run_process(
     run_id: Identifier | None = None,
     attempt_id: Identifier | None = None,
     context: Mapping[str, JsonValue] | None = None,
-    artifact_refs: Sequence[ArtifactRefV1] = (),
+    artifact_refs: Sequence[ObservationArtifact] = (),
     failure_class: FailureClass | None = None,
     retryable: bool | None = None,
-) -> ProcessReportV1:
+) -> ProcessReport:
     """Run an argv command with bounded output and a hard elapsed timeout.
 
     ``command`` must be a non-empty sequence of argument strings. It is passed
@@ -634,7 +636,7 @@ def run_process(
     except OSError as exc:
         message = str(exc).encode("utf-8", errors="replace")
         captured = message[:max_output_bytes]
-        return ProcessReportV1(
+        return ProcessReport(
             timestamp=started_at,
             component=component,
             operation=operation,
@@ -708,7 +710,7 @@ def run_process(
         outcome = Outcome.FAILURE
         error_code = "process.nonzero-exit"
 
-    return ProcessReportV1(
+    return ProcessReport(
         timestamp=started_at,
         component=component,
         operation=operation,
@@ -736,14 +738,14 @@ def run_process(
 
 
 __all__ = [
-    "ArtifactRefV1",
+    "ObservationArtifact",
     "EventSink",
-    "EventV1",
+    "Event",
     "FieldRedactor",
     "JsonlStderrEventSink",
-    "OBSERVABILITY_SCHEMA_VERSION",
+    "OBSERVABILITY_SCHEMA",
     "Outcome",
-    "ProcessReportV1",
-    "ResultEnvelopeV1",
+    "ProcessReport",
+    "ResultEnvelope",
     "run_process",
 ]
