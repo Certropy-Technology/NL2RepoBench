@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "lark"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "parsing"
+tags = ["python", "parsing", "earley", "lalr", "parse-trees", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/lark-parser/lark"
+revision = "9bae96161b45a5bf70011c75b1ef41228d3f4caa"
+license_spdx = "MIT"
+# Unprefixed `git archive --format=tar HEAD` from the detached revision.
+source_digest = "sha256:077d2122d23bc3bc434f64874b2ad437860adb8dae0331e1040c7164bde7f56d"
+submodules = ["tests/test_nearley/nearley@326831689826cb1b9a4d21d1ce0d5db9278e9636"]
+
+[environment]
+# A source-only probe environment is recorded in audit.md. No final image,
+# OS lock, or platform policy is approved for this task yet.
+status = "unknown"
+python_version = ">=3.8"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# The runtime package declares no third-party dependencies. These are the
+# source-declared build/test requirements plus the transitive packages seen in
+# one temporary resolver run; they are not an approved offline bundle.
+status = "unknown"
+installer = "uv"
+packages = [
+  "setuptools>=80",
+  "setuptools-scm>=9.2.2",
+  "pytest==9.0.3",
+  "regex",
+  "interegular>=0.3.1,<0.4.0",
+  "Js2Py==0.68",
+  "atomicwrites",
+  "pyjsparser==2.7.1",
+  "six==1.17.0",
+  "tzlocal==5.4.4",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "iniconfig==2.3.0",
+  "pygments==2.21.0",
+]
+
+[tests]
+framework = "pytest"
+# CPython 3.12.11/pytest 9.0.3 collected 1312 nodes with the optional
+# regex/interegular/Js2Py profile, but Js2Py could not import on 3.12 and the
+# Nearley tests were omitted. This is a provisional observation, not a frozen
+# production denominator.
+expected_total = 1312
+expected_total_source = "unknown"
+commands = [
+  "python -m tests",
+  "python -m pytest --collect-only -q -p no:cacheprovider",
+]
+protected_paths = ["tests", "tests/test_nearley/nearley"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Exact source, MIT license, LOC, package metadata, optional dependency behavior, and source-only collection/baseline probes are recorded. Publication is blocked because the final environment and hash-locked offline dependency closure, private test and command artifacts, Oracle bundle, and Lark-specific child-side adapter are absent; no Harbor, Docker, hidden-test, or shared catalog assets are authorized in this lane."

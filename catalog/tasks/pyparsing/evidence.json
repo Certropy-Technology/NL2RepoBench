@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "record_type": "static-authoring-evidence",
+  "task_id": "pyparsing",
+  "recorded_at": "2026-08-22",
+  "publication_gate": false,
+  "source": {
+    "upstream_url": "https://github.com/pyparsing/pyparsing",
+    "resolved_from": "refs/remotes/origin/master",
+    "revision": "efd56db4e59f36b1673ce0eb0823e3afaa9d1201",
+    "tree": "1a77dbc46165613a4580fcfc97393f8c17a5f751",
+    "parent": "038ff39cbc29b77a74ac21674206d5bf170ca769",
+    "author_date": "2026-08-18T09:55:14+05:30",
+    "committer_date": "2026-08-17T23:25:14-05:00",
+    "subject": "Fix match_previous_expr to match nested and repeated expressions (#653)",
+    "describe": "3.3.2-66-gefd56db",
+    "submodules": [],
+    "tracked_files": 293,
+    "archive": {
+      "format": "git-archive-tar-unprefixed",
+      "bytes": 13690880,
+      "members_including_directories": 312,
+      "sha256": "a5dfb002ae8c378326c1f3395a0f2531080c5b5d0b480e33a3a4a29526a3c737",
+      "independent_matching_runs": 2
+    }
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "LICENSE",
+    "bytes": 1062,
+    "newline_terminated_lines": 20,
+    "git_blob": "f9f48d0619a386cd812261b41b04016207b72d5b",
+    "sha256": "a5425f9dc14ac74d4c5f0b679e941f2442e32cca7452a4418d5b1a49893ebe4e",
+    "project_metadata_declaration": "MIT",
+    "license_paths_in_source": [
+      "LICENSE"
+    ]
+  },
+  "source_metadata": {
+    "pyproject_sha256": "5929f450aa175f7aee12243b6da065b30da5bd4b7445de4fc94ae4037df72886",
+    "pyproject_git_blob": "8987ccd394305d0541a00c583878d6cf16be9465",
+    "tox_ini_sha256": "933faac519c58c45ee06529f6f71b6c9ca6d6aec60b007c48005987d2a5fe857",
+    "tests_requirements_sha256": "a6ac2e41d8c091c422f2fef7bd50fd2b87ae98331343b8ec19bb316365508af6",
+    "distribution": "pyparsing",
+    "import_package": "pyparsing",
+    "source_version": "3.3.3",
+    "requires_python": ">=3.9",
+    "build_backend": "flit_core.buildapi",
+    "build_requirements": [
+      "flit_core>=3.12,<4"
+    ],
+    "required_runtime_dependencies": [],
+    "optional_dependencies": {
+      "diagrams": [
+        "railroad-diagrams",
+        "jinja2"
+      ]
+    }
+  },
+  "loc": {
+    "method": "tracked UTF-8 Python files; physical=str.splitlines; noncomment means nonblank and not beginning with # after leading whitespace; docstrings remain counted",
+    "runtime_total": {
+      "paths": "pyparsing/**/*.py",
+      "files": 17,
+      "bytes": 452242,
+      "physical": 12985,
+      "nonblank": 10645,
+      "nonblank_nonleading_comment": 10042
+    },
+    "runtime_root_modules": {
+      "paths": "pyparsing/*.py",
+      "files": 11,
+      "bytes": 418875,
+      "physical": 12080,
+      "nonblank": 9872,
+      "nonblank_nonleading_comment": 9330
+    },
+    "runtime_ai_python": {
+      "paths": "pyparsing/ai/**/*.py",
+      "files": 3,
+      "bytes": 49,
+      "physical": 2,
+      "nonblank": 2,
+      "nonblank_nonleading_comment": 2
+    },
+    "runtime_diagram_python": {
+      "paths": "pyparsing/diagram/**/*.py",
+      "files": 1,
+      "bytes": 26929,
+      "physical": 761,
+      "nonblank": 653,
+      "nonblank_nonleading_comment": 593
+    },
+    "runtime_tools_python": {
+      "paths": "pyparsing/tools/**/*.py",
+      "files": 2,
+      "bytes": 6389,
+      "physical": 142,
+      "nonblank": 118,
+      "nonblank_nonleading_comment": 117
+    },
+    "tests_tree": {
+      "paths": "tests/**/*.py",
+      "files": 13,
+      "bytes": 564752,
+      "physical": 15514,
+      "nonblank": 13516,
+      "nonblank_nonleading_comment": 12807
+    },
+    "tiny_tests_tree": {
+      "paths": "examples/tiny/tests/**/*.py",
+      "files": 3,
+      "bytes": 16540,
+      "physical": 606,
+      "nonblank": 520,
+      "nonblank_nonleading_comment": 499
+    }
+  },
+  "api_inventory": {
+    "root___all___entries": 171,
+    "root___all___unique_entries": 171,
+    "root___all___ordered_names_sha256": "c1a066bc7472906088a17275a1792ba65bf9c5df7db2a513c7153b546f3b1277",
+    "root_modern_or_metadata_entries": 125,
+    "root_compatibility_or_namespace_entries": 46,
+    "ast_heuristic": {
+      "tracked_runtime_files": 17,
+      "unique_public_class_names": 73,
+      "unique_public_module_function_names": 41,
+      "unique_public_class_member_names": 177,
+      "unique_property_or_accessor_names": 9
+    },
+    "human_inventory": "api-inventory.md",
+    "public_contract_draft": "instruction.md"
+  },
+  "package_data": {
+    "py_typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ai_best_practices_markdown": {
+      "bytes": 8472,
+      "sha256": "aa53ca4e679311869a005446930477133ba43fe4de2052f3a18389ce85417086"
+    }
+  },
+  "wheel_probe": {
+    "classification": "disposable source-build observation, not an approved artifact",
+    "filename": "pyparsing-3.3.3-py3-none-any.whl",
+    "bytes": 124711,
+    "sha256": "92ff4320c6d206d5dc9cad07329b2386eda68c4d865e800b150a635a567704d6",
+    "members": 23,
+    "root_is_purelib": true,
+    "tag": "py3-none-any",
+    "generator": "flit 3.12.0",
+    "contains_py_typed": true,
+    "contains_ai_best_practices_markdown": true,
+    "network_or_cache_isolation_proven": false
+  },
+  "collection": {
+    "classification": "source-only observation, not frozen production denominator",
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -p <temporary-node-recorder> -p no:cacheprovider --collect-only -q tests examples/tiny/tests",
+    "pytest": "9.1.1",
+    "environment_controls": {
+      "locale": "C.UTF-8",
+      "timezone": "UTC",
+      "ambient_pytest_plugin_autoload": false,
+      "pytest_cache_provider": false
+    },
+    "probes": [
+      {
+        "python": "CPython 3.12.11",
+        "runs": 2,
+        "exit_codes": [0, 0],
+        "items_each": 2157,
+        "node_ids_sha256": "40ab728c1e1a6809ea6e0e2c81ab047a5a1f091ceef7f8d907335d5200c8772d"
+      },
+      {
+        "python": "CPython 3.13.14",
+        "runs": 2,
+        "exit_codes": [0, 0],
+        "items_each": 2157,
+        "node_ids_sha256": "40ab728c1e1a6809ea6e0e2c81ab047a5a1f091ceef7f8d907335d5200c8772d"
+      }
+    ],
+    "node_record_json_sha256": "fff3cac1d5484187a21e630a2f2340e2ca66007f507b36a48c67edc5deeb02eb",
+    "node_sets_equal_across_all_four_runs": true,
+    "scope_totals": {
+      "tests": 2136,
+      "examples/tiny/tests": 21
+    },
+    "per_file_items": {
+      "examples/tiny/tests/test_tiny.py": 4,
+      "examples/tiny/tests/test_tiny_ast_nodes.py": 15,
+      "examples/tiny/tests/test_tiny_grammar.py": 2,
+      "tests/test_diagram.py": 11,
+      "tests/test_examples.py": 19,
+      "tests/test_matplotlib_cases.py": 27,
+      "tests/test_pep8_converter.py": 4,
+      "tests/test_pre_pep8_deprecation_warnings.py": 45,
+      "tests/test_simple_unit.py": 15,
+      "tests/test_testing.py": 10,
+      "tests/test_unit.py": 1940,
+      "tests/test_util.py": 65
+    },
+    "minimal_dependency_probe": {
+      "python": "CPython 3.12.11",
+      "installed": [
+        "pytest==9.1.1"
+      ],
+      "exit_code": 2,
+      "items_reported_before_interruption": 2146,
+      "collection_errors": 1,
+      "error": "tests/test_diagram.py could not import pyparsing.diagram because railroad was absent"
+    }
+  },
+  "source_baseline": {
+    "classification": "single direct-source baseline, not an Oracle run",
+    "python": "CPython 3.12.11",
+    "pytest": "9.1.1",
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -p no:cacheprovider -q --junitxml=<temporary-path> tests examples/tiny/tests",
+    "exit_code": 0,
+    "pytest_items_passed": 2157,
+    "unittest_subtests_passed": 2041,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "wall_time_reported_seconds": 109.37,
+    "junit_root": {
+      "tests": 4198,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "metric_warning": "pytest collection has 2157 item node IDs, while JUnit expands 2041 unittest subtests and reports 4198 testcases; a final structured metric policy must select and enforce one denominator"
+  },
+  "resolved_probe_environment": {
+    "classification": "network/cache-backed local resolution, not an offline dependency closure",
+    "host": "Fedora Linux 44 x86_64, glibc 2.43",
+    "packages": [
+      "contourpy==1.3.3",
+      "cycler==0.12.1",
+      "fonttools==4.63.0",
+      "iniconfig==2.3.0",
+      "jinja2==3.1.6",
+      "kiwisolver==1.5.0",
+      "markupsafe==3.0.3",
+      "matplotlib==3.10.8",
+      "numpy==2.5.2",
+      "packaging==26.3",
+      "pillow==12.3.0",
+      "pluggy==1.6.0",
+      "pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==2.9.0.post0",
+      "railroad-diagrams==3.0.1",
+      "six==1.17.0"
+    ],
+    "native_binary_risk": [
+      "contourpy",
+      "fonttools optional accelerators",
+      "kiwisolver",
+      "markupsafe optional accelerator",
+      "matplotlib",
+      "numpy and bundled OpenBLAS",
+      "pillow"
+    ]
+  },
+  "scope": {
+    "included_in_draft": [
+      "installable pure-Python pyparsing package and metadata",
+      "171-name root __all__ including compatibility aliases",
+      "parser elements, operators, parse actions, ParseResults, exceptions, helpers, common and Unicode namespaces",
+      "testing helpers",
+      "optional railroad diagram API",
+      "PEP8-name converter module and best-practices module entry point"
+    ],
+    "excluded_from_provisional_unit_probe": [
+      "Sphinx doctest environments",
+      "mypy environment",
+      "performance benchmark runner and cross-version network installer scripts",
+      "unselected examples and generated documentation assets"
+    ],
+    "production_assets_present": []
+  },
+  "blockers": [
+    "no immutable base image or final OS/interpreter/locale policy",
+    "no hash-locked offline build and test dependency artifact",
+    "no private adapted test bundle or allowlisted command artifact",
+    "no pyparsing-specific child-side scenario adapter for callbacks, parser graphs, state, rich ParseResults, exceptions, warnings, files, and diagrams",
+    "pytest-item versus JUnit-subtest denominator policy unresolved",
+    "no completed test-to-spec traceability review",
+    "no Oracle bundle, three Oracle runs, or empty/stub/forgery/offline controls",
+    "public package/repository contamination policy not approved"
+  ]
+}

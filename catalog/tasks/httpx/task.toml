@@ -1,0 +1,84 @@
+schema_version = "1.0"
+task_id = "httpx"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "http-client"
+tags = ["python", "http", "async", "anyio", "transport", "repository-generation", "pytest", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/encode/httpx"
+revision = "b5addb64f0161ff6bfe94c124ef76f6a1fba5254"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:e5ffd70c3050ff652fa0a9415bd0d5ff609f055e7d63e185214d69ed1ba87bdf"
+submodules = []
+
+[environment]
+# CPython 3.12.11 and Linux were used for the disposable probes in audit.md.
+# No image digest or OS lock is authorized for this development-only package.
+status = "unknown"
+python_version = "3.12.11"
+os_name = "linux-amd64"
+network_mode = "no-network"
+
+[dependencies]
+# These are source-declared requirements plus the observed test/tool pins. They
+# are not an approved, hash-locked offline DependencyBundle.
+status = "unknown"
+installer = "uv"
+packages = [
+  "hatchling",
+  "hatch-fancy-pypi-readme",
+  "certifi",
+  "httpcore==1.*",
+  "anyio",
+  "idna",
+  "brotli; platform_python_implementation == 'CPython'",
+  "brotlicffi; platform_python_implementation != 'CPython'",
+  "click==8.*",
+  "pygments==2.*",
+  "rich>=10,<15",
+  "h2>=3,<5",
+  "socksio==1.*",
+  "zstandard>=0.18.0",
+  "chardet==5.2.0",
+  "mkdocs==1.6.1",
+  "mkautodoc==0.2.0",
+  "mkdocs-material==9.6.18",
+  "build==1.3.0",
+  "twine==6.1.0",
+  "coverage[toml]==7.10.6",
+  "cryptography==45.0.7",
+  "mypy==1.17.1",
+  "pytest==8.4.1",
+  "ruff==0.12.11",
+  "trio==0.31.0",
+  "trio-typing==0.10.0",
+  "trustme==1.2.1",
+  "uvicorn==0.35.0",
+]
+
+[tests]
+framework = "pytest"
+# 1,418 nodes were observed in CPython 3.12.11 with the source requirements.
+# Keep this provisional until collection is repeated in the final verifier.
+expected_total = 1418
+expected_total_source = "unknown"
+commands = ["python -m pytest -q"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "authoring-worker"
+reason = "Exact source and provisional collection metadata are recorded, but the final no-network environment, dependency closure, network/transport policy, candidate boundary, private verifier artifacts, frozen denominator, Oracle, and controls are not proven."
