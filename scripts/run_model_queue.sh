@@ -46,6 +46,11 @@ for task in "${task_list[@]}"; do
         scripts/run_harbor_model.sh \
         >"$RUN_ROOT/${task}.log" 2>&1
     rc=$?
+    # The task wrapper also cleans up, but keep a queue-level finalizer for
+    # provider crashes, shell interruptions, and partial runner failures.
+    python3 scripts/cleanup_harbor_trials.py \
+        --jobs-dir "$RUN_ROOT/${RUN_PREFIX}-${task}" \
+        >>"$RUN_ROOT/cleanup.log" 2>&1 || true
     log "done[$task] rc=$rc $(date -Is)"
     flock -u "$task_lock"
     exec {task_lock}>&-
