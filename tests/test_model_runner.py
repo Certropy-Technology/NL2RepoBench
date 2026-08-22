@@ -21,6 +21,7 @@ def _load_pi_launcher():
 
 
 def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path) -> None:
+    assert (ROOT / "scripts/run_harbor_model.sh").stat().st_mode & 0o111
     task_root = tmp_path / "catalog/tasks/demo/harbor"
     task_root.mkdir(parents=True)
     (task_root / "task.toml").write_text(
