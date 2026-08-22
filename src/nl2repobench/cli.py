@@ -31,9 +31,12 @@ from nl2repobench.domain.models import (
     MetadataGapReport,
     TaskManifest,
 )
-from nl2repobench.domain.runtime import RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import HarborToolchainLock
+from nl2repobench.harbor.registry import (
+    HarborCompilerRegistry,
+    UnknownRuntimeAdapterError,
+)
 from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.state import StateStore
@@ -166,25 +169,20 @@ def compile_harbor_task(
         allow_private=allow_private,
     )
     try:
-        parsed_source = CatalogCompiler.load_task(source)
-        runtime = RuntimeDiscriminator.from_catalog_source(
-            parsed_source.model_dump(mode="python")
+        task_root = HarborCompilerRegistry.default().compile_task(
+            source,
+            output_root,
+            toolchain,
+            artifact_resolver=resolver,
+            allow_incomplete=allow_incomplete,
         )
-        if runtime.language is RuntimeLanguage.NODE:
-            from nl2repobench.harbor.node_compiler import (
-                NodeHarborCompiler,
-            )
-
-            task_root = NodeHarborCompiler(
-                toolchain,
-                artifact_resolver=resolver,
-            ).compile_task(source, output_root, allow_incomplete=allow_incomplete)
-        else:
-            task_root = HarborCompiler(
-                toolchain,
-                artifact_resolver=resolver,
-            ).compile_task(source, output_root, allow_incomplete=allow_incomplete)
-    except (HarborCompileError, CatalogError, OSError, ValueError) as exc:
+    except (
+        HarborCompileError,
+        UnknownRuntimeAdapterError,
+        CatalogError,
+        OSError,
+        ValueError,
+    ) as exc:
         typer.echo(f"Harbor compile failed: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     _json_print(

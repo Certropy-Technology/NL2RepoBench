@@ -1,0 +1,56 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
+from nl2repobench.harbor.registry import (
+    HarborCompilerRegistry,
+    UnknownRuntimeAdapterError,
+)
+
+
+class _FakeCompiler:
+    def compile_task(
+        self,
+        source_dir: Path,
+        output_root: Path,
+        *,
+        allow_incomplete: bool = False,
+    ) -> Path:
+        del source_dir, allow_incomplete
+        return output_root / "fake"
+
+
+def test_registry_resolves_exact_identity_without_language_branch() -> None:
+    calls: list[tuple[Path, bool]] = []
+
+    def factory(toolchain: Path, resolver: object) -> _FakeCompiler:
+        del resolver
+        calls.append((toolchain, True))
+        return _FakeCompiler()
+
+    identity = RuntimeDiscriminator(
+        language=RuntimeLanguage.NODE,
+        package_manager=PackageManager.PNPM,
+    )
+    registry = HarborCompilerRegistry(
+        factories={(RuntimeLanguage.NODE, PackageManager.PNPM): factory}
+    )
+    resolved = registry.resolve(identity)
+    assert resolved(Path("toolchain.lock.toml"), None).compile_task(
+        Path("source"), Path("output"), allow_incomplete=True
+    ) == Path("output/fake")
+    assert calls == [(Path("toolchain.lock.toml"), True)]
+
+
+def test_registry_fails_closed_for_unregistered_identity() -> None:
+    registry = HarborCompilerRegistry.default()
+    with pytest.raises(UnknownRuntimeAdapterError, match=r"node\+pnpm"):
+        registry.resolve(
+            RuntimeDiscriminator(
+                language=RuntimeLanguage.NODE,
+                package_manager=PackageManager.PNPM,
+            )
+        )
