@@ -60,7 +60,7 @@ cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup
   # only the exact trials created below; never run a global Docker prune.
   set +e
-  uv run --frozen python ../scripts/cleanup_harbor_trials.py \
+  PYTHONPATH=../src python3 ../scripts/cleanup_harbor_trials.py \
     --jobs-dir "$harbor_jobs_dir" \
     >>"$job_dir/cleanup.log" 2>&1
   cleanup_rc=$?

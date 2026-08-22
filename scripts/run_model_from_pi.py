@@ -80,6 +80,12 @@ def main() -> int:
     parser.add_argument("--run-prefix", required=True)
     parser.add_argument("--lock-root", type=Path, required=True)
     parser.add_argument(
+        "--concurrency",
+        type=int,
+        default=2,
+        help="Bounded concurrent Harbor trials (default: 2).",
+    )
+    parser.add_argument(
         "--credential-env",
         help="Use this already-exported environment variable instead of the Pi literal key.",
     )
@@ -90,6 +96,9 @@ def main() -> int:
         default=Path.home() / ".pi/agent/models.json",
     )
     args = parser.parse_args()
+
+    if not 1 <= args.concurrency <= 8:
+        raise SystemExit("--concurrency must be between 1 and 8")
 
     for label, value in {
         "task": args.task,
@@ -131,6 +140,7 @@ def main() -> int:
             "RUN_ROOT": str(run_root),
             "RUN_PREFIX": args.run_prefix,
             "LOCK_ROOT": str(lock_root),
+            "MAX_CONCURRENCY": str(args.concurrency),
             "AGENT_TIMEOUT_SECONDS": "18000",
             "REASONING_EFFORT": "max",
             "MAX_RETRIES": "3",

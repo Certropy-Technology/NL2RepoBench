@@ -150,6 +150,7 @@ python3 scripts/run_model_from_pi.py \
   --provider z-open-api-gpt-openai-responses \
   --model-id gpt-5.6-sol --harbor-model openai/gpt-5.6-sol \
   --task markupsafe \
+  --concurrency 2 \
   --run-root "$PWD/.nl2repo/runs/smoke-gpt-$(date -u +%Y%m%dT%H%M%SZ)" \
   --run-prefix gpt56 \
   --lock-root "$PWD/.nl2repo/locks/gpt-smoke-$(date -u +%Y%m%dT%H%M%SZ)"
