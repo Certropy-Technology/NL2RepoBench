@@ -8,10 +8,8 @@ import os
 import re
 import shlex
 import shutil
-import stat
-import tarfile
 import tempfile
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 import tomli_w
 
@@ -19,8 +17,17 @@ from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.models import ArtifactRef, TaskManifest
 from nl2repobench.storage.artifacts import LocalArtifactResolver
-from nl2repobench.storage.files import atomic_copy, atomic_write
+from nl2repobench.storage.files import atomic_write
 
+from .bundle_io import (
+    BundleArchiveError,
+    BundleArchiveIOError,
+    BundleLimits,
+    BundleTreeError,
+    BundleTreeSourceError,
+    copy_bundle_tree,
+    extract_bundle_archive,
+)
 from .models import VerifierCommandPlan, load_command_plan, load_toolchain_lock
 
 
@@ -550,70 +557,30 @@ exit 0
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required")
         archive = self.artifact_resolver.resolve(reference)
-        destination.mkdir(parents=True, exist_ok=True)
         try:
-            with tarfile.open(archive, mode="r:*") as handle:
-                seen: set[PurePosixPath] = set()
-                member_count = 0
-                total_bytes = 0
-                for member in handle:
-                    member_count += 1
-                    if member_count > self.MAX_BUNDLE_MEMBERS:
-                        raise HarborCompileError("private bundle contains too many members")
-                    relative = PurePosixPath(member.name)
-                    if relative.is_absolute() or ".." in relative.parts:
-                        raise HarborCompileError(f"archive path escapes bundle: {member.name}")
-                    if member.issym() or member.islnk() or member.isdev():
-                        raise HarborCompileError(
-                            f"archive links/devices are forbidden: {member.name}"
-                        )
-                    if relative in seen:
-                        raise HarborCompileError(f"duplicate archive path: {member.name}")
-                    seen.add(relative)
-                    if member.size < 0 or member.size > self.MAX_BUNDLE_MEMBER_BYTES:
-                        raise HarborCompileError(
-                            f"archive member size exceeds limit: {member.name}"
-                        )
-                    if member.isfile():
-                        total_bytes += member.size
-                        if total_bytes > self.MAX_BUNDLE_TOTAL_BYTES:
-                            raise HarborCompileError(
-                                "private bundle expanded size exceeds limit"
-                            )
-                    target = destination.joinpath(*relative.parts)
-                    if member.isdir():
-                        target.mkdir(parents=True, exist_ok=True)
-                    elif member.isfile():
-                        extracted = handle.extractfile(member)
-                        if extracted is None:
-                            raise HarborCompileError(f"cannot read archive member: {member.name}")
-                        atomic_copy(
-                            target,
-                            extracted,
-                            expected_size=member.size,
-                            max_size=self.MAX_BUNDLE_MEMBER_BYTES,
-                        )
-                        os.chmod(target, stat.S_IMODE(member.mode) & 0o777)
-                    else:
-                        raise HarborCompileError(f"unsupported archive member type: {member.name}")
-        except (tarfile.TarError, OSError) as exc:
+            extract_bundle_archive(
+                archive,
+                destination,
+                limits=BundleLimits(
+                    max_members=self.MAX_BUNDLE_MEMBERS,
+                    max_member_bytes=self.MAX_BUNDLE_MEMBER_BYTES,
+                    max_total_bytes=self.MAX_BUNDLE_TOTAL_BYTES,
+                ),
+            )
+        except BundleArchiveIOError as exc:
             raise HarborCompileError(f"cannot extract private bundle: {exc}") from exc
+        except BundleArchiveError as exc:
+            raise HarborCompileError(str(exc)) from exc
 
     def _copy_tree(self, source: Path, destination: Path) -> None:
-        if not source.is_dir():
-            raise HarborCompileError(f"development fixture directory is missing: {source}")
-        destination.mkdir(parents=True, exist_ok=True)
-        source_root = source.resolve()
-        for path in sorted(source.rglob("*")):
-            if path.is_symlink() or not path.resolve().is_relative_to(source_root):
-                raise HarborCompileError(f"fixture path escapes source root: {path}")
-            relative = path.relative_to(source)
-            target = destination / relative
-            if path.is_dir():
-                target.mkdir(parents=True, exist_ok=True)
-            elif path.is_file():
-                atomic_write(target, path.read_bytes())
-                os.chmod(target, stat.S_IMODE(path.stat().st_mode))
+        try:
+            copy_bundle_tree(source, destination)
+        except BundleTreeSourceError as exc:
+            raise HarborCompileError(
+                f"development fixture directory is missing: {source}"
+            ) from exc
+        except BundleTreeError as exc:
+            raise HarborCompileError(str(exc)) from exc
 
     def _write_readme(
         self,

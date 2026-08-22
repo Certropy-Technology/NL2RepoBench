@@ -11,10 +11,9 @@ import hashlib
 import json
 import os
 import shutil
-import stat
 import tarfile
 import tempfile
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 import tomli_w
 
@@ -22,9 +21,19 @@ from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.models import ArtifactRef
 from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2, TaskManifestV2
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
-from nl2repobench.storage.files import atomic_copy, atomic_write
+from nl2repobench.storage.files import atomic_write
 from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
 
+from .bundle_io import (
+    BundleArchiveError,
+    BundleArchiveIOError,
+    BundleArchiveMemberSizeError,
+    BundleLimits,
+    BundleTreeError,
+    BundleTreeSourceError,
+    copy_bundle_tree,
+    extract_bundle_archive,
+)
 from .models_v2 import load_node_toolchain_lock
 from .node_dependencies import NodeDependencyError, validate_npm_dependency_bundle
 
@@ -369,68 +378,33 @@ exit 0
             raise NodeHarborCompileError("private artifact resolver is required")
         try:
             archive = self.artifact_resolver.resolve(reference)
-            destination.mkdir(parents=True, exist_ok=True)
-            with tarfile.open(archive, mode="r:*") as handle:
-                seen: set[PurePosixPath] = set()
-                total = 0
-                for index, member in enumerate(handle, start=1):
-                    if index > self.MAX_BUNDLE_MEMBERS:
-                        raise NodeHarborCompileError("private bundle contains too many members")
-                    relative = PurePosixPath(member.name)
-                    if relative.is_absolute() or ".." in relative.parts:
-                        raise NodeHarborCompileError(f"archive path escapes bundle: {member.name}")
-                    if member.issym() or member.islnk() or member.isdev():
-                        raise NodeHarborCompileError(
-                            f"archive links/devices are forbidden: {member.name}"
-                        )
-                    if relative in seen:
-                        raise NodeHarborCompileError(f"duplicate archive path: {member.name}")
-                    seen.add(relative)
-                    if member.size < 0 or member.size > self.MAX_BUNDLE_MEMBER_BYTES:
-                        raise NodeHarborCompileError(f"archive member exceeds limit: {member.name}")
-                    target = destination.joinpath(*relative.parts)
-                    if member.isdir():
-                        target.mkdir(parents=True, exist_ok=True)
-                    elif member.isfile():
-                        total += member.size
-                        if total > self.MAX_BUNDLE_TOTAL_BYTES:
-                            raise NodeHarborCompileError(
-                                "private bundle expanded size exceeds limit"
-                            )
-                        extracted = handle.extractfile(member)
-                        if extracted is None:
-                            raise NodeHarborCompileError(
-                                f"cannot read archive member: {member.name}"
-                            )
-                        atomic_copy(
-                            target,
-                            extracted,
-                            expected_size=member.size,
-                            max_size=self.MAX_BUNDLE_MEMBER_BYTES,
-                        )
-                        os.chmod(target, stat.S_IMODE(member.mode) & 0o777)
-                    else:
-                        raise NodeHarborCompileError(
-                            f"unsupported archive member type: {member.name}"
-                        )
+            extract_bundle_archive(
+                archive,
+                destination,
+                limits=BundleLimits(
+                    max_members=self.MAX_BUNDLE_MEMBERS,
+                    max_member_bytes=self.MAX_BUNDLE_MEMBER_BYTES,
+                    max_total_bytes=self.MAX_BUNDLE_TOTAL_BYTES,
+                ),
+            )
+        except BundleArchiveMemberSizeError as exc:
+            raise NodeHarborCompileError(
+                f"archive member exceeds limit: {exc.member_name}"
+            ) from exc
+        except BundleArchiveIOError as exc:
+            raise NodeHarborCompileError(f"cannot extract private bundle: {exc}") from exc
+        except BundleArchiveError as exc:
+            raise NodeHarborCompileError(str(exc)) from exc
         except (OSError, RuntimeError, tarfile.TarError) as exc:
             raise NodeHarborCompileError(f"cannot extract private bundle: {exc}") from exc
 
     def _copy_tree(self, source: Path, destination: Path) -> None:
-        if not source.is_dir() or source.is_symlink():
-            raise NodeHarborCompileError(f"fixture directory is missing: {source}")
-        destination.mkdir(parents=True, exist_ok=True)
-        source_root = source.resolve()
-        for path in sorted(source.rglob("*")):
-            if path.is_symlink() or not path.resolve().is_relative_to(source_root):
-                raise NodeHarborCompileError(f"fixture path escapes source root: {path}")
-            relative = path.relative_to(source)
-            target = destination / relative
-            if path.is_dir():
-                target.mkdir(parents=True, exist_ok=True)
-            elif path.is_file():
-                atomic_write(target, path.read_bytes())
-                os.chmod(target, stat.S_IMODE(path.stat().st_mode))
+        try:
+            copy_bundle_tree(source, destination)
+        except BundleTreeSourceError as exc:
+            raise NodeHarborCompileError(f"fixture directory is missing: {source}") from exc
+        except BundleTreeError as exc:
+            raise NodeHarborCompileError(str(exc)) from exc
 
     def _write_readme(
         self, manifest: TaskManifestV2, task_root: Path, allow_incomplete: bool
