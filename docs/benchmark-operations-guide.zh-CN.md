@@ -4,6 +4,11 @@
 真实架构、命令、门禁、产物、归档方式和已知故障。本文不包含 API key、hidden
 tests、私有依赖 bytes、Oracle bytes 或不可复现的分数。
 
+> **当前交付契约：unified Harbor contract。** 下文中历史性的 “Python v1” 和
+> “Node/npm v2” 只用于解释已有 run、schema 或 artifact，不能作为新任务的两个
+> runtime API。新题和迁移题统一由一个 canonical parser/compiler 处理；Python、npm
+> 和 pnpm 仅作为 runtime/package-manager adapter。新 release 不与旧 v1/v2 分数合并。
+
 ## 当前状态
 
 查询真实状态，不要依赖旧文档中的 active-task 数字：

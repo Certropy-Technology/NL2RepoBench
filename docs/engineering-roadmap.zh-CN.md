@@ -1,5 +1,10 @@
 # NL2RepoBench 工程化改造长期路线图
 
+> **路线图决策已被更新。** 本文保留为历史背景；其中“保留 v1、增量添加 v2、
+> legacy compatibility runtime”等设计不再是当前交付方案。当前采用单一 unified
+> contract，直接迁移旧题并删除旧运行时兼容层，详见
+> [`unified-contract-migration-adr.zh-CN.md`](unified-contract-migration-adr.zh-CN.md)。
+
 ## 1. 目标与结论
 
 当前工程能够在单机上批量启动 OpenHands 并测试生成结果，但它还不是一个可持续的大规模题目生产与评测系统。主要问题不是缺少几个 metadata 字段，而是缺少四个基础能力：

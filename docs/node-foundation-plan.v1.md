@@ -1,5 +1,11 @@
 # Code Context
 
+> **Historical design record — superseded.** This file describes the former additive
+> Python-v1/Node-v2 plan. The current implementation direction is the clean-break
+> unified contract in [`unified-contract-migration-adr.zh-CN.md`](unified-contract-migration-adr.zh-CN.md).
+> Do not use the additive v2 compatibility instructions below for new authoring or
+> migration work.
+
 ## Files Retrieved
 
 1. `src/nl2repobench/domain/models.py:21-337,422-481` - v1 schema, Python-only environment/dependency/test fields, publication gaps.
