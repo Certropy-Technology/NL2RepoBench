@@ -32,6 +32,7 @@ from nl2repobench.domain.models import (
     TestManifest,
     Visibility,
 )
+from nl2repobench.domain.runtime import RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.files import (
     UnsafePathError,
@@ -170,27 +171,33 @@ class CatalogCompiler:
 
     def compile_task(self, source_dir: Path, output_root: Path) -> CompiledTask | CompiledTaskV2:
         source = self.load_task(source_dir)
-        if source.schema_version == "2.0":
+        runtime = RuntimeDiscriminator.from_catalog_source(source.model_dump(mode="python"))
+        if runtime.language is RuntimeLanguage.NODE:
+            from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2
+
+            if not isinstance(source, DeclarativeTaskSourceV2):
+                raise CatalogError("Node runtime requires the unified Node task source")
             return self._compile_task_v2(source_dir, source, output_root)
-        instruction_path = source_dir / source.instruction
+        python_source = cast(DeclarativeTaskSource, source)
+        instruction_path = source_dir / python_source.instruction
         instruction_ref = self.artifact_store.put_file(
             instruction_path,
             media_type="text/markdown; charset=utf-8",
             visibility=Visibility.PUBLIC,
         )
         manifest = TaskManifest(
-            task_id=source.task_id,
-            version=source.version,
-            metadata=source.metadata,
+            task_id=python_source.task_id,
+            version=python_source.version,
+            metadata=python_source.metadata,
             instruction=instruction_ref,
-            source_lock=source.source,
-            environment_lock=source.environment,
-            dependency_bundle=source.dependencies,
-            tests=source.tests,
-            metric=source.metric,
-            lifecycle=source.lifecycle,
-            harbor=source.harbor,
-            oracle_bundle=source.oracle_bundle,
+            source_lock=python_source.source,
+            environment_lock=python_source.environment,
+            dependency_bundle=python_source.dependencies,
+            tests=python_source.tests,
+            metric=python_source.metric,
+            lifecycle=python_source.lifecycle,
+            harbor=python_source.harbor,
+            oracle_bundle=python_source.oracle_bundle,
         )
         payload = canonical_json(manifest)
         output_dir = safe_child_directory(output_root, source.task_id)

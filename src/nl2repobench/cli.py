@@ -31,6 +31,7 @@ from nl2repobench.domain.models import (
     MetadataGapReport,
     TaskManifest,
 )
+from nl2repobench.domain.runtime import RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import HarborToolchainLock
 from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
@@ -166,7 +167,10 @@ def compile_harbor_task(
     )
     try:
         parsed_source = CatalogCompiler.load_task(source)
-        if parsed_source.schema_version == "2.0":
+        runtime = RuntimeDiscriminator.from_catalog_source(
+            parsed_source.model_dump(mode="python")
+        )
+        if runtime.language is RuntimeLanguage.NODE:
             from nl2repobench.harbor.node_compiler import (
                 NodeHarborCompiler,
             )
