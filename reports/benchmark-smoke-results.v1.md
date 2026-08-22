@@ -69,6 +69,19 @@ terminal Harbor result, `valid=true`, fixed denominator and reward consistency,
 zero infrastructure exceptions, and a full artifact secret scan. Do not append
 to any existing root and do not use `--overwrite` for OSS upload.
 
+## Additional Accepted Cells
+
+- GPT-5.6 `unittest-parametrize`, fresh root
+  `.nl2repo/runs/bench-gpt-unittest-20260822T121649Z/`: terminal and valid,
+  fixed denominator `26`, `0/26` passed, reward `0.0`, no infrastructure
+  exception, no credential scan hit. This is a valid model result, not an
+  infrastructure failure.
+- Fable5 `markupsafe`, fresh root
+  `.nl2repo/runs/bench-fable-anthropic-20260822T114710Z/`: terminal and valid,
+  `39/39`, reward `1.0`, no infrastructure exception, no credential scan hit.
+  The successful run used Anthropic model-prefix normalization and the Pi
+  provider `z-open-api-opus5-fable5-anthropic`.
+
 ## Later Infrastructure Attempts
 
 - A GPT `tablib` attempt at
