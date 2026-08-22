@@ -21,6 +21,7 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 - [Benchmark 运行、出题与排障总手册](docs/benchmark-operations-guide.zh-CN.md)
 - [Python/Node 高规模出题计划](docs/authoring-at-scale-plan.v1.md)
 - [AST 驱动批量出题 Pipeline（当前入口）](docs/authoring-pipeline-ast.zh-CN.md)
+- [300 道 Harbor Task 扩展计划](docs/harbor-300-task-expansion-plan.zh-CN.md)
 - [Harbor/OpenHands trajectory 产物说明](docs/trajectory-artifacts.zh-CN.md)
 
 ## Modern Core
