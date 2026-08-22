@@ -21,6 +21,12 @@ task_path="catalog/tasks/${TASK_ID}/harbor"
 job_dir="${RUN_ROOT}/${RUN_ID}"
 task_config="${task_path}/task.toml"
 
+if [[ "$job_dir" = /* ]]; then
+  harbor_jobs_dir="$job_dir"
+else
+  harbor_jobs_dir="../$job_dir"
+fi
+
 [[ -d "$task_path" ]] || { echo "missing Harbor task: $task_path" >&2; exit 1; }
 [[ -f "$task_config" ]] || { echo "missing Harbor config: $task_config" >&2; exit 1; }
 mkdir -p "$job_dir"
@@ -49,7 +55,7 @@ echo "agent_timeout_multiplier=$agent_timeout_multiplier"
 echo "max_retries=$MAX_RETRIES retry_infra=$RETRY_INFRA"
 echo "llm_num_retries=$LLM_NUM_RETRIES llm_timeout=$LLM_TIMEOUT"
 echo "llm_retry_wait=$LLM_RETRY_MIN_WAIT-$LLM_RETRY_MAX_WAIT"
-echo "jobs_dir=$job_dir"
+echo "jobs_dir=$harbor_jobs_dir"
 
 retry_args=()
 if [[ "$RETRY_INFRA" == "1" ]]; then
@@ -80,4 +86,4 @@ exec env PYTHONPATH=../src:${PYTHONPATH:-} \
   --ae "LLM_RETRY_MAX_WAIT=$LLM_RETRY_MAX_WAIT" \
   --agent-timeout-multiplier "$agent_timeout_multiplier" \
   "${retry_args[@]}" \
-  --jobs-dir "../$job_dir"
+  --jobs-dir "$harbor_jobs_dir"

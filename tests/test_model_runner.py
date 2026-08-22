@@ -4,6 +4,7 @@ import importlib.util
 import os
 import subprocess
 import sys
+import types
 from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
@@ -12,6 +13,42 @@ ROOT = Path(__file__).parents[1]
 def _load_pi_launcher():
     spec = importlib.util.spec_from_file_location(
         "run_model_from_pi", ROOT / "scripts/run_model_from_pi.py"
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_harbor_docker(monkeypatch):
+    harbor = types.ModuleType("harbor")
+    constants = types.ModuleType("harbor.constants")
+    constants.MAIN_SERVICE_NAME = "main"
+    environments = types.ModuleType("harbor.environments")
+    base = types.ModuleType("harbor.environments.base")
+    base.ExecResult = object
+    docker_package = types.ModuleType("harbor.environments.docker")
+    docker_module = types.ModuleType("harbor.environments.docker.docker")
+
+    class FakeDockerEnvironment:
+        def _compose_env_vars(self, include_os_env=True):
+            del include_os_env
+            return {"LLM_API_KEY": "secret", "PUBLIC": "value"}
+
+    docker_module.DockerEnvironment = FakeDockerEnvironment
+    for name, module in {
+        "harbor": harbor,
+        "harbor.constants": constants,
+        "harbor.environments": environments,
+        "harbor.environments.base": base,
+        "harbor.environments.docker": docker_package,
+        "harbor.environments.docker.docker": docker_module,
+    }.items():
+        monkeypatch.setitem(sys.modules, name, module)
+    spec = importlib.util.spec_from_file_location(
+        "nl2repobench_test_harbor_docker",
+        ROOT / "src/nl2repobench/harbor_docker.py",
     )
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
@@ -78,6 +115,52 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
     assert "agent_timeout_seconds=18000" in completed.stdout
 
 
+def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
+    task_root = tmp_path / "catalog/tasks/demo/harbor"
+    task_root.mkdir(parents=True)
+    (task_root / "task.toml").write_text(
+        'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "harbor-runner").mkdir()
+    capture = tmp_path / "uv-arguments.txt"
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_uv = fake_bin / "uv"
+    fake_uv.write_text(
+        '#!/usr/bin/env bash\nprintf "%s\\n" "$@" > "$CAPTURE"\n',
+        encoding="utf-8",
+    )
+    fake_uv.chmod(0o755)
+    absolute_root = tmp_path / "absolute-runs"
+    env = os.environ.copy()
+    env.update(
+        {
+            "AGENT_TIMEOUT_SECONDS": "18000",
+            "CAPTURE": str(capture),
+            "LLM_API_KEY": "test-secret",
+            "LLM_BASE_URL": "https://example.invalid/v1",
+            "MODEL": "openai/test-model",
+            "PATH": f"{fake_bin}:{env['PATH']}",
+            "TASK_ID": "demo",
+            "RUN_ROOT": str(absolute_root),
+            "RUN_ID": "gpt56-demo",
+        }
+    )
+    completed = subprocess.run(
+        ["bash", str(ROOT / "scripts/run_harbor_model.sh")],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    arguments = capture.read_text(encoding="utf-8").splitlines()
+    jobs_index = arguments.index("--jobs-dir")
+    assert arguments[jobs_index + 1] == str(absolute_root / "gpt56-demo")
+
+
 def test_stdin_secret_environment_keeps_secret_out_of_docker_argv() -> None:
     secret = "sentinel-secret-never-print"
     probe = subprocess.run(
@@ -121,6 +204,33 @@ def test_stdin_secret_environment_keeps_secret_out_of_docker_argv() -> None:
     assert probe.stdout.strip() == "ok"
     assert secret not in probe.stdout
     assert secret not in probe.stderr
+
+
+def test_secret_command_builder_and_compose_sanitizer(monkeypatch) -> None:
+    module = _load_harbor_docker(monkeypatch)
+    secret = "sentinel-secret-never-print"
+
+    argv, payload = module._build_secret_exec(
+        command="echo ok",
+        public_env={"PUBLIC": "value"},
+        secret_env={"LLM_API_KEY": secret},
+        cwd="/workspace",
+        user=10001,
+    )
+
+    assert secret not in "\n".join(argv)
+    assert argv[:4] == ["exec", "-T", "-w", "/workspace"]
+    assert __import__("json").loads(payload)["LLM_API_KEY"] == secret
+    environment = object.__new__(module.StdinSecretDockerEnvironment)
+    assert environment._compose_env_vars() == {"PUBLIC": "value"}
+    with __import__("pytest").raises(ValueError, match="duplicated"):
+        module._build_secret_exec(
+            command="echo ok",
+            public_env={"LLM_API_KEY": "public"},
+            secret_env={"LLM_API_KEY": secret},
+            cwd=None,
+            user=None,
+        )
 
 
 def test_agent_log_redaction_removes_secret_bytes(tmp_path: Path) -> None:
