@@ -5,7 +5,18 @@ output="${1:-.nl2repo/phase2-ministats}"
 rm -rf -- "$output"
 mkdir -p -- "$output/tasks" "$output/jobs"
 
-harbor=(uv run --frozen --project harbor-runner harbor)
+harbor=(env PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py)
+
+run_harbor() {
+  local jobs_dir="$1"
+  shift
+  set +e
+  "${harbor[@]}" run "$@" --jobs-dir "$jobs_dir"
+  local harbor_rc=$?
+  uv run python scripts/cleanup_harbor_trials.py --jobs-dir "$jobs_dir" || true
+  set -e
+  return "$harbor_rc"
+}
 
 for attempt in 1 2 3; do
   uv run nl2repo harbor compile \
@@ -13,14 +24,13 @@ for attempt in 1 2 3; do
     --output "$output/tasks/oracle-$attempt" \
     --toolchain toolchain.lock.toml \
     --allow-incomplete
-  "${harbor[@]}" run \
+  run_harbor "$output/jobs/oracle-$attempt" \
     -p "$output/tasks/oracle-$attempt/ministats" \
-    -a oracle \
-    --jobs-dir "$output/jobs/oracle-$attempt"
+    -a oracle
 done
 
 base="$output/tasks/oracle-1/ministats"
-"${harbor[@]}" run -p "$base" -a nop --jobs-dir "$output/jobs/nop"
+run_harbor "$output/jobs/nop" -p "$base" -a nop
 
 uv run nl2repo harbor prepare-control \
   "$base" stub --output "$output/tasks/controls" --toolchain toolchain.lock.toml
@@ -34,10 +44,9 @@ uv run nl2repo harbor prepare-control \
   "$base" call-hang --output "$output/tasks/controls" --toolchain toolchain.lock.toml
 
 for kind in stub forgery install-hang workspace-invalid call-hang; do
-  "${harbor[@]}" run \
+  run_harbor "$output/jobs/$kind" \
     -p "$output/tasks/controls/ministats-$kind" \
-    -a oracle \
-    --jobs-dir "$output/jobs/$kind"
+    -a oracle
 done
 
 summary_args=(

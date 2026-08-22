@@ -95,9 +95,11 @@ environment is healthy before you spend model budget.
 
 ```bash
 cd harbor-runner
-uv run --frozen harbor run \
+PYTHONPATH=../src uv run --frozen python ../scripts/harbor_safe_entry.py run \
   -p ../catalog/tasks/ftfy/harbor \
   -a oracle \
+  --jobs-dir ../.nl2repo/runs/oracle/ftfy
+python ../scripts/cleanup_harbor_trials.py \
   --jobs-dir ../.nl2repo/runs/oracle/ftfy
 cd ..
 ```

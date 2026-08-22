@@ -21,11 +21,10 @@ task_path="catalog/tasks/${TASK_ID}/harbor"
 job_dir="${RUN_ROOT}/${RUN_ID}"
 task_config="${task_path}/task.toml"
 
-if [[ "$job_dir" = /* ]]; then
-  harbor_jobs_dir="$job_dir"
-else
-  harbor_jobs_dir="../$job_dir"
+if [[ "$job_dir" != /* ]]; then
+  job_dir="$PWD/$job_dir"
 fi
+harbor_jobs_dir="$job_dir"
 
 [[ -d "$task_path" ]] || { echo "missing Harbor task: $task_path" >&2; exit 1; }
 [[ -f "$task_config" ]] || { echo "missing Harbor config: $task_config" >&2; exit 1; }
@@ -57,6 +56,20 @@ echo "llm_num_retries=$LLM_NUM_RETRIES llm_timeout=$LLM_TIMEOUT"
 echo "llm_retry_wait=$LLM_RETRY_MIN_WAIT-$LLM_RETRY_MAX_WAIT"
 echo "jobs_dir=$harbor_jobs_dir"
 
+cleanup_harbor_trials() {
+  # Harbor environment services intentionally use `sleep infinity`.  Cleanup
+  # only the exact trials created below; never run a global Docker prune.
+  set +e
+  uv run --frozen python ../scripts/cleanup_harbor_trials.py \
+    --jobs-dir "$harbor_jobs_dir" \
+    >>"$job_dir/cleanup.log" 2>&1
+  cleanup_rc=$?
+  if [[ "$cleanup_rc" -ne 0 ]]; then
+    printf 'harbor_cleanup_rc=%s\n' "$cleanup_rc" >>"$job_dir/cleanup.log"
+  fi
+}
+trap cleanup_harbor_trials EXIT
+
 retry_args=()
 if [[ "$RETRY_INFRA" == "1" ]]; then
   # Only retry classified infrastructure errors (rate limit, gateway 5xx,
@@ -72,8 +85,9 @@ if [[ "$RETRY_INFRA" == "1" ]]; then
 fi
 
 cd harbor-runner
-exec env PYTHONPATH=../src:${PYTHONPATH:-} \
-  uv run --frozen harbor run \
+set +e
+env PYTHONPATH=../src:${PYTHONPATH:-} \
+  uv run --frozen python ../scripts/harbor_safe_entry.py run \
   -p "../$task_path" \
   -e nl2repobench.harbor_docker:StdinSecretDockerEnvironment \
   -a nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction \
@@ -87,3 +101,5 @@ exec env PYTHONPATH=../src:${PYTHONPATH:-} \
   --agent-timeout-multiplier "$agent_timeout_multiplier" \
   "${retry_args[@]}" \
   --jobs-dir "$harbor_jobs_dir"
+harbor_rc=$?
+exit "$harbor_rc"

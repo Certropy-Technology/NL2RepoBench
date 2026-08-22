@@ -32,7 +32,7 @@ while IFS= read -r task_id; do
     result_dir="$OUTPUT_DIR/${task_id}-oracle"
     
     cd harbor-runner
-    if timeout 600 uv run --frozen harbor run \
+    if timeout 600 env PYTHONPATH=../src uv run --frozen python ../scripts/harbor_safe_entry.py run \
         -p "../$task_path" \
         -a oracle \
         --jobs-dir "../$result_dir" 2>&1 | tee "../${task_id}-oracle.log" | tail -20; then
@@ -56,6 +56,9 @@ while IFS= read -r task_id; do
         failed=$((failed + 1))
         echo "  ❌ Failed"
     fi
+    # Always clean this exact jobs directory after timeout, API failure, or
+    # normal completion; never perform a global Docker cleanup here.
+    python ../scripts/cleanup_harbor_trials.py --jobs-dir "../$result_dir" || true
     cd ..
     
 done < "$TASK_LIST"

@@ -116,8 +116,11 @@ Implementation Notes
 ## 4. Oracle、controls 与评分
 
 ```bash
-uv run --frozen --project harbor-runner harbor run \
+PYTHONPATH=src uv run --frozen --project harbor-runner \
+  python scripts/harbor_safe_entry.py run \
   -p catalog/tasks/<task>/harbor -a oracle \
+  --jobs-dir .nl2repo/runs/oracle/<task>/attempt-1
+uv run python scripts/cleanup_harbor_trials.py \
   --jobs-dir .nl2repo/runs/oracle/<task>/attempt-1
 ```
 
@@ -217,6 +220,13 @@ python3 scripts/upload_runs_to_oss.py \
 collision check。成功 GPT smoke 已上传；Fable invalid artifact只保留本地诊断。
 
 ## 8. 已知踩坑与收尾
+
+Harbor 环境服务正常使用 `sleep infinity` 保持 agent container 存活；如果 runner 已经
+退出但该容器仍在，优先检查 `result.json`、`exception.txt`、`trial.log` 和 compose
+project cleanup。2026-08-22 曾因 Harbor 0.21.0/Python 3.14 的跨 asyncio context
+`ContextVar.reset()` 清理异常留下 orphan environment；当前模型脚本已改用
+`scripts/harbor_safe_entry.py` 和精确 jobs-dir cleanup。完整诊断和并发规则见
+[`harbor-runner-cleanup-and-concurrency.zh-CN.md`](harbor-runner-cleanup-and-concurrency.zh-CN.md)。
 
 | 症状 | 根因 | 处理 |
 | --- | --- | --- |
