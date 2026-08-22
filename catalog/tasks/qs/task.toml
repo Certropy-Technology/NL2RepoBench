@@ -1,0 +1,79 @@
+schema_version = "2.0"
+task_id = "qs"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "query-string"
+tags = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/ljharb/qs"
+revision = "3a890d4ecd3deb72a45d90be36f4f8c5970467c7"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:f5bb4b5c13cb29aba6441d5781bb17de37b473f74aec203898b28f980ff95402"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+base_image_digest = "sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "22.23.1"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+# The source intentionally has no lockfile. A reviewed v3 lock/cache closure
+# is required before this development source can be compiled for publication.
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["es-define-property", "side-channel"]
+
+[tests]
+# This is the deterministic upstream Tape leaf observation. A future private
+# node:test adapter may narrow the JSON-only subset and must then freeze a new
+# denominator/version before packaging.
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 1045
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Development-only Node CommonJS pilot for JSON-compatible query-string parsing and stringifying."
+keywords = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "specified"
+reason = "Development-only v2 authoring source; private node:test adapter, dependency/cache artifact, verifier, Oracle, and controls are intentionally absent."

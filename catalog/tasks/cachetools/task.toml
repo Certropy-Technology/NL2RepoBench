@@ -1,0 +1,62 @@
+schema_version = "1.0"
+task_id = "cachetools"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "caching"
+tags = ["python", "caching", "memoization", "collections", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/tkem/cachetools"
+revision = "01af8e5b7ce44432b357e26c7d67eb7fa055ae72"
+license_spdx = "MIT"
+# Unprefixed `git archive --format=tar HEAD`; repeated archive bytes match.
+source_digest = "sha256:67fe3a54397f9d1437464dfd149bdf54520a0c5a894eb4ab66eb1f37ea100449"
+submodules = []
+
+[environment]
+# Python and OS are recorded from the candidate declaration only. A final
+# image digest and dependency closure have not been frozen in this static lane.
+status = "unknown"
+python_version = ">=3.10"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# cachetools has no runtime dependencies. These are the candidate's declared
+# build and test/tooling requirements; they are intentionally not a lock.
+status = "unknown"
+installer = "pip"
+packages = [
+  "setuptools>=80",
+  "setuptools-scm>=8.2",
+  "pytest",
+  "pytest-cov",
+  "sphinx",
+  "pyright",
+  "ruff",
+]
+
+[tests]
+framework = "pytest"
+# 312 items were observed by collect-only with pytest 9.1.1 on CPython 3.14;
+# this is not a frozen production denominator.
+expected_total = 312
+expected_total_source = "unknown"
+commands = ["python -m pip install -e .", "python -m pytest --continue-on-collection-errors -q tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Static provenance, license, package boundary, API inventory, source SLOC, packaging metadata, and collect-only evidence are recorded. Publication is blocked because the final environment and hash-locked dependency bundle, frozen private test/command artifacts, Oracle bundle, and cachetools-specific child-side adapter for callable/stateful/threaded APIs are absent; no Docker, hidden-test, or Oracle execution is authorized in this lane."
