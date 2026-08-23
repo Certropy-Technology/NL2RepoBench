@@ -7,6 +7,7 @@ MODEL="${MODEL:?set MODEL, e.g. openai/gpt-5.6-sol}"
 LLM_BASE_URL="${LLM_BASE_URL:?set LLM_BASE_URL}"
 LLM_API_KEY="${LLM_API_KEY:?set LLM_API_KEY}"
 AGENT_TIMEOUT_SECONDS="${AGENT_TIMEOUT_SECONDS:-18000}"
+AGENT_SETUP_TIMEOUT_MULTIPLIER="${AGENT_SETUP_TIMEOUT_MULTIPLIER:-3}"
 REASONING_EFFORT="${REASONING_EFFORT:-max}"
 MAX_RETRIES="${MAX_RETRIES:-2}"
 RETRY_INFRA="${RETRY_INFRA:-1}"
@@ -58,6 +59,7 @@ echo "model=$MODEL"
 echo "reasoning_effort=$REASONING_EFFORT"
 echo "agent_timeout_seconds=$AGENT_TIMEOUT_SECONDS"
 echo "agent_timeout_multiplier=$agent_timeout_multiplier"
+echo "agent_setup_timeout_multiplier=$AGENT_SETUP_TIMEOUT_MULTIPLIER"
 echo "max_retries=$MAX_RETRIES retry_infra=$RETRY_INFRA"
 echo "llm_num_retries=$LLM_NUM_RETRIES llm_timeout=$LLM_TIMEOUT"
 echo "llm_retry_wait=$LLM_RETRY_MIN_WAIT-$LLM_RETRY_MAX_WAIT"
@@ -111,6 +113,7 @@ env PYTHONPATH=../src:${PYTHONPATH:-} \
   --ae "LLM_RETRY_MIN_WAIT=$LLM_RETRY_MIN_WAIT" \
   --ae "LLM_RETRY_MAX_WAIT=$LLM_RETRY_MAX_WAIT" \
   --agent-timeout-multiplier "$agent_timeout_multiplier" \
+  --agent-setup-timeout-multiplier "$AGENT_SETUP_TIMEOUT_MULTIPLIER" \
   "${retry_args[@]}" \
   --jobs-dir "$harbor_jobs_dir"
 harbor_rc=$?

@@ -174,6 +174,7 @@ def main() -> int:
             "LOCK_ROOT": str(lock_root),
             "MAX_CONCURRENCY": str(args.concurrency),
             "AGENT_TIMEOUT_SECONDS": "18000",
+            "AGENT_SETUP_TIMEOUT_MULTIPLIER": "3",
             "REASONING_EFFORT": "max",
             "MAX_RETRIES": "3",
             "LLM_NUM_RETRIES": "10",

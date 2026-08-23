@@ -113,6 +113,7 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
     assert "test-secret" not in completed.stdout
     assert "test-secret" not in completed.stderr
     assert "agent_timeout_seconds=18000" in completed.stdout
+    assert "agent_setup_timeout_multiplier=3" in completed.stdout
 
 
 def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
