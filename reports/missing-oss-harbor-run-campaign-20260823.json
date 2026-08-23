@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "missing-oss-harbor-run-20260823",
+  "tasks": [
+    {
+      "task_id": "autojump",
+      "source": "catalog/tasks/autojump/harbor"
+    },
+    {
+      "task_id": "flasky",
+      "source": "catalog/tasks/flasky/harbor"
+    },
+    {
+      "task_id": "graphneuralnetwork",
+      "source": "catalog/tasks/graphneuralnetwork/harbor"
+    },
+    {
+      "task_id": "pandarallel",
+      "source": "catalog/tasks/pandarallel/harbor"
+    },
+    {
+      "task_id": "pss",
+      "source": "catalog/tasks/pss/harbor"
+    },
+    {
+      "task_id": "pysondb-v2",
+      "source": "catalog/tasks/pysondb-v2/harbor"
+    },
+    {
+      "task_id": "pythonprojecttemplate",
+      "source": "catalog/tasks/pythonprojecttemplate/harbor"
+    },
+    {
+      "task_id": "records",
+      "source": "catalog/tasks/records/harbor"
+    },
+    {
+      "task_id": "retrying",
+      "source": "catalog/tasks/retrying/harbor"
+    },
+    {
+      "task_id": "schedule-master",
+      "source": "catalog/tasks/schedule-master/harbor"
+    }
+  ],
+  "policy": "skip task if trusted OSS inventory contains any finished run; model queues per-model concurrency=2"
+}
