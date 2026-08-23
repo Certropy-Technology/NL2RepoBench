@@ -1,0 +1,75 @@
+schema_version = "2.0"
+task_id = "chalk"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "terminal-formatting"
+tags = ["node", "npm", "esm", "terminal", "ansi", "color", "json", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/chalk/chalk"
+revision = "661317e6f91fe7c90306c2c48ea9354562ee9146"
+license_spdx = "MIT"
+source_digest = "sha256:0b041959f2c9516006566ed834208aaccf765e8d20f1b39efd8727e2d3844d80"
+submodules = []
+
+[environment]
+# Node/npm probes used the host toolchain. No immutable verifier image digest
+# has been approved for this candidate, so the environment remains unknown.
+status = "unknown"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "22.23.1"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+# The frozen package has no runtime dependencies. The upstream development
+# suite still needs a large range-resolved AVA/lint/type-checking closure; no
+# content-addressed lock/cache bundle is approved for this task.
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[tests]
+# 58 is the observed AVA leaf count from the official suite. It is not a
+# production frozen node:test collection until a private adapter is reviewed.
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 58
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Blocked Node ESM pilot for deterministic terminal string styling with explicit color levels."
+keywords = ["node", "npm", "esm", "terminal", "ansi", "color", "json", "chalk"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"

@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "status": "proposed-audit-contract",
+  "purpose": "Deterministic child-side JSON boundary for Chalk formatting; this is not a Harbor bundle or a candidate CLI requirement.",
+  "transport": {
+    "mode": "jsonl",
+    "encoding": "utf-8",
+    "request": "one JSON object per line on stdin",
+    "response": "one JSON object per line on stdout",
+    "stderr": "diagnostics only; never parsed as a result",
+    "canonical_json": {
+      "ensure_ascii": false,
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "allow_nan": false
+    }
+  },
+  "request": {
+    "required": ["id", "operation", "payload"],
+    "id_type": "string",
+    "operations": ["format", "inventory", "detect-support"],
+    "json_value": "null, boolean, finite number, string, array, or plain object recursively",
+    "forbidden_values": [
+      "undefined",
+      "NaN",
+      "Infinity",
+      "function",
+      "symbol",
+      "BigInt",
+      "Date",
+      "custom prototype",
+      "custom toString",
+      "cycle",
+      "file handle",
+      "TTY handle"
+    ],
+    "format": {
+      "required": ["level", "chain", "values"],
+      "level": "integer 0 through 3",
+      "chain": "non-empty array of {name: string, args: JSON array}; zero-argument style names use args=[]",
+      "style_names": "the names exported by modifierNames, foregroundColorNames, backgroundColorNames, underlineColorNames, plus visible and the nine color-model builders",
+      "values": "JSON values converted by the package's ordinary JavaScript String semantics and joined with one ASCII space"
+    },
+    "inventory": {
+      "required": [],
+      "payload": "empty object",
+      "result": "exported style-name arrays and aliases; support metadata is only included from an isolated launch"
+    },
+    "detect-support": {
+      "required": ["stream", "environment", "argv"],
+      "stream": "stdout or stderr",
+      "environment": "complete allowlisted environment map supplied before child launch",
+      "argv": "complete allowlisted argv vector supplied before module import"
+    }
+  },
+  "response": {
+    "success": {
+      "id": "string",
+      "ok": true,
+      "value": "string, JSON array, JSON object, or false according to operation"
+    },
+    "failure": {
+      "id": "string",
+      "ok": false,
+      "error_type": "string",
+      "message": "stable bounded message without paths, stacks, timestamps, or environment dumps"
+    }
+  },
+  "determinism": {
+    "ordinary_format_environment": {
+      "TERM": "dumb",
+      "CI": "true",
+      "FORCE_COLOR": "0",
+      "COLORTERM": "absent",
+      "stdout": "pipe",
+      "stderr": "pipe",
+      "argv_color_flags": "absent",
+      "locale": "C.UTF-8"
+    },
+    "ansi": "preserved in text when explicit level is greater than zero; level zero emits no style escapes",
+    "line_endings": "Chalk preserves input LF and CRLF; JSONL adds only its response delimiter",
+    "forbidden_output": [
+      "timestamps",
+      "object addresses",
+      "process paths",
+      "ambient terminal dimensions",
+      "cursor-control frames",
+      "stdout diagnostics"
+    ]
+  },
+  "publication_state": "blocked-until-immutable-image-offline-closure-private-node-test-adapter-and-controls-are-proven"
+}

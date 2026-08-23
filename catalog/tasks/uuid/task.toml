@@ -1,0 +1,78 @@
+schema_version = "2.0"
+task_id = "uuid"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "uuid-library"
+tags = ["node", "npm", "esm", "uuid", "rfc9562", "crypto", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/uuidjs/uuid"
+revision = "fd59f0277549d22cc7ec00a7b3b5c9bccb4d3c1d"
+license_spdx = "MIT"
+source_digest = "sha256:fbf7e9c3a1bd5132ab04286855533c2b5f1607c1f97e1878cd568c41d58bdda8"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+base_image_digest = "sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "22.23.1"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+# The upstream v3 lock is committed and integrity-complete, but no reviewed
+# content-addressed cache artifact is stored in this public task directory.
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[tests]
+# Development observation from the official node:test suite. A private JSON
+# adapter must freeze its own collection and denominator before packaging.
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 82
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Development-only Node ESM pilot for JSON-safe RFC 9562 UUID generation and parsing."
+keywords = ["node", "npm", "esm", "uuid", "rfc9562", "crypto", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "specified"
+reason = "Development-only evidence-first candidate; private JSON adapter, dependency/cache artifact, verifier, Oracle, and controls are intentionally absent."
