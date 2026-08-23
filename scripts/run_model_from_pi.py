@@ -76,6 +76,16 @@ def main() -> int:
     parser.add_argument("--model-id", required=True)
     parser.add_argument("--harbor-model", required=True)
     parser.add_argument("--task", required=True)
+    parser.add_argument(
+        "--harbor-task-path",
+        type=Path,
+        help="Use a compiled Harbor task path instead of catalog/tasks/<task>/harbor.",
+    )
+    parser.add_argument(
+        "--harbor-task-root",
+        type=Path,
+        help="Resolve each task as <root>/<task-id> for a compiled batch.",
+    )
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--run-prefix", required=True)
     parser.add_argument("--lock-root", type=Path, required=True)
@@ -97,6 +107,9 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    if args.harbor_task_path is not None and args.harbor_task_root is not None:
+        raise SystemExit("use only one of --harbor-task-path and --harbor-task-root")
+
     if not 1 <= args.concurrency <= 8:
         raise SystemExit("--concurrency must be between 1 and 8")
 
@@ -112,7 +125,15 @@ def main() -> int:
     for task_name in task_names:
         if not SAFE_NAME.fullmatch(task_name):
             raise SystemExit(f"unsafe task: {task_name!r}")
-        task_root = ROOT / "catalog/tasks" / task_name / "harbor"
+        task_root = (
+            args.harbor_task_path.resolve()
+            if args.harbor_task_path is not None
+            else (args.harbor_task_root.resolve() / task_name)
+            if args.harbor_task_root is not None
+            else ROOT / "catalog/tasks" / task_name / "harbor"
+        )
+        if task_root.is_symlink():
+            raise SystemExit(f"Harbor task path must not be a symlink: {task_root}")
         if not (task_root / "task.toml").is_file():
             raise SystemExit(f"missing Harbor task: {task_root}")
     run_root = args.run_root if args.run_root.is_absolute() else ROOT / args.run_root
@@ -143,6 +164,12 @@ def main() -> int:
             "LLM_BASE_URL": base_url,
             "LLM_API_KEY": api_key,
             "RUN_ROOT": str(run_root),
+            "HARBOR_TASK_PATH": str(args.harbor_task_path.resolve())
+            if args.harbor_task_path is not None
+            else "",
+            "HARBOR_TASK_ROOT": str(args.harbor_task_root.resolve())
+            if args.harbor_task_root is not None
+            else "",
             "RUN_PREFIX": args.run_prefix,
             "LOCK_ROOT": str(lock_root),
             "MAX_CONCURRENCY": str(args.concurrency),
