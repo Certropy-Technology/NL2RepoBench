@@ -1,0 +1,67 @@
+schema_version = "1.0"
+task_id = "natsort"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = [
+  "python",
+  "sorting",
+  "unicode",
+  "locale",
+  "stdlib-fallback",
+  "pytest",
+  "hypothesis",
+  "repository-generation",
+  "audit-candidate",
+]
+language = "python"
+
+[source]
+# This is deliberately an audit source, not a frozen source lock. The URL and
+# commit are fixed; the archive and LICENSE bytes still need independent
+# evidence before this task can leave the blocked state.
+status = "unknown"
+upstream_url = "https://github.com/SethMMorton/natsort"
+revision = "e90771d7c39157d079425b655763938c2709d486"
+license_spdx = "MIT"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = ">=3.8,<4.0"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# Runtime scope is the standard-library fallback. These are provisional
+# authoring/test tools only; no offline wheelhouse or lock digest is claimed.
+status = "unknown"
+installer = "uv"
+packages = ["pytest", "hypothesis", "setuptools"]
+
+[tests]
+framework = "pytest"
+# The v1 source schema requires a positive integer. This is an explicitly
+# non-scoring sentinel until bounded pytest and Hypothesis collection is
+# repeated in the final environment.
+expected_total = 1
+expected_total_source = "unknown"
+commands = [
+  "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 LC_ALL=C.UTF-8 LANG=C.UTF-8 python -m pytest --collect-only -q -p no:cacheprovider -o addopts='' tests",
+  "PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 LC_ALL=C.UTF-8 LANG=C.UTF-8 python -m pytest --collect-only -q -p no:cacheprovider -o addopts='' tests",
+]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Audit candidate only. Exact archive digest and LICENSE evidence, source-only LOC, stable pytest/Hypothesis collection, offline dependency closure, locale/Unicode repeatability, and JSON-safe scope evidence are missing. expected_total=1 is a schema sentinel and must not be used as a denominator. No Harbor, Oracle, or private test artifact is present."

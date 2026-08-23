@@ -1,0 +1,56 @@
+schema_version = "1.0"
+task_id = "tabulate"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "unknown"
+category = "data-formatting"
+tags = ["python", "tabular-data", "text-formatting", "unicode", "locale", "repository-generation", "pytest"]
+language = "python"
+
+[source]
+# The revision is fixed, but this audit candidate does not claim a source
+# artifact until the archive and license bytes have been independently hashed.
+status = "unknown"
+upstream_url = "https://github.com/astanin/python-tabulate"
+revision = "268615a5c27dc40e5c22454c07b44d5c50410da0"
+license_spdx = "unknown"
+submodules = []
+
+[environment]
+# No immutable verifier image or platform lock is part of this task-local
+# candidate. The intended execution lane is a network-isolated CPython job.
+status = "unknown"
+python_version = "3.12"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# The base lane intentionally has no runtime extras. numpy, pandas and wcwidth
+# are excluded; the offline closure still needs a separate, hash-locked probe.
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+# The schema requires a positive provisional value. This is not a frozen
+# denominator: official pytest and doctest collection remains an audit gate.
+expected_total = 1
+expected_total_source = "unknown"
+commands = [
+  "python -m pytest --collect-only -q",
+  "python -m pytest --collect-only -q --doctest-modules tabulate",
+]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Audit-only candidate. Exact archive and license evidence, source-only LOC, official pytest/doctest collection, base-lane dependency closure, locale/Unicode probes, and the JSON/text subprocess boundary are not verified in this isolated task-local checkout. No hidden tests, Oracle, Harbor assets, or publication artifacts are present."
