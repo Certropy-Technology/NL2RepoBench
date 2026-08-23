@@ -31,6 +31,16 @@
       "collected": 4,
       "passed": 4,
       "reward": 1.0
+    },
+    {
+      "task_id": "pythonprojecttemplate",
+      "issue": "candidate pyproject addopts required pytest-cov absent from verifier image",
+      "repair": "override candidate addopts in trusted pytest invocation with -o addopts=",
+      "evidence": ".nl2repo/runs/oracle/pythonprojecttemplate-verifier-fix-20260824/2026-08-24__04-41-46/harbor__hoY5a2X/verifier/grading.json",
+      "valid": true,
+      "collected": 36,
+      "passed": 36,
+      "reward": 1.0
     }
   ],
   "model_runs": "not started by authoring loop",
