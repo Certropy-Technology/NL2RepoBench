@@ -154,10 +154,19 @@ class HarborCompiler:
 
     def _write_environment(self, manifest: TaskManifest, task_root: Path) -> None:
         image = self.toolchain.images.agent_base
-        dockerfile = f"""FROM --platform=linux/amd64 {image}
-
-WORKDIR /workspace
-        """
+        packages = tuple(manifest.environment_lock.system_packages)
+        install = ""
+        if packages:
+            quoted = " ".join(shlex.quote(package) for package in packages)
+            install = (
+                "RUN apt-get update && apt-get install -y --no-install-recommends "
+                f"{quoted} && rm -rf /var/lib/apt/lists/*\n\n"
+            )
+        dockerfile = (
+            f"FROM --platform=linux/amd64 {image}\n\n"
+            + install
+            + "WORKDIR /workspace\n"
+        )
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
         profile = manifest.harbor
         assert profile is not None
@@ -190,6 +199,7 @@ WORKDIR /workspace
         atomic_write(tests_root / "requirements.lock.txt", requirements_data)
 
         dependencies_root = tests_root / "dependencies"
+        custom_verifier = manifest.verifier is not None and not allow_incomplete
         if allow_incomplete:
             dependencies_root.mkdir(parents=True)
             atomic_write(dependencies_root / "requirements.lock.txt", b"")
@@ -200,20 +210,34 @@ WORKDIR /workspace
         else:
             dependency_artifact = manifest.dependency_bundle.artifact
             command_artifact = manifest.tests.commands_artifact
-            if dependency_artifact is None or command_artifact is None:
+            if dependency_artifact is None or (command_artifact is None and not custom_verifier):
                 raise HarborCompileError(
                     "production task requires dependency and command artifacts"
                 )
             self._extract_private_bundle(dependency_artifact, dependencies_root)
             self._validate_dependency_bundle(dependencies_root)
-            command_plan = self._resolve_command_plan(command_artifact)
+            if custom_verifier:
+                command_plan = VerifierCommandPlan(
+                    runner="pytest-subprocess-boundary-v1",
+                    candidate_install="pip-target-no-deps-v1",
+                )
+            else:
+                assert command_artifact is not None
+                command_plan = self._resolve_command_plan(command_artifact)
         atomic_write(
             tests_root / "command-plan.json",
             canonical_json(command_plan) + b"\n",
         )
 
         private_root = tests_root / "private"
-        if manifest.tests.test_bundle is not None:
+        if custom_verifier:
+            assert manifest.verifier is not None
+            verifier_root = tests_root / "verifier"
+            self._extract_private_bundle(manifest.verifier.bundle, verifier_root)
+            entrypoint = verifier_root / manifest.verifier.entrypoint
+            if entrypoint.is_symlink() or not entrypoint.is_file():
+                raise HarborCompileError("custom verifier entrypoint is missing")
+        elif manifest.tests.test_bundle is not None:
             self._extract_private_bundle(manifest.tests.test_bundle, private_root)
         elif allow_incomplete:
             self._copy_tree(source_dir / "harbor/tests", private_root)
@@ -237,9 +261,15 @@ RUN python -m pip install \
 COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0555 test.sh /tests/test.sh
-COPY --chmod=0500 private /tests/private
+"""
+        if custom_verifier:
+            dockerfile += "COPY --chmod=0500 verifier /tests/verifier\n"
+        else:
+            dockerfile += "COPY --chmod=0500 private /tests/private\n"
+        dockerfile += """
 
 RUN useradd --uid 10001 --create-home candidate \
+  && mkdir -p /tests/private \
   && chmod -R 0500 /tests/private \
   && chmod -R 0555 /usr/local/lib/python3.12/site-packages/nl2repobench
 WORKDIR /tests
@@ -397,6 +427,8 @@ WORKDIR /tests
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
     def _test_script(self, manifest: TaskManifest) -> str:
+        if manifest.verifier is not None:
+            return self._custom_test_script(manifest)
         expected = manifest.tests.expected_total
         metric = shlex.quote(manifest.metric.contract_id)
         profile = manifest.harbor
@@ -522,6 +554,63 @@ python -I -m nl2repobench.verification.cli \
   --junit /logs/verifier/junit.xml \
   --pytest-exit-code "$pytest_exit_code"
 exit 0
+        """
+
+    def _custom_test_script(self, manifest: TaskManifest) -> str:
+        assert manifest.harbor is not None
+        assert manifest.verifier is not None
+        expected = manifest.tests.expected_total
+        entrypoint = shlex.quote(f"/tests/verifier/{manifest.verifier.entrypoint}")
+        metric = shlex.quote(manifest.metric.contract_id)
+        return f"""#!/usr/bin/env bash
+set -uo pipefail
+mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
+chmod 0700 /logs/verifier /tmp/trusted-results
+rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
+python -I -m nl2repobench.verification.network_check \
+  --output /logs/verifier/network.json
+if [[ "$?" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --metric-contract {metric} \
+    --reason verifier-network-available
+  exit 0
+fi
+python -I -B -m nl2repobench.verification.workspace_copy \
+  --source /workspace --destination /tmp/candidate
+if [[ "$?" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --metric-contract {metric} \
+    --reason candidate-workspace-rejected
+  exit 0
+fi
+chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
+python -I -B -m nl2repobench.verification.candidate_install \
+  --source /tmp/candidate --target /tmp/candidate-site \
+  --timeout-sec {manifest.harbor.candidate_install_timeout_sec} \
+  --status /logs/verifier/candidate-install.json
+if [[ "$?" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --metric-contract {metric} \
+    --reason candidate-installation-failed
+  exit 0
+fi
+python -I -m nl2repobench.verification.custom_verifier \
+  --entrypoint {entrypoint} --expected {expected} \
+  --junit /logs/verifier/junit.xml \
+  --collection /logs/verifier/collection.json \
+  --timeout-sec {manifest.harbor.candidate_total_timeout_sec}
+custom_exit=$?
+if [[ "$custom_exit" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --metric-contract {metric} \
+    --reason verifier-internal-error
+  exit 0
+fi
+python -I -m nl2repobench.verification.cli \
+  --expected {expected} --metric-contract {metric} \
+  --collection /logs/verifier/collection.json \
+  --junit /logs/verifier/junit.xml --pytest-exit-code 0
+exit 0
 """
 
     def _copy_verifier_runtime(self, destination: Path) -> None:
@@ -546,6 +635,7 @@ exit 0
             "verification/pytest_plugin.py",
             "verification/run_pytest.py",
             "verification/workspace_copy.py",
+            "verification/custom_verifier.py",
         )
         for relative in files:
             source = package_root / relative

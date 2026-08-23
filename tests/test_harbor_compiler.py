@@ -291,6 +291,94 @@ def test_dependency_bundle_requires_hashed_wheel_closure(tmp_path) -> None:
     compiler._validate_dependency_bundle(dependencies)  # noqa: SLF001
 
 
+def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
+    store = FileArtifactStore(tmp_path / "artifacts")
+    dependency_bundle = store.put_bytes(
+        _tar_bytes({"requirements.lock.txt": b""}), visibility=Visibility.PRIVATE
+    )
+    verifier_bundle = store.put_bytes(
+        _tar_bytes(
+            {
+                "run.py": (
+                    b"import json\n"
+                    b"print(json.dumps({'schema_version':'1.0','leaves':"
+                    b"[{'id':'one','status':'passed'}]}))\n"
+                )
+            }
+        ),
+        visibility=Visibility.PRIVATE,
+    )
+    oracle_bundle = store.put_bytes(
+        _tar_bytes({"solve.sh": b"#!/usr/bin/env bash\nset -eu\n"}),
+        visibility=Visibility.PRIVATE,
+    )
+    source_dir = tmp_path / "catalog/tasks/custom"
+    source_dir.mkdir(parents=True)
+    (source_dir / "instruction.md").write_text("# Custom\n", encoding="utf-8")
+    (source_dir / "task.toml").write_text(
+        tomli_w.dumps(
+            {
+                "schema_version": "1.0",
+                "task_id": "custom",
+                "instruction": "instruction.md",
+                "metadata": {
+                    "difficulty": "easy",
+                    "category": "test",
+                    "tags": ["python"],
+                    "language": "python",
+                },
+                "source": {
+                    "status": "known",
+                    "upstream_url": "https://example.invalid/repo",
+                    "revision": "1" * 40,
+                    "license_spdx": "MIT",
+                    "source_digest": "sha256:" + "2" * 64,
+                },
+                "environment": {
+                    "status": "known",
+                    "python_version": "3.12",
+                    "os_name": "linux",
+                    "base_image": "python:3.12-slim",
+                    "base_image_digest": "sha256:" + "3" * 64,
+                    "network_mode": "no-network",
+                },
+                "dependencies": {
+                    "status": "known",
+                    "artifact": dependency_bundle.model_dump(mode="json"),
+                    "installer": "uv",
+                },
+                "tests": {
+                    "expected_total": 1,
+                    "expected_total_source": "frozen-collection",
+                    "commands": ["custom-json-v1"],
+                },
+                "verifier": {
+                    "protocol": "custom-json-v1",
+                    "bundle": verifier_bundle.model_dump(mode="json"),
+                    "entrypoint": "run.py",
+                },
+                "harbor": {
+                    "description": "Custom verifier fixture",
+                    "keywords": ["python", "json", "custom"],
+                },
+                "oracle_bundle": oracle_bundle.model_dump(mode="json"),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    output = HarborCompiler(
+        TOOLCHAIN,
+        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+    ).compile_task(source_dir, tmp_path / "output")
+
+    assert (output / "tests/verifier/run.py").is_file()
+    assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
+    assert "COPY --chmod=0500 verifier /tests/verifier" in (
+        output / "tests/Dockerfile"
+    ).read_text(encoding="utf-8")
+
+
 def test_dependency_bundle_rejects_requirement_directives(tmp_path) -> None:
     dependencies = tmp_path / "dependencies"
     dependencies.mkdir()

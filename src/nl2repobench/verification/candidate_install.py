@@ -34,7 +34,13 @@ def tree_usage(paths: tuple[Path, ...]) -> tuple[int, int]:
             continue
         for child in children:
             entries += 1
-            metadata = child.stat(follow_symlinks=False)
+            try:
+                metadata = child.stat(follow_symlinks=False)
+            except FileNotFoundError:
+                # Build backends may remove a temporary bytecode file between
+                # scandir and stat; it is not a candidate failure.
+                entries -= 1
+                continue
             if stat.S_ISDIR(metadata.st_mode):
                 pending.append(Path(child.path))
             elif stat.S_ISREG(metadata.st_mode):

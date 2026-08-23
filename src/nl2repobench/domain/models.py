@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 from enum import StrEnum
+from pathlib import PurePosixPath
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler, model_validator
@@ -257,6 +258,28 @@ class DependencyBundle(RecordModel):
         return self
 
 
+class TaskVerifierSpec(RecordModel):
+    """Private task-specific verifier protocol descriptor."""
+
+    protocol: Literal["custom-json-v1"] = "custom-json-v1"
+    bundle: ArtifactRef
+    entrypoint: str = "run.py"
+
+    @model_validator(mode="after")
+    def validate_private_entrypoint(self) -> TaskVerifierSpec:
+        path = PurePosixPath(self.entrypoint)
+        if (
+            path.is_absolute()
+            or not self.entrypoint
+            or "." in path.parts
+            or ".." in path.parts
+        ):
+            raise ValueError("verifier.entrypoint must be a safe relative path")
+        if self.bundle.visibility is not Visibility.PRIVATE:
+            raise ValueError("verifier.bundle must be private")
+        return self
+
+
 class TestManifest(RecordModel):
     """Frozen test contract; hidden command bytes may be private artifacts."""
 
@@ -434,6 +457,7 @@ class TaskManifest(RecordModel):
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
     harbor: HarborExecutionProfile | None = None
     oracle_bundle: ArtifactRef | None = None
+    verifier: TaskVerifierSpec | None = None
     legacy_projection: LegacyProjection | None = None
 
     def publication_gaps(self) -> tuple[str, ...]:
@@ -454,14 +478,15 @@ class TaskManifest(RecordModel):
             gaps.append("dependency_bundle.status=known")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
-        if self.tests.test_bundle is None:
-            gaps.append("tests.test_bundle")
-        elif self.tests.test_bundle.visibility is not Visibility.PRIVATE:
-            gaps.append("tests.test_bundle.visibility=private")
-        if self.tests.commands_artifact is None:
-            gaps.append("tests.commands_artifact")
-        elif self.tests.commands_artifact.visibility is not Visibility.PRIVATE:
-            gaps.append("tests.commands_artifact.visibility=private")
+        if self.verifier is None:
+            if self.tests.test_bundle is None:
+                gaps.append("tests.test_bundle")
+            elif self.tests.test_bundle.visibility is not Visibility.PRIVATE:
+                gaps.append("tests.test_bundle.visibility=private")
+            if self.tests.commands_artifact is None:
+                gaps.append("tests.commands_artifact")
+            elif self.tests.commands_artifact.visibility is not Visibility.PRIVATE:
+                gaps.append("tests.commands_artifact.visibility=private")
         if self.metric.contract_id != "fixed-test-pass-rate-v1":
             gaps.append("metric.contract_id=fixed-test-pass-rate-v1")
         if self.harbor is None:

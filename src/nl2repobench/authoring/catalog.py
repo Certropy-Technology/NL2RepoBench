@@ -29,6 +29,7 @@ from nl2repobench.domain.models import (
     TaskManifest,
     TaskMetadata,
     TaskRef,
+    TaskVerifierSpec,
     TestManifest,
     Visibility,
 )
@@ -76,6 +77,7 @@ class DeclarativeTaskSource(RecordModel):
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
     harbor: HarborExecutionProfile | None = None
     oracle_bundle: ArtifactRef | None = None
+    verifier: TaskVerifierSpec | None = None
 
     @model_validator(mode="after")
     def validate_paths(self) -> DeclarativeTaskSource:
@@ -198,6 +200,7 @@ class CatalogCompiler:
             lifecycle=python_source.lifecycle,
             harbor=python_source.harbor,
             oracle_bundle=python_source.oracle_bundle,
+            verifier=python_source.verifier,
         )
         payload = canonical_json(manifest)
         output_dir = safe_child_directory(output_root, source.task_id)

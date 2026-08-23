@@ -729,6 +729,39 @@
       "title": "TaskStatus",
       "type": "string"
     },
+    "TaskVerifierSpec": {
+      "additionalProperties": false,
+      "description": "Private task-specific verifier protocol descriptor.",
+      "properties": {
+        "bundle": {
+          "$ref": "#/$defs/ArtifactRef"
+        },
+        "entrypoint": {
+          "default": "run.py",
+          "title": "Entrypoint",
+          "type": "string"
+        },
+        "protocol": {
+          "const": "custom-json-v1",
+          "default": "custom-json-v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bundle"
+      ],
+      "title": "TaskVerifierSpec",
+      "type": "object",
+      "x-nl2repobench-model": "TaskVerifierSpec",
+      "x-nl2repobench-runtime-validation": true
+    },
     "TestManifest": {
       "additionalProperties": false,
       "allOf": [
@@ -927,6 +960,17 @@
     },
     "tests": {
       "$ref": "#/$defs/TestManifest"
+    },
+    "verifier": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TaskVerifierSpec"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "version": {
       "default": "1.0.0",
