@@ -38,6 +38,13 @@ def _failure_class(rows: list[dict[str, Any]]) -> str | None:
     return classes.pop()
 
 
+def _model_matches(actual: object, expected: str) -> bool:
+    if not isinstance(actual, str):
+        return False
+    normalized = actual.removeprefix("openai/").removeprefix("anthropic/")
+    return normalized == expected
+
+
 def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]:
     plan = _json(plan_path)
     tasks = plan.get("tasks")
@@ -59,9 +66,19 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
         if errors:
             raise ValueError(f"result parse errors for {model_id}: {errors[:3]}")
         rows = frame.to_dicts()
+        mismatched = [
+            row
+            for row in rows
+            if not _model_matches(row.get("model"), str(model_id))
+        ]
+        if mismatched:
+            raise ValueError(f"result model mismatch for {model_id}: {mismatched[:2]}")
         normalized_by_model[model_id] = rows
         all_rows.extend(rows)
         seen = {str(row.get("task_id")) for row in rows}
+        extras = seen - {str(task_id) for task_id in tasks}
+        if extras:
+            raise ValueError(f"unexpected task results for {model_id}: {sorted(extras)}")
         for task_id in tasks:
             if task_id not in seen:
                 missing.append({"model": model_id, "task_id": str(task_id)})

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 import tomllib
@@ -112,11 +113,23 @@ def _validate_oracle(task: dict[str, Any], task_id: str) -> None:
         if run.get("valid") is not True:
             raise ValueError(f"{task_id}: Oracle run {index + 1} is not valid")
         reward = run.get("reward")
-        if not isinstance(reward, (int, float)) or reward < 0.80:
+        if (
+            isinstance(reward, bool)
+            or not isinstance(reward, (int, float))
+            or not math.isfinite(float(reward))
+            or not 0 <= reward <= 1
+            or reward < 0.80
+        ):
             raise ValueError(f"{task_id}: Oracle run {index + 1} is below reward 0.80")
         total = run.get("expected_total")
         collected = run.get("collected_total")
-        if not isinstance(total, int) or total <= 0 or not isinstance(collected, int):
+        if (
+            isinstance(total, bool)
+            or not isinstance(total, int)
+            or total <= 0
+            or isinstance(collected, bool)
+            or not isinstance(collected, int)
+        ):
             raise ValueError(f"{task_id}: Oracle run {index + 1} lacks collection evidence")
         if total != collected:
             raise ValueError(f"{task_id}: Oracle collection mismatch in run {index + 1}")
@@ -138,6 +151,26 @@ def _validate_controls(task: dict[str, Any], task_id: str) -> None:
         result = _required_dict(controls[name], f"{task_id}.controls.{name}")
         if result.get("passed") is not True:
             raise ValueError(f"{task_id}: control {name} did not pass")
+        evidence = result.get("evidence")
+        if not isinstance(evidence, list) or not evidence or not all(
+            isinstance(item, str) and item for item in evidence
+        ):
+            raise ValueError(f"{task_id}: control {name} lacks evidence references")
+        result_kind = result.get("result")
+        if not isinstance(result_kind, str) or not result_kind:
+            raise ValueError(f"{task_id}: control {name} lacks a structured result")
+        if name in {"empty", "stub", "forgery"}:
+            reward = result.get("reward")
+            if (
+                isinstance(reward, bool)
+                or not isinstance(reward, (int, float))
+                or not math.isfinite(float(reward))
+                or not 0 <= reward <= 0.20
+            ):
+                raise ValueError(f"{task_id}: control {name} reward is not near zero")
+        else:
+            if result.get("completed") is not True:
+                raise ValueError(f"{task_id}: control {name} did not complete")
 
 
 def _validate_model_runs(task: dict[str, Any], task_id: str) -> None:
@@ -158,12 +191,40 @@ def _validate_model_runs(task: dict[str, Any], task_id: str) -> None:
         failure_class = run.get("failure_class")
         if failure_class is not None and failure_class not in ALLOWED_FAILURE_CLASSES:
             raise ValueError(f"{task_id}: invalid model failure class: {failure_class}")
+        status = run.get("status")
+        valid = run.get("valid")
+        if status not in {"completed", "failed"} or not isinstance(valid, bool):
+            raise ValueError(f"{task_id}: model {model} lacks coherent status/valid fields")
+        if status == "completed" and (valid is not True or failure_class is not None):
+            raise ValueError(f"{task_id}: completed model {model} must be valid without failure")
+        if status == "failed" and (valid is not False or failure_class is None):
+            raise ValueError(
+                f"{task_id}: failed model {model} requires failure class and valid=false"
+            )
         if attempts > 1 and failure_class != "infrastructure":
             raise ValueError(f"{task_id}: only infrastructure failures may be retried for {model}")
         by_model[model] = run
     missing = TARGET_MODELS - set(by_model)
     if missing:
         raise ValueError(f"{task_id}: missing model runs: {', '.join(sorted(missing))}")
+
+
+def _validate_existing_oss_runs(task: dict[str, Any], task_id: str) -> None:
+    refs = task.get("oss_run_refs")
+    if not isinstance(refs, list) or not refs:
+        raise ValueError(f"{task_id}: existing OSS task requires oss_run_refs")
+    for index, raw in enumerate(refs):
+        ref = _required_dict(raw, f"{task_id}.oss_run_refs[{index}]")
+        if ref.get("source") != "oss":
+            raise ValueError(f"{task_id}: OSS exemption reference is not OSS-backed")
+        if ref.get("task_id") != task_id:
+            raise ValueError(f"{task_id}: OSS exemption task_id mismatch")
+        model = ref.get("model")
+        if model not in TARGET_MODELS:
+            raise ValueError(f"{task_id}: OSS exemption has unsupported model")
+        prefix = ref.get("prefix")
+        if not isinstance(prefix, str) or not prefix.startswith("nl2repobench/runs/"):
+            raise ValueError(f"{task_id}: OSS exemption lacks a valid run prefix")
 
 
 def validate_campaign(
@@ -232,13 +293,23 @@ def validate_campaign(
                 raise ValueError("catalog source revision is not immutable")
             if source_lock.get("license_spdx") in LICENSE_UNKNOWN:
                 raise ValueError("catalog license is unresolved")
+            candidate = _required_dict(task.get("candidate"), f"{task_id}.candidate")
+            if candidate.get("revision") != revision:
+                raise ValueError("candidate and catalog source revisions differ")
+            if str(candidate.get("upstream_url", "")).rstrip("/") != str(
+                source_lock.get("upstream_url", "")
+            ).rstrip("/"):
+                raise ValueError("candidate and catalog upstream URLs differ")
             harbor_task = catalog_root / task_id / "harbor/task.toml"
             if not harbor_task.is_file():
                 raise ValueError("Harbor task bundle is missing")
-            _validate_candidate(task.get("candidate"), as_of=as_of, task_id=task_id)
-            _validate_oracle(task, task_id)
+            _validate_candidate(candidate, as_of=as_of, task_id=task_id)
+            if task.get("existing_oss") is True:
+                _validate_existing_oss_runs(task, task_id)
+            else:
+                _validate_oracle(task, task_id)
+                _validate_model_runs(task, task_id)
             _validate_controls(task, task_id)
-            _validate_model_runs(task, task_id)
             valid_tasks.append(task)
         except (OSError, ValueError) as exc:
             label = raw.get("task_id", "<unknown>") if isinstance(raw, dict) else "<unknown>"

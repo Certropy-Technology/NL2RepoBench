@@ -93,3 +93,21 @@ def test_model_campaign_report_fails_on_missing_result(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="missing model results"):
         reporter.build_report(plan)
+
+
+def test_model_campaign_report_rejects_foreign_model_rows(tmp_path: Path) -> None:
+    gpt = tmp_path / "gpt"
+    _run(gpt, "demo", "anthropic/claude-fable-5")
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "tasks": ["demo"],
+                "models": [{"model_id": "gpt-5.6-sol", "run_root": str(gpt)}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="model mismatch"):
+        reporter.build_report(plan)

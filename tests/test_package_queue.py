@@ -89,3 +89,60 @@ def test_queue_rejects_stale_candidate_with_complete_evidence(tmp_path: Path) ->
     )
 
     assert result["counts"] == {"rejected": 1}
+
+
+def test_queue_is_order_independent_and_preserves_github_language(tmp_path: Path) -> None:
+    catalog = tmp_path / "catalog"
+    catalog.mkdir()
+    first = tmp_path / "first.json"
+    second = tmp_path / "second.json"
+    first.write_text(
+        json.dumps(
+            {
+                "candidates": [
+                    {
+                        "package": "node-demo",
+                        "repository": "owner/node-demo",
+                        "language": "node",
+                        "source_kind": "github",
+                        "revision": "a" * 40,
+                        "license_spdx": "MIT",
+                        "stars": 150,
+                        "last_activity": "2026-08-20",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    second.write_text(
+        json.dumps(
+            {
+                "candidates": [
+                    {
+                        "package": "node-demo",
+                        "repository": "owner/node-demo",
+                        "language": "node",
+                        "source_kind": "github",
+                        "revision": "b" * 40,
+                        "license_spdx": "MIT",
+                        "stars": 150,
+                        "last_activity": "2026-08-20",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    left = queue_builder.build_queue(
+        [first, second], catalog_root=catalog, observed_at="2026-08-23T00:00:00Z"
+    )
+    right = queue_builder.build_queue(
+        [second, first], catalog_root=catalog, observed_at="2026-08-23T00:00:00Z"
+    )
+
+    assert left == right
+    assert left["queue"][0]["language"] == "node"
+    assert left["queue"][0]["status"] == "needs-evidence"
+    assert left["queue"][0]["conflicts"] == ["revision"]

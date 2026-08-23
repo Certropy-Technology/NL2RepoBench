@@ -146,6 +146,22 @@ def test_task_upload_rejects_symlink_files(tmp_path: Path) -> None:
     assert [item.local.name for item in items] == ["task.toml"]
 
 
+def test_task_upload_rejects_symlink_directories(tmp_path: Path) -> None:
+    catalog = tmp_path / "catalog" / "tasks"
+    task = catalog / "demo"
+    task.mkdir(parents=True)
+    (task / "task.toml").write_text("task", encoding="utf-8")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "secret.txt").write_text("secret", encoding="utf-8")
+    (task / "linked").symlink_to(outside, target_is_directory=True)
+
+    import pytest
+
+    with pytest.raises(ValueError, match="contains symlink"):
+        list(uploader.iter_task_uploads(catalog))
+
+
 def test_secret_scan_requires_high_confidence_key_shape(tmp_path: Path) -> None:
     public_text = tmp_path / "public.txt"
     public_text.write_text("dask-@trio and mask-id", encoding="utf-8")

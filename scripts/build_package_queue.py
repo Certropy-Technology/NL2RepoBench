@@ -59,6 +59,8 @@ def _source_kind(report: Path, raw: dict[str, Any]) -> str:
             return "npm"
         if folded in {"pypi", "python"}:
             return "pypi"
+        if folded == "github":
+            return "github"
     name = report.name.casefold()
     if "npm" in name or "node" in name:
         return "npm"
@@ -82,13 +84,28 @@ def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]
         record = merged.setdefault(
             identity,
             {
-                "candidate_id": _slug(identity),
+                "candidate_id": (
+                    f"{_slug(identity)}-"
+                    f"{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:12]}"
+                ),
                 "package": package,
-                "language": "node" if source_kind == "npm" else "python",
+                "language": (
+                    str(raw.get("language"))
+                    if raw.get("language") in {"python", "node"}
+                    else (
+                        "node"
+                        if source_kind == "npm"
+                        else "python"
+                        if source_kind == "pypi"
+                        else "unknown"
+                    )
+                ),
                 "source_kind": source_kind,
                 "upstream_url": repository,
+                "identity": identity,
                 "selection_sources": [],
                 "risk_flags": [],
+                "conflicts": [],
                 "status": "needs-evidence",
             },
         )
@@ -120,8 +137,18 @@ def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]
         for target, aliases in field_aliases.items():
             for alias in aliases:
                 value = raw.get(alias)
-                if value is not None and target not in record:
+                if value is None:
+                    continue
+                if target not in record:
                     record[target] = value
+                    break
+                if record[target] != value:
+                    record["conflicts"].append(target)
+                    values = (record[target], value)
+                    record[target] = min(
+                        values,
+                        key=lambda item: json.dumps(item, ensure_ascii=False, sort_keys=True),
+                    )
                     break
         risks = raw.get("risks") or raw.get("offline_risk") or raw.get("risk_flags")
         if isinstance(risks, list):
@@ -147,6 +174,8 @@ def _status(record: dict[str, Any], existing_ids: set[str], observed_at: str) ->
     normalized = {_slug(package), _slug(str(repository or ""))}
     if package in existing_ids or normalized.intersection({_slug(item) for item in existing_ids}):
         return "existing"
+    if record.get("language") not in {"python", "node"}:
+        return "needs-evidence"
     revision = record.get("revision")
     license_spdx = record.get("license_spdx")
     last_activity = record.get("last_activity")
@@ -196,7 +225,7 @@ def build_queue(
         if path.is_dir() and not path.name.startswith(".")
     } if catalog_root.is_dir() else set()
     records: dict[str, dict[str, Any]] = {}
-    for report in reports:
+    for report in sorted(reports):
         for record in _merge_records(report, _load(report)):
             identity = str(record["candidate_id"])
             if identity not in records:
@@ -207,9 +236,23 @@ def build_queue(
                 current["risk_flags"] = sorted(
                     set(current.get("risk_flags", [])) | set(record.get("risk_flags", []))
                 )
+                current["conflicts"] = sorted(
+                    set(current.get("conflicts", [])) | set(record.get("conflicts", []))
+                )
                 for key, value in record.items():
+                    if key in {"selection_sources", "risk_flags", "conflicts"}:
+                        continue
                     if key not in current and value not in (None, [], ""):
                         current[key] = value
+                    elif key in current and current[key] != value and value not in (None, [], ""):
+                        current["conflicts"].append(key)
+                        current[key] = min(
+                            (current[key], value),
+                            key=lambda item: json.dumps(
+                                item, ensure_ascii=False, sort_keys=True
+                            ),
+                        )
+                current["conflicts"] = sorted(set(current["conflicts"]))
     queue = []
     for record in sorted(
         records.values(), key=lambda item: (item["language"], item["package"].casefold())
@@ -219,7 +262,11 @@ def build_queue(
         )
         record["risk_flags"] = sorted(set(record.get("risk_flags", [])))
         record["observed_at"] = observed_at
-        record["status"] = _status(record, existing_ids, observed_at)
+        record["status"] = (
+            "needs-evidence"
+            if record.get("conflicts")
+            else _status(record, existing_ids, observed_at)
+        )
         queue.append(record)
     counts: dict[str, int] = {}
     for record in queue:

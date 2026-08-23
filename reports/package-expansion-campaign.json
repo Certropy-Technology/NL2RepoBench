@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "nl2repobench-package-expansion-v2",
+  "status": "in-progress",
+  "as_of": "2026-08-23T00:00:00Z",
+  "minimum_tasks": 500,
+  "new_task_count": 0,
+  "datasets": [
+    {
+      "dataset_id": "nl2repobench-package-python-v2",
+      "language": "python",
+      "status": "planning"
+    },
+    {
+      "dataset_id": "nl2repobench-package-node-v2",
+      "language": "node",
+      "status": "planning"
+    }
+  ],
+  "tasks": [],
+  "current_snapshot": {
+    "catalog_task_directories": 179,
+    "catalog_task_sources": 105,
+    "harbor_task_directories": 77,
+    "published_tasks": 0,
+    "excluded_tasks": 0,
+    "legacy_complete": 74,
+    "legacy_pending": 30,
+    "note": "This is an honest planning snapshot, not a releaseable dataset manifest."
+  },
+  "oracle_contract": {
+    "attempts": 1,
+    "valid_required": true,
+    "minimum_reward": 0.8,
+    "collection_must_match_frozen_total": true,
+    "stability_claim": "not-proven-by-this-contract"
+  },
+  "archive": null
+}

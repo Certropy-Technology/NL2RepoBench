@@ -34,6 +34,7 @@ task_id = "{task_id}"
 language = "{language}"
 [source]
 status = "known"
+upstream_url = "https://github.com/example/{task_id}"
 revision = "{'a' * 40}"
 license_spdx = "MIT"
 [lifecycle]
@@ -47,13 +48,26 @@ status = "published"
 
 
 def _evidence(task_id: str, language: str, dataset_id: str) -> dict[str, object]:
-    controls = {name: {"passed": True} for name in campaign.REQUIRED_CONTROLS}
+    controls = {
+        name: {
+            "passed": True,
+            "evidence": [f"controls/{name}/result.json"],
+            "result": "low-score" if name in {"empty", "stub", "forgery"} else "completed",
+            **(
+                {"reward": 0.0}
+                if name in {"empty", "stub", "forgery"}
+                else {"completed": True}
+            ),
+        }
+        for name in campaign.REQUIRED_CONTROLS
+    }
     return {
         "task_id": task_id,
         "language": language,
         "dataset_id": dataset_id,
         "candidate": {
             "source_kind": "pypi" if language == "python" else "npm",
+            "upstream_url": f"https://github.com/example/{task_id}",
             "revision": "a" * 40,
             "license_spdx": "MIT",
             "observed_at": "2026-08-20T00:00:00Z",
@@ -67,8 +81,18 @@ def _evidence(task_id: str, language: str, dataset_id: str) -> dict[str, object]
         ],
         "controls": controls,
         "model_runs": [
-            {"model": "gpt-5.6-sol", "attempts": 1, "status": "completed"},
-            {"model": "claude-fable-5", "attempts": 1, "status": "completed"},
+            {
+                "model": "gpt-5.6-sol",
+                "attempts": 1,
+                "status": "completed",
+                "valid": True,
+            },
+            {
+                "model": "claude-fable-5",
+                "attempts": 1,
+                "status": "completed",
+                "valid": True,
+            },
         ],
     }
 
@@ -119,6 +143,69 @@ def test_campaign_fails_closed_below_target(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="below required minimum"):
         campaign.validate_campaign(path, catalog_root=catalog, minimum_tasks=2)
+
+
+def test_campaign_allows_existing_oss_task_without_new_oracle_or_model_runs(
+    tmp_path: Path,
+) -> None:
+    catalog = tmp_path / "catalog" / "tasks"
+    source, harbor = _task(catalog, "demo", "python")
+    payload = {
+        "schema_version": "1.0",
+        "as_of": "2026-08-23T00:00:00Z",
+        "datasets": [{"dataset_id": "python-v1", "language": "python"}],
+        "tasks": [
+            {
+                "task_id": "demo",
+                "language": "python",
+                "dataset_id": "python-v1",
+                "existing_oss": True,
+                "oss_run_refs": [
+                    {
+                        "source": "oss",
+                        "task_id": "demo",
+                        "model": "gpt-5.6-sol",
+                        "prefix": "nl2repobench/runs/gpt-5.6-sol/demo/trial/",
+                    }
+                ],
+                "candidate": {
+                    "source_kind": "pypi",
+                    "upstream_url": "https://github.com/example/demo",
+                    "revision": "a" * 40,
+                    "license_spdx": "MIT",
+                    "observed_at": "2026-08-20T00:00:00Z",
+                    "last_activity": "2026-01-01T00:00:00Z",
+                    "stars": 100,
+                    "monthly_downloads": 0,
+                    "evidence_url": "https://example.invalid/evidence",
+                },
+                "controls": {
+                    name: {
+                        "passed": True,
+                        "evidence": [f"controls/{name}/result.json"],
+                        "result": (
+                            "low-score"
+                            if name in {"empty", "stub", "forgery"}
+                            else "completed"
+                        ),
+                        **(
+                            {"reward": 0.0}
+                            if name in {"empty", "stub", "forgery"}
+                            else {"completed": True}
+                        ),
+                    }
+                    for name in campaign.REQUIRED_CONTROLS
+                },
+            }
+        ],
+    }
+    path = tmp_path / "campaign.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = campaign.validate_campaign(path, catalog_root=catalog, minimum_tasks=1)
+
+    assert result["task_count"] == 1
+    assert source.is_file() and harbor.is_file()
 
 
 def test_published_dataset_validator_matches_compiled_entries(tmp_path: Path) -> None:

@@ -155,6 +155,18 @@ def reconcile(catalog_root: Path) -> dict[str, Any]:
         blocker_document = _document_blocker(task_dir)
         blocked_docs = blocker_document[0] if blocker_document else []
         if not source_path.is_file():
+            if not blocked_docs:
+                record = {
+                    "task_id": task_dir.name,
+                    "status": "untracked-source",
+                    "reason_kind": "unclassified",
+                    "reason": "catalog task directory has no task.toml",
+                    "blocked_docs": [],
+                    "integrity_errors": ["missing authoritative task.toml"],
+                }
+                records.append(record)
+                counts[record["reason_kind"]] = counts.get(record["reason_kind"], 0) + 1
+                continue
             if blocked_docs:
                 reason = blocker_document[1]
                 reason_kind = _reason_kind(reason)

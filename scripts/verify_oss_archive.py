@@ -60,14 +60,14 @@ def resolve_archive_config(
             raise ValueError("campaign archive requires manifest and remote_manifest_key")
         manifest_path = (campaign_or_manifest.parent / manifest_value).resolve()
         local_root = (
-            (campaign_or_manifest.parent / local_value).resolve()
+            (campaign_or_manifest.parent / local_value).absolute()
             if isinstance(local_value, str)
             else None
         )
         raw_roots = archive.get("local_upload_roots", [])
         if not isinstance(raw_roots, list) or not all(isinstance(item, str) for item in raw_roots):
             raise ValueError("campaign archive local_upload_roots must be a list of paths")
-        local_roots = tuple((campaign_or_manifest.parent / item).resolve() for item in raw_roots)
+        local_roots = tuple((campaign_or_manifest.parent / item).absolute() for item in raw_roots)
         if local_root is not None and local_root not in local_roots:
             local_roots = (*local_roots, local_root)
         return manifest_path, remote_key, local_root, local_roots
@@ -148,11 +148,16 @@ def scan_for_secrets(root: Path) -> list[str]:
     """Return file paths containing secret-shaped values, never the values."""
 
     findings: list[str] = []
+    if root.is_symlink():
+        return [str(root)]
     if not root.exists():
         return findings
     paths = [root] if root.is_file() else sorted(root.rglob("*"))
     for path in paths:
-        if not path.is_file() or path.is_symlink():
+        if path.is_symlink():
+            findings.append(str(path))
+            continue
+        if not path.is_file():
             continue
         try:
             text = path.read_text(encoding="utf-8", errors="ignore")

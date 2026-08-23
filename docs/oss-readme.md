@@ -10,7 +10,7 @@ NL2RepoBench 评测 LLM agent 能否从一份自然语言规格和**空 workspac
 
 ```
 nl2repobench/
-├── harbor-tasks/                  # 64 个 Harbor 任务定义（37 active + blocked 候选）
+├── harbor-tasks/                  # 历史归档任务定义；当前数量以版本化 manifest 为准
 │   ├── aiofiles/
 │   │   ├── task.toml              # catalog 元数据（上游 revision、digest、冻结分母）
 │   │   ├── instruction.md         # agent 唯一输入
@@ -115,12 +115,14 @@ dataset_score = mean(task_score for every VALID task)
 | `installation-failed` | 候选包无法安装 | 先确认环境，再判定模型失败 |
 | `pytest-abnormal-exit` | verifier 崩溃 | 基础设施问题 |
 
-## 📌 数据集状态
+## 📌 历史数据集状态
 
-- **37 个 active 任务**，每个都有 1.0 的 Oracle 基线
-- **13 个 blocked 候选**，原因记录在仓库 `blocked.md`（版本漂移、外网依赖、
-  verifier 超时、并发不稳定）
-- 单题冻结测试数从 26 到 1009
+以下是旧归档的描述，不是当前 Package campaign 的发布证明：
+
+- 旧归档曾记录 **37 个 active 任务** 和 **13 个 blocked 候选**；
+- 旧归档的单题冻结测试数从 26 到 1009；
+- 当前 campaign 使用一次 Oracle gate，并通过
+  `reports/package-expansion-campaign.json` 和 OSS run inventory 重新计算状态。
 
 ## 🔗 代码仓库
 

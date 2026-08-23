@@ -72,6 +72,10 @@ not a blanket regex bypass.
 
 After upload, verify remote payload bytes before cleaning local runs:
 
+The campaign JSON is initially a below-target planning state. Run these commands
+only after the integrator has populated its `archive` section with the generated
+local manifest and remote manifest key.
+
 ```bash
 python scripts/verify_oss_archive.py \
   --manifest reports/package-expansion-campaign.json
@@ -113,10 +117,14 @@ ossutil cp -r oss://dingshang-sg/nl2repobench/runs/oracle/ftfy/ ./
 Authoritative scoring lives in each trial's `verifier/grading.json`; treat
 `valid: false` as a task/environment result, not a model score.
 
-## Current Archive
+## Historical Archive Snapshot
+
+The following figures are a historical snapshot from the previous archive
+campaign, not a current release gate. Regenerate a versioned OSS inventory
+before using them in a report.
 
 | Field | Value |
 | --- | --- |
-| Task definitions | 683 objects (~12 MB), 64 task directories |
-| Run artifacts | 37,362 objects (~514 MB) |
+| Task definitions | 683 objects (~12 MB), 64 task directories (historical) |
+| Run artifacts | 37,362 objects (~514 MB) (historical) |
 | Models | `gpt-5.6-sol`, `claude-fable-5`, plus Oracle and `unknown` |

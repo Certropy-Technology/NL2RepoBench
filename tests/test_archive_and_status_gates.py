@@ -102,6 +102,19 @@ def test_archive_cleanup_is_contained_under_repo_runs(tmp_path: Path) -> None:
         archive.remove_local_runs(tmp_path / "outside", repo_root=repo)
 
 
+def test_archive_cleanup_rejects_symlink_root(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    trusted = repo / ".nl2repo" / "runs"
+    trusted.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    linked = trusted / "linked"
+    linked.symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symlink"):
+        archive.remove_local_runs(linked, repo_root=repo)
+
+
 def test_status_reconciliation_marks_dependency_block_as_repairable(tmp_path: Path) -> None:
     task = tmp_path / "demo"
     task.mkdir()

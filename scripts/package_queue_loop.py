@@ -145,6 +145,8 @@ def command_status(args: argparse.Namespace) -> int:
 
 
 def command_claim(args: argparse.Namespace) -> int:
+    if args.limit < 1 or args.lease_seconds < 1 or args.max_attempts < 1:
+        raise ValueError("claim limits, lease-seconds, and max-attempts must be positive")
     with locked_state(args.state) as state:
         items = sync_queue(state, args.queue)
         selected: list[dict[str, Any]] = []
@@ -154,8 +156,20 @@ def command_claim(args: argparse.Namespace) -> int:
             record = items[candidate_id]
             if args.language and record.get("language") != args.language:
                 continue
-            if record.get("status") == "running" and not lease_expired(record):
+            if int(record.get("attempts", 0)) >= args.max_attempts:
                 continue
+            if record.get("status") == "running":
+                if not lease_expired(record):
+                    continue
+                record["status"] = "pending"
+                record["retry_history"] = [
+                    *record.get("retry_history", []),
+                    {
+                        "failure_class": "infrastructure",
+                        "reason": "lease expired before handoff",
+                        "recorded_at": now(),
+                    },
+                ]
             if record.get("status") not in ACTIVE:
                 continue
             record.update(
@@ -223,6 +237,7 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--owner", required=True)
             sub.add_argument("--limit", type=int, default=1)
             sub.add_argument("--lease-seconds", type=int, default=7200)
+            sub.add_argument("--max-attempts", type=int, default=3)
             sub.add_argument("--language", choices=("python", "node"))
         elif name == "record":
             sub.add_argument("candidate_id")

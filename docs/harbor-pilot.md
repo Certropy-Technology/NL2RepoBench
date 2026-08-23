@@ -1,4 +1,9 @@
-# NL2RepoBench Harbor Pilot
+# NL2RepoBench Harbor Pilot (Historical)
+
+> This document describes the historical Harbor pilot. The current Package
+> campaign uses a one-run Oracle gate and skips model/Oracle reruns when an
+> OSS run inventory already contains the task/model pair. See
+> `docs/authoring-pipeline-ast.zh-CN.md` for the active workflow.
 
 ## What This Benchmark Measures
 
@@ -83,9 +88,11 @@ uv run --frozen harbor run \
 
 Only valid Oracle results are candidates for model evaluation. Environment,
 dependency, test-asset and verifier failures must be fixed or marked blocked;
-they must not be reported as model scores. For the expansion pilot, require
-three independent valid runs with stable collection and reward >= 0.80; record
-the Oracle ceiling and stable failed tests when the baseline is below 1.0.
+they must not be reported as model scores. For the current Package campaign,
+require one valid run with collection equal to the frozen denominator and
+reward >= 0.80; record the Oracle ceiling and failed tests when the baseline is
+below 1.0. Cross-run stability is a separate historical experiment, not a
+requirement for this campaign.
 
 ## OpenHands Model Run
 

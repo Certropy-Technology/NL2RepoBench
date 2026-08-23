@@ -53,11 +53,16 @@ def validate_published_datasets(
     datasets = campaign.get("datasets")
     if not isinstance(datasets, list) or not datasets:
         raise ValueError("campaign.datasets must be a non-empty list")
+    raw_campaign_tasks = campaign.get("tasks")
+    if not isinstance(raw_campaign_tasks, list):
+        raise ValueError("campaign tasks must be a list")
     campaign_tasks = {
         raw["task_id"]: raw
-        for raw in campaign.get("tasks", [])
+        for raw in raw_campaign_tasks
         if isinstance(raw, dict) and isinstance(raw.get("task_id"), str)
     }
+    if len(campaign_tasks) != len(raw_campaign_tasks):
+        raise ValueError("campaign tasks must be objects with unique task_id values")
     dataset_reports: list[dict[str, Any]] = []
     all_task_ids: set[str] = set()
     for raw_dataset in datasets:
@@ -80,6 +85,8 @@ def validate_published_datasets(
         if not isinstance(declared_tasks, list) or not isinstance(compiled_tasks, list):
             raise ValueError(f"dataset {dataset_id}: tasks must be lists")
         compiled_ids = [item.get("task_id") for item in compiled_tasks if isinstance(item, dict)]
+        if len(compiled_ids) != len(set(compiled_ids)):
+            raise ValueError(f"dataset {dataset_id}: compiled task IDs are not unique")
         if sorted(declared_tasks) != sorted(compiled_ids):
             raise ValueError(f"dataset {dataset_id}: source and compiled task entries differ")
         if all_task_ids.intersection(compiled_ids):
@@ -111,12 +118,14 @@ def validate_published_datasets(
             )
             if canonical_lifecycle.get("status") != "published":
                 raise ValueError(f"{task_id}: compiled lifecycle is not published")
-            campaign_task = campaign_tasks.get(task_id, {})
+            if task_id not in campaign_tasks:
+                raise ValueError(f"{task_id}: missing campaign task evidence")
+            campaign_task = campaign_tasks[task_id]
             source_digest = _sha256(source_task)
             harbor_digest = _sha256(harbor_task)
-            if campaign_task.get("source_manifest_sha256") not in {None, source_digest}:
+            if campaign_task.get("source_manifest_sha256") != source_digest:
                 raise ValueError(f"{task_id}: source hash differs from campaign")
-            if campaign_task.get("harbor_task_sha256") not in {None, harbor_digest}:
+            if campaign_task.get("harbor_task_sha256") != harbor_digest:
                 raise ValueError(f"{task_id}: Harbor task hash differs from campaign")
             task_reports.append(
                 {

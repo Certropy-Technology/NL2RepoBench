@@ -111,3 +111,39 @@ def test_dual_queue_invocation_keeps_credentials_out_of_argv(tmp_path: Path, mon
     assert calls
     assert "--models-file" in calls[0]
     assert all("test-key" not in value for value in calls[0])
+
+
+def test_dual_plan_skips_only_oss_backed_existing_runs(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
+    models = tmp_path / "models.json"
+    _models(models)
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps({"campaign_id": "pilot", "tasks": [{"task_id": "demo"}]}),
+        encoding="utf-8",
+    )
+    inventory = tmp_path / "oss-runs.json"
+    inventory.write_text(
+        json.dumps(
+            {
+                "runs": [
+                    {"model": "gpt-5.6-sol", "task_id": "demo", "source": "oss"}
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    plan = dual.build_plan(
+        campaign,
+        run_root=tmp_path / "runs",
+        lock_root=tmp_path / "locks",
+        models_file=models,
+        existing_inventory=inventory,
+    )
+
+    by_model = {model["model_id"]: model for model in plan["models"]}
+    assert by_model["gpt-5.6-sol"]["tasks"] == []
+    assert by_model["gpt-5.6-sol"]["skipped_existing_tasks"] == ["demo"]
+    assert by_model["claude-fable-5"]["tasks"] == []
+    assert by_model["claude-fable-5"]["skipped_existing_tasks"] == ["demo"]

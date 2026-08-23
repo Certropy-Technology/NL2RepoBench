@@ -89,8 +89,8 @@ query it with `scripts/convert_testfiles_loop.py status` before reporting counts
 
 ## 4. Run The Oracle Gate (no API key)
 
-The Oracle installs the frozen upstream source and must produce a valid,
-stable collection with reward >= `0.80`. Run this first — it proves your Docker
+The Oracle installs the frozen upstream source and must produce one valid result
+whose collection matches the frozen denominator, with reward >= `0.80`. Run this first — it proves your Docker
 environment is healthy before you spend model budget.
 
 ```bash
@@ -128,7 +128,7 @@ score for that task.
 
 ## 5. Run A Model Securely
 
-Only tasks with three valid, stable Oracle runs at reward >= `0.80` should be scored. The runner script uses
+For the current Package campaign, only tasks with one valid Oracle run at reward >= `0.80` should be scored. This is not a cross-run stability proof. The runner script uses
 Harbor with the file-backed OpenHands SDK adapter (required: large instructions
 exceed the host `ARG_MAX` if passed on the command line).
 

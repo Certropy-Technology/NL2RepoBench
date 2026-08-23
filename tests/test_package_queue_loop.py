@@ -57,6 +57,7 @@ def test_queue_claim_and_record_are_owner_bound(tmp_path: Path) -> None:
         owner="worker-a",
         limit=1,
         lease_seconds=60,
+        max_attempts=3,
         language=None,
     )
     assert loop.command_claim(claimed) == 0

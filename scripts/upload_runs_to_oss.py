@@ -212,7 +212,11 @@ class Stats:
 
 def iter_run_uploads(runs_dir: Path) -> Iterator[Upload]:
     for run_root in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
+        if run_root.is_symlink():
+            raise ValueError(f"run root must not be a symlink: {run_root}")
         for path in sorted(run_root.rglob("*")):
+            if path.is_symlink() and path.is_dir():
+                raise ValueError(f"run directory contains symlink: {path}")
             if path.is_symlink() or not path.is_file() or any(
                 part in INTERNAL_PATH_PARTS for part in path.relative_to(run_root).parts
             ):
@@ -240,7 +244,13 @@ def iter_task_uploads(catalog: Path) -> Iterator[Upload]:
         # assets and must not cross the publication boundary.
         if task_dir.name.startswith("."):
             continue
+        if task_dir.is_symlink():
+            raise ValueError(f"task directory must not be a symlink: {task_dir}")
         for path in sorted(task_dir.rglob("*")):
+            if (
+                path.is_symlink() and path.is_dir()
+            ):
+                raise ValueError(f"task directory contains symlink: {path}")
             if (
                 path.is_symlink()
                 or not path.is_file()
@@ -430,14 +440,17 @@ def main() -> int:
     stats = run_uploads(bucket, items, args.workers, args.overwrite, "upload")
 
     if stats.failed == 0 and args.manifest and args.remote_manifest_key:
-        bucket.put_object_from_file(
-            args.remote_manifest_key,
-            str(args.manifest),
-            headers={
-                "x-oss-meta-sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest()
-            },
-        )
-        print(f"manifest_remote=oss://{BUCKET}/{args.remote_manifest_key}")
+        try:
+            manifest_item = Upload(
+                local=args.manifest,
+                key=args.remote_manifest_key,
+                size=args.manifest.stat().st_size,
+            )
+            outcome = upload_one(bucket, manifest_item, args.overwrite)
+            print(f"manifest_remote=oss://{BUCKET}/{args.remote_manifest_key} ({outcome})")
+        except Exception as exc:  # noqa: BLE001 - preserve collision evidence
+            print(f"manifest upload failed: {exc}", file=sys.stderr)
+            return 1
 
     print(
         f"\nuploaded={stats.uploaded} skipped={stats.skipped} "

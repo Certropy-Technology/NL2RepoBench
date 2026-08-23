@@ -69,14 +69,39 @@ def campaign_tasks(path: Path) -> tuple[str, ...]:
     return tuple(task_ids)
 
 
+def existing_model_runs(path: Path | None) -> dict[str, set[str]]:
+    """Load a trusted OSS run inventory keyed by model and task."""
+
+    if path is None:
+        return {}
+    payload = _json(path)
+    raw_runs = payload.get("runs")
+    if not isinstance(raw_runs, list):
+        raise ValueError("existing run inventory requires a runs list")
+    result: dict[str, set[str]] = {}
+    for raw in raw_runs:
+        if not isinstance(raw, dict):
+            raise ValueError("existing run inventory entries must be objects")
+        model = raw.get("model")
+        task_id = raw.get("task_id")
+        if not isinstance(model, str) or not isinstance(task_id, str):
+            raise ValueError("existing run inventory requires model and task_id")
+        if raw.get("source") not in {"oss", "oss-manifest"}:
+            raise ValueError(f"existing run is not OSS-backed: {model}/{task_id}")
+        result.setdefault(model, set()).add(task_id)
+    return result
+
+
 def build_plan(
     campaign_path: Path,
     *,
     run_root: Path,
     lock_root: Path,
     models_file: Path,
+    existing_inventory: Path | None = None,
 ) -> dict[str, Any]:
     tasks = campaign_tasks(campaign_path)
+    existing = existing_model_runs(existing_inventory)
     campaign = _json(campaign_path)
     campaign_id = campaign.get("campaign_id") or campaign_path.stem
     if not isinstance(campaign_id, str) or SAFE_NAME.fullmatch(campaign_id) is None:
@@ -84,12 +109,15 @@ def build_plan(
     queues: list[dict[str, Any]] = []
     for spec in MODEL_SPECS:
         api, _, _ = provider_config(models_file, spec.provider, spec.model_id)
+        existing_tasks = set().union(*existing.values()) if existing else set()
+        missing_tasks = [task for task in tasks if task not in existing_tasks]
         queues.append(
             {
                 **asdict(spec),
                 "api": api,
                 "harbor_model": normalize_harbor_model(api, spec.harbor_model),
-                "tasks": list(tasks),
+                "tasks": missing_tasks,
+                "skipped_existing_tasks": sorted(set(tasks) - set(missing_tasks)),
                 "run_root": str((run_root / spec.run_prefix).resolve()),
                 "lock_root": str((lock_root / spec.run_prefix).resolve()),
                 "retry_policy": "infrastructure-only",
@@ -102,6 +130,12 @@ def build_plan(
         "campaign_sha256": "sha256:" + hashlib.sha256(campaign_path.read_bytes()).hexdigest(),
         "task_count": len(tasks),
         "tasks": list(tasks),
+        "existing_inventory": str(existing_inventory) if existing_inventory else None,
+        "existing_inventory_sha256": (
+            "sha256:" + hashlib.sha256(existing_inventory.read_bytes()).hexdigest()
+            if existing_inventory
+            else None
+        ),
         "models": queues,
         "credential_policy": "Pi provider config only; no key in plan or argv",
     }
@@ -158,6 +192,11 @@ def main() -> int:
     parser.add_argument(
         "--models-file", type=Path, default=Path.home() / ".pi/agent/models.json"
     )
+    parser.add_argument(
+        "--existing-inventory",
+        type=Path,
+        help="Trusted JSON inventory of OSS runs to skip; entries must declare source=oss.",
+    )
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     try:
@@ -166,6 +205,7 @@ def main() -> int:
             run_root=args.run_root,
             lock_root=args.lock_root,
             models_file=args.models_file,
+            existing_inventory=args.existing_inventory,
         )
     except (OSError, ValueError) as exc:
         print(f"dual model plan failed: {exc}", file=sys.stderr)
@@ -181,6 +221,7 @@ def main() -> int:
         futures = {
             pool.submit(_run_queue, queue, args.models_file): queue["model_id"]
             for queue in plan["models"]
+            if queue["tasks"]
         }
         for future in as_completed(futures):
             model_id = futures[future]
