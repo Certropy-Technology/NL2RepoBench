@@ -11,7 +11,20 @@
   },
   "risk_policy": "remediate-before-gate",
   "schema_version": "1.0",
-  "skipped": [],
+  "skipped": [
+    {
+      "package": "dataclasses-json",
+      "reason": "catalog-task-exists"
+    },
+    {
+      "package": "fastjsonschema",
+      "reason": "catalog-task-exists"
+    },
+    {
+      "package": "sympy",
+      "reason": "catalog-task-exists"
+    }
+  ],
   "stages": [
     "source-freeze",
     "ast-inventory",
@@ -24,81 +37,5 @@
     "review-handoff"
   ],
   "status": "planned",
-  "tasks": [
-    {
-      "agent_run_boundary": "Authoring ends after Oracle/controls/review; downstream Agent Run Loop consumes this catalog task and is not started here.",
-      "candidate_id": "https-github-com-lidatong-dataclasses-json-2e2e78b2f87f",
-      "handoff_status": "awaiting-agent-run",
-      "language": "python",
-      "package": "dataclasses-json",
-      "production_gate": "Python locked toolchain, AST/test inventory, active remediation, Harbor gates, review",
-      "remediation_reasons": [],
-      "remediation_required": false,
-      "revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
-      "source_digest": null,
-      "stages": [
-        "source-freeze",
-        "ast-inventory",
-        "test-inventory",
-        "dependency-probe",
-        "harbor-package",
-        "verifier-build",
-        "oracle-once",
-        "controls",
-        "review-handoff"
-      ],
-      "upstream_url": "https://github.com/lidatong/dataclasses-json",
-      "worker_boundary": "catalog/tasks/dataclasses-json/** only"
-    },
-    {
-      "agent_run_boundary": "Authoring ends after Oracle/controls/review; downstream Agent Run Loop consumes this catalog task and is not started here.",
-      "candidate_id": "https-github-com-horejsek-python-fastjsonschema-81f0cca3dc86",
-      "handoff_status": "awaiting-agent-run",
-      "language": "python",
-      "package": "fastjsonschema",
-      "production_gate": "Python locked toolchain, AST/test inventory, active remediation, Harbor gates, review",
-      "remediation_reasons": [],
-      "remediation_required": false,
-      "revision": "b88fa37cd46bb81e8d9dce91a7e1bc4debedd3a2",
-      "source_digest": null,
-      "stages": [
-        "source-freeze",
-        "ast-inventory",
-        "test-inventory",
-        "dependency-probe",
-        "harbor-package",
-        "verifier-build",
-        "oracle-once",
-        "controls",
-        "review-handoff"
-      ],
-      "upstream_url": "https://github.com/horejsek/python-fastjsonschema",
-      "worker_boundary": "catalog/tasks/fastjsonschema/** only"
-    },
-    {
-      "agent_run_boundary": "Authoring ends after Oracle/controls/review; downstream Agent Run Loop consumes this catalog task and is not started here.",
-      "candidate_id": "https-github-com-sympy-sympy-6b19b50142de",
-      "handoff_status": "awaiting-agent-run",
-      "language": "python",
-      "package": "sympy",
-      "production_gate": "Python locked toolchain, AST/test inventory, active remediation, Harbor gates, review",
-      "remediation_reasons": [],
-      "remediation_required": false,
-      "revision": "e950d313a932bc6cccbc95376b3821cd2f8b5af4",
-      "source_digest": null,
-      "stages": [
-        "source-freeze",
-        "ast-inventory",
-        "test-inventory",
-        "dependency-probe",
-        "harbor-package",
-        "verifier-build",
-        "oracle-once",
-        "controls",
-        "review-handoff"
-      ],
-      "upstream_url": "https://github.com/sympy/sympy",
-      "worker_boundary": "catalog/tasks/sympy/** only"
-    }
-  ]
+  "tasks": []
 }

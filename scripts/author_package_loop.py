@@ -152,7 +152,7 @@ def build_plan(
                     else "Python locked toolchain, AST/test inventory, active remediation, "
                     "Harbor gates, review"
                 ),
-                "handoff_status": "awaiting-agent-run",
+                "handoff_status": "authoring-in-progress",
             }
         )
     return {

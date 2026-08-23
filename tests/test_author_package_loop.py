@@ -71,6 +71,7 @@ def test_author_loop_filters_catalog_and_oss_but_remediates_candidates(tmp_path:
     assert plan["tasks"][0]["remediation_reasons"] == ["candidate-evidence-incomplete"]
     assert plan["tasks"][2]["remediation_reasons"] == ["risk-adaptation-required:native"]
     assert plan["agent_run_loop"].startswith("separate downstream")
+    assert plan["tasks"][0]["handoff_status"] == "authoring-in-progress"
     assert plan["tasks"][0]["stages"] == list(loop.STAGES)
 
 
