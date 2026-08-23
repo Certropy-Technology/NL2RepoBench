@@ -1,9 +1,9 @@
 # 300 道 Harbor Task 扩展计划
 
 目标：在不伪造 provenance、测试分母、依赖 closure 或 verifier boundary 的前提下，
-将 NL2RepoBench 扩展到 **300 道可审计 Harbor Task**，并逐步形成新的 unified dataset
-release。测量对象仍然是上游 NL2Repo 的 0-to-1 repository generation；Harbor 只是更
-严格的执行和隔离格式。
+将 NL2RepoBench 扩展到 **300+ 道 published Harbor Task，并对同一批 300+ task_id
+实际运行 Benchmark**，逐步形成新的 unified dataset release。测量对象仍然是上游
+NL2Repo 的 0-to-1 repository generation；Harbor 只是更严格的执行和隔离格式。
 
 ## 目标口径
 
@@ -15,9 +15,14 @@ release。测量对象仍然是上游 NL2Repo 的 0-to-1 repository generation�
 | Harbor task candidate | 已有 catalog source，可确定性生成 Harbor tree，但可能 blocked | 否 |
 | published task | source、环境、依赖、spec、verifier、Oracle、controls、review 全通过 | 是 |
 
-最终目标是 300 个 `published task`。在到达 300 之前，所有 candidate 和 blocked 记录
-都保留证据和 blocker，不把 blocked 当成 0 分题，也不从旧 v1/v2 结果推导新 release
-分数。
+最终目标是两个同时成立的条件：
+
+1. 至少 300 个 `published task`；
+2. 新 Benchmark dataset manifest 中至少包含同一批 300 个 task_id，并且每个 task 都
+   有新 release 的真实 Harbor trial 结果。
+
+在到达 300 之前，所有 candidate 和 blocked 记录都保留证据和 blocker，不把 blocked 当
+成 0 分题，也不从旧 v1/v2 结果推导新 release 分数。
 
 ## 组合目标
 
@@ -135,6 +140,27 @@ AST 只能证明结构、导出、signature、调用和风险标记，不能证�
 8. batch cleanup 无 orphan container，模型/环境/verifier/infrastructure 分类完整。
 
 任一 checkpoint 失败，下一批只允许做修复和重新验证，不允许继续堆数量掩盖问题。
+
+### Benchmark dataset gate
+
+Benchmark 不从 `catalog/tasks/` 目录数量、Harbor tree 数量或 candidate report 数量推导
+题目集合。发布前必须运行：
+
+```bash
+python3 scripts/build_published_benchmark_manifest.py \
+  --dataset-release 1.0.0 \
+  --output .nl2repo/datasets/nl2repobench-harbor-300/manifest.json \
+  --parquet .nl2repo/datasets/nl2repobench-harbor-300/tasks.parquet
+```
+
+该命令默认要求至少 300 个 source `lifecycle.status = published` 且具备完整 Harbor
+tree；不足时以非零状态 fail closed。`--allow-below-target` 只用于诊断，生成的 manifest
+状态为 `below-target`，不能交给 benchmark runner。
+
+对通过 gate 的 manifest，runner 必须为每个 task_id 创建新的 run root。至少一次有效
+trial 才能称为“Benchmark 已覆盖”；正式能力比较仍按预先声明的 attempts/pass@k 执行。
+缺失 trial、`finished_at`、grading、trajectory、cleanup 或 `valid=true` 的 task 必须
+单独列在 reliability report，不能从分母中静默删除。
 
 ## 语言与 package-manager 扩展
 

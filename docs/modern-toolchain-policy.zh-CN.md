@@ -43,6 +43,17 @@ python3 scripts/summarize_benchmark_runs.py \
 该命令只读取 trial `result.json` 和 verifier `grading.json`，并按 valid task 的 task
 score 做宏平均；不会把 raw test case 数量作为跨题权重，也不会修改原始结果。
 
+300+ Benchmark 的 task 集合使用单独的 published manifest gate：
+
+```bash
+python3 scripts/build_published_benchmark_manifest.py \
+  --dataset-release 1.0.0 \
+  --output .nl2repo/datasets/nl2repobench-harbor-300/manifest.json \
+  --parquet .nl2repo/datasets/nl2repobench-harbor-300/tasks.parquet
+```
+
+任务数量不足 300 时默认失败；不能用 candidate/audit/blocked 目录补齐数量。
+
 ### 不适合强行使用 Polars 的场景
 
 - 单个小 JSON control record 的严格 schema 校验；
