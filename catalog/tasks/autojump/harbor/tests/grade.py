@@ -52,7 +52,7 @@ def main() -> None:
         reason = "verifier-internal-error"
 
     xfail_suffixes = _xfail_suffixes()
-    if len(xfail_suffixes) != 4 and reason is None:
+    if len(xfail_suffixes) != 5 and reason is None:
         reason = "verifier-internal-error"
         valid = False
 

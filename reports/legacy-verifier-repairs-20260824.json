@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "repairs": [
+    {
+      "task_id": "pss",
+      "issue": "separate verifier Dockerfile used stale fixture manifest checksum",
+      "repair": "recomputed manifest digest inside pinned base image and updated Dockerfile",
+      "evidence": ".nl2repo/runs/oracle/pss-dockerfix-20260824/2026-08-24__00-44-07/harbor__CWNDqNm/verifier/grading.json",
+      "valid": true,
+      "collected": 46,
+      "passed": 46,
+      "reward": 1.0
+    },
+    {
+      "task_id": "autojump",
+      "issue": "grader expected four xfail exclusions while frozen fixture contains five",
+      "repair": "derive the existing fixture xfail set and require five for this pinned fixture",
+      "evidence": ".nl2repo/runs/oracle/autojump-verifier-fix-20260824/2026-08-24__03-24-33/harbor__dpZEGeE/verifier/grading.json",
+      "valid": true,
+      "collected": 32,
+      "effective_total": 23,
+      "passed": 23,
+      "reward": 1.0
+    },
+    {
+      "task_id": "graphneuralnetwork",
+      "issue": "networkx 3.4.2 removed the upstream test API from the pinned verifier image",
+      "repair": "added a verifier-only compatibility alias from_scipy_sparse_matrix to from_scipy_sparse_array",
+      "evidence": ".nl2repo/runs/oracle/graphneuralnetwork-environment-audit-20260824-v2/2026-08-24__03-32-19/harbor__7opp4Lf/verifier/grading.json",
+      "valid": true,
+      "collected": 4,
+      "passed": 4,
+      "reward": 1.0
+    }
+  ],
+  "model_runs": "not started by authoring loop",
+  "oss_archive": "pending"
+}
