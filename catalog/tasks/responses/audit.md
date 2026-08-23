@@ -25,17 +25,22 @@ the candidate and its required network boundary, but does not establish the
 source, packaging, test, verifier, or publication gates needed to author a
 task.
 
-## Explicit Unknowns
+## Explicit Unknown Gates
 
-- source tree, source archive, provenance evidence, tree digest, commit date,
+The following gates are explicitly unknown; none is inferred from the supplied
+project name or license evidence:
+
+- exact archive bytes and hash, source provenance, tree digest, commit date,
   and submodule state;
 - package version, import surface, Python/runtime requirements, build system,
   runtime dependencies, and offline dependency closure;
-- public API signatures, behavior contracts, error behavior, and supported
-  entry points;
+- fixture inventory and any required fixture data;
 - upstream test inventory, collection behavior, test count, frozen denominator,
   and behavior coverage;
-- the implementation and verification of the required loopback-only boundary;
+- source-only LOC, with tests, fixtures, generated files, and documentation
+  excluded;
+- the implementation and verification of the required loopback-only/mock
+  transport boundary;
 - verifier or candidate subprocess contract, image/toolchain, Oracle results,
   empty/stub/forgery/offline controls, review records, and publication
   metadata.
