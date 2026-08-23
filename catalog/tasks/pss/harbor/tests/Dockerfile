@@ -14,7 +14,7 @@ RUN mkdir -p /tests/fixture && \
     (cd /tests/fixture/test && find . -type f -print0 | sort -z | xargs -0 sha256sum) \
       > /tests/fixture/test.sha256 && \
     printf '%s  %s\n' \
-      'a96a99bebf5625c230bf8032a144f24cbaad3ca423a302a441fe5abf7520c321' \
+      '178379623d127be3d6ed5e3033b5f58c426e5e6b6611585b83487b8f109698d1' \
       '/tests/fixture/test.sha256' | sha256sum -c - && \
     chmod -R a-w /tests/fixture/test && \
     chmod 0444 /tests/fixture/test.sha256

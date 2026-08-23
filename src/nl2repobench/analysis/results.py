@@ -45,6 +45,18 @@ def normalize_result(path: Path) -> dict[str, Any]:
     grading = _read_grading(path.parent)
     exception = _mapping(payload.get("exception_info"))
     counts = _mapping(grading.get("counts"))
+    failure_class = grading.get("failure_class")
+    failure_reason = grading.get("failure_reason") or exception.get("exception_type")
+    if _verifier_build_failure(exception):
+        failure_class = "verifier"
+        failure_reason = "verifier-build-failed"
+    elif _legacy_fable_empty_workspace(path, str(model or "unknown")):
+        # Older Fable trials used the relay's enabled-thinking path. The
+        # malformed tool call left an empty workspace, so grader-side
+        # installation/collection errors are downstream symptoms of the
+        # provider/adapter defect rather than model behavior.
+        failure_class = "infrastructure"
+        failure_reason = "provider-tool-schema-empty-input"
     return {
         "task_id": str(payload.get("task_name") or path.parent.name),
         "trial_name": str(payload.get("trial_name") or path.parent.name),
@@ -55,8 +67,8 @@ def normalize_result(path: Path) -> dict[str, Any]:
         "valid": _bool_or_none(grading.get("valid")),
         "passed": _int_or_none(counts.get("passed")),
         "expected_total": _int_or_none(grading.get("expected_total")),
-        "failure_class": grading.get("failure_class"),
-        "failure_reason": grading.get("failure_reason") or exception.get("exception_type"),
+        "failure_class": failure_class,
+        "failure_reason": failure_reason,
         "termination_reason": exception.get("exception_type"),
         "started_at": payload.get("started_at"),
         "finished_at": payload.get("finished_at"),
@@ -148,6 +160,30 @@ def _read_grading(trial_dir: Path) -> dict[str, Any]:
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         return {}
     return value if isinstance(value, dict) else {}
+
+
+def _verifier_build_failure(exception: dict[str, Any]) -> bool:
+    message = str(exception.get("exception_message") or "").casefold()
+    return "docker compose command failed" in message or "failed to solve" in message
+
+
+def _legacy_fable_empty_workspace(path: Path, model: str) -> bool:
+    if model != "anthropic/claude-fable-5":
+        return False
+    log_path = path.parent / "agent" / "openhands_sdk.txt"
+    try:
+        log = log_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return False
+    if "Error validating tool" not in log or "LLM produced empty" not in log:
+        return False
+    workspace = path.parent / "artifacts" / "workspace"
+    if not workspace.is_dir():
+        return True
+    try:
+        return not any(item.is_file() for item in workspace.rglob("*"))
+    except OSError:
+        return False
 
 
 def _float_or_none(value: object) -> float | None:

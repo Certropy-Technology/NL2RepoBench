@@ -61,3 +61,59 @@ def test_results_use_valid_task_macro_average(tmp_path: Path) -> None:
     ]
     assert summary["model_summary"][0]["macro_task_score"] == 0.75
     assert summary["failure_summary"] == [{"classification": "infrastructure", "trials": 1}]
+
+
+def test_results_reclassify_legacy_fable_empty_workspace(tmp_path: Path) -> None:
+    root = tmp_path / "runs"
+    _write_trial(root, "fable-trial", reward=0.0, valid=False, failure_class=None)
+    trial = root / "fable-trial"
+    (trial / "result.json").write_text(
+        json.dumps(
+            {
+                "task_name": "demo",
+                "trial_name": "fable-trial",
+                "config": {"agent": {"model_name": "anthropic/claude-fable-5"}},
+                "verifier_result": {"rewards": {"reward": 0.0}},
+                "exception_info": None,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (trial / "agent").mkdir()
+    (trial / "agent" / "openhands_sdk.txt").write_text(
+        "Error validating tool 'terminal'\nLLM produced empty response\n",
+        encoding="utf-8",
+    )
+
+    frame, errors = load_results([root])
+
+    assert errors == []
+    assert frame.to_dicts()[0]["failure_class"] == "infrastructure"
+    assert frame.to_dicts()[0]["failure_reason"] == "provider-tool-schema-empty-input"
+
+
+def test_results_classify_verifier_build_exception(tmp_path: Path) -> None:
+    root = tmp_path / "runs"
+    _write_trial(root, "verifier-trial", reward=0.0, valid=False, failure_class=None)
+    trial = root / "verifier-trial"
+    (trial / "result.json").write_text(
+        json.dumps(
+            {
+                "task_name": "demo",
+                "trial_name": "verifier-trial",
+                "config": {"agent": {"model_name": "anthropic/claude-fable-5"}},
+                "verifier_result": {},
+                "exception_info": {
+                    "exception_type": "RuntimeError",
+                    "exception_message": "Docker compose command failed during build",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    frame, errors = load_results([root])
+
+    assert errors == []
+    assert frame.to_dicts()[0]["failure_class"] == "verifier"
+    assert frame.to_dicts()[0]["failure_reason"] == "verifier-build-failed"

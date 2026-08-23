@@ -20,6 +20,22 @@ The task-local `instruction.md` and `harbor/instruction.md` are byte-identical
 to `start.md`. The Harbor verifier replaces the candidate's `test` tree with
 the immutable fixture from the pinned image after the editable install.
 
+## Remediation Update (2026-08-24)
+
+The original draft recorded the verifier as unexecuted and contained a stale
+fixture-manifest checksum in `harbor/tests/Dockerfile`. That checksum caused
+the separate verifier image build to fail before any test or candidate was
+started. The fixture manifest was recomputed inside the pinned base image with
+the exact Dockerfile command; its SHA-256 is
+`178379623d127be3d6ed5e3033b5f58c426e5e6b6611585b83487b8f109698d1`. The
+Dockerfile now checks this digest.
+
+The repaired task was run once as an Oracle with Harbor 0.21.0. Evidence at
+`.nl2repo/runs/oracle/pss-dockerfix-20260824/2026-08-24__00-44-07/` records
+`valid=true`, `collected=46`, `expected=46`, `passed=46`, and `reward=1.0`.
+This fixes the verifier-build blocker; controls and publication gates remain
+separate and are not implied by this Oracle result.
+
 ## Immutable Verifier Image
 
 The conversion-loop state at
