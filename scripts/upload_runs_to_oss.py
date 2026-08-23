@@ -340,10 +340,18 @@ def secret_shaped_paths(items: list[Upload]) -> list[str]:
     findings: list[str] = []
     for item in items:
         try:
-            data = item.local.read_bytes()
+            with item.local.open("rb") as handle:
+                tail = b""
+                found = False
+                while chunk := handle.read(1024 * 1024):
+                    data = tail + chunk
+                    if any(pattern.search(data) for pattern in SECRET_PATTERNS):
+                        found = True
+                        break
+                    tail = data[-128:]
         except OSError:
             continue
-        if any(pattern.search(data) for pattern in SECRET_PATTERNS):
+        if found:
             findings.append(str(item.local))
     return findings
 
