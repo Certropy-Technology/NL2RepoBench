@@ -46,7 +46,11 @@ def normalize_result(path: Path) -> dict[str, Any]:
     exception = _mapping(payload.get("exception_info"))
     counts = _mapping(grading.get("counts"))
     failure_class = grading.get("failure_class")
-    failure_reason = grading.get("failure_reason") or exception.get("exception_type")
+    failure_reason = (
+        grading.get("failure_reason")
+        or grading.get("reason")
+        or exception.get("exception_type")
+    )
     if _verifier_build_failure(exception):
         failure_class = "verifier"
         failure_reason = "verifier-build-failed"

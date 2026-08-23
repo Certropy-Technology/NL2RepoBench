@@ -138,6 +138,21 @@ def test_results_summary_includes_invalid_verifier_rows_with_null_valid(tmp_path
     ]
 
 
+def test_results_accept_legacy_grading_reason_field(tmp_path: Path) -> None:
+    root = tmp_path / "runs"
+    _write_trial(root, "legacy-trial", reward=0.0, valid=False)
+    grading_path = root / "legacy-trial" / "verifier" / "grading.json"
+    grading_path.write_text(
+        json.dumps({"valid": False, "reason": "verifier-internal-error"}),
+        encoding="utf-8",
+    )
+
+    frame, errors = load_results([root])
+
+    assert errors == []
+    assert frame.to_dicts()[0]["failure_reason"] == "verifier-internal-error"
+
+
 def test_results_strip_harbor_namespace_from_task_name(tmp_path: Path) -> None:
     root = tmp_path / "runs"
     _write_trial(root, "namespaced-trial", reward=1.0, valid=True)
