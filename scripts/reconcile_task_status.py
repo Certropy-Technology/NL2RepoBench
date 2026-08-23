@@ -75,6 +75,17 @@ def _load_source(path: Path) -> tuple[dict[str, Any] | None, str | None]:
     return payload, None
 
 
+def _has_symlink_component(path: Path) -> bool:
+    absolute = path.absolute()
+    parts = absolute.parts
+    cursor = Path(parts[0])
+    for part in parts[1:]:
+        cursor /= part
+        if cursor.is_symlink():
+            return True
+    return False
+
+
 def _reason_kind(reason: str) -> str:
     folded = reason.casefold()
     for marker in (
@@ -147,7 +158,7 @@ def _lifecycle_errors(status: str, lifecycle: dict[str, Any], reason_kind: str) 
 def reconcile(catalog_root: Path) -> dict[str, Any]:
     records: list[dict[str, Any]] = []
     counts: dict[str, int] = {}
-    if catalog_root.is_symlink() or not catalog_root.is_dir():
+    if _has_symlink_component(catalog_root) or not catalog_root.is_dir():
         raise ValueError(f"catalog root does not exist: {catalog_root}")
 
     for task_dir in sorted(path for path in catalog_root.iterdir() if path.is_dir()):

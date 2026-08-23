@@ -51,6 +51,11 @@ def resolve_archive_config(
     """Resolve archive paths, the remote key, and local integrity roots."""
 
     payload = _read_json(campaign_or_manifest)
+    project_root = (
+        campaign_or_manifest.parent.parent
+        if campaign_or_manifest.parent.name == "reports"
+        else campaign_or_manifest.parent
+    )
     archive = payload.get("archive")
     if isinstance(archive, dict):
         manifest_value = archive.get("manifest")
@@ -58,16 +63,16 @@ def resolve_archive_config(
         local_value = archive.get("local_runs_dir")
         if not isinstance(manifest_value, str) or not isinstance(remote_key, str):
             raise ValueError("campaign archive requires manifest and remote_manifest_key")
-        manifest_path = (campaign_or_manifest.parent / manifest_value).resolve()
+        manifest_path = (project_root / manifest_value).resolve()
         local_root = (
-            (campaign_or_manifest.parent / local_value).absolute()
+            (project_root / local_value).absolute()
             if isinstance(local_value, str)
             else None
         )
         raw_roots = archive.get("local_upload_roots", [])
         if not isinstance(raw_roots, list) or not all(isinstance(item, str) for item in raw_roots):
             raise ValueError("campaign archive local_upload_roots must be a list of paths")
-        local_roots = tuple((campaign_or_manifest.parent / item).absolute() for item in raw_roots)
+        local_roots = tuple((project_root / item).absolute() for item in raw_roots)
         if local_root is not None and local_root not in local_roots:
             local_roots = (*local_roots, local_root)
         return manifest_path, remote_key, local_root, local_roots

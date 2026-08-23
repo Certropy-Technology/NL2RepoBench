@@ -44,12 +44,17 @@ def _resolve(base: Path, value: Any, field: str) -> Path:
     return path
 
 
+def _campaign_root(path: Path) -> Path:
+    return path.parent.parent if path.parent.name == "reports" else path.parent
+
+
 def validate_published_datasets(
     campaign_path: Path,
     *,
     catalog_root: Path,
 ) -> dict[str, Any]:
     campaign = _json(campaign_path)
+    project_root = _campaign_root(campaign_path)
     datasets = campaign.get("datasets")
     if not isinstance(datasets, list) or not datasets:
         raise ValueError("campaign.datasets must be a non-empty list")
@@ -70,9 +75,9 @@ def validate_published_datasets(
             raise ValueError("campaign dataset entries must be objects")
         dataset_id = raw_dataset.get("dataset_id")
         language = raw_dataset.get("language")
-        source_path = _resolve(campaign_path.parent, raw_dataset.get("source"), "dataset.source")
+        source_path = _resolve(project_root, raw_dataset.get("source"), "dataset.source")
         compiled_root = _resolve(
-            campaign_path.parent, raw_dataset.get("compiled"), "dataset.compiled"
+            project_root, raw_dataset.get("compiled"), "dataset.compiled"
         )
         source = _toml(source_path)
         compiled = _json(compiled_root / "dataset.manifest.json")

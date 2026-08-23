@@ -112,7 +112,7 @@ def build_plan(
     existing_inventory: Path | None = None,
 ) -> dict[str, Any]:
     tasks = campaign_tasks(campaign_path)
-    existing, refs_by_task = existing_model_runs(existing_inventory)
+    _, refs_by_task = existing_model_runs(existing_inventory)
     existing_tasks = set(refs_by_task)
     campaign = _json(campaign_path)
     campaign_id = campaign.get("campaign_id") or campaign_path.stem

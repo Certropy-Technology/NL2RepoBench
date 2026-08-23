@@ -70,6 +70,10 @@ def _required_dict(value: Any, field: str) -> dict[str, Any]:
     return value
 
 
+def _campaign_root(path: Path) -> Path:
+    return path.parent.parent if path.parent.name == "reports" else path.parent
+
+
 def _validate_candidate(candidate: Any, *, as_of: datetime, task_id: str) -> None:
     data = _required_dict(candidate, f"tasks[{task_id}].candidate")
     source_kind = data.get("source_kind")
@@ -270,7 +274,7 @@ def validate_campaign(
         expected_digest = inventory_meta.get("sha256")
         if not isinstance(inventory_value, str) or not isinstance(expected_digest, str):
             raise ValueError("campaign OSS inventory requires path and sha256")
-        inventory_path = (campaign_path.parent / inventory_value).resolve()
+        inventory_path = (_campaign_root(campaign_path) / inventory_value).resolve()
         if not inventory_path.is_file():
             raise ValueError(f"campaign OSS inventory is missing: {inventory_path}")
         actual_digest = "sha256:" + hashlib.sha256(inventory_path.read_bytes()).hexdigest()
