@@ -15,7 +15,7 @@ from typing import Any
 BUCKET = "dingshang-sg"
 ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
 ROOT_PREFIX = "nl2repobench/runs/"
-MODELS = frozenset({"gpt-5.6-sol", "claude-fable-5"})
+RUN_KINDS = frozenset({"gpt-5.6-sol", "claude-fable-5", "oracle"})
 
 
 def _build_bucket() -> Any:
@@ -69,7 +69,7 @@ def inventory(
         if len(parts) < 5 or parts[:2] != ["nl2repobench", "runs"]:
             continue
         model, raw_task, trial = parts[2:5]
-        if model not in MODELS or not raw_task or not trial or trial.endswith(".log"):
+        if model not in RUN_KINDS or not raw_task or not trial or trial.endswith(".log"):
             continue
         task = canonical_task_id(raw_task, known_tasks)
         if task is None:

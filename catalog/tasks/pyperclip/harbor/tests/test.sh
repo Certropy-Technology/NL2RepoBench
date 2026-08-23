@@ -39,10 +39,12 @@ if ! python -m venv --system-site-packages /tmp/candidate-venv \
 fi
 
 mkdir -p /tmp/candidate-results
-chown -R "$CANDIDATE_UID:$CANDIDATE_UID" \
-    /tmp/candidate \
-    /tmp/candidate-results \
-    /tmp/candidate-venv
+chmod 1733 /tmp/candidate-results
+# Keep the report inode verifier-owned so the candidate cannot replace it with
+# a symlink or another file before the trusted grader reads it.
+: > /tmp/candidate-results/junit.xml
+chmod 0666 /tmp/candidate-results/junit.xml
+chown -R "$CANDIDATE_UID:$CANDIDATE_UID" /tmp/candidate /tmp/candidate-venv
 
 timeout --signal=TERM --kill-after=5s 60s \
     runuser -u candidate -- env \

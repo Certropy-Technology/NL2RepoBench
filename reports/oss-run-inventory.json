@@ -2,7 +2,7 @@
   "bucket": "dingshang-sg",
   "object_count_scanned": 37578,
   "prefix": "nl2repobench/runs/",
-  "run_count": 94,
+  "run_count": 213,
   "runs": [
     {
       "evidence_keys": [
@@ -1760,6 +1760,2347 @@
       "status": "completed",
       "task_id": "typing_extensions",
       "trial": "expansion-gpt-v3--2026-08-20__01-45-40"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v1--2026-08-19__11-38-56/result.json",
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v1--2026-08-19__11-38-56/harbor__KagMH3M/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T11:39:27.821161",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v1--2026-08-19__11-38-56/harbor__KagMH3M/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v1--2026-08-19__11-38-56/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v1--2026-08-19__11-38-56/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "oracle-legacy-v1--2026-08-19__11-38-56"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v2--2026-08-19__12-02-47/result.json",
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v2--2026-08-19__12-02-47/harbor__v8hPs5M/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:03:19.529724",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v2--2026-08-19__12-02-47/harbor__v8hPs5M/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v2--2026-08-19__12-02-47/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v2--2026-08-19__12-02-47/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "oracle-legacy-v2--2026-08-19__12-02-47"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v3--2026-08-19__12-19-27/result.json"
+      ],
+      "finished_at": "2026-08-19T12:19:59.883004",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v3--2026-08-19__12-19-27/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v3--2026-08-19__12-19-27/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "oracle-legacy-v3--2026-08-19__12-19-27"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v4--2026-08-19__12-29-17/result.json",
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v4--2026-08-19__12-29-17/harbor__qKhA3xi/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:29:50.042036",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v4--2026-08-19__12-29-17/harbor__qKhA3xi/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v4--2026-08-19__12-29-17/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/oracle-legacy-v4--2026-08-19__12-29-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "oracle-legacy-v4--2026-08-19__12-29-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-pth-v1--2026-08-19__11-46-42/result.json",
+        "nl2repobench/runs/oracle/aiofiles/oracle-pth-v1--2026-08-19__11-46-42/harbor__hbGEQPt/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T11:47:15.128163",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/oracle-pth-v1--2026-08-19__11-46-42/harbor__hbGEQPt/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/oracle-pth-v1--2026-08-19__11-46-42/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/oracle-pth-v1--2026-08-19__11-46-42/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "oracle-pth-v1--2026-08-19__11-46-42"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles--2026-08-19__10-49-36/result.json",
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles--2026-08-19__10-49-36/harbor__9VWcrgL/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T10:50:54.785302",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles--2026-08-19__10-49-36/harbor__9VWcrgL/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles--2026-08-19__10-49-36/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles--2026-08-19__10-49-36/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "smoke-aiofiles--2026-08-19__10-49-36"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v2--2026-08-19__10-53-15/result.json",
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v2--2026-08-19__10-53-15/harbor__bnwPGG3/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T10:53:46.816057",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v2--2026-08-19__10-53-15/harbor__bnwPGG3/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v2--2026-08-19__10-53-15/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v2--2026-08-19__10-53-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "smoke-aiofiles-v2--2026-08-19__10-53-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v3--2026-08-19__10-55-01/result.json",
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v3--2026-08-19__10-55-01/harbor__GnW83WB/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T10:55:33.438063",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v3--2026-08-19__10-55-01/harbor__GnW83WB/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v3--2026-08-19__10-55-01/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v3--2026-08-19__10-55-01/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "smoke-aiofiles-v3--2026-08-19__10-55-01"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v4--2026-08-19__10-56-38/result.json",
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v4--2026-08-19__10-56-38/harbor__zeYn7PA/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T10:57:31.436309",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v4--2026-08-19__10-56-38/harbor__zeYn7PA/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v4--2026-08-19__10-56-38/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v4--2026-08-19__10-56-38/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "smoke-aiofiles-v4--2026-08-19__10-56-38"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v5--2026-08-19__10-58-52/result.json",
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v5--2026-08-19__10-58-52/harbor__amaHCyw/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T10:59:50.711358",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v5--2026-08-19__10-58-52/harbor__amaHCyw/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v5--2026-08-19__10-58-52/",
+      "result_key": "nl2repobench/runs/oracle/aiofiles/smoke-aiofiles-v5--2026-08-19__10-58-52/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "smoke-aiofiles-v5--2026-08-19__10-58-52"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-final-smoke--2026-08-19__14-42-56/result.json",
+        "nl2repobench/runs/oracle/arguably/oracle-final-smoke--2026-08-19__14-42-56/harbor__iHLAKB2/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T14:43:33.413556",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-final-smoke--2026-08-19__14-42-56/harbor__iHLAKB2/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/arguably/oracle-final-smoke--2026-08-19__14-42-56/",
+      "result_key": "nl2repobench/runs/oracle/arguably/oracle-final-smoke--2026-08-19__14-42-56/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "oracle-final-smoke--2026-08-19__14-42-56"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v2--2026-08-19__12-03-22/result.json",
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v2--2026-08-19__12-03-22/harbor__VNLFVmg/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:03:54.953589",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v2--2026-08-19__12-03-22/harbor__VNLFVmg/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/arguably/oracle-legacy-v2--2026-08-19__12-03-22/",
+      "result_key": "nl2repobench/runs/oracle/arguably/oracle-legacy-v2--2026-08-19__12-03-22/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "oracle-legacy-v2--2026-08-19__12-03-22"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v3--2026-08-19__12-20-03/result.json"
+      ],
+      "finished_at": "2026-08-19T12:20:35.662711",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/arguably/oracle-legacy-v3--2026-08-19__12-20-03/",
+      "result_key": "nl2repobench/runs/oracle/arguably/oracle-legacy-v3--2026-08-19__12-20-03/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "oracle-legacy-v3--2026-08-19__12-20-03"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v4--2026-08-19__12-28-29/result.json",
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v4--2026-08-19__12-28-29/harbor__y3PrWMt/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:29:00.501716",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/arguably/oracle-legacy-v4--2026-08-19__12-28-29/harbor__y3PrWMt/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/arguably/oracle-legacy-v4--2026-08-19__12-28-29/",
+      "result_key": "nl2repobench/runs/oracle/arguably/oracle-legacy-v4--2026-08-19__12-28-29/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "oracle-legacy-v4--2026-08-19__12-28-29"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/asteval/oracle-expansion-v1--2026-08-19__21-07-59/result.json",
+        "nl2repobench/runs/oracle/asteval/oracle-expansion-v1--2026-08-19__21-07-59/harbor__7kYdkHY/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:08:31.194054",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/asteval/oracle-expansion-v1--2026-08-19__21-07-59/harbor__7kYdkHY/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/asteval/oracle-expansion-v1--2026-08-19__21-07-59/",
+      "result_key": "nl2repobench/runs/oracle/asteval/oracle-expansion-v1--2026-08-19__21-07-59/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "asteval",
+      "trial": "oracle-expansion-v1--2026-08-19__21-07-59"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/asteval/oracle-expansion-v2--2026-08-19__21-16-26/result.json",
+        "nl2repobench/runs/oracle/asteval/oracle-expansion-v2--2026-08-19__21-16-26/harbor__WqcbVan/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:17:01.215046",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/asteval/oracle-expansion-v2--2026-08-19__21-16-26/harbor__WqcbVan/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/asteval/oracle-expansion-v2--2026-08-19__21-16-26/",
+      "result_key": "nl2repobench/runs/oracle/asteval/oracle-expansion-v2--2026-08-19__21-16-26/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "asteval",
+      "trial": "oracle-expansion-v2--2026-08-19__21-16-26"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/autopep8/oracle-new-batch--2026-08-19__19-24-49/result.json",
+        "nl2repobench/runs/oracle/autopep8/oracle-new-batch--2026-08-19__19-24-49/harbor__dVdSoZz/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:25:39.370149",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/autopep8/oracle-new-batch--2026-08-19__19-24-49/harbor__dVdSoZz/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/autopep8/oracle-new-batch--2026-08-19__19-24-49/",
+      "result_key": "nl2repobench/runs/oracle/autopep8/oracle-new-batch--2026-08-19__19-24-49/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "autopep8",
+      "trial": "oracle-new-batch--2026-08-19__19-24-49"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/bleach/oracle-new-batch--2026-08-19__19-24-49/result.json",
+        "nl2repobench/runs/oracle/bleach/oracle-new-batch--2026-08-19__19-24-49/harbor__JeB3qD9/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:25:28.437256",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/bleach/oracle-new-batch--2026-08-19__19-24-49/harbor__JeB3qD9/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/bleach/oracle-new-batch--2026-08-19__19-24-49/",
+      "result_key": "nl2repobench/runs/oracle/bleach/oracle-new-batch--2026-08-19__19-24-49/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "bleach",
+      "trial": "oracle-new-batch--2026-08-19__19-24-49"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v2--2026-08-19__12-03-58/result.json",
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v2--2026-08-19__12-03-58/harbor__TLwMBsj/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:04:32.426084",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v2--2026-08-19__12-03-58/harbor__TLwMBsj/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/boltons/oracle-legacy-v2--2026-08-19__12-03-58/",
+      "result_key": "nl2repobench/runs/oracle/boltons/oracle-legacy-v2--2026-08-19__12-03-58/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boltons",
+      "trial": "oracle-legacy-v2--2026-08-19__12-03-58"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v3--2026-08-19__12-20-38/result.json"
+      ],
+      "finished_at": "2026-08-19T12:21:11.996871",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/boltons/oracle-legacy-v3--2026-08-19__12-20-38/",
+      "result_key": "nl2repobench/runs/oracle/boltons/oracle-legacy-v3--2026-08-19__12-20-38/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boltons",
+      "trial": "oracle-legacy-v3--2026-08-19__12-20-38"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v4--2026-08-19__12-29-54/result.json",
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v4--2026-08-19__12-29-54/harbor__6sxSUqo/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:30:27.699234",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v4--2026-08-19__12-29-54/harbor__6sxSUqo/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/boltons/oracle-legacy-v4--2026-08-19__12-29-54/",
+      "result_key": "nl2repobench/runs/oracle/boltons/oracle-legacy-v4--2026-08-19__12-29-54/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boltons",
+      "trial": "oracle-legacy-v4--2026-08-19__12-29-54"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v5--2026-08-19__12-43-49/result.json",
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v5--2026-08-19__12-43-49/harbor__uhfnBwJ/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:44:21.792252",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/boltons/oracle-legacy-v5--2026-08-19__12-43-49/harbor__uhfnBwJ/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/boltons/oracle-legacy-v5--2026-08-19__12-43-49/",
+      "result_key": "nl2repobench/runs/oracle/boltons/oracle-legacy-v5--2026-08-19__12-43-49/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boltons",
+      "trial": "oracle-legacy-v5--2026-08-19__12-43-49"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/boto/oracle-expansion-v5--2026-08-19__21-51-40/result.json",
+        "nl2repobench/runs/oracle/boto/oracle-expansion-v5--2026-08-19__21-51-40/harbor__7PSfyUP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:52:22.422375",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/boto/oracle-expansion-v5--2026-08-19__21-51-40/harbor__7PSfyUP/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/boto/oracle-expansion-v5--2026-08-19__21-51-40/",
+      "result_key": "nl2repobench/runs/oracle/boto/oracle-expansion-v5--2026-08-19__21-51-40/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boto",
+      "trial": "oracle-expansion-v5--2026-08-19__21-51-40"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/boto/oracle-expansion-v6--2026-08-19__21-53-15/result.json",
+        "nl2repobench/runs/oracle/boto/oracle-expansion-v6--2026-08-19__21-53-15/harbor__BdWTZHA/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:58:55.162418",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/boto/oracle-expansion-v6--2026-08-19__21-53-15/harbor__BdWTZHA/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/boto/oracle-expansion-v6--2026-08-19__21-53-15/",
+      "result_key": "nl2repobench/runs/oracle/boto/oracle-expansion-v6--2026-08-19__21-53-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boto",
+      "trial": "oracle-expansion-v6--2026-08-19__21-53-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/box/oracle-expansion-v12--2026-08-20__00-52-51/result.json",
+        "nl2repobench/runs/oracle/box/oracle-expansion-v12--2026-08-20__00-52-51/harbor__RWMFmPv/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:53:23.129872",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/box/oracle-expansion-v12--2026-08-20__00-52-51/harbor__RWMFmPv/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/box/oracle-expansion-v12--2026-08-20__00-52-51/",
+      "result_key": "nl2repobench/runs/oracle/box/oracle-expansion-v12--2026-08-20__00-52-51/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "box",
+      "trial": "oracle-expansion-v12--2026-08-20__00-52-51"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cachier/oracle-expansion-v7--2026-08-19__23-10-05/result.json",
+        "nl2repobench/runs/oracle/cachier/oracle-expansion-v7--2026-08-19__23-10-05/harbor__hUyNycV/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:14:52.550480",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cachier/oracle-expansion-v7--2026-08-19__23-10-05/harbor__hUyNycV/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cachier/oracle-expansion-v7--2026-08-19__23-10-05/",
+      "result_key": "nl2repobench/runs/oracle/cachier/oracle-expansion-v7--2026-08-19__23-10-05/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cachier",
+      "trial": "oracle-expansion-v7--2026-08-19__23-10-05"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v2--2026-08-19__12-04-36/result.json",
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v2--2026-08-19__12-04-36/harbor__iAshrN5/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:07:27.373943",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v2--2026-08-19__12-04-36/harbor__iAshrN5/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v2--2026-08-19__12-04-36/",
+      "result_key": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v2--2026-08-19__12-04-36/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cerberus",
+      "trial": "oracle-legacy-v2--2026-08-19__12-04-36"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v3--2026-08-19__12-21-15/result.json"
+      ],
+      "finished_at": "2026-08-19T12:24:02.221295",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v3--2026-08-19__12-21-15/",
+      "result_key": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v3--2026-08-19__12-21-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cerberus",
+      "trial": "oracle-legacy-v3--2026-08-19__12-21-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v4--2026-08-19__12-30-31/result.json",
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v4--2026-08-19__12-30-31/harbor__dsECZoD/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:33:12.814120",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v4--2026-08-19__12-30-31/harbor__dsECZoD/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v4--2026-08-19__12-30-31/",
+      "result_key": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v4--2026-08-19__12-30-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cerberus",
+      "trial": "oracle-legacy-v4--2026-08-19__12-30-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v5--2026-08-19__12-39-52/result.json",
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v5--2026-08-19__12-39-52/harbor__mvWu2uu/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:42:37.414068",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cerberus/oracle-legacy-v5--2026-08-19__12-39-52/harbor__mvWu2uu/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v5--2026-08-19__12-39-52/",
+      "result_key": "nl2repobench/runs/oracle/cerberus/oracle-legacy-v5--2026-08-19__12-39-52/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cerberus",
+      "trial": "oracle-legacy-v5--2026-08-19__12-39-52"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-25-45/result.json",
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-25-45/harbor__F3ytGMc/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:26:34.342014",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-25-45/harbor__F3ytGMc/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-25-45/",
+      "result_key": "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-25-45/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cookiecutter",
+      "trial": "oracle-new-batch--2026-08-19__19-25-45"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-27-47/result.json",
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-27-47/harbor__Z5CAr3x/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:28:32.675389",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-27-47/harbor__Z5CAr3x/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-27-47/",
+      "result_key": "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-27-47/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cookiecutter",
+      "trial": "oracle-new-batch--2026-08-19__19-27-47"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-29-05/result.json",
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-29-05/harbor__Vg85WJ2/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:29:49.941515",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-29-05/harbor__Vg85WJ2/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-29-05/",
+      "result_key": "nl2repobench/runs/oracle/cookiecutter/oracle-new-batch--2026-08-19__19-29-05/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cookiecutter",
+      "trial": "oracle-new-batch--2026-08-19__19-29-05"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/databases/oracle-expansion-v9--2026-08-20__00-15-20/result.json"
+      ],
+      "finished_at": "2026-08-20T00:25:53.007028",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/databases/oracle-expansion-v9--2026-08-20__00-15-20/",
+      "result_key": "nl2repobench/runs/oracle/databases/oracle-expansion-v9--2026-08-20__00-15-20/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "databases",
+      "trial": "oracle-expansion-v9--2026-08-20__00-15-20"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/dbutils/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+        "nl2repobench/runs/oracle/dbutils/oracle-expansion-v15--2026-08-20__01-23-10/harbor__76NjPwY/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:23:48.555442",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/dbutils/oracle-expansion-v15--2026-08-20__01-23-10/harbor__76NjPwY/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/dbutils/oracle-expansion-v15--2026-08-20__01-23-10/",
+      "result_key": "nl2repobench/runs/oracle/dbutils/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "dbutils",
+      "trial": "oracle-expansion-v15--2026-08-20__01-23-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v2--2026-08-19__12-07-30/result.json",
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v2--2026-08-19__12-07-30/harbor__LBvdtc4/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:08:01.712986",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v2--2026-08-19__12-07-30/harbor__LBvdtc4/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/decouple/oracle-legacy-v2--2026-08-19__12-07-30/",
+      "result_key": "nl2repobench/runs/oracle/decouple/oracle-legacy-v2--2026-08-19__12-07-30/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "oracle-legacy-v2--2026-08-19__12-07-30"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v3--2026-08-19__12-24-05/result.json"
+      ],
+      "finished_at": "2026-08-19T12:24:36.495413",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/decouple/oracle-legacy-v3--2026-08-19__12-24-05/",
+      "result_key": "nl2repobench/runs/oracle/decouple/oracle-legacy-v3--2026-08-19__12-24-05/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "oracle-legacy-v3--2026-08-19__12-24-05"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v4--2026-08-19__12-33-16/result.json",
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v4--2026-08-19__12-33-16/harbor__e4o3Lvm/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:33:46.746000",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/decouple/oracle-legacy-v4--2026-08-19__12-33-16/harbor__e4o3Lvm/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/decouple/oracle-legacy-v4--2026-08-19__12-33-16/",
+      "result_key": "nl2repobench/runs/oracle/decouple/oracle-legacy-v4--2026-08-19__12-33-16/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "oracle-legacy-v4--2026-08-19__12-33-16"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/deepdiff/oracle-expansion-v1--2026-08-19__21-06-37/result.json",
+        "nl2repobench/runs/oracle/deepdiff/oracle-expansion-v1--2026-08-19__21-06-37/harbor__dxZCrmK/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:07:15.550696",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/deepdiff/oracle-expansion-v1--2026-08-19__21-06-37/harbor__dxZCrmK/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/deepdiff/oracle-expansion-v1--2026-08-19__21-06-37/",
+      "result_key": "nl2repobench/runs/oracle/deepdiff/oracle-expansion-v1--2026-08-19__21-06-37/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "deepdiff",
+      "trial": "oracle-expansion-v1--2026-08-19__21-06-37"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/deslib/oracle-expansion-v8--2026-08-20__00-03-17/result.json",
+        "nl2repobench/runs/oracle/deslib/oracle-expansion-v8--2026-08-20__00-03-17/harbor__GetuKEr/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:05:23.098966",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/deslib/oracle-expansion-v8--2026-08-20__00-03-17/harbor__GetuKEr/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/deslib/oracle-expansion-v8--2026-08-20__00-03-17/",
+      "result_key": "nl2repobench/runs/oracle/deslib/oracle-expansion-v8--2026-08-20__00-03-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "deslib",
+      "trial": "oracle-expansion-v8--2026-08-20__00-03-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v5--2026-08-19__21-51-40/result.json",
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v5--2026-08-19__21-51-40/harbor__iELf9g8/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:52:31.568969",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v5--2026-08-19__21-51-40/harbor__iELf9g8/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v5--2026-08-19__21-51-40/",
+      "result_key": "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v5--2026-08-19__21-51-40/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "dictdatabase",
+      "trial": "oracle-expansion-v5--2026-08-19__21-51-40"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-53-15/result.json",
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-53-15/harbor__onhLKMF/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:54:04.947868",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-53-15/harbor__onhLKMF/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-53-15/",
+      "result_key": "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-53-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "dictdatabase",
+      "trial": "oracle-expansion-v6--2026-08-19__21-53-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-58-58/result.json",
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-58-58/harbor__44FhMyP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:59:54.619614",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-58-58/harbor__44FhMyP/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-58-58/",
+      "result_key": "nl2repobench/runs/oracle/dictdatabase/oracle-expansion-v6--2026-08-19__21-58-58/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "dictdatabase",
+      "trial": "oracle-expansion-v6--2026-08-19__21-58-58"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v1--2026-08-19__21-06-37/result.json",
+        "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v1--2026-08-19__21-06-37/harbor__wBkpR73/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:07:10.016282",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v1--2026-08-19__21-06-37/harbor__wBkpR73/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v1--2026-08-19__21-06-37/",
+      "result_key": "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v1--2026-08-19__21-06-37/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "docopt-ng",
+      "trial": "oracle-expansion-v1--2026-08-19__21-06-37"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v2--2026-08-19__21-15-45/result.json",
+        "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v2--2026-08-19__21-15-45/harbor__jkNDZP8/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:16:15.950866",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v2--2026-08-19__21-15-45/harbor__jkNDZP8/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v2--2026-08-19__21-15-45/",
+      "result_key": "nl2repobench/runs/oracle/docopt-ng/oracle-expansion-v2--2026-08-19__21-15-45/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "docopt-ng",
+      "trial": "oracle-expansion-v2--2026-08-19__21-15-45"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/emoji/oracle-expansion-v12--2026-08-20__00-53-29/result.json",
+        "nl2repobench/runs/oracle/emoji/oracle-expansion-v12--2026-08-20__00-53-29/harbor__5Fz76wy/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:54:18.040956",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/emoji/oracle-expansion-v12--2026-08-20__00-53-29/harbor__5Fz76wy/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/emoji/oracle-expansion-v12--2026-08-20__00-53-29/",
+      "result_key": "nl2repobench/runs/oracle/emoji/oracle-expansion-v12--2026-08-20__00-53-29/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "emoji",
+      "trial": "oracle-expansion-v12--2026-08-20__00-53-29"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/fastapi-users/oracle-expansion-v8--2026-08-20__00-03-17/result.json",
+        "nl2repobench/runs/oracle/fastapi-users/oracle-expansion-v8--2026-08-20__00-03-17/harbor__gQFwdE9/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:04:24.784726",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/fastapi-users/oracle-expansion-v8--2026-08-20__00-03-17/harbor__gQFwdE9/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/fastapi-users/oracle-expansion-v8--2026-08-20__00-03-17/",
+      "result_key": "nl2repobench/runs/oracle/fastapi-users/oracle-expansion-v8--2026-08-20__00-03-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "fastapi-users",
+      "trial": "oracle-expansion-v8--2026-08-20__00-03-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/flask-restful/oracle-expansion-v7--2026-08-19__23-09-18/result.json",
+        "nl2repobench/runs/oracle/flask-restful/oracle-expansion-v7--2026-08-19__23-09-18/harbor__WNYC7tC/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:09:56.382576",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/flask-restful/oracle-expansion-v7--2026-08-19__23-09-18/harbor__WNYC7tC/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/flask-restful/oracle-expansion-v7--2026-08-19__23-09-18/",
+      "result_key": "nl2repobench/runs/oracle/flask-restful/oracle-expansion-v7--2026-08-19__23-09-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "flask-restful",
+      "trial": "oracle-expansion-v7--2026-08-19__23-09-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/flask-restful/oracle-flask-v2--2026-08-19__23-33-59/result.json",
+        "nl2repobench/runs/oracle/flask-restful/oracle-flask-v2--2026-08-19__23-33-59/harbor__CKNi3R9/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:34:35.191428",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/flask-restful/oracle-flask-v2--2026-08-19__23-33-59/harbor__CKNi3R9/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/flask-restful/oracle-flask-v2--2026-08-19__23-33-59/",
+      "result_key": "nl2repobench/runs/oracle/flask-restful/oracle-flask-v2--2026-08-19__23-33-59/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "flask-restful",
+      "trial": "oracle-flask-v2--2026-08-19__23-33-59"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/freezegun/oracle-new4-v2--2026-08-19__14-58-58/result.json",
+        "nl2repobench/runs/oracle/freezegun/oracle-new4-v2--2026-08-19__14-58-58/harbor__duPnEyP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T14:59:37.053083",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/freezegun/oracle-new4-v2--2026-08-19__14-58-58/harbor__duPnEyP/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/freezegun/oracle-new4-v2--2026-08-19__14-58-58/",
+      "result_key": "nl2repobench/runs/oracle/freezegun/oracle-new4-v2--2026-08-19__14-58-58/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "freezegun",
+      "trial": "oracle-new4-v2--2026-08-19__14-58-58"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v2--2026-08-19__12-08-05/result.json",
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v2--2026-08-19__12-08-05/harbor__N5RtMBw/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:08:36.993157",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v2--2026-08-19__12-08-05/harbor__N5RtMBw/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v2--2026-08-19__12-08-05/",
+      "result_key": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v2--2026-08-19__12-08-05/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "oracle-legacy-v2--2026-08-19__12-08-05"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v3--2026-08-19__12-24-39/result.json"
+      ],
+      "finished_at": "2026-08-19T12:25:11.965557",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v3--2026-08-19__12-24-39/",
+      "result_key": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v3--2026-08-19__12-24-39/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "oracle-legacy-v3--2026-08-19__12-24-39"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v4--2026-08-19__12-33-50/result.json",
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v4--2026-08-19__12-33-50/harbor__6CMEcY5/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:34:21.571610",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v4--2026-08-19__12-33-50/harbor__6CMEcY5/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v4--2026-08-19__12-33-50/",
+      "result_key": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v4--2026-08-19__12-33-50/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "oracle-legacy-v4--2026-08-19__12-33-50"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v5--2026-08-19__12-42-40/result.json",
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v5--2026-08-19__12-42-40/harbor__tihjoTc/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:43:11.942189",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v5--2026-08-19__12-42-40/harbor__tihjoTc/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v5--2026-08-19__12-42-40/",
+      "result_key": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v5--2026-08-19__12-42-40/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "oracle-legacy-v5--2026-08-19__12-42-40"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v6--2026-08-19__12-46-28/result.json",
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v6--2026-08-19__12-46-28/harbor__t43gn7H/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:47:00.438145",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/ftfy/oracle-legacy-v6--2026-08-19__12-46-28/harbor__t43gn7H/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v6--2026-08-19__12-46-28/",
+      "result_key": "nl2repobench/runs/oracle/ftfy/oracle-legacy-v6--2026-08-19__12-46-28/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "oracle-legacy-v6--2026-08-19__12-46-28"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/funcy/oracle-expansion-v10--2026-08-20__00-32-57/result.json",
+        "nl2repobench/runs/oracle/funcy/oracle-expansion-v10--2026-08-20__00-32-57/harbor__2b93zje/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:33:29.556972",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/funcy/oracle-expansion-v10--2026-08-20__00-32-57/harbor__2b93zje/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/funcy/oracle-expansion-v10--2026-08-20__00-32-57/",
+      "result_key": "nl2repobench/runs/oracle/funcy/oracle-expansion-v10--2026-08-20__00-32-57/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "funcy",
+      "trial": "oracle-expansion-v10--2026-08-20__00-32-57"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/fuzzywuzzy/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+        "nl2repobench/runs/oracle/fuzzywuzzy/oracle-expansion-v15--2026-08-20__01-23-10/harbor__4BQs6Xw/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:23:47.223643",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/fuzzywuzzy/oracle-expansion-v15--2026-08-20__01-23-10/harbor__4BQs6Xw/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/fuzzywuzzy/oracle-expansion-v15--2026-08-20__01-23-10/",
+      "result_key": "nl2repobench/runs/oracle/fuzzywuzzy/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "fuzzywuzzy",
+      "trial": "oracle-expansion-v15--2026-08-20__01-23-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/gitingest/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+        "nl2repobench/runs/oracle/gitingest/oracle-expansion-v15--2026-08-20__01-23-10/harbor__VhxtiUV/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:23:54.824878",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/gitingest/oracle-expansion-v15--2026-08-20__01-23-10/harbor__VhxtiUV/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/gitingest/oracle-expansion-v15--2026-08-20__01-23-10/",
+      "result_key": "nl2repobench/runs/oracle/gitingest/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "gitingest",
+      "trial": "oracle-expansion-v15--2026-08-20__01-23-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v2--2026-08-19__12-08-40/result.json",
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v2--2026-08-19__12-08-40/harbor__jpuw8yP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:09:13.947766",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v2--2026-08-19__12-08-40/harbor__jpuw8yP/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/humanize/oracle-legacy-v2--2026-08-19__12-08-40/",
+      "result_key": "nl2repobench/runs/oracle/humanize/oracle-legacy-v2--2026-08-19__12-08-40/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "humanize",
+      "trial": "oracle-legacy-v2--2026-08-19__12-08-40"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v3--2026-08-19__12-25-15/result.json"
+      ],
+      "finished_at": "2026-08-19T12:25:49.776361",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/humanize/oracle-legacy-v3--2026-08-19__12-25-15/",
+      "result_key": "nl2repobench/runs/oracle/humanize/oracle-legacy-v3--2026-08-19__12-25-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "humanize",
+      "trial": "oracle-legacy-v3--2026-08-19__12-25-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v4--2026-08-19__12-34-25/result.json",
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v4--2026-08-19__12-34-25/harbor__27uvQfz/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:34:57.113467",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v4--2026-08-19__12-34-25/harbor__27uvQfz/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/humanize/oracle-legacy-v4--2026-08-19__12-34-25/",
+      "result_key": "nl2repobench/runs/oracle/humanize/oracle-legacy-v4--2026-08-19__12-34-25/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "humanize",
+      "trial": "oracle-legacy-v4--2026-08-19__12-34-25"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v5--2026-08-19__12-43-15/result.json",
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v5--2026-08-19__12-43-15/harbor__c3rzjJY/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:43:46.801845",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/humanize/oracle-legacy-v5--2026-08-19__12-43-15/harbor__c3rzjJY/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/humanize/oracle-legacy-v5--2026-08-19__12-43-15/",
+      "result_key": "nl2repobench/runs/oracle/humanize/oracle-legacy-v5--2026-08-19__12-43-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "humanize",
+      "trial": "oracle-legacy-v5--2026-08-19__12-43-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/jsonlines/oracle-new4--2026-08-19__14-54-47/result.json",
+        "nl2repobench/runs/oracle/jsonlines/oracle-new4--2026-08-19__14-54-47/harbor__mtXDcsG/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T14:56:15.730355",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/jsonlines/oracle-new4--2026-08-19__14-54-47/harbor__mtXDcsG/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/jsonlines/oracle-new4--2026-08-19__14-54-47/",
+      "result_key": "nl2repobench/runs/oracle/jsonlines/oracle-new4--2026-08-19__14-54-47/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "jsonlines",
+      "trial": "oracle-new4--2026-08-19__14-54-47"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/jsonlines/oracle-new4-v2--2026-08-19__14-58-16/result.json",
+        "nl2repobench/runs/oracle/jsonlines/oracle-new4-v2--2026-08-19__14-58-16/harbor__urtASBa/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T14:58:52.832228",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/jsonlines/oracle-new4-v2--2026-08-19__14-58-16/harbor__urtASBa/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/jsonlines/oracle-new4-v2--2026-08-19__14-58-16/",
+      "result_key": "nl2repobench/runs/oracle/jsonlines/oracle-new4-v2--2026-08-19__14-58-16/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "jsonlines",
+      "trial": "oracle-new4-v2--2026-08-19__14-58-16"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/markdownify/oracle-expansion-v10--2026-08-20__00-33-33/result.json",
+        "nl2repobench/runs/oracle/markdownify/oracle-expansion-v10--2026-08-20__00-33-33/harbor__bpGAwec/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:34:06.531537",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/markdownify/oracle-expansion-v10--2026-08-20__00-33-33/harbor__bpGAwec/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/markdownify/oracle-expansion-v10--2026-08-20__00-33-33/",
+      "result_key": "nl2repobench/runs/oracle/markdownify/oracle-expansion-v10--2026-08-20__00-33-33/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "markdownify",
+      "trial": "oracle-expansion-v10--2026-08-20__00-33-33"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/markdownify/oracle-expansion-v11--2026-08-20__00-41-54/result.json",
+        "nl2repobench/runs/oracle/markdownify/oracle-expansion-v11--2026-08-20__00-41-54/harbor__bGdivM8/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:42:27.071538",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/markdownify/oracle-expansion-v11--2026-08-20__00-41-54/harbor__bGdivM8/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/markdownify/oracle-expansion-v11--2026-08-20__00-41-54/",
+      "result_key": "nl2repobench/runs/oracle/markdownify/oracle-expansion-v11--2026-08-20__00-41-54/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "markdownify",
+      "trial": "oracle-expansion-v11--2026-08-20__00-41-54"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/markdownify/oracle-markdownify-v2--2026-08-20__00-46-51/result.json",
+        "nl2repobench/runs/oracle/markdownify/oracle-markdownify-v2--2026-08-20__00-46-51/harbor__ewnawDd/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:47:25.089272",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/markdownify/oracle-markdownify-v2--2026-08-20__00-46-51/harbor__ewnawDd/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/markdownify/oracle-markdownify-v2--2026-08-20__00-46-51/",
+      "result_key": "nl2repobench/runs/oracle/markdownify/oracle-markdownify-v2--2026-08-20__00-46-51/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "markdownify",
+      "trial": "oracle-markdownify-v2--2026-08-20__00-46-51"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/markupsafe/oracle-resume-v1--2026-08-20__10-52-36/result.json",
+        "nl2repobench/runs/oracle/markupsafe/oracle-resume-v1--2026-08-20__10-52-36/harbor__FJuF4hD/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T10:53:09.220762",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/markupsafe/oracle-resume-v1--2026-08-20__10-52-36/harbor__FJuF4hD/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/markupsafe/oracle-resume-v1--2026-08-20__10-52-36/",
+      "result_key": "nl2repobench/runs/oracle/markupsafe/oracle-resume-v1--2026-08-20__10-52-36/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "markupsafe",
+      "trial": "oracle-resume-v1--2026-08-20__10-52-36"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/math-verify/oracle-expansion-v9--2026-08-20__00-15-20/result.json",
+        "nl2repobench/runs/oracle/math-verify/oracle-expansion-v9--2026-08-20__00-15-20/harbor__NLne7mn/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:15:57.143857",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/math-verify/oracle-expansion-v9--2026-08-20__00-15-20/harbor__NLne7mn/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/math-verify/oracle-expansion-v9--2026-08-20__00-15-20/",
+      "result_key": "nl2repobench/runs/oracle/math-verify/oracle-expansion-v9--2026-08-20__00-15-20/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "math-verify",
+      "trial": "oracle-expansion-v9--2026-08-20__00-15-20"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v12--2026-08-20__00-53-29/result.json",
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v12--2026-08-20__00-53-29/harbor__yhDAZng/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:54:04.415543",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v12--2026-08-20__00-53-29/harbor__yhDAZng/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v12--2026-08-20__00-53-29/",
+      "result_key": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v12--2026-08-20__00-53-29/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "mechanicalsoup",
+      "trial": "oracle-expansion-v12--2026-08-20__00-53-29"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-07/result.json",
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-07/harbor__d4UJqeJ/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:58:39.648579",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-07/harbor__d4UJqeJ/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-07/",
+      "result_key": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-07/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "mechanicalsoup",
+      "trial": "oracle-expansion-v13--2026-08-20__00-58-07"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-42/result.json",
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-42/harbor__i2TMeMq/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:59:14.476694",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-42/harbor__i2TMeMq/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-42/",
+      "result_key": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-58-42/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "mechanicalsoup",
+      "trial": "oracle-expansion-v13--2026-08-20__00-58-42"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-59-17/result.json",
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-59-17/harbor__n3MJycp/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:59:49.796123",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-59-17/harbor__n3MJycp/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-59-17/",
+      "result_key": "nl2repobench/runs/oracle/mechanicalsoup/oracle-expansion-v13--2026-08-20__00-59-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "mechanicalsoup",
+      "trial": "oracle-expansion-v13--2026-08-20__00-59-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v1--2026-08-19__21-07-59/result.json",
+        "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v1--2026-08-19__21-07-59/harbor__qZuCkng/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:08:47.453571",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v1--2026-08-19__21-07-59/harbor__qZuCkng/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v1--2026-08-19__21-07-59/",
+      "result_key": "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v1--2026-08-19__21-07-59/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "more-Itertools",
+      "trial": "oracle-expansion-v1--2026-08-19__21-07-59"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v2--2026-08-19__21-17-04/result.json",
+        "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v2--2026-08-19__21-17-04/harbor__tNXdY99/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:17:48.264645",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v2--2026-08-19__21-17-04/harbor__tNXdY99/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v2--2026-08-19__21-17-04/",
+      "result_key": "nl2repobench/runs/oracle/more-Itertools/oracle-expansion-v2--2026-08-19__21-17-04/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "more-Itertools",
+      "trial": "oracle-expansion-v2--2026-08-19__21-17-04"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/paillier/oracle-expansion-v7--2026-08-19__23-09-18/result.json",
+        "nl2repobench/runs/oracle/paillier/oracle-expansion-v7--2026-08-19__23-09-18/harbor__ZC7KmAA/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:10:01.865493",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/paillier/oracle-expansion-v7--2026-08-19__23-09-18/harbor__ZC7KmAA/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/paillier/oracle-expansion-v7--2026-08-19__23-09-18/",
+      "result_key": "nl2repobench/runs/oracle/paillier/oracle-expansion-v7--2026-08-19__23-09-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "paillier",
+      "trial": "oracle-expansion-v7--2026-08-19__23-09-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v2--2026-08-19__12-09-17/result.json",
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v2--2026-08-19__12-09-17/harbor__svfksPZ/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:09:49.609970",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v2--2026-08-19__12-09-17/harbor__svfksPZ/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/parse/oracle-legacy-v2--2026-08-19__12-09-17/",
+      "result_key": "nl2repobench/runs/oracle/parse/oracle-legacy-v2--2026-08-19__12-09-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "oracle-legacy-v2--2026-08-19__12-09-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v3--2026-08-19__12-25-53/result.json"
+      ],
+      "finished_at": "2026-08-19T12:26:24.802932",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/parse/oracle-legacy-v3--2026-08-19__12-25-53/",
+      "result_key": "nl2repobench/runs/oracle/parse/oracle-legacy-v3--2026-08-19__12-25-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "oracle-legacy-v3--2026-08-19__12-25-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v4--2026-08-19__12-35-00/result.json",
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v4--2026-08-19__12-35-00/harbor__UWw5TGV/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:35:31.472162",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/parse/oracle-legacy-v4--2026-08-19__12-35-00/harbor__UWw5TGV/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/parse/oracle-legacy-v4--2026-08-19__12-35-00/",
+      "result_key": "nl2repobench/runs/oracle/parse/oracle-legacy-v4--2026-08-19__12-35-00/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "oracle-legacy-v4--2026-08-19__12-35-00"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v3--2026-08-19__21-31-53/result.json",
+        "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v3--2026-08-19__21-31-53/harbor__mbi2GjU/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:32:26.997511",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v3--2026-08-19__21-31-53/harbor__mbi2GjU/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v3--2026-08-19__21-31-53/",
+      "result_key": "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v3--2026-08-19__21-31-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pathlib2",
+      "trial": "oracle-expansion-v3--2026-08-19__21-31-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v4--2026-08-19__21-36-58/result.json",
+        "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v4--2026-08-19__21-36-58/harbor__szCRxee/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:37:32.412443",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v4--2026-08-19__21-36-58/harbor__szCRxee/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v4--2026-08-19__21-36-58/",
+      "result_key": "nl2repobench/runs/oracle/pathlib2/oracle-expansion-v4--2026-08-19__21-36-58/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pathlib2",
+      "trial": "oracle-expansion-v4--2026-08-19__21-36-58"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pdfplumber-stable/oracle-expansion-v12--2026-08-20__00-54-21/result.json",
+        "nl2repobench/runs/oracle/pdfplumber-stable/oracle-expansion-v12--2026-08-20__00-54-21/harbor__mYfebAn/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:56:04.788282",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pdfplumber-stable/oracle-expansion-v12--2026-08-20__00-54-21/harbor__mYfebAn/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pdfplumber-stable/oracle-expansion-v12--2026-08-20__00-54-21/",
+      "result_key": "nl2repobench/runs/oracle/pdfplumber-stable/oracle-expansion-v12--2026-08-20__00-54-21/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pdfplumber-stable",
+      "trial": "oracle-expansion-v12--2026-08-20__00-54-21"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pyjwt/oracle-new-batch--2026-08-19__19-25-44/result.json",
+        "nl2repobench/runs/oracle/pyjwt/oracle-new-batch--2026-08-19__19-25-44/harbor__xbSom74/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:26:28.862324",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pyjwt/oracle-new-batch--2026-08-19__19-25-44/harbor__xbSom74/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pyjwt/oracle-new-batch--2026-08-19__19-25-44/",
+      "result_key": "nl2repobench/runs/oracle/pyjwt/oracle-new-batch--2026-08-19__19-25-44/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pyjwt",
+      "trial": "oracle-new-batch--2026-08-19__19-25-44"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v3--2026-08-19__21-31-13/result.json",
+        "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v3--2026-08-19__21-31-13/harbor__LW9CvJK/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:31:49.521199",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v3--2026-08-19__21-31-13/harbor__LW9CvJK/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v3--2026-08-19__21-31-13/",
+      "result_key": "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v3--2026-08-19__21-31-13/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pypinyin",
+      "trial": "oracle-expansion-v3--2026-08-19__21-31-13"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v4--2026-08-19__21-36-58/result.json",
+        "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v4--2026-08-19__21-36-58/harbor__pFHfWiR/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:37:33.648513",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v4--2026-08-19__21-36-58/harbor__pFHfWiR/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v4--2026-08-19__21-36-58/",
+      "result_key": "nl2repobench/runs/oracle/pypinyin/oracle-expansion-v4--2026-08-19__21-36-58/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pypinyin",
+      "trial": "oracle-expansion-v4--2026-08-19__21-36-58"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pyquery/oracle-resume-v1--2026-08-20__10-52-36/result.json",
+        "nl2repobench/runs/oracle/pyquery/oracle-resume-v1--2026-08-20__10-52-36/harbor__6m3Zd2p/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T10:53:16.769024",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pyquery/oracle-resume-v1--2026-08-20__10-52-36/harbor__6m3Zd2p/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pyquery/oracle-resume-v1--2026-08-20__10-52-36/",
+      "result_key": "nl2repobench/runs/oracle/pyquery/oracle-resume-v1--2026-08-20__10-52-36/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pyquery",
+      "trial": "oracle-resume-v1--2026-08-20__10-52-36"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pytest-cov/oracle-expansion-v3--2026-08-19__21-31-53/result.json",
+        "nl2repobench/runs/oracle/pytest-cov/oracle-expansion-v3--2026-08-19__21-31-53/harbor__DhZWNwD/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:33:30.100177",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pytest-cov/oracle-expansion-v3--2026-08-19__21-31-53/harbor__DhZWNwD/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pytest-cov/oracle-expansion-v3--2026-08-19__21-31-53/",
+      "result_key": "nl2repobench/runs/oracle/pytest-cov/oracle-expansion-v3--2026-08-19__21-31-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pytest-cov",
+      "trial": "oracle-expansion-v3--2026-08-19__21-31-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v1--2026-08-19__21-07-18/result.json",
+        "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v1--2026-08-19__21-07-18/harbor__QhpmTdy/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:07:52.737815",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v1--2026-08-19__21-07-18/harbor__QhpmTdy/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v1--2026-08-19__21-07-18/",
+      "result_key": "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v1--2026-08-19__21-07-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-dotenv",
+      "trial": "oracle-expansion-v1--2026-08-19__21-07-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v2--2026-08-19__21-16-26/result.json",
+        "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v2--2026-08-19__21-16-26/harbor__cVCWvHb/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:16:59.363422",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v2--2026-08-19__21-16-26/harbor__cVCWvHb/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v2--2026-08-19__21-16-26/",
+      "result_key": "nl2repobench/runs/oracle/python-dotenv/oracle-expansion-v2--2026-08-19__21-16-26/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-dotenv",
+      "trial": "oracle-expansion-v2--2026-08-19__21-16-26"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/python-fsutil/oracle-expansion-v9--2026-08-20__00-15-20/result.json",
+        "nl2repobench/runs/oracle/python-fsutil/oracle-expansion-v9--2026-08-20__00-15-20/harbor__BZ9pZfA/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:15:55.479279",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/python-fsutil/oracle-expansion-v9--2026-08-20__00-15-20/harbor__BZ9pZfA/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/python-fsutil/oracle-expansion-v9--2026-08-20__00-15-20/",
+      "result_key": "nl2repobench/runs/oracle/python-fsutil/oracle-expansion-v9--2026-08-20__00-15-20/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-fsutil",
+      "trial": "oracle-expansion-v9--2026-08-20__00-15-20"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/python-pathspec/oracle-expansion-v10--2026-08-20__00-32-57/result.json",
+        "nl2repobench/runs/oracle/python-pathspec/oracle-expansion-v10--2026-08-20__00-32-57/harbor__FKuKLaJ/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:33:29.926523",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/python-pathspec/oracle-expansion-v10--2026-08-20__00-32-57/harbor__FKuKLaJ/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/python-pathspec/oracle-expansion-v10--2026-08-20__00-32-57/",
+      "result_key": "nl2repobench/runs/oracle/python-pathspec/oracle-expansion-v10--2026-08-20__00-32-57/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-pathspec",
+      "trial": "oracle-expansion-v10--2026-08-20__00-32-57"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/python-slugify/oracle-expansion-v10--2026-08-20__00-33-33/result.json",
+        "nl2repobench/runs/oracle/python-slugify/oracle-expansion-v10--2026-08-20__00-33-33/harbor__b9KpeTt/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:34:05.977888",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/python-slugify/oracle-expansion-v10--2026-08-20__00-33-33/harbor__b9KpeTt/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/python-slugify/oracle-expansion-v10--2026-08-20__00-33-33/",
+      "result_key": "nl2repobench/runs/oracle/python-slugify/oracle-expansion-v10--2026-08-20__00-33-33/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-slugify",
+      "trial": "oracle-expansion-v10--2026-08-20__00-33-33"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pytz/oracle-legacy-v2--2026-08-19__12-09-53/result.json",
+        "nl2repobench/runs/oracle/pytz/oracle-legacy-v2--2026-08-19__12-09-53/harbor__kurpN3P/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:10:25.364078",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/pytz/oracle-legacy-v2--2026-08-19__12-09-53/harbor__kurpN3P/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/pytz/oracle-legacy-v2--2026-08-19__12-09-53/",
+      "result_key": "nl2repobench/runs/oracle/pytz/oracle-legacy-v2--2026-08-19__12-09-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pytz",
+      "trial": "oracle-legacy-v2--2026-08-19__12-09-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/pytz/oracle-legacy-v3--2026-08-19__12-26-28/result.json"
+      ],
+      "finished_at": "2026-08-19T12:26:45.328341",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/pytz/oracle-legacy-v3--2026-08-19__12-26-28/",
+      "result_key": "nl2repobench/runs/oracle/pytz/oracle-legacy-v3--2026-08-19__12-26-28/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pytz",
+      "trial": "oracle-legacy-v3--2026-08-19__12-26-28"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/rich-click/oracle-expansion-v12--2026-08-20__00-52-51/result.json",
+        "nl2repobench/runs/oracle/rich-click/oracle-expansion-v12--2026-08-20__00-52-51/harbor__MoADhMg/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:53:26.124054",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/rich-click/oracle-expansion-v12--2026-08-20__00-52-51/harbor__MoADhMg/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/rich-click/oracle-expansion-v12--2026-08-20__00-52-51/",
+      "result_key": "nl2repobench/runs/oracle/rich-click/oracle-expansion-v12--2026-08-20__00-52-51/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "rich-click",
+      "trial": "oracle-expansion-v12--2026-08-20__00-52-51"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/rich-click/oracle-expansion-v13--2026-08-20__00-57-26/result.json",
+        "nl2repobench/runs/oracle/rich-click/oracle-expansion-v13--2026-08-20__00-57-26/harbor__KnkVnR7/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:58:04.073062",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/rich-click/oracle-expansion-v13--2026-08-20__00-57-26/harbor__KnkVnR7/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/rich-click/oracle-expansion-v13--2026-08-20__00-57-26/",
+      "result_key": "nl2repobench/runs/oracle/rich-click/oracle-expansion-v13--2026-08-20__00-57-26/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "rich-click",
+      "trial": "oracle-expansion-v13--2026-08-20__00-57-26"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/schema/oracle-expansion-v3--2026-08-19__21-33-33/result.json",
+        "nl2repobench/runs/oracle/schema/oracle-expansion-v3--2026-08-19__21-33-33/harbor__8qYQMmZ/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:34:04.124343",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/schema/oracle-expansion-v3--2026-08-19__21-33-33/harbor__8qYQMmZ/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/schema/oracle-expansion-v3--2026-08-19__21-33-33/",
+      "result_key": "nl2repobench/runs/oracle/schema/oracle-expansion-v3--2026-08-19__21-33-33/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "schema",
+      "trial": "oracle-expansion-v3--2026-08-19__21-33-33"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/six/oracle-legacy-v2--2026-08-19__12-10-30/result.json",
+        "nl2repobench/runs/oracle/six/oracle-legacy-v2--2026-08-19__12-10-30/harbor__gNbgFiN/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:11:02.232553",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/six/oracle-legacy-v2--2026-08-19__12-10-30/harbor__gNbgFiN/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/six/oracle-legacy-v2--2026-08-19__12-10-30/",
+      "result_key": "nl2repobench/runs/oracle/six/oracle-legacy-v2--2026-08-19__12-10-30/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "oracle-legacy-v2--2026-08-19__12-10-30"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/six/oracle-legacy-v3--2026-08-19__12-26-48/result.json"
+      ],
+      "finished_at": "2026-08-19T12:27:20.543510",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/six/oracle-legacy-v3--2026-08-19__12-26-48/",
+      "result_key": "nl2repobench/runs/oracle/six/oracle-legacy-v3--2026-08-19__12-26-48/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "oracle-legacy-v3--2026-08-19__12-26-48"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/six/oracle-legacy-v4--2026-08-19__12-35-34/result.json",
+        "nl2repobench/runs/oracle/six/oracle-legacy-v4--2026-08-19__12-35-34/harbor__HuGPwY2/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T12:36:05.914776",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/six/oracle-legacy-v4--2026-08-19__12-35-34/harbor__HuGPwY2/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/six/oracle-legacy-v4--2026-08-19__12-35-34/",
+      "result_key": "nl2repobench/runs/oracle/six/oracle-legacy-v4--2026-08-19__12-35-34/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "oracle-legacy-v4--2026-08-19__12-35-34"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v1--2026-08-19__21-07-18/result.json",
+        "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v1--2026-08-19__21-07-18/harbor__PZLA4Y8/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:07:56.409235",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v1--2026-08-19__21-07-18/harbor__PZLA4Y8/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v1--2026-08-19__21-07-18/",
+      "result_key": "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v1--2026-08-19__21-07-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sortedcontainers",
+      "trial": "oracle-expansion-v1--2026-08-19__21-07-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v2--2026-08-19__21-15-45/result.json",
+        "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v2--2026-08-19__21-15-45/harbor__EGzPQbr/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:16:21.861855",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v2--2026-08-19__21-15-45/harbor__EGzPQbr/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v2--2026-08-19__21-15-45/",
+      "result_key": "nl2repobench/runs/oracle/sortedcontainers/oracle-expansion-v2--2026-08-19__21-15-45/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sortedcontainers",
+      "trial": "oracle-expansion-v2--2026-08-19__21-15-45"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/sqlparse/oracle-expansion-v8--2026-08-20__00-03-17/result.json",
+        "nl2repobench/runs/oracle/sqlparse/oracle-expansion-v8--2026-08-20__00-03-17/harbor__5HMUYEV/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:03:52.495812",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/sqlparse/oracle-expansion-v8--2026-08-20__00-03-17/harbor__5HMUYEV/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/sqlparse/oracle-expansion-v8--2026-08-20__00-03-17/",
+      "result_key": "nl2repobench/runs/oracle/sqlparse/oracle-expansion-v8--2026-08-20__00-03-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sqlparse",
+      "trial": "oracle-expansion-v8--2026-08-20__00-03-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/stable-baselines3/oracle-expansion-v14--2026-08-20__01-07-27/result.json"
+      ],
+      "finished_at": "2026-08-20T01:17:59.912911",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/stable-baselines3/oracle-expansion-v14--2026-08-20__01-07-27/",
+      "result_key": "nl2repobench/runs/oracle/stable-baselines3/oracle-expansion-v14--2026-08-20__01-07-27/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "stable-baselines3",
+      "trial": "oracle-expansion-v14--2026-08-20__01-07-27"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/stable-baselines3/oracle-stable-v2--2026-08-20__01-19-59/result.json"
+      ],
+      "finished_at": "2026-08-20T01:50:30.523451",
+      "grading_keys": [],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/oracle/stable-baselines3/oracle-stable-v2--2026-08-20__01-19-59/",
+      "result_key": "nl2repobench/runs/oracle/stable-baselines3/oracle-stable-v2--2026-08-20__01-19-59/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "stable-baselines3",
+      "trial": "oracle-stable-v2--2026-08-20__01-19-59"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/stamina/oracle-expansion-v10--2026-08-20__00-34-10/result.json",
+        "nl2repobench/runs/oracle/stamina/oracle-expansion-v10--2026-08-20__00-34-10/harbor__rfcS2ry/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:34:42.851913",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/stamina/oracle-expansion-v10--2026-08-20__00-34-10/harbor__rfcS2ry/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/stamina/oracle-expansion-v10--2026-08-20__00-34-10/",
+      "result_key": "nl2repobench/runs/oracle/stamina/oracle-expansion-v10--2026-08-20__00-34-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "stamina",
+      "trial": "oracle-expansion-v10--2026-08-20__00-34-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/structlog/oracle-expansion-v14--2026-08-20__01-07-27/result.json",
+        "nl2repobench/runs/oracle/structlog/oracle-expansion-v14--2026-08-20__01-07-27/harbor__9A42gjj/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:08:01.998325",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/structlog/oracle-expansion-v14--2026-08-20__01-07-27/harbor__9A42gjj/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/structlog/oracle-expansion-v14--2026-08-20__01-07-27/",
+      "result_key": "nl2repobench/runs/oracle/structlog/oracle-expansion-v14--2026-08-20__01-07-27/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "structlog",
+      "trial": "oracle-expansion-v14--2026-08-20__01-07-27"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tablib/oracle-expansion-v7--2026-08-19__23-14-55/result.json",
+        "nl2repobench/runs/oracle/tablib/oracle-expansion-v7--2026-08-19__23-14-55/harbor__xMVt6Na/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:15:29.611020",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tablib/oracle-expansion-v7--2026-08-19__23-14-55/harbor__xMVt6Na/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tablib/oracle-expansion-v7--2026-08-19__23-14-55/",
+      "result_key": "nl2repobench/runs/oracle/tablib/oracle-expansion-v7--2026-08-19__23-14-55/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tablib",
+      "trial": "oracle-expansion-v7--2026-08-19__23-14-55"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tenacity/oracle-new4-v2--2026-08-19__15-00-29/result.json",
+        "nl2repobench/runs/oracle/tenacity/oracle-new4-v2--2026-08-19__15-00-29/harbor__ZV2mpEK/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T15:01:09.315438",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tenacity/oracle-new4-v2--2026-08-19__15-00-29/harbor__ZV2mpEK/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tenacity/oracle-new4-v2--2026-08-19__15-00-29/",
+      "result_key": "nl2repobench/runs/oracle/tenacity/oracle-new4-v2--2026-08-19__15-00-29/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tenacity",
+      "trial": "oracle-new4-v2--2026-08-19__15-00-29"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tinydb/oracle-new4-v2--2026-08-19__14-59-43/result.json",
+        "nl2repobench/runs/oracle/tinydb/oracle-new4-v2--2026-08-19__14-59-43/harbor__J4872w9/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T15:00:23.151720",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tinydb/oracle-new4-v2--2026-08-19__14-59-43/harbor__J4872w9/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tinydb/oracle-new4-v2--2026-08-19__14-59-43/",
+      "result_key": "nl2repobench/runs/oracle/tinydb/oracle-new4-v2--2026-08-19__14-59-43/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tinydb",
+      "trial": "oracle-new4-v2--2026-08-19__14-59-43"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v10--2026-08-20__00-34-10/result.json",
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v10--2026-08-20__00-34-10/harbor__NAFUYqP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:35:07.378580",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v10--2026-08-20__00-34-10/harbor__NAFUYqP/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v10--2026-08-20__00-34-10/",
+      "result_key": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v10--2026-08-20__00-34-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tqdm",
+      "trial": "oracle-expansion-v10--2026-08-20__00-34-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-42-30/result.json",
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-42-30/harbor__yzz9v3w/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:43:28.881718",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-42-30/harbor__yzz9v3w/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-42-30/",
+      "result_key": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-42-30/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tqdm",
+      "trial": "oracle-expansion-v11--2026-08-20__00-42-30"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-43-32/result.json",
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-43-32/harbor__dAiQ6iB/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:44:28.320843",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-43-32/harbor__dAiQ6iB/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-43-32/",
+      "result_key": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-43-32/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tqdm",
+      "trial": "oracle-expansion-v11--2026-08-20__00-43-32"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-44-31/result.json",
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-44-31/harbor__kLVACVK/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:45:22.895903",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-44-31/harbor__kLVACVK/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-44-31/",
+      "result_key": "nl2repobench/runs/oracle/tqdm/oracle-expansion-v11--2026-08-20__00-44-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tqdm",
+      "trial": "oracle-expansion-v11--2026-08-20__00-44-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/typing_extensions/oracle-expansion-v3--2026-08-19__21-31-13/result.json",
+        "nl2repobench/runs/oracle/typing_extensions/oracle-expansion-v3--2026-08-19__21-31-13/harbor__Trk9aNv/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:31:46.914293",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/typing_extensions/oracle-expansion-v3--2026-08-19__21-31-13/harbor__Trk9aNv/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/typing_extensions/oracle-expansion-v3--2026-08-19__21-31-13/",
+      "result_key": "nl2repobench/runs/oracle/typing_extensions/oracle-expansion-v3--2026-08-19__21-31-13/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "typing_extensions",
+      "trial": "oracle-expansion-v3--2026-08-19__21-31-13"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/unidecode/oracle-resume-v1--2026-08-20__10-51-57/result.json",
+        "nl2repobench/runs/oracle/unidecode/oracle-resume-v1--2026-08-20__10-51-57/harbor__d8ZD7vY/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T10:52:32.236828",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/unidecode/oracle-resume-v1--2026-08-20__10-51-57/harbor__d8ZD7vY/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/unidecode/oracle-resume-v1--2026-08-20__10-51-57/",
+      "result_key": "nl2repobench/runs/oracle/unidecode/oracle-resume-v1--2026-08-20__10-51-57/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "unidecode",
+      "trial": "oracle-resume-v1--2026-08-20__10-51-57"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/unittest-parametrize/oracle-resume-v1--2026-08-20__10-51-57/result.json",
+        "nl2repobench/runs/oracle/unittest-parametrize/oracle-resume-v1--2026-08-20__10-51-57/harbor__gNXQuFV/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T10:52:30.693112",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/unittest-parametrize/oracle-resume-v1--2026-08-20__10-51-57/harbor__gNXQuFV/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/unittest-parametrize/oracle-resume-v1--2026-08-20__10-51-57/",
+      "result_key": "nl2repobench/runs/oracle/unittest-parametrize/oracle-resume-v1--2026-08-20__10-51-57/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "unittest-parametrize",
+      "trial": "oracle-resume-v1--2026-08-20__10-51-57"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/voluptuous/oracle-expansion-v7--2026-08-19__23-10-05/result.json",
+        "nl2repobench/runs/oracle/voluptuous/oracle-expansion-v7--2026-08-19__23-10-05/harbor__oUHtQa9/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:10:37.132463",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/voluptuous/oracle-expansion-v7--2026-08-19__23-10-05/harbor__oUHtQa9/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/voluptuous/oracle-expansion-v7--2026-08-19__23-10-05/",
+      "result_key": "nl2repobench/runs/oracle/voluptuous/oracle-expansion-v7--2026-08-19__23-10-05/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "voluptuous",
+      "trial": "oracle-expansion-v7--2026-08-19__23-10-05"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/oracle/xlrd/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+        "nl2repobench/runs/oracle/xlrd/oracle-expansion-v15--2026-08-20__01-23-10/harbor__Chqcwp2/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:23:46.353943",
+      "grading_keys": [
+        "nl2repobench/runs/oracle/xlrd/oracle-expansion-v15--2026-08-20__01-23-10/harbor__Chqcwp2/verifier/grading.json"
+      ],
+      "model": "oracle",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/oracle/xlrd/oracle-expansion-v15--2026-08-20__01-23-10/",
+      "result_key": "nl2repobench/runs/oracle/xlrd/oracle-expansion-v15--2026-08-20__01-23-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "xlrd",
+      "trial": "oracle-expansion-v15--2026-08-20__01-23-10"
     }
   ],
   "schema_version": "1.0",

@@ -47,6 +47,7 @@ def test_oss_inventory_deduplicates_objects_and_ignores_oracle_and_unknown() -> 
         "nl2repobench/runs/claude-fable-5/demo/trial-b/grading.json",
         "nl2repobench/runs/claude-fable-5/demo/trial-b/result.json",
         "nl2repobench/runs/oracle/demo/trial-c/grading.json",
+        "nl2repobench/runs/oracle/demo/trial-c/result.json",
         "nl2repobench/runs/unknown/demo/trial-d/grading.json",
         "nl2repobench/runs/_queue-logs/queue.log",
     ]
@@ -58,10 +59,11 @@ def test_oss_inventory_deduplicates_objects_and_ignores_oracle_and_unknown() -> 
         inventory_module._objects = original
 
     assert report["object_count_scanned"] == len(keys)
-    assert report["run_count"] == 2
+    assert report["run_count"] == 3
     assert {(row["model"], row["task_id"]) for row in report["runs"]} == {
         ("gpt-5.6-sol", "demo"),
         ("claude-fable-5", "demo"),
+        ("oracle", "demo"),
     }
 
 

@@ -2,7 +2,7 @@
 
 ## Status And Recommendation
 
-**Record recommendation: BLOCKED.** Keep this task out of every published dataset. The task-local Harbor 1.4 bundle is a conversion draft, not an Oracle-gated publication record. Three independent Harbor Oracle runs were not completed, the offline candidate dependency closure is not locked, and the frozen effective denominator covers only two unavailable-backend exception checks.
+**Record recommendation: BLOCKED.** Keep this task out of every published dataset. The task-local Harbor 1.4 bundle is a conversion draft, not an Oracle-gated publication record. The current Package campaign Oracle gate has not been run, the offline candidate dependency closure is not locked, and the frozen effective denominator covers only two unavailable-backend exception checks.
 
 The revision and verifier image are freezeable and the frozen environment does not require a GUI service. The blocker is therefore task/verifier quality and missing gate evidence, not an unresolvable source revision or an unavailable desktop session.
 
@@ -78,9 +78,7 @@ An image-compatible baseline using the frozen source revision plus the exact ima
 | Instruction parity | Passed | Public catalog and Harbor instructions are byte-identical |
 | Catalog CLI validation | Incomplete | `uv run nl2repo task validate-source catalog/tasks/pyperclip` timed out after 120 seconds while creating/building the local environment; a 30-second offline retry and 10-second direct `.venv/bin/nl2repo` retry also timed out, so no validation verdict was produced |
 | Harbor schema/conversion-loop validation | Not run | Stopped before any additional long build/run operation |
-| Harbor Oracle run 1 | Not run | No Harbor result artifact |
-| Harbor Oracle run 2 | Not run | No Harbor result artifact |
-| Harbor Oracle run 3 | Not run | No Harbor result artifact |
+| Harbor Oracle gate | Not run | No Harbor result artifact; the current Package campaign requires one valid run with collection matching and reward at least `0.80` |
 
 ## Residual Risks
 
@@ -89,6 +87,14 @@ An image-compatible baseline using the frozen source revision plus the exact ima
 3. The conversion draft runs the exact legacy pytest file in an unprivileged candidate process. It isolates hidden bytes from the agent image, but it is not the hardened `candidate_client` subprocess contract required for production publication and does not yet have forgery-control evidence.
 4. The candidate dependency closure remains `status = "unknown"`; no offline wheelhouse artifact is locked in the catalog.
 5. The agent image uses the repository's pinned Python 3.12 base while the frozen verifier uses Python 3.10.11. The source supports both, but model-environment parity has not been demonstrated.
-6. No three-run Harbor Oracle stability evidence, empty/stub/forgery controls, or offline network proof has been recorded.
+6. No Harbor Oracle gate result, empty/stub/forgery controls, or offline network proof has been recorded.
 
-To unblock, adapt the behavior checks to the hardened candidate subprocess boundary, add deterministic mocked-backend coverage sufficient to measure the public contract, lock the offline dependency closure, run conversion-loop validation, then record three independent valid Harbor Oracle runs with stable collection and reward at least `0.80`. If preserving the historical denominator is mandatory, exclude this task from the publishable benchmark because its two effective assertions do not measure the advertised clipboard API.
+## Task-Local Repair
+
+- The verifier creates `/tmp/candidate-results/junit.xml` before the candidate
+  test process starts and uses a sticky report directory. The candidate cannot
+  replace the report inode with a symlink or another file before grading.
+- The existing agent image already installs `ca-certificates` and `git`, matching
+  the Oracle solution's pinned-revision fetch requirement.
+
+To unblock, adapt the behavior checks to the hardened candidate subprocess boundary, add deterministic mocked-backend coverage sufficient to measure the public contract, lock the offline dependency closure, run conversion-loop validation, then record one valid Harbor Oracle gate run with collection matching and reward at least `0.80`. If preserving the historical denominator is mandatory, exclude this task from the publishable benchmark because its two effective assertions do not measure the advertised clipboard API.
