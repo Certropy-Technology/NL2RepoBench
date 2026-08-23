@@ -25,11 +25,25 @@ def _json(path: Path) -> dict[str, Any]:
     return value
 
 
+def _derived_failure_class(row: dict[str, Any]) -> str | None:
+    explicit = row.get("failure_class")
+    if explicit is not None:
+        return str(explicit)
+    reason = str(row.get("failure_reason") or row.get("termination_reason") or "").casefold()
+    if "collection-mismatch" in reason or "junit" in reason or "verifier" in reason:
+        return "verifier"
+    if "installation-failed" in reason or "candidate-install" in reason:
+        return "model"
+    if any(term in reason for term in ("setup-timeout", "timeout", "network", "gateway", "api")):
+        return "infrastructure"
+    return None
+
+
 def _failure_class(rows: list[dict[str, Any]]) -> str | None:
     classes = {
-        str(row["failure_class"])
+        failure_class
         for row in rows
-        if row.get("failure_class") is not None
+        if (failure_class := _derived_failure_class(row)) is not None
     }
     if not classes:
         return None
@@ -116,9 +130,9 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
             rewards = [row["reward"] for row in valid_rows]
             failure_class = _failure_class(rows)
             retry_history = [
-                row.get("failure_class")
+                _derived_failure_class(row)
                 for row in rows
-                if row.get("valid") is not True and row.get("failure_class") is not None
+                if row.get("valid") is not True and _derived_failure_class(row) is not None
             ]
             if valid_rows:
                 status = "completed"
