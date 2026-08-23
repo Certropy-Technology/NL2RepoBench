@@ -1,0 +1,332 @@
+{
+  "campaign_id": "missing-oss-harbor-run-20260823",
+  "missing": [
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "graphneuralnetwork"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "pandarallel"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "retrying"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "autojump"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "pysondb-v2"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "pss"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "pythonprojecttemplate"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "schedule-master"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "records"
+    }
+  ],
+  "models": [
+    "gpt-5.6-sol",
+    "claude-fable-5"
+  ],
+  "plan_sha256": "sha256:507af7404fb81450c8dd50ff4035ecdcd1d2bb1120c0bab4baacb06ccfdc0326",
+  "retry_policy": "infrastructure-only",
+  "schema_version": "1.0",
+  "skipped_existing_tasks": [],
+  "summary": {
+    "failure_summary": [
+      {
+        "classification": "infrastructure",
+        "trials": 9
+      },
+      {
+        "classification": "verifier",
+        "trials": 1
+      }
+    ],
+    "model_summary": [
+      {
+        "macro_task_score": 0.4117647058823529,
+        "model": "openai/gpt-5.6-sol",
+        "valid_attempts": 1,
+        "valid_tasks": 1
+      }
+    ],
+    "task_scores": [
+      {
+        "attempts": 1,
+        "model": "openai/gpt-5.6-sol",
+        "task_id": "flasky",
+        "task_score": 0.4117647058823529
+      }
+    ]
+  },
+  "task_count": 10,
+  "tasks": [
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "autojump"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 1,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [
+            0.4117647058823529
+          ],
+          "status": "completed",
+          "valid": true
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "flasky"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "graphneuralnetwork"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "pandarallel"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "verifier",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "verifier"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "pss"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "pysondb-v2"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "pythonprojecttemplate"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "records"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "retrying"
+    },
+    {
+      "model_runs": [
+        {
+          "attempts": 0,
+          "failure_class": null,
+          "model": "gpt-5.6-sol",
+          "retry_history": [],
+          "rewards": [],
+          "status": "missing",
+          "valid": null
+        },
+        {
+          "attempts": 1,
+          "failure_class": "infrastructure",
+          "model": "claude-fable-5",
+          "retry_history": [
+            "infrastructure"
+          ],
+          "rewards": [],
+          "status": "failed",
+          "valid": false
+        }
+      ],
+      "task_id": "schedule-master"
+    }
+  ]
+}

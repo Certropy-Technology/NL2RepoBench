@@ -143,3 +143,90 @@ def test_model_campaign_report_retains_oss_exemption_without_new_results(
 
     assert report["missing"] == []
     assert report["tasks"][0]["existing_oss"] is True
+
+
+def test_model_campaign_report_allows_in_progress_rows_for_diagnostics(tmp_path: Path) -> None:
+    root = tmp_path / "gpt"
+    trial = root / "gpt-demo" / "2026-08-23__00-00-00" / "harbor__abc"
+    trial.mkdir(parents=True)
+    (trial / "result.json").write_text(
+        json.dumps(
+            {
+                "task_name": "demo",
+                "trial_name": "gpt-demo",
+                "config": {"agent": {"model_name": "openai/gpt-5.6-sol"}},
+                "agent_result": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "tasks": ["demo"],
+                "models": [{"model_id": "gpt-5.6-sol", "run_root": str(root)}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = reporter.build_report(plan, require_all=False)
+
+    assert report["tasks"][0]["model_runs"][0]["status"] == "in-progress"
+
+
+def test_model_campaign_report_marks_missing_rows_for_diagnostics(tmp_path: Path) -> None:
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "tasks": ["demo"],
+                "models": [{"model_id": "gpt-5.6-sol", "run_root": str(tmp_path / "missing")}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = reporter.build_report(plan, require_all=False)
+
+    assert report["tasks"][0]["model_runs"][0]["status"] == "missing"
+
+
+def test_model_campaign_report_keeps_terminal_failure_over_pending_result(tmp_path: Path) -> None:
+    root = tmp_path / "gpt"
+    trial = root / "gpt-demo" / "2026-08-23__00-00-00" / "harbor__abc"
+    verifier = trial / "verifier"
+    verifier.mkdir(parents=True)
+    (trial / "result.json").write_text(
+        json.dumps(
+            {
+                "task_name": "demo",
+                "trial_name": "gpt-demo",
+                "config": {"agent": {"model_name": "openai/gpt-5.6-sol"}},
+                "verifier_result": {},
+                "exception_info": {"exception_type": "RuntimeError"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (verifier / "grading.json").write_text(
+        json.dumps({"valid": None, "failure_class": "verifier"}),
+        encoding="utf-8",
+    )
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "tasks": ["demo"],
+                "models": [{"model_id": "gpt-5.6-sol", "run_root": str(root)}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = reporter.build_report(plan, require_all=False)
+
+    model_run = report["tasks"][0]["model_runs"][0]
+    assert model_run["status"] == "failed"
+    assert model_run["failure_class"] == "verifier"

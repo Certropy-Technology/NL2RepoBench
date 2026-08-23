@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "python-remediation-20260824",
+  "authoring_loop_boundary": "catalog-handoff-before-agent-run",
+  "oracle_contract": {
+    "attempts": 1,
+    "valid": true,
+    "collection_matches_fixed_total": true,
+    "reward_minimum": 0.8
+  },
+  "tasks": [
+    {
+      "task_id": "dataclasses-json",
+      "status": "oracle-passed",
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 24,
+      "reward": 1.0,
+      "evidence": ".nl2repo/runs/oracle/package-remediation-dataclasses-json-20260824-v3/2026-08-24__01-47-36/harbor__aJnQX3y/verifier/grading.json",
+      "remediations": [
+        "install source directory without --require-hashes",
+        "bypass Poetry dynamic versioning when verifier has no Git"
+      ]
+    },
+    {
+      "task_id": "fastjsonschema",
+      "status": "oracle-passed",
+      "expected_total": 2898,
+      "collected": 2898,
+      "passed": 2898,
+      "reward": 1.0,
+      "evidence": ".nl2repo/runs/oracle/package-remediation-fastjsonschema-20260824-v8/2026-08-24__03-09-41/harbor__pJJxh5q/verifier/grading.json",
+      "remediations": [
+        "add Git to agent image for exact source fetch",
+        "rename pytest request parameter reserved by pytest",
+        "materialize meta-schema and localhost remote references offline"
+      ]
+    },
+    {
+      "task_id": "sympy",
+      "status": "oracle-passed",
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 24,
+      "reward": 1.0,
+      "evidence": ".nl2repo/runs/oracle/package-remediation-sympy-20260824-v8/2026-08-24__02-42-32/harbor__8DmbEB9/verifier/grading.json",
+      "remediations": [
+        "replace placeholder Oracle with exact-revision facade solution",
+        "copy wheelhouse and lockfiles into Docker build contexts",
+        "add mpmath to verifier lock and make hidden tests readable",
+        "reject unknown solve symbols explicitly"
+      ]
+    }
+  ],
+  "controls": {
+    "status": "pending",
+    "required": ["empty", "stub", "forgery", "timeout", "offline"],
+    "model_runs": "not started by authoring loop"
+  },
+  "publication": {
+    "status": "not-published",
+    "agent_run_loop": "separate downstream consumer"
+  }
+}

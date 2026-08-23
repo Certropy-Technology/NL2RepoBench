@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "python-remediation-20260824",
+  "authoring_loop_boundary": "catalog-handoff-before-agent-run",
+  "controls": [
+    {
+      "task_id": "dataclasses-json",
+      "control": "nop",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "installation-failed",
+      "evidence": ".nl2repo/runs/controls/package-remediation-dataclasses-json-nop-20260824-v2"
+    },
+    {
+      "task_id": "fastjsonschema",
+      "control": "nop",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/package-remediation-fastjsonschema-nop-20260824-v3"
+    },
+    {
+      "task_id": "sympy",
+      "control": "nop",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/package-remediation-sympy-nop-20260824-v2"
+    }
+  ],
+  "offline": {
+    "status": "covered-by-oracle-verifier",
+    "evidence": [
+      "dataclasses-json verifier uses --no-index wheelhouse installation",
+      "fastjsonschema verifier image uses --no-index hash-locked wheelhouse",
+      "sympy verifier image uses --no-index hash-locked wheelhouse"
+    ]
+  },
+  "pending": ["stub", "forgery", "timeout"],
+  "publication": "not-published",
+  "model_runs": "not-started-by-authoring-loop"
+}

@@ -58,7 +58,7 @@ def normalize_result(path: Path) -> dict[str, Any]:
         failure_class = "infrastructure"
         failure_reason = "provider-tool-schema-empty-input"
     return {
-        "task_id": str(payload.get("task_name") or path.parent.name),
+        "task_id": _canonical_task_id(payload.get("task_name"), path.parent.name),
         "trial_name": str(payload.get("trial_name") or path.parent.name),
         "model": str(model or "unknown"),
         "result_path": str(path),
@@ -116,7 +116,7 @@ def summarize_results(frame: pl.DataFrame) -> dict[str, Any]:
         .sort("model")
     )
     failures = (
-        frame.filter(pl.col("valid") != True)  # noqa: E712
+        frame.filter(~pl.col("valid").fill_null(False))
         .with_columns(
             pl.coalesce(
                 [pl.col("failure_class"), pl.col("termination_reason"), pl.lit("unknown")]
@@ -141,6 +141,14 @@ def _is_trial_result(path: Path) -> bool:
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         return True
     return isinstance(payload, dict) and "trial_name" in payload
+
+
+def _canonical_task_id(task_name: object, fallback: str) -> str:
+    """Normalize Harbor namespace-qualified names to catalog task IDs."""
+
+    if isinstance(task_name, str) and task_name:
+        return task_name.rsplit("/", 1)[-1]
+    return fallback
 
 
 def _mapping(value: object) -> dict[str, Any]:

@@ -117,3 +117,36 @@ def test_results_classify_verifier_build_exception(tmp_path: Path) -> None:
     assert errors == []
     assert frame.to_dicts()[0]["failure_class"] == "verifier"
     assert frame.to_dicts()[0]["failure_reason"] == "verifier-build-failed"
+
+
+def test_results_summary_includes_invalid_verifier_rows_with_null_valid(tmp_path: Path) -> None:
+    root = tmp_path / "runs"
+    _write_trial(root, "verifier-trial", reward=0.0, valid=False, failure_class="verifier")
+    trial = root / "verifier-trial"
+    payload = json.loads((trial / "result.json").read_text(encoding="utf-8"))
+    payload["task_name"] = "nl2repobench/pss"
+    (trial / "result.json").write_text(json.dumps(payload), encoding="utf-8")
+    grading = json.loads((trial / "verifier/grading.json").read_text(encoding="utf-8"))
+    grading["valid"] = None
+    (trial / "verifier/grading.json").write_text(json.dumps(grading), encoding="utf-8")
+
+    frame, errors = load_results([root])
+
+    assert errors == []
+    assert summarize_results(frame)["failure_summary"] == [
+        {"classification": "verifier", "trials": 1}
+    ]
+
+
+def test_results_strip_harbor_namespace_from_task_name(tmp_path: Path) -> None:
+    root = tmp_path / "runs"
+    _write_trial(root, "namespaced-trial", reward=1.0, valid=True)
+    trial = root / "namespaced-trial"
+    payload = json.loads((trial / "result.json").read_text(encoding="utf-8"))
+    payload["task_name"] = "nl2repobench/flasky"
+    (trial / "result.json").write_text(json.dumps(payload), encoding="utf-8")
+
+    frame, errors = load_results([root])
+
+    assert errors == []
+    assert frame.to_dicts()[0]["task_id"] == "flasky"

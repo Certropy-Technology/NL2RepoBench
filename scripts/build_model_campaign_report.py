@@ -124,6 +124,7 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
             model_id = model_plan["model_id"]
             rows = [row for row in normalized_by_model[model_id] if row.get("task_id") == task_id]
             valid_rows = [row for row in rows if row.get("valid") is True]
+            pending_rows = [row for row in rows if row.get("valid") is None]
             for row in valid_rows:
                 if row.get("reward") is None:
                     raise ValueError(f"completed result lacks reward: {model_id}/{task_id}")
@@ -138,12 +139,20 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
                 status = "completed"
                 valid = True
                 terminal_failure_class = None
-            else:
-                if failure_class is None:
-                    raise ValueError(f"failed result lacks failure class: {model_id}/{task_id}")
+            elif failure_class is not None:
                 status = "failed"
                 valid = False
                 terminal_failure_class = failure_class
+            elif pending_rows:
+                status = "in-progress"
+                valid = None
+                terminal_failure_class = None
+            elif not rows and not require_all:
+                status = "missing"
+                valid = None
+                terminal_failure_class = None
+            else:
+                raise ValueError(f"failed result lacks failure class: {model_id}/{task_id}")
             task_record["model_runs"].append(
                 {
                     "model": model_id,
