@@ -7,9 +7,11 @@
   "new_task_count": 0,
   "oss_run_inventory": {
     "path": "reports/oss-run-inventory.json",
-    "sha256": "sha256:65956de392ef58359e02822449f05ae029858b51386a810dd5211636eae43052",
-    "finished_model_run_count": 94,
-    "task_count": 39,
+    "sha256": "sha256:0f722ee784eafbc31375f96206a1eedfe56caf28cb276b698baa9f322bf95079",
+    "finished_run_count": 213,
+    "model_run_count": 94,
+    "oracle_run_count": 119,
+    "task_count": 63,
     "object_count_scanned": 37578
   },
   "datasets": [
@@ -31,7 +33,7 @@
     "harbor_task_directories": 77,
     "published_tasks": 0,
     "excluded_tasks": 0,
-    "oss_run_task_count": 39,
+    "oss_run_task_count": 63,
     "legacy_complete": 74,
     "legacy_pending": 30,
     "note": "This is an honest planning snapshot, not a releaseable dataset manifest."

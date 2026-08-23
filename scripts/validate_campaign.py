@@ -201,7 +201,7 @@ def _validate_model_runs(task: dict[str, Any], task_id: str) -> None:
     for raw in raw_runs:
         run = _required_dict(raw, f"{task_id}.model_runs[]")
         model = run.get("model")
-        if model not in TARGET_MODELS:
+        if model not in {*TARGET_MODELS, "oracle"}:
             raise ValueError(f"{task_id}: unsupported model run: {model}")
         if model in by_model:
             raise ValueError(f"{task_id}: duplicate model run record: {model}")
