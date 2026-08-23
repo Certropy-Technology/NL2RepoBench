@@ -61,6 +61,8 @@ def normalize_result(path: Path) -> dict[str, Any]:
         # provider/adapter defect rather than model behavior.
         failure_class = "infrastructure"
         failure_reason = "provider-tool-schema-empty-input"
+    if failure_class is None:
+        failure_class = _infer_failure_class(failure_reason)
     return {
         "task_id": _canonical_task_id(payload.get("task_name"), path.parent.name),
         "trial_name": str(payload.get("trial_name") or path.parent.name),
@@ -196,6 +198,17 @@ def _legacy_fable_empty_workspace(path: Path, model: str) -> bool:
         return not any(item.is_file() for item in workspace.rglob("*"))
     except OSError:
         return False
+
+
+def _infer_failure_class(reason: object) -> str | None:
+    folded = str(reason or "").casefold()
+    if any(term in folded for term in ("verifier", "junit", "collection-mismatch")):
+        return "verifier"
+    if any(term in folded for term in ("candidate-install", "installation-failed")):
+        return "model"
+    if any(term in folded for term in ("timeout", "gateway", "network", "api", "disconnect")):
+        return "infrastructure"
+    return None
 
 
 def _float_or_none(value: object) -> float | None:

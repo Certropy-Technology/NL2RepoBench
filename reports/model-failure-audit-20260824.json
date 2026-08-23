@@ -3,15 +3,11 @@
   "missing": [
     {
       "model": "gpt-5.6-sol",
-      "task_id": "pythonprojecttemplate"
+      "task_id": "records"
     },
     {
       "model": "gpt-5.6-sol",
       "task_id": "retrying"
-    },
-    {
-      "model": "gpt-5.6-sol",
-      "task_id": "schedule-master"
     },
     {
       "model": "gpt-5.6-sol",
@@ -23,7 +19,11 @@
     },
     {
       "model": "gpt-5.6-sol",
-      "task_id": "records"
+      "task_id": "pythonprojecttemplate"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "task_id": "schedule-master"
     }
   ],
   "models": [
@@ -41,12 +41,8 @@
         "trials": 9
       },
       {
-        "classification": "unknown",
-        "trials": 1
-      },
-      {
         "classification": "verifier",
-        "trials": 1
+        "trials": 2
       }
     ],
     "model_summary": [
