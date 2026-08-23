@@ -155,6 +155,11 @@ python3 scripts/run_model_from_pi.py \
   --lock-root "$PWD/.nl2repo/locks/gpt-smoke-$(date -u +%Y%m%dT%H%M%SZ)"
 ```
 
+编程式批次使用 `scripts/run_dual_model_queue.py`：默认每个模型同时运行 2 个不同
+task，总并发 4；`--existing-inventory reports/oss-run-inventory.json` 会把 OSS
+已有 task 整体跳过，不重复模型或 Oracle。资源紧张时使用
+`--per-model-concurrency 1`。
+
 聊天消息中的 key 不会自动导入本机环境。临时替换时先在受控 shell 设置环境变量，
 再使用 `--credential-env`；变量名可出现在命令行，变量值绝不能出现。
 
