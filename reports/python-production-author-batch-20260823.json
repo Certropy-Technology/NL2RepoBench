@@ -1,0 +1,120 @@
+{
+  "batch_id": "python-production-author-20260823",
+  "candidate_input": "reports/python-production-queue-full-20260823.json",
+  "candidate_input_sha256": "sha256:8318fcca265809122796ee8f359366096040afa0817cea1ff91a8e55c76081a3",
+  "language": "python",
+  "oss_inventory": "reports/oss-run-inventory.json",
+  "parallelism": {
+    "shared_integrator_writers": 1,
+    "workers": 5
+  },
+  "risk_policy": "safe-first",
+  "schema_version": "1.0",
+  "skipped": [
+    {
+      "package": "boto3",
+      "reason": "risk-flags:cloud,credentials,network"
+    },
+    {
+      "package": "google-auth",
+      "reason": "needs-evidence"
+    },
+    {
+      "package": "pydantic-settings",
+      "reason": "needs-evidence"
+    },
+    {
+      "package": "pymongo",
+      "reason": "needs-evidence"
+    },
+    {
+      "package": "referencing",
+      "reason": "needs-evidence"
+    },
+    {
+      "package": "requests",
+      "reason": "risk-flags:network"
+    },
+    {
+      "package": "textual",
+      "reason": "risk-flags:interactive,terminal"
+    }
+  ],
+  "stages": [
+    "source-freeze",
+    "ast-inventory",
+    "test-inventory",
+    "dependency-probe",
+    "harbor-package",
+    "verifier-build",
+    "oracle-once",
+    "controls",
+    "review-handoff"
+  ],
+  "status": "planned",
+  "tasks": [
+    {
+      "candidate_id": "https-github-com-lidatong-dataclasses-json-2e2e78b2f87f",
+      "language": "python",
+      "package": "dataclasses-json",
+      "production_gate": "Python locked toolchain, AST/test inventory, Harbor gates, review",
+      "revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/lidatong/dataclasses-json",
+      "worker_boundary": "catalog/tasks/dataclasses-json/** only"
+    },
+    {
+      "candidate_id": "https-github-com-horejsek-python-fastjsonschema-81f0cca3dc86",
+      "language": "python",
+      "package": "fastjsonschema",
+      "production_gate": "Python locked toolchain, AST/test inventory, Harbor gates, review",
+      "revision": "b88fa37cd46bb81e8d9dce91a7e1bc4debedd3a2",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/horejsek/python-fastjsonschema",
+      "worker_boundary": "catalog/tasks/fastjsonschema/** only"
+    },
+    {
+      "candidate_id": "https-github-com-sympy-sympy-6b19b50142de",
+      "language": "python",
+      "package": "sympy",
+      "production_gate": "Python locked toolchain, AST/test inventory, Harbor gates, review",
+      "revision": "e950d313a932bc6cccbc95376b3821cd2f8b5af4",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/sympy/sympy",
+      "worker_boundary": "catalog/tasks/sympy/** only"
+    }
+  ]
+}

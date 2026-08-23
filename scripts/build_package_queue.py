@@ -71,6 +71,13 @@ def _source_kind(report: Path, raw: dict[str, Any]) -> str:
 
 def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]]:
     source_kind = _source_kind(report, payload)
+    report_language = payload.get("language")
+    if report_language not in {"python", "node"}:
+        report_language = (
+            "python"
+            if "python" in str(payload.get("dataset_target", "")).casefold()
+            else None
+        )
     merged: dict[str, dict[str, Any]] = {}
 
     def absorb(raw: Any, *, shape: str) -> None:
@@ -97,6 +104,8 @@ def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]
                         if source_kind == "npm"
                         else "python"
                         if source_kind == "pypi"
+                        else report_language
+                        if report_language is not None
                         else "unknown"
                     )
                 ),

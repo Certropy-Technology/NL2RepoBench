@@ -1,0 +1,993 @@
+{
+  "counts": {
+    "existing": 21,
+    "needs-evidence": 11
+  },
+  "observed_at": "2026-08-23T00:00:00Z",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-agronholm-anyio-464b3b4383f0",
+      "category": "async",
+      "conflicts": [],
+      "identity": "https://github.com/agronholm/anyio",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_spdx": "MIT",
+      "notes": [
+        "backend matrix and async timing need frozen environment"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "anyio",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 2530,
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/agronholm/anyio"
+    },
+    {
+      "candidate_id": "https-github-com-python-attrs-attrs-11d0c59b6230",
+      "category": "data-model",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/python-attrs/attrs",
+      "language": "python",
+      "last_activity": "2026-08-07",
+      "license_evidence": "https://github.com/python-attrs/attrs/blob/main/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "attrs",
+      "revision": "c1dc5dcba16ed827aa6dcad896b41a3afedb4e32",
+      "risk_flags": [
+        "hatch build metadata"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 5646,
+      "stars": 5832,
+      "status": "existing",
+      "test_count": 680,
+      "test_files": 32,
+      "upstream_url": "https://github.com/python-attrs/attrs"
+    },
+    {
+      "candidate_id": "https-github-com-beartype-beartype-d78002d2745c",
+      "category": "typing",
+      "conflicts": [],
+      "identity": "https://github.com/beartype/beartype",
+      "language": "python",
+      "last_activity": "2026-08-15",
+      "license_spdx": "MIT",
+      "notes": [
+        "large metaprogramming surface and PyPI license field needs local evidence"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "beartype",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 3486,
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/beartype/beartype"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-build-e4f87f8011bd",
+      "category": "packaging",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/build",
+      "language": "python",
+      "last_activity": "2026-08-18",
+      "license_spdx": "MIT",
+      "notes": [
+        "packaging subprocesses and isolated build behavior need careful verifier contract"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "build",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 854,
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pypa/build"
+    },
+    {
+      "candidate_id": "https-github-com-tkem-cachetools-5d1f931bc68e",
+      "category": "caching",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/tkem/cachetools",
+      "language": "python",
+      "last_activity": "2026-08-01",
+      "license_evidence": "https://github.com/tkem/cachetools/blob/master/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "cachetools",
+      "revision": "01af8e5b7ce44432b357e26c7d67eb7fa055ae72",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 1261,
+      "stars": 2776,
+      "status": "existing",
+      "test_count": 132,
+      "test_files": 14,
+      "upstream_url": "https://github.com/tkem/cachetools"
+    },
+    {
+      "candidate_id": "https-github-com-python-attrs-cattrs-09cd0ba7c1ae",
+      "category": "serialization",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/python-attrs/cattrs",
+      "language": "python",
+      "last_activity": "2026-08-09",
+      "license_evidence": "https://github.com/python-attrs/cattrs/blob/main/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "cattrs",
+      "revision": "f2e42f3c69dabd48dd1a5b8fb1aad9c1d39c339a",
+      "risk_flags": [
+        "dependency closure"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 5980,
+      "stars": 1051,
+      "status": "existing",
+      "test_count": 436,
+      "test_files": 70,
+      "upstream_url": "https://github.com/python-attrs/cattrs"
+    },
+    {
+      "candidate_id": "https-github-com-pallets-click-59f828ed3d49",
+      "category": "cli",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/pallets/click",
+      "language": "python",
+      "last_activity": "2026-08-16",
+      "license_evidence": "https://github.com/pallets/click/blob/main/LICENSE.txt",
+      "license_spdx": "BSD-3-Clause",
+      "notes": [
+        "subprocess-heavy tests need offline adapter review"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "click",
+      "revision": "cbd7a4109da16ce58f54c2a618b4c986e3041fcf",
+      "risk_flags": [
+        "pytest excludes stress marker",
+        "subprocess-heavy tests"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 9483,
+      "stars": 17626,
+      "status": "existing",
+      "test_count": 541,
+      "test_files": 46,
+      "upstream_url": "https://github.com/pallets/click"
+    },
+    {
+      "candidate_id": "https-github-com-glotzerlab-coxeter-b4f513fa4d2a",
+      "category": "computational-geometry",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/glotzerlab/coxeter",
+      "language": "python",
+      "last_activity": "2026-07-29",
+      "license_evidence": "https://github.com/glotzerlab/coxeter/blob/9056679b197f0e835c04dd317cc1049359a0ee7c/LICENSE",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "coxeter",
+      "revision": "9056679b197f0e835c04dd317cc1049359a0ee7c",
+      "risk_flags": [
+        "SciPy dependency",
+        "degenerate shapes",
+        "floating-point geometry"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 25,
+      "status": "existing",
+      "upstream_url": "https://github.com/glotzerlab/coxeter"
+    },
+    {
+      "candidate_id": "https-github-com-rr-docstring-parser-ca2540d855d4",
+      "category": "text-parsing",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/rr-/docstring_parser",
+      "language": "python",
+      "last_activity": "2026-06-30",
+      "license_evidence": "https://github.com/rr-/docstring_parser/blob/8347d8fb347bd66e4bf5711d3df586357166944a/LICENSE.md",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "docstring-parser",
+      "revision": "8347d8fb347bd66e4bf5711d3df586357166944a",
+      "risk_flags": [
+        "dialect coverage must be specified",
+        "output model traceability"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 260,
+      "status": "existing",
+      "upstream_url": "https://github.com/rr-/docstring_parser"
+    },
+    {
+      "candidate_id": "https-github-com-tox-dev-filelock-b7a707ac6021",
+      "category": "filesystem",
+      "conflicts": [],
+      "identity": "https://github.com/tox-dev/filelock",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_spdx": "MIT",
+      "notes": [
+        "large subprocess/test surface despite pure Python source"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "filelock",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 975,
+      "status": "existing",
+      "upstream_url": "https://github.com/tox-dev/filelock"
+    },
+    {
+      "candidate_id": "https-github-com-encode-httpx-c9226c2ff37a",
+      "category": "http-client",
+      "conflicts": [],
+      "identity": "https://github.com/encode/httpx",
+      "language": "python",
+      "last_activity": "2026-03-29",
+      "license_spdx": "BSD-3-Clause",
+      "notes": [
+        "network-heavy upstream tests; requires deterministic transport adapter"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "httpx",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 15427,
+      "status": "existing",
+      "upstream_url": "https://github.com/encode/httpx"
+    },
+    {
+      "candidate_id": "https-github-com-hypothesisworks-hypothesis-3952cdb25e6f",
+      "category": "testing",
+      "conflicts": [],
+      "identity": "https://github.com/HypothesisWorks/hypothesis",
+      "language": "python",
+      "last_activity": "2026-08-16",
+      "license_spdx": "MPL-2.0 on PyPI; GitHub API NOASSERTION",
+      "notes": [
+        "license evidence reconciliation and large test/dependency surface required"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "hypothesis",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 8894,
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/HypothesisWorks/hypothesis"
+    },
+    {
+      "candidate_id": "https-github-com-jmespath-jmespath-py-9258270ddeda",
+      "category": "query",
+      "conflicts": [
+        "last_activity"
+      ],
+      "difficulty": "easy",
+      "identity": "https://github.com/jmespath/jmespath.py",
+      "language": "python",
+      "last_activity": "2026-01-22",
+      "license_evidence": "https://github.com/jmespath/jmespath.py/blob/develop/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "jmespath",
+      "revision": "2812594e69d43098ef60f81f4efc404c071b0418",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 1274,
+      "stars": 2452,
+      "status": "needs-evidence",
+      "test_count": 81,
+      "test_files": 8,
+      "upstream_url": "https://github.com/jmespath/jmespath.py"
+    },
+    {
+      "candidate_id": "https-github-com-python-jsonschema-jsonschema-68b7bda54162",
+      "category": "validation",
+      "conflicts": [],
+      "identity": "https://github.com/python-jsonschema/jsonschema",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_spdx": "MIT",
+      "notes": [
+        "root test layout needs explicit collection audit"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "jsonschema",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 4972,
+      "status": "existing",
+      "upstream_url": "https://github.com/python-jsonschema/jsonschema"
+    },
+    {
+      "candidate_id": "https-github-com-lark-parser-lark-402063a2c295",
+      "category": "parser",
+      "conflicts": [
+        "category",
+        "license_evidence",
+        "source_kind",
+        "stars"
+      ],
+      "difficulty": "hard",
+      "identity": "https://github.com/lark-parser/lark",
+      "language": "python",
+      "last_activity": "2026-08-13",
+      "license_evidence": "https://github.com/lark-parser/lark/blob/9bae96161b45a5bf70011c75b1ef41228d3f4caa/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "lark",
+      "revision": "9bae96161b45a5bf70011c75b1ef41228d3f4caa",
+      "risk_flags": [
+        "large API inventory",
+        "multiple parser backends",
+        "optional parser backend/dependency closure",
+        "optional regex dependency"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "github",
+      "source_sloc": 7076,
+      "stars": 5958,
+      "status": "needs-evidence",
+      "test_count": 318,
+      "test_files": 18,
+      "upstream_url": "https://github.com/lark-parser/lark"
+    },
+    {
+      "candidate_id": "https-github-com-marshmallow-code-marshmallow-8b675b79e920",
+      "category": "validation",
+      "conflicts": [
+        "last_activity"
+      ],
+      "difficulty": "medium",
+      "identity": "https://github.com/marshmallow-code/marshmallow",
+      "language": "python",
+      "last_activity": "2026-08-08",
+      "license_evidence": "https://github.com/marshmallow-code/marshmallow/blob/dev/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "marshmallow",
+      "revision": "c7b559a1fa3aba57ca6dba0ab336841c5038a782",
+      "risk_flags": [
+        "dependency closure"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 3937,
+      "stars": 7242,
+      "status": "needs-evidence",
+      "test_count": 652,
+      "test_files": 19,
+      "upstream_url": "https://github.com/marshmallow-code/marshmallow"
+    },
+    {
+      "candidate_id": "https-github-com-lepture-mistune-003cf1edf09c",
+      "category": "markdown",
+      "conflicts": [],
+      "identity": "https://github.com/lepture/mistune",
+      "language": "python",
+      "last_activity": "2026-08-14",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "mistune",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 3065,
+      "status": "existing",
+      "upstream_url": "https://github.com/lepture/mistune"
+    },
+    {
+      "candidate_id": "https-github-com-python-parsy-parsy-1aa3aae50e82",
+      "category": "parser-combinators",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/python-parsy/parsy",
+      "language": "python",
+      "last_activity": "2026-06-22",
+      "license_evidence": "https://github.com/python-parsy/parsy/blob/03deafa98a17adc27b1f650241701b2d21902b3e/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "parsy",
+      "revision": "03deafa98a17adc27b1f650241701b2d21902b3e",
+      "risk_flags": [
+        "confirm LOC meets selected dataset threshold",
+        "small API surface"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 450,
+      "status": "existing",
+      "upstream_url": "https://github.com/python-parsy/parsy"
+    },
+    {
+      "candidate_id": "https-github-com-tox-dev-platformdirs-4c7829bf4318",
+      "category": "filesystem",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/tox-dev/platformdirs",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_evidence": "https://github.com/tox-dev/platformdirs/blob/main/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "platformdirs",
+      "revision": "d3cf61ce5e729f2c35f830b69e14adb7b6970a00",
+      "risk_flags": [
+        "small subprocess surface"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 2305,
+      "stars": 968,
+      "status": "existing",
+      "test_count": 105,
+      "test_files": 8,
+      "upstream_url": "https://github.com/tox-dev/platformdirs"
+    },
+    {
+      "candidate_id": "https-github-com-pytest-dev-pluggy-8935d2002c98",
+      "category": "testing",
+      "conflicts": [
+        "last_activity"
+      ],
+      "difficulty": "easy",
+      "identity": "https://github.com/pytest-dev/pluggy",
+      "language": "python",
+      "last_activity": "2026-08-12",
+      "license_evidence": "https://github.com/pytest-dev/pluggy/blob/main/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "pluggy",
+      "revision": "d23f110b240d67ee503eba0082f30cae73f3e1e3",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 1341,
+      "stars": 1682,
+      "status": "needs-evidence",
+      "test_count": 127,
+      "test_files": 11,
+      "upstream_url": "https://github.com/pytest-dev/pluggy"
+    },
+    {
+      "candidate_id": "https-github-com-pre-commit-pre-commit-7bb32ddfaf1e",
+      "category": "developer-tool",
+      "conflicts": [],
+      "identity": "https://github.com/pre-commit/pre-commit",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_spdx": "MIT",
+      "notes": [
+        "subprocess and tool-download behavior must be adapted for offline verifier"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "pre-commit",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 15506,
+      "status": "existing",
+      "upstream_url": "https://github.com/pre-commit/pre-commit"
+    },
+    {
+      "candidate_id": "https-github-com-prompt-toolkit-python-prompt-toolkit-56bbe7b0dd59",
+      "category": "terminal",
+      "conflicts": [],
+      "identity": "https://github.com/prompt-toolkit/python-prompt-toolkit",
+      "language": "python",
+      "last_activity": "2026-07-26",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "prompt-toolkit",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 10555,
+      "status": "existing",
+      "upstream_url": "https://github.com/prompt-toolkit/python-prompt-toolkit"
+    },
+    {
+      "candidate_id": "https-github-com-pydantic-pydantic-6249314697cb",
+      "category": "validation",
+      "conflicts": [],
+      "identity": "https://github.com/pydantic/pydantic",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_spdx": "MIT",
+      "notes": [
+        "pydantic-core introduces a native Rust dependency; offline wheel and platform matrix required"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "pydantic",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 28561,
+      "status": "existing",
+      "upstream_url": "https://github.com/pydantic/pydantic"
+    },
+    {
+      "candidate_id": "https-github-com-pyparsing-pyparsing-410b12bf9279",
+      "category": "parser",
+      "conflicts": [],
+      "identity": "https://github.com/pyparsing/pyparsing",
+      "language": "python",
+      "last_activity": "2026-08-12",
+      "license_spdx": "MIT",
+      "notes": [
+        "large parser surface; source freeze needed"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "pyparsing",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 2484,
+      "status": "existing",
+      "upstream_url": "https://github.com/pyparsing/pyparsing"
+    },
+    {
+      "candidate_id": "https-github-com-python-constraint-python-constraint-27b056da90c6",
+      "category": "constraint-solving",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/python-constraint/python-constraint",
+      "language": "python",
+      "last_activity": "2026-08-18",
+      "license_evidence": "https://github.com/python-constraint/python-constraint/blob/d91ba03d1fd6acc30d64fd9d513dc0523f697b5b/LICENSE",
+      "license_spdx": "BSD-2-Clause",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "python-constraint",
+      "revision": "d91ba03d1fd6acc30d64fd9d513dc0523f697b5b",
+      "risk_flags": [
+        "backtracking runtime",
+        "solver ordering"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 518,
+      "status": "existing",
+      "upstream_url": "https://github.com/python-constraint/python-constraint"
+    },
+    {
+      "candidate_id": "https-github-com-psf-requests-0d1a89c543ba",
+      "category": "http-client",
+      "conflicts": [],
+      "identity": "https://github.com/psf/requests",
+      "language": "python",
+      "last_activity": "2026-08-17",
+      "license_spdx": "Apache-2.0",
+      "notes": [
+        "network behavior must be replaced with deterministic transport fixtures"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "requests",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 54245,
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/psf/requests"
+    },
+    {
+      "candidate_id": "https-github-com-salib-salib-2cbc33a5d228",
+      "category": "scientific-analysis",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/SALib/SALib",
+      "language": "python",
+      "last_activity": "2026-07-17",
+      "license_evidence": "https://github.com/SALib/SALib/blob/aa2c5545b3bfd0a982e9fad7625070a8ea340d38/LICENSE.md",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "salib",
+      "revision": "aa2c5545b3bfd0a982e9fad7625070a8ea340d38",
+      "risk_flags": [
+        "floating-point tolerances",
+        "random seeds",
+        "scientific dependency closure"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 1004,
+      "status": "existing",
+      "upstream_url": "https://github.com/SALib/SALib"
+    },
+    {
+      "candidate_id": "https-github-com-lebrice-simpleparsing-dcd50bc863e3",
+      "category": "typed-cli",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/lebrice/SimpleParsing",
+      "language": "python",
+      "last_activity": "2026-07-27",
+      "license_evidence": "https://github.com/lebrice/SimpleParsing/blob/7a706bee8b258b548cb979c7321c1ba0cf8413e6/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "simple-parsing",
+      "revision": "7a706bee8b258b548cb979c7321c1ba0cf8413e6",
+      "risk_flags": [
+        "argparse compatibility",
+        "nested dataclass semantics"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 541,
+      "status": "existing",
+      "upstream_url": "https://github.com/lebrice/SimpleParsing"
+    },
+    {
+      "candidate_id": "https-github-com-python-poetry-tomlkit-f7e9c1fdb6db",
+      "category": "serialization",
+      "conflicts": [
+        "last_activity"
+      ],
+      "difficulty": "hard",
+      "identity": "https://github.com/python-poetry/tomlkit",
+      "language": "python",
+      "last_activity": "2026-07-17",
+      "license_evidence": "https://github.com/python-poetry/tomlkit/blob/master/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "tomlkit",
+      "revision": "d8ed1e3cdb024dfc2c6f12b45a0dfd4d4d91f727",
+      "risk_flags": [
+        "Poetry build backend"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "deep_validation"
+        },
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "source_sloc": 4631,
+      "stars": 842,
+      "status": "needs-evidence",
+      "test_count": 241,
+      "test_files": 12,
+      "upstream_url": "https://github.com/python-poetry/tomlkit"
+    },
+    {
+      "candidate_id": "https-github-com-fastapi-typer-f3c517e561f6",
+      "category": "cli",
+      "conflicts": [],
+      "identity": "https://github.com/fastapi/typer",
+      "language": "python",
+      "last_activity": "2026-08-12",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "typer",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 19899,
+      "status": "existing",
+      "upstream_url": "https://github.com/fastapi/typer"
+    },
+    {
+      "candidate_id": "https-github-com-urllib3-urllib3-1e1bf8b13d33",
+      "category": "http-client",
+      "conflicts": [],
+      "identity": "https://github.com/urllib3/urllib3",
+      "language": "python",
+      "last_activity": "2026-08-10",
+      "license_spdx": "MIT",
+      "notes": [
+        "TLS/network test surface needs offline audit"
+      ],
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "urllib3",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-package-candidates.v1.json",
+          "report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+          "shape": "shortlist"
+        }
+      ],
+      "source_kind": "pypi",
+      "stars": 4051,
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/urllib3/urllib3"
+    },
+    {
+      "candidate_id": "https-github-com-python-validators-validators-35c24b8d650c",
+      "category": "validation",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/python-validators/validators",
+      "language": "python",
+      "last_activity": "2026-03-14",
+      "license_evidence": "https://github.com/python-validators/validators/blob/70de324322def13a49a93d222f798ec1ab700885/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "validators",
+      "revision": "70de324322def13a49a93d222f798ec1ab700885",
+      "risk_flags": [
+        "IDNA and URL dependency versions",
+        "README contamination"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/github-package-candidates.v1.json",
+          "report_sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "github",
+      "stars": 1116,
+      "status": "existing",
+      "upstream_url": "https://github.com/python-validators/validators"
+    }
+  ],
+  "queue_id": "package-discovery-2026-08-23",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": "reports/github-package-candidates.v1.json",
+      "sha256": "sha256:9177f7c27f145aacd7350a63553a6c3cbad44c9c135b1cdc98cd956cbd51458d"
+    },
+    {
+      "path": "reports/python-package-candidates.v1.json",
+      "sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}

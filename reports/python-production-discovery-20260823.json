@@ -1,0 +1,107 @@
+{
+  "candidates": [
+    {
+      "language": "python",
+      "last_activity": "2026-01-22T16:35:26.279695Z",
+      "latest_version": "1.1.0",
+      "license_evidence": "https://pypi.org/project/jmespath/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 642380571,
+      "observed_at": "2026-08-23T15:18:41.297683+00:00",
+      "package": "jmespath",
+      "revision": "2812594e69d43098ef60f81f4efc404c071b0418",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/jmespath/jmespath.py"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-08-08T14:27:29.517160Z",
+      "latest_version": "4.3.1",
+      "license_evidence": "https://pypi.org/project/marshmallow/",
+      "license_spdx": null,
+      "monthly_downloads": 121367928,
+      "observed_at": "2026-08-23T15:18:41.297683+00:00",
+      "package": "marshmallow",
+      "revision": "0c05c83d8a0602bef2520e54f5fd62c2f8ccc955",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/marshmallow-code/marshmallow"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-05-14T19:25:27.735762Z",
+      "latest_version": "2.34.2",
+      "license_evidence": "https://pypi.org/project/requests/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 1796866782,
+      "observed_at": "2026-08-23T15:18:41.297683+00:00",
+      "package": "requests",
+      "revision": "8f8b212de8c2129d7954c6cd373762880375620a",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/psf/requests"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-07-17T01:48:05.728578Z",
+      "latest_version": "0.15.1",
+      "license_evidence": "https://pypi.org/project/tomlkit/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 500117402,
+      "observed_at": "2026-08-23T15:18:41.297683+00:00",
+      "package": "tomlkit",
+      "revision": "7ab7469addd60e03ca3bfbb1287642e8d771e1c0",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/python-poetry/tomlkit"
+    }
+  ],
+  "errors": [
+    {
+      "error": "ValueError: PyPI package has no upstream repository: anyio",
+      "package": "anyio"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: beartype",
+      "package": "beartype"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: build",
+      "package": "build"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: hypothesis",
+      "package": "hypothesis"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: lark",
+      "package": "lark"
+    },
+    {
+      "error": "AttributeError: 'NoneType' object has no attribute 'get'",
+      "package": "pluggy"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: urllib3",
+      "package": "urllib3"
+    }
+  ],
+  "language": "python",
+  "next_stage": "source-freeze-and-ast-test-inventory",
+  "observed_at": "2026-08-23T15:18:41.297683+00:00",
+  "report_id": "python-production-discovery-2026-08-23",
+  "schema_version": "1.0",
+  "threshold": {
+    "max_activity_months": 36,
+    "min_monthly_downloads": 1000
+  }
+}

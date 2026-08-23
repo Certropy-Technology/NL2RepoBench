@@ -1,0 +1,327 @@
+{
+  "candidates": [
+    {
+      "language": "python",
+      "last_activity": "2026-08-21T19:37:36.840104Z",
+      "latest_version": "1.43.78",
+      "license_evidence": "https://pypi.org/project/boto3/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 3372132397,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "boto3",
+      "revision": "722e01b074c67db38ad226ac1a2dab5c36c1577c",
+      "risk_flags": [
+        "cloud",
+        "network",
+        "credentials"
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/boto/boto3"
+    },
+    {
+      "language": "python",
+      "last_activity": "2024-06-09T16:20:19.103848Z",
+      "latest_version": "0.6.7",
+      "license_evidence": "https://pypi.org/project/dataclasses-json/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 64603255,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "dataclasses-json",
+      "revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/lidatong/dataclasses-json"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-08-15T19:47:08.853367Z",
+      "latest_version": "2.22.2",
+      "license_evidence": "https://pypi.org/project/fastjsonschema/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 150826931,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "fastjsonschema",
+      "revision": "b88fa37cd46bb81e8d9dce91a7e1bc4debedd3a2",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/horejsek/python-fastjsonschema"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-08-06T06:24:01.360156Z",
+      "latest_version": "2.56.3",
+      "license_evidence": "https://pypi.org/project/google-auth/",
+      "license_spdx": "Apache 2.0",
+      "monthly_downloads": 584336266,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "google-auth",
+      "revision": null,
+      "risk_flags": [
+        "cloud",
+        "credentials",
+        "network"
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-auth"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-08-07T09:24:57.419335Z",
+      "latest_version": "2.15.0",
+      "license_evidence": "https://pypi.org/project/pydantic-settings/",
+      "license_spdx": null,
+      "monthly_downloads": 505362493,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "pydantic-settings",
+      "revision": "d26fc0c3944fe68cf169f86386988bb83e3df2d8",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/pydantic/pydantic-settings"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-04-20T16:39:53.524353Z",
+      "latest_version": "4.17.0",
+      "license_evidence": "https://pypi.org/project/pymongo/",
+      "license_spdx": null,
+      "monthly_downloads": 109877200,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "pymongo",
+      "revision": "ebc4bffcc842464e48a3edbd04802d1a42bc818a",
+      "risk_flags": [
+        "database",
+        "network"
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/mongodb/mongo-python-driver"
+    },
+    {
+      "language": "python",
+      "last_activity": "2025-10-13T15:30:48.871335Z",
+      "latest_version": "0.37.0",
+      "license_evidence": "https://pypi.org/project/referencing/",
+      "license_spdx": null,
+      "monthly_downloads": 587198687,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "referencing",
+      "revision": "b081312fdf2567324d0c11fb07b630d7fcecea35",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/python-jsonschema/referencing"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-05-14T19:25:27.735762Z",
+      "latest_version": "2.34.2",
+      "license_evidence": "https://pypi.org/project/requests/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 1796866782,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "requests",
+      "revision": "8f8b212de8c2129d7954c6cd373762880375620a",
+      "risk_flags": [
+        "network"
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/psf/requests"
+    },
+    {
+      "language": "python",
+      "last_activity": "2025-04-27T18:05:01.611132Z",
+      "latest_version": "1.14.0",
+      "license_evidence": "https://pypi.org/project/sympy/",
+      "license_spdx": "BSD",
+      "monthly_downloads": 171349421,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "sympy",
+      "revision": "e950d313a932bc6cccbc95376b3821cd2f8b5af4",
+      "risk_flags": [],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/sympy/sympy"
+    },
+    {
+      "language": "python",
+      "last_activity": "2026-06-30T06:51:26.364743Z",
+      "latest_version": "8.2.8",
+      "license_evidence": "https://pypi.org/project/textual/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 545366395,
+      "observed_at": "2026-08-23T15:22:06.086412+00:00",
+      "package": "textual",
+      "revision": "06dbeef4bb70fb718236aa418ed658ef4667a126",
+      "risk_flags": [
+        "terminal",
+        "interactive"
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "test_evidence": "requires source-freeze AST/test inventory",
+      "upstream_url": "https://github.com/Textualize/textual"
+    }
+  ],
+  "errors": [
+    {
+      "error": "ValueError: PyPI package has no upstream repository: aiohttp",
+      "package": "aiohttp"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "alembic"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: anyio",
+      "package": "anyio"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: beautifulsoup4",
+      "package": "beautifulsoup4"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "botocore"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: cffi",
+      "package": "cffi"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: cryptography",
+      "package": "cryptography"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "Django"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "FastAPI"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "Flask"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "google-cloud-storage"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "httpcore"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "importlib-metadata"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "lxml"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: matplotlib",
+      "package": "matplotlib"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "msgspec"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: networkx",
+      "package": "networkx"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: numpy",
+      "package": "numpy"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: orjson",
+      "package": "orjson"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: pandas",
+      "package": "pandas"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "peewee"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "Pillow"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "PyNaCl"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "PyYAML"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: redis",
+      "package": "redis"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "ruamel.yaml"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: scikit-learn",
+      "package": "scikit-learn"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: scipy",
+      "package": "scipy"
+    },
+    {
+      "error": "HTTPError: HTTP Error 429: Too Many Requests",
+      "package": "SQLAlchemy"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "Starlette"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: trio",
+      "package": "trio"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: urllib3",
+      "package": "urllib3"
+    },
+    {
+      "error": "ValueError: PyPI package has no upstream repository: websockets",
+      "package": "websockets"
+    },
+    {
+      "error": "HTTPError: HTTP Error 404: Not Found",
+      "package": "Werkzeug"
+    }
+  ],
+  "language": "python",
+  "next_stage": "source-freeze-and-ast-test-inventory",
+  "observed_at": "2026-08-23T15:22:06.086412+00:00",
+  "report_id": "python-production-discovery-2026-08-23",
+  "schema_version": "1.0",
+  "threshold": {
+    "max_activity_months": 36,
+    "min_monthly_downloads": 1000
+  }
+}

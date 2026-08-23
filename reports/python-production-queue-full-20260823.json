@@ -1,0 +1,276 @@
+{
+  "counts": {
+    "candidate": 6,
+    "needs-evidence": 4
+  },
+  "observed_at": "2026-08-23T00:00:00Z",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-boto-boto3-c386b66c5f86",
+      "conflicts": [],
+      "identity": "https://github.com/boto/boto3",
+      "language": "python",
+      "last_activity": "2026-08-21T19:37:36.840104Z",
+      "license_evidence": "https://pypi.org/project/boto3/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 3372132397,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "boto3",
+      "revision": "722e01b074c67db38ad226ac1a2dab5c36c1577c",
+      "risk_flags": [
+        "cloud",
+        "credentials",
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/boto/boto3"
+    },
+    {
+      "candidate_id": "https-github-com-lidatong-dataclasses-json-2e2e78b2f87f",
+      "conflicts": [],
+      "identity": "https://github.com/lidatong/dataclasses-json",
+      "language": "python",
+      "last_activity": "2024-06-09T16:20:19.103848Z",
+      "license_evidence": "https://pypi.org/project/dataclasses-json/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 64603255,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "dataclasses-json",
+      "revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/lidatong/dataclasses-json"
+    },
+    {
+      "candidate_id": "https-github-com-horejsek-python-fastjsonschema-81f0cca3dc86",
+      "conflicts": [],
+      "identity": "https://github.com/horejsek/python-fastjsonschema",
+      "language": "python",
+      "last_activity": "2026-08-15T19:47:08.853367Z",
+      "license_evidence": "https://pypi.org/project/fastjsonschema/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 150826931,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "fastjsonschema",
+      "revision": "b88fa37cd46bb81e8d9dce91a7e1bc4debedd3a2",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/horejsek/python-fastjsonschema"
+    },
+    {
+      "candidate_id": "https-github-com-googleapis-google-cloud-python-tree-main-packages-google-auth-51acfcdfdadb",
+      "conflicts": [],
+      "identity": "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-auth",
+      "language": "python",
+      "last_activity": "2026-08-06T06:24:01.360156Z",
+      "license_evidence": "https://pypi.org/project/google-auth/",
+      "license_spdx": "Apache 2.0",
+      "monthly_downloads": 584336266,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "google-auth",
+      "risk_flags": [
+        "cloud",
+        "credentials",
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-auth"
+    },
+    {
+      "candidate_id": "https-github-com-pydantic-pydantic-settings-742ef0554bc8",
+      "conflicts": [],
+      "identity": "https://github.com/pydantic/pydantic-settings",
+      "language": "python",
+      "last_activity": "2026-08-07T09:24:57.419335Z",
+      "license_evidence": "https://pypi.org/project/pydantic-settings/",
+      "monthly_downloads": 505362493,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "pydantic-settings",
+      "revision": "d26fc0c3944fe68cf169f86386988bb83e3df2d8",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pydantic/pydantic-settings"
+    },
+    {
+      "candidate_id": "https-github-com-mongodb-mongo-python-driver-3c906e510c65",
+      "conflicts": [],
+      "identity": "https://github.com/mongodb/mongo-python-driver",
+      "language": "python",
+      "last_activity": "2026-04-20T16:39:53.524353Z",
+      "license_evidence": "https://pypi.org/project/pymongo/",
+      "monthly_downloads": 109877200,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "pymongo",
+      "revision": "ebc4bffcc842464e48a3edbd04802d1a42bc818a",
+      "risk_flags": [
+        "database",
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/mongodb/mongo-python-driver"
+    },
+    {
+      "candidate_id": "https-github-com-python-jsonschema-referencing-c1adaaacca23",
+      "conflicts": [],
+      "identity": "https://github.com/python-jsonschema/referencing",
+      "language": "python",
+      "last_activity": "2025-10-13T15:30:48.871335Z",
+      "license_evidence": "https://pypi.org/project/referencing/",
+      "monthly_downloads": 587198687,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "referencing",
+      "revision": "b081312fdf2567324d0c11fb07b630d7fcecea35",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python-jsonschema/referencing"
+    },
+    {
+      "candidate_id": "https-github-com-psf-requests-0d1a89c543ba",
+      "conflicts": [],
+      "identity": "https://github.com/psf/requests",
+      "language": "python",
+      "last_activity": "2026-05-14T19:25:27.735762Z",
+      "license_evidence": "https://pypi.org/project/requests/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 1796866782,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "requests",
+      "revision": "8f8b212de8c2129d7954c6cd373762880375620a",
+      "risk_flags": [
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/psf/requests"
+    },
+    {
+      "candidate_id": "https-github-com-sympy-sympy-6b19b50142de",
+      "conflicts": [],
+      "identity": "https://github.com/sympy/sympy",
+      "language": "python",
+      "last_activity": "2025-04-27T18:05:01.611132Z",
+      "license_evidence": "https://pypi.org/project/sympy/",
+      "license_spdx": "BSD",
+      "monthly_downloads": 171349421,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "sympy",
+      "revision": "e950d313a932bc6cccbc95376b3821cd2f8b5af4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sympy/sympy"
+    },
+    {
+      "candidate_id": "https-github-com-textualize-textual-e724ad156956",
+      "conflicts": [],
+      "identity": "https://github.com/Textualize/textual",
+      "language": "python",
+      "last_activity": "2026-06-30T06:51:26.364743Z",
+      "license_evidence": "https://pypi.org/project/textual/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 545366395,
+      "observed_at": "2026-08-23T00:00:00Z",
+      "package": "textual",
+      "revision": "06dbeef4bb70fb718236aa418ed658ef4667a126",
+      "risk_flags": [
+        "interactive",
+        "terminal"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/python-production-discovery-full-20260823.json",
+          "report_sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/Textualize/textual"
+    }
+  ],
+  "queue_id": "package-discovery-2026-08-23",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": "reports/python-production-discovery-full-20260823.json",
+      "sha256": "sha256:33d9f8e0745ca91ba99713d6440b38e31c15b01b68efb0f943949a1907caac8b"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}
