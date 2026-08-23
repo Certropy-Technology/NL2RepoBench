@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "report_id": "npm-package-candidates.v1",
+  "recorded_at": "2026-08-21",
+  "mode": "discover",
+  "status": "needs-evidence",
+  "source_document": "reports/npm-package-candidates.v1.md",
+  "candidates": [
+    {
+      "package": "jsonc-parser",
+      "repository": "https://github.com/microsoft/node-jsonc-parser",
+      "revision": "900046d46a96dd5d014030e37c0055157921ef92",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/microsoft/node-jsonc-parser/blob/900046d46a96dd5d014030e37c0055157921ef92/LICENSE",
+      "category": "json-parser",
+      "language": "node",
+      "test_files": 1,
+      "risks": ["ESM", "generated-lockfile"]
+    },
+    {
+      "package": "canonicalize",
+      "repository": "https://github.com/erdtman/canonicalize",
+      "revision": "c1b08c3771d681c8bd9c4d8765e00f2f717482f8",
+      "license_spdx": "Apache-2.0",
+      "license_evidence": "https://github.com/erdtman/canonicalize/blob/c1b08c3771d681c8bd9c4d8765e00f2f717482f8/LICENSE",
+      "category": "json-canonicalization",
+      "language": "node",
+      "risks": ["ESM", "generated-lockfile"]
+    },
+    {
+      "package": "query-string",
+      "repository": "https://github.com/sindresorhus/query-string",
+      "revision": "aae373a54526c7b297f60e4d7b77eb0709d2ae9c",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/sindresorhus/query-string/blob/aae373a54526c7b297f60e4d7b77eb0709d2ae9c/license",
+      "category": "query-string",
+      "language": "node",
+      "risks": ["ESM", "generated-lockfile"]
+    },
+    {
+      "package": "qs",
+      "repository": "https://github.com/ljharb/qs",
+      "revision": "3a890d4ecd3deb72a45d90be36f4f8c5970467c7",
+      "license_spdx": "BSD-3-Clause",
+      "license_evidence": "https://github.com/ljharb/qs/blob/3a890d4ecd3deb72a45d90be36f4f8c5970467c7/README.md",
+      "category": "query-string",
+      "language": "node",
+      "risks": ["CommonJS", "posttest-audit"]
+    },
+    {
+      "package": "validator",
+      "repository": "https://github.com/validatorjs/validator.js",
+      "revision": "a79ff980ab14257e795332989e497bdff3218e87",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/validatorjs/validator.js/blob/a79ff980ab14257e795332989e497bdff3218e87/LICENSE",
+      "category": "validation",
+      "language": "node",
+      "risks": ["CommonJS", "generated-build"]
+    },
+    {
+      "package": "stringify-object",
+      "repository": "https://github.com/sindresorhus/stringify-object",
+      "revision": "c359727290822d9cabf7c07fb86cdb08701c1010",
+      "license_spdx": "BSD-2-Clause",
+      "license_evidence": "https://github.com/sindresorhus/stringify-object/blob/c359727290822d9cabf7c07fb86cdb08701c1010/license",
+      "category": "serialization",
+      "language": "node",
+      "risks": ["ESM", "JSON-only-scope"]
+    }
+  ],
+  "required_next_stage": [
+    "revalidate catalog deduplication",
+    "fetch current stars or monthly downloads",
+    "revalidate activity date",
+    "freeze npm lockfile v3 and offline tarball closure",
+    "collect and adapt tests in the final Node verifier"
+  ]
+}

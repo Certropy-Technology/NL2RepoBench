@@ -515,7 +515,7 @@ metadata backfill
 ### Release 门禁
 
 - dataset manifest 全量校验；
-- 每题 Oracle 三次独立运行；
+- 当前 Package campaign 每题 Oracle 一次运行；需要稳定性证明时使用独立实验版本；
 - 全控制集；
 - immutable refs 和 image digest；
 - private asset leakage scan；

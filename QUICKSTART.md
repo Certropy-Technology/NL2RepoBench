@@ -259,11 +259,12 @@ docker rm -f $(docker ps -q --filter "name=harbor__")   # only when no run is ac
 
 ## 10. Current Dataset State
 
-- 104 legacy tasks are terminalized in `.nl2repo/conversion-loop/state.json`:
-  70 static complete and 34 evidence-backed blocked.
+- 104 legacy tasks are tracked in `.nl2repo/conversion-loop/state.json`; the current
+  reconciliation is 74 complete and 30 pending. Blocked/excluded lifecycle records
+  are audited separately by `scripts/reconcile_task_status.py`.
 - Node/npm tasks use a separate development-only v2 pilot.
 - New Python/npm candidates remain audit/spec records until private artifacts,
-  Oracle and controls are approved.
+  the current one-run Oracle gate and controls are approved.
 - Do not use stale “37 active task” text in older pilot documents as current state.
 
 Blocked candidates stay in the catalog for repair and audit but are excluded

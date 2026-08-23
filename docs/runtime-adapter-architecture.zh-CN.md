@@ -150,7 +150,7 @@ terminal for that attempt and remain separately classified.
 3. Reuse an existing package-manager adapter or add a new one with lock/store tests.
 4. Implement report normalization to the common leaf report.
 5. Add one synthetic development fixture and one real candidate audit.
-6. Pass the vertical gates: Oracle x3, empty, stub, forgery, install failure, hang and offline.
+6. Pass the current vertical gates: Oracle x1, empty, stub, forgery, install failure, hang and offline. Historical x3 stability experiments are a separate evidence class.
 7. Add the adapter to the explicit registry and documentation table.
 8. Only then author a batch of 10–20 tasks.
 

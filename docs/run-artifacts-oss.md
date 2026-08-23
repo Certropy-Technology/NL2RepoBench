@@ -48,18 +48,41 @@ export OSS_ACCESS_KEY_ID=...
 export OSS_ACCESS_KEY_SECRET=...
 
 # Inspect planned object keys without transferring anything
-python scripts/upload_runs_to_oss.py --dry-run
+python scripts/upload_runs_to_oss.py --dry-run \
+  --manifest reports/oss-objects.json \
+  --remote-manifest-key nl2repobench/_manifests/oss-objects.json
 
-# Upload task definitions + runs + README
-python scripts/upload_runs_to_oss.py --workers 16 --readme docs/oss-readme.md
+# Upload task definitions + runs + README and checksum metadata
+python scripts/upload_runs_to_oss.py --workers 16 --readme docs/oss-readme.md \
+  --manifest reports/oss-objects.json \
+  --remote-manifest-key nl2repobench/_manifests/oss-objects.json
 
 # Only runs, or only task definitions
 python scripts/upload_runs_to_oss.py --skip-tasks
 python scripts/upload_runs_to_oss.py --skip-runs
 ```
 
-The script needs the `oss2` package. It is safe to re-run: object keys are
-deterministic and existing objects are skipped unless `--overwrite` is given.
+The script needs the `oss2` package. It is safe to re-run only when an existing
+object has the same size and SHA-256 metadata; a same-key collision fails closed.
+Use `--overwrite` only for an explicitly approved archive migration.
+The uploader scans the exact files selected for transfer before contacting OSS;
+secret-shaped content or symlinked files stop the upload. Public upstream
+fixture credentials still require an explicit review and exclusion/allowlist,
+not a blanket regex bypass.
+
+After upload, verify remote payload bytes before cleaning local runs:
+
+```bash
+python scripts/verify_oss_archive.py \
+  --manifest reports/package-expansion-campaign.json
+python scripts/verify_oss_archive.py \
+  --manifest reports/package-expansion-campaign.json --delete-local
+```
+
+The second command is the only supported local raw-run deletion path. It
+requires a campaign archive section, a remote checksum manifest, and a local
+run directory below `.nl2repo/runs/`. Local脱敏 manifest and aggregate reports
+remain after cleanup.
 
 ## Before Uploading
 

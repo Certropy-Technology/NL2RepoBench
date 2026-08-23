@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+"""Validate the evidence manifest for a package-to-Harbor campaign.
+
+The campaign manifest is an index of evidence, not a replacement for catalog
+source files.  Published status, language, revision, license, and Harbor
+assets are read from the repository; the manifest supplies immutable
+selection, Oracle/control, model-run, and archive references.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import tomllib
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+TARGET_MODELS = frozenset({"gpt-5.6-sol", "claude-fable-5"})
+LANGUAGES = frozenset({"python", "node"})
+SHA_PATTERN = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
+LICENSE_UNKNOWN = frozenset({"", "unknown", "unresolved", "NOASSERTION"})
+ALLOWED_FAILURE_CLASSES = frozenset(
+    {"source", "spec", "environment", "verifier", "model", "infrastructure"}
+)
+REQUIRED_CONTROLS = frozenset({"empty", "stub", "forgery", "timeout", "offline"})
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid JSON {path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise ValueError(f"JSON root must be an object: {path}")
+    return value
+
+
+def _read_toml(path: Path) -> dict[str, Any]:
+    try:
+        return tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        raise ValueError(f"invalid TOML {path}: {exc}") from exc
+
+
+def _parse_date(value: Any, field: str) -> datetime:
+    if not isinstance(value, str):
+        raise ValueError(f"{field} must be an ISO date")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError(f"{field} must be an ISO date: {value}") from exc
+    return parsed.replace(tzinfo=parsed.tzinfo or UTC)
+
+
+def _months_old(as_of: datetime, activity: datetime) -> int:
+    months = (as_of.year - activity.year) * 12 + as_of.month - activity.month
+    if as_of.day < activity.day:
+        months -= 1
+    return months
+
+
+def _required_dict(value: Any, field: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError(f"{field} must be an object")
+    return value
+
+
+def _validate_candidate(candidate: Any, *, as_of: datetime, task_id: str) -> None:
+    data = _required_dict(candidate, f"tasks[{task_id}].candidate")
+    source_kind = data.get("source_kind")
+    if source_kind not in {"pypi", "npm", "github"}:
+        raise ValueError(f"{task_id}: candidate.source_kind must be pypi, npm, or github")
+    revision = data.get("revision")
+    if not isinstance(revision, str) or SHA_PATTERN.fullmatch(revision) is None:
+        raise ValueError(f"{task_id}: candidate.revision must be a complete immutable SHA")
+    license_spdx = data.get("license_spdx")
+    if not isinstance(license_spdx, str) or license_spdx in LICENSE_UNKNOWN:
+        raise ValueError(f"{task_id}: candidate.license_spdx is unresolved")
+    observed_at = _parse_date(data.get("observed_at"), f"{task_id}.candidate.observed_at")
+    if observed_at > as_of:
+        raise ValueError(f"{task_id}: candidate evidence is dated after campaign as_of")
+    activity_value = data.get("last_activity") or data.get("last_release")
+    activity = _parse_date(activity_value, f"{task_id}.candidate.last_activity")
+    if activity > as_of:
+        raise ValueError(f"{task_id}: candidate activity is dated after campaign as_of")
+    if _months_old(as_of, activity) > 36:
+        raise ValueError(f"{task_id}: candidate activity is older than 36 months")
+    stars = data.get("stars")
+    downloads = data.get("monthly_downloads")
+    if not isinstance(stars, int) or stars < 0:
+        raise ValueError(f"{task_id}: candidate.stars must be a non-negative integer")
+    if not isinstance(downloads, int) or downloads < 0:
+        raise ValueError(f"{task_id}: candidate.monthly_downloads must be non-negative")
+    if stars < 100 and downloads < 1_000:
+        raise ValueError(f"{task_id}: candidate does not meet stars/download threshold")
+    evidence_url = data.get("evidence_url")
+    if not isinstance(evidence_url, str) or not evidence_url.startswith("https://"):
+        raise ValueError(f"{task_id}: candidate.evidence_url must be an HTTPS source")
+
+
+def _validate_oracle(task: dict[str, Any], task_id: str) -> None:
+    runs = task.get("oracle_runs")
+    if not isinstance(runs, list) or len(runs) != 1:
+        raise ValueError(f"{task_id}: oracle_runs must contain exactly one run")
+    expected: int | None = None
+    collections: set[int] = set()
+    for index, raw in enumerate(runs):
+        run = _required_dict(raw, f"{task_id}.oracle_runs[{index}]")
+        if run.get("valid") is not True:
+            raise ValueError(f"{task_id}: Oracle run {index + 1} is not valid")
+        reward = run.get("reward")
+        if not isinstance(reward, (int, float)) or reward < 0.80:
+            raise ValueError(f"{task_id}: Oracle run {index + 1} is below reward 0.80")
+        total = run.get("expected_total")
+        collected = run.get("collected_total")
+        if not isinstance(total, int) or total <= 0 or not isinstance(collected, int):
+            raise ValueError(f"{task_id}: Oracle run {index + 1} lacks collection evidence")
+        if total != collected:
+            raise ValueError(f"{task_id}: Oracle collection mismatch in run {index + 1}")
+        if expected is None:
+            expected = total
+        elif expected != total:
+            raise ValueError(f"{task_id}: Oracle frozen denominator changed across runs")
+        collections.add(collected)
+    if len(collections) != 1:
+        raise ValueError(f"{task_id}: Oracle collection is unstable")
+
+
+def _validate_controls(task: dict[str, Any], task_id: str) -> None:
+    controls = _required_dict(task.get("controls"), f"tasks[{task_id}].controls")
+    missing = REQUIRED_CONTROLS - set(controls)
+    if missing:
+        raise ValueError(f"{task_id}: missing controls: {', '.join(sorted(missing))}")
+    for name in sorted(REQUIRED_CONTROLS):
+        result = _required_dict(controls[name], f"{task_id}.controls.{name}")
+        if result.get("passed") is not True:
+            raise ValueError(f"{task_id}: control {name} did not pass")
+
+
+def _validate_model_runs(task: dict[str, Any], task_id: str) -> None:
+    raw_runs = task.get("model_runs")
+    if not isinstance(raw_runs, list):
+        raise ValueError(f"{task_id}: model_runs must be a list")
+    by_model: dict[str, dict[str, Any]] = {}
+    for raw in raw_runs:
+        run = _required_dict(raw, f"{task_id}.model_runs[]")
+        model = run.get("model")
+        if model not in TARGET_MODELS:
+            raise ValueError(f"{task_id}: unsupported model run: {model}")
+        if model in by_model:
+            raise ValueError(f"{task_id}: duplicate model run record: {model}")
+        attempts = run.get("attempts")
+        if not isinstance(attempts, int) or attempts < 1:
+            raise ValueError(f"{task_id}: {model} must have at least one attempt")
+        failure_class = run.get("failure_class")
+        if failure_class is not None and failure_class not in ALLOWED_FAILURE_CLASSES:
+            raise ValueError(f"{task_id}: invalid model failure class: {failure_class}")
+        if attempts > 1 and failure_class != "infrastructure":
+            raise ValueError(f"{task_id}: only infrastructure failures may be retried for {model}")
+        by_model[model] = run
+    missing = TARGET_MODELS - set(by_model)
+    if missing:
+        raise ValueError(f"{task_id}: missing model runs: {', '.join(sorted(missing))}")
+
+
+def validate_campaign(
+    campaign_path: Path,
+    *,
+    catalog_root: Path,
+    minimum_tasks: int = 500,
+    allow_below_target: bool = False,
+) -> dict[str, Any]:
+    campaign = _read_json(campaign_path)
+    if campaign.get("schema_version") != "1.0":
+        raise ValueError("campaign schema_version must be 1.0")
+    as_of = _parse_date(campaign.get("as_of"), "campaign.as_of")
+    datasets = campaign.get("datasets")
+    if not isinstance(datasets, list) or not datasets:
+        raise ValueError("campaign.datasets must be a non-empty list")
+    dataset_map: dict[str, dict[str, Any]] = {}
+    languages: set[str] = set()
+    for raw in datasets:
+        dataset = _required_dict(raw, "campaign.datasets[]")
+        dataset_id = dataset.get("dataset_id")
+        language = dataset.get("language")
+        if not isinstance(dataset_id, str) or not dataset_id:
+            raise ValueError("campaign dataset_id must be non-empty")
+        if language not in LANGUAGES:
+            raise ValueError(f"dataset {dataset_id}: unsupported language {language}")
+        if dataset_id in dataset_map:
+            raise ValueError(f"duplicate dataset_id: {dataset_id}")
+        dataset_map[dataset_id] = dataset
+        languages.add(language)
+    if len(languages) > 1 and len(dataset_map) == 1:
+        raise ValueError("Python and Node tasks must use separate dataset records")
+
+    raw_tasks = campaign.get("tasks")
+    if not isinstance(raw_tasks, list):
+        raise ValueError("campaign.tasks must be a list")
+    task_ids: set[str] = set()
+    valid_tasks: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for raw in raw_tasks:
+        try:
+            task = _required_dict(raw, "campaign.tasks[]")
+            task_id = task.get("task_id")
+            if not isinstance(task_id, str) or not task_id:
+                raise ValueError("task_id must be non-empty")
+            if task_id in task_ids:
+                raise ValueError("duplicate task_id")
+            task_ids.add(task_id)
+            dataset_id = task.get("dataset_id")
+            if dataset_id not in dataset_map:
+                raise ValueError("references an unknown dataset")
+            language = task.get("language")
+            if language != dataset_map[dataset_id].get("language"):
+                raise ValueError("language does not match dataset")
+            source_path = catalog_root / task_id / "task.toml"
+            source = _read_toml(source_path)
+            lifecycle = _required_dict(source.get("lifecycle"), f"{task_id}.lifecycle")
+            if lifecycle.get("status") != "published":
+                raise ValueError("catalog lifecycle is not published")
+            metadata = _required_dict(source.get("metadata"), f"{task_id}.metadata")
+            if metadata.get("language") != language:
+                raise ValueError("catalog language does not match campaign")
+            source_lock = _required_dict(source.get("source"), f"{task_id}.source")
+            revision = source_lock.get("revision")
+            if not isinstance(revision, str) or SHA_PATTERN.fullmatch(revision) is None:
+                raise ValueError("catalog source revision is not immutable")
+            if source_lock.get("license_spdx") in LICENSE_UNKNOWN:
+                raise ValueError("catalog license is unresolved")
+            harbor_task = catalog_root / task_id / "harbor/task.toml"
+            if not harbor_task.is_file():
+                raise ValueError("Harbor task bundle is missing")
+            _validate_candidate(task.get("candidate"), as_of=as_of, task_id=task_id)
+            _validate_oracle(task, task_id)
+            _validate_controls(task, task_id)
+            _validate_model_runs(task, task_id)
+            valid_tasks.append(task)
+        except (OSError, ValueError) as exc:
+            label = raw.get("task_id", "<unknown>") if isinstance(raw, dict) else "<unknown>"
+            errors.append(f"{label}: {exc}")
+    if errors:
+        raise ValueError("campaign validation errors:\n" + "\n".join(errors))
+    if len(valid_tasks) < minimum_tasks and not allow_below_target:
+        raise ValueError(
+            f"publishable task count {len(valid_tasks)} is below required minimum {minimum_tasks}"
+        )
+    return {
+        "schema_version": "1.0",
+        "campaign_id": campaign.get("campaign_id"),
+        "as_of": campaign["as_of"],
+        "task_count": len(valid_tasks),
+        "minimum_tasks": minimum_tasks,
+        "status": "releaseable" if len(valid_tasks) >= minimum_tasks else "below-target",
+        "dataset_count": len(dataset_map),
+        "languages": sorted(languages),
+        "new_task_count": campaign.get("new_task_count"),
+        "archive": campaign.get("archive"),
+        "tasks": [task["task_id"] for task in valid_tasks],
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("campaign", type=Path)
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--minimum-tasks", type=int, default=500)
+    parser.add_argument("--allow-below-target", action="store_true")
+    args = parser.parse_args()
+    try:
+        report = validate_campaign(
+            args.campaign,
+            catalog_root=args.catalog_root,
+            minimum_tasks=args.minimum_tasks,
+            allow_below_target=args.allow_below_target,
+        )
+    except ValueError as exc:
+        print(f"campaign validation failed: {exc}", file=sys.stderr)
+        return 1
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

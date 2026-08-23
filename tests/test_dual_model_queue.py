@@ -1,0 +1,113 @@
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+SCRIPTS = Path(__file__).parents[1] / "scripts"
+sys.path.insert(0, str(SCRIPTS))
+
+
+def _load_script():
+    path = SCRIPTS / "run_dual_model_queue.py"
+    spec = importlib.util.spec_from_file_location("run_dual_model_queue", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+dual = _load_script()
+
+
+def _models(path: Path) -> None:
+    path.write_text(
+        json.dumps(
+            {
+                "providers": {
+                    "z-open-api-gpt-openai-responses": {
+                        "api": "openai-responses",
+                        "baseUrl": "https://example.invalid/v1",
+                        "apiKey": "${TEST_MODEL_KEY}",
+                        "models": [{"id": "gpt-5.6-sol"}],
+                    },
+                    "z-open-api-fabel5": {
+                        "api": "anthropic-messages",
+                        "baseUrl": "https://example.invalid/v1",
+                        "apiKey": "${TEST_MODEL_KEY}",
+                        "models": [{"id": "claude-fable-5"}],
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    path.chmod(0o600)
+
+
+def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
+    models = tmp_path / "models.json"
+    _models(models)
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps(
+            {
+                "campaign_id": "pilot",
+                "tasks": [{"task_id": "demo"}, {"task_id": "second"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    plan = dual.build_plan(
+        campaign,
+        run_root=tmp_path / "runs",
+        lock_root=tmp_path / "locks",
+        models_file=models,
+    )
+
+    assert plan["task_count"] == 2
+    assert {item["model_id"] for item in plan["models"]} == {
+        "gpt-5.6-sol",
+        "claude-fable-5",
+    }
+    assert all(item["concurrency"] == 1 for item in plan["models"])
+    assert "test-key-not-written-to-plan" not in json.dumps(plan)
+
+
+def test_dual_queue_invocation_keeps_credentials_out_of_argv(tmp_path: Path, monkeypatch) -> None:
+    calls: list[list[str]] = []
+
+    class Result:
+        returncode = 0
+
+    def fake_run(command, **kwargs):
+        calls.append(command)
+        assert "LLM_API_KEY" not in command
+        del kwargs
+        return Result()
+
+    monkeypatch.setattr(dual.subprocess, "run", fake_run)
+    queue = {
+        "provider": "z-open-api-gpt-openai-responses",
+        "model_id": "gpt-5.6-sol",
+        "harbor_model": "openai/gpt-5.6-sol",
+        "run_prefix": "gpt56",
+        "run_root": str(tmp_path / "runs"),
+        "lock_root": str(tmp_path / "locks"),
+        "tasks": ["demo"],
+    }
+    models = tmp_path / "models.json"
+    models.write_text("{}", encoding="utf-8")
+
+    result = dual._run_queue(queue, models)
+
+    assert result["status"] == "completed"
+    assert calls
+    assert "--models-file" in calls[0]
+    assert all("test-key" not in value for value in calls[0])

@@ -327,7 +327,7 @@ uv run --frozen --project harbor-runner harbor run \
   -p /tmp/node-harbor/node-synthetic -a oracle
 ```
 
-Run empty, stub, forgery, install-script, loader-hook, hang, and offline controls. Oracle must pass three independent runs with stable collection, `valid=true`, and reward at least 0.80; target is 1.0.
+Run empty, stub, forgery, install-script, loader-hook, hang, and offline controls. The current campaign Oracle must pass one run with collection matching the frozen denominator, `valid=true`, and reward at least 0.80; target is 1.0. Cross-run stability requires a separate experiment version.
 
 ## Explicit Out of Scope
 

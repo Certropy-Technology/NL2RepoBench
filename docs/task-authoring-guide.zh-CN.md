@@ -165,7 +165,7 @@ status: discovered
 3. 运行完整上游测试，保存命令、stdout、stderr、JUnit、collected count 和 wall time。
 4. 只修环境问题，不修改功能源码来迎合测试。
 5. 对 README、LICENSE 存在性等与功能无关的构建约束，可在镜像中预置空文件或做可审计的 packaging relaxation。
-6. 固定最终 Dockerfile、`EnvironmentLock`、`DependencyBundle` 和 image digest。扩展 pilot 的 Oracle 必须在这个最终镜像中三次独立达到 `valid=true`、稳定 collection 且 reward 不低于 0.80；低于 1.0 时保存 Oracle ceiling 和稳定失败集合。
+6. 固定最终 Dockerfile、`EnvironmentLock`、`DependencyBundle` 和 image digest。当前 Package campaign 的 Oracle 在这个最终镜像中运行一次，必须达到 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；低于 1.0 时保存 Oracle ceiling 和失败集合。历史三次稳定性实验另行归档。
 7. verifier 必须在清空 pip cache 的 `no-network` 环境中完成安装、collection 和测试；不能依赖运行时公网下载。
 
 基线记录必须区分：
@@ -263,7 +263,7 @@ reward = clamp(passed / frozen_total, 0, 1)
 
 | 控制 | 预期 |
 | --- | --- |
-| 冻结上游实现/Oracle | 三次独立 `valid=true`、稳定 collection、reward >= 0.80 |
+| 冻结上游实现/Oracle | 一次 `valid=true`、collection 与固定分母一致、reward >= 0.80 |
 | 空工作区 | reward 接近 0，且 verifier 正常结束 |
 | 只有 packaging 和空函数 | 只能得到很低分，不能因 import 成功获得高分 |
 | 测试文件同名伪造 | 不影响隐藏 verifier |
@@ -286,7 +286,7 @@ Oracle 失败时按顺序排查：environment、artifact 路径、安装命令�
 一题只有同时满足下列条件才能合入：
 
 - source revision、license、image digest 和依赖锁完整；
-- Oracle 三次独立运行均 `valid=true`、collection 与固定分母一致且 reward >= 0.80；低于 1.0 时保存稳定失败集合和 Oracle ceiling；
+- Oracle 一次运行 `valid=true`、collection 与固定分母一致且 reward >= 0.80；低于 1.0 时保存失败集合和 Oracle ceiling；
 - collected count 与冻结分母一致；
 - 所有 hidden assertions 能映射到公开规格；
 - 空实现和伪造测试不能获得异常高分；

@@ -18,7 +18,7 @@ run_harbor() {
   return "$harbor_rc"
 }
 
-for attempt in 1 2 3; do
+for attempt in 1; do
   uv run nl2repo harbor compile \
     catalog/tasks/ministats \
     --output "$output/tasks/oracle-$attempt" \

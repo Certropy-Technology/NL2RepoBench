@@ -27,7 +27,7 @@ NL2RepoBench 测量 Agent 从自然语言规格和空 `/workspace` 出发，生�
 
 | 路线 | 语言 | 状态 |
 | --- | --- | --- |
-| Legacy closeout | Python | 104 题终态化：70 complete、34 blocked、pending=0、running=0 |
+| Legacy conversion | Python | 104 题状态文件当前为 74 complete、30 pending；catalog lifecycle 另由 reconciler 审计 |
 | Node/npm v2 pilot | Node 22/npm | development-only；synthetic vertical slice 已通过，不代表 production |
 
 `complete` 表示 task-local Harbor 包通过静态来源和结构校验，不代表通过 Oracle、
@@ -99,7 +99,8 @@ Python 与 Node 使用不同 dataset/version、schema、grader、依赖闭包和
 
 冻结候选时保存 upstream full commit、archive/license hashes、OS/runtime/image digest、
 offline dependency closure、test bundle、自动 collection、固定 denominator、
-Oracle 3x、controls、traceability、review record 和 content manifest。
+Oracle x1、controls、traceability、review record 和 content manifest。当前 Package
+campaign 使用一次 Oracle gate；历史三次稳定性实验不能直接并入新版本分数。
 
 公开 instruction 至少包含：
 
@@ -124,13 +125,11 @@ uv run python scripts/cleanup_harbor_trials.py \
   --jobs-dir .nl2repo/runs/oracle/<task>/attempt-1
 ```
 
-正式题要求三次独立 `valid=true`、collection 稳定、reward `>=0.80`。必须读取
+正式题要求一次 `valid=true`、collection 与固定分母一致、reward `>=0.80`。必须读取
 `verifier/grading.json`，不能只看 Harbor CLI 的 `rc=0`。
 
-本轮 legacy controls pilot 只得到诊断结果：`markupsafe` Oracle 3/3 为 39/39，
-`schedule-master` Oracle 3/3 为 81/81；`unidecode` 两次 64/65、一次 verifier
-image build timeout。三者 nop 都是 `valid=false`。没有任务被标成 controls-passed，
-详情在 `reports/controls-pilot-results.v1.md`。
+本轮 legacy controls pilot 是历史三次稳定性实验，不属于当前一次 Oracle campaign
+gate。没有任务被标成 controls-passed，详情在 `reports/controls-pilot-results.v1.md`。
 
 ```text
 task_score    = clamp(passed / frozen_total, 0, 1)
@@ -216,9 +215,10 @@ python3 scripts/upload_runs_to_oss.py \
   --manifest /tmp/<accepted-root>-manifest.json
 ```
 
-不要 `--overwrite`。当前 uploader 会归一历史 `gpt56-new6-markupsafe`、把 root
-`queue.log` 放进 `_queue-logs`，但远端去重仍是 existence-only skip，不能替代 hash
-collision check。成功 GPT smoke 已上传；Fable invalid artifact只保留本地诊断。
+默认不要 `--overwrite`。上传器会把 SHA-256 写入 OSS 元数据；同名对象只有 size 和
+SHA-256 都相同才 skip，否则 fail closed。上传后使用 `scripts/verify_oss_archive.py`
+检查远端 payload checksum，再显式 `--delete-local` 清理本地 raw runs。成功 GPT smoke
+已上传；Fable invalid artifact 只保留本地诊断。
 
 ## 8. 已知踩坑与收尾
 

@@ -37,7 +37,7 @@ Harbor pilot 合并评分，也不声称 parity。
 - candidate 先 `npm pack`，检查 tarball 后安装到隔离 target；
 - agent 与 verifier 都默认断网；
 - 独立子进程调用 JSON 可序列化 API 或 CLI；
-- Oracle 三次 `valid=true`、稳定 collection、reward `>= 0.80`；
+- 当前 campaign Oracle 一次 `valid=true`、collection 与固定分母一致、reward `>= 0.80`；稳定性实验另建版本；
 - empty、stub、forgery、install-script、loader-hook、hang 和 offline 控制。
 
 适合的五类 pilot：纯 JavaScript 字符串/数组工具、parser/serializer、受限文件

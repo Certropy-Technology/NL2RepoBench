@@ -49,7 +49,7 @@ spec skeleton -> semantic draft -> bidirectional traceability
 Harbor package + private verifier + candidate boundary
       │
       ▼
-Oracle x3 -> empty/stub/forgery/hang/offline controls
+Oracle x1 -> empty/stub/forgery/hang/offline controls
       │
       ▼
 blind review -> 5–10 task pilot -> publish
@@ -79,11 +79,34 @@ blind review -> 5–10 task pilot -> publish
 规则：
 
 - 只接受完整 commit SHA；branch、tag、latest 一律不能进入 freeze；
-- 目标规模参考上游 NL2Repo：300–120,000 implementation LOC、至少 10 stars、近期有
-  活跃、明确许可、官方测试可执行；边界项目记录为 conditional，不偷偷放宽；
+- 当前 campaign 候选门槛是最近 commit/release 不超过 36 个月，且 GitHub stars >= 100
+  或 PyPI/npm 月下载量 >= 1,000；同时需要明确许可和官方可执行测试。LOC、native、
+  外部服务和资源风险另行记录，边界项目记录为 conditional，不偷偷放宽；
 - 与 `catalog/tasks`、已发布 source digest、候选报告和 fork/改名包做 normalized name、
   upstream URL、source hash 和 API fingerprint 去重；
 - 发现阶段可以高并发，但只写自己的 report artifact。
+
+当前已实现的归一化入口是：
+
+```bash
+python scripts/build_package_queue.py \
+  --input reports/python-package-candidates.v1.json \
+  --input reports/npm-package-candidates.v1.json \
+  --input reports/github-package-candidates.v1.json \
+  --catalog-root catalog/tasks \
+  --observed-at 2026-08-23T00:00:00Z \
+  --output reports/package-discovery-queue.v1.json
+python scripts/package_queue_loop.py init \
+  --queue reports/package-discovery-queue.v1.json
+python scripts/package_queue_loop.py claim \
+  --queue reports/package-discovery-queue.v1.json \
+  --owner worker-a --limit 1 --language python
+```
+
+`build_package_queue.py` 只产生候选和 `needs-evidence` 状态，不提升题目到
+Harbor；queue state 使用文件锁和输入 hash，candidate 证据变化时 fail closed。
+每个 Package 的后续冻结、AST、环境、规格和 Harbor 产物必须在独立 worktree
+完成，再由 integrator 统一写共享 dataset/index。
 
 ## Stage 1：Source freeze 与廉价静态门禁
 
@@ -238,7 +261,7 @@ agent image 不得包含 hidden tests、grader、Oracle、private dependency byt
 
 只有通过静态和环境门禁的题才消耗 Harbor/Docker 资源。顺序固定：
 
-1. Oracle 三次独立运行；
+1. Oracle 一次运行；
 2. empty workspace；
 3. packaging + stub；
 4. forged test/reward；
@@ -246,7 +269,7 @@ agent image 不得包含 hidden tests、grader、Oracle、private dependency byt
 6. offline verifier；
 7. reviewer evidence pack。
 
-Oracle 要求三次 `valid=true`、collection/分母稳定、reward `>=0.80`。任何控制异常高分、
+当前 campaign contract 要求一次 `valid=true`、collection 与固定分母一致、reward `>=0.80`。一次运行不证明跨运行稳定性；任何控制异常高分、
 private leakage、report mismatch 或 verifier invalid 都回退到 blocked，不修测试来过门禁。
 
 ## 批量调度策略
@@ -260,7 +283,7 @@ private leakage、report mismatch 或 verifier invalid 都回退到 blocked，�
 | Env probe | 15–30 | sandbox/CPU | offline closure + stable collection |
 | Spec/trace | 10–20 | reviewer/LLM | 双向 traceability |
 | Harbor package | 5–10 | Docker/磁盘 | deterministic bundle + boundary |
-| Oracle/control | 3–5 | Harbor/模型 | Oracle x3 + controls |
+| Oracle/control | 3–5 | Harbor/模型 | Oracle x1 + controls |
 | Pilot | 5–10 | Harbor/model budget | 难度/失败归因合理 |
 
 同一 task 的 stage 只能有一个 claim；worker 只写
@@ -302,13 +325,34 @@ nl2repo author probe TASK --output authoring/
 nl2repo author draft-spec TASK --output authoring/
 nl2repo author validate-spec TASK --output authoring/
 nl2repo author package TASK --output authoring/
-nl2repo author oracle TASK --attempts 3
+nl2repo author oracle TASK --attempts 1
 nl2repo author controls TASK
 nl2repo author publish TASK
 ```
 
 第一实现优先提供 `scan-source`、`scan-tests`、`trace` 的本地 deterministic 命令；Harbor
 和模型阶段继续复用现有独立脚本，等 artifact contract 稳定后再接入统一 CLI。
+
+双模型运行使用独立的 serial queue。默认只生成计划，显式 `--execute` 才会消耗
+Harbor/API 预算：
+
+```bash
+python scripts/run_dual_model_queue.py \
+  --campaign reports/package-expansion-campaign.json \
+  --run-root .nl2repo/runs/package-expansion \
+  --lock-root .nl2repo/locks/package-expansion \
+  --plan-output reports/package-expansion-model-plan.json
+python scripts/run_dual_model_queue.py \
+  --campaign reports/package-expansion-campaign.json \
+  --run-root .nl2repo/runs/package-expansion \
+  --lock-root .nl2repo/locks/package-expansion \
+  --plan-output reports/package-expansion-model-plan.json \
+  --execute
+```
+
+计划固定 `gpt-5.6-sol` 与 `claude-fable-5` 各一条 serial queue，provider 只从
+Pi 的 mode-600 `models.json` 读取；失败不静默重试，只有 Harbor 已分类的
+infrastructure failure 可由底层 wrapper 重试。
 
 ## 新语言接入协议
 

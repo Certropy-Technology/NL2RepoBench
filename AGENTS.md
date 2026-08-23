@@ -104,7 +104,7 @@ discover
 | `inventoried` | API inventory、test plan | public API、CLI、fixtures、test-to-behavior 映射完整 |
 | `specified` | `instruction.md` | 只看规格可推导所有隐藏断言，不泄漏实现 |
 | `packaged` | private tests、verifier、发布视图/Harbor task | 隐藏资产与 agent 环境隔离 |
-| `oracle-passed` | Oracle reward、JUnit、日志 | 发布前要求三次独立运行均 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；保存每次失败集合与 Oracle 基线 |
+| `oracle-passed` | Oracle reward、JUnit、日志 | 当前 Package campaign 发布前要求一次运行 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；保存失败集合与 Oracle ceiling。稳定性实验另建版本 |
 | `controls-passed` | empty/stub/forgery/offline 结果 | 无异常高分，verifier 不被候选篡改 |
 | `reviewed` | 两份 review 记录 | blind review 和 traceability review 均通过 |
 | `piloted` | 多 agent/model 结果 | 难度和失败归因合理，无系统性 spec/env/verifier 问题 |
@@ -187,14 +187,14 @@ catalog source -> canonical manifest -> Harbor bundle / legacy projection
 每题最低控制集：
 
 ```text
-Oracle/upstream implementation -> >= 0.80（三次独立运行，collection 与固定分母一致）
+Oracle/upstream implementation -> >= 0.80（一次运行，collection 与固定分母一致）
 empty workspace                -> near 0
 packaging + stub functions     -> low score
 forged test/reward files       -> cannot affect grading
 offline verifier               -> completes successfully
 ```
 
-Oracle 低于 0.80、`valid=false` 或三次结果不稳定时，依次检查 environment、artifact 路径、安装、collection、固定分母和 reward 输出。不得通过删除真实功能断言来跨过 0.80 门槛；允许发布低于 1.0 的 Oracle 基线时，必须保存三次 passed/total、稳定失败集合和原因，并在结果报告中明确该题的 Oracle ceiling。
+当前 Package campaign contract v2 使用一次 Oracle gate：Oracle `valid=false` 或 reward 低于 0.80 时，依次检查 environment、artifact 路径、安装、collection、固定分母和 reward 输出。一次 Oracle 结果不证明跨运行稳定性；需要稳定性研究时必须另建实验版本，不能把 v2 结果与历史三次 Oracle 结果直接合并。不得通过删除真实功能断言来跨过 0.80 门槛，并保存 passed/total、原因和 Oracle ceiling。
 
 ## 9. Harbor 任务协议
 
@@ -311,7 +311,7 @@ task_id | version | status | oracle | empty | pilot mean | failure class | artif
 - source lock、license、依赖和 image digest 完整；
 - instruction 与 hidden assertions 双向可追溯；
 - frozen total 自动生成并与实际 collection 一致；
-- Oracle 三次独立运行均 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；低于 1.0 时保存稳定失败集合、原因和 Oracle ceiling；
+- Oracle 一次运行 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；低于 1.0 时保存失败集合、原因和 Oracle ceiling；
 - empty、stub、forgery 和 offline 控制通过；
 - 两名审核人完成 blind/spec traceability review；
 - pilot 没有未解决的 spec/environment/verifier 系统性问题；

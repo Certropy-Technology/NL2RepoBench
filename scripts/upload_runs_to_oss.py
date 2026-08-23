@@ -58,6 +58,12 @@ RUN_ROOT_ALIASES = {
 
 # Directory names that only group runs and never name a task.
 CONTAINER_DIRS = frozenset({"results", "runs", "jobs", "output"})
+INTERNAL_PATH_PARTS = frozenset({".pi-glla", ".git", "__pycache__"})
+SECRET_PATTERNS = (
+    re.compile(rb"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{40,}(?![A-Za-z0-9_-])"),
+    re.compile(rb"LTAI[A-Za-z0-9]{12,}"),
+    re.compile(rb"AKIA[A-Z0-9]{12,}"),
+)
 
 
 def known_tasks(catalog: Path = Path("catalog/tasks")) -> frozenset[str]:
@@ -190,6 +196,10 @@ class Upload:
     key: str
     size: int
 
+    @property
+    def sha256(self) -> str:
+        return hashlib.sha256(self.local.read_bytes()).hexdigest()
+
 
 @dataclass
 class Stats:
@@ -203,7 +213,9 @@ class Stats:
 def iter_run_uploads(runs_dir: Path) -> Iterator[Upload]:
     for run_root in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
         for path in sorted(run_root.rglob("*")):
-            if not path.is_file():
+            if path.is_symlink() or not path.is_file() or any(
+                part in INTERNAL_PATH_PARTS for part in path.relative_to(run_root).parts
+            ):
                 continue
             if path == run_root / "queue.log":
                 yield Upload(
@@ -223,8 +235,17 @@ def iter_run_uploads(runs_dir: Path) -> Iterator[Upload]:
 
 def iter_task_uploads(catalog: Path) -> Iterator[Upload]:
     for task_dir in sorted(p for p in catalog.iterdir() if p.is_dir()):
+        # ``.pi-glla`` and similar control directories can live below the
+        # catalog while an agent session is active.  They are never task
+        # assets and must not cross the publication boundary.
+        if task_dir.name.startswith("."):
+            continue
         for path in sorted(task_dir.rglob("*")):
-            if not path.is_file() or "__pycache__" in path.parts:
+            if (
+                path.is_symlink()
+                or not path.is_file()
+                or any(part in INTERNAL_PATH_PARTS for part in path.relative_to(task_dir).parts)
+            ):
                 continue
             rel = path.relative_to(task_dir).as_posix()
             key = f"{ROOT}/harbor-tasks/{task_dir.name}/{rel}"
@@ -233,8 +254,32 @@ def iter_task_uploads(catalog: Path) -> Iterator[Upload]:
 
 def upload_one(bucket: oss2.Bucket, item: Upload, overwrite: bool) -> str:
     if not overwrite and bucket.object_exists(item.key):
+        try:
+            existing = bucket.head_object(item.key)
+        except Exception as exc:  # noqa: BLE001 - surface collision evidence
+            raise RuntimeError(
+                f"cannot verify existing object before skip: {item.key}: {exc}"
+            ) from exc
+        existing_size = getattr(existing, "content_length", None)
+        existing_digest = next(
+            (
+                str(value)
+                for key, value in getattr(existing, "headers", {}).items()
+                if str(key).casefold() == "x-oss-meta-sha256"
+            ),
+            None,
+        )
+        if existing_size != item.size or existing_digest != item.sha256:
+            raise RuntimeError(
+                f"remote object collision for {item.key}: "
+                f"size={existing_size!r}, sha256={existing_digest!r}"
+            )
         return "skipped"
-    bucket.put_object_from_file(item.key, str(item.local))
+    bucket.put_object_from_file(
+        item.key,
+        str(item.local),
+        headers={"x-oss-meta-sha256": item.sha256},
+    )
     return "uploaded"
 
 
@@ -272,14 +317,35 @@ def write_manifest(items: list[Upload], destination: Path) -> None:
 
     rows = []
     for item in sorted(items, key=lambda value: value.key):
-        digest = hashlib.sha256(item.local.read_bytes()).hexdigest()
-        rows.append({"key": item.key, "size": item.size, "sha256": digest})
+        rows.append({"key": item.key, "size": item.size, "sha256": item.sha256})
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(
-        json.dumps({"schema_version": "1.0", "objects": rows}, sort_keys=True, indent=2)
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "hash_algorithm": "sha256",
+                "objects": rows,
+            },
+            sort_keys=True,
+            indent=2,
+        )
         + "\n",
         encoding="utf-8",
     )
+
+
+def secret_shaped_paths(items: list[Upload]) -> list[str]:
+    """Scan exact upload files and return paths only, never secret bytes."""
+
+    findings: list[str] = []
+    for item in items:
+        try:
+            data = item.local.read_bytes()
+        except OSError:
+            continue
+        if any(pattern.search(data) for pattern in SECRET_PATTERNS):
+            findings.append(str(item.local))
+    return findings
 
 
 def main() -> int:
@@ -294,6 +360,13 @@ def main() -> int:
         type=Path,
         help="Write a local key/size/SHA-256 manifest before upload or dry-run output.",
     )
+    parser.add_argument(
+        "--remote-manifest-key",
+        help=(
+            "Upload the local manifest to this OSS key after payloads succeed. "
+            "Required for remote checksum verification."
+        ),
+    )
     parser.add_argument("--skip-tasks", action="store_true")
     parser.add_argument("--skip-runs", action="store_true")
     parser.add_argument("--readme", type=Path)
@@ -304,6 +377,20 @@ def main() -> int:
         items += list(iter_task_uploads(args.catalog))
     if not args.skip_runs and args.runs_dir.is_dir():
         items += list(iter_run_uploads(args.runs_dir))
+    if args.readme and args.readme.is_file():
+        items.append(
+            Upload(
+                local=args.readme,
+                key=f"{ROOT}/README.md",
+                size=args.readme.stat().st_size,
+            )
+        )
+
+    secret_paths = secret_shaped_paths(items)
+    if secret_paths:
+        for path in secret_paths[:20]:
+            print(f"secret-shaped content blocks upload: {path}", file=sys.stderr)
+        return 2
 
     if args.manifest:
         write_manifest(items, args.manifest)
@@ -315,6 +402,8 @@ def main() -> int:
             print(f"  {item.key}")
         if len(items) > 20:
             print(f"  ... {len(items) - 20} more")
+        if args.remote_manifest_key and args.manifest:
+            print(f"manifest_remote=oss://{BUCKET}/{args.remote_manifest_key}")
         return 0
 
     try:
@@ -332,9 +421,15 @@ def main() -> int:
     bucket = oss2.Bucket(oss2.Auth(key_id, key_secret), ENDPOINT, BUCKET)
     stats = run_uploads(bucket, items, args.workers, args.overwrite, "upload")
 
-    if args.readme and args.readme.is_file():
-        bucket.put_object_from_file(f"{ROOT}/README.md", str(args.readme))
-        print(f"readme: oss://{BUCKET}/{ROOT}/README.md")
+    if stats.failed == 0 and args.manifest and args.remote_manifest_key:
+        bucket.put_object_from_file(
+            args.remote_manifest_key,
+            str(args.manifest),
+            headers={
+                "x-oss-meta-sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest()
+            },
+        )
+        print(f"manifest_remote=oss://{BUCKET}/{args.remote_manifest_key}")
 
     print(
         f"\nuploaded={stats.uploaded} skipped={stats.skipped} "
