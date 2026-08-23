@@ -96,7 +96,7 @@ protocol，必须整体替换 producer、validator、grader、fixtures 和基线
 3. 为每题重新确认完整 commit、license、环境 digest、依赖 closure、private tests、
    frozen collection 和 subprocess boundary；
 4. 重新编译 canonical manifest、Harbor bundle、verifier 和 dataset；
-5. 运行 Oracle 三次及 empty/stub/forgery/install-failure/hang/offline controls；
+5. 当前 Package campaign 运行一次 Oracle 及 empty/stub/forgery/install-failure/hang/offline controls；跨运行稳定性另建实验版本；
 6. 不能证明 provenance、denominator、offline closure 或 candidate boundary 的题继续
    `blocked`，不能用旧 projection 猜测补齐；
 7. 迁移完成后删除旧运行时 reader/compiler/grader，而不是在新代码中保留 fallback。
