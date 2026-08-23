@@ -17,7 +17,13 @@ LLM_RETRY_MAX_WAIT="${LLM_RETRY_MAX_WAIT:-120}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)-${TASK_ID}}"
 RUN_ROOT="${RUN_ROOT:-.nl2repo/runs/model}"
 
-task_path="catalog/tasks/${TASK_ID}/harbor"
+if [[ -n "${HARBOR_TASK_PATH:-}" ]]; then
+  task_path="$HARBOR_TASK_PATH"
+elif [[ -n "${HARBOR_TASK_ROOT:-}" ]]; then
+  task_path="$HARBOR_TASK_ROOT/$TASK_ID"
+else
+  task_path="catalog/tasks/${TASK_ID}/harbor"
+fi
 job_dir="${RUN_ROOT}/${RUN_ID}"
 task_config="${task_path}/task.toml"
 
@@ -26,6 +32,7 @@ if [[ "$job_dir" != /* ]]; then
 fi
 harbor_jobs_dir="$job_dir"
 
+[[ "$task_path" != *$'\n'* ]] || { echo "invalid Harbor task path" >&2; exit 1; }
 [[ -d "$task_path" ]] || { echo "missing Harbor task: $task_path" >&2; exit 1; }
 [[ -f "$task_config" ]] || { echo "missing Harbor config: $task_config" >&2; exit 1; }
 mkdir -p "$job_dir"
@@ -84,11 +91,16 @@ if [[ "$RETRY_INFRA" == "1" ]]; then
   )
 fi
 
+if [[ "$task_path" == /* ]]; then
+  harbor_task_path="$task_path"
+else
+  harbor_task_path="../$task_path"
+fi
 cd harbor-runner
 set +e
 env PYTHONPATH=../src:${PYTHONPATH:-} \
   uv run --frozen python ../scripts/harbor_safe_entry.py run \
-  -p "../$task_path" \
+  -p "$harbor_task_path" \
   -e nl2repobench.harbor_docker:StdinSecretDockerEnvironment \
   -a nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction \
   -m "$MODEL" \

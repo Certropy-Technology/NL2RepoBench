@@ -76,7 +76,8 @@ def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
         "gpt-5.6-sol",
         "claude-fable-5",
     }
-    assert all(item["concurrency"] == 1 for item in plan["models"])
+    assert all(item["concurrency"] == 2 for item in plan["models"])
+    assert plan["max_total_concurrency"] == 4
     assert "test-key-not-written-to-plan" not in json.dumps(plan)
 
 

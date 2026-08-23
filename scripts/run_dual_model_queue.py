@@ -110,7 +110,11 @@ def build_plan(
     lock_root: Path,
     models_file: Path,
     existing_inventory: Path | None = None,
+    per_model_concurrency: int = 2,
+    harbor_task_root: Path | None = None,
 ) -> dict[str, Any]:
+    if not 1 <= per_model_concurrency <= 4:
+        raise ValueError("per_model_concurrency must be between 1 and 4")
     tasks = campaign_tasks(campaign_path)
     _, refs_by_task = existing_model_runs(existing_inventory)
     existing_tasks = set(refs_by_task)
@@ -132,7 +136,10 @@ def build_plan(
                 "run_root": str((run_root / spec.run_prefix).resolve()),
                 "lock_root": str((lock_root / spec.run_prefix).resolve()),
                 "retry_policy": "infrastructure-only",
-                "concurrency": 1,
+                "concurrency": per_model_concurrency,
+                "harbor_task_root": str(harbor_task_root.resolve())
+                if harbor_task_root is not None
+                else None,
             }
         )
     return {
@@ -153,6 +160,8 @@ def build_plan(
         },
         "models": queues,
         "credential_policy": "Pi provider config only; no key in plan or argv",
+        "per_model_concurrency": per_model_concurrency,
+        "max_total_concurrency": per_model_concurrency * len(MODEL_SPECS),
     }
 
 
@@ -175,10 +184,12 @@ def _run_queue(queue: dict[str, Any], models_file: Path) -> dict[str, Any]:
         "--lock-root",
         queue["lock_root"],
         "--concurrency",
-        "1",
+        str(queue.get("concurrency", 2)),
         "--models-file",
         str(models_file),
     ]
+    if queue.get("harbor_task_root"):
+        command.extend(["--harbor-task-root", queue["harbor_task_root"]])
     completed = subprocess.run(command, cwd=Path(__file__).parents[1], check=False)
     return {
         "model": queue["model_id"],
@@ -212,6 +223,8 @@ def main() -> int:
         type=Path,
         help="Trusted JSON inventory of OSS runs to skip; entries must declare source=oss.",
     )
+    parser.add_argument("--per-model-concurrency", type=int, default=2)
+    parser.add_argument("--harbor-task-root", type=Path)
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     try:
@@ -221,6 +234,8 @@ def main() -> int:
             lock_root=args.lock_root,
             models_file=args.models_file,
             existing_inventory=args.existing_inventory,
+            per_model_concurrency=args.per_model_concurrency,
+            harbor_task_root=args.harbor_task_root,
         )
     except (OSError, ValueError) as exc:
         print(f"dual model plan failed: {exc}", file=sys.stderr)
