@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "provider": "z-open-api-fabel5",
+  "model": "claude-fable-5",
+  "base_url_probe": {
+    "endpoint": "/v1/messages",
+    "http_status": 200,
+    "simple_tool_input": "preserved"
+  },
+  "protocol_matrix": [
+    {"mode": "thinking-enabled", "tool_input": "empty-object"},
+    {"mode": "thinking-adaptive", "short-prompt-tool-input": "preserved"},
+    {"mode": "long-openhands-prompt", "tool-input": "intermittently-empty-or-no-call"}
+  ],
+  "fixes_attempted": [
+    "model-scoped adaptive thinking via litellm_extra_body",
+    "merge rather than overwrite adapter extra body",
+    "native tool calling disabled text-tool fallback"
+  ],
+  "evidence": {
+    "short_node_success": ".nl2repo/runs/model/node-production-canonicalize-fable-adaptive-v4",
+    "long_python_retry": ".nl2repo/runs/model/fable-autojump-native-fallback-20260824"
+  },
+  "classification": "infrastructure",
+  "decision": "do not retry long Python Fable tasks until provider/model context-tool contract changes"
+}

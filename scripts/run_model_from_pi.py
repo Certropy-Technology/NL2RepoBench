@@ -79,7 +79,10 @@ def provider_runtime_env(api: str, model_id: str) -> dict[str, str]:
     """
 
     if api == "anthropic-messages" and model_id == "claude-fable-5":
-        return {"LLM_ANTHROPIC_THINKING_MODE": "adaptive"}
+        return {
+            "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
+            "LLM_ANTHROPIC_NATIVE_TOOLS": "0",
+        }
     return {}
 
 

@@ -76,6 +76,11 @@ ADAPTIVE_THINKING_PATCH = (
         # provider-neutral reasoning_effort parameter.
         llm_kwargs.pop("reasoning_effort", None)
         llm_kwargs["litellm_extra_body"] = {"thinking": {"type": "adaptive"}}
+    if (
+        os.environ.get("LLM_ANTHROPIC_NATIVE_TOOLS") == "0"
+        and model.startswith("anthropic/")
+    ):
+        llm_kwargs["native_tool_calling"] = False
 """
 )
 

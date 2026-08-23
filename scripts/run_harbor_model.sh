@@ -74,6 +74,9 @@ agent_env_args=(
 if [[ -n "${LLM_ANTHROPIC_THINKING_MODE:-}" ]]; then
   agent_env_args+=(--ae "LLM_ANTHROPIC_THINKING_MODE=$LLM_ANTHROPIC_THINKING_MODE")
 fi
+if [[ -n "${LLM_ANTHROPIC_NATIVE_TOOLS:-}" ]]; then
+  agent_env_args+=(--ae "LLM_ANTHROPIC_NATIVE_TOOLS=$LLM_ANTHROPIC_NATIVE_TOOLS")
+fi
 
 cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup

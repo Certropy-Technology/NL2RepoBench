@@ -354,7 +354,10 @@ def test_pi_launcher_scopes_fable_adaptive_thinking_to_fable() -> None:
 
     assert launcher.provider_runtime_env(
         "anthropic-messages", "claude-fable-5"
-    ) == {"LLM_ANTHROPIC_THINKING_MODE": "adaptive"}
+    ) == {
+        "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
+        "LLM_ANTHROPIC_NATIVE_TOOLS": "0",
+    }
     assert launcher.provider_runtime_env(
         "anthropic-messages", "claude-sonnet-5"
     ) == {}
