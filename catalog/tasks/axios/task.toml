@@ -1,0 +1,59 @@
+schema_version = "2.0"
+task_id = "axios"
+version = "0.1.0"
+
+[metadata]
+language = "node"
+difficulty = "unknown"
+category = "http-client"
+tags = ["node", "npm", "http", "json-boundary"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/axios/axios"
+revision = "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25"
+license_spdx = "MIT"
+source_digest = "sha256:e81bdadfeb7d7a3bcd31aaf85f6cf269d03e55176f73daf604330697b0fb83d1"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["follow-redirects", "form-data", "https-proxy-agent", "proxy-from-env"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 1548
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+reason = "Axios is an HTTP/network client and its upstream suite is Vitest/browser/module/smoke based; it cannot satisfy the JSON-only no-network first slice without narrowing behavior and authoring a new private node:test bundle."
