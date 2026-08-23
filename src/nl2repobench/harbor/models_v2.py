@@ -40,7 +40,7 @@ class NodeImageLockV2(V2RecordModel):
 
 
 class NodeRuntimeLockV2(V2RecordModel):
-    runtime_version: str = Field(pattern=r"^22\.[0-9]+\.[0-9]+$")
+    runtime_version: str = Field(pattern=r"^(?:22|24)\.[0-9]+\.[0-9]+$")
     npm_version: str = Field(pattern=SEMVER_PATTERN)
     libc: Literal["glibc", "musl"]
     executable: str = "/usr/local/bin/node"
@@ -52,7 +52,8 @@ class NodeHarborToolchainLockV2(V2RecordModel):
     harbor: HarborVersionLock
     images: NodeImageLockV2
     runtime: NodeRuntimeLockV2
-    python_grader: Literal["absent", "locked"] = "absent"
+    node_grader: Literal["absent", "locked"] = "absent"
+    node_runtime_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")
     node_report_schema: Literal["node-test-json-v1"] = "node-test-json-v1"
 
     @model_validator(mode="after")
@@ -61,8 +62,10 @@ class NodeHarborToolchainLockV2(V2RecordModel):
             raise ValueError("Node Harbor compiler requires task schema 1.4")
         if self.status == "locked" and self.images.status != "locked":
             raise ValueError("locked Node toolchain requires locked images")
-        if self.status == "locked" and self.python_grader != "locked":
-            raise ValueError("production Node toolchain requires a locked grader")
+        if self.status == "locked" and self.node_grader != "locked":
+            raise ValueError("production Node toolchain requires a locked Node grader")
+        if self.status == "locked" and self.node_runtime_sha256 is None:
+            raise ValueError("production Node toolchain requires a Node runtime hash")
         return self
 
 

@@ -164,10 +164,13 @@ def _validate_oracle(task: dict[str, Any], task_id: str) -> None:
 
 def _validate_controls(task: dict[str, Any], task_id: str) -> None:
     controls = _required_dict(task.get("controls"), f"tasks[{task_id}].controls")
-    missing = REQUIRED_CONTROLS - set(controls)
+    required_controls = set(REQUIRED_CONTROLS)
+    if task.get("language") == "node":
+        required_controls.update({"install-script", "loader-hook", "hang"})
+    missing = required_controls - set(controls)
     if missing:
         raise ValueError(f"{task_id}: missing controls: {', '.join(sorted(missing))}")
-    for name in sorted(REQUIRED_CONTROLS):
+    for name in sorted(required_controls):
         result = _required_dict(controls[name], f"{task_id}.controls.{name}")
         if result.get("passed") is not True:
             raise ValueError(f"{task_id}: control {name} did not pass")
@@ -179,7 +182,7 @@ def _validate_controls(task: dict[str, Any], task_id: str) -> None:
         result_kind = result.get("result")
         if not isinstance(result_kind, str) or not result_kind:
             raise ValueError(f"{task_id}: control {name} lacks a structured result")
-        if name in {"empty", "stub", "forgery"}:
+        if name in {"empty", "stub"}:
             reward = result.get("reward")
             if (
                 isinstance(reward, bool)
@@ -188,6 +191,15 @@ def _validate_controls(task: dict[str, Any], task_id: str) -> None:
                 or not 0 <= reward <= 0.20
             ):
                 raise ValueError(f"{task_id}: control {name} reward is not near zero")
+        elif name in {"forgery", "loader-hook", "offline"}:
+            reward = result.get("reward")
+            if (
+                isinstance(reward, bool)
+                or not isinstance(reward, (int, float))
+                or not math.isfinite(float(reward))
+                or not 0 <= reward < 1
+            ):
+                raise ValueError(f"{task_id}: control {name} was not bounded below a full score")
         else:
             if result.get("completed") is not True:
                 raise ValueError(f"{task_id}: control {name} did not complete")

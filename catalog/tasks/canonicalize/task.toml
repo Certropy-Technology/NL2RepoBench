@@ -20,48 +20,47 @@ submodules = []
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-base_image = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
-base_image_digest = "sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
 runtime = "node"
-version = "22.23.1"
+version = "24.19.0"
 package_manager = "npm"
-package_manager_version = "10.9.8"
+package_manager_version = "11.17.0"
 architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-# The upstream revision has no lockfile. A reviewed npm v3 lock/cache closure
-# is required before this task can move beyond development authoring.
-status = "unknown"
+# Generated and validated from the exact source revision with npm 11.17.0.
+status = "known"
 ecosystem = "npm"
 consumer = "candidate-runtime"
 lockfile_name = "package-lock.json"
 lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "10.9.8"
+package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-packages = []
+artifact = { digest = "sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", size_bytes = 4321280, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", visibility = "private" }
+packages = ["@eslint/js", "c8", "eslint", "globals"]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 40
-# V2 currently permits only "frozen-collection" for this field. Here it names
-# a development observation, not a production private test artifact or Oracle
-# gate; lifecycle=specified and publication_gaps keep compilation fail-closed.
+expected_total = 10
 expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:cee1b3612813db19dbc6c5ef687b4cb81418b9376be2a3f431baf66a5f1c0097", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:cee1b3612813db19dbc6c5ef687b4cb81418b9376be2a3f431baf66a5f1c0097", visibility = "private" }
+test_bundle = { digest = "sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
-description = "Development-only Node ESM pilot for deterministic JSON canonicalization."
+description = "Production Node ESM vertical slice for deterministic JSON canonicalization."
 keywords = ["node", "npm", "esm", "json", "rfc8785", "serialization"]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
@@ -75,5 +74,14 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "specified"
-reason = "Development-only authoring pilot; private dependency, test, grader, Oracle, and control artifacts are intentionally absent."
+status = "packaged"
+owner = "integrator"
+reason = "Production Node vertical slice; Oracle and controls are recorded in the campaign gate."
+approval_refs = ["node-production-vertical-slice-v1"]
+
+[oracle_bundle]
+digest = "sha256:5edebff66c2e4b4bed40e1a3a4ab726d62511b3314442a24e2e08403afd292d9"
+size_bytes = 133120
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:5edebff66c2e4b4bed40e1a3a4ab726d62511b3314442a24e2e08403afd292d9"
+visibility = "private"

@@ -285,7 +285,21 @@ def validate_npm_package_tarball(archive: Path) -> None:
             raise NodeDependencyError("candidate npm tarball lacks package/package.json")
         if not isinstance(package_json, dict):
             raise NodeDependencyError("candidate package.json must be an object")
-        if "scripts" in package_json:
+        lifecycle_hooks = {
+            "preinstall",
+            "install",
+            "postinstall",
+            "prepare",
+            "prepublish",
+            "prepublishonly",
+            "publish",
+            "postpublish",
+        }
+        scripts = package_json.get("scripts")
+        if scripts is not None and (
+            not isinstance(scripts, dict)
+            or any(str(name).casefold() in lifecycle_hooks for name in scripts)
+        ):
             raise NodeDependencyError("candidate lifecycle scripts are forbidden")
         if "workspaces" in package_json:
             raise NodeDependencyError("npm workspaces are forbidden")

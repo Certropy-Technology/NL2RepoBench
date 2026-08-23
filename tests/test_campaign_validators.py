@@ -52,15 +52,28 @@ def _evidence(task_id: str, language: str, dataset_id: str) -> dict[str, object]
         name: {
             "passed": True,
             "evidence": [f"controls/{name}/result.json"],
-            "result": "low-score" if name in {"empty", "stub", "forgery"} else "completed",
+            "result": (
+                "low-score"
+                if name in {"empty", "stub", "forgery", "offline"}
+                else "completed"
+            ),
             **(
                 {"reward": 0.0}
-                if name in {"empty", "stub", "forgery"}
+                if name in {"empty", "stub", "forgery", "offline"}
                 else {"completed": True}
             ),
         }
         for name in campaign.REQUIRED_CONTROLS
     }
+    if language == "node":
+        for name in ("install-script", "loader-hook", "hang"):
+            controls[name] = {
+                "passed": True,
+                "evidence": [f"controls/{name}/result.json"],
+                "result": "completed",
+                "completed": True,
+                "reward": 0.6 if name == "loader-hook" else 0.0,
+            }
     return {
         "task_id": task_id,
         "language": language,
@@ -198,12 +211,12 @@ def test_campaign_allows_existing_oss_task_without_new_oracle_or_model_runs(
                         "evidence": [f"controls/{name}/result.json"],
                         "result": (
                             "low-score"
-                            if name in {"empty", "stub", "forgery"}
+                            if name in {"empty", "stub", "forgery", "offline"}
                             else "completed"
                         ),
                         **(
                             {"reward": 0.0}
-                            if name in {"empty", "stub", "forgery"}
+                            if name in {"empty", "stub", "forgery", "offline"}
                             else {"completed": True}
                         ),
                     }

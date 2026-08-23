@@ -1,6 +1,11 @@
 # `canonicalize` Authoring Provenance
 
-Status: `specified` / development-only.
+Status: `packaged` / production vertical-slice passed.
+
+The production task intentionally scopes the private boundary to ten
+JSON-compatible canonicalization cases. Upstream object/callback and cycle
+tests are not silently counted because they cannot be represented by the
+JSON-only candidate client.
 
 This audit records the evidence used for the task-local Node v2 source. It is
 not a Harbor bundle, a private test package, or a publication approval.
@@ -21,6 +26,18 @@ not a Harbor bundle, a private test package, or a publication approval.
 
 The archive digest is recorded in `task.toml` as the v2 `SourceLock` digest.
 No upstream source files are copied into this task directory.
+
+## Production Gate
+
+- Production runtime: Node `24.19.0`, npm `11.17.0`, linux/amd64 image digest
+  `sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848`.
+- Private npm v3 dependency/cache bundle: `sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a`,
+  validated with `validate_npm_dependency_bundle`.
+- Production Harbor compile passed with `toolchain.node.lock.toml` and private
+  artifact authorization.
+- One Oracle gate passed: `valid=true`, collection `10`, reward `1.0`.
+- Node control matrix passed: empty, stub, forgery, install-script, loader-hook,
+  hang, and offline. See `reports/node-canonicalize-production-gate.v1.json`.
 
 ## License Revalidation
 

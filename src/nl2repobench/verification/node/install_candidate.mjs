@@ -1,4 +1,4 @@
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join } from "node:path";
 
@@ -49,14 +49,17 @@ if (tarballs.length !== 1) process.exit(71);
 run("/usr/local/bin/node", ["/tests/runtime/node/validate-package.mjs", join(target, tarballs[0])], target);
 run("/usr/local/bin/npm", ["install", join(target, tarballs[0]), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`, "--prefix", target], source);
 // npm installs the packed dependency tree but may not create a package root
-// descriptor for an empty prefix. Keep the resolver's cwd contract explicit.
-const sourcePackage = join(source, "package.json");
+// descriptor for an empty prefix. Keep the resolver's cwd contract explicit
+// without giving the candidate site the candidate's self-referencing name.
 const targetPackage = join(target, "package.json");
 try {
   statSync(targetPackage);
 } catch {
-  const { copyFileSync } = await import("node:fs");
-  copyFileSync(sourcePackage, targetPackage);
+  writeFileSync(
+    targetPackage,
+    JSON.stringify({ private: true, type: "module" }) + "\n",
+    { mode: 0o444 },
+  );
 }
 try {
   for (const name of readdirSync(target)) statSync(join(target, name));

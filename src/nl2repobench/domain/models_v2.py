@@ -31,7 +31,7 @@ from .models import (
 )
 
 SCHEMA_VERSION_V2: Literal["2.0"] = "2.0"
-NODE_VERSION_PATTERN = r"^22\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+NODE_VERSION_PATTERN = r"^(?:22|24)\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
 SEMVER_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
 
 
@@ -76,7 +76,10 @@ class RuntimeProfileV2(V2RecordModel):
             if self.runtime != "node":
                 raise ValueError("Node language requires the node runtime")
             if not re.fullmatch(NODE_VERSION_PATTERN, self.version):
-                raise ValueError("Node runtime version must be an exact 22.x.y version")
+                raise ValueError(
+                    "Node runtime version must be an exact supported "
+                    "22.x.y or 24.x.y version"
+                )
             if self.package_manager not in {"npm", "none"}:
                 raise ValueError("Node runtime supports npm or no package manager")
             if self.package_manager == "npm":
@@ -293,8 +296,8 @@ class TaskManifestV2(V2RecordModel):
             runtime = self.environment_lock.runtime
             if runtime is None:
                 gaps.append("environment.runtime")
-            elif runtime.version.split(".", 1)[0] != "22":
-                gaps.append("environment.runtime.version=node-22")
+            elif runtime.version.split(".", 1)[0] not in {"22", "24"}:
+                gaps.append("environment.runtime.version=node-22-or-24")
             if self.environment_lock.base_image_digest is None:
                 gaps.append("environment.base_image_digest")
         if self.dependency_bundle.status != "known":

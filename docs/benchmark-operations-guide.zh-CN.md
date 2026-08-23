@@ -28,7 +28,7 @@ NL2RepoBench 测量 Agent 从自然语言规格和空 `/workspace` 出发，生�
 | 路线 | 语言 | 状态 |
 | --- | --- | --- |
 | Legacy conversion | Python | 104 题状态文件当前为 74 complete、30 pending；catalog lifecycle 另由 reconciler 审计 |
-| Node/npm v2 pilot | Node 22/npm | development-only；synthetic vertical slice 已通过，不代表 production |
+| Node/npm lane | Node 24/npm 11 production lock；Node 22 synthetic dev fixture | `canonicalize` production compile + one Oracle + control matrix passed |
 
 `complete` 表示 task-local Harbor 包通过静态来源和结构校验，不代表通过 Oracle、
 empty/stub/forgery/offline controls。`blocked` 必须有证据，不能作为模型得分。

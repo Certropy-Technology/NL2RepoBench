@@ -67,6 +67,23 @@ class NodeHarborCompiler:
         digest = f"sha256:{hashlib.sha256(harbor_lock.read_bytes()).hexdigest()}"
         if digest != self.toolchain.harbor.lock_sha256:
             raise NodeHarborCompileError("Harbor runner lock digest does not match Node toolchain")
+        if self.toolchain.status == "locked":
+            runtime_digest = self._node_runtime_digest()
+            if runtime_digest != self.toolchain.node_runtime_sha256:
+                raise NodeHarborCompileError(
+                    "locked Node toolchain runtime helper digest does not match"
+                )
+
+    @staticmethod
+    def _node_runtime_digest() -> str:
+        runtime_root = Path(__file__).parents[1] / "verification/node"
+        digest = hashlib.sha256()
+        for path in sorted(path for path in runtime_root.rglob("*") if path.is_file()):
+            relative = path.relative_to(runtime_root).as_posix().encode("utf-8")
+            digest.update(relative)
+            digest.update(b"\0")
+            digest.update(hashlib.sha256(path.read_bytes()).digest())
+        return f"sha256:{digest.hexdigest()}"
 
     def compile_task(
         self,

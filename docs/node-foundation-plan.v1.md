@@ -129,7 +129,8 @@ class TestManifestV2:
 
 For Node publication, require:
 
-- exact Node 22 patch and npm version;
+- exact Node 24 LTS patch and npm version for production; Node 22 is retained only
+  by the development synthetic fixture;
 - digest-pinned image;
 - `linux/amd64` and explicit libc;
 - `metadata.language == runtime.language == "node"`;
@@ -251,7 +252,7 @@ The Node branch must:
 
 - use digest-pinned Node agent/verifier images;
 - generate a separate no-network verifier;
-- use a dual-runtime verifier image containing Node 22/npm and the existing locked Python grader, or implement a separately approved pure-Node grader;
+- use a digest-pinned Node 24/npm verifier with the separately locked pure-Node grader/helper tree;
 - copy only trusted Node helpers and v2 grader files;
 - keep private tests out of the agent image and build layers;
 - write and runtime-validate the v2 command plan;
@@ -268,7 +269,7 @@ Start with `domain/models.py:21-337` and add v2 records without changing v1 seri
 
 ## Security Boundary
 
-- Agent image contains only digest-pinned Node 22/npm and an empty `/workspace`.
+- Agent image contains only digest-pinned Node 24/npm and an empty `/workspace`.
 - Verifier is a separate no-network environment with private tests mode 0500 and root-owned logs.
 - Candidate workspace is copied with existing bounded regular-file checks.
 - npm cache is verifier-owned, read-only to candidate, and used only with explicit `--offline`.
@@ -342,7 +343,9 @@ Run empty, stub, forgery, install-script, loader-hook, hang, and offline control
 
 ## Residual Risks
 
-- No digest-pinned dual-runtime Node 22/npm plus Python-grader image exists in the checkout.
+- The production lane intentionally does not depend on a Python grader; the pure-Node
+  helper/grader tree is content-hash locked, but a real candidate vertical slice must
+  still pass Oracle and controls before publication.
 - npm `_cacache` and package-lock behavior are version-sensitive and must be tied to one exact npm patch.
 - `node:test` event/reporter behavior must be tested in the exact locked Node image.
 - ESM resolution and JSON serialization need an explicit public contract.

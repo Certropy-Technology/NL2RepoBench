@@ -100,4 +100,8 @@ if (Buffer.byteLength(encoded) > MAX_REPORT_BYTES) {
   process.exit(70);
 }
 writeFileSync(output, `${encoded}\n`, { encoding: "utf8", flag: "wx", mode: 0o400 });
-process.exitCode = runnerExitCode === 0 && cases.length === expected ? 0 : 1;
+process.exitCode = runnerExitCode === 70
+  ? 70
+  : runnerExitCode === 0 && cases.length === expected
+    ? 0
+    : 1;

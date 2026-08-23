@@ -1,14 +1,27 @@
 # Node/npm Foundation Status
 
-The additive Node/npm foundation is development-only in this checkout.
+The historical Node/npm synthetic foundation remains development-only; the
+production lane is now a separate Node 24 toolchain lock.
 
-- Host validation used Node `22.23.1` and npm `10.9.8` without contacting a registry.
-- `toolchain.node.lock.toml` records the exact runtime and Harbor `0.21.0` schema `1.4`.
-- The official Node `linux/amd64` manifest was verified as
-  `docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27`;
-  both development image entries use that digest.
-- Production Node compilation still fails closed because the private npm dependency
-  artifact and production verifier/grader lock have not been reviewed and added.
+- Synthetic development validation remains Node `22.23.1` / npm `10.9.8`.
+- `toolchain.node.lock.toml` now locks production Node `24.19.0` / npm `11.17.0`,
+  Harbor `0.21.0`, schema `1.4`, and a pure Node helper/grader tree digest.
+- The official Node 24 `linux/amd64` manifest is pinned as
+  `docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848`.
+- `toolchain.node.dev.lock.toml` preserves the old synthetic Node 22 development
+  fixture and must not be used for production tasks.
+
+## Production Vertical Slice
+
+- Candidate: `canonicalize`, exact source revision
+  `c1b08c3771d681c8bd9c4d8765e00f2f717482f8`.
+- Production compile uses Node 24.19.0/npm 11.17.0 and the private npm v3
+  offline closure; `uv run nl2repo harbor compile ... --toolchain
+  toolchain.node.lock.toml --allow-private` passed.
+- One Oracle run passed: `valid=true`, `10/10` collected/passed, reward `1.0`.
+- Node controls passed: empty, stub, forgery, install-script, loader-hook,
+  hang, and offline. Machine-readable evidence is in
+  `reports/node-canonicalize-production-gate.v1.json`.
 
 ## Development E2E evidence
 

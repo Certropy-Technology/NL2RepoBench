@@ -36,10 +36,19 @@ try {
   process.exit(69);
 }
 if (!packageJson || typeof packageJson !== "object" || Array.isArray(packageJson)) process.exit(70);
-if (
-  Object.hasOwn(packageJson, "scripts")
-  || Object.hasOwn(packageJson, "workspaces")
-  || Object.hasOwn(packageJson, "gypfile")
-  || Object.hasOwn(packageJson, "binary")
-) process.exit(71);
+const lifecycleHooks = new Set([
+  "preinstall",
+  "install",
+  "postinstall",
+  "prepare",
+  "prepublish",
+  "prepublishonly",
+  "publish",
+  "postpublish",
+]);
+if (Object.hasOwn(packageJson, "workspaces") || Object.hasOwn(packageJson, "gypfile") || Object.hasOwn(packageJson, "binary")) process.exit(71);
+if (packageJson.scripts !== undefined) {
+  if (!packageJson.scripts || typeof packageJson.scripts !== "object" || Array.isArray(packageJson.scripts)) process.exit(71);
+  if (Object.keys(packageJson.scripts).some((name) => lifecycleHooks.has(name.toLowerCase()))) process.exit(71);
+}
 process.exit(0);

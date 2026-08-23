@@ -1,0 +1,91 @@
+{
+  "controls": {
+    "empty": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/empty/2026-08-23__21-04-35/canonicalize__3XDeXBC/verifier/grading.json"
+      ],
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "passed": true,
+      "result": "near-zero model score",
+      "reward": 0,
+      "valid": true
+    },
+    "forgery": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/forgery/2026-08-23__21-05-51/canonicalize-forgery__KWkjwxA/artifacts/workspace/grading.json",
+        ".nl2repo/runs/controls/node-production-canonicalize-3/forgery/2026-08-23__21-05-51/canonicalize-forgery__KWkjwxA/verifier/grading.json"
+      ],
+      "failure_class": null,
+      "failure_reason": null,
+      "passed": true,
+      "result": "forged report cannot produce full score",
+      "reward": 0.6,
+      "valid": true
+    },
+    "hang": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/hang/2026-08-23__21-07-48/canonicalize-hang__ijUGMY5/verifier/grading.json"
+      ],
+      "failure_class": "verifier",
+      "failure_reason": "node-collection-error",
+      "passed": true,
+      "result": "hang terminated as verifier collection error",
+      "reward": 0,
+      "valid": false
+    },
+    "install-script": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/install-script/2026-08-23__21-06-30/canonicalize-install-script__SAuW4sd/verifier/grading.json"
+      ],
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "passed": true,
+      "result": "lifecycle script rejected",
+      "reward": 0,
+      "valid": true
+    },
+    "loader-hook": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/loader-hook/2026-08-23__21-07-08/canonicalize-loader-hook__7TECYes/verifier/grading.json"
+      ],
+      "failure_class": null,
+      "failure_reason": null,
+      "passed": true,
+      "result": "loader injection cannot produce full score",
+      "reward": 0.6,
+      "valid": true
+    },
+    "offline": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/offline/2026-08-23__21-19-58/canonicalize-offline__9wwTGCx/verifier/grading.json"
+      ],
+      "failure_class": null,
+      "failure_reason": null,
+      "passed": true,
+      "result": "network behavior cannot produce full score",
+      "reward": 0,
+      "valid": true
+    },
+    "stub": {
+      "completed": true,
+      "evidence": [
+        ".nl2repo/runs/controls/node-production-canonicalize-3/stub/2026-08-23__21-05-12/canonicalize-stub__dQ2aavb/verifier/grading.json"
+      ],
+      "failure_class": null,
+      "failure_reason": null,
+      "passed": true,
+      "result": "stub low score",
+      "reward": 0,
+      "valid": true
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "node-production-canonicalize-3"
+}

@@ -1,0 +1,27 @@
+{
+  "bundle_mode": "production",
+  "controls": {
+    "empty": true,
+    "forgery": true,
+    "hang": true,
+    "install-script": true,
+    "loader-hook": true,
+    "offline": true,
+    "stub": true
+  },
+  "oracle": {
+    "collected": 10,
+    "expected_total": 10,
+    "reward": 1,
+    "valid": true
+  },
+  "runtime": {
+    "executable": "/usr/local/bin/node",
+    "libc": "glibc",
+    "npm_executable": "/usr/local/bin/npm",
+    "npm_version": "11.17.0",
+    "runtime_version": "24.19.0"
+  },
+  "schema_version": "1.0",
+  "task_id": "canonicalize"
+}

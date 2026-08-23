@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const MAX_REQUEST_BYTES = 64 * 1024;
@@ -55,9 +56,17 @@ async function main() {
     try {
       candidate = require(packageName);
     } catch (error) {
-      if (error?.code !== "ERR_REQUIRE_ESM") throw error;
-      const resolved = require.resolve(packageName);
-      candidate = await import(pathToFileURL(resolved).href);
+      if (error?.code !== "ERR_REQUIRE_ESM" && error?.code !== "ERR_PACKAGE_PATH_NOT_EXPORTED") throw error;
+      const packageRoot = join(process.cwd(), "node_modules", packageName);
+      const packageManifest = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+      const exports = packageManifest.exports;
+      const entry = typeof exports === "string"
+        ? exports
+        : exports?.["."]?.import ?? exports?.import ?? packageManifest.module ?? packageManifest.main;
+      if (typeof entry !== "string" || !entry.startsWith("./") || entry.includes("..")) {
+        throw new Error("allowlisted package has no safe ESM entry");
+      }
+      candidate = await import(pathToFileURL(join(packageRoot, entry)).href);
     }
     const value = candidate[exportName];
     if (typeof value !== "function") {

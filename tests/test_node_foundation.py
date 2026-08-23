@@ -41,7 +41,8 @@ from nl2repobench.verification.node_models import NodeVerificationReason
 
 ROOT = Path(__file__).parents[1]
 NODE_TASK = ROOT / "catalog/tasks/node-synthetic"
-NODE_TOOLCHAIN = ROOT / "toolchain.node.lock.toml"
+NODE_TOOLCHAIN = ROOT / "toolchain.node.dev.lock.toml"
+NODE_PRODUCTION_TOOLCHAIN = ROOT / "toolchain.node.lock.toml"
 
 
 def _report(
@@ -83,7 +84,13 @@ def test_v2_runtime_and_npm_versions_are_exact() -> None:
     )
     assert profile.schema_version == "2.0"
     assert load_node_toolchain_lock(NODE_TOOLCHAIN).runtime.runtime_version == "22.23.1"
-    with pytest.raises(ValueError, match="exact 22.x.y"):
+    production = load_node_toolchain_lock(NODE_PRODUCTION_TOOLCHAIN)
+    assert production.status == "locked"
+    assert production.node_grader == "locked"
+    assert production.node_runtime_sha256 is not None
+    assert production.runtime.runtime_version == "24.19.0"
+    assert production.runtime.npm_version == "11.17.0"
+    with pytest.raises(ValueError, match="supported 22.x.y or 24.x.y"):
         RuntimeProfileV2(
             language="node",
             runtime="node",
@@ -165,6 +172,19 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
 def test_v2_production_compilation_fails_closed(tmp_path: Path) -> None:
     with pytest.raises(NodeHarborCompileError, match="development-only|unsupported"):
         NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(NODE_TASK, tmp_path / "output")
+
+
+def test_locked_node_toolchain_rejects_runtime_helper_drift(tmp_path: Path) -> None:
+    toolchain = tmp_path / "toolchain.node.lock.toml"
+    (tmp_path / "harbor-runner").mkdir()
+    shutil.copy2(ROOT / "harbor-runner/uv.lock", tmp_path / "harbor-runner/uv.lock")
+    text = NODE_PRODUCTION_TOOLCHAIN.read_text(encoding="utf-8").replace(
+        "f3d988ea38f439082388183bb825eb5001c903b0cbeee3bc48f005a8a7d7e756",
+        "0" * 64,
+    )
+    toolchain.write_text(text, encoding="utf-8")
+    with pytest.raises(NodeHarborCompileError, match="runtime helper digest"):
+        NodeHarborCompiler(toolchain)
 
 
 def test_node_report_grades_leaf_statuses_and_todo_denominator() -> None:
@@ -290,6 +310,27 @@ def test_npm_package_tar_rejects_traversal_and_links(tmp_path: Path) -> None:
         archive.addfile(info)
     with pytest.raises(NodeDependencyError, match="link/device"):
         validate_npm_package_tarball(linked)
+
+
+def test_npm_package_tar_allows_non_lifecycle_scripts(tmp_path: Path) -> None:
+    archive = tmp_path / "scripts.tgz"
+    package_json = json.dumps(
+        {"name": "demo", "version": "1.0.0", "scripts": {"test": "node test.js"}}
+    ).encode()
+    archive.write_bytes(_tar_bytes([("package/package.json", package_json)]))
+
+    validate_npm_package_tarball(archive)
+
+
+def test_npm_package_tar_rejects_install_lifecycle_script(tmp_path: Path) -> None:
+    archive = tmp_path / "lifecycle.tgz"
+    package_json = json.dumps(
+        {"name": "demo", "version": "1.0.0", "scripts": {"postinstall": "node build.js"}}
+    ).encode()
+    archive.write_bytes(_tar_bytes([("package/package.json", package_json)]))
+
+    with pytest.raises(NodeDependencyError, match="lifecycle"):
+        validate_npm_package_tarball(archive)
 
 
 def test_node_runtime_report_script_collects_eight_leaf_tests(tmp_path: Path) -> None:
@@ -519,7 +560,12 @@ def test_npm_package_tarball_accepts_clean_package(tmp_path: Path) -> None:
     ("members", "message"),
     [
         (
-            [("package/package.json", b'{"name":"demo","version":"1.0.0","scripts":{"x":"bad"}}')],
+                [
+                    (
+                        "package/package.json",
+                        b'{"name":"demo","version":"1.0.0","scripts":{"postinstall":"bad"}}',
+                    )
+                ],
             "lifecycle",
         ),
         (
@@ -588,6 +634,9 @@ def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.Mon
     assert "--offline" in node_candidate_install.npm_install_tar_command(
         Path("/pack/pkg.tgz"), Path("/target"), Path("/cache")
     )
+    assert "timeout" in (
+        ROOT / "catalog/tasks/node-synthetic/harbor/tests/test_client.mjs"
+    ).read_text(encoding="utf-8")
     with pytest.raises(ValueError, match="regular directory"):
         node_candidate_install._check_directory(Path("/missing"), "source")  # noqa: SLF001
 

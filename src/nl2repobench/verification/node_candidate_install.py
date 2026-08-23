@@ -163,6 +163,12 @@ def install_candidate(
         )
         if installed["returncode"] != 0:
             return {"outcome": "package-install-failed", "steps": [ci, packed, installed]}
+        root_manifest = target / "package.json"
+        if not root_manifest.exists():
+            atomic_write(
+                root_manifest,
+                b'{"private":true,"type":"module"}\n',
+            )
         terminate_uid_processes(10001)
         return {"outcome": "success", "steps": [ci, packed, installed]}
 

@@ -7,8 +7,12 @@ export function callCandidate(exportName, args) {
   const site = process.env.NODE_CANDIDATE_SITE;
   if (!site) throw new Error("candidate site is not configured");
   const result = spawnSync(
-    "runuser",
+    "/usr/bin/timeout",
     [
+      "--signal=TERM",
+      "--kill-after=5s",
+      "30s",
+      "runuser",
       "-u",
       "candidate",
       "--",
