@@ -1,4 +1,10 @@
-# 300 道 Harbor Task 扩展计划
+# 300 道 Harbor Task 扩展计划（Historical）
+
+> This is a superseded historical plan. The active Package campaign targets
+> 500+ cumulative publishable tasks, uses one Oracle run, and skips a task
+> whenever the trusted OSS inventory already contains a finished run. The x3
+> Oracle requirements below are historical evidence and must not be applied to
+> the active campaign.
 
 目标：在不伪造 provenance、测试分母、依赖 closure 或 verifier boundary 的前提下，
 将 NL2RepoBench 扩展到 **300+ 道 published Harbor Task，并对同一批 300+ task_id

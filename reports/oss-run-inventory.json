@@ -1,0 +1,1767 @@
+{
+  "bucket": "dingshang-sg",
+  "object_count_scanned": 37578,
+  "prefix": "nl2repobench/runs/",
+  "run_count": 94,
+  "runs": [
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/aiofiles/batch-fable--2026-08-19__19-19-06/result.json",
+        "nl2repobench/runs/claude-fable-5/aiofiles/batch-fable--2026-08-19__19-19-06/harbor__UNMNcPM/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:02:15.115441",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/aiofiles/batch-fable--2026-08-19__19-19-06/harbor__UNMNcPM/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/aiofiles/batch-fable--2026-08-19__19-19-06/",
+      "result_key": "nl2repobench/runs/claude-fable-5/aiofiles/batch-fable--2026-08-19__19-19-06/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "batch-fable--2026-08-19__19-19-06"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-fable5-xhigh/legacy-results--2026-08-18__16-26-12/result.json",
+        "nl2repobench/runs/claude-fable-5/arguably-fable5-xhigh/legacy-results--2026-08-18__16-26-12/arguably__HBu5MHh/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T16:27:59.788629",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-fable5-xhigh/legacy-results--2026-08-18__16-26-12/arguably__HBu5MHh/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably-fable5-xhigh/legacy-results--2026-08-18__16-26-12/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably-fable5-xhigh/legacy-results--2026-08-18__16-26-12/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "legacy-results--2026-08-18__16-26-12"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v3/model-fable-v3--2026-08-19__15-58-52/result.json",
+        "nl2repobench/runs/claude-fable-5/arguably-v3/model-fable-v3--2026-08-19__15-58-52/harbor__bPBvEz5/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T16:26:24.598977",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v3/model-fable-v3--2026-08-19__15-58-52/harbor__bPBvEz5/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably-v3/model-fable-v3--2026-08-19__15-58-52/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably-v3/model-fable-v3--2026-08-19__15-58-52/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "model-fable-v3--2026-08-19__15-58-52"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v4/model-fable-v4--2026-08-19__16-17-19/result.json",
+        "nl2repobench/runs/claude-fable-5/arguably-v4/model-fable-v4--2026-08-19__16-17-19/harbor__FpiqKXb/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T16:53:52.672398",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v4/model-fable-v4--2026-08-19__16-17-19/harbor__FpiqKXb/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably-v4/model-fable-v4--2026-08-19__16-17-19/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably-v4/model-fable-v4--2026-08-19__16-17-19/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "model-fable-v4--2026-08-19__16-17-19"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v5/model-fable-v5--2026-08-19__16-53-54/result.json",
+        "nl2repobench/runs/claude-fable-5/arguably-v5/model-fable-v5--2026-08-19__16-53-54/harbor__FU7vaxV/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T17:43:09.452341",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v5/model-fable-v5--2026-08-19__16-53-54/harbor__FU7vaxV/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably-v5/model-fable-v5--2026-08-19__16-53-54/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably-v5/model-fable-v5--2026-08-19__16-53-54/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "model-fable-v5--2026-08-19__16-53-54"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v3--2026-08-19__12-57-53/result.json"
+      ],
+      "finished_at": "2026-08-19T12:59:08.460522",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v3--2026-08-19__12-57-53/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v3--2026-08-19__12-57-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "model-pilot-v3--2026-08-19__12-57-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v4--2026-08-19__13-03-31/result.json",
+        "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v4--2026-08-19__13-03-31/harbor__q2siobW/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T13:14:20.402976",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v4--2026-08-19__13-03-31/harbor__q2siobW/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v4--2026-08-19__13-03-31/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably/model-pilot-v4--2026-08-19__13-03-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "model-pilot-v4--2026-08-19__13-03-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v2/model-retry-fable-v2--2026-08-19__15-33-31/result.json",
+        "nl2repobench/runs/claude-fable-5/arguably-v2/model-retry-fable-v2--2026-08-19__15-33-31/harbor__rDiBux7/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T15:49:28.835317",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/arguably-v2/model-retry-fable-v2--2026-08-19__15-33-31/harbor__rDiBux7/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/arguably-v2/model-retry-fable-v2--2026-08-19__15-33-31/",
+      "result_key": "nl2repobench/runs/claude-fable-5/arguably-v2/model-retry-fable-v2--2026-08-19__15-33-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "model-retry-fable-v2--2026-08-19__15-33-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/asteval/expansion-fable-v3--2026-08-19__22-21-56/result.json",
+        "nl2repobench/runs/claude-fable-5/asteval/expansion-fable-v3--2026-08-19__22-21-56/harbor__sP7B5jX/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T22:38:09.587779",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/asteval/expansion-fable-v3--2026-08-19__22-21-56/harbor__sP7B5jX/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/asteval/expansion-fable-v3--2026-08-19__22-21-56/",
+      "result_key": "nl2repobench/runs/claude-fable-5/asteval/expansion-fable-v3--2026-08-19__22-21-56/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "asteval",
+      "trial": "expansion-fable-v3--2026-08-19__22-21-56"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/autopep8/batch-fable-new--2026-08-19__19-32-06/result.json",
+        "nl2repobench/runs/claude-fable-5/autopep8/batch-fable-new--2026-08-19__19-32-06/harbor__i7R3gzU/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:02:40.137509",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/autopep8/batch-fable-new--2026-08-19__19-32-06/harbor__i7R3gzU/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/autopep8/batch-fable-new--2026-08-19__19-32-06/",
+      "result_key": "nl2repobench/runs/claude-fable-5/autopep8/batch-fable-new--2026-08-19__19-32-06/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "autopep8",
+      "trial": "batch-fable-new--2026-08-19__19-32-06"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/bleach/batch-fable-new--2026-08-19__20-02-51/result.json",
+        "nl2repobench/runs/claude-fable-5/bleach/batch-fable-new--2026-08-19__20-02-51/harbor__KTBWdev/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:13:40.597399",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/bleach/batch-fable-new--2026-08-19__20-02-51/harbor__KTBWdev/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/bleach/batch-fable-new--2026-08-19__20-02-51/",
+      "result_key": "nl2repobench/runs/claude-fable-5/bleach/batch-fable-new--2026-08-19__20-02-51/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "bleach",
+      "trial": "batch-fable-new--2026-08-19__20-02-51"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto--2026-08-21__14-02-11/result.json",
+        "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto--2026-08-21__14-02-11/harbor__dkk7Hty/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-21T14:07:54.154387",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto--2026-08-21__14-02-11/harbor__dkk7Hty/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto--2026-08-21__14-02-11/",
+      "result_key": "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto--2026-08-21__14-02-11/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boto",
+      "trial": "batch-fable-boto--2026-08-21__14-02-11"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto-retry--2026-08-21__14-30-39/result.json",
+        "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto-retry--2026-08-21__14-30-39/harbor__CqF7xUP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-21T14:54:08.623929",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto-retry--2026-08-21__14-30-39/harbor__CqF7xUP/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto-retry--2026-08-21__14-30-39/",
+      "result_key": "nl2repobench/runs/claude-fable-5/boto/batch-fable-boto-retry--2026-08-21__14-30-39/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boto",
+      "trial": "batch-fable-boto-retry--2026-08-21__14-30-39"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/box/expansion-fable-v7--2026-08-20__01-52-28/result.json"
+      ],
+      "finished_at": "2026-08-20T01:52:42.515347",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/box/expansion-fable-v7--2026-08-20__01-52-28/",
+      "result_key": "nl2repobench/runs/claude-fable-5/box/expansion-fable-v7--2026-08-20__01-52-28/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "box",
+      "trial": "expansion-fable-v7--2026-08-20__01-52-28"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/cerberus/batch-fable--2026-08-19__20-02-27/result.json",
+        "nl2repobench/runs/claude-fable-5/cerberus/batch-fable--2026-08-19__20-02-27/harbor__rsr6B4m/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:19:02.752321",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/cerberus/batch-fable--2026-08-19__20-02-27/harbor__rsr6B4m/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/cerberus/batch-fable--2026-08-19__20-02-27/",
+      "result_key": "nl2repobench/runs/claude-fable-5/cerberus/batch-fable--2026-08-19__20-02-27/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cerberus",
+      "trial": "batch-fable--2026-08-19__20-02-27"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/dbutils/expansion-fable-v8--2026-08-20__01-54-46/result.json"
+      ],
+      "finished_at": "2026-08-20T01:55:00.052885",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/dbutils/expansion-fable-v8--2026-08-20__01-54-46/",
+      "result_key": "nl2repobench/runs/claude-fable-5/dbutils/expansion-fable-v8--2026-08-20__01-54-46/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "dbutils",
+      "trial": "expansion-fable-v8--2026-08-20__01-54-46"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/decouple/batch-fable--2026-08-19__20-19-12/result.json",
+        "nl2repobench/runs/claude-fable-5/decouple/batch-fable--2026-08-19__20-19-12/harbor__U6z4UQu/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:30:07.450732",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/decouple/batch-fable--2026-08-19__20-19-12/harbor__U6z4UQu/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/decouple/batch-fable--2026-08-19__20-19-12/",
+      "result_key": "nl2repobench/runs/claude-fable-5/decouple/batch-fable--2026-08-19__20-19-12/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "batch-fable--2026-08-19__20-19-12"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/deepdiff/expansion-fable-v3--2026-08-19__21-50-32/result.json"
+      ],
+      "finished_at": "2026-08-19T21:56:45.917321",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/deepdiff/expansion-fable-v3--2026-08-19__21-50-32/",
+      "result_key": "nl2repobench/runs/claude-fable-5/deepdiff/expansion-fable-v3--2026-08-19__21-50-32/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "deepdiff",
+      "trial": "expansion-fable-v3--2026-08-19__21-50-32"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/docopt-ng/expansion-fable-v3--2026-08-19__21-56-48/result.json"
+      ],
+      "finished_at": "2026-08-19T22:03:01.850826",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/docopt-ng/expansion-fable-v3--2026-08-19__21-56-48/",
+      "result_key": "nl2repobench/runs/claude-fable-5/docopt-ng/expansion-fable-v3--2026-08-19__21-56-48/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "docopt-ng",
+      "trial": "expansion-fable-v3--2026-08-19__21-56-48"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/emoji/expansion-fable-v7--2026-08-20__01-53-10/result.json"
+      ],
+      "finished_at": "2026-08-20T01:53:24.101821",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/emoji/expansion-fable-v7--2026-08-20__01-53-10/",
+      "result_key": "nl2repobench/runs/claude-fable-5/emoji/expansion-fable-v7--2026-08-20__01-53-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "emoji",
+      "trial": "expansion-fable-v7--2026-08-20__01-53-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/fastapi-users/expansion-fable-v5--2026-08-20__00-42-55/result.json",
+        "nl2repobench/runs/claude-fable-5/fastapi-users/expansion-fable-v5--2026-08-20__00-42-55/harbor__aFkfHHF/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:03:41.240872",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/fastapi-users/expansion-fable-v5--2026-08-20__00-42-55/harbor__aFkfHHF/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/fastapi-users/expansion-fable-v5--2026-08-20__00-42-55/",
+      "result_key": "nl2repobench/runs/claude-fable-5/fastapi-users/expansion-fable-v5--2026-08-20__00-42-55/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "fastapi-users",
+      "trial": "expansion-fable-v5--2026-08-20__00-42-55"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/freezegun/batch-fable--2026-08-19__20-19-12/result.json",
+        "nl2repobench/runs/claude-fable-5/freezegun/batch-fable--2026-08-19__20-19-12/harbor__zzXtXsC/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:37:47.359180",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/freezegun/batch-fable--2026-08-19__20-19-12/harbor__zzXtXsC/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/freezegun/batch-fable--2026-08-19__20-19-12/",
+      "result_key": "nl2repobench/runs/claude-fable-5/freezegun/batch-fable--2026-08-19__20-19-12/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "freezegun",
+      "trial": "batch-fable--2026-08-19__20-19-12"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/ftfy/batch-fable--2026-08-19__20-30-17/result.json",
+        "nl2repobench/runs/claude-fable-5/ftfy/batch-fable--2026-08-19__20-30-17/harbor__mzfwQnk/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:57:04.284229",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/ftfy/batch-fable--2026-08-19__20-30-17/harbor__mzfwQnk/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/ftfy/batch-fable--2026-08-19__20-30-17/",
+      "result_key": "nl2repobench/runs/claude-fable-5/ftfy/batch-fable--2026-08-19__20-30-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "batch-fable--2026-08-19__20-30-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/ftfy-fable5/legacy-results--2026-08-18__17-27-18/result.json",
+        "nl2repobench/runs/claude-fable-5/ftfy-fable5/legacy-results--2026-08-18__17-27-18/ftfy__eUDiU7Y/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T17:42:00.677053",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/ftfy-fable5/legacy-results--2026-08-18__17-27-18/ftfy__eUDiU7Y/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/ftfy-fable5/legacy-results--2026-08-18__17-27-18/",
+      "result_key": "nl2repobench/runs/claude-fable-5/ftfy-fable5/legacy-results--2026-08-18__17-27-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "legacy-results--2026-08-18__17-27-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/funcy/expansion-fable-v6--2026-08-20__01-25-08/result.json"
+      ],
+      "finished_at": "2026-08-20T01:50:31.334079",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/funcy/expansion-fable-v6--2026-08-20__01-25-08/",
+      "result_key": "nl2repobench/runs/claude-fable-5/funcy/expansion-fable-v6--2026-08-20__01-25-08/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "funcy",
+      "trial": "expansion-fable-v6--2026-08-20__01-25-08"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/fuzzywuzzy/expansion-fable-v8--2026-08-20__01-54-25/result.json"
+      ],
+      "finished_at": "2026-08-20T01:54:39.276190",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/fuzzywuzzy/expansion-fable-v8--2026-08-20__01-54-25/",
+      "result_key": "nl2repobench/runs/claude-fable-5/fuzzywuzzy/expansion-fable-v8--2026-08-20__01-54-25/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "fuzzywuzzy",
+      "trial": "expansion-fable-v8--2026-08-20__01-54-25"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/jsonlines/batch-fable--2026-08-19__20-37-57/result.json",
+        "nl2repobench/runs/claude-fable-5/jsonlines/batch-fable--2026-08-19__20-37-57/harbor__uztHYyi/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:54:58.748133",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/jsonlines/batch-fable--2026-08-19__20-37-57/harbor__uztHYyi/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/jsonlines/batch-fable--2026-08-19__20-37-57/",
+      "result_key": "nl2repobench/runs/claude-fable-5/jsonlines/batch-fable--2026-08-19__20-37-57/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "jsonlines",
+      "trial": "batch-fable--2026-08-19__20-37-57"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/math-verify/expansion-fable-v5--2026-08-20__00-28-10/result.json",
+        "nl2repobench/runs/claude-fable-5/math-verify/expansion-fable-v5--2026-08-20__00-28-10/harbor__RLHgQJ5/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:42:52.272249",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/math-verify/expansion-fable-v5--2026-08-20__00-28-10/harbor__RLHgQJ5/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/math-verify/expansion-fable-v5--2026-08-20__00-28-10/",
+      "result_key": "nl2repobench/runs/claude-fable-5/math-verify/expansion-fable-v5--2026-08-20__00-28-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "math-verify",
+      "trial": "expansion-fable-v5--2026-08-20__00-28-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/mechanicalsoup/expansion-fable-v7--2026-08-20__01-52-50/result.json"
+      ],
+      "finished_at": "2026-08-20T01:53:03.281776",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/mechanicalsoup/expansion-fable-v7--2026-08-20__01-52-50/",
+      "result_key": "nl2repobench/runs/claude-fable-5/mechanicalsoup/expansion-fable-v7--2026-08-20__01-52-50/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "mechanicalsoup",
+      "trial": "expansion-fable-v7--2026-08-20__01-52-50"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/more-Itertools/expansion-fable-v3--2026-08-19__22-38-13/result.json"
+      ],
+      "finished_at": "2026-08-19T22:44:26.923406",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/more-Itertools/expansion-fable-v3--2026-08-19__22-38-13/",
+      "result_key": "nl2repobench/runs/claude-fable-5/more-Itertools/expansion-fable-v3--2026-08-19__22-38-13/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "more-Itertools",
+      "trial": "expansion-fable-v3--2026-08-19__22-38-13"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/paillier/expansion-fable-v4--2026-08-19__23-55-41/result.json",
+        "nl2repobench/runs/claude-fable-5/paillier/expansion-fable-v4--2026-08-19__23-55-41/harbor__RDEvbyH/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:08:22.889164",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/paillier/expansion-fable-v4--2026-08-19__23-55-41/harbor__RDEvbyH/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/paillier/expansion-fable-v4--2026-08-19__23-55-41/",
+      "result_key": "nl2repobench/runs/claude-fable-5/paillier/expansion-fable-v4--2026-08-19__23-55-41/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "paillier",
+      "trial": "expansion-fable-v4--2026-08-19__23-55-41"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/parse/batch-fable--2026-08-19__20-55-08/result.json",
+        "nl2repobench/runs/claude-fable-5/parse/batch-fable--2026-08-19__20-55-08/harbor__pGogrV3/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:39:11.224772",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/parse/batch-fable--2026-08-19__20-55-08/harbor__pGogrV3/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/parse/batch-fable--2026-08-19__20-55-08/",
+      "result_key": "nl2repobench/runs/claude-fable-5/parse/batch-fable--2026-08-19__20-55-08/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "batch-fable--2026-08-19__20-55-08"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/pdfplumber-stable/expansion-fable-v7--2026-08-20__01-53-31/result.json"
+      ],
+      "finished_at": "2026-08-20T01:53:44.899326",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/pdfplumber-stable/expansion-fable-v7--2026-08-20__01-53-31/",
+      "result_key": "nl2repobench/runs/claude-fable-5/pdfplumber-stable/expansion-fable-v7--2026-08-20__01-53-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pdfplumber-stable",
+      "trial": "expansion-fable-v7--2026-08-20__01-53-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/pypinyin/expansion-fable-v3--2026-08-19__22-44-31/result.json"
+      ],
+      "finished_at": "2026-08-19T22:50:44.775671",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/pypinyin/expansion-fable-v3--2026-08-19__22-44-31/",
+      "result_key": "nl2repobench/runs/claude-fable-5/pypinyin/expansion-fable-v3--2026-08-19__22-44-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pypinyin",
+      "trial": "expansion-fable-v3--2026-08-19__22-44-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/python-pathspec/expansion-fable-v6--2026-08-20__01-50-39/result.json"
+      ],
+      "finished_at": "2026-08-20T01:50:52.718470",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/python-pathspec/expansion-fable-v6--2026-08-20__01-50-39/",
+      "result_key": "nl2repobench/runs/claude-fable-5/python-pathspec/expansion-fable-v6--2026-08-20__01-50-39/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-pathspec",
+      "trial": "expansion-fable-v6--2026-08-20__01-50-39"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/python-slugify/expansion-fable-v6--2026-08-20__01-51-00/result.json"
+      ],
+      "finished_at": "2026-08-20T01:51:13.762870",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/python-slugify/expansion-fable-v6--2026-08-20__01-51-00/",
+      "result_key": "nl2repobench/runs/claude-fable-5/python-slugify/expansion-fable-v6--2026-08-20__01-51-00/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-slugify",
+      "trial": "expansion-fable-v6--2026-08-20__01-51-00"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/rich-click/expansion-fable-v7--2026-08-20__01-53-52/result.json"
+      ],
+      "finished_at": "2026-08-20T01:54:05.659529",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/rich-click/expansion-fable-v7--2026-08-20__01-53-52/",
+      "result_key": "nl2repobench/runs/claude-fable-5/rich-click/expansion-fable-v7--2026-08-20__01-53-52/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "rich-click",
+      "trial": "expansion-fable-v7--2026-08-20__01-53-52"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/schema/expansion-fable-v3--2026-08-19__22-57-06/result.json",
+        "nl2repobench/runs/claude-fable-5/schema/expansion-fable-v3--2026-08-19__22-57-06/harbor__LgzSuD9/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:07:56.718710",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/schema/expansion-fable-v3--2026-08-19__22-57-06/harbor__LgzSuD9/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/schema/expansion-fable-v3--2026-08-19__22-57-06/",
+      "result_key": "nl2repobench/runs/claude-fable-5/schema/expansion-fable-v3--2026-08-19__22-57-06/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "schema",
+      "trial": "expansion-fable-v3--2026-08-19__22-57-06"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/six/batch-fable--2026-08-19__20-57-18/result.json",
+        "nl2repobench/runs/claude-fable-5/six/batch-fable--2026-08-19__20-57-18/harbor__RJjGRuw/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:08:09.256020",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/six/batch-fable--2026-08-19__20-57-18/harbor__RJjGRuw/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/six/batch-fable--2026-08-19__20-57-18/",
+      "result_key": "nl2repobench/runs/claude-fable-5/six/batch-fable--2026-08-19__20-57-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "batch-fable--2026-08-19__20-57-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/sortedcontainers/expansion-fable-v3--2026-08-19__22-03-05/result.json",
+        "nl2repobench/runs/claude-fable-5/sortedcontainers/expansion-fable-v3--2026-08-19__22-03-05/harbor__wmS6ECe/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T22:21:53.302666",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/sortedcontainers/expansion-fable-v3--2026-08-19__22-03-05/harbor__wmS6ECe/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/sortedcontainers/expansion-fable-v3--2026-08-19__22-03-05/",
+      "result_key": "nl2repobench/runs/claude-fable-5/sortedcontainers/expansion-fable-v3--2026-08-19__22-03-05/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sortedcontainers",
+      "trial": "expansion-fable-v3--2026-08-19__22-03-05"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/sqlparse/expansion-fable-v5--2026-08-20__01-03-44/result.json",
+        "nl2repobench/runs/claude-fable-5/sqlparse/expansion-fable-v5--2026-08-20__01-03-44/harbor__tTa8JbP/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:24:37.870383",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/sqlparse/expansion-fable-v5--2026-08-20__01-03-44/harbor__tTa8JbP/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/claude-fable-5/sqlparse/expansion-fable-v5--2026-08-20__01-03-44/",
+      "result_key": "nl2repobench/runs/claude-fable-5/sqlparse/expansion-fable-v5--2026-08-20__01-03-44/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sqlparse",
+      "trial": "expansion-fable-v5--2026-08-20__01-03-44"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/stamina/expansion-fable-v6--2026-08-20__01-51-21/result.json"
+      ],
+      "finished_at": "2026-08-20T01:51:34.749026",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/stamina/expansion-fable-v6--2026-08-20__01-51-21/",
+      "result_key": "nl2repobench/runs/claude-fable-5/stamina/expansion-fable-v6--2026-08-20__01-51-21/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "stamina",
+      "trial": "expansion-fable-v6--2026-08-20__01-51-21"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/tinydb/batch-fable--2026-08-19__21-08-18/result.json",
+        "nl2repobench/runs/claude-fable-5/tinydb/batch-fable--2026-08-19__21-08-18/harbor__57YkNei/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T21:42:03.761052",
+      "grading_keys": [
+        "nl2repobench/runs/claude-fable-5/tinydb/batch-fable--2026-08-19__21-08-18/harbor__57YkNei/verifier/grading.json"
+      ],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/tinydb/batch-fable--2026-08-19__21-08-18/",
+      "result_key": "nl2repobench/runs/claude-fable-5/tinydb/batch-fable--2026-08-19__21-08-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tinydb",
+      "trial": "batch-fable--2026-08-19__21-08-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/tqdm/expansion-fable-v6--2026-08-20__01-51-42/result.json"
+      ],
+      "finished_at": "2026-08-20T01:51:58.906040",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/tqdm/expansion-fable-v6--2026-08-20__01-51-42/",
+      "result_key": "nl2repobench/runs/claude-fable-5/tqdm/expansion-fable-v6--2026-08-20__01-51-42/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tqdm",
+      "trial": "expansion-fable-v6--2026-08-20__01-51-42"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/claude-fable-5/typing_extensions/expansion-fable-v3--2026-08-19__22-50-48/result.json"
+      ],
+      "finished_at": "2026-08-19T22:57:02.831658",
+      "grading_keys": [],
+      "model": "claude-fable-5",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/claude-fable-5/typing_extensions/expansion-fable-v3--2026-08-19__22-50-48/",
+      "result_key": "nl2repobench/runs/claude-fable-5/typing_extensions/expansion-fable-v3--2026-08-19__22-50-48/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "typing_extensions",
+      "trial": "expansion-fable-v3--2026-08-19__22-50-48"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/aiofiles/batch-gpt--2026-08-19__17-10-57/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/aiofiles/batch-gpt--2026-08-19__17-10-57/harbor__e9JHjmL/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T18:01:58.612898",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/aiofiles/batch-gpt--2026-08-19__17-10-57/harbor__e9JHjmL/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/aiofiles/batch-gpt--2026-08-19__17-10-57/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/aiofiles/batch-gpt--2026-08-19__17-10-57/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "aiofiles",
+      "trial": "batch-gpt--2026-08-19__17-10-57"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-max/legacy-results--2026-08-18__16-26-12/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-max/legacy-results--2026-08-18__16-26-12/arguably__fbgQq2i/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T16:27:51.017849",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-max/legacy-results--2026-08-18__16-26-12/arguably__fbgQq2i/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-max/legacy-results--2026-08-18__16-26-12/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-max/legacy-results--2026-08-18__16-26-12/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "legacy-results--2026-08-18__16-26-12"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-final/legacy-results--2026-08-18__16-28-52/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-final/legacy-results--2026-08-18__16-28-52/arguably__JpuqoWo/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T16:30:23.572497",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-final/legacy-results--2026-08-18__16-28-52/arguably__JpuqoWo/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-final/legacy-results--2026-08-18__16-28-52/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/arguably-gpt56-final/legacy-results--2026-08-18__16-28-52/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "legacy-results--2026-08-18__16-28-52"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt4o-test/legacy-results--2026-08-18__16-43-45/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt4o-test/legacy-results--2026-08-18__16-43-45/arguably__bdgQKmA/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T16:47:24.221031",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/arguably-gpt4o-test/legacy-results--2026-08-18__16-43-45/arguably__bdgQKmA/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/arguably-gpt4o-test/legacy-results--2026-08-18__16-43-45/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/arguably-gpt4o-test/legacy-results--2026-08-18__16-43-45/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "arguably",
+      "trial": "legacy-results--2026-08-18__16-43-45"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/asteval/expansion-gpt-v3--2026-08-20__00-04-17/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/asteval/expansion-gpt-v3--2026-08-20__00-04-17/harbor__dMBCg2U/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:48:42.799872",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/asteval/expansion-gpt-v3--2026-08-20__00-04-17/harbor__dMBCg2U/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/asteval/expansion-gpt-v3--2026-08-20__00-04-17/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/asteval/expansion-gpt-v3--2026-08-20__00-04-17/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "asteval",
+      "trial": "expansion-gpt-v3--2026-08-20__00-04-17"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/autopep8/batch-gpt-new--2026-08-19__19-32-06/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/autopep8/batch-gpt-new--2026-08-19__19-32-06/harbor__xV2Rcyp/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:42:20.298784",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/autopep8/batch-gpt-new--2026-08-19__19-32-06/harbor__xV2Rcyp/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/autopep8/batch-gpt-new--2026-08-19__19-32-06/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/autopep8/batch-gpt-new--2026-08-19__19-32-06/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "autopep8",
+      "trial": "batch-gpt-new--2026-08-19__19-32-06"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/bleach/batch-gpt-new--2026-08-19__19-42-31/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/bleach/batch-gpt-new--2026-08-19__19-42-31/harbor__K6hGznC/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:45:18.111021",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/bleach/batch-gpt-new--2026-08-19__19-42-31/harbor__K6hGznC/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/bleach/batch-gpt-new--2026-08-19__19-42-31/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/bleach/batch-gpt-new--2026-08-19__19-42-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "bleach",
+      "trial": "batch-gpt-new--2026-08-19__19-42-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/boltons-gpt56sol/legacy-results--2026-08-18__17-27-18/result.json"
+      ],
+      "finished_at": "2026-08-18T17:28:23.562981",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/boltons-gpt56sol/legacy-results--2026-08-18__17-27-18/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/boltons-gpt56sol/legacy-results--2026-08-18__17-27-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boltons",
+      "trial": "legacy-results--2026-08-18__17-27-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/boto/batch-gpt-boto-retry--2026-08-21__15-57-23/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/boto/batch-gpt-boto-retry--2026-08-21__15-57-23/harbor__rJ6btzx/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-21T16:00:02.488177",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/boto/batch-gpt-boto-retry--2026-08-21__15-57-23/harbor__rJ6btzx/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/boto/batch-gpt-boto-retry--2026-08-21__15-57-23/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/boto/batch-gpt-boto-retry--2026-08-21__15-57-23/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "boto",
+      "trial": "batch-gpt-boto-retry--2026-08-21__15-57-23"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/box/expansion-gpt-v8--2026-08-20__01-49-43/result.json"
+      ],
+      "finished_at": "2026-08-20T01:49:57.625668",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/box/expansion-gpt-v8--2026-08-20__01-49-43/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/box/expansion-gpt-v8--2026-08-20__01-49-43/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "box",
+      "trial": "expansion-gpt-v8--2026-08-20__01-49-43"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/cerberus/batch-gpt--2026-08-19__18-02-13/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/cerberus/batch-gpt--2026-08-19__18-02-13/harbor__xxsaAUx/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T18:55:33.615055",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/cerberus/batch-gpt--2026-08-19__18-02-13/harbor__xxsaAUx/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/cerberus/batch-gpt--2026-08-19__18-02-13/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/cerberus/batch-gpt--2026-08-19__18-02-13/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "cerberus",
+      "trial": "batch-gpt--2026-08-19__18-02-13"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/dbutils/expansion-gpt-v8--2026-08-20__01-51-54/result.json"
+      ],
+      "finished_at": "2026-08-20T01:52:07.533190",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/dbutils/expansion-gpt-v8--2026-08-20__01-51-54/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/dbutils/expansion-gpt-v8--2026-08-20__01-51-54/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "dbutils",
+      "trial": "expansion-gpt-v8--2026-08-20__01-51-54"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-1h-v2--2026-08-19__14-44-36/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-1h-v2--2026-08-19__14-44-36/harbor__NDVmkjQ/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T15:21:11.495888",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-1h-v2--2026-08-19__14-44-36/harbor__NDVmkjQ/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/decouple/model-1h-v2--2026-08-19__14-44-36/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/decouple/model-1h-v2--2026-08-19__14-44-36/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "model-1h-v2--2026-08-19__14-44-36"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v3--2026-08-19__12-57-53/result.json"
+      ],
+      "finished_at": "2026-08-19T12:59:03.611349",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v3--2026-08-19__12-57-53/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v3--2026-08-19__12-57-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "model-pilot-v3--2026-08-19__12-57-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v4--2026-08-19__13-03-31/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v4--2026-08-19__13-03-31/harbor__oCEEaoc/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T13:11:10.100444",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v4--2026-08-19__13-03-31/harbor__oCEEaoc/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v4--2026-08-19__13-03-31/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/decouple/model-pilot-v4--2026-08-19__13-03-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "decouple",
+      "trial": "model-pilot-v4--2026-08-19__13-03-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/deepdiff/expansion-gpt-v3--2026-08-19__21-50-32/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/deepdiff/expansion-gpt-v3--2026-08-19__21-50-32/harbor__NMMyZKh/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T22:46:27.247721",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/deepdiff/expansion-gpt-v3--2026-08-19__21-50-32/harbor__NMMyZKh/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/deepdiff/expansion-gpt-v3--2026-08-19__21-50-32/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/deepdiff/expansion-gpt-v3--2026-08-19__21-50-32/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "deepdiff",
+      "trial": "expansion-gpt-v3--2026-08-19__21-50-32"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/docopt-ng/expansion-gpt-v3--2026-08-19__22-46-30/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/docopt-ng/expansion-gpt-v3--2026-08-19__22-46-30/harbor__s2Bom6y/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T23:21:09.784298",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/docopt-ng/expansion-gpt-v3--2026-08-19__22-46-30/harbor__s2Bom6y/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/docopt-ng/expansion-gpt-v3--2026-08-19__22-46-30/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/docopt-ng/expansion-gpt-v3--2026-08-19__22-46-30/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "docopt-ng",
+      "trial": "expansion-gpt-v3--2026-08-19__22-46-30"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/emoji/expansion-gpt-v8--2026-08-20__01-50-29/result.json"
+      ],
+      "finished_at": "2026-08-20T01:50:43.169561",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/emoji/expansion-gpt-v8--2026-08-20__01-50-29/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/emoji/expansion-gpt-v8--2026-08-20__01-50-29/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "emoji",
+      "trial": "expansion-gpt-v8--2026-08-20__01-50-29"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/fastapi-users/expansion-gpt-v8--2026-08-20__01-46-47/result.json"
+      ],
+      "finished_at": "2026-08-20T01:47:02.079800",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/fastapi-users/expansion-gpt-v8--2026-08-20__01-46-47/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/fastapi-users/expansion-gpt-v8--2026-08-20__01-46-47/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "fastapi-users",
+      "trial": "expansion-gpt-v8--2026-08-20__01-46-47"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/freezegun/batch-gpt--2026-08-19__18-11-03/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/freezegun/batch-gpt--2026-08-19__18-11-03/harbor__84MRh9k/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:02:34.366659",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/freezegun/batch-gpt--2026-08-19__18-11-03/harbor__84MRh9k/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/freezegun/batch-gpt--2026-08-19__18-11-03/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/freezegun/batch-gpt--2026-08-19__18-11-03/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "freezegun",
+      "trial": "batch-gpt--2026-08-19__18-11-03"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/ftfy-gpt56sol/legacy-results--2026-08-18__17-06-19/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/ftfy-gpt56sol/legacy-results--2026-08-18__17-06-19/ftfy__r5HTgn6/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T17:24:53.252224",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/ftfy-gpt56sol/legacy-results--2026-08-18__17-06-19/ftfy__r5HTgn6/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/ftfy-gpt56sol/legacy-results--2026-08-18__17-06-19/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/ftfy-gpt56sol/legacy-results--2026-08-18__17-06-19/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "legacy-results--2026-08-18__17-06-19"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v3--2026-08-19__12-57-53/result.json"
+      ],
+      "finished_at": "2026-08-19T12:59:09.448107",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v3--2026-08-19__12-57-53/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v3--2026-08-19__12-57-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "model-pilot-v3--2026-08-19__12-57-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v4--2026-08-19__13-03-31/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v4--2026-08-19__13-03-31/harbor__bvUYTGx/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T13:22:05.926625",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v4--2026-08-19__13-03-31/harbor__bvUYTGx/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v4--2026-08-19__13-03-31/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/ftfy/model-pilot-v4--2026-08-19__13-03-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "ftfy",
+      "trial": "model-pilot-v4--2026-08-19__13-03-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/funcy/expansion-gpt-v8--2026-08-20__01-47-53/result.json"
+      ],
+      "finished_at": "2026-08-20T01:48:07.535609",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/funcy/expansion-gpt-v8--2026-08-20__01-47-53/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/funcy/expansion-gpt-v8--2026-08-20__01-47-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "funcy",
+      "trial": "expansion-gpt-v8--2026-08-20__01-47-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/fuzzywuzzy/expansion-gpt-v8--2026-08-20__01-51-33/result.json"
+      ],
+      "finished_at": "2026-08-20T01:51:46.540227",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/fuzzywuzzy/expansion-gpt-v8--2026-08-20__01-51-33/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/fuzzywuzzy/expansion-gpt-v8--2026-08-20__01-51-33/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "fuzzywuzzy",
+      "trial": "expansion-gpt-v8--2026-08-20__01-51-33"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/jsonlines/batch-gpt--2026-08-19__18-55-44/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/jsonlines/batch-gpt--2026-08-19__18-55-44/harbor__4MwURVE/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:41:00.365848",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/jsonlines/batch-gpt--2026-08-19__18-55-44/harbor__4MwURVE/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/jsonlines/batch-gpt--2026-08-19__18-55-44/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/jsonlines/batch-gpt--2026-08-19__18-55-44/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "jsonlines",
+      "trial": "batch-gpt--2026-08-19__18-55-44"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/gpt56-markupsafe/2026-08-22__13-01-07/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/gpt56-markupsafe/2026-08-22__13-01-07/harbor__Dud45A5/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-22T13:27:55.893484",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/gpt56-markupsafe/2026-08-22__13-01-07/harbor__Dud45A5/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/gpt56-markupsafe/2026-08-22__13-01-07/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/gpt56-markupsafe/2026-08-22__13-01-07/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "markupsafe",
+      "trial": "2026-08-22__13-01-07"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/math-verify/expansion-gpt-v8--2026-08-20__01-46-25/result.json"
+      ],
+      "finished_at": "2026-08-20T01:46:39.886477",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/math-verify/expansion-gpt-v8--2026-08-20__01-46-25/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/math-verify/expansion-gpt-v8--2026-08-20__01-46-25/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "math-verify",
+      "trial": "expansion-gpt-v8--2026-08-20__01-46-25"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/mechanicalsoup/expansion-gpt-v8--2026-08-20__01-50-06/result.json"
+      ],
+      "finished_at": "2026-08-20T01:50:21.043450",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/mechanicalsoup/expansion-gpt-v8--2026-08-20__01-50-06/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/mechanicalsoup/expansion-gpt-v8--2026-08-20__01-50-06/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "mechanicalsoup",
+      "trial": "expansion-gpt-v8--2026-08-20__01-50-06"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/more-Itertools/expansion-gpt-v3--2026-08-20__00-48-46/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/more-Itertools/expansion-gpt-v3--2026-08-20__00-48-46/harbor__FHEDzuR/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T01:15:50.477548",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/more-Itertools/expansion-gpt-v3--2026-08-20__00-48-46/harbor__FHEDzuR/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/more-Itertools/expansion-gpt-v3--2026-08-20__00-48-46/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/more-Itertools/expansion-gpt-v3--2026-08-20__00-48-46/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "more-Itertools",
+      "trial": "expansion-gpt-v3--2026-08-20__00-48-46"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/paillier/expansion-gpt-v8--2026-08-20__01-47-31/result.json"
+      ],
+      "finished_at": "2026-08-20T01:47:45.776385",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/paillier/expansion-gpt-v8--2026-08-20__01-47-31/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/paillier/expansion-gpt-v8--2026-08-20__01-47-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "paillier",
+      "trial": "expansion-gpt-v8--2026-08-20__01-47-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/parse-gpt56sol/legacy-results--2026-08-18__17-27-18/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/parse-gpt56sol/legacy-results--2026-08-18__17-27-18/parse__QGr6crS/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-18T17:35:42.994199",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/parse-gpt56sol/legacy-results--2026-08-18__17-27-18/parse__QGr6crS/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/parse-gpt56sol/legacy-results--2026-08-18__17-27-18/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/parse-gpt56sol/legacy-results--2026-08-18__17-27-18/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "legacy-results--2026-08-18__17-27-18"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v3--2026-08-19__12-57-53/result.json"
+      ],
+      "finished_at": "2026-08-19T12:59:16.238511",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v3--2026-08-19__12-57-53/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v3--2026-08-19__12-57-53/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "model-pilot-v3--2026-08-19__12-57-53"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v4--2026-08-19__13-03-31/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v4--2026-08-19__13-03-31/harbor__gQtFX73/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T13:32:41.807612",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v4--2026-08-19__13-03-31/harbor__gQtFX73/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v4--2026-08-19__13-03-31/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/parse/model-pilot-v4--2026-08-19__13-03-31/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "parse",
+      "trial": "model-pilot-v4--2026-08-19__13-03-31"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/pdfplumber-stable/expansion-gpt-v8--2026-08-20__01-50-50/result.json"
+      ],
+      "finished_at": "2026-08-20T01:51:04.294238",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/pdfplumber-stable/expansion-gpt-v8--2026-08-20__01-50-50/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/pdfplumber-stable/expansion-gpt-v8--2026-08-20__01-50-50/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pdfplumber-stable",
+      "trial": "expansion-gpt-v8--2026-08-20__01-50-50"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/pypinyin/expansion-gpt-v3--2026-08-20__01-15-54/result.json"
+      ],
+      "finished_at": "2026-08-20T01:45:32.479225",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/pypinyin/expansion-gpt-v3--2026-08-20__01-15-54/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/pypinyin/expansion-gpt-v3--2026-08-20__01-15-54/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "pypinyin",
+      "trial": "expansion-gpt-v3--2026-08-20__01-15-54"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/python-pathspec/expansion-gpt-v8--2026-08-20__01-48-15/result.json"
+      ],
+      "finished_at": "2026-08-20T01:48:29.307371",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/python-pathspec/expansion-gpt-v8--2026-08-20__01-48-15/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/python-pathspec/expansion-gpt-v8--2026-08-20__01-48-15/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-pathspec",
+      "trial": "expansion-gpt-v8--2026-08-20__01-48-15"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/python-slugify/expansion-gpt-v8--2026-08-20__01-48-37/result.json"
+      ],
+      "finished_at": "2026-08-20T01:48:51.077355",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/python-slugify/expansion-gpt-v8--2026-08-20__01-48-37/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/python-slugify/expansion-gpt-v8--2026-08-20__01-48-37/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "python-slugify",
+      "trial": "expansion-gpt-v8--2026-08-20__01-48-37"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/rich-click/expansion-gpt-v8--2026-08-20__01-51-12/result.json"
+      ],
+      "finished_at": "2026-08-20T01:51:25.505609",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/rich-click/expansion-gpt-v8--2026-08-20__01-51-12/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/rich-click/expansion-gpt-v8--2026-08-20__01-51-12/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "rich-click",
+      "trial": "expansion-gpt-v8--2026-08-20__01-51-12"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/schema/expansion-gpt-v3--2026-08-20__01-46-02/result.json"
+      ],
+      "finished_at": "2026-08-20T01:46:16.072252",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/schema/expansion-gpt-v3--2026-08-20__01-46-02/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/schema/expansion-gpt-v3--2026-08-20__01-46-02/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "schema",
+      "trial": "expansion-gpt-v3--2026-08-20__01-46-02"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt--2026-08-19__19-02-44/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt--2026-08-19__19-02-44/harbor__oKsPrtv/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T19:36:55.005514",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt--2026-08-19__19-02-44/harbor__oKsPrtv/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt--2026-08-19__19-02-44/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt--2026-08-19__19-02-44/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "batch-gpt--2026-08-19__19-02-44"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt-retry--2026-08-19__20-39-29/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt-retry--2026-08-19__20-39-29/harbor__KgnsBDK/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:40:56.179716",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt-retry--2026-08-19__20-39-29/harbor__KgnsBDK/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt-retry--2026-08-19__20-39-29/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/six/batch-gpt-retry--2026-08-19__20-39-29/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "batch-gpt-retry--2026-08-19__20-39-29"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/six/model-1h-v1--2026-08-19__14-09-08/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/six/model-1h-v1--2026-08-19__14-09-08/harbor__VdjBLHT/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T14:16:45.774979",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/six/model-1h-v1--2026-08-19__14-09-08/harbor__VdjBLHT/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/six/model-1h-v1--2026-08-19__14-09-08/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/six/model-1h-v1--2026-08-19__14-09-08/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "six",
+      "trial": "model-1h-v1--2026-08-19__14-09-08"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/sortedcontainers/expansion-gpt-v3--2026-08-19__23-21-13/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/sortedcontainers/expansion-gpt-v3--2026-08-19__23-21-13/harbor__efMZfTx/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-20T00:04:13.306209",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/sortedcontainers/expansion-gpt-v3--2026-08-19__23-21-13/harbor__efMZfTx/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 0,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/sortedcontainers/expansion-gpt-v3--2026-08-19__23-21-13/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/sortedcontainers/expansion-gpt-v3--2026-08-19__23-21-13/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sortedcontainers",
+      "trial": "expansion-gpt-v3--2026-08-19__23-21-13"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/sqlparse/expansion-gpt-v8--2026-08-20__01-47-10/result.json"
+      ],
+      "finished_at": "2026-08-20T01:47:23.956048",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/sqlparse/expansion-gpt-v8--2026-08-20__01-47-10/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/sqlparse/expansion-gpt-v8--2026-08-20__01-47-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "sqlparse",
+      "trial": "expansion-gpt-v8--2026-08-20__01-47-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/stamina/expansion-gpt-v8--2026-08-20__01-48-59/result.json"
+      ],
+      "finished_at": "2026-08-20T01:49:13.201163",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/stamina/expansion-gpt-v8--2026-08-20__01-48-59/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/stamina/expansion-gpt-v8--2026-08-20__01-48-59/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "stamina",
+      "trial": "expansion-gpt-v8--2026-08-20__01-48-59"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/tinydb/batch-gpt--2026-08-19__19-37-10/result.json",
+        "nl2repobench/runs/gpt-5.6-sol/tinydb/batch-gpt--2026-08-19__19-37-10/harbor__YY7DJNA/verifier/grading.json"
+      ],
+      "finished_at": "2026-08-19T20:00:11.817308",
+      "grading_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/tinydb/batch-gpt--2026-08-19__19-37-10/harbor__YY7DJNA/verifier/grading.json"
+      ],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/tinydb/batch-gpt--2026-08-19__19-37-10/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/tinydb/batch-gpt--2026-08-19__19-37-10/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tinydb",
+      "trial": "batch-gpt--2026-08-19__19-37-10"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/tqdm/expansion-gpt-v8--2026-08-20__01-49-21/result.json"
+      ],
+      "finished_at": "2026-08-20T01:49:35.198077",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/tqdm/expansion-gpt-v8--2026-08-20__01-49-21/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/tqdm/expansion-gpt-v8--2026-08-20__01-49-21/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "tqdm",
+      "trial": "expansion-gpt-v8--2026-08-20__01-49-21"
+    },
+    {
+      "evidence_keys": [
+        "nl2repobench/runs/gpt-5.6-sol/typing_extensions/expansion-gpt-v3--2026-08-20__01-45-40/result.json"
+      ],
+      "finished_at": "2026-08-20T01:45:54.248069",
+      "grading_keys": [],
+      "model": "gpt-5.6-sol",
+      "n_completed_trials": 1,
+      "n_errored_trials": 1,
+      "prefix": "nl2repobench/runs/gpt-5.6-sol/typing_extensions/expansion-gpt-v3--2026-08-20__01-45-40/",
+      "result_key": "nl2repobench/runs/gpt-5.6-sol/typing_extensions/expansion-gpt-v3--2026-08-20__01-45-40/result.json",
+      "revision_binding": "unbound-legacy",
+      "source": "oss",
+      "status": "completed",
+      "task_id": "typing_extensions",
+      "trial": "expansion-gpt-v3--2026-08-20__01-45-40"
+    }
+  ],
+  "schema_version": "1.0",
+  "source": "oss"
+}

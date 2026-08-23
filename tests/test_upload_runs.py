@@ -162,6 +162,19 @@ def test_task_upload_rejects_symlink_directories(tmp_path: Path) -> None:
         list(uploader.iter_task_uploads(catalog))
 
 
+def test_upload_plan_rejects_duplicate_keys_and_manifest_collision(tmp_path: Path) -> None:
+    path = tmp_path / "payload"
+    path.write_text("payload", encoding="utf-8")
+    item = uploader.Upload(path, "nl2repobench/runs/demo/result.json", path.stat().st_size)
+
+    import pytest
+
+    with pytest.raises(ValueError, match="duplicate"):
+        uploader.validate_upload_plan([item, item], None)
+    with pytest.raises(ValueError, match="collides"):
+        uploader.validate_upload_plan([item], item.key)
+
+
 def test_secret_scan_requires_high_confidence_key_shape(tmp_path: Path) -> None:
     public_text = tmp_path / "public.txt"
     public_text.write_text("dask-@trio and mask-id", encoding="utf-8")

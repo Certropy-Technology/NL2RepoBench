@@ -228,7 +228,7 @@ One boundary example when relevant
 
 ### 阶段 E：构造隐藏测试
 
-优先保留上游 pytest 的断言语义和行为覆盖。Phase 2 production runner 不允许 trusted pytest 直接 import candidate；需要把 import/API/CLI 调用改接 `candidate_client` subprocess contract，但不得因此改变输入、预期值或断言含义。无法适配状态对象、callback、native in-process 行为或复杂 fixture 的题保持 `blocked`，不能回退到 candidate 与 JUnit writer 同进程。
+优先保留上游 pytest 的断言语义和行为覆盖。Phase 2 production runner 不允许 trusted pytest 直接 import candidate；需要把 import/API/CLI 调用改接 `candidate_client` subprocess contract，但不得因此改变输入、预期值或断言含义。无法适配状态对象、callback、native in-process 行为或复杂 fixture 的题，在当前 Package campaign 中应记录为有证据的 `excluded`；历史题可以保留 `blocked` 作为迁移审计状态，但不得计入发布集，也不能回退到 candidate 与 JUnit writer 同进程。
 
 测试分层建议：
 

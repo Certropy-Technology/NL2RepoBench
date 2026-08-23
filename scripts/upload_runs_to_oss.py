@@ -22,6 +22,7 @@ import json
 import os
 import re
 import sys
+from collections import Counter
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
@@ -60,7 +61,7 @@ RUN_ROOT_ALIASES = {
 CONTAINER_DIRS = frozenset({"results", "runs", "jobs", "output"})
 INTERNAL_PATH_PARTS = frozenset({".pi-glla", ".git", "__pycache__"})
 SECRET_PATTERNS = (
-    re.compile(rb"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{40,}(?![A-Za-z0-9_-])"),
+    re.compile(rb"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{40,256}(?![A-Za-z0-9_-])"),
     re.compile(rb"LTAI[A-Za-z0-9]{12,}"),
     re.compile(rb"AKIA[A-Z0-9]{12,}"),
 )
@@ -73,6 +74,17 @@ def known_tasks(catalog: Path = Path("catalog/tasks")) -> frozenset[str]:
 
 
 TASKS = known_tasks()
+
+
+def has_symlink_component(path: Path) -> bool:
+    current = path.absolute()
+    parts = current.parts
+    cursor = Path(parts[0])
+    for part in parts[1:]:
+        cursor /= part
+        if cursor.is_symlink():
+            return True
+    return False
 
 
 def is_oracle_root(name: str) -> bool:
@@ -211,6 +223,8 @@ class Stats:
 
 
 def iter_run_uploads(runs_dir: Path) -> Iterator[Upload]:
+    if has_symlink_component(runs_dir):
+        raise ValueError(f"runs directory contains a symlink component: {runs_dir}")
     for run_root in sorted(p for p in runs_dir.iterdir() if p.is_dir()):
         if run_root.is_symlink():
             raise ValueError(f"run root must not be a symlink: {run_root}")
@@ -238,6 +252,8 @@ def iter_run_uploads(runs_dir: Path) -> Iterator[Upload]:
 
 
 def iter_task_uploads(catalog: Path) -> Iterator[Upload]:
+    if has_symlink_component(catalog):
+        raise ValueError(f"catalog contains a symlink component: {catalog}")
     for task_dir in sorted(p for p in catalog.iterdir() if p.is_dir()):
         # ``.pi-glla`` and similar control directories can live below the
         # catalog while an agent session is active.  They are never task
@@ -358,12 +374,21 @@ def secret_shaped_paths(items: list[Upload]) -> list[str]:
                     if any(pattern.search(data) for pattern in SECRET_PATTERNS):
                         found = True
                         break
-                    tail = data[-128:]
+                    tail = data[-320:]
         except OSError:
             continue
         if found:
             findings.append(str(item.local))
     return findings
+
+
+def validate_upload_plan(items: list[Upload], remote_manifest_key: str | None) -> None:
+    keys = [item.key for item in items]
+    duplicates = sorted(key for key, count in Counter(keys).items() if count > 1)
+    if duplicates:
+        raise ValueError(f"duplicate upload keys: {', '.join(duplicates[:10])}")
+    if remote_manifest_key and remote_manifest_key in set(keys):
+        raise ValueError("remote manifest key collides with a payload key")
 
 
 def main() -> int:
@@ -403,6 +428,12 @@ def main() -> int:
                 size=args.readme.stat().st_size,
             )
         )
+
+    try:
+        validate_upload_plan(items, args.remote_manifest_key)
+    except ValueError as exc:
+        print(f"upload plan rejected: {exc}", file=sys.stderr)
+        return 2
 
     secret_paths = secret_shaped_paths(items)
     if secret_paths:

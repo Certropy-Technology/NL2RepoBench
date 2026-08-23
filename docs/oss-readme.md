@@ -122,7 +122,8 @@ dataset_score = mean(task_score for every VALID task)
 - 旧归档曾记录 **37 个 active 任务** 和 **13 个 blocked 候选**；
 - 旧归档的单题冻结测试数从 26 到 1009；
 - 当前 campaign 使用一次 Oracle gate，并通过
-  `reports/package-expansion-campaign.json` 和 OSS run inventory 重新计算状态。
+  `reports/package-expansion-campaign.json` 和 `reports/oss-run-inventory.json`
+  重新计算状态；历史 OSS run 的豁免是去重政策，不是当前 source revision 的证明。
 
 ## 🔗 代码仓库
 

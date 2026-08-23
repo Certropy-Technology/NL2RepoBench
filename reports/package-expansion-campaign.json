@@ -5,6 +5,13 @@
   "as_of": "2026-08-23T00:00:00Z",
   "minimum_tasks": 500,
   "new_task_count": 0,
+  "oss_run_inventory": {
+    "path": "reports/oss-run-inventory.json",
+    "sha256": "sha256:65956de392ef58359e02822449f05ae029858b51386a810dd5211636eae43052",
+    "finished_model_run_count": 94,
+    "task_count": 39,
+    "object_count_scanned": 37578
+  },
   "datasets": [
     {
       "dataset_id": "nl2repobench-package-python-v2",
@@ -24,6 +31,7 @@
     "harbor_task_directories": 77,
     "published_tasks": 0,
     "excluded_tasks": 0,
+    "oss_run_task_count": 39,
     "legacy_complete": 74,
     "legacy_pending": 30,
     "note": "This is an honest planning snapshot, not a releaseable dataset manifest."

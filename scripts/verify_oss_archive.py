@@ -22,7 +22,7 @@ from typing import Any
 
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 SECRET_PATTERNS = (
-    re.compile(r"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{40,}(?![A-Za-z0-9_-])"),
+    re.compile(r"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{40,256}(?![A-Za-z0-9_-])"),
     re.compile(r"LTAI[A-Za-z0-9]{12,}"),
     re.compile(r"AKIA[A-Z0-9]{12,}"),
 )
@@ -238,11 +238,22 @@ def remove_local_runs(runs_dir: Path, *, repo_root: Path) -> None:
 def validate_upload_roots(roots: tuple[Path, ...]) -> list[str]:
     errors: list[str] = []
     for root in roots:
-        if root.is_symlink():
-            errors.append(f"upload root is a symlink: {root}")
+        if any(component.is_symlink() for component in _path_components(root)):
+            errors.append(f"upload root contains a symlink component: {root}")
         elif not root.exists():
             errors.append(f"upload root is missing: {root}")
     return errors
+
+
+def _path_components(path: Path) -> tuple[Path, ...]:
+    absolute = path.absolute()
+    parts = absolute.parts
+    cursor = Path(parts[0])
+    components = [cursor]
+    for part in parts[1:]:
+        cursor /= part
+        components.append(cursor)
+    return tuple(components)
 
 
 def build_bucket() -> Any:

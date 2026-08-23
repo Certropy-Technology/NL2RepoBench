@@ -77,7 +77,15 @@ def _evidence(task_id: str, language: str, dataset_id: str) -> dict[str, object]
             "evidence_url": "https://example.invalid/evidence",
         },
         "oracle_runs": [
-            {"valid": True, "reward": 0.9, "expected_total": 10, "collected_total": 10}
+            {
+                "valid": True,
+                "reward": 0.9,
+                "expected_total": 10,
+                "collected_total": 10,
+                "oracle_ceiling": 0.9,
+                "failure_set": ["test_failure"],
+                "reason": "one stable upstream failure",
+            }
         ],
         "controls": controls,
         "model_runs": [
@@ -166,6 +174,11 @@ def test_campaign_allows_existing_oss_task_without_new_oracle_or_model_runs(
                         "task_id": "demo",
                         "model": "gpt-5.6-sol",
                         "prefix": "nl2repobench/runs/gpt-5.6-sol/demo/trial/",
+                        "status": "completed",
+                        "evidence_keys": [
+                            "nl2repobench/runs/gpt-5.6-sol/demo/trial/result.json"
+                        ],
+                        "revision_binding": "unbound-legacy",
                     }
                 ],
                 "candidate": {
@@ -206,6 +219,37 @@ def test_campaign_allows_existing_oss_task_without_new_oracle_or_model_runs(
 
     assert result["task_count"] == 1
     assert source.is_file() and harbor.is_file()
+
+
+def test_campaign_binds_oss_inventory_hash(tmp_path: Path) -> None:
+    inventory = tmp_path / "inventory.json"
+    inventory.write_text(
+        json.dumps({"source": "oss", "runs": []}), encoding="utf-8"
+    )
+    import hashlib
+
+    path = tmp_path / "campaign.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "as_of": "2026-08-23T00:00:00Z",
+                "oss_run_inventory": {
+                    "path": "inventory.json",
+                    "sha256": "sha256:" + hashlib.sha256(inventory.read_bytes()).hexdigest(),
+                },
+                "datasets": [{"dataset_id": "python-v1", "language": "python"}],
+                "tasks": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = campaign.validate_campaign(
+        path, catalog_root=tmp_path / "catalog", minimum_tasks=0, allow_below_target=True
+    )
+
+    assert result["task_count"] == 0
 
 
 def test_published_dataset_validator_matches_compiled_entries(tmp_path: Path) -> None:

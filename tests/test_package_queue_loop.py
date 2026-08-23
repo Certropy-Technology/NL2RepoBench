@@ -100,3 +100,38 @@ def test_queue_rejects_changed_input_hash(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="queue changed"):
         loop.command_status(_args(queue=queue, state=state))
+
+
+def test_queue_terminalizes_expired_lease_at_attempt_limit(tmp_path: Path) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    with loop.locked_state(state) as payload:
+        payload["items"]["python-demo"].update(
+            {
+                "status": "running",
+                "owner": "dead-worker",
+                "lease_expires_at": "2000-01-01T00:00:00+00:00",
+                "attempts": 1,
+            }
+        )
+
+    assert (
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="worker-b",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=1,
+                language=None,
+            )
+        )
+        == 2
+    )
+    with loop.locked_state(state) as payload:
+        record = payload["items"]["python-demo"]
+        assert record["status"] == "blocked"
+        assert record["failure_class"] == "infrastructure"

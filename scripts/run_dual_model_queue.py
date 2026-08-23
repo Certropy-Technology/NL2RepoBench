@@ -69,16 +69,19 @@ def campaign_tasks(path: Path) -> tuple[str, ...]:
     return tuple(task_ids)
 
 
-def existing_model_runs(path: Path | None) -> dict[str, set[str]]:
+def existing_model_runs(
+    path: Path | None,
+) -> tuple[dict[str, set[str]], dict[str, list[dict[str, Any]]]]:
     """Load a trusted OSS run inventory keyed by model and task."""
 
     if path is None:
-        return {}
+        return {}, {}
     payload = _json(path)
     raw_runs = payload.get("runs")
     if not isinstance(raw_runs, list):
         raise ValueError("existing run inventory requires a runs list")
     result: dict[str, set[str]] = {}
+    refs_by_task: dict[str, list[dict[str, Any]]] = {}
     for raw in raw_runs:
         if not isinstance(raw, dict):
             raise ValueError("existing run inventory entries must be objects")
@@ -86,10 +89,18 @@ def existing_model_runs(path: Path | None) -> dict[str, set[str]]:
         task_id = raw.get("task_id")
         if not isinstance(model, str) or not isinstance(task_id, str):
             raise ValueError("existing run inventory requires model and task_id")
-        if raw.get("source") not in {"oss", "oss-manifest"}:
+        if raw.get("source") != "oss":
             raise ValueError(f"existing run is not OSS-backed: {model}/{task_id}")
+        if raw.get("status") not in {"completed", "errored"}:
+            raise ValueError(f"existing run is not a finished trial: {model}/{task_id}")
+        evidence_keys = raw.get("evidence_keys")
+        if not isinstance(evidence_keys, list) or not any(
+            isinstance(key, str) and key.endswith("result.json") for key in evidence_keys
+        ):
+            raise ValueError(f"existing run lacks result evidence: {model}/{task_id}")
         result.setdefault(model, set()).add(task_id)
-    return result
+        refs_by_task.setdefault(task_id, []).append(raw)
+    return result, refs_by_task
 
 
 def build_plan(
@@ -101,7 +112,8 @@ def build_plan(
     existing_inventory: Path | None = None,
 ) -> dict[str, Any]:
     tasks = campaign_tasks(campaign_path)
-    existing = existing_model_runs(existing_inventory)
+    existing, refs_by_task = existing_model_runs(existing_inventory)
+    existing_tasks = set(refs_by_task)
     campaign = _json(campaign_path)
     campaign_id = campaign.get("campaign_id") or campaign_path.stem
     if not isinstance(campaign_id, str) or SAFE_NAME.fullmatch(campaign_id) is None:
@@ -109,7 +121,6 @@ def build_plan(
     queues: list[dict[str, Any]] = []
     for spec in MODEL_SPECS:
         api, _, _ = provider_config(models_file, spec.provider, spec.model_id)
-        existing_tasks = set().union(*existing.values()) if existing else set()
         missing_tasks = [task for task in tasks if task not in existing_tasks]
         queues.append(
             {
@@ -136,6 +147,10 @@ def build_plan(
             if existing_inventory
             else None
         ),
+        "skipped_existing_tasks": sorted(existing_tasks.intersection(tasks)),
+        "existing_oss_runs": {
+            task: refs_by_task[task] for task in sorted(existing_tasks.intersection(tasks))
+        },
         "models": queues,
         "credential_policy": "Pi provider config only; no key in plan or argv",
     }

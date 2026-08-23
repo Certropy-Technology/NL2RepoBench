@@ -207,7 +207,8 @@ harbor-runner/.venv/bin/python -m harbor.utils.trajectory_validator <trajectory.
 
 ## 7. OSS 归档
 
-先生成 manifest，再做远端 prefix collision check：
+先生成 manifest，再在实际上传时做远端 exact-key collision check；`--dry-run`
+只检查本地计划，不访问 OSS：
 
 ```bash
 python3 scripts/upload_runs_to_oss.py \

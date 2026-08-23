@@ -255,7 +255,8 @@ def build_queue(
                 current["conflicts"] = sorted(set(current["conflicts"]))
     queue = []
     for record in sorted(
-        records.values(), key=lambda item: (item["language"], item["package"].casefold())
+        records.values(),
+        key=lambda item: (item["language"], item["package"].casefold(), item["candidate_id"]),
     ):
         record["selection_sources"] = sorted(
             record["selection_sources"], key=lambda item: (item["report"], item["shape"])

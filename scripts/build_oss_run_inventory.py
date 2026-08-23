@@ -36,8 +36,31 @@ def _objects(bucket: Any, prefix: str) -> Iterable[Any]:
     return oss2.ObjectIterator(bucket, prefix=prefix)
 
 
-def inventory(bucket: Any, *, prefix: str = ROOT_PREFIX) -> dict[str, Any]:
-    runs: dict[tuple[str, str, str], dict[str, str]] = {}
+def canonical_task_id(raw: str, known_tasks: set[str]) -> str | None:
+    if raw in known_tasks:
+        return raw
+    matches = [
+        task
+        for task in known_tasks
+        if raw.startswith(f"{task}-") or raw.endswith(f"-{task}")
+    ]
+    return max(matches, key=len) if matches else None
+
+
+def inventory(
+    bucket: Any,
+    *,
+    prefix: str = ROOT_PREFIX,
+    known_tasks: set[str] | None = None,
+) -> dict[str, Any]:
+    if known_tasks is None:
+        catalog = Path("catalog/tasks")
+        known_tasks = {
+            path.name
+            for path in catalog.iterdir()
+            if path.is_dir() and not path.name.startswith(".")
+        } if catalog.is_dir() else set()
+    runs: dict[tuple[str, str, str], dict[str, Any]] = {}
     object_count = 0
     for obj in _objects(bucket, prefix):
         key = str(getattr(obj, "key", ""))
@@ -45,18 +68,61 @@ def inventory(bucket: Any, *, prefix: str = ROOT_PREFIX) -> dict[str, Any]:
         parts = key.split("/")
         if len(parts) < 5 or parts[:2] != ["nl2repobench", "runs"]:
             continue
-        model, task, trial = parts[2:5]
-        if model not in MODELS or not task or not trial:
+        model, raw_task, trial = parts[2:5]
+        if model not in MODELS or not raw_task or not trial or trial.endswith(".log"):
+            continue
+        task = canonical_task_id(raw_task, known_tasks)
+        if task is None:
             continue
         identity = (model, task, trial)
-        runs[identity] = {
-            "model": model,
-            "task_id": task,
-            "trial": trial,
-            "source": "oss",
-            "prefix": "/".join(parts[:5]) + "/",
-        }
-    rows = sorted(runs.values(), key=lambda row: (row["model"], row["task_id"], row["trial"]))
+        record = runs.setdefault(
+            identity,
+            {
+                "model": model,
+                "task_id": task,
+                "trial": trial,
+                "source": "oss",
+                "prefix": "/".join(parts[:5]) + "/",
+                "object_keys": [],
+            },
+        )
+        record["object_keys"].append(key)
+    verified: list[dict[str, Any]] = []
+    for record in runs.values():
+        object_keys = set(record.pop("object_keys", []))
+        prefix_key = record["prefix"]
+        result_key = prefix_key + "result.json"
+        if result_key not in object_keys:
+            continue
+        try:
+            payload = json.loads(bucket.get_object(result_key).read())
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError):
+            continue
+        if not isinstance(payload, dict) or payload.get("finished_at") is None:
+            continue
+        stats = payload.get("stats")
+        stats = stats if isinstance(stats, dict) else {}
+        completed = stats.get("n_completed_trials", 0)
+        errored = stats.get("n_errored_trials", 0)
+        if not isinstance(completed, int) or not isinstance(errored, int):
+            continue
+        if completed < 1 and errored < 1:
+            continue
+        grading_keys = sorted(key for key in object_keys if key.endswith("/grading.json"))
+        record.update(
+            {
+                "status": "completed" if completed > 0 else "errored",
+                "result_key": result_key,
+                "grading_keys": grading_keys,
+                "evidence_keys": [result_key, *grading_keys],
+                "finished_at": payload.get("finished_at"),
+                "n_completed_trials": completed,
+                "n_errored_trials": errored,
+                "revision_binding": "unbound-legacy",
+            }
+        )
+        verified.append(record)
+    rows = sorted(verified, key=lambda row: (row["model"], row["task_id"], row["trial"]))
     return {
         "schema_version": "1.0",
         "source": "oss",

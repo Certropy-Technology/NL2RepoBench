@@ -156,10 +156,20 @@ def command_claim(args: argparse.Namespace) -> int:
             record = items[candidate_id]
             if args.language and record.get("language") != args.language:
                 continue
-            if int(record.get("attempts", 0)) >= args.max_attempts:
-                continue
             if record.get("status") == "running":
                 if not lease_expired(record):
+                    continue
+                if int(record.get("attempts", 0)) >= args.max_attempts:
+                    record.update(
+                        {
+                            "status": "blocked",
+                            "owner": None,
+                            "lease_expires_at": None,
+                            "reason": "lease expired at retry limit",
+                            "failure_class": "infrastructure",
+                            "updated_at": now(),
+                        }
+                    )
                     continue
                 record["status"] = "pending"
                 record["retry_history"] = [
@@ -170,6 +180,8 @@ def command_claim(args: argparse.Namespace) -> int:
                         "recorded_at": now(),
                     },
                 ]
+            if int(record.get("attempts", 0)) >= args.max_attempts:
+                continue
             if record.get("status") not in ACTIVE:
                 continue
             record.update(

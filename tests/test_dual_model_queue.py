@@ -127,7 +127,13 @@ def test_dual_plan_skips_only_oss_backed_existing_runs(tmp_path: Path, monkeypat
         json.dumps(
             {
                 "runs": [
-                    {"model": "gpt-5.6-sol", "task_id": "demo", "source": "oss"}
+                    {
+                        "model": "gpt-5.6-sol",
+                        "task_id": "demo",
+                        "source": "oss",
+                        "status": "completed",
+                        "evidence_keys": ["nl2repobench/runs/gpt-5.6-sol/demo/trial/result.json"],
+                    }
                 ]
             }
         ),

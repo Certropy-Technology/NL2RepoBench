@@ -10,6 +10,7 @@ selection, Oracle/control, model-run, and archive references.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -133,6 +134,21 @@ def _validate_oracle(task: dict[str, Any], task_id: str) -> None:
             raise ValueError(f"{task_id}: Oracle run {index + 1} lacks collection evidence")
         if total != collected:
             raise ValueError(f"{task_id}: Oracle collection mismatch in run {index + 1}")
+        oracle_ceiling = run.get("oracle_ceiling")
+        failure_set = run.get("failure_set")
+        if (
+            isinstance(oracle_ceiling, bool)
+            or not isinstance(oracle_ceiling, (int, float))
+            or not math.isfinite(float(oracle_ceiling))
+            or abs(float(oracle_ceiling) - float(reward)) > 1e-9
+        ):
+            raise ValueError(f"{task_id}: Oracle ceiling must equal the recorded reward")
+        if not isinstance(failure_set, list) or not all(
+            isinstance(item, str) and item for item in failure_set
+        ):
+            raise ValueError(f"{task_id}: Oracle failure_set must be a list of test IDs")
+        if reward < 1.0 and not isinstance(run.get("reason"), str):
+            raise ValueError(f"{task_id}: sub-1.0 Oracle requires a failure reason")
         if expected is None:
             expected = total
         elif expected != total:
@@ -222,6 +238,15 @@ def _validate_existing_oss_runs(task: dict[str, Any], task_id: str) -> None:
         model = ref.get("model")
         if model not in TARGET_MODELS:
             raise ValueError(f"{task_id}: OSS exemption has unsupported model")
+        if ref.get("status") not in {"completed", "errored"}:
+            raise ValueError(f"{task_id}: OSS exemption run is not finished")
+        evidence_keys = ref.get("evidence_keys")
+        if not isinstance(evidence_keys, list) or not any(
+            isinstance(key, str) and key.endswith("result.json") for key in evidence_keys
+        ):
+            raise ValueError(f"{task_id}: OSS exemption lacks result evidence")
+        if ref.get("revision_binding") not in {"matched", "unbound-legacy"}:
+            raise ValueError(f"{task_id}: OSS exemption lacks revision binding classification")
         prefix = ref.get("prefix")
         if not isinstance(prefix, str) or not prefix.startswith("nl2repobench/runs/"):
             raise ValueError(f"{task_id}: OSS exemption lacks a valid run prefix")
@@ -238,6 +263,22 @@ def validate_campaign(
     if campaign.get("schema_version") != "1.0":
         raise ValueError("campaign schema_version must be 1.0")
     as_of = _parse_date(campaign.get("as_of"), "campaign.as_of")
+    inventory_meta = campaign.get("oss_run_inventory")
+    if inventory_meta is not None:
+        inventory_meta = _required_dict(inventory_meta, "campaign.oss_run_inventory")
+        inventory_value = inventory_meta.get("path")
+        expected_digest = inventory_meta.get("sha256")
+        if not isinstance(inventory_value, str) or not isinstance(expected_digest, str):
+            raise ValueError("campaign OSS inventory requires path and sha256")
+        inventory_path = (campaign_path.parent / inventory_value).resolve()
+        if not inventory_path.is_file():
+            raise ValueError(f"campaign OSS inventory is missing: {inventory_path}")
+        actual_digest = "sha256:" + hashlib.sha256(inventory_path.read_bytes()).hexdigest()
+        if actual_digest != expected_digest:
+            raise ValueError("campaign OSS inventory hash differs from campaign")
+        inventory = _read_json(inventory_path)
+        if inventory.get("source") != "oss":
+            raise ValueError("campaign OSS inventory is not OSS-sourced")
     datasets = campaign.get("datasets")
     if not isinstance(datasets, list) or not datasets:
         raise ValueError("campaign.datasets must be a non-empty list")

@@ -111,3 +111,35 @@ def test_model_campaign_report_rejects_foreign_model_rows(tmp_path: Path) -> Non
 
     with pytest.raises(ValueError, match="model mismatch"):
         reporter.build_report(plan)
+
+
+def test_model_campaign_report_retains_oss_exemption_without_new_results(
+    tmp_path: Path,
+) -> None:
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "campaign_id": "pilot",
+                "tasks": ["demo"],
+                "skipped_existing_tasks": ["demo"],
+                "existing_oss_runs": {
+                    "demo": [{"source": "oss", "task_id": "demo"}]
+                },
+                "models": [
+                    {"model_id": "gpt-5.6-sol", "run_root": str(tmp_path / "gpt"), "tasks": []},
+                    {
+                        "model_id": "claude-fable-5",
+                        "run_root": str(tmp_path / "fable"),
+                        "tasks": [],
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = reporter.build_report(plan)
+
+    assert report["missing"] == []
+    assert report["tasks"][0]["existing_oss"] is True

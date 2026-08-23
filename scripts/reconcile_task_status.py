@@ -66,6 +66,8 @@ NO_TEST_PATTERNS = (
 
 
 def _load_source(path: Path) -> tuple[dict[str, Any] | None, str | None]:
+    if path.is_symlink():
+        return None, "task.toml must not be a symlink"
     try:
         payload = tomllib.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
@@ -145,12 +147,14 @@ def _lifecycle_errors(status: str, lifecycle: dict[str, Any], reason_kind: str) 
 def reconcile(catalog_root: Path) -> dict[str, Any]:
     records: list[dict[str, Any]] = []
     counts: dict[str, int] = {}
-    if not catalog_root.is_dir():
+    if catalog_root.is_symlink() or not catalog_root.is_dir():
         raise ValueError(f"catalog root does not exist: {catalog_root}")
 
     for task_dir in sorted(path for path in catalog_root.iterdir() if path.is_dir()):
         if task_dir.name.startswith("."):
             continue
+        if task_dir.is_symlink():
+            raise ValueError(f"catalog task directory must not be a symlink: {task_dir}")
         source_path = task_dir / "task.toml"
         blocker_document = _document_blocker(task_dir)
         blocked_docs = blocker_document[0] if blocker_document else []

@@ -357,6 +357,8 @@ python scripts/run_dual_model_queue.py \
 计划固定 `gpt-5.6-sol` 与 `claude-fable-5` 各一条 serial queue，provider 只从
 Pi 的 mode-600 `models.json` 读取；`--existing-inventory` 中已经存在于 OSS 的
 `task_id` 会被整体跳过，不再运行模型或 Oracle，即使历史 run 只记录了一个模型。
+这是用户指定的运行去重政策，不是 source provenance 证明；历史 OSS 记录会标为
+`revision_binding=unbound-legacy`，当前题目的 source lock 仍必须独立通过发布门禁。
 失败不静默重试，只有 Harbor 已分类的 infrastructure failure 可由底层 wrapper
 重试。
 

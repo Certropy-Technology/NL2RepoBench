@@ -51,6 +51,10 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
     models = plan.get("models")
     if not isinstance(tasks, list) or not isinstance(models, list) or not models:
         raise ValueError("model plan requires tasks and models")
+    skipped = set(plan.get("skipped_existing_tasks", []))
+    if not skipped.issubset(set(tasks)):
+        raise ValueError("model plan skipped tasks must be declared in tasks")
+    required_tasks = set(tasks) - skipped
     normalized_by_model: dict[str, list[dict[str, Any]]] = {}
     all_rows: list[dict[str, Any]] = []
     missing: list[dict[str, str]] = []
@@ -62,6 +66,9 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
         if not isinstance(model_id, str) or not isinstance(run_root, str):
             raise ValueError("model plan model requires model_id and run_root")
         root = Path(run_root)
+        if "tasks" in model_plan and not model_plan.get("tasks"):
+            normalized_by_model[model_id] = []
+            continue
         frame, errors = load_results([root])
         if errors:
             raise ValueError(f"result parse errors for {model_id}: {errors[:3]}")
@@ -76,10 +83,10 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
         normalized_by_model[model_id] = rows
         all_rows.extend(rows)
         seen = {str(row.get("task_id")) for row in rows}
-        extras = seen - {str(task_id) for task_id in tasks}
+        extras = seen - {str(task_id) for task_id in required_tasks}
         if extras:
             raise ValueError(f"unexpected task results for {model_id}: {sorted(extras)}")
-        for task_id in tasks:
+        for task_id in required_tasks:
             if task_id not in seen:
                 missing.append({"model": model_id, "task_id": str(task_id)})
     if require_all and missing:
@@ -87,20 +94,51 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
 
     records: list[dict[str, Any]] = []
     for task_id in tasks:
+        if task_id in skipped:
+            refs = plan.get("existing_oss_runs", {}).get(task_id, [])
+            records.append(
+                {
+                    "task_id": task_id,
+                    "existing_oss": True,
+                    "oss_run_refs": refs,
+                    "model_runs": [],
+                }
+            )
+            continue
         task_record = {"task_id": task_id, "model_runs": []}
         for model_plan in models:
             model_id = model_plan["model_id"]
             rows = [row for row in normalized_by_model[model_id] if row.get("task_id") == task_id]
             valid_rows = [row for row in rows if row.get("valid") is True]
-            rewards = [row["reward"] for row in valid_rows if row.get("reward") is not None]
+            for row in valid_rows:
+                if row.get("reward") is None:
+                    raise ValueError(f"completed result lacks reward: {model_id}/{task_id}")
+            rewards = [row["reward"] for row in valid_rows]
+            failure_class = _failure_class(rows)
+            retry_history = [
+                row.get("failure_class")
+                for row in rows
+                if row.get("valid") is not True and row.get("failure_class") is not None
+            ]
+            if valid_rows:
+                status = "completed"
+                valid = True
+                terminal_failure_class = None
+            else:
+                if failure_class is None:
+                    raise ValueError(f"failed result lacks failure class: {model_id}/{task_id}")
+                status = "failed"
+                valid = False
+                terminal_failure_class = failure_class
             task_record["model_runs"].append(
                 {
                     "model": model_id,
                     "attempts": len(rows),
-                    "status": "completed" if valid_rows else "failed",
-                    "failure_class": _failure_class(rows),
-                    "valid": bool(valid_rows),
+                    "status": status,
+                    "failure_class": terminal_failure_class,
+                    "valid": valid,
                     "rewards": rewards,
+                    "retry_history": retry_history,
                 }
             )
         records.append(task_record)
@@ -111,6 +149,7 @@ def build_report(plan_path: Path, *, require_all: bool = True) -> dict[str, Any]
         "plan_sha256": "sha256:" + hashlib.sha256(plan_path.read_bytes()).hexdigest(),
         "task_count": len(tasks),
         "models": [model["model_id"] for model in models],
+        "skipped_existing_tasks": sorted(skipped),
         "tasks": records,
         "missing": missing,
         "summary": summarize_results(summary_frame),

@@ -2,7 +2,7 @@
 
 > This document describes the historical Harbor pilot. The current Package
 > campaign uses a one-run Oracle gate and skips model/Oracle reruns when an
-> OSS run inventory already contains the task/model pair. See
+> OSS run inventory already contains the task ID. See
 > `docs/authoring-pipeline-ast.zh-CN.md` for the active workflow.
 
 ## What This Benchmark Measures
