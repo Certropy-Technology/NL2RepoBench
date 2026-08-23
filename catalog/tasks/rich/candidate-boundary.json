@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "status": "proposed-audit-contract",
+  "purpose": "Deterministic child-side adapter boundary for captured Rich rendering; not a Harbor bundle and not a candidate CLI requirement.",
+  "transport": {
+    "mode": "jsonl",
+    "encoding": "utf-8",
+    "request": "one JSON object per line on stdin",
+    "response": "one JSON object per line on stdout",
+    "stderr": "diagnostics only; never parsed as a result",
+    "canonical_json": {
+      "ensure_ascii": false,
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "allow_nan": false
+    }
+  },
+  "request": {
+    "required": ["id", "operation", "payload"],
+    "id_type": "string",
+    "operations": ["text", "json", "markdown", "syntax", "table"],
+    "options": {
+      "width": "positive integer; default 80",
+      "color_system": "null or explicit Rich color system",
+      "force_terminal": "boolean; default false",
+      "markup": "boolean; default false",
+      "emoji": "boolean; default false"
+    },
+    "payload_policy": "JSON-compatible scalars, arrays, and objects only; no callables, file handles, live tasks, clocks, or terminal handles"
+  },
+  "response": {
+    "success": {"id": "string", "ok": true, "text": "string"},
+    "failure": {"id": "string", "ok": false, "error_type": "string", "message": "string"}
+  },
+  "text_normalization": {
+    "line_endings": "LF",
+    "trailing_newline": "exactly one",
+    "ansi": "absent when color_system is null and force_terminal is false",
+    "environment": "TERM=dumb, COLUMNS=80, LINES=24, LC_ALL=C.UTF-8, PYTHONHASHSEED=0",
+    "forbidden_output": ["timestamps", "object addresses", "progress refresh frames", "terminal cursor controls unless explicitly requested"]
+  },
+  "publication_state": "blocked-until-subprocess-adapter-and-offline-closure-are-proven"
+}
