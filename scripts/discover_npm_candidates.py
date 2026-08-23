@@ -13,6 +13,27 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+RISKY_PACKAGES = {
+    "better-sqlite3": ["native", "database"],
+    "esbuild": ["native", "build-tool"],
+    "sharp": ["native", "platform-binary"],
+    "axios": ["network"],
+    "express": ["network", "server"],
+    "fastify": ["network", "server"],
+    "koa": ["network", "server"],
+    "socket.io": ["network", "server"],
+    "ws": ["network"],
+    "undici": ["network"],
+    "node-fetch": ["network"],
+    "jsdom": ["browser-emulation", "network"],
+    "execa": ["process"],
+    "vite": ["build-tool", "native-optional"],
+    "rollup": ["build-tool"],
+    "typescript": ["build-tool", "large-suite"],
+    "eslint": ["dynamic-loader", "build-tool"],
+    "prettier": ["build-tool", "large-suite"],
+}
+
 
 def _get_json(url: str) -> dict[str, Any]:
     request = urllib.request.Request(url, headers={"User-Agent": "NL2RepoBench-authoring/1.0"})
@@ -82,6 +103,7 @@ def discover(package: str, observed_at: str) -> dict[str, Any]:
         "latest_version": latest,
         "observed_at": observed_at,
         "test_evidence": "requires source-freeze AST/test inventory",
+        "risk_flags": RISKY_PACKAGES.get(package, []),
         "status": "needs-evidence",
     }
 

@@ -1,0 +1,170 @@
+{
+  "batch_id": "node-production-author-20260823",
+  "candidate_input": "reports/npm-production-queue-20260823.json",
+  "candidate_input_sha256": "sha256:a3e99af48f4cb493529b6c3af392475fc223da69a47cd10eb7a88b33b6aca5a8",
+  "language": "node",
+  "oss_inventory": "reports/oss-run-inventory.json",
+  "parallelism": {
+    "shared_integrator_writers": 1,
+    "workers": 5
+  },
+  "risk_policy": "safe-first",
+  "schema_version": "1.0",
+  "skipped": [
+    {
+      "package": "axios",
+      "reason": "risk-flags:network"
+    },
+    {
+      "package": "better-sqlite3",
+      "reason": "risk-flags:database,native"
+    },
+    {
+      "package": "esbuild",
+      "reason": "risk-flags:build-tool,native"
+    },
+    {
+      "package": "eslint",
+      "reason": "risk-flags:build-tool,dynamic-loader"
+    },
+    {
+      "package": "execa",
+      "reason": "risk-flags:process"
+    },
+    {
+      "package": "express",
+      "reason": "risk-flags:network,server"
+    },
+    {
+      "package": "fastify",
+      "reason": "risk-flags:network,server"
+    },
+    {
+      "package": "jsdom",
+      "reason": "risk-flags:browser-emulation,network"
+    },
+    {
+      "package": "koa",
+      "reason": "risk-flags:network,server"
+    }
+  ],
+  "stages": [
+    "source-freeze",
+    "ast-inventory",
+    "test-inventory",
+    "dependency-probe",
+    "harbor-package",
+    "verifier-build",
+    "oracle-once",
+    "controls",
+    "review-handoff"
+  ],
+  "status": "planned",
+  "tasks": [
+    {
+      "candidate_id": "https-github-com-cheeriojs-cheerio-97d99ecf637b",
+      "language": "node",
+      "package": "cheerio",
+      "production_gate": "Node 24 locked toolchain, AST/test inventory, offline closure, Harbor compile, verifier build, Oracle once, controls, review",
+      "revision": "808f8456b38a730497c675f1478d659cc4adfefe",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/cheeriojs/cheerio",
+      "worker_boundary": "catalog/tasks/cheerio/** only"
+    },
+    {
+      "candidate_id": "https-github-com-date-fns-date-fns-5810735b1a60",
+      "language": "node",
+      "package": "date-fns",
+      "production_gate": "Node 24 locked toolchain, AST/test inventory, offline closure, Harbor compile, verifier build, Oracle once, controls, review",
+      "revision": "a0a39220522ed1228445792c768ed887709aea5f",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/date-fns/date-fns",
+      "worker_boundary": "catalog/tasks/date-fns/** only"
+    },
+    {
+      "candidate_id": "https-github-com-mrmlnc-fast-glob-b908fb229d7f",
+      "language": "node",
+      "package": "fast-glob",
+      "production_gate": "Node 24 locked toolchain, AST/test inventory, offline closure, Harbor compile, verifier build, Oracle once, controls, review",
+      "revision": "467b65a79ed1b84fd9fd18966deda8a4e57b8e0e",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/mrmlnc/fast-glob",
+      "worker_boundary": "catalog/tasks/fast-glob/** only"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-globby-7eec0f9a0621",
+      "language": "node",
+      "package": "globby",
+      "production_gate": "Node 24 locked toolchain, AST/test inventory, offline closure, Harbor compile, verifier build, Oracle once, controls, review",
+      "revision": "46cf13ff8bf5f0e0db96c4985faf83a59d194777",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/sindresorhus/globby",
+      "worker_boundary": "catalog/tasks/globby/** only"
+    },
+    {
+      "candidate_id": "https-github-com-lodash-lodash-81d116c0938b",
+      "language": "node",
+      "package": "lodash",
+      "production_gate": "Node 24 locked toolchain, AST/test inventory, offline closure, Harbor compile, verifier build, Oracle once, controls, review",
+      "revision": "a666ba591064c8011988275790ad7d625279f09c",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/lodash/lodash",
+      "worker_boundary": "catalog/tasks/lodash/** only"
+    }
+  ]
+}

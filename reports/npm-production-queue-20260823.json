@@ -1,0 +1,719 @@
+{
+  "counts": {
+    "candidate": 27
+  },
+  "observed_at": "2026-08-23T13:32:05Z",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-axios-axios-ee40d88ea29e",
+      "conflicts": [],
+      "identity": "https://github.com/axios/axios",
+      "language": "node",
+      "last_activity": "2026-07-29T17:07:54.912Z",
+      "license_evidence": "https://www.npmjs.com/package/axios",
+      "license_spdx": "MIT",
+      "monthly_downloads": 478298666,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "axios",
+      "revision": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
+      "risk_flags": [
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/axios/axios"
+    },
+    {
+      "candidate_id": "https-github-com-wiselibs-better-sqlite3-cb77b525e1dc",
+      "conflicts": [],
+      "identity": "https://github.com/WiseLibs/better-sqlite3",
+      "language": "node",
+      "last_activity": "2026-08-05T03:47:44.751Z",
+      "license_evidence": "https://www.npmjs.com/package/better-sqlite3",
+      "license_spdx": "MIT",
+      "monthly_downloads": 37869416,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "better-sqlite3",
+      "revision": "f8e2d541208281368129929a96f70f937c0735ef",
+      "risk_flags": [
+        "database",
+        "native"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/WiseLibs/better-sqlite3"
+    },
+    {
+      "candidate_id": "https-github-com-cheeriojs-cheerio-97d99ecf637b",
+      "conflicts": [],
+      "identity": "https://github.com/cheeriojs/cheerio",
+      "language": "node",
+      "last_activity": "2026-01-23T16:29:49.559Z",
+      "license_evidence": "https://www.npmjs.com/package/cheerio",
+      "license_spdx": "MIT",
+      "monthly_downloads": 112560285,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "cheerio",
+      "revision": "808f8456b38a730497c675f1478d659cc4adfefe",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/cheeriojs/cheerio"
+    },
+    {
+      "candidate_id": "https-github-com-date-fns-date-fns-5810735b1a60",
+      "conflicts": [],
+      "identity": "https://github.com/date-fns/date-fns",
+      "language": "node",
+      "last_activity": "2026-05-29T23:23:42.628Z",
+      "license_evidence": "https://www.npmjs.com/package/date-fns",
+      "license_spdx": "MIT",
+      "monthly_downloads": 401953426,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "date-fns",
+      "revision": "a0a39220522ed1228445792c768ed887709aea5f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/date-fns/date-fns"
+    },
+    {
+      "candidate_id": "https-github-com-evanw-esbuild-0bc70df4ac94",
+      "conflicts": [],
+      "identity": "https://github.com/evanw/esbuild",
+      "language": "node",
+      "last_activity": "2026-08-08T20:00:55.454Z",
+      "license_evidence": "https://www.npmjs.com/package/esbuild",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1071929084,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "esbuild",
+      "revision": "f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
+      "risk_flags": [
+        "build-tool",
+        "native"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/evanw/esbuild"
+    },
+    {
+      "candidate_id": "https-github-com-eslint-eslint-1ce554b31982",
+      "conflicts": [],
+      "identity": "https://github.com/eslint/eslint",
+      "language": "node",
+      "last_activity": "2026-08-21T13:07:47.620Z",
+      "license_evidence": "https://www.npmjs.com/package/eslint",
+      "license_spdx": "MIT",
+      "monthly_downloads": 638788491,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "eslint",
+      "revision": "c27bc926e496985eb7911c09eb60914b2e4b5d0f",
+      "risk_flags": [
+        "build-tool",
+        "dynamic-loader"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/eslint/eslint"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-execa-77f24959d5c8",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/execa",
+      "language": "node",
+      "last_activity": "2026-07-31T02:11:27.763Z",
+      "license_evidence": "https://www.npmjs.com/package/execa",
+      "license_spdx": "MIT",
+      "monthly_downloads": 635043236,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "execa",
+      "revision": "8017b279e19347efaf2587711c2d57dbd4330740",
+      "risk_flags": [
+        "process"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/execa"
+    },
+    {
+      "candidate_id": "https-github-com-expressjs-express-f12f3d8cb55a",
+      "conflicts": [],
+      "identity": "https://github.com/expressjs/express",
+      "language": "node",
+      "last_activity": "2025-12-01T20:49:43.268Z",
+      "license_evidence": "https://www.npmjs.com/package/express",
+      "license_spdx": "MIT",
+      "monthly_downloads": 523119096,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "express",
+      "revision": "023767fe9872e029271df1418f73401bff20ff40",
+      "risk_flags": [
+        "network",
+        "server"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/expressjs/express"
+    },
+    {
+      "candidate_id": "https-github-com-mrmlnc-fast-glob-b908fb229d7f",
+      "conflicts": [],
+      "identity": "https://github.com/mrmlnc/fast-glob",
+      "language": "node",
+      "last_activity": "2025-01-05T10:38:42.236Z",
+      "license_evidence": "https://www.npmjs.com/package/fast-glob",
+      "license_spdx": "MIT",
+      "monthly_downloads": 609467502,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "fast-glob",
+      "revision": "467b65a79ed1b84fd9fd18966deda8a4e57b8e0e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/mrmlnc/fast-glob"
+    },
+    {
+      "candidate_id": "https-github-com-fastify-fastify-3fc86703f4dd",
+      "conflicts": [],
+      "identity": "https://github.com/fastify/fastify",
+      "language": "node",
+      "last_activity": "2026-08-18T19:51:15.791Z",
+      "license_evidence": "https://www.npmjs.com/package/fastify",
+      "license_spdx": "MIT",
+      "monthly_downloads": 45648702,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "fastify",
+      "revision": "4176096a31f5b4c31512c36f578b08a596a72435",
+      "risk_flags": [
+        "network",
+        "server"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/fastify/fastify"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-globby-7eec0f9a0621",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/globby",
+      "language": "node",
+      "last_activity": "2026-08-19T17:05:37.965Z",
+      "license_evidence": "https://www.npmjs.com/package/globby",
+      "license_spdx": "MIT",
+      "monthly_downloads": 361856869,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "globby",
+      "revision": "46cf13ff8bf5f0e0db96c4985faf83a59d194777",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/globby"
+    },
+    {
+      "candidate_id": "https-github-com-jsdom-jsdom-6b60d2340458",
+      "conflicts": [],
+      "identity": "https://github.com/jsdom/jsdom",
+      "language": "node",
+      "last_activity": "2026-07-29T04:18:42.378Z",
+      "license_evidence": "https://www.npmjs.com/package/jsdom",
+      "license_spdx": "MIT",
+      "monthly_downloads": 375738767,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "jsdom",
+      "revision": "52be38ea0ce303b0756c7086ce8b3b9d74b0553b",
+      "risk_flags": [
+        "browser-emulation",
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/jsdom/jsdom"
+    },
+    {
+      "candidate_id": "https-github-com-koajs-koa-3ab12e9c35ad",
+      "conflicts": [],
+      "identity": "https://github.com/koajs/koa",
+      "language": "node",
+      "last_activity": "2026-05-21T07:25:34.368Z",
+      "license_evidence": "https://www.npmjs.com/package/koa",
+      "license_spdx": "MIT",
+      "monthly_downloads": 32294869,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "koa",
+      "revision": "9c202e0077f4e314795222aff1be0da0bf9b2493",
+      "risk_flags": [
+        "network",
+        "server"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/koajs/koa"
+    },
+    {
+      "candidate_id": "https-github-com-lodash-lodash-81d116c0938b",
+      "conflicts": [],
+      "identity": "https://github.com/lodash/lodash",
+      "language": "node",
+      "last_activity": "2026-04-01T21:01:20.458Z",
+      "license_evidence": "https://www.npmjs.com/package/lodash",
+      "license_spdx": "MIT",
+      "monthly_downloads": 687350390,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "lodash",
+      "revision": "a666ba591064c8011988275790ad7d625279f09c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/lodash/lodash"
+    },
+    {
+      "candidate_id": "https-github-com-node-fetch-node-fetch-beb86783f0c2",
+      "conflicts": [],
+      "identity": "https://github.com/node-fetch/node-fetch",
+      "language": "node",
+      "last_activity": "2023-07-25T11:50:17.626Z",
+      "license_evidence": "https://www.npmjs.com/package/node-fetch",
+      "license_spdx": "MIT",
+      "monthly_downloads": 708897938,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "node-fetch",
+      "revision": "8b3320d2a7c07bce4afc6b2bf6c3bbddda85b01f",
+      "risk_flags": [
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/node-fetch/node-fetch"
+    },
+    {
+      "candidate_id": "https-github-com-pinojs-pino-2d602af8224e",
+      "conflicts": [],
+      "identity": "https://github.com/pinojs/pino",
+      "language": "node",
+      "last_activity": "2026-02-09T15:50:56.728Z",
+      "license_evidence": "https://www.npmjs.com/package/pino",
+      "license_spdx": "MIT",
+      "monthly_downloads": 175180643,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "pino",
+      "revision": "b394c2c16ac6a8919cd33d7f5684a01baca1096f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/pinojs/pino"
+    },
+    {
+      "candidate_id": "https-github-com-prettier-prettier-e9238e80d3db",
+      "conflicts": [],
+      "identity": "https://github.com/prettier/prettier",
+      "language": "node",
+      "last_activity": "2026-07-21T05:51:53.987Z",
+      "license_evidence": "https://www.npmjs.com/package/prettier",
+      "license_spdx": "MIT",
+      "monthly_downloads": 518267136,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "prettier",
+      "revision": "d9969c57343d48a4d1fac12f3f5c4b2fd82d8da5",
+      "risk_flags": [
+        "build-tool",
+        "large-suite"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/prettier/prettier"
+    },
+    {
+      "candidate_id": "https-github-com-rollup-rollup-ca3952bcc2cc",
+      "conflicts": [],
+      "identity": "https://github.com/rollup/rollup",
+      "language": "node",
+      "last_activity": "2026-08-20T17:04:26.351Z",
+      "license_evidence": "https://www.npmjs.com/package/rollup",
+      "license_spdx": "MIT",
+      "monthly_downloads": 479484776,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "rollup",
+      "revision": "89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb",
+      "risk_flags": [
+        "build-tool"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/rollup/rollup"
+    },
+    {
+      "candidate_id": "https-github-com-lovell-sharp-7cea96cd74ec",
+      "conflicts": [],
+      "identity": "https://github.com/lovell/sharp",
+      "language": "node",
+      "last_activity": "2026-07-01T11:28:34.077Z",
+      "license_evidence": "https://www.npmjs.com/package/sharp",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 348478645,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "sharp",
+      "revision": "ea5bef24c187b2c7ee3fe3cad3b45c8cb67a46fd",
+      "risk_flags": [
+        "native",
+        "platform-binary"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/lovell/sharp"
+    },
+    {
+      "candidate_id": "https-github-com-socketio-socket-io-d8ae6603dba4",
+      "conflicts": [],
+      "identity": "https://github.com/socketio/socket.io",
+      "language": "node",
+      "last_activity": "2025-12-23T16:42:13.022Z",
+      "license_evidence": "https://www.npmjs.com/package/socket.io",
+      "license_spdx": "MIT",
+      "monthly_downloads": 69121375,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "socket.io",
+      "revision": "ae7fb46e08c5ed964b4a1ea8b1703e816511598e",
+      "risk_flags": [
+        "network",
+        "server"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/socketio/socket.io"
+    },
+    {
+      "candidate_id": "https-github-com-microsoft-typescript-afd7eb9ac895",
+      "conflicts": [],
+      "identity": "https://github.com/microsoft/TypeScript",
+      "language": "node",
+      "last_activity": "2026-07-08T15:55:18.431Z",
+      "license_evidence": "https://www.npmjs.com/package/typescript",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 1026187959,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "typescript",
+      "revision": "d6c4afddb2c55f4a9dea7b59293a99a8fdea1799",
+      "risk_flags": [
+        "build-tool",
+        "large-suite"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/microsoft/TypeScript"
+    },
+    {
+      "candidate_id": "https-github-com-nodejs-undici-4b9c5accc20e",
+      "conflicts": [],
+      "identity": "https://github.com/nodejs/undici",
+      "language": "node",
+      "last_activity": "2026-08-03T15:11:43.611Z",
+      "license_evidence": "https://www.npmjs.com/package/undici",
+      "license_spdx": "MIT",
+      "monthly_downloads": 642922197,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "undici",
+      "revision": "7eb7c8ec8f23acd9c3da93a286162f8c1dc68326",
+      "risk_flags": [
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/nodejs/undici"
+    },
+    {
+      "candidate_id": "https-github-com-vitejs-vite-2b14193563ce",
+      "conflicts": [],
+      "identity": "https://github.com/vitejs/vite",
+      "language": "node",
+      "last_activity": "2026-08-20T04:14:39.107Z",
+      "license_evidence": "https://www.npmjs.com/package/vite",
+      "license_spdx": "MIT",
+      "monthly_downloads": 659247277,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "vite",
+      "revision": "4f9d2f4dadc83191200de7d2154c957a711e8c3d",
+      "risk_flags": [
+        "build-tool",
+        "native-optional"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/vitejs/vite"
+    },
+    {
+      "candidate_id": "https-github-com-winstonjs-winston-e9ae228ac280",
+      "conflicts": [],
+      "identity": "https://github.com/winstonjs/winston",
+      "language": "node",
+      "last_activity": "2025-12-07T07:37:16.009Z",
+      "license_evidence": "https://www.npmjs.com/package/winston",
+      "license_spdx": "MIT",
+      "monthly_downloads": 114135751,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "winston",
+      "revision": "ff0b79de8562bb322c390fbc82fe71c11f373428",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/winstonjs/winston"
+    },
+    {
+      "candidate_id": "https-github-com-websockets-ws-6302134ebe38",
+      "conflicts": [],
+      "identity": "https://github.com/websockets/ws",
+      "language": "node",
+      "last_activity": "2026-08-07T14:10:25.816Z",
+      "license_evidence": "https://www.npmjs.com/package/ws",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1036751756,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "ws",
+      "revision": "d9b89544e627f2a260fb85a6f42c8ecba98d7615",
+      "risk_flags": [
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/websockets/ws"
+    },
+    {
+      "candidate_id": "https-github-com-yargs-yargs-ea8ab05b808b",
+      "conflicts": [],
+      "identity": "https://github.com/yargs/yargs",
+      "language": "node",
+      "last_activity": "2026-07-26T04:07:48.666Z",
+      "license_evidence": "https://www.npmjs.com/package/yargs",
+      "license_spdx": "MIT",
+      "monthly_downloads": 999898874,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "yargs",
+      "revision": "2a4378bdc2eac9cf7d0cdfe0a52b1b25f779806a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/yargs/yargs"
+    },
+    {
+      "candidate_id": "https-github-com-colinhacks-zod-843591bff689",
+      "conflicts": [],
+      "identity": "https://github.com/colinhacks/zod",
+      "language": "node",
+      "last_activity": "2026-05-04T07:06:40.819Z",
+      "license_evidence": "https://www.npmjs.com/package/zod",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1051969792,
+      "observed_at": "2026-08-23T13:32:05Z",
+      "package": "zod",
+      "revision": "e516c3baf22615e20934116abebfed6c000222c2",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": "reports/npm-production-discovery-20260823.json",
+          "report_sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/colinhacks/zod"
+    }
+  ],
+  "queue_id": "package-discovery-2026-08-23",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": "reports/npm-production-discovery-20260823.json",
+      "sha256": "sha256:4acb839941715ad99e913741907e6832323f67d94a9e2505f91d82cfaeb3b028"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}
