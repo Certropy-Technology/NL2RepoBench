@@ -1,0 +1,77 @@
+{
+  "campaign_id": "missing-oss-harbor-run-20260823",
+  "campaign_sha256": "sha256:038c7e72decbfd3188b3571f7a129836c791d18a547fe75225e26bc171c0c44b",
+  "credential_policy": "Pi provider config only; no key in plan or argv",
+  "existing_inventory": "reports/oss-run-inventory.json",
+  "existing_inventory_sha256": "sha256:0f722ee784eafbc31375f96206a1eedfe56caf28cb276b698baa9f322bf95079",
+  "existing_oss_runs": {},
+  "max_total_concurrency": 4,
+  "models": [
+    {
+      "api": "openai-responses",
+      "concurrency": 2,
+      "harbor_model": "openai/gpt-5.6-sol",
+      "harbor_task_root": null,
+      "lock_root": "/home/ayi/dev/NL2RepoBench/.nl2repo/locks/model/missing-oss-harbor-20260823-v2/gpt56",
+      "model_id": "gpt-5.6-sol",
+      "provider": "z-open-api-gpt-openai-responses",
+      "retry_policy": "infrastructure-only",
+      "run_prefix": "gpt56",
+      "run_root": "/home/ayi/dev/NL2RepoBench/.nl2repo/runs/model/missing-oss-harbor-20260823-v2/gpt56",
+      "skipped_existing_tasks": [],
+      "tasks": [
+        "autojump",
+        "flasky",
+        "graphneuralnetwork",
+        "pandarallel",
+        "pss",
+        "pysondb-v2",
+        "pythonprojecttemplate",
+        "records",
+        "retrying",
+        "schedule-master"
+      ]
+    },
+    {
+      "api": "anthropic-messages",
+      "concurrency": 2,
+      "harbor_model": "anthropic/claude-fable-5",
+      "harbor_task_root": null,
+      "lock_root": "/home/ayi/dev/NL2RepoBench/.nl2repo/locks/model/missing-oss-harbor-20260823-v2/fable",
+      "model_id": "claude-fable-5",
+      "provider": "z-open-api-fabel5",
+      "retry_policy": "infrastructure-only",
+      "run_prefix": "fable",
+      "run_root": "/home/ayi/dev/NL2RepoBench/.nl2repo/runs/model/missing-oss-harbor-20260823-v2/fable",
+      "skipped_existing_tasks": [],
+      "tasks": [
+        "autojump",
+        "flasky",
+        "graphneuralnetwork",
+        "pandarallel",
+        "pss",
+        "pysondb-v2",
+        "pythonprojecttemplate",
+        "records",
+        "retrying",
+        "schedule-master"
+      ]
+    }
+  ],
+  "per_model_concurrency": 2,
+  "schema_version": "1.0",
+  "skipped_existing_tasks": [],
+  "task_count": 10,
+  "tasks": [
+    "autojump",
+    "flasky",
+    "graphneuralnetwork",
+    "pandarallel",
+    "pss",
+    "pysondb-v2",
+    "pythonprojecttemplate",
+    "records",
+    "retrying",
+    "schedule-master"
+  ]
+}
