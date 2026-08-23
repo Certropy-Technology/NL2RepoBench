@@ -3,27 +3,15 @@
   "missing": [
     {
       "model": "gpt-5.6-sol",
+      "task_id": "schedule-master"
+    },
+    {
+      "model": "gpt-5.6-sol",
       "task_id": "records"
     },
     {
       "model": "gpt-5.6-sol",
       "task_id": "retrying"
-    },
-    {
-      "model": "gpt-5.6-sol",
-      "task_id": "pss"
-    },
-    {
-      "model": "gpt-5.6-sol",
-      "task_id": "pysondb-v2"
-    },
-    {
-      "model": "gpt-5.6-sol",
-      "task_id": "pythonprojecttemplate"
-    },
-    {
-      "model": "gpt-5.6-sol",
-      "task_id": "schedule-master"
     }
   ],
   "models": [
@@ -41,16 +29,20 @@
         "trials": 9
       },
       {
+        "classification": "model",
+        "trials": 1
+      },
+      {
         "classification": "verifier",
-        "trials": 2
+        "trials": 3
       }
     ],
     "model_summary": [
       {
-        "macro_task_score": 0.4705882352941176,
+        "macro_task_score": 0.6029411764705882,
         "model": "openai/gpt-5.6-sol",
-        "valid_attempts": 3,
-        "valid_tasks": 3
+        "valid_attempts": 4,
+        "valid_tasks": 4
       }
     ],
     "task_scores": [
@@ -70,6 +62,12 @@
         "attempts": 1,
         "model": "openai/gpt-5.6-sol",
         "task_id": "pandarallel",
+        "task_score": 1.0
+      },
+      {
+        "attempts": 1,
+        "model": "openai/gpt-5.6-sol",
+        "task_id": "pss",
         "task_score": 1.0
       }
     ]
@@ -187,13 +185,15 @@
     {
       "model_runs": [
         {
-          "attempts": 0,
+          "attempts": 1,
           "failure_class": null,
           "model": "gpt-5.6-sol",
           "retry_history": [],
-          "rewards": [],
-          "status": "missing",
-          "valid": null
+          "rewards": [
+            1.0
+          ],
+          "status": "completed",
+          "valid": true
         },
         {
           "attempts": 1,
@@ -212,13 +212,15 @@
     {
       "model_runs": [
         {
-          "attempts": 0,
-          "failure_class": null,
+          "attempts": 1,
+          "failure_class": "model",
           "model": "gpt-5.6-sol",
-          "retry_history": [],
+          "retry_history": [
+            "model"
+          ],
           "rewards": [],
-          "status": "missing",
-          "valid": null
+          "status": "failed",
+          "valid": false
         },
         {
           "attempts": 1,
@@ -237,13 +239,15 @@
     {
       "model_runs": [
         {
-          "attempts": 0,
-          "failure_class": null,
+          "attempts": 1,
+          "failure_class": "verifier",
           "model": "gpt-5.6-sol",
-          "retry_history": [],
+          "retry_history": [
+            "verifier"
+          ],
           "rewards": [],
-          "status": "missing",
-          "valid": null
+          "status": "failed",
+          "valid": false
         },
         {
           "attempts": 1,
