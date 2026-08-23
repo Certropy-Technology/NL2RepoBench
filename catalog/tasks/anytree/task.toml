@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "anytree"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "tree-data-structure"
+tags = [
+  "python",
+  "tree",
+  "nodes",
+  "iterators",
+  "rendering",
+  "import-export",
+  "mermaid",
+  "repository-generation",
+  "pytest",
+  "separate-verifier",
+]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/c0fec0de/anytree"
+revision = "2e0a1b956172654d75aff93277ce3d883355e0bf"
+license_spdx = "Apache-2.0"
+# Unprefixed `git archive --format=tar HEAD`; three independent hashes matched.
+source_digest = "sha256:bc253cb8287fdbeae24cf78801f81024fcc4317541a6334419582378940b28ce"
+submodules = []
+
+[environment]
+# Source-only probes ran on CPython 3.12.11. No immutable task image or OS
+# lock is approved for this audit candidate.
+status = "unknown"
+python_version = ">=3.9.2,<4.0"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# `project.dependencies = []` was parsed from the locked pyproject. The
+# entries below are build/test observations, not an offline DependencyBundle.
+status = "unknown"
+installer = "uv"
+packages = [
+  "pdm-backend",
+  "pytest==8.3.5",
+  "test2ref==0.8.1",
+  "pytest-cov",
+  "coveralls",
+  "mypy",
+  "ruff",
+  "pre-commit",
+  "sphinx",
+  "sphinx-rtd-theme",
+  "sphinxemoji",
+]
+
+[tests]
+framework = "pytest"
+# Two source-only collect-only runs found 163 item node IDs. This is not a
+# final private-bundle denominator and therefore remains non-frozen.
+expected_total = 163
+expected_total_source = "unknown"
+# Provisional audit command. A production command must be a private,
+# allowlisted artifact collected in the final verifier environment.
+commands = [
+  "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m pytest --collect-only -q -p no:cacheprovider -o addopts='' tests",
+]
+protected_paths = ["tests", "tests/refdata"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"

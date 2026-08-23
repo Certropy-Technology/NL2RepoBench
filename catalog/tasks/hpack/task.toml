@@ -1,0 +1,68 @@
+schema_version = "1.0"
+task_id = "hpack"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "http-header-compression"
+tags = ["python", "http2", "hpack", "compression", "protocol", "pytest", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-hyper/hpack"
+revision = "d05cff4cd462658847f67c48700aab40b2ba8cf1"
+license_spdx = "MIT"
+# Repeated unprefixed `git archive --format=tar HEAD` from the exact revision.
+source_digest = "sha256:85c3b998329e464f054e725830d0fc4437ffed9dbea4732e611c499b083403c0"
+submodules = []
+
+[environment]
+# Source probes used CPython 3.14.6. A final verifier image and OS policy are
+# intentionally not frozen in this authoring-only candidate.
+status = "unknown"
+python_version = ">=3.10"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# hpack has no runtime dependencies. These are the exact direct build/test/
+# tooling versions selected by the source uv.lock, not a task-local wheelhouse.
+status = "unknown"
+installer = "uv"
+packages = [
+  "setuptools==82.0.1",
+  "wheel==0.47.0",
+  "pytest==9.1.1",
+  "pytest-cov==7.1.0",
+  "pytest-xdist==3.8.0",
+  "hypothesis==6.155.6",
+  "ruff==0.15.18",
+  "mypy==1.20.2",
+  "typing-extensions==4.15.0",
+  "check-manifest==0.51",
+  "build==1.5.0",
+  "twine==6.2.0",
+  "sphinx==9.1.0; python_version >= '3.12'",
+]
+
+[tests]
+framework = "pytest"
+# 502 is stable source-tree evidence under the probe environments. It is not
+# a final private-bundle denominator, so publication keeps this value unknown.
+expected_total = 502
+expected_total_source = "unknown"
+commands = ["python -m pytest --continue-on-collection-errors -q tests"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Exact source, license, archive and provisional collection evidence are recorded, but final environment, dependency closure, bundled fixture provenance, candidate adapter, private verifier assets, frozen denominator, Oracle and controls remain unverified."

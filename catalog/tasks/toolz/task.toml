@@ -1,0 +1,58 @@
+schema_version = "1.0"
+task_id = "toolz"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "functional-utilities"
+tags = ["python", "functional-programming", "iterators", "higher-order-functions", "dict-utilities", "pure-python", "pytest", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pytoolz/toolz"
+revision = "568c2b8393973cd172a466546c9d95779c452438"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:1f0ef83ae7991a23a6fb664180354551bd4ea24ce5de1472d91e69061f07b213"
+submodules = []
+
+[environment]
+# The source supports Python >=3.9, but no immutable verifier image or final
+# OS/interpreter policy has been approved in this static authoring lane.
+status = "unknown"
+python_version = ">=3.9"
+os_name = "unknown"
+network_mode = "no-network"
+
+[dependencies]
+# Runtime imports are standard-library/local only. These are the unpinned
+# PEP 517 build and source-test requirements, not an offline closure.
+status = "unknown"
+installer = "uv"
+packages = [
+  "setuptools>=77",
+  "setuptools-git-versioning>=2.0",
+  "pytest>=6.0",
+]
+
+[tests]
+framework = "pytest"
+# CPython 3.12.11 and 3.14.6, pytest 9.1.1, and plugin autoload disabled
+# each collected 186 items. This is repeated source evidence, not a frozen
+# production denominator.
+expected_total = 186
+expected_total_source = "unknown"
+commands = ["python -m pytest --continue-on-collection-errors -q"]
+protected_paths = ["toolz/tests", "toolz/sandbox/tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Exact source, archive and license hashes, source-only LOC, repeated pytest collection, runtime import closure, dynamic SCM build/version observations, AST API inventory, and JSON-safe subprocess scope are recorded in audit.md. Publication is blocked because the final image and hash-locked offline build/test closure, private command and test artifacts, task-specific child adapter, Oracle, controls, and reviews are absent; this lane intentionally creates none of those assets."
