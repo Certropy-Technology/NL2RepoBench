@@ -65,6 +65,16 @@ echo "llm_num_retries=$LLM_NUM_RETRIES llm_timeout=$LLM_TIMEOUT"
 echo "llm_retry_wait=$LLM_RETRY_MIN_WAIT-$LLM_RETRY_MAX_WAIT"
 echo "jobs_dir=$harbor_jobs_dir"
 
+agent_env_args=(
+  --ae "LLM_NUM_RETRIES=$LLM_NUM_RETRIES"
+  --ae "LLM_TIMEOUT=$LLM_TIMEOUT"
+  --ae "LLM_RETRY_MIN_WAIT=$LLM_RETRY_MIN_WAIT"
+  --ae "LLM_RETRY_MAX_WAIT=$LLM_RETRY_MAX_WAIT"
+)
+if [[ -n "${LLM_ANTHROPIC_THINKING_MODE:-}" ]]; then
+  agent_env_args+=(--ae "LLM_ANTHROPIC_THINKING_MODE=$LLM_ANTHROPIC_THINKING_MODE")
+fi
+
 cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup
   # only the exact trials created below; never run a global Docker prune.
@@ -108,10 +118,7 @@ env PYTHONPATH=../src:${PYTHONPATH:-} \
   -m "$MODEL" \
   --ak "reasoning_effort=$REASONING_EFFORT" \
   --ae "LLM_BASE_URL=$LLM_BASE_URL" \
-  --ae "LLM_NUM_RETRIES=$LLM_NUM_RETRIES" \
-  --ae "LLM_TIMEOUT=$LLM_TIMEOUT" \
-  --ae "LLM_RETRY_MIN_WAIT=$LLM_RETRY_MIN_WAIT" \
-  --ae "LLM_RETRY_MAX_WAIT=$LLM_RETRY_MAX_WAIT" \
+  "${agent_env_args[@]}" \
   --agent-timeout-multiplier "$agent_timeout_multiplier" \
   --agent-setup-timeout-multiplier "$AGENT_SETUP_TIMEOUT_MULTIPLIER" \
   "${retry_args[@]}" \

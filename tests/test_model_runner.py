@@ -347,3 +347,69 @@ def test_pi_launcher_aligns_model_prefix_with_provider_api() -> None:
     assert launcher.normalize_harbor_model(
         "openai-responses", "openai/gpt-5.6-sol"
     ) == "openai/gpt-5.6-sol"
+
+
+def test_pi_launcher_scopes_fable_adaptive_thinking_to_fable() -> None:
+    launcher = _load_pi_launcher()
+
+    assert launcher.provider_runtime_env(
+        "anthropic-messages", "claude-fable-5"
+    ) == {"LLM_ANTHROPIC_THINKING_MODE": "adaptive"}
+    assert launcher.provider_runtime_env(
+        "anthropic-messages", "claude-sonnet-5"
+    ) == {}
+    assert launcher.provider_runtime_env("openai-responses", "gpt-5.6-sol") == {}
+
+
+def test_openhands_runner_injects_adaptive_anthropic_thinking() -> None:
+    probe_code = """from nl2repobench.harbor_openhands import _inject_adaptive_thinking
+source = '''    reasoning_effort = os.environ.get("LLM_REASONING_EFFORT")
+    if reasoning_effort:
+        llm_kwargs["reasoning_effort"] = reasoning_effort
+'''
+patched = _inject_adaptive_thinking(source)
+assert 'llm_kwargs.pop("reasoning_effort", None)' in patched
+assert 'llm_kwargs["litellm_extra_body"] = ' in patched
+assert '{"thinking": {"type": "adaptive"}}' in patched
+print("ok")
+"""
+    probe = subprocess.run(
+        [
+            str(ROOT / "harbor-runner/.venv/bin/python"),
+            "-c",
+            probe_code,
+        ],
+        cwd=ROOT,
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "ok"
+
+
+def test_openhands_runner_merges_litellm_extra_body() -> None:
+    probe = subprocess.run(
+        [
+            str(ROOT / "harbor-runner/.venv/bin/python"),
+            "-c",
+            (
+                "from nl2repobench.harbor_openhands import _merge_litellm_extra_body; "
+                "source='    if litellm_extra_body:\\n'"
+                "+'        llm_kwargs[\\\"litellm_extra_body\\\"] = litellm_extra_body\\n'; "
+                "patched=_merge_litellm_extra_body(source); "
+                "assert 'llm_kwargs.get(\\\"litellm_extra_body\\\", {})' in patched; "
+                "print('ok')"
+            ),
+        ],
+        cwd=ROOT,
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "ok"

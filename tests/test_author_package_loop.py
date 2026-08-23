@@ -19,7 +19,7 @@ def _load_script():
 loop = _load_script()
 
 
-def test_author_loop_filters_catalog_and_oss_and_emits_stages(tmp_path: Path) -> None:
+def test_author_loop_filters_catalog_and_oss_but_remediates_candidates(tmp_path: Path) -> None:
     catalog = tmp_path / "catalog"
     (catalog / "already-catalog").mkdir(parents=True)
     candidates = tmp_path / "candidates.json"
@@ -62,11 +62,39 @@ def test_author_loop_filters_catalog_and_oss_and_emits_stages(tmp_path: Path) ->
         batch_id="node-test",
     )
 
-    assert [task["package"] for task in plan["tasks"]] == ["new-node"]
+    assert [task["package"] for task in plan["tasks"]] == ["needs", "new-node", "risky"]
     assert {item["reason"] for item in plan["skipped"]} == {
         "catalog-task-exists",
         "oss-run-exists",
-        "needs-evidence",
-        "risk-flags:native",
     }
+    assert plan["tasks"][0]["remediation_required"] is True
+    assert plan["tasks"][0]["remediation_reasons"] == ["candidate-evidence-incomplete"]
+    assert plan["tasks"][2]["remediation_reasons"] == ["risk-adaptation-required:native"]
+    assert plan["agent_run_loop"].startswith("separate downstream")
     assert plan["tasks"][0]["stages"] == list(loop.STAGES)
+
+
+def test_author_loop_can_resume_selected_packages_only(tmp_path: Path) -> None:
+    candidates = tmp_path / "candidates.json"
+    candidates.write_text(
+        json.dumps(
+            {
+                "queue": [
+                    {"package": "first", "language": "python", "status": "candidate"},
+                    {"package": "second", "language": "python", "status": "candidate"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    plan = loop.build_plan(
+        candidates,
+        language="python",
+        catalog_root=tmp_path / "catalog",
+        oss_inventory=None,
+        limit=5,
+        packages={"second"},
+    )
+
+    assert [task["package"] for task in plan["tasks"]] == ["second"]

@@ -34,10 +34,10 @@ test AST/import inventory ────┼─> API/test behavior graph
 package/CLI metadata scan ────┘
       │
       ▼
-cheap static gates (LOC/API/dynamic/native/service risk)
+cheap static triage (LOC/API/dynamic/native/service risk)
       │
       ▼
-environment + dependency closure probe
+environment + dependency closure remediation
       │
       ▼
 ground-truth image + automatic collection
@@ -52,7 +52,10 @@ Harbor package + private verifier + candidate boundary
 Oracle x1 -> empty/stub/forgery/hang/offline controls
       │
       ▼
-blind review -> 5–10 task pilot -> publish
+blind review -> catalog handoff (awaiting-agent-run)
+
+Agent Run Loop 独立消费已通过 authoring gate 的 catalog task，运行 GPT/Fable、归档 OSS
+并生成模型报告；它不属于 Raw Package -> Harbor 出题 Loop。
 ```
 
 每个箭头都是 stage 边界。stage 只读上游 artifact，不读取 worker 的未提交工作目录。
@@ -81,7 +84,10 @@ blind review -> 5–10 task pilot -> publish
 - 只接受完整 commit SHA；branch、tag、latest 一律不能进入 freeze；
 - 当前 campaign 候选门槛是最近 commit/release 不超过 36 个月，且 GitHub stars >= 100
   或 PyPI/npm 月下载量 >= 1,000；同时需要明确许可和官方可执行测试。LOC、native、
-  外部服务和资源风险另行记录，边界项目记录为 conditional，不偷偷放宽；
+  外部服务和资源风险另行记录，边界项目记录为 conditional，不偷偷放宽。风险标记是
+  remediation 输入，不是自动 Block；worker 必须尝试固定版本、补齐依赖闭包、调整
+  build/test 配置和设计合适的 candidate/verifier boundary；只有尝试失败并留下完整
+  命令、版本、exit code、日志和失败分类后，才允许进入 blocked/excluded；
 - 与 `catalog/tasks`、已发布 source digest、候选报告和 fork/改名包做 normalized name、
   upstream URL、source hash 和 API fingerprint 去重；
 - 发现阶段可以高并发，但只写自己的 report artifact。
@@ -218,7 +224,9 @@ status: covered|missing-spec|dynamic-unresolved|blocked
 - 标记 native build、system package、locale、TTY、browser、DB、network、secret 和
   platform-specific tests。
 
-三次基线 collection 必须稳定，且官方源码在最终环境通过率至少 0.80。失败只归一个主类：
+三次基线 collection 必须稳定，且官方源码在最终环境通过率至少 0.80。缺少现成 lock、
+wheelhouse、image digest 或 build backend 不是失败理由，author worker 必须先补齐并
+验证它们。失败只归一个主类：
 source/spec/environment/verifier/model/infrastructure。
 
 ## Stage 4：Spec generation 与 traceability

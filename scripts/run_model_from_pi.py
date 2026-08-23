@@ -70,6 +70,19 @@ def normalize_harbor_model(api: str, harbor_model: str) -> str:
     return harbor_model
 
 
+def provider_runtime_env(api: str, model_id: str) -> dict[str, str]:
+    """Return protocol-specific runtime knobs without changing Pi config.
+
+    The relay's Anthropic ``thinking=enabled`` path can emit empty tool input
+    for Fable.  Fable's supported adaptive-thinking path preserves the tool
+    schema, so keep this workaround explicit and model-scoped.
+    """
+
+    if api == "anthropic-messages" and model_id == "claude-fable-5":
+        return {"LLM_ANTHROPIC_THINKING_MODE": "adaptive"}
+    return {}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--provider", required=True)
@@ -183,6 +196,7 @@ def main() -> int:
             "LLM_RETRY_MAX_WAIT": "120",
         }
     )
+    environment.update(provider_runtime_env(api, args.model_id))
     print(f"launch task={args.task} model={harbor_model} run_root={run_root}")
     completed = subprocess.run(
         [str(ROOT / "scripts/run_model_queue.sh")],

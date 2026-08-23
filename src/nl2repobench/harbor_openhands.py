@@ -60,6 +60,52 @@ REDACTING_STREAM = r"""
     sys.stderr = _RedactingStream(sys.stderr, api_key)
 """
 
+ADAPTIVE_THINKING_MARKER = """    reasoning_effort = os.environ.get("LLM_REASONING_EFFORT")
+    if reasoning_effort:
+        llm_kwargs["reasoning_effort"] = reasoning_effort
+"""
+
+ADAPTIVE_THINKING_PATCH = (
+    ADAPTIVE_THINKING_MARKER
+    + """    anthropic_thinking_mode = os.environ.get(
+        "LLM_ANTHROPIC_THINKING_MODE"
+    )
+    if anthropic_thinking_mode == "adaptive" and model.startswith("anthropic/"):
+        # The relay's enabled-thinking translation can drop tool input.  Use
+        # Anthropic adaptive thinking and avoid sending the conflicting
+        # provider-neutral reasoning_effort parameter.
+        llm_kwargs.pop("reasoning_effort", None)
+        llm_kwargs["litellm_extra_body"] = {"thinking": {"type": "adaptive"}}
+"""
+)
+
+EXTRA_BODY_MARKER = """    if litellm_extra_body:
+        llm_kwargs["litellm_extra_body"] = litellm_extra_body
+"""
+
+EXTRA_BODY_PATCH = """    if litellm_extra_body:
+        llm_kwargs["litellm_extra_body"] = {
+            **llm_kwargs.get("litellm_extra_body", {}),
+            **litellm_extra_body,
+        }
+"""
+
+
+def _inject_adaptive_thinking(source: str) -> str:
+    """Add the Fable relay workaround to the SDK runner source."""
+
+    if ADAPTIVE_THINKING_MARKER not in source:
+        raise RuntimeError("OpenHands SDK runner missing adaptive-thinking marker")
+    return source.replace(ADAPTIVE_THINKING_MARKER, ADAPTIVE_THINKING_PATCH, 1)
+
+
+def _merge_litellm_extra_body(source: str) -> str:
+    """Preserve adapter-injected provider options when env options are empty."""
+
+    if EXTRA_BODY_MARKER not in source:
+        raise RuntimeError("OpenHands SDK runner missing extra-body marker")
+    return source.replace(EXTRA_BODY_MARKER, EXTRA_BODY_PATCH, 1)
+
 
 def _redact_tree(root: Path, secret: str) -> int:
     needle = secret.encode("utf-8")
@@ -156,6 +202,7 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
             "LLM_RETRY_MIN_WAIT",
             "LLM_RETRY_MAX_WAIT",
             "LLM_TIMEOUT",
+            "LLM_ANTHROPIC_THINKING_MODE",
         ):
             value = self._get_env(name)
             if value is not None:
@@ -237,10 +284,10 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
 """,
             1,
         )
-        sdk_runner_file.write_text(
-            runner_source.replace(marker, replacement, 1),
-            encoding="utf-8",
-        )
+        runner_source = runner_source.replace(marker, replacement, 1)
+        runner_source = _inject_adaptive_thinking(runner_source)
+        runner_source = _merge_litellm_extra_body(runner_source)
+        sdk_runner_file.write_text(runner_source, encoding="utf-8")
         await environment.upload_file(
             source_path=instruction_file,
             target_path="/installed-agent/instruction.md",

@@ -4,7 +4,8 @@
 This controller only creates a bounded batch manifest and source-freeze stage
 artifacts. A worker owns one Package task directory; the integrator owns
 shared datasets, toolchain locks, private artifacts, Oracle/control results,
-and publication.
+and publication. Agent model runs are a separate downstream loop and are never
+started by this authoring controller.
 """
 
 from __future__ import annotations
@@ -72,6 +73,16 @@ def _candidate_records(path: Path, language: str) -> list[dict[str, Any]]:
     )
 
 
+def _remediation_reasons(record: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    if record.get("status") != "candidate":
+        reasons.append("candidate-evidence-incomplete")
+    risk_flags = record.get("risk_flags") or []
+    if risk_flags:
+        reasons.append("risk-adaptation-required:" + ",".join(risk_flags))
+    return reasons
+
+
 def build_plan(
     candidate_path: Path,
     *,
@@ -81,6 +92,7 @@ def build_plan(
     limit: int,
     batch_id: str | None = None,
     allow_risk: bool = False,
+    packages: set[str] | None = None,
 ) -> dict[str, Any]:
     if limit < 1:
         raise ValueError("limit must be positive")
@@ -98,18 +110,13 @@ def build_plan(
     skipped: list[dict[str, str]] = []
     for record in _candidate_records(candidate_path, language):
         package = str(record.get("package", ""))
+        if packages is not None and package not in packages:
+            continue
         if package in existing_catalog:
             skipped.append({"package": package, "reason": "catalog-task-exists"})
             continue
         if package in existing_oss:
             skipped.append({"package": package, "reason": "oss-run-exists"})
-            continue
-        if record.get("status") != "candidate":
-            skipped.append({"package": package, "reason": "needs-evidence"})
-            continue
-        risk_flags = record.get("risk_flags") or []
-        if risk_flags and not allow_risk:
-            skipped.append({"package": package, "reason": "risk-flags:" + ",".join(risk_flags)})
             continue
         selected.append(record)
         if len(selected) >= limit:
@@ -118,6 +125,7 @@ def build_plan(
     tasks = []
     for record in selected:
         candidate_id = str(record.get("candidate_id") or record.get("package"))
+        remediation_reasons = _remediation_reasons(record)
         tasks.append(
             {
                 "candidate_id": candidate_id,
@@ -128,14 +136,23 @@ def build_plan(
                 "source_digest": record.get("source_digest"),
                 "stages": list(STAGES),
                 "worker_boundary": f"catalog/tasks/{record['package']}/** only",
+                "remediation_required": bool(remediation_reasons),
+                "remediation_reasons": remediation_reasons,
+                "agent_run_boundary": (
+                    "Authoring ends after Oracle/controls/review; downstream Agent Run Loop "
+                    "consumes this catalog task and is not started here."
+                ),
                 "production_gate": (
                     (
                         "Node 24 locked toolchain, AST/test inventory, offline closure, "
-                        "Harbor compile, verifier build, Oracle once, controls, review"
+                        "active remediation, Harbor compile, verifier build, Oracle once, "
+                        "controls, review"
                     )
                     if language == "node"
-                    else "Python locked toolchain, AST/test inventory, Harbor gates, review"
+                    else "Python locked toolchain, AST/test inventory, active remediation, "
+                    "Harbor gates, review"
                 ),
+                "handoff_status": "awaiting-agent-run",
             }
         )
     return {
@@ -152,7 +169,8 @@ def build_plan(
         "tasks": tasks,
         "skipped": skipped,
         "status": "planned",
-        "risk_policy": "allow-risk" if allow_risk else "safe-first",
+        "risk_policy": "allow-risk" if allow_risk else "remediate-before-gate",
+        "agent_run_loop": "separate downstream consumer; not executed by this plan",
     }
 
 
@@ -164,6 +182,12 @@ def main() -> int:
     parser.add_argument("--oss-inventory", type=Path)
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--batch-id")
+    parser.add_argument(
+        "--package",
+        action="append",
+        dest="packages",
+        help="Restrict authoring to one or more package names; repeatable.",
+    )
     parser.add_argument("--allow-risk", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -176,6 +200,7 @@ def main() -> int:
             limit=args.limit,
             batch_id=args.batch_id,
             allow_risk=args.allow_risk,
+            packages=set(args.packages) if args.packages else None,
         )
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"authoring loop planning failed: {exc}", file=sys.stderr)
