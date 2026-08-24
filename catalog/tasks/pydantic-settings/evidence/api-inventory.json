@@ -1,0 +1,32 @@
+{
+  "method": "Python ast module walk plus root __all__ inspection",
+  "revision": "d26fc0c3944fe68cf169f86386988bb83e3df2d8",
+  "slice": {
+    "excluded": [
+      "AWSSecretsManagerSettingsSource",
+      "AWSSystemsManagerSettingsSource",
+      "AzureKeyVaultSettingsSource",
+      "GoogleSecretManagerSettingsSource",
+      "documentation example execution"
+    ],
+    "public": [
+      {"kind": "class", "name": "BaseSettings", "path": "pydantic_settings/main.py", "line": 139},
+      {"kind": "class", "name": "SettingsConfigDict", "path": "pydantic_settings/main.py", "line": 49},
+      {"kind": "class", "name": "CliApp", "path": "pydantic_settings/main.py", "line": 674},
+      {"kind": "class", "name": "SettingsError", "path": "pydantic_settings/exceptions.py", "line": 1},
+      {"kind": "class", "name": "PydanticBaseSettingsSource", "path": "pydantic_settings/sources/base.py", "line": 106},
+      {"kind": "class", "name": "EnvSettingsSource", "path": "pydantic_settings/sources/providers/env.py", "line": 47},
+      {"kind": "class", "name": "DotEnvSettingsSource", "path": "pydantic_settings/sources/providers/dotenv.py", "line": 27},
+      {"kind": "class", "name": "SecretsSettingsSource", "path": "pydantic_settings/sources/providers/secrets.py", "line": 27},
+      {"kind": "marker", "name": "NoDecode", "path": "pydantic_settings/sources/types.py", "line": 28},
+      {"kind": "marker", "name": "ForceDecode", "path": "pydantic_settings/sources/types.py", "line": 32},
+      {"kind": "type-alias", "name": "CliPositionalArg", "path": "pydantic_settings/sources/types.py"},
+      {"kind": "type-alias", "name": "CliSubCommand", "path": "pydantic_settings/sources/types.py"}
+    ]
+  },
+  "upstream_test_files_inspected": [
+    "tests/test_settings.py",
+    "tests/test_precedence_and_merging.py",
+    "tests/test_source_cli.py"
+  ]
+}

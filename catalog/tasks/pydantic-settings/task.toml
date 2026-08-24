@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "pydantic-settings"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = ["python", "configuration", "pydantic", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pydantic/pydantic-settings"
+revision = "d26fc0c3944fe68cf169f86386988bb83e3df2d8"
+license_spdx = "MIT"
+source_digest = "sha256:57b7dab78777c75bcc2c138d561dea097afe3088c0b3e7f1d67481d6b4bbd5aa"
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+
+[dependencies]
+status = "known"
+installer = "pip"
+artifact = { digest = "sha256:81e9a2e4a1f4d5a7d94953c63191734132f0a6dd76b50b1c8d26200305fd2458", size_bytes = 4208640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:81e9a2e4a1f4d5a7d94953c63191734132f0a6dd76b50b1c8d26200305fd2458", visibility = "private" }
+packages = ["annotated-types==0.7.0", "editables==0.5", "hatchling==1.28.0", "packaging==26.0", "pathspec==1.0.4", "pluggy==1.6.0", "pydantic==2.13.4", "pydantic-core==2.46.4", "python-dotenv==1.2.2", "setuptools==80.9.0", "trove-classifiers==2026.6.1.19", "typing-extensions==4.15.0", "typing-inspection==0.4.4", "wheel==0.45.1"]
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/test.sh"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:74268b01199019a49e0392a6c07dd3a5a22f03df10cb5ef39d19af30fd195082", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:74268b01199019a49e0392a6c07dd3a5a22f03df10cb5ef39d19af30fd195082", visibility = "private" }
+entrypoint = "run.py"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the core pydantic-settings API from an empty workspace."
+keywords = ["python", "configuration", "pydantic", "repository-generation"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "oracle-passed"
+reason = "Harbor 0.21.0 Oracle passed 20/20 with valid=true and reward=1.0; nop control scored 0.0; stub, forgery, blind review, and pilot remain."
+
+[oracle_bundle]
+digest = "sha256:3af5b012306b3349fa8aab34bff98a3382ee4f861d42612424178ce0b44c01ca"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:3af5b012306b3349fa8aab34bff98a3382ee4f861d42612424178ce0b44c01ca"
+visibility = "private"

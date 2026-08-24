@@ -1,0 +1,14 @@
+{
+  "base_image": "python:3.12-slim",
+  "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "docker_engine": "29.7.2",
+  "harbor": "0.21.0",
+  "host_uv": "0.12.3",
+  "python": "3.12",
+  "requirements_input": "harbor/tests/requirements.in",
+  "requirements_lock": "harbor/tests/requirements.lock",
+  "verifier_image_id": "sha256:e933a24a5ef6ccbf939f33a220ffb01474b9ddbb6d634ba75da3d0ee0a50cf4d",
+  "wheel_platform": "manylinux2014_x86_64",
+  "wheel_python_abi": "cp312",
+  "wheelhouse_hashes": "evidence/wheelhouse.sha256"
+}
