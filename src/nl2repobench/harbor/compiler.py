@@ -630,6 +630,7 @@ exit 0
             "domain/__init__.py",
             "domain/canonical.py",
             "domain/models.py",
+            "domain/network_policy.py",
             "verification/__init__.py",
             "verification/cli.py",
             "verification/candidate_client.py",
