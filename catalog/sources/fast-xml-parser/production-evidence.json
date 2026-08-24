@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-xml-parser",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze Node/npm/base-image versions and a complete private npm cache/lock closure, then establish deterministic dual ESM/CJS build output, a JSON-safe parser/validator contract, structured collection, separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/NaturalIntelligence/fast-xml-parser.git",
+      "revision": "7d608151078d47040841e9804d490feb5c07dfe7",
+      "source_digest": "sha256:97965c88e42a83e541192fdc8838dd651beca426a768fa81a1eba9d059a6c659",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:7883225d5e84a6bbb9b170c3d891b4bf6d6259cee869c86bd86381a927071745"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/fast-xml-parser",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/fast-xml-parser/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:43da93a16e094c43fa15f7add9f898aba3ca55e18440dd685aaa284b889eeb67"
+        }
+      },
+      {
+        "command": "npm ci --offline --ignore-scripts",
+        "tool_version": "Node/npm runtime closure not approved for this revision",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/fast-xml-parser/blocked.md",
+          "sha256": "sha256:0c2d6b0969ec5460d65356ccce405a78145b050503229fa4b4b13ab225d9c072"
+        }
+      }
+    ]
+  }
+}

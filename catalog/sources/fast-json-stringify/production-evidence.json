@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-json-stringify",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Create and review a content-addressed npm v3 lock/cache bundle for the exact revision under Node 24.19.0/npm 11.17.0, then freeze a narrowed JSON-only child adapter, collection denominator, separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/fastify/fast-json-stringify",
+      "revision": "6aa2ed4cc403cf68d7c31ee4dd14724372fea664",
+      "source_digest": "sha256:ff387c10fe9f28464ffeacb88171e7f3b8748675bc48c614457ab30a135e7229",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:b08de5bb7b21f44a8358edf74febe50c75ef2a1e5470e06c8919eb934cba067c",
+      "audit_sha256": "sha256:df4dc4b636d1b7063d54eec3f37fe269be88b5bec7541e0e2d12e235adefaf0d"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/fast-json-stringify",
+        "tool_version": "repository toolchain; task descriptor absent at invocation",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/fast-json-stringify/evidence/remediation-pre.txt",
+          "sha256": "sha256:1c474814cf7fae4b0c894ab7d5016b1d9acc3ea8984e524664497750dd0ca1c8"
+        }
+      },
+      {
+        "command": "node --check over all 71 tracked JavaScript files",
+        "tool_version": "Node source inspection toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/fast-json-stringify/blocked.md",
+          "sha256": "sha256:df4dc4b636d1b7063d54eec3f37fe269be88b5bec7541e0e2d12e235adefaf0d"
+        }
+      }
+    ]
+  }
+}

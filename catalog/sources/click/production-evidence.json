@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "click",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze flit_core, pytest, and transitive dependencies as a hash-locked build/test closure, then define a reviewed JSON-safe command/callback adapter, freeze its collection, and run separate-verifier Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/pallets/click",
+      "revision": "cbd7a4109da16ce58f54c2a618b4c986e3041fcf",
+      "source_digest": "sha256:1e48394d9815df68dd94d614c90e16f509532a28f906e745da396d929f1eadc1",
+      "license_spdx": "BSD-3-Clause",
+      "license_path": "LICENSE.txt",
+      "license_digest": "sha256:9a8ad106a394e853bfe21f42f4e72d592819a22805d991b5f3275029292b658d"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/click",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/click/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:9e9f7bad160eb7e48bf31be3b6c5c8afc735c2f1f41344bb649f8a11179e5ac3"
+        }
+      },
+      {
+        "command": "uv run --locked --no-default-groups --group tests python -m pytest --collect-only -q -p no:cacheprovider",
+        "tool_version": "CPython/uv locked tests-group collection probe",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/click/blocked.md",
+          "sha256": "sha256:fef2fc7d772c5ff61751ca3d38c60a6178936094ac6a8d757e6240312d4dd4d4"
+        }
+      }
+    ]
+  }
+}

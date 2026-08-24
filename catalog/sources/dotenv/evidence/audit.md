@@ -1,8 +1,8 @@
 # dotenv static authoring audit
 
-Status: `blocked` / audit-only. This directory intentionally has no
-`task.toml`, Harbor tree, private test bundle, Oracle artifact, or dependency
-cache. It is a discovery/inventory record for a future Node task.
+Status: `blocked`. This audit is paired with a parseable descriptor and hashed
+remediation evidence. It has no Harbor runtime, private test bundle, Oracle
+artifact, or complete dependency cache; `catalog/tasks/dotenv/` remains absent.
 
 ## Frozen source evidence
 

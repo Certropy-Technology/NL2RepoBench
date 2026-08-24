@@ -1,0 +1,64 @@
+schema_version = "2.0"
+task_id = "dotenv"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "environment-config"
+tags = ["node", "npm", "dotenv", "parser", "json", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/motdotla/dotenv"
+revision = "2fc7eac8ad77cbd5f7814355c7fa352dbcf3c358"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:8847b9563b9c54e1cd420d895c31efa9627f5fd34dd936d0175e0017067e1d3d"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the source lock is npm v2 and the required v3 cache/build closure is missing."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["committed lockfile v2; approved npm v3 cache closure is missing"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/dotenv"
+reason = "The source/archive is frozen, but the committed npm lock is v2 rather than the production v3 contract; generated dist provenance, offline closure, separate verifier, frozen denominator, Oracle, and controls are unavailable. No catalog/tasks/dotenv runtime exists."

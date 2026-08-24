@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dotenv",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Produce and review an npm lockfile v3 and complete offline integrity closure for Node 24.19.0/npm 11.17.0, freeze generated dist provenance, then author the narrowed adapter, verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/motdotla/dotenv",
+      "revision": "2fc7eac8ad77cbd5f7814355c7fa352dbcf3c358",
+      "source_digest": "sha256:8847b9563b9c54e1cd420d895c31efa9627f5fd34dd936d0175e0017067e1d3d",
+      "license_spdx": "BSD-2-Clause"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/dotenv",
+        "tool_version": "repository toolchain; descriptor absent at invocation",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/dotenv/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:fb132c40ff452f66a5704c7daf9c817fc273e4f5e151ab2db613dbc8d519335f"
+        }
+      }
+    ]
+  }
+}

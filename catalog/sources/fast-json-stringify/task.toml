@@ -1,0 +1,67 @@
+schema_version = "2.0"
+task_id = "fast-json-stringify"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "json-serialization"
+tags = ["node", "npm", "json-schema", "serialization", "code-generation", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/fastify/fast-json-stringify"
+revision = "6aa2ed4cc403cf68d7c31ee4dd14724372fea664"
+license_spdx = "MIT"
+source_digest = "sha256:ff387c10fe9f28464ffeacb88171e7f3b8748675bc48c614457ab30a135e7229"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the exact revision has no committed npm lockfile or reviewed private cache closure, and Oracle source acquisition must remain digest-locked."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["runtime dependency ranges observed but no committed lockfile or content-addressed npm cache"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/fast-json-stringify"
+reason = "The exact source and MIT license are frozen, but the revision has no committed package-lock.json, no approved npm v3 cache closure, no frozen child-side JSON adapter or denominator, and no separate verifier, Oracle, or controls. No catalog/tasks/fast-json-stringify runtime exists."

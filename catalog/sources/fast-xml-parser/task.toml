@@ -1,0 +1,64 @@
+schema_version = "2.0"
+task_id = "fast-xml-parser"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "xml-parser"
+tags = ["node", "npm", "xml", "parser", "esm", "cjs", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/NaturalIntelligence/fast-xml-parser.git"
+revision = "7d608151078d47040841e9804d490feb5c07dfe7"
+license_spdx = "MIT"
+source_digest = "sha256:97965c88e42a83e541192fdc8838dd651beca426a768fa81a1eba9d059a6c659"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the upstream package lacks an exact runtime lock and the dependency/build/verifier closure is not frozen."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["runtime/build dependency closure not frozen"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/fast-xml-parser"
+reason = "The exact source and MIT archive/license evidence are known, but the package has no exact upstream Node/npm runtime lock, dual ESM/CJS build dependency closure, frozen collection, separate verifier, Oracle, or controls. No catalog/tasks/fast-xml-parser runtime exists."

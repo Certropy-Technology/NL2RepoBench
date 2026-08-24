@@ -1,8 +1,9 @@
 # `fast-xml-parser` Node v2 Static Audit
-**Status: blocked.** This file is a task-local evidence record for the exact
-upstream revision. It is not a task descriptor, a publication manifest, or a
-Harbor bundle. No hidden tests, private test bytes, npm cache, secrets, Docker
-files, Oracle solution, or shared files were added.
+**Status: blocked.** This file is a task-local evidence record paired with a
+parseable descriptor and hash-bound production evidence for the exact upstream
+revision. It is not a publication manifest or Harbor bundle. No hidden tests,
+private test bytes, npm cache, secrets, Docker files, or Oracle solution were
+added; `catalog/tasks/fast-xml-parser/` remains absent.
 
 ## Source Lock
 
