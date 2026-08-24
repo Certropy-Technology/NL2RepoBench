@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pythonprojecttemplate"
+version = "0.2.0"
+description = "Build the FastVector two-dimensional vector package from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "vector-math",
+    "fixture-adapter",
+    "repository-generation",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = [
+    "python",
+    "vector-math",
+    "fixture-adapter",
+    "repository-generation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 36
+canonical_manifest_digest = "sha256:aede01fc1b8b8715b7c245fd491cbf84ec380a5c657ca845b3c1b16aae655f47"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

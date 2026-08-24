@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/schedule-master"
+version = "0.2.0"
+description = "Build the schedule in-process job scheduling library from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "scheduling",
+    "timezones",
+    "stateful-api",
+    "repository-generation",
+]
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = [
+    "python",
+    "scheduling",
+    "stateful-api",
+    "timezones",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 81
+canonical_manifest_digest = "sha256:fbd3a33efe32b58583a2c3dd48b2a2ed27be4a04a33e1628d114acae5ba76fee"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

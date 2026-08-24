@@ -5,7 +5,7 @@ Build a Python package named `GraphNeuralNetwork` that provides reusable graph n
 The project should be usable from a clean checkout and should include the Cora data layout used by the examples.
 
 ## Supports
-- Target Python 3.10.11 and provide a conventional `setup.py` for editable installation.
+- Target Python 3.12.14 and provide a conventional `setup.py` for editable installation.
 - Declare the runtime dependencies needed by the public package, including TensorFlow, NetworkX, NumPy, SciPy-compatible sparse operations, scikit-learn, and Matplotlib.
 - Put the importable package in `gnn/` and expose a coherent public entry point from `gnn/__init__.py`.
 - Keep model inputs and outputs shape-stable for full-graph node classification and preserve sparse adjacency support where the API accepts it.

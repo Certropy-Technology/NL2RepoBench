@@ -1,9 +1,12 @@
 # PSS Provenance Audit
 
-Status: `packaged` task-local Harbor draft. This audit was completed without
-starting Docker, Harbor, pytest, Oracle, or a negative-control run. The parent
-must complete the three-run Oracle gate and empty/stub/forgery/offline controls
-before any dataset publication decision.
+Status: `oracle-passed`. See "Production Package Repair (2026-08-24)" at the end
+of this file for the current authoritative record: the base image was re-based to
+the 3.12 production base, private dependency/verifier/Oracle bundles were
+registered, and the generic compiled Oracle plus stub/forgery/empty controls were
+run. The sections above describe the earlier legacy-image draft and are retained
+as historical evidence; where they conflict with the repair section, the repair
+section governs.
 
 ## Legacy Contract
 
@@ -230,3 +233,133 @@ Completed in this lane without Docker/Harbor/pytest execution:
 
 The task-local files contain no hidden test bytes, image layers, source archive,
 run results, Oracle reward, or control result.
+
+## Production Package Repair (2026-08-24)
+
+This section is the authoritative current record. The task now compiles as a
+production Harbor task with zero `TaskManifest.publication_gaps()` and no
+`--allow-incomplete`.
+
+### Source
+
+| Field | Value |
+| --- | --- |
+| Upstream | `https://github.com/eliben/pss` |
+| Revision | `b40cf0b6f1b8f8cb965144317e9ab7902b5fcb0b` |
+| License | `Unlicense` (bundled `psslib/colorama` copy is BSD) |
+| `sha256(git archive --format=tar <revision>)` | `2c86bef90a85c8d09fd0a66d64d183f9960bc46f1489fce629303a92b43bee9b` |
+
+The archive digest was recomputed from a fresh clone at the pinned revision and
+is byte-exact against the recorded `[source].source_digest`. The revision is
+unchanged by this repair.
+
+### Base image re-base
+
+The legacy image could not run the production verifier at all: the compiler
+installs the trusted `nl2repobench` runtime into the hardcoded Python 3.12
+`site-packages` path, so a 3.10 base fails with `ModuleNotFoundError`. The base
+was therefore re-based.
+
+| Field | Old | New |
+| --- | --- | --- |
+| `base_image` | `ghcr.io/multimodal-art-projection/nl2repobench/pss` | `python:3.12.14-slim-bookworm` |
+| `base_image_digest` | `sha256:38e0fcf6fb1a74781d6d57c524c750be9e56f0173193733c4a23cf6e8c8d1459` | `sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e` |
+| `python_version` | `3.10.11` | `3.12.14` |
+| `os_name` | `debian-11` | `debian-12` |
+
+`[task] version` was bumped `0.1.0` -> `0.2.0`.
+
+### Frozen denominator
+
+The frozen revision was re-collected inside the new pinned base image, at the
+pinned revision, with `pytest==8.4.1` and `colorama==0.4.6`:
+
+```text
+46 collected / 46 passed
+```
+
+The denominator survives the re-base. `expected_total` remains `46` with
+`expected_total_source = "frozen-collection"`; there is no rescope. All 46
+collected items are scored, so the denominator is the full collection. The 46
+unique JUnit `classname::name` ids from that baseline are frozen into the
+verifier bundle as `scored-nodes.json`.
+
+`instruction.md` was updated only in the Python version line and the dependency
+version block, to the versions actually pinned here. No behavioural text changed.
+
+### Registered private artifacts
+
+| Bundle | Digest | Bytes |
+| --- | --- | ---: |
+| Dependency wheelhouse | `sha256:8ed9724b153b4cc8d7145697901bfb3918dfde1691dc3d46f5abc4a1ae6700e5` | 2,949,120 |
+| Private verifier | `sha256:2ff4a04239a836b564022db061249bf14420a2b7311751164a99e86869662933` | 143,360 |
+| Oracle | `sha256:73c0719e6e03b954dd9cad7a6ef61e2676fed769ead482bdf92aab6199d556a4` | 276,480 |
+
+All three are `visibility = private` and are referenced from `task.toml` by
+digest only. No wheels, hidden test bytes, or source archive enter this public
+catalog tree.
+
+The dependency bundle holds 8 wheels at the tar root plus a
+`requirements.lock.txt` in which every pin carries `--hash=sha256:`: colorama,
+iniconfig, packaging, pluggy, pygments, pytest, setuptools, wheel. `setuptools`
+and `wheel` are required because the candidate install runs
+`pip install --no-deps --no-build-isolation`.
+
+The verifier uses protocol `custom-json-v1` with entrypoint `run.py`. `run.py` is
+trusted, never imports candidate code, and runs the frozen fixture through
+`runuser -u candidate`. Because `python -I` ignores `PYTHONPATH`, the child
+command sets `PYTHONPATH=/tmp/candidate-site:/opt/candidate-dependencies/site`
+explicitly. The child's working directory is a neutral empty `/tmp/pss-run`
+rather than the candidate repository root, so the candidate cannot shadow the
+frozen `test` package or supply `psslib` through the working directory; `psslib`
+must resolve from the installed candidate site. Exactly 46 unique leaves are
+emitted on one JSON line.
+
+The Oracle bundle holds `solve.sh` (mode 0755) at the tar root plus the frozen
+`source/`. It is purely local (`cp -a "$root/source/." /workspace/`) and performs
+no `git fetch`, so no reference implementation is reachable from the no-network
+agent image.
+
+### Oracle and control evidence
+
+Compile, with no `--allow-incomplete`:
+
+```bash
+uv run nl2repo harbor compile catalog/tasks/pss --toolchain toolchain.lock.toml \
+  --output /tmp/pss-cmp --artifact-root .nl2repo/artifacts --allow-private
+```
+
+Runs, all with agent `oracle`:
+
+| Run | Reward | valid | passed/collected | Evidence |
+| --- | ---: | --- | --- | --- |
+| Oracle | 1.0 | true | 46 / 46 | `.nl2repo/runs/oracle/pss-final/2026-08-24__18-19-58/` |
+| Stub | 0.022 | true | 1 / 46 | `.nl2repo/runs/controls/pss-stub/2026-08-24__18-17-48/` |
+| Forgery | 0.022 | true | 1 / 46 | `.nl2repo/runs/controls/pss-forgery/2026-08-24__18-18-24/` |
+| Empty | 0.0 | true | 0 / 0 | `.nl2repo/runs/controls/pss-empty/2026-08-24__18-19-00/` |
+
+The Oracle satisfies the one-run gate: `valid=true`, `collected == expected_total
+== 46`, `reward = 1.0 >= 0.80`, with no failing nodes and therefore no Oracle
+ceiling below 1.0.
+
+The forgery control scored exactly the same as the stub, so its attempts to write
+`/logs/verifier/reward.json`, overwrite the trusted verifier entrypoint and the
+frozen fixture, install a `sitecustomize` import hook, emit a fake all-passing
+JSON report, and ship a shadowing `test` package and `conftest.py` had no effect
+on grading. The empty workspace was correctly attributed
+`failure_class=model`, `failure_reason=candidate-installation-failed`.
+
+Both verifier runs execute with `verifier_network_mode = "no-network"`, and the
+generated verifier `test.sh` runs the trusted network check before grading, so
+the offline requirement is exercised on every run above.
+
+### Decision recorded
+
+The base-image re-base was pre-approved by the parent for this class of legacy
+3.10 image, conditional on the denominator surviving. It survived at 46, so the
+task proceeded without escalation.
+
+### Remaining gates
+
+Blind review and spec-traceability review are still outstanding, and no pilot has
+been run. Status is therefore `oracle-passed`, not `published`.

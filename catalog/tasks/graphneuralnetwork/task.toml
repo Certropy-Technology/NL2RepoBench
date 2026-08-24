@@ -1,7 +1,9 @@
 schema_version = "1.0"
 task_id = "graphneuralnetwork"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
+
+oracle_bundle = { digest = "sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e", size_bytes = 34099200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e", visibility = "private" }
 
 [metadata]
 difficulty = "easy"
@@ -19,39 +21,41 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.10.11"
-os_name = "debian-bullseye"
-base_image = "ghcr.io/multimodal-art-projection/nl2repobench/graphneuralnetwork"
-base_image_digest = "sha256:6388582535fd9c56af5a69eef057a136c3ec4ae54ae26156b6db843286d62152"
+python_version = "3.12.14"
+os_name = "debian-12"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["build-essential", "libgomp1"]
 network_mode = "no-network"
-
-# The immutable verifier image contains the native TensorFlow/scientific
-# dependency closure. A standalone wheelhouse is intentionally not published.
+build_command = "install the pinned CPU-only TensorFlow closure from the private wheelhouse during the verifier image build"
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress, and the Oracle solution restores the frozen source from a local archive rather than fetching it. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
 packages = [
-  "networkx==2.8.8",
+  "tensorflow-cpu==2.19.0",
+  "networkx==3.4.2",
   "numpy==2.1.3",
+  "scipy==1.15.3",
   "scikit-learn==1.7.1",
   "matplotlib==3.10.5",
-  "scipy==1.15.3",
-  "tensorflow==2.19.0",
-  "pytest==8.4.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
 ]
+artifact = { digest = "sha256:cebc072443f1a5aec0662d7330779b9c61f93951a83325f3cc9588648d7e64fd", size_bytes = 395120640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:cebc072443f1a5aec0662d7330779b9c61f93951a83325f3cc9588648d7e64fd", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 4
 expected_total_source = "frozen-collection"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
-protected_paths = ["tests"]
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -65,8 +69,8 @@ description = "Build the GraphNeuralNetwork TensorFlow graph-learning package fr
 keywords = ["python", "tensorflow", "graph-neural-network", "machine-learning", "repository-generation", "separate-verifier"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 1800.0
-candidate_install_timeout_sec = 180.0
-candidate_total_timeout_sec = 900.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 1200.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 4
@@ -74,6 +78,13 @@ memory_mb = 8192
 storage_mb = 32768
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
 [lifecycle]
-status = "packaged"
-reason = "Immutable verifier image, upstream source lock, MIT license evidence, normalized frozen collection of four items, and separate image-backed verifier are recorded; Oracle and controls remain pending parent orchestration."
+status = "oracle-passed"
+owner = "integrator"
+reason = "Re-based to the python:3.12.14-slim-bookworm verifier runtime with the frozen denominator of four re-collected on that base. Generic private-bundle compiled Oracle passed 4/4 with reward 1.0; stub, forgery and empty controls all scored 0.0. Blind and traceability review remain pending."

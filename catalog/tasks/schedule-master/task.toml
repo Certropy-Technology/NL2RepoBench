@@ -1,12 +1,14 @@
 schema_version = "1.0"
 task_id = "schedule-master"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
+
+oracle_bundle = { digest = "sha256:d44f267ff683af724478ec41bc8235dfd7d6638554a4f41a8fd344bbc2c50832", size_bytes = 215040, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d44f267ff683af724478ec41bc8235dfd7d6638554a4f41a8fd344bbc2c50832", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "scheduling", "stateful-api", "timezones"]
+tags = ["python", "scheduling", "stateful-api", "timezones", "separate-verifier"]
 language = "python"
 
 # Release 1.2.2. `git archive --format=tar <revision>` is recorded here.
@@ -22,15 +24,18 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.3"
+python_version = "3.12.14"
 os_name = "debian-12"
-base_image = "ghcr.io/multimodal-art-projection/nl2repobench/schedule-master"
-base_image_digest = "sha256:903e864b08437cacb1dbf4305f6ecc1443d09c6af7a714e2d81c4c5fee2d6677"
-system_packages = ["tzdata"]
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
 network_mode = "no-network"
 
-# The immutable verifier image supplies pytest 8.4.1 and pytz 2025.2.
-# No standalone offline wheelhouse artifact exists for this legacy projection.
+# Runtime and test dependencies ship as a private offline wheelhouse artifact
+# (pytest 8.4.1 and pytz 2025.2) installed during the Docker build phase.
+# The frozen suite selects explicit POSIX TZ strings and calls time.tzset(), so
+# host tzdata does not participate in grading; remote timezone behaviour comes
+# from the pinned pytz wheel.
 
 [environment.network_policy]
 mode = "no-network"
@@ -38,15 +43,16 @@ offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = ["pytest==8.4.1", "pytz==2025.2"]
+packages = ["pytest==8.4.1", "pytz==2025.2", "setuptools==75.8.0", "wheel==0.45.1"]
+artifact = { digest = "sha256:7189900847f846f228fa95b397d2e358a1a66da7000cceb55e8e5fb2e880f95b", size_bytes = 3512320, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:7189900847f846f228fa95b397d2e358a1a66da7000cceb55e8e5fb2e880f95b", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 81
 expected_total_source = "frozen-collection"
-commands = ["pytest --continue-on-collection-errors test_schedule.py"]
+commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["test_schedule.py"]
 
 [metric]
@@ -56,12 +62,18 @@ excluded_statuses = ["skipped"]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b768f96ccfa3a335d6c248cc22d8637e6065ee211b0f13f3002ab68fe3ae5cc1", size_bytes = 92160, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b768f96ccfa3a335d6c248cc22d8637e6065ee211b0f13f3002ab68fe3ae5cc1", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
 [harbor]
 description = "Build the schedule in-process job scheduling library from an empty workspace."
 keywords = ["python", "scheduling", "timezones", "stateful-api", "repository-generation"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
+candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
@@ -71,5 +83,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-reason = "Pinned source, verifier image, frozen test path, and collection count are resolved; Oracle gate pending."
+status = "oracle-passed"
+reason = "Re-based to python:3.12.14-slim-bookworm with private dependency, verifier and oracle bundles. Generic private-bundle compiled Oracle passed 81/81 with reward 1.0 and collected == expected_total; empty, stub, forgery and offline controls all scored 0.0. Blind and traceability review remain pending."

@@ -1,9 +1,12 @@
 # `pythonprojecttemplate` Static Conversion Audit
 
-Status: **packaged; Oracle and controls pending**. This task uses the
-immutable legacy verifier image as the source of its private test fixture.
-The catalog contains no hidden test bytes, no Oracle output, and no Docker
-run artifacts.
+Status: **oracle-passed**. Sections below up to "Dependency closure and
+candidate boundary" are the original static conversion audit of the legacy
+GHCR image and are retained as historical evidence. The task has since been
+converted to a production separate-verifier Harbor task; see "Production
+repair" at the end, which supersedes the legacy image, Python version and
+command contract described above. The catalog still contains no hidden test
+bytes, no wheels and no source archive, only private artifact digests.
 
 ## Legacy contract
 
@@ -120,3 +123,147 @@ by the grader under `/logs/verifier`.
 
 This is a static packaging decision only. No Docker build, Oracle run,
 pytest run, or candidate behavior execution was performed.
+
+---
+
+# Production repair (supersedes the legacy conversion above)
+
+This section records the conversion to a production separate-verifier Harbor
+task. It is authoritative where it conflicts with the legacy audit above.
+
+## Decision: base image re-base
+
+The task pinned CPython `3.10.18`. The production verifier copies its trusted
+runtime into the hardcoded `python3.12` site-packages path, so a 3.10 base
+cannot start the verifier at all (`ModuleNotFoundError: nl2repobench`). Applied
+the standing pre-approved re-base:
+
+| field | before | after |
+| --- | --- | --- |
+| `base_image` | `python:3.10.18` | `python:3.12.14-slim-bookworm` |
+| `base_image_digest` | `sha256:e501e3982f1b1363dc3a010affe949eb55c3a058bc6614a095bb71d8203b2951` | `sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e` |
+| `python_version` | `3.10.18` | `3.12.14` |
+| `os_name` | `debian-trixie` | `debian-12` |
+| `[task] version` | `0.1.0` | `0.2.0` |
+
+The legacy GHCR image
+`ghcr.io/.../pythonprojecttemplate@sha256:a5623b41...` is no longer referenced
+by the task; it remains documented above only as the origin of the denominator.
+
+**Denominator survived the re-base.** Re-collected the frozen upstream tree
+inside the new pinned image: `36 tests collected`, `36 passed`. `expected_total`
+remains `36` with `expected_total_source = "frozen-collection"`, unchanged from
+the legacy declaration, so no rescope was required.
+
+`instruction.md` was edited only where it stated the old Python and dependency
+versions. It now states Python 3.12.14 and exactly the three versions actually
+pinned. No behavioural requirement in the instruction changed.
+
+## Source lock re-verification
+
+`git archive --format=tar f1c116379eb485c17fb1b6cd3e2454712e4e0585 | sha256sum`
+reproduced `c47d5545686d207763d3c21aafd6eb26b575dcc02ef62159fa21011ccde9413c`,
+equal to the recorded `[source].source_digest`. Revision, MIT license and
+archive digest are therefore unchanged from the legacy audit.
+
+## Registered private artifacts
+
+| bundle | digest | bytes |
+| --- | --- | ---: |
+| dependency | `sha256:fcb7aba66bff030567b5e6f36affd08d1a7029cb88a5d8a0f3ab3e20c5ffd024` | 17674240 |
+| verifier | `sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822` | 20480 |
+| Oracle | `sha256:168be0421ca55010bbdfc62cd755affaf94f23cb6467bab809ad7368fdcf4f63` | 71680 |
+
+Dependency bundle: wheels at tar root plus `requirements.lock.txt` at root with
+`--hash=sha256:` on every pin (`numpy==2.2.6`, `setuptools==80.10.2`,
+`wheel==0.45.1`). `setuptools`/`wheel` are load-bearing: the slim base ships no
+setuptools and the candidate install runs `pip install --no-deps
+--no-build-isolation`, so without them the declared `setuptools.build_meta`
+backend fails with `BackendUnavailable`. This replaces the legacy `unknown`
+dependency status, whose closure lived only inside the retired image.
+
+Verifier bundle: protocol `custom-json-v1`, entrypoint `run.py`. `run.py` is
+trusted and never imports candidate code; it drives `client.py` as uid 10001
+under `python -I` and emits one JSON line of exactly 36 uniquely-identified
+leaves. Because `python -I` ignores `PYTHONPATH`, the adapter is handed both
+`/tmp/candidate-site` and `/opt/candidate-dependencies/site` explicitly. The
+hidden slice mirrors the upstream `tests/test_vector.py` parametrisation at the
+frozen revision, one leaf per collected node. Operands cross the JSON boundary
+only as allowlisted `kind` tags resolved by an in-adapter constructor map, so no
+Python source, import path or shell fragment is ever passed through. Adapter
+crash, timeout or candidate import failure degrades to 36 failed leaves instead
+of a collection mismatch.
+
+Oracle bundle: `solve.sh` (mode 0755) at tar root plus the frozen `source.tar`.
+Purely local: it checksums `source.tar` against `source_digest`, clears
+`/workspace` and untars. It performs **no** `git fetch`, so the agent image
+stays no-network, the reference implementation cannot leak, and an Oracle run
+needs no `--allow-agent-hosts` authorization. This supersedes the legacy
+network-fetching Oracle script noted above; `harbor/solution/solve.sh` was
+aligned to the same local form so there is one spelling of the Oracle path.
+
+## Defect found and fixed during Oracle bring-up
+
+The first compiled Oracle run scored `0.0` with `valid=true` and
+`collected=36`: the denominator was right but every leaf failed. Cause, from
+`verifier/adapter-detail.txt`:
+
+```
+adapter-exit-2: /usr/local/bin/python: can't open file
+'/tests/verifier/client.py': [Errno 13] Permission denied
+```
+
+The compiler installs the verifier bundle as `COPY --chmod=0500 verifier
+/tests/verifier`, i.e. root-only, so uid 10001 cannot read the adapter in place.
+`run.py` now stages `client.py` into `/tmp/verifier-adapter` as root-owned
+`0755`/`0444`: the candidate can read and execute it but cannot replace it, so
+the trust boundary holds. The forgery control below confirms this.
+
+## Evidence
+
+| gate | command | result |
+| --- | --- | --- |
+| gaps | `TaskManifest.publication_gaps()` | `[]` |
+| compile | `nl2repo harbor compile ... --allow-private` (no `--allow-incomplete`) | exit 0 |
+| Oracle | `harbor_safe_entry.py run -a oracle` | `valid=true`, 36/36, reward **1.0** |
+| stub | control, agent oracle | reward **0.194** |
+| forgery | control, agent oracle | reward **0.194**, grading byte-identical to stub |
+| empty | cleared-workspace solve.sh, agent oracle | reward **0.0** |
+| network policy | `nl2repo task lint-network` | 0 errors, 0 findings for this task |
+
+Artifact paths:
+
+- Oracle: `.nl2repo/runs/oracle/pythonprojecttemplate-cmp/2026-08-24__18-17-50/`
+  (`pythonprojecttemplate__*/verifier/grading.json`:
+  `valid=true, reward=1.0, expected_total=36, collected=36, passed=36, failed=0, skipped=0, errors=0`)
+- failing diagnosis run retained at
+  `.nl2repo/runs/oracle/pythonprojecttemplate-cmp/2026-08-24__18-15-28/`
+- controls: `.nl2repo/runs/controls/pythonprojecttemplate-{stub,forgery,empty}/`
+
+**Oracle ceiling is 1.0**; there is no unexplained failing set.
+
+### Stub floor is 0.194, not 0
+
+The stub and forgery controls both pass 7 of 36 leaves. Those 7 are the
+negative assertions inherited from upstream: `mul_raises[None]`,
+`mul_raises[str]`, `div_raises[vector]`, `operators_raises[tuple]`,
+`operators_raises[list]`, `equality_other_class[tuple]`,
+`equality_other_class[list]`. A bare class with only `__init__` satisfies these
+for free, because Python already raises `TypeError` for unsupported `*`, `/`,
+`<`, `+`, `-` operands and default `!=` is already true against a tuple or list.
+This is a property of the upstream test suite, not a weakness introduced by the
+hidden slice, and 0.194 remains under the 0.2 control gate. Removing those
+leaves would drop real functional assertions and change the frozen denominator,
+so they were kept.
+
+Forgery had **no** effect: its grading output is byte-identical to the stub's
+(`reward 0.19444444444444445`, 7 passed / 29 failed), despite the candidate
+attempting to overwrite `/logs/verifier/reward.json`,
+`/logs/verifier/grading.json`, all three `/tests/verifier/*.py` files and the
+staged `/tmp/verifier-adapter/client.py` at import time.
+
+## Remaining gates
+
+Blind review, spec traceability review and pilot are still pending. Cross-run
+Oracle stability was not measured; this is the single-run Package campaign
+contract v2 gate only.

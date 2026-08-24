@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "pss"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -19,35 +19,57 @@ license_spdx = "Unlicense"
 source_digest = "sha256:2c86bef90a85c8d09fd0a66d64d183f9960bc46f1489fce629303a92b43bee9b"
 submodules = []
 
+# Re-based from the legacy ghcr.io/multimodal-art-projection/nl2repobench/pss
+# image (Python 3.10.11, debian-11). The production verifier installs its trusted
+# runtime into the 3.12 site-packages path, so a 3.10 base cannot start it. The
+# frozen revision still collects and passes 46/46 on this base, so the
+# denominator is unchanged; see provenance.md.
 [environment]
 status = "known"
-python_version = "3.10.11"
-os_name = "debian-11"
-base_image = "ghcr.io/multimodal-art-projection/nl2repobench/pss"
-base_image_digest = "sha256:38e0fcf6fb1a74781d6d57c524c750be9e56f0173193733c4a23cf6e8c8d1459"
+python_version = "3.12.14"
+os_name = "debian-12"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = ["ca-certificates", "git"]
-build_command = "pip install -e .; pip install colorama pytest; pytest"
+build_command = "apt-get install --no-install-recommends ca-certificates git"
 network_mode = "no-network"
-
-# The pinned verifier image supplies the frozen test runtime. A standalone
-# hash-locked wheelhouse is not part of this task-local package.
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+# Verifier-side runtime for the frozen upstream fixture, resolved offline from a
+# hash-locked wheelhouse at Docker build time. setuptools and wheel are required
+# because the candidate install runs pip with --no-build-isolation.
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = ["colorama==0.4.6", "pytest==8.4.1"]
+packages = [
+  "colorama==0.4.6",
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==8.4.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+artifact = { digest = "sha256:8ed9724b153b4cc8d7145697901bfb3918dfde1691dc3d46f5abc4a1ae6700e5", size_bytes = 2949120, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:8ed9724b153b4cc8d7145697901bfb3918dfde1691dc3d46f5abc4a1ae6700e5", visibility = "private" }
 
+# The frozen upstream fixture collects 46 items at the pinned revision and all 46
+# are scored, so the denominator is the full collection.
 [tests]
 framework = "pytest"
 expected_total = 46
 expected_total_source = "frozen-collection"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors test"]
-protected_paths = ["test"]
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/fixture/test", "/tests/verifier/scored-nodes.json"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:2ff4a04239a836b564022db061249bf14420a2b7311751164a99e86869662933", size_bytes = 143360, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2ff4a04239a836b564022db061249bf14420a2b7311751164a99e86869662933", visibility = "private" }
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -71,5 +93,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-reason = "The upstream source lock, immutable verifier image, image-pinned test overlay, frozen collection of 46 tests, and task-local Harbor assets are recorded. Oracle, empty/stub/forgery/offline controls, and dependency-bundle publication gates remain pending the parent."
+status = "oracle-passed"
+reason = "Generic private-bundle compiled Oracle passed 46/46 with reward 1.0 and collected == expected_total = 46. Stub and forgery controls both scored 1/46 = 0.022 and the empty workspace scored 0.0 with failure_class=model. Blind and traceability review remain pending."
+
+[oracle_bundle]
+digest = "sha256:73c0719e6e03b954dd9cad7a6ef61e2676fed769ead482bdf92aab6199d556a4"
+size_bytes = 276480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:73c0719e6e03b954dd9cad7a6ef61e2676fed769ead482bdf92aab6199d556a4"
+visibility = "private"
