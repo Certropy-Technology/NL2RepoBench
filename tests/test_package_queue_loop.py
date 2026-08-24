@@ -169,3 +169,33 @@ def test_queue_claim_can_target_one_candidate(tmp_path: Path) -> None:
     with loop.locked_state(state) as payload:
         assert payload["items"]["second"]["status"] == "running"
         assert payload["items"]["first"]["status"] == "pending"
+
+
+def test_queue_release_returns_claim_without_consuming_attempt(tmp_path: Path) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    claim = _args(
+        queue=queue,
+        state=state,
+        owner="worker",
+        limit=1,
+        lease_seconds=60,
+        max_attempts=3,
+        language=None,
+        candidate_id=["python-demo"],
+    )
+    assert loop.command_claim(claim) == 0
+    assert loop.command_release(
+        _args(
+            queue=queue,
+            state=state,
+            candidate_id="python-demo",
+            owner="worker",
+            reason="concurrency-window",
+        )
+    ) == 0
+    with loop.locked_state(state) as payload:
+        assert payload["items"]["python-demo"]["status"] == "pending"
+        assert payload["items"]["python-demo"]["attempts"] == 1

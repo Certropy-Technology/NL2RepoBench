@@ -169,6 +169,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             json.dumps(brief, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
             encoding="utf-8",
         )
+        worktree_claim = path / ".nl2repo" / "authoring-claim.json"
+        worktree_claim.parent.mkdir(parents=True, exist_ok=True)
+        worktree_claim.write_text(
+            json.dumps(brief, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+            encoding="utf-8",
+        )
         results.append(
             {
                 "package": package,

@@ -240,11 +240,34 @@ def command_record(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_release(args: argparse.Namespace) -> int:
+    """Return a claim to pending without consuming an attempt."""
+
+    with locked_state(args.state) as state:
+        items = sync_queue(state, args.queue)
+        record = items.get(args.candidate_id)
+        if record is None:
+            raise ValueError(f"unknown candidate: {args.candidate_id}")
+        if record.get("owner") != args.owner or record.get("status") != "running":
+            raise ValueError(f"{args.candidate_id} is not claimed by {args.owner}")
+        record.update(
+            {
+                "status": "pending",
+                "owner": None,
+                "lease_expires_at": None,
+                "release_reason": args.reason,
+                "updated_at": now(),
+            }
+        )
+    print(json.dumps({"released": args.candidate_id, "reason": args.reason}, sort_keys=True))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for name in ("init", "status", "claim", "record"):
+    for name in ("init", "status", "claim", "record", "release"):
         sub = subparsers.add_parser(name)
         sub.add_argument("--queue", type=Path, required=True)
         sub.add_argument("--state", type=Path, default=Path(".nl2repo/package-queue/state.json"))
@@ -259,9 +282,13 @@ def build_parser() -> argparse.ArgumentParser:
                 action="append",
                 help="Claim only the named candidate; repeatable.",
             )
-        elif name == "record":
+        elif name in {"record", "release"}:
             sub.add_argument("candidate_id")
             sub.add_argument("--owner", required=True)
+        if name == "release":
+            sub.add_argument("--reason", required=True)
+            continue
+        if name == "record":
             sub.add_argument("--status", required=True, choices=sorted(TERMINAL))
             sub.add_argument("--reason")
             sub.add_argument("--failure-class")
@@ -277,6 +304,7 @@ def main() -> int:
             "status": command_status,
             "claim": command_claim,
             "record": command_record,
+            "release": command_release,
         }[args.command](args)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"package queue failed: {exc}", file=os.sys.stderr)
