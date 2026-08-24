@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "date-fns",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Materialize and hash a compliant npm v3 private cache/lock closure, rerun production compile, and persist official Harbor 0.21.0 Oracle, empty, stub, forgery, and offline network receipts before reopening the task.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/date-fns/date-fns",
+      "revision": "a0a39220522ed1228445792c768ed887709aea5f",
+      "source_digest": "sha256:bfae8a8d4c91f0d01026245898ff9b3a49ad4a1ce10df4c711a97cae302b4bf9",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "pnpm install --offline --frozen-lockfile",
+        "tool_version": "Node 22.23.1, npm 10.9.8, pnpm 10.33.0",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/date-fns/evidence/remediation.txt",
+          "sha256": "sha256:06b18f7f2bc49eb9a5a7c1c798344b2d8cd37455c30abff87afd8bc265520299"
+        }
+      },
+      {
+        "command": "direct core npm ci --offline",
+        "tool_version": "Node/npm offline probe",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/date-fns/evidence/remediation.txt",
+          "sha256": "sha256:06b18f7f2bc49eb9a5a7c1c798344b2d8cd37455c30abff87afd8bc265520299"
+        }
+      },
+      {
+        "command": "production evidence filesystem audit for Harbor 0.21.0 grading/network receipts",
+        "tool_version": "repository filesystem audit",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/date-fns/provenance.md",
+          "sha256": "sha256:3f479b628bbc5fe736b0ab1e7d1af4aac67dae066963a6aa0030d94948cff9e5"
+        }
+      }
+    ]
+  }
+}

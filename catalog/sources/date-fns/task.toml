@@ -2,7 +2,6 @@ schema_version = "2.0"
 task_id = "date-fns"
 version = "0.2.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:88d2fd25653efaf3da78e3bd31557c5e41586dc00613c6d4ac4550a5db94bc53", size_bytes = 1688, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:88d2fd25653efaf3da78e3bd31557c5e41586dc00613c6d4ac4550a5db94bc53", visibility = "private" }
 
 [metadata]
 language = "node"
@@ -41,7 +40,7 @@ architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-status = "known"
+status = "unknown"
 ecosystem = "npm"
 consumer = "candidate-runtime"
 lockfile_name = "package-lock.json"
@@ -50,7 +49,6 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:aeb40fca456bd67dadc1c21ed854bd5321c2a4c2ad97ac4767c2aaf4a5d6ee56", size_bytes = 406, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:aeb40fca456bd67dadc1c21ed854bd5321c2a4c2ad97ac4767c2aaf4a5d6ee56", visibility = "private" }
 packages = []
 
 [tests]
@@ -66,7 +64,7 @@ contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
-description = "Build an installable JSON-observable UTC date utility package from an empty workspace."
+description = "Blocked candidate: production Harbor evidence and an approved npm cache closure are unavailable."
 keywords = ["node", "npm", "esm", "date", "calendar", "interval", "json"]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 720.0
@@ -80,6 +78,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
-reason = "Frozen source, digest-pinned Node 24 images, private offline closure, separate verifier, Oracle 21/21, and empty/stub/forgery/timeout/offline controls passed; independent reviews and publication remain integrator work."
+status = "blocked"
+owner = "repair/date-fns"
+reason = "No independently persisted Harbor 0.21.0 Oracle, control, or network receipts exist for the prior controls-passed claim; provenance records failed offline dependency probes, and the checked-in runtime has been removed. No production runtime is currently authorized."

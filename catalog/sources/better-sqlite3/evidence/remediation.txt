@@ -1,0 +1,10 @@
+command: uv run nl2repo task validate-source catalog/sources/better-sqlite3
+{
+  "instruction": "catalog/sources/better-sqlite3/instruction.md",
+  "source_digest": "sha256:74c389018b932795ca23ee13188936c5580445145528a859a5506b4584b98b21",
+  "status": "controls-passed",
+  "task_id": "better-sqlite3",
+  "version": "2.0.0"
+}
+command: uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output /tmp/better-sqlite3-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
+Harbor compile failed: cannot extract private bundle: artifact is missing: sha256:3dc2c68167d64d2c05bc38c0ef0e67b7cdf47b1fdd2f654d9ce4e45ba07d4ff7

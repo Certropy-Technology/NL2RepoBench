@@ -65,8 +65,9 @@ contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
+status = "blocked"
+owner = "repair/better-sqlite3"
+reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts, and production recompile fails because the referenced private npm bundle is missing. The invalid runtime is removed; no production status is retained without evidence."
 
 [harbor]
 description = "Recreate a deterministic better-sqlite3 API subset with a bounded Node 24 SQLite adaptation."

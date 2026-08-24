@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "esbuild",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Restore or re-register the referenced private npm bundle, recompile without --allow-incomplete, then rerun Harbor 0.21.0 Oracle and every control with hash-bound grading and network receipts before reopening.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/evanw/esbuild",
+      "revision": "f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
+      "source_digest": "sha256:93c9ac8c1e6afba13f21749180b5a4ee79e36f145cfe180a8b6a1afeb75b8a6e",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/esbuild --output /tmp/esbuild-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+        "tool_version": "repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/esbuild/evidence/production-compile-missing-artifact.txt",
+          "sha256": "sha256:9b227d7e457a55a1784b779d1704728a7ee75acda25ab0fef19f3227d02bd3f1"
+        }
+      }
+    ]
+  }
+}

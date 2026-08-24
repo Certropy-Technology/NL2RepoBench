@@ -79,10 +79,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
-reason = "Frozen source, API/test inventory, pinned Node environment, complete offline npm closure, separate subprocess verifier, and private Oracle are in place. Oracle scored valid=true reward=1.0 at 19/19 under network none. Empty, stub, forgery, offline, lifecycle-script, loader-hook, and timeout controls behaved as required. Awaiting the independent Agent Run and two human reviews."
-approval_refs = ["authoring-remediation-eslint-c27bc92"]
+status = "blocked"
+owner = "repair/eslint"
+reason = "The previous controls-passed claim has no discoverable ESLint-specific Harbor Oracle, control, or network receipts in the checkout. The invalid runtime was removed; no production status is retained without hash-bound evidence."
 
 [oracle_bundle]
 digest = "sha256:7e27a9e9fc82b066484e59b8b7909f57e6b01de917476b9d999b9485df2aa6ba"

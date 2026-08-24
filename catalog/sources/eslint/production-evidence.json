@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "eslint",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Recompile from the source authority with the private npm/cache/verifier artifacts, run official Harbor 0.21.0 Oracle and all controls, then reopen only with hash-bound grading and network receipts.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/eslint/eslint",
+      "revision": "c27bc926e496985eb7911c09eb60914b2e4b5d0f",
+      "source_digest": "sha256:a02160c6f87fa83ba6082361d085ea32d5937dd2063bb6735b8d649d04b03ca0",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/eslint --output /tmp/eslint-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+        "tool_version": "repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/eslint/evidence/remediation.txt",
+          "sha256": "sha256:abefa9efa0e50c6f3313466d154a8ea7431892727cc8b45a8e64ffa80524396c"
+        }
+      },
+      {
+        "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/eslint -a oracle",
+        "tool_version": "Harbor runner 0.21.0; no task-specific receipts available",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/eslint/evidence/remediation.txt",
+          "sha256": "sha256:abefa9efa0e50c6f3313466d154a8ea7431892727cc8b45a8e64ffa80524396c"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+command: uv run nl2repo harbor compile catalog/sources/eslint --output /tmp/eslint-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
+result: not-run in this remediation; no private Oracle/control run evidence was available in the checkout.
+command: uv run --frozen --project harbor-runner harbor run -p catalog/tasks/eslint -a oracle
+result: not-run; no ESLint-specific Harbor grading/network artifacts or handoff were present.
+runtime directory removal is required because controls-passed has no verifiable evidence.

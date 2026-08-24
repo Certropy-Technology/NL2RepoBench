@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "better-sqlite3",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Materialize the referenced private npm/cache bundle, recompile the source without --allow-incomplete, then run official Harbor 0.21.0 Oracle and all controls with hash-bound network receipts before reopening.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/WiseLibs/better-sqlite3",
+      "revision": "f8e2d541208281368129929a96f70f937c0735ef",
+      "source_digest": "sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/better-sqlite3",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/better-sqlite3/evidence/remediation.txt",
+          "sha256": "sha256:0ddb3980d60cb4a334785a1f04fb101e64f2239320a7eb0a66aeb5bf3ba83f84"
+        }
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output /tmp/better-sqlite3-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+        "tool_version": "repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/better-sqlite3/evidence/remediation.txt",
+          "sha256": "sha256:0ddb3980d60cb4a334785a1f04fb101e64f2239320a7eb0a66aeb5bf3ba83f84"
+        }
+      }
+    ]
+  }
+}

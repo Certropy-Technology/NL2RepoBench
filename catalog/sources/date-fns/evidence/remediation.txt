@@ -1,0 +1,9 @@
+date-fns production evidence audit (2026-08-25)
+
+Source provenance records exact revision a0a39220522ed1228445792c768ed887709aea5f and archive digest sha256:bfae8a8d4c91f0d01026245898ff9b3a49ad4a1ce10df4c711a97cae302b4bf9.
+
+The checked-in runtime claims Oracle 21/21 and controls-passed, but no Harbor 0.21.0 grading.json, network.json, result.json, or control receipts are present in the checkout or recognized .nl2repo evidence roots. The checked-in bundle contains tests/dependencies/package-lock.json and bundle.manifest.json, which is not a permitted Node v2 private cache layout for the current production contract.
+
+Provenance dependency probes: pnpm install --offline --frozen-lockfile exited 1 because @typescript/native-preview@7.0.0-dev.20260421.2 was absent; direct core npm ci --offline exited 1 because workspace:* development dependencies are present.
+
+Decision: blocked. Remove the invalid runtime; reopen only after materializing a complete approved npm v3 cache/lock closure, separate verifier network evidence, official Harbor 0.21.0 Oracle grading and empty/stub/forgery/offline controls.

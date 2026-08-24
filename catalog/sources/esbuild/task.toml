@@ -79,10 +79,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
-reason = "Frozen source, API/test inventory, offline npm closure, digest-pinned images, and a private node:test verifier are in place. Oracle scored valid=true reward=1.0 at 11/11 under network none, and empty/stub/forgery/offline/install-script/loader-hook/timeout controls all behaved as required. Awaiting the independent Agent Run plus two human reviews before publication."
-approval_refs = ["authoring-remediation-esbuild-f6058f8"]
+status = "blocked"
+owner = "repair/esbuild"
+reason = "The previous controls-passed claim is not reproducible in this checkout: production compile fails because the referenced private npm bundle is missing, and no task-specific Harbor Oracle/control/network receipts are discoverable. The invalid runtime is removed."
 
 [oracle_bundle]
 digest = "sha256:8531700a15c8bdd44a9ee283b89d1efcd64c60d6fe166a0b8bd16bb1434e03b3"
