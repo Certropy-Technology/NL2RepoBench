@@ -1,9 +1,9 @@
 {
-  "canonical_manifest_digest": "sha256:55d035fb0448215c6bbaa097b5c58de3484fc44da91536c9617690e6bea2c193",
+  "canonical_manifest_digest": "sha256:4ed0f2bf2849db58027b3f1afcb6df9a02386a6b8224193cd425267a5db78124",
   "files": [
     {
       "path": "README.md",
-      "sha256": "35f26ace636476023caf863c65cfd839f8d8e87d38c2e78c2dfc47c1ba9cdc2c",
+      "sha256": "38f5ef4c6822d3ff8a9944b8eeb96ba9b2742c728aca98d43dfe444c9620b93d",
       "size_bytes": 518
     },
     {
@@ -95,6 +95,11 @@
       "path": "solution/source/appveyor.yml",
       "sha256": "a88c06b527c7cd7b58f77a26c14ad6d76f7d89ca152b1f65916dea0c31be5049",
       "size_bytes": 997
+    },
+    {
+      "path": "solution/source/docs/Makefile",
+      "sha256": "d645f2a2d6aafab335795f39dc7864ac016a2504d9f9b53196ecb8468c3879e9",
+      "size_bytes": 6794
     },
     {
       "path": "solution/source/docs/conf.py",
@@ -1938,7 +1943,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "f5f8aa374e622c5143ee6341c09f9d536b8c62def69fa4aa7bcb403cbf34aabd",
+      "sha256": "9e996540a964db129360bb9f3e1a824d5d06876b47fdcf4e5c139a9f442887ea",
       "size_bytes": 1321
     },
     {
@@ -1983,8 +1988,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/domain/models.py",
-      "sha256": "721135849e44085202e137956b07c2b45a406e5461232c40b65106a94a33e135",
-      "size_bytes": 28008
+      "sha256": "dfa38133ecb5ba27190d8a8a932948c8025f7af31ea26e5dec8cb4ba89bcf089",
+      "size_bytes": 28385
     },
     {
       "path": "tests/runtime/nl2repobench/domain/network_policy.py",

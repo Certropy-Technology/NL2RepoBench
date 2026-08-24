@@ -443,7 +443,9 @@ class TestManifest(RecordModel):
     )
 
     framework: Literal["pytest"] = "pytest"
-    expected_total: Annotated[int, Field(gt=0)]
+    # Blocked/excluded descriptors may have no frozen collection yet. Runtime
+    # publication validation still requires a positive frozen denominator.
+    expected_total: Annotated[int, Field(ge=0)] = 0
     expected_total_source: Literal["frozen-collection", "legacy-file", "unknown"] = "unknown"
     commands: tuple[str, ...] = ()
     commands_artifact: ArtifactRef | None = None
@@ -453,7 +455,11 @@ class TestManifest(RecordModel):
 
     @model_validator(mode="after")
     def validate_command_source(self) -> TestManifest:
-        if not self.commands and self.commands_artifact is None:
+        if (
+            not self.commands
+            and self.commands_artifact is None
+            and not (self.expected_total == 0 and self.expected_total_source == "unknown")
+        ):
             raise ValueError("test commands must be embedded or referenced by an artifact")
         if self.commands and self.commands_artifact is not None:
             raise ValueError("test commands must not be embedded and referenced simultaneously")
@@ -655,6 +661,8 @@ class TaskManifest(RecordModel):
             gaps.append("dependency_bundle.artifact=forbidden")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
+        if self.tests.expected_total <= 0:
+            gaps.append("tests.expected_total>0")
         if self.verifier is None:
             if self.tests.test_bundle is None:
                 gaps.append("tests.test_bundle")

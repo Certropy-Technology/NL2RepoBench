@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "Harbor final release empty control",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/repairs/prompt-toolkit/.work/runs/empty-final-release/2026-08-25__00-14-12/prompt-toolkit__dB87N9N/verifier/grading.json",
+        "sha256": "sha256:c911b3187f669552710685e72edcb8552da6c30a793d580b012f482577c3d0c0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/prompt-toolkit/.work/runs/empty-final-release/2026-08-25__00-14-12/prompt-toolkit__dB87N9N/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    },
+    "forgery": {
+      "command": "Harbor final release forgery control",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/repairs/prompt-toolkit/.work/runs/forgery-final-release/2026-08-25__00-15-26/prompt-toolkit-forgery__bW5kLwc/verifier/grading.json",
+        "sha256": "sha256:5e772d24330f9aa8768f8ca149012778e87d0ff58ae198b36003df925fe32de8"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/prompt-toolkit/.work/runs/forgery-final-release/2026-08-25__00-15-26/prompt-toolkit-forgery__bW5kLwc/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Harbor parent recheck verifier network probe",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/prompt-toolkit-parent-recheck/2026-08-25__04-00-41/prompt-toolkit__ePqeu2k/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    },
+    "stub": {
+      "command": "Harbor final release stub control",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/repairs/prompt-toolkit/.work/runs/stub-final-release/2026-08-25__00-14-48/prompt-toolkit-stub__trtDGsc/verifier/grading.json",
+        "sha256": "sha256:5e772d24330f9aa8768f8ca149012778e87d0ff58ae198b36003df925fe32de8"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/prompt-toolkit/.work/runs/stub-final-release/2026-08-25__00-14-48/prompt-toolkit-stub__trtDGsc/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/prompt-toolkit -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/prompt-toolkit-parent-recheck/2026-08-25__04-00-41/prompt-toolkit__ePqeu2k/verifier/grading.json",
+      "sha256": "sha256:003f83fa4eac4014ddb80eb08cf17cf6de6c8a191c63ee39baad63845cf8d7a0"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/prompt-toolkit-parent-recheck/2026-08-25__04-00-41/prompt-toolkit__ePqeu2k/verifier/network.json",
+      "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "prompt-toolkit",
+  "terminal_kind": "valid"
+}
