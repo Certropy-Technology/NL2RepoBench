@@ -19,14 +19,21 @@ def _private_bundle() -> ArtifactRef:
 
 
 def test_custom_verifier_requires_private_bundle_and_safe_entrypoint() -> None:
-    spec = TaskVerifierSpec(bundle=_private_bundle(), entrypoint="run.py")
+    spec = TaskVerifierSpec(
+        bundle=_private_bundle(),
+        entrypoint="run.py",
+        environment={"POETRY_DYNAMIC_VERSIONING_BYPASS": "0.0.0"},
+    )
     assert spec.protocol == "custom-json-v1"
+    assert spec.environment["POETRY_DYNAMIC_VERSIONING_BYPASS"] == "0.0.0"
     with pytest.raises(ValueError, match="artifact URI"):
         TaskVerifierSpec(
             bundle=_private_bundle().model_copy(update={"visibility": Visibility.PUBLIC}),
         )
     with pytest.raises(ValueError, match="safe relative"):
         TaskVerifierSpec(bundle=_private_bundle(), entrypoint="../run.py")
+    with pytest.raises(ValueError, match="cannot override PATH"):
+        TaskVerifierSpec(bundle=_private_bundle(), environment={"PATH": "bad"})
 
 
 def test_custom_verifier_writes_fixed_collection_and_junit(tmp_path: Path) -> None:
