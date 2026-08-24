@@ -21,6 +21,9 @@ from nl2repobench.domain.models_v2 import (
     EnvironmentLockV2,
     RuntimeProfileV2,
 )
+from nl2repobench.domain.models_v2 import (
+    TestManifestV2 as NodeTestsManifest,
+)
 from nl2repobench.harbor.models_v2 import load_node_toolchain_lock
 from nl2repobench.harbor.node_compiler import NodeHarborCompileError, NodeHarborCompiler
 from nl2repobench.harbor.node_dependencies import (
@@ -127,6 +130,13 @@ def test_v2_environment_rejects_runtime_language_mismatch() -> None:
             },
             network_mode="no-network",
         )
+
+
+def test_v2_blocked_task_can_record_unfrozen_collection() -> None:
+    tests = NodeTestsManifest(expected_total=0, expected_total_source="unknown")
+
+    assert tests.expected_total == 0
+    assert tests.expected_total_source == "unknown"
 
 
 def test_v2_catalog_dispatch_and_determinism(tmp_path: Path) -> None:

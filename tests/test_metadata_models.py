@@ -17,6 +17,9 @@ from nl2repobench.domain.models import (
     TaskStatus,
     Visibility,
 )
+from nl2repobench.domain.models import (
+    TestManifest as ManifestTests,
+)
 
 
 def test_canonical_digest_does_not_depend_on_field_order() -> None:
@@ -81,6 +84,27 @@ def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
 def test_blocked_task_requires_reason() -> None:
     with pytest.raises(ValidationError, match="require a reason"):
         TaskLifecycleRecord(status=TaskStatus.BLOCKED)
+
+
+def test_blocked_task_can_record_unfrozen_collection() -> None:
+    tests = ManifestTests(expected_total=0, expected_total_source="unknown")
+
+    assert tests.commands == ()
+    assert tests.expected_total == 0
+
+    instruction = ArtifactRef(
+        digest="sha256:" + "b" * 64,
+        size_bytes=1,
+        uri="artifact://public/sha256:" + "b" * 64,
+        visibility=Visibility.PUBLIC,
+    )
+    manifest = TaskManifest(
+        task_id="blocked-unfrozen",
+        instruction=instruction,
+        tests=tests,
+        lifecycle=TaskLifecycleRecord(status=TaskStatus.BLOCKED, reason="source freeze failed"),
+    )
+    assert "tests.expected_total>0" in manifest.publication_gaps()
 
 
 def test_published_lifecycle_requires_auditable_evidence() -> None:
