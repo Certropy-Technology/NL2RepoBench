@@ -214,6 +214,32 @@
       "valid": true,
       "reward": 0.0,
       "evidence": ".nl2repo/runs/controls/marshmallow-custom-forgery-v2/2026-08-24__15-31-03/marshmallow-forgery__wQtvW7Z/verifier/grading.json"
+    },
+    {
+      "task_id": "python-fire",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/python-fire-custom-empty-v1/2026-08-24__16-04-31/python-fire-empty__HhxyYS7/verifier/grading.json"
+    },
+    {
+      "task_id": "python-fire",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/python-fire-custom-stub-v1/2026-08-24__16-02-27/python-fire-stub__DhzA39J/verifier/grading.json"
+    },
+    {
+      "task_id": "python-fire",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/python-fire-custom-forgery-v1/2026-08-24__16-02-27/python-fire-forgery__znWCtqj/verifier/grading.json"
     }
   ],
   "offline": {

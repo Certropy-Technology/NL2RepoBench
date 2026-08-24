@@ -1,11 +1,10 @@
 # `python-fire` Static Authoring Audit - Blocked
 
-**Status: blocked.** This directory is a public, task-local evidence record
-only. It is not a task descriptor, public instruction, private test bundle,
-command plan, dependency bundle, verifier, Docker/Harbor tree, Oracle, control
-result, or publication approval. No upstream source/archive bytes, license
-bytes, hidden tests, secrets, generated projection, or shared catalog file are
-included.
+**Status: oracle-passed remediation; historical blocker retained below.** The
+current task has a deterministic noninteractive JSON/CLI contract, private
+offline dependency/verifier/Oracle bundles, generic compiled `20/20` Oracle and
+empty/stub/forgery controls. The broad reflection/IPython/fuzz suite below is
+historical context only.
 
 ## Audit scope
 

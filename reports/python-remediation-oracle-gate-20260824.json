@@ -162,6 +162,20 @@
         "pin flit_core in a no-network dependency bundle",
         "normalize mapping order and freeze a 33-leaf serialization contract"
       ]
+    },
+    {
+      "task_id": "python-fire",
+      "status": "oracle-passed",
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 20,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/python-fire-custom-compiled-v3/2026-08-24__16-00-59/python-fire__cN5QAHP/verifier/grading.json",
+      "remediations": [
+        "replace live callback/IPython/fuzz behavior with deterministic noninteractive JSON CLI fixtures",
+        "pin termcolor and build dependencies in a private offline wheelhouse",
+        "include the network_policy module in the trusted separate-verifier runtime"
+      ]
     }
   ],
   "controls": {
