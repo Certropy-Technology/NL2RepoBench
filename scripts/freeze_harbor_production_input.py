@@ -14,7 +14,7 @@ def _git(*args: str) -> str:
     return subprocess.check_output(["git", *args], text=True).strip()
 
 
-def freeze(base: str, source_path: str) -> dict[str, object]:
+def freeze(base: str, source_path: str, campaign_id: str) -> dict[str, object]:
     commit = _git("rev-parse", base)
     lines = _git("ls-tree", f"{commit}:{source_path}").splitlines()
     sources = []
@@ -26,7 +26,7 @@ def freeze(base: str, source_path: str) -> dict[str, object]:
     sources.sort(key=lambda item: str(item["task_id"]))
     payload: dict[str, object] = {
         "schema_version": "1.0",
-        "campaign_id": "harbor-production-input-v1",
+        "campaign_id": campaign_id,
         "base_commit": commit,
         "source_root": source_path,
         "source_count": len(sources),
@@ -42,10 +42,11 @@ def main() -> int:
     parser.add_argument("--base", required=True, help="Commit/ref whose source tree is frozen.")
     parser.add_argument("--sources", default="catalog/sources")
     parser.add_argument("--expected-sources", type=int, required=True)
+    parser.add_argument("--campaign-id", default="harbor-production-input-v1")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
 
-    payload = freeze(args.base, args.sources)
+    payload = freeze(args.base, args.sources, args.campaign_id)
     if payload["source_count"] != args.expected_sources:
         raise SystemExit(
             f"expected {args.expected_sources} sources, found {payload['source_count']}"
