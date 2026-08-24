@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/cachetools"
+version = "1.0.0"
+description = "Build cachetools 7.1.7 from an empty workspace and reproduce deterministic cache, TTL, LRU, LFU, MRU-trace, random-replacement, key, and memoization behavior through a separate child-side JSON adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "caching",
+    "cache-policies",
+    "ttl",
+    "memoization",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "easy"
+category = "caching"
+tags = [
+    "python",
+    "caching",
+    "memoization",
+    "cache-policies",
+    "ttl",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 17
+canonical_manifest_digest = "sha256:e787fa5f61715a1685e63b36c707c9f0d4c20fea1032a590f6dceff5ab735296"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 480.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

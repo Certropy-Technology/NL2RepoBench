@@ -1,12 +1,12 @@
 schema_version = "1.0"
 task_id = "cachetools"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "easy"
 category = "caching"
-tags = ["python", "caching", "memoization", "collections", "repository-generation", "separate-verifier"]
+tags = ["python", "caching", "memoization", "cache-policies", "ttl", "separate-verifier"]
 language = "python"
 
 [source]
@@ -14,49 +14,73 @@ status = "known"
 upstream_url = "https://github.com/tkem/cachetools"
 revision = "01af8e5b7ce44432b357e26c7d67eb7fa055ae72"
 license_spdx = "MIT"
-# Unprefixed `git archive --format=tar HEAD`; repeated archive bytes match.
 source_digest = "sha256:67fe3a54397f9d1437464dfd149bdf54520a0c5a894eb4ab66eb1f37ea100449"
 submodules = []
 
 [environment]
-# Python and OS are recorded from the candidate declaration only. A final
-# image digest and dependency closure have not been frozen in this static lane.
-status = "unknown"
-python_version = ">=3.10"
-os_name = "unknown"
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "install the hash-locked build backend during image build; Oracle verifies the pinned source archive before copying src/cachetools"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build closure is installed during Docker image build. Agent and verifier runs require no egress, while the Oracle uses only a local private source archive after checking the frozen revision digest."
 
 [dependencies]
-# cachetools has no runtime dependencies. These are the candidate's declared
-# build and test/tooling requirements; they are intentionally not a lock.
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = [
-  "setuptools>=80",
-  "setuptools-scm>=8.2",
-  "pytest",
-  "pytest-cov",
-  "sphinx",
-  "pyright",
-  "ruff",
-]
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# 312 items were observed by collect-only with pytest 9.1.1 on CPython 3.14;
-# this is not a frozen production denominator.
-expected_total = 312
-expected_total_source = "unknown"
-commands = ["python -m pip install -e .", "python -m pytest --continue-on-collection-errors -q tests"]
-protected_paths = ["tests"]
+expected_total = 17
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:3dd59f8c036fd5414ddf49aa7d56158d8daadade8b7c44b194648adb0e41aa80", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3dd59f8c036fd5414ddf49aa7d56158d8daadade8b7c44b194648adb0e41aa80", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[harbor]
+description = "Build cachetools 7.1.7 from an empty workspace and reproduce deterministic cache, TTL, LRU, LFU, MRU-trace, random-replacement, key, and memoization behavior through a separate child-side JSON adapter."
+keywords = ["python", "caching", "cache-policies", "ttl", "memoization", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 480.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:da5fc086e99abf5b3ea91e19f0dedb209eeec8aab999e595899fa0f445bbff3d"
+size_bytes = 286720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:da5fc086e99abf5b3ea91e19f0dedb209eeec8aab999e595899fa0f445bbff3d"
+visibility = "private"
+
 [lifecycle]
-status = "blocked"
-reason = "Static provenance, license, package boundary, API inventory, source SLOC, packaging metadata, and collect-only evidence are recorded. Publication is blocked because the final environment and hash-locked dependency bundle, frozen private test/command artifacts, Oracle bundle, and cachetools-specific child-side adapter for callable/stateful/threaded APIs are absent; no Docker, hidden-test, or Oracle execution is authorized in this lane."
+status = "controls-passed"
+owner = "worker"
+reason = "Official Harbor Oracle passed 17/17 with reward 1.0; stub and forgery controls each collected 17/17 and scored 0.0 under the no-network separate verifier."
