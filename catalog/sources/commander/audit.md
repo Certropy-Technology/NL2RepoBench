@@ -1,8 +1,9 @@
 # `commander` Blocked Audit
 
-Status: **blocked**. This is a bounded audit record only. It contains no
-`task.toml`, public instruction, hidden tests, Harbor task files, verifier,
-Oracle, dependency cache, or shared catalog/index edit.
+Status: **blocked**. This bounded audit is paired with a parseable blocked
+descriptor and hashed remediation evidence. It contains no hidden tests,
+Harbor runtime, verifier, Oracle, dependency cache, or shared catalog/index
+edit; `catalog/tasks/commander/` remains absent.
 
 ## Candidate Identity
 

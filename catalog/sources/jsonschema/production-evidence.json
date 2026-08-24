@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Obtain an approved candidate record with a complete immutable commit SHA, then freeze archive/license, dependencies, collection, verifier, Oracle, and controls before generating any runtime task.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The approved candidate reports identify the repository and license claim but provide no immutable revision, so source and license bytes cannot be trusted.",
+      "candidate_report": "reports/python-package-candidates.v1.json",
+      "candidate_report_sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4",
+      "upstream_url": "https://github.com/python-jsonschema/jsonschema",
+      "license_claim": "MIT"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/jsonschema",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/jsonschema/evidence/descriptor-validation.log",
+          "sha256": "sha256:d3783f9d7a02daa4769a5fc7e32739a20eeb1079f4cb2faccc5e97e1692df7e5"
+        }
+      }
+    ]
+  }
+}

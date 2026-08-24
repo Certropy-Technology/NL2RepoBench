@@ -2,11 +2,12 @@
 
 **Status: blocked.** This file is task-local evidence for the Node production
 authoring lane (batch `node-production-author-20260823`, candidate
-`https-github-com-cheeriojs-cheerio-97d99ecf637b`). It is not a Harbor task, a
+`https-github-com-cheeriojs-cheerio-97d99ecf637b`). It is paired with a
+parseable blocked descriptor and hashed production evidence. It is not a
 private test bundle, an Oracle, a dependency cache, a verifier, or a
 publication approval. No upstream source bytes, test bytes, tarballs, npm
-cache, or generated artifacts are stored in this directory. The only durable
-write root used for this audit is `catalog/tasks/cheerio/`.
+cache, or generated artifacts are stored in this directory; the runtime
+directory `catalog/tasks/cheerio/` remains absent.
 
 ## Decision
 

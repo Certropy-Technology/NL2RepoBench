@@ -118,8 +118,9 @@ def test_catalog_network_policy_controls_generated_agent_runtime(tmp_path) -> No
     source = tmp_path / "source"
     shutil.copytree(SOURCE, source)
     task_toml = source / "task.toml"
-    task_toml.write_text(
-        task_toml.read_text().replace(
+    task_text = task_toml.read_text()
+    if "[environment.network_policy]" not in task_text:
+        task_text = task_text.replace(
             "[dependencies]\n",
             """[environment.network_policy]
 mode = "no-network"
@@ -129,9 +130,8 @@ reason = "Synthetic compiler policy projection fixture."
 
 [dependencies]
 """,
-            1,
         )
-    )
+    task_toml.write_text(task_text)
     task_root = HarborCompiler(TOOLCHAIN).compile_task(
         source,
         tmp_path / "output",

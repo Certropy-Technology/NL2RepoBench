@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "commander",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Resolve one canonical upstream commit, reproduce archive and license hashes, then freeze Node/npm versions, lock/cache closure, CJS/ESM boundary, collection, separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "No trusted full commit, reproducible archive, or exact license-byte hash was available.",
+      "candidate_url": "https://github.com/tj/commander.js",
+      "license_claim": "MIT",
+      "audit_sha256": "sha256:4f9adf4157745fe2edc7dda6e86aa4f923e73abf509102c742942b878b598066"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/commander",
+        "tool_version": "uv repository toolchain; task descriptor absent at invocation",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/commander/evidence/descriptor-validation.log",
+          "sha256": "sha256:d878d1c3a11a8b838b20c5ffec513153a6ee91573af9cb0bd0cc75f715d51aab"
+        }
+      }
+    ]
+  }
+}

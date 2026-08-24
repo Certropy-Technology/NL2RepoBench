@@ -1,0 +1,7 @@
+command: uv run nl2repo task validate-source catalog/sources/jsonschema
+tool_version: repository toolchain
+result: not-run before descriptor creation; source authority remained unresolved
+command: git archive --format=tar <immutable-revision>
+result: not-run; approved candidate report contains no revision
+command: uv run --frozen --project harbor-runner harbor run -p catalog/tasks/jsonschema -a oracle
+result: not-run; runtime directory intentionally absent

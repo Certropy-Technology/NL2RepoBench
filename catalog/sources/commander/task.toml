@@ -1,0 +1,52 @@
+schema_version = "2.0"
+task_id = "commander"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "cli-parser"
+tags = ["node", "npm", "cli", "cjs", "esm", "blocked"]
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/tj/commander.js"
+license_spdx = "MIT"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; source authority and the npm dependency/cache closure are not frozen."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/commander"
+reason = "Immutable source authority, archive/license hashes, dependency/cache closure, collection, separate verifier, Oracle, and controls are unavailable. No catalog/tasks/commander runtime exists."

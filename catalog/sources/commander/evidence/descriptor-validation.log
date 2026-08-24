@@ -1,0 +1,4 @@
+command: uv run nl2repo task validate-source catalog/sources/commander
+invalid task source: invalid task source catalog/sources/commander/task.toml: [Errno 2] No such file or directory: 'catalog/sources/commander/task.toml'
+exit_code=1
+command: git status --short -- catalog/sources/commander catalog/tasks/commander

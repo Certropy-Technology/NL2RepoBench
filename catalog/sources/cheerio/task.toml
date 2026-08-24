@@ -1,0 +1,67 @@
+schema_version = "2.0"
+task_id = "cheerio"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "html-parser"
+tags = ["node", "npm", "typescript", "html", "dom", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/cheeriojs/cheerio"
+revision = "808f8456b38a730497c675f1478d659cc4adfefe"
+license_spdx = "MIT"
+source_digest = "sha256:bc9a92fdbe3d61dfc45561a119d1a3264ba9241ca3ead179d40b5c75e676cbdf"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The agent and verifier must run without egress; the package requires generated dist outputs, a development build closure with lifecycle/native/browser surfaces, and a verifier scope that has not been frozen."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["433 lock entries; complete private cache and build closure not approved"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/cheerio"
+reason = "The frozen Cheerio revision requires network-loading, generated dist, lifecycle/native/browser build surfaces, Vitest/type-level tests, and non-JSON APIs. The first safe no-network separate-verifier contract cannot be authored without an approved scope change and reviewed dependency closure; no runtime task was generated."

@@ -1,0 +1,11 @@
+command: uv run nl2repo task validate-source catalog/sources/jsonschema
+{
+  "instruction": "catalog/sources/jsonschema/blocked.md",
+  "source_digest": "sha256:f5b0535fb3e9b67518128c9d97c1b0f44c236a7d1822b1b1c8c259d5629d735c",
+  "status": "blocked",
+  "task_id": "jsonschema",
+  "version": "0.1.0"
+}
+command: git status --short -- catalog/sources/jsonschema catalog/tasks/jsonschema
+?? catalog/sources/jsonschema/production-evidence.json
+?? catalog/sources/jsonschema/task.toml

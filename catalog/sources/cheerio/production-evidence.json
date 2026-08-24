@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cheerio",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "spec",
+    "next_step": "Approve a materially narrowed JSON-safe Cheerio contract, then freeze generated dist/build artifacts, a no-network dependency closure, a private node:test adapter, and fresh Oracle/controls evidence.",
+    "source_freeze": {
+      "status": "known",
+      "revision": "808f8456b38a730497c675f1478d659cc4adfefe",
+      "source_digest": "sha256:bc9a92fdbe3d61dfc45561a119d1a3264ba9241ca3ead179d40b5c75e676cbdf",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:61c1e21d3a8ff20f9b69abe15104a75584688080febc22f60a4cbf3854becf4e"
+    },
+    "commands": [
+      {
+        "command": "bounded Node production authoring audit and contract review",
+        "tool_version": "Node 26.7.0/npm 12.0.2 diagnostics; locked target Node 24.19.0/npm 11.17.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/cheerio/blocked.md",
+          "sha256": "sha256:46fb7fd89affc7ae842938f8788da3f9993afad9a5d00b6507ba0338bd18cf18"
+        }
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/cheerio",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/cheerio/evidence/descriptor-validation.log",
+          "sha256": "sha256:5a8a2bcbaf4ed0955cba817ce1db4bc6fe70e5266094d3c361edec38cac4218d"
+        }
+      }
+    ]
+  }
+}

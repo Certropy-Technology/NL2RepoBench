@@ -1,10 +1,11 @@
 # `jsonschema` Static Authoring Audit
 
-**Status: blocked.** This directory is an evidence record only. It contains no
-public task instruction, `task.toml`, Harbor bundle, Docker asset, Oracle
-solution, hidden/private test bytes, dependency cache, verifier, or shared
-catalog/index update. The block is a source-freeze blocker, not a model or
-runtime test result.
+**Status: blocked.** This directory is a source authority with a parseable
+blocked descriptor and hashed remediation evidence. It contains no Harbor
+bundle, Docker asset, Oracle solution, hidden/private test bytes, dependency
+cache, verifier, or shared catalog/index update. The block is a source-freeze
+blocker, not a model or runtime test result; `catalog/tasks/jsonschema/`
+remains absent.
 
 ## Authoritative candidate record
 
