@@ -1,9 +1,9 @@
 # `jinja` Legacy Conversion Audit
 
-Status: **blocked**. This directory is a task-local provenance audit only. It
-does not contain a Harbor task, a public instruction projection, an Oracle
-solution, hidden tests, binary fixtures, a dependency bundle, or a dataset
-entry. No shared conversion-loop state or legacy task file is changed.
+Status: **blocked**. This audit is paired with a parseable descriptor and
+hash-bound production evidence. It does not contain a Harbor runtime, Oracle
+solution, hidden tests, binary fixtures, or a dependency bundle;
+`catalog/tasks/jinja/` remains absent.
 
 ## Legacy Identity
 

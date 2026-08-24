@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "csv-parse",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Create and review an isolated npm v3 lock/cache closure for the csv-parse sync-only runtime and its approved build/test adapter, freeze generated dist provenance, then author the private node:test verifier, denominator, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/adaltas/node-csv",
+      "revision": "3591c0770f7235b203f7cbcd7805ddedfaaf3ce1",
+      "source_digest": "sha256:59008cce99e32cf346af17ef0de740f1067db994043fd5819e58b4c511fe48d9",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:032efe3de772e9f85c722ee9ff7ccd5cab01e024296b2b8d25893bf779be9360",
+      "package_manifest_digest": "sha256:33b8d521425dae25b51242b73d6aa5194ca1112c8b69f98f13110fbedaf15cec",
+      "audit_digest": "sha256:df38ca4c614d29ae1f0c718763999e44d1338fc8da25ae0cf65db357a06b8e0d"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/csv-parse",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/csv-parse/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:e7373de24786b203be5e4ec834557b519526d31f52cabab28f49e82482282f62"
+        }
+      },
+      {
+        "command": "git archive --format=tar 3591c0770f7235b203f7cbcd7805ddedfaaf3ce1",
+        "tool_version": "Git archive probe recorded in evidence/audit.md",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/csv-parse/evidence/audit.md",
+          "sha256": "sha256:df38ca4c614d29ae1f0c718763999e44d1338fc8da25ae0cf65db357a06b8e0d"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json5",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze an approved npm v3 lock/cache closure for the exact revision under Node 24.19.0/npm 11.17.0, then author a JSON-only child adapter, structured collection, separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/json5/json5",
+      "revision": "b935d4a280eafa8835e6182551b63809e61243b0",
+      "source_digest": "sha256:014a285d90e324aaf92ef2be8806c7abff1853b3abd5d2f6a9823b35eb2b6683",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE.md",
+      "license_digest": "sha256:53e59feb13058722d977c699eb0407c7bce2f93c949b681bbd2ff31698535927",
+      "audit_sha256": "sha256:1e93f6034ddb6a9c3d348c293bab340b67a56dab04d3d6a5b5e1ef730c4fabc5"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/json5",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/json5/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:2353e43587e5939beb7467eda923dc95e2d8c41b601f9fa4e3960d33e134e5c2"
+        }
+      }
+    ]
+  }
+}

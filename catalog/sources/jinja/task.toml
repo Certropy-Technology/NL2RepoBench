@@ -1,0 +1,65 @@
+schema_version = "1.0"
+task_id = "jinja"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "template-engine"
+tags = ["python", "templates", "sandbox", "async", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pallets/jinja"
+revision = "5ef70112a1ff19c05324ff889dd30405b1002044"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:61082a25b5f6e7c49a0e4c12d9aa6be8e684489e0d613dc14512e8ea0c001421"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Jinja requires MarkupSafe, flit_core, and a reviewed pytest/test-data closure; no approved hash-locked offline verifier environment is present."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["MarkupSafe>=3.0", "flit_core<4", "pytest/test-data closure not frozen"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate: the Jinja image/test boundary, dependency closure, and separate verifier are not production-frozen."
+keywords = ["python", "templates", "sandbox", "async", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/jinja"
+reason = "Immutable Jinja source is known, but the legacy image/test boundary and denominator are not reconciled with the pinned revision; MarkupSafe/flit/pytest closure, structured collection, separate verifier, Oracle, and controls are absent. No catalog/tasks/jinja runtime exists."

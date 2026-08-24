@@ -1,0 +1,65 @@
+schema_version = "1.0"
+task_id = "jmespath"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "easy"
+category = "json-query-language"
+tags = ["python", "jmespath", "json", "query", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jmespath/jmespath.py"
+revision = "2812594e69d43098ef60f81f4efc404c071b0418"
+license_spdx = "MIT"
+source_digest = "sha256:878aae1a0c13f72226998d07402200365ba0335ce106566bd95077e8abae28b4"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The candidate has no approved private test/command artifact or complete offline verifier dependency closure; source acquisition remains forbidden during agent and verifier runs."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["pytest and verifier dependencies are not a frozen private lock"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate: full jmespath Python tests cross a process-local separate-verifier boundary and no approved adapted JSON contract or private evidence bundle exists."
+keywords = ["python", "jmespath", "json", "query", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/jmespath"
+reason = "The immutable source/archive/license are known, but the 992-node upstream suite cannot be reused through the generic JSON boundary; no approved private test/command artifact, dependency lock, separate verifier, Oracle, or controls exists. No catalog/tasks/jmespath runtime exists."

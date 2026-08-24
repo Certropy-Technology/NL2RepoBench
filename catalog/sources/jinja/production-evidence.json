@@ -1,0 +1,39 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/jinja",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/jinja/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:ba86ad8cb2b5aab59393acd4adf67fb1ed4519cb9ae6c0efa3c42105764860c4"
+        },
+        "tool_version": "repository toolchain; task descriptor absent at invocation"
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/jinja",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/jinja/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:b07696c4323947e33a62a823d490cd5bafe23375f321c03e1cc7a74395799a96"
+        },
+        "tool_version": "repository toolchain"
+      }
+    ],
+    "failure_class": "verifier",
+    "next_step": "Reconcile the immutable image/test boundary with revision 5ef70112a1ff19c05324ff889dd30405b1002044, freeze MarkupSafe/flit/pytest/test-data hashes, then author a separate child-side verifier and run Oracle and controls.",
+    "source_freeze": {
+      "audit_sha256": "sha256:09eed7d264f129e7075aa17d501e020ff8af3298b2d65df92db06702e1b70553",
+      "license_digest": "sha256:3b49dcee4105eb37bac10faf1be260408fe85d252b8e9df2e0979fc1e094437b",
+      "license_path": "LICENSE.txt",
+      "license_spdx": "BSD-3-Clause",
+      "revision": "5ef70112a1ff19c05324ff889dd30405b1002044",
+      "source_digest": "sha256:61082a25b5f6e7c49a0e4c12d9aa6be8e684489e0d613dc14512e8ea0c001421",
+      "status": "known",
+      "upstream_url": "https://github.com/pallets/jinja"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "jinja",
+  "terminal_kind": "blocked"
+}

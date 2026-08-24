@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jmespath",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve and implement a deliberately narrowed JSON-safe query contract, freeze a private adapted test/command bundle and hash-locked verifier dependencies, then run production compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/jmespath/jmespath.py",
+      "revision": "2812594e69d43098ef60f81f4efc404c071b0418",
+      "source_digest": "sha256:878aae1a0c13f72226998d07402200365ba0335ce106566bd95077e8abae28b4",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:6eefacfa4d71b82d08408c751470ac8d9854538da2142cb27be0287fb13d0ab9",
+      "audit_sha256": "sha256:ea05c1c799a74a6d6a0c5a7fc35add675e95720146f7fe383b81143f16478a44"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/jmespath",
+        "tool_version": "repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/jmespath/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:76c745e88e900d1d1d794c419bd3231683bed5256145fa280715edaefd8c01bd"
+        }
+      },
+      {
+        "command": "PYTHONDONTWRITEBYTECODE=1 uv run --no-project --with pytest==8.4.1 python3 -m pytest --collect-only -q tests -p no:cacheprovider",
+        "tool_version": "CPython 3.14.6, pytest 8.4.1; source-only audit",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/jmespath/blocked.md",
+          "sha256": "sha256:ea05c1c799a74a6d6a0c5a7fc35add675e95720146f7fe383b81143f16478a44"
+        }
+      }
+    ]
+  }
+}

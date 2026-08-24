@@ -1,0 +1,64 @@
+schema_version = "2.0"
+task_id = "csv-parse"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "csv-parser"
+tags = ["node", "npm", "csv", "parser", "sync", "esm", "cjs", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/adaltas/node-csv"
+revision = "3591c0770f7235b203f7cbcd7805ddedfaaf3ce1"
+license_spdx = "MIT"
+source_digest = "sha256:59008cce99e32cf346af17ef0de740f1067db994043fd5819e58b4c511fe48d9"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the upstream monorepo lock contains workspace links, unrelated packages, and build/test tooling that are not an approved standalone npm v3 closure."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["csv-parse sync runtime has no third-party imports, but the isolated build/test closure and generated dist provenance are not frozen"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/csv-parse"
+reason = "The sync-only runtime graph is feasible and has no third-party imports, but the source is an npm workspace monorepo whose root lock contains workspace links and unrelated tooling. The package test script requires an unapproved tsx/build closure, generated dist provenance is not frozen, and no private node:test adapter, denominator, separate verifier, Oracle, or controls exist. No catalog/tasks/csv-parse runtime exists."

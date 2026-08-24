@@ -1,0 +1,64 @@
+schema_version = "2.0"
+task_id = "json5"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "json-parser"
+tags = ["node", "npm", "json5", "parser", "tap", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/json5/json5"
+revision = "b935d4a280eafa8835e6182551b63809e61243b0"
+license_spdx = "MIT"
+source_digest = "sha256:014a285d90e324aaf92ef2be8806c7abff1853b3abd5d2f6a9823b35eb2b6683"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The package needs a compliant npm v3 lock/cache closure and a reviewed test/build boundary before offline agent or verifier execution."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["committed npm lock v1; compliant private npm v3 closure is missing"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/json5"
+reason = "The exact source and MIT archive/license evidence are known, but the npm v1 lock, missing v3 cache closure, incompatible upstream Tap wrapper, absent bounded node:test verifier, denominator, Oracle, and controls prevent runtime generation."
