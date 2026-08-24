@@ -395,7 +395,7 @@ def validate_campaign(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("campaign", type=Path)
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--minimum-tasks", type=int, default=500)
     parser.add_argument("--allow-below-target", action="store_true")
     args = parser.parse_args()

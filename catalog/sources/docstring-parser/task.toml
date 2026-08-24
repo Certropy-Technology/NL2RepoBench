@@ -1,0 +1,80 @@
+schema_version = "1.0"
+task_id = "docstring-parser"
+version = "0.2.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "text-parsing"
+tags = ["python", "docstrings", "parsing", "unicode", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rr-/docstring_parser"
+revision = "8347d8fb347bd66e4bf5711d3df586357166944a"
+license_spdx = "MIT"
+source_digest = "sha256:2cb59707c20099e0f8b61ab9eeb6faeb7fea370a03b3468c822f84c0ac21f3e9"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+network_mode = "no-network"
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"]
+artifact = { digest = "sha256:18682d9f2029d11c40cf0eed404920dcf60311a4fe402785561fc70f9fcc5a6b", size_bytes = 307200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:18682d9f2029d11c40cf0eed404920dcf60311a4fe402785561fc70f9fcc5a6b", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pinned docstring_parser package from an empty workspace; grading uses a deterministic offline parse and composition slice."
+keywords = ["python", "docstrings", "text-parsing", "unicode", "offline", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 360.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:d23864ebef5d6e2da6d327f3c3d9985837dc83c4d3d264d3f65e34c2d09f3673", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d23864ebef5d6e2da6d327f3c3d9985837dc83c4d3d264d3f65e34c2d09f3673", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:d5ecf42a87e0a3744533459a1f3fba37e9731851dfdedccefeb0ac00b9a6d855"
+size_bytes = 235520
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d5ecf42a87e0a3744533459a1f3fba37e9731851dfdedccefeb0ac00b9a6d855"
+visibility = "private"
+
+[lifecycle]
+status = "oracle-passed"
+owner = "integrator"
+reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+evidence = [
+  { digest = "sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40", size_bytes = 1035, media_type = "application/json", uri = "artifact://private/sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40", visibility = "private" },
+]

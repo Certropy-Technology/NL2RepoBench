@@ -414,7 +414,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parent.parent)
     parser.add_argument("--legacy-root", type=Path, default=Path("test_files"))
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--state", type=Path, default=Path(".nl2repo/conversion-loop/state.json"))
     commands = parser.add_subparsers(dest="command", required=True)
 

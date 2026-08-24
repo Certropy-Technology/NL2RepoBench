@@ -40,7 +40,7 @@ from nl2repobench.verification.node_grader import grade_node_test_report
 from nl2repobench.verification.node_models import NodeVerificationReason
 
 ROOT = Path(__file__).parents[1]
-NODE_TASK = ROOT / "catalog/tasks/node-synthetic"
+NODE_TASK = ROOT / "catalog/sources/node-synthetic"
 NODE_TOOLCHAIN = ROOT / "toolchain.node.dev.lock.toml"
 NODE_PRODUCTION_TOOLCHAIN = ROOT / "toolchain.node.lock.toml"
 
@@ -611,7 +611,7 @@ def test_node_compiler_extracts_private_bundle_and_rejects_missing_resolver(tmp_
 def test_node_compiler_rejects_python_source_and_existing_output(tmp_path: Path) -> None:
     with pytest.raises(NodeHarborCompileError, match="schema_version=2.0"):
         NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
-            ROOT / "catalog/tasks/ministats", tmp_path / "out", allow_incomplete=True
+            ROOT / "catalog/sources/ministats", tmp_path / "out", allow_incomplete=True
         )
     compiler = NodeHarborCompiler(NODE_TOOLCHAIN)
     existing = tmp_path / "out/node-synthetic"
@@ -635,7 +635,7 @@ def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.Mon
         Path("/pack/pkg.tgz"), Path("/target"), Path("/cache")
     )
     assert "timeout" in (
-        ROOT / "catalog/tasks/node-synthetic/harbor/tests/test_client.mjs"
+        ROOT / "catalog/sources/node-synthetic/harbor/tests/test_client.mjs"
     ).read_text(encoding="utf-8")
     with pytest.raises(ValueError, match="regular directory"):
         node_candidate_install._check_directory(Path("/missing"), "source")  # noqa: SLF001

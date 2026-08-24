@@ -1,88 +1,56 @@
-schema_version = "1.0"
-task_id = "typer"
-version = "0.2.0"
-instruction = "instruction.md"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
 
-oracle_bundle = { digest = "sha256:3575f2f224eac1470eae421110547236c6f62ac9142f5b13e4d614b070f75180", size_bytes = 2734080, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3575f2f224eac1470eae421110547236c6f62ac9142f5b13e4d614b070f75180", visibility = "private" }
+[task]
+name = "nl2repobench/typer"
+version = "0.2.0"
+description = "Build the pinned typer type-hint CLI framework slice from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "cli",
+    "type-hints",
+    "argument-parsing",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "hard"
 category = "cli"
-tags = ["python", "cli", "type-hints", "argument-parsing", "separate-verifier"]
-language = "python"
-
-[source]
-status = "known"
-upstream_url = "https://github.com/fastapi/typer"
-revision = "9a7b2e83f6b62c750d6026b0de9ebf2026a8b8fa"
-license_spdx = "MIT"
-source_digest = "sha256:4713273f314d75895e287e1dfed01cd97d1d1c6ec643ebb9e379ff5e80dda71b"
-submodules = []
-
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "The full runtime, build and adapter closure is pinned in the private dependency wheelhouse and installed at image build time. The Oracle extracts the frozen source archive from its private bundle, so no run-time fetch of upstream source is required. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = [
-  "annotated-doc==0.0.4",
-  "markdown-it-py==4.0.0",
-  "mdurl==0.1.2",
-  "pdm-backend==2.4.9",
-  "pygments==2.20.0",
-  "rich==15.0.0",
-  "setuptools==80.9.0",
-  "shellingham==1.5.4",
-  "wheel==0.45.1",
+tags = [
+    "python",
+    "cli",
+    "type-hints",
+    "argument-parsing",
+    "separate-verifier",
 ]
-artifact = { digest = "sha256:9b86a95c3bb5e21ca5d3324f77f1d310dce4ed092c0b528da2cc1a243695aca9", size_bytes = 3061760, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9b86a95c3bb5e21ca5d3324f77f1d310dce4ed092c0b528da2cc1a243695aca9", visibility = "private" }
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 23
+canonical_manifest_digest = "sha256:8ffcb7933e602c1b6b128230c437b56f04387de587d31819006d21193266d426"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[tests]
-framework = "pytest"
-expected_total = 23
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+[agent]
+timeout_sec = 3600.0
 
 [verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:fcec1fcdb8dda6894cf2c9c402aca5f7ece1dd71d7bb2fdb5520b3ab96935fb8", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:fcec1fcdb8dda6894cf2c9c402aca5f7ece1dd71d7bb2fdb5520b3ab96935fb8", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[harbor]
-description = "Build the pinned typer type-hint CLI framework slice from an empty workspace."
-keywords = ["python", "cli", "type-hints", "argument-parsing", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 900.0
-candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 600.0
-agent_network_mode = "no-network"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 23/23 with reward 1.0; empty/stub/forgery controls passed and review remains pending."

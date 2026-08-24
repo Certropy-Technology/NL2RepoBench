@@ -9,7 +9,7 @@ use:
 1. fetch the pinned revision,
 2. assert ``rev-parse HEAD`` equals that revision,
 3. build ``git archive --format=tar <revision>`` and check it against the
-   ``source_digest`` recorded in ``catalog/tasks/<task>/task.toml``,
+   ``source_digest`` recorded in ``catalog/sources/<task>/task.toml``,
 4. extract into a cleaned ``/workspace``.
 
 ``git archive`` of a fixed revision is byte-reproducible, and the digest is
@@ -38,7 +38,7 @@ import tomllib
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TASKS_ROOT = REPO_ROOT / "catalog" / "tasks"
+TASKS_ROOT = REPO_ROOT / "catalog" / "sources"
 
 _SHA256_PREFIXED = re.compile(r"^sha256:([0-9a-f]{64})$")
 _FETCHES_SOURCE = re.compile(r"\bgit\b[^\n]{0,120}?\b(?:fetch|clone)\b")
@@ -54,7 +54,7 @@ set -euo pipefail
 # metadata still declares no-network; authorize the source host for an Oracle
 # run only, e.g. `harbor run -a oracle --allow-agent-hosts codeload.github.com`.
 #
-# SOURCE_ARCHIVE_SHA256 is source_digest from catalog/tasks/{task}/task.toml and
+# SOURCE_ARCHIVE_SHA256 is source_digest from catalog/sources/{task}/task.toml and
 # equals sha256(git archive --format=tar {revision}), which is byte-reproducible
 # for a fixed revision. A changed remote fails the check instead of being used.
 

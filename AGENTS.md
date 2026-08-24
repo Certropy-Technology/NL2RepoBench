@@ -73,7 +73,7 @@ dataset_score = mean(task_score for every valid task)
 1. 首批只做 5 到 10 题 pilot，覆盖 Easy、Medium、Hard 和不同项目形态。
 2. pilot 稳定后，每批建议 10 到 20 题；并发受 Docker、磁盘、API rate limit 和 reviewer 数量约束。
 3. 不同 task 可以并发；同一 task 的 source freeze、spec、tests 和 verifier 不允许多个 writer 并发修改。
-4. 并行 worker 只写各自 `catalog/tasks/<task-id>/` 或独立 worktree。canonical manifest、共享索引、dataset manifest、`config.json` 和发布目录由 compiler/integrator 串行更新。
+4. 并行 worker 只写各自 `catalog/sources/<task-id>/` 或独立 worktree。canonical manifest、共享索引、dataset manifest、`config.json` 和发布目录由 compiler/integrator 串行更新。
 5. 每个 stage 只消费上一阶段已版本化 artifact。失败后从最后一个可信 stage 恢复，不从头盲目重做。
 6. LLM 可起草规格和 traceability，但不能自行批准 license、Oracle、测试覆盖或最终发布门禁。
 

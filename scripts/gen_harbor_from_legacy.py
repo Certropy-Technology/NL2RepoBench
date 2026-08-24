@@ -612,7 +612,7 @@ def write_task(task: str, config: dict[str, object]) -> None:
     if config.get("blocked"):
         print(f"  ! {task} blocked: {config['blocked']}")
         return
-    tests = REPO / "catalog" / "tasks" / task / "harbor" / "tests"
+    tests = REPO / "catalog" / "sources" / task / "harbor" / "tests"
     tests.mkdir(parents=True, exist_ok=True)
     (tests / "Dockerfile").write_text(dockerfile(task, config), encoding="utf-8")
     (tests / "grade.py").write_text(GRADE_PY, encoding="utf-8")

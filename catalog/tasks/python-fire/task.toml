@@ -1,72 +1,58 @@
-schema_version = "1.0"
-task_id = "python-fire"
-version = "0.2.0"
-instruction = "instruction.md"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
 
-oracle_bundle = { digest = "sha256:2e4154d2e56a701223b7c69d98ba99b6e326a05a3522ea89414149d161061a86", size_bytes = 522240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2e4154d2e56a701223b7c69d98ba99b6e326a05a3522ea89414149d161061a86", visibility = "private" }
+[task]
+name = "nl2repobench/python-fire"
+version = "0.2.0"
+description = "Build the pinned python-fire noninteractive CLI and help-text slice from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "cli",
+    "reflection",
+    "help-text",
+    "unicode",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "hard"
 category = "cli"
-tags = ["python", "cli", "reflection", "help-text", "unicode", "separate-verifier"]
-language = "python"
+tags = [
+    "python",
+    "cli",
+    "reflection",
+    "help-text",
+    "unicode",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:fc54198278ef6939f0196b194157bb04f81307af57aa6183b806014cb7fc3984"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[source]
-status = "known"
-upstream_url = "https://github.com/google/python-fire.git"
-revision = "716bbc23d7eca949fdb682172283c8d18f742cb6"
-license_spdx = "Apache-2.0"
-source_digest = "sha256:a0254d68a6e3b4aef32ce2f9fd1b10f45755149a1194b683897809d80b670494"
-submodules = []
+[agent]
+timeout_sec = 3600.0
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
 network_mode = "no-network"
 
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0", "termcolor==3.1.0", "wheel==0.45.1"]
-artifact = { digest = "sha256:a67cac0bda78043fbffe8bf05a7c379408b4dcab7f7cfeeab0a25c8f8cf8b98c", size_bytes = 1290240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a67cac0bda78043fbffe8bf05a7c379408b4dcab7f7cfeeab0a25c8f8cf8b98c", visibility = "private" }
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[tests]
-framework = "pytest"
-expected_total = 20
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
-[harbor]
-description = "Build the pinned python-fire noninteractive CLI and help-text slice from an empty workspace."
-keywords = ["python", "cli", "reflection", "help-text", "unicode", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:986bde95d5e3c334325cf592da2da09d116f5252e1ca6735f4591c6ffbe9a25f", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:986bde95d5e3c334325cf592da2da09d116f5252e1ca6735f4591c6ffbe9a25f", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
-[lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."

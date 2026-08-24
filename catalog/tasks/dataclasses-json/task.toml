@@ -1,78 +1,56 @@
-schema_version = "1.0"
-task_id = "dataclasses-json"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/dataclasses-json"
 version = "0.1.0"
-instruction = "instruction.md"
+description = "Build a JSON serialization library for Python dataclasses from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "repository-generation",
+    "dataclasses",
+    "json",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "dataclasses", "json", "serialization", "separate-verifier"]
-language = "python"
+tags = [
+    "python",
+    "dataclasses",
+    "json",
+    "serialization",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:d89b979b1c71f9c0c45fac3c08e94d567250995f2a60ee0956cbc24a0dc42ec2"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[source]
-status = "known"
-upstream_url = "https://github.com/lidatong/dataclasses-json"
-revision = "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541"
-license_spdx = "MIT"
-source_digest = "sha256:113c90da5957f13cc49f80d535cde965e66850f72559498a9ebfd934c4db449f"
-submodules = []
-
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-
-[dependencies]
-status = "known"
-installer = "pip"
-artifact = { digest = "sha256:f8b726ac8b32c6b7356aa328bccda1678a44f5e4a240c0015c7d161fd5011f37", size_bytes = 1075200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:f8b726ac8b32c6b7356aa328bccda1678a44f5e4a240c0015c7d161fd5011f37", visibility = "private" }
-packages = ["dataclasses-json", "pytest"]
-
-[tests]
-framework = "pytest"
-expected_total = 24
-expected_total_source = "frozen-collection"
-commands = ["python -m pytest /tests/private/test_contract.py --junitxml=/logs/verifier/junit.xml"]
+[agent]
+timeout_sec = 1800.0
 
 [verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:3bd865362b789eddf3a3b456fcfb2548cfde64dc211870008a560455b56801c4", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3bd865362b789eddf3a3b456fcfb2548cfde64dc211870008a560455b56801c4", visibility = "private" }
-entrypoint = "run.py"
-environment = { POETRY_DYNAMIC_VERSIONING_BYPASS = "0.0.0" }
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[harbor]
-description = "Build a JSON serialization library for Python dataclasses from an empty workspace."
-keywords = ["python", "repository-generation", "dataclasses", "json", "separate-verifier"]
-agent_timeout_sec = 1800.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Remediated source/build/dependency closure and task-local JSON contract; Harbor Oracle and controls remain pending."
-
-[oracle_bundle]
-digest = "sha256:6f59a06f3697e5fc9840f75cb6c39e914c24c23f7e22948ee9daa50ba6340bcf"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:6f59a06f3697e5fc9840f75cb6c39e914c24c23f7e22948ee9daa50ba6340bcf"
-visibility = "private"

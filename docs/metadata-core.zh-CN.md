@@ -95,9 +95,9 @@ commands_artifact = { digest = "sha256:...", size_bytes = 128, uri = "artifact:/
 声明式命令：
 
 ```bash
-uv run nl2repo task scaffold my-task --root catalog/tasks
-uv run nl2repo task validate-source catalog/tasks/my-task
-uv run nl2repo task compile catalog/tasks/my-task --output build/catalog
+uv run nl2repo task scaffold my-task --root catalog/sources
+uv run nl2repo task validate-source catalog/sources/my-task
+uv run nl2repo task compile catalog/sources/my-task --output build/catalog
 uv run nl2repo dataset compile catalog/datasets/my-dataset/dataset.toml --output build/catalog
 uv run nl2repo dataset validate build/catalog
 ```

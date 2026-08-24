@@ -84,8 +84,8 @@ git archive --format=tar HEAD | sha256sum
 sha256sum LICENSE
 python -m py_compile <verifier-and-adapter-files>
 bash -n <solution-and-verifier-scripts>
-uv run nl2repo task validate-source catalog/tasks/<task>
-uv run nl2repo harbor compile catalog/tasks/<task> \
+uv run nl2repo task validate-source catalog/sources/<task>
+uv run nl2repo harbor compile catalog/sources/<task> \
   --toolchain <locked-toolchain> --allow-private
 ```
 
@@ -107,7 +107,7 @@ stdout/stderr；不要把 verifier/image/collection failure 写成模型 0。只
 ## Loop 运行纪律
 
 - `run_authoring_loop.py` 最大并发 3，claim 使用 `package_queue_loop.py` 文件锁和 lease。
-- 每个 Package 一个 detached worktree，worker 只写自己的 `catalog/tasks/<id>/**`。
+- 每个 Package 一个 detached worktree，worker 只写自己的 `catalog/sources/<id>/**`。
 - claim brief 同时写入主 `.nl2repo/authoring/...` 和 worker worktree 的
   `.nl2repo/authoring-claim.json`，避免 ignored state 在 worktree 中丢失。
 - Worker 不运行 GPT/Fable；integrator 串行合并 catalog/private refs/dataset/report。

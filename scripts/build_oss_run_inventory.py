@@ -54,7 +54,7 @@ def inventory(
     known_tasks: set[str] | None = None,
 ) -> dict[str, Any]:
     if known_tasks is None:
-        catalog = Path("catalog/tasks")
+        catalog = Path("catalog/sources")
         known_tasks = {
             path.name
             for path in catalog.iterdir()

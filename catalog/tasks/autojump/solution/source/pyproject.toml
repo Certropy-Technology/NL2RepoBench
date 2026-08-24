@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autojump"
+version = "22.5.3"
+description = "A smart directory navigation utility for terminal users."
+requires-python = ">=3.8"
+
+[tool.setuptools]
+packages = ["bin", "tools"]
+include-package-data = false

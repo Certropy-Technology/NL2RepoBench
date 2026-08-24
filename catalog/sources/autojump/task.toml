@@ -1,0 +1,98 @@
+schema_version = "1.0"
+task_id = "autojump"
+version = "0.2.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-cli"
+tags = ["python", "cli", "shell", "filesystem", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/wting/autojump"
+revision = "ee21082751da739c65fe0ec2d02ca95d4266aebc"
+license_spdx = "GPL-3.0-or-later"
+source_digest = "sha256:a91e88d3d72b8abd2328d1f990d6e360d27736b49375e5c1e3fd8db576752cd9"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["ca-certificates", "git"]
+build_command = "apt-get install --no-install-recommends ca-certificates git"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+# Verifier-side runtime for the frozen upstream fixture, resolved offline from a
+# hash-locked wheelhouse at Docker build time. setuptools and wheel are required
+# because the candidate install runs pip with --no-build-isolation.
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "iniconfig==2.3.0",
+  "mock==5.2.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==8.4.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+artifact = { digest = "sha256:c7d188e13c3cc9b83093dad2458b9efe9b7ed17e48c988b417177f7e1be0f53d", size_bytes = 2959360, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c7d188e13c3cc9b83093dad2458b9efe9b7ed17e48c988b417177f7e1be0f53d", visibility = "private" }
+
+# The frozen upstream fixture collects 32 items at the pinned revision: 23 scored
+# nodes, 4 xfail nodes and 5 Python-2-only skipif nodes. Only the 23 scored nodes
+# form the denominator, so platform-detection changes cannot move it.
+[tests]
+framework = "pytest"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/fixture/tests", "/tests/verifier/scored-nodes.json"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:7e1cabf2ad9afb7feaffb4a1f27da38c3fa26e90b054bfd40ce9d381b0def5e6", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:7e1cabf2ad9afb7feaffb4a1f27da38c3fa26e90b054bfd40ce9d381b0def5e6", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the Autojump smart directory navigation utility from an empty workspace."
+keywords = ["python", "cli", "shell", "filesystem", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "oracle-passed"
+reason = "Generic private-bundle compiled Oracle passed 23/23 with reward 1.0, collected == expected_total = 23. Stub and forgery controls scored 1/23 = 0.043 and the empty workspace scored 0.0 with failure_class=model. Blind and traceability review remain pending."
+
+[oracle_bundle]
+digest = "sha256:54f24a030373c9af6d4dc06f77d97eaf017ad30a80714587e163305290b7af5c"
+size_bytes = 235520
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:54f24a030373c9af6d4dc06f77d97eaf017ad30a80714587e163305290b7af5c"
+visibility = "private"

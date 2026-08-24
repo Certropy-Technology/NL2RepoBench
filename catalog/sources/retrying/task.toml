@@ -1,0 +1,81 @@
+schema_version = "1.0"
+task_id = "retrying"
+version = "0.2.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "retry", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rholder/retrying"
+revision = "3a435e8ba85d85d7300a3609cb6f3ba8cb4bc170"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:de12f17823ab9b4d10e40e16afa94a77038c25df63b961279085948a3fffd6b3"
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["six==1.17.0", "setuptools==75.8.0", "wheel==0.45.1", "pytest==9.1.1", "iniconfig==2.3.0", "packaging==26.3", "pluggy==1.6.0", "pygments==2.21.0"]
+artifact = { digest = "sha256:4e468399b6c5e50b21b8c796b0834c2b016f0f3957a3bea9c731f17fd133c705", size_bytes = 3123200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4e468399b6c5e50b21b8c796b0834c2b016f0f3957a3bea9c731f17fd133c705", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/fixture/test_retrying.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:c426cc18d69a5e475788029880089293cfd645aab5c354c55ba9b11ed66a3207", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c426cc18d69a5e475788029880089293cfd645aab5c354c55ba9b11ed66a3207", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the retrying package from an empty workspace."
+keywords = ["python", "retry-library", "repository-generation", "nl2repobench", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "oracle-passed"
+reason = "Generic compiled Oracle (no --allow-incomplete): valid=true, collected=23==expected_total, passed=23, reward=1.0. Empty/stub/forgery controls all reward=0.0 with the frozen denominator intact. Blind review and pilot remain pending."
+
+[oracle_bundle]
+digest = "sha256:065910fbea460d6448b74bfd40a719ff92763a6100ed179d8d924eb3d6560aa2"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:065910fbea460d6448b74bfd40a719ff92763a6100ed179d8d924eb3d6560aa2"
+visibility = "private"

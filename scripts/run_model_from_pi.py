@@ -95,7 +95,7 @@ def main() -> int:
     parser.add_argument(
         "--harbor-task-path",
         type=Path,
-        help="Use a compiled Harbor task path instead of catalog/tasks/<task>/harbor.",
+        help="Use a compiled Harbor task path instead of catalog/sources/<task>/harbor.",
     )
     parser.add_argument(
         "--harbor-task-root",
@@ -146,7 +146,7 @@ def main() -> int:
             if args.harbor_task_path is not None
             else (args.harbor_task_root.resolve() / task_name)
             if args.harbor_task_root is not None
-            else ROOT / "catalog/tasks" / task_name / "harbor"
+            else ROOT / "catalog/sources" / task_name / "harbor"
         )
         if task_root.is_symlink():
             raise SystemExit(f"Harbor task path must not be a symlink: {task_root}")

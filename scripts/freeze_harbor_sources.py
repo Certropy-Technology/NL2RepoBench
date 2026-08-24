@@ -105,7 +105,7 @@ rm -rf /workspace/.github
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--cache", type=Path, default=Path("/tmp"))
     parser.add_argument("tasks", nargs="*", default=list(TASKS))
     args = parser.parse_args()

@@ -1,75 +1,56 @@
-schema_version = "1.0"
-task_id = "platformdirs"
-version = "0.2.0"
-instruction = "instruction.md"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
 
-oracle_bundle = { digest = "sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654", visibility = "private" }
+[task]
+name = "nl2repobench/platformdirs"
+version = "0.2.0"
+description = "Build the pinned platformdirs Unix/XDG API slice from an empty workspace with a separate JSON verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "platform-directories",
+    "xdg",
+    "filesystem",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "medium"
 category = "filesystem"
-tags = ["python", "platform-directories", "xdg", "path-api", "separate-verifier"]
-language = "python"
+tags = [
+    "python",
+    "platform-directories",
+    "xdg",
+    "path-api",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:a201c10922ef88c2a9b5de6dd867f536bcbb6663284902c2deb6c83724349e8b"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[source]
-status = "known"
-upstream_url = "https://github.com/tox-dev/platformdirs"
-revision = "d3cf61ce5e729f2c35f830b69e14adb7b6970a00"
-license_spdx = "MIT"
-source_digest = "sha256:01837750779cd8f90d271f9b6184cf7d8d78fac37c72ce40ac97ccfb4064d572"
-submodules = []
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "generate static version.py and setuptools pyproject after exact archive verification"
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-artifact = { digest = "sha256:e8690ca63021827b26ab03b17161c719fa8fe74c1da4a3589ad76ef598dac94c", size_bytes = 1146880, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e8690ca63021827b26ab03b17161c719fa8fe74c1da4a3589ad76ef598dac94c", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 20
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
-[harbor]
-description = "Build the pinned platformdirs Unix/XDG API slice from an empty workspace with a separate JSON verifier."
-keywords = ["python", "platform-directories", "xdg", "filesystem", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
-[lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."

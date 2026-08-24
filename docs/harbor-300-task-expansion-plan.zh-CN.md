@@ -82,7 +82,7 @@ NL2Repo 的 0-to-1 repository generation；Harbor 只是更严格的执行和隔
 ### Authoring
 
 - 每批 10–20 个 task-local writer；
-- 每个 writer 只写 `catalog/tasks/<task-id>/`；
+- 每个 writer 只写 `catalog/sources/<task-id>/`；
 - blocked/audit 也是合法 stage 结果，但不会自动获得 Harbor publication；
 - integrator 串行合并、验证、提交和同步 `/data/NL2RepoBench-current`；
 - 每批结束立即清理已终态 worktree，防止 `/tmp` ENOSPC。
@@ -149,7 +149,7 @@ AST 只能证明结构、导出、signature、调用和风险标记，不能证�
 
 ### Benchmark dataset gate
 
-Benchmark 不从 `catalog/tasks/` 目录数量、Harbor tree 数量或 candidate report 数量推导
+Benchmark 不从 `catalog/sources/` 目录数量、Harbor tree 数量或 candidate report 数量推导
 题目集合。发布前必须运行：
 
 ```bash

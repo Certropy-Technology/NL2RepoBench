@@ -18,7 +18,7 @@ while IFS= read -r task_id; do
     [[ -z "$task_id" ]] && continue
     [[ "$task_id" =~ ^# ]] && continue
     
-    task_path="catalog/tasks/$task_id/harbor"
+    task_path="catalog/sources/$task_id/harbor"
     if [[ ! -d "$task_path" ]]; then
         echo "⏭️  Skipping $task_id (not found)"
         continue

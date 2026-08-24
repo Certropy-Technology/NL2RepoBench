@@ -79,7 +79,7 @@ source-freeze
 优先使用 generic candidate client。JSON/回调/生成代码/状态 session 无法表达时使用
 `verifier.protocol = "custom-json-v1"`：task TOML 只保存 private bundle digest、URI
 和安全相对 entrypoint。hidden tests、adapter、fixture、grader 和 wheelhouse 不得进入
-public `catalog/tasks`。custom report 必须包含固定数量的唯一 leaf ID 和
+public `catalog/sources`。custom report 必须包含固定数量的唯一 leaf ID 和
 `passed|failed|skipped` 状态；wrapper 负责 timeout、UID、no-network、JUnit/collection
 和 reward。
 
@@ -90,8 +90,8 @@ Worker 在 handoff 前至少运行并保存：
 ```bash
 python -m py_compile <verifier-python-files>
 bash -n <solution-and-test-scripts>
-uv run nl2repo task validate-source catalog/tasks/<task>
-uv run nl2repo harbor compile catalog/tasks/<task> \
+uv run nl2repo task validate-source catalog/sources/<task>
+uv run nl2repo harbor compile catalog/sources/<task> \
   --toolchain toolchain.lock.toml --allow-private
 ```
 
@@ -105,7 +105,7 @@ frozen denominator、reward `>=0.80`。再运行 empty/stub/forgery/timeout/offl
 
 ```text
 task_id / language / source revision
-changed files: catalog/tasks/<task>/** only
+changed files: catalog/sources/<task>/** only
 source/license/environment/dependency digests
 commands + versions + exit codes
 frozen collection and denominator

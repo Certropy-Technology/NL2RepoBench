@@ -304,7 +304,7 @@ def build_queue(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=Path, action="append", required=True)
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--observed-at", default=datetime.now(UTC).isoformat())
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()

@@ -168,7 +168,7 @@ def build_plan(
                 "stages": list(STAGES),
                 "remediation_policy": REMEDIATION_POLICY,
                 "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md",
-                "worker_boundary": f"catalog/tasks/{record['package']}/** only",
+                "worker_boundary": f"catalog/sources/{record['package']}/** only",
                 "remediation_required": bool(remediation_reasons),
                 "remediation_reasons": remediation_reasons,
                 "agent_run_boundary": (
@@ -213,7 +213,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", type=Path, required=True)
     parser.add_argument("--language", choices=("python", "node"), required=True)
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--oss-inventory", type=Path)
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--batch-id")

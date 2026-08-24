@@ -1,89 +1,56 @@
-schema_version = "1.0"
-task_id = "pythonprojecttemplate"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pythonprojecttemplate"
 version = "0.2.0"
-instruction = "instruction.md"
+description = "Build the FastVector two-dimensional vector package from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "vector-math",
+    "fixture-adapter",
+    "repository-generation",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "easy"
 category = "python-library"
-tags = ["python", "vector-math", "fixture-adapter", "repository-generation", "separate-verifier"]
-language = "python"
-
-[source]
-status = "known"
-upstream_url = "https://github.com/franneck94/PythonProjectTemplate"
-revision = "f1c116379eb485c17fb1b6cd3e2454712e4e0585"
-license_spdx = "MIT"
-source_digest = "sha256:c47d5545686d207763d3c21aafd6eb26b575dcc02ef62159fa21011ccde9413c"
-submodules = []
-
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress, and the Oracle bundle ships the frozen source archive locally so even an Oracle run needs no host authorization. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
-
-[dependencies]
-# setuptools/wheel supply the declared setuptools.build_meta backend because the
-# candidate install runs `pip install --no-deps --no-build-isolation`; numpy is
-# the upstream runtime dependency.
-status = "known"
-installer = "pip"
-packages = [
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
-  "numpy==2.2.6",
+tags = [
+    "python",
+    "vector-math",
+    "fixture-adapter",
+    "repository-generation",
+    "separate-verifier",
 ]
-artifact = { digest = "sha256:fcb7aba66bff030567b5e6f36affd08d1a7029cb88a5d8a0f3ab3e20c5ffd024", size_bytes = 17674240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:fcb7aba66bff030567b5e6f36affd08d1a7029cb88a5d8a0f3ab3e20c5ffd024", visibility = "private" }
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 36
+canonical_manifest_digest = "sha256:aede01fc1b8b8715b7c245fd491cbf84ec380a5c657ca845b3c1b16aae655f47"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[tests]
-framework = "pytest"
-expected_total = 36
-expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/client.py", "/tests/verifier/cases.py"]
+[agent]
+timeout_sec = 3600.0
 
 [verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822", visibility = "private" }
-entrypoint = "run.py"
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[harbor]
-description = "Build the FastVector two-dimensional vector package from an empty workspace."
-keywords = ["python", "vector-math", "fixture-adapter", "repository-generation", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "no-network"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "oracle-passed"
-reason = "Generic private-bundle compiled Oracle passed 36/36 with reward 1.0 on the re-based python:3.12.14-slim-bookworm verifier base; the 36-item frozen collection was re-confirmed on that base. Stub 0.194, forgery 0.194 (byte-identical to stub, so tampering had no effect) and empty 0.0 controls pass. Blind/traceability review and pilot remain pending."
-
-[oracle_bundle]
-digest = "sha256:168be0421ca55010bbdfc62cd755affaf94f23cb6467bab809ad7368fdcf4f63"
-size_bytes = 71680
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:168be0421ca55010bbdfc62cd755affaf94f23cb6467bab809ad7368fdcf4f63"
-visibility = "private"

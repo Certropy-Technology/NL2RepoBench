@@ -1,0 +1,300 @@
+{
+  "canonical_manifest_digest": "sha256:6ef6a24b183e294aa63c4c9d24b538a5ad42fc0c2b108fd2c69f1532aaf1d689",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "180206662d3f7a5f8c2717cd76d30b57549a5bde6bbffe468e66351a7b2eb31a",
+      "size_bytes": 513
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "7eb669c71306dad3f49be59024d4e34e22dea25fbcfa50c6d807f0205513aead",
+      "size_bytes": 813
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "912942793773b9f2327f0e192dc0238f6f6afc35ca15f558bdd3c5380efe735d",
+      "size_bytes": 654
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "63880e1a77c7a786994089ebcf5cae9ea333b14d2ab47aab47b6afb75108ca26",
+      "size_bytes": 245
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "4164ca23de7b0816989c62dcdfb020da7c333d3fb4aec18cf8837505cb8ba5ed",
+      "size_bytes": 2565
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "999e6c5129bf5e2d0f30c96131d1e9d2cdd072d9410511b888558fc12b37114c",
+      "size_bytes": 83
+    },
+    {
+      "path": "solution/source/.github/dependabot.yml",
+      "sha256": "883b95e3be554fbadd92b315e4a8c6ea6ca688b64924e22dd61222b07f683507",
+      "size_bytes": 118
+    },
+    {
+      "path": "solution/source/.github/workflows/ci.yml",
+      "sha256": "2ca052d14edc53f1bb5611d8063218018d7fc74a601d7ddb1eb57ad799ff4044",
+      "size_bytes": 983
+    },
+    {
+      "path": "solution/source/.gitignore",
+      "sha256": "24e4f45565a1e99662c22cb790635253b04a5656e9ee99099cd8b0ec85237a8e",
+      "size_bytes": 65
+    },
+    {
+      "path": "solution/source/LICENSE.txt",
+      "sha256": "ed22ae7c29d18ad952a4d75c0fbe95f99e89e170d3c83cc178d4519f5add4554",
+      "size_bytes": 1054
+    },
+    {
+      "path": "solution/source/MANIFEST.in",
+      "sha256": "c2dc5b95e689f90240d5449989958be4a4878970c1b7e67585b886945f034ba1",
+      "size_bytes": 30
+    },
+    {
+      "path": "solution/source/README.md",
+      "sha256": "584ba3b9380b0926e4348bc8c4edc0b524e4b8776577ea0f7b34acdbef671d6a",
+      "size_bytes": 10452
+    },
+    {
+      "path": "solution/source/changelog.txt",
+      "sha256": "9a9a6030656f1bc7981d9c8c1261f43071ce32d7bbb0d5776cfc4cfc5216c9f4",
+      "size_bytes": 4056
+    },
+    {
+      "path": "solution/source/icecream/__init__.py",
+      "sha256": "e28e088ce20a6b168a92c8615d1b82f8177848ac30b1afcc2f13c0db83115e3e",
+      "size_bytes": 432
+    },
+    {
+      "path": "solution/source/icecream/__version__.py",
+      "sha256": "981ad94fa2f8a4a174ad004fcf7b6c7d93a8500cab8e7ac4087ca938845364c1",
+      "size_bytes": 485
+    },
+    {
+      "path": "solution/source/icecream/builtins.py",
+      "sha256": "5d1c5d364426ea231fe5ca088efbae87d8be91e289b861d79b769825cc0409fd",
+      "size_bytes": 386
+    },
+    {
+      "path": "solution/source/icecream/coloring.py",
+      "sha256": "d0b8b587158c6179fc8e0a26b58ceaaedf86366266f573666505f96856e87df6",
+      "size_bytes": 3623
+    },
+    {
+      "path": "solution/source/icecream/icecream.py",
+      "sha256": "f6c6aa5078259b814d9846ed221d001806e005d72cfa4845147eb03a2ca0f3c6",
+      "size_bytes": 11156
+    },
+    {
+      "path": "solution/source/logo.svg",
+      "sha256": "4b698b0b402589f122d04d8635a70a06b4fb7c793a4abfa85a70f8e2565a4e4c",
+      "size_bytes": 12801
+    },
+    {
+      "path": "solution/source/setup.cfg",
+      "sha256": "e11853bcbcef097ba08202b0009185d262dfe36811b3b065889cfbef6b5b5b74",
+      "size_bytes": 39
+    },
+    {
+      "path": "solution/source/setup.py",
+      "sha256": "76c55a727c6df7863305917becab8c8593d75aa125e5ccd9d256ccebc1af6ae7",
+      "size_bytes": 3219
+    },
+    {
+      "path": "solution/source/tox.ini",
+      "sha256": "2fc840f32248e2bd0cebb5b9f1327f718125cad0f4174616c4abada973dd28fe",
+      "size_bytes": 138
+    },
+    {
+      "path": "task.toml",
+      "sha256": "a476cc26e4000bd518638e05157d116b8ba284bcfa00318ca7d001c972e254f7",
+      "size_bytes": 1215
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "6645ae4ff5a9de1f03e49b6dca61c0c3832102a4ff36b0b5ad83f0d19564a6f0",
+      "size_bytes": 948
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "2fc9b8598275f157e29997ff64999e5eb1163c62ff62ccade36ba5b4f2355116",
+      "size_bytes": 139
+    },
+    {
+      "path": "tests/dependencies/asttokens-3.0.2-py3-none-any.whl",
+      "sha256": "9da13157f5b28becde0bd374fc677dcd3c290614264eff096f167c469cd9f933",
+      "size_bytes": 28702
+    },
+    {
+      "path": "tests/dependencies/colorama-0.4.6-py2.py3-none-any.whl",
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+      "size_bytes": 25335
+    },
+    {
+      "path": "tests/dependencies/executing-2.2.1-py2.py3-none-any.whl",
+      "sha256": "760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017",
+      "size_bytes": 28317
+    },
+    {
+      "path": "tests/dependencies/pygments-2.21.0-py3-none-any.whl",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+      "size_bytes": 1250147
+    },
+    {
+      "path": "tests/dependencies/requirements.lock.txt",
+      "sha256": "ad6e28a9c7cc27fb297dde6940deb37fd89e76c6e0615e460ef7c788835eab24",
+      "size_bytes": 1380
+    },
+    {
+      "path": "tests/dependencies/setuptools-84.0.0-py3-none-any.whl",
+      "sha256": "51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670",
+      "size_bytes": 818216
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/requirements.lock.txt",
+      "sha256": "1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb",
+      "size_bytes": 4194
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "122d2a3562f0946a90dafb16d73b2733bfcf82ffcb6cb8ddef3c4751f66086ef",
+      "size_bytes": 26532
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "d9c452f7548dbf438600c4d529d593dfd71e8b2aff769cc20212bc81e8665dc2",
+      "size_bytes": 12614
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "c243f17f6d83df713b74731a950dbcc6bbc550884a8130871094e7f3f59d5b2c",
+      "size_bytes": 387
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "8f0047ee52ac29dafb61fbf9a0894281f42359f9a0b6ae28c663eceab78b6101",
+      "size_bytes": 7485
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "684528089ccf130e32f889bc76c6693f4ca2e2a10e253b3f33171c5c38e99a31",
+      "size_bytes": 5017
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3483a52bae169b117dc538130fdc898bd023966d6b454ebadcd9a871d8d43ad1",
+      "size_bytes": 6147
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "7f90aa57e5582799eccd272d3dd27400e3860077197f8f3a65d86f44200bfeba",
+      "size_bytes": 3274
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5fd66c5c5be8bd3cb51d5699fc5d3c2042d13bbd18c81fa645aac2c9728d2a02",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "afb7c382396a8d57a2aeeeece84af10feff084ecc5d5ac138bc42ee43d0dba69",
+      "size_bytes": 2024
+    },
+    {
+      "path": "tests/verifier/run.py",
+      "sha256": "6553a866f97e1d6670474faedfea507b6b4c3e0cbb03fce449cb0fc65961ef27",
+      "size_bytes": 3106
+    },
+    {
+      "path": "tests/verifier/tests/__pycache__/test_deterministic_slice.cpython-314.pyc",
+      "sha256": "813066db2c878031aefe290700356ed122a06a9e379f13346695e6be1aabf53b",
+      "size_bytes": 9131
+    },
+    {
+      "path": "tests/verifier/tests/test_deterministic_slice.py",
+      "sha256": "5bead2e686782583fc0e157dd40f341e26595456f9c27f69b23750d92b19fb33",
+      "size_bytes": 4628
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "icecream",
+  "task_version": "0.2.0",
+  "toolchain_lock_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+}

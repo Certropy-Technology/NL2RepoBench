@@ -130,7 +130,7 @@ def write_outputs(manifest: dict[str, Any], output: Path, parquet: Path | None) 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--dataset-id", default="nl2repobench-harbor-300")
     parser.add_argument("--dataset-release", required=True)
     parser.add_argument("--minimum-tasks", type=int, default=300)

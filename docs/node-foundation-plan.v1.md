@@ -78,7 +78,7 @@ src/nl2repobench/verification/node_candidate_client.py
 src/nl2repobench/verification/node/*.mjs
 schemas/v2/*.json
 toolchain.node.lock.toml
-catalog/tasks/node-synthetic/
+catalog/sources/node-synthetic/
 ```
 
 `CatalogCompiler.load_task()` must inspect raw TOML `schema_version` before invoking the v1 Pydantic model, then route to `DeclarativeTaskSourceV2`. A v2 file must never be parsed through the v1 `Literal["1.0"]` model.
@@ -306,7 +306,7 @@ tests/fixtures/node-v2/dependencies/
 tests/fixtures/node-v2/candidate-tars/
 tests/fixtures/node-v2/golden-bundle/
 toolchain.node.lock.toml
-catalog/tasks/node-synthetic/
+catalog/sources/node-synthetic/
 ```
 
 Synthetic task: plain JavaScript ESM, eight frozen leaf tests, no dependencies, no lifecycle scripts, no native modules, and API calls only through the adapter. Use separate dataset ID `nl2repobench-node-pilot-v1`.
@@ -320,9 +320,9 @@ uv run pytest tests/test_metadata_models.py tests/test_catalog.py \
 uv run ruff check .
 uv run mypy
 uv run nl2repo schema export --output /tmp/nl2repo-schemas
-uv run nl2repo task validate-source catalog/tasks/node-synthetic
-uv run nl2repo task compile catalog/tasks/node-synthetic --output /tmp/node-catalog
-uv run nl2repo harbor compile catalog/tasks/node-synthetic \
+uv run nl2repo task validate-source catalog/sources/node-synthetic
+uv run nl2repo task compile catalog/sources/node-synthetic --output /tmp/node-catalog
+uv run nl2repo harbor compile catalog/sources/node-synthetic \
   --toolchain toolchain.node.lock.toml --output /tmp/node-harbor
 uv run --frozen --project harbor-runner harbor run \
   -p /tmp/node-harbor/node-synthetic -a oracle

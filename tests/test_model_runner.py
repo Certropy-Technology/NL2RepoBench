@@ -59,7 +59,7 @@ def _load_harbor_docker(monkeypatch):
 
 def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path) -> None:
     assert (ROOT / "scripts/run_harbor_model.sh").stat().st_mode & 0o111
-    task_root = tmp_path / "catalog/tasks/demo/harbor"
+    task_root = tmp_path / "catalog/sources/demo/harbor"
     task_root.mkdir(parents=True)
     (task_root / "task.toml").write_text(
         'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n',
@@ -117,7 +117,7 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
 
 
 def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
-    task_root = tmp_path / "catalog/tasks/demo/harbor"
+    task_root = tmp_path / "catalog/sources/demo/harbor"
     task_root.mkdir(parents=True)
     (task_root / "task.toml").write_text(
         'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n',

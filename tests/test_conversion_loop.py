@@ -32,7 +32,7 @@ def complete_task(root: Path, task_id: str) -> None:
 
 def test_sync_marks_only_structurally_complete_bundles(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "done")
     legacy_task(legacy, "todo")
     complete_task(catalog, "done")
@@ -46,7 +46,7 @@ def test_sync_marks_only_structurally_complete_bundles(tmp_path) -> None:
 
 def test_claim_is_exclusive_and_expired_lease_can_be_reclaimed(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "demo")
     state_path = tmp_path / "state.json"
     args = type(
@@ -81,7 +81,7 @@ def test_complete_bundle_requires_every_file(tmp_path) -> None:
 
 def test_reopen_preserves_blocker_history(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "demo")
     state_path = tmp_path / "state.json"
     with loop.locked_state(state_path) as state:
@@ -107,7 +107,7 @@ def test_reopen_preserves_blocker_history(tmp_path) -> None:
 
 def test_sync_does_not_overwrite_explicit_blocker_with_complete_bundle(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "demo")
     complete_task(catalog, "demo")
     state: dict[str, object] = {
@@ -127,7 +127,7 @@ def test_sync_does_not_overwrite_explicit_blocker_with_complete_bundle(tmp_path)
 
 def test_block_command_can_record_integrator_decision(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "demo")
     state_path = tmp_path / "state.json"
     with loop.locked_state(state_path) as state:
@@ -154,7 +154,7 @@ def test_block_command_can_record_integrator_decision(tmp_path) -> None:
 
 def test_block_can_reclaim_expired_writer_lease(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "demo")
     state_path = tmp_path / "state.json"
     with loop.locked_state(state_path) as state:
@@ -187,7 +187,7 @@ def test_block_can_reclaim_expired_writer_lease(tmp_path) -> None:
 
 def test_block_takeover_records_explicit_integrator_override(tmp_path) -> None:
     legacy = tmp_path / "test_files"
-    catalog = tmp_path / "catalog/tasks"
+    catalog = tmp_path / "catalog/sources"
     legacy_task(legacy, "demo")
     state_path = tmp_path / "state.json"
     with loop.locked_state(state_path) as state:

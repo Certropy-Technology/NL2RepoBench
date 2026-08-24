@@ -67,7 +67,7 @@ SECRET_PATTERNS = (
 )
 
 
-def known_tasks(catalog: Path = Path("catalog/tasks")) -> frozenset[str]:
+def known_tasks(catalog: Path = Path("catalog/sources")) -> frozenset[str]:
     if not catalog.is_dir():
         return frozenset()
     return frozenset(p.name for p in catalog.iterdir() if p.is_dir())
@@ -394,7 +394,7 @@ def validate_upload_plan(items: list[Upload], remote_manifest_key: str | None) -
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--runs-dir", default=".nl2repo/runs", type=Path)
-    parser.add_argument("--catalog", default="catalog/tasks", type=Path)
+    parser.add_argument("--catalog", default="catalog/sources", type=Path)
     parser.add_argument("--workers", type=int, default=12)
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

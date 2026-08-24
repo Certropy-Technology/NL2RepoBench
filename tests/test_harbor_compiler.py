@@ -16,7 +16,7 @@ from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResol
 from nl2repobench.verification.command_plan import validate_command_plan
 
 ROOT = Path(__file__).parents[1]
-SOURCE = ROOT / "catalog/tasks/ministats"
+SOURCE = ROOT / "catalog/sources/ministats"
 TOOLCHAIN = ROOT / "toolchain.lock.toml"
 
 
@@ -203,7 +203,7 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         b'"candidate_install":"pip-target-no-deps-v1"}',
         visibility=Visibility.PRIVATE,
     )
-    source_dir = tmp_path / "catalog/tasks/production"
+    source_dir = tmp_path / "catalog/sources/production"
     source_dir.mkdir(parents=True)
     (source_dir / "instruction.md").write_text("# Production task\n", encoding="utf-8")
     task = {
@@ -313,7 +313,7 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
         _tar_bytes({"solve.sh": b"#!/usr/bin/env bash\nset -eu\n"}),
         visibility=Visibility.PRIVATE,
     )
-    source_dir = tmp_path / "catalog/tasks/custom"
+    source_dir = tmp_path / "catalog/sources/custom"
     source_dir.mkdir(parents=True)
     (source_dir / "instruction.md").write_text("# Custom\n", encoding="utf-8")
     (source_dir / "task.toml").write_text(

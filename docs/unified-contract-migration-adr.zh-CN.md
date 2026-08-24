@@ -91,7 +91,7 @@ protocol，必须整体替换 producer、validator、grader、fixtures 和基线
 迁移方式是一次性生成新 contract，而不是运行时兼容：
 
 1. 冻结 104 道 `test_files/`、当前 conversion state、历史结果和 artifact 输入的 hash；
-2. 将可恢复的 legacy metadata 转成 `catalog/tasks/<task-id>/task.toml` 和
+2. 将可恢复的 legacy metadata 转成 `catalog/sources/<task-id>/task.toml` 和
    `instruction.md`；
 3. 为每题重新确认完整 commit、license、环境 digest、依赖 closure、private tests、
    frozen collection 和 subprocess boundary；

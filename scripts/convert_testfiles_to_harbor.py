@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Convert a legacy NL2RepoBench task into a catalog-backed Harbor source.
 
-The human-facing catalog remains at ``catalog/tasks/<task-id>``.  The
+The human-facing catalog remains at ``catalog/sources/<task-id>``.  The
 hand-authored Harbor bundle is kept below that source at ``harbor/`` so it can
 be reviewed and run directly while the canonical compiler is being completed.
 Run outputs belong under ``.nl2repo/runs`` and are never written into a task.
@@ -581,8 +581,8 @@ def main():
     parser.add_argument("task_id", help="Task ID to convert")
     parser.add_argument(
         "--output",
-        default="catalog/tasks",
-        help="Catalog task root (default: catalog/tasks)",
+        default="catalog/sources",
+        help="Catalog task root (default: catalog/sources)",
     )
     parser.add_argument(
         "--upstream-url",

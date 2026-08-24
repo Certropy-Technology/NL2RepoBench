@@ -2,7 +2,7 @@
 set -euo pipefail
 
 TASK_LIST="${1:-batch_tasks.txt}"
-OUTPUT_DIR="${2:-catalog/tasks}"
+OUTPUT_DIR="${2:-catalog/sources}"
 
 if [[ ! -f "$TASK_LIST" ]]; then
     echo "❌ Task list not found: $TASK_LIST"

@@ -153,7 +153,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "language": language,
             "claim": claimed,
             "worktree": str(path),
-            "task_scope": f"catalog/tasks/{package}/** only",
+            "task_scope": f"catalog/sources/{package}/** only",
             "stages": plan.get("stages", []),
             "remediation_policy": plan.get("remediation_policy", {}),
             "worker_guidance": plan.get("worker_guidance"),

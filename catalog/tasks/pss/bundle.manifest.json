@@ -1,0 +1,1185 @@
+{
+  "canonical_manifest_digest": "sha256:f217d8184bc4e3b2f5c195db57fed4311e70dcb3b3d89a80924ee7d900152f97",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "5a8d04438f2d4e67ab76957dc38f35ce18cb2fa09b047b34b42cb7f1d944194c",
+      "size_bytes": 508
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "e9a649320ec4e466782fadf4e03bee0aba331bec4f34e2ca5ec972e2c852b578",
+      "size_bytes": 6850
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "73bbdf1e98770468dc08a7951822dfd7aae7211dabc57a3fac5845d546249ab1",
+      "size_bytes": 4383
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "0ed3b1a88044774162a0e7a87f0c796da8777e4ee486f97c93ee8d785cf20048",
+      "size_bytes": 404
+    },
+    {
+      "path": "environment/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "b54e23170f283f0e87ab366a187d2b676d6ad669dc21f1770aec4b968e8ee071",
+      "size_bytes": 36713
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "cf321d532bdf645ed6f40fb8f57efaa792ec9da521c8307021dd9c3d997a90f1",
+      "size_bytes": 675
+    },
+    {
+      "path": "solution/source/.github/workflows/ci.yml",
+      "sha256": "bf260cd39b9ed0e5b00460486ff44eff258494cbd60241e9273d94058cc83362",
+      "size_bytes": 554
+    },
+    {
+      "path": "solution/source/.gitignore",
+      "sha256": "ba5d0606f092470be910b271d1b39bbc973974cfc9e3b01133c7612accff3a84",
+      "size_bytes": 56
+    },
+    {
+      "path": "solution/source/.vimrc",
+      "sha256": "5c210bcf98d5958296a0a7d4b5fd222f17ee45acb1e939e2c8d78651268fcd63",
+      "size_bytes": 167
+    },
+    {
+      "path": "solution/source/CHANGES",
+      "sha256": "df5b065f9a7d38cc9d89bc4fb2dea04f5fa743612bd5db63efc7c51fd0593630",
+      "size_bytes": 6119
+    },
+    {
+      "path": "solution/source/LICENSE",
+      "sha256": "54f6df3757daa8bcf326903a793e794cd5b5efa53bffa529eb03ec01a9d90114",
+      "size_bytes": 1589
+    },
+    {
+      "path": "solution/source/MANIFEST.in",
+      "sha256": "bda1e8ad4b67236ab741c886ad8a9cdff01ad61876cfb5415cab70ce56250afc",
+      "size_bytes": 147
+    },
+    {
+      "path": "solution/source/README.rst",
+      "sha256": "78ee64d3c4532b4bf5be3a0ae0769206aa47fdf2473275e86a3ead009d7be077",
+      "size_bytes": 2302
+    },
+    {
+      "path": "solution/source/__main__.py",
+      "sha256": "13153dfaf6c142342bceee4f30d0a8e700b083d2b41cc2c8b5ec6908a40d8804",
+      "size_bytes": 178
+    },
+    {
+      "path": "solution/source/_dev/TODO",
+      "sha256": "b12ef83f0b81113ed16fa1d340db686111a78ee7706704896cf35038428fe868",
+      "size_bytes": 843
+    },
+    {
+      "path": "solution/source/_dev/z.py",
+      "sha256": "3ad3c79a7e7f3d9cfd59f67fceded3f0b608ca226c5ee401051301c03de3d9f9",
+      "size_bytes": 471
+    },
+    {
+      "path": "solution/source/psslib/__init__.py",
+      "sha256": "d1a6a5395becc2a16a4e4f2bcb9dbf7e59580479ae764c4d7fda484f56914cf9",
+      "size_bytes": 21
+    },
+    {
+      "path": "solution/source/psslib/colorama/LICENSE.txt",
+      "sha256": "15137d6c822e3ab097093a33c3a39a9df699f373f6438867ad534ff60762a947",
+      "size_bytes": 1492
+    },
+    {
+      "path": "solution/source/psslib/colorama/README.rst",
+      "sha256": "e069887888728165582c1fc4583bb2f9528dda1f1db7958ba26fa39af9f581f3",
+      "size_bytes": 12040
+    },
+    {
+      "path": "solution/source/psslib/colorama/__init__.py",
+      "sha256": "31a18d747dda686a976ceae7f95e74a2365cc4fc7f2da9375a40fde37fe01b7a",
+      "size_bytes": 225
+    },
+    {
+      "path": "solution/source/psslib/colorama/ansi.py",
+      "sha256": "42aad2a045ea54ea6ab33d0285b4aac50de991135bae6769ba21514d7edb71e6",
+      "size_bytes": 2304
+    },
+    {
+      "path": "solution/source/psslib/colorama/ansitowin32.py",
+      "sha256": "59e3b39f632c94e6a164d6d294845415652aea16be2eec98a4fdc2b2348d3dcf",
+      "size_bytes": 9256
+    },
+    {
+      "path": "solution/source/psslib/colorama/initialise.py",
+      "sha256": "091c208ca7521a18af85f0484e907dbf242c56073a4f2086bc5a95ca6ab12bdd",
+      "size_bytes": 1597
+    },
+    {
+      "path": "solution/source/psslib/colorama/win32.py",
+      "sha256": "a66f1d84fb5a083afc5b657b6f46d52541eecf4ad533cf7acfa39f03e891576e",
+      "size_bytes": 5121
+    },
+    {
+      "path": "solution/source/psslib/colorama/winterm.py",
+      "sha256": "e8a33fbfba98a3efc633b64409b3d5f1963c88bc0ffb9985a891c21863a9d758",
+      "size_bytes": 5732
+    },
+    {
+      "path": "solution/source/psslib/contentmatcher.py",
+      "sha256": "703c7bc72a9411a601cb9746479cd5f0752729eae7d25c434bfee082cdb57c60",
+      "size_bytes": 5605
+    },
+    {
+      "path": "solution/source/psslib/defaultpssoutputformatter.py",
+      "sha256": "29a5a1cba60caf0267d88c7a5b970207b77e927ff7983c97fc6cf93504a3fff0",
+      "size_bytes": 5380
+    },
+    {
+      "path": "solution/source/psslib/driver.py",
+      "sha256": "504ce26be279ae6668ee07b77821df0d4582dd2b18a35798988951e0ba3fd13b",
+      "size_bytes": 16627
+    },
+    {
+      "path": "solution/source/psslib/filefinder.py",
+      "sha256": "841378df24e587f0846186470725d29a65119c51bddb887bbccfac8c6a00e244",
+      "size_bytes": 7715
+    },
+    {
+      "path": "solution/source/psslib/matchresult.py",
+      "sha256": "8043a78e4b01c1b1dfb071f907e86ff7462d04470f4af7c950d37397367bdfa4",
+      "size_bytes": 956
+    },
+    {
+      "path": "solution/source/psslib/outputformatter.py",
+      "sha256": "0f6134d216767e3e8dcf15a7357764ef7a5bdc8e63dbb4d211691abb307e238f",
+      "size_bytes": 2036
+    },
+    {
+      "path": "solution/source/psslib/pss.py",
+      "sha256": "71fdf767bd434dcbc9b98195701ac1e2627ff7228799094196ee3be9abc84337",
+      "size_bytes": 17801
+    },
+    {
+      "path": "solution/source/psslib/utils.py",
+      "sha256": "bc97f0f2f96b9a23601b106a26f1e3f0fce37e2430b9c310e000210b9fce1dfc",
+      "size_bytes": 2759
+    },
+    {
+      "path": "solution/source/scripts/pss",
+      "sha256": "41ee62ef087849f0315222f8d9d07479ed71e92b841e49ced0d92b550f85cc25",
+      "size_bytes": 78
+    },
+    {
+      "path": "solution/source/scripts/pss.py",
+      "sha256": "41ee62ef087849f0315222f8d9d07479ed71e92b841e49ced0d92b550f85cc25",
+      "size_bytes": 78
+    },
+    {
+      "path": "solution/source/setup.cfg",
+      "sha256": "58e9befa735d9104e2468bf040bf5881844d55dd09968af9e45d95dc3445532e",
+      "size_bytes": 161
+    },
+    {
+      "path": "solution/source/setup.py",
+      "sha256": "90d908f279a717927076ecf73f7d8e13f5d8c2e5d6c2aa7203405d18c66bf45d",
+      "size_bytes": 1881
+    },
+    {
+      "path": "solution/source/test/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/test_contentmatcher.py",
+      "sha256": "32e2fe5b256b1b7ada635f5546d7fa57944fd994d171f834db45d79fba8f5f60",
+      "size_bytes": 4334
+    },
+    {
+      "path": "solution/source/test/test_driver.py",
+      "sha256": "1c5b694f560dbefeaa7850660d99e73af7d7848698038e7f3ebec3152ee25d3e",
+      "size_bytes": 5937
+    },
+    {
+      "path": "solution/source/test/test_filefinder.py",
+      "sha256": "91a075402880678b4d55c3ca1b6c8cb2c010ae9d114427c368574c79778ef474",
+      "size_bytes": 7969
+    },
+    {
+      "path": "solution/source/test/test_pssmain.py",
+      "sha256": "cb870c17a7a8f85e994db27ec9852c87005920793158925e7b4818bbec8f3ccd",
+      "size_bytes": 24979
+    },
+    {
+      "path": "solution/source/test/testdirs/ignored_dirs/.bzr/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "solution/source/test/testdirs/ignored_dirs/dir1/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "solution/source/test/testdirs/ignored_dirs/dir2/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "solution/source/test/testdirs/ignored_dirs/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/#z.c#",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/.bzr/hgc.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/.bzr/ttc.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/a.c",
+      "sha256": "26e9050f214e3307db0a53c8fac17430c22eb9d097b5c5424f75f48c6129d0d4",
+      "size_bytes": 17
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/a.c~",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/anothersubdir/CVS/r.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/anothersubdir/a.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/anothersubdir/deep/t.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/anothersubdir/deep/tt.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/b.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/c.c",
+      "sha256": "2f26bdbd9e50eeaf94925dfa0c3639193d49ad1ee51365fe9d96d6a494c961c0",
+      "size_bytes": 10
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/partialignored/found.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/partialignored/thisoneisignored/notfound.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/bin1.F90",
+      "sha256": "837885c8f8091aeaeb9ec3c3f85a6ff470a415e610b8ba3e49f9b33c9cf9d619",
+      "size_bytes": 7
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/btesxt.bonkers",
+      "sha256": "0337f273700079de76cb0302afdbc8a1b91bb5d51ff6865dbef8f55b75cc46b4",
+      "size_bytes": 24
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/gc.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/kktkt.c~",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/r.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/sbin.scala",
+      "sha256": "7fde8eebf388fcff667a89be60430cc6e198b1a78cb603a39cdd09885a3336e3",
+      "size_bytes": 4
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/stext.scala",
+      "sha256": "2a0134fdb5042f4fb9a4a48e9bde9b4cd52f8b042306a3c3f2b7e3047e8bd2d2",
+      "size_bytes": 13
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/txt1.F90",
+      "sha256": "5e6f26f9b17cda72b30b4f6a536c007435c2f09f52ae6952bfb52aae396e019a",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/simple_filefinder/truesubdir/txt2.F90",
+      "sha256": "91cef983c577996c1da6a2b7be1f735a620c7b1847e8dc1bdee2029be6b67cac",
+      "size_bytes": 12
+    },
+    {
+      "path": "solution/source/test/testdirs/test-case-dir/file.c",
+      "sha256": "99096e2d33967a5ee41cec02925a363327cedbc88f1a90e481e645d2cbac7b4e",
+      "size_bytes": 82
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/SConstruct",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/a.bat",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/a.cmd",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/a.java",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/a.js",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/a.lua",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/test_types/a.scons",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/.svn/othersvn",
+      "sha256": "77429c465eac2a298f1823c5fe2611f67b690c6a5205219b16c211c01d77efbd",
+      "size_bytes": 31
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/.svn/svnfile",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/CMakeLists.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/Makefile",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/filea.c",
+      "sha256": "8b37e3bda0fe1f1bf3cbcec946470226e1e15156f8c26469a9f188f0cbabfaf3",
+      "size_bytes": 22
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/filea.h",
+      "sha256": "2f5f733a473b538b37c28223e557c60f3320da7871ff8ceefb42e778f9d7d6de",
+      "size_bytes": 71
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/rbnonascii.rb",
+      "sha256": "0ad79e894acbaec3f08e77a6aaed7092ed388b4d8f55862570b9d97e3147be85",
+      "size_bytes": 7
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/CMakeFuncs.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/Makefile",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/filey.c",
+      "sha256": "8e3f6bc6c54bfeabd207b88474a9cd8dafb0669e5e227ddd46ac474f7e7fe0e8",
+      "size_bytes": 46
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/filez.c",
+      "sha256": "0d7b732398ca615fab135ae3b1f9ca29943e12323011650338a4c85675f4d407",
+      "size_bytes": 30
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/joe.cmake",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/joe2.cmake",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/ppp.qqq",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/someada.adb",
+      "sha256": "938eacdac915b2031317ff6d31c489c65f63828d2ff6ce13ae3d89ad758bd232",
+      "size_bytes": 139
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/wholewords.adb",
+      "sha256": "6d8115f3b70c69c38a420a3618cba5e8d62951c7128106885f5974efabcf1089",
+      "size_bytes": 42
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/subdir1/zb.erl",
+      "sha256": "9420d4a7d4b9b1f9c147920c9ddbf1887cb8cda1ab2bead07120bb8b1dbf5751",
+      "size_bytes": 29
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/zappos.mk",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir1/zb.lsp",
+      "sha256": "e006649b83c75bb176b532482ff73fda0839d79adc6eeebf6cabbbbbe3aadd59",
+      "size_bytes": 8
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir2/f.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir2/othertext.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir2/somescript",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir2/sometext.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir3/.gitattributes",
+      "sha256": "675ca7a51a3a19acc9d0666b69617c3f8d20a1d0c330cc12c9df4af645ac81db",
+      "size_bytes": 68
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir3/crlfnewlines.txt",
+      "sha256": "826e1f7370a283f7a92df65b998d215008ae397f7012d69268da8516a62265f8",
+      "size_bytes": 53
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir3/crnewlines.txt",
+      "sha256": "5a9dfcd4571af5f0409f132483269e25f21a977dfcbd2123b80eae9ebc332a7b",
+      "size_bytes": 48
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir3/lfnewlines.txt",
+      "sha256": "4f03a571306644ec7ea496f478a403f77fac10dc46e2587c0a580fee626fa997",
+      "size_bytes": 48
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/file1.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/file1.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/file2.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/file2.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/file3.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/file3.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/main1.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/main1.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/main2.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/main2.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/main3.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/testdirs/testdir4/main3.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "solution/source/test/utils.py",
+      "sha256": "79d87531c324bec7126e12b6a920a8eeb22c7405fad7c61ff3360a86eeb01beb",
+      "size_bytes": 2826
+    },
+    {
+      "path": "solution/source/tools/pss-bash-completion.bash",
+      "sha256": "deeb7f695f57c56e7ff7b3519fe2c100c9f68cd92bf6a71ab68103933dad0d19",
+      "size_bytes": 1368
+    },
+    {
+      "path": "task.toml",
+      "sha256": "8e58828bd6a2c3755320d7776ff4bf48360a7150cb80a3133473e4592c911bec",
+      "size_bytes": 1244
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "6645ae4ff5a9de1f03e49b6dca61c0c3832102a4ff36b0b5ad83f0d19564a6f0",
+      "size_bytes": 948
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "2fc9b8598275f157e29997ff64999e5eb1163c62ff62ccade36ba5b4f2355116",
+      "size_bytes": 139
+    },
+    {
+      "path": "tests/dependencies/colorama-0.4.6-py2.py3-none-any.whl",
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+      "size_bytes": 25335
+    },
+    {
+      "path": "tests/dependencies/iniconfig-2.3.0-py3-none-any.whl",
+      "sha256": "f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12",
+      "size_bytes": 7484
+    },
+    {
+      "path": "tests/dependencies/packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "size_bytes": 129956
+    },
+    {
+      "path": "tests/dependencies/pluggy-1.6.0-py3-none-any.whl",
+      "sha256": "e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746",
+      "size_bytes": 20538
+    },
+    {
+      "path": "tests/dependencies/pygments-2.21.0-py3-none-any.whl",
+      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+      "size_bytes": 1250147
+    },
+    {
+      "path": "tests/dependencies/pytest-8.4.1-py3-none-any.whl",
+      "sha256": "539c70ba6fcead8e78eebbf1115e8b589e7565830d7d006a8723f19ac8a0afb7",
+      "size_bytes": 365474
+    },
+    {
+      "path": "tests/dependencies/requirements.lock.txt",
+      "sha256": "a8a6fd5f5cb7acc86edaa633bdc47e6e036afdb4df72348134abd84281bee529",
+      "size_bytes": 808
+    },
+    {
+      "path": "tests/dependencies/setuptools-80.10.2-py3-none-any.whl",
+      "sha256": "95b30ddfb717250edb492926c92b5221f7ef3fbcc2b07579bcd4a27da21d0173",
+      "size_bytes": 1064234
+    },
+    {
+      "path": "tests/dependencies/wheel-0.45.1-py3-none-any.whl",
+      "sha256": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248",
+      "size_bytes": 72494
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/requirements.lock.txt",
+      "sha256": "1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb",
+      "size_bytes": 4194
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "84a374bc5cf7fb64153c7db84f065bb44fecbb7125a6ddb8a8da3dad6ee6c1ff",
+      "size_bytes": 26326
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "dc5d3fb78d793ea977dc8eb7a673ba06124beb4218cca81e1059264ce27525ce",
+      "size_bytes": 12593
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "c243f17f6d83df713b74731a950dbcc6bbc550884a8130871094e7f3f59d5b2c",
+      "size_bytes": 387
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "8f0047ee52ac29dafb61fbf9a0894281f42359f9a0b6ae28c663eceab78b6101",
+      "size_bytes": 7485
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "684528089ccf130e32f889bc76c6693f4ca2e2a10e253b3f33171c5c38e99a31",
+      "size_bytes": 5017
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3483a52bae169b117dc538130fdc898bd023966d6b454ebadcd9a871d8d43ad1",
+      "size_bytes": 6147
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "7f90aa57e5582799eccd272d3dd27400e3860077197f8f3a65d86f44200bfeba",
+      "size_bytes": 3274
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5fd66c5c5be8bd3cb51d5699fc5d3c2042d13bbd18c81fa645aac2c9728d2a02",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "7d0e3462e9a15e53f0931c9dd970649e014cb7959804a9d8f4a4c060b327a1aa",
+      "size_bytes": 2024
+    },
+    {
+      "path": "tests/verifier/fixture/test/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/test_contentmatcher.py",
+      "sha256": "32e2fe5b256b1b7ada635f5546d7fa57944fd994d171f834db45d79fba8f5f60",
+      "size_bytes": 4334
+    },
+    {
+      "path": "tests/verifier/fixture/test/test_driver.py",
+      "sha256": "1c5b694f560dbefeaa7850660d99e73af7d7848698038e7f3ebec3152ee25d3e",
+      "size_bytes": 5937
+    },
+    {
+      "path": "tests/verifier/fixture/test/test_filefinder.py",
+      "sha256": "91a075402880678b4d55c3ca1b6c8cb2c010ae9d114427c368574c79778ef474",
+      "size_bytes": 7969
+    },
+    {
+      "path": "tests/verifier/fixture/test/test_pssmain.py",
+      "sha256": "cb870c17a7a8f85e994db27ec9852c87005920793158925e7b4818bbec8f3ccd",
+      "size_bytes": 24979
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/ignored_dirs/.bzr/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/ignored_dirs/dir1/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/ignored_dirs/dir2/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/ignored_dirs/file.xml",
+      "sha256": "ae0666f161fed1a5dde998bbd0e140550d2da0db27db1d0e31e370f2bd366a57",
+      "size_bytes": 7
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/#z.c#",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/.bzr/hgc.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/.bzr/ttc.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/a.c",
+      "sha256": "26e9050f214e3307db0a53c8fac17430c22eb9d097b5c5424f75f48c6129d0d4",
+      "size_bytes": 17
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/a.c~",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/anothersubdir/CVS/r.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/anothersubdir/a.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/anothersubdir/deep/t.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/anothersubdir/deep/tt.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/b.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/c.c",
+      "sha256": "2f26bdbd9e50eeaf94925dfa0c3639193d49ad1ee51365fe9d96d6a494c961c0",
+      "size_bytes": 10
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/partialignored/found.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/partialignored/thisoneisignored/notfound.c",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/bin1.F90",
+      "sha256": "837885c8f8091aeaeb9ec3c3f85a6ff470a415e610b8ba3e49f9b33c9cf9d619",
+      "size_bytes": 7
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/btesxt.bonkers",
+      "sha256": "0337f273700079de76cb0302afdbc8a1b91bb5d51ff6865dbef8f55b75cc46b4",
+      "size_bytes": 24
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/gc.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/kktkt.c~",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/r.cpp",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/sbin.scala",
+      "sha256": "7fde8eebf388fcff667a89be60430cc6e198b1a78cb603a39cdd09885a3336e3",
+      "size_bytes": 4
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/stext.scala",
+      "sha256": "2a0134fdb5042f4fb9a4a48e9bde9b4cd52f8b042306a3c3f2b7e3047e8bd2d2",
+      "size_bytes": 13
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/txt1.F90",
+      "sha256": "5e6f26f9b17cda72b30b4f6a536c007435c2f09f52ae6952bfb52aae396e019a",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/simple_filefinder/truesubdir/txt2.F90",
+      "sha256": "91cef983c577996c1da6a2b7be1f735a620c7b1847e8dc1bdee2029be6b67cac",
+      "size_bytes": 12
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test-case-dir/file.c",
+      "sha256": "99096e2d33967a5ee41cec02925a363327cedbc88f1a90e481e645d2cbac7b4e",
+      "size_bytes": 82
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/SConstruct",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/a.bat",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/a.cmd",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/a.java",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/a.js",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/a.lua",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/test_types/a.scons",
+      "sha256": "783701f7599830824fa73488f80eb79894f6f14203264b6a3ac3f0a14012c25f",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/.svn/othersvn",
+      "sha256": "77429c465eac2a298f1823c5fe2611f67b690c6a5205219b16c211c01d77efbd",
+      "size_bytes": 31
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/.svn/svnfile",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/CMakeLists.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/Makefile",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/filea.c",
+      "sha256": "8b37e3bda0fe1f1bf3cbcec946470226e1e15156f8c26469a9f188f0cbabfaf3",
+      "size_bytes": 22
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/filea.h",
+      "sha256": "2f5f733a473b538b37c28223e557c60f3320da7871ff8ceefb42e778f9d7d6de",
+      "size_bytes": 71
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/rbnonascii.rb",
+      "sha256": "0ad79e894acbaec3f08e77a6aaed7092ed388b4d8f55862570b9d97e3147be85",
+      "size_bytes": 7
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/CMakeFuncs.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/Makefile",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/filey.c",
+      "sha256": "8e3f6bc6c54bfeabd207b88474a9cd8dafb0669e5e227ddd46ac474f7e7fe0e8",
+      "size_bytes": 46
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/filez.c",
+      "sha256": "0d7b732398ca615fab135ae3b1f9ca29943e12323011650338a4c85675f4d407",
+      "size_bytes": 30
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/joe.cmake",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/joe2.cmake",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/ppp.qqq",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/someada.adb",
+      "sha256": "938eacdac915b2031317ff6d31c489c65f63828d2ff6ce13ae3d89ad758bd232",
+      "size_bytes": 139
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/wholewords.adb",
+      "sha256": "6d8115f3b70c69c38a420a3618cba5e8d62951c7128106885f5974efabcf1089",
+      "size_bytes": 42
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/subdir1/zb.erl",
+      "sha256": "9420d4a7d4b9b1f9c147920c9ddbf1887cb8cda1ab2bead07120bb8b1dbf5751",
+      "size_bytes": 29
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/zappos.mk",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir1/zb.lsp",
+      "sha256": "e006649b83c75bb176b532482ff73fda0839d79adc6eeebf6cabbbbbe3aadd59",
+      "size_bytes": 8
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir2/f.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir2/othertext.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir2/somescript",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir2/sometext.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir3/.gitattributes",
+      "sha256": "675ca7a51a3a19acc9d0666b69617c3f8d20a1d0c330cc12c9df4af645ac81db",
+      "size_bytes": 68
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir3/crlfnewlines.txt",
+      "sha256": "826e1f7370a283f7a92df65b998d215008ae397f7012d69268da8516a62265f8",
+      "size_bytes": 53
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir3/crnewlines.txt",
+      "sha256": "5a9dfcd4571af5f0409f132483269e25f21a977dfcbd2123b80eae9ebc332a7b",
+      "size_bytes": 48
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir3/lfnewlines.txt",
+      "sha256": "4f03a571306644ec7ea496f478a403f77fac10dc46e2587c0a580fee626fa997",
+      "size_bytes": 48
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/file1.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/file1.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/file2.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/file2.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/file3.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/file3.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/main1.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/main1.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/main2.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/main2.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/main3.py",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/testdirs/testdir4/main3.txt",
+      "sha256": "c9d04c9565fc665c80681fb1d829938026871f66e14f501e08531df66938a789",
+      "size_bytes": 5
+    },
+    {
+      "path": "tests/verifier/fixture/test/utils.py",
+      "sha256": "79d87531c324bec7126e12b6a920a8eeb22c7405fad7c61ff3360a86eeb01beb",
+      "size_bytes": 2826
+    },
+    {
+      "path": "tests/verifier/run.py",
+      "sha256": "9e0137d74145293c77ce689c67fe78ede2806577ba4520f9652f2175a23a09c6",
+      "size_bytes": 6961
+    },
+    {
+      "path": "tests/verifier/scored-nodes.json",
+      "sha256": "a3e92a37cf3f42c90170fb8d5519273a6c0eb12408d8d2453f839084462ed82d",
+      "size_bytes": 3022
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "pss",
+  "task_version": "0.2.0",
+  "toolchain_lock_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+}

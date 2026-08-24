@@ -1,75 +1,57 @@
-schema_version = "1.0"
-task_id = "sympy"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/sympy"
 version = "0.1.0"
-instruction = "instruction.md"
+description = "Implement a stable, bounded public SymPy core slice from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "computer-algebra",
+    "symbolic-math",
+    "pytest",
+    "separate-verifier",
+    "offline",
+]
 
 [metadata]
 difficulty = "hard"
 category = "python-library"
-tags = ["python", "computer-algebra", "symbolic-math", "repository-generation", "separate-verifier"]
-language = "python"
+tags = [
+    "python",
+    "computer-algebra",
+    "symbolic-math",
+    "repository-generation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:3551a9f3f3dfb7bbb418bc44ba5c8d985818ed7da5677115e8e581f488c25af1"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[source]
-status = "known"
-upstream_url = "https://github.com/sympy/sympy"
-revision = "e950d313a932bc6cccbc95376b3821cd2f8b5af4"
-license_spdx = "BSD-3-Clause"
-source_digest = "sha256:1d3ddf24d7ff12e2eb576275839e78ccad9aa3c474c6f033e9b2619a3bf37d1b"
-
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-
-[dependencies]
-status = "known"
-installer = "pip"
-artifact = { digest = "sha256:488f003aecab95bc8cf1ccea2921c40ee6cb15425c58c7c0e8f6120179c50a9c", size_bytes = 542720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:488f003aecab95bc8cf1ccea2921c40ee6cb15425c58c7c0e8f6120179c50a9c", visibility = "private" }
-packages = ["mpmath==1.3.0"]
-
-[tests]
-framework = "pytest"
-expected_total = 24
-expected_total_source = "frozen-collection"
-commands = ["pip install .", "pytest /tests/hidden --junitxml=/tmp/junit.xml"]
+[agent]
+timeout_sec = 1800.0
 
 [verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:1b1fec4dc900be1a3cdbb9015258897228a241995331ba9a89a5f751a2a88dfc", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:1b1fec4dc900be1a3cdbb9015258897228a241995331ba9a89a5f751a2a88dfc", visibility = "private" }
-entrypoint = "run.py"
+timeout_sec = 360.0
+environment_mode = "separate"
+network_mode = "no-network"
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[harbor]
-description = "Implement a stable, bounded public SymPy core slice from an empty workspace."
-keywords = ["python", "computer-algebra", "symbolic-math", "pytest", "separate-verifier", "offline"]
-agent_timeout_sec = 1800.0
-verifier_timeout_sec = 360.0
-candidate_install_timeout_sec = 60.0
-candidate_total_timeout_sec = 180.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "oracle-passed"
-reason = "Exact upstream revision frozen; production denominator is the 24-test task-local public slice, not upstream collection."
-
-[oracle_bundle]
-digest = "sha256:cb6c8ddb37595f4aa122a885bb25f366fe9d7c53860abc35f75383df495a9650"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:cb6c8ddb37595f4aa122a885bb25f366fe9d7c53860abc35f75383df495a9650"
-visibility = "private"

@@ -160,7 +160,7 @@ def validate_published_datasets(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--campaign", type=Path, required=True)
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     args = parser.parse_args()
     try:
         report = validate_published_datasets(args.campaign, catalog_root=args.catalog_root)

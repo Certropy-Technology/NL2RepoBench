@@ -117,7 +117,7 @@ git diff --check
 uv run pytest -q
 uv run ruff check src tests scripts
 uv run mypy src/nl2repobench
-uv run nl2repo task validate-source catalog/tasks/<task>
+uv run nl2repo task validate-source catalog/sources/<task>
 git status --short --branch
 ```
 

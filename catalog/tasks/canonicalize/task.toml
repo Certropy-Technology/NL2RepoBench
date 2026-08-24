@@ -1,87 +1,63 @@
-schema_version = "2.0"
-task_id = "canonicalize"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/canonicalize"
 version = "2.0.0"
-instruction = "instruction.md"
+description = "Production Node ESM vertical slice for deterministic JSON canonicalization."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "json",
+    "rfc8785",
+    "serialization",
+]
 
 [metadata]
 difficulty = "easy"
 category = "json-serialization"
-tags = ["node", "npm", "esm", "json", "rfc8785", "serialization"]
-language = "node"
-
-[source]
-status = "known"
-upstream_url = "https://github.com/erdtman/canonicalize"
-revision = "c1b08c3771d681c8bd9c4d8765e00f2f717482f8"
-license_spdx = "Apache-2.0"
-source_digest = "sha256:7436a1cb393e1e1b577c0066f2d9f2bc71666943d3ae740c19fc0b8a5ec60403"
-submodules = []
-
-[environment]
-status = "known"
-os_name = "debian-bookworm"
-base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.runtime]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "json",
+    "rfc8785",
+    "serialization",
+]
 language = "node"
 runtime = "node"
-version = "24.19.0"
+runtime_version = "24.19.0"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 10
+canonical_manifest_digest = "sha256:f417e3499ca8f255db5f0afe16b1e37173c69fd52a639daa69419cae1c338283"
+toolchain_lock_digest = "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
 
-[dependencies]
-# Generated and validated from the exact source revision with npm 11.17.0.
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
-package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", size_bytes = 4321280, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", visibility = "private" }
-packages = ["@eslint/js", "c8", "eslint", "globals"]
+[agent]
+timeout_sec = 900.0
 
-[tests]
-framework = "node:test"
-report_format = "node-test-json-v1"
-expected_total = 10
-expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:cee1b3612813db19dbc6c5ef687b4cb81418b9376be2a3f431baf66a5f1c0097", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:cee1b3612813db19dbc6c5ef687b4cb81418b9376be2a3f431baf66a5f1c0097", visibility = "private" }
-test_bundle = { digest = "sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", visibility = "private" }
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
 
-[metric]
-contract_id = "node-test-leaf-pass-rate-v1"
-collection_mismatch = "fail"
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
 
-[harbor]
-description = "Production Node ESM vertical slice for deterministic JSON canonicalization."
-keywords = ["node", "npm", "esm", "json", "rfc8785", "serialization"]
-agent_timeout_sec = 900.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 1
 memory_mb = 1024
 storage_mb = 4096
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "packaged"
-owner = "integrator"
-reason = "Production Node vertical slice; Oracle and controls are recorded in the campaign gate."
-approval_refs = ["node-production-vertical-slice-v1"]
-
-[oracle_bundle]
-digest = "sha256:5edebff66c2e4b4bed40e1a3a4ab726d62511b3314442a24e2e08403afd292d9"
-size_bytes = 133120
-media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:5edebff66c2e4b4bed40e1a3a4ab726d62511b3314442a24e2e08403afd292d9"
-visibility = "private"

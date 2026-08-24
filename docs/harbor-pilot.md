@@ -53,9 +53,9 @@ Skipped tests are recorded separately and do not silently inflate the score.
 ```bash
 python scripts/convert_testfiles_to_harbor.py <task-id> \
   --upstream-url https://github.com/<org>/<repo> \
-  --output catalog/tasks
-python scripts/batch_convert.sh migration_tasks.txt catalog/tasks
-python scripts/freeze_harbor_sources.py --root catalog/tasks --cache /tmp
+  --output catalog/sources
+python scripts/batch_convert.sh migration_tasks.txt catalog/sources
+python scripts/freeze_harbor_sources.py --root catalog/sources --cache /tmp
 python scripts/gen_harbor_from_legacy.py
 ```
 
@@ -67,7 +67,7 @@ Validate catalog sources and the pilot dataset:
 
 ```bash
 for task in aiofiles arguably autopep8 boto box bleach cerberus decouple deepdiff docopt-ng asteval emoji freezegun fastapi-users funcy fuzzywuzzy ftfy jsonlines parse pypinyin python-pathspec python-slugify schema six typing_extensions sortedcontainers more-Itertools math-verify mechanicalsoup paillier pdfplumber-stable sqlparse stamina tinydb tqdm rich-click; do
-  uv run nl2repo task validate-source catalog/tasks/$task
+  uv run nl2repo task validate-source catalog/sources/$task
 done
 uv run nl2repo dataset compile \
   catalog/datasets/nl2repobench-harbor-pilot/dataset.toml \
@@ -81,7 +81,7 @@ Run a task directly through Harbor:
 ```bash
 cd harbor-runner
 uv run --frozen harbor run \
-  -p ../catalog/tasks/ftfy/harbor \
+  -p ../catalog/sources/ftfy/harbor \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/oracle/ftfy
 ```
@@ -155,6 +155,6 @@ blockers, not model failures.
 3. Keep verifier dependencies and fixtures out of the agent image.
 4. Validate Oracle before spending model budget.
 5. Record `valid`, collection, skipped, failure reason and reward together.
-6. Keep every run under `.nl2repo/runs/`, never inside `catalog/tasks`.
+6. Keep every run under `.nl2repo/runs/`, never inside `catalog/sources`.
 7. Treat API gateway errors, setup failures and timeouts as infrastructure or
    environment evidence, not model scores.

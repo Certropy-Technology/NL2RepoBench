@@ -1,0 +1,72 @@
+schema_version = "1.0"
+task_id = "icecream"
+version = "0.2.0"
+instruction = "instruction.md"
+
+oracle_bundle = { digest = "sha256:3bbbcb3e3079b77cae19296ef383718a5def8cb616b4556700e5da2d5aab844b", size_bytes = 71680, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3bbbcb3e3079b77cae19296ef383718a5def8cb616b4556700e5da2d5aab844b", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "debugging"
+tags = ["python", "debugger", "formatting", "callbacks", "offline", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/gruns/icecream"
+revision = "816e6c6bbac50f16fda8f801c658fe5ebcfd50bc"
+license_spdx = "MIT"
+source_digest = "sha256:cf563c74849444da66c3e3914346d1f89086da3565980876f037f542daf5367c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+network_mode = "no-network"
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["asttokens==3.0.2", "colorama==0.4.6", "executing==2.2.1", "pygments==2.21.0", "setuptools==84.0.0"]
+artifact = { digest = "sha256:924a149df1c61c0e0fda934076e045ca3cfb71519ecf70aacbf4b0599c799357", size_bytes = 2160640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:924a149df1c61c0e0fda934076e045ca3cfb71519ecf70aacbf4b0599c799357", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pinned icecream debugging and formatting package from an empty workspace with deterministic mocked output behavior."
+keywords = ["python", "debugger", "formatting", "callbacks", "offline", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 360.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "public"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:043f6e8cc3dbb8651c5e1d11545db2e6877182ab4a92741b59ae192e32c66d22", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:043f6e8cc3dbb8651c5e1d11545db2e6877182ab4a92741b59ae192e32c66d22", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[lifecycle]
+status = "oracle-passed"
+owner = "integrator"
+reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."

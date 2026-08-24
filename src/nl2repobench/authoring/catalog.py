@@ -297,15 +297,15 @@ class CatalogCompiler:
     def compile_dataset(self, source_path: Path, output_root: Path) -> DatasetManifest:
         source = self.load_dataset(source_path)
         catalog_root = next(
-            (parent for parent in source_path.parents if (parent / "tasks").is_dir()),
+            (parent for parent in source_path.parents if (parent / "sources").is_dir()),
             None,
         )
         if catalog_root is None:
-            raise CatalogError(f"cannot find catalog/tasks above {source_path}")
+            raise CatalogError(f"cannot find catalog/sources above {source_path}")
         task_dirs: list[Path] = []
         seen_ids: set[str] = set()
         for task_id in source.tasks:
-            tasks_root = (catalog_root / "tasks").resolve()
+            tasks_root = (catalog_root / "sources").resolve()
             task_dir = (tasks_root / task_id).resolve()
             if not task_dir.is_relative_to(tasks_root):
                 raise CatalogError(f"task source escapes catalog root: {task_id}")

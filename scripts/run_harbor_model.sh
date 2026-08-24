@@ -23,7 +23,7 @@ if [[ -n "${HARBOR_TASK_PATH:-}" ]]; then
 elif [[ -n "${HARBOR_TASK_ROOT:-}" ]]; then
   task_path="$HARBOR_TASK_ROOT/$TASK_ID"
 else
-  task_path="catalog/tasks/${TASK_ID}/harbor"
+  task_path="catalog/sources/${TASK_ID}/harbor"
 fi
 job_dir="${RUN_ROOT}/${RUN_ID}"
 task_config="${task_path}/task.toml"

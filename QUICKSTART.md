@@ -96,7 +96,7 @@ environment is healthy before you spend model budget.
 ```bash
 cd harbor-runner
 PYTHONPATH=../src uv run --frozen python ../scripts/harbor_safe_entry.py run \
-  -p ../catalog/tasks/ftfy/harbor \
+  -p ../catalog/sources/ftfy/harbor \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/oracle/ftfy
 python ../scripts/cleanup_harbor_trials.py \
@@ -154,7 +154,7 @@ Key environment variables:
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `TASK_ID` | required | task under `catalog/tasks/` |
+| `TASK_ID` | required | task under `catalog/sources/` |
 | `MODEL` | required | LiteLLM model id, e.g. `openai/gpt-5.6-sol` |
 | `LLM_BASE_URL` | internal | resolved by the Pi-aware wrapper |
 | `LLM_API_KEY` | internal | held in a short-lived process environment; never put it in argv |
@@ -237,7 +237,7 @@ divide by all tests — that would weight large suites more heavily.
 ## 8. Housekeeping
 
 Run outputs go to `.nl2repo/runs/` and are gitignored — never write them inside
-`catalog/tasks/`.
+`catalog/sources/`.
 
 If a run is interrupted, remove orphaned containers (this only touches Harbor
 containers with no live host process):

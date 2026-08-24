@@ -1,0 +1,92 @@
+schema_version = "1.0"
+task_id = "records"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "sql", "database", "tablib", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/kennethreitz/records"
+revision = "72efce67874d1b40ac2a35542127e8830da49707"
+license_spdx = "ISC"
+source_digest = "sha256:4e0a1b23d7d38f96182d2be29d915fa45165fddd8ec14f193acb5304a57b0e04"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "debian-12"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/records"
+base_image_digest = "sha256:03378b1619c4ddcfebb0f3941e8fd448fe2754cf9489f13594cb0b40551f5a2d"
+network_mode = "no-network"
+
+# The verifier image is the immutable legacy image. The hash-locked wheelhouse
+# below reproduces its runtime closure for the offline candidate install.
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "SQLAlchemy==2.0.43",
+  "tablib==3.8.0",
+  "openpyxl==3.1.5",
+  "docopt==0.6.2",
+  "psycopg2-binary==2.9.10",
+]
+artifact = { digest = "sha256:8f9b3941b17e2432ac7f5e72f327fc851b1f37c8bb78e9fe539cffe84316b733", size_bytes = 9799680, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:8f9b3941b17e2432ac7f5e72f327fc851b1f37c8bb78e9fe539cffe84316b733", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 31
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["tests"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:93936ab95cc75c76050b09b66f5c660189aa637c7a02287a64326da9ee6d5844", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:93936ab95cc75c76050b09b66f5c660189aa637c7a02287a64326da9ee6d5844", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:fd6f422a6d1608561be3188189f5749e9d7bd14ce4837861ec42b48e43bd00de"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:fd6f422a6d1608561be3188189f5749e9d7bd14ce4837861ec42b48e43bd00de"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the Records human-friendly SQL query and export library from an empty workspace."
+keywords = ["python", "sql", "database", "tablib", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "oracle-passed"
+owner = "integrator"
+reason = "Generic private-bundle compiled Oracle passed 31/31 with reward 1.0, collected 31 == expected_total 31, valid=true; stub/forgery/empty controls all scored 0.0 and the verifier ran with no public network. Blind and traceability review remain pending."

@@ -1,76 +1,55 @@
-schema_version = "1.0"
-task_id = "pyperclip"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pyperclip"
 version = "0.2.0"
-instruction = "instruction.md"
+description = "Build pyperclip from an empty workspace and satisfy deterministic clipboard contracts through a separate JSON-line verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "clipboard",
+    "fixture-adapter",
+    "lazy-loading",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "clipboard", "fixture-adapter", "separate-verifier"]
-language = "python"
+tags = [
+    "python",
+    "clipboard",
+    "fixture-adapter",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 10
+canonical_manifest_digest = "sha256:99a256f3d94ffad7a9d786d4d6924e9300c4a44d4bc29694c08b53c6d47787d5"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[source]
-status = "known"
-upstream_url = "https://github.com/asweigart/pyperclip"
-revision = "f5326bfd7c5448b40051dd261a7304657977b838"
-license_spdx = "BSD-3-Clause"
-source_digest = "sha256:4e80effb92cd84116a2541bb5aa4df7d7832761c04600322f558265ba73c0275"
-
-[environment]
-status = "known"
-python_version = "3.12.4"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1", "pytest==8.3.5", "iniconfig==2.0.0", "packaging==24.2", "pluggy==1.5.0"]
-artifact = { digest = "sha256:3149cbea39de4083557951f06b95308dd1469448f54be02d44caddd7267d6f9a", size_bytes = 1587200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3149cbea39de4083557951f06b95308dd1469448f54be02d44caddd7267d6f9a", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 10
-expected_total_source = "frozen-collection"
-commands = ["python -m pytest --collect-only /tests/private/test_contract.py", "python -m pytest /tests/private/test_contract.py --junitxml=/logs/verifier/junit.xml"]
-protected_paths = ["/tests/private/test_contract.py", "/tests/private/runner.py"]
+[agent]
+timeout_sec = 3600.0
 
 [verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:b1e14b97d9d9b385e3d3c27225ca4de4fd2b85f0c12034019c22767f24aa7de0", size_bytes = 1638400, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b1e14b97d9d9b385e3d3c27225ca4de4fd2b85f0c12034019c22767f24aa7de0", visibility = "private" }
-entrypoint = "run.py"
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[harbor]
-description = "Build pyperclip from an empty workspace and satisfy deterministic clipboard contracts through a separate JSON-line verifier."
-keywords = ["python", "clipboard", "fixture-adapter", "lazy-loading", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "oracle-passed"
-reason = "Generic private-bundle compiled Oracle passed 10/10 with reward 1.0; controls and review remain pending."
-
-[oracle_bundle]
-digest = "sha256:d8688aaa1929e62eae4c1e4cad4703c2e46c894d67c1b38fb329772d6428b832"
-size_bytes = 122880
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:d8688aaa1929e62eae4c1e4cad4703c2e46c894d67c1b38fb329772d6428b832"
-visibility = "private"

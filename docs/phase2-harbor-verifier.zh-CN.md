@@ -35,13 +35,13 @@ Production 编译默认拒绝所有 `publication_gaps()`。Synthetic fixture 需
 
 ```bash
 uv run nl2repo harbor compile \
-  catalog/tasks/ministats \
+  catalog/sources/ministats \
   --output build/harbor \
   --toolchain toolchain.lock.toml \
   --allow-incomplete
 ```
 
-Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 private artifact tar。解包采用流式成员计数，并拒绝绝对路径、`..`、symlink、hardlink、device、重复路径、超长成员与超大展开体积。开发 fixture 可以从 `catalog/tasks/<id>/harbor/` 复制公开 synthetic assets，但不能发布。
+Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 private artifact tar。解包采用流式成员计数，并拒绝绝对路径、`..`、symlink、hardlink、device、重复路径、超长成员与超大展开体积。开发 fixture 可以从 `catalog/sources/<id>/harbor/` 复制公开 synthetic assets，但不能发布。
 
 ## Verifier 执行顺序
 
@@ -112,7 +112,9 @@ uv run nl2repo harbor prepare-control \
 scripts/run_phase2_ministats_controls.sh
 ```
 
-脚本从 `harbor-runner/uv.lock` 运行 Harbor `0.21.0`，重新编译每次 Oracle bundle，运行九个 job，并由 `scripts/summarize_phase2_controls.py` 断言 reward、exceptions、grading validity、offline evidence、availability controls 和 checked report provenance。Scheduled CI 还会上传结构化 job/verifier artifacts。
+脚本从 `harbor-runner/uv.lock` 运行 Harbor `0.21.0`，重新编译 Oracle bundle，运行控制矩阵，并由 `scripts/summarize_phase2_controls.py` 断言 reward、exceptions、grading validity、offline evidence、availability controls 和 checked report provenance。
+
+该矩阵只作为手动/本地入口，没有 scheduled CI workflow；结构化 job/verifier artifact 保留在本地 `--jobs-dir` 下。当前 `summarize_phase2_controls.py` 仍断言 `oracle-1/2/3` 三次 attempt，而 runner 在 one-run Oracle contract 下只产出 `oracle-1`，因此脚本在汇总阶段会失败；修复需要同时重新生成 `reports/phase2-ministats-controls.v1.json` 的 checked reference。
 
 ## 真实 Easy/Medium/Hard Slice
 

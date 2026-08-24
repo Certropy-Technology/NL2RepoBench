@@ -15,7 +15,7 @@
 
 ### 0. 事实源与发布边界
 
-新题必须先建立 Human-facing declarative source。`catalog/tasks/<task-id>/task.toml + instruction.md` 是唯一人工编辑入口；canonical manifest 是严格校验后的机器契约，Harbor task 和旧 `test_files/<task-id>/` 都是下游单向、确定性生成物。禁止反向修改 generated output 或长期维护双向同步。
+新题必须先建立 Human-facing declarative source。`catalog/sources/<task-id>/task.toml + instruction.md` 是唯一人工编辑入口；canonical manifest 是严格校验后的机器契约，Harbor task 和旧 `test_files/<task-id>/` 都是下游单向、确定性生成物。禁止反向修改 generated output 或长期维护双向同步。
 
 公开仓库只保存不含 secret/private bytes 的 manifest、schema、content digest 和公开 provenance。private tests、Oracle、license evidence 或受限依赖放在访问受控的私有 Git、对象存储或 registry 中，公开 manifest 只保存 opaque artifact ref、digest、size、visibility 和 provenance classification。
 

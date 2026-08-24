@@ -1,7 +1,7 @@
 # Run Artifact Storage (Alibaba Cloud OSS)
 
 Task definitions and run artifacts are archived in the shared OSS bucket. The
-repository keeps task sources under `catalog/tasks/`; `.nl2repo/runs/` is
+repository keeps task sources under `catalog/sources/`; `.nl2repo/runs/` is
 gitignored and lives only in OSS.
 
 ## Bucket

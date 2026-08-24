@@ -303,7 +303,7 @@ def scaffold_catalog_task(
     root: Annotated[
         Path,
         typer.Option("--root", help="Human-facing task catalog root."),
-    ] = Path("catalog/tasks"),
+    ] = Path("catalog/sources"),
 ) -> None:
     """Create a minimal declarative TOML/Markdown task source."""
 
@@ -457,7 +457,7 @@ def lint_network(
     tasks_root: Annotated[
         Path,
         typer.Option("--tasks-root", help="Catalog task directory to scan."),
-    ] = Path("catalog/tasks"),
+    ] = Path("catalog/sources"),
     strict: Annotated[
         bool,
         typer.Option("--strict", help="Treat warnings as failures."),

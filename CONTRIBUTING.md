@@ -53,13 +53,13 @@ python scripts/convert_testfiles_to_harbor.py <task> \
   --source-digest sha256:$(cd /tmp/<task>-source && git archive <sha> | sha256sum | cut -d' ' -f1)
 
 # 6. 验证 catalog source
-uv run nl2repo task validate-source catalog/tasks/<task>
+uv run nl2repo task validate-source catalog/sources/<task>
 ```
 
 生成的结构：
 
 ```text
-catalog/tasks/<task>/
+catalog/sources/<task>/
 ├── task.toml                          # catalog 元数据
 ├── instruction.md                     # 公开规格（agent 唯一输入）
 └── harbor/
@@ -81,7 +81,7 @@ catalog/tasks/<task>/
 ```bash
 cd harbor-runner
 uv run --frozen harbor run \
-  -p ../catalog/tasks/<task>/harbor \
+  -p ../catalog/sources/<task>/harbor \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/oracle-<task>-gate-1
 
@@ -180,7 +180,7 @@ python scripts/convert_testfiles_loop.py claim \
 python scripts/convert_testfiles_loop.py validate icecream
 python scripts/convert_testfiles_loop.py record icecream \
   --owner worker-a --status complete \
-  --artifact catalog/tasks/icecream
+  --artifact catalog/sources/icecream
 
 # 无法可信转换时保存 blocker，不创建半成品发布项
 python scripts/convert_testfiles_loop.py record icecream \
@@ -223,7 +223,7 @@ scripts/run_harbor_model.sh
 ```bash
 cd harbor-runner
 uv run --frozen harbor run \
-  -p ../catalog/tasks/ftfy/harbor \
+  -p ../catalog/sources/ftfy/harbor \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/test-ftfy
 ```
@@ -370,7 +370,7 @@ done | head -20
 ```text
 nl2repobench/
 ├── README.md
-├── harbor-tasks/<task>/...          # 任务定义（catalog/tasks/*/harbor/）
+├── harbor-tasks/<task>/...          # 任务定义（catalog/sources/*/harbor/）
 └── runs/
     ├── <model>/<task>/<trial>/...   # 模型运行数据
     ├── oracle/<task>/<trial>/...    # Oracle 门禁证据

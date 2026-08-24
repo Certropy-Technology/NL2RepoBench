@@ -20,7 +20,7 @@ run_harbor() {
 
 for attempt in 1; do
   uv run nl2repo harbor compile \
-    catalog/tasks/ministats \
+    catalog/sources/ministats \
     --output "$output/tasks/oracle-$attempt" \
     --toolchain toolchain.lock.toml \
     --allow-incomplete

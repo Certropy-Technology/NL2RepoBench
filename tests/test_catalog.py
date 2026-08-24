@@ -75,7 +75,7 @@ def _published_manifest(task_id: str) -> TaskManifest:
 
 
 def test_repository_example_is_valid_human_source() -> None:
-    source = CatalogCompiler.load_task(ROOT / "catalog/tasks/ministats")
+    source = CatalogCompiler.load_task(ROOT / "catalog/sources/ministats")
 
     assert source.task_id == "ministats"
     assert source.metadata.difficulty == "easy"
@@ -83,7 +83,7 @@ def test_repository_example_is_valid_human_source() -> None:
 
 
 def test_task_compiler_is_deterministic(tmp_path) -> None:
-    source_dir = ROOT / "catalog/tasks/ministats"
+    source_dir = ROOT / "catalog/sources/ministats"
     first_output = tmp_path / "first"
     second_output = tmp_path / "second"
     first_store = FileArtifactStore(tmp_path / "artifacts")
@@ -102,7 +102,7 @@ def test_dataset_compiler_resolves_task_ids_from_catalog_root(tmp_path) -> None:
     catalog = tmp_path / "catalog"
     dataset_dir = catalog / "datasets/example"
     dataset_dir.mkdir(parents=True)
-    scaffold_task(catalog / "tasks", "demo")
+    scaffold_task(catalog / "sources", "demo")
     (dataset_dir / "dataset.toml").write_text(
         """schema_version = "1.0"
 dataset_id = "example"
@@ -134,7 +134,7 @@ tasks = ["demo"]
 
 def test_dataset_validation_detects_task_digest_drift(tmp_path) -> None:
     catalog = tmp_path / "catalog"
-    scaffold_task(catalog / "tasks", "demo")
+    scaffold_task(catalog / "sources", "demo")
     dataset_dir = catalog / "datasets/example"
     dataset_dir.mkdir(parents=True)
     dataset_path = dataset_dir / "dataset.toml"
@@ -160,7 +160,7 @@ tasks = ["demo"]
 
 def test_dataset_validation_rejects_trailing_whitespace(tmp_path) -> None:
     catalog = tmp_path / "catalog"
-    scaffold_task(catalog / "tasks", "demo")
+    scaffold_task(catalog / "sources", "demo")
     dataset_dir = catalog / "datasets/example"
     dataset_dir.mkdir(parents=True)
     dataset_path = dataset_dir / "dataset.toml"
@@ -181,7 +181,7 @@ tasks = ["demo"]
 
 def test_dataset_validation_rejects_symlinked_task_directory(tmp_path) -> None:
     catalog = tmp_path / "catalog"
-    scaffold_task(catalog / "tasks", "demo")
+    scaffold_task(catalog / "sources", "demo")
     dataset_dir = catalog / "datasets/example"
     dataset_dir.mkdir(parents=True)
     dataset_path = dataset_dir / "dataset.toml"
@@ -213,7 +213,7 @@ def test_scaffold_source_is_parseable(tmp_path) -> None:
 
 def test_dataset_rejects_metric_contract_mismatch(tmp_path) -> None:
     catalog = tmp_path / "catalog"
-    scaffold_task(catalog / "tasks", "demo")
+    scaffold_task(catalog / "sources", "demo")
     dataset_dir = catalog / "datasets/example"
     dataset_dir.mkdir(parents=True)
     dataset_path = dataset_dir / "dataset.toml"

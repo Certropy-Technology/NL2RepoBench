@@ -95,7 +95,7 @@ Agent Run Loop 独立消费已通过 authoring gate 的 catalog task，运行 GP
   remediation 输入，不是自动 Block；worker 必须尝试固定版本、补齐依赖闭包、调整
   build/test 配置和设计合适的 candidate/verifier boundary；只有尝试失败并留下完整
   命令、版本、exit code、日志和失败分类后，才允许进入 blocked/excluded；
-- 与 `catalog/tasks`、已发布 source digest、候选报告和 fork/改名包做 normalized name、
+- 与 `catalog/sources`、已发布 source digest、候选报告和 fork/改名包做 normalized name、
   upstream URL、source hash 和 API fingerprint 去重；
 - 发现阶段可以高并发，但只写自己的 report artifact。
 
@@ -106,7 +106,7 @@ python scripts/build_package_queue.py \
   --input reports/python-package-candidates.v1.json \
   --input reports/npm-package-candidates.v1.json \
   --input reports/github-package-candidates.v1.json \
-  --catalog-root catalog/tasks \
+  --catalog-root catalog/sources \
   --observed-at 2026-08-23T00:00:00Z \
   --output reports/package-discovery-queue.v1.json
 python scripts/package_queue_loop.py init \
@@ -302,7 +302,7 @@ private leakage、report mismatch 或 verifier invalid 都回退到 blocked，�
 | Pilot | 5–10 | Harbor/model budget | 难度/失败归因合理 |
 
 同一 task 的 stage 只能有一个 claim；worker 只写
-`catalog/tasks/<task-id>/authoring/<stage>/` 或独立 worktree。共享 catalog、dataset、
+`catalog/sources/<task-id>/authoring/<stage>/` 或独立 worktree。共享 catalog、dataset、
 registry、报告和发布目录由 integrator 串行写入。每完成一题立即落盘 stage result。
 
 静态失败不消耗 Docker；纯 infrastructure failure 才可有上限地重试；source/spec/

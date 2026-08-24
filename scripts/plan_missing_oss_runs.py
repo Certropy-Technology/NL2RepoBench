@@ -95,7 +95,7 @@ def plan(catalog_root: Path, oss_inventory: Path, limit: int) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/tasks"))
+    parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--oss-inventory", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=10)
     parser.add_argument("--output", type=Path, required=True)

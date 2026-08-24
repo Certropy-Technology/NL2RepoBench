@@ -1,77 +1,57 @@
-schema_version = "1.0"
-task_id = "marshmallow"
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/marshmallow"
 version = "0.2.0"
-instruction = "instruction.md"
+description = "Build the pinned marshmallow package from an empty workspace; grading uses a deterministic offline JSON-safe schema and serialization slice."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "serialization",
+    "validation",
+    "schema",
+    "offline",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "hard"
 category = "serialization"
-tags = ["python", "serialization", "validation", "schema", "separate-verifier"]
-language = "python"
+tags = [
+    "python",
+    "serialization",
+    "validation",
+    "schema",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 33
+canonical_manifest_digest = "sha256:7b21122054792d6a1ba3ffcfa3c60e04c32de8817f7e28e3cbbacdfefc8598a5"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
-[source]
-status = "known"
-upstream_url = "https://github.com/marshmallow-code/marshmallow"
-revision = "c7b559a1fa3aba57ca6dba0ab336841c5038a782"
-license_spdx = "MIT"
-source_digest = "sha256:c531024b6b6cf15be06fd2205f9304265524a3b1958e3e6c09793bc9b9f35728"
-submodules = []
+[agent]
+timeout_sec = 3600.0
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
 network_mode = "no-network"
 
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["flit_core==3.12.0"]
-artifact = { digest = "sha256:526726e3218d9895ad4a51ba167c929d13f77310a5712ad7c22b5a56ba553aa3", size_bytes = 51200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:526726e3218d9895ad4a51ba167c929d13f77310a5712ad7c22b5a56ba553aa3", visibility = "private" }
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
-[tests]
-framework = "pytest"
-expected_total = 33
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
-[harbor]
-description = "Build the pinned marshmallow package from an empty workspace; grading uses a deterministic offline JSON-safe schema and serialization slice."
-keywords = ["python", "serialization", "validation", "schema", "offline", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
-verifier_network_mode = "no-network"
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-workspace_artifact = "/workspace"
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:92658c9384b100fe31012387e6f6a30723e060409b98a924d612a7509ee896c2", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:92658c9384b100fe31012387e6f6a30723e060409b98a924d612a7509ee896c2", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
-[oracle_bundle]
-digest = "sha256:aa7501c75af112c83d666772e5e63b25d1b7c8b7bef06ce0fd615ac580180e1b"
-size_bytes = 1454080
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:aa7501c75af112c83d666772e5e63b25d1b7c8b7bef06ce0fd615ac580180e1b"
-visibility = "private"
-
-[lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 33/33 with reward 1.0; controls and review remain pending."
