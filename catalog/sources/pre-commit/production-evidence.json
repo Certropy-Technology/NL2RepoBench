@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pre-commit",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Approve a bounded full-behavior or local-only contract, then build an immutable image, freeze the complete hash-locked dependency and toolchain closure, adapt the persistent Git/subprocess state boundary, freeze the adapted collection and private verifier, and run Oracle plus empty/stub/forgery/offline controls before creating catalog/tasks/pre-commit.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/pre-commit/pre-commit",
+      "revision": "a9bba55a3f74068b53f4bd4d831d7e05e34eae6c",
+      "tree_sha1": "708e5ff82c2a410b01c28f1b465d6e213f9dc9f1",
+      "source_digest": "sha256:143b9d1dbc08a1edf79ffd947d2f7e847b89495569b6b9566f58a50b39bee6ec",
+      "source_archive_size_bytes": 1024000,
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:ea2ca27cba7cc35822d95a46d59bcd3cc88e196592e6390d1949a359ffc990e8",
+      "submodules": [],
+      "audit": {
+        "path": "catalog/sources/pre-commit/blocked.md",
+        "sha256": "sha256:f875e8910d6335423a0eb413fb8fef1d02603009ec2cc20034494940199b14ac"
+      },
+      "candidate_report": {
+        "path": "reports/python-package-candidates.v1.json",
+        "sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4"
+      }
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "No immutable verifier image or hash-locked dependency closure exists; pre-commit can clone hook repositories and install language toolchains, so neither agent nor verifier may retrieve source or dependencies during a run."
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/pre-commit",
+        "tool_version": "uv 0.12.3; nl2repobench 0.1.0; Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pre-commit/evidence/remediation.txt",
+          "sha256": "sha256:1bb87d3c6b37bc50310ae8bf42849debeeb69ebe209640c871edc6715732050b"
+        }
+      },
+      {
+        "command": "uv run python -c 'from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; report, has_bundle, has_policy = lint_task(Path(\"catalog/sources/pre-commit\")); print(f\"has_policy={has_policy}; has_bundle={has_bundle}; findings={len(report)}\"); [print(f\"{f.rule}: {f.severity}: {f.detail}\") for f in report]; raise SystemExit(1 if any(f.severity == \"error\" for f in report) else 0)'",
+        "tool_version": "uv 0.12.3; nl2repobench 0.1.0; Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pre-commit/evidence/remediation.txt",
+          "sha256": "sha256:1bb87d3c6b37bc50310ae8bf42849debeeb69ebe209640c871edc6715732050b"
+        }
+      },
+      {
+        "command": "rm -rf /tmp/pre-commit-remediation-task /tmp/pre-commit-remediation-artifacts && uv run nl2repo harbor compile catalog/sources/pre-commit --output /tmp/pre-commit-remediation-task --artifact-root /tmp/pre-commit-remediation-artifacts --toolchain toolchain.lock.toml --allow-private",
+        "tool_version": "uv 0.12.3; nl2repobench 0.1.0; Python 3.14.7",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/pre-commit/evidence/remediation.txt",
+          "sha256": "sha256:1bb87d3c6b37bc50310ae8bf42849debeeb69ebe209640c871edc6715732050b"
+        }
+      }
+    ]
+  }
+}

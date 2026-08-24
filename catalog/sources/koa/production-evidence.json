@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "task_id": "koa",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Materialize the referenced private npm/cache and Oracle artifacts, recompile the source without an incomplete-output override, then run official Harbor 0.21.0 Oracle plus empty, stub, forgery, and offline network controls with hash-bound grading and network receipts before reopening.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/koajs/koa",
+      "revision": "9c202e0077f4e314795222aff1be0da0bf9b2493",
+      "source_digest": "sha256:7fc748340171c9bd930b610b61c783fd21e011882f56474cdb628ba92de6b633",
+      "license_spdx": "MIT"
+    },
+    "audited_inputs": {
+      "task_descriptor": {
+        "path": "catalog/sources/koa/task.toml",
+        "sha256": "sha256:19845e83dacd3124b5d0dde034f858cc38876e1a56202d72b550b0140306ab0f"
+      },
+      "instruction": {
+        "path": "catalog/sources/koa/instruction.md",
+        "sha256": "sha256:498dfc4a1ffd49314f4862abd268a9e5570e4c0dc44e9e50a722e35b9c067d5d"
+      }
+    },
+    "observed_state": {
+      "lifecycle_status_before_transition": "controls-passed",
+      "collection_status": "not-evidenced",
+      "private_node_test_bundle": "referenced-but-not-materialized",
+      "runtime_path_before_transition": "catalog/tasks/koa",
+      "runtime_path_exists_after_transition": false
+    },
+    "commands": [
+      {
+        "command": "koa-specific Harbor Oracle/control/network receipt filesystem audit",
+        "tool_version": "repository filesystem audit",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/koa/evidence/remediation.txt",
+          "sha256": "sha256:e637f4fd6f88742e2e4bd91031fa8c303a30ea0e1062f5d17e618650f81ab15c"
+        }
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/koa --output /tmp/koa-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+        "tool_version": "repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/koa/evidence/remediation.txt",
+          "sha256": "sha256:e637f4fd6f88742e2e4bd91031fa8c303a30ea0e1062f5d17e618650f81ab15c"
+        }
+      },
+      {
+        "command": "if [ -e catalog/tasks/koa ] || [ -L catalog/tasks/koa ]; then printf '%s\\n' 'runtime_path=present'; exit 1; fi; printf '%s\\n' 'runtime_path=absent'",
+        "tool_version": "POSIX shell filesystem inspection",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/koa/evidence/runtime-absence.txt",
+          "sha256": "sha256:aa2338159722abdfbdade53aca88914784a30a79b4020e0df6a156242a345a9a"
+        }
+      }
+    ]
+  }
+}

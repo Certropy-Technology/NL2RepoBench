@@ -1,0 +1,16 @@
+pymongo production-evidence audit (2026-08-24T23:09:06Z)
+
+No task-specific Oracle, control, network, or production-recompile receipt
+was found. No score or control result is claimed.
+
+$ find .nl2repo/runs .nl2repo/authoring-work -type f -name receipt-files | rg -i pymongo
+exit_code=1; stdout: no task-specific receipt paths
+
+$ uv run --frozen --project harbor-runner harbor --version
+exit_code=0; stdout: 0.21.0
+
+$ uv run nl2repo harbor compile catalog/sources/pymongo --output /tmp/pymongo-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.lock.toml --allow-private
+exit_code=1; stderr: ArtifactStoreError: artifact is missing:
+sha256:fe25140b1d0d36961466ec15f5199e1eae22a03b19b5c5a605f3a8889fe4d4f5
+
+The checked-in runtime was removed. Reopen only after a successful

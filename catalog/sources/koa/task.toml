@@ -69,8 +69,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
+status = "blocked"
+owner = "repair/koa"
+reason = "The previous controls-passed claim has no discoverable koa-specific Harbor Oracle/control/network receipts, and production recompile fails because the referenced private npm bundle is missing. The invalid runtime is removed; no production status is retained without hash-bound evidence."
 
 [harbor]
 description = "Build the Koa HTTP middleware framework from an empty Node workspace."

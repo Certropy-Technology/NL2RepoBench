@@ -1,0 +1,58 @@
+globby production evidence audit (2026-08-25)
+
+The source descriptor's prior controls-passed claim was audited against the
+checked-out catalog and the repository's named run/artifact roots. No
+task-specific Harbor Oracle, control, network, or production-recompile receipt
+was found. The static network-policy lint below is metadata validation only;
+it is not a runtime network receipt.
+
+$ uv run nl2repo task validate-source catalog/sources/globby
+{
+  "instruction": "catalog/sources/globby/instruction.md",
+  "source_digest": "sha256:530b7908116719d4a5cecfa0c405aae3bda700fca42a70000a9772968a15c6b0",
+  "status": "blocked",
+  "task_id": "globby",
+  "version": "2.0.0"
+}
+exit_code=0
+
+$ uv run nl2repo harbor compile catalog/sources/globby --output /tmp/globby-production-recompile --artifact-root /tmp/globby-production-artifacts --toolchain toolchain.node.lock.toml --allow-private
+Harbor compile failed: cannot extract private bundle: artifact is missing: sha256:f5765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62
+compile_exit=1
+
+$ find catalog/sources/globby catalog/tasks/globby -type f \( -name 'grading.json' -o -name 'network.json' -o -name 'result.json' -o -name 'network-probe.json' -o -iname '*receipt*' -o -iname '*recompile*' \) -print
+$ find .nl2repo/runs -type f -path '*globby*' -print
+$ find /tmp /var/tmp -maxdepth 5 -type f \( -iname 'globby*' -o -iname '*globby*receipt*' -o -iname '*globby*recompile*' \) -print
+No task-specific Harbor receipts or production recompile artifacts found.
+exit_code=1
+
+$ uv run nl2repo task lint-network --tasks-root /tmp/globby-network-root --strict
+{
+  "error_count": 0,
+  "findings": [],
+  "tasks_scanned": 1,
+  "tasks_with_explicit_policy": 1,
+  "tasks_with_harbor_bundle": 0,
+  "warning_count": 0
+}
+lint_exit=0
+
+$ [ -e .nl2repo/artifacts/sha256/f5/765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62 ] && echo dependency_artifact=present || echo dependency_artifact=absent; [ -e .nl2repo/artifacts/sha256/5c/4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77 ] && echo oracle_artifact=present || echo oracle_artifact=absent
+dependency_artifact=absent
+oracle_artifact=absent
+
+Before runtime removal:
+$ test -e catalog/tasks/globby
+runtime_path=present
+runtime_check_exit=1
+
+After runtime removal:
+$ test ! -e catalog/tasks/globby
+runtime_path=absent
+runtime_removed=1
+
+The source revision and archive digest remain known in task.toml and
+provenance.md. Reopen only after restoring the pinned private dependency and
+Oracle assets, recompiling without --allow-incomplete, and running Harbor
+0.21.0 Oracle plus empty/stub/forgery/offline controls with hash-bound grading
+and network receipts.

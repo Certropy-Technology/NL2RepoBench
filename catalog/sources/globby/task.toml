@@ -79,9 +79,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
-reason = "Source, offline dependency closure, Harbor package, Oracle, and negative controls were executed in the task-local evidence run."
+status = "blocked"
+owner = "repair/globby"
+reason = "The prior controls-passed claim has no discoverable task-specific Harbor Oracle/control/network receipts or production recompile artifact. Production compile is blocked because the declared private npm bundle is missing; the invalid runtime is removed and no production status is retained without hash-bound evidence."
 
 [oracle_bundle]
 digest = "sha256:5c4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77"

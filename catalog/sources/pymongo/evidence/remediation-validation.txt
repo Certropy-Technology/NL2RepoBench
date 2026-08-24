@@ -1,0 +1,12 @@
+command: uv run nl2repo task validate-source catalog/sources/pymongo
+{
+  "instruction": "catalog/sources/pymongo/instruction.md",
+  "source_digest": "sha256:3f5a1f780dc5a8cc5e1cc76d97e6bfaca1accc961ed0ab7a3c5ed0a0b64e72ab",
+  "status": "blocked",
+  "task_id": "pymongo",
+  "version": "1.0.0"
+}
+command: git status --short -- catalog/sources/pymongo catalog/tasks/pymongo
+ M catalog/sources/pymongo/task.toml
+?? catalog/sources/pymongo/evidence/
+?? catalog/sources/pymongo/task.toml.orig

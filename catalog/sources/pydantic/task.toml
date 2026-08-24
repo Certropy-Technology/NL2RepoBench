@@ -1,0 +1,62 @@
+schema_version = "1.0"
+task_id = "pydantic"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "unknown"
+category = "validation"
+tags = ["python", "validation", "native-extension", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/pydantic/pydantic"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The candidate has no approved immutable revision or image-bound Python and Rust dependency closure; all agent and verifier runs remain offline."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked Pydantic candidate: immutable provenance, native build closure, frozen collection, and a separate verifier are unavailable."
+keywords = ["python", "validation", "pydantic", "native-extension", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/pydantic"
+reason = "The candidate report identifies pydantic/pydantic but supplies no immutable revision. The audit also found an unresolved pydantic-core native Rust dependency, missing offline closure, no final collection denominator, and no Pydantic-specific separate verifier. No catalog/tasks/pydantic runtime exists."

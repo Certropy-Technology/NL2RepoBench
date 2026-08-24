@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyautogui",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Define an owner-approved deterministic GUI/TTY contract or exclude the interactive keyboard leaves, then freeze an offline dependency closure, separate verifier, Oracle, and controls.",
+    "source_freeze": {"status":"known","upstream_url":"https://github.com/asweigart/pyautogui","revision":"5fee761f90e69f47dd3af6439f3a1a6b4ac806d8","source_digest":"sha256:e0ec59dff155bf12f40f44b2d4acf3fc6dcb6173976f9b1f5f818c5ffed9dd8a","license_spdx":"BSD-3-Clause"},
+    "commands": [{"command":"uv run nl2repo task validate-source catalog/sources/pyautogui","tool_version":"repository toolchain","exit_code":0,"log":{"path":"catalog/sources/pyautogui/evidence/remediation-validation.txt","sha256":"sha256:e1273a155cf22e39794c2c45b1d2753397850add56a5eed5eca5e971b3a43792"}}]
+  }
+}

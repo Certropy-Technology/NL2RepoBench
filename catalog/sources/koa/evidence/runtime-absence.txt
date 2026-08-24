@@ -1,0 +1,5 @@
+Koa runtime absence check (2026-08-24T23:02:45Z)
+Command: if [ -e catalog/tasks/koa ] || [ -L catalog/tasks/koa ]; then printf '%s\n' 'runtime_path=present'; exit 1; fi; printf '%s\n' 'runtime_path=absent'
+Observed output:
+runtime_path=absent
+Observed exit code: 0

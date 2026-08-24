@@ -1,0 +1,37 @@
+Koa production evidence audit (2026-08-24T23:02:45Z)
+
+The source descriptor recorded controls-passed, but this checkout contains no
+koa-specific Harbor Oracle, control, or network receipts. The generated runtime
+was present during the audit and is removed by the blocked transition.
+
+Source freeze:
+upstream_url=https://github.com/koajs/koa
+revision=9c202e0077f4e314795222aff1be0da0bf9b2493
+source_digest=sha256:7fc748340171c9bd930b610b61c783fd21e011882f56474cdb628ba92de6b633
+license_spdx=MIT
+
+Receipt audit command:
+set -eu; receipts="$(find catalog/sources/koa catalog/tasks/koa -type f \( -name grading.json -o -name network.json -o -name result.json -o -name network-probe.json -o -iname '*receipt*' \) -print 2>/dev/null | sort)"; koa_runs="$(find .nl2repo -type f \( -iname '*koa*' -o -path '*/koa/*' \) -print 2>/dev/null | sort)"; if [ -n "$receipts" ] || [ -n "$koa_runs" ]; then printf '%s\n' "$receipts" "$koa_runs"; exit 0; fi; printf '%s\n' 'No koa-specific Harbor Oracle/control/network receipt files found.'; exit 1
+
+Observed receipt audit output:
+No koa-specific Harbor Oracle/control/network receipt files found.
+Observed exit code: 1
+
+Production recompile command:
+uv run nl2repo harbor compile catalog/sources/koa --output /tmp/koa-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
+
+Observed production recompile output:
+Harbor compile failed: cannot extract private bundle: artifact is missing:
+sha256:4eaab9ddf9908685afc0a80f048ee28de829b61b2592e139c7c62b3352c673cf
+Observed exit code: 1
+
+The referenced private dependency artifact and Oracle bundle are not present
+under .nl2repo/artifacts. No grading.json, network.json, result.json, or
+network-probe.json was found for koa. No receipt or score was inferred from the
+old controls-passed field.
+
+Descriptor validation before transition:
+uv run nl2repo task validate-source catalog/sources/koa
+Observed result: exit code 0; task_id koa; version 2.0.0; source status
+controls-passed; source digest sha256:ad3a77eafc0eee3998a30b882eabfebe8a030dcd0dbdf552abed04d83fbcc8cc.
+This validates metadata shape only, not production evidence.

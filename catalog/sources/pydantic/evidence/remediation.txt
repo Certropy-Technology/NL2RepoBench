@@ -1,0 +1,31 @@
+uv_version=uv 0.12.3 (x86_64-unknown-linux-gnu)
+nl2repobench_version=0.1.0
+validate_source=
+{
+  "instruction": "catalog/sources/pydantic/blocked.md",
+  "source_digest": "sha256:87d218370439a188ba66d08bc8003d9ffbd6931632d6a923a735509cfc27f8a5",
+  "status": "blocked",
+  "task_id": "pydantic",
+  "version": "0.1.0"
+}
+network_lint=
+{
+  "error_count": 0,
+  "findings": [
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "/tmp/nl2repo-pydantic-network-lint/pydantic/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pydantic"
+    }
+  ],
+  "tasks_scanned": 1,
+  "tasks_with_explicit_policy": 1,
+  "tasks_with_harbor_bundle": 0,
+  "warning_count": 1
+}
+runtime_absent=yes
+compile_command=uv run nl2repo harbor compile catalog/sources/pydantic --output /tmp/pydantic-production-remediation --artifact-root /tmp/pydantic-production-artifacts --toolchain toolchain.lock.toml --allow-private
+compile_exit_code=1
+compile_output=Harbor compile failed: task is not publishable: metadata.difficulty, source_lock.status=known, environment_lock.status=known, dependency_bundle.status=known, dependency_bundle.lock_artifact, tests.expected_total_source=frozen-collection, tests.expected_total>0, tests.test_bundle, tests.commands_artifact, oracle_bundle

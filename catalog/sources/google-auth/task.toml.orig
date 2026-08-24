@@ -82,8 +82,8 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout, and production recompile currently fails because the referenced private dependency lock artifact is missing. The invalid runtime is removed; no production status is retained without hash-bound evidence."
+status = "controls-passed"
+reason = "Source/license frozen and reverified, offline hash-locked wheelhouse closure built into digest-pinned agent and verifier images, no-network baseline enforced, Oracle reward 1.0 at 32/32 collection, and the empty/stub/forgery/symlink/install-timeout/adapter-timeout/offline control matrix all behaved correctly. Worker endpoint is awaiting-agent-run; the shared lifecycle enum has no such value. This lane did not start a Harbor model Agent Run."
 
 [oracle_bundle]
 digest = "sha256:a3cad5e6ecdb8a3cfa8da71d075db0c201a95220b2f8541eed8a068f13a1e1a2"

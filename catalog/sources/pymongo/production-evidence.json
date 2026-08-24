@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pymongo",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Restore the private hash-locked dependency artifact, recompile, and run official Harbor 0.21.0 Oracle, controls, and network receipts before recreating the runtime.",
+    "source_freeze": {"status":"known","upstream_url":"https://github.com/mongodb/mongo-python-driver","revision":"ebc4bffcc842464e48a3edbd04802d1a42bc818a","source_digest":"sha256:d2882d62405f4f6a5746bb5b91756246b5279715850d1fd9cef98c268038af6d","license_spdx":"Apache-2.0"},
+    "commands": [{"command":"uv run nl2repo task validate-source catalog/sources/pymongo","tool_version":"repository toolchain","exit_code":0,"log":{"path":"catalog/sources/pymongo/evidence/remediation-validation.txt","sha256":"sha256:25756e8d941b42dde39036418c4d93cf32875d05bc247c415ab21b07bf2f1308"}}]
+  }
+}

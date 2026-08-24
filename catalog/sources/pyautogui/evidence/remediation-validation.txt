@@ -1,0 +1,11 @@
+command: uv run nl2repo task validate-source catalog/sources/pyautogui
+{
+  "instruction": "catalog/sources/pyautogui/blocked.md",
+  "source_digest": "sha256:c8784adb981376e1da91952911b95583905f66f9cb0557a0d7f6806f6546563e",
+  "status": "blocked",
+  "task_id": "pyautogui",
+  "version": "0.1.0"
+}
+command: git status --short -- catalog/sources/pyautogui catalog/tasks/pyautogui
+?? catalog/sources/pyautogui/evidence/
+?? catalog/sources/pyautogui/task.toml

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-auth",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Restore the private hash-locked dependency artifact and recompile, then run official Harbor Oracle, controls, and structured offline probes before recreating the runtime.",
+    "source_freeze": {"status":"known","upstream_url":"https://github.com/googleapis/google-cloud-python/tree/main/packages/google-auth","revision":"b4d97179f151d5ff37e6c7dbbd190a84c7d936a9","source_digest":"sha256:c78d2dfa82d178bfff82dc803ca9c6aa1d836947849082ea6caafd2a63574e89","license_spdx":"Apache-2.0"},
+    "commands": [{"command":"uv run nl2repo task validate-source catalog/sources/google-auth","tool_version":"repository toolchain","exit_code":0,"log":{"path":"catalog/sources/google-auth/evidence/remediation-validation.txt","sha256":"sha256:f587fd4e60b0bb943368da2e8a3c229a760014260a7febfa7a81c0606937788e"}}]
+  }
+}

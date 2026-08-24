@@ -1,0 +1,55 @@
+command: uv run nl2repo task validate-source catalog/sources/google-auth
+{
+  "instruction": "catalog/sources/google-auth/instruction.md",
+  "source_digest": "sha256:25add353b47831631c159973200307cd95bdaa47f3c4135ee51cd491ea3e775f",
+  "status": "blocked",
+  "task_id": "google-auth",
+  "version": "0.2.0"
+}
+command: git status --short -- catalog/sources/google-auth catalog/tasks/google-auth
+ M catalog/sources/google-auth/task.toml
+ D catalog/tasks/google-auth/README.md
+ D catalog/tasks/google-auth/bundle.manifest.json
+ D catalog/tasks/google-auth/controls/call-hang.sh
+ D catalog/tasks/google-auth/controls/empty.sh
+ D catalog/tasks/google-auth/controls/forgery.sh
+ D catalog/tasks/google-auth/controls/install-hang.sh
+ D catalog/tasks/google-auth/controls/stub.sh
+ D catalog/tasks/google-auth/controls/workspace-invalid.sh
+ D catalog/tasks/google-auth/environment/Dockerfile
+ D catalog/tasks/google-auth/environment/candidate-requirements.lock.txt
+ D catalog/tasks/google-auth/instruction.md
+ D catalog/tasks/google-auth/solution/solve.sh
+ D catalog/tasks/google-auth/task.toml
+ D catalog/tasks/google-auth/tests/Dockerfile
+ D catalog/tasks/google-auth/tests/candidate-requirements.lock.txt
+ D catalog/tasks/google-auth/tests/command-plan.json
+ D catalog/tasks/google-auth/tests/docker-compose.yaml
+ D catalog/tasks/google-auth/tests/requirements.lock.txt
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/__init__.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/domain/__init__.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/domain/canonical.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/domain/models.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/domain/network_policy.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/__init__.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/candidate_client.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/candidate_install.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/candidate_runner.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/cli.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/command_plan.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/custom_verifier.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/grader.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/integrity.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/junit.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/models.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/network_check.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/process_cleanup.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/pytest_plugin.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/run_pytest.py
+ D catalog/tasks/google-auth/tests/runtime/nl2repobench/verification/workspace_copy.py
+ D catalog/tasks/google-auth/tests/test.sh
+ D catalog/tasks/google-auth/tests/verifier/grade.py
+ D catalog/tasks/google-auth/tests/verifier/run.py
+ D catalog/tasks/google-auth/tests/verifier/run_scenarios.py
+?? catalog/sources/google-auth/evidence/
+?? catalog/sources/google-auth/task.toml.orig

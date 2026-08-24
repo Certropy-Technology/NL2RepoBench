@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pydantic",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Obtain owner approval for a complete upstream commit SHA; then freeze that archive and license bytes, choose an explicit pydantic-core source-versus-wheel policy, close Python/Rust/build dependencies, implement a Pydantic-specific separate verifier, freeze collection, and run Oracle plus empty/stub/forgery/offline controls before creating catalog/tasks/pydantic.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The approved candidate row identifies the repository but supplies no immutable revision. The report-era checkout is explicitly non-authoritative and cannot be promoted to a source lock, archive digest, or license lock.",
+      "upstream_url": "https://github.com/pydantic/pydantic",
+      "candidate_report": {
+        "path": "reports/python-package-candidates.v1.json",
+        "sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4"
+      },
+      "candidate_report_markdown": {
+        "path": "reports/python-package-candidates.v1.md",
+        "sha256": "sha256:8b69e9658705324979bd6b540c114a2f488488dfad34298c10530b23b6f9a2c5"
+      },
+      "license_claim": "MIT",
+      "reference_provenance": {
+        "status": "non-authoritative",
+        "revision": "aeeefbeabadc3179ecd3738216a95f61e7f4e0d9",
+        "source_digest": "sha256:4a8501801b7902ebffce85da76ae2bc66d78353e24a82d5c7479027bcf11e4ae",
+        "archive": "git archive --format=tar aeeefbeabadc3179ecd3738216a95f61e7f4e0d9",
+        "reason": "This report-era reference was inspected only for risk characterization; the candidate record does not establish that it was the selected source revision."
+      },
+      "audit": {
+        "path": "catalog/sources/pydantic/blocked.md",
+        "sha256": "sha256:e290f3970b3167e4fcd4f12f0cef68917d92585b1af99f546033e348a9c3e1ae"
+      }
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/pydantic",
+        "tool_version": "uv 0.12.3; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pydantic/evidence/remediation.txt",
+          "sha256": "sha256:2171862e7bc59051d144699aa1299b7010a20248a82f65ad36cdda6677d011a5"
+        }
+      },
+      {
+        "command": "uv run nl2repo task lint-network --tasks-root /tmp/nl2repo-pydantic-network-lint",
+        "tool_version": "uv 0.12.3; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pydantic/evidence/remediation.txt",
+          "sha256": "sha256:2171862e7bc59051d144699aa1299b7010a20248a82f65ad36cdda6677d011a5"
+        }
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/pydantic --output /tmp/pydantic-production-remediation --artifact-root /tmp/pydantic-production-artifacts --toolchain toolchain.lock.toml --allow-private",
+        "tool_version": "uv 0.12.3; nl2repobench 0.1.0",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/pydantic/evidence/remediation.txt",
+          "sha256": "sha256:2171862e7bc59051d144699aa1299b7010a20248a82f65ad36cdda6677d011a5"
+        }
+      }
+    ]
+  }
+}

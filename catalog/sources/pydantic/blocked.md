@@ -1,8 +1,9 @@
 # `pydantic` Static Authoring Audit
 
 **Status: blocked.** This task-local directory is public audit evidence only.
-It contains no `task.toml`, instruction projection, source archive, license
-bytes, copied upstream tests, hidden assertions, private artifact reference,
+It contains a blocked `task.toml` descriptor and hashed remediation evidence;
+it contains no source archive, license bytes, copied upstream tests, hidden
+assertions, private artifact reference,
 dependency wheel or crate cache, Docker/Harbor asset, verifier, Oracle solution,
 secret, reward, or shared catalog/dataset change.
 
@@ -101,8 +102,9 @@ push date is not a revision, and the report does not authorize a nearest-time
 heuristic. Tags `v2.12.4`, `v2.12.5`, and the current branch tip are likewise
 not substitutes for the missing candidate SHA.
 
-No `task.toml` or instruction is created because either would falsely imply a
-selected implementation contract.
+The blocked descriptor and evidence record are present only to record this
+refusal. They do not select an implementation contract, create a production
+instruction, or create a runtime task.
 
 ## Non-authoritative Report-era Reference
 
@@ -477,6 +479,7 @@ with HTTP 403, so no API response is used as evidence; license observations
 come from Git blobs and project metadata in the detached public reference.
 
 No dependency sync for the upstream source, native build, pytest collection or
-execution, Docker/Harbor command, private artifact access, Oracle, control,
-secret use, generated manifest, or shared-file mutation was performed. The
-only tracked repository artifact created by this audit is this `blocked.md`.
+execution, private artifact access, Oracle, control, secret use, generated
+manifest, or shared-file mutation was performed. No Harbor runtime exists;
+`catalog/tasks/pydantic/` remains absent. The descriptor and hashed remediation
+record are the only new catalog artifacts for this blocked task.

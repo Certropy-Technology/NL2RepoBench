@@ -1,0 +1,54 @@
+# prettytable production remediation evidence
+
+The source descriptor was added only under catalog/sources/prettytable. No
+catalog/tasks/prettytable runtime was created.
+
+Tool versions:
+
+```text
+git version 2.55.0
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+Python 3.14.7
+Docker version 29.7.2, build a7dcaa6
+```
+
+Command: git ls-remote https://github.com/prettytable/prettytable.git HEAD refs/heads/main refs/tags/3.3.0
+Tool version: git version 2.55.0
+Exit code: 0
+Observed stdout:
+
+```text
+3c80d392d32f48b0ab1e368793ddb751dbe41807	HEAD
+3c80d392d32f48b0ab1e368793ddb751dbe41807	refs/heads/main
+8ce5bd8956e12726f313db9644b03292400a49a7	refs/tags/3.3.0
+```
+
+Command: git clone --filter=blob:none --no-checkout --depth=1 https://github.com/prettytable/prettytable.git /tmp/nl2repo-prettytable-source.tp1jXi/source; git -C /tmp/nl2repo-prettytable-source.tp1jXi/source checkout --detach --quiet 3c80d392d32f48b0ab1e368793ddb751dbe41807; git -C /tmp/nl2repo-prettytable-source.tp1jXi/source archive --format=tar --output=/tmp/nl2repo-prettytable-source.tp1jXi/prettytable.tar 3c80d392d32f48b0ab1e368793ddb751dbe41807; sha256sum /tmp/nl2repo-prettytable-source.tp1jXi/prettytable.tar; wc -c < /tmp/nl2repo-prettytable-source.tp1jXi/prettytable.tar
+Tool version: git version 2.55.0
+Exit code: 0
+Observed source revision: 3c80d392d32f48b0ab1e368793ddb751dbe41807
+Observed tree: 26a1c631968582723400fc47f5c382966eecd3a7
+Observed archive: 409600 bytes, sha256:76f15330d9b102191694e8f0ef21632dfd80cdeb6ff5d14c95a8d21553052532
+Observed LICENSE: 1612 bytes, sha256:0c8adcc204c8af6cdfdf7887dfd1f99c29901f6c1d505a78bba96efa4fb2cb05
+
+Command: uv run nl2repo task validate-source catalog/sources/prettytable
+Tool version: uv 0.12.3; repository toolchain
+Exit code: 0
+Observed stdout:
+
+```json
+{"instruction":"catalog/sources/prettytable/blocked.md","source_digest":"sha256:bf4c825a4152758dceff013e92eb4f964aab695f46f7f707501f1bc01ef4be10","status":"blocked","task_id":"prettytable","version":"0.1.0"}
+```
+
+Command: PYTHONPATH=/tmp/nl2repo-prettytable-source.tp1jXi/source/src python -c 'import prettytable; print(prettytable.__version__)'
+Tool version: Python 3.14.7
+Exit code: 1
+Observed stderr: ModuleNotFoundError: No module named 'prettytable._version'
+
+Command: uv run nl2repo harbor compile catalog/sources/prettytable --output /tmp/prettytable-blocked-compile --artifact-root .nl2repo/artifacts --toolchain toolchain.lock.toml
+Tool version: uv 0.12.3; repository toolchain
+Exit code: 1
+Observed stderr: Harbor compile failed: task is not publishable: metadata.difficulty, environment_lock.status=known, dependency_bundle.status=known, dependency_bundle.lock_artifact, tests.expected_total_source=frozen-collection, tests.expected_total>0, tests.test_bundle, tests.commands_artifact, oracle_bundle
+
+Final path check: catalog/tasks/prettytable is absent. No Harbor runtime, private
+tests, verifier, Oracle bundle, dependency cache, or generated manifest exists.
