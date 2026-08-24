@@ -1,0 +1,34 @@
+{
+  "batch_id": "node-author-loop-wave-20260824",
+  "language": "node",
+  "max_concurrency": 3,
+  "model_runs_started": false,
+  "owner": "node-loop-wave-20260824",
+  "results": [
+    {
+      "brief": ".nl2repo/authoring/node-author-loop-wave-20260824/claims/lodash.json",
+      "candidate_id": "https-github-com-lodash-lodash-81d116c0938b",
+      "package": "lodash",
+      "status": "claimed",
+      "worktree": "/tmp/nl2repo-programmatic-authoring/node-author-loop-wave-20260824/lodash",
+      "worktree_status": "created"
+    },
+    {
+      "brief": ".nl2repo/authoring/node-author-loop-wave-20260824/claims/pino.json",
+      "candidate_id": "https-github-com-pinojs-pino-2d602af8224e",
+      "package": "pino",
+      "status": "claimed",
+      "worktree": "/tmp/nl2repo-programmatic-authoring/node-author-loop-wave-20260824/pino",
+      "worktree_status": "created"
+    },
+    {
+      "brief": ".nl2repo/authoring/node-author-loop-wave-20260824/claims/winston.json",
+      "candidate_id": "https-github-com-winstonjs-winston-e9ae228ac280",
+      "package": "winston",
+      "status": "claimed",
+      "worktree": "/tmp/nl2repo-programmatic-authoring/node-author-loop-wave-20260824/winston",
+      "worktree_status": "created"
+    }
+  ],
+  "schema_version": "1.0"
+}

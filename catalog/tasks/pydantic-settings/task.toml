@@ -39,7 +39,7 @@ commands = ["bash /tests/test.sh"]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:74268b01199019a49e0392a6c07dd3a5a22f03df10cb5ef39d19af30fd195082", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:74268b01199019a49e0392a6c07dd3a5a22f03df10cb5ef39d19af30fd195082", visibility = "private" }
+bundle = { digest = "sha256:1ee8681e67476c4a6325aff8d85b170ff3563b1e3b98b36a8ac88ad28aa10e7d", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:1ee8681e67476c4a6325aff8d85b170ff3563b1e3b98b36a8ac88ad28aa10e7d", visibility = "private" }
 entrypoint = "run.py"
 
 [metric]

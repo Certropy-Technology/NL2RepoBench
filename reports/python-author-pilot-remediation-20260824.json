@@ -1,0 +1,106 @@
+{
+  "agent_run_loop": "separate downstream consumer; not executed by this plan",
+  "batch_id": "python-author-pilot-remediation-20260824",
+  "candidate_input": "reports/python-production-queue-full-20260823.json",
+  "candidate_input_sha256": "sha256:8318fcca265809122796ee8f359366096040afa0817cea1ff91a8e55c76081a3",
+  "language": "python",
+  "oss_inventory": "reports/oss-run-inventory.json",
+  "parallelism": {
+    "shared_integrator_writers": 1,
+    "workers": 1
+  },
+  "remediation_policy": {
+    "automatic_block_only": [
+      "no-executable-tests-after-remediation",
+      "license-unclear-or-undistributable",
+      "revision-cannot-be-frozen-after-fetch-attempts",
+      "paid-or-unreproducible-external-service",
+      "resource-budget-exceeded-after-bounded-probes"
+    ],
+    "blocked_requires": [
+      "attempted_commands",
+      "tool_versions",
+      "exit_codes",
+      "failure_logs",
+      "failure_class",
+      "next_unblock_action"
+    ],
+    "missing_build_backend_or_dockerfile": "must-remediate",
+    "missing_hash_locked_offline_closure": "must-remediate",
+    "missing_immutable_image_or_digest": "must-remediate",
+    "missing_runtime_or_dev_pin": "must-remediate",
+    "risk_flags": "adapt-and-probe-before-decision"
+  },
+  "risk_policy": "remediate-before-gate",
+  "schema_version": "1.0",
+  "skipped": [],
+  "stages": [
+    "source-freeze",
+    "ast-inventory",
+    "test-inventory",
+    "dependency-probe",
+    "environment-remediation",
+    "dependency-closure",
+    "harbor-package",
+    "verifier-build",
+    "oracle-once",
+    "controls",
+    "review-handoff"
+  ],
+  "status": "planned",
+  "tasks": [
+    {
+      "agent_run_boundary": "Authoring ends after Oracle/controls/review; downstream Agent Run Loop consumes this catalog task and is not started here.",
+      "candidate_id": "https-github-com-boto-boto3-c386b66c5f86",
+      "handoff_status": "authoring-in-progress",
+      "language": "python",
+      "package": "boto3",
+      "production_gate": "Python locked toolchain, AST/test inventory, active remediation, Harbor gates, review",
+      "remediation_policy": {
+        "automatic_block_only": [
+          "no-executable-tests-after-remediation",
+          "license-unclear-or-undistributable",
+          "revision-cannot-be-frozen-after-fetch-attempts",
+          "paid-or-unreproducible-external-service",
+          "resource-budget-exceeded-after-bounded-probes"
+        ],
+        "blocked_requires": [
+          "attempted_commands",
+          "tool_versions",
+          "exit_codes",
+          "failure_logs",
+          "failure_class",
+          "next_unblock_action"
+        ],
+        "missing_build_backend_or_dockerfile": "must-remediate",
+        "missing_hash_locked_offline_closure": "must-remediate",
+        "missing_immutable_image_or_digest": "must-remediate",
+        "missing_runtime_or_dev_pin": "must-remediate",
+        "risk_flags": "adapt-and-probe-before-decision"
+      },
+      "remediation_reasons": [
+        "risk-adaptation-required:cloud,credentials,network"
+      ],
+      "remediation_required": true,
+      "revision": "722e01b074c67db38ad226ac1a2dab5c36c1577c",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "environment-remediation",
+        "dependency-closure",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/boto/boto3",
+      "worker_boundary": "catalog/tasks/boto3/** only",
+      "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md"
+    }
+  ],
+  "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md"
+}

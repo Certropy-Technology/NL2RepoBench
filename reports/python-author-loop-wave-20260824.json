@@ -1,0 +1,159 @@
+{
+  "agent_run_loop": "separate downstream consumer; not executed by this plan",
+  "batch_id": "python-author-loop-wave-20260824",
+  "candidate_input": "reports/python-production-queue-full-20260823.json",
+  "candidate_input_sha256": "sha256:8318fcca265809122796ee8f359366096040afa0817cea1ff91a8e55c76081a3",
+  "language": "python",
+  "oss_inventory": "reports/oss-run-inventory.json",
+  "parallelism": {
+    "shared_integrator_writers": 1,
+    "workers": 2
+  },
+  "remediation_policy": {
+    "automatic_block_only": [
+      "no-executable-tests-after-remediation",
+      "license-unclear-or-undistributable",
+      "revision-cannot-be-frozen-after-fetch-attempts",
+      "paid-or-unreproducible-external-service",
+      "resource-budget-exceeded-after-bounded-probes"
+    ],
+    "blocked_requires": [
+      "attempted_commands",
+      "tool_versions",
+      "exit_codes",
+      "failure_logs",
+      "failure_class",
+      "next_unblock_action"
+    ],
+    "missing_build_backend_or_dockerfile": "must-remediate",
+    "missing_hash_locked_offline_closure": "must-remediate",
+    "missing_immutable_image_or_digest": "must-remediate",
+    "missing_runtime_or_dev_pin": "must-remediate",
+    "risk_flags": "adapt-and-probe-before-decision"
+  },
+  "risk_policy": "remediate-before-gate",
+  "schema_version": "1.0",
+  "skipped": [],
+  "stages": [
+    "source-freeze",
+    "ast-inventory",
+    "test-inventory",
+    "dependency-probe",
+    "environment-remediation",
+    "dependency-closure",
+    "harbor-package",
+    "verifier-build",
+    "oracle-once",
+    "controls",
+    "review-handoff"
+  ],
+  "status": "planned",
+  "tasks": [
+    {
+      "agent_run_boundary": "Authoring ends after Oracle/controls/review; downstream Agent Run Loop consumes this catalog task and is not started here.",
+      "candidate_id": "https-github-com-googleapis-google-cloud-python-tree-main-packages-google-auth-51acfcdfdadb",
+      "handoff_status": "authoring-in-progress",
+      "language": "python",
+      "package": "google-auth",
+      "production_gate": "Python locked toolchain, AST/test inventory, active remediation, Harbor gates, review",
+      "remediation_policy": {
+        "automatic_block_only": [
+          "no-executable-tests-after-remediation",
+          "license-unclear-or-undistributable",
+          "revision-cannot-be-frozen-after-fetch-attempts",
+          "paid-or-unreproducible-external-service",
+          "resource-budget-exceeded-after-bounded-probes"
+        ],
+        "blocked_requires": [
+          "attempted_commands",
+          "tool_versions",
+          "exit_codes",
+          "failure_logs",
+          "failure_class",
+          "next_unblock_action"
+        ],
+        "missing_build_backend_or_dockerfile": "must-remediate",
+        "missing_hash_locked_offline_closure": "must-remediate",
+        "missing_immutable_image_or_digest": "must-remediate",
+        "missing_runtime_or_dev_pin": "must-remediate",
+        "risk_flags": "adapt-and-probe-before-decision"
+      },
+      "remediation_reasons": [
+        "candidate-evidence-incomplete",
+        "risk-adaptation-required:cloud,credentials,network"
+      ],
+      "remediation_required": true,
+      "revision": null,
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "environment-remediation",
+        "dependency-closure",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-auth",
+      "worker_boundary": "catalog/tasks/google-auth/** only",
+      "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md"
+    },
+    {
+      "agent_run_boundary": "Authoring ends after Oracle/controls/review; downstream Agent Run Loop consumes this catalog task and is not started here.",
+      "candidate_id": "https-github-com-textualize-textual-e724ad156956",
+      "handoff_status": "authoring-in-progress",
+      "language": "python",
+      "package": "textual",
+      "production_gate": "Python locked toolchain, AST/test inventory, active remediation, Harbor gates, review",
+      "remediation_policy": {
+        "automatic_block_only": [
+          "no-executable-tests-after-remediation",
+          "license-unclear-or-undistributable",
+          "revision-cannot-be-frozen-after-fetch-attempts",
+          "paid-or-unreproducible-external-service",
+          "resource-budget-exceeded-after-bounded-probes"
+        ],
+        "blocked_requires": [
+          "attempted_commands",
+          "tool_versions",
+          "exit_codes",
+          "failure_logs",
+          "failure_class",
+          "next_unblock_action"
+        ],
+        "missing_build_backend_or_dockerfile": "must-remediate",
+        "missing_hash_locked_offline_closure": "must-remediate",
+        "missing_immutable_image_or_digest": "must-remediate",
+        "missing_runtime_or_dev_pin": "must-remediate",
+        "risk_flags": "adapt-and-probe-before-decision"
+      },
+      "remediation_reasons": [
+        "risk-adaptation-required:interactive,terminal"
+      ],
+      "remediation_required": true,
+      "revision": "06dbeef4bb70fb718236aa418ed658ef4667a126",
+      "source_digest": null,
+      "stages": [
+        "source-freeze",
+        "ast-inventory",
+        "test-inventory",
+        "dependency-probe",
+        "environment-remediation",
+        "dependency-closure",
+        "harbor-package",
+        "verifier-build",
+        "oracle-once",
+        "controls",
+        "review-handoff"
+      ],
+      "upstream_url": "https://github.com/Textualize/textual",
+      "worker_boundary": "catalog/tasks/textual/** only",
+      "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md"
+    }
+  ],
+  "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md"
+}

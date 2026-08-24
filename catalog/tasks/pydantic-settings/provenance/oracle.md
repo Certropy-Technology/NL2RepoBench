@@ -11,7 +11,7 @@ Oracle evidence from the remediation worker:
 - `collected=20`, `expected=20`, `passed=20`
 - `reward=1.0`
 - nop control reward `0.0`
-- worker evidence: `evidence/harbor-oracle/pydantic-settings-oracle/`
+- generic compiled evidence: `.nl2repo/runs/oracle/pydantic-settings-custom-compiled-correct/2026-08-24__11-41-41/pydantic-settings__uhMgx82/verifier/grading.json`
 
 Remediation included pinning `editables`, selecting CPython 3.12 wheels rather
 than host CPython 3.14 artifacts, isolating dotenv fixtures, pinning the
