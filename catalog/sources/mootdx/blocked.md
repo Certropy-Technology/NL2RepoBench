@@ -1,16 +1,17 @@
 # `mootdx` Static Provenance and Blocker Audit
 
-Status: **blocked**. Suggested primary failure class: `environment` (live,
-mutable finance services); secondary class: `verifier` (ambiguous final test
-root and unproven collection). This directory is an audit record only. It
-contains no Harbor task descriptor, public instruction copy, Oracle solution, verifier
-script, dependency wheelhouse, or hidden test bytes. The dataset catalog,
-shared indexes, conversion-loop state, and `test_files/mootdx/` are unchanged.
+Status: **blocked**. The single failure class is `environment`: the final
+legacy test path depends on mutable finance services and current-date/cache
+behavior. This file is the historical audit; the directory now also contains
+a parseable blocked descriptor and hashed remediation evidence, but no Harbor
+runtime, Oracle solution, verifier script, dependency wheelhouse, or hidden test
+bytes. The dataset catalog, shared indexes, conversion-loop state, and
+`test_files/mootdx/` are unchanged.
 
 The primary blocker is environmental: the effective test suite exercises live
 TongdaXin/Sina/同花顺 financial-data services and current-date behavior. That
 cannot be made a deterministic no-network Harbor verifier by pinning the
-legacy image alone. A secondary blocker is that the pinned image contains two
+legacy image alone. The same environmental blocker is compounded by two
 different test trees and a late, unapproved test/packaging overlay; the only
 pytest collection cache belongs to the other tree.
 
@@ -217,8 +218,9 @@ verifiers even if network access were enabled.
 
 ## Decision and reopen requirements
 
-Keep `mootdx` **blocked**. Do not create `task.toml`, `instruction.md`,
-`harbor/`, or any public copy of the hidden tests from this evidence.
+Keep `mootdx` **blocked**. The blocked `task.toml` and this audit are public
+metadata only; do not create `instruction.md`, `harbor/`, a runtime task, or
+any public copy of the hidden tests from this evidence.
 
 To reopen, the owner should:
 
@@ -261,5 +263,7 @@ or Oracle:
   unconditional/conditional skip markers.
 - Inspected source call sites and cache decorators statically for live finance
   endpoints, TCP server connections, current-date behavior, and refresh ages.
-- No Docker/Harbor/pytest/Oracle/control command was run. No shared or legacy
-  file was edited.
+- The historical audit above did not run Docker, Harbor, pytest, Oracle, or
+  controls. The later descriptor validation and blocked compile probe are
+  recorded in `evidence/remediation.txt` and `production-evidence.json`; no
+  shared catalog, generated runtime, or legacy file was edited.

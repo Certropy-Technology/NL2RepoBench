@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pluggy",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "From a clean detached checkout at d23f110b240d67ee503eba0082f30cae73f3e1e3, reproduce an unprefixed source archive and license-byte SHA-256, then freeze the hash-locked build/test closure, private Pluggy-specific verifier and test bundle, final collection, Oracle, and controls before generating catalog/tasks/pluggy.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The candidate records establish a full commit and MIT claim, but the bounded upstream-access attempt did not preserve a detached archive digest or verified license bytes, so source provenance is not frozen.",
+      "upstream_url": "https://github.com/pytest-dev/pluggy",
+      "revision": "d23f110b240d67ee503eba0082f30cae73f3e1e3",
+      "license_spdx": "MIT",
+      "audit": {
+        "path": "catalog/sources/pluggy/blocked.md",
+        "sha256": "sha256:6cf134ed2c93557a69dc509e9d348c439272c324424bba612397d67ba36e3558"
+      },
+      "candidate_report": {
+        "path": "reports/python-package-candidates.v1.json",
+        "sha256": "sha256:fd613b5114ac315e3d3276ef10c7dbf8dab1b3e0d899d8be4f1c2009302c2bc4"
+      }
+    },
+    "commands": [
+      {
+        "command": "set -e; uv --version; uv run python -c \"import importlib.metadata as m; print(m.version('nl2repobench'))\"; uv run nl2repo task validate-source catalog/sources/pluggy; uv run python -c \"from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; findings, has_bundle, has_policy = lint_task(Path('catalog/sources/pluggy')); assert has_policy and not has_bundle; assert [(item.rule, item.severity) for item in findings] == [('offline-dependencies-missing', 'warning')]; print('policy-lint=explicit-no-network; expected-warning=offline-dependencies-missing')\"; test ! -e catalog/tasks/pluggy",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pluggy/evidence/remediation.txt",
+          "sha256": "sha256:64be686c39746eaf0819cec62ef52ea9e5600bf435e429ece04b27d1ead591e4"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+$ uv --version
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+$ uv run python -c "import importlib.metadata as m; print(m.version(\"nl2repobench\"))"
+0.1.0
+$ uv run nl2repo task validate-source catalog/sources/pluggy
+{
+  "instruction": "catalog/sources/pluggy/blocked.md",
+  "source_digest": "sha256:3fed5dce7ca4306cd72ae68970d90b6d3cc9372e65c62f89537a3b0f1c95aad5",
+  "status": "blocked",
+  "task_id": "pluggy",
+  "version": "0.1.0"
+}
+$ uv run python -c "lint Pluggy task policy"
+policy-lint=explicit-no-network; expected-warning=offline-dependencies-missing
+$ test ! -e catalog/tasks/pluggy
+catalog/tasks/pluggy: absent
+exit_code=0

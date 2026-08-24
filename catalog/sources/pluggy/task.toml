@@ -1,0 +1,48 @@
+schema_version = "1.0"
+task_id = "pluggy"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "easy"
+category = "testing"
+tags = ["python", "plugins", "hooks", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/pytest-dev/pluggy"
+revision = "d23f110b240d67ee503eba0082f30cae73f3e1e3"
+license_spdx = "MIT"
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The audit records an upstream URL, full commit, and MIT claim, but no detached source archive digest, license-byte hash, immutable image, or hash-locked build/test closure. No agent, verifier, or Oracle runtime may fetch the reference source."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["setuptools>=65", "setuptools-scm[toml]>=8"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "The audit records 127 static test definitions, not a frozen collection. Upstream access did not yield a detached archive or license-byte hash, and no immutable environment, dependency lock, private Pluggy-specific verifier/test bundle, Oracle, controls, or catalog/tasks/pluggy runtime exists."

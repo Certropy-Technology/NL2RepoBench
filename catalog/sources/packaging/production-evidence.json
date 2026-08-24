@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "task_id": "packaging",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Resolve an owner-approved immutable pypa/packaging commit, detach a clean checkout, and record reproducible archive and license hashes before freezing metadata, collection, dependencies, a separate verifier, Oracle, or controls.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The bounded audit did not establish a trusted full upstream commit, source archive digest, license evidence, package metadata, or source checkout. The candidate URL is an identity hint only and is not immutable provenance.",
+      "candidate_url": "https://github.com/pypa/packaging",
+      "audit_path": "catalog/sources/packaging/audit.md",
+      "audit_sha256": "sha256:3357a92b7bb353fb87fea5da193940d1330652d7b3618e119fd4888f083feba3",
+      "historical_inventory": {
+        "source_tree_sha1": "530bd0a5078465f68a59f17fdf84bceea0415696",
+        "meaning": "A source-directory inventory key from the frozen catalog input; it is not an upstream commit, revision, or source archive digest."
+      }
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "No immutable source or approved dependency closure is present, so neither a future candidate run nor a verifier run may fetch the reference project or dependencies at runtime."
+    },
+    "runtime_task": {
+      "path": "catalog/tasks/packaging",
+      "present": false
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/packaging",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); nl2repobench 0.1.0; Python 3.14.7",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/packaging/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:22080c77ec90762fe42b268c3207f13c14766fe819675605f7df496199ad46c7"
+        }
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/packaging",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); nl2repobench 0.1.0; Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/packaging/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:dc52f32e85315e89b1376cea51fe63a4fcf720c78550dba35bb933043e3222f6"
+        }
+      }
+    ]
+  }
+}

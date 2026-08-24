@@ -1,0 +1,31 @@
+mootdx remediation probe
+recorded_at_utc: 2026-08-24T22:50:13Z
+command: uv --version
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+command: uv run python --version
+Python 3.14.7
+command: uv run nl2repo task validate-source catalog/sources/mootdx
+{
+  "instruction": "catalog/sources/mootdx/blocked.md",
+  "source_digest": "sha256:798a98db7eba9d38c12b67ceb156c403c4afd6c727adbab05387d91192eb0fc4",
+  "status": "blocked",
+  "task_id": "mootdx",
+  "version": "0.1.0"
+}
+exit_code: 0
+command: uv run nl2repo harbor compile catalog/sources/mootdx --output /tmp/mootdx-remediation-task --artifact-root /tmp/mootdx-remediation-artifacts --toolchain toolchain.lock.toml --allow-private
+Harbor compile failed: task is not publishable: environment_lock.status=known, dependency_bundle.status=known, dependency_bundle.lock_artifact, tests.expected_total_source=frozen-collection, tests.expected_total>0, tests.test_bundle, tests.commands_artifact, oracle_bundle
+exit_code: 1
+command: uv run python - <<'PY' (task-local network policy lint)
+from pathlib import Path
+from nl2repobench.authoring.network_lint import lint_task
+report, has_bundle, has_policy = lint_task(Path("catalog/sources/mootdx"))
+print(f"has_policy={has_policy}; has_bundle={has_bundle}; findings={len(report)}")
+for finding in report:
+    print(f"{finding.rule}: {finding.severity}: {finding.detail}")
+assert has_policy
+assert not any(f.severity == "error" for f in report)
+PY
+has_policy=True; has_bundle=False; findings=1
+offline-dependencies-missing: warning: dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached
+exit_code: 0

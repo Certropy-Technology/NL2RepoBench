@@ -1,0 +1,64 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/mootdx --output /tmp/mootdx-remediation-task --artifact-root /tmp/mootdx-remediation-artifacts --toolchain toolchain.lock.toml --allow-private",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/mootdx/evidence/remediation.txt",
+          "sha256": "sha256:2556861d5904f81e07afee4f6bd22563c2a62d960bc9ea725892c1245d1bb1d4"
+        },
+        "tool_version": "nl2repobench 0.1.0; uv 0.12.3; Python 3.14.7"
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/mootdx",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/mootdx/evidence/remediation.txt",
+          "sha256": "sha256:2556861d5904f81e07afee4f6bd22563c2a62d960bc9ea725892c1245d1bb1d4"
+        },
+        "tool_version": "nl2repobench 0.1.0; uv 0.12.3; Python 3.14.7"
+      }
+    ],
+    "dependency_closure": {
+      "legacy_extra_command": "pip install requests (unversioned)",
+      "source_requirements": "requirements.txt is copied in the image and hash-recorded, but no standalone offline wheelhouse exists",
+      "status": "not-approved",
+      "test_requirements": "pytest-datadir, pytest-cov, pytest, and freezegun are unpinned"
+    },
+    "failure_class": "environment",
+    "legacy_contract": {
+      "declared_test_count": 92,
+      "instruction_sha256": "sha256:c2d17e68567c9e340685ab866da68bf5ef373f9981e35dc9e6e6783034317cb",
+      "test_commands_sha256": "sha256:d3a2d6275cfc9336d62cbad263d1a09582e4c0098b47f36e45cbcba06ea8b1bb",
+      "test_files_sha256": "sha256:af7f0b2bd342822f2fa8e6a9fda610570f911f30d3108379ea4184c0866727c3"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reason": "The active legacy tests reach mutable financial services and refresh current-date caches; no deterministic offline fixture/stub closure or approved verifier exists.",
+      "reference_source_fetch": "forbidden"
+    },
+    "next_step": "Build one reviewed immutable image with a single approved test tree, replace live TongdaXin/Sina/同花顺 calls with pinned local fixtures or a deterministic protocol stub, freeze the complete hash-locked dependency closure and final collection, then implement a separate candidate verifier and run the Harbor 0.21.0 Oracle and empty/stub/forgery/offline controls.",
+    "source_freeze": {
+      "audit_path": "catalog/sources/mootdx/blocked.md",
+      "audit_sha256": "sha256:0e64dc8e327607d8f9c548146a45a80ef35baa3c0089cda6bee90cb76bc50865",
+      "base_image": "ghcr.io/multimodal-art-projection/nl2repobench/mootdx@sha256:3250e7d6ef515f288f6307957d93b05a4d66889dbb2b3de3844f612f9457ddaf",
+      "base_image_digest": "sha256:3250e7d6ef515f288f6307957d93b05a4d66889dbb2b3de3844f612f9457ddaf",
+      "image_config_digest": "sha256:88eb41fe3294ebca698d6410627e3271ccc517962647f705b6042168fc50f7ca",
+      "license_digest": "sha256:ee03a051e103766e566b0a3ac0532daa665bb063cf8f30de46fd7c7ac9d00ec6",
+      "license_path": "LICENSE",
+      "license_spdx": "MIT",
+      "requirements_lock_path": "requirements.txt",
+      "requirements_lock_sha256": "sha256:3cd5c6d70e3f2b359433ae2a451b04840a61ffad66aeb54cadae9851f713d648",
+      "revision": "e99ae34382d970c68654c6d17c45512e728f130d",
+      "source_archive_size_bytes": 57600000,
+      "source_digest": "sha256:1572a695d11188fbf3319d89ea101960055186dfbc92322cce1e9ee560b984a4",
+      "status": "known",
+      "upstream_url": "https://github.com/mootdx/mootdx.git"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "mootdx",
+  "terminal_kind": "blocked"
+}

@@ -1,0 +1,48 @@
+schema_version = "1.0"
+task_id = "packaging"
+version = "0.1.0"
+instruction = "audit.md"
+
+[metadata]
+difficulty = "unknown"
+category = "packaging"
+tags = ["python", "packaging", "source-freeze", "blocked"]
+language = "python"
+
+[source]
+# This locator is not immutable provenance; source status remains unknown.
+status = "unknown"
+upstream_url = "https://github.com/pypa/packaging"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The audit did not establish an immutable source checkout or a hash-locked dependency closure; candidate and verifier runs must remain offline."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "The audit establishes neither an immutable upstream revision nor license/archive, package metadata, test collection, dependency, verifier, Oracle, or control evidence. This source-only candidate must not produce a catalog/tasks/packaging runtime."
