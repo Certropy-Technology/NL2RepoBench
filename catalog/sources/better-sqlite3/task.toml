@@ -1,0 +1,84 @@
+schema_version = "2.0"
+task_id = "better-sqlite3"
+version = "2.0.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:26229c564b3e1ab54a2c7a941b7c21be8e7d5866d8e698447cbaa859f4984d89", size_bytes = 30720, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:26229c564b3e1ab54a2c7a941b7c21be8e7d5866d8e698447cbaa859f4984d89", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "database-library"
+tags = ["node", "npm", "sqlite", "transactions", "native-adaptation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/WiseLibs/better-sqlite3"
+revision = "f8e2d541208281368129929a96f70f937c0735ef"
+license_spdx = "MIT"
+source_digest = "sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:3dc2c68167d64d2c05bc38c0ef0e67b7cdf47b1fdd2f654d9ce4e45ba07d4ff7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3dc2c68167d64d2c05bc38c0ef0e67b7cdf47b1fdd2f654d9ce4e45ba07d4ff7", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 12
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-command-plan+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:221e4d9ba58f61d4f29b78465b67ca795fd38ab2a58e4479035831f36fc30171", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:221e4d9ba58f61d4f29b78465b67ca795fd38ab2a58e4479035831f36fc30171", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-direct-gpt-20260824-r1"
+
+[harbor]
+description = "Recreate a deterministic better-sqlite3 API subset with a bounded Node 24 SQLite adaptation."
+keywords = ["node", "npm", "sqlite", "transactions", "database"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+

@@ -1,0 +1,64 @@
+{
+  "name": "rollup",
+  "version": "4.62.5",
+  "description": "WASM-backed Rollup reference package",
+  "main": "dist/rollup.js",
+  "module": "dist/es/rollup.js",
+  "types": "dist/rollup.d.ts",
+  "bin": {
+    "rollup": "dist/bin/rollup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rollup/rollup.git"
+  },
+  "keywords": [
+    "modules",
+    "bundler",
+    "bundling",
+    "es6",
+    "optimizer"
+  ],
+  "author": "Rich Harris",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rollup/rollup/issues"
+  },
+  "homepage": "https://rollupjs.org/",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/bin/rollup",
+    "dist/wasm-node/*.wasm",
+    "LICENSE.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/rollup.d.ts",
+      "import": "./dist/es/rollup.js",
+      "require": "./dist/rollup.js"
+    },
+    "./loadConfigFile": {
+      "types": "./dist/loadConfigFile.d.ts",
+      "require": "./dist/loadConfigFile.js",
+      "default": "./dist/loadConfigFile.js"
+    },
+    "./getLogFilter": {
+      "types": "./dist/getLogFilter.d.ts",
+      "import": "./dist/es/getLogFilter.js",
+      "require": "./dist/getLogFilter.js"
+    },
+    "./parseAst": {
+      "types": "./dist/parseAst.d.ts",
+      "import": "./dist/es/parseAst.js",
+      "require": "./dist/parseAst.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {}
+}

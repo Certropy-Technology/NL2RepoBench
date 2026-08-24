@@ -1,0 +1,120 @@
+{
+  "canonical_manifest_digest": "sha256:25c01e3a3dee7d1e0bb10095d457a417046be44f64ac8f828d4a1e01bc008c78",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "ebd6e56886b33682fae6939bb823e19fefebb0bce7f0e882bf530bf260290dd4",
+      "size_bytes": 317
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "c4635ce36405c3fc0b9c242e2400004f1e2b793b7abbbf5f164400cab9714526",
+      "size_bytes": 5326
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "de8425b245cbaa341bb001050ce753e56fe81bb1b94698f5436c73cc8c9fc60a",
+      "size_bytes": 494
+    },
+    {
+      "path": "solution/template/index.js",
+      "sha256": "61d4308794edf7b0be8a36fd90718788f82edbf10ff6ded1f9a9e98648f36ac5",
+      "size_bytes": 5524
+    },
+    {
+      "path": "solution/template/package-lock.json",
+      "sha256": "4752f77aca40b7aeabebcf0722d8a3b76786cf971e05cb123d1afb2ccdb82518",
+      "size_bytes": 210
+    },
+    {
+      "path": "solution/template/package.json",
+      "sha256": "ca5ab14ca07a27351f6f85d8d3d43e30a0981e50e6d0a7059ca75f9bbd141bd5",
+      "size_bytes": 205
+    },
+    {
+      "path": "task.toml",
+      "sha256": "513b9c33043be135da64bf3cd2911da47fc1f650faeed842d9f4b8e202bfdc47",
+      "size_bytes": 1272
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "0ab85344798e8a54c17f1fbefd95dcdc4659eab5260206ef7948929986f5b852",
+      "size_bytes": 175
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/execa.test.mjs",
+      "sha256": "04319f5771e136a68f1042b6567a63ce0bde9366f8c0720cc6273a117ad09cfe",
+      "size_bytes": 3463
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "168030f28eb649b762e87e57eb5d85c42ba686449e5512afee17745beeb77f00",
+      "size_bytes": 906
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "07ecb1fbc642340d2d28bcb9e79ef8035ea674404c593e87ba9e2ca11f3b4171",
+      "size_bytes": 2255
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "execa",
+  "task_version": "1.0.0",
+  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+}

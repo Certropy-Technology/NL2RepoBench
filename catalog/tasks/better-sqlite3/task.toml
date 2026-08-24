@@ -1,0 +1,61 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/better-sqlite3"
+version = "2.0.0"
+description = "Recreate a deterministic better-sqlite3 API subset with a bounded Node 24 SQLite adaptation."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "sqlite",
+    "transactions",
+    "database",
+]
+
+[metadata]
+difficulty = "hard"
+category = "database-library"
+tags = [
+    "node",
+    "npm",
+    "sqlite",
+    "transactions",
+    "native-adaptation",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 12
+canonical_manifest_digest = "sha256:b32556b699a096bc6c62e36d13e3285df6eaff6bf3b83aed30ae73b53b74e4d9"
+toolchain_lock_digest = "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096

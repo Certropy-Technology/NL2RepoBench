@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/koa"
+version = "2.0.0"
+description = "Build the Koa HTTP middleware framework from an empty Node workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "http",
+    "middleware",
+    "web-framework",
+    "json",
+    "cookies",
+    "async",
+]
+
+[metadata]
+difficulty = "medium"
+category = "node-web-framework"
+tags = [
+    "node",
+    "npm",
+    "http",
+    "middleware",
+    "web-framework",
+    "json",
+    "cookies",
+    "async",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 17
+canonical_manifest_digest = "sha256:1a5965b6795ae30abe577a929dbc93346878b87ea7c990fc7d5b367ec08213b2"
+toolchain_lock_digest = "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192

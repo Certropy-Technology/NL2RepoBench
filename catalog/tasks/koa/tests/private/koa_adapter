@@ -1,0 +1,136 @@
+import { createRequire } from "node:module";
+import { request as httpRequest, createServer } from "node:http";
+
+const require = createRequire(`${process.cwd()}/package.json`);
+const Koa = require("koa");
+
+function middlewareFor(step) {
+  return async (ctx, next) => {
+    switch (step.kind) {
+      case "body":
+        ctx.body = step.value;
+        break;
+      case "status":
+        ctx.status = step.value;
+        break;
+      case "header":
+        ctx.set(step.name, step.value);
+        break;
+      case "append":
+        ctx.append(step.name, step.value);
+        break;
+      case "record":
+        ctx.state.events ??= [];
+        ctx.state.events.push(step.value);
+        await next();
+        ctx.state.events.push(`${step.value}:after`);
+        return;
+      case "state":
+        ctx.state[step.name] = step.value;
+        break;
+      case "request-info":
+        ctx.body = {
+          method: ctx.method,
+          url: ctx.url,
+          path: ctx.path,
+          querystring: ctx.querystring,
+          query: ctx.query,
+          host: ctx.host,
+          hostname: ctx.hostname,
+          protocol: ctx.protocol,
+          secure: ctx.secure,
+          ip: ctx.ip,
+          ips: ctx.ips,
+          subdomains: ctx.subdomains,
+          accept: ctx.get("Accept"),
+          state: ctx.state,
+        };
+        break;
+      case "accepts":
+        ctx.body = { html: ctx.accepts("html"), json: ctx.accepts("json") };
+        break;
+      case "throw":
+        ctx.throw(step.status, step.message);
+        break;
+      case "redirect":
+        ctx.redirect(step.url);
+        break;
+      case "cookie":
+        ctx.cookies.set(step.name, step.value, { httpOnly: true });
+        break;
+      case "current-context":
+        ctx.body = { same: ctx.app.currentContext === ctx };
+        break;
+      case "respond-false":
+        ctx.respond = false;
+        return;
+      default:
+        throw new Error(`unknown adapter step: ${step.kind}`);
+    }
+    await next();
+  };
+}
+
+async function performRequest(app, request) {
+  const server = createServer(app.callback());
+  await new Promise((resolve, reject) => server.listen(0, "127.0.0.1", resolve).once("error", reject));
+  const address = server.address();
+  const headers = request.headers ?? {};
+  const result = await new Promise((resolve, reject) => {
+    const req = httpRequest({
+      host: "127.0.0.1", port: address.port, method: request.method ?? "GET",
+      path: request.path ?? "/", headers,
+    }, (res) => {
+      const chunks = [];
+      res.on("data", (chunk) => chunks.push(chunk));
+      res.on("end", () => resolve({
+        status: res.statusCode,
+        headers: res.headers,
+        body: Buffer.concat(chunks).toString("utf8"),
+      }));
+    });
+    req.on("error", reject);
+    if (request.body !== undefined) req.end(request.body);
+    else req.end();
+  });
+  await new Promise((resolve) => server.close(resolve));
+  return result;
+}
+
+async function main(input) {
+  if (input.operation === "app-json") {
+    const app = new Koa(input.payload.options);
+    return app.toJSON();
+  }
+  if (input.operation === "use-error") {
+    const app = new Koa();
+    try { app.use(null); return { ok: false }; }
+    catch (error) { return { ok: true, name: error.name, message: error.message }; }
+  }
+  if (input.operation === "http") {
+    const app = new Koa(input.payload.options);
+    for (const step of input.payload.steps ?? []) app.use(middlewareFor(step));
+    return performRequest(app, input.payload.request ?? {});
+  }
+  throw new Error("unknown adapter operation");
+}
+
+let input;
+try { input = JSON.parse(await new Promise((resolve, reject) => {
+  let data = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", (chunk) => { data += chunk; });
+  process.stdin.on("end", () => resolve(data));
+  process.stdin.on("error", reject);
+})); } catch (error) {
+  process.stdout.write(JSON.stringify({ ok: false, error: String(error.message ?? error) }));
+  process.exit(64);
+}
+try {
+  const value = await main(input);
+  process.stdout.write(JSON.stringify({ ok: true, value }));
+} catch (error) {
+  process.stdout.write(JSON.stringify({ ok: false, error: String(error.message ?? error) }));
+  process.exitCode = 1;
+}
+

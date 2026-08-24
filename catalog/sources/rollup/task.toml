@@ -1,0 +1,109 @@
+schema_version = "2.0"
+task_id = "rollup"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "javascript-module-bundler"
+tags = ["node", "npm", "commonjs", "esm", "bundler", "cli", "wasm"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rollup/rollup"
+revision = "89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb"
+license_spdx = "MIT"
+source_digest = "sha256:1be81f7d2cd36f7539701f6f93f107bf28eccb31a8ade43de5fd8c55137983d6"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:8c92e7fbbdcc8184d403279fc29d65d355ff0aa4669edbb684eb1390d65c2219"
+size_bytes = 439
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:8c92e7fbbdcc8184d403279fc29d65d355ff0aa4669edbb684eb1390d65c2219"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 11
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:895f08b5239989cf514e707b443c7025462e182aa3292c5f9d95ef661bd5532e"
+size_bytes = 244
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:895f08b5239989cf514e707b443c7025462e182aa3292c5f9d95ef661bd5532e"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:5adb4620db7e16958b510d53f59fdde01482a6b4ac94c25dc137c8f88382b8ec"
+size_bytes = 2342
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:5adb4620db7e16958b510d53f59fdde01482a6b4ac94c25dc137c8f88382b8ec"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Recreate a self-contained WASM-backed Rollup JavaScript module bundler and CLI from an empty workspace."
+keywords = ["node", "npm", "commonjs", "esm", "bundler", "cli", "wasm"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-direct-gpt-20260824-r1"
+reason = "WASM-backed Rollup vertical slice; exact source freeze, offline candidate closure, verifier bundle, Oracle bundle, and controls are recorded in task-local evidence."
+
+[oracle_bundle]
+digest = "sha256:f913a80afea1bdfcdac3b5ee5eb045a20928fd4290fd507f33187aac0980ca6c"
+size_bytes = 3081526
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f913a80afea1bdfcdac3b5ee5eb045a20928fd4290fd507f33187aac0980ca6c"
+visibility = "private"

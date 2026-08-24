@@ -1,0 +1,2905 @@
+{
+  "canonical_manifest_digest": "sha256:6060226a32ced678272a3cdf1643222efad269c49532c6b458051dc8982eab52",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "5c0c6cc9c986866e43f3d7e17dd984381579ccc1d8e963a30c66902b95e04307",
+      "size_bytes": 318
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "899c3e45d4a71ae005f827934f97fef4fb170988d67b2cfe52adc1d02eb4e54f",
+      "size_bytes": 7982
+    },
+    {
+      "path": "solution/package-template/LICENSE",
+      "sha256": "3b6be04f862a077a4b97929dbf247299360824d9365f8603c263769303ace18c",
+      "size_bytes": 1094
+    },
+    {
+      "path": "solution/package-template/README.md",
+      "sha256": "17c291e8a0f7fb7ab938c0dc8ccad5e010b71cf9b6727528573a0a12f11d3d33",
+      "size_bytes": 20750
+    },
+    {
+      "path": "solution/package-template/bin/eslint.js",
+      "sha256": "bb07a179294caee1175397035fef38347782cb8fbf00356ca8c6fd2c87a989fa",
+      "size_bytes": 6028
+    },
+    {
+      "path": "solution/package-template/conf/ecma-version.js",
+      "sha256": "04652399e294312c1386dc79fc9785f01907d79cef0dd53ba62d6c8983cc2969",
+      "size_bytes": 304
+    },
+    {
+      "path": "solution/package-template/conf/globals.js",
+      "sha256": "e4dd5758ab9ead9621c8ee08d0d08f9ce40f0c7a4e39f4f4e2931f5b15b551d8",
+      "size_bytes": 2630
+    },
+    {
+      "path": "solution/package-template/conf/replacements.json",
+      "sha256": "84ee7d595cbec6d69d26bf925158770e88496abe2a842e54a5626046034e9370",
+      "size_bytes": 987
+    },
+    {
+      "path": "solution/package-template/conf/rule-type-list.json",
+      "sha256": "db54b0e3fa1b238076017be60c71288c015fcb0d77b570c261130c02a76024dc",
+      "size_bytes": 2537
+    },
+    {
+      "path": "solution/package-template/lib/api.js",
+      "sha256": "d970a38ce77982fe2c68c6eef1f5f852925f63f9276c14d43033bc18c1f842a2",
+      "size_bytes": 1065
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/formatters/formatters-meta.json",
+      "sha256": "ffc02fdc67d0eaceb4d215fc9e58035a3f4da6d0c0a36a1c043004c6ef6a8b54",
+      "size_bytes": 1039
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/formatters/html.js",
+      "sha256": "95c611b2a58f4207f58866453443a9cbe8b8e3934b3405c745204fdd8bea21c6",
+      "size_bytes": 12523
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/formatters/json-with-metadata.js",
+      "sha256": "1983eb09522f35ddbbd0520a723416e39601960d140cb930ee33c66bbcefeba6",
+      "size_bytes": 392
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/formatters/json.js",
+      "sha256": "e1ef73bc85e2a658312637428245096acd32ed7715e6d0fecea4d8e950408ab8",
+      "size_bytes": 347
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/formatters/stylish.js",
+      "sha256": "391441db8d7d159689c21b16f53f4a415634ebe1293cdee92daff76a3d6ecbeb",
+      "size_bytes": 3911
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/hash.js",
+      "sha256": "776c23da95f9f0c7981de1d321263ff8825884deb82165ded352c1b647494659",
+      "size_bytes": 1057
+    },
+    {
+      "path": "solution/package-template/lib/cli-engine/lint-result-cache.js",
+      "sha256": "c62f056e6345138a9df7e0165163f5b2f1f6d928f2f4b7f68dfd38e51b66698a",
+      "size_bytes": 7233
+    },
+    {
+      "path": "solution/package-template/lib/cli.js",
+      "sha256": "27fd4a67ba1d373bcd4d72b7f422d84979b97b148d329417c0c05fbb81d43b14",
+      "size_bytes": 14243
+    },
+    {
+      "path": "solution/package-template/lib/config/config-loader.js",
+      "sha256": "fa65aa94f39e8d21824ad84675ee59022786cb5ceebf0a36053e8379b424c2e3",
+      "size_bytes": 23019
+    },
+    {
+      "path": "solution/package-template/lib/config/config.js",
+      "sha256": "1a689210588422d3cb71cb8075b9c9e6d206f5148f1239b234a9879a6528ee6a",
+      "size_bytes": 22886
+    },
+    {
+      "path": "solution/package-template/lib/config/default-config.js",
+      "sha256": "b257a73f4890e08ce3298d851971afb0ff4a06a5669ba4bd897ebde3e401b36e",
+      "size_bytes": 1697
+    },
+    {
+      "path": "solution/package-template/lib/config/flat-config-array.js",
+      "sha256": "6e35cf7ac0e915f9201e51bcb23f145660c53ab5c210f30a65053735d34938a2",
+      "size_bytes": 6745
+    },
+    {
+      "path": "solution/package-template/lib/config/flat-config-schema.js",
+      "sha256": "0281f44f3c3f2c5f138db9918dec9f2c58669f812e598488b1cf69c7ad651e9d",
+      "size_bytes": 16018
+    },
+    {
+      "path": "solution/package-template/lib/config-api.js",
+      "sha256": "b2aeda3685350b8456013f933be964dd940cfdcd1090b8c44af63f12a906f41e",
+      "size_bytes": 269
+    },
+    {
+      "path": "solution/package-template/lib/eslint/eslint-helpers.js",
+      "sha256": "ba70c76105da4536ca807c70e6758180a4c8991a0f03a0694392a60a89a8bde0",
+      "size_bytes": 44814
+    },
+    {
+      "path": "solution/package-template/lib/eslint/eslint.js",
+      "sha256": "262630433cf67ebc503bfc22b7b4d1d86e9fe6e5442a3ca721641d0c248c2135",
+      "size_bytes": 41476
+    },
+    {
+      "path": "solution/package-template/lib/eslint/index.js",
+      "sha256": "66ebeb897736fa5253171a36e9cfe319bf37ff7cde445912600b24378f86c3dc",
+      "size_bytes": 87
+    },
+    {
+      "path": "solution/package-template/lib/eslint/worker.js",
+      "sha256": "d210074b7202569396bbcb75e84c08a98088744d2fd5b6032edde3502bdb0845",
+      "size_bytes": 5380
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/index.js",
+      "sha256": "ed31b3687e9ae1740f246bfecbd5488d587d012a989220c0f8aef1203a0a4e09",
+      "size_bytes": 10615
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/index.js",
+      "sha256": "39129a5a0148916e52200e4fa1cdf37b7f5631fc66127363076647c61603c785",
+      "size_bytes": 96
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/source-code.js",
+      "sha256": "668e448ac033050cd1b87ca43a36e7636a70d7b48803a60961d17dcb1b104d1b",
+      "size_bytes": 33718
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/backward-token-comment-cursor.js",
+      "sha256": "4704df09035edf48b8831dd44a2589abe655526df23cdae1ed9bcc2cf05087b0",
+      "size_bytes": 1877
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/backward-token-cursor.js",
+      "sha256": "8ffc33d994da09afafb95b135ef512a88e6974b7db92cbcb27f94171e4b24a1b",
+      "size_bytes": 1606
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/cursor.js",
+      "sha256": "ecdadfa9b2d86d65be620cbe5547ed3ca40f5da0ee930f305d4c643878a479b5",
+      "size_bytes": 2198
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/cursors.js",
+      "sha256": "fdb74e166372132ee3aa15bd6e3bcd8a82911135a31c3458a529c061535bc76c",
+      "size_bytes": 3714
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/decorative-cursor.js",
+      "sha256": "236e6015d7e2e682563c6e99bdaeb1d598eb9c9a45358ce9c98b7a2f42b3d6ca",
+      "size_bytes": 953
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/filter-cursor.js",
+      "sha256": "769f640f85ca34cff94433e7fefb002fd0e0af33d2c4854b175c6b22c8389c33",
+      "size_bytes": 1110
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/forward-token-comment-cursor.js",
+      "sha256": "534c8784b88469b44b68f7feb7c858e7802e835f293e0e9220f7669d08591c91",
+      "size_bytes": 1911
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/forward-token-cursor.js",
+      "sha256": "0ec1161cb33f5b8542a3ef4b785cab595cb3eb941f9fd2dda599c2a62dd293b9",
+      "size_bytes": 1684
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/index.js",
+      "sha256": "15f633f8abfb6162ec97d1da6362b5ce247c7eaa56cf5730261458be055006d7",
+      "size_bytes": 21568
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/limit-cursor.js",
+      "sha256": "6153f090f90c34045752dddae078984b62d4bc795bc3ffbbeccb4cd56e0b4d14",
+      "size_bytes": 1027
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/padded-token-cursor.js",
+      "sha256": "6219e0a0bd3b052b1d7a69ed905571ac815dd37449ecafd4bfd61184d2f9dc1e",
+      "size_bytes": 1577
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/skip-cursor.js",
+      "sha256": "4b750656a1d1ee42043e214396112ca60498ddb4694897b6f5fb92a1b6481dfe",
+      "size_bytes": 1062
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/source-code/token-store/utils.js",
+      "sha256": "df5ae05e1e8361ae7ff357b04204bc5ad7fce48bc1920d3f7b1ad4a0f8988b56",
+      "size_bytes": 3872
+    },
+    {
+      "path": "solution/package-template/lib/languages/js/validate-language-options.js",
+      "sha256": "b6cf5107e2ba9cd61f88d2188e90427012d8ef6ad9b461bf1895f80cff1d4952",
+      "size_bytes": 4687
+    },
+    {
+      "path": "solution/package-template/lib/linter/apply-disable-directives.js",
+      "sha256": "a144ea4ce3620c65b097296fd71e7dace388732405809ec4e4ff330ef65f8c7e",
+      "size_bytes": 19085
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/code-path-analyzer.js",
+      "sha256": "223e9049e574939cd752684350e9c3c45c5ef015cde39e158ecd835025b4a6cc",
+      "size_bytes": 21108
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/code-path-segment.js",
+      "sha256": "0d306c16bcff69440065a2f92c01b55080bfc60fa2c53da79902ecdc62c1b407",
+      "size_bytes": 7742
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/code-path-state.js",
+      "sha256": "a2c6eccb69079bd2217d9f905b2461d4954acc295e8114a4afae7ef4a6aa96ad",
+      "size_bytes": 71730
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/code-path.js",
+      "sha256": "bd1386685b1538a6001d0e22e34f903c7a5346c59f5b729c5488971304ac3c00",
+      "size_bytes": 9738
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/debug-helpers.js",
+      "sha256": "de1321076b5b58aa1da66fd487c40f7980134be1d2f0eeceb1b3ff3638050fcf",
+      "size_bytes": 6125
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/fork-context.js",
+      "sha256": "2c6e9a25063810eb4e024f4e6991818bc076c8baef6dabcacc0284021b22a58e",
+      "size_bytes": 12317
+    },
+    {
+      "path": "solution/package-template/lib/linter/code-path-analysis/id-generator.js",
+      "sha256": "dc3eaca0266d8f828d9815289fd5987362dd0d96edbc5589fe6b8095371bb76a",
+      "size_bytes": 840
+    },
+    {
+      "path": "solution/package-template/lib/linter/esquery.js",
+      "sha256": "9df3cfc5bd0e18e30bbb3697204ee29bd39d9f3d6586aa3fa51eaff79995dabe",
+      "size_bytes": 9350
+    },
+    {
+      "path": "solution/package-template/lib/linter/file-context.js",
+      "sha256": "48e30cbc92aca50d4bbe54539f1da6c39cdeb0062d9fc67d67ed14d3efd677ba",
+      "size_bytes": 2186
+    },
+    {
+      "path": "solution/package-template/lib/linter/file-report.js",
+      "sha256": "189c6fb23036c3d87c7c20bcf2a525c4f34a53078ebf6308b760404285a2f686",
+      "size_bytes": 18563
+    },
+    {
+      "path": "solution/package-template/lib/linter/index.js",
+      "sha256": "ada3e0c54cdec48875435d74386c8a3e7b5438153ca41bc99a3a83dcd652c7aa",
+      "size_bytes": 179
+    },
+    {
+      "path": "solution/package-template/lib/linter/interpolate.js",
+      "sha256": "3df4f52eadbd14ac55a29dabaf57a45bf3d7ce05c902ee4540cca12fb1c95eb7",
+      "size_bytes": 1344
+    },
+    {
+      "path": "solution/package-template/lib/linter/linter.js",
+      "sha256": "3274e543588b0e73f2c38ec1f3f39674b37d4b6031138b9b236e04db489d84bf",
+      "size_bytes": 49203
+    },
+    {
+      "path": "solution/package-template/lib/linter/rule-fixer.js",
+      "sha256": "9bfb2de1308672f44d73e51e7c31e807f06707dc61a405e0b10f216c62e4cdef",
+      "size_bytes": 5906
+    },
+    {
+      "path": "solution/package-template/lib/linter/source-code-fixer.js",
+      "sha256": "fa739d255f50bf547ff942d492145dff8088b983e085a68b621acb6f2782bc11",
+      "size_bytes": 4209
+    },
+    {
+      "path": "solution/package-template/lib/linter/source-code-traverser.js",
+      "sha256": "3c92c60dab41a9800fee8e6c984900d55fa3db029cc7b181b2cfab78fdf95cb4",
+      "size_bytes": 9803
+    },
+    {
+      "path": "solution/package-template/lib/linter/source-code-visitor.js",
+      "sha256": "e52eca5144a035aef6e85d7f42dcbde6e0d22582db0d72dd2b96746b40ee1d83",
+      "size_bytes": 2147
+    },
+    {
+      "path": "solution/package-template/lib/linter/timing.js",
+      "sha256": "c7f8c95f29043a6dd2555c819206b6be4a070759188ff7a67ab063a63614d813",
+      "size_bytes": 4723
+    },
+    {
+      "path": "solution/package-template/lib/linter/vfile.js",
+      "sha256": "387bba52fe569cc23b7d6883bd24c1785a7edd7c60c03fb1d489caea66e480bd",
+      "size_bytes": 2808
+    },
+    {
+      "path": "solution/package-template/lib/options.js",
+      "sha256": "f92fbe1eff4908b6393262e3d5070376abbfb2aed332b757d3e7da88ab487025",
+      "size_bytes": 11907
+    },
+    {
+      "path": "solution/package-template/lib/rule-tester/index.js",
+      "sha256": "f36d367b98668691528c4e365ffb919257434b581b5c06c06c92ed0bb3239c60",
+      "size_bytes": 96
+    },
+    {
+      "path": "solution/package-template/lib/rule-tester/rule-tester.js",
+      "sha256": "4ab45c5860da7d649e7180cfdc07c8453c19ac0232fdfacdc214901d46878d9d",
+      "size_bytes": 60681
+    },
+    {
+      "path": "solution/package-template/lib/rules/accessor-pairs.js",
+      "sha256": "da2ab1dac86c01b16165bdeac7633e555a02e9c0b9fddb0e27aaa80dcab6d8bf",
+      "size_bytes": 9762
+    },
+    {
+      "path": "solution/package-template/lib/rules/array-bracket-newline.js",
+      "sha256": "06242f151bba2e6518f5d8afbc952fcd30f0904a2eea532f4de203712b67cd9e",
+      "size_bytes": 8123
+    },
+    {
+      "path": "solution/package-template/lib/rules/array-bracket-spacing.js",
+      "sha256": "1f0dad480ca0b7c76ed3e2938917909709fd27f18405b927703aa7a45a895e8d",
+      "size_bytes": 8047
+    },
+    {
+      "path": "solution/package-template/lib/rules/array-callback-return.js",
+      "sha256": "c8ef7bc2645b64aeed7bfa0d5207866d68d1fa107b90f319af1d89afe45019fc",
+      "size_bytes": 12934
+    },
+    {
+      "path": "solution/package-template/lib/rules/array-element-newline.js",
+      "sha256": "0cad8fa3b15f0a1e91e69687c7fb0f3c5cc6ca29bd8b2e49c1798f449a63bf8e",
+      "size_bytes": 9070
+    },
+    {
+      "path": "solution/package-template/lib/rules/arrow-body-style.js",
+      "sha256": "45990930172e85dcf79b3202058a14be09b5a0a2612d0bf8b709e7e1ada1fc89",
+      "size_bytes": 10365
+    },
+    {
+      "path": "solution/package-template/lib/rules/arrow-parens.js",
+      "sha256": "934061b074bbac6801e6c2901924b16c983b4001e1b9b57c6f7c99bdb9be5bfd",
+      "size_bytes": 7119
+    },
+    {
+      "path": "solution/package-template/lib/rules/arrow-spacing.js",
+      "sha256": "05409990ba0a69078a4352326cb3044e0a68269b3f01a953745876f65f6f177d",
+      "size_bytes": 4618
+    },
+    {
+      "path": "solution/package-template/lib/rules/block-scoped-var.js",
+      "sha256": "562e2cd422e2b6782b82c09648cb30cc7f0634d17030375866119cb42c982494",
+      "size_bytes": 3772
+    },
+    {
+      "path": "solution/package-template/lib/rules/block-spacing.js",
+      "sha256": "3e7c66d749afd98ba4e35e7aa7190893bf544152692e61a67148efea1c8bace8",
+      "size_bytes": 5153
+    },
+    {
+      "path": "solution/package-template/lib/rules/brace-style.js",
+      "sha256": "5ad59e14162ecca1a678fd3183566a21c6afc2fec0cf75342d53a351aa7f00b4",
+      "size_bytes": 7592
+    },
+    {
+      "path": "solution/package-template/lib/rules/callback-return.js",
+      "sha256": "826b440a8fdd716af8b72d81531087763e2505839dde2c5f98155238821fd64b",
+      "size_bytes": 5879
+    },
+    {
+      "path": "solution/package-template/lib/rules/camelcase.js",
+      "sha256": "2def1a12f55dcc6ca8262e1ec8bef516d56082d6b85a4c4de0e08c9502004d0b",
+      "size_bytes": 10363
+    },
+    {
+      "path": "solution/package-template/lib/rules/capitalized-comments.js",
+      "sha256": "c81fbedeb439151e628748b219e0adf081929cca9b71fb36accd01a05f87ea22",
+      "size_bytes": 9300
+    },
+    {
+      "path": "solution/package-template/lib/rules/class-methods-use-this.js",
+      "sha256": "156a83bcef81ceb63e33c9a71b15b59ed9cf74319fec27cd62a3a5d84ad1df3e",
+      "size_bytes": 6416
+    },
+    {
+      "path": "solution/package-template/lib/rules/comma-dangle.js",
+      "sha256": "28bc0df8a5a534fabf7d12caef77bc2e13018ed41dd21f54f29a4adb5984c0b9",
+      "size_bytes": 11652
+    },
+    {
+      "path": "solution/package-template/lib/rules/comma-spacing.js",
+      "sha256": "88ab2f1715021597e3e99e3323090afcc91303d579c80e18fcbc174ed6b7fb7e",
+      "size_bytes": 5854
+    },
+    {
+      "path": "solution/package-template/lib/rules/comma-style.js",
+      "sha256": "f23c0e62069381e65c5b5db4fb69c4f84ef0bece33cd5b6f9fee0d98bcab8d24",
+      "size_bytes": 10241
+    },
+    {
+      "path": "solution/package-template/lib/rules/complexity.js",
+      "sha256": "2d0a10b93268e29cfaefd6293153136a3864c423a20f36b89d9c6920aec3d617",
+      "size_bytes": 5195
+    },
+    {
+      "path": "solution/package-template/lib/rules/computed-property-spacing.js",
+      "sha256": "750147c003b7c01216810c54b83ff0d209f46c6d96add1bbab6912e5be8964f0",
+      "size_bytes": 6679
+    },
+    {
+      "path": "solution/package-template/lib/rules/consistent-return.js",
+      "sha256": "83dcd7a70e393ae9fec30c0ce2cadd47aea0e5efb484d350177f9092ae637415",
+      "size_bytes": 5432
+    },
+    {
+      "path": "solution/package-template/lib/rules/consistent-this.js",
+      "sha256": "278538379e7efcd1059dd2be5ac81a9a06327eb94d08af053808667138201ad8",
+      "size_bytes": 4429
+    },
+    {
+      "path": "solution/package-template/lib/rules/constructor-super.js",
+      "sha256": "5539885981d167e5e8dc86cf87f7f9d4461bb72f034e590a37f8fde94bc4102b",
+      "size_bytes": 12051
+    },
+    {
+      "path": "solution/package-template/lib/rules/curly.js",
+      "sha256": "6c6ad927d7601789c77f7028337aa9f2c871d58e0e3120d0ed8eae58ca809972",
+      "size_bytes": 11758
+    },
+    {
+      "path": "solution/package-template/lib/rules/default-case-last.js",
+      "sha256": "f72bd7f92215f1d38f32a322bbae0dcbdb66a3922c3ae3e0b4cf98769e7084e4",
+      "size_bytes": 1103
+    },
+    {
+      "path": "solution/package-template/lib/rules/default-case.js",
+      "sha256": "efa7a0b006c4e88ccd238dde2e1ad3b8f641c1b4cf8852acaade3426fd411635",
+      "size_bytes": 2311
+    },
+    {
+      "path": "solution/package-template/lib/rules/default-param-last.js",
+      "sha256": "8d08334fa69a793d34a2ff4c659737eb81d818660b8778eccad9051beea3f892",
+      "size_bytes": 1665
+    },
+    {
+      "path": "solution/package-template/lib/rules/dot-location.js",
+      "sha256": "9b9659e5a5a2a1638eae7263d28bb7d9f78227b5fc200f30b23857eb19f065ea",
+      "size_bytes": 3404
+    },
+    {
+      "path": "solution/package-template/lib/rules/dot-notation.js",
+      "sha256": "e970cf3030402ec4138437892e76c994ec1c60fcbe49af869b8d65c1592d29f0",
+      "size_bytes": 5213
+    },
+    {
+      "path": "solution/package-template/lib/rules/eol-last.js",
+      "sha256": "e294fef887a864446b76965101bc7ff7ce62892637746d869275ee238bbfb7db",
+      "size_bytes": 3566
+    },
+    {
+      "path": "solution/package-template/lib/rules/eqeqeq.js",
+      "sha256": "4d7dc86f36ea7cbf0ebdb41843daf0d86835e5ee605904512d03adb0f844e02b",
+      "size_bytes": 5310
+    },
+    {
+      "path": "solution/package-template/lib/rules/for-direction.js",
+      "sha256": "1bebbde236a953448adab355c2c9240f13a26cf633dd64856d9b6a70fe952bc8",
+      "size_bytes": 5656
+    },
+    {
+      "path": "solution/package-template/lib/rules/func-call-spacing.js",
+      "sha256": "1b900f89033b9a26162a5f2c8e090e62ee5e6db3b3bf3947a32c06ed9e8191f2",
+      "size_bytes": 8290
+    },
+    {
+      "path": "solution/package-template/lib/rules/func-name-matching.js",
+      "sha256": "2bba355aac7ff6333d3758881ec03d6b0736a9d0fe4564d5fea159a4b0519fe0",
+      "size_bytes": 8866
+    },
+    {
+      "path": "solution/package-template/lib/rules/func-names.js",
+      "sha256": "474b9467306811279cd4102ba36066f953eea97e792a996b2b729f83c01d8d85",
+      "size_bytes": 5573
+    },
+    {
+      "path": "solution/package-template/lib/rules/func-style.js",
+      "sha256": "4ba731294909b0d117155d648405e53fa3f4c34057870ac051b3f39f45cbefe5",
+      "size_bytes": 5312
+    },
+    {
+      "path": "solution/package-template/lib/rules/function-call-argument-newline.js",
+      "sha256": "c4f61297b33651809c461eea6c8c1ebbc4a063faec6c1a15fbd45eb290e16974",
+      "size_bytes": 4222
+    },
+    {
+      "path": "solution/package-template/lib/rules/function-paren-newline.js",
+      "sha256": "bfe8669aa26fb580e745c6c1aa85a52544ca6fcbd77afb1c1e86720fc5117734",
+      "size_bytes": 10198
+    },
+    {
+      "path": "solution/package-template/lib/rules/generator-star-spacing.js",
+      "sha256": "e11eb98994d8f67f9d10cc47e1af761eac710314e5fe67dd5c4c372d6846e1ea",
+      "size_bytes": 6307
+    },
+    {
+      "path": "solution/package-template/lib/rules/getter-return.js",
+      "sha256": "6f16516ad920736ccd76ccd0bf8975072b9147a14a2bd26b0892e820ae5bd401",
+      "size_bytes": 4538
+    },
+    {
+      "path": "solution/package-template/lib/rules/global-require.js",
+      "sha256": "e119beb641d1a306fd3682b860afcda2ac9ab97b2e78488cfc526023449578f6",
+      "size_bytes": 2853
+    },
+    {
+      "path": "solution/package-template/lib/rules/grouped-accessor-pairs.js",
+      "sha256": "3b9e9c09fcd6758e98bcd6a5b5c379b23a40fbab5d749d89ea21886044feab93",
+      "size_bytes": 7185
+    },
+    {
+      "path": "solution/package-template/lib/rules/guard-for-in.js",
+      "sha256": "04c8a8ea5c81627a35c7531e07f518a7bfdd46e1d95efb263867922b4c3ba494",
+      "size_bytes": 1924
+    },
+    {
+      "path": "solution/package-template/lib/rules/handle-callback-err.js",
+      "sha256": "2499982068a8f946b3ce647fa67a92a81088a15ff10a5c2f474520aa56d73f60",
+      "size_bytes": 3247
+    },
+    {
+      "path": "solution/package-template/lib/rules/id-blacklist.js",
+      "sha256": "122d104b47e13f87562f2a30ff5ba3301085f4196f04f235f185a5cfde0a0a38",
+      "size_bytes": 6700
+    },
+    {
+      "path": "solution/package-template/lib/rules/id-denylist.js",
+      "sha256": "f52153401cd9bdfa3d7ed29cff5977425c9acc4dfa6c53aa3e943792c9171461",
+      "size_bytes": 6422
+    },
+    {
+      "path": "solution/package-template/lib/rules/id-length.js",
+      "sha256": "c428a6af30308bcb7994afb89416842d5bd2e04bcbdc638913fbef174d9fd577",
+      "size_bytes": 5613
+    },
+    {
+      "path": "solution/package-template/lib/rules/id-match.js",
+      "sha256": "0ec45222853601dffbb0ec64aaa85af9f4a3648fe8bb9e10b1a07522772af3ba",
+      "size_bytes": 9247
+    },
+    {
+      "path": "solution/package-template/lib/rules/implicit-arrow-linebreak.js",
+      "sha256": "41cc4977b10f839e3636d58afed6613bb8316177ae7803e0dfed45287720ed78",
+      "size_bytes": 3147
+    },
+    {
+      "path": "solution/package-template/lib/rules/indent-legacy.js",
+      "sha256": "50c4e73147230163d46cd70f09c27ffd41cb93a1a85c38618c20058e25055632",
+      "size_bytes": 35743
+    },
+    {
+      "path": "solution/package-template/lib/rules/indent.js",
+      "sha256": "88117090e3991e7f06068037377b23ead7d9ea998b824045563cf5bebc506afb",
+      "size_bytes": 66460
+    },
+    {
+      "path": "solution/package-template/lib/rules/index.js",
+      "sha256": "ef9721dfcc03d7aaf331614e1c9b9273ae6414b63daa30572b6e28ef5895d14f",
+      "size_bytes": 17913
+    },
+    {
+      "path": "solution/package-template/lib/rules/init-declarations.js",
+      "sha256": "023cdfcef43a4e08173adcd8b737678adccedf9dce36dbdc46267e819db382e8",
+      "size_bytes": 3902
+    },
+    {
+      "path": "solution/package-template/lib/rules/jsx-quotes.js",
+      "sha256": "77bd0e827af3f3d185f1e9b0e6609f3b7f4e606200c6f5feda164df0e3ce7f06",
+      "size_bytes": 3147
+    },
+    {
+      "path": "solution/package-template/lib/rules/key-spacing.js",
+      "sha256": "af38eca85032c9ae1a9d442c9c8e28665f6e3354f2023ebf3e4e7f5d491d0ebf",
+      "size_bytes": 21244
+    },
+    {
+      "path": "solution/package-template/lib/rules/keyword-spacing.js",
+      "sha256": "e3a5f4009a447c04a3842b3cf1d6cb2c7f443879f219e4443fb58bbc726a7b53",
+      "size_bytes": 20393
+    },
+    {
+      "path": "solution/package-template/lib/rules/line-comment-position.js",
+      "sha256": "35380cb02a4c190b5128f122bbe8abf42c95d5522324e107eacfd27a2b4915f3",
+      "size_bytes": 3736
+    },
+    {
+      "path": "solution/package-template/lib/rules/linebreak-style.js",
+      "sha256": "2ed4f39e3acf223bdab9bc1f650235bb80840428443d37a9919ef1d201834ac4",
+      "size_bytes": 3569
+    },
+    {
+      "path": "solution/package-template/lib/rules/lines-around-comment.js",
+      "sha256": "2022903fa5b1cc9cb56c1e7dced6b54697b539283c4ae7e87faf7eb2497e19b2",
+      "size_bytes": 15497
+    },
+    {
+      "path": "solution/package-template/lib/rules/lines-around-directive.js",
+      "sha256": "08db981b610a5b913b41df9206da8dadca77576b70c9f0fb70fb457388096d94",
+      "size_bytes": 7023
+    },
+    {
+      "path": "solution/package-template/lib/rules/lines-between-class-members.js",
+      "sha256": "4053140c2ab611b87311499e66f0373da31c4c9df9c01c0609d095f850b7ebd0",
+      "size_bytes": 10129
+    },
+    {
+      "path": "solution/package-template/lib/rules/logical-assignment-operators.js",
+      "sha256": "01af3f8bacef54e4fed9f0cd08ff7c525a3eba5a3d4865e09374f8a63b9c3d45",
+      "size_bytes": 19046
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-classes-per-file.js",
+      "sha256": "3256cd1ac5e30b86d5b007249b721ec7224863b9383f2d2a08388ffaa976cc4d",
+      "size_bytes": 1971
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-depth.js",
+      "sha256": "0e73ba579d7ed730f701224b15aac75ac21b9a5362d072140a4ac43cdbc785cb",
+      "size_bytes": 4081
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-len.js",
+      "sha256": "0911d903096da15d70f41877dabed65e910c70897dd97a1a273c1a8e544bb55a",
+      "size_bytes": 13663
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-lines-per-function.js",
+      "sha256": "56d71813bc40134acf751e1eb7dc66eacf9e00f65c75c903381a76b1c1cc80a4",
+      "size_bytes": 6137
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-lines.js",
+      "sha256": "88db1c754f5ff68ad591ece59079ee171134d7b36151bc055bb971642990ae9e",
+      "size_bytes": 4430
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-nested-callbacks.js",
+      "sha256": "d401945b9ecc9c3787da2d9e8805ca5786db32205c1fa6d9130ccab8fa57594d",
+      "size_bytes": 3389
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-params.js",
+      "sha256": "321f432a29e73f89914a52236bbca1d58faf02838e5d332e6e77ac476b9cb549",
+      "size_bytes": 3615
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-statements-per-line.js",
+      "sha256": "72c5bae252bd9e16de0ad3558aec2d25c5d1a18901584d9558420237b492fc6a",
+      "size_bytes": 6738
+    },
+    {
+      "path": "solution/package-template/lib/rules/max-statements.js",
+      "sha256": "49cf1cbce7d2828af6c41f4327223a778accf9cd11a3e9459361c31b365221ef",
+      "size_bytes": 4666
+    },
+    {
+      "path": "solution/package-template/lib/rules/multiline-comment-style.js",
+      "sha256": "feaf5dc6fac69540183e9db5f39940b4c4172fa3f9ca898eaf1b9cffdb20f9f8",
+      "size_bytes": 18395
+    },
+    {
+      "path": "solution/package-template/lib/rules/multiline-ternary.js",
+      "sha256": "303905fb175c41c2fb269575700d6538dbbb34f2977091ac7b000c0bf19946bd",
+      "size_bytes": 6541
+    },
+    {
+      "path": "solution/package-template/lib/rules/new-cap.js",
+      "sha256": "b6fd763e19406f4f6b77f4d42aca543c56a5d7972b68dd31eeb29e5c79dc834e",
+      "size_bytes": 7204
+    },
+    {
+      "path": "solution/package-template/lib/rules/new-parens.js",
+      "sha256": "3f8d74ae52f0d9b395c00fa959d2b9d5b89aa1e14d31cdd876d5da85503275c2",
+      "size_bytes": 3167
+    },
+    {
+      "path": "solution/package-template/lib/rules/newline-after-var.js",
+      "sha256": "02cd7868794005210bea080e689fa4b5e174cb28a9084ad5e235e8a352dbec0f",
+      "size_bytes": 8852
+    },
+    {
+      "path": "solution/package-template/lib/rules/newline-before-return.js",
+      "sha256": "c5e4869e4d131b28b9a5c43da2469ce2ae3cdce8140c9c1e1a6d8d411cb51f61",
+      "size_bytes": 7126
+    },
+    {
+      "path": "solution/package-template/lib/rules/newline-per-chained-call.js",
+      "sha256": "a4722a8f2e18ed07fe704361fedded2725f8fb55fc36d88c30c54eb906d7fd38",
+      "size_bytes": 3883
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-alert.js",
+      "sha256": "964929474afb0309d66dd7a78dc95a7bd2a8617b7e25ed14f0345a2840360ee8",
+      "size_bytes": 3843
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-array-constructor.js",
+      "sha256": "2037bee4e4eb55e14c06e8aac6d73995ab66bf27329ca5a35c71c52e605e78de",
+      "size_bytes": 4970
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-async-promise-executor.js",
+      "sha256": "1add0e2c000c41ad421ca4acfdb5dac7d41bf97547101606d552d4a9cf76baf3",
+      "size_bytes": 1115
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-await-in-loop.js",
+      "sha256": "92e2551f0856ad2b60fb32a34c96a6a8192ca3fef01e52566b6a99a9843573c3",
+      "size_bytes": 2494
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-bitwise.js",
+      "sha256": "b361801180da0c97e73c88d2e9c630fe8a84eb78585ca97b5e062b64a5787b99",
+      "size_bytes": 2948
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-buffer-constructor.js",
+      "sha256": "fb5fce913b893baf34849450cfcc016cb91bc7b26865e9ec33fe8550eb8b0de3",
+      "size_bytes": 1868
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-caller.js",
+      "sha256": "432f6c7ca06adc41b73d127ad8744193ea0648daf94197feb7d5873080d8ba55",
+      "size_bytes": 1086
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-case-declarations.js",
+      "sha256": "2d829d5927b1fbc71097230023d29e00e6dd79a1ef923c02b963401c548a69a6",
+      "size_bytes": 1867
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-catch-shadow.js",
+      "sha256": "30b2589fa614cea44dadd6f1bf8db3dd37eed6c42f31685e5714982f913e838f",
+      "size_bytes": 2515
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-class-assign.js",
+      "sha256": "db75f6fa268238c2c64d55b7ebca22bd997db3bcbccdebc5abcb0007cbfaec9e",
+      "size_bytes": 1566
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-compare-neg-zero.js",
+      "sha256": "b76cfcb8d4ccab14a551c787aac27b92c999db25745e118a38296b7a8eaca039",
+      "size_bytes": 3865
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-cond-assign.js",
+      "sha256": "9b4b5edf9b3dfb81479a605075c1aa4c4bb27d71d6ffee3f730ead3fc4356ac6",
+      "size_bytes": 4837
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-confusing-arrow.js",
+      "sha256": "3381aa698b137c9f7815066d19fc46d9cc039f5cb08d20edfc64b040f3811221",
+      "size_bytes": 3232
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-console.js",
+      "sha256": "62b10c03f5969176f79328f9b75b810b65936eb688aabd806fe2e96e3810ae53",
+      "size_bytes": 6428
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-const-assign.js",
+      "sha256": "1f160f113f4bb0c48e94cf96c70b6613f8971c42019da2adf8cf4acdf0f53ed7",
+      "size_bytes": 1848
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-constant-binary-expression.js",
+      "sha256": "302351368e297cee3540f4b95df0c715b66baf6f8b74e6ebc6feee876b10925a",
+      "size_bytes": 19771
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-constant-condition.js",
+      "sha256": "80a4e43e959a395931ed7f76dfaaccc134168336d9bc3e958a7da3801f2eac62",
+      "size_bytes": 4469
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-constructor-return.js",
+      "sha256": "01b80f13afaefe5049a590d0f334bfa82edd905f7bd1f310f2a797e60a637b23",
+      "size_bytes": 1191
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-continue.js",
+      "sha256": "64697fae8b4185a7ae38f3a99b80b1374cf2062f52de0754c9457de919123a02",
+      "size_bytes": 784
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-control-regex.js",
+      "sha256": "bf3d587c617fcc89d54f7f1a0963226b66487f53070d551496dbf3a2838d788a",
+      "size_bytes": 3928
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-debugger.js",
+      "sha256": "bb73859598171fe8436877a767c41dbe96b3a8810ef921e7029fe24b9cf262fc",
+      "size_bytes": 793
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-delete-var.js",
+      "sha256": "2651e6bfd3a53ccff2b9b57971b9772fabbeb304a6c8d2327d98363c968aa133",
+      "size_bytes": 852
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-div-regex.js",
+      "sha256": "02dcc3464752896a8266613a4d8e281adf901d5bda9dedbc997fc85c98fae8b0",
+      "size_bytes": 1245
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-dupe-args.js",
+      "sha256": "63a3fc5da16046278e5ca19a5d3a1bed561c03a3dd287d9eec7e81a0dc554336",
+      "size_bytes": 2612
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-dupe-class-members.js",
+      "sha256": "835aaa945348303e11c3497f382c34d67804971aeca0b09e9ce15d6f6800c9ae",
+      "size_bytes": 2880
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-dupe-else-if.js",
+      "sha256": "ac81cbf8ee0a2bf0d8aa64fdd840dcaf74106b04a4d2f41332b00a6ddeab2256",
+      "size_bytes": 4197
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-dupe-keys.js",
+      "sha256": "412ca8069eaef098ca4a1aa7f45d8a878a788f0d7185770bd412cd819d382b1b",
+      "size_bytes": 3963
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-duplicate-case.js",
+      "sha256": "28f48a2885cb862846949773ebf4ac074afd23dccfb9cec562ea902bc7e3f730",
+      "size_bytes": 1765
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-duplicate-imports.js",
+      "sha256": "4b47ac9110743b8c8fddba8b2b971f1aaafe1c632b72522ebbe2aa0db84d1cec",
+      "size_bytes": 10009
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-else-return.js",
+      "sha256": "d1799736a709b4e4391ce718ea68d13cdf2e5cb7431ba1d04a320255b7a8c85b",
+      "size_bytes": 13605
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-empty-character-class.js",
+      "sha256": "51011b27b4c254bced104e1527dd8f288463cd96fa6ea55c5cbc092e923b66d5",
+      "size_bytes": 1938
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-empty-function.js",
+      "sha256": "991cf7bb9e55c9192779f978c580f6ee00ea32218d5d47467ed6da2ea609e43f",
+      "size_bytes": 5729
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-empty-pattern.js",
+      "sha256": "f86cd0f6734e8aa3118665da5814da21db6919dcd817a0e22571d1315219cd67",
+      "size_bytes": 1841
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-empty-static-block.js",
+      "sha256": "4afebe310f27f4cc5d03ae41a312f6b9239c0e63e223df5937733b0527eb9256",
+      "size_bytes": 1589
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-empty.js",
+      "sha256": "8bba183d0a30d84e865c969ab448e8f1f0198465b73433ddda5c4bcdbcf85044",
+      "size_bytes": 3202
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-eq-null.js",
+      "sha256": "287f357a2af217c3ded2003943acc6d52bbc59807b6d24a048d68d19ec7362ab",
+      "size_bytes": 1117
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-eval.js",
+      "sha256": "bddc96ea30f2c02931a1ad78cda39c64c48fba16ee5704bda19fa21345132ecc",
+      "size_bytes": 7744
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-ex-assign.js",
+      "sha256": "589fcebc77e7b2ebb40e593f8119e9b1e475085d7cd26fab4d92b65401e59c44",
+      "size_bytes": 1301
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-extend-native.js",
+      "sha256": "26717e9240f343712538e3d26b299d35d5e8525484d7db6ec9a23831333c78e9",
+      "size_bytes": 5416
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-extra-bind.js",
+      "sha256": "ddc076551329aec6870aa938e9265fda591046e28e0c89229856535259a7acc7",
+      "size_bytes": 6007
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-extra-boolean-cast.js",
+      "sha256": "7693b5e9d86ead9ddc32fec8f8bbee07b3921e0a49b81350e15075a24c21a92d",
+      "size_bytes": 10690
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-extra-label.js",
+      "sha256": "59ec416aa0782f4eb64969ca66563ea121c1c2df2cf47a935f4ef7b2f8e5830e",
+      "size_bytes": 4265
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-extra-parens.js",
+      "sha256": "bbb6d4342dac76d86c83a7d87cad345f77adea03746ba6dd69ece2165c52cbe3",
+      "size_bytes": 43590
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-extra-semi.js",
+      "sha256": "047b18c0307f0e6f47a22a28900497eacdb3cf2df4f08b7824fa99cbdc96e141",
+      "size_bytes": 4628
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-fallthrough.js",
+      "sha256": "8b8c4d4886a9e383ebd35a8e70ceb28838839d82d8394f7c7b2fe0ec334bcfdb",
+      "size_bytes": 6672
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-floating-decimal.js",
+      "sha256": "f4e961d247a206756aaa93b65d2ed754b5023074ea958b070c61f67dbc9865d3",
+      "size_bytes": 2568
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-func-assign.js",
+      "sha256": "39413b4191c68ce6f0295addc7679ddeba0aff351451b3fa3d7b5ddb0ea9af80",
+      "size_bytes": 1861
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-global-assign.js",
+      "sha256": "00daec62a1314e4a190f9a702d080ba5ca2ee8c45b2a526be31ad8a69c277011",
+      "size_bytes": 2426
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-implicit-coercion.js",
+      "sha256": "779d58d444e8f584deff6f65b273a5330559c182f241cfe84ac8e2c6b42252b1",
+      "size_bytes": 13174
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-implicit-globals.js",
+      "sha256": "10f7df92ac90adfbe3e0c0ae805318952b011228b42a5ca1b1d9f013b9ae2dc9",
+      "size_bytes": 4626
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-implied-eval.js",
+      "sha256": "98d073f062ee29babdc90b19272b567bab129e182dcef0afbc4ea858d3c8c1bd",
+      "size_bytes": 4350
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-import-assign.js",
+      "sha256": "b30d49ba0196d4f47f7f02b1427feca6e9baa74d223bb542d60f24492091d12e",
+      "size_bytes": 6179
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-inline-comments.js",
+      "sha256": "380ea1b7a506f168010ad1baef63d213097c300ad8fd6ff26684fd4a5695caec",
+      "size_bytes": 2691
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-inner-declarations.js",
+      "sha256": "692680d2c61f288bb6befb50d797cfd69a021d60d3806097c5f592ed9623a20c",
+      "size_bytes": 3221
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-invalid-regexp.js",
+      "sha256": "88ec5caa821defd0359ecf13681a1e85715054f691f0e1367b389325b542fbeb",
+      "size_bytes": 6079
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-invalid-this.js",
+      "sha256": "f40c5211a7fa31ff664df1aee0c16e808f35163a5e5f466e2ce1a4974a8991be",
+      "size_bytes": 4463
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-irregular-whitespace.js",
+      "sha256": "3d75999531370211f9b6818f202c0d0c58faada3d99c52e47ab08f57848a653e",
+      "size_bytes": 7853
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-iterator.js",
+      "sha256": "93b4d69a1481bb4460bfd288d1abec714909e47862f400e317909b06af67571a",
+      "size_bytes": 1110
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-label-var.js",
+      "sha256": "a7b66ae68f1ee54b0332d1342ad9ed7295469944fc781ff8b1afd0b1ebc97a69",
+      "size_bytes": 2063
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-labels.js",
+      "sha256": "6c1495842054e784faf61e78384600b1c796d720244487808bca3fc2e475f780",
+      "size_bytes": 3365
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-lone-blocks.js",
+      "sha256": "9b365aab52aa221c93ec5dc3162672ff3f27618faf0eaa200b8ad50b8b1905e6",
+      "size_bytes": 3320
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-lonely-if.js",
+      "sha256": "714197fba8a14e329bf2876c19e68ad96d940f63ba8f5724d33227ceb9ae6461",
+      "size_bytes": 3303
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-loop-func.js",
+      "sha256": "a9a6bf4168fd5354e3373a8e5c43881736748063905c2d77f0bdc24df4115f2d",
+      "size_bytes": 7218
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-loss-of-precision.js",
+      "sha256": "2ff3fe93d5d610e484a20b26cd66e3f8bb22696a7ab70dd98ebd3718bf6d458b",
+      "size_bytes": 7441
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-magic-numbers.js",
+      "sha256": "5a2801a3f4660cfbc2308d28bf8e7b87febd83293838a302837ae587daa62f97",
+      "size_bytes": 10419
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-misleading-character-class.js",
+      "sha256": "11bb93cb15d541c646d63c20bdb2d3bcdfec72e4c2aa831516a401c5256905cd",
+      "size_bytes": 16369
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-mixed-operators.js",
+      "sha256": "b412698d27292358a0ed5cef2fd193f8a85e8f22d87ee1e71e91f3a4236c10d1",
+      "size_bytes": 7147
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-mixed-requires.js",
+      "sha256": "a272997bad9ed089f35ec39de7a2dac1b76cd9d8399a39e1d776ba96b6f764d3",
+      "size_bytes": 6383
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-mixed-spaces-and-tabs.js",
+      "sha256": "b76f36e9785afbb3efb77381dc342bf0d804b7548e8ca8804a5a979395c6a658",
+      "size_bytes": 3443
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-multi-assign.js",
+      "sha256": "0e7ab3d6f5c7c6fb8abda97b294fbe89117cb10839b0a10d1f2d6697599bf70f",
+      "size_bytes": 1327
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-multi-spaces.js",
+      "sha256": "353eb154626d0b61d9eed6b5346bc01db616292db29c0a1f0b64d2d791f6bc6e",
+      "size_bytes": 4588
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-multi-str.js",
+      "sha256": "fa03672f6fd7f84726e373ad56c3e0a7055fdab8ab936b2d4924d5998355e941",
+      "size_bytes": 1610
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-multiple-empty-lines.js",
+      "sha256": "3dce0387f35c7c334322ff2b7fda0a8e0cd3f83a2df1e3536683a90eebcca3f6",
+      "size_bytes": 5581
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-native-reassign.js",
+      "sha256": "0c55a743ed6aa5e34b058cab68ba8f0e2c3f134066f9011213e5d5c047d2bf1a",
+      "size_bytes": 2765
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-negated-condition.js",
+      "sha256": "6a3333b3c1c3a561e539125475982fd2467893e921ce123297b07cef369f9c8b",
+      "size_bytes": 2431
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-negated-in-lhs.js",
+      "sha256": "1ff50d0eb871c62e35bd68ddf1369d352cef0fd8592e1d79dca62c3324635319",
+      "size_bytes": 1338
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-nested-ternary.js",
+      "sha256": "0c9a65ed7c104e3444ee9c4dc5ddbd5a38360fc0e1485ff44e8adf92c5560ced",
+      "size_bytes": 960
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new-func.js",
+      "sha256": "87fcd377d69f76808e472e7be25b976dc77b8b64a447a26801bcf7a4e7925654",
+      "size_bytes": 2393
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new-native-nonconstructor.js",
+      "sha256": "9942ccea71dd64367cb4217cd83492e271dc6acbdfa3c162c3b65d1266777553",
+      "size_bytes": 1754
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new-object.js",
+      "sha256": "50764b66248b94b0feb1fcce23340868c7913ce16302e3fe7637759c0041796d",
+      "size_bytes": 1866
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new-require.js",
+      "sha256": "a6570aa241cfd710de684b3ecf24c96e3b5285cd0e9ed8ed304c4c957ac07279",
+      "size_bytes": 1588
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new-symbol.js",
+      "sha256": "c6b90ed324360e74c703ee34391ced2b463608de5a39a78f7c23a7c548c38cdf",
+      "size_bytes": 1739
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new-wrappers.js",
+      "sha256": "8ec49a7c6aa35284c448a1af764c5775f1fd1d1ab618136cd579391936823710",
+      "size_bytes": 1460
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-new.js",
+      "sha256": "e4a7db49da6cf4b32c8f7551f09e6917d02bc1f4b870160df2dc3a0ee56509a0",
+      "size_bytes": 905
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-nonoctal-decimal-escape.js",
+      "sha256": "72ff9f26be474cfe22d7a5e14057003faf2af642859238e228c863930006e1b6",
+      "size_bytes": 4566
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-obj-calls.js",
+      "sha256": "f5718292556a5dfdd6af30fc845059f8a7bb9a9f1c83d01ac47c3ea47da796b8",
+      "size_bytes": 2487
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-object-constructor.js",
+      "sha256": "87ded7b6a4f26611585691845db98c2d25a132abdf148340b2d35b4f89ef8b00",
+      "size_bytes": 2923
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-octal-escape.js",
+      "sha256": "630832592ab4f709acc17b5898ef41ac243efece3c24182bf6f6911746c0618c",
+      "size_bytes": 1175
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-octal.js",
+      "sha256": "42688b7c179deed3b6cfc32bf8758e5f043bd9cd1ffb39113388cf06eeacaaa4",
+      "size_bytes": 832
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-param-reassign.js",
+      "sha256": "656a39dc153a27e58f24b8a64b74bea730fbf0bf8197fa9b9eb7a834ddbd6795",
+      "size_bytes": 6363
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-path-concat.js",
+      "sha256": "ce54d18755b08c59bbc03ea2a3f9f63f9fc09c5409a9228218fa2fbe72d880c0",
+      "size_bytes": 2012
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-plusplus.js",
+      "sha256": "9f0ef24499d53923dbc1df3323a4601f139a6b090b7c7ad7926da447d37b989a",
+      "size_bytes": 2672
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-process-env.js",
+      "sha256": "bb7911759388ab28f0a606937690aca2039ee397fb0c0117074bb0e591a2355d",
+      "size_bytes": 1646
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-process-exit.js",
+      "sha256": "69686c757eef9e65bb20fbf345f714fe2d93a0305742a4dcac85444d8b3fd3d8",
+      "size_bytes": 1735
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-promise-executor-return.js",
+      "sha256": "381c8a1de4ecd476820a33950df6d5c540a9f24ccbcaa64ab7f06785b6abf65b",
+      "size_bytes": 6718
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-proto.js",
+      "sha256": "6b748de13051bbfb539df4b7d9ee7bee276056e90431e743b997667cbb29696c",
+      "size_bytes": 1093
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-prototype-builtins.js",
+      "sha256": "9e980172bb9b9d8c1a053a59c29001570fb25c51008e9032979e6ee7a70fd255",
+      "size_bytes": 4721
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-redeclare.js",
+      "sha256": "13695f84fcf1978a1d8563903c89bc81b0e07c485e90c62ba9e3be7dd0d6a99e",
+      "size_bytes": 4425
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-regex-spaces.js",
+      "sha256": "25659d946f117312c60106a1449d598805e77ee6ed019cff5dfa9876f76665c3",
+      "size_bytes": 5276
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-restricted-exports.js",
+      "sha256": "d795b34ecffd35e206909ee789ab4bdbde3e0f056302aa45791622e8f1085846",
+      "size_bytes": 5548
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-restricted-globals.js",
+      "sha256": "5f3c64c1cd11f8cc502bb478207045fd0aad13f60ecdcb6aed8cb0399274685f",
+      "size_bytes": 6204
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-restricted-imports.js",
+      "sha256": "69f543330f74d2386ddf729ac1103cef4ea9bd777f42d23de286ccc6f349dbfd",
+      "size_bytes": 25239
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-restricted-modules.js",
+      "sha256": "74ef733b000095d1f1e44dddce9891018d9c72d9d1f541313eea6eaf23350028",
+      "size_bytes": 6128
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-restricted-properties.js",
+      "sha256": "ae057b0fee428db1b5ef56161400568953af01d9794c57fd44ed5615c35e57f4",
+      "size_bytes": 5971
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-restricted-syntax.js",
+      "sha256": "c85343aa1bf6a8dc8db045e93ef4b4b072ae6f1d03fe8f4e93d5960607be4e21",
+      "size_bytes": 1721
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-return-assign.js",
+      "sha256": "5bf2c99b34b9547c79a8fef52c007d2529e7ad5be49f4975389fe0033eac179e",
+      "size_bytes": 2259
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-return-await.js",
+      "sha256": "18f2c1d0140bed24cf1bee9755f48e340867ef237bbb3d909d7f4315de2cc030",
+      "size_bytes": 4457
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-script-url.js",
+      "sha256": "2e6004e2a260e703798829062c1f09005e5fd077f57e0e158c7ce3d0e914a23f",
+      "size_bytes": 1498
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-self-assign.js",
+      "sha256": "3431884a2e4f041efca83d9f9b93091b4ddcd3eb3466da84819cb8db80cd2ac3",
+      "size_bytes": 4666
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-self-compare.js",
+      "sha256": "af355aa2592d4cf717fece11ac34be5604d42a4d5b85c5bdcb1bd51f140fd75b",
+      "size_bytes": 1705
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-sequences.js",
+      "sha256": "0253893af724e6c48ca0791ab0150e4ea4b1485f090f70ed699671f75e704a17",
+      "size_bytes": 4011
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-setter-return.js",
+      "sha256": "6a8ea1926db035d3393701f885940c15ae04d6ba3ba412533cee44d34f1b8e6b",
+      "size_bytes": 3706
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-shadow-restricted-names.js",
+      "sha256": "161b64859585ef8939625b1ec297ca46814816020b9e46592f20d51046b13f7e",
+      "size_bytes": 2671
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-shadow.js",
+      "sha256": "005ba963c87237c1c326152c9a7ea49b85742affe5abc75c15959b38e102e78e",
+      "size_bytes": 19509
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-spaced-func.js",
+      "sha256": "11c86d4423293458ce990eb584d4f6eef6b04b01cc9d204d1b486b02a241b7a0",
+      "size_bytes": 2597
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-sparse-arrays.js",
+      "sha256": "08c13b8f2626c6130794084ea10b7fb511cbe5c73583beed7c9f3e3be4eda44b",
+      "size_bytes": 1483
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-sync.js",
+      "sha256": "99844c718aa205493c6940c1b46bac5fef297517a015ad7f037e6e736e2acd15",
+      "size_bytes": 1887
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-tabs.js",
+      "sha256": "c0c8e6c8ea9db16fd6af2358f1160d1ec88b91188f9c0e0f6e9f89890f231d7d",
+      "size_bytes": 2449
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-template-curly-in-string.js",
+      "sha256": "9f7f421bee433b2863b37211b20b073f729af249094af0fea404a924b629495a",
+      "size_bytes": 989
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-ternary.js",
+      "sha256": "e89729d12e76d5f288d02c510fda5ea0f7c9e5c1a4646aabb64662ae555686b9",
+      "size_bytes": 785
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-this-before-super.js",
+      "sha256": "d129b1d1cb9417c03494d4cf59f9ee45fd920224dc2e4bd89a6b5306dbe1d84d",
+      "size_bytes": 9022
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-throw-literal.js",
+      "sha256": "c4b11362c5c5813cd7b2e016ec6f2505b45c1d0f6482416832add6a38dac1174",
+      "size_bytes": 1196
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-trailing-spaces.js",
+      "sha256": "2a21ae9a0e4dab504ff1cc04a70c0b37f98cd0e2185a16690e8b8c51aaa566d0",
+      "size_bytes": 6110
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unassigned-vars.js",
+      "sha256": "e03eb47e27307171257960759d9c882f7d2a88770990d01ddf00bbbb2e2b92dd",
+      "size_bytes": 1938
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-undef-init.js",
+      "sha256": "971c490370c831ee57ab09c05de018e443e71fe7908812e0901c41f4cf03c0aa",
+      "size_bytes": 2409
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-undef.js",
+      "sha256": "fae5c7b864efe2f4a23c99e07823a491299ccfc6b6ef9c9173ac47da85298858",
+      "size_bytes": 1899
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-undefined.js",
+      "sha256": "163cab5d44438c2653dbc86f05d716e94aaa7b619014c7d48dd59dbc5b50eaf4",
+      "size_bytes": 2074
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-underscore-dangle.js",
+      "sha256": "a4154d407c6a92d307e30d093f7427ede8888957d7dbf91dd3c5b67564ff6be6",
+      "size_bytes": 9535
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unexpected-multiline.js",
+      "sha256": "49f32b2d2382f3f7ea64bbadef71a0773c0b33d9556402314d6c40423b3d510b",
+      "size_bytes": 3477
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unmodified-loop-condition.js",
+      "sha256": "32d78523da00e1bfdf8b87e9e25badac3b6a2f7a916bb84a04d0e1761b18b669",
+      "size_bytes": 10790
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unneeded-ternary.js",
+      "sha256": "cbf22b11d1e168b6bf2a7a7b54eb6fbe1c17f75aaba5b8d0908474c961a9cd02",
+      "size_bytes": 5935
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unreachable-loop.js",
+      "sha256": "7f3c2b97cbb13fabd23dd92d53dcee4e96b382c45806fb2ee2643b40428ec5ba",
+      "size_bytes": 4840
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unreachable.js",
+      "sha256": "4cd53fcfa5be070d50aeaae22fc59f721c60c0608d30a72a758b6aa879cb630a",
+      "size_bytes": 7371
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unsafe-finally.js",
+      "sha256": "8ff07d01ac9da68b9254332be2a55d11354250dea72506da0d29517ef6345588",
+      "size_bytes": 3339
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unsafe-negation.js",
+      "sha256": "0c03570f34148eea96e0d6d79ba756c56b59c4f15f4cfc1780272f98522235d9",
+      "size_bytes": 3972
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unsafe-optional-chaining.js",
+      "sha256": "5b069df4812099a64413b95c23fc62a156c7ba55567ba033e56e3050ed3a7846",
+      "size_bytes": 5389
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unused-expressions.js",
+      "sha256": "144a77d45fc1a1419376a2ac12b83447b7cde93f9cc35a1de74723b3b68f036e",
+      "size_bytes": 5495
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unused-labels.js",
+      "sha256": "8248b04a5dbd9806a3111b30e428a1889d82da4cd5bca28c97ac7683dfd9a42d",
+      "size_bytes": 4458
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unused-private-class-members.js",
+      "sha256": "a3325a7168a6a8221b5f9985b23eabd0f7d78c48458a0cc6fb611745c9305f0f",
+      "size_bytes": 12644
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-unused-vars.js",
+      "sha256": "5cdb5a78f7671dc941150194abeb88d3b39a8780f48f786f0632981ad881f222",
+      "size_bytes": 51395
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-use-before-define.js",
+      "sha256": "4d8b3e96b8da1773c6666219f3d717217911e6f2e542941a144a75f816a61cd9",
+      "size_bytes": 12076
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-assignment.js",
+      "sha256": "c1e1168e2c6e932cc9e4c6260101a9f8d08b82fcb89bf463ad2a0576e498d08c",
+      "size_bytes": 19487
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-backreference.js",
+      "sha256": "b51811549af15262ff60c357ee68ddfbeb7b5c05bc2ea60faca1474ab7eae79f",
+      "size_bytes": 7662
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-call.js",
+      "sha256": "f474dc02a615df8aa060cd0259bbad5937bf91d4f4a15a537f4df5654bf14c71",
+      "size_bytes": 2779
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-catch.js",
+      "sha256": "d044fcee756366ff186d7e7f113616dd122523a244b254dca687255ea3e35685",
+      "size_bytes": 1310
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-computed-key.js",
+      "sha256": "d967bd83fce691331625dcdcbe46fe75da8901fc1114127d7818591e56b5a2cd",
+      "size_bytes": 5936
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-concat.js",
+      "sha256": "128f7c7eed7e5f4f42e40c86189eef1d64a232f28a6388fc867cd1324859a64f",
+      "size_bytes": 2964
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-constructor.js",
+      "sha256": "f8b6ac3e6562eaf7e7febe44a4e64554368a3c7b1ab21fe637e8ca5f736fc761",
+      "size_bytes": 7190
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-escape.js",
+      "sha256": "819fbc0c2139e074f91243eef052860140f25e09e994cf262e738e6b7ed56ca8",
+      "size_bytes": 11059
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-rename.js",
+      "sha256": "64caccdca8f806efbbf15438bc7f17631881e38a11f706cf18d68ae4b4ba07d4",
+      "size_bytes": 4929
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-useless-return.js",
+      "sha256": "af0bb317012db3a0ecf5bb14cde1709ae326c8f6e78c16bc0236ca6a1e71edd2",
+      "size_bytes": 11660
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-var.js",
+      "sha256": "af57fe7bbbdcdd016d8ed177ce8d257ef9b84964b2ebc4bd538ca1e0c6c1a2f2",
+      "size_bytes": 15823
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-void.js",
+      "sha256": "b845c4f98668c4a0818673f79b186981cb6e3acce7b26821ad3c994b7e6fb35b",
+      "size_bytes": 1366
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-warning-comments.js",
+      "sha256": "68ca892a464a809256d8554514a8730ca687acdd079aaa167f5fd8e77a9adc49",
+      "size_bytes": 5670
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-whitespace-before-property.js",
+      "sha256": "1186f55944b34efce1762a53c2558d818228710dd12f00ea00e8dcfd4e9cb117",
+      "size_bytes": 3877
+    },
+    {
+      "path": "solution/package-template/lib/rules/no-with.js",
+      "sha256": "0640f2711d4e1fc7e6ee7a757082a27a060975ce790c1d298d159d8c210ff43a",
+      "size_bytes": 860
+    },
+    {
+      "path": "solution/package-template/lib/rules/nonblock-statement-body-position.js",
+      "sha256": "b0da640ccaf74a6052a774928d0eb7162337832469fc9404bf16281ed02867d7",
+      "size_bytes": 4418
+    },
+    {
+      "path": "solution/package-template/lib/rules/object-curly-newline.js",
+      "sha256": "4f47bc6940a776e460b97f7f7a59688e97cc51582af574a3f0ced412ee0138a4",
+      "size_bytes": 10115
+    },
+    {
+      "path": "solution/package-template/lib/rules/object-curly-spacing.js",
+      "sha256": "3b9dc2de86c1ad76b83b0bca31ab8d9175e988e1778cadda38e999928f03749b",
+      "size_bytes": 10353
+    },
+    {
+      "path": "solution/package-template/lib/rules/object-property-newline.js",
+      "sha256": "b695ca0ab02f588f4e3bf8a393b40769de648eaab3339c48995167a7de7dedc0",
+      "size_bytes": 3758
+    },
+    {
+      "path": "solution/package-template/lib/rules/object-shorthand.js",
+      "sha256": "fc70ca4245d9da794059480bedf66a682cdc2b801e706933368964328d1cd2a0",
+      "size_bytes": 18556
+    },
+    {
+      "path": "solution/package-template/lib/rules/one-var-declaration-per-line.js",
+      "sha256": "7659f97c074c2cb0acf23c2c2542372762b99168866ba4ecd20961b9a96e63bb",
+      "size_bytes": 2995
+    },
+    {
+      "path": "solution/package-template/lib/rules/one-var.js",
+      "sha256": "3c937dedbf618f137d9681fcb0c789e73e752bb8210ae69d04e4e2cface2b15c",
+      "size_bytes": 19198
+    },
+    {
+      "path": "solution/package-template/lib/rules/operator-assignment.js",
+      "sha256": "051a74443824effed4083c7e012b4dad1edd0e992873f26c6b2bf52877b93c76",
+      "size_bytes": 7536
+    },
+    {
+      "path": "solution/package-template/lib/rules/operator-linebreak.js",
+      "sha256": "92feda5937c134765c49d7615ace1177cd97b470f19ef01885a100411ce62320",
+      "size_bytes": 8901
+    },
+    {
+      "path": "solution/package-template/lib/rules/padded-blocks.js",
+      "sha256": "cf7bbfa12a2d393fc222ef8436af8ee38f669140350abc693f8ce9b083d23862",
+      "size_bytes": 8910
+    },
+    {
+      "path": "solution/package-template/lib/rules/padding-line-between-statements.js",
+      "sha256": "d78bec638807d0bd2d2f3879deb7c049069095c95c1f072991f52ebcb804327b",
+      "size_bytes": 16984
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-arrow-callback.js",
+      "sha256": "50423b76765bb63d166ef2fc124fdd1a8a82963a4a4afddec43c1c2dd0ecac22",
+      "size_bytes": 12053
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-const.js",
+      "sha256": "df91352466a3036142909b371742be0635c041f9e7390ee153f0c1420ece251b",
+      "size_bytes": 16061
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-destructuring.js",
+      "sha256": "da8e8f29cdb37154ef9cedb1effdd138de77663f933e711d9ba5c354cf9dfbcd",
+      "size_bytes": 8931
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-exponentiation-operator.js",
+      "sha256": "aa2103716733bdb1824c680848278b74ee188675e024af3a7f19c8fc7ddce5eb",
+      "size_bytes": 7801
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-named-capture-group.js",
+      "sha256": "8605bcd5c0ecb642cfb11c2b4c217524306742026f5ae55d2c9924eeac353d94",
+      "size_bytes": 5048
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-numeric-literals.js",
+      "sha256": "b7c97731aede6caf0f8473a2b137c8c7c944af2f071f48b7ee4234ac3faa6c2f",
+      "size_bytes": 4777
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-object-has-own.js",
+      "sha256": "71aaa870c98c1dad3f188de44bd7d4b98e815628e373e91f827d85136909b506",
+      "size_bytes": 3790
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-object-spread.js",
+      "sha256": "a644e08e65ada1d3323defe5f780a49c3ae1580342ed75051253ba9c6bebc282",
+      "size_bytes": 9681
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-promise-reject-errors.js",
+      "sha256": "c849f41ca5817b56ce21f207522975abc94fa068e6796e4172c81a34b82916e7",
+      "size_bytes": 4853
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-reflect.js",
+      "sha256": "28ab04d08b3f33887970d075c7dde69e3fc29cdcb8403e28089c54da3d320edc",
+      "size_bytes": 3828
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-regex-literals.js",
+      "sha256": "da2ee6d13a309b8209d58db63e065bcc3da7fe0c90306e4f9d807a20089483f1",
+      "size_bytes": 14379
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-rest-params.js",
+      "sha256": "37eb4c28f220c307667bb217f49d7ae463a432ac0da82110c8526e9fc3e53273",
+      "size_bytes": 3326
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-spread.js",
+      "sha256": "8a8ac30263797a77504b1e6046fe84afcfc58ae7a9bb3365afc619e7de73e9ec",
+      "size_bytes": 2555
+    },
+    {
+      "path": "solution/package-template/lib/rules/prefer-template.js",
+      "sha256": "4d1efc32e17fb7ce3bf1a8daf6a98964dc1add8507125d72222798ab2be8d6dd",
+      "size_bytes": 10723
+    },
+    {
+      "path": "solution/package-template/lib/rules/preserve-caught-error.js",
+      "sha256": "8c18e789abd7ee8e01771395261222e00627232e5ef08bc468742c8997922802",
+      "size_bytes": 20746
+    },
+    {
+      "path": "solution/package-template/lib/rules/quote-props.js",
+      "sha256": "6ba7b19ce3a36b5aebbe46f494e865ddcd060eeec1bff119c08778d0b6487d48",
+      "size_bytes": 10129
+    },
+    {
+      "path": "solution/package-template/lib/rules/quotes.js",
+      "sha256": "d907645f250513779e9fcb734f2bf6bb1059528edc82a5f62b3f6ab2354aa7c2",
+      "size_bytes": 10926
+    },
+    {
+      "path": "solution/package-template/lib/rules/radix.js",
+      "sha256": "95deacabf93811bbc88763c34515c7560fd2d08ad9e75371f973273ccbdbf0ee",
+      "size_bytes": 5157
+    },
+    {
+      "path": "solution/package-template/lib/rules/require-atomic-updates.js",
+      "sha256": "2fe8062919d551afe59c82ae67719d274d729319708aea2f02b8658818505173",
+      "size_bytes": 9293
+    },
+    {
+      "path": "solution/package-template/lib/rules/require-await.js",
+      "sha256": "537bbad8b22432421fb1988b6928cb0c14a2e2ba712bb7bfcc207d5e28ae2a8b",
+      "size_bytes": 4597
+    },
+    {
+      "path": "solution/package-template/lib/rules/require-unicode-regexp.js",
+      "sha256": "12f00e5206f2999c53feeae81bb4b7d73f9d66fe380a0f87f76a16f521af0a01",
+      "size_bytes": 7765
+    },
+    {
+      "path": "solution/package-template/lib/rules/require-yield.js",
+      "sha256": "17d500b073eb537c5155fa1547aef3c5c61e471392498533fac69ef8212b1534",
+      "size_bytes": 2047
+    },
+    {
+      "path": "solution/package-template/lib/rules/rest-spread-spacing.js",
+      "sha256": "ae34e0e44b03ab8c4c9519b9134dc604f7f79164b165a76b491b8aab796bebb9",
+      "size_bytes": 3716
+    },
+    {
+      "path": "solution/package-template/lib/rules/semi-spacing.js",
+      "sha256": "47e10b8a9a7d0f74fca5c805871ebde32f57f8fc9232916bbf56d3b68e63a717",
+      "size_bytes": 7372
+    },
+    {
+      "path": "solution/package-template/lib/rules/semi-style.js",
+      "sha256": "0225ba743ce0906f2956d45c5e4eb2e8af7b2ba42afde1f7fe75accc29963842",
+      "size_bytes": 5246
+    },
+    {
+      "path": "solution/package-template/lib/rules/semi.js",
+      "sha256": "6a58b0a32d86013030878a63d2764c5eebfadb8c6746eb1f925bf0f07a5e72ef",
+      "size_bytes": 13324
+    },
+    {
+      "path": "solution/package-template/lib/rules/sort-imports.js",
+      "sha256": "267354eefb3c0a5234dc60a123ebcb566cf8141d6410cff746f56154e63f1a46",
+      "size_bytes": 8603
+    },
+    {
+      "path": "solution/package-template/lib/rules/sort-keys.js",
+      "sha256": "4becf7e063962c2ad6011b552afb123a5300354eee9bef3703f87831b8b306af",
+      "size_bytes": 5880
+    },
+    {
+      "path": "solution/package-template/lib/rules/sort-vars.js",
+      "sha256": "fb99c26209247cf8104d1e117bfcb42ee277cdaf0ef228a1e54b0adaf7114cd9",
+      "size_bytes": 3320
+    },
+    {
+      "path": "solution/package-template/lib/rules/space-before-blocks.js",
+      "sha256": "2dedb902e025a9d14db64eb3ff0e4c7180835245aa83d3b19f092a7752c32acc",
+      "size_bytes": 6322
+    },
+    {
+      "path": "solution/package-template/lib/rules/space-before-function-paren.js",
+      "sha256": "86e0258f49c9dd394a81ebc7bb828b475c0328caf1d33daaf07e73353d4672e2",
+      "size_bytes": 5233
+    },
+    {
+      "path": "solution/package-template/lib/rules/space-in-parens.js",
+      "sha256": "bc35c6b0a97113f260573f1b39246bfe85934cabd1393b8bb92f662291960454",
+      "size_bytes": 9290
+    },
+    {
+      "path": "solution/package-template/lib/rules/space-infix-ops.js",
+      "sha256": "52633b7b063b735321ef9ddf64fcb86e78f9c7ae9850fae7e7f5dc4e4f63d3e6",
+      "size_bytes": 5846
+    },
+    {
+      "path": "solution/package-template/lib/rules/space-unary-ops.js",
+      "sha256": "1a93106d512a1d7f170a878dca0505960aa18723ea4617cd205892027e28ae35",
+      "size_bytes": 10644
+    },
+    {
+      "path": "solution/package-template/lib/rules/spaced-comment.js",
+      "sha256": "1606b4359a0c07045365fd16669f6d934dae8873be1a791969c67d1a00498b8f",
+      "size_bytes": 11246
+    },
+    {
+      "path": "solution/package-template/lib/rules/strict.js",
+      "sha256": "7dceb162e8b2710119a6ae2bd653d2c4582e16916745eaa004a3f5d0ff6ecb88",
+      "size_bytes": 9361
+    },
+    {
+      "path": "solution/package-template/lib/rules/switch-colon-spacing.js",
+      "sha256": "db5ee19a3b02c9adaaffb725ec6e84ff321a555ad6a490e5ff6158c5722fe127",
+      "size_bytes": 4695
+    },
+    {
+      "path": "solution/package-template/lib/rules/symbol-description.js",
+      "sha256": "14d12fbe3764c250ccfc5a5c6abcbcc23c764592ef283181e0977b72d1602e01",
+      "size_bytes": 1701
+    },
+    {
+      "path": "solution/package-template/lib/rules/template-curly-spacing.js",
+      "sha256": "2936da8616baa5350852e95164f6cb0a7c32e6b667bacc7770f0dcb0ddbc365c",
+      "size_bytes": 4337
+    },
+    {
+      "path": "solution/package-template/lib/rules/template-tag-spacing.js",
+      "sha256": "c4e68209bc18318dcfad8b3225351132b54cf491f5e95e2f4680866c6965bfb1",
+      "size_bytes": 3053
+    },
+    {
+      "path": "solution/package-template/lib/rules/unicode-bom.js",
+      "sha256": "d33108d35f90239c089f46fdbb712511e10aae16699bfaa454669a300a3fd626",
+      "size_bytes": 1716
+    },
+    {
+      "path": "solution/package-template/lib/rules/use-isnan.js",
+      "sha256": "f69ff3e4bb58439d66edc5db0a9c5e8372b77615891b4625f7f9dca4fa1f5fa8",
+      "size_bytes": 7490
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/ast-utils.js",
+      "sha256": "fed8140dae93c64ec62d876ed586e05ed3dab25858b4ad74a32c02ffbb89bf48",
+      "size_bytes": 85701
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/char-source.js",
+      "sha256": "9917a9aa8cc22dd899d160280ea635c7220ea81b5a64d78aea82301201211edf",
+      "size_bytes": 5905
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/code-path-utils.js",
+      "sha256": "fee922bb0b3a951f4fdc06f5c822dbe127f9f1431747d8aac593bef54b5ca89f",
+      "size_bytes": 482
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/fix-tracker.js",
+      "sha256": "78e272d184683be7fc974b91e18a809da440f98c3fc9568aa9ca5a0e50647b4d",
+      "size_bytes": 4030
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/keywords.js",
+      "sha256": "7be63d1633c1eff7b88b3c49db2adb368d20551549c5febf1f103907660f2459",
+      "size_bytes": 741
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/lazy-loading-rule-map.js",
+      "sha256": "3aa4ea7e1805115dfe4476702820d4ed8477c10d865236d5ee06583dca3b0f43",
+      "size_bytes": 2622
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/regular-expressions.js",
+      "sha256": "679e509513eab1c2285467b75f1d1f2783333a053c4e2850ad72325bd8c23490",
+      "size_bytes": 1380
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/unicode/index.js",
+      "sha256": "088b76f88328018b2beb56324fc87d5e26ae62fd5fc8fea3d2926b4abc9fdc22",
+      "size_bytes": 446
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/unicode/is-combining-character.js",
+      "sha256": "0f824e66cb1545c150a992d431d2649c4304d43844aa6d45a25c4f2bfb457df0",
+      "size_bytes": 461
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/unicode/is-emoji-modifier.js",
+      "sha256": "afd442dd1b514022b256bf620309cd3dec6bd658dec4b7f00a48b06823d087c1",
+      "size_bytes": 364
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/unicode/is-regional-indicator-symbol.js",
+      "sha256": "71d68b3a88e1ba8f271c97ed457cc90c6e9e89018beb701f7677c3648dce2765",
+      "size_bytes": 394
+    },
+    {
+      "path": "solution/package-template/lib/rules/utils/unicode/is-surrogate-pair.js",
+      "sha256": "8f9caea9c6361bbc46f94cbb15e34f95e00c6144a7d6e4ef71398a15f3f23823",
+      "size_bytes": 468
+    },
+    {
+      "path": "solution/package-template/lib/rules/valid-typeof.js",
+      "sha256": "e3893d9e054c845f1abbdac571ae4c48ced2c7fa77daca0514f2b87c3add6921",
+      "size_bytes": 4262
+    },
+    {
+      "path": "solution/package-template/lib/rules/vars-on-top.js",
+      "sha256": "5da3f5775cc1371a57b6c0038ab7ed44d945c00a9ff1805f0d3db60a9c0a2a09",
+      "size_bytes": 4304
+    },
+    {
+      "path": "solution/package-template/lib/rules/wrap-iife.js",
+      "sha256": "0ad5f4cc6ed31dc91ac50c90d42783b83b3b948cc1b1aee35208024ce004e70c",
+      "size_bytes": 6914
+    },
+    {
+      "path": "solution/package-template/lib/rules/wrap-regex.js",
+      "sha256": "5b067cb45c07c0903484674ddecf9050bfd85b24f576c17fd8993471ee028e8e",
+      "size_bytes": 2167
+    },
+    {
+      "path": "solution/package-template/lib/rules/yield-star-spacing.js",
+      "sha256": "297dd1e4114dc17910c728d039ae60c01e0d61a2a793da9178dd9ffbb86da65f",
+      "size_bytes": 3982
+    },
+    {
+      "path": "solution/package-template/lib/rules/yoda.js",
+      "sha256": "9e348764d201d4e1ca3bd53a12380c74044fdf66327cfff4db24c8ae78dee5b8",
+      "size_bytes": 9713
+    },
+    {
+      "path": "solution/package-template/lib/services/parser-service.js",
+      "sha256": "054a199633f5d5b0ac1f8342dc6eaa4355e8ac4858c0001cb29bcb0c73151079",
+      "size_bytes": 1790
+    },
+    {
+      "path": "solution/package-template/lib/services/processor-service.js",
+      "sha256": "9cb47c18bb36bf31e3c33f8e7ed32492c9dd54b9573f853a81d1d8f4598e6ee3",
+      "size_bytes": 2934
+    },
+    {
+      "path": "solution/package-template/lib/services/suppressions-service.js",
+      "sha256": "db8d95dea49dede1ea0b0ab224cb7c7783c57f3e94c7a432fb905c10fee34058",
+      "size_bytes": 8732
+    },
+    {
+      "path": "solution/package-template/lib/services/warning-service.js",
+      "sha256": "f63a53101be37620f6d5531a1bef438b237b3b8936c42a747596ed8503887a18",
+      "size_bytes": 2782
+    },
+    {
+      "path": "solution/package-template/lib/shared/ajv.js",
+      "sha256": "d2838eb53703f8b09d64b62f01a8c5f899a8c0912294123d69157da80e5a2f60",
+      "size_bytes": 931
+    },
+    {
+      "path": "solution/package-template/lib/shared/assert.js",
+      "sha256": "6595b8b03bd2ce531beee3a39a458a2205211c23fa2d4b8559c93265884949f8",
+      "size_bytes": 524
+    },
+    {
+      "path": "solution/package-template/lib/shared/ast-utils.js",
+      "sha256": "427509ac68e149a6612820b4943b68dbad689645e1972672b3a33c65f321c476",
+      "size_bytes": 897
+    },
+    {
+      "path": "solution/package-template/lib/shared/deep-merge-arrays.js",
+      "sha256": "67bbb5368f8bc247e62f6b421bb2226e914b26ccb6231fae20d7bd4c1a384aa6",
+      "size_bytes": 1574
+    },
+    {
+      "path": "solution/package-template/lib/shared/directives.js",
+      "sha256": "f95583fcefb946579a5233015ac78fdecb39204ded8334b0918cd50bbf76b357",
+      "size_bytes": 413
+    },
+    {
+      "path": "solution/package-template/lib/shared/flags.js",
+      "sha256": "ed597ff5840e316a7b6fac2c378f92512ac2bb5a8db6c5e03c6f6be5b3f8e09c",
+      "size_bytes": 2328
+    },
+    {
+      "path": "solution/package-template/lib/shared/logging.js",
+      "sha256": "a37ba9648763da0ae5218e864cc3c786c6d7f583fa3ab94fd5456d444febd37c",
+      "size_bytes": 635
+    },
+    {
+      "path": "solution/package-template/lib/shared/message-counts.js",
+      "sha256": "9c0ad197480b1f40e2a5af6cbc1317ebc6e94409997a67fc3be94bc78ab00562",
+      "size_bytes": 941
+    },
+    {
+      "path": "solution/package-template/lib/shared/naming.js",
+      "sha256": "0aaf9bd1e0d3c753e9b6138ae89d60946bfda234d25b6c788f3c2fe8603d64f6",
+      "size_bytes": 2951
+    },
+    {
+      "path": "solution/package-template/lib/shared/option-utils.js",
+      "sha256": "fba01b907330d016236c3a690e0f35c18dddfe24f1cb5910ea501f1a70f87fd4",
+      "size_bytes": 1271
+    },
+    {
+      "path": "solution/package-template/lib/shared/relative-module-resolver.js",
+      "sha256": "9aca34c298aa3dd314e20ed406908fb17ba08d8c019734e040965e17c29b7b04",
+      "size_bytes": 1028
+    },
+    {
+      "path": "solution/package-template/lib/shared/runtime-info.js",
+      "sha256": "31a6dc016eae3efc64c005822aeeb8c0f9952d7d4f8ec28f6e14aef5a3bbb94f",
+      "size_bytes": 5142
+    },
+    {
+      "path": "solution/package-template/lib/shared/serialization.js",
+      "sha256": "3049119d77bba7d1dd5012f921fb9acb81da68bdbb7ac6575239f3ed9fac0929",
+      "size_bytes": 2113
+    },
+    {
+      "path": "solution/package-template/lib/shared/severity.js",
+      "sha256": "471d6b1f6970a7bc7f85a10d60bf919d412fb664dc0a6f6b4d4c52a64fe3d676",
+      "size_bytes": 1177
+    },
+    {
+      "path": "solution/package-template/lib/shared/stats.js",
+      "sha256": "acabc33b4e92b7b2f5ae317fc672d1d4083f9ec244512e3a65180ad071fe29c5",
+      "size_bytes": 638
+    },
+    {
+      "path": "solution/package-template/lib/shared/string-utils.js",
+      "sha256": "7a454e7fa55ad212120f879b3778b704c00d42cce86766adc799d7902d951142",
+      "size_bytes": 1549
+    },
+    {
+      "path": "solution/package-template/lib/shared/text-table.js",
+      "sha256": "5db5661de6d7f26db0fcc714f855d4be49c6c2beee0ef0b39dc6f75d0036892d",
+      "size_bytes": 2213
+    },
+    {
+      "path": "solution/package-template/lib/shared/translate-cli-options.js",
+      "sha256": "a8cb35e09bded5695c8c12fce67cc78d8361ec4221f5e3b8f70f5dd13f30b450",
+      "size_bytes": 6024
+    },
+    {
+      "path": "solution/package-template/lib/shared/traverser.js",
+      "sha256": "827ba68c52faaac8c24c912953d7d5081a48e41d8a59dede636c538891b83be9",
+      "size_bytes": 4858
+    },
+    {
+      "path": "solution/package-template/lib/types/config-api.d.ts",
+      "sha256": "4c45fcc16e392f4009b84ad9dc022474e73b879096455f986e04dbe51ec5bd3d",
+      "size_bytes": 315
+    },
+    {
+      "path": "solution/package-template/lib/types/index.d.ts",
+      "sha256": "9bacda4a079a2ff1ddca39adf10708b80bfd5bdeaf5d12bcb50bc25cc1967cf9",
+      "size_bytes": 40935
+    },
+    {
+      "path": "solution/package-template/lib/types/rules.d.ts",
+      "sha256": "11ed6095220ff51909e5f58c1391a5ed83f22560470976c423fe6114065e584c",
+      "size_bytes": 131174
+    },
+    {
+      "path": "solution/package-template/lib/types/universal.d.ts",
+      "sha256": "05c128bef8ade8755f8bad285bbf2ef8867939f3e7e61884fda1e2f3aecfa4c7",
+      "size_bytes": 140
+    },
+    {
+      "path": "solution/package-template/lib/types/use-at-your-own-risk.d.ts",
+      "sha256": "4bbf16c1d5736684484ee60fe3a40e40eafedd3a082efb859892df5836a64464",
+      "size_bytes": 1480
+    },
+    {
+      "path": "solution/package-template/lib/universal.js",
+      "sha256": "6f9da7fab637e0500c055cef44ad9e2afd46b86f43cf72decde2c332ee51b58c",
+      "size_bytes": 181
+    },
+    {
+      "path": "solution/package-template/lib/unsupported-api.js",
+      "sha256": "474c225bdb308925cbde4558fd016b8ad75867326728c8256eb15a2a09a2f157",
+      "size_bytes": 714
+    },
+    {
+      "path": "solution/package-template/messages/all-matched-files-ignored.js",
+      "sha256": "1d800b641a65d3aeb2767600fb4ca11807fb64a022995fea4d2940f435e97545",
+      "size_bytes": 1022
+    },
+    {
+      "path": "solution/package-template/messages/config-file-missing.js",
+      "sha256": "2121d59d0d4d40247e7667a74bf6c6e306fd8460cb4b36f0e616fa47eddeed16",
+      "size_bytes": 514
+    },
+    {
+      "path": "solution/package-template/messages/config-plugin-missing.js",
+      "sha256": "8aed712a9ad0a5840f36e4f409aed61df16dc059fbc85f3ca518124971c1e28e",
+      "size_bytes": 445
+    },
+    {
+      "path": "solution/package-template/messages/config-serialize-function.js",
+      "sha256": "27deb422e7e5526c2e1b151e6efd6afbbd134f335fd6365c1cf98d51f29a3a03",
+      "size_bytes": 942
+    },
+    {
+      "path": "solution/package-template/messages/eslintrc-incompat.js",
+      "sha256": "51a1efc7eff9595a38e600b0e6fd71fa436acb9784787c9c0c87912b4fba0114",
+      "size_bytes": 5209
+    },
+    {
+      "path": "solution/package-template/messages/eslintrc-plugins.js",
+      "sha256": "6ba1dd8dfbc585579c2ce9bcf60cb7f47136a51aff6650ac09c6ce7b86be8de7",
+      "size_bytes": 927
+    },
+    {
+      "path": "solution/package-template/messages/extend-config-missing.js",
+      "sha256": "97a0c2a1b1e32ed946db70d79fd5372a61efba4d3a6e19877e1d148a245335a2",
+      "size_bytes": 418
+    },
+    {
+      "path": "solution/package-template/messages/failed-to-read-json.js",
+      "sha256": "b4b3ce4dfa3f80342ee7f87f670d478cc4c1901a1d74d3dbc1e767dc39854555",
+      "size_bytes": 157
+    },
+    {
+      "path": "solution/package-template/messages/file-not-found.js",
+      "sha256": "7a37b314e5903b0b16e94946d8032741feb88e2553ef01a3061532a1c66ab969",
+      "size_bytes": 268
+    },
+    {
+      "path": "solution/package-template/messages/invalid-rule-options.js",
+      "sha256": "fc7e84e09927432ed65d78826c4dc24da52ff504daaadbc7c51858527a0626a8",
+      "size_bytes": 646
+    },
+    {
+      "path": "solution/package-template/messages/invalid-rule-severity.js",
+      "sha256": "ced1f3796a9cbdc341fd6d0d7d86a5f6340e801910f4817b85450e755e4386f7",
+      "size_bytes": 406
+    },
+    {
+      "path": "solution/package-template/messages/no-config-found.js",
+      "sha256": "694f32e673e7ed9759ce1ae2c921b5b23ef41df2352c236b82089d835bca40e3",
+      "size_bytes": 527
+    },
+    {
+      "path": "solution/package-template/messages/plugin-conflict.js",
+      "sha256": "d0cc5d1723f322ffc2698fd56c934e9053b9543a78f0b61e40eeabc96ab0b841",
+      "size_bytes": 518
+    },
+    {
+      "path": "solution/package-template/messages/plugin-invalid.js",
+      "sha256": "9c0169c5d85a57ca2dbc17d813cb5f19383060a3f0183535a9c15c0acb9f5159",
+      "size_bytes": 653
+    },
+    {
+      "path": "solution/package-template/messages/plugin-missing.js",
+      "sha256": "cd19f4efabac7c64caca0d383e3e4492e3d0baf7a443a1dcad6d91c4b8632c6a",
+      "size_bytes": 659
+    },
+    {
+      "path": "solution/package-template/messages/rule-unsupported-language.js",
+      "sha256": "32afa638e348d7a3e9314ba6d37311d7d1d8f83efefd0deb77a82f5bcd6663ef",
+      "size_bytes": 553
+    },
+    {
+      "path": "solution/package-template/messages/shared.js",
+      "sha256": "c3ffedcd4b664bf1dfd08fa80802af4cb6ffa4bdeff60c9ed841ca7158580286",
+      "size_bytes": 546
+    },
+    {
+      "path": "solution/package-template/messages/whitespace-found.js",
+      "sha256": "98d46f5db29b81079653a103c87f95e0f0102d929a6e39106d86da844af41248",
+      "size_bytes": 386
+    },
+    {
+      "path": "solution/package-template/package-lock.json",
+      "sha256": "c957b7e76f85ae644f5c113863270eda7e839a542345a2228aef3f20cb9436f5",
+      "size_bytes": 33426
+    },
+    {
+      "path": "solution/package-template/package.json",
+      "sha256": "f64bb2512b62af14cfe83153781f7db43e303d81776f23b18aa23df250b92b1f",
+      "size_bytes": 2678
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "e86cae51a6668dc9781518fc07c530e67d8dd788d7966093e67ab2e2a233a15b",
+      "size_bytes": 200
+    },
+    {
+      "path": "task.toml",
+      "sha256": "302451a020eb85d7e19d9dcd770eca0a9c1806bda8761b6697770cbc0e626ef1",
+      "size_bytes": 1375
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/02/9e/86d16430714fcb1ecbcbc0e3757c0417f59a7403663a63f709065f6bfc96d6f74672838ff36c6eb3cca6b639300b10b6ab60798abb41a1a4ce443beed3d2",
+      "sha256": "19136a1e7ef183bc0f9757197de4a9539a380b70b930d1673ab2eb4097ba7aa5",
+      "size_bytes": 166185
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/04/b2/374e5d535b73ef97bd25df2ab763ae22f9ac29c17aac181616924a8cb676d782b303fb28fbae15b492e103c7325a6171a3116e6881aa4a34c10a34c8e26c",
+      "sha256": "a13adf5fddeb769655edce551e81fbb11904b9c9be76d95e41da8c4c499d4edc",
+      "size_bytes": 4496
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/04/ba/e011c453c17da8ea01b118e08dc8cbc64a9df96287ee633c3d87520c4d198aaadb40659554ebb6dd6fd3ebdaf50703cfa3de2dad25f8cee82ebee26c864c",
+      "sha256": "9025508d9125eee531bbc49ce3ae560183975ad595f058c378bd56af4152fb16",
+      "size_bytes": 4199
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/04/dd/b607979a30c23d50cb63ac677983978260fa423c3532d052576d8b1a4f9cd8c6314e7244b9dd2403137a56915a16a475d56f706b61c10de13c1ae7907970",
+      "sha256": "d0d7cc3b19863faa09d3822d1386b6b62ccc4551f7190ffaa25c792bbaf59dec",
+      "size_bytes": 4409
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/05/d6/e8cbe97bb40dce196e858f21475a43f92ee0728f54e4df72e3caad1ac72cdd93dfff2528b6bb77cfd504a677528dc2ae9538a606940bbcec28ac562afa3f",
+      "sha256": "5dbd60ac858b8eb9fb8219cd0dbe89cb866405749cbac90c2f8bc18acc77aeea",
+      "size_bytes": 4621
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/0c/25/eee887e1a9c92ced364a6371f1a77cbaaa9858e522599ab58c0eb29c11148e5d641d32153d220fcf62bcf2c3fba5f63388ca1d0de0cd2d6c2e61a1d83c77",
+      "sha256": "bb4b50306b8b0f048475efddae11810e245937dca8ae85498ab4a171697bbf3c",
+      "size_bytes": 3699
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/0c/e6/ddfca294b14f85685bf83cbc5245e9e95df41698f5d73f7a4f67afcad4f0ab32edaf42930332e41efc1a987a82dccfcae8d1b54317547138981f54476153",
+      "sha256": "a4186192e9463523090de29e3e5256f6963ccdd126216219c56a17b6ca9f17ca",
+      "size_bytes": 14401
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/12/b8/924e5b79382f7fed25e445208085f4b1c684948019b7dce1fe224c1b769828aac4ac520ef2dee87e208088fd08380415abdd4da2dfd4699b271bc4cab87b",
+      "sha256": "b5cb22e604ad47f511e96b7aa57910995994f3e48744fbc507018da9efae0f12",
+      "size_bytes": 73417
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/1a/17/4f832d5e978fc898fd395f4e54c38730dbf33ddc10949a712f599352b650b310a304e05924f98a680393a21cd426a12ec269f6fc5dadcfc9af26d50af37a",
+      "sha256": "ec8f3c0dfb21497db5a3480c45a6cf6f9b18d3b337b2ea4d03e3ef2a9c2bb358",
+      "size_bytes": 5930
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/26/65/cc67ac2ebc398b88712697dca4cea3ba97015ba1fd061b822470668435d0910c398c5679f2eece47b0880709b6aad30d8cc8f843aa48535204b62d4d8f1c",
+      "sha256": "ac23a031966a7371d192e35c7852ab31c772b7d4e468ddd886ad3c014372cb60",
+      "size_bytes": 4312
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/2a/67/ca2f76fa1be457bcff0dd6faf74ead642ffa021609f63585c4b6a3fcfcbde929aa540381bc70555aa05dd2537db7083e17ca947f7df8a81e692d8bafd36a",
+      "sha256": "3ecf9370d7296b47b570c88a11f70b35bb965af8d536536b259eb55f9b793b61",
+      "size_bytes": 4053
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/2d/a3/63b51594058fbecc1e6713f37071aa0cca548f93e4be647341d53cdd6cc24c9f2e9dca7a401aded7fed97f418ab74c8784ea7c47a696e8d8b1b29ab1b93f",
+      "sha256": "2ec11480a90965a753b141be5432d24f4ca98860b844fd1b10cab0a1023423fc",
+      "size_bytes": 3151
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/30/c7/4046e54443388d4de243f0380caa6870475d41450fdc04ffa92ed61d4939dfdcc20ef1f15e8883446d7dfa65d3657d4ffb03d7f7814c38f41de842cbf004",
+      "sha256": "3e8d45da5b8085a4a8d51368ffead5b551a502c286978962a05d5c8e0d72fda6",
+      "size_bytes": 8052
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/33/07/04d4ff806780ba0d69698a7fce98e039e2698867ffb166e26241de12c81dbda00263377d145bdc2428da6d5b672da78704b2f8652d8fc2b10d6ea070e5a1",
+      "sha256": "77278a566a21ac718a07dbdd54a6138946ec19436359247edf446cbe99f20fe6",
+      "size_bytes": 22326
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/39/63/43f1e8b756d342f61ed5eb4a9f7f7495a1b1ebf7de824f0831b9b832418129836f7487d2746eec8408d3497b19059b9b0e6a38791b5d7a45803573c64c4b",
+      "sha256": "5e5569ecd12064f73632a8c18a45b1d1de4a27b699a671864801f1c35ee779ee",
+      "size_bytes": 2510
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/44/6c/305a7c10be455f6af295b76d8518bc3ec5849dcc04709b4aeee83853540dee994e6165cdbc57790ee2cb6062bcab4e52e9baf808f468a28e5b408cd6dca8",
+      "sha256": "89c1ac9c946ee8905a875837114528e97eeae35e03be3190584b2216af43e4a7",
+      "size_bytes": 13449
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/44/7c/4c2e9f659ca1c61d19e0f5016144231b600715a67ebdb2648672addfdfac638155564e18f8aaa2db4cb96aed2b23f01f9f210d44b8210623694ab3241e23",
+      "sha256": "47cfe872e088e28c53b736fef305324b57cc1cfc9f72a9b0f769f92731cb8359",
+      "size_bytes": 3756
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/49/b2/9b00d90deb4dd58b88c466fe3d2de549327e321b0b1bcd9c28ac4a32122badb0dde725875b3b7eb37e1189e90103a4e6481640ed9eae494719af9778eca1",
+      "sha256": "8c5d4286146ad62fc1096981700ce1c22a167708926fca01f9ca74f9bb50bc19",
+      "size_bytes": 2663
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/49/c4/3822ebc8105d533253fb66dfaf8c9ffff7394f6f64837315b13376e4f2ceade8619d27b28ed5d09c4e274e3c929e3d6df42c4ff6713ef00b23e1a3dfd6c6",
+      "sha256": "5d06001fddd25cbee90c96db4dc5b7b57711b984c3141e28d10f143deb52dbaf",
+      "size_bytes": 10834
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/4d/83/9a9ccdf01b0346b193767154d83c0af0e39e319d78f9aa6585d5b12801ce3e714fe897b19587ba1d7af8e9d4534776e1dcdca64c70576ec54e5773ab8945",
+      "sha256": "36e6519736cafaa158dc1bca8137683f5bf1bc1c476d40519028b3f3a96bc9e0",
+      "size_bytes": 3265
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/4e/da/5c349dd7033c771aaf2c591cc96956a346cd2e57103660091d6f58e6d9890fcf81ba7a05050320379f9bed10865e7cf93959ae145db2ae4b97ca90959d80",
+      "sha256": "4b44a14da6987a3c0585c2ff16b3800425732ff35cad710c65e72d7f8e33b11b",
+      "size_bytes": 2017
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/52/15/cd9be08531671b0a15f2c05c249a1aa3b373d10a67126bf85f0602c86fba10e4735bd704b489c5ac1ad48050d81e7c7788f9e06b03c2357f199b1ec19dbc",
+      "sha256": "4d87476af7eb8e64fb45afebe22f09babd734122a430e64d40cee064ab8caeae",
+      "size_bytes": 14260
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/5d/74/d4c02be2b1ae6869c34644ff527cdb5804d00c8be44fc011666e564417b37bb301d8412ebf65f93b491c31e03e63dc21f6d7560d45ca350c430d55f6429d",
+      "sha256": "67ac5a6cea2268114a1f8935ca3ad60fe634fed04dd7914939bf24ceaa2d57b8",
+      "size_bytes": 5512
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/5e/57/94a1cf6ec065ea8d6c176944d9026ccc705679f39f10036befc7552be7121c8b15c83fef0b9c50e0469954df4bacead7aa765b2415fbbe69ee0aefd3a87b",
+      "sha256": "8035d10cc48e2692358ac06cbadfa795279aaf6b3c04f29bd322f6df09513f8e",
+      "size_bytes": 6779
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/5f/1c/08f043a1550816a7a8832feddbd2bf3a7f877a017eb3494e791df078c9d084b972d773915c61e3aefa79c67ed4b84c48eeff5d6bb782893d33206df9afe0",
+      "sha256": "345bb942f3be1fe234cab09ddc1df2c443cb2e84aaf5743c1862cf2b4e8d5066",
+      "size_bytes": 3449
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/63/79/0a2ef0b576f4ce4fea0696a350d572ea2ba0f51d4d985cf739d8d98094965b30c583cc66173223d127c4d80f7f66b83fce4e395998d27889beddbd2acc04",
+      "sha256": "e94ae1cfacadb9b669cd7e4c862fe9b4f844d32e2c1b783a966617f912a5d0f8",
+      "size_bytes": 75502
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/65/9d/70d1aa10930b94b82ed87feeec75e68d7ea42288b71245b7c8d3ca00c6a2eda5742bf402155fb032ec72c3ba22d801a14fbbca0160dabf4088bd5111c9dd",
+      "sha256": "3c2942da7ba321f6ba27255a5faceee76eae502403129d8aa50d2dc8400a94d5",
+      "size_bytes": 3866
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/6a/4f/50cb943b8d86f65b071ecb9169be0d8aa0073f64884b48b392066466ca03ec1b091556dd1f65ad2aaed333fa6ead2530077d943c167981e0c1b82d6cbbff",
+      "sha256": "dbb535c9302ce9b3f777ece3ff055cc8d88890a1e1deddc045340aef76fb775c",
+      "size_bytes": 2073
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/6d/5d/13828f4ae217cf09e93e68c027f35469a452afdb248341e328499baf4c04b2c0d4e7549080ac2644d855aaa6f21ab4abbb54c44b5a547511acef5610f285",
+      "sha256": "7774adde8013a91e5502d550f071ab61b1077ce5cc3c4933fb853bba55a02280",
+      "size_bytes": 11398
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/6f/1b/de57857cbf961be277054d3deb3d281904ea429237cad32e28555549c08b8354144c0d7acfc9744bf7cf22e5aa7d9bd6e7c8412359f9b95a4066b5f7cb7c",
+      "sha256": "6916df30c976c50fb67af9d9693728b1d93e501f8fb4a46731b4ca3a0d1d0f1a",
+      "size_bytes": 7090
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/72/e6/9d73154513cb032ba89625bb3c4a7d1abf636b8764121908559415bd01a007a87c235ac6474fc2c9e211463e1ec048157675e15d33b1ff0cf8ee96687cae",
+      "sha256": "23bf153cb8d21f3a21e79cbf2654a2b9bfec73d6ce1c5827b53f810d0590e1fc",
+      "size_bytes": 80357
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/7e/01/71ec77e8abad32b4ad9cec386717c8c8bf362038cc5fba08cb3923078cb20f81e9ea6bb4bba1a6a001352af7d995e8862f376b51982d309d3617ea23db33",
+      "sha256": "f52192ad895dee468f1d1d5bf8972f7114e2459ff126632a1963e7bd2a38ed0a",
+      "size_bytes": 202724
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/7f/7a/90f68432f63d808417bf1fd542f75c0b98a042094fe00ce9ca340606e61b303bb04b2a3d3d1dce4760dcfd70623efb19690c22200da8ad56cd3701347ce1",
+      "sha256": "b019a0980f27638dc3f85836b0e478f188e00d7a6e5852c0819fa86f56e47b8f",
+      "size_bytes": 3656
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/7f/b7/1c14f2b7497147a71d795081b2449fc525072db8a674cd5b8dddfac1a381e72b771acbd5445b447ac8f6051c2d0082a86e90fcca8eadb6b790e6032a86cb",
+      "sha256": "e2085ae2b084792812a4f4102f6b4967e93cfda8457361b7debe610cf2aedaf0",
+      "size_bytes": 8903
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/80/4d/5e40d67747efa44f3154a5d1a5a66cbc903643fcc2f21ea0f0aa3915408d0931d2350f9d6ccb51fde7c3cd5d890cdab01a73b7b9fc29c8299ac7b4f87705",
+      "sha256": "b7beb7c13d7cb80d5cf559973e89e24898414cc5ac2fb699341682e22540c6b6",
+      "size_bytes": 9398
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/86/c0/53354a904c3c245ad71d608da2d3a63f9d4044b0d10324a8d676280bbde832f240ee2404bcb91969924710a721172f467fa630f2e4706632344227682afa",
+      "sha256": "8e9652205f5fca36dec78e11650ed998e639f5744600e1dbfc024cd627eed8bd",
+      "size_bytes": 15266
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/88/f6/4ae9e6236f146edee078fd667712c10830914ca80a28a65dd1fb3baad148dc026fcc3ba282c1e0e03df3f77a54f3b6828fdcab67547c539f63470520d553",
+      "sha256": "71d20b2743581b997191a760edc54df51dcea7c53b12c613cabc360f636d832a",
+      "size_bytes": 2954
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/90/7c/6bdb366962d766acdd6a0e3aeb5ff675ad1d641bc0f1fa09292b51b87979af5ecc26704d614d6056614ce5ada630d7fc99a7a62e0d8efb62dbdb3747660c",
+      "sha256": "9acba5bd18a51e9cdf5898380e4df63f803e1844def64ae1a46f88cff86d556e",
+      "size_bytes": 1506
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/91/5b/1ca97938382a7af126747648042958baffc8a3df4d0a0564c9ab7d8ffdd61e5934b02b8d56c93c5a94dd5e46603967d514fcb5fd0fb1564a657d480631ea",
+      "sha256": "c5adbd730a495a3c635bbae9ee5f693b95c7e13b395f7036efab8232c5f0640f",
+      "size_bytes": 9542
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/94/6a/bef72af5fc6b8059a558207463befc921b9ff855f288bc2f045b14ad3dd70387f29aec51b7b703fabf8779064adabd48a584802c1b8423f37b74d8b5943d",
+      "sha256": "0ad4c0f28f9bc5bb6f3eb879b4fd38265def6d7e1e5d61f96f78ee6a8a7be94a",
+      "size_bytes": 133521
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/96/17/7fc05f8b93df076684c2b6556b687b5f8795d88a32236a55dc93bb1a52db9a9d20f22ccc671e149710326a1f10fb9ac47c0f4b829aa964c23095f31bf01f",
+      "sha256": "1e2df822c43e0a2b448e5df79bf8e6d3e085c86e30456cd383a2f96215fd1687",
+      "size_bytes": 6318
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/a0/83/f392c993838fccae289a6063bea245c34fbced9ffc37129b6fffe81221d31d2ac268d2ee027d834524fcbee1228cb82a86c36c319c0f9444c837b7c6bf6d",
+      "sha256": "0c03aa83c6bf68e7c2cc2c5b5a2d732c1879e7711b08011b0bc48df10d10bf3c",
+      "size_bytes": 3400
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/a2/39/9e374a9dfb2d23b3312da18e3caf43deab97703049089423aee90e5fe3595f92cc17b8ab58ae18284e92e7c887079b6e1486ac7ee53aa6d889d2c0b844e9",
+      "sha256": "4b8999acb914830edcd3c5b8fec632b32c6bc759ac3edc86336f5a9e08ba7b92",
+      "size_bytes": 2258
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/a3/15/4790747f1097f608d5e75b144b5ba9a0ec9c82094706d03b441a62f672d528d4f3538a7d4f52297eafffb8af93295600bf7e7d648ecc7b9a34ae8caa88a7",
+      "sha256": "eb26f1c561e57af4a4365e6b54f5f3e745e3963747a93845af1f000a747b6098",
+      "size_bytes": 8620
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/ad/59/2cbec9cd09d27fa2119ceb180fc3237c7a1782c6c88b33c9b1b84fedfe6395a897b03ee3b59a22e94c74224604ca08b7b12f831e00555a82db3b1e6359d9",
+      "sha256": "c772bceca58f20f0ea08ac6121ba385f55db715cd3c2c46b2b38d06d3c6129f1",
+      "size_bytes": 2765
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/ae/af/6cf893617f4202863b435f196527b838d68664e52957b69d0b1f0c80e5c7a3c27eef2a62a9e293eb8ba60478fbf63d4eb9b00b1e81b5ed2229e60c50d781",
+      "sha256": "d967b05e40c5396a56d70e0d3150477b969cb6cc1058d68bc2b95ab0159158cc",
+      "size_bytes": 7635
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/b4/3e/34787c40df98743c421935e223907a034786238c9a77e1b88cd260efa6505efff981f881c2a870c657ba7117eecc9254ef8a085c08f3d90bbca75b28dd4c",
+      "sha256": "cc0945290fe3cc73aa7f04b03cdc0704ca7ac8d805ff19f43fa3f9e5e0b6728d",
+      "size_bytes": 8751
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/b9/5d/903963f69d6ceccb668ca7c69189b862f5d9731791e0879487681f4e893184c834e2249cb1d2ecb9d505ddc966ed00736e6b85c9cd429c6b73b3294777bc",
+      "sha256": "188c320cdc413adfec03098fda72af7a9b02152ba13d3a8f87f172d93ced38ea",
+      "size_bytes": 6255
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/bd/8b/7b503d54f5683ad77f2c84bb4b3af740bbef03b02fe2945b44547707fb0c9d712a4d136d007d239db9fe8c91115a84be4563b5f5a14ee7295645b5fabc16",
+      "sha256": "e4ce59f9fbac44349abab87279ab658f6b4614916bec5e088ae3be9323e193bb",
+      "size_bytes": 7603
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/be/47/033eb459a354192db9f944b18fa60fd698843ae6aa165a170629ffdbe5ea659246ab5f49bdcfca6909ab789a53aa52c5a9c8db9880edd5472ad81d2cd7e6",
+      "sha256": "14e8fc397f1f852ffda5bed29d012605add8866feff1790b388ad8f7abb8d291",
+      "size_bytes": 9408
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/be/92/d012cf952c2af59d4d015d2d3b99a628170943007d209e042ebadb71230bad0c510c1ead9b957fbcbe98310dd2b72753f08c22627a9efb3a2b536782e5d4",
+      "sha256": "5a3d2c8074a28229665727e47b8a1090941856a7962905efe05d20d3760355f8",
+      "size_bytes": 117068
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/be/a4/da504831ce6f980d274495a77a3e24685f8b7c5460e30adb74e739f89d4f35d14231fee34457bfe5649e8ac054e12993b33b1cd7cb8f1d6be368ec765a33",
+      "sha256": "2dc9c1afb534793f6beba1c23b27e5a84a5a0677ae9b300b2b46b8a99a3725d9",
+      "size_bytes": 12709
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/c2/97/3e2d77a2ca28acc4f944914cd4eacbf24b57eb20edcc8318f57ddcbb3e6f1883382e6b1d8ddc56bf0ff6a0d56a9b3a9add23eb98eb031497cfdad86fa26a",
+      "sha256": "30ce592c610e46e141ffc5653545d33f24089e57316c1057e5a68d106841aaea",
+      "size_bytes": 8109
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/c4/90/406c389fa398697df0c1b8797463ccb0b306e2029fd68bb63f1ad0204a5672200069a72babc55b9e38f13c2d440ec5d9608ba66a71eeeea04a6a3537a253",
+      "sha256": "cc338c6515fd66a157e553423d0b3d887d06763479fbc6c7fd9db64dc75aa1bf",
+      "size_bytes": 2028
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/c5/2f/741f9d5c2b0d2396dc66be61f2d886a2d4b22aadf6f0e7b6fbf70fc9ecc7ef0df90890567e923eb30b7063b54c21d79d07b1249dc5765cb2ebfbda688315",
+      "sha256": "16b004c4e056634c6b96c44821d453c268359d781a5db3652bddb191b3195dc3",
+      "size_bytes": 36931
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/c5/b6/c21f9742614e53f0b704861ba1ec727cf075ee5b7aac237634cce64529f6441dca5688753f271ce4eb6f41aec69bfe63221d0b62f7030ffbce3944f7b756",
+      "sha256": "f735add93641842e13096c8b3239f54e9b0b10e8ffd8a377400f4d61eabec065",
+      "size_bytes": 5141
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/c5/e9/526b21c7dfa66013b6568658bba56df884d6cd97c3a3bf92959a4243e2105d0f7b61f137e4f6f61ab0b33e99758e6611648197f184b4a7af046be1e9524a",
+      "sha256": "3fe453fb193bb58f6f0505dfb1151230935380b5b55e1f9864261c2aafc1bec6",
+      "size_bytes": 4255
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/e1/b5/7905f4769aa7d04c99be579b4f3dd7fe669ba1888bd3b8007983c91cad7399a534ff430c15456072c17d68cebea512e3dd6c7c70689966f46ea6236b1f49",
+      "sha256": "d1f7464db9713c5f73c919da72de334fce0bcbd76fb08727d36712ef5dfef5a5",
+      "size_bytes": 2618
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/e4/a7/843896417c4540e3b6e816206c7fee8c9a62697df33ba84060e292e56b67b89e52a074a96a096d2848b386b13f16979b82189a6d2d5d5b91a892863f741b",
+      "sha256": "7c0636e6b1777c04674783f876ed23ec41c30a57466f1dc47a4a2943fcca5144",
+      "size_bytes": 622066
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/e7/e7/cff0ff0c14d0be0326420f1ac1da991914f1b3a90594ce949ebae54bbe6f1531ca2b3586af06aa057312bc6d0cf842c6e7e2850411e9b8c032df732b061c",
+      "sha256": "12dcb1dcff7099bff0663fc220551ba53fcf23c136a22375e323bb6626d95724",
+      "size_bytes": 6145
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/e7/ec/9b841640344271687dd7e5ebc015ab54c4b7c41d2afb9fa91827ed50774994aabe1ebbd8087fa1836d61dff112628c7ae38cef06fa56b5e1294bd92792d5",
+      "sha256": "5ddc55129d365193496e8ae1f6e21e4beabe639b6c00f5f67e2e0843b72efa55",
+      "size_bytes": 11683
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/e8/59/73b9b4cb646dc9d9afcd542025784863ceae68c601f268253dc985ef70bb2fa1568726afece715c8ebf5d73fab73ed1f7100eb479d23bfb57b45dd645394",
+      "sha256": "f6616e15e530ed552f9daa2d3ce71963947c6bc7c98c9b64fd3e673fd02622c6",
+      "size_bytes": 2967
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/e8/8a/50ee6294c5171934b20e6d1d21cfb971b1aa5248860d649c173c6785d264d5a862852178f50d070ca13db64b744e70bc98febcf43d669667d6b25a669df6",
+      "sha256": "a772bbe141b4af2c1e65f7530353cd6e978f0349067ea3dc2b0aac2428c2826b",
+      "size_bytes": 14017
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/ee/9d/c3ad5108a295b50756af0062ee0928758ee6dcd351f624773c078aaa19b966839808f72ba60600028d6a3826521cd38b9fba0e3127749023c1e44bf460cf",
+      "sha256": "149c997f9e5e274feff3217785f0947507dd65d273a5274ea7ff620598bf91fd",
+      "size_bytes": 24865
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/ee/b2/94cb2df7435c9cf7ca50d430262edc17d74f45ed321f5a55b561da3c5a5d628b549e1e279e8741c77cf78bd9f3172bacf4b3c79c2acf5fac2b8b26f9dd06",
+      "sha256": "5612de52afe83da73e66b519e83aa56aa81151c844b90bcf8e045df5ecec8d2d",
+      "size_bytes": 132003
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/ef/cf/cf5d3d7094b2c3813cc3b3bb23abd873cf4bd70fece7fbbc32a447b87d74310a6766a9f1ac10f4319a2092408dda8c557dd5b552b2f36dac94625ba9c69e",
+      "sha256": "f4a64efb583769c09638d81963fd3f7aa883b632f9992a256de3fbe962ca75b4",
+      "size_bytes": 3806
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/ef/ef/9d161b5cc77df9dee05aabc0c347836ec417ad0730bb6503a19934089c711de9b4ab5dd884cb30af1b4ed9e3851874b4a1594c97b7933fca1cfc7a471bd4",
+      "sha256": "fedbabaa6db26c6be0183f82777dfa852d59a62f8885de93bd32ebc28758958f",
+      "size_bytes": 1503
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/f8/23/40cf182592ba4d7ff90acb0a907e4ef8423b5c7ae384ed09be005f26891bcf17fc2698ae7e3893a0561dc05534f744fda61f7f8539ac65139bfbda8c24d0",
+      "sha256": "50b22954f78c880d1de67c861725d430560a08f2c8c20ad13b65d4ab18dd6cbb",
+      "size_bytes": 24234
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/f9/b4/f6b87e04e4b184ee1fe7ddebdc4bfb109495c2a48a7aca6f0e589e5e57afbaec3b2a97f2da693eea24102ddabcdfa1aff94011818710e2c7574cb7691029",
+      "sha256": "1f4457d4df0f93521899c0fdee0263de0f243ecb90ea6bc6d744fadd132067d1",
+      "size_bytes": 7465
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/03/af/b652af7d985d655c33bbc6261689ea2f5a550b485dde76ad3aefbe2591eb",
+      "sha256": "a210d3f7499969c343facc631db66a0e86be7fe8b5a8a31e1b857ebee3e53471",
+      "size_bytes": 690
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/04/03/44d195bf59b7f71c2a336b826652f3fe5b71a260b8607e4de0b0ab4f6af2",
+      "sha256": "00a51199d0510a7ed3970028dbac905e0daee22b1d2398efa74991f5fa8bf874",
+      "size_bytes": 714
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/0c/11/9bf57dceb99b6a930d3ad84cbe70e19fad1250d13e828e2b3c4c491b3994",
+      "sha256": "218ea9cea1cb9340cd2e4eb65a9a0b2e3a4b3340122d78ddcd88128147af276c",
+      "size_bytes": 698
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/0f/8e/fef71706495f530b51fbfa76aaf98e2f3c4a9580e94c97efa0654f6ce607",
+      "sha256": "dc2271a9b828f9d410d13faf99a74109a66e0983b8efd6540fde91fc0f8d6063",
+      "size_bytes": 677
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/10/01/03efc199c2b017a7533cc730722dec616ebc1b3be56bda4c0a85c7f71fa6",
+      "sha256": "480a5fe7912dbedced51b2b767f2f1a0ad39bc5ee2ffaa3d718fbee2b6b2decd",
+      "size_bytes": 679
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/12/80/71b2d1452a6c218b9b534041f2e2b4b9ce6235c552e2515e16f03820d00e",
+      "sha256": "c0ab7d93e350b85771d7aa319e8133b069d495f8d9fe1f7da2d32e4d18dc8998",
+      "size_bytes": 694
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/18/69/ca47ff09ac9d048c991a5d94c9ef412ffa5496c2ab672947137bfb61e829",
+      "sha256": "a3e71efc08bd1f170808a7b8c28758bebdfe51c691b88217685306f10d517c87",
+      "size_bytes": 718
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/1c/a4/c7d3cc971492220b7cec031eec035df5e60b61a4319081d0cc87870409b3",
+      "sha256": "e7abe1aa3161e395c2c8b627a0d6e0b088302e23dad707e9e65ad42338f1b672",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/1c/e6/f18a9a75bf7bd16cdb1b75eaccaa4ced854717a581a33918e15c61fc4ac5",
+      "sha256": "b7c3a694d44d8f966dc2fe23f00045d145b9e16a6ef7d72acd9a98aa36a3dc25",
+      "size_bytes": 702
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/21/a7/bd8af8e4938b9fee217abddb09ce52db330434e323c828aeabe5bd909ae7",
+      "sha256": "f76b07d7aa41c4c2a3b43e6c011939cdf99f7c0981524006ec5a8008c2793381",
+      "size_bytes": 646
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/23/76/f7afbc9eb60823c417e5dd1dd2f56b61e1b85cdd840120ff5644e6b03358",
+      "sha256": "98f24ac6115fb3e9a55b5e1d8185ef26abc93319b3426c67f329bb7b21e75f51",
+      "size_bytes": 658
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/2e/c8/cc8592ab15d662d89edc5604d9f6347e26fbca3465f5f245b65eefb11d93",
+      "sha256": "d2351d306d7cc1abe4b1fb3a0209fc1d7d7699ccbad4d40b2393c105801ef31c",
+      "size_bytes": 678
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/33/0d/aee2258d65148542a94d8133e0db3a0d57e2817555b89709243b5f7408ea",
+      "sha256": "94db3c37faf75585e8550b97d57b1d4da6f47554e9bfdac1d0a1c3bd47f7b001",
+      "size_bytes": 731
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/35/7f/e41f2c2713684e6e809753f5b2a642d98d5d19a1c17c03d0788531cebf88",
+      "sha256": "52d8f1d59b5aa7dc3aba7d057469cdd11044cf551755047e3a4155d453068728",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/36/ed/16204172c2fd41b6d18d24dde353d9bd08b895673283fdee1da156c14ec6",
+      "sha256": "243f6ccf923d5117ff94cfed8d084cd4673d9aca30b88edf8f7213ddd73b9845",
+      "size_bytes": 662
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/40/ae/3297caeecf16808017a479c939430759f9d57eeddc307b56b0995f3af281",
+      "sha256": "69749418a2a14602bf23a43bf152f0b26a3b5ac9958c81cce67cbb617302bf71",
+      "size_bytes": 680
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/46/87/de21d5d0acb5b18e75e9e9fbedab515b3a15f2d20926f30a5bbcafb74b0f",
+      "sha256": "5e060c244edf72f5c57971570047f40bf7f3edff53f28e2d6ef62f6f2dba2d58",
+      "size_bytes": 667
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/47/6e/0184937fde98938cb062ec8293fb6a17fcb7da8963a6d525de3f86b642e5",
+      "sha256": "65a08e3437b5c8bd04238c66a97afa75e3514704c326931bf939728e4e59e2f0",
+      "size_bytes": 678
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/4a/f9/db09e99d2fc4b9d471366260d48b659687fefb56966562f29c82112f99a9",
+      "sha256": "8bc3e88c3a3ef90dba28df9c26a334bad91cd4d6761418dc8ba306b07d2c1700",
+      "size_bytes": 666
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/4b/4d/ce47a91aa4c10cda303c5b693122434fcebd897428fb2d4b7b305796453a",
+      "sha256": "20ab841cb4ff6d171ebaa9a2924983e5759b6ea39dce6106674bb184f840322c",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/4b/ed/35cb8b23ae64f5467e4748e13214ac6208cf6c4330e3bc5a2a28b7b96aac",
+      "sha256": "95dde1d0be3660c7b958c65cf07bf7cce4e346ef42f0782a9a958e9d23f3d53b",
+      "size_bytes": 654
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/51/7d/7fc8fb088ff37e4ff427d1fec06dd168abfd2fcda2b0ea1489ca5010fb91",
+      "sha256": "63561c12051049dd47afbadd83ba4f40e3f0d9a2cf5f75e631aa077cd16026e5",
+      "size_bytes": 711
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/56/02/f7c9e3404de9212aefe3706d0ad202a663b6af36dcd7532e19428d480a26",
+      "sha256": "5f64a42e8501014df93d84b197b4236abdf4233eb91a5031fc2824cb9de9cda0",
+      "size_bytes": 786
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/58/85/6fd694af3f2a77a99b7f63d7eeca0a3d895a46536c015370e462365772e9",
+      "sha256": "2b4d28850e1a89d331fb3702fafcdd67d24b73d565d8ee265129e945e41ae3d9",
+      "size_bytes": 663
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/5e/5b/6a0a461bca7b918433912044df6657867557c4d09906a8e0feaf8ef0694e",
+      "sha256": "a4f8d15cde0110bfb17a6a04eb1fefe5671a0bb837b998f2b4efcc9622881705",
+      "size_bytes": 666
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/63/13/ae6e5e4decaac98fb4c1f225b531d8948d705782a9b851a792f5a4f7f087",
+      "sha256": "1498df1859bd589d025fe6737f37196bbac921ccd8bf660eb3af72b7902e8ac5",
+      "size_bytes": 701
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/64/28/e444d001268ef2d4c2a6c96efcf4cbe9d51fdc9008329f7956b60986aef9",
+      "sha256": "ed2743570f755d3030f0f900deb0053e1d03765e255ee8834363a5a62c5fa185",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/6b/96/8af21194b7c666dcff699b874730170edc9a2670a4d17bf4186649ee9fa7",
+      "sha256": "fed54a72ae52f39bcfe8d8078a46eba37b9d7485b916ce96557cb007ef81bd23",
+      "size_bytes": 670
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/72/6f/7551d241cb30c6b780bfac91fe638ab4ee94cbbb639305be492e439c37b0",
+      "sha256": "6d1e93081b0c6c5b1d63ea6da263127c7c60e4810fd81d4fb46c08ebff7f53a5",
+      "size_bytes": 674
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/74/8d/17d5aa3783c612239557f251b2be4fdcb43aec68db7405d1d6b7a9377c5d",
+      "sha256": "6b59bef01740aabdf99dc82d50bf53c2261fcbf9eb2c997ad1e9635fc7ad732a",
+      "size_bytes": 714
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/75/17/fefef5c06cc570a726f66b226d6abde231b9f5de2ae35354240c598b5518",
+      "sha256": "419bc8b207b08997ded7024264cbfed796885e039d50c21112c99289ca5064ae",
+      "size_bytes": 678
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/75/e3/8a67a6a69c573e507dac8723fa56c0451c1ebb42aa08925c3bd37a8435c3",
+      "sha256": "993a44fc0d0d8d8cdc0301e3848366cd7dad5f81f53ea8057d41bb0bb6e47d3e",
+      "size_bytes": 666
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/77/6b/29a46658abf61c9719df02da136c280351a126f4bf1dfded33238ec0f0f5",
+      "sha256": "f62d0dd759af7df762d7364a88d8be106499e1089a487607d95c28d40e6523a0",
+      "size_bytes": 704
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/79/23/3b5c4878bcc451766f7bcf5df7d2a4999739fcb2e30c1dcf6d759fbf963e",
+      "sha256": "ee7c2354fc4f952a1402b9dfed22969fbca4f5123c30a6378e3f7e081c12ac7f",
+      "size_bytes": 674
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/7a/da/c99fe20ee8c4a489636364819eeba7691d224f93b56f13b9d5cfd1943647",
+      "sha256": "91830c0a4099daf756ab8772f5d8776fe06fc941f326a26fbc61ee23c579af23",
+      "size_bytes": 684
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/80/0a/af231a546c7b050c2a64264985e2039e7cc7481bdbecd273d749133c468c",
+      "sha256": "8c0a3c361f1dde6019cd7862f810955c334e96607fab1bfd759c83023ca196db",
+      "size_bytes": 713
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/81/46/99a7db3a3209b5de2c760de391f5d6844b67a72311c9da9da01366aaa562",
+      "sha256": "1aa434a05c66efc2f52d5b9b9d6be1628d5654d8b568f25a0b22ca219f27013c",
+      "size_bytes": 666
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/82/d4/aed451e167a5b0a6599321bfc9dccaa481334065ca397082e26598c17294",
+      "sha256": "b579984c3a7936e79d83a1c78e1f40f8c4cc639fac7058944e31e4da2c10aa8a",
+      "size_bytes": 681
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/83/56/4f18b102f853efee1776840072d961037dd2a88b95721f1b60f8320d242c",
+      "sha256": "835b55cef7e95fc5aa54e7032c7d98747611ce9711e6461e90dc47cab5dbb241",
+      "size_bytes": 665
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/88/30/8a44b32d69a5591845c94cb9672fdd649aeb30591590834cefc04ee63fb3",
+      "sha256": "79ff4aaeefca35012fdb8b710f1cb47c491676b09ea27c8170656808c5e2ed26",
+      "size_bytes": 699
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/89/05/7f5b1c22a459a524f032a961bfc12d557754cbf1670d01de840100035dd3",
+      "sha256": "00b028d6b2d5c047d1d1c63cecf71972b1272fb49d9eff9c79396c87943c2528",
+      "size_bytes": 654
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/8b/93/7b95e0dedcb8078233a6c78e446ab86eeb34fe91750c0e4ce90602a1e1eb",
+      "sha256": "b3f6ed87f80a30e063ad3dc4bb7bbbf661829ea7762d0aaef4c0949de303c42c",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/8d/f8/aefda99ca03a1004596e312ea5d597c682502fb85fe4283d6c1079cacd8f",
+      "sha256": "d69e0431fb68ba599c3ebccd78dfe8fb3436b97156298b88139a42a952bbfb09",
+      "size_bytes": 698
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/93/69/8f5daa2e963ae7637a4ec1906adb0f59a184aeaff930e427cca84fdb2d25",
+      "sha256": "1ad1a008be72d42c1a0c7b72a83519d74b55d96ec7d6b2d512f31bc7704a14d3",
+      "size_bytes": 668
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/95/20/216edd7104928342f4e596f226b589b3733c83a5c056ece5738890de4460",
+      "sha256": "1c1fa37226a97cfaa39cdee6dd36f27db5109aebcf60a6a75d61112cf793c9b7",
+      "size_bytes": 742
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/9d/6b/76c21652f2169a69eaaea1063b83090d4a616b9b952147bafbb6e4588813",
+      "sha256": "e5eaba83770c92e5d41c2b55caaa872b331f78804bab5569b0ed32a5cc3c994d",
+      "size_bytes": 678
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/a1/30/a81ec09ff8849df96b20fa9c869a01023fc35e39a6fe539bee503fd77a00",
+      "sha256": "382f011872f647968716ac8987a0b99afde0c079ef456a4165bbae2bdb3cf44c",
+      "size_bytes": 664
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/b1/d5/dbda3997103ab7ac453133d444716b9c6df11b46865cd9c18413c734cfbc",
+      "sha256": "d01aa2efd7f65226c50f8e5605806b4e85b42cedd929e1cb4a998a3a22551701",
+      "size_bytes": 717
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/b4/9d/5a271b1898a503a6f8a6b2361235fd7539e9ae1aa5622d3e78124d1a0c34",
+      "sha256": "b10cf6826e32df2488bd0da6d775515b1ddf801218122a36ff69b5e4f4ba7ba7",
+      "size_bytes": 658
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/ba/31/0ff11cd5c49f9abb3792227a2806421aeb4003688278322146dd805a2cea",
+      "sha256": "bb4e677479f5353b31c55629de76dd35b2f387310494291caef5c35461fafb51",
+      "size_bytes": 698
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/bc/57/55d5ffad838c85bbe848a48a3e7a70d3e3f0ff7fb11f6a531d9a1902bec2",
+      "sha256": "ead662e7c0bcf10eb8a33ee01045c49a5ebd551ab289aac9de2a2422a3f6d2c6",
+      "size_bytes": 687
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/c1/62/1dc46fbb60fdd4bf8b84dc091030bd86c7d42fd5d9cf9bb6bc7a6d2a8ce0",
+      "sha256": "0541ba128b081e80279e2dfdd062a53e5505eca3955c6b47992af6b4583da895",
+      "size_bytes": 678
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/c3/ea/2ac6234e08578459cc70534addafba44ecd5267c7510db659945c34b184d",
+      "sha256": "8d73b699dcca32ba45b3ac8f53aa65e83f902d187865479279b1f27807f41179",
+      "size_bytes": 666
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/c4/b6/40fce73af539a38444740709e250d84965b565639acbceca877d820538ee",
+      "sha256": "0667cb2d0e9f87de88aaca598c6ff88137ecc6a2b513dd86985882992566340b",
+      "size_bytes": 694
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/c5/39/1d26498054c07107bca5dec3e4c244be0003d52ac2eebc92797ebafba65f",
+      "sha256": "4a7e21d13a6954203b2aebacf4ed14259a406ed5a5f830430a74ff67014dc129",
+      "size_bytes": 734
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/c9/1f/e25f670d26bc26d1cb236efef449fc8718223fd484c4107ba797934cb10c",
+      "sha256": "f881c39b6565a9a36acf09cecbdf010db51ba13120b11827cea520ec2575ed96",
+      "size_bytes": 659
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/ca/de/0bd207e4befdc1899d2abf0d3271f34fd6bd81eaaa9e7f4b005488802bb0",
+      "sha256": "a190d53035911da29692e87d3cd56aad5d2e8aa63266a5972129f950932a48eb",
+      "size_bytes": 654
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/cb/f4/2ace9a1dfbea06eafdda3044e21e830e5cbd76a5eb5a794acdc111e0c31e",
+      "sha256": "92b3a8b2ceaf09a568b2dedd5d00ceaa63be8523de472bdf6f4dd469ca5ed5d1",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/cd/d3/470c9cbb447615faafb6dfdf54632831f7f96c77771ea06a1eeffba41373",
+      "sha256": "4f30b84e99b98b614f05c34653516096f9d028fe7e7380616887401163d2e66b",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/ce/0c/a2590d81727a5f907971aec316d449516a7f62bdc4422e85ce5dbe1cc3ce",
+      "sha256": "5de04a84cf7376437fece50c731f56eb13b895dd41f6d4653afc7c115d410b65",
+      "size_bytes": 666
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/ce/72/f99ab9b86ec4a9a5033a4b41f687abf6110c7960ef61b601ec5567a38010",
+      "sha256": "1db810e7bae529aeb1f88d5d35dffd39292c08d7c71914f537f8b7c2970c9399",
+      "size_bytes": 682
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/d0/f3/570007f66e0a594c21201eb3e8f15d7a4d92bcb97b59246e5b7194b3b290",
+      "sha256": "43e773406e1dc600538dc42da33f9b815982cb98fa05b68dbd86cab9f7200284",
+      "size_bytes": 718
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/d6/ab/ff62b55961237d1adf5a5ed12d2ef28eeff1ed62df93854f5c4b0332c942",
+      "sha256": "fb3c73a3de6802fec6f372a990c65d30316dbdb9e7a2176f81d76990f35c2d8b",
+      "size_bytes": 711
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/e6/45/e236d9a349e738c8841f9d14a32f0d4d269da22830565d660e941dc2ff4e",
+      "sha256": "60a747a5325a7453d0f3266801069c4d5120fa17f96676273f82a0306bdd561a",
+      "size_bytes": 695
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/e9/a9/5b88cf3c6125d3f0a83e08d7fc6bc3848a7da209ed87f32d58376e0c2224",
+      "sha256": "4eaef581dd9e3438dc9091a00cfd1535a3e0d88ec4248d16c8e3d41c68738bac",
+      "size_bytes": 674
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/ee/2c/6d5c2061312fdd689bcc92e60ccf2b2e72bc15b7e22453f3a8680f491803",
+      "sha256": "133b40dbc2c0540b597c1db021c179774cb33ba172df2009e359b18acff5d7ec",
+      "size_bytes": 702
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/f1/17/7d3c580b65869fc4f55b962ca87f8ed801eeb7d0a568c2b65f39ea2df787",
+      "sha256": "d9417b6393c35a86796e0bd18c62fa1aa15d671fad3334da9a31bb4e4d593e5e",
+      "size_bytes": 670
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/f3/82/ffe6d031118c280f930d5a8ba11df17d931b6f09825617541d35aea437bc",
+      "sha256": "6e0cd141d161fe42cea3333ad27bcb81a00e064b3bbd2da7c00594848f93c82c",
+      "size_bytes": 678
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/fb/ea/7f7a0679c52edb767a55df3d93f847884d7909cf16c2f148ba11d53e9f7c",
+      "sha256": "0c206442689fed4ad1b72011ebc9204b3862cb9026b01d383fe3e7d1e89f898a",
+      "size_bytes": 670
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "c957b7e76f85ae644f5c113863270eda7e839a542345a2228aef3f20cb9436f5",
+      "size_bytes": 33426
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/api.test.mjs",
+      "sha256": "d1291d3d531d42a14d802fd17583983daa7107871028594c518afeae07c0e1a5",
+      "size_bytes": 9236
+    },
+    {
+      "path": "tests/private/eslint_runner.node",
+      "sha256": "a16e244df5af6a8fa495f0d6ca924d91b07b87b03a2447e0d932c26a2f8f255b",
+      "size_bytes": 5432
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "68cf5b9d03bcb0710b11140586725c0da63fa993307c74203000bea98c7342c2",
+      "size_bytes": 1255
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "f9d9acaaa6e6b6d1c0e9f83008dece6e616f89899929d3f1f365f1308aa2268b",
+      "size_bytes": 2255
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "eslint",
+  "task_version": "2.0.0",
+  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+}
