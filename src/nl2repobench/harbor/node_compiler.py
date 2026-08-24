@@ -14,6 +14,7 @@ import shutil
 import tarfile
 import tempfile
 from pathlib import Path
+from typing import Any
 
 import tomli_w
 
@@ -287,7 +288,7 @@ WORKDIR /tests
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
         }
-        data = {
+        data: dict[str, Any] = {
             "schema_version": self.toolchain.harbor.task_schema,
             "artifacts": [manifest.harbor.workspace_artifact],
             "task": {
@@ -319,6 +320,10 @@ WORKDIR /tests
                 "storage_mb": manifest.harbor.storage_mb,
             },
         }
+        if manifest.harbor.agent_network_mode == "allowlist":
+            # Harbor only accepts allowed_hosts in allowlist mode. The catalog
+            # schema has already restricted these to exact registry hostnames.
+            data["environment"]["allowed_hosts"] = list(manifest.harbor.agent_allowed_hosts)
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
     def _test_script(self, manifest: TaskManifestV2) -> str:

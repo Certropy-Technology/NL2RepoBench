@@ -26,6 +26,7 @@ from nl2repobench.authoring.catalog import (
     validate_compiled_dataset,
 )
 from nl2repobench.authoring.inventory import InventoryError, scan_python_source, write_inventory
+from nl2repobench.authoring.network_lint import lint_catalog
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.models import (
     DatasetManifest,
@@ -448,6 +449,30 @@ def validate_task(
         }
     )
     if not canonical_match:
+        raise typer.Exit(code=1)
+
+
+@task_app.command("lint-network")
+def lint_network(
+    tasks_root: Annotated[
+        Path,
+        typer.Option("--tasks-root", help="Catalog task directory to scan."),
+    ] = Path("catalog/tasks"),
+    strict: Annotated[
+        bool,
+        typer.Option("--strict", help="Treat warnings as failures."),
+    ] = False,
+) -> None:
+    """Lint run-time network egress policy across catalog tasks.
+
+    Fails when a task can still reach the frozen upstream source it must
+    reproduce: a missing or contradictory policy, a forbidden host, or
+    reference-source acquisition such as ``git clone``.
+    """
+
+    report = lint_catalog(tasks_root)
+    _json_print(report.as_dict())
+    if report.errors or (strict and report.warnings):
         raise typer.Exit(code=1)
 
 

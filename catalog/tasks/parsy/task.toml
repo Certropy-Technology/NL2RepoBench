@@ -27,6 +27,12 @@ python_version = ">=3.9"
 os_name = "unknown"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+
 [dependencies]
 # These are source-declared build/test requirements, not an offline closure.
 # Runtime dependencies remain empty; dependency provenance is still unknown.

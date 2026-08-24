@@ -25,7 +25,13 @@ base_image = "python:3.10.11"
 base_image_digest = "sha256:fc1d7d6e1df26c603b5729e92fff684a56e9d1b8c6db263c6169a1f250e80787"
 system_packages = ["ca-certificates", "git"]
 build_command = "apt-get install --no-install-recommends ca-certificates git"
-network_mode = "public"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 
 [dependencies]
 status = "unknown"
@@ -53,7 +59,7 @@ agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
 candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096

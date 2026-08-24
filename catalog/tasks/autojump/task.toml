@@ -25,10 +25,16 @@ base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = ["ca-certificates", "git"]
 build_command = "apt-get install --no-install-recommends ca-certificates git"
-network_mode = "public"
+network_mode = "no-network"
 
 # The immutable verifier image carries the legacy pytest and mock runtime.
 # A standalone hash-locked wheelhouse is not part of this task-local package.
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 [dependencies]
 status = "unknown"
 installer = "pip"
@@ -55,7 +61,7 @@ agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096

@@ -10,6 +10,7 @@ import shlex
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Any
 
 import tomli_w
 
@@ -162,11 +163,16 @@ class HarborCompiler:
                 "RUN apt-get update && apt-get install -y --no-install-recommends "
                 f"{quoted} && rm -rf /var/lib/apt/lists/*\n\n"
             )
-        dockerfile = (
-            f"FROM --platform=linux/amd64 {image}\n\n"
-            + install
-            + "WORKDIR /workspace\n"
-        )
+        # The Docker build phase still has network, so the third-party build and
+        # test dependency closure is baked into the image here. That is what lets
+        # the agent phase run with no-network: nothing has to be fetched later.
+        # Only third-party dependencies are installed; the package under test is
+        # what the agent must write itself.
+        dependencies = tuple(manifest.dependency_bundle.packages)
+        if dependencies:
+            quoted = " ".join(shlex.quote(package) for package in dependencies)
+            install += f"RUN pip install --no-cache-dir {quoted}\n\n"
+        dockerfile = f"FROM --platform=linux/amd64 {image}\n\n" + install + "WORKDIR /workspace\n"
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
         profile = manifest.harbor
         assert profile is not None
@@ -350,9 +356,7 @@ WORKDIR /tests
                 raise HarborCompileError(f"dependency bundle contains non-wheel file: {path.name}")
             distribution = path.name.split("-", 1)[0]
             wheel_distributions.add(re.sub(r"[-_.]+", "-", distribution.casefold()))
-        missing_wheels = sorted(
-            name for name in requirements if name not in wheel_distributions
-        )
+        missing_wheels = sorted(name for name in requirements if name not in wheel_distributions)
         if missing_wheels:
             raise HarborCompileError(
                 "dependency wheelhouse is incomplete: " + ", ".join(missing_wheels)
@@ -385,7 +389,7 @@ WORKDIR /tests
     def _write_task_toml(self, manifest: TaskManifest, task_root: Path) -> None:
         profile = manifest.harbor
         assert profile is not None
-        data = {
+        data: dict[str, Any] = {
             "schema_version": self.toolchain.harbor.task_schema,
             "artifacts": [profile.workspace_artifact],
             "task": {
@@ -425,6 +429,10 @@ WORKDIR /tests
                 "storage_mb": profile.storage_mb,
             },
         }
+        if profile.agent_network_mode == "allowlist":
+            # Harbor only accepts allowed_hosts in allowlist mode. The catalog
+            # schema has already restricted these to exact registry hostnames.
+            data["environment"]["allowed_hosts"] = list(profile.agent_allowed_hosts)
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
     def _test_script(self, manifest: TaskManifest) -> str:
@@ -677,9 +685,7 @@ exit 0
         try:
             copy_bundle_tree(source, destination)
         except BundleTreeSourceError as exc:
-            raise HarborCompileError(
-                f"development fixture directory is missing: {source}"
-            ) from exc
+            raise HarborCompileError(f"development fixture directory is missing: {source}") from exc
         except BundleTreeError as exc:
             raise HarborCompileError(str(exc)) from exc
 

@@ -1,23 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "=== Oracle: Copying upstream math-verify source code ==="
+# Oracle-only reference source acquisition.
+#
+# harbor/solution/ is uploaded by the Oracle agent alone and is not part of the
+# agent image build context, so this never reaches the model agent. Task
+# metadata still declares no-network; authorize the source host for an Oracle
+# run only, e.g. `harbor run -a oracle --allow-agent-hosts codeload.github.com`.
+#
+# SOURCE_ARCHIVE_SHA256 is source_digest from catalog/tasks/math-verify/task.toml and
+# equals sha256(git archive --format=tar 68da5f36c72d83e987bda77155c3bb26898913c0), which is byte-reproducible
+# for a fixed revision. A changed remote fails the check instead of being used.
 
-# Fetch the immutable upstream revision used by this task.
-git init /tmp/math-verify-src >/dev/null
-git -C /tmp/math-verify-src remote add origin https://github.com/huggingface/math-verify
-git -C /tmp/math-verify-src fetch --depth 1 origin 68da5f36c72d83e987bda77155c3bb26898913c0 >/dev/null
-git -C /tmp/math-verify-src checkout --detach FETCH_HEAD >/dev/null
+UPSTREAM_URL="https://github.com/huggingface/math-verify"
+UPSTREAM_REVISION="68da5f36c72d83e987bda77155c3bb26898913c0"
+SOURCE_ARCHIVE_SHA256="d169504b20b3e34a9c8c98430d54eb50c64316e1fc4309546a5b96422b29b73e"
+SOURCE_DIR="/tmp/math-verify-source"
+SOURCE_ARCHIVE="/tmp/math-verify-source.tar"
 
-# Copy entire source tree to workspace
-cd /tmp/math-verify-src
-cp -r * /workspace/ 2>/dev/null || true
-cp -r .* /workspace/ 2>/dev/null || true
+rm -rf "$SOURCE_DIR" "$SOURCE_ARCHIVE"
 
-# Keep the checkout metadata: projects using VCS versioning need it during
-# editable installation.  Remove only CI metadata that is irrelevant to the
-# candidate workspace.
+git init -q "$SOURCE_DIR"
+git -C "$SOURCE_DIR" remote add origin "$UPSTREAM_URL"
+git -C "$SOURCE_DIR" fetch -q --depth 1 origin "$UPSTREAM_REVISION"
+git -C "$SOURCE_DIR" checkout -q --detach FETCH_HEAD
+
+resolved_revision="$(git -C "$SOURCE_DIR" rev-parse HEAD)"
+if [[ "$resolved_revision" != "$UPSTREAM_REVISION" ]]; then
+    echo "unexpected source revision: $resolved_revision" >&2
+    exit 1
+fi
+
+git -C "$SOURCE_DIR" archive --format=tar "$UPSTREAM_REVISION" > "$SOURCE_ARCHIVE"
+printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check --strict
+
+find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+tar -xf "$SOURCE_ARCHIVE" -C /workspace
 rm -rf /workspace/.github
-
-echo "✓ Oracle solution complete"
-ls -la /workspace/

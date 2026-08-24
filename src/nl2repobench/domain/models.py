@@ -13,11 +13,26 @@ from enum import StrEnum
 from pathlib import PurePosixPath
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, GetJsonSchemaHandler, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    GetJsonSchemaHandler,
+    JsonValue,
+    field_validator,
+    model_validator,
+)
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import CoreSchema
 
 from .canonical import content_digest
+from .network_policy import (
+    OFFLINE_DEPENDENCY_SOURCES,
+    NetworkPolicyMode,
+    admissible_hosts,
+    host_category,
+    validate_allowed_hosts,
+)
 
 SCHEMA_VERSION: Literal["1.0"] = "1.0"
 SHA256_PATTERN = r"^sha256:[0-9a-f]{64}$"
@@ -166,6 +181,98 @@ class SourceLock(RecordModel):
         return self
 
 
+_ADMISSIBLE_HOST_ENUM: list[JsonValue] = list(sorted(admissible_hosts()))
+_OFFLINE_DEPENDENCY_ENUM: list[JsonValue] = list(OFFLINE_DEPENDENCY_SOURCES)
+
+
+class NetworkPolicy(RecordModel):
+    """Declared run-time egress policy for one task.
+
+    The dependency closure is installed at image build time, where Docker still
+    has network, so ``no-network`` is the preferred run-time mode. ``allowlist``
+    covers what cannot be preinstalled: primarily the model provider endpoint an
+    in-container agent needs to reach, and per-task registry hosts for packages
+    that resist baking. Code hosts, raw file endpoints, wildcard suffixes and
+    generic source mirrors are rejected by
+    :mod:`nl2repobench.domain.network_policy` so that an agent cannot fetch the
+    frozen upstream implementation it is asked to reproduce.
+    """
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "if": {
+                        "required": ["mode"],
+                        "properties": {"mode": {"const": "allowlist"}},
+                    },
+                    "then": {
+                        "required": ["allowed_hosts", "reason"],
+                        "properties": {
+                            "allowed_hosts": {
+                                "type": "array",
+                                "minItems": 1,
+                                "items": {"enum": _ADMISSIBLE_HOST_ENUM},
+                            },
+                            "reason": {"type": "string", "minLength": 1},
+                        },
+                    },
+                    "else": {"properties": {"allowed_hosts": {"maxItems": 0}}},
+                },
+                {"properties": {"offline_dependencies": {"enum": _OFFLINE_DEPENDENCY_ENUM}}},
+            ]
+        }
+    )
+
+    mode: NetworkPolicyMode = "no-network"
+    allowed_hosts: tuple[str, ...] = ()
+    offline_dependencies: Literal["preinstalled-image", "private-artifact", "missing"] = "missing"
+    reference_source_fetch: Literal["forbidden"] = "forbidden"
+    reason: str | None = None
+
+    @property
+    def registry_hosts(self) -> tuple[str, ...]:
+        """Allowed package registry hosts, which should stay empty when possible."""
+
+        return tuple(h for h in self.allowed_hosts if host_category(h) == "registry")
+
+    @property
+    def model_provider_hosts(self) -> tuple[str, ...]:
+        """Allowed model inference endpoints for an in-container agent."""
+
+        return tuple(h for h in self.allowed_hosts if host_category(h) == "model-provider")
+
+    @field_validator("allowed_hosts", mode="before")
+    @classmethod
+    def normalize_hosts(cls, value: object) -> tuple[str, ...]:
+        if value is None:
+            return ()
+        return validate_allowed_hosts(value)
+
+    @model_validator(mode="after")
+    def validate_policy(self) -> NetworkPolicy:
+        if self.mode == "allowlist":
+            if not self.allowed_hosts:
+                raise ValueError(
+                    "allowlist mode requires at least one exact registry hostname; "
+                    "prefer mode='no-network' with preinstalled dependencies"
+                )
+            if not (self.reason or "").strip():
+                raise ValueError(
+                    "allowlist mode requires a reason recording why the dependency "
+                    "closure cannot be preinstalled"
+                )
+        elif self.allowed_hosts:
+            raise ValueError("allowed_hosts is only valid when mode='allowlist'")
+        if self.mode == "no-network" and self.offline_dependencies == "missing":
+            if not (self.reason or "").strip():
+                raise ValueError(
+                    "no-network with offline_dependencies='missing' requires a reason "
+                    "naming the wheelhouse or package cache that is still absent"
+                )
+        return self
+
+
 class EnvironmentLock(RecordModel):
     """Reproducible execution environment metadata."""
 
@@ -207,6 +314,19 @@ class EnvironmentLock(RecordModel):
     system_packages: tuple[str, ...] = ()
     build_command: str | None = None
     network_mode: Literal["public", "no-network", "allowlist"] | None = None
+    network_policy: NetworkPolicy | None = None
+
+    @model_validator(mode="after")
+    def validate_network_policy_consistency(self) -> EnvironmentLock:
+        policy = self.network_policy
+        if policy is None:
+            return self
+        if self.network_mode is not None and self.network_mode != policy.mode:
+            raise ValueError(
+                f"network_mode={self.network_mode!r} contradicts "
+                f"network_policy.mode={policy.mode!r}"
+            )
+        return self
 
     @model_validator(mode="after")
     def validate_known_environment(self) -> EnvironmentLock:
@@ -269,12 +389,7 @@ class TaskVerifierSpec(RecordModel):
     @model_validator(mode="after")
     def validate_private_entrypoint(self) -> TaskVerifierSpec:
         path = PurePosixPath(self.entrypoint)
-        if (
-            path.is_absolute()
-            or not self.entrypoint
-            or "." in path.parts
-            or ".." in path.parts
-        ):
+        if path.is_absolute() or not self.entrypoint or "." in path.parts or ".." in path.parts:
             raise ValueError("verifier.entrypoint must be a safe relative path")
         if self.bundle.visibility is not Visibility.PRIVATE:
             raise ValueError("verifier.bundle must be private")
@@ -362,7 +477,26 @@ class HarborExecutionProfile(RecordModel):
     candidate_install_timeout_sec: Annotated[float, Field(gt=0)] = 90.0
     candidate_total_timeout_sec: Annotated[float, Field(gt=0)] = 300.0
     agent_network_mode: Literal["public", "no-network", "allowlist"] = "public"
+    agent_allowed_hosts: tuple[str, ...] = ()
     verifier_network_mode: Literal["no-network"] = "no-network"
+
+    @field_validator("agent_allowed_hosts", mode="before")
+    @classmethod
+    def normalize_agent_hosts(cls, value: object) -> tuple[str, ...]:
+        if value is None:
+            return ()
+        return validate_allowed_hosts(value)
+
+    @model_validator(mode="after")
+    def validate_agent_allowlist(self) -> HarborExecutionProfile:
+        if self.agent_network_mode == "allowlist" and not self.agent_allowed_hosts:
+            raise ValueError("agent_network_mode='allowlist' requires agent_allowed_hosts")
+        if self.agent_allowed_hosts and self.agent_network_mode != "allowlist":
+            raise ValueError(
+                "agent_allowed_hosts is only valid with agent_network_mode='allowlist'"
+            )
+        return self
+
     cpus: Annotated[int, Field(gt=0)] = 2
     memory_mb: Annotated[int, Field(ge=512)] = 2048
     storage_mb: Annotated[int, Field(ge=1024)] = 4096
@@ -378,8 +512,7 @@ class HarborExecutionProfile(RecordModel):
         )
         if required >= self.verifier_timeout_sec:
             raise ValueError(
-                "candidate install + call budgets + 60s reserve must be below "
-                "verifier_timeout_sec"
+                "candidate install + call budgets + 60s reserve must be below verifier_timeout_sec"
             )
         return self
 

@@ -218,6 +218,17 @@
           "default": null,
           "title": "Network Mode"
         },
+        "network_policy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NetworkPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "os_name": {
           "anyOf": [
             {
@@ -270,6 +281,14 @@
       "additionalProperties": false,
       "description": "Execution settings deterministically projected into Harbor task.toml.",
       "properties": {
+        "agent_allowed_hosts": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Agent Allowed Hosts",
+          "type": "array"
+        },
         "agent_network_mode": {
           "default": "public",
           "enum": [
@@ -420,6 +439,142 @@
       "title": "MetricContract",
       "type": "object",
       "x-nl2repobench-model": "MetricContract",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "NetworkPolicy": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "else": {
+            "properties": {
+              "allowed_hosts": {
+                "maxItems": 0
+              }
+            }
+          },
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "allowlist"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "allowed_hosts": {
+                "items": {
+                  "enum": [
+                    "api.anthropic.com",
+                    "api.cohere.com",
+                    "api.deepseek.com",
+                    "api.fireworks.ai",
+                    "api.groq.com",
+                    "api.mistral.ai",
+                    "api.openai.com",
+                    "api.together.xyz",
+                    "api.x.ai",
+                    "ark.cn-beijing.volces.com",
+                    "bedrock-runtime.us-east-1.amazonaws.com",
+                    "crates.io",
+                    "dashscope-intl.aliyuncs.com",
+                    "dashscope.aliyuncs.com",
+                    "files.pythonhosted.org",
+                    "generativelanguage.googleapis.com",
+                    "index.crates.io",
+                    "openrouter.ai",
+                    "proxy.golang.org",
+                    "pypi.org",
+                    "registry.npmjs.org",
+                    "static.crates.io",
+                    "sum.golang.org"
+                  ]
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "reason": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "allowed_hosts",
+              "reason"
+            ]
+          }
+        },
+        {
+          "properties": {
+            "offline_dependencies": {
+              "enum": [
+                "preinstalled-image",
+                "private-artifact",
+                "missing"
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Declared run-time egress policy for one task.\n\nThe dependency closure is installed at image build time, where Docker still\nhas network, so ``no-network`` is the preferred run-time mode. ``allowlist``\ncovers what cannot be preinstalled: primarily the model provider endpoint an\nin-container agent needs to reach, and per-task registry hosts for packages\nthat resist baking. Code hosts, raw file endpoints, wildcard suffixes and\ngeneric source mirrors are rejected by\n:mod:`nl2repobench.domain.network_policy` so that an agent cannot fetch the\nfrozen upstream implementation it is asked to reproduce.",
+      "properties": {
+        "allowed_hosts": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Hosts",
+          "type": "array"
+        },
+        "mode": {
+          "default": "no-network",
+          "enum": [
+            "no-network",
+            "allowlist"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "offline_dependencies": {
+          "default": "missing",
+          "enum": [
+            "preinstalled-image",
+            "private-artifact",
+            "missing"
+          ],
+          "title": "Offline Dependencies",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "reference_source_fetch": {
+          "const": "forbidden",
+          "default": "forbidden",
+          "title": "Reference Source Fetch",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "NetworkPolicy",
+      "type": "object",
+      "x-nl2repobench-model": "NetworkPolicy",
       "x-nl2repobench-runtime-validation": true
     },
     "ProvenanceStatus": {

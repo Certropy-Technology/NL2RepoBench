@@ -1,23 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "=== Oracle: Copying upstream fuzzywuzzy source code ==="
+# Oracle-only reference source acquisition.
+#
+# harbor/solution/ is uploaded by the Oracle agent alone and is not part of the
+# agent image build context, so this never reaches the model agent. Task
+# metadata still declares no-network; authorize the source host for an Oracle
+# run only, e.g. `harbor run -a oracle --allow-agent-hosts codeload.github.com`.
+#
+# SOURCE_ARCHIVE_SHA256 is source_digest from catalog/tasks/fuzzywuzzy/task.toml and
+# equals sha256(git archive --format=tar 749d61ab2ea35498c4d04d74dafde9248f253fb4), which is byte-reproducible
+# for a fixed revision. A changed remote fails the check instead of being used.
 
-# Fetch the immutable upstream revision used by this task.
-git init /tmp/fuzzywuzzy-src >/dev/null
-git -C /tmp/fuzzywuzzy-src remote add origin https://github.com/seatgeek/fuzzywuzzy
-git -C /tmp/fuzzywuzzy-src fetch --depth 1 origin 749d61ab2ea35498c4d04d74dafde9248f253fb4 >/dev/null
-git -C /tmp/fuzzywuzzy-src checkout --detach FETCH_HEAD >/dev/null
+UPSTREAM_URL="https://github.com/seatgeek/fuzzywuzzy"
+UPSTREAM_REVISION="749d61ab2ea35498c4d04d74dafde9248f253fb4"
+SOURCE_ARCHIVE_SHA256="12c83e8b8cc27274d1795b2871659a08e9c2cabc7aa44f6dfca3338b9b3c9a15"
+SOURCE_DIR="/tmp/fuzzywuzzy-source"
+SOURCE_ARCHIVE="/tmp/fuzzywuzzy-source.tar"
 
-# Copy entire source tree to workspace
-cd /tmp/fuzzywuzzy-src
-cp -r * /workspace/ 2>/dev/null || true
-cp -r .* /workspace/ 2>/dev/null || true
+rm -rf "$SOURCE_DIR" "$SOURCE_ARCHIVE"
 
-# Keep the checkout metadata: projects using VCS versioning need it during
-# editable installation.  Remove only CI metadata that is irrelevant to the
-# candidate workspace.
+git init -q "$SOURCE_DIR"
+git -C "$SOURCE_DIR" remote add origin "$UPSTREAM_URL"
+git -C "$SOURCE_DIR" fetch -q --depth 1 origin "$UPSTREAM_REVISION"
+git -C "$SOURCE_DIR" checkout -q --detach FETCH_HEAD
+
+resolved_revision="$(git -C "$SOURCE_DIR" rev-parse HEAD)"
+if [[ "$resolved_revision" != "$UPSTREAM_REVISION" ]]; then
+    echo "unexpected source revision: $resolved_revision" >&2
+    exit 1
+fi
+
+git -C "$SOURCE_DIR" archive --format=tar "$UPSTREAM_REVISION" > "$SOURCE_ARCHIVE"
+printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check --strict
+
+find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+tar -xf "$SOURCE_ARCHIVE" -C /workspace
 rm -rf /workspace/.github
-
-echo "✓ Oracle solution complete"
-ls -la /workspace/

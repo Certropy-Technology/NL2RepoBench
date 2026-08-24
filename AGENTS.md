@@ -64,6 +64,8 @@ dataset_score = mean(task_score for every valid task)
 
 不要在同一次正式 benchmark run 中边跑边修改 instruction、测试、镜像或分母。任何此类修改都使已产生结果失效，必须提升版本并从头重跑受影响的控制和 trials。
 
+只改变**获取方式**而不改变**内容**的维护不在此列：例如把 Oracle 的无校验 `git fetch` 换成固定 revision + 摘要校验（见 §9.1）。revision 不变、内容由摘要证明一致，因此已有结果不失效，也不需要提升版本。判据是内容能否被证明未变，而不是文件是否被编辑过。
+
 ## 4. 批量出题总原则
 
 大规模出题采用“小批次、可重跑 stage、单题隔离、统一集成”的方式：
@@ -192,7 +194,10 @@ empty workspace                -> near 0
 packaging + stub functions     -> low score
 forged test/reward files       -> cannot affect grading
 offline verifier               -> completes successfully
+network policy lint            -> 0 error（uv run nl2repo task lint-network）
 ```
+
+网络策略是静态门禁，不需要跑容器：`uv run nl2repo task lint-network` 检查每题是否声明了显式 `[environment.network_policy]`、allowlist 是否只含精确 registry/provider hostname、Oracle 取源码是否有摘要校验，以及公开 instruction 是否泄漏了可取回上游源码的 endpoint。详见 §9.1。
 
 当前 Package campaign contract v2 使用一次 Oracle gate：Oracle `valid=false` 或 reward 低于 0.80 时，依次检查 environment、artifact 路径、安装、collection、固定分母和 reward 输出。一次 Oracle 结果不证明跨运行稳定性；需要稳定性研究时必须另建实验版本，不能把 v2 结果与历史三次 Oracle 结果直接合并。不得通过删除真实功能断言来跨过 0.80 门槛，并保存 passed/total、原因和 Oracle ceiling。
 
@@ -231,6 +236,59 @@ uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle
 ```
 
 新题先运行 Oracle，再运行 empty/nop 和 stub 控制，最后才运行真实 agent。不要仅因 Harbor 能执行就声称与旧 harness parity；必须在 Easy/Medium/Hard 的 5 到 10 题上比较 passed/total、setup errors、runtime、steps 和 termination reason。
+
+### 9.1 Oracle 取源码与网络的当前做法
+
+Oracle 是参考实现，它拿冻结源码是合法的；模型 agent 拿源码不合法。两者靠“题目元数据恒为断网 + 运行时授权”区分，不靠给题目放宽网络。
+
+隔离依据（`harbor/agents/oracle.py`）：`harbor/solution/` 只有 Oracle agent 会 `upload_dir`，而 agent image 的 build context 只有 `environment/`。所以参考实现不会进模型镜像。也因此不得把冻结源码烘进 agent image（见 §9 关于 Oracle 不进 agent image 的规定）。
+
+每题 `task.toml` 固定声明断网：
+
+```toml
+[environment.network_policy]
+mode = "no-network"              # 只允许 no-network 或 allowlist，public 不可表达
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+```
+
+第三方依赖在 **Docker build 阶段**安装（build 阶段有网络），compiler 会把 `[dependencies].packages` 生成 `RUN pip install --no-cache-dir ...`。因此 run 阶段不需要 registry。`allowlist` 只收精确 hostname，用于确实无法预装的情况；`ALLOWED_REGISTRY_HOSTS` 命中会被 lint 提示优先改为预装。
+
+LLM provider host 是**运行时**配置，不写进题目：Harbor `trial/network_policy.py:merge_extra_allowlists` 会把 `agent.extra_allowed_hosts` 合并进 agent 阶段策略。注意题目若声明 `public`，运行时注入会被忽略并告警。
+
+`solve.sh` 必须固定 revision 并校验内容，不允许无校验 fetch。标准形态（`scripts/pin_oracle_source.py` 生成）：
+
+```bash
+git -C "$SOURCE_DIR" fetch -q --depth 1 origin "$UPSTREAM_REVISION"
+resolved_revision="$(git -C "$SOURCE_DIR" rev-parse HEAD)"   # 断言等于 UPSTREAM_REVISION
+git -C "$SOURCE_DIR" archive --format=tar "$UPSTREAM_REVISION" > "$SOURCE_ARCHIVE"
+printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check --strict
+```
+
+摘要直接复用该题 `[source].source_digest`（等于 `sha256(git archive <revision>)`），不需要新增 artifact。
+
+例外：上游在 `.gitattributes` 标了 `export-subst` 且用 git 推导版本（hatch-vcs / setuptools-scm）时，按 commit SHA 浅取会同时坏两件事——`git archive` 替换 `describe-name`/`ref-names` 导致摘要不可复现，且无 tag 使版本解析成 `0.0`（`structlog` 的上游 `tests/test_packaging.py` 会因此失败）。这类题改为取 **tag ref**、仍断言 commit SHA，并且**不做 checkout**（`checkout --detach` 会把 `HEAD` 写进 `ref-names` 从而改变 tar）。已知例外记录在 `scripts/pin_oracle_source.py` 的 `_TAG_REFS`。
+
+运行 Oracle 时显式授权源码 host；跑模型时不授权：
+
+```bash
+# Oracle：授权取源码
+uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle \
+  --allow-agent-hosts codeload.github.com
+
+# 模型：不授权，源码不可达
+uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a openhands -m '<provider>/<model>'
+```
+
+静态检查全仓库网络策略（有 error 时退出码非 0）：
+
+```bash
+uv run nl2repo task lint-network [--strict]
+```
+
+`oracle-source-unverified` 表示某题 Oracle 还在无校验取源码；`oracle-requires-host-authorization` 是提示该题 Oracle 需要上面的授权参数，属预期状态而非缺陷。
+
+维护 Oracle 执行路径（例如把无校验 fetch 换成 pin + 校验）不改变题目语义：revision 不变，内容由摘要证明一致。这类改动不使已有结果失效，也不需要提升版本。真正改变 instruction、隐藏测试、镜像或分母时才按 §3 处理。
 
 ## 10. 旧 OpenHands Harness 的运行协议
 

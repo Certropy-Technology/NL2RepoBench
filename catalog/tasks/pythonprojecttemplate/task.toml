@@ -25,6 +25,12 @@ base_image = "python:3.10.18"
 base_image_digest = "sha256:e501e3982f1b1363dc3a010affe949eb55c3a058bc6614a095bb71d8203b2951"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+
 [dependencies]
 # The full runtime/test closure is pinned by the immutable verifier image;
 # no standalone wheelhouse artifact is committed in this legacy conversion.
@@ -62,7 +68,7 @@ agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
 candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096
