@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "status": "production-json-boundary",
+  "purpose": "Verifier-owned bounded child protocol for the single parseNpmTarballUrl export.",
+  "transport": {
+    "mode": "jsonl",
+    "encoding": "utf-8",
+    "request": "one JSON object per line on stdin",
+    "response": "one JSON object per line on stdout",
+    "stderr": "diagnostics only; never parsed as a result",
+    "canonical_json": {
+      "ensure_ascii": false,
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "allow_nan": false
+    }
+  },
+  "request": {
+    "required": ["id", "operation", "payload"],
+    "id_type": "string",
+    "operations": ["call", "inventory"],
+    "call": {
+      "payload": {"args": "JSON array with exactly one bounded value"},
+      "package": "parse-npm-tarball-url",
+      "export": "parseNpmTarballUrl"
+    },
+    "inventory": {
+      "payload": "empty object",
+      "result": "package-shape booleans and export-name strings only"
+    },
+    "json_value": "null, boolean, finite number, string, array, or plain object recursively",
+    "bounds": {
+      "request_bytes": 65536,
+      "response_bytes": 262144,
+      "argument_count": 1,
+      "json_depth": 16
+    }
+  },
+  "response": {
+    "success": {
+      "id": "string",
+      "ok": true,
+      "value": "null, JSON object, or inventory JSON object"
+    },
+    "failure": {
+      "id": "string",
+      "ok": false,
+      "error_type": "bounded exception class or adapter code",
+      "message": "bounded message without paths, stacks, timestamps, or environment dumps"
+    }
+  },
+  "isolation": {
+    "candidate_network": "none",
+    "candidate_source": "empty workspace only",
+    "forbidden_boundary_values": ["function", "symbol", "BigInt", "Date", "cycle", "file handle", "TTY handle", "source code"],
+    "stdout": "JSON responses only",
+    "stderr": "diagnostics only"
+  }
+}
