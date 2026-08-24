@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/uuid"
+version = "2.0.1"
+description = "Build the real uuidjs/uuid v14.0.2 Node ESM package for a deterministic RFC 9562 API slice."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "uuid",
+    "rfc9562",
+    "crypto",
+    "json",
+]
+
+[metadata]
+difficulty = "easy"
+category = "uuid-library"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "uuid",
+    "rfc9562",
+    "crypto",
+    "json",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 11
+canonical_manifest_digest = "sha256:2781fd9d2d69d9bdd843cba179e96311b3c2b7c8518cbc8d66e11dfad61a61ff"
+toolchain_lock_digest = "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

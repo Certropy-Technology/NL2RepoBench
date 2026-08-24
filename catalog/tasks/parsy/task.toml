@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/parsy"
+version = "0.2.0"
+description = "Build the parsy parser-combinator library from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "parser-combinators",
+    "pytest",
+    "separate-verifier",
+    "no-network",
+]
+
+[metadata]
+difficulty = "easy"
+category = "parser-combinators"
+tags = [
+    "python",
+    "parser-combinators",
+    "repository-generation",
+    "pytest",
+    "stdlib",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 88
+canonical_manifest_digest = "sha256:84c9477353bc6a04da9982fb1a8c552ab2c0023dca082c3bd49c91b94c2bdada"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096

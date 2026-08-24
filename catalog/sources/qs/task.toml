@@ -20,48 +20,52 @@ submodules = []
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-base_image = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
-base_image_digest = "sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier run without egress; npm dependencies are preinstalled from the private hash-locked cache, and only Oracle receives the local pinned source archive."
 
 [environment.runtime]
 language = "node"
 runtime = "node"
-version = "22.23.1"
+version = "24.19.0"
 package_manager = "npm"
-package_manager_version = "10.9.8"
+package_manager_version = "11.17.0"
 architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-# The source intentionally has no lockfile. A reviewed v3 lock/cache closure
-# is required before this development source can be compiled for publication.
-status = "unknown"
+status = "known"
 ecosystem = "npm"
 consumer = "candidate-runtime"
 lockfile_name = "package-lock.json"
 lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "10.9.8"
+package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
 packages = ["es-define-property", "side-channel"]
+artifact = { digest = "sha256:8e7c589b4204a84381dc37717692779bcf77c533e60bb78de316c80a0f0ec6ab", size_bytes = 11970560, media_type = "application/gzip", uri = "artifact://private/sha256:8e7c589b4204a84381dc37717692779bcf77c533e60bb78de316c80a0f0ec6ab", visibility = "private" }
 
 [tests]
-# This is the deterministic upstream Tape leaf observation. A future private
-# node:test adapter may narrow the JSON-only subset and must then freeze a new
-# denominator/version before packaging.
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 1045
+expected_total = 17
 expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111", visibility = "private" }
+test_bundle = { digest = "sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
-description = "Development-only Node CommonJS pilot for JSON-compatible query-string parsing and stringifying."
+description = "Pinned qs CommonJS JSON query-string contract with a deterministic 17-leaf node:test slice."
 keywords = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
@@ -75,5 +79,13 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "specified"
-reason = "Development-only v2 authoring source; private node:test adapter, dependency/cache artifact, verifier, Oracle, and controls are intentionally absent."
+status = "oracle-passed"
+owner = "qs-repair"
+reason = "Official Harbor Oracle passed valid=true with 17/17 fixed leaves and reward 1.0."
+
+[oracle_bundle]
+digest = "sha256:4a8830b28168e71bf06afd5f1741da3b5d1445ae5ee637a38fa65eb64482537d"
+size_bytes = 12032000
+media_type = "application/gzip"
+uri = "artifact://private/sha256:4a8830b28168e71bf06afd5f1741da3b5d1445ae5ee637a38fa65eb64482537d"
+visibility = "private"

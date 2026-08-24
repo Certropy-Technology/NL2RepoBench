@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "parsy"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -20,11 +20,11 @@ source_digest = "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b0
 # revision; LICENSE is 1132 bytes with SHA-256
 # 3cd274c6ec7873e4f03693145819ec1fb82768d1386b7c59b4ff194c79853e06.
 [environment]
-# The source supports Python >=3.9, but no final task-specific interpreter,
-# OS, base-image digest, or image filesystem lock is established in this lane.
-status = "unknown"
-python_version = ">=3.9"
-os_name = "unknown"
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 network_mode = "no-network"
 
 [environment.network_policy]
@@ -34,26 +34,32 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 
 [dependencies]
-# These are source-declared build/test requirements, not an offline closure.
-# Runtime dependencies remain empty; dependency provenance is still unknown.
-status = "unknown"
+# The verifier and candidate image install this hash-locked package-index
+# closure during Docker build; no wheelhouse is carried in the task.
+status = "known"
 installer = "pip"
 packages = [
-  "setuptools>=61.2",
-  "pytest==9.0.3",
-  "pytest-cov==4.0.0",
-  "coverage==6.3.2",
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==9.1.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
 ]
+lock_artifact = { digest = "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", size_bytes = 707, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# 88 is a repeated source-only observation under CPython 3.12/3.13 and
-# pytest 9.0.3. It is not a final frozen denominator.
 expected_total = 88
-expected_total_source = "unknown"
-# Provisional source-probe command only; production command bytes must come
-# from a private allowlisted commands_artifact when this task is reopened.
-commands = ["python -m pytest -p no:cacheprovider --continue-on-collection-errors -q"]
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/fixture"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:d9adcae4345746eb166cc0e367d22580f6587a1f42b471205d6f5f27113a897c", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d9adcae4345746eb166cc0e367d22580f6587a1f42b471205d6f5f27113a897c", visibility = "private" }
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -78,5 +84,12 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Exact revision, source archive, MIT license evidence, and source-only collection/baseline probes were revalidated, but no final task-specific environment lock, authorized private test bundle, allowlisted command-plan artifact, offline dependency closure, Oracle bundle, or reviewed child-side adapter exists; Harbor/Docker/Oracle execution remains intentionally deferred."
+status = "controls-passed"
+reason = "Production bundle materialized with a frozen 88-leaf upstream suite, separate custom-json-v1 verifier, hash-locked build dependencies, and digest-verified local Oracle source archive. Harbor Oracle, empty, stub, and forgery controls are recorded in task-local evidence."
+
+[oracle_bundle]
+digest = "sha256:9daf44390c7aa813a4461b056d0f98f066bc5fe1fcf7eb7aaeda4850b09a53bc"
+size_bytes = 204800
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9daf44390c7aa813a4461b056d0f98f066bc5fe1fcf7eb7aaeda4850b09a53bc"
+visibility = "private"

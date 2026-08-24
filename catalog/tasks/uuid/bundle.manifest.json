@@ -1,0 +1,150 @@
+{
+  "canonical_manifest_digest": "sha256:2781fd9d2d69d9bdd843cba179e96311b3c2b7c8518cbc8d66e11dfad61a61ff",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "4ea5af6537ad13feb61192ba99025f3be6d95e13170362add78ac0f93f17006e",
+      "size_bytes": 316
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "environment/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "be6cb71536ea18d9e8f11cb3ef029b9be69adb48d173279f39119cc5d5bbe9c7",
+      "size_bytes": 12923
+    },
+    {
+      "path": "solution/npm-release.tgz",
+      "sha256": "30e122d0715991b19b98043ea8eb275e9083315c8b9cb9e9ba66c249ef936c6b",
+      "size_bytes": 14956
+    },
+    {
+      "path": "solution/npm-release.tgz.sha512",
+      "sha256": "568c5ca1d91079acb51c444cd7b9db12661bbdeba304934b77700047ef7c539d",
+      "size_bytes": 146
+    },
+    {
+      "path": "solution/provenance.txt",
+      "sha256": "fa3a51b41892cf4fbaef1a818b512c89aebb7fee7d96a86c53c0c3515c763452",
+      "size_bytes": 385
+    },
+    {
+      "path": "solution/runtime.tar",
+      "sha256": "09a55fffb6ee8921c7ae54326002dfca32267a4dd83990a627e57277bd9428e5",
+      "size_bytes": 133120
+    },
+    {
+      "path": "solution/runtime.tar.sha256",
+      "sha256": "14c938d703c3a5f64967bde60d56c872b67019c8a95e07d2ee8a56e48beb9b8a",
+      "size_bytes": 78
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "3efbe30af88fdfe41c86347358f56d0e86c781e749d319309af5e4a0b6071167",
+      "size_bytes": 1600
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "fbf7e9c3a1bd5132ab04286855533c2b5f1607c1f97e1878cd568c41d58bdda8",
+      "size_bytes": 808960
+    },
+    {
+      "path": "solution/source.tar.sha256",
+      "sha256": "1cf72b2ddeac223d5aa16a0d6a0097f8d33280fad55c348b2bedc1d9678930f9",
+      "size_bytes": 77
+    },
+    {
+      "path": "task.toml",
+      "sha256": "89aa822fb714e9d918a47425d052b2e4b91a8d0d52ff40ed846be19b698a6431",
+      "size_bytes": 1265
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "5e56bf307fe37df501a46fefbf06c320a0cc253bc12f8cfe48f0e4c333cbc70f",
+      "size_bytes": 156
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/contract.test.mjs",
+      "sha256": "127b0088bb0e87d77353c77c7a1bf27341afaa79b04259b67096f0864a471f85",
+      "size_bytes": 3390
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "53d5adc03ea2e976e90b54d3cb2247f1255385ad4b4ade7ee1a235532ad59664",
+      "size_bytes": 3173
+    },
+    {
+      "path": "tests/private/traceability.md",
+      "sha256": "dfe023f3295f8741fc02f095d907141b99b3487d00ed917aef0209b1a89efaee",
+      "size_bytes": 1372
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "07ecb1fbc642340d2d28bcb9e79ef8035ea674404c593e87ba9e2ca11f3b4171",
+      "size_bytes": 2255
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "uuid",
+  "task_version": "2.0.1",
+  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+}
