@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/graphneuralnetwork"
+version = "0.2.0"
+description = "Build the GraphNeuralNetwork TensorFlow graph-learning package from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "tensorflow",
+    "graph-neural-network",
+    "machine-learning",
+    "repository-generation",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = [
+    "python",
+    "machine-learning",
+    "tensorflow",
+    "graph-neural-network",
+    "repository-generation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 4
+canonical_manifest_digest = "sha256:67496db2aae14942a5a044cd3c63e51b48c6c6bdf220638d1b2c4ed3f15fea05"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 1800.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 4096
+storage_mb = 65536
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 4
+memory_mb = 8192
+storage_mb = 32768

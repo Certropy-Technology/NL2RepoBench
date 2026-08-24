@@ -3,8 +3,8 @@ FROM --platform=linux/amd64 ghcr.io/multimodal-art-projection/nl2repobench/recor
 COPY requirements.lock.txt /tmp/requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
 
-COPY dependencies /opt/candidate-dependencies
-RUN python -m pip install   --no-cache-dir   --no-index   --find-links /opt/candidate-dependencies   --target /opt/candidate-dependencies/site   --require-hashes   -r /opt/candidate-dependencies/requirements.lock.txt
+COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
+RUN python -m pip install   --no-cache-dir   --target /opt/candidate-dependencies/site   --require-hashes   -r /tmp/candidate-requirements.lock.txt
 
 COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json

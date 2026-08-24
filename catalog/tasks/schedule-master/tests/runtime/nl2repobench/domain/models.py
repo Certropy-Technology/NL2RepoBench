@@ -268,7 +268,7 @@ class NetworkPolicy(RecordModel):
             if not (self.reason or "").strip():
                 raise ValueError(
                     "no-network with offline_dependencies='missing' requires a reason "
-                    "naming the wheelhouse or package cache that is still absent"
+                    "naming the dependency lock or package cache that is still absent"
                 )
         return self
 
@@ -347,7 +347,14 @@ class EnvironmentLock(RecordModel):
 
 
 class DependencyBundle(RecordModel):
-    """Offline dependency closure used by an agent or verifier environment."""
+    """Hash-locked build-time dependencies for Python task images.
+
+    Python Harbor images install candidate dependencies from the package index
+    during the Docker build.  The final task never carries a wheelhouse and
+    the verifier never uses ``--no-index``.  ``lock_artifact`` contains only a
+    requirements lock file with hashes; ``artifact`` is retained solely so
+    older catalog records can be diagnosed and rejected during publication.
+    """
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -358,8 +365,8 @@ class DependencyBundle(RecordModel):
                         "properties": {"status": {"const": "known"}},
                     },
                     "then": {
-                        "required": ["artifact"],
-                        "properties": {"artifact": {"not": {"type": "null"}}},
+                        "required": ["lock_artifact"],
+                        "properties": {"lock_artifact": {"not": {"type": "null"}}},
                     },
                 }
             ]
@@ -367,14 +374,21 @@ class DependencyBundle(RecordModel):
     )
 
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
+    lock_artifact: ArtifactRef | None = None
+    """Private raw ``requirements.lock.txt`` used for network installation."""
+
+    # Legacy field.  It points to a wheelhouse and is intentionally not used
+    # by the Python Harbor compiler anymore.  Keeping it in the model lets us
+    # produce a precise publication gap for stale catalog records instead of
+    # silently treating vendor installation as valid.
     artifact: ArtifactRef | None = None
     installer: Literal["uv", "pip", "system", "unknown"] = "unknown"
     packages: tuple[str, ...] = ()
 
     @model_validator(mode="after")
     def validate_known_bundle(self) -> DependencyBundle:
-        if self.status is ProvenanceStatus.KNOWN and self.artifact is None:
-            raise ValueError("known dependency bundle requires an artifact")
+        if self.status is ProvenanceStatus.KNOWN and self.lock_artifact is None:
+            raise ValueError("known dependency bundle requires lock_artifact")
         return self
 
 
@@ -618,6 +632,10 @@ class TaskManifest(RecordModel):
             gaps.append("environment_lock.status=known")
         if self.dependency_bundle.status is not ProvenanceStatus.KNOWN:
             gaps.append("dependency_bundle.status=known")
+        if self.dependency_bundle.lock_artifact is None:
+            gaps.append("dependency_bundle.lock_artifact")
+        if self.dependency_bundle.artifact is not None:
+            gaps.append("dependency_bundle.artifact=forbidden")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.verifier is None:

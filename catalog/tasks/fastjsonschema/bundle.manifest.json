@@ -1,15 +1,20 @@
 {
-  "canonical_manifest_digest": "sha256:273dc0ae2ae034de6f6a5d5e36b9417847b8986e91c55375b5e9e19fa9a786d7",
+  "canonical_manifest_digest": "sha256:5e29fe695d3370b26410856276e07058c38070bc9b45554e49ed767546084d8a",
   "files": [
     {
       "path": "README.md",
-      "sha256": "026e01e051c3242a991591208deca6603a2215868010a01aab6fc75fcbb67197",
+      "sha256": "6843ef4f8e9bb4c7164eb607460f152811612990db4135d924dcdc6ae5fe3ebc",
       "size_bytes": 521
     },
     {
       "path": "environment/Dockerfile",
-      "sha256": "aae6a14abedc9550dcedd2425966518b91284b4ea3039e580600adbb2ceb7131",
-      "size_bytes": 337
+      "sha256": "5d2088c271bc21eb960b5577718eac57fd35e7d64a4ac295f83e37148b0fd3cf",
+      "size_bytes": 421
+    },
+    {
+      "path": "environment/candidate-requirements.lock.txt",
+      "sha256": "7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01",
+      "size_bytes": 377
     },
     {
       "path": "instruction.md",
@@ -23,43 +28,23 @@
     },
     {
       "path": "task.toml",
-      "sha256": "b97de00dcdc865f5ee696136e33d0c34c597983c3ceedc1d93802c4d69cc5a96",
+      "sha256": "a9bb259f4614ab3ee7411cea800be872380b922f441ace9fd854a3dd9d507d7f",
       "size_bytes": 1188
     },
     {
       "path": "tests/Dockerfile",
-      "sha256": "6e00cb794300006550b6502c2b74d0bef5c61ab1fa7bb9265b3890646f0e4898",
-      "size_bytes": 936
+      "sha256": "75d238840acb3dc344116b847e11aca3e87aa36d5773d19007eea51647bce3e3",
+      "size_bytes": 895
+    },
+    {
+      "path": "tests/candidate-requirements.lock.txt",
+      "sha256": "7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01",
+      "size_bytes": 377
     },
     {
       "path": "tests/command-plan.json",
       "sha256": "2fc9b8598275f157e29997ff64999e5eb1163c62ff62ccade36ba5b4f2355116",
       "size_bytes": 139
-    },
-    {
-      "path": "tests/dependencies/iniconfig-2.3.0-py3-none-any.whl",
-      "sha256": "f631c04d2c48c52b84d0d0549c99ff3859c98df65b3101406327ecc7d53fbf12",
-      "size_bytes": 7484
-    },
-    {
-      "path": "tests/dependencies/packaging-26.3-py3-none-any.whl",
-      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
-      "size_bytes": 129956
-    },
-    {
-      "path": "tests/dependencies/pluggy-1.6.0-py3-none-any.whl",
-      "sha256": "e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746",
-      "size_bytes": 20538
-    },
-    {
-      "path": "tests/dependencies/pytest-8.3.5-py3-none-any.whl",
-      "sha256": "c69214aa47deac29fad6c2a4f590b9c4a9fdb16a403176fe154b79c0b4d4d820",
-      "size_bytes": 343634
-    },
-    {
-      "path": "tests/dependencies/requirements.lock.txt",
-      "sha256": "7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01",
-      "size_bytes": 377
     },
     {
       "path": "tests/docker-compose.yaml",
@@ -88,13 +73,13 @@
     },
     {
       "path": "tests/runtime/nl2repobench/domain/models.py",
-      "sha256": "122d2a3562f0946a90dafb16d73b2733bfcf82ffcb6cb8ddef3c4751f66086ef",
-      "size_bytes": 26532
+      "sha256": "92444b1eb0e2420939ac36a0a35a9416c4bbb78e2f2b6ce265e7f5c667a473fb",
+      "size_bytes": 27377
     },
     {
       "path": "tests/runtime/nl2repobench/domain/network_policy.py",
-      "sha256": "d9c452f7548dbf438600c4d529d593dfd71e8b2aff769cc20212bc81e8665dc2",
-      "size_bytes": 12614
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
     },
     {
       "path": "tests/runtime/nl2repobench/verification/__init__.py",

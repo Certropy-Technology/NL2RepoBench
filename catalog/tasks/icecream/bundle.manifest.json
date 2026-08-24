@@ -1,9 +1,9 @@
 {
-  "canonical_manifest_digest": "sha256:6ef6a24b183e294aa63c4c9d24b538a5ad42fc0c2b108fd2c69f1532aaf1d689",
+  "canonical_manifest_digest": "sha256:4383ebb2d8c2c9b772a365b91842884d7607e39c74e828cd294a13df25b88cc3",
   "files": [
     {
       "path": "README.md",
-      "sha256": "180206662d3f7a5f8c2717cd76d30b57549a5bde6bbffe468e66351a7b2eb31a",
+      "sha256": "3d5f585a6b1c2717259072a29fb3607af9d47f418d9645bee63c8b2a21d4c797",
       "size_bytes": 513
     },
     {
@@ -18,8 +18,13 @@
     },
     {
       "path": "environment/Dockerfile",
-      "sha256": "63880e1a77c7a786994089ebcf5cae9ea333b14d2ab47aab47b6afb75108ca26",
-      "size_bytes": 245
+      "sha256": "e47ae5197884d2a15d9a628dbce9773b5e06750afb953be0478d29dcb6fca043",
+      "size_bytes": 304
+    },
+    {
+      "path": "environment/candidate-requirements.lock.txt",
+      "sha256": "ad6e28a9c7cc27fb297dde6940deb37fd89e76c6e0615e460ef7c788835eab24",
+      "size_bytes": 1380
     },
     {
       "path": "instruction.md",
@@ -113,48 +118,23 @@
     },
     {
       "path": "task.toml",
-      "sha256": "a476cc26e4000bd518638e05157d116b8ba284bcfa00318ca7d001c972e254f7",
+      "sha256": "f3e414f58b423a04227f989b4cdfc5e1a73bf6098f9f308b5b437d2dcb2fb8e7",
       "size_bytes": 1215
     },
     {
       "path": "tests/Dockerfile",
-      "sha256": "6645ae4ff5a9de1f03e49b6dca61c0c3832102a4ff36b0b5ad83f0d19564a6f0",
-      "size_bytes": 948
+      "sha256": "fae94c146463d286415a8d62112807af969f008cda0d2db0e4c57b663194ab01",
+      "size_bytes": 907
+    },
+    {
+      "path": "tests/candidate-requirements.lock.txt",
+      "sha256": "ad6e28a9c7cc27fb297dde6940deb37fd89e76c6e0615e460ef7c788835eab24",
+      "size_bytes": 1380
     },
     {
       "path": "tests/command-plan.json",
       "sha256": "2fc9b8598275f157e29997ff64999e5eb1163c62ff62ccade36ba5b4f2355116",
       "size_bytes": 139
-    },
-    {
-      "path": "tests/dependencies/asttokens-3.0.2-py3-none-any.whl",
-      "sha256": "9da13157f5b28becde0bd374fc677dcd3c290614264eff096f167c469cd9f933",
-      "size_bytes": 28702
-    },
-    {
-      "path": "tests/dependencies/colorama-0.4.6-py2.py3-none-any.whl",
-      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
-      "size_bytes": 25335
-    },
-    {
-      "path": "tests/dependencies/executing-2.2.1-py2.py3-none-any.whl",
-      "sha256": "760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017",
-      "size_bytes": 28317
-    },
-    {
-      "path": "tests/dependencies/pygments-2.21.0-py3-none-any.whl",
-      "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
-      "size_bytes": 1250147
-    },
-    {
-      "path": "tests/dependencies/requirements.lock.txt",
-      "sha256": "ad6e28a9c7cc27fb297dde6940deb37fd89e76c6e0615e460ef7c788835eab24",
-      "size_bytes": 1380
-    },
-    {
-      "path": "tests/dependencies/setuptools-84.0.0-py3-none-any.whl",
-      "sha256": "51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670",
-      "size_bytes": 818216
     },
     {
       "path": "tests/docker-compose.yaml",
@@ -183,13 +163,13 @@
     },
     {
       "path": "tests/runtime/nl2repobench/domain/models.py",
-      "sha256": "122d2a3562f0946a90dafb16d73b2733bfcf82ffcb6cb8ddef3c4751f66086ef",
-      "size_bytes": 26532
+      "sha256": "92444b1eb0e2420939ac36a0a35a9416c4bbb78e2f2b6ce265e7f5c667a473fb",
+      "size_bytes": 27377
     },
     {
       "path": "tests/runtime/nl2repobench/domain/network_policy.py",
-      "sha256": "d9c452f7548dbf438600c4d529d593dfd71e8b2aff769cc20212bc81e8665dc2",
-      "size_bytes": 12614
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
     },
     {
       "path": "tests/runtime/nl2repobench/verification/__init__.py",
@@ -280,11 +260,6 @@
       "path": "tests/verifier/run.py",
       "sha256": "6553a866f97e1d6670474faedfea507b6b4c3e0cbb03fce449cb0fc65961ef27",
       "size_bytes": 3106
-    },
-    {
-      "path": "tests/verifier/tests/__pycache__/test_deterministic_slice.cpython-314.pyc",
-      "sha256": "813066db2c878031aefe290700356ed122a06a9e379f13346695e6be1aabf53b",
-      "size_bytes": 9131
     },
     {
       "path": "tests/verifier/tests/test_deterministic_slice.py",

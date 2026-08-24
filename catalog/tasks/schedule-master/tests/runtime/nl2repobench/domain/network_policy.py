@@ -9,9 +9,10 @@ The dependency closure is installed at **image build time**, where Docker still
 has network access. Run-time egress therefore does not need a package registry
 in the normal case:
 
-1. ``no-network`` is the preferred run-time mode. Build and test dependencies
-   are baked into the task image (``RUN pip install ...``) or supplied as a
-   private artifact (wheelhouse, npm cache).
+1. ``no-network`` is the preferred run-time mode. Python build and test
+   dependencies are fetched from a package index under ``--require-hashes``
+   during image build; Python tasks never vendor a wheelhouse. The independent
+   Node lane may supply its npm cache under its v2 lock/cache contract.
 2. ``allowlist`` exists for what genuinely cannot be preinstalled. In practice
    that is the **model provider endpoint**: Harbor runs "installed" agents such
    as OpenHands inside the task environment, so a restricted agent still has to

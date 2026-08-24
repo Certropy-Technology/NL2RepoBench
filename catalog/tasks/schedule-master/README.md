@@ -3,7 +3,7 @@
 Generated deterministically from the canonical NL2RepoBench catalog.
 
 - Mode: production
-- Canonical manifest: `sha256:fbd3a33efe32b58583a2c3dd48b2a2ed27be4a04a33e1628d114acae5ba76fee`
+- Canonical manifest: `sha256:219ba8b749a94f673d75b0781c81bfdfc3ae78628f1341260540493ba07e9083`
 - Toolchain lock: `sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff`
 - Metric: `fixed-test-pass-rate-v1`
 - Expected tests: `81`

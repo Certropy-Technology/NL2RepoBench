@@ -219,20 +219,14 @@ class NetworkPolicy(RecordModel):
                     },
                     "else": {"properties": {"allowed_hosts": {"maxItems": 0}}},
                 },
-                {
-                    "properties": {
-                        "offline_dependencies": {"enum": _OFFLINE_DEPENDENCY_ENUM}
-                    }
-                },
+                {"properties": {"offline_dependencies": {"enum": _OFFLINE_DEPENDENCY_ENUM}}},
             ]
         }
     )
 
     mode: NetworkPolicyMode = "no-network"
     allowed_hosts: tuple[str, ...] = ()
-    offline_dependencies: Literal[
-        "preinstalled-image", "private-artifact", "missing"
-    ] = "missing"
+    offline_dependencies: Literal["preinstalled-image", "private-artifact", "missing"] = "missing"
     reference_source_fetch: Literal["forbidden"] = "forbidden"
     reason: str | None = None
 
@@ -274,7 +268,7 @@ class NetworkPolicy(RecordModel):
             if not (self.reason or "").strip():
                 raise ValueError(
                     "no-network with offline_dependencies='missing' requires a reason "
-                    "naming the wheelhouse or package cache that is still absent"
+                    "naming the dependency lock or package cache that is still absent"
                 )
         return self
 
@@ -353,7 +347,14 @@ class EnvironmentLock(RecordModel):
 
 
 class DependencyBundle(RecordModel):
-    """Offline dependency closure used by an agent or verifier environment."""
+    """Hash-locked build-time dependencies for Python task images.
+
+    Python Harbor images install candidate dependencies from the package index
+    during the Docker build.  The final task never carries a wheelhouse and
+    the verifier never uses ``--no-index``.  ``lock_artifact`` contains only a
+    requirements lock file with hashes; ``artifact`` is retained solely so
+    older catalog records can be diagnosed and rejected during publication.
+    """
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -364,8 +365,8 @@ class DependencyBundle(RecordModel):
                         "properties": {"status": {"const": "known"}},
                     },
                     "then": {
-                        "required": ["artifact"],
-                        "properties": {"artifact": {"not": {"type": "null"}}},
+                        "required": ["lock_artifact"],
+                        "properties": {"lock_artifact": {"not": {"type": "null"}}},
                     },
                 }
             ]
@@ -373,14 +374,21 @@ class DependencyBundle(RecordModel):
     )
 
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
+    lock_artifact: ArtifactRef | None = None
+    """Private raw ``requirements.lock.txt`` used for network installation."""
+
+    # Legacy field.  It points to a wheelhouse and is intentionally not used
+    # by the Python Harbor compiler anymore.  Keeping it in the model lets us
+    # produce a precise publication gap for stale catalog records instead of
+    # silently treating vendor installation as valid.
     artifact: ArtifactRef | None = None
     installer: Literal["uv", "pip", "system", "unknown"] = "unknown"
     packages: tuple[str, ...] = ()
 
     @model_validator(mode="after")
     def validate_known_bundle(self) -> DependencyBundle:
-        if self.status is ProvenanceStatus.KNOWN and self.artifact is None:
-            raise ValueError("known dependency bundle requires an artifact")
+        if self.status is ProvenanceStatus.KNOWN and self.lock_artifact is None:
+            raise ValueError("known dependency bundle requires lock_artifact")
         return self
 
 
@@ -395,12 +403,7 @@ class TaskVerifierSpec(RecordModel):
     @model_validator(mode="after")
     def validate_private_entrypoint(self) -> TaskVerifierSpec:
         path = PurePosixPath(self.entrypoint)
-        if (
-            path.is_absolute()
-            or not self.entrypoint
-            or "." in path.parts
-            or ".." in path.parts
-        ):
+        if path.is_absolute() or not self.entrypoint or "." in path.parts or ".." in path.parts:
             raise ValueError("verifier.entrypoint must be a safe relative path")
         if self.bundle.visibility is not Visibility.PRIVATE:
             raise ValueError("verifier.bundle must be private")
@@ -501,14 +504,13 @@ class HarborExecutionProfile(RecordModel):
     @model_validator(mode="after")
     def validate_agent_allowlist(self) -> HarborExecutionProfile:
         if self.agent_network_mode == "allowlist" and not self.agent_allowed_hosts:
-            raise ValueError(
-                "agent_network_mode='allowlist' requires agent_allowed_hosts"
-            )
+            raise ValueError("agent_network_mode='allowlist' requires agent_allowed_hosts")
         if self.agent_allowed_hosts and self.agent_network_mode != "allowlist":
             raise ValueError(
                 "agent_allowed_hosts is only valid with agent_network_mode='allowlist'"
             )
         return self
+
     cpus: Annotated[int, Field(gt=0)] = 2
     memory_mb: Annotated[int, Field(ge=512)] = 2048
     storage_mb: Annotated[int, Field(ge=1024)] = 4096
@@ -524,8 +526,7 @@ class HarborExecutionProfile(RecordModel):
         )
         if required >= self.verifier_timeout_sec:
             raise ValueError(
-                "candidate install + call budgets + 60s reserve must be below "
-                "verifier_timeout_sec"
+                "candidate install + call budgets + 60s reserve must be below verifier_timeout_sec"
             )
         return self
 
@@ -631,6 +632,10 @@ class TaskManifest(RecordModel):
             gaps.append("environment_lock.status=known")
         if self.dependency_bundle.status is not ProvenanceStatus.KNOWN:
             gaps.append("dependency_bundle.status=known")
+        if self.dependency_bundle.lock_artifact is None:
+            gaps.append("dependency_bundle.lock_artifact")
+        if self.dependency_bundle.artifact is not None:
+            gaps.append("dependency_bundle.artifact=forbidden")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.verifier is None:
