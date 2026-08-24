@@ -35,11 +35,9 @@ timeout --signal=TERM --kill-after=5s 90s \
     runuser -u candidate -- env \
         HOME=/home/candidate \
         PIP_DISABLE_PIP_VERSION_CHECK=1 \
-        PIP_NO_INDEX=1 \
         /tmp/candidate-venv/bin/python -m pip install \
             --no-build-isolation \
             --no-deps \
-            --no-index \
             -e /tmp/candidate \
     > /logs/verifier/install-stdout.txt \
     2> /logs/verifier/install-stderr.txt

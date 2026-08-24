@@ -1,0 +1,61 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/fast-glob"
+version = "0.1.0"
+description = "Build the fast-glob 4.0.0 pattern-matching library from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "glob",
+    "filesystem",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "developer-tool"
+tags = [
+    "node",
+    "npm",
+    "glob",
+    "filesystem",
+    "node-test",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 36
+canonical_manifest_digest = "sha256:469f332fdfe705642ca2607ecb01a37cf88e2824da56c343352947f575b7e3f8"
+toolchain_lock_digest = "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192

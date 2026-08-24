@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "fast-glob"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "developer-tool"
+tags = ["node", "npm", "glob", "filesystem", "node-test"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/mrmlnc/fast-glob"
+revision = "467b65a79ed1b84fd9fd18966deda8a4e57b8e0e"
+license_spdx = "MIT"
+# `git archive --format=tar <revision> | sha256sum`, observed identically on the
+# audit host and re-verified in this repair run.
+source_digest = "sha256:becf5ae57d324fb632a7762a619a0625f566e8f2e89a3b5c55311ea394175b9a"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The locked npm v3 cache is private and the agent/verifier run phases are both no-network."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+# Canonical schema v2 has no [environment.network_policy] block; the offline
+# contract is expressed by network_mode plus the dependency bundle below. The
+# npm v3 lock and its 71-file cache closure are generated during the authoring
+# build phase and shipped as an offline bundle, so `npm ci --offline` needs no
+# egress, and the Oracle ships a precompiled distribution that fetches no
+# source at run time.
+
+[dependencies]
+# `unknown` until the offline npm bundle is registered as a content-addressed
+# private artifact. The closure itself exists and is verified (see handoff.md);
+# only the artifact binding is outstanding, so production compile is not yet
+# claimed and the bundle is supplied via --allow-incomplete.
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+artifact = { digest = "sha256:4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b", size_bytes = 1423360, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b", visibility = "private" }
+packages = [
+  "@nodelib/fs.stat",
+  "@nodelib/fs.walk",
+  "glob-parent",
+  "merge2",
+  "micromatch",
+]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 36
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ae0d5dc22c9d5bf46ee967a7fffef897063c31a78046afc47d753287d5a61081", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ae0d5dc22c9d5bf46ee967a7fffef897063c31a78046afc47d753287d5a61081", visibility = "private" }
+test_bundle = { digest = "sha256:56428100ac69806e55c009c8465c530d88dd3021637e8a33dc4c8d21793e5854", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:56428100ac69806e55c009c8465c530d88dd3021637e8a33dc4c8d21793e5854", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "oracle-passed"
+owner = "integrator"
+reason = "Locked Node v2 Oracle and controls passed; artifact refs registered."
+approval_refs = ["node-repair-fast-glob-v1"]
+
+[oracle_bundle]
+digest = "sha256:e448c9fec7a1a8809a6ec6dda68be55673e54cca44f391a770b6beceaa8558d0"
+size_bytes = 194560
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e448c9fec7a1a8809a6ec6dda68be55673e54cca44f391a770b6beceaa8558d0"
+visibility = "private"
+
+[harbor]
+description = "Build the fast-glob 4.0.0 pattern-matching library from an empty workspace."
+keywords = ["node", "npm", "glob", "filesystem", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"

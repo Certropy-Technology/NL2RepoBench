@@ -35,7 +35,7 @@ timeout --signal=TERM --kill-after=10s "$INSTALL_TIMEOUT" \
         LANG=C.UTF-8 \
         LC_ALL=C.UTF-8 \
         PIP_DISABLE_PIP_VERSION_CHECK=1 \
-        sh -c 'cd /tmp/candidate && python -m pip install --user --no-index --no-deps --no-build-isolation -e .' \
+        sh -c 'cd /tmp/candidate && python -m pip install --user --no-deps --no-build-isolation -e .' \
     > /logs/verifier/install-stdout.txt \
     2> /logs/verifier/install-stderr.txt
 install_exit_code=$?
