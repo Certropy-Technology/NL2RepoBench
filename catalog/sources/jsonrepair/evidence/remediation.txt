@@ -1,0 +1,11 @@
+command: docker run --rm --network none -v /tmp/nl2repo-jsonrepair-remediation/source:/workspace -v /tmp/nl2repo-jsonrepair-remediation/npm-cache:/npm-cache -w /workspace node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 sh -c 'node --version; npm --version; npm_config_cache=/npm-cache npm ci --offline --ignore-scripts --no-audit --no-fund'
+toolchain: Node v24.19.0; npm 11.17.0; Docker Engine 29.7.2; linux/amd64
+network: Docker --network none; npm cache was empty
+stdout:
+v24.19.0
+11.17.0
+stderr:
+npm error code ENOTCACHED
+npm error request to https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz failed: cache mode is 'only-if-cached' but no cached response is available.
+npm error A complete log of this run can be found in: /npm-cache/_logs/2026-08-24T21_36_28_362Z-debug-0.log
+exit_code: 1

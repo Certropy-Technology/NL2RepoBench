@@ -1,0 +1,67 @@
+schema_version = "2.0"
+task_id = "jsonrepair"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "unknown"
+category = "json-repair"
+tags = ["node", "npm", "json", "parser", "repair", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/josdejong/jsonrepair"
+revision = "4a80ed87fb1155db064945bc2aa4f6b4f4e89c27"
+license_spdx = "ISC"
+source_digest = "sha256:b4245dabfaca974f251eca04bfe5f0d03c4886f2b30540e76395f3173af965c1"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The exact revision has no approved private npm cache closure; candidate and verifier runs must remain offline and the Oracle source must remain digest-locked."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["728 development-only lock entries; approved private npm cache closure is missing"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/jsonrepair"
+reason = "The exact source and ISC license are frozen, but the required private npm cache closure failed the locked offline install probe. No frozen node:test denominator, separate verifier, Oracle, controls, or catalog/tasks/jsonrepair runtime exists."

@@ -1,0 +1,67 @@
+schema_version = "2.0"
+task_id = "markdown-it"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "unknown"
+category = "markdown-parser"
+tags = ["node", "npm", "markdown", "parser", "renderer", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/markdown-it/markdown-it"
+revision = "1e8ab89ca299351879169a79d2627fe3a356ce4a"
+license_spdx = "MIT"
+source_digest = "sha256:4a0dd5c3aefa2a727323622c1c5a21ce6b2b1ba378444979b5938227055acd39"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the pinned package manifest and lock root versions differ, and no reviewed private npm cache or tarball closure exists."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["package manifest/lock root version mismatch", "private npm cache/tarball closure missing"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/markdown-it"
+reason = "The exact source and MIT archive/license evidence are known, but the package manifest and committed lock disagree on the root version and the required offline npm closure is not frozen. No bounded node:test verifier, frozen denominator, Oracle, controls, or runtime task exists."

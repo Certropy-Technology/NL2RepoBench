@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastify",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Recompile from the source authority with the private npm/cache/verifier artifacts, run official Harbor 0.21.0 Oracle and all controls, and persist hash-bound grading and network receipts before reopening.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/fastify/fastify",
+      "revision": "4176096a31f5b4c31512c36f578b08a596a72435",
+      "source_digest": "sha256:ab2b2bc7ef73ad3060d30fc6e93cdd7af4e4241ddf9eaf356d06a6927147110e",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "find catalog/sources/fastify catalog/tasks/fastify -type f \\( -name 'grading.json' -o -name 'network.json' -o -name 'result.json' -o -name 'network-probe.json' -o -iname '*receipt*' \\) -print 2>/dev/null | sort; find .nl2repo -type f \\( -iname '*fastify*' -o -path '*/fastify/*' \\) -print 2>/dev/null | sort",
+        "tool_version": "repository filesystem audit",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/fastify/evidence/remediation.txt",
+          "sha256": "sha256:a1ad849a0b5a89a08ef55296ccaec5fea3ee8fd3e1a768c46c6a3308d07826b8"
+        }
+      }
+    ]
+  }
+}

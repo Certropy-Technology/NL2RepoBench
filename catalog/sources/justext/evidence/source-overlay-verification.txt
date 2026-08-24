@@ -1,0 +1,67 @@
+verification=justext immutable image versus pinned upstream source
+git_version=git version 2.55.0
+docker_version=client=29.7.2 server=29.7.2
+tar_version=tar (GNU tar) 1.35
+diffutils_version=cmp (GNU diffutils) 3.12
+coreutils_version=sha256sum (GNU coreutils) 9.10
+
+command=git init/fetch/checkout exact revision; git archive --format=tar HEAD
+exit_code=0
+resolved_revision=9fb3340ad2087110348de513e4a4b6fd4f3cc839
+source_archive_sha256=505425ef32656e4073d8dcbae0e59e77f001aa686d8e17ab630c3ff94f7edb68
+source_archive_bytes=2672640
+license_sha256=d71c0b2234fd22e9f295986ed8f22cf425b7a4c269248d214eb8bda2a32e7179
+license_bytes=1339
+upstream_core_sha256=b870b975ed98629ec7d310d364ca99a886e9a942ab66c19de5f8e22ca1a64724
+upstream_core_bytes=13177
+upstream_setup_sha256=654f19e112060facb6bcc5f36c38692d017827c38399fa4842f837903baab42b
+upstream_setup_bytes=2114
+
+command=docker pull ghcr.io/multimodal-art-projection/nl2repobench/justext@sha256:8f5f01415624b39a05c64ea288f714f8be74ea4d58c2e0149dc02b148da67082
+exit_code=0
+image_config_digest=sha256:1be7cc12eaa4866fdf22af25ed7b168a98f74d490ac1f2d67c8dc7c25442dd52
+image_created=2025-09-02T14:01:02.2885596Z
+image_platform=linux/amd64
+source_layer_compressed_digest=sha256:14849ec9bb110dd3abe20d6850854065d6925ab401061076837fdb85d867c4e5
+source_layer_compressed_bytes=411779886
+
+command=extract project/justext/core.py from the saved immutable source layer without starting a container
+exit_code=0
+image_core_sha256=39437b8da4409444cb54aec01668ad4af919d7dd8a10edf2739e780e1f924414
+image_core_bytes=13201
+
+command=cmp --silent pinned-upstream-core immutable-image-core
+exit_code=1
+diff:
+--- /tmp/justext-source-verify-final/repo/justext/core.py	2026-08-25 05:42:29.872916527 +0800
++++ /tmp/justext-source-verify-final/image-core.py	2026-08-25 05:42:31.476515725 +0800
+@@ -18,7 +18,7 @@
+ except ImportError:
+     from backports.functools_lru_cache import lru_cache
+
+-from lxml.html.clean import Cleaner
++from lxml_html_clean.clean import Cleaner
+ from xml.sax.handler import ContentHandler
+ from .paragraph import Paragraph
+ from ._compat import unicode, ignored
+@@ -28,8 +28,8 @@
+ MAX_LINK_DENSITY_DEFAULT = 0.2
+ LENGTH_LOW_DEFAULT = 70
+ LENGTH_HIGH_DEFAULT = 200
+-STOPWORDS_LOW_DEFAULT = 0.30
+-STOPWORDS_HIGH_DEFAULT = 0.32
++STOPWORDS_LOW_DEFAULT = 0.20
++STOPWORDS_HIGH_DEFAULT = 0.22
+ NO_HEADINGS_DEFAULT = False
+ # Short and near-good headings within MAX_HEADING_DISTANCE characters before
+ # a good paragraph are classified as good unless --no-headings is specified.
+@@ -38,7 +38,7 @@
+     'body', 'blockquote', 'caption', 'center', 'col', 'colgroup', 'dd',
+     'div', 'dl', 'dt', 'fieldset', 'form', 'legend', 'optgroup', 'option',
+     'p', 'pre', 'table', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tr',
+-    'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
++    'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article'
+ })
+ DEFAULT_ENCODING = 'utf8'
+ DEFAULT_ENC_ERRORS = 'replace'
+finding=immutable image core is not the pinned upstream core; threshold and paragraph-boundary changes require an owner-approved source boundary

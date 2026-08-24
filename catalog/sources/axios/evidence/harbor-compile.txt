@@ -1,0 +1,5 @@
+$ uv --version
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+$ uv run nl2repo harbor compile catalog/sources/axios --output /tmp/nl2repo-axios-harbor-recompile --toolchain toolchain.node.lock.toml --artifact-root /tmp/nl2repo-axios-harbor-artifacts
+Harbor compile failed: Node task source is missing [harbor] settings
+exit_code=1

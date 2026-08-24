@@ -79,10 +79,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "node-author-direct-gpt-20260824-r1"
-reason = "Production Node task; source freeze, runtime dependency closure, private contract tests, Oracle 12/12, and all bounded controls are recorded in task-local evidence."
-approval_refs = ["fastify-authoring-gate-v1"]
+status = "blocked"
+owner = "repair/fastify"
+reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout. The invalid runtime is removed; no production status is retained without hash-bound evidence."
 
 [oracle_bundle]
 digest = "sha256:edfa9071a885908fe71222ec2752c6fc4145a06a622ff175719ec30a75e9840f"

@@ -1,7 +1,10 @@
 # `cookie` Node 24 Authoring Evidence
 
-Status: `controls-passed`. This file records task-local provenance and gate
-evidence. It does not claim upstream parity or dataset publication.
+Status: `blocked`. Historical Oracle, empty, stub, and forgery grading receipts
+remain available, but the required completed offline-verifier and structured
+network-probe receipts are not present in this checkout. This file records
+task-local provenance and gate evidence; it does not claim upstream parity or
+dataset publication.
 
 ## Frozen Source And License
 

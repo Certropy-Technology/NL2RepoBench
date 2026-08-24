@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "markdown-it",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Reconcile package.json 15.0.0 with package-lock.json root 14.3.0, then produce and review a complete private npm v3 cache/tarball closure under Node 24.19.0/npm 11.17.0 and rerun npm ci --offline --ignore-scripts before authoring the bounded adapter, verifier, frozen collection, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/markdown-it/markdown-it",
+      "revision": "1e8ab89ca299351879169a79d2627fe3a356ce4a",
+      "source_digest": "sha256:4a0dd5c3aefa2a727323622c1c5a21ce6b2b1ba378444979b5938227055acd39",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:792c48c5a849a15fdf9e37e8bcf9e6d1dd13b32b46c642a748a0a46a9919d473"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/markdown-it",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/markdown-it/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:6f422d07f91c604cc6a2cad27fe90be7b2b4931eceb400f8b9bc3faa4b8ff906"
+        }
+      },
+      {
+        "command": "cd /tmp/nl2repo-markdown-it-production && npm ci --offline --ignore-scripts --no-audit --no-fund",
+        "tool_version": "Node 26.7.0/npm 12.0.2 diagnostics; locked target Node 24.19.0/npm 11.17.0",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/markdown-it/evidence/remediation.txt",
+          "sha256": "sha256:2193fbf63f00496468a423a58a03c7a9853bb067f2381fe43d0bfedbdf093479"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "set -euo pipefail; uv run --frozen --project harbor-runner harbor --version; sha256sum retained cookie Oracle, empty, stub, and forgery grading receipts; find task-local cookie network/offline receipt paths",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/cookie/evidence/production-evidence-reconciliation.txt",
+          "sha256": "sha256:cf9baee7963e4a24a96186b6405f0852019ae8e8c5e053bea8a4bdaed90f73c0"
+        },
+        "tool_version": "Harbor 0.21.0"
+      }
+    ],
+    "failure_class": "verifier",
+    "next_step": "Recompile the source with its private artifacts, run an official Harbor 0.21.0 Oracle and complete empty, stub, forgery, and offline controls, preserve a task-local structured no-network probe, and restore the runtime only with hash-bound valid evidence.",
+    "source_freeze": {
+      "license_spdx": "MIT",
+      "revision": "51c485421a95ee796de6d8dab53a5ade0a20db8a",
+      "source_digest": "sha256:e4f8342e3b6d89c5dc8d03e086d2f5faa8c5a09ca6f76b7ac9b4a06fa610d0b0",
+      "status": "known",
+      "upstream_url": "https://github.com/jshttp/cookie"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "cookie",
+  "terminal_kind": "blocked"
+}

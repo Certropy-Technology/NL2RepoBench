@@ -1,0 +1,32 @@
+Fastify production evidence audit (2026-08-25)
+
+The source descriptor was controls-passed, but no complete task-local,
+hashable Harbor Oracle/control/network receipt set was found in this checkout.
+The runtime was present during this audit and was removed as part of the
+blocked transition.
+
+Audit command:
+find catalog/sources/fastify catalog/tasks/fastify -type f \( -name 'grading.json' -o -name 'network.json' -o -name 'result.json' -o -name 'network-probe.json' -o -iname '*receipt*' \) -print 2>/dev/null | sort
+find .nl2repo -type f \( -iname '*fastify*' -o -path '*/fastify/*' \) -print 2>/dev/null | sort
+test -d catalog/sources/fastify/evidence && printf 'present\n' || printf 'absent\n'
+printf '%s\n' 'No complete task-local Harbor Oracle/control/network receipt set was found.'
+exit 1
+
+Observed stdout:
+== task-local Harbor receipt candidates ==
+== task-local evidence directory ==
+absent
+== fastify-named Harbor run files under .nl2repo ==
+== audit result ==
+No complete task-local Harbor Oracle/control/network receipt set was found.
+
+Observed exit code: 1
+
+Independent descriptor check:
+`uv run nl2repo task validate-source catalog/sources/fastify` exited 0 and
+reported task_id `fastify`, version `2.0.0`, and the source digest recorded in
+the descriptor. This validates metadata shape only; it is not production
+Oracle, control, or network evidence.
+
+No receipt, grading result, network probe, or Harbor run artifact was created
+or inferred from the controls-passed claim. Reopen only after official Harbor

@@ -1,10 +1,17 @@
+Status: **blocked**. Paired with a parseable descriptor and hash-bound
+production evidence; no `catalog/tasks/justext` runtime exists.
+
 # jusText Static Provenance Audit
 
-Status: **blocked**. This directory intentionally contains an audit record only;
-there is no catalog `task.toml`, public-instruction copy, Harbor bundle, Oracle
-script, or hidden-test byte in this worktree. No Docker, Harbor, successful pytest test run, Oracle,
-or negative-control run was performed in this lane. A host `pytest --collect-only`
-probe was attempted but `pytest` is not installed in the worktree environment.
+Status: **blocked**. This directory contains a terminal catalog descriptor,
+this audit, and hash-bound evidence only. It contains no production instruction
+copy, Harbor bundle, Oracle script, or hidden-test byte, and no
+`catalog/tasks/justext` runtime exists. The immutable image was pulled and its
+layers were inspected without starting a container process. No Harbor run,
+successful pytest collection/test run, Oracle, or negative control was
+performed. One host collection probe exited 4 because the repository pytest
+configuration referenced pytest-cov options unavailable in that invocation; it
+is not collection evidence.
 
 The legacy identity and the test-count arithmetic are recoverable, but the
 pinned verifier image contains an unapproved **functional source overlay in the
@@ -44,17 +51,18 @@ was clean or that `61` was freshly collected.
 
 ## Immutable Verifier Image
 
-The conversion-loop state at
-`/root/NL2RepoBench/.nl2repo/conversion-loop/state.json` records this image:
+A prior conversion-loop audit recorded this image (the external state file at
+`/root/NL2RepoBench/.nl2repo/conversion-loop/state.json` is not present in the
+current checkout):
 
 ```text
 ghcr.io/multimodal-art-projection/nl2repobench/justext@sha256:8f5f01415624b39a05c64ea288f714f8be74ea4d58c2e0149dc02b148da67082
 ```
 
-The state record says `status = available`, platform `linux/amd64`, and tagged
-reference `ghcr.io/multimodal-art-projection/nl2repobench/justext:1.0`.
-Registry inspection resolved the requested digest to a Docker distribution
-manifest v2 with:
+That audit recorded `status = available`, platform `linux/amd64`, and tagged
+reference `ghcr.io/multimodal-art-projection/nl2repobench/justext:1.0`. The
+immutable digest was independently pulled in this lane, and registry plus local
+image inspection resolved it to a Docker distribution manifest v2 with:
 
 - Config digest: `sha256:1be7cc12eaa4866fdf22af25ed7b168a98f74d490ac1f2d67c8dc7c25442dd52`.
 - Image creation time: `2025-09-02T14:01:02.2885596Z`.
@@ -218,28 +226,32 @@ artifact:
    paragraph-boundary changes), update the public instruction to state that
    contract, and preserve the patch manifest alongside the image digest.
 
-After that source decision, a later validation lane must still run three
-independent valid Oracle trials, verify stable collection and denominator, and
+After that source decision, a later validation lane must still obtain a valid
+production Oracle run, verify collection against the frozen denominator, and
 run empty/stub/forgery/offline controls. No shared dataset/index or conversion
 state was modified here.
 
 ## Static Validation Record
 
-The following checks were run without Docker or pytest execution:
+The following static checks were run without starting a container process or
+executing the hidden test suite:
 
 - read `AGENTS.md` and `CONTRIBUTING.md`;
 - parsed and hashed all four legacy artifacts;
-- read the conversion-loop state and verified the exact immutable image ref;
-- inspected the registry manifest/config and relevant layer metadata;
-- extracted only the image's test/setup/source layers under `/tmp` (no
-  container process) and compared paths/blobs against the upstream clone;
-- enumerated all 202 reachable upstream commits and selected the unique
-  122/130 path-match revision;
-- computed the upstream archive, license, source, setup, test, and overlay
-  hashes; and
+- pulled the exact immutable image digest and inspected its registry
+  manifest, local config, history, and relevant layers;
+- extracted only the image's test/setup/source layers under `/tmp` and
+  compared paths/blobs against a fresh shallow fetch of the pinned upstream
+  revision;
+- independently reproduced the upstream archive, license, source, and setup
+  hashes with Git 2.55.0;
+- retained the prior exhaustive 202-commit comparison that selected the
+  unique 122/130 path-match revision;
 - parsed the frozen test files with Python AST and confirmed 61 functions with
-  no parametrization or skip/xfail hooks.
+  no parametrization or skip/xfail hooks; and
+- ran the terminal descriptor validator, focused network-policy lint, and a
+  production compiler remediation attempt.
 
-No Docker, Harbor, successful pytest test run, Oracle, or negative-control
-command was run. The only pytest probe was the unavailable host
-`pytest --collect-only` command noted above.
+No Harbor run, successful pytest collection/test run, Oracle, or
+negative-control command was run. The failed host collection probe described
+above is not production evidence.

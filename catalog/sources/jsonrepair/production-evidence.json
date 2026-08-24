@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonrepair",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Materialize and hash a complete private npm cache for every package-lock.json integrity entry under Node 24.19.0/npm 11.17.0, rerun the pinned --network none npm ci probe successfully, then author and separately verify the clean package, node:test adapter, frozen denominator, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/josdejong/jsonrepair",
+      "revision": "4a80ed87fb1155db064945bc2aa4f6b4f4e89c27",
+      "source_digest": "sha256:b4245dabfaca974f251eca04bfe5f0d03c4886f2b30540e76395f3173af965c1",
+      "license_spdx": "ISC",
+      "license_path": "LICENSE.md",
+      "license_digest": "sha256:fd50f5abb7eeb614c8d1293b9f239a5238d7536e3a9a9a8929a082c82d12b3fd",
+      "audit_sha256": "sha256:0552bf8abac07cf3abbb87ab29cf0c68d84075681e5042d1b0e9426a9e0eff1c"
+    },
+    "commands": [
+      {
+        "command": "docker run --rm --network none -v /tmp/nl2repo-jsonrepair-remediation/source:/workspace -v /tmp/nl2repo-jsonrepair-remediation/npm-cache:/npm-cache -w /workspace node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 sh -c 'node --version; npm --version; npm_config_cache=/npm-cache npm ci --offline --ignore-scripts --no-audit --no-fund'",
+        "tool_version": "Docker Engine 29.7.2; Node v24.19.0; npm 11.17.0; linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/jsonrepair/evidence/remediation.txt",
+          "sha256": "sha256:d9aaaa58fc3e3c0da85531cda723a791c6f7a10cf66d893a1f5451f41052d701"
+        }
+      }
+    ]
+  }
+}

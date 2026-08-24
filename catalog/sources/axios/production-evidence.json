@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "task_id": "axios",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "spec",
+    "next_step": "Obtain approval for a bounded Axios behavior subset expressible through the JSON-only no-network boundary; then author a private node:test bundle, freeze its collection, and supply the dependency, Harbor, verifier, and Oracle artifacts before generating a runtime.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/axios/axios",
+      "revision": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
+      "source_digest": "sha256:e81bdadfeb7d7a3bcd31aaf85f6cf269d03e55176f73daf604330697b0fb83d1",
+      "license_spdx": "MIT"
+    },
+    "audited_inputs": {
+      "task_descriptor": {
+        "path": "catalog/sources/axios/task.toml",
+        "sha256": "sha256:b56f65929eaf32cd468f0cde8223e4303e0c52b6fa3f839a6d714c4f7731666e"
+      },
+      "instruction": {
+        "path": "catalog/sources/axios/instruction.md",
+        "sha256": "sha256:2764c2faf07ae22de78e10e5d5822582e3be1eebf04f666f287781bf0b63937c"
+      },
+      "provenance": {
+        "path": "catalog/sources/axios/provenance.md",
+        "sha256": "sha256:d450a90360f63487fc0fb703bf0129d3eac1826db4cfe7d9ff3899a45a54f1d5"
+      },
+      "deterministic_test_inventory": {
+        "path": "catalog/sources/axios/deterministic-test-inventory.json",
+        "sha256": "sha256:b651dc3f73d1f9095ab54a0d4d2bde7b87e7e7b69b13dc3b5de7eb64e1b2ea29"
+      },
+      "api_inventory": {
+        "path": "catalog/sources/axios/api-inventory.json",
+        "sha256": "sha256:fd9a2e7ff03d4e3133cbf72562d0ccc820c09f1bb01aa517faa3d5cfdcb78223"
+      }
+    },
+    "observed_state": {
+      "lifecycle_status": "blocked",
+      "static_test_count": 1548,
+      "node_test_registrations": 0,
+      "vitest_or_other_registrations": 1548,
+      "collection_status": "not-run",
+      "private_node_test_bundle": false,
+      "runtime_path": "catalog/tasks/axios",
+      "runtime_path_exists": false
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/axios",
+        "tool_version": "uv 0.12.3; nl2repo task CLI",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/axios/evidence/descriptor-validation.txt",
+          "sha256": "sha256:41370e2cd130496805972850e575f73813346587f9a7d410b72ac33f3cc5b56e"
+        }
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/axios --output /tmp/nl2repo-axios-harbor-recompile --toolchain toolchain.node.lock.toml --artifact-root /tmp/nl2repo-axios-harbor-artifacts",
+        "tool_version": "uv 0.12.3; nl2repo Harbor CLI",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/axios/evidence/harbor-compile.txt",
+          "sha256": "sha256:4389c12a044a707ef61ca533971b91fcda41928129fba0b4fa6de3c612719682"
+        }
+      },
+      {
+        "command": "if [ -e catalog/tasks/axios ] || [ -L catalog/tasks/axios ]; then printf '%s\\n' 'runtime_path=present'; exit 1; fi; printf '%s\\n' 'runtime_path=absent'",
+        "tool_version": "POSIX shell filesystem inspection",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/axios/evidence/runtime-absence.txt",
+          "sha256": "sha256:b1e6b0720d409ace1ed98ff3854c0f7978ae97e08ccf213813bac2bef17c794c"
+        }
+      }
+    ]
+  }
+}

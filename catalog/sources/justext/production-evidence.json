@@ -1,0 +1,82 @@
+{
+  "blocked": {
+    "collection": {
+      "frozen_collection_available": false,
+      "legacy_declared_total": 61,
+      "static_test_function_count": 61
+    },
+    "commands": [
+      {
+        "command": "cmp --silent /tmp/justext-source-verify-final/repo/justext/core.py /tmp/justext-source-verify-final/image-core.py",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/justext/evidence/source-overlay-verification.txt",
+           "sha256": "sha256:f072f91d85560811fd9b972dd2feb089cb485b3f1d4f31789893dccddba75b3c"
+        },
+        "tool_version": "GNU diffutils 3.12; Git 2.55.0; Docker client/server 29.7.2"
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/justext --output /tmp/justext-production-remediation-final --artifact-root .nl2repo/artifacts --toolchain toolchain.lock.toml --allow-private",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/justext/evidence/production-remediation.txt",
+          "sha256": "sha256:ca21d1fe4c57ef354dcd41251132349efebc01fb6a52301aa7a80ad4b518891c"
+        },
+        "tool_version": "nl2repobench 0.1.0 via uv 0.12.3"
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/justext",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/justext/evidence/descriptor-validation.txt",
+          "sha256": "sha256:2c34427ec96528235a57488cf57c103367f9f2246d621f4ead775a515fb63796"
+        },
+        "tool_version": "nl2repobench 0.1.0 via uv 0.12.3"
+      },
+      {
+        "command": "uv run nl2repo task lint-network --tasks-root /tmp/justext-network-lint-root",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/justext/evidence/descriptor-validation.txt",
+          "sha256": "sha256:2c34427ec96528235a57488cf57c103367f9f2246d621f4ead775a515fb63796"
+        },
+        "tool_version": "nl2repobench 0.1.0 via uv 0.12.3"
+      }
+    ],
+    "failure_class": "source",
+    "immutable_image": {
+      "config_digest": "sha256:1be7cc12eaa4866fdf22af25ed7b168a98f74d490ac1f2d67c8dc7c25442dd52",
+      "functional_deviations": [
+        "STOPWORDS_LOW_DEFAULT 0.30 -> 0.20",
+        "STOPWORDS_HIGH_DEFAULT 0.32 -> 0.22",
+        "PARAGRAPH_TAGS adds main",
+        "PARAGRAPH_TAGS adds article"
+      ],
+      "image_core_digest": "sha256:39437b8da4409444cb54aec01668ad4af919d7dd8a10edf2739e780e1f924414",
+      "reference": "ghcr.io/multimodal-art-projection/nl2repobench/justext@sha256:8f5f01415624b39a05c64ea288f714f8be74ea4d58c2e0149dc02b148da67082",
+      "source_layer_digest": "sha256:14849ec9bb110dd3abe20d6850854065d6925ab401061076837fdb85d867c4e5",
+      "upstream_core_digest": "sha256:b870b975ed98629ec7d310d364ca99a886e9a942ab66c19de5f8e22ca1a64724"
+    },
+    "next_step": "Obtain an owner-approved source-boundary decision for the immutable-image justext/core.py deviations and preserve it as an immutable patch manifest; then freeze the dependency closure, collected denominator, separate verifier, Oracle, and empty/stub/forgery/offline controls.",
+    "runtime_task": {
+      "path": "catalog/tasks/justext",
+      "present": false
+    },
+    "source_freeze": {
+      "audit": {
+        "path": "catalog/sources/justext/blocked.md",
+        "sha256": "sha256:037a106160afb8e945c5fdaf48c3e15073c09aa4758f779b4cbbeff0b29cefb3"
+      },
+      "license_digest": "sha256:d71c0b2234fd22e9f295986ed8f22cf425b7a4c269248d214eb8bda2a32e7179",
+      "license_path": "LICENSE.rst",
+      "license_spdx": "BSD-2-Clause",
+      "revision": "9fb3340ad2087110348de513e4a4b6fd4f3cc839",
+      "source_digest": "sha256:505425ef32656e4073d8dcbae0e59e77f001aa686d8e17ab630c3ff94f7edb68",
+      "status": "known",
+      "upstream_url": "https://github.com/miso-belica/jusText"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "justext",
+  "terminal_kind": "blocked"
+}

@@ -1,0 +1,15 @@
+$ uv run --frozen --project harbor-runner harbor --version
+0.21.0
+
+# Hashable grading receipts found
+96fdd5bed9aa746ea9271247ee97129cace3d09a2e6dd9175d2ee0f8cd82bc8b  .nl2repo/authoring-work/repairs/cookie/runs/cookie-oracle-controls-final/cookie__L9MFBa8/verifier/grading.json
+5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd  .nl2repo/authoring-work/repairs/cookie/runs/cookie-empty/cookie__ZEZc5Fu/verifier/grading.json
+8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c  .nl2repo/authoring-work/repairs/cookie/runs/cookie-stub-isolated/cookie-stub__MDWJzDC/verifier/grading.json
+8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c  .nl2repo/authoring-work/repairs/cookie/runs/cookie-forgery/cookie-forgery__htRh2xW/verifier/grading.json
+
+# Task-local network and offline receipt inventory
+.nl2repo/authoring-work/repairs/cookie/network-lint.log
+
+# Required durable receipt paths
+MISSING catalog/sources/cookie/evidence/network-probe.json
+MISSING .nl2repo/authoring-work/repairs/cookie/runs/cookie-offline

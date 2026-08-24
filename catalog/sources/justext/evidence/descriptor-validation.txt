@@ -1,0 +1,32 @@
+tool_version=nl2repobench 0.1.0 via uv 0.12.3
+command=uv run nl2repo task validate-source catalog/sources/justext
+{
+  "instruction": "catalog/sources/justext/blocked.md",
+  "source_digest": "sha256:f19be1e7716b7122a743a106fd557c07d611ce8f5677cd61d9a90664b047c523",
+  "status": "blocked",
+  "task_id": "justext",
+  "version": "0.1.0"
+}
+exit_code=0
+
+command=uv run nl2repo task lint-network --tasks-root /tmp/justext-network-lint-root
+{
+  "error_count": 0,
+  "findings": [
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "/tmp/justext-network-lint-root/justext/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "justext"
+    }
+  ],
+  "tasks_scanned": 1,
+  "tasks_with_explicit_policy": 1,
+  "tasks_with_harbor_bundle": 0,
+  "warning_count": 1
+}
+exit_code=0
+
+command=test ! -e catalog/tasks/justext
+exit_code=0
