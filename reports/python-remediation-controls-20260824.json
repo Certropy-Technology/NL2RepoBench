@@ -240,6 +240,32 @@
       "valid": true,
       "reward": 0.0,
       "evidence": ".nl2repo/runs/controls/python-fire-custom-forgery-v1/2026-08-24__16-02-27/python-fire-forgery__znWCtqj/verifier/grading.json"
+    },
+    {
+      "task_id": "typer",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/typer-custom-empty-v1/2026-08-24__16-49-49/typer-empty__n73Ghfi/verifier/grading.json"
+    },
+    {
+      "task_id": "typer",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/typer-custom-stub-v2/2026-08-24__16-44-58/typer-stub__RPVoScG/verifier/grading.json"
+    },
+    {
+      "task_id": "typer",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/typer-custom-forgery-v2/2026-08-24__16-44-58/typer-forgery__mfQAF4t/verifier/grading.json"
     }
   ],
   "offline": {

@@ -26,6 +26,7 @@ failure classification and next gate in task-local provenance.
 | `platformdirs` | `d3cf61ce5e729f2c35f830b69e14adb7b6970a00` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 | `marshmallow` | `c7b559a1fa3aba57ca6dba0ab336841c5038a782` | 33 | `33/33`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 | `python-fire` | `716bbc23d7eca949fdb682172283c8d18f742cb6` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
+| `typer` | `9a7b2e83f6b62c750d6026b0de9ebf2026a8b8fa` | 23 | `23/23`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 
 Evidence paths and structured grading details are recorded in:
 

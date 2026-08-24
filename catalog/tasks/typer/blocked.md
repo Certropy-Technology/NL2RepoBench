@@ -1,10 +1,9 @@
 # `typer` Static Authoring Audit
 
-Status: **blocked**. This directory contains public audit evidence only. It
-does not contain a task descriptor, public instruction projection, copied
-upstream tests, hidden assertions, private command plan, dependency wheels,
-Docker or Harbor files, verifier code, Oracle solution, secrets, or shared
-catalog/dataset edits. No legacy task exists at `test_files/typer/`.
+Status: **oracle-passed remediation; historical blocker retained below**. The
+current task has a bounded candidate-side fixture adapter, private offline
+bundles, generic compiled `23/23` Oracle and empty/stub/forgery controls. The
+full typed callback/platform suite below remains historical context only.
 
 ## Decision
 

@@ -176,6 +176,20 @@
         "pin termcolor and build dependencies in a private offline wheelhouse",
         "include the network_policy module in the trusted separate-verifier runtime"
       ]
+    },
+    {
+      "task_id": "typer",
+      "status": "oracle-passed",
+      "expected_total": 23,
+      "collected": 23,
+      "passed": 23,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/typer-custom-compiled-current/2026-08-24__16-54-27/typer__RjJQ2jB/verifier/grading.json",
+      "remediations": [
+        "bound typed callback construction inside an allowlisted candidate-side fixture adapter",
+        "pin PDM build and Rich CLI dependencies in a private offline bundle",
+        "declare no-network and source-fetch-forbidden policy for the fixed Linux slice"
+      ]
     }
   ],
   "controls": {
