@@ -95,6 +95,14 @@ Python 与 Node 使用不同 dataset/version、schema、grader、依赖闭包和
 - Python v1：pytest/JUnit，`fixed-test-pass-rate-v1`；
 - Node v2：`node:test`、`node-test-json-v1`、`node-test-leaf-pass-rate-v1`、npm v3。
 
+对于复杂 JSON/回调/状态边界，Python v1 还支持受限的
+`verifier.protocol = "custom-json-v1"`。task TOML 只保存 private verifier bundle
+的 digest、URI 和相对 entrypoint；suite、adapter、remote fixture、grader 和
+wheelhouse 不进入 public `catalog/tasks`。`HarborCompiler` 只 materialize private
+bundle 到 separate no-network verifier，并用固定 wrapper 校验 leaf IDs、状态集合、
+固定分母和 JUnit/collection；禁止把 custom `test.sh` 当作公开 task source。候选依赖
+安装到隔离的 candidate site，不能污染 trusted verifier 的 pydantic/pytest runtime。
+
 ## 3. Ground Truth 与规格
 
 冻结候选时保存 upstream full commit、archive/license hashes、OS/runtime/image digest、
