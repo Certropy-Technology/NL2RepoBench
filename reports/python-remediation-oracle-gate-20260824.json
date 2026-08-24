@@ -148,6 +148,20 @@
         "add git/ca-certificates to the pinned agent image for exact source fetch",
         "pin setuptools/wheel build closure and isolate candidate imports"
       ]
+    },
+    {
+      "task_id": "marshmallow",
+      "status": "oracle-passed",
+      "expected_total": 33,
+      "collected": 33,
+      "passed": 33,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/marshmallow-custom-compiled-current/2026-08-24__15-27-22/marshmallow__ncQMMiW/verifier/grading.json",
+      "remediations": [
+        "replace process-local Schema/Field calls with candidate-side JSON scenarios",
+        "pin flit_core in a no-network dependency bundle",
+        "normalize mapping order and freeze a 33-leaf serialization contract"
+      ]
     }
   ],
   "controls": {

@@ -24,6 +24,7 @@ failure classification and next gate in task-local provenance.
 | `docstring-parser` | `8347d8fb347bd66e4bf5711d3df586357166944a` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 | `icecream` | `816e6c6bbac50f16fda8f801c658fe5ebcfd50bc` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 | `platformdirs` | `d3cf61ce5e729f2c35f830b69e14adb7b6970a00` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
+| `marshmallow` | `c7b559a1fa3aba57ca6dba0ab336841c5038a782` | 33 | `33/33`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 
 Evidence paths and structured grading details are recorded in:
 

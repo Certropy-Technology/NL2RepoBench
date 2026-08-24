@@ -188,6 +188,32 @@
       "valid": true,
       "reward": 0.0,
       "evidence": ".nl2repo/runs/controls/platformdirs-custom-forgery-v2/2026-08-24__14-56-59/platformdirs-forgery__uDdohct/verifier/grading.json"
+    },
+    {
+      "task_id": "marshmallow",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/marshmallow-custom-empty-v1/2026-08-24__15-32-52/marshmallow-empty__54vcSCt/verifier/grading.json"
+    },
+    {
+      "task_id": "marshmallow",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/marshmallow-custom-stub-v2/2026-08-24__15-31-03/marshmallow-stub__cC29qsW/verifier/grading.json"
+    },
+    {
+      "task_id": "marshmallow",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/marshmallow-custom-forgery-v2/2026-08-24__15-31-03/marshmallow-forgery__wQtvW7Z/verifier/grading.json"
     }
   ],
   "offline": {

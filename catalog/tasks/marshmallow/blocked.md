@@ -1,11 +1,9 @@
 # Marshmallow Authoring Audit and Blocker
 
-Status: **blocked for production authoring**. The pinned upstream source and
-direct source tests are healthy, but the current task lane has no private test
-bundle, offline dependency artifact, Harbor package, or task-specific adapter
-for the separate candidate boundary. This file contains public provenance and
-audit evidence only. It does not contain upstream test bytes, private tests,
-an Oracle bundle, Docker assets, credentials, or generated verifier code.
+Status: **oracle-passed remediation; historical blocker retained below**. The
+current task has a private JSON scenario verifier, offline dependency/Oracle
+bundles, generic compiled `33/33` Oracle and empty/stub/forgery controls. The
+broader in-process upstream suite below remains historical context only.
 
 ## Candidate and Source Freeze
 
