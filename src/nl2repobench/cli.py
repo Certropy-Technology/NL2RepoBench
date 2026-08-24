@@ -26,7 +26,7 @@ from nl2repobench.authoring.catalog import (
     validate_compiled_dataset,
 )
 from nl2repobench.authoring.inventory import InventoryError, scan_python_source, write_inventory
-from nl2repobench.authoring.network_lint import lint_catalog
+from nl2repobench.authoring.network_lint import lint_catalog_roots
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.models import (
     DatasetManifest,
@@ -458,6 +458,13 @@ def lint_network(
         Path,
         typer.Option("--tasks-root", help="Catalog task directory to scan."),
     ] = Path("catalog/sources"),
+    include_generated: Annotated[
+        bool,
+        typer.Option(
+            "--include-generated",
+            help="Also scan catalog/tasks as the generated Harbor runtime view.",
+        ),
+    ] = False,
     strict: Annotated[
         bool,
         typer.Option("--strict", help="Treat warnings as failures."),
@@ -470,7 +477,11 @@ def lint_network(
     reference-source acquisition such as ``git clone``.
     """
 
-    report = lint_catalog(tasks_root)
+    roots = [tasks_root]
+    generated = Path("catalog/tasks")
+    if include_generated and generated != tasks_root and generated.is_dir():
+        roots.append(generated)
+    report = lint_catalog_roots(*roots)
     _json_print(report.as_dict())
     if report.errors or (strict and report.warnings):
         raise typer.Exit(code=1)

@@ -38,7 +38,8 @@ import tomllib
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TASKS_ROOT = REPO_ROOT / "catalog" / "sources"
+SOURCE_ROOT = REPO_ROOT / "catalog" / "sources"
+TASKS_ROOT = REPO_ROOT / "catalog" / "tasks"
 
 _SHA256_PREFIXED = re.compile(r"^sha256:([0-9a-f]{64})$")
 _FETCHES_SOURCE = re.compile(r"\bgit\b[^\n]{0,120}?\b(?:fetch|clone)\b")
@@ -174,7 +175,7 @@ class ConversionError(RuntimeError):
 def _load_source(task: str) -> tuple[str, str, str]:
     """Return ``(upstream_url, revision, bare_digest)`` for ``task``."""
 
-    task_toml = TASKS_ROOT / task / "task.toml"
+    task_toml = SOURCE_ROOT / task / "task.toml"
     if not task_toml.is_file():
         raise ConversionError(f"{task}: missing task.toml")
     source = tomllib.loads(task_toml.read_text()).get("source") or {}
@@ -204,7 +205,7 @@ def render(task: str) -> str:
         script = TAG_TEMPLATE.format(task=task, url=url, revision=revision, tag=tag, digest=digest)
     else:
         script = TEMPLATE.format(task=task, url=url, revision=revision, digest=digest)
-    existing = TASKS_ROOT / task / "harbor" / "solution" / "solve.sh"
+    existing = TASKS_ROOT / task / "solution" / "solve.sh"
     if existing.is_file() and "/workspace/.github" in existing.read_text():
         script += _GITHUB_CLEANUP
     return script
@@ -213,7 +214,7 @@ def render(task: str) -> str:
 def convert(task: str, *, dry_run: bool = False, force: bool = False) -> str:
     """Convert one task. Returns a short status string."""
 
-    solve = TASKS_ROOT / task / "harbor" / "solution" / "solve.sh"
+    solve = TASKS_ROOT / task / "solution" / "solve.sh"
     if not solve.is_file():
         raise ConversionError(f"{task}: missing harbor/solution/solve.sh")
     current = solve.read_text()
@@ -240,7 +241,7 @@ def candidates() -> list[str]:
 
     found: list[str] = []
     for directory in sorted(p for p in TASKS_ROOT.iterdir() if p.is_dir()):
-        solve = directory / "harbor" / "solution" / "solve.sh"
+        solve = directory / "solution" / "solve.sh"
         if not solve.is_file():
             continue
         body = solve.read_text()

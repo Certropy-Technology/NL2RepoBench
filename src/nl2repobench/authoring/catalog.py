@@ -198,7 +198,11 @@ class CatalogCompiler:
             tests=python_source.tests,
             metric=python_source.metric,
             lifecycle=python_source.lifecycle,
-            harbor=python_source.harbor,
+            harbor=(
+                python_source.harbor.apply_network_policy(python_source.environment.network_policy)
+                if python_source.harbor is not None
+                else None
+            ),
             oracle_bundle=python_source.oracle_bundle,
             verifier=python_source.verifier,
         )
@@ -255,7 +259,11 @@ class CatalogCompiler:
             tests=source.tests,
             metric=source.metric,
             lifecycle=source.lifecycle,
-            harbor=source.harbor,
+            harbor=(
+                source.harbor.apply_network_policy(source.environment.network_policy)
+                if source.harbor is not None
+                else None
+            ),
             oracle_bundle=source.oracle_bundle,
         )
         payload = canonical_json(manifest)

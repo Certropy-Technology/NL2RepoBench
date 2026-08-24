@@ -74,7 +74,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert task["verifier"]["environment"]["network_mode"] == "no-network"
     assert task["metadata"]["expected_test_count"] == 18
     assert "@sha256:" in (task_root / "environment/Dockerfile").read_text()
-    assert not (task_root / "environment/docker-compose.yaml").exists()
+    assert "network_mode: none" in (task_root / "environment/docker-compose.yaml").read_text()
     assert "network_mode: none" in (task_root / "tests/docker-compose.yaml").read_text()
     verifier_dockerfile = (task_root / "tests/Dockerfile").read_text()
     assert "--require-hashes" in verifier_dockerfile
@@ -111,6 +111,17 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert (task_root / "solution/solve.sh").stat().st_mode & 0o111
     assert (task_root / "controls/stub.sh").stat().st_mode & 0o111
     assert not list((task_root / "environment").rglob("test_ministats.py"))
+
+
+def test_catalog_network_policy_controls_generated_agent_runtime(tmp_path) -> None:
+    task_root = HarborCompiler(TOOLCHAIN).compile_task(
+        SOURCE,
+        tmp_path / "output",
+        allow_incomplete=True,
+    )
+    task = tomllib.loads((task_root / "task.toml").read_text())
+    assert task["environment"]["network_mode"] == "no-network"
+    assert "network_mode: none" in (task_root / "environment/docker-compose.yaml").read_text()
 
 
 def test_compiler_output_is_byte_identical_across_roots(tmp_path) -> None:

@@ -27,7 +27,7 @@ import re
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
 from nl2repobench.domain.network_policy import (
     NetworkPolicyViolation,
@@ -188,6 +188,14 @@ def _scannable_files(task_dir: Path) -> list[Path]:
     return files
 
 
+def _has_harbor_bundle(task_dir: Path) -> bool:
+    """Recognize both legacy nested and migrated flat Harbor task trees."""
+
+    if (task_dir / "harbor" / "task.toml").is_file():
+        return True
+    return all((task_dir / name).is_dir() for name in ("environment", "solution", "tests"))
+
+
 def _check_policy_table(task_id: str, policy: object, source: Path) -> list[Finding]:
     findings: list[Finding] = []
     if not isinstance(policy, dict):
@@ -293,7 +301,7 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
     task_id = task_dir.name
     findings: list[Finding] = []
     source = task_dir / "task.toml"
-    has_bundle = (task_dir / "harbor" / "task.toml").exists()
+    has_bundle = _has_harbor_bundle(task_dir)
 
     try:
         data = tomllib.loads(source.read_text())
@@ -306,9 +314,16 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
 
     environment = data.get("environment", {}) or {}
     policy = environment.get("network_policy")
-    has_policy = policy is not None
+    # Harbor 1.4 generated task.toml cannot carry the catalog-only policy table;
+    # its [environment].network_mode is the runtime representation instead.
+    flat_runtime_policy = (
+        has_bundle
+        and data.get("schema_version") == "1.4"
+        and environment.get("network_mode") in {"no-network", "allowlist"}
+    )
+    has_policy = policy is not None or flat_runtime_policy
 
-    if has_policy:
+    if policy is not None:
         findings.extend(_check_policy_table(task_id, policy, source))
         declared_mode = policy.get("mode") if isinstance(policy, dict) else None
         env_mode = environment.get("network_mode")
@@ -323,6 +338,8 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
                     str(source),
                 )
             )
+    elif flat_runtime_policy:
+        pass
     elif has_bundle:
         findings.append(
             Finding(
@@ -347,13 +364,17 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
     # Checked regardless of whether a policy table exists: a task that declares
     # an unrestricted agent must not escape review just because it has not
     # written a policy yet.
-    if (data.get("harbor", {}) or {}).get("agent_network_mode") == "public":
+    agent_public = (data.get("harbor", {}) or {}).get("agent_network_mode") == "public"
+    generated_public = (
+        flat_runtime_policy is False and has_bundle and environment.get("network_mode") == "public"
+    )
+    if agent_public or generated_public:
         findings.append(
             Finding(
                 task_id,
                 "agent-network-public",
                 "error" if has_bundle else "warning",
-                "harbor.agent_network_mode='public' leaves the agent unrestricted",
+                "agent runtime network_mode='public' leaves the agent unrestricted",
                 str(source),
             )
         )
@@ -361,6 +382,8 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
     restricted = True
     if isinstance(policy, dict):
         restricted = policy.get("mode") in {"no-network", "allowlist"}
+    elif has_bundle:
+        restricted = environment.get("network_mode") in {"no-network", "allowlist"}
     upstream = _upstream_identity(data)
 
     for path in _scannable_files(task_dir):
@@ -374,6 +397,7 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
         if path.name in _PROVENANCE_FILES or _is_evidence_path(path, task_dir):
             continue
         is_solution = any(marker in where for marker in _SOLUTION_MARKERS)
+        generated_runtime = data.get("schema_version") == "1.4"
 
         if is_solution:
             # The Oracle is the reference implementation, so acquiring source is
@@ -387,11 +411,17 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
                 verified = _DIGEST_VERIFICATION.search(text) is not None or tree_verified
                 pinned = _REVISION_PIN.search(text) is not None
                 if not verified:
+                    # A migrated flat bundle may still contain an older generated
+                    # solve.sh while its source declaration is the authority. The
+                    # source lint remains strict; generated drift is reported as a
+                    # warning so the integrator can recompile it without blocking
+                    # source validation.
+                    severity: Severity = "warning" if generated_runtime else "error"
                     findings.append(
                         Finding(
                             task_id,
                             "oracle-source-unverified",
-                            "error",
+                            severity,
                             f"{where} downloads reference source without checking it against a "
                             "recorded digest; pin the revision and verify with "
                             "'sha256sum --check --strict', or verify the git tree hash when the "
@@ -477,7 +507,7 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
                 Finding(
                     task_id,
                     rule,
-                    cast(Severity, severity),
+                    severity,
                     f"{url[:110]} in {where} {note}",
                     where,
                 )
@@ -504,4 +534,27 @@ def lint_catalog(tasks_root: Path) -> LintReport:
         report.findings.extend(findings)
         report.tasks_with_bundle += int(has_bundle)
         report.tasks_with_policy += int(has_policy)
+    return report
+
+
+def lint_catalog_roots(*tasks_roots: Path) -> LintReport:
+    """Lint multiple catalog roots while keeping one aggregate report.
+
+    Migration work commonly has both the human source tree and a generated
+    flat Harbor tree in the checkout. This helper lets CI inspect both without
+    requiring generated files to pretend they are source declarations.
+    """
+
+    report = LintReport()
+    seen: set[tuple[str, str]] = set()
+    for root in tasks_roots:
+        partial = lint_catalog(root)
+        for finding in partial.findings:
+            key = (finding.task_id, finding.rule)
+            if key not in seen:
+                report.findings.append(finding)
+                seen.add(key)
+        report.tasks_scanned += partial.tasks_scanned
+        report.tasks_with_bundle += partial.tasks_with_bundle
+        report.tasks_with_policy += partial.tasks_with_policy
     return report

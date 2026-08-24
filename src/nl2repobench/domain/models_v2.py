@@ -26,6 +26,7 @@ from .models import (
     ArtifactRef,
     Difficulty,
     HarborExecutionProfile,
+    NetworkPolicy,
     SourceLock,
     TaskLifecycleRecord,
 )
@@ -77,8 +78,7 @@ class RuntimeProfileV2(V2RecordModel):
                 raise ValueError("Node language requires the node runtime")
             if not re.fullmatch(NODE_VERSION_PATTERN, self.version):
                 raise ValueError(
-                    "Node runtime version must be an exact supported "
-                    "22.x.y or 24.x.y version"
+                    "Node runtime version must be an exact supported 22.x.y or 24.x.y version"
                 )
             if self.package_manager not in {"npm", "none"}:
                 raise ValueError("Node runtime supports npm or no package manager")
@@ -106,6 +106,19 @@ class EnvironmentLockV2(V2RecordModel):
     base_image_digest: Annotated[str | None, Field(pattern=r"^sha256:[0-9a-f]{64}$")] = None
     runtime: RuntimeProfileV2 | None = None
     network_mode: Literal["public", "no-network", "allowlist"] | None = None
+    network_policy: NetworkPolicy | None = None
+
+    @model_validator(mode="after")
+    def validate_network_policy_consistency(self) -> EnvironmentLockV2:
+        if self.network_policy is not None and self.network_mode not in (
+            None,
+            self.network_policy.mode,
+        ):
+            raise ValueError(
+                f"network_mode={self.network_mode!r} contradicts "
+                f"network_policy.mode={self.network_policy.mode!r}"
+            )
+        return self
 
     @model_validator(mode="after")
     def validate_known_environment(self) -> EnvironmentLockV2:

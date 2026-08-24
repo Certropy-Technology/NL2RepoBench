@@ -516,6 +516,23 @@ class HarborExecutionProfile(RecordModel):
     storage_mb: Annotated[int, Field(ge=1024)] = 4096
     workspace_artifact: str = "/workspace"
 
+    def apply_network_policy(self, policy: NetworkPolicy | None) -> HarborExecutionProfile:
+        """Return the Harbor profile resolved from the catalog policy.
+
+        ``network_policy`` is the human-facing authority. The legacy Harbor
+        fields remain accepted for compatibility, but a declared policy always
+        wins when the compiler projects a runtime bundle.
+        """
+
+        if policy is None:
+            return self
+        return self.model_copy(
+            update={
+                "agent_network_mode": policy.mode,
+                "agent_allowed_hosts": policy.allowed_hosts,
+            }
+        )
+
     @model_validator(mode="after")
     def validate_candidate_time_budget(self) -> HarborExecutionProfile:
         reserved_verifier_sec = 60.0

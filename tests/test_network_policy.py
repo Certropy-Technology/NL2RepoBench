@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.authoring.network_lint import lint_catalog, lint_task
+from nl2repobench.authoring.network_lint import lint_catalog, lint_catalog_roots, lint_task
 from nl2repobench.domain.models import EnvironmentLock, HarborExecutionProfile, NetworkPolicy
 from nl2repobench.domain.network_policy import (
     NetworkPolicyViolation,
@@ -130,6 +130,22 @@ class TestPolicyModel:
                 description="d", keywords=("a", "b", "c"), agent_network_mode="allowlist"
             )
 
+    def test_harbor_profile_policy_override_is_compiler_authority(self) -> None:
+        profile = HarborExecutionProfile(
+            description="d", keywords=("a", "b", "c"), agent_network_mode="public"
+        )
+        policy = NetworkPolicy(mode="no-network", offline_dependencies="preinstalled-image")
+        resolved = profile.apply_network_policy(policy)
+        assert resolved.agent_network_mode == "no-network"
+        assert resolved.agent_allowed_hosts == ()
+
+    def test_v2_environment_accepts_network_policy(self) -> None:
+        from nl2repobench.domain.models_v2 import EnvironmentLockV2
+
+        policy = NetworkPolicy(mode="no-network", offline_dependencies="preinstalled-image")
+        env = EnvironmentLockV2(network_mode="no-network", network_policy=policy)
+        assert env.network_policy is policy
+
 
 class TestReferenceSourceScan:
     @pytest.mark.parametrize(
@@ -178,6 +194,33 @@ class TestCatalogLint:
         findings, _, has_policy = lint_task(task)
         assert not has_policy
         assert any(f.rule == "policy-missing" and f.severity == "error" for f in findings)
+
+    def test_flat_harbor_runtime_no_network_is_accepted(self, tmp_path: Path) -> None:
+        task = self._write(tmp_path, "flat", _task_toml(""), bundle=False)
+        (task / "environment").mkdir()
+        (task / "solution").mkdir()
+        (task / "tests").mkdir()
+        text = (task / "task.toml").read_text()
+        (task / "task.toml").write_text(
+            text.replace('schema_version = "1.0"', 'schema_version = "1.4"')
+        )
+        findings, has_bundle, has_policy = lint_task(task)
+        assert has_bundle and has_policy
+        assert not any(f.rule == "policy-missing" and f.severity == "error" for f in findings)
+
+    def test_flat_harbor_runtime_public_is_an_error(self, tmp_path: Path) -> None:
+        task = self._write(tmp_path, "flat-public", _task_toml("", env_mode="public"), bundle=False)
+        (task / "environment").mkdir()
+        (task / "solution").mkdir()
+        (task / "tests").mkdir()
+        (task / "task.toml").write_text(
+            (task / "task.toml")
+            .read_text()
+            .replace('schema_version = "1.0"', 'schema_version = "1.4"')
+        )
+        findings, has_bundle, _ = lint_task(task)
+        assert has_bundle
+        assert any(f.rule == "agent-network-public" and f.severity == "error" for f in findings)
 
     def test_public_agent_mode_is_an_error(self, tmp_path: Path) -> None:
         task = self._write(
@@ -340,6 +383,15 @@ class TestCatalogLint:
         assert report.tasks_with_bundle == 2
         assert report.tasks_with_policy == 1
         assert report.as_dict()["error_count"] == len(report.errors)
+
+    def test_lint_catalog_roots_deduplicates_findings(self, tmp_path: Path) -> None:
+        source = tmp_path / "sources"
+        generated = tmp_path / "tasks"
+        self._write(source, "same", _task_toml(""), bundle=True)
+        self._write(generated, "same", _task_toml(""), bundle=True)
+        report = lint_catalog_roots(source, generated)
+        assert report.tasks_scanned == 2
+        assert sum(f.rule == "policy-missing" for f in report.findings) == 1
 
     def test_missing_root_is_reported(self, tmp_path: Path) -> None:
         report = lint_catalog(tmp_path / "absent")
