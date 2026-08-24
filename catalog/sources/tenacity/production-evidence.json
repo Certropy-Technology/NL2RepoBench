@@ -1,0 +1,58 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/tenacity",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/tenacity/evidence/remediation-validation.txt",
+          "sha256": "sha256:39617c8b88aa9479f825df16a2f3daed6933239063625e39139b3a56af17b324"
+        },
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu)"
+      },
+      {
+        "command": "rm -rf catalog/tasks/tenacity",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/tenacity/evidence/remediation-validation.txt",
+          "sha256": "sha256:39617c8b88aa9479f825df16a2f3daed6933239063625e39139b3a56af17b324"
+        },
+        "tool_version": "rm (GNU coreutils) 9.10"
+      }
+    ],
+    "failure_class": "verifier",
+    "next_step": "Resolve the pinned-source versus legacy-test mismatch by selecting the matching immutable source revision or freezing the legacy tests from the pinned revision; then freeze hash-locked dependencies, a separate verifier, and rerun Oracle and controls before recreating the runtime.",
+    "oracle_audit": {
+      "harbor_version": "0.21.0",
+      "grading": {
+        "path": ".nl2repo/runs/oracle-new4-v2/tenacity/2026-08-19__15-00-29/harbor__ZV2mpEK/verifier/grading.json",
+        "sha256": "sha256:f9ba5de93ca40b1e252e0bf35bcbb2a31b54a563901322eafb4b90665d74cde8"
+      },
+      "pytest": {
+        "path": ".nl2repo/runs/oracle-new4-v2/tenacity/2026-08-19__15-00-29/harbor__ZV2mpEK/verifier/pytest-stdout.txt",
+        "sha256": "sha256:20a7e5768cffa022db0b04f851261cace1724b62ff45a21e74170b0e51411bd0"
+      },
+      "result": {
+        "path": ".nl2repo/runs/oracle-new4-v2/tenacity/2026-08-19__15-00-29/harbor__ZV2mpEK/result.json",
+        "sha256": "sha256:373ad641baa55e7f06a57022bedeb25e8f19ebef8e7d96f789a0a5601b4f6602"
+      },
+      "collected": 124,
+      "passed": 120,
+      "failed": 4,
+      "skipped": 0,
+      "pytest_exit_code": 1,
+      "reward": 0.967741935483871,
+      "failure_summary": "Two after_log name-format assertions and two retry-statistics decorator metadata assertions fail against the pinned source."
+    },
+    "source_freeze": {
+      "license_spdx": "Apache-2.0",
+      "revision": "26f719dc73d3c5612b9c1b8d18a7883837790ad8",
+      "source_digest": "sha256:aef4cf90d9d752dc617235bbd0a0c60c3420fbf79b01a115fea7d023c85264e1",
+      "status": "known",
+      "upstream_url": "https://github.com/jd/tenacity"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "tenacity",
+  "terminal_kind": "blocked"
+}
