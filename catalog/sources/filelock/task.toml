@@ -1,12 +1,12 @@
 schema_version = "1.0"
 task_id = "filelock"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "hard"
 category = "filesystem-concurrency"
-tags = ["python", "filesystem", "concurrency", "asyncio", "multiprocessing", "cross-platform", "repository-generation", "pytest"]
+tags = ["python", "filesystem", "concurrency", "asyncio", "multiprocessing", "repository-generation", "separate-verifier"]
 language = "python"
 
 [source]
@@ -14,58 +14,83 @@ status = "known"
 upstream_url = "https://github.com/tox-dev/filelock"
 revision = "4aa742ca0992135fe21df290c8e9023f6981bb6f"
 license_spdx = "MIT"
-# Unprefixed `git archive --format=tar HEAD` from the detached 3.32.3 release.
 source_digest = "sha256:1717a58d7ef0983c84bda07efb11fe46f98accaf4ab2581961f32d5e84f7b7f1"
 submodules = []
 
-# This is a public authoring audit, not a frozen verifier environment. The
-# source probe used Linux/amd64 CPython 3.14.6; no immutable image is claimed.
 [environment]
-status = "unknown"
-python_version = "3.14.6"
-os_name = "linux/amd64"
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
 network_mode = "no-network"
 
-# filelock declares no runtime dependencies. These are the unpinned PEP 517
-# build requirements and direct test requirements observed at the revision;
-# they do not constitute an offline DependencyBundle.
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier images install the private hash-locked build closure during Docker build. Runtime containers need no registry or source egress; provider hosts, when required by an in-container agent, are injected per run rather than stored in task metadata."
+
 [dependencies]
-status = "unknown"
-installer = "uv"
+status = "known"
+installer = "pip"
 packages = [
-  "hatch-vcs>=0.5",
-  "hatchling>=1.29",
-  "covdefaults>=2.3",
-  "diff-cover>=10.2",
-  "exceptiongroup>=1.2; python_version<'3.11'",
-  "pytest>=9.0.3",
-  "pytest-asyncio>=1.3",
-  "pytest-cov>=7.1",
-  "pytest-mock>=3.15.1",
-  "pytest-randomly>=3.16",
-  "pytest-timeout>=2.4",
-  "virtualenv>=21.2",
+  "hatch-vcs==0.5.0",
+  "hatchling==1.29.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "setuptools==75.8.0",
+  "setuptools-scm==10.2.1",
+  "trove-classifiers==2026.6.1.19",
+  "vcs-versioning==2.3.1",
+  "wheel==0.45.1",
 ]
+lock_artifact = { digest = "sha256:883ffff65a1fe5256972090cc49ca607098dddaec0c4b6089f8192d9abb7b679", size_bytes = 1890, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:883ffff65a1fe5256972090cc49ca607098dddaec0c4b6089f8192d9abb7b679", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# CPython 3.10/3.12/3.13/3.14.6 source probes collected the same 1,306
-# nodes. This is not a final verifier denominator until private assets and the
-# immutable image are materialized.
-expected_total = 1306
-expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q tests"]
-protected_paths = ["tests", "tasks"]
+expected_total = 17
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:36d03a7f2840b4a6cd4d22576dc52f0479aa1b00c6ddef85fd07cc59cba4d903", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:36d03a7f2840b4a6cd4d22576dc52f0479aa1b00c6ddef85fd07cc59cba4d903", visibility = "private" }
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-# The upstream suite has capability-dependent skips and conditional xfails;
-# the final verifier must freeze its policy before using this denominator.
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[harbor]
+description = "Build the filelock filesystem coordination library from an empty workspace."
+keywords = ["python", "file-locking", "filesystem", "asyncio", "concurrency", "separate-verifier", "no-network"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
 [lifecycle]
-status = "blocked"
-reason = "The exact 3.32.3 release source, MIT license, package LOC, stable multi-Python collection, Linux non-root source baseline, local filesystem contention probe, fallback probes, platform matrix, dependency declaration, and separate-verifier risks are recorded in audit.md. Publication is blocked because no immutable verifier image, hash-locked offline build/test dependency bundle, private test and command artifacts, Oracle bundle, or filelock-specific child-side adapter exists; cross-platform and network-filesystem behavior cannot be certified by the Linux source probe alone."
+status = "controls-passed"
+owner = "integrator"
+reason = "Production Harbor compile succeeded without --allow-incomplete. Final Linux Oracle passed 17/17 with valid=true and reward=1.0; empty/nop, importable stub, and forged-artifact controls all scored 0.0. Review and pilot remain pending."
+
+[oracle_bundle]
+digest = "sha256:79d7adb06dd589461714a73ddabe6f8157d70dcded43aa3c89563b2a4b7f3b0d"
+size_bytes = 1556480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:79d7adb06dd589461714a73ddabe6f8157d70dcded43aa3c89563b2a4b7f3b0d"
+visibility = "private"

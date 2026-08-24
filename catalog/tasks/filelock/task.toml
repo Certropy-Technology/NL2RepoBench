@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/filelock"
+version = "0.2.0"
+description = "Build the filelock filesystem coordination library from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "file-locking",
+    "filesystem",
+    "asyncio",
+    "concurrency",
+    "separate-verifier",
+    "no-network",
+]
+
+[metadata]
+difficulty = "hard"
+category = "filesystem-concurrency"
+tags = [
+    "python",
+    "filesystem",
+    "concurrency",
+    "asyncio",
+    "multiprocessing",
+    "repository-generation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 17
+canonical_manifest_digest = "sha256:78ecfdbefc31f4e032d88c1150c1997f652927761a8653a4f51b899c634c6754"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

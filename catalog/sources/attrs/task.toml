@@ -19,42 +19,41 @@ source_digest = "sha256:c7ebd671099d268790f83a2bc3e51b0dc3844bafd41a71b9768567e6
 submodules = []
 
 [environment]
-# The source and collection probes are recorded in audit.md, but no final
-# verifier image, OS lock, or platform policy has been approved.
-status = "unknown"
-python_version = ">=3.10"
-os_name = "unknown"
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build closure is installed during Docker build; the agent and separate verifier run without egress, and the Oracle consumes a locally bundled archive of the pinned revision."
+
 [dependencies]
-# attrs has no runtime dependencies. These are the unpinned build, default
-# test, optional-test, and type-checking requirements observed in the source;
-# they are not a production dependency closure.
-status = "unknown"
-installer = "uv"
+status = "known"
+installer = "pip"
 packages = [
-  "hatchling",
-  "hatch-vcs",
-  "hatch-fancy-pypi-readme>=23.2.0",
-  "pytest>9",
-  "hypothesis",
-  "pytest-xdist[psutil]",
-  "cloudpickle; platform_python_implementation == 'CPython'",
-  "pympler",
-  "pytest-mypy-plugins; platform_python_implementation == 'CPython' and python_version >= '3.10'",
-  "mypy",
-  "pyright",
+  "hatch-fancy-pypi-readme==25.1.0",
+  "hatch-vcs==0.5.0",
+  "hatchling==1.27.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "setuptools==84.0.0",
+  "setuptools-scm==10.2.1",
+  "trove-classifiers==2026.6.1.19",
+  "vcs-versioning==2.3.1",
 ]
+lock_artifact = { digest = "sha256:1cf14dce7bdbfee65cfc65d14a519fa3084f0b9e09223a6e8668225f6610c201", size_bytes = 2377, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1cf14dce7bdbfee65cfc65d14a519fa3084f0b9e09223a6e8668225f6610c201", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# CPython 3.12/pytest 8.4.1 collected 1411 nodes. CPython 3.14/pytest
-# 9.1.1 collected 1412 because test_forward_references.py is enabled there.
-# This is a static probe, not a frozen production denominator.
-expected_total = 1411
-expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q"]
-protected_paths = ["tests"]
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -63,6 +62,34 @@ excluded_statuses = ["skipped"]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[harbor]
+description = "Build the pinned attrs class-building library from an empty workspace; grading uses deterministic allowlisted JSON class, conversion, validation, and introspection scenarios."
+keywords = ["python", "data-model", "validators", "converters", "json-scenarios", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf06172f3def30ed932"
+size_bytes = 2160640
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf06172f3def30ed932"
+visibility = "private"
+
 [lifecycle]
-status = "blocked"
-reason = "The exact source revision, archive and MIT license evidence, package/API inventory, dependency review, deterministic-behavior review, and clean collect-only probes are recorded. Publication is blocked because the final environment and hash-locked offline dependency bundle, private test and command artifacts, Oracle bundle, and attrs-specific child-side JSON scenario adapter are absent; no hidden tests, private bytes, Docker, Oracle, or shared catalog edits are authorized in this static lane."
+status = "controls-passed"
+owner = "integrator"
+reason = "Production bundle passed the required Oracle gate and empty, stub, and forgery controls; review and pilot remain separate publication stages."

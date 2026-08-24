@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "id": "modern-basics",
+      "request": {"schema_version": "1.0", "scenario": "modern-basics"},
+      "expected": {"equal": true, "field_names": ["name", "age"], "fields_from_instance": true, "has_dict": false, "has_weakref": true, "match_args": ["name", "age"], "other_type_equal": false, "repr": "User(name='Ada', age=0)"}
+    },
+    {
+      "id": "conversion-validation-order",
+      "request": {"schema_version": "1.0", "scenario": "conversion-validation-order"},
+      "expected": {"before_failure": 5, "events": ["convert: 4 ", "validate:4", "convert:5", "validate:5", "convert:-1", "validate:-1"], "failure": "builtins.ValueError", "value": 5}
+    },
+    {
+      "id": "factories",
+      "request": {"schema_version": "1.0", "scenario": "factories"},
+      "expected": {"first": {"code": "a-1", "prefix": "a", "values": [3]}, "fresh": true, "second": {"code": "b-1", "prefix": "b", "values": []}}
+    },
+    {
+      "id": "keyword-alias",
+      "request": {"schema_version": "1.0", "scenario": "keyword-alias"},
+      "expected": {"aliases": ["label", "count"], "kw_only": [false, true], "positional_error": "builtins.TypeError", "stored": ["Ada", 2]}
+    },
+    {
+      "id": "classic-compatibility",
+      "request": {"schema_version": "1.0", "scenario": "classic-compatibility"},
+      "expected": {"dataclass_callable": true, "has_dict": true, "ib_alias": true, "modern_alias": true, "number": 7, "repr": "Classic(number=7, enabled=True)", "s_alias": true}
+    },
+    {
+      "id": "frozen-errors",
+      "request": {"schema_version": "1.0", "scenario": "frozen-errors"},
+      "expected": {"equal_hash": true, "failures": [["attr.exceptions.FrozenInstanceError", "can't set attribute", ["can't set attribute"]], ["attr.exceptions.FrozenInstanceError", "can't set attribute", ["can't set attribute"]]]}
+    },
+    {
+      "id": "assignment-hooks",
+      "request": {"schema_version": "1.0", "scenario": "assignment-hooks"},
+      "expected": {"count": 7, "failure": "builtins.ValueError", "raw": {"unconverted": true}}
+    },
+    {
+      "id": "validator-composition",
+      "request": {"schema_version": "1.0", "scenario": "validator-composition"},
+      "expected": {"failures": ["builtins.TypeError", "builtins.ValueError"], "or_failure": "builtins.ValueError", "values": [1, 2]}
+    },
+    {
+      "id": "validator-state",
+      "request": {"schema_version": "1.0", "scenario": "validator-state"},
+      "expected": {"accepted": "not-an-int", "legacy_enabled": true, "restored_failure": "builtins.TypeError", "states": [false, true, true, true, false]}
+    },
+    {
+      "id": "converter-helpers",
+      "request": {"schema_version": "1.0", "scenario": "converter-helpers"},
+      "expected": {"bools": [true, true, true, true, false, false, false, false], "factory_fresh": true, "invalid": "builtins.ValueError", "optional_none": null, "optional_value": 4, "pipe": 12}
+    },
+    {
+      "id": "collection-conversion",
+      "request": {"schema_version": "1.0", "scenario": "collection-conversion"},
+      "expected": {"classic": {"items": [{"value": 1}, {"value": 2}], "mapping": {"last": {"value": 3}}}, "classic_items_type": "list", "modern": {"items": [{"value": 1}, {"value": 2}], "mapping": {"last": {"value": 3}}}, "modern_items_type": "tuple", "retained_items_type": "tuple", "tuple": [[[1], [2]], {"last": [3]}]}
+    },
+    {
+      "id": "field-introspection",
+      "request": {"schema_version": "1.0", "scenario": "field-introspection"},
+      "expected": {"dict_identity": true, "explicit": ["other", "external", false], "indexed_identity": true, "metadata": {"role": "id"}, "metadata_error": "builtins.TypeError", "renamed": ["_identifier", "identifier", true]}
+    },
+    {
+      "id": "evolve-behavior",
+      "request": {"schema_version": "1.0", "scenario": "evolve-behavior"},
+      "expected": {"changed": ["Grace", "fixed"], "distinct": true, "failures": ["builtins.TypeError", "builtins.TypeError"], "original": ["Ada", "fixed"]}
+    },
+    {
+      "id": "inheritance-order",
+      "request": {"schema_version": "1.0", "scenario": "inheritance-order"},
+      "expected": {"has": [true, true, false], "inherited": [true, false], "names": ["base", "child"], "repr": "Child(base=1, child=2)"}
+    },
+    {
+      "id": "make-class",
+      "request": {"schema_version": "1.0", "scenario": "make-class"},
+      "expected": {"fields": ["x", "y"], "repr": "Point(x=3, y=0)", "slotted": true, "values": [3, 0]}
+    },
+    {
+      "id": "ordering-hashing",
+      "request": {"schema_version": "1.0", "scenario": "ordering-hashing"},
+      "expected": {"equal_hash": true, "mutable_hash_error": "builtins.TypeError", "ordered": [true, true, true]}
+    },
+    {
+      "id": "resolve-types",
+      "request": {"schema_version": "1.0", "scenario": "resolve-types"},
+      "expected": {"before_is_string": true, "resolved": true, "same_class": true}
+    },
+    {
+      "id": "value-serializer",
+      "request": {"schema_version": "1.0", "scenario": "value-serializer"},
+      "expected": {"calls": [["number", 3], ["label", "alpha"]], "converted": {"label": "ALPHA", "number": 6}}
+    },
+    {
+      "id": "init-hooks",
+      "request": {"schema_version": "1.0", "scenario": "init-hooks"},
+      "expected": {"events": ["pre", "convert", "validate", "post"], "values": [4, 8]}
+    },
+    {
+      "id": "version-aliases",
+      "request": {"schema_version": "1.0", "scenario": "version-aliases"},
+      "expected": {"converter_identity": true, "distribution": "26.1.0", "exception_identity": true, "required_exports": true, "validator_identity": true, "version_comparison": true, "version_info": [26, 1, 0, "final"], "versions": ["26.1.0", "26.1.0"]}
+    }
+  ]
+}

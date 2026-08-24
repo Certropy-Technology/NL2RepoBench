@@ -1,32 +1,28 @@
 # `filelock` Authoring Audit
 
-Status: **blocked for production authoring**. This task-local directory contains
-public provenance, behavioral inventory, and source-only validation evidence. It
-contains no upstream test bytes, hidden assertions, Oracle solution,
-content-addressed dependency bundle, verifier code, Docker/Harbor assets,
-credentials, or shared catalog/dataset edits.
+Status: **controls-passed for the Linux/amd64 production lane; publication pending review and pilot**. This source directory contains public provenance, behavioral inventory, the public instruction, and control scripts. Private verifier/Oracle bytes and dependency locks remain isolated in the task-local repair and content-addressed artifact namespaces; no upstream test bytes, credentials, or shared catalog/dataset edits are present here.
 
-The source and public specification are strong enough for a future pilot, but
-this candidate is not publishable from the present lane. The project is a
-large, process- and filesystem-sensitive library whose upstream suite directly
-constructs rich Python objects, patches implementation modules, creates threads
-and child processes, forks, runs async tasks, and inspects platform capability.
-A generic one-call JSON candidate boundary cannot preserve those semantics.
+The production task intentionally does not claim full upstream-suite parity.
+It freezes a reviewed 17-leaf Linux/amd64 contract behind a task-specific
+child-process adapter. The wider upstream suite constructs rich Python objects,
+patches implementation modules, creates threads and child processes, forks,
+runs async tasks, and inspects platform capabilities; those behaviors remain
+outside this bounded contract and must not be inferred from its Oracle result.
 
 ## Decision
 
-Keep `filelock` at `lifecycle.status = "blocked"` until all of the following are
-separately approved and recorded:
+The task now advances to `lifecycle.status = "controls-passed"` for the
+explicit Linux/amd64 lane. Review, pilot, and publication still require the
+remaining benchmark gates. The following production artifacts and controls are
+recorded below:
 
-1. an immutable final verifier image and explicit OS/Python/platform policy;
-2. a hash-locked, offline build/runtime/test dependency artifact, including the
-   PEP 517 backend and the Python 3.10 conditional `exceptiongroup` path;
-3. a private test bundle and allowlisted command-plan artifact;
-4. a task-specific child-side adapter that can run reviewed filesystem,
-   process, thread, fork, async, descriptor, and rich-exception scenarios while
-   keeping expected assertions in the trusted private verifier; and
-5. three valid Oracle runs followed by empty, stub, forgery, and offline
-   controls.
+1. an immutable Linux/amd64 verifier image and explicit OS/Python/filesystem policy;
+2. a hash-locked package-index build closure installed during Docker build;
+3. a private custom-json-v1 verifier and command-plan artifact;
+4. a task-specific child-side adapter for reviewed filesystem, process, async,
+   descriptor, marker, lease, and reader/writer scenarios; and
+5. one valid Oracle run under the current one-run contract, followed by empty,
+   stub, forgery, and offline controls.
 
 The local Linux baseline below is source evidence only. It is not a Harbor
 Oracle reward, does not establish a frozen production denominator, and must not
@@ -483,15 +479,13 @@ independent generic JSON requests:
 6. The package has no console entry point, so a generic console operation adds
    no substitute boundary.
 
-A future filelock-specific adapter should accept only reviewed declarative
-scenarios, construct the lock objects and callbacks inside the untrusted child,
-control a temporary filesystem and environment, run bounded sync/thread/process
-and async sequences, and return normalized JSON observations (state
-transitions, intervals, marker/claim directory listings, public record fields,
-exception type/message/properties, and cleanup results). Hidden expected values
-and assertions must remain in the trusted private bundle. Directly importing
-candidate code from trusted pytest, or copying the upstream test suite into a
-trusted verifier, is not an acceptable fallback.
+The production lane uses a filelock-specific adapter that accepts no external
+scenario input: it constructs lock objects and helpers inside an untrusted child,
+uses temporary paths and explicit readiness/release handshakes for contention,
+runs bounded sync/process/async sequences, and returns normalized JSON
+observations. Expected values and assertions remain in the trusted private
+runner. The trusted verifier never imports candidate code and never consumes
+candidate-written reward or grading files.
 
 The public package name is common and available on PyPI. If agent networking is
 enabled, downloading `filelock==3.32.3` is a contamination risk; the final
@@ -523,24 +517,45 @@ UV_CACHE_DIR=/tmp/filelock-empty-cache uv build --wheel --offline ...
 git status --short --untracked-files=all
 ```
 
-No Docker build, Harbor execution, hidden-test/private-artifact materialization,
-Oracle, negative control, dataset compilation, conversion-loop state update,
-shared index edit, or secret use was performed. The only durable files created
-for this candidate are the task-local `task.toml`, `instruction.md`, and this
-`audit.md`.
+Production repair execution completed in the task-local lane. The source
+archive, private verifier, dependency lock, Oracle bundle, and control bundles
+are content-addressed under `.nl2repo/artifacts` and projected into
+`catalog/tasks/filelock`. No shared code, docs, reports, datasets, config, or
+other task was edited. Harbor job directories used for execution were copied to
+task-local evidence and are not part of the published task bundle.
+
+## Production Repair Evidence
+
+- Source: revision `4aa742ca0992135fe21df290c8e9023f6981bb6f`; verified unprefixed
+  archive SHA-256 `1717a58d7ef0983c84bda07efb11fe46f98accaf4ab2581961f32d5e84f7b7f1`.
+- Runtime: Linux/amd64 CPython 3.12.14 image digest
+  `sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a`;
+  agent and verifier run with `network_mode = no-network` and verifier compose
+  `network_mode: none`.
+- Dependency lock: private `sha256:883ffff65a1fe5256972090cc49ca607098dddaec0c4b6089f8192d9abb7b679`,
+  1,890 bytes; only hash-locked package-index requirements, no wheelhouse.
+- Verifier: private `sha256:36d03a7f2840b4a6cd4d22576dc52f0479aa1b00c6ddef85fd07cc59cba4d903`,
+  30,720 bytes; custom-json-v1 child adapter, 17 frozen leaves.
+- Oracle: private `sha256:79d7adb06dd589461714a73ddabe6f8157d70dcded43aa3c89563b2a4b7f3b0d`,
+  1,556,480 bytes; final task-local evidence `evidence/runtime-final-oracle-*` records
+  `valid=true`, collection `17`, passed `17`, reward `1.0`.
+- Controls: empty/nop reward `0.0`; functional stub collection `17`, failed
+  `17`, reward `0.0`; forgery collection `17`, failed `17`, reward `0.0` while
+  the forged workspace reward file was ignored. The final structured summary is
+  `evidence/runtime-final-controls-summary.json`; all verifier network probes
+  reported public egress unavailable.
+- Local adapter smoke: all 17 reference observations passed, including
+  readiness-gated native/soft/SQLite contention, strict claims, leases,
+  descriptors, async lifecycle, marker codec, and singleton behavior.
+
+These results establish the packaged and controls-passed state for this Linux
+lane. They do not claim Windows, NFS/SMB, cross-host, or model-pilot parity.
 
 ## Reopen Conditions
 
 Reopen this candidate only after:
 
-1. selecting and recording a final platform/user/filesystem policy (at minimum,
-   decide whether the production task is Linux-only or has real Windows and
-   network-filesystem lanes);
-2. materializing a hash-locked offline build/test/verifier closure and an
-   immutable image digest;
-3. recollecting the private suite in that final image with structured JUnit/JSON,
-   explicit skip/xfail semantics, and a fixed denominator;
-4. reviewing a child-side adapter for rich state, callbacks, descriptor and
-   filesystem effects, fork/process behavior, and async cancellation; and
-5. running Oracle x3, empty, stub, forgery, and offline controls before any
-   lifecycle advance.
+1. complete independent blind and traceability review;
+2. run the approved model pilot and record failure classification; and
+3. decide whether separate Windows or network-filesystem lanes are needed before
+   any broader publication claim.
