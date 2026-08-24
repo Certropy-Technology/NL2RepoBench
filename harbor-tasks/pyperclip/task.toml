@@ -1,0 +1,55 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pyperclip"
+version = "0.2.0"
+description = "Build pyperclip from an empty workspace and satisfy deterministic clipboard contracts through a separate JSON-line verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "clipboard",
+    "fixture-adapter",
+    "lazy-loading",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = [
+    "python",
+    "clipboard",
+    "fixture-adapter",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 10
+canonical_manifest_digest = "sha256:99a256f3d94ffad7a9d786d4d6924e9300c4a44d4bc29694c08b53c6d47787d5"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

@@ -1,0 +1,245 @@
+{
+  "canonical_manifest_digest": "sha256:8ffcb7933e602c1b6b128230c437b56f04387de587d31819006d21193266d426",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "1af8792fc6d3b8722823a7c4c612b7c504e4a30242ccb9451d06636aa10fe1cb",
+      "size_bytes": 510
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "f87e8984c45e43295993071db9a1e19e3af6489d9b105e0e70b968222bda48fb",
+      "size_bytes": 579
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "22831ea6bbb5cc28af4c34b785f8421aadbb103339d2a179dbc76e7f0a2aec42",
+      "size_bytes": 505
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "de4a13c25bd4f58dc81dcd201f87423ae1810a7872d1ef6721d09c869c2b80f1",
+      "size_bytes": 316
+    },
+    {
+      "path": "environment/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "5011bd63698e3c8be05f38c868e4da6d5265c21663ebe124f487dfc0f9cc297c",
+      "size_bytes": 10225
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "0e1efbe98afc8ca28364f153a79d8dc82fe0a66900d4ead7d905e96639794716",
+      "size_bytes": 135
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "4713273f314d75895e287e1dfed01cd97d1d1c6ec643ebb9e379ff5e80dda71b",
+      "size_bytes": 2723840
+    },
+    {
+      "path": "task.toml",
+      "sha256": "aa7fe4545d39909ddf10305fa4df168d7b04f4d219e2fd2d32f99d0f5100fbda",
+      "size_bytes": 1134
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "6645ae4ff5a9de1f03e49b6dca61c0c3832102a4ff36b0b5ad83f0d19564a6f0",
+      "size_bytes": 948
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "2fc9b8598275f157e29997ff64999e5eb1163c62ff62ccade36ba5b4f2355116",
+      "size_bytes": 139
+    },
+    {
+      "path": "tests/dependencies/annotated_doc-0.0.4-py3-none-any.whl",
+      "sha256": "571ac1dc6991c450b25a9c2d84a3705e2ae7a53467b5d111c24fa8baabbed320",
+      "size_bytes": 5303
+    },
+    {
+      "path": "tests/dependencies/markdown_it_py-4.0.0-py3-none-any.whl",
+      "sha256": "87327c59b172c5011896038353a81343b6754500a08cd7a4973bb48c6d578147",
+      "size_bytes": 87321
+    },
+    {
+      "path": "tests/dependencies/mdurl-0.1.2-py3-none-any.whl",
+      "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8",
+      "size_bytes": 9979
+    },
+    {
+      "path": "tests/dependencies/pdm_backend-2.4.9-py3-none-any.whl",
+      "sha256": "8d1064751dadb0c40b1026b46826a448d85c8228a564985c62fb53d4aba538a1",
+      "size_bytes": 115770
+    },
+    {
+      "path": "tests/dependencies/pygments-2.20.0-py3-none-any.whl",
+      "sha256": "81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176",
+      "size_bytes": 1231151
+    },
+    {
+      "path": "tests/dependencies/requirements.lock.txt",
+      "sha256": "9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667",
+      "size_bytes": 922
+    },
+    {
+      "path": "tests/dependencies/rich-15.0.0-py3-none-any.whl",
+      "sha256": "33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb",
+      "size_bytes": 310654
+    },
+    {
+      "path": "tests/dependencies/setuptools-80.9.0-py3-none-any.whl",
+      "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+      "size_bytes": 1201486
+    },
+    {
+      "path": "tests/dependencies/shellingham-1.5.4-py2.py3-none-any.whl",
+      "sha256": "7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686",
+      "size_bytes": 9755
+    },
+    {
+      "path": "tests/dependencies/wheel-0.45.1-py3-none-any.whl",
+      "sha256": "708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248",
+      "size_bytes": 72494
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/requirements.lock.txt",
+      "sha256": "1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb",
+      "size_bytes": 4194
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "122d2a3562f0946a90dafb16d73b2733bfcf82ffcb6cb8ddef3c4751f66086ef",
+      "size_bytes": 26532
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "d9c452f7548dbf438600c4d529d593dfd71e8b2aff769cc20212bc81e8665dc2",
+      "size_bytes": 12614
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "c243f17f6d83df713b74731a950dbcc6bbc550884a8130871094e7f3f59d5b2c",
+      "size_bytes": 387
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "8f0047ee52ac29dafb61fbf9a0894281f42359f9a0b6ae28c663eceab78b6101",
+      "size_bytes": 7485
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "684528089ccf130e32f889bc76c6693f4ca2e2a10e253b3f33171c5c38e99a31",
+      "size_bytes": 5017
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3483a52bae169b117dc538130fdc898bd023966d6b454ebadcd9a871d8d43ad1",
+      "size_bytes": 6147
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "7f90aa57e5582799eccd272d3dd27400e3860077197f8f3a65d86f44200bfeba",
+      "size_bytes": 3274
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5fd66c5c5be8bd3cb51d5699fc5d3c2042d13bbd18c81fa645aac2c9728d2a02",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "cddbfb704b553dc30ea6dd3be859ee1a8c88e9256810a28d1c5eaf9a268f8f7a",
+      "size_bytes": 2025
+    },
+    {
+      "path": "tests/verifier/adapter.py",
+      "sha256": "a52a0a34f88d93b8aad77216ff35ba972ba6ec2648e1fb91dd84ed26b1d15730",
+      "size_bytes": 9085
+    },
+    {
+      "path": "tests/verifier/run.py",
+      "sha256": "6291cea112977c913c88d3d0602bc938ced9136c0fe8b7c28e8c9ec31d989a22",
+      "size_bytes": 11210
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "typer",
+  "task_version": "0.2.0",
+  "toolchain_lock_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+}
