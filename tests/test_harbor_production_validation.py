@@ -96,6 +96,14 @@ def test_frozen_input_rejects_duplicate_task_ids(tmp_path: Path) -> None:
         )
 
 
+def test_repository_relative_rejects_external_gate_input(tmp_path: Path) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+
+    with pytest.raises(gate.ProductionGateError, match="must be inside the repository"):
+        gate.repository_relative(tmp_path / "outside.json", repository, "production input")
+
+
 def _runtime_fixture(root: Path) -> tuple[dict[str, object], Path]:
     task_root = root / "task"
     files = {

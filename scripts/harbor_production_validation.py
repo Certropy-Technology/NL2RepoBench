@@ -293,6 +293,13 @@ def _task_issue(task_id: str, message: str) -> JsonObject:
     return {"task_id": task_id, "message": message}
 
 
+def repository_relative(path: Path, repository_root: Path, field: str) -> str:
+    try:
+        return path.resolve().relative_to(repository_root.resolve()).as_posix()
+    except ValueError as exc:
+        raise ProductionGateError(f"{field} must be inside the repository: {path}") from exc
+
+
 def validate_catalog(
     *,
     sources_root: Path,
@@ -337,7 +344,7 @@ def validate_catalog(
             source_root = sources_root / task_id
             row: JsonObject = {
                 "task_id": task_id,
-                "source_path": source_root.relative_to(repository_root).as_posix(),
+                "source_path": repository_relative(source_root, repository_root, "source root"),
             }
             task_errors: list[str] = []
             try:
@@ -372,7 +379,9 @@ def validate_catalog(
                     evidence = read_json_object(evidence_path)
                     if evidence.get("task_id") != task_id:
                         raise ProductionGateError("production evidence task_id mismatch")
-                    row["evidence_path"] = evidence_path.relative_to(repository_root).as_posix()
+                    row["evidence_path"] = repository_relative(
+                        evidence_path, repository_root, "production evidence"
+                    )
                     row["evidence_sha256"] = sha256_file(evidence_path)
                     row["evidence"] = evidence
                 elif require_evidence:
@@ -383,7 +392,9 @@ def validate_catalog(
                     if not runtime_root.is_dir():
                         raise ProductionGateError("valid source has no Harbor runtime directory")
                     runtime_data = _validate_runtime_shape(task_id, source_data, runtime_root)
-                    row["runtime_path"] = runtime_root.relative_to(repository_root).as_posix()
+                    row["runtime_path"] = repository_relative(
+                        runtime_root, repository_root, "runtime task"
+                    )
                     row["runtime_schema_version"] = runtime_data.get("schema_version")
                     row["expected_total"] = source_data.get("tests", {}).get("expected_total")
                     row["bundle_manifest_sha256"] = sha256_file(
@@ -444,7 +455,7 @@ def validate_catalog(
         "report_kind": "harbor-production-gate",
         "repository_root": ".",
         "input": {
-            "path": input_path.relative_to(repository_root).as_posix(),
+            "path": repository_relative(input_path, repository_root, "production input"),
             "content_sha256": frozen["content_sha256"],
             "base_commit": frozen["base_commit"],
         },
