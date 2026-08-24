@@ -202,7 +202,12 @@ def main() -> int:
     parser.add_argument("--queue", type=Path, required=True)
     parser.add_argument("--queue-state", type=Path, required=True)
     parser.add_argument("--state-root", type=Path, default=Path(".nl2repo/authoring"))
-    parser.add_argument("--worktree-root", type=Path, default=Path("/tmp/nl2repo-authoring"))
+    parser.add_argument(
+        "--worktree-root",
+        type=Path,
+        default=Path(".nl2repo/authoring-work/worktrees"),
+        help="Disk-backed worktree root; do not use tmpfs for source/build artifacts.",
+    )
     parser.add_argument("--owner", required=True)
     parser.add_argument("--max-concurrency", type=int, default=3)
     parser.add_argument("--lease-seconds", type=int, default=7200)

@@ -53,6 +53,12 @@ REMEDIATION_POLICY = {
         "failure_class",
         "next_unblock_action",
     ],
+    "storage": {
+        "large_artifacts": "project-disk-only",
+        "preferred_root": ".nl2repo/authoring-work/",
+        "tmpfs_policy": "small bounded process scratch only; clean after each stage",
+        "max_tmpfs_bytes": 256 * 1024 * 1024,
+    },
 }
 
 

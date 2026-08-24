@@ -75,6 +75,7 @@ def test_author_loop_filters_catalog_and_oss_but_remediates_candidates(tmp_path:
     assert plan["tasks"][0]["stages"] == list(loop.STAGES)
     assert "environment-remediation" in plan["stages"]
     assert plan["remediation_policy"]["missing_hash_locked_offline_closure"] == "must-remediate"
+    assert plan["remediation_policy"]["storage"]["tmpfs_policy"].startswith("small bounded")
     assert plan["worker_guidance"].endswith("authoring-agent-remediation-guide.zh-CN.md")
 
 

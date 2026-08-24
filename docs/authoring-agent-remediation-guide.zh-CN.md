@@ -4,6 +4,14 @@
 或其他模型运行；Worker 的终点是把经过前置门禁的 task 放进 catalog，状态为
 `awaiting-agent-run`。后续模型评测由独立 Agent Run Loop 消费 catalog。
 
+## 存储纪律
+
+大型 source clone、wheelhouse、npm cache、Docker build context、test bundle 和
+Oracle artifact 必须放在项目磁盘（推荐 `.nl2repo/authoring-work/<batch>/<package>/`），
+不要放 `/tmp` tmpfs。`/tmp` 只允许小型、bounded 的进程 socket/短期日志，单个 worker
+不得超过 256 MiB；每个 stage 完成后立即清理。Worker brief 必须记录工作目录和 cleanup
+结果。这样可以避免多个并发 Package 把 tmpfs 打满，误报为 Docker/依赖/模型故障。
+
 ## 核心规则
 
 下面这些不是 Block 原因，而是 Worker 必须完成的 remediation：

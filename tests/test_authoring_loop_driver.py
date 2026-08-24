@@ -75,3 +75,15 @@ def test_driver_claims_bounded_plan_and_writes_worker_brief(tmp_path: Path, monk
     assert output["model_runs_started"] is False
     assert [x["package"] for x in output["results"]] == ["one"]
     assert (tmp_path / "claims/python-test-batch/claims/one.json").is_file()
+
+
+def test_driver_default_worktree_root_is_disk_backed() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--worktree-root",
+        type=Path,
+        default=Path(".nl2repo/authoring-work/worktrees"),
+    )
+    assert parser.parse_args([]).worktree_root == Path(".nl2repo/authoring-work/worktrees")

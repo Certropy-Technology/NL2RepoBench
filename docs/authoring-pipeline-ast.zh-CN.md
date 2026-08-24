@@ -7,7 +7,9 @@
 Worker 的具体 remediation contract 见
 [`authoring-agent-remediation-guide.zh-CN.md`](authoring-agent-remediation-guide.zh-CN.md)。
 缺 image/lock/wheelhouse/build backend 是待完成工作，不是自动 Block；authoring loop
-只到 catalog handoff，Agent Run 由下游独立 loop 执行。
+只到 catalog handoff，Agent Run 由下游独立 loop 执行。Loop 的大文件和 worktree 使用
+项目磁盘 `.nl2repo/authoring-work/`，不使用 `/tmp` tmpfs；`/tmp` 只保留有大小和时限的
+短期进程 scratch。
 
 旧的四文件转换和“先写 instruction、再人工补测试映射”的流程不再作为扩展主路径。
 新 Pipeline 以 source/test AST inventory 为廉价前置证据，用动态 collection 和 Oracle
