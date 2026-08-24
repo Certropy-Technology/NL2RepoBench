@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "harbor control empty",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/empty/2026-08-24__22-14-34/parsy__QtBKoXt/verifier/grading.json",
+        "sha256": "sha256:b30b128bd04a0bee58aba0947bfa7bf996e7ee5260e59e499fca1ddb82a1343f"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/empty/2026-08-24__22-14-34/parsy__QtBKoXt/verifier/network.json",
+        "sha256": "sha256:ec9f61699d0aebbccb6edc3dee8ab464d1135871a98a330b1a4808cd11bf66e3"
+      }
+    },
+    "forgery": {
+      "command": "harbor control forgery",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/forgery/2026-08-24__22-13-19/parsy-forgery__DVHpnYQ/verifier/grading.json",
+        "sha256": "sha256:906b7510151ec6f7bd86ced4ca7c2ecd9c64abe44fe5a4863e1929cf10d9e013"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/forgery/2026-08-24__22-13-19/parsy-forgery__DVHpnYQ/verifier/network.json",
+        "sha256": "sha256:99f85b1efd33c218a8ec6f4042df300e7a98877b2290f92065ecc62d838f8e14"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "offline verifier network probe",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/oracle/2026-08-24__22-11-45/parsy__iFmnXg4/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    },
+    "stub": {
+      "command": "harbor control stub",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/stub/2026-08-24__22-13-19/parsy-stub__PJTw3Gq/verifier/grading.json",
+        "sha256": "sha256:906b7510151ec6f7bd86ced4ca7c2ecd9c64abe44fe5a4863e1929cf10d9e013"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/stub/2026-08-24__22-13-19/parsy-stub__PJTw3Gq/verifier/network.json",
+        "sha256": "sha256:3592e9b40bf3871f772b5b1053abe309c4cc95594c6135b8a2ec94b24b81f5ab"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/parsy -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/oracle/2026-08-24__22-11-45/parsy__iFmnXg4/verifier/grading.json",
+      "sha256": "sha256:cd5b64bd3544586934b50758601fc806dc0dd644f111b7059c8971382cefcbe9"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/authoring-work/repairs/parsy/.work/runs/oracle/2026-08-24__22-11-45/parsy__iFmnXg4/verifier/network.json",
+      "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "parsy",
+  "terminal_kind": "valid"
+}
