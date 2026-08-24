@@ -83,6 +83,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_install.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_runner.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/workspace_copy.py").is_file()
+    assert (task_root / "tests/runtime/nl2repobench/domain/network_policy.py").is_file()
     assert (task_root / "tests/private/test_ministats.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/grader.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/network_check.py").is_file()
