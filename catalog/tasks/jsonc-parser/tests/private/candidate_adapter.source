@@ -1,0 +1,231 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+if (process.env.JSONC_ADAPTER_MODE !== "1") {
+  process.exit(0);
+}
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const MAX_TEXT_BYTES = 32 * 1024;
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds the bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function plainObject(value, name) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new TypeError(`${name} must be an object`);
+  }
+  return value;
+}
+
+function exactKeys(value, keys, name) {
+  for (const key of Object.keys(value)) {
+    if (!keys.includes(key)) throw new TypeError(`${name}.${key} is not supported`);
+  }
+}
+
+function boundedText(value, name = "text") {
+  if (typeof value !== "string") throw new TypeError(`${name} must be a string`);
+  if (Buffer.byteLength(value) > MAX_TEXT_BYTES) throw new RangeError(`${name} is too large`);
+  return value;
+}
+
+function parseOptions(value = {}) {
+  const options = plainObject(value, "options");
+  const keys = ["disallowComments", "allowTrailingComma", "allowEmptyContent"];
+  exactKeys(options, keys, "options");
+  for (const key of keys) {
+    if (options[key] !== undefined && typeof options[key] !== "boolean") {
+      throw new TypeError(`options.${key} must be a boolean`);
+    }
+  }
+  return options;
+}
+
+function formattingOptions(value = {}) {
+  const options = plainObject(value, "formattingOptions");
+  const keys = ["tabSize", "insertSpaces", "eol", "insertFinalNewline", "keepLines"];
+  exactKeys(options, keys, "formattingOptions");
+  if (options.tabSize !== undefined && (!Number.isSafeInteger(options.tabSize) || options.tabSize < 1 || options.tabSize > 16)) {
+    throw new RangeError("formattingOptions.tabSize must be an integer from 1 to 16");
+  }
+  for (const key of ["insertSpaces", "insertFinalNewline", "keepLines"]) {
+    if (options[key] !== undefined && typeof options[key] !== "boolean") {
+      throw new TypeError(`formattingOptions.${key} must be a boolean`);
+    }
+  }
+  if (options.eol !== undefined && !["\n", "\r", "\r\n"].includes(options.eol)) {
+    throw new TypeError("formattingOptions.eol must be a supported newline");
+  }
+  return options;
+}
+
+function modificationOptions(value = {}) {
+  const options = plainObject(value, "options");
+  exactKeys(options, ["formattingOptions", "isArrayInsertion"], "options");
+  const normalized = {};
+  if (options.formattingOptions !== undefined) {
+    normalized.formattingOptions = formattingOptions(options.formattingOptions);
+  }
+  if (options.isArrayInsertion !== undefined) {
+    if (typeof options.isArrayInsertion !== "boolean") {
+      throw new TypeError("options.isArrayInsertion must be a boolean");
+    }
+    normalized.isArrayInsertion = options.isArrayInsertion;
+  }
+  return normalized;
+}
+
+function jsonPath(value) {
+  if (!Array.isArray(value) || value.length > 32) throw new TypeError("path must be a bounded array");
+  return value.map((segment) => {
+    if (typeof segment === "string") {
+      if (segment.length > 128) throw new RangeError("path segment is too long");
+      return segment;
+    }
+    if (!Number.isSafeInteger(segment) || segment < -1 || segment > 10_000) {
+      throw new TypeError("path segments must be bounded strings or integers");
+    }
+    return segment;
+  });
+}
+
+function edits(value, textLength) {
+  if (!Array.isArray(value) || value.length > 256) throw new TypeError("edits must be a bounded array");
+  return value.map((entry) => {
+    const edit = plainObject(entry, "edit");
+    exactKeys(edit, ["offset", "length", "content"], "edit");
+    if (!Number.isSafeInteger(edit.offset) || edit.offset < 0 || edit.offset > textLength) {
+      throw new RangeError("edit.offset is out of bounds");
+    }
+    if (!Number.isSafeInteger(edit.length) || edit.length < 0 || edit.offset + edit.length > textLength) {
+      throw new RangeError("edit.length is out of bounds");
+    }
+    boundedText(edit.content, "edit.content");
+    return { offset: edit.offset, length: edit.length, content: edit.content };
+  });
+}
+
+async function loadCandidate() {
+  const root = join(process.cwd(), "node_modules", "jsonc-parser");
+  const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+  const entry = typeof manifest.exports === "string"
+    ? manifest.exports
+    : manifest.exports?.["."]?.import ?? manifest.exports?.import ?? manifest.module ?? manifest.main;
+  if (typeof entry !== "string" || !entry.startsWith("./") || entry.includes("..")) {
+    throw new Error("jsonc-parser has no safe ESM package entry");
+  }
+  return import(pathToFileURL(join(root, entry)).href);
+}
+
+async function main() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+  let request;
+  try {
+    request = JSON.parse(data.toString("utf8"));
+  } catch {
+    emit({ ok: false, error: "malformed-json" }, 64);
+  }
+  plainObject(request, "request");
+  if (typeof request.operation !== "string") throw new TypeError("operation must be a string");
+  const candidate = request.operation === "metadata" ? null : await loadCandidate();
+
+  switch (request.operation) {
+    case "metadata": {
+      exactKeys(request, ["operation"], "request");
+      const manifest = JSON.parse(readFileSync(join(process.cwd(), "node_modules", "jsonc-parser", "package.json"), "utf8"));
+      const exportImport = typeof manifest.exports === "string"
+        ? manifest.exports
+        : manifest.exports?.["."]?.import ?? manifest.exports?.import ?? null;
+      emit({ ok: true, result: {
+        name: manifest.name ?? null,
+        version: manifest.version ?? null,
+        type: manifest.type ?? null,
+        exportImport,
+        scripts: manifest.scripts ?? null,
+        dependencies: Object.keys(manifest.dependencies ?? {}).sort(),
+        devDependencies: Object.keys(manifest.devDependencies ?? {}).sort(),
+      } });
+      break;
+    }
+    case "parse": {
+      exactKeys(request, ["operation", "text", "options"], "request");
+      const errors = [];
+      const value = candidate.parse(boundedText(request.text), errors, parseOptions(request.options ?? {}));
+      emit({
+        ok: true,
+        result: {
+          hasValue: value !== undefined,
+          value: value === undefined ? null : value,
+          errors: errors.map((error) => ({ ...error, name: candidate.printParseErrorCode(error.error) })),
+        },
+      });
+      break;
+    }
+    case "modify": {
+      exactKeys(request, ["operation", "text", "path", "value", "delete", "options"], "request");
+      if (request.delete !== undefined && typeof request.delete !== "boolean") {
+        throw new TypeError("delete must be a boolean");
+      }
+      if (request.delete === true && Object.hasOwn(request, "value")) {
+        throw new TypeError("delete requests cannot include value");
+      }
+      const text = boundedText(request.text);
+      const resultEdits = candidate.modify(
+        text,
+        jsonPath(request.path),
+        request.delete === true ? undefined : request.value,
+        modificationOptions(request.options ?? {}),
+      );
+      emit({ ok: true, result: { edits: resultEdits, text: candidate.applyEdits(text, resultEdits) } });
+      break;
+    }
+    case "format": {
+      exactKeys(request, ["operation", "text", "range", "options"], "request");
+      const text = boundedText(request.text);
+      let range;
+      if (request.range !== undefined && request.range !== null) {
+        range = plainObject(request.range, "range");
+        exactKeys(range, ["offset", "length"], "range");
+        if (!Number.isSafeInteger(range.offset) || range.offset < 0 || range.offset > text.length) {
+          throw new RangeError("range.offset is out of bounds");
+        }
+        if (!Number.isSafeInteger(range.length) || range.length < 0 || range.offset + range.length > text.length) {
+          throw new RangeError("range.length is out of bounds");
+        }
+      }
+      const resultEdits = candidate.format(text, range, formattingOptions(request.options ?? {}));
+      emit({ ok: true, result: { edits: resultEdits, text: candidate.applyEdits(text, resultEdits) } });
+      break;
+    }
+    case "applyEdits": {
+      exactKeys(request, ["operation", "text", "edits"], "request");
+      const text = boundedText(request.text);
+      emit({ ok: true, result: { text: candidate.applyEdits(text, edits(request.edits, text.length)) } });
+      break;
+    }
+    default:
+      throw new TypeError("operation is not allowlisted");
+  }
+}
+
+try {
+  await main();
+} catch (error) {
+  emit({
+    ok: false,
+    error: "candidate-call-failed",
+    exception_type: error?.constructor?.name ?? "Error",
+    message: String(error?.message ?? error),
+  }, 1);
+}

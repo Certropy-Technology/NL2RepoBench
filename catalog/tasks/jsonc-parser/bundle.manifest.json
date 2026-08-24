@@ -1,0 +1,125 @@
+{
+  "canonical_manifest_digest": "sha256:e550903d635a0c17d56ca37f7babf1bf0a127e6ede0eebbb6c8daff1a3146d0f",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "3d3e31ee1976f52259c10c0aa824d1a44116a0061ba2ba237405a47a89c0df52",
+      "size_bytes": 324
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "environment/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "955d833916544a188c525e061e9eeff04bbd727bb3c53225187b9ad4b1df426f",
+      "size_bytes": 8523
+    },
+    {
+      "path": "solution/distribution.tar",
+      "sha256": "99ecb53a34efa2cc74f71a0907eb732215c16a5741f733183fab715625f44260",
+      "size_bytes": 112640
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "322d0dd458f3c677da3271f979c5b9f5fdcb3ca685a267f66a269af99750d293",
+      "size_bytes": 1744
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "4d9fef513a7d3543b79aa9965ffe967cede24c3b675037e44374123589a2ad9b",
+      "size_bytes": 266240
+    },
+    {
+      "path": "task.toml",
+      "sha256": "1b9205966e7680e8ca00d2f1057ad4d563f622ed375f62e5fbaa9f22f3a12146",
+      "size_bytes": 1299
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "dad392f127e2e8fccead155f9120e9bdbab57b786d48fabe0d7db6b9ac4d3623",
+      "size_bytes": 225
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/candidate_adapter.source",
+      "sha256": "87d58f259c47571174cf98aa6b7edabfd9c43d9702978e4aba0ce0807b84eae8",
+      "size_bytes": 9008
+    },
+    {
+      "path": "tests/private/contract.test.mjs",
+      "sha256": "4e3e265518c08e8508d6aabd67f501c01da664044169d284ea23e0570c9c366e",
+      "size_bytes": 10705
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "ee6786a5b05a9b67c9744b76941959e3673aa01ea02eed0e25a1f4613965a34b",
+      "size_bytes": 1806
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "16580c80a7275f6dd3bb3f9e99dd56bde8babd1efd5a6f52389201b9b0d238a6",
+      "size_bytes": 2255
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "jsonc-parser",
+  "task_version": "2.0.0",
+  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+}

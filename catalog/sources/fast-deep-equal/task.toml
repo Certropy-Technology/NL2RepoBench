@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "fast-deep-equal"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "deep-equality"
+tags = ["node", "npm", "commonjs", "json", "equality", "subprocess"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/epoberezkin/fast-deep-equal.git"
+revision = "a8e7172b6c411ec320d6045fd4afbd2abc1b4bde"
+license_spdx = "MIT"
+source_digest = "sha256:bfae19c6df85a382dc13a05ceb6ace92125e9a54e603056f3244b2f842ccf755"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The verifier receives a private npm v3 cache artifact and both run phases have no network access. The scripts-stripped Oracle bundle is local and never fetches upstream source."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:949eaa861a331f8273258a69eed71002b5b484228045d85cfe7ea4558f9ccf9f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:949eaa861a331f8273258a69eed71002b5b484228045d85cfe7ea4558f9ccf9f", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", visibility = "private" }
+test_bundle = { digest = "sha256:71a7b368d85c8aea4bf5ec64900e317cb4b815793ed31d7a60e866aeb618d97f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:71a7b368d85c8aea4bf5ec64900e317cb4b815793ed31d7a60e866aeb618d97f", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the fast-deep-equal CommonJS JSON equality package from an empty workspace."
+keywords = ["node", "npm", "commonjs", "json", "equality", "separate-verifier"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "fast-deep-equal-repair"
+reason = "Official Harbor Oracle returned valid=true with 20/20 leaves and reward 1.0; empty, stub, and forged-workspace controls all returned valid=true with reward 0.0."
+
+[oracle_bundle]
+digest = "sha256:0a878d3dc5bac73a18378cada7fcf709f586053183b0209afa73efd4e69d0a12"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0a878d3dc5bac73a18378cada7fcf709f586053183b0209afa73efd4e69d0a12"
+visibility = "private"

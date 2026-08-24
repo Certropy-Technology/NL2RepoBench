@@ -9,7 +9,10 @@ FORBIDDEN_DOCKER_SNIPPETS = ("COPY dependencies", "--no-index", "--find-links")
 
 
 def _is_node_task(task: Path) -> bool:
-    data = tomllib.loads((task / "task.toml").read_text(encoding="utf-8"))
+    task_toml = task / "task.toml"
+    if not task_toml.is_file():
+        return False
+    data = tomllib.loads(task_toml.read_text(encoding="utf-8"))
     return (data.get("metadata") or {}).get("language") == "node"
 
 
@@ -17,6 +20,9 @@ def test_python_harbor_tasks_do_not_vendor_dependencies() -> None:
     violations: list[str] = []
 
     for task in sorted(path for path in TASKS.iterdir() if path.is_dir()):
+        if not (task / "task.toml").is_file():
+            violations.append(f"{task.name}: task.toml missing")
+            continue
         if _is_node_task(task):
             continue
 
@@ -27,12 +33,14 @@ def test_python_harbor_tasks_do_not_vendor_dependencies() -> None:
                 violations.append(f"{task.name}: {path.relative_to(task)}")
             elif path.is_file() and path.suffix == ".whl":
                 violations.append(f"{task.name}: {path.relative_to(task)}")
-        for dockerfile in task.rglob("Dockerfile"):
-            text = dockerfile.read_text(encoding="utf-8", errors="ignore")
+        install_surfaces = list(task.rglob("Dockerfile")) + list(task.rglob("*.sh"))
+        for install_surface in install_surfaces:
+            text = install_surface.read_text(encoding="utf-8", errors="ignore")
             for snippet in FORBIDDEN_DOCKER_SNIPPETS:
                 if snippet in text:
                     violations.append(
-                        f"{task.name}: {dockerfile.relative_to(task)} contains {snippet!r}"
+                        f"{task.name}: {install_surface.relative_to(task)} "
+                        f"contains {snippet!r}"
                     )
 
     assert violations == []
