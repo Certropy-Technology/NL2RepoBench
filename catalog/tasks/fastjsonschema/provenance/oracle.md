@@ -5,7 +5,7 @@ The generic private-bundle Harbor verifier passed one Oracle run:
 - `valid=true`
 - `collected=2898`, `expected=2898`, `passed=2898`
 - `reward=1.0`
-- evidence: `.nl2repo/runs/oracle/fastjsonschema-custom-compiled-v11/2026-08-24__08-28-35/fastjsonschema__bsjTpPM/verifier/grading.json`
+- evidence: `.nl2repo/runs/oracle/fastjsonschema-custom-compiled-current-v12/2026-08-24__09-25-39/fastjsonschema__AEnQqFq/verifier/grading.json`
 
 Remediation included adding Git to the agent image, correcting a pytest
 reserved parameter name, adding frozen meta-schemas and localhost remote
