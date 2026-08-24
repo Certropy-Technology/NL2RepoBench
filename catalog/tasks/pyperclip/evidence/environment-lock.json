@@ -1,0 +1,11 @@
+{
+  "base_image": "python:3.12-slim",
+  "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "runtime": "Python 3.12.4, Debian 12, linux/amd64",
+  "runtime_dependencies": [],
+  "build_dependencies": ["setuptools==80.10.2", "wheel==0.45.1"],
+  "verifier_dependencies": ["pytest==8.3.5", "iniconfig==2.0.0", "packaging==24.2", "pluggy==1.5.0"],
+  "wheelhouse": "evidence/wheelhouse.sha256",
+  "network": {"agent": "public for immutable source fetch", "verifier": "no-network"},
+  "source_revision": "f5326bfd7c5448b40051dd261a7304657977b838"
+}

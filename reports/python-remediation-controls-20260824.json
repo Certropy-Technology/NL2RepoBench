@@ -32,6 +32,84 @@
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
       "evidence": ".nl2repo/runs/controls/custom-current-sympy-nop-20260824"
+    },
+    {
+      "task_id": "pyperclip",
+      "control": "nop",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/pyperclip-custom-nop/2026-08-24__13-01-22/pyperclip__mJUAgPa/verifier/grading.json"
+    },
+    {
+      "task_id": "pyperclip",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/pyperclip-custom-stub-v3/2026-08-24__13-05-10/pyperclip-stub__XEoiAX3/verifier/grading.json"
+    },
+    {
+      "task_id": "pyperclip",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/pyperclip-custom-forgery-v3/2026-08-24__13-05-10/pyperclip-forgery__ApZy33Z/verifier/grading.json"
+    },
+    {
+      "task_id": "httpx",
+      "control": "nop",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/httpx-custom-nop/2026-08-24__13-01-22/httpx__joKwiUv/verifier/grading.json"
+    },
+    {
+      "task_id": "httpx",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/httpx-custom-stub-v3/2026-08-24__13-05-10/httpx-stub__dB786qR/verifier/grading.json"
+    },
+    {
+      "task_id": "httpx",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/httpx-custom-forgery-v3/2026-08-24__13-05-10/httpx-forgery__d3ugRRg/verifier/grading.json"
+    },
+    {
+      "task_id": "pytz",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/pytz-custom-empty/2026-08-24__13-20-47/pytz-empty__qGrsXeg/verifier/grading.json"
+    },
+    {
+      "task_id": "pytz",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.06666666666666667,
+      "evidence": ".nl2repo/runs/controls/pytz-custom-stub-v2/2026-08-24__13-18-48/pytz-stub__8sEixJA/verifier/grading.json"
+    },
+    {
+      "task_id": "pytz",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/pytz-custom-forgery-v2/2026-08-24__13-18-48/pytz-forgery__Shnhn8n/verifier/grading.json"
     }
   ],
   "offline": {
@@ -39,10 +117,11 @@
     "evidence": [
       "dataclasses-json verifier uses --no-index wheelhouse installation",
       "fastjsonschema verifier image uses --no-index hash-locked wheelhouse",
-      "sympy verifier image uses --no-index hash-locked wheelhouse"
+      "sympy verifier image uses --no-index hash-locked wheelhouse",
+      "pyperclip, httpx and pytz compiled verifier network probes report public_network_available=false"
     ]
   },
-  "pending": ["stub", "forgery", "timeout"],
+  "pending": ["timeout", "stub/forgery for pydantic-settings"],
   "publication": "not-published",
   "model_runs": "not-started-by-authoring-loop"
 }

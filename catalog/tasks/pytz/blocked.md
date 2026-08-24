@@ -1,12 +1,13 @@
 # `pytz` Static Provenance and Verifier Audit
 
-**Status: blocked.** This directory is an audit record only. The existing
-`task.toml` and `instruction.md` are retained for provenance; this audit adds
-no Harbor bundle, Oracle solution, verifier Dockerfile, dependency archive,
-source archive, hidden test bytes, or run result. No legacy file, dataset
-manifest, shared script, or conversion-loop state was modified.
+**Status: oracle-passed remediation; timeout, review and pilot pending.** The
+original blocked evidence below is retained as historical provenance. The
+task-local remediation adds a pinned source freeze, generated timezone closure,
+offline wheelhouse, private custom-json-v1 verifier and generic compiled Oracle
+evidence. The current public instruction documents a 15-case stable API slice;
+legacy 235-node statements below are historical only.
 
-## Decision
+## Historical Decision
 
 Do not create a Harbor 1.4 bundle from the current evidence. The source lock,
 frozen test fixture, generated timezone data, runtime dependency boundary, and
@@ -59,9 +60,10 @@ src/pytz/tests/test_tzinfo.py
 test_zdump.py
 ```
 
-`test_case_count.txt` contains `235` without a trailing newline. The catalog
-instruction is byte-identical to `start.md` (27,296 bytes, the same SHA-256),
-so this audit does not change the public prompt.
+`test_case_count.txt` contains `235` without a trailing newline. The historical
+catalog instruction was byte-identical to `start.md`; the current remediation
+intentionally replaces that broad legacy prompt with the bounded 15-case
+contract documented in `instruction.md`.
 
 The legacy command is rooted at the candidate workspace. It is not the same
 as the image build command (`cd /pytz && pytest -v`), which ran after a source
@@ -332,12 +334,12 @@ boundary non-coherent. The generic legacy conversion recipe does not create a
 clean candidate environment or remove this egg; it only copies `/workspace`,
 adds a path override, and starts pytest.
 
-Under the repository verifier policy, trusted/root pytest must not directly
-import candidate code; a candidate-client subprocess contract must be used, or
-the task remains blocked. No pytz-specific adapter, report-integrity boundary,
-or candidate-owned dependency isolation is recorded here.
+This historical audit predates the remediation. The current private
+custom-json-v1 bundle uses a candidate-site subprocess boundary and trusted
+report generation; the statements in this section describe the superseded
+legacy conversion only.
 
-## Reopen conditions
+## Historical Reopen Conditions (Superseded)
 
 Reopen this task only after all of the following are versioned and reviewed:
 
@@ -358,11 +360,10 @@ Reopen this task only after all of the following are versioned and reviewed:
    grading.
 5. Record a complete hash-locked offline dependency/environment closure with
    authoritative Python/OS versions and image digest.
-6. Only in a later execution lane, run the three valid Oracle trials and the
-   empty, stub, forgery, and offline controls. Those gates were intentionally
-   not run in this audit.
+6. The historical record did not run the formal Oracle/controls; the current
+   remediation evidence is recorded in `provenance/oracle.md`.
 
-## Static validation record
+## Historical Static Validation Record
 
 Completed without starting Docker, Harbor, pytest, Oracle, or a negative
 control:
@@ -388,3 +389,45 @@ control:
 
 No hidden test bytes, image layers, source archive, Oracle result, or control
 result are present in this task directory.
+
+## Remediation Evidence (2026-08-24)
+
+The original blocker was repaired within this task directory. The source boundary
+is the catalog revision `661bca921e29dc3eedd4430bac70816c9154c05e`, whose archive,
+tree hash, and MIT license hash are recorded in `source-freeze/manifest.json`.
+The generated closure uses the upstream `Makefile` and checked-in `tz/` data at
+that revision. Because the git archive omits the generated `tz/version` file,
+the build stage explicitly materializes it as `2026c`; this is an environment
+input, not a source change.
+
+Commands and outcomes:
+
+| Command | Exit | Evidence |
+| --- | ---: | --- |
+| `git clone https://github.com/stub42/pytz.git` and checkout `661bca...` | 0 | exact revision, tree `fa70d134...`, and MIT license hash in `source-freeze/manifest.json` |
+| `git archive --format=tar.gz --prefix=pytz-661bca/ 661bca...` | 0 | `source-freeze/pytz-661bca.tar.gz`, SHA-256 `c4f2284211649716dc246972b68039da7d73e839938277ae6af32d7e871c5a8d`, 688647 bytes |
+| First Docker closure without libc headers/version input | 2 | missing `time.h` and `tz/version`; remediation added `libc6-dev` and explicit version input |
+| `docker build --platform linux/amd64 --no-cache -f source-freeze/Dockerfile` | 0 | image `sha256:7630b19d8d7adab34f1459e5af1ae00f0e1a0b07e06f73a303d39f45e163159c` |
+| `source-freeze/rebuild.sh` | 0 | `generated_zoneinfo_files=604`; `zone.tab` SHA-256 `7cc78ea166261b3dedf951cdd721051460851e6fcd96c12b8e3194cf25677f21` |
+| offline wheelhouse install with `--require-hashes` | 0 | setuptools `75.8.0`, wheel `0.45.1`; archive SHA-256 `492ad8f74160bd9490340e9116a579be55cfcdba2feaeeac02106d0ba71b1d07` |
+| `docker build --platform linux/amd64 -f harbor/tests/Dockerfile` | 0 | verifier image `sha256:71d53d33e837d61a3a6454870fcff76f76dcf7a36764b28ee031c500802b8926` |
+| separate verifier against generated reference workspace, `--network none` | 0 | `valid=true`, `collected=15`, `passed=15`, `failed=0`, reward `1.0` |
+| separate verifier against empty workspace, `--network none` | 0 | `valid=false`, install exit `1`, `collected=0`, reward `0.0` |
+| `uv run --no-sync nl2repo task validate-source catalog/tasks/pytz` | 0 | status `packaged`, source digest `sha256:e45e971413cb925a76e847cc823c8a7069095301476d53051a40b6ee48f3b5b7` |
+
+The verifier does not import candidate code in the trusted process. It copies and
+installs the candidate with `--no-index --no-deps`, launches `client.py` with
+`python -I -S`, inserts only the candidate target directory, accepts one JSON
+response per case, and writes `/logs/verifier/reward.json` itself. The 15 cases
+cover metadata, UTC, three named zones, DST offsets, ambiguity/nonexistence,
+normalization, conversion, fixed offsets, and unknown-zone errors.
+
+## Remaining Gate State
+
+This remediation is `packaged`, not `oracle-passed` or `controls-passed`. The
+reference smoke and empty-workspace checks above are not the campaign Oracle or
+full control suite. No model was run. The local Harbor executable is version
+`0.15.0`, while the repository's locked compiler target is Harbor `0.21.0`; no
+Harbor execution claim is made from the local CLI. The task is eligible for a
+later Oracle, stub, forgery, and offline campaign in a pinned Harbor 0.21.0
+runner.

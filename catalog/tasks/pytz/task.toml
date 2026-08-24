@@ -1,39 +1,43 @@
 schema_version = "1.0"
 task_id = "pytz"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
+
+oracle_bundle = { digest = "sha256:48c2e29b35e5c89b204cc45a398ede871d4ecffb50b1351a9b8806514dac1a88", size_bytes = 276480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:48c2e29b35e5c89b204cc45a398ede871d4ecffb50b1351a9b8806514dac1a88", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "repository-generation"]
+tags = ["python", "repository-generation", "timezone", "packaging", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = 'https://github.com/stub42/pytz'
-revision = '661bca921e29dc3eedd4430bac70816c9154c05e'
-license_spdx = 'MIT'
-source_digest = 'sha256:f46f66a141c36c377205ac76b122c04b9727b8edae3a4cbaed856ac209eb3e1b'
+upstream_url = "https://github.com/stub42/pytz"
+revision = "661bca921e29dc3eedd4430bac70816c9154c05e"
+license_spdx = "MIT"
+source_digest = "sha256:f46f66a141c36c377205ac76b122c04b9727b8edae3a4cbaed856ac209eb3e1b"
 
 [environment]
 status = "known"
-python_version = "3.12"
-os_name = "debian-12"
-base_image = 'python:3.12-slim'
-base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 network_mode = "no-network"
+build_command = "printf 2026c > tz/version && make PYTHON=/usr/local/bin/python3 PYTHON3=/usr/local/bin/python3 build"
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==75.8.0", "wheel==0.45.1"]
+artifact = { digest = "sha256:12babd557053e38a19b16f50842b2c0fb3ad209c32f80f2222a95a062b9a9a0f", size_bytes = 1310720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:12babd557053e38a19b16f50842b2c0fb3ad209c32f80f2222a95a062b9a9a0f", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 235
-expected_total_source = "unknown"
-commands = ["pytest --continue-on-collection-errors -v"]
+expected_total = 15
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -42,12 +46,18 @@ excluded_statuses = ["skipped"]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:9ae8a1cd57693b4ad018bbee8892f76272fd1f911fbbc5b218f817cffdf38fd7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9ae8a1cd57693b4ad018bbee8892f76272fd1f911fbbc5b218f817cffdf38fd7", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
 [harbor]
-description = "Build the pytz package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+description = "Build the locked pytz timezone API slice from an empty workspace."
+keywords = ["python", "repository-generation", "timezone", "packaging", "offline", "separate-verifier"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
+candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "public"
 verifier_network_mode = "no-network"
@@ -57,5 +67,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Legacy verifier stores pytz as an egg and the source build requires generated zoneinfo data; needs a dedicated offline source-freeze stage."
+status = "oracle-passed"
+owner = "integrator"
+reason = "Generic private-bundle compiled Oracle passed 15/15 with reward 1.0; controls and review remain pending."

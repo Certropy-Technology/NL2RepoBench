@@ -1,12 +1,12 @@
 schema_version = "1.0"
 task_id = "pyperclip"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "easy"
+difficulty = "medium"
 category = "python-library"
-tags = ["python", "clipboard", "repository-generation"]
+tags = ["python", "clipboard", "fixture-adapter", "separate-verifier"]
 language = "python"
 
 [source]
@@ -18,37 +18,44 @@ source_digest = "sha256:4e80effb92cd84116a2541bb5aa4df7d7832761c04600322f558265b
 
 [environment]
 status = "known"
-python_version = "3.10.11"
-os_name = "debian-11"
-base_image = "ghcr.io/multimodal-art-projection/nl2repobench/pyperclip"
-base_image_digest = "sha256:a3cac678d154fc68b673495484f834c92daa4aa3db42e0008264a49c3f7d2769"
+python_version = "3.12.4"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
 network_mode = "no-network"
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==80.10.2", "wheel==0.45.1", "pytest==8.3.5", "iniconfig==2.0.0", "packaging==24.2", "pluggy==1.5.0"]
+artifact = { digest = "sha256:3149cbea39de4083557951f06b95308dd1469448f54be02d44caddd7267d6f9a", size_bytes = 1587200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3149cbea39de4083557951f06b95308dd1469448f54be02d44caddd7267d6f9a", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 2
+expected_total = 10
 expected_total_source = "frozen-collection"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
-protected_paths = ["tests"]
+commands = ["python -m pytest --collect-only /tests/private/test_contract.py", "python -m pytest /tests/private/test_contract.py --junitxml=/logs/verifier/junit.xml"]
+protected_paths = ["/tests/private/test_contract.py", "/tests/private/runner.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b1e14b97d9d9b385e3d3c27225ca4de4fd2b85f0c12034019c22767f24aa7de0", size_bytes = 1638400, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b1e14b97d9d9b385e3d3c27225ca4de4fd2b85f0c12034019c22767f24aa7de0", visibility = "private" }
+entrypoint = "run.py"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the pyperclip package from an empty workspace."
-keywords = ["python", "clipboard", "repository-generation", "nl2repobench"]
+description = "Build pyperclip from an empty workspace and satisfy deterministic clipboard contracts through a separate JSON-line verifier."
+keywords = ["python", "clipboard", "fixture-adapter", "lazy-loading", "separate-verifier"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
+candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "public"
 verifier_network_mode = "no-network"
@@ -58,5 +65,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Oracle gate and offline dependency closure are not yet evidenced; do not publish or add to a dataset. See provenance.md."
+status = "oracle-passed"
+reason = "Generic private-bundle compiled Oracle passed 10/10 with reward 1.0; controls and review remain pending."
+
+[oracle_bundle]
+digest = "sha256:d8688aaa1929e62eae4c1e4cad4703c2e46c894d67c1b38fb329772d6428b832"
+size_bytes = 122880
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d8688aaa1929e62eae4c1e4cad4703c2e46c894d67c1b38fb329772d6428b832"
+visibility = "private"

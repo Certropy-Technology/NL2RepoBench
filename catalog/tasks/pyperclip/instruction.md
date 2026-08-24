@@ -207,3 +207,7 @@ except pyperclip.PyperclipException:
 pyperclip.set_clipboard("no")
 assert pyperclip.is_available() is True
 ```
+
+## Deterministic verification boundary
+
+The verifier may exercise the public functions through a JSON-line fixture adapter. The adapter is external to the package and may provide an in-memory `(copy, paste)` pair through `determine_clipboard`; it must not require a desktop session or persist clipboard data in the library. JSON values sent to that adapter must be converted to ordinary text by the selected copy callable, and the adapter's responses must remain JSON serializable. The package itself must still report the unavailable backend explicitly when no host clipboard mechanism exists.

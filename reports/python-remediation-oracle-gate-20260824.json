@@ -50,6 +50,62 @@
         "add mpmath to verifier lock and make hidden tests readable",
         "reject unknown solve symbols explicitly"
       ]
+    },
+    {
+      "task_id": "pydantic-settings",
+      "status": "oracle-passed",
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 20,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/pydantic-settings-custom-compiled-correct/2026-08-24__11-41-41/pydantic-settings__uhMgx82/verifier/grading.json",
+      "remediations": [
+        "isolate candidate dependencies from trusted verifier runtime",
+        "make Poetry dynamic versioning work without Git",
+        "create candidate-owned output paths and preserve child import paths"
+      ]
+    },
+    {
+      "task_id": "pyperclip",
+      "status": "oracle-passed",
+      "expected_total": 10,
+      "collected": 10,
+      "passed": 10,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/pyperclip-custom-compiled-v5/2026-08-24__12-41-14/pyperclip__Fqr66Xa/verifier/grading.json",
+      "remediations": [
+        "add hash-locked verifier runtime wheels",
+        "separate fixture adapter and private JSON verifier from public catalog",
+        "add an Oracle solve bundle with an explicit solve.sh"
+      ]
+    },
+    {
+      "task_id": "httpx",
+      "status": "oracle-passed",
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 24,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/httpx-custom-compiled-current/2026-08-24__12-47-27/httpx__wpuNkhd/verifier/grading.json",
+      "remediations": [
+        "freeze a deterministic offline MockTransport slice",
+        "pin the CPython image and dependency wheelhouse",
+        "move the verifier and test adapter behind private artifact refs"
+      ]
+    },
+    {
+      "task_id": "pytz",
+      "status": "oracle-passed",
+      "expected_total": 15,
+      "collected": 15,
+      "passed": 15,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/pytz-custom-compiled-current/2026-08-24__13-17-14/pytz__s5deNRu/verifier/grading.json",
+      "remediations": [
+        "freeze generated 604-file zoneinfo closure at Olson 2026c",
+        "pin setuptools/wheel in a private offline dependency bundle",
+        "adapt the 15-case verifier to custom-json-v1 subprocess isolation"
+      ]
     }
   ],
   "controls": {
