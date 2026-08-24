@@ -27,7 +27,7 @@ import re
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal, cast
 
 from nl2repobench.domain.network_policy import (
     NetworkPolicyViolation,
@@ -147,7 +147,7 @@ _SOURCE_SERVING_MARKERS = (
 )
 
 
-def _upstream_identity(data: dict) -> tuple[str, str] | None:
+def _upstream_identity(data: dict[str, Any]) -> tuple[str, str] | None:
     """Return ``(owner, repo)`` for the frozen upstream, when recorded."""
 
     url = ((data.get("source") or {}).get("upstream_url") or "").strip()
@@ -474,7 +474,13 @@ def lint_task(task_dir: Path) -> tuple[list[Finding], bool, bool]:
                     "is a raw/archive source endpoint",
                 )
             findings.append(
-                Finding(task_id, rule, severity, f"{url[:110]} in {where} {note}", where)
+                Finding(
+                    task_id,
+                    rule,
+                    cast(Severity, severity),
+                    f"{url[:110]} in {where} {note}",
+                    where,
+                )
             )
 
     return findings, has_bundle, has_policy
