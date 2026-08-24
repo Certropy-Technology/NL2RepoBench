@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "source_revision": "a0a39220522ed1228445792c768ed887709aea5f",
+  "private_test_files": {
+    "arithmetic.test.mjs": {
+      "count": 11,
+      "contract_sections": [
+        "addDays",
+        "addMonths",
+        "setHours",
+        "differenceInCalendarDays",
+        "eachDayOfInterval",
+        "startOfWeek",
+        "endOfMonth",
+        "min",
+        "max"
+      ]
+    },
+    "parsing-and-predicates.test.mjs": {
+      "count": 10,
+      "contract_sections": [
+        "parseISO",
+        "formatISO",
+        "formatRFC3339",
+        "getISOWeek",
+        "isWeekend",
+        "isLeapYear",
+        "isWithinInterval"
+      ]
+    }
+  },
+  "coverage_statement": "Every private leaf maps to a named API contract in instruction.md; every selected API has at least one private leaf.",
+  "verifier_boundary": "Private tests call only the JSON subprocess client; trusted code never imports candidate modules directly."
+}

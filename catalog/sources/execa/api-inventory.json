@@ -1,0 +1,20 @@
+{
+  "source_revision": "8017b279e19347efaf2587711c2d57dbd4330740",
+  "package_version": "10.0.1",
+  "public_runtime_exports": [
+    "execa",
+    "execaSync",
+    "execaNode",
+    "parseCommandString",
+    "ExecaError",
+    "ExecaSyncError"
+  ],
+  "scored_subset": {
+    "async_execution": ["file", "arguments", "cwd", "env", "extendEnv", "input", "reject", "stripFinalNewline", "timeout"],
+    "sync_execution": ["file", "arguments", "cwd", "env", "extendEnv", "input", "reject", "stripFinalNewline"],
+    "node_execution": ["scriptPath", "arguments", "options"],
+    "pure_helpers": ["parseCommandString"]
+  },
+  "out_of_scope": ["IPC", "streams", "piping", "browser", "Windows-only behavior", "native addons", "network services", "interactive TTY behavior"],
+  "inventory_evidence": "provenance/source-inventory.json"
+}

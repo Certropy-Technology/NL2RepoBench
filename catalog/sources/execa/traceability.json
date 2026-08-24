@@ -1,0 +1,25 @@
+{
+  "contract": "node-test-leaf-pass-rate-v1",
+  "frozen_total": 11,
+  "bidirectional": true,
+  "public_to_tests": {
+    "exports": ["package-exports"],
+    "async_execution": ["async-success", "argument-boundaries", "input-and-newline", "environment-and-cwd", "async-failure", "reject-false", "timeout"],
+    "sync_execution": ["sync-execution"],
+    "execaNode": ["node-execution"],
+    "parseCommandString": ["parse-command"]
+  },
+  "tests_to_public_contract": {
+    "package-exports": "Package exports",
+    "async-success": "execa success result",
+    "argument-boundaries": "execa default shell=false argument handling",
+    "input-and-newline": "execa input and stripFinalNewline",
+    "environment-and-cwd": "execa cwd/env/extendEnv",
+    "async-failure": "ExecaError failure contract",
+    "reject-false": "execa reject:false",
+    "sync-execution": "execaSync",
+    "node-execution": "execaNode",
+    "parse-command": "parseCommandString",
+    "timeout": "execa timeout"
+  }
+}

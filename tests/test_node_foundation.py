@@ -167,6 +167,8 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "candidate-installation-failed" in generated_test_script
     assert 'schema_version = "1.4"' in (first / "task.toml").read_text()
     assert 'language = "node"' in (first / "task.toml").read_text()
+    assert not (first / "environment/docker-compose.yaml").exists()
+    assert "network_mode: none" in (first / "tests/docker-compose.yaml").read_text()
 
 
 def test_v2_production_compilation_fails_closed(tmp_path: Path) -> None:

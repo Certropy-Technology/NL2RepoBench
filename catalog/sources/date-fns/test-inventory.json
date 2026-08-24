@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "source_revision": "a0a39220522ed1228445792c768ed887709aea5f",
+  "upstream_test_files_observed": 256,
+  "upstream_test_declaration_sites_observed": 3666,
+  "private_bundle_files": [
+    "arithmetic.test.mjs",
+    "parsing-and-predicates.test.mjs"
+  ],
+  "frozen_total": 21,
+  "collection_source": "node --test --test-reporter=tap private test files",
+  "groups": {
+    "arithmetic": 11,
+    "parsing-and-predicates": 10
+  },
+  "boundary_policy": "JSON arguments, JSON-observable Date values, TZ=UTC, no external services"
+}

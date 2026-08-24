@@ -1,0 +1,305 @@
+{
+  "canonical_manifest_digest": "sha256:2234302f4ce9723c67163f5adb4cdd7504564fac15aa9c5d5cc0b74a6a99fd43",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "1a05a015bf4436de6cfc4aa1c0a51108bf3a8c79e4850cf951d8c0624157b85f",
+      "size_bytes": 318
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "73aeac0e4a483b660f28b926224f7bd29742c4b967d9e78a1f31b09adfbef683",
+      "size_bytes": 3533
+    },
+    {
+      "path": "solution/reference/LICENSE.md",
+      "sha256": "fa1bd040c5bdeefe65b3821cebf474f2733ce65df13089bd151dda1778e62fe8",
+      "size_bytes": 35231
+    },
+    {
+      "path": "solution/reference/dist/bin/rollup",
+      "sha256": "6f3784818bdb687e7bf9729e78339d67ed7fb23bfbb2c629b9ea02cfad6207c0",
+      "size_bytes": 82112
+    },
+    {
+      "path": "solution/reference/dist/es/getLogFilter.js",
+      "sha256": "ce7763cd3b8b682e8e584dc2447c6393de2fd2325c42883b7f78f2f0c423862d",
+      "size_bytes": 2088
+    },
+    {
+      "path": "solution/reference/dist/es/package.json",
+      "sha256": "6dc1b06d6b093e9cccb20bee06a93836eee0420ae26803ca2ce4065d82f070d1",
+      "size_bytes": 17
+    },
+    {
+      "path": "solution/reference/dist/es/parseAst.js",
+      "sha256": "47418e4d0905449cebb6b8b8b43ba75ede9b65a1180060dc7ca38b7f0d9dd6f2",
+      "size_bytes": 293
+    },
+    {
+      "path": "solution/reference/dist/es/rollup.js",
+      "sha256": "d85245b0245919b7e9624a6fd7a70fe6653d1827430fa3ca534cabc6ac0b8ec0",
+      "size_bytes": 430
+    },
+    {
+      "path": "solution/reference/dist/es/shared/node-entry.js",
+      "sha256": "13cc7a49ec076b95801eb2e4fdcde677e8b4aaf856bc116a2568c63b1f315e82",
+      "size_bytes": 954000
+    },
+    {
+      "path": "solution/reference/dist/es/shared/parseAst.js",
+      "sha256": "8a46212450a57e6fe624b059c7894b705785dc32d4303745442fc6250ab199bd",
+      "size_bytes": 86189
+    },
+    {
+      "path": "solution/reference/dist/es/shared/watch.js",
+      "sha256": "85227130be9ab1dee854185770a73c2364edf6fb1e84cc7bf943770cc2f31a21",
+      "size_bytes": 264040
+    },
+    {
+      "path": "solution/reference/dist/getLogFilter.d.ts",
+      "sha256": "e7cbf7017d77efd5099e08d85bf58c7658f29edfce5ab0db8faccb86fe9736fa",
+      "size_bytes": 171
+    },
+    {
+      "path": "solution/reference/dist/getLogFilter.js",
+      "sha256": "f7ee0fde63d6abc99641d057d96bbda5539968850b576d664adcebf489e46f9e",
+      "size_bytes": 2230
+    },
+    {
+      "path": "solution/reference/dist/loadConfigFile.d.ts",
+      "sha256": "da9f07c6be066d7b02671ee64ac78bd56cd1a57d98f1ad6b2ef54f685ca146cf",
+      "size_bytes": 471
+    },
+    {
+      "path": "solution/reference/dist/loadConfigFile.js",
+      "sha256": "3120b188eb7c6bf3814d5c4b610afc5dffc1b6391248085ce856c13d4ddd430a",
+      "size_bytes": 705
+    },
+    {
+      "path": "solution/reference/dist/native.js",
+      "sha256": "98c08eccf1668be62c52aa43d64d76b051c20ec65efbc6ad373441eb5067e6c5",
+      "size_bytes": 375
+    },
+    {
+      "path": "solution/reference/dist/parseAst.d.ts",
+      "sha256": "a660aa95476042d3fdcc1343cf6bb8fdf24772d31712b1db321c5a4dcc325434",
+      "size_bytes": 134
+    },
+    {
+      "path": "solution/reference/dist/parseAst.js",
+      "sha256": "acb1c355f3d798f6dadb0608159f5910679f2d0b1f3687c758955ba821cb9619",
+      "size_bytes": 506
+    },
+    {
+      "path": "solution/reference/dist/rollup.d.ts",
+      "sha256": "21944c138a48dc23382cb6558b1d4498908faad2104ba7ff390ba8b27c06f3c0",
+      "size_bytes": 36142
+    },
+    {
+      "path": "solution/reference/dist/rollup.js",
+      "sha256": "7133cff8e2ccaac0493dee04960287b73af178db5eaae0727773c4ef0b5dc0c8",
+      "size_bytes": 4701
+    },
+    {
+      "path": "solution/reference/dist/shared/fsevents-importer.js",
+      "sha256": "8b239344dcc2cdb8b638c3ca96b69d61910bebd9801209bd748c061a12a7235f",
+      "size_bytes": 884
+    },
+    {
+      "path": "solution/reference/dist/shared/index.js",
+      "sha256": "3d510884d2161011dba7a3d94fe593cd340d704b9e4cc7f3b89422c83174b97c",
+      "size_bytes": 254170
+    },
+    {
+      "path": "solution/reference/dist/shared/loadConfigFile.js",
+      "sha256": "19fc0f39e1f2c8a0df8913f12a7e43bcb8e212d16ec8c4ffe366d07d4c5b53ed",
+      "size_bytes": 22927
+    },
+    {
+      "path": "solution/reference/dist/shared/parseAst.js",
+      "sha256": "41ffc3ad4dd48ed6f1e56de359ddbe9f15980d489a939bf47c0b1b9707dd81a3",
+      "size_bytes": 95295
+    },
+    {
+      "path": "solution/reference/dist/shared/rollup.js",
+      "sha256": "89eb1a21cd41688101352647f6f6b8052061ac9838826f43092cbf06da88bf57",
+      "size_bytes": 953193
+    },
+    {
+      "path": "solution/reference/dist/shared/watch-cli.js",
+      "sha256": "72146dd1e81830c870188e3b94ae3199de4fde2db1a47fffdeacaa870daf62d2",
+      "size_bytes": 18481
+    },
+    {
+      "path": "solution/reference/dist/shared/watch.js",
+      "sha256": "46cf572652a0a359a442ce39db97fcee6d38cc35f5e449a5a72b20e7f5ff65e5",
+      "size_bytes": 10570
+    },
+    {
+      "path": "solution/reference/dist/wasm-node/bindings_wasm.js",
+      "sha256": "23dc55e5d890f81bcb9581ce9dc83afed0547be03ae58b43e649c426c306512d",
+      "size_bytes": 7897
+    },
+    {
+      "path": "solution/reference/dist/wasm-node/bindings_wasm_bg.wasm",
+      "sha256": "724497dbe40fca8b2ea789784bc2e8b1308acf8b1214ad4140c308c78e4af299",
+      "size_bytes": 565727
+    },
+    {
+      "path": "solution/reference/package-lock.json",
+      "sha256": "7361466cc0637a482641d19a9146eb9cd9e2b5cbde4e9bb90aac435d5fb91f4a",
+      "size_bytes": 126
+    },
+    {
+      "path": "solution/reference/package.json",
+      "sha256": "e8f797755dd1c63713ccf4cf5e208d184f729f4e67f604611ed88cc8fc35332a",
+      "size_bytes": 1490
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "6b3e39ec5eaae786c1d0438481741d9318b08830b9c110c1ac175b7a560e23d0",
+      "size_bytes": 286
+    },
+    {
+      "path": "solution/source/source-archive.tar",
+      "sha256": "1be81f7d2cd36f7539701f6f93f107bf28eccb31a8ade43de5fd8c55137983d6",
+      "size_bytes": 26132480
+    },
+    {
+      "path": "task.toml",
+      "sha256": "fa64db1e4cf870d12fcf67f29f27d7fc5f5c9fd026bb2d1b483b3b81ff44ed49",
+      "size_bytes": 1295
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "7361466cc0637a482641d19a9146eb9cd9e2b5cbde4e9bb90aac435d5fb91f4a",
+      "size_bytes": 126
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/t01-surface.mjs",
+      "sha256": "dc229e0b4c4fb931cdf39855a6214eef7f2859a0bf0c3a7a40c6fed5f3780f9c",
+      "size_bytes": 362
+    },
+    {
+      "path": "tests/private/t02-basic-bundle.mjs",
+      "sha256": "65717dcde689de663b9adf0e071cdec41a0b7350a0078b4eef34649a4fe2a576",
+      "size_bytes": 917
+    },
+    {
+      "path": "tests/private/t03-formats.mjs",
+      "sha256": "a2bd24340461233ba0468a062c621c3e0e2b7fbc5168dde6a2cedb0d862d31e1",
+      "size_bytes": 797
+    },
+    {
+      "path": "tests/private/t04-plugin.mjs",
+      "sha256": "6a43720c2b388999650dd4a916d4cd39d5c0763a1fc442d208eb1c95000e3606",
+      "size_bytes": 707
+    },
+    {
+      "path": "tests/private/t05-external.mjs",
+      "sha256": "35ddb72fcc321a408688bc83ead17cf4500efcd34e98053da86f2574c2af110d",
+      "size_bytes": 726
+    },
+    {
+      "path": "tests/private/t06-write.mjs",
+      "sha256": "4b5d88a4cecb3a3e508d621954b0d9bd09ac06868f968a48711b41ddff5d7ce9",
+      "size_bytes": 723
+    },
+    {
+      "path": "tests/private/t07-sourcemap.mjs",
+      "sha256": "0a400a5c9837d05faa97a6444d0fc8fc47796eb19a642d3d7c30192b942ad1b1",
+      "size_bytes": 754
+    },
+    {
+      "path": "tests/private/t08-splitting.mjs",
+      "sha256": "0667a35f9e6b1a389857067674f7690cef81ddbb4a8aa8de028530df438e0fc2",
+      "size_bytes": 1046
+    },
+    {
+      "path": "tests/private/t09-cli-version.mjs",
+      "sha256": "0478c52a69fd7849e634f37baacf53216d0c5b6ae09077773c1faaccfd86d007",
+      "size_bytes": 593
+    },
+    {
+      "path": "tests/private/t10-cli-build.mjs",
+      "sha256": "cc99fc712adf2da42ceab1e6ee24213bc594d804f6e6e2478ca232c25862fb7b",
+      "size_bytes": 798
+    },
+    {
+      "path": "tests/private/t11-errors.mjs",
+      "sha256": "eb35893bfe061d06fb5c128e4d9ca8c6d40f5d8c36093882475940fd334fdb3b",
+      "size_bytes": 386
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "732cee41b53ec84dcfbee0ea85ac8c6c1a75a98e1b7ed48ad99e5c9ae010879b",
+      "size_bytes": 751
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "07ecb1fbc642340d2d28bcb9e79ef8035ea674404c593e87ba9e2ca11f3b4171",
+      "size_bytes": 2255
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "rollup",
+  "task_version": "2.0.0",
+  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+}

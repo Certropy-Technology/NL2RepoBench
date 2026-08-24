@@ -1,0 +1,166 @@
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds the bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function request() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) {
+    emit({ ok: false, error: "request-too-large" }, 64);
+  }
+  try {
+    const payload = JSON.parse(data.toString("utf8"));
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      emit({ ok: false, error: "request-must-be-object" }, 64);
+    }
+    return payload;
+  } catch {
+    emit({ ok: false, error: "malformed-json" }, 64);
+  }
+}
+
+function slimMessages(messages) {
+  return messages.map((message) => ({
+    ruleId: message.ruleId ?? null,
+    severity: message.severity,
+    message: message.message,
+    line: message.line,
+    column: message.column,
+    ...(message.endLine === undefined ? {} : { endLine: message.endLine }),
+    ...(message.endColumn === undefined ? {} : { endColumn: message.endColumn }),
+    ...(message.messageId === undefined ? {} : { messageId: message.messageId }),
+  }));
+}
+
+async function main() {
+  const payload = request();
+  const allowed = new Set([
+    "apiSurface",
+    "verify",
+    "verifyAndFix",
+    "sourceSnapshot",
+    "splitLines",
+    "lintText",
+    "configHelpers",
+    "builtinRule",
+  ]);
+  if (typeof payload.operation !== "string" || !allowed.has(payload.operation)) {
+    emit({ ok: false, error: "operation-not-allowlisted" }, 64);
+  }
+
+  const require = createRequire(pathToFileURL(join(process.cwd(), "package.json")));
+  const api = require("eslint");
+
+  switch (payload.operation) {
+    case "apiSurface": {
+      const loaded = await api.loadESLint();
+      return {
+        keys: Object.keys(api).sort(),
+        types: Object.fromEntries(Object.entries(api).map(([name, value]) => [name, typeof value])),
+        eslintVersion: api.ESLint.version,
+        linterVersion: api.Linter.version,
+        loadIdentity: loaded === api.ESLint,
+        ruleTesterConstructible: new api.RuleTester() instanceof api.RuleTester,
+      };
+    }
+    case "verify": {
+      const linter = new api.Linter();
+      return slimMessages(linter.verify(payload.code, payload.config, payload.filename));
+    }
+    case "verifyAndFix": {
+      const linter = new api.Linter();
+      const result = linter.verifyAndFix(payload.code, payload.config, {
+        filename: payload.filename,
+        fix: true,
+      });
+      return {
+        fixed: result.fixed,
+        output: result.output,
+        messages: slimMessages(result.messages),
+      };
+    }
+    case "sourceSnapshot": {
+      const linter = new api.Linter();
+      linter.verify(payload.code, payload.config, payload.filename);
+      const sourceCode = linter.getSourceCode();
+      return {
+        text: sourceCode.text,
+        lines: sourceCode.lines,
+        getText: sourceCode.getText(),
+        firstToken: sourceCode.getFirstToken(sourceCode.ast)?.value ?? null,
+        isSourceCode: sourceCode instanceof api.SourceCode,
+        loc: sourceCode.getLocFromIndex(payload.index),
+        reverseIndex: sourceCode.getIndexFromLoc(payload.loc),
+        comments: sourceCode.getAllComments().map((comment) => ({
+          type: comment.type,
+          value: comment.value,
+          loc: comment.loc,
+        })),
+      };
+    }
+    case "splitLines":
+      return api.SourceCode.splitLines(payload.text);
+    case "lintText": {
+      const eslint = new api.ESLint(payload.options);
+      const [result] = await eslint.lintText(payload.code, payload.lintOptions);
+      return {
+        filePath: result.filePath.split(/[\\/]/).at(-1),
+        errorCount: result.errorCount,
+        warningCount: result.warningCount,
+        fixableErrorCount: result.fixableErrorCount,
+        fixableWarningCount: result.fixableWarningCount,
+        messages: slimMessages(result.messages),
+        output: result.output ?? null,
+      };
+    }
+    case "configHelpers": {
+      const config = require("eslint/config");
+      return {
+        keys: Object.keys(config).sort(),
+        types: Object.fromEntries(Object.entries(config).map(([name, value]) => [name, typeof value])),
+        defined: config.defineConfig(...payload.configs),
+        ignored: config.globalIgnores(payload.ignores, payload.name),
+      };
+    }
+    case "builtinRule": {
+      const risk = require("eslint/use-at-your-own-risk");
+      const rule = risk.builtinRules.get(payload.ruleName);
+      return {
+        keys: Object.keys(risk).sort(),
+        size: risk.builtinRules.size,
+        exists: Boolean(rule),
+        meta: rule ? {
+          type: rule.meta.type,
+          fixable: rule.meta.fixable ?? null,
+          messages: rule.meta.messages,
+        } : null,
+      };
+    }
+    default:
+      throw new Error("unreachable operation");
+  }
+}
+
+try {
+  emit({ ok: true, value: await main() });
+} catch (error) {
+  emit({
+    ok: false,
+    error: "candidate-call-failed",
+    exception_type: error?.constructor?.name ?? "Error",
+    message: String(error?.message ?? error),
+  }, 1);
+}

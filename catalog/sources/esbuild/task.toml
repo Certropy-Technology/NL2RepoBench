@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "esbuild"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "javascript-transformer"
+tags = ["node", "npm", "esbuild", "transform", "bundler", "typescript", "jsx", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/evanw/esbuild"
+revision = "f6058f8364fe7ab91ca57a83e02577ed74c9cae4"
+license_spdx = "MIT"
+source_digest = "sha256:93c9ac8c1e6afba13f21749180b5a4ee79e36f145cfe180a8b6a1afeb75b8a6e"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+artifact = { digest = "sha256:aa416bda29b7abe7bc918632746f594b28c50b523c2738acc54d2da0f103c345", size_bytes = 449, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:aa416bda29b7abe7bc918632746f594b28c50b523c2738acc54d2da0f103c345", visibility = "private" }
+packages = []
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 11
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
+test_bundle = { digest = "sha256:6a0f8014a2b15889a787a286c0e375fbe25bc93f91a089a1f21a0e2a5d815d01", size_bytes = 1863, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6a0f8014a2b15889a787a286c0e375fbe25bc93f91a089a1f21a0e2a5d815d01", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Production Node task for rebuilding a deterministic JavaScript and TypeScript transformation API compatible with esbuild 0.28.2."
+keywords = ["node", "npm", "esbuild", "transform", "bundler", "typescript", "jsx", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-direct-gpt-20260824-r1"
+reason = "Frozen source, API/test inventory, offline npm closure, digest-pinned images, and a private node:test verifier are in place. Oracle scored valid=true reward=1.0 at 11/11 under network none, and empty/stub/forgery/offline/install-script/loader-hook/timeout controls all behaved as required. Awaiting the independent Agent Run plus two human reviews before publication."
+approval_refs = ["authoring-remediation-esbuild-f6058f8"]
+
+[oracle_bundle]
+digest = "sha256:8531700a15c8bdd44a9ee283b89d1efcd64c60d6fe166a0b8bd16bb1434e03b3"
+size_bytes = 4740525
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:8531700a15c8bdd44a9ee283b89d1efcd64c60d6fe166a0b8bd16bb1434e03b3"
+visibility = "private"

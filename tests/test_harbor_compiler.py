@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import shutil
 import tarfile
 import tomllib
 from pathlib import Path
@@ -74,7 +75,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert task["verifier"]["environment"]["network_mode"] == "no-network"
     assert task["metadata"]["expected_test_count"] == 18
     assert "@sha256:" in (task_root / "environment/Dockerfile").read_text()
-    assert "network_mode: none" in (task_root / "environment/docker-compose.yaml").read_text()
+    assert not (task_root / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (task_root / "tests/docker-compose.yaml").read_text()
     verifier_dockerfile = (task_root / "tests/Dockerfile").read_text()
     assert "--require-hashes" in verifier_dockerfile
@@ -114,14 +115,31 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
 
 
 def test_catalog_network_policy_controls_generated_agent_runtime(tmp_path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(SOURCE, source)
+    task_toml = source / "task.toml"
+    task_toml.write_text(
+        task_toml.read_text().replace(
+            "[dependencies]\n",
+            """[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Synthetic compiler policy projection fixture."
+
+[dependencies]
+""",
+            1,
+        )
+    )
     task_root = HarborCompiler(TOOLCHAIN).compile_task(
-        SOURCE,
+        source,
         tmp_path / "output",
         allow_incomplete=True,
     )
     task = tomllib.loads((task_root / "task.toml").read_text())
     assert task["environment"]["network_mode"] == "no-network"
-    assert "network_mode: none" in (task_root / "environment/docker-compose.yaml").read_text()
+    assert not (task_root / "environment/docker-compose.yaml").exists()
 
 
 def test_compiler_output_is_byte_identical_across_roots(tmp_path) -> None:

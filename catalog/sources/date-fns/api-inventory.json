@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "package": "date-fns",
+  "source_revision": "a0a39220522ed1228445792c768ed887709aea5f",
+  "package_version": "4.4.0",
+  "root_export_count": 250,
+  "export_path_count": 741,
+  "core_source_directory_count": 758,
+  "selected_json_boundary_exports": [
+    "addDays",
+    "addMonths",
+    "setHours",
+    "differenceInCalendarDays",
+    "eachDayOfInterval",
+    "startOfWeek",
+    "endOfMonth",
+    "parseISO",
+    "formatISO",
+    "formatRFC3339",
+    "getISOWeek",
+    "isWeekend",
+    "isLeapYear",
+    "isWithinInterval",
+    "min",
+    "max"
+  ],
+  "excluded_surface": [
+    "locale and context objects",
+    "custom Date subclasses",
+    "callbacks and mutable sessions",
+    "FP modules",
+    "browser and timezone packages",
+    "TypeScript type-level behavior"
+  ]
+}

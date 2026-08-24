@@ -1,0 +1,87 @@
+schema_version = "2.0"
+task_id = "koa"
+version = "2.0.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:45992a718ffe7792d5dcb7fc98c16aa9875e70cd1a1c1497455085fcd1022864", size_bytes = 11212800, media_type = "application/x-tar", uri = "artifact://private/sha256:45992a718ffe7792d5dcb7fc98c16aa9875e70cd1a1c1497455085fcd1022864", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "node-web-framework"
+tags = ["node", "npm", "http", "middleware", "web-framework", "json", "cookies", "async"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/koajs/koa"
+revision = "9c202e0077f4e314795222aff1be0da0bf9b2493"
+license_spdx = "MIT"
+source_digest = "sha256:7fc748340171c9bd930b610b61c783fd21e011882f56474cdb628ba92de6b633"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+artifact = { digest = "sha256:4eaab9ddf9908685afc0a80f048ee28de829b61b2592e139c7c62b3352c673cf", size_bytes = 10496000, media_type = "application/x-tar", uri = "artifact://private/sha256:4eaab9ddf9908685afc0a80f048ee28de829b61b2592e139c7c62b3352c673cf", visibility = "private" }
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["accepts", "content-disposition", "content-type", "cookies", "delegates", "destroy", "encodeurl", "escape-html", "fresh", "http-assert", "http-errors", "koa-compose", "mime-types", "on-finished", "parseurl", "statuses", "type-is", "vary"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 17
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:50444dbfe291d6478623f341c576501991988ba074583ed0055a4b098105b5e9", size_bytes = 20480, media_type = "application/x-tar", uri = "artifact://private/sha256:50444dbfe291d6478623f341c576501991988ba074583ed0055a4b098105b5e9", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+passed_statuses = ["passed"]
+denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-direct-gpt-20260824-r1"
+
+[harbor]
+description = "Build the Koa HTTP middleware framework from an empty Node workspace."
+keywords = ["node", "npm", "http", "middleware", "web-framework", "json", "cookies", "async"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"

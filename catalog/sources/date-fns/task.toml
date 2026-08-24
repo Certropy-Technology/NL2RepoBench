@@ -1,0 +1,85 @@
+schema_version = "2.0"
+task_id = "date-fns"
+version = "0.2.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:88d2fd25653efaf3da78e3bd31557c5e41586dc00613c6d4ac4550a5db94bc53", size_bytes = 1688, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:88d2fd25653efaf3da78e3bd31557c5e41586dc00613c6d4ac4550a5db94bc53", visibility = "private" }
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "date-time-library"
+tags = ["node", "npm", "esm", "date", "calendar", "interval", "json"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/date-fns/date-fns"
+revision = "a0a39220522ed1228445792c768ed887709aea5f"
+license_spdx = "MIT"
+source_digest = "sha256:bfae8a8d4c91f0d01026245898ff9b3a49ad4a1ce10df4c711a97cae302b4bf9"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+artifact = { digest = "sha256:aeb40fca456bd67dadc1c21ed854bd5321c2a4c2ad97ac4767c2aaf4a5d6ee56", size_bytes = 406, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:aeb40fca456bd67dadc1c21ed854bd5321c2a4c2ad97ac4767c2aaf4a5d6ee56", visibility = "private" }
+packages = []
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 21
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", size_bytes = 261, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", visibility = "private" }
+test_bundle = { digest = "sha256:6389dc3733bce14885cc722040ee5da9b2884b27824445f6136e556a13f6ec4b", size_bytes = 1932, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6389dc3733bce14885cc722040ee5da9b2884b27824445f6136e556a13f6ec4b", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build an installable JSON-observable UTC date utility package from an empty workspace."
+keywords = ["node", "npm", "esm", "date", "calendar", "interval", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-direct-gpt-20260824-r1"
+reason = "Frozen source, digest-pinned Node 24 images, private offline closure, separate verifier, Oracle 21/21, and empty/stub/forgery/timeout/offline controls passed; independent reviews and publication remain integrator work."

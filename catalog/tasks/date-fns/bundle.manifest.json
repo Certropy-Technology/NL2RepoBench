@@ -1,0 +1,115 @@
+{
+  "canonical_manifest_digest": "sha256:8b2337f6d3432c895b8ab7f3c9c1709e51553f4616113b9eefcc76fe84910feb",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "9a3ef57b47edc5710af7a81e6455f2cdc67ca63ea291e1b4b68493f9670591ba",
+      "size_bytes": 320
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "223fd1dcc2f8bb10e3ebd5962f38b3b5b93a9f2e3b59b065a24f8c21c8f90fb1",
+      "size_bytes": 3738
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "fa8c53eb9fbd821e3f4ed332995de6fb62d495b2c6c19a7375b72caaaff2690b",
+      "size_bytes": 5029
+    },
+    {
+      "path": "task.toml",
+      "sha256": "5c27b64c5c8f5876e65831032497873132a94a424c03e675c7d1abdcf604e9a9",
+      "size_bytes": 1278
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "9c2e7c44113b7cdf82fadb86810fbae489e72237d9a3dfd43b6ebf93189250f9",
+      "size_bytes": 213
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/arithmetic.test.mjs",
+      "sha256": "6fede072e40c03df858544768c8ff1805bec9620e987dbdae7cd006b1a14ebdc",
+      "size_bytes": 2408
+    },
+    {
+      "path": "tests/private/package.json",
+      "sha256": "72e5d5e58a18a6cc570d7ea91a3815c0e8b5d530b4fff5a6b8e314a3457b3ebe",
+      "size_bytes": 100
+    },
+    {
+      "path": "tests/private/parsing-and-predicates.test.mjs",
+      "sha256": "6c6efc231e4fb4be701072c45b8289ed0f7e5a52978567d3b9bacf9c9e2f3c02",
+      "size_bytes": 1903
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "c7a4337f55893348235f4d645684f4bef0f811e0d5dc07a3450368f468d0497e",
+      "size_bytes": 1311
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "693bb0ea780db3bac850cf7eb52c6b93b2db8093cc92abf9d335ebf0cc10d45a",
+      "size_bytes": 2255
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "date-fns",
+  "task_version": "0.2.0",
+  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+}

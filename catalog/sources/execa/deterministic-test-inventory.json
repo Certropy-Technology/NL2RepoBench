@@ -1,0 +1,18 @@
+{
+  "framework": "node:test",
+  "expected_total": 11,
+  "collection_policy": "fixed-private-adaptation",
+  "tests": [
+    {"id": "package-exports", "behavior": "ESM package metadata and required named exports", "source": "index.js/package.json"},
+    {"id": "async-success", "behavior": "capture stdout/stderr and successful result status", "source": "test/methods/main.js"},
+    {"id": "argument-boundaries", "behavior": "preserve an argument containing spaces without shell interpretation", "source": "test/arguments/escape.js"},
+    {"id": "input-and-newline", "behavior": "write stdin and strip one final newline", "source": "test/io/input.js; test/io/strip-final-newline.js"},
+    {"id": "environment-and-cwd", "behavior": "apply cwd/env and extendEnv semantics", "source": "test/arguments/env.js; test/arguments/cwd.js"},
+    {"id": "async-failure", "behavior": "reject with structured error on non-zero exit", "source": "test/return/error.js"},
+    {"id": "reject-false", "behavior": "resolve failed result when reject is false", "source": "test/return/reject.js"},
+    {"id": "sync-execution", "behavior": "synchronous result and failure boundary", "source": "test/methods/sync.js"},
+    {"id": "node-execution", "behavior": "run a script with process.execPath and preserve arguments", "source": "test/methods/node.js"},
+    {"id": "parse-command", "behavior": "split whitespace and unescape backslashes without quote parsing", "source": "test/arguments/escape.js"},
+    {"id": "timeout", "behavior": "terminate a slow child and report timedOut", "source": "test/terminate/timeout.js"}
+  ]
+}

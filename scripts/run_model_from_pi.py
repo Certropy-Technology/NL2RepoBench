@@ -9,14 +9,22 @@ import os
 import re
 import stat
 import subprocess
+import tomllib
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
-def provider_config(models_file: Path, provider: str, model_id: str) -> tuple[str, str, str]:
+def provider_config(
+    models_file: Path,
+    provider: str,
+    model_id: str,
+    *,
+    allow_unresolved_credential: bool = False,
+) -> tuple[str, str, str]:
     mode = stat.S_IMODE(models_file.stat().st_mode)
     if mode & 0o077:
         raise ValueError(f"Pi models file must not be group/world accessible: mode {mode:o}")
@@ -47,7 +55,7 @@ def provider_config(models_file: Path, provider: str, model_id: str) -> tuple[st
         if match is None:
             raise ValueError("Pi apiKey environment reference is malformed")
         api_key = os.environ.get(match.group(1), "")
-        if not api_key:
+        if not api_key and not allow_unresolved_credential:
             raise ValueError(f"Pi credential environment variable is empty: {match.group(1)}")
     return api, base_url, api_key
 
@@ -70,18 +78,56 @@ def normalize_harbor_model(api: str, harbor_model: str) -> str:
     return harbor_model
 
 
+def provider_hostname(base_url: str) -> str:
+    """Return the exact HTTPS hostname used for the run-scoped allowlist."""
+
+    parsed = urlsplit(base_url)
+    if parsed.scheme.lower() != "https" or not parsed.hostname:
+        raise ValueError("Pi provider requires an HTTPS URL with a hostname")
+    if parsed.username or parsed.password:
+        raise ValueError("Pi provider base URL must not contain URL credentials")
+    try:
+        _ = parsed.port
+    except ValueError as exc:
+        raise ValueError("Pi provider base URL contains an invalid port") from exc
+    return parsed.hostname.rstrip(".").lower()
+
+
+def check_compiled_task_network_policy(task_root: Path) -> None:
+    """Reject generated tasks that bypass Harbor's dynamic egress sidecar."""
+
+    task_toml = task_root / "task.toml"
+    with task_toml.open("rb") as handle:
+        task = tomllib.load(handle)
+    environment = task.get("environment")
+    mode = environment.get("network_mode") if isinstance(environment, dict) else None
+    if mode not in {"no-network", "allowlist"}:
+        raise SystemExit(
+            f"compiled Harbor task must restrict agent egress, got {mode!r}: {task_toml}"
+        )
+    compose = task_root / "environment/docker-compose.yaml"
+    if compose.is_file() and re.search(
+        r"(?m)^\s+(?:network_mode|networks)\s*:",
+        compose.read_text(encoding="utf-8"),
+    ):
+        raise SystemExit(
+            "compiled Agent compose declares explicit networking and bypasses "
+            f"Harbor's egress sidecar: {compose}"
+        )
+
+
 def provider_runtime_env(api: str, model_id: str) -> dict[str, str]:
     """Return protocol-specific runtime knobs without changing Pi config.
 
-    The relay's Anthropic ``thinking=enabled`` path can emit empty tool input
-    for Fable.  Fable's supported adaptive-thinking path preserves the tool
-    schema, so keep this workaround explicit and model-scoped.
+    The Fable relay rejects OpenHands' verbose built-in security policy with a
+    ``content_filter`` finish reason. Keep the remaining OpenHands prompt and
+    select the concise adapter-owned policy verified against the relay.
     """
 
     if api == "anthropic-messages" and model_id == "claude-fable-5":
         return {
             "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
-            "LLM_ANTHROPIC_NATIVE_TOOLS": "0",
+            "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
         }
     return {}
 
@@ -95,7 +141,7 @@ def main() -> int:
     parser.add_argument(
         "--harbor-task-path",
         type=Path,
-        help="Use a compiled Harbor task path instead of catalog/sources/<task>/harbor.",
+        help="Use a compiled Harbor task path instead of catalog/tasks/<task>.",
     )
     parser.add_argument(
         "--harbor-task-root",
@@ -146,19 +192,23 @@ def main() -> int:
             if args.harbor_task_path is not None
             else (args.harbor_task_root.resolve() / task_name)
             if args.harbor_task_root is not None
-            else ROOT / "catalog/sources" / task_name / "harbor"
+            else ROOT / "catalog/tasks" / task_name
         )
         if task_root.is_symlink():
             raise SystemExit(f"Harbor task path must not be a symlink: {task_root}")
         if not (task_root / "task.toml").is_file():
             raise SystemExit(f"missing Harbor task: {task_root}")
+        check_compiled_task_network_policy(task_root)
     run_root = args.run_root if args.run_root.is_absolute() else ROOT / args.run_root
     lock_root = args.lock_root if args.lock_root.is_absolute() else ROOT / args.lock_root
     if run_root.exists():
         raise SystemExit(f"run root already exists: {run_root}")
 
     api, base_url, configured_key = provider_config(
-        args.models_file, args.provider, args.model_id
+        args.models_file,
+        args.provider,
+        args.model_id,
+        allow_unresolved_credential=bool(args.credential_env),
     )
     harbor_model = normalize_harbor_model(api, args.harbor_model)
     api_key = configured_key
@@ -172,12 +222,14 @@ def main() -> int:
         if not args.base_url.startswith("https://"):
             raise SystemExit("--base-url must use HTTPS")
         base_url = args.base_url
+    provider_host = provider_hostname(base_url)
     environment = os.environ.copy()
     environment.update(
         {
             "TASKS": ",".join(task_names),
             "MODEL": harbor_model,
             "LLM_BASE_URL": base_url,
+            "LLM_PROVIDER_HOST": provider_host,
             "LLM_API_KEY": api_key,
             "RUN_ROOT": str(run_root),
             "HARBOR_TASK_PATH": str(args.harbor_task_path.resolve())

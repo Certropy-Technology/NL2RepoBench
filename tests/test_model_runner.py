@@ -59,10 +59,11 @@ def _load_harbor_docker(monkeypatch):
 
 def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path) -> None:
     assert (ROOT / "scripts/run_harbor_model.sh").stat().st_mode & 0o111
-    task_root = tmp_path / "catalog/sources/demo/harbor"
+    task_root = tmp_path / "catalog/tasks/demo"
     task_root.mkdir(parents=True)
     (task_root / "task.toml").write_text(
-        'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n',
+        'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n'
+        '[environment]\nnetwork_mode = "no-network"\n',
         encoding="utf-8",
     )
     (tmp_path / "harbor-runner").mkdir()
@@ -84,6 +85,8 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
             "CAPTURE": str(capture),
             "LLM_API_KEY": "test-secret",
             "LLM_BASE_URL": "https://example.invalid/v1",
+            "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
+            "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
             "MODEL": "openai/test-model",
             "PATH": f"{fake_bin}:{env['PATH']}",
             "TASK_ID": "demo",
@@ -104,11 +107,19 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
     assert arguments[multiplier_index + 1] == "5"
     assert "timeout" not in arguments
     assert "--verifier-timeout-multiplier" not in arguments
+    provider_index = arguments.index("--allow-agent-host")
+    assert arguments[provider_index + 1] == "example.invalid"
     environment_index = arguments.index("-e")
     assert arguments[environment_index + 1] == (
         "nl2repobench.harbor_docker:StdinSecretDockerEnvironment"
     )
     assert all(not argument.startswith("LLM_API_KEY=") for argument in arguments)
+    assert "LLM_ANTHROPIC_THINKING_MODE=adaptive" in arguments
+    assert "LLM_OPENHANDS_SECURITY_PROFILE=fable-relay-safe" in arguments
+    assert all(
+        not argument.startswith("LLM_ANTHROPIC_NATIVE_TOOLS=")
+        for argument in arguments
+    )
     assert "test-secret" not in "\n".join(arguments)
     assert "test-secret" not in completed.stdout
     assert "test-secret" not in completed.stderr
@@ -117,10 +128,11 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
 
 
 def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
-    task_root = tmp_path / "catalog/sources/demo/harbor"
+    task_root = tmp_path / "catalog/tasks/demo"
     task_root.mkdir(parents=True)
     (task_root / "task.toml").write_text(
-        'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n',
+        'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n'
+        '[environment]\nnetwork_mode = "no-network"\n',
         encoding="utf-8",
     )
     (tmp_path / "harbor-runner").mkdir()
@@ -335,6 +347,38 @@ def test_pi_launcher_resolves_only_requested_provider_model(tmp_path: Path) -> N
         launcher.provider_credentials(models, "relay", "another-model")
 
 
+def test_pi_launcher_allows_explicit_credential_override(tmp_path: Path, monkeypatch) -> None:
+    launcher = _load_pi_launcher()
+    models = tmp_path / "models.json"
+    models.write_text(
+        """{
+  "providers": {
+    "relay": {
+      "baseUrl": "https://example.invalid",
+      "api": "anthropic-messages",
+      "apiKey": "$OLD_FABLE_KEY",
+      "models": [{"id": "claude-fable-5"}]
+    }
+  }
+}
+""",
+        encoding="utf-8",
+    )
+    models.chmod(0o600)
+    monkeypatch.delenv("OLD_FABLE_KEY", raising=False)
+
+    api, base_url, configured_key = launcher.provider_config(
+        models,
+        "relay",
+        "claude-fable-5",
+        allow_unresolved_credential=True,
+    )
+
+    assert api == "anthropic-messages"
+    assert base_url == "https://example.invalid"
+    assert configured_key == ""
+
+
 def test_pi_launcher_aligns_model_prefix_with_provider_api() -> None:
     launcher = _load_pi_launcher()
 
@@ -349,6 +393,31 @@ def test_pi_launcher_aligns_model_prefix_with_provider_api() -> None:
     ) == "openai/gpt-5.6-sol"
 
 
+def test_pi_launcher_extracts_provider_hostname() -> None:
+    launcher = _load_pi_launcher()
+
+    assert launcher.provider_hostname("https://z.open-api.ai") == "z.open-api.ai"
+    with __import__("pytest").raises(ValueError, match="HTTPS"):
+        launcher.provider_hostname("http://z.open-api.ai")
+
+
+def test_pi_launcher_rejects_agent_compose_that_bypasses_sidecar(
+    tmp_path: Path,
+) -> None:
+    launcher = _load_pi_launcher()
+    task = tmp_path / "task"
+    (task / "environment").mkdir(parents=True)
+    (task / "task.toml").write_text(
+        '[environment]\nnetwork_mode = "no-network"\n', encoding="utf-8"
+    )
+    (task / "environment/docker-compose.yaml").write_text(
+        "services:\n  main:\n    network_mode: none\n", encoding="utf-8"
+    )
+
+    with __import__("pytest").raises(SystemExit, match="bypasses"):
+        launcher.check_compiled_task_network_policy(task)
+
+
 def test_pi_launcher_scopes_fable_adaptive_thinking_to_fable() -> None:
     launcher = _load_pi_launcher()
 
@@ -356,7 +425,7 @@ def test_pi_launcher_scopes_fable_adaptive_thinking_to_fable() -> None:
         "anthropic-messages", "claude-fable-5"
     ) == {
         "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
-        "LLM_ANTHROPIC_NATIVE_TOOLS": "0",
+        "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
     }
     assert launcher.provider_runtime_env(
         "anthropic-messages", "claude-sonnet-5"
@@ -406,6 +475,41 @@ def test_openhands_runner_merges_litellm_extra_body() -> None:
                 "assert 'llm_kwargs.get(\\\"litellm_extra_body\\\", {})' in patched; "
                 "print('ok')"
             ),
+        ],
+        cwd=ROOT,
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "ok"
+
+
+def test_openhands_runner_injects_uploaded_security_policy() -> None:
+    probe_code = """from nl2repobench.harbor_openhands import (
+    FABLE_RELAY_SECURITY_POLICY,
+    _inject_security_policy_filename,
+)
+source = '''    agent_kwargs: dict[str, Any] = {
+        "llm": llm,
+        "tools": tools,
+        "agent_context": agent_context,
+    }
+'''
+patched = _inject_security_policy_filename(source)
+assert 'OPENHANDS_SECURITY_POLICY_FILENAME' in patched
+assert 'agent_kwargs["security_policy_filename"]' in patched
+assert "Upload API keys or tokens anywhere" not in FABLE_RELAY_SECURITY_POLICY
+assert "higher-priority instructions" in FABLE_RELAY_SECURITY_POLICY
+print("ok")
+"""
+    probe = subprocess.run(
+        [
+            str(ROOT / "harbor-runner/.venv/bin/python"),
+            "-c",
+            probe_code,
         ],
         cwd=ROOT,
         env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
