@@ -1,12 +1,12 @@
 schema_version = "1.0"
 task_id = "autorccar"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "easy"
+difficulty = "medium"
 category = "robotics-system"
-tags = ["python", "computer-vision", "robotics", "repository-generation"]
+tags = ["python", "robotics", "machine-learning", "model-api", "separate-verifier"]
 language = "python"
 
 [source]
@@ -18,47 +18,50 @@ source_digest = "sha256:730b441114359e818cd90349868c1a23550c8afc2a8522aaaba71b5d
 
 [environment]
 status = "known"
-python_version = "3.11.7"
+python_version = "3.12.14"
 os_name = "debian-12"
-base_image = "ghcr.io/multimodal-art-projection/nl2repobench/autorccar"
-base_image_digest = "sha256:fe7beae3a27817f6140f0129202cbb127cf687a1dd288a72318647edec12a72e"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded model API uses build-time hash-locked dependencies; model agents run without egress and cannot fetch the frozen reference source."
 
 [dependencies]
 status = "unknown"
 installer = "pip"
 packages = [
-  "numpy",
-  "matplotlib",
-  "jupyter",
-  "scikit-learn",
-  "cython",
-  "pygame",
-  "pyserial",
-  "opencv-python",
+  "numpy==2.2.6",
+  "opencv-python-headless==4.12.0.88",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
 ]
 
 [tests]
 framework = "pytest"
-expected_total = 13
-expected_total_source = "legacy-file"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors test"]
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/fixture"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the AutoRCCar autonomous RC-car computer and sensor system from an empty workspace."
-keywords = ["python", "computer-vision", "robotics", "repository-generation", "separate-verifier"]
-agent_timeout_sec = 3600.0
+description = "Build the hardware-independent AutoRCCar model and training-data API from an empty workspace."
+keywords = ["python", "robotics", "machine-learning", "model-api", "separate-verifier"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
+candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096
@@ -67,4 +70,4 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Source repository, commit, BSD-2-Clause license, source archive digest, and verifier image digest are pinned. Publication remains blocked because the checkout lacks install metadata, the image fixture differs from upstream and imports an absent RCTest, the legacy denominator is 13 while the fixture inventory is 22 parametrized items, and offline dependency, Oracle, private test, and frozen collection artifacts are missing."
+reason = "Remediation produced a bounded computer.model specification, but source validation and production compilation cannot proceed without a frozen dependency lock, private verifier bundle, and local Oracle bundle. The legacy image fixture also imports absent RCTest and its denominator conflicts with the 22 parametrized fixture cases. No catalog/tasks/autorccar runtime is published."

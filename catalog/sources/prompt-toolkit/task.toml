@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "prompt-toolkit"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -9,11 +9,10 @@ category = "terminal"
 tags = [
   "python",
   "terminal",
-  "interactive-cli",
-  "line-editing",
+  "headless",
+  "buffer",
   "completion",
-  "widgets",
-  "pytest",
+  "key-bindings",
   "separate-verifier",
 ]
 language = "python"
@@ -23,66 +22,56 @@ status = "known"
 upstream_url = "https://github.com/prompt-toolkit/python-prompt-toolkit"
 revision = "583b3412c792a5cc9f01adde603679f3824a88f3"
 license_spdx = "BSD-3-Clause"
-# Unprefixed `git archive --format=tar HEAD` at the detached revision.
 source_digest = "sha256:b9dda9618cc8482f22128b28e60b095bb7eb95926e1c17276da2d4eeccc8feb0"
 submodules = []
 
 [environment]
-# The source probe was Linux-only. No final image or OS lock is authorized.
-status = "unknown"
-python_version = ">=3.10"
-os_name = "unknown"
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked third-party closure is installed during the Docker build phase. Agent and verifier runs require no egress, and the Oracle copies a local private source bundle."
+
 [dependencies]
-# These are source-declared roots and probe tools, not a distributable closure.
-status = "unknown"
-installer = "uv"
-packages = [
-  "setuptools>=68",
-  "wcwidth>=0.1.4",
-  "pytest>=8.1.1",
-  "pytest-cov>=5",
-  "coverage>=7.11",
-  "pytest-mock>=3.14.1",
-]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2", "wcwidth==0.8.1"]
+lock_artifact = { digest = "sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8", size_bytes = 375, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# Linux CPython 3.10/3.13/3.14 probes each collected 156 nodes. This is not
-# a final verifier denominator; Windows skips five marked output tests.
-expected_total = 156
-expected_total_source = "unknown"
-commands = [
-  "python -m pip install -e .",
-  "python -m pytest --continue-on-collection-errors -q tests",
-]
-protected_paths = ["tests"]
+expected_total = 9
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:27947fc192711c499e414201cd50a6beaad1e9847c3fa6954ea01a4be899a417", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:27947fc192711c499e414201cd50a6beaad1e9847c3fa6954ea01a4be899a417", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-# Development execution profile only; no Harbor bundle is included here.
-description = "Build the prompt-toolkit interactive terminal UI library from an empty workspace."
-keywords = [
-  "python",
-  "terminal",
-  "interactive-cli",
-  "line-editing",
-  "completion",
-  "widgets",
-  "pytest",
-  "separate-verifier",
-]
+description = "Build prompt_toolkit 3.0.53 from an empty workspace; grading uses deterministic headless document, buffer, completion, data-model, and key-binding behavior through a separate child adapter."
+keywords = ["python", "terminal", "headless", "buffer", "completion", "key-bindings", "separate-verifier"]
 agent_timeout_sec = 3600.0
-verifier_timeout_sec = 900.0
+verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 600.0
+candidate_total_timeout_sec = 240.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
@@ -90,6 +79,17 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d3378d4d4d3d4ae3bc1d5"
+size_bytes = 6031360
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d3378d4d4d3d4ae3bc1d5"
+visibility = "private"
+
 [lifecycle]
-status = "blocked"
-reason = "Static source and collection evidence is recorded, but final environment, offline dependency closure, terminal/TTY policy, candidate subprocess adapter, private verifier assets, frozen denominator, Oracle, and controls are not yet proven."
+status = "controls-passed"
+owner = "worker"
+reason = "Official Harbor Oracle passed 9/9 with reward 1.0; empty, stub, and forged-reward controls each scored 0.0 under the no-network separate verifier."
+evidence = [
+  { digest = "sha256:11f68c92a1f1e0803fa47a6a39fe320e75b1f877f27472afe62156bdef461577", size_bytes = 5036, media_type = "application/json", uri = "artifact://private/sha256:11f68c92a1f1e0803fa47a6a39fe320e75b1f877f27472afe62156bdef461577", visibility = "private" },
+]

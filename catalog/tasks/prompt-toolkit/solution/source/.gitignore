@@ -1,0 +1,59 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+
+# Python 3rd Party
+Pipfile*
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+.pytest_cache
+coverage.xml
+
+# Translations
+*.mo
+
+# Makefile - for those who like that workflow
+Makefile
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Generated documentation
+docs/_build
+
+# pycharm metadata
+.idea
+
+# uv
+uv.lock
+
+# vscode metadata
+.vscode
+
+# virtualenvs
+.venv*

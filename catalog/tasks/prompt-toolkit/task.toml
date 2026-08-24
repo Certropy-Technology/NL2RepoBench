@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/prompt-toolkit"
+version = "0.2.0"
+description = "Build prompt_toolkit 3.0.53 from an empty workspace; grading uses deterministic headless document, buffer, completion, data-model, and key-binding behavior through a separate child adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "terminal",
+    "headless",
+    "buffer",
+    "completion",
+    "key-bindings",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "terminal"
+tags = [
+    "python",
+    "terminal",
+    "headless",
+    "buffer",
+    "completion",
+    "key-bindings",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 9
+canonical_manifest_digest = "sha256:007740858391fe07c5611eee8e2d196420981815bfb96f0ca11fb1f34581eb23"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 480.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
