@@ -160,12 +160,6 @@ class NodeHarborCompiler:
 WORKDIR /workspace
 """
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
-        assert manifest.harbor is not None
-        if manifest.harbor.agent_network_mode == "no-network":
-            atomic_write(
-                task_root / "environment/docker-compose.yaml",
-                b"services:\n  main:\n    network_mode: none\n",
-            )
 
     def _write_verifier(
         self,

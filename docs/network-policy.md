@@ -45,11 +45,17 @@ The compiler resolves the catalog policy into the Harbor agent profile:
 catalog task.toml [environment.network_policy]
     -> canonical EnvironmentLock.network_policy
     -> HarborExecutionProfile.agent_network_mode/agent_allowed_hosts
-    -> Harbor task.toml + environment/docker-compose.yaml
+    -> Harbor task.toml + egress-sidecar-managed agent network
 ```
 
 The compiler therefore owns the generated runtime projection. A policy change
 must not be implemented by editing generated `catalog/tasks` files alone.
+Agent services must not declare Compose `network_mode` or `networks`: Harbor
+respects explicit task-authored networking and then cannot route that service
+through its egress sidecar, so run-scoped `--allow-agent-host` overrides would
+not reach the model Provider or Oracle source host. The separate verifier keeps
+its explicit `tests/docker-compose.yaml: network_mode: none` override because it
+never receives a run-scoped host authorization.
 
 ## Oracle
 

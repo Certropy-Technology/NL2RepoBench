@@ -191,15 +191,6 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 """
         dockerfile = f"FROM --platform=linux/amd64 {image}\n\n" + install + "WORKDIR /workspace\n"
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
-        profile = manifest.harbor
-        assert profile is not None
-        if profile.agent_network_mode == "no-network":
-            compose = """services:
-  main:
-    network_mode: none
-"""
-            atomic_write(task_root / "environment/docker-compose.yaml", compose.encode())
-
     def _write_verifier(
         self,
         source_dir: Path,

@@ -126,7 +126,7 @@ catalog source -> canonical manifest -> Harbor bundle / legacy projection
 
 禁止人工修改 generated `manifest.json`、Harbor bundle 或 `test_files/` 来绕过 catalog。当前可用命令以 `uv run nl2repo --help` 为准；不要声称路线图中的未实现命令已经可用。
 
-网络策略也是声明式 catalog 的一部分，不是 Harbor 输出文件的手工开关。每个运行中的 task 在 `catalog/sources/<task-id>/task.toml` 的 `[environment.network_policy]` 声明 `mode`、依赖预置方式和 reference-source 禁止规则；compiler 将它投影为 Harbor 的 agent network mode、精确 allowlist 和 `environment/docker-compose.yaml`。canonical manifest 构建时 policy 覆盖 legacy `harbor.agent_network_mode`，因此 compiler 是 runtime policy 的唯一权威。迁移后的 flat `catalog/tasks/<task-id>/` 仍是生成的 runtime 视图，修复必须回到 source 或通过 integrator/compiler 重建。完整规则见 `docs/network-policy.md`。
+网络策略也是声明式 catalog 的一部分，不是 Harbor 输出文件的手工开关。每个运行中的 task 在 `catalog/sources/<task-id>/task.toml` 的 `[environment.network_policy]` 声明 `mode`、依赖预置方式和 reference-source 禁止规则；compiler 将它投影为 Harbor 的 agent network mode 和精确 allowlist，并让 Harbor egress sidecar 管理 Agent 网络。Agent compose 不得显式声明 `network_mode`/`networks`，否则 run-scoped Provider/Oracle host 授权无法生效；separate verifier 仍使用 `network_mode: none`。canonical manifest 构建时 policy 覆盖 legacy `harbor.agent_network_mode`，因此 compiler 是 runtime policy 的唯一权威。迁移后的 flat `catalog/tasks/<task-id>/` 仍是生成的 runtime 视图，修复必须回到 source 或通过 integrator/compiler 重建。完整规则见 `docs/network-policy.md`。
 
 ## 6. Candidate 与 Ground Truth 门禁
 

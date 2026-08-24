@@ -45,7 +45,7 @@ Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 p
 
 ## Verifier 执行顺序
 
-1. `task.toml` 声明 Agent/Verifier phase policy；Verifier environment 额外生成 `docker-compose.yaml: network_mode: none`，Agent 只有声明 `no-network` 时才生成该 override，避免有效网络与 metadata 矛盾；启动后再证明 verifier 无法连接 `pypi.org:443` 和数字地址 `1.1.1.1:443`，并把 network namespace 与 route table 写入 `network.json`；
+1. `task.toml` 声明 Agent/Verifier phase policy；Verifier environment 额外生成 `docker-compose.yaml: network_mode: none`。Agent environment 不生成显式 `network_mode`/`networks` override，而由 Harbor egress sidecar 应用 `no-network` baseline，确保 Oracle/模型 Provider 的 run-scoped `--allow-agent-host` 可以临时切换为精确 allowlist；启动后再证明 verifier 无法连接 `pypi.org:443` 和数字地址 `1.1.1.1:443`，并把 network namespace 与 route table 写入 `network.json`；
 2. root 用 bounded regular-tree copier 接收 Harbor 恢复的 `/workspace`：最多 20,000 entries、单文件 64 MiB、总计 256 MiB、相对路径 512 bytes；拒绝 symlink 和其他 special file，并把原 workspace 改为 root-owned/read-only；candidate 导致的拒绝记 model zero；
 3. verifier image 只在 Docker build 阶段从 package index 使用 `lock_artifact` 中的
    `requirements.lock.txt` 和 `--require-hashes` 安装依赖；禁止复制 wheelhouse、`--no-index`
