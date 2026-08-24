@@ -1,0 +1,62 @@
+schema_version = "1.0"
+task_id = "frontmatter"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "front-matter-parser"
+tags = ["python", "yaml", "toml", "frontmatter", "packaging", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/eyeseast/python-frontmatter"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen verifier image and source/test mapping are unavailable; no agent or verifier may retrieve the candidate or dependencies at runtime."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate: the frozen image/source boundary, dependency closure, and separate verifier for frontmatter are unavailable."
+keywords = ["python", "yaml", "toml", "frontmatter", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/frontmatter"
+reason = "The conversion-loop state and immutable verifier image lock are absent, the legacy denominator 55 is not a frozen collection, and the candidate revision/license/archive cannot be tied to the missing image. No catalog/tasks/frontmatter runtime exists."

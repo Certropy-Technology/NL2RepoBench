@@ -1,9 +1,10 @@
 # `frontmatter` Provenance Audit
 
-Status: **blocked**. This directory is an audit record only. It is not a
-publishable Harbor task. No `task.toml`, public instruction copy, Harbor
-bundle, verifier code, Oracle solution, hidden test bytes, binary fixture, or
-dataset entry is included.
+Status: **blocked**. This audit is paired with a parseable blocked descriptor
+and hash-bound production evidence. It is not a publishable Harbor task; no
+Harbor bundle, verifier code, Oracle solution, hidden test bytes, binary
+fixture, or dataset entry is included, and `catalog/tasks/frontmatter/`
+remains absent.
 
 ## Preserved Legacy Identity
 

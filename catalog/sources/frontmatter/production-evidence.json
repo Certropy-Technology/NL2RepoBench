@@ -1,0 +1,37 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "conversion-loop state/image lock lookup and legacy source audit",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/frontmatter/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:10564f05c963dba11c7185e374469fc5bb90d74a8ccc0730468f7de8dac36039"
+        },
+        "tool_version": "repository audit toolchain"
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/frontmatter",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/frontmatter/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:93c03d44658417b10bf6eabd5e89e16bee692aba70746ec5d7e0ff7ec5665b0e"
+        },
+        "tool_version": "repository toolchain; descriptor absent at invocation"
+      }
+    ],
+    "failure_class": "source",
+    "next_step": "Restore the conversion-loop state or obtain an approved immutable image lock, inventory its tests, identify the unique upstream commit and license/archive hashes, reconcile collection with the legacy count 55, then freeze dependencies and author a separate verifier before any Harbor runtime.",
+    "source_freeze": {
+      "candidate_url": "https://github.com/eyeseast/python-frontmatter",
+      "legacy_commands_sha256": "sha256:7c51442c79c7435459f8005057cd4ed3750eb2019f17136f4ad73944f809c618",
+      "legacy_declared_total": 55,
+      "legacy_instruction_sha256": "sha256:bbe70efdae51c6c917901b08151d3940a5ae60a2253ecc4934046370ceb0c235",
+      "reason": "The required conversion-loop state and legacy image lock entry are absent; the observed upstream main tip is not adopted as a frozen revision.",
+      "status": "failed"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "frontmatter",
+  "terminal_kind": "blocked"
+}

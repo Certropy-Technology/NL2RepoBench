@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ipytest",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Reconcile the legacy fixture overlay with the exact upstream revision, freeze structured collection and a hash-locked Jupyter/pytest closure, then author a separate candidate verifier and run Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/chmp/ipytest",
+      "revision": "ea052c6ee76121d8504ec5ad35aa3b3fec9a7846",
+      "source_digest": "sha256:71ee968ab4f92fb7fea81008ca6e9687311c1b594118c1da18e28182b16ad8c9",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:ea4244a34e9f87053db8477b6ba18c58628ff905820527fa62b8a605c7b1d4f6",
+      "audit_sha256": "sha256:8f1ebc4c83edb85122c6f8c3bb08ed59d746dd01cf9adcda827be9b093124b32"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/ipytest",
+        "tool_version": "repository toolchain; descriptor absent at invocation",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/ipytest/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:29d7ae68f2a3e48475803e469d127af650195571eeb002cc2376e5587a197918"
+        }
+      }
+    ]
+  }
+}

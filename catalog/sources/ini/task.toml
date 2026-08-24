@@ -1,0 +1,64 @@
+schema_version = "2.0"
+task_id = "ini"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "configuration-parser"
+tags = ["node", "npm", "ini", "parser", "serializer", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/npm/ini"
+revision = "3c96c74fd42584bd655e17a4e63e2ef0a3b406ee"
+license_spdx = "ISC"
+source_digest = "sha256:a78f7cd279d5a73c235c24358625f72743bb51622a72905f9fc40d062735b7f4"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Runtime-only closure passed in a disposable probe, but the development/test closure is lockfile v2, incomplete, and rejected; no private verifier or Oracle bundle is frozen."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["development lockfile v2 and rejected; runtime-only disposable lock was not retained"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/ini"
+reason = "Immutable source and ISC license evidence are known, but the development closure is lockfile v2 and fails offline installation/validator policy. The disposable runtime-only probe was not a frozen private artifact; no node:test adapter, denominator, separate verifier, Oracle, or controls exist. No catalog/tasks/ini runtime exists."

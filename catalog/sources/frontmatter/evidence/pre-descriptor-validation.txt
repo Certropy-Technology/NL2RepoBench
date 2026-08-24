@@ -1,0 +1,5 @@
+command: uv run nl2repo task validate-source catalog/sources/frontmatter
+result: not-run before descriptor creation; no task.toml existed
+command: conversion-loop state/image lock lookup
+result: failed; .nl2repo/conversion-loop/state.json is absent and legacy-images.lock.toml has no frontmatter entry
+exit_code: 1

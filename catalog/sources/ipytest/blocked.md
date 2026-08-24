@@ -1,9 +1,9 @@
 # `ipytest` Static Provenance Audit
 
-Status: **blocked**. This directory is an audit record only. It is not a
-publishable Harbor task. No public instruction copy, Harbor descriptor,
-Oracle solution, verifier bundle, private test archive, or binary fixture is
-included here.
+Status: **blocked**. This audit is paired with a parseable source descriptor
+and hash-bound remediation evidence. It is not a publishable Harbor task; no
+Harbor runtime, Oracle solution, verifier bundle, private test archive, or
+binary fixture is included, and `catalog/tasks/ipytest/` remains absent.
 
 The legacy task identity remains `ipytest`; this audit does not modify
 `test_files/ipytest/`, the dataset catalog, or conversion-loop state.
@@ -178,8 +178,9 @@ These are verifier/environment blockers, not model failures.
 
 ## Decision
 
-Keep `ipytest` **blocked**. Do not create `task.toml`, `instruction.md`, a
-Harbor 1.4 directory, or any hidden fixture copy from the current evidence.
+Keep `ipytest` **blocked**. The source descriptor records this terminal state;
+do not create a Harbor 1.4 runtime directory or any hidden fixture copy from
+the current evidence.
 The upstream revision, MIT license, archive digest, image reference, and
 test/setup overlays are sufficiently documented for a future reopen, but the
 fixed denominator and compliant candidate boundary are not proven.

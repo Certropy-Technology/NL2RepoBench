@@ -1,9 +1,9 @@
 # `google-images-download` Static Provenance Audit
 
-Status: **blocked**. This is an audit record only. It contains no catalog
-`task.toml`, public instruction copy, Harbor bundle, Oracle solution, verifier
-script, grader, or hidden test bytes. No dataset, shared script,
-conversion-loop state, legacy task file, or other task is changed.
+Status: **blocked**. This audit is paired with a parseable descriptor and
+hash-bound production evidence. It contains no Harbor bundle, Oracle
+solution, verifier script, grader, or hidden test bytes; no runtime exists at
+`catalog/tasks/google-images-download/`.
 
 ## Legacy Contract
 

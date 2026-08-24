@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-images-download",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Obtain an owner-approved overlay manifest or replace overlays with exact upstream test blobs, freeze a browser/driver/native dependency closure, and author a bounded offline candidate adapter before Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/hardikvasa/google-images-download",
+      "revision": "0d2bf8f17b5a8806d90df7258e7a172aa0cb7963",
+      "source_digest": "sha256:9c5932606c3e76509c45c908f5fb2b3c81ef65e0eb6068e330980ab099143a62",
+      "license_spdx": "MIT",
+      "license_path": "Licence.txt",
+      "license_digest": "sha256:54ee19366219d75d235b1a54cd09afb4a511b8297167269bca715ced3d850ebc",
+      "audit_sha256": "sha256:5b8316dc7482e6b22576276ff59b12a8be2c21c341b3bf2963bba536d21bc302"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/google-images-download",
+        "tool_version": "repository toolchain; descriptor absent at invocation",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/google-images-download/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:b0a43511c5fc12f7d8455e96ce3ed809beac24228f81b70c811bf2db59858f13"
+        }
+      }
+    ]
+  }
+}
