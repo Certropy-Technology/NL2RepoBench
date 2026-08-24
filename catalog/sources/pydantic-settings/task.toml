@@ -28,7 +28,7 @@ network_mode = "no-network"
 [dependencies]
 status = "known"
 installer = "pip"
-artifact = { digest = "sha256:81e9a2e4a1f4d5a7d94953c63191734132f0a6dd76b50b1c8d26200305fd2458", size_bytes = 4208640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:81e9a2e4a1f4d5a7d94953c63191734132f0a6dd76b50b1c8d26200305fd2458", visibility = "private" }
+lock_artifact = { digest = "sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", size_bytes = 14279, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", visibility = "private" }
 packages = ["annotated-types==0.7.0", "editables==0.5", "hatchling==1.28.0", "packaging==26.0", "pathspec==1.0.4", "pluggy==1.6.0", "pydantic==2.13.4", "pydantic-core==2.46.4", "python-dotenv==1.2.2", "setuptools==80.9.0", "trove-classifiers==2026.6.1.19", "typing-extensions==4.15.0", "typing-inspection==0.4.4", "wheel==0.45.1"]
 
 [tests]

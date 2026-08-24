@@ -38,7 +38,7 @@ network_mode = "no-network"
 
 [dependencies]
 # The restricted CSV/JSON path has no runtime third-party dependency. These
-# are observed build/test inputs only; no content-addressed wheelhouse exists.
+# are observed build/test inputs only; no content-addressed requirements lock exists.
 status = "unknown"
 installer = "uv"
 packages = [

@@ -27,7 +27,7 @@ system_packages = ["gcc=4:14.2.0-1", "libc6-dev:amd64=2.41-12+deb13u3"]
 build_command = "python -m pip install --no-index --no-build-isolation --no-deps -e ."
 network_mode = "public"
 
-# Exact baseline packages are recorded, but no hash-locked offline wheelhouse
+# Exact baseline packages are recorded, but no hash-locked requirements artifact
 # exists. Keep dependency provenance unknown until that artifact is frozen.
 [dependencies]
 status = "unknown"

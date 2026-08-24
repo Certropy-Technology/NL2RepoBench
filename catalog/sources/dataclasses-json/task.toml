@@ -29,7 +29,7 @@ network_mode = "no-network"
 [dependencies]
 status = "known"
 installer = "pip"
-artifact = { digest = "sha256:f8b726ac8b32c6b7356aa328bccda1678a44f5e4a240c0015c7d161fd5011f37", size_bytes = 1075200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:f8b726ac8b32c6b7356aa328bccda1678a44f5e4a240c0015c7d161fd5011f37", visibility = "private" }
+lock_artifact = { digest = "sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", size_bytes = 1374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", visibility = "private" }
 packages = ["dataclasses-json", "pytest"]
 
 [tests]

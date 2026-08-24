@@ -3,7 +3,7 @@ task_id = "httpx"
 version = "0.2.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:f9895b0d0d46f290c7a26b5d33c456b3cc508c50778703341799997c733157cb", size_bytes = 4157440, media_type = "application/x-tar", uri = "artifact://private/sha256:f9895b0d0d46f290c7a26b5d33c456b3cc508c50778703341799997c733157cb", visibility = "private" }
+oracle_bundle = { digest = "sha256:de3d266d324ff365adfecfff4728ef8eae5c6d5df266eb28684c59a117083f66", size_bytes = 3430400, media_type = "application/x-tar", uri = "artifact://private/sha256:de3d266d324ff365adfecfff4728ef8eae5c6d5df266eb28684c59a117083f66", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
@@ -29,7 +29,7 @@ network_mode = "no-network"
 
 [dependencies]
 status = "known"
-artifact = { digest = "sha256:e6e5ea5a3139f7c7e3361732c21e33f983bac6c158d4cd9154d6534560e7f857", size_bytes = 3164160, media_type = "application/x-tar", uri = "artifact://private/sha256:e6e5ea5a3139f7c7e3361732c21e33f983bac6c158d4cd9154d6534560e7f857", visibility = "private" }
+lock_artifact = { digest = "sha256:8f35c08665ed4c75ca58caf51de225dfdbeb95ca5a66057adeebfa14c408d6cd", size_bytes = 4774, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8f35c08665ed4c75ca58caf51de225dfdbeb95ca5a66057adeebfa14c408d6cd", visibility = "private" }
 installer = "pip"
 packages = [
   "anyio==4.10.0",

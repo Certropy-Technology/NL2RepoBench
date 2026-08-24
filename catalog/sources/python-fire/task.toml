@@ -31,7 +31,7 @@ network_mode = "no-network"
 status = "known"
 installer = "pip"
 packages = ["setuptools==80.9.0", "termcolor==3.1.0", "wheel==0.45.1"]
-artifact = { digest = "sha256:a67cac0bda78043fbffe8bf05a7c379408b4dcab7f7cfeeab0a25c8f8cf8b98c", size_bytes = 1290240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a67cac0bda78043fbffe8bf05a7c379408b4dcab7f7cfeeab0a25c8f8cf8b98c", visibility = "private" }
+lock_artifact = { digest = "sha256:323fe7d38c9cde4d4ff2fe22a00f73b845101ec779040127f86cafd149e1a709", size_bytes = 305, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:323fe7d38c9cde4d4ff2fe22a00f73b845101ec779040127f86cafd149e1a709", visibility = "private" }
 
 [tests]
 framework = "pytest"

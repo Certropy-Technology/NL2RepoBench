@@ -29,7 +29,7 @@ network_mode = "no-network"
 [dependencies]
 status = "known"
 installer = "pip"
-artifact = { digest = "sha256:3fcec4862155e7af0d25aac5bdc6ada8e86eb53f7b9bcb3379d9393ac19935d6", size_bytes = 512000, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3fcec4862155e7af0d25aac5bdc6ada8e86eb53f7b9bcb3379d9393ac19935d6", visibility = "private" }
+lock_artifact = { digest = "sha256:7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01", size_bytes = 377, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01", visibility = "private" }
 packages = ["pytest==8.3.5", "iniconfig==2.3.0", "packaging==26.3", "pluggy==1.6.0"]
 
 [tests]

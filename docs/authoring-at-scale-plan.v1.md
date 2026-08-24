@@ -50,7 +50,8 @@ extension 默认延后或 blocked。
 
 1. detached checkout 固定 full SHA，保存 archive 和 LICENSE hashes；
 2. 在最终 Python/OS/image 中执行 collection 和完整 suite；
-3. build/runtime/test requirements 进入带 hash 的 wheelhouse/lock；
+3. build/runtime/test requirements 进入带 hash 的 lock；Python verifier 在 Docker build
+   阶段联网安装，禁止 vendor wheelhouse；
 4. pytest config、xfail/xpass/skip 语义进入 metric contract；
 5. callable、async、stateful、CLI、numpy/pandas 对象使用 child-side adapter；
 6. 先 Oracle，再 controls，再 blind/spec review。

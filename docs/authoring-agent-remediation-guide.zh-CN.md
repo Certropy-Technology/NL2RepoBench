@@ -6,7 +6,7 @@
 
 ## 存储纪律
 
-大型 source clone、wheelhouse、npm cache、Docker build context、test bundle 和
+大型 source clone、dependency lock、npm cache、Docker build context、test bundle 和
 Oracle artifact 必须放在项目磁盘（推荐 `.nl2repo/authoring-work/<batch>/<package>/`），
 不要放 `/tmp` tmpfs。`/tmp` 只允许小型、bounded 的进程 socket/短期日志，单个 worker
 不得超过 256 MiB；每个 stage 完成后立即清理。Worker brief 必须记录工作目录和 cleanup
@@ -17,16 +17,16 @@ Oracle artifact 必须放在项目磁盘（推荐 `.nl2repo/authoring-work/<batc
 下面这些不是 Block 原因，而是 Worker 必须完成的 remediation：
 
 - 没有 immutable verifier image、base-image digest 或完整 environment lock；
-- runtime/dev dependency 没有 pin、hash 或 offline wheelhouse；
+- runtime/dev dependency 没有 exact pin、hash lock 或 build-stage install contract；
 - 没有 build backend、Dockerfile、package lock、submodule materialization 或测试闭包；
 - native、network、database、browser、TTY、interactive 等 risk flag；
 - 上游测试 runner、Python/Node 版本和当前镜像不兼容。
 
-Worker 应先固定 revision 和 license，再选择兼容 runtime，补 lock/wheelhouse、系统包、
+Worker 应先固定 revision 和 license，再选择兼容 runtime，补 requirements lock、系统包、
 Dockerfile、build backend、candidate boundary 和 verifier。每次尝试必须写入 task-local
 `provenance/` 或 `evidence/`：命令、版本、exit code、stdout/stderr 路径、digest、
-下一步动作。网络安装成功不等于 offline closure；必须重新下载/清空 cache 后用
-`--no-index` 或等价方式验证。
+下一步动作。Python verifier 依赖必须在 Docker build 阶段按 hash lock 联网安装；禁止
+把 wheelhouse vendor 到 task，也禁止用 `--no-index` 伪造 offline verifier 安装。
 
 只有以下情况，在 remediation attempts 已经有证据后才可以 `blocked`/`excluded`：
 
@@ -78,7 +78,7 @@ source-freeze
 
 优先使用 generic candidate client。JSON/回调/生成代码/状态 session 无法表达时使用
 `verifier.protocol = "custom-json-v1"`：task TOML 只保存 private bundle digest、URI
-和安全相对 entrypoint。hidden tests、adapter、fixture、grader 和 wheelhouse 不得进入
+和安全相对 entrypoint。hidden tests、adapter、fixture、grader 和 dependency lock 不得进入
 public `catalog/sources`。custom report 必须包含固定数量的唯一 leaf ID 和
 `passed|failed|skipped` 状态；wrapper 负责 timeout、UID、no-network、JUnit/collection
 和 reward。

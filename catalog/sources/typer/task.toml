@@ -31,7 +31,7 @@ network_mode = "no-network"
 mode = "no-network"
 offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
-reason = "The full runtime, build and adapter closure is pinned in the private dependency wheelhouse and installed at image build time. The Oracle extracts the frozen source archive from its private bundle, so no run-time fetch of upstream source is required. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The full runtime, build and adapter closure is pinned in the private hash-locked requirements artifact and installed at image build time. The Oracle extracts the frozen source archive from its private bundle, so no run-time fetch of upstream source is required. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
 
 [dependencies]
 status = "known"
@@ -47,7 +47,7 @@ packages = [
   "shellingham==1.5.4",
   "wheel==0.45.1",
 ]
-artifact = { digest = "sha256:9b86a95c3bb5e21ca5d3324f77f1d310dce4ed092c0b528da2cc1a243695aca9", size_bytes = 3061760, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9b86a95c3bb5e21ca5d3324f77f1d310dce4ed092c0b528da2cc1a243695aca9", visibility = "private" }
+lock_artifact = { digest = "sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", size_bytes = 922, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", visibility = "private" }
 
 [tests]
 framework = "pytest"

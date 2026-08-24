@@ -31,7 +31,7 @@ base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee320
 system_packages = []
 network_mode = "no-network"
 
-# Runtime and test dependencies ship as a private offline wheelhouse artifact
+# Runtime and test dependencies ship as a private hash-locked requirements artifact
 # (pytest 8.4.1 and pytz 2025.2) installed during the Docker build phase.
 # The frozen suite selects explicit POSIX TZ strings and calls time.tzset(), so
 # host tzdata does not participate in grading; remote timezone behaviour comes
@@ -46,7 +46,7 @@ reason = "Third-party build and test dependencies are installed during the Docke
 status = "known"
 installer = "pip"
 packages = ["pytest==8.4.1", "pytz==2025.2", "setuptools==75.8.0", "wheel==0.45.1"]
-artifact = { digest = "sha256:7189900847f846f228fa95b397d2e358a1a66da7000cceb55e8e5fb2e880f95b", size_bytes = 3512320, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:7189900847f846f228fa95b397d2e358a1a66da7000cceb55e8e5fb2e880f95b", visibility = "private" }
+lock_artifact = { digest = "sha256:2efd8650487d4127fcfb4ddde1f74fb8190d0044698cfc11d91a581facd8984d", size_bytes = 804, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2efd8650487d4127fcfb4ddde1f74fb8190d0044698cfc11d91a581facd8984d", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -84,4 +84,4 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "oracle-passed"
-reason = "Re-based to python:3.12.14-slim-bookworm with private dependency, verifier and oracle bundles. Generic private-bundle compiled Oracle passed 81/81 with reward 1.0 and collected == expected_total; empty, stub, forgery and offline controls all scored 0.0. Blind and traceability review remain pending."
+reason = "Re-based to python:3.12.14-slim-bookworm with a private hash-locked dependency lock plus verifier and Oracle bundles. Generic private-bundle compiled Oracle passed 81/81 with reward 1.0 and collected == expected_total; empty, stub, forgery and offline controls all scored 0.0. Blind and traceability review remain pending."

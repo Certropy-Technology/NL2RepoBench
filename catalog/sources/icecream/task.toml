@@ -31,7 +31,7 @@ network_mode = "no-network"
 status = "known"
 installer = "pip"
 packages = ["asttokens==3.0.2", "colorama==0.4.6", "executing==2.2.1", "pygments==2.21.0", "setuptools==84.0.0"]
-artifact = { digest = "sha256:924a149df1c61c0e0fda934076e045ca3cfb71519ecf70aacbf4b0599c799357", size_bytes = 2160640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:924a149df1c61c0e0fda934076e045ca3cfb71519ecf70aacbf4b0599c799357", visibility = "private" }
+lock_artifact = { digest = "sha256:ad6e28a9c7cc27fb297dde6940deb37fd89e76c6e0615e460ef7c788835eab24", size_bytes = 1380, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:ad6e28a9c7cc27fb297dde6940deb37fd89e76c6e0615e460ef7c788835eab24", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -62,7 +62,7 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:043f6e8cc3dbb8651c5e1d11545db2e6877182ab4a92741b59ae192e32c66d22", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:043f6e8cc3dbb8651c5e1d11545db2e6877182ab4a92741b59ae192e32c66d22", visibility = "private" }
+bundle = { digest = "sha256:08fa6c3fd95f8037ce3d90614e68ae372746cae482f43046819222a356419e35", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:08fa6c3fd95f8037ce3d90614e68ae372746cae482f43046819222a356419e35", visibility = "private" }
 entrypoint = "run.py"
 environment = {}
 

@@ -42,7 +42,7 @@ packages = [
   "wheel==0.45.1",
   "numpy==2.2.6",
 ]
-artifact = { digest = "sha256:fcb7aba66bff030567b5e6f36affd08d1a7029cb88a5d8a0f3ab3e20c5ffd024", size_bytes = 17674240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:fcb7aba66bff030567b5e6f36affd08d1a7029cb88a5d8a0f3ab3e20c5ffd024", visibility = "private" }
+lock_artifact = { digest = "sha256:0f3dedf79c6b58611093e452fea6fcd7067db300460a789c86c3577366cf6aa9", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0f3dedf79c6b58611093e452fea6fcd7067db300460a789c86c3577366cf6aa9", visibility = "private" }
 
 [tests]
 framework = "pytest"

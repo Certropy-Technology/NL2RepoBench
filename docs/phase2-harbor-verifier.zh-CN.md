@@ -47,7 +47,10 @@ Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 p
 
 1. `task.toml` 声明 Agent/Verifier phase policy；Verifier environment 额外生成 `docker-compose.yaml: network_mode: none`，Agent 只有声明 `no-network` 时才生成该 override，避免有效网络与 metadata 矛盾；启动后再证明 verifier 无法连接 `pypi.org:443` 和数字地址 `1.1.1.1:443`，并把 network namespace 与 route table 写入 `network.json`；
 2. root 用 bounded regular-tree copier 接收 Harbor 恢复的 `/workspace`：最多 20,000 entries、单文件 64 MiB、总计 256 MiB、相对路径 512 bytes；拒绝 symlink 和其他 special file，并把原 workspace 改为 root-owned/read-only；candidate 导致的拒绝记 model zero；
-3. verifier image build 从离线 wheelhouse 使用 `--no-index --require-hashes` 安装依赖；运行时再次读取并精确校验 allowlisted `VerifierCommandPlan`；
+3. verifier image 只在 Docker build 阶段从 package index 使用 `lock_artifact` 中的
+   `requirements.lock.txt` 和 `--require-hashes` 安装依赖；禁止复制 wheelhouse、`--no-index`
+   和 vendor 安装。Verifier run 仍由 compose 强制断网；运行时再次读取并精确校验
+   allowlisted `VerifierCommandPlan`；
 4. root install supervisor 以 UID 10001 和 CPU、地址空间、进程、FD、文件大小上限执行 candidate build backend，持续监控 wall clock、entry count 和 aggregate bytes；所有 success/failure/timeout 路径都终止 process group 并扫描 UID 至 quiescent，再把隔离 target 交给 tests；
 5. private tests 仅 root 可读；root 对 private tests、command plan 和 verifier runtime 做 hash/mode snapshot；
 6. trusted/root pytest 使用 `python -I -B`，只导入 private tests、trusted plugin 和 `candidate_client`，不把 candidate target 放入自身 `sys.path`，并禁用 `pytest11` autoload；
@@ -57,7 +60,7 @@ Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 p
 10. root grader 用 `O_NOFOLLOW | O_NONBLOCK` 和大小上限读取报告；hardened parser 逐 testcase 分类，不信任 XML 汇总属性，并校验 collection、固定分母、JUnit 数量和 pytest exit/status 一致性；
 11. 固定分母 grader 写 numeric `reward.json` 和详细 `grading.json`。
 
-Verifier runtime 使用 `defusedxml` 拒绝实体展开。Agent image 不包含 test bundle、grader、runtime 或 verifier dependency。Production dependency tar 必须包含 hash-locked `requirements.lock.txt` 和完整 wheelhouse；compiler 拒绝未固定 requirement、远端/directive、缺 hash、非 wheel 文件和缺失 distribution wheel，Docker build 再由 pip 校验 wheel hash。Command artifact 必须是 allowlisted `VerifierCommandPlan`，compiler 与 runtime 双重验证，不执行任意 legacy shell 字符串。
+Verifier runtime 使用 `defusedxml` 拒绝实体展开。Agent image 不包含 test bundle、grader、runtime 或 verifier dependency。Python production task 的 `lock_artifact` 只允许包含 hash-locked `requirements.lock.txt`；compiler 拒绝 legacy wheelhouse artifact，并在 build 阶段让 pip 从网络按 hash 获取包。Command artifact 必须是 allowlisted `VerifierCommandPlan`，compiler 与 runtime 双重验证，不执行任意 legacy shell 字符串。Node/npm lane 使用独立 v2 lock/cache contract，不由 Python verifier policy 推断。
 
 ## 评分和失败分类
 

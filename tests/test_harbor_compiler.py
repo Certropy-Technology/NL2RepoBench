@@ -76,7 +76,12 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "@sha256:" in (task_root / "environment/Dockerfile").read_text()
     assert not (task_root / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (task_root / "tests/docker-compose.yaml").read_text()
-    assert "--require-hashes" in (task_root / "tests/Dockerfile").read_text()
+    verifier_dockerfile = (task_root / "tests/Dockerfile").read_text()
+    assert "--require-hashes" in verifier_dockerfile
+    assert "COPY candidate-requirements.lock.txt" in verifier_dockerfile
+    assert "COPY dependencies" not in verifier_dockerfile
+    assert "--no-index" not in verifier_dockerfile
+    assert not (task_root / "tests/dependencies").exists()
     assert "useradd --uid 10001" in (task_root / "tests/Dockerfile").read_text()
     assert "chmod -R 0500 /tests/private" in (task_root / "tests/Dockerfile").read_text()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_client.py").is_file()
@@ -87,6 +92,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert (task_root / "tests/private/test_ministats.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/grader.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/network_check.py").is_file()
+    assert (task_root / "tests/candidate-requirements.lock.txt").read_bytes() == b""
     test_script = (task_root / "tests/test.sh").read_text()
     assert "verifier-network-available" in test_script
     assert "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1" in test_script
@@ -194,8 +200,9 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         _tar_bytes({"solve.sh": b"#!/usr/bin/env bash\nset -euo pipefail\n"}),
         visibility=Visibility.PRIVATE,
     )
-    dependencies = store.put_bytes(
-        _tar_bytes({"requirements.lock.txt": b""}),
+    dependency_lock = store.put_bytes(
+        b"demo-pkg==1.0 \\\n" + b"    --hash=sha256:" + b"0" * 64 + b"\n",
+        media_type="text/plain; charset=utf-8",
         visibility=Visibility.PRIVATE,
     )
     commands = store.put_bytes(
@@ -234,7 +241,7 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         },
         "dependencies": {
             "status": "known",
-            "artifact": dependencies.model_dump(mode="json"),
+            "lock_artifact": dependency_lock.model_dump(mode="json"),
             "installer": "uv",
         },
         "tests": {
@@ -259,8 +266,11 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
 
     assert (output / "tests/private/test_private.py").is_file()
     assert (output / "solution/solve.sh").is_file()
-    assert (output / "tests/dependencies/requirements.lock.txt").is_file()
-    assert "python:3.12-slim@sha256:" in (output / "tests/Dockerfile").read_text()
+    assert (output / "tests/candidate-requirements.lock.txt").is_file()
+    verifier_dockerfile = (output / "tests/Dockerfile").read_text()
+    assert "python:3.12-slim@sha256:" in verifier_dockerfile
+    assert "COPY dependencies" not in verifier_dockerfile
+    assert "--no-index" not in verifier_dockerfile
     assert json.loads((output / "bundle.manifest.json").read_text())["mode"] == "production"
 
 
@@ -276,26 +286,29 @@ def test_runtime_command_plan_rejects_modified_protocol(tmp_path) -> None:
         validate_command_plan(plan)
 
 
-def test_dependency_bundle_requires_hashed_wheel_closure(tmp_path) -> None:
-    dependencies = tmp_path / "dependencies"
-    dependencies.mkdir()
-    (dependencies / "requirements.lock.txt").write_text(
-        "demo-pkg==1.0 \\\n    --hash=sha256:" + "0" * 64 + "\n",
-        encoding="utf-8",
-    )
+def test_dependency_lock_requires_hashes() -> None:
     compiler = HarborCompiler(TOOLCHAIN)
 
-    with pytest.raises(HarborCompileError, match="wheelhouse is incomplete"):
-        compiler._validate_dependency_bundle(dependencies)  # noqa: SLF001
+    with pytest.raises(HarborCompileError, match="lack sha256 hashes"):
+        compiler._validate_dependency_lock(b"demo-pkg==1.0\n")  # noqa: SLF001
 
-    (dependencies / "demo_pkg-1.0-py3-none-any.whl").write_bytes(b"fixture")
-    compiler._validate_dependency_bundle(dependencies)  # noqa: SLF001
+    compiler._validate_dependency_lock(
+        b"demo-pkg==1.0 \\\n" + b"    --hash=sha256:" + b"0" * 64 + b"\n"
+    )
+
+
+def test_vendor_dependency_bundle_is_forbidden(tmp_path) -> None:
+    compiler = HarborCompiler(TOOLCHAIN)
+    with pytest.raises(HarborCompileError, match="vendor dependency bundles are forbidden"):
+        compiler._validate_dependency_bundle(tmp_path / "dependencies")  # noqa: SLF001
 
 
 def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
     store = FileArtifactStore(tmp_path / "artifacts")
-    dependency_bundle = store.put_bytes(
-        _tar_bytes({"requirements.lock.txt": b""}), visibility=Visibility.PRIVATE
+    dependency_lock = store.put_bytes(
+        b"",
+        media_type="text/plain; charset=utf-8",
+        visibility=Visibility.PRIVATE,
     )
     verifier_bundle = store.put_bytes(
         _tar_bytes(
@@ -345,7 +358,7 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
                 },
                 "dependencies": {
                     "status": "known",
-                    "artifact": dependency_bundle.model_dump(mode="json"),
+                    "lock_artifact": dependency_lock.model_dump(mode="json"),
                     "installer": "uv",
                 },
                 "tests": {
@@ -375,48 +388,17 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
 
     assert (output / "tests/verifier/run.py").is_file()
     assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
-    assert "COPY --chmod=0500 verifier /tests/verifier" in (
-        output / "tests/Dockerfile"
-    ).read_text(encoding="utf-8")
-
-
-def test_dependency_bundle_rejects_requirement_directives(tmp_path) -> None:
-    dependencies = tmp_path / "dependencies"
-    dependencies.mkdir()
-    (dependencies / "requirements.lock.txt").write_text(
-        "--index-url https://example.invalid/simple\n",
-        encoding="utf-8",
+    assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
+        encoding="utf-8"
     )
+    assert "COPY dependencies" not in (output / "tests/Dockerfile").read_text(encoding="utf-8")
 
+
+def test_dependency_lock_rejects_requirement_directives() -> None:
     with pytest.raises(HarborCompileError, match="forbidden directive"):
-        HarborCompiler(TOOLCHAIN)._validate_dependency_bundle(dependencies)  # noqa: SLF001
-
-
-def test_dependency_bundle_rejects_nested_wheel(tmp_path) -> None:
-    dependencies = tmp_path / "dependencies"
-    nested = dependencies / "nested"
-    nested.mkdir(parents=True)
-    (dependencies / "requirements.lock.txt").write_text(
-        "demo-pkg==1.0 \\\n    --hash=sha256:" + "0" * 64 + "\n",
-        encoding="utf-8",
-    )
-    (nested / "demo_pkg-1.0-py3-none-any.whl").write_bytes(b"fixture")
-
-    with pytest.raises(HarborCompileError, match="wheel must be at wheelhouse root"):
-        HarborCompiler(TOOLCHAIN)._validate_dependency_bundle(dependencies)  # noqa: SLF001
-
-
-def test_dependency_bundle_does_not_prefix_match_wheel_names(tmp_path) -> None:
-    dependencies = tmp_path / "dependencies"
-    dependencies.mkdir()
-    (dependencies / "requirements.lock.txt").write_text(
-        "foo==1.0 \\\n    --hash=sha256:" + "0" * 64 + "\n",
-        encoding="utf-8",
-    )
-    (dependencies / "foo_bar-1.0-py3-none-any.whl").write_bytes(b"fixture")
-
-    with pytest.raises(HarborCompileError, match="wheelhouse is incomplete: foo"):
-        HarborCompiler(TOOLCHAIN)._validate_dependency_bundle(dependencies)  # noqa: SLF001
+        HarborCompiler(TOOLCHAIN)._validate_dependency_lock(  # noqa: SLF001
+            b"--index-url https://example.invalid/simple\n"
+        )
 
 
 def test_prepare_stub_control_replaces_only_control_solution(tmp_path) -> None:

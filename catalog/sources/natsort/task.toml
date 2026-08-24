@@ -37,7 +37,7 @@ network_mode = "no-network"
 
 [dependencies]
 # Runtime scope is the standard-library fallback. These are provisional
-# authoring/test tools only; no offline wheelhouse or lock digest is claimed.
+# authoring/test tools only; no hash-locked requirements artifact or lock digest is claimed.
 status = "unknown"
 installer = "uv"
 packages = ["pytest", "hypothesis", "setuptools"]

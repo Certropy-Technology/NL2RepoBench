@@ -216,7 +216,7 @@ class LegacyImporter:
             "source_lock.license_spdx",
             "environment_lock.python_version",
             "environment_lock.base_image_digest",
-            "dependency_bundle.artifact",
+            "dependency_bundle.lock_artifact",
             "tests.test_bundle",
             "tests.expected_total_source=frozen-collection",
             "harbor",

@@ -1,5 +1,5 @@
 # Development descriptor only. This is intentionally not a runnable Harbor
-# bundle: private tests, command plan, dependency wheelhouse, Oracle, and a
+# bundle: private tests, command plan, hash-locked dependency lock, Oracle, and a
 # task-specific subprocess scenario adapter are omitted until authorized private
 # artifacts are provisioned in task.toml. The expected test count below is a
 # source-only observation, not a frozen production denominator.

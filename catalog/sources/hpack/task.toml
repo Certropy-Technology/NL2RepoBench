@@ -28,7 +28,7 @@ network_mode = "no-network"
 
 [dependencies]
 # hpack has no runtime dependencies. These are the exact direct build/test/
-# tooling versions selected by the source uv.lock, not a task-local wheelhouse.
+# tooling versions selected by the source uv.lock, not a task-local requirements lock.
 status = "unknown"
 installer = "uv"
 packages = [

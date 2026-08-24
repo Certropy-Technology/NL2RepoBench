@@ -29,7 +29,7 @@ network_mode = "no-network"
 status = "known"
 installer = "pip"
 packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"]
-artifact = { digest = "sha256:18682d9f2029d11c40cf0eed404920dcf60311a4fe402785561fc70f9fcc5a6b", size_bytes = 307200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:18682d9f2029d11c40cf0eed404920dcf60311a4fe402785561fc70f9fcc5a6b", visibility = "private" }
+lock_artifact = { digest = "sha256:c3761d51e1ef6be43bca30617d589d428b33f8025473de20f01282f5ece2d6b9", size_bytes = 520, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:c3761d51e1ef6be43bca30617d589d428b33f8025473de20f01282f5ece2d6b9", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -60,7 +60,7 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:d23864ebef5d6e2da6d327f3c3d9985837dc83c4d3d264d3f65e34c2d09f3673", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d23864ebef5d6e2da6d327f3c3d9985837dc83c4d3d264d3f65e34c2d09f3673", visibility = "private" }
+bundle = { digest = "sha256:df387818cbee7d7f9558b80af8a6b974ba3180a2728ea3354bf0a59a7f8a71cd", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:df387818cbee7d7f9558b80af8a6b974ba3180a2728ea3354bf0a59a7f8a71cd", visibility = "private" }
 entrypoint = "run.py"
 environment = {}
 

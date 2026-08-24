@@ -10,7 +10,7 @@
 
 1. `src/nl2repobench/domain/models.py:21-337,422-481` - v1 schema, Python-only environment/dependency/test fields, publication gaps.
 2. `src/nl2repobench/authoring/catalog.py:54-73,146-189,297-345` - declarative source parsing, manifest compilation, Python/pytest scaffold defaults.
-3. `src/nl2repobench/harbor/compiler.py:55-101,144-243,262-317,343-543` - Harbor generation, pip/wheelhouse verifier, pytest script, runtime copying.
+3. `src/nl2repobench/harbor/compiler.py:55-101,144-243,262-543` - Harbor generation, pip/hash-lock network verifier, pytest script, runtime copying.
 4. `src/nl2repobench/harbor/models.py:42-82` - Python verifier lock and exact pytest/pip command plan.
 5. `src/nl2repobench/verification/models.py:13-76` - pytest/JUnit failure and grading models.
 6. `src/nl2repobench/verification/grader.py:16-178` - fixed-denominator grading and JUnit validation.
@@ -46,7 +46,7 @@ TestManifest.framework: Literal["pytest"]
 The main compiler blockers are:
 
 - `HarborCompiler._write_verifier()` (`harbor/compiler.py:160-243`) always installs Python requirements with pip and copies `nl2repobench` into Python site-packages.
-- `_validate_dependency_bundle()` (`harbor/compiler.py:262-317`) requires `requirements.lock.txt`, hashed requirements, and root-level wheels.
+- `_validate_dependency_lock()` (`harbor/compiler.py`) requires a bounded `requirements.lock.txt` with hashes; Python verifier no longer accepts a wheelhouse.
 - `_test_script()` (`harbor/compiler.py:388-514`) invokes Python network checks, `candidate_install`, `run_pytest`, JUnit copying, and `--pytest-exit-code`.
 - `_copy_verifier_runtime()` (`harbor/compiler.py:516-543`) copies only Python files.
 - `VerifierCommandPlan` (`harbor/models.py:62-68`) and `verification/command_plan.py:12-35` accept only `pytest-subprocess-boundary-v1` and `pip-target-no-deps-v1`.
@@ -153,7 +153,7 @@ bundle.manifest.json
 
 For the synthetic zero-dependency task, the archive still contains a v3 package-lock root and an empty cache. Do not bypass the known-artifact requirement.
 
-Add `_validate_npm_dependency_bundle()` beside the current wheelhouse validator. It must reject:
+Add `_validate_npm_dependency_bundle()` beside the Python requirements-lock validator. It must reject:
 
 - links, devices, shell scripts, `.npmrc`, `node_modules`, and unexpected files;
 - non-UTF-8 or non-v3 lockfiles;

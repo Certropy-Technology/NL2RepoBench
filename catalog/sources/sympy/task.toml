@@ -28,7 +28,7 @@ network_mode = "no-network"
 [dependencies]
 status = "known"
 installer = "pip"
-artifact = { digest = "sha256:488f003aecab95bc8cf1ccea2921c40ee6cb15425c58c7c0e8f6120179c50a9c", size_bytes = 542720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:488f003aecab95bc8cf1ccea2921c40ee6cb15425c58c7c0e8f6120179c50a9c", visibility = "private" }
+lock_artifact = { digest = "sha256:1433a4f353e86e1857d9a0a4ef22209b0e76e980e00fbdc4389cdca773d6d34e", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1433a4f353e86e1857d9a0a4ef22209b0e76e980e00fbdc4389cdca773d6d34e", visibility = "private" }
 packages = ["mpmath==1.3.0"]
 
 [tests]

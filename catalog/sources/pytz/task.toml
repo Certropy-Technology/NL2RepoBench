@@ -31,7 +31,7 @@ build_command = "printf 2026c > tz/version && make PYTHON=/usr/local/bin/python3
 status = "known"
 installer = "pip"
 packages = ["setuptools==75.8.0", "wheel==0.45.1"]
-artifact = { digest = "sha256:12babd557053e38a19b16f50842b2c0fb3ad209c32f80f2222a95a062b9a9a0f", size_bytes = 1310720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:12babd557053e38a19b16f50842b2c0fb3ad209c32f80f2222a95a062b9a9a0f", visibility = "private" }
+lock_artifact = { digest = "sha256:1b63d5fa7fb4bfddfe597ca1c2d2fbbe6c131bde66a00caa4c865e05aff8dbe0", size_bytes = 191, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1b63d5fa7fb4bfddfe597ca1c2d2fbbe6c131bde66a00caa4c865e05aff8dbe0", visibility = "private" }
 
 [tests]
 framework = "pytest"

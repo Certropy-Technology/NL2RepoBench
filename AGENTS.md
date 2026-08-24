@@ -126,6 +126,8 @@ catalog source -> canonical manifest -> Harbor bundle / legacy projection
 
 禁止人工修改 generated `manifest.json`、Harbor bundle 或 `test_files/` 来绕过 catalog。当前可用命令以 `uv run nl2repo --help` 为准；不要声称路线图中的未实现命令已经可用。
 
+网络策略也是声明式 catalog 的一部分，不是 Harbor 输出文件的手工开关。每个运行中的 task 在 `catalog/sources/<task-id>/task.toml` 的 `[environment.network_policy]` 声明 `mode`、依赖预置方式和 reference-source 禁止规则；compiler 将它投影为 Harbor 的 agent network mode、精确 allowlist 和 `environment/docker-compose.yaml`。canonical manifest 构建时 policy 覆盖 legacy `harbor.agent_network_mode`，因此 compiler 是 runtime policy 的唯一权威。迁移后的 flat `catalog/tasks/<task-id>/` 仍是生成的 runtime 视图，修复必须回到 source 或通过 integrator/compiler 重建。完整规则见 `docs/network-policy.md`。
+
 ## 6. Candidate 与 Ground Truth 门禁
 
 候选 manifest 至少包含：`task_id`、`upstream_url`、完整 commit SHA、license、Python 版本、LOC、public API 数、test count、最近更新时间、difficulty 和 category。
@@ -180,7 +182,8 @@ catalog source -> canonical manifest -> Harbor bundle / legacy projection
 - 生成 JUnit/JSON 等结构化结果，不依赖 pytest 控制台正则；
 - 检查每条 setup/test 命令退出码和 collection error；
 - 由 verifier 自己写 `/logs/verifier/reward.json`；
-- 默认断网运行，依赖已预置或锁定；
+- 默认断网运行；Python verifier 依赖只允许在 Docker build 阶段从 package index
+  按 hash lock 联网安装，禁止把 wheelhouse vendor 到 task 或使用 `--no-index`；
 - 看不到 agent 写入的伪造 reward，并防止隐藏测试被覆盖；
 - 把安装失败、JUnit 缺失和 collection error 记录到 grading details。
 
@@ -220,7 +223,7 @@ network policy lint            -> 0 error（uv run nl2repo task lint-network）
     └── <hidden tests>
 ```
 
-`task.toml` 必须填写 task name/version、3 到 8 个 keywords、difficulty/category/tags、metric contract、expected count、agent/verifier timeout、资源、network mode、artifact 和 separate verifier。Oracle、隐藏测试、judge prompt 和 grader dependency 不得进入 agent image。
+`task.toml` 必须填写 task name/version、3 到 8 个 keywords、difficulty/category/tags、metric contract、expected count、agent/verifier timeout、资源、network mode、artifact 和 separate verifier。Python 依赖必须引用只含 `requirements.lock.txt` 的 `lock_artifact`；禁止 verifier dependency wheelhouse、`COPY dependencies`、`--no-index` 和 vendor 安装。Oracle、隐藏测试、judge prompt 和 grader dependency 不得进入 agent image。
 
 先检查 CLI 版本。该仓库示例要求 Harbor `0.21.0` 和 schema `1.4`；旧的 `0.15.0` CLI 不兼容。实际命令为：
 
@@ -252,7 +255,11 @@ offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 ```
 
-第三方依赖在 **Docker build 阶段**安装（build 阶段有网络），compiler 会把 `[dependencies].packages` 生成 `RUN pip install --no-cache-dir ...`。因此 run 阶段不需要 registry。`allowlist` 只收精确 hostname，用于确实无法预装的情况；`ALLOWED_REGISTRY_HOSTS` 命中会被 lint 提示优先改为预装。
+第三方依赖在 **Docker build 阶段**安装（build 阶段有网络）。Python compiler 将 hash-locked
+`lock_artifact` 写入两个 Docker build context，并生成 `pip install --require-hashes`；Verifier
+绝不复制或读取 wheelhouse，也不使用 `--no-index`。因此 run 阶段不需要 registry。Node/npm
+lane 仍由独立 v2 compiler 管理其 npm lock/cache contract。`allowlist` 只收精确 hostname，
+用于确实无法预装的情况；`ALLOWED_REGISTRY_HOSTS` 命中会被 lint 提示优先改为预装。
 
 LLM provider host 是**运行时**配置，不写进题目：Harbor `trial/network_policy.py:merge_extra_allowlists` 会把 `agent.extra_allowed_hosts` 合并进 agent 阶段策略。注意题目若声明 `public`，运行时注入会被忽略并告警。
 

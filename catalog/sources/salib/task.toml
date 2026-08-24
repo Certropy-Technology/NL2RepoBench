@@ -25,7 +25,7 @@ python_version = "3.13.14"
 os_name = "linux/amd64"
 network_mode = "no-network"
 
-# SALib declares lower bounds and no committed lock or wheelhouse exists at the
+# SALib declares lower bounds and no committed lock or requirements lock exists at the
 # pinned revision. The list records declared direct/runtime-test requirements,
 # not a resolved offline closure.
 [dependencies]

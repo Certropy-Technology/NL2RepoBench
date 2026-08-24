@@ -28,7 +28,7 @@ network_mode = "no-network"
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, or by attaching a private wheelhouse artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
 
 [dependencies]
 status = "unknown"

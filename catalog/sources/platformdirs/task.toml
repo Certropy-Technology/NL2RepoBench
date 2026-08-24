@@ -33,7 +33,7 @@ build_command = "generate static version.py and setuptools pyproject after exact
 status = "known"
 installer = "pip"
 packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-artifact = { digest = "sha256:e8690ca63021827b26ab03b17161c719fa8fe74c1da4a3589ad76ef598dac94c", size_bytes = 1146880, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e8690ca63021827b26ab03b17161c719fa8fe74c1da4a3589ad76ef598dac94c", visibility = "private" }
+lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
 
 [tests]
 framework = "pytest"

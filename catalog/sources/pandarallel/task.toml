@@ -26,7 +26,7 @@ base_image_digest = "sha256:f25336a4bdcab50fb33ef2cb008c10634915e98e7dcbe167750a
 network_mode = "no-network"
 
 # The immutable verifier image carries the tested pandas/multiprocessing
-# runtime. A standalone hash-locked wheelhouse is not part of this package.
+# runtime. A standalone hash-locked requirements artifact is not part of this package.
 
 [environment.network_policy]
 mode = "no-network"

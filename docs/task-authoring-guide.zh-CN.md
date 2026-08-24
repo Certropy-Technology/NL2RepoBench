@@ -109,7 +109,9 @@ catalog source
 - `TaskManifest`：task ID/version、difficulty/category/tags、公开 instruction ref、运行约束和 artifact refs；
 - `SourceLock`：upstream URL、完整 commit、submodules、license evidence 和 source hash；
 - `EnvironmentLock`：OS、Python、系统包、基础镜像 digest、build/runtime/test dependency locks；
-- `DependencyBundle`：离线 wheelhouse 或等价依赖闭包、文件 hash 和生成记录；
+- `DependencyBundle`：Python build 阶段联网安装所需的 hash-locked
+  `requirements.lock.txt` artifact；Python verifier 禁止 vendor wheelhouse。Node/npm
+  依赖闭包仍走独立 v2 lock/cache contract；
 - `TestManifest`：测试 bundle、命令、冻结 collection 数、测试框架和 test hash；
 - `MetricContract`：passed/failed/error/skipped/xfail/collection mismatch 的精确定义；
 - `ReviewRecord`、`ControlRecord` 和 `TaskLifecycleRecord`。

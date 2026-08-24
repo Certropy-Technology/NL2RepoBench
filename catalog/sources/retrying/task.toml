@@ -34,7 +34,7 @@ reason = "Third-party build and test dependencies are installed during the Docke
 status = "known"
 installer = "pip"
 packages = ["six==1.17.0", "setuptools==75.8.0", "wheel==0.45.1", "pytest==9.1.1", "iniconfig==2.3.0", "packaging==26.3", "pluggy==1.6.0", "pygments==2.21.0"]
-artifact = { digest = "sha256:4e468399b6c5e50b21b8c796b0834c2b016f0f3957a3bea9c731f17fd133c705", size_bytes = 3123200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4e468399b6c5e50b21b8c796b0834c2b016f0f3957a3bea9c731f17fd133c705", visibility = "private" }
+lock_artifact = { digest = "sha256:e1a73e6ccc9cb9d9f36cb88815852f0cb3a134adede32e2386d548ba2d620df7", size_bytes = 865, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e1a73e6ccc9cb9d9f36cb88815852f0cb3a134adede32e2386d548ba2d620df7", visibility = "private" }
 
 [tests]
 framework = "pytest"

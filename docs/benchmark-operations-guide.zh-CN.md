@@ -98,15 +98,17 @@ Python 与 Node 使用不同 dataset/version、schema、grader、依赖闭包和
 对于复杂 JSON/回调/状态边界，Python v1 还支持受限的
 `verifier.protocol = "custom-json-v1"`。task TOML 只保存 private verifier bundle
 的 digest、URI 和相对 entrypoint；suite、adapter、remote fixture、grader 和
-wheelhouse 不进入 public `catalog/sources`。`HarborCompiler` 只 materialize private
+dependency lock 不进入 public `catalog/sources`。`HarborCompiler` 只 materialize private
 bundle 到 separate no-network verifier，并用固定 wrapper 校验 leaf IDs、状态集合、
-固定分母和 JUnit/collection；禁止把 custom `test.sh` 当作公开 task source。候选依赖
-安装到隔离的 candidate site，不能污染 trusted verifier 的 pydantic/pytest runtime。
+固定分母和 JUnit/collection；Python verifier 的依赖只在 Docker build 阶段按
+`lock_artifact` 联网安装，禁止 wheelhouse vendor。禁止把 custom `test.sh` 当作公开
+task source。候选依赖安装到隔离的 candidate site，不能污染 trusted verifier 的
+pydantic/pytest runtime。
 
 ## 3. Ground Truth 与规格
 
 冻结候选时保存 upstream full commit、archive/license hashes、OS/runtime/image digest、
-offline dependency closure、test bundle、自动 collection、固定 denominator、
+hash-locked build dependency lock、test bundle、自动 collection、固定 denominator、
 Oracle x1、controls、traceability、review record 和 content manifest。当前 Package
 campaign 使用一次 Oracle gate；历史三次稳定性实验不能直接并入新版本分数。
 
@@ -254,7 +256,7 @@ project cleanup。2026-08-22 曾因 Harbor 0.21.0/Python 3.14 的跨 asyncio con
 | Fable 连续 `TerminalAction.command` 缺失、workspace 为空 | Anthropic relay 的 `thinking=enabled` 丢失 tool input；旧 run 的 grader 安装/collection 错误只是后果 | Fable 只通过 `run_model_from_pi.py` 启用 model-scoped `thinking=adaptive`；旧空 workspace run 分类为 infrastructure，不静默当模型失败 |
 | Fable 长 Python instruction 仍返回空 tool/content | 受控 direct LiteLLM 与 OpenHands 两层均复现于约 15.6K system + 7.4K instruction；native tool 和 text-tool fallback 都未稳定解决 | 将该 provider/task 组合记录为 infrastructure blocker，停止无效重试；短 Node task 的 adaptive run 单独计入证据，不能外推到长 prompt |
 | verifier build 的 fixture checksum mismatch | 派生 Dockerfile 的硬编码 manifest 与 pinned base image 漂移 | 在 pinned image 内重算 manifest，更新 task-local Dockerfile，再跑 Oracle；不要删掉 integrity check |
-| candidate install 因 `--require-hashes` 拒绝 source directory | pip hash 校验适用于 wheel/requirements，不适用于本地 source path | 依赖 wheelhouse 继续 `--require-hashes`，candidate 用受限 `--target --no-deps` 安装 |
+| candidate install 因 `--require-hashes` 拒绝 source directory | pip hash 校验适用于 wheel/requirements，不适用于本地 source path | build 阶段从网络按 `lock_artifact` 安装 hash-locked requirements，candidate 仍用受限 `--target --no-deps` 安装 |
 | pytest 把 `request` 报为 reserved parametrize name | fixture contract 参数名与 pytest 保留名冲突 | 改为 `payload` 等非保留名并重跑 collection |
 | Python verifier 用 `networkx`/SymPy 旧 API 失败 | pinned image 中实际版本与冻结上游 API 有 drift，或 runtime wheel 未进入 verifier context | 先记录实际版本，补兼容 shim/锁依赖并重新 Oracle；不能直接降低断言 |
 | source solution 生成空 workspace | placeholder `solve.sh` 或 agent image 缺 Git/构建工具 | 先补 exact-revision materializer、工具链和 build context，再判断题目是否可行 |

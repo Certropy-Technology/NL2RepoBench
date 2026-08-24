@@ -27,7 +27,7 @@ base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = ["build-essential", "libgomp1"]
 network_mode = "no-network"
-build_command = "install the pinned CPU-only TensorFlow closure from the private wheelhouse during the verifier image build"
+build_command = "install the pinned CPU-only TensorFlow closure from the private requirements lock during the verifier image build"
 
 [environment.network_policy]
 mode = "no-network"
@@ -48,7 +48,7 @@ packages = [
   "setuptools==80.10.2",
   "wheel==0.45.1",
 ]
-artifact = { digest = "sha256:cebc072443f1a5aec0662d7330779b9c61f93951a83325f3cc9588648d7e64fd", size_bytes = 395120640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:cebc072443f1a5aec0662d7330779b9c61f93951a83325f3cc9588648d7e64fd", visibility = "private" }
+lock_artifact = { digest = "sha256:a30e649e38343eebfe8322f4c75c14e36752e5d3a48bae529988273f0cfa4b1c", size_bytes = 5118, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a30e649e38343eebfe8322f4c75c14e36752e5d3a48bae529988273f0cfa4b1c", visibility = "private" }
 
 [tests]
 framework = "pytest"

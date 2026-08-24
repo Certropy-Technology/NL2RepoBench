@@ -25,7 +25,7 @@ base_image = "ghcr.io/multimodal-art-projection/nl2repobench/records"
 base_image_digest = "sha256:03378b1619c4ddcfebb0f3941e8fd448fe2754cf9489f13594cb0b40551f5a2d"
 network_mode = "no-network"
 
-# The verifier image is the immutable legacy image. The hash-locked wheelhouse
+# The verifier image is the immutable legacy image. The hash-locked requirements artifact
 # below reproduces its runtime closure for the offline candidate install.
 
 [environment.network_policy]
@@ -43,7 +43,7 @@ packages = [
   "docopt==0.6.2",
   "psycopg2-binary==2.9.10",
 ]
-artifact = { digest = "sha256:8f9b3941b17e2432ac7f5e72f327fc851b1f37c8bb78e9fe539cffe84316b733", size_bytes = 9799680, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:8f9b3941b17e2432ac7f5e72f327fc851b1f37c8bb78e9fe539cffe84316b733", visibility = "private" }
+lock_artifact = { digest = "sha256:f034fa0d95dd21401e1a7ed3db5c9d5f4170e97fc20809c049d4ccbf9b9c10ca", size_bytes = 1030, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:f034fa0d95dd21401e1a7ed3db5c9d5f4170e97fc20809c049d4ccbf9b9c10ca", visibility = "private" }
 
 [tests]
 framework = "pytest"

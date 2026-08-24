@@ -30,7 +30,7 @@ network_mode = "no-network"
 [dependencies]
 # Poetry's locked core runtime closure is pygments 2.19.2, markdown-it-py
 # 3.0.0, and mdurl 0.1.2. The optional `jupyter` extra is deliberately not
-# part of the core candidate. No wheelhouse or build-backend closure is stored.
+# part of the core candidate. No requirements lock or build-backend closure is stored.
 status = "unknown"
 installer = "uv"
 packages = [

@@ -54,6 +54,30 @@ def test_known_environment_requires_image_digest() -> None:
         )
 
 
+def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
+    artifact = ArtifactRef(
+        digest="sha256:" + "e" * 64,
+        size_bytes=1,
+        uri="artifact://private/sha256:" + "e" * 64,
+        visibility=Visibility.PRIVATE,
+    )
+
+    with pytest.raises(ValidationError, match="requires lock_artifact"):
+        DependencyBundle(
+            status=ProvenanceStatus.KNOWN,
+            artifact=artifact,
+            installer="pip",
+        )
+
+    bundle = DependencyBundle(
+        status=ProvenanceStatus.KNOWN,
+        lock_artifact=artifact,
+        installer="pip",
+    )
+    assert bundle.lock_artifact == artifact
+    assert bundle.artifact is None
+
+
 def test_blocked_task_requires_reason() -> None:
     with pytest.raises(ValidationError, match="require a reason"):
         TaskLifecycleRecord(status=TaskStatus.BLOCKED)

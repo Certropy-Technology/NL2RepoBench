@@ -6,7 +6,7 @@
 
 Worker 的具体 remediation contract 见
 [`authoring-agent-remediation-guide.zh-CN.md`](authoring-agent-remediation-guide.zh-CN.md)。
-缺 image/lock/wheelhouse/build backend 是待完成工作，不是自动 Block；authoring loop
+缺 image/lock/build backend 是待完成工作，不是自动 Block；authoring loop
 只到 catalog handoff，Agent Run 由下游独立 loop 执行。Loop 的大文件和 worktree 使用
 项目磁盘 `.nl2repo/authoring-work/`，不使用 `/tmp` tmpfs；`/tmp` 只保留有大小和时限的
 短期进程 scratch。
@@ -232,7 +232,7 @@ status: covered|missing-spec|dynamic-unresolved|blocked
   platform-specific tests。
 
 三次基线 collection 必须稳定，且官方源码在最终环境通过率至少 0.80。缺少现成 lock、
-wheelhouse、image digest 或 build backend 不是失败理由，author worker 必须先补齐并
+dependency lock、image digest 或 build backend 不是失败理由，author worker 必须先补齐并
 验证它们。失败只归一个主类：
 source/spec/environment/verifier/model/infrastructure。
 

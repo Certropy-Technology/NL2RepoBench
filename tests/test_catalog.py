@@ -50,7 +50,7 @@ def _published_manifest(task_id: str) -> TaskManifest:
             },
             "dependency_bundle": {
                 "status": "known",
-                "artifact": _artifact("5"),
+                "lock_artifact": _artifact("5"),
                 "installer": "uv",
             },
             "tests": {

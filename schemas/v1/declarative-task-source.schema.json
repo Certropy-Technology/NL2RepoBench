@@ -60,19 +60,19 @@
           },
           "then": {
             "properties": {
-              "artifact": {
+              "lock_artifact": {
                 "not": {
                   "type": "null"
                 }
               }
             },
             "required": [
-              "artifact"
+              "lock_artifact"
             ]
           }
         }
       ],
-      "description": "Offline dependency closure used by an agent or verifier environment.",
+      "description": "Hash-locked build-time dependencies for Python task images.\n\nPython Harbor images install candidate dependencies from the package index\nduring the Docker build.  The final task never carries a wheelhouse and\nthe verifier never uses ``--no-index``.  ``lock_artifact`` contains only a\nrequirements lock file with hashes; ``artifact`` is retained solely so\nolder catalog records can be diagnosed and rejected during publication.",
       "properties": {
         "artifact": {
           "anyOf": [
@@ -95,6 +95,17 @@
           ],
           "title": "Installer",
           "type": "string"
+        },
+        "lock_artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "packages": {
           "default": [],

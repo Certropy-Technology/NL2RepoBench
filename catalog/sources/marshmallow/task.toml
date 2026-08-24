@@ -29,7 +29,7 @@ network_mode = "no-network"
 status = "known"
 installer = "pip"
 packages = ["flit_core==3.12.0"]
-artifact = { digest = "sha256:526726e3218d9895ad4a51ba167c929d13f77310a5712ad7c22b5a56ba553aa3", size_bytes = 51200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:526726e3218d9895ad4a51ba167c929d13f77310a5712ad7c22b5a56ba553aa3", visibility = "private" }
+lock_artifact = { digest = "sha256:bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe", size_bytes = 381, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe", visibility = "private" }
 
 [tests]
 framework = "pytest"

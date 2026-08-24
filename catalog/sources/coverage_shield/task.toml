@@ -28,7 +28,7 @@ base_image_digest = "sha256:78b52f4c9cbf18b368a958cb3b933727c0a30b064b1fa33492e8
 network_mode = "no-network"
 
 # The immutable verifier image contains the legacy dependency installation.
-# An offline wheelhouse has not been authored yet, so this remains explicit.
+# An hash-locked requirements artifact has not been authored yet, so this remains explicit.
 
 [environment.network_policy]
 mode = "no-network"

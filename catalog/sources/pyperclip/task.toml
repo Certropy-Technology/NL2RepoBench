@@ -29,7 +29,7 @@ network_mode = "no-network"
 status = "known"
 installer = "pip"
 packages = ["setuptools==80.10.2", "wheel==0.45.1", "pytest==8.3.5", "iniconfig==2.0.0", "packaging==24.2", "pluggy==1.5.0"]
-artifact = { digest = "sha256:3149cbea39de4083557951f06b95308dd1469448f54be02d44caddd7267d6f9a", size_bytes = 1587200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3149cbea39de4083557951f06b95308dd1469448f54be02d44caddd7267d6f9a", visibility = "private" }
+lock_artifact = { digest = "sha256:fefd050bfda3dd90a8926b8adbe2dbf7998d86fc0a2627c3333a07fe56c2c577", size_bytes = 664, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fefd050bfda3dd90a8926b8adbe2dbf7998d86fc0a2627c3333a07fe56c2c577", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -40,7 +40,7 @@ protected_paths = ["/tests/private/test_contract.py", "/tests/private/runner.py"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:b1e14b97d9d9b385e3d3c27225ca4de4fd2b85f0c12034019c22767f24aa7de0", size_bytes = 1638400, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b1e14b97d9d9b385e3d3c27225ca4de4fd2b85f0c12034019c22767f24aa7de0", visibility = "private" }
+bundle = { digest = "sha256:b85317c4a0f00084a1bcc8745c3a63b4a34ee086d2c47118ded3bafe0b790996", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b85317c4a0f00084a1bcc8745c3a63b4a34ee086d2c47118ded3bafe0b790996", visibility = "private" }
 entrypoint = "run.py"
 
 [metric]
@@ -69,8 +69,8 @@ status = "oracle-passed"
 reason = "Generic private-bundle compiled Oracle passed 10/10 with reward 1.0; controls and review remain pending."
 
 [oracle_bundle]
-digest = "sha256:d8688aaa1929e62eae4c1e4cad4703c2e46c894d67c1b38fb329772d6428b832"
-size_bytes = 122880
+digest = "sha256:1b5e9e40ff098af6a0c2931d9819f1d722e3660332f4d820c23a34bda5ed7fe8"
+size_bytes = 92160
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:d8688aaa1929e62eae4c1e4cad4703c2e46c894d67c1b38fb329772d6428b832"
+uri = "artifact://private/sha256:1b5e9e40ff098af6a0c2931d9819f1d722e3660332f4d820c23a34bda5ed7fe8"
 visibility = "private"

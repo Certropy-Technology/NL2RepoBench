@@ -40,7 +40,7 @@ offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 # Verifier-side runtime for the frozen upstream fixture, resolved offline from a
-# hash-locked wheelhouse at Docker build time. setuptools and wheel are required
+# hash-locked requirements artifact at Docker build time. setuptools and wheel are required
 # because the candidate install runs pip with --no-build-isolation.
 [dependencies]
 status = "known"
@@ -55,7 +55,7 @@ packages = [
   "setuptools==80.10.2",
   "wheel==0.45.1",
 ]
-artifact = { digest = "sha256:8ed9724b153b4cc8d7145697901bfb3918dfde1691dc3d46f5abc4a1ae6700e5", size_bytes = 2949120, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:8ed9724b153b4cc8d7145697901bfb3918dfde1691dc3d46f5abc4a1ae6700e5", visibility = "private" }
+lock_artifact = { digest = "sha256:a8a6fd5f5cb7acc86edaa633bdc47e6e036afdb4df72348134abd84281bee529", size_bytes = 808, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a8a6fd5f5cb7acc86edaa633bdc47e6e036afdb4df72348134abd84281bee529", visibility = "private" }
 
 # The frozen upstream fixture collects 46 items at the pinned revision and all 46
 # are scored, so the denominator is the full collection.

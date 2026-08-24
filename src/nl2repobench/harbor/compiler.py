@@ -93,9 +93,16 @@ class HarborCompiler:
         output_root.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(tempfile.mkdtemp(prefix=f".{manifest.task_id}-", dir=output_root))
         try:
+            dependency_lock = self._resolve_dependency_lock(manifest, allow_incomplete)
             self._write_instruction(source_dir, source.instruction, temporary_root)
-            self._write_environment(manifest, temporary_root)
-            self._write_verifier(source_dir, manifest, temporary_root, allow_incomplete)
+            self._write_environment(manifest, temporary_root, dependency_lock)
+            self._write_verifier(
+                source_dir,
+                manifest,
+                temporary_root,
+                dependency_lock,
+                allow_incomplete,
+            )
             self._write_solution(
                 source_dir,
                 manifest.oracle_bundle,
@@ -153,7 +160,12 @@ class HarborCompiler:
         source = source_dir / relative
         atomic_write(task_root / "instruction.md", source.read_bytes())
 
-    def _write_environment(self, manifest: TaskManifest, task_root: Path) -> None:
+    def _write_environment(
+        self,
+        manifest: TaskManifest,
+        task_root: Path,
+        dependency_lock: bytes,
+    ) -> None:
         image = self.toolchain.images.agent_base
         packages = tuple(manifest.environment_lock.system_packages)
         install = ""
@@ -168,10 +180,15 @@ class HarborCompiler:
         # the agent phase run with no-network: nothing has to be fetched later.
         # Only third-party dependencies are installed; the package under test is
         # what the agent must write itself.
-        dependencies = tuple(manifest.dependency_bundle.packages)
-        if dependencies:
-            quoted = " ".join(shlex.quote(package) for package in dependencies)
-            install += f"RUN pip install --no-cache-dir {quoted}\n\n"
+        atomic_write(
+            task_root / "environment/candidate-requirements.lock.txt",
+            dependency_lock,
+        )
+        install += """COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
+RUN python -m pip install --no-cache-dir --require-hashes \\
+  -r /tmp/candidate-requirements.lock.txt
+
+"""
         dockerfile = f"FROM --platform=linux/amd64 {image}\n\n" + install + "WORKDIR /workspace\n"
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
         profile = manifest.harbor
@@ -188,6 +205,7 @@ class HarborCompiler:
         source_dir: Path,
         manifest: TaskManifest,
         task_root: Path,
+        dependency_lock: bytes,
         allow_incomplete: bool,
     ) -> None:
         tests_root = task_root / "tests"
@@ -204,24 +222,15 @@ class HarborCompiler:
             )
         atomic_write(tests_root / "requirements.lock.txt", requirements_data)
 
-        dependencies_root = tests_root / "dependencies"
+        atomic_write(tests_root / "candidate-requirements.lock.txt", dependency_lock)
         custom_verifier = manifest.verifier is not None and not allow_incomplete
         if allow_incomplete:
-            dependencies_root.mkdir(parents=True)
-            atomic_write(dependencies_root / "requirements.lock.txt", b"")
             command_plan = VerifierCommandPlan(
                 runner="pytest-subprocess-boundary-v1",
                 candidate_install="pip-target-no-deps-v1",
             )
         else:
-            dependency_artifact = manifest.dependency_bundle.artifact
             command_artifact = manifest.tests.commands_artifact
-            if dependency_artifact is None or (command_artifact is None and not custom_verifier):
-                raise HarborCompileError(
-                    "production task requires dependency and command artifacts"
-                )
-            self._extract_private_bundle(dependency_artifact, dependencies_root)
-            self._validate_dependency_bundle(dependencies_root)
             if custom_verifier:
                 command_plan = VerifierCommandPlan(
                     runner="pytest-subprocess-boundary-v1",
@@ -256,14 +265,12 @@ class HarborCompiler:
 COPY requirements.lock.txt /tmp/requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
 
-COPY dependencies /opt/candidate-dependencies
+COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install \
   --no-cache-dir \
-  --no-index \
-  --find-links /opt/candidate-dependencies \
   --target /opt/candidate-dependencies/site \
   --require-hashes \
-  -r /opt/candidate-dependencies/requirements.lock.txt
+  -r /tmp/candidate-requirements.lock.txt
 
 COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json
@@ -307,11 +314,30 @@ WORKDIR /tests
         except (OSError, ValueError) as exc:
             raise HarborCompileError(str(exc)) from exc
 
-    def _validate_dependency_bundle(self, root: Path) -> None:
-        lock = root / "requirements.lock.txt"
-        if not lock.is_file() or lock.is_symlink():
-            raise HarborCompileError("dependency bundle must contain requirements.lock.txt")
-        data = lock.read_bytes()
+    def _resolve_dependency_lock(self, manifest: TaskManifest, allow_incomplete: bool) -> bytes:
+        """Resolve a hash lock without materializing vendor dependency bytes."""
+
+        bundle = manifest.dependency_bundle
+        if bundle.artifact is not None:
+            raise HarborCompileError(
+                "vendor dependency artifacts are forbidden; use dependency_bundle.lock_artifact"
+            )
+        if bundle.lock_artifact is None:
+            if allow_incomplete:
+                return b""
+            raise HarborCompileError("production task requires dependency_bundle.lock_artifact")
+        if self.artifact_resolver is None:
+            raise HarborCompileError("private artifact resolver is required for dependency lock")
+        try:
+            data = self.artifact_resolver.resolve(bundle.lock_artifact).read_bytes()
+        except (OSError, ValueError) as exc:
+            raise HarborCompileError(f"cannot resolve dependency lock: {exc}") from exc
+        self._validate_dependency_lock(data)
+        return data
+
+    def _validate_dependency_lock(self, data: bytes) -> None:
+        """Validate a pip requirements lock used for network installation."""
+
         if len(data) > self.MAX_DEPENDENCY_LOCK_BYTES:
             raise HarborCompileError("dependency requirements lock exceeds size limit")
         try:
@@ -344,23 +370,12 @@ WORKDIR /tests
                 "dependency requirements lack sha256 hashes: " + ", ".join(missing_hashes)
             )
 
-        wheel_distributions: set[str] = set()
-        for path in root.rglob("*"):
-            if not path.is_file() or path == lock:
-                continue
-            if path.parent != root:
-                raise HarborCompileError(
-                    f"dependency wheel must be at wheelhouse root: {path.relative_to(root)}"
-                )
-            if path.suffix != ".whl":
-                raise HarborCompileError(f"dependency bundle contains non-wheel file: {path.name}")
-            distribution = path.name.split("-", 1)[0]
-            wheel_distributions.add(re.sub(r"[-_.]+", "-", distribution.casefold()))
-        missing_wheels = sorted(name for name in requirements if name not in wheel_distributions)
-        if missing_wheels:
-            raise HarborCompileError(
-                "dependency wheelhouse is incomplete: " + ", ".join(missing_wheels)
-            )
+    def _validate_dependency_bundle(self, root: Path) -> None:
+        """Reject the legacy vendor-wheelhouse contract explicitly."""
+
+        raise HarborCompileError(
+            "vendor dependency bundles are forbidden; use a hash-locked network install"
+        )
 
     def _write_solution(
         self,

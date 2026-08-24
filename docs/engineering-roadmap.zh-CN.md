@@ -134,7 +134,8 @@ src/nl2repobench/
 - `TaskManifest`：task ID/version、difficulty/category/tags、公开 instruction ref、运行约束、artifact refs；
 - `SourceLock`：upstream URL、完整 commit、submodules、license evidence、构建版本和 source hash；
 - `EnvironmentLock`：OS、Python、系统包、基础镜像 digest、build/runtime/test dependency locks；
-- `DependencyBundle`：离线 wheelhouse 或等价依赖闭包的 artifact ref、文件 hash 和生成记录；
+- `DependencyBundle`：Python build 阶段联网安装的 hash-locked requirements artifact ref；
+  Python verifier 不允许 wheelhouse vendor。Node/npm lane 另有独立 lock/cache contract；
 - `TestManifest`：冻结测试 bundle、命令、expected collection、test framework、test hash；
 - `MetricContract`：passed/failed/error/skipped/xfail/collection mismatch 的精确定义；
 - `ReviewRecord`：blind review、traceability review、reviewer、时间和结论；
@@ -330,7 +331,7 @@ nl2repo dataset diff
 - SQLite state/index repository；
 - content-addressed artifact store；
 - `PrivateArtifactResolver` reference implementation 和授权 fixture；
-- `EnvironmentLock`、`DependencyBundle` 和离线 wheelhouse builder；
+- `EnvironmentLock`、`DependencyBundle` 和 hash-locked requirements builder；
 - resolved `toolchain.lock`，包含 Harbor version/commit、task schema、agent adapter 和基础镜像 digest；
 - 104 题 legacy importer；
 - manifest 到 Harbor bundle 的 deterministic compiler；
