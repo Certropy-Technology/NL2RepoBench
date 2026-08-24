@@ -264,6 +264,7 @@ class TaskVerifierSpec(RecordModel):
     protocol: Literal["custom-json-v1"] = "custom-json-v1"
     bundle: ArtifactRef
     entrypoint: str = "run.py"
+    environment: dict[str, str] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def validate_private_entrypoint(self) -> TaskVerifierSpec:
@@ -277,6 +278,14 @@ class TaskVerifierSpec(RecordModel):
             raise ValueError("verifier.entrypoint must be a safe relative path")
         if self.bundle.visibility is not Visibility.PRIVATE:
             raise ValueError("verifier.bundle must be private")
+        forbidden = {"PATH", "PYTHONPATH", "LD_PRELOAD", "LD_LIBRARY_PATH"}
+        for name, value in self.environment.items():
+            if not re.fullmatch(r"[A-Z_][A-Z0-9_]*", name):
+                raise ValueError("verifier environment names must be uppercase shell names")
+            if name in forbidden:
+                raise ValueError(f"verifier environment cannot override {name}")
+            if len(value) > 512:
+                raise ValueError("verifier environment values are too long")
         return self
 
 

@@ -16,7 +16,7 @@
       "collected": 24,
       "passed": 24,
       "reward": 1.0,
-      "evidence": ".nl2repo/runs/oracle/package-remediation-dataclasses-json-20260824-v3/2026-08-24__01-47-36/harbor__aJnQX3y/verifier/grading.json",
+      "evidence": ".nl2repo/runs/oracle/dataclasses-json-custom-compiled-current-v4/2026-08-24__09-06-20/dataclasses-json__QQknj2V/verifier/grading.json",
       "remediations": [
         "install source directory without --require-hashes",
         "bypass Poetry dynamic versioning when verifier has no Git"
@@ -29,7 +29,7 @@
       "collected": 2898,
       "passed": 2898,
       "reward": 1.0,
-      "evidence": ".nl2repo/runs/oracle/package-remediation-fastjsonschema-20260824-v8/2026-08-24__03-09-41/harbor__pJJxh5q/verifier/grading.json",
+      "evidence": ".nl2repo/runs/oracle/fastjsonschema-custom-compiled-v11/2026-08-24__08-28-35/fastjsonschema__bsjTpPM/verifier/grading.json",
       "remediations": [
         "add Git to agent image for exact source fetch",
         "rename pytest request parameter reserved by pytest",
@@ -43,7 +43,7 @@
       "collected": 24,
       "passed": 24,
       "reward": 1.0,
-      "evidence": ".nl2repo/runs/oracle/sympy-custom-compiled-20260824-v3/2026-08-24__05-47-36/sympy__BHZ9rjU/verifier/grading.json",
+      "evidence": ".nl2repo/runs/oracle/sympy-custom-compiled-current-v4/2026-08-24__09-10-13/sympy__CabPc8R/verifier/grading.json",
       "remediations": [
         "replace placeholder Oracle with exact-revision facade solution",
         "copy wheelhouse and lockfiles into Docker build contexts",

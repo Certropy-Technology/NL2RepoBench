@@ -70,15 +70,21 @@ def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[st
         os.chown(candidate_home, 0, 0)
         os.chmod(candidate_home, 0o555)
 
+    dependency_root = os.environ.get("NL2REPO_CANDIDATE_DEPENDENCIES")
+    environment = [
+        f"HOME={home}",
+        f"TMPDIR={temporary}",
+        "PYTHONDONTWRITEBYTECODE=1",
+    ]
+    if dependency_root:
+        environment.append(f"PYTHONPATH={dependency_root}")
     command = [
         "runuser",
         "-u",
         "candidate",
         "--",
         "env",
-        f"HOME={home}",
-        f"TMPDIR={temporary}",
-        "PYTHONDONTWRITEBYTECODE=1",
+        *environment,
         "prlimit",
         "--as=536870912",
         "--cpu=60",
@@ -87,7 +93,6 @@ def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[st
         "--nproc=32",
         "--",
         "python",
-        "-I",
         "-B",
         "-m",
         "pip",

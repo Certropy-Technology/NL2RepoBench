@@ -11,7 +11,7 @@
       "reward": 0.0,
       "failure_class": "model",
       "failure_reason": "installation-failed",
-      "evidence": ".nl2repo/runs/controls/package-remediation-dataclasses-json-nop-20260824-v2"
+      "evidence": ".nl2repo/runs/controls/custom-current-dataclasses-json-nop-20260824"
     },
     {
       "task_id": "fastjsonschema",
@@ -21,7 +21,7 @@
       "reward": 0.0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "evidence": ".nl2repo/runs/controls/package-remediation-fastjsonschema-nop-20260824-v3"
+      "evidence": ".nl2repo/runs/controls/custom-current-fastjsonschema-nop-20260824"
     },
     {
       "task_id": "sympy",
@@ -31,7 +31,7 @@
       "reward": 0.0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "evidence": ".nl2repo/runs/controls/package-remediation-sympy-nop-20260824-v2"
+      "evidence": ".nl2repo/runs/controls/custom-current-sympy-nop-20260824"
     }
   ],
   "offline": {

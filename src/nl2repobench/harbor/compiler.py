@@ -255,6 +255,7 @@ RUN python -m pip install \
   --no-cache-dir \
   --no-index \
   --find-links /opt/candidate-dependencies \
+  --target /opt/candidate-dependencies/site \
   --require-hashes \
   -r /opt/candidate-dependencies/requirements.lock.txt
 
@@ -442,6 +443,7 @@ mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json
 rm -rf /tmp/candidate /tmp/candidate-site /tmp/candidate-build /tmp/trusted-results
+export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 mkdir -p /tmp/trusted-results
 chmod 0700 /tmp/trusted-results
 
@@ -562,11 +564,17 @@ exit 0
         expected = manifest.tests.expected_total
         entrypoint = shlex.quote(f"/tests/verifier/{manifest.verifier.entrypoint}")
         metric = shlex.quote(manifest.metric.contract_id)
+        environment = "\n".join(
+            f"export {name}={shlex.quote(value)}"
+            for name, value in sorted(manifest.verifier.environment.items())
+        )
         return f"""#!/usr/bin/env bash
 set -uo pipefail
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
 rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
+{environment}
+export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 python -I -m nl2repobench.verification.network_check \
   --output /logs/verifier/network.json
 if [[ "$?" -ne 0 ]]; then
@@ -598,9 +606,11 @@ python -I -m nl2repobench.verification.custom_verifier \
   --entrypoint {entrypoint} --expected {expected} \
   --junit /logs/verifier/junit.xml \
   --collection /logs/verifier/collection.json \
-  --timeout-sec {manifest.harbor.candidate_total_timeout_sec}
+  --timeout-sec {manifest.harbor.candidate_total_timeout_sec} \
+  > /logs/verifier/custom-stdout.txt \
+  2> /logs/verifier/custom-stderr.txt
 custom_exit=$?
-if [[ "$custom_exit" -ne 0 ]]; then
+if [[ "$custom_exit" -ne 0 && "$custom_exit" -ne 1 ]]; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} --metric-contract {metric} \
     --reason verifier-internal-error
@@ -609,7 +619,7 @@ fi
 python -I -m nl2repobench.verification.cli \
   --expected {expected} --metric-contract {metric} \
   --collection /logs/verifier/collection.json \
-  --junit /logs/verifier/junit.xml --pytest-exit-code 0
+  --junit /logs/verifier/junit.xml --pytest-exit-code "$custom_exit"
 exit 0
 """
 

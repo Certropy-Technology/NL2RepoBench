@@ -741,6 +741,13 @@
           "title": "Entrypoint",
           "type": "string"
         },
+        "environment": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Environment",
+          "type": "object"
+        },
         "protocol": {
           "const": "custom-json-v1",
           "default": "custom-json-v1",

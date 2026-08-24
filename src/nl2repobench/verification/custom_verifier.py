@@ -43,14 +43,17 @@ def run(entrypoint: Path, expected: int, junit: Path, collection: Path, timeout:
     except (OSError, subprocess.SubprocessError):
         return 70
     if completed.returncode != 0:
+        print(completed.stderr[-4000:], file=sys.stderr)
         return 70
     lines = [line for line in completed.stdout.splitlines() if line.strip()]
     if not lines or len(completed.stdout.encode("utf-8")) > MAX_REPORT_BYTES:
+        print("custom verifier produced no bounded report", file=sys.stderr)
         return 70
     try:
         report = json.loads(lines[-1])
         leaves = report["leaves"]
     except (KeyError, TypeError, json.JSONDecodeError):
+        print("custom verifier report is not valid JSON", file=sys.stderr)
         return 70
     if (
         report.get("schema_version") != "1.0"
@@ -65,6 +68,17 @@ def run(entrypoint: Path, expected: int, junit: Path, collection: Path, timeout:
         )
         or len({leaf["id"] for leaf in leaves}) != len(leaves)
     ):
+        unique = (
+            len({x.get("id") for x in leaves if isinstance(x, dict)})
+            if isinstance(leaves, list)
+            else "n/a"
+        )
+        print(
+            "custom verifier report failed schema validation: "
+            f"leaves={len(leaves) if isinstance(leaves, list) else 'non-list'} "
+            f"unique={unique}",
+            file=sys.stderr,
+        )
         return 70
     collection.write_text(
         json.dumps(
@@ -80,7 +94,7 @@ def run(entrypoint: Path, expected: int, junit: Path, collection: Path, timeout:
         encoding="utf-8",
     )
     _write_junit(junit, leaves)
-    return 0
+    return 1 if any(leaf["status"] == "failed" for leaf in leaves) else 0
 
 
 def main() -> None:

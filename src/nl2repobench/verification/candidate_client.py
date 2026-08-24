@@ -42,7 +42,7 @@ class CandidateProcessResult:
 
 
 def _command(arguments: list[str]) -> list[str]:
-    return [
+    command = [
         "runuser",
         "-u",
         "candidate",
@@ -60,6 +60,10 @@ def _command(arguments: list[str]) -> list[str]:
         CANDIDATE_SITE,
         *arguments,
     ]
+    dependency_root = os.environ.get("NL2REPO_CANDIDATE_DEPENDENCIES")
+    if dependency_root:
+        command.insert(6, f"NL2REPO_CANDIDATE_DEPENDENCIES={dependency_root}")
+    return command
 
 
 def _read_bounded(handle: BinaryIO) -> str:

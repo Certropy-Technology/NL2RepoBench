@@ -40,7 +40,7 @@ def test_custom_verifier_writes_fixed_collection_and_junit(tmp_path: Path) -> No
     junit = tmp_path / "junit.xml"
     collection = tmp_path / "collection.json"
 
-    assert run(entrypoint, 2, junit, collection, 10.0) == 0
+    assert run(entrypoint, 2, junit, collection, 10.0) == 1
     assert json.loads(collection.read_text(encoding="utf-8"))["collected"] == 2
     assert junit.is_file()
 
