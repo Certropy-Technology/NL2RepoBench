@@ -1,12 +1,12 @@
-# `prompt-toolkit` Harbor Bundle
+# `python-constraint` Harbor Bundle
 
 Generated deterministically from the canonical NL2RepoBench catalog.
 
 - Mode: production
-- Canonical manifest: `sha256:55d035fb0448215c6bbaa097b5c58de3484fc44da91536c9617690e6bea2c193`
+- Canonical manifest: `sha256:e101ae3c49089753a4ee896710c380562506a167c10d5281ea5cadfbe6de8485`
 - Toolchain lock: `sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff`
 - Metric: `fixed-test-pass-rate-v1`
-- Expected tests: `9`
+- Expected tests: `16`
 - Verifier: separate environment, no network
 
 Run with Harbor 0.21.0:

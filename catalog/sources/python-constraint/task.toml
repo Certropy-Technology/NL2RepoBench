@@ -1,12 +1,12 @@
 schema_version = "1.0"
 task_id = "python-constraint"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
 category = "constraint-solving"
-tags = ["python", "constraint-satisfaction", "backtracking", "finite-domains"]
+tags = ["python", "constraint-satisfaction", "backtracking", "scenario-adapter", "separate-verifier"]
 language = "python"
 
 [source]
@@ -20,47 +20,68 @@ submodules = []
 [environment]
 status = "known"
 python_version = "3.12.14"
-os_name = "debian-13"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["gcc=4:14.2.0-1", "libc6-dev:amd64=2.41-12+deb13u3"]
-build_command = "python -m pip install --no-index --no-build-isolation --no-deps -e ."
-network_mode = "public"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["build-essential"]
+network_mode = "no-network"
+build_command = "pip install --no-deps --no-build-isolation"
 
-# Exact baseline packages are recorded, but no hash-locked requirements artifact
-# exists. Keep dependency provenance unknown until that artifact is frozen.
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Build dependencies are hash-locked and installed during image build; agent and verifier runs have no network. Oracle restores a local digest-verified source archive and never fetches reference source."
+
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = [
-  "Cython==3.2.9",
-  "Pygments==2.21.0",
-  "coverage==7.15.4",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pep440==0.1.2",
-  "pluggy==1.6.0",
-  "poetry-core==2.4.1",
-  "py-cpuinfo==9.0.0",
-  "pytest==9.1.1",
-  "pytest-benchmark==5.2.3",
-  "pytest-cov==7.1.0",
-  "setuptools==84.0.0",
-]
+packages = ["poetry-core==2.4.1", "setuptools==84.0.0", "Cython==3.2.9"]
+lock_artifact = { digest = "sha256:8038048d90f59b9ee0d37831390154d39aa557536df542a977941ec842954022", size_bytes = 4289, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8038048d90f59b9ee0d37831390154d39aa557536df542a977941ec842954022", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 52
+expected_total = 16
 expected_total_source = "frozen-collection"
-commands = ["python -m pytest --no-cov --benchmark-json=/out/benchmark.json --junitxml=/out/junit.xml tests"]
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[harbor]
+description = "Build python-constraint2 from an empty workspace and satisfy a bounded child-side finite-domain constraint scenario suite."
+keywords = ["python", "constraint-solving", "backtracking", "stateful-adapter", "generators", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:bd469a7507cffe3007cef6ee8067736b947bb3ed5cde3444984e845e431a15a0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bd469a7507cffe3007cef6ee8067736b947bb3ed5cde3444984e845e431a15a0", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:652b067acd0267e78f7e364df9c29e79ecf58047df344c7c677daf8fa09dc2f1"
+size_bytes = 7628800
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:652b067acd0267e78f7e364df9c29e79ecf58047df344c7c677daf8fa09dc2f1"
+visibility = "private"
+
 [lifecycle]
-status = "blocked"
-reason = "The frozen upstream suite requires stateful in-process objects, callbacks, generators, doctests, and multiprocessing; the current JSON-only candidate_client cannot preserve those assertions across the separate-verifier boundary."
+status = "oracle-passed"
+owner = "repair/python-constraint"
+reason = "Official Harbor 0.21 Oracle passed 16/16 with valid=true and reward=1.0 after adding the verifier build toolchain; stub and forgery controls each collected 16/16 and scored 0.0."
+evidence = [{ digest = "sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a", size_bytes = 1337, media_type = "application/json", uri = "artifact://private/sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a", visibility = "private" }]

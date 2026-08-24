@@ -54,7 +54,7 @@ protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:27947fc192711c499e414201cd50a6beaad1e9847c3fa6954ea01a4be899a417", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:27947fc192711c499e414201cd50a6beaad1e9847c3fa6954ea01a4be899a417", visibility = "private" }
+bundle = { digest = "sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da", visibility = "private" }
 entrypoint = "run.py"
 environment = {}
 
@@ -91,5 +91,5 @@ status = "controls-passed"
 owner = "worker"
 reason = "Official Harbor Oracle passed 9/9 with reward 1.0; empty, stub, and forged-reward controls each scored 0.0 under the no-network separate verifier."
 evidence = [
-  { digest = "sha256:11f68c92a1f1e0803fa47a6a39fe320e75b1f877f27472afe62156bdef461577", size_bytes = 5036, media_type = "application/json", uri = "artifact://private/sha256:11f68c92a1f1e0803fa47a6a39fe320e75b1f877f27472afe62156bdef461577", visibility = "private" },
+  { digest = "sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32", size_bytes = 5847, media_type = "application/json", uri = "artifact://private/sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32", visibility = "private" },
 ]

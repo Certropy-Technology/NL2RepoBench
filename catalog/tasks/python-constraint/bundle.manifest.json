@@ -1,0 +1,205 @@
+{
+  "canonical_manifest_digest": "sha256:e101ae3c49089753a4ee896710c380562506a167c10d5281ea5cadfbe6de8485",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "1c62b2a1dc837b29076edbf30724ce93434787ec193c67ea43d3bef25193c1f7",
+      "size_bytes": 522
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "203e8a88917c86911672ff9c759fbab0c436c9565f42f063d8373a8eabb48a44",
+      "size_bytes": 698
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "c828b184961fc82476cac2396429348257af22d86c35aabfed686e278d1f17b9",
+      "size_bytes": 525
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "9eb6c929894d79624e56c60474d2cbba4b2c465e2deda72008615f72edc6e8bf",
+      "size_bytes": 417
+    },
+    {
+      "path": "environment/candidate-requirements.lock.txt",
+      "sha256": "8038048d90f59b9ee0d37831390154d39aa557536df542a977941ec842954022",
+      "size_bytes": 4289
+    },
+    {
+      "path": "environment/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "13210a39d17ac2c21e07d9bae65463a9cd65f8a9f76df6df827433647b055c9b",
+      "size_bytes": 4856
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "33ab7b22af7d3fdcaa79350fe9ad652ac01d2033c571981c36d3cf943a65d642",
+      "size_bytes": 452
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "c15171bf0b6e8271e099566d5acef4c322e2d2efa13dd1f92cb3370b5f4675ff",
+      "size_bytes": 7618560
+    },
+    {
+      "path": "task.toml",
+      "sha256": "90fd413d3be4753d8dd538ba34909cc323422d639ed93e5c7f3d5abd5eaf5def",
+      "size_bytes": 1265
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "6d0f9f1daad88a065fa5f5a7a5687c92b8e5356a6196c9a1b96d415ad7dad45a",
+      "size_bytes": 1020
+    },
+    {
+      "path": "tests/candidate-requirements.lock.txt",
+      "sha256": "8038048d90f59b9ee0d37831390154d39aa557536df542a977941ec842954022",
+      "size_bytes": 4289
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "2fc9b8598275f157e29997ff64999e5eb1163c62ff62ccade36ba5b4f2355116",
+      "size_bytes": 139
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/requirements.lock.txt",
+      "sha256": "1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb",
+      "size_bytes": 4194
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "721135849e44085202e137956b07c2b45a406e5461232c40b65106a94a33e135",
+      "size_bytes": 28008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "c243f17f6d83df713b74731a950dbcc6bbc550884a8130871094e7f3f59d5b2c",
+      "size_bytes": 387
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "8f0047ee52ac29dafb61fbf9a0894281f42359f9a0b6ae28c663eceab78b6101",
+      "size_bytes": 7485
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "684528089ccf130e32f889bc76c6693f4ca2e2a10e253b3f33171c5c38e99a31",
+      "size_bytes": 5017
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3483a52bae169b117dc538130fdc898bd023966d6b454ebadcd9a871d8d43ad1",
+      "size_bytes": 6147
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "7f90aa57e5582799eccd272d3dd27400e3860077197f8f3a65d86f44200bfeba",
+      "size_bytes": 3274
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5fd66c5c5be8bd3cb51d5699fc5d3c2042d13bbd18c81fa645aac2c9728d2a02",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "2c32688cb253a92e771069be68208c71cb408deab7b2fbaef1b3fd3002e1cda4",
+      "size_bytes": 2025
+    },
+    {
+      "path": "tests/verifier/adapter.py",
+      "sha256": "a330251811190038636a478205042c18752a177b1fdf6f1c829d082adac2c7d8",
+      "size_bytes": 11758
+    },
+    {
+      "path": "tests/verifier/run.py",
+      "sha256": "7c87f573d3a87ab2d57faacd7297584c450b222cdb4ea3823e6b2964577c75dd",
+      "size_bytes": 3700
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "python-constraint",
+  "task_version": "0.2.0",
+  "toolchain_lock_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+}

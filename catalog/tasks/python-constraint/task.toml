@@ -4,44 +4,41 @@ artifacts = [
 ]
 
 [task]
-name = "nl2repobench/prompt-toolkit"
+name = "nl2repobench/python-constraint"
 version = "0.2.0"
-description = "Build prompt_toolkit 3.0.53 from an empty workspace; grading uses deterministic headless document, buffer, completion, data-model, and key-binding behavior through a separate child adapter."
+description = "Build python-constraint2 from an empty workspace and satisfy a bounded child-side finite-domain constraint scenario suite."
 authors = [
     { name = "NL2RepoBench" },
 ]
 keywords = [
     "python",
-    "terminal",
-    "headless",
-    "buffer",
-    "completion",
-    "key-bindings",
+    "constraint-solving",
+    "backtracking",
+    "stateful-adapter",
+    "generators",
     "separate-verifier",
 ]
 
 [metadata]
-difficulty = "hard"
-category = "terminal"
+difficulty = "medium"
+category = "constraint-solving"
 tags = [
     "python",
-    "terminal",
-    "headless",
-    "buffer",
-    "completion",
-    "key-bindings",
+    "constraint-satisfaction",
+    "backtracking",
+    "scenario-adapter",
     "separate-verifier",
 ]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 9
-canonical_manifest_digest = "sha256:55d035fb0448215c6bbaa097b5c58de3484fc44da91536c9617690e6bea2c193"
+expected_test_count = 16
+canonical_manifest_digest = "sha256:e101ae3c49089753a4ee896710c380562506a167c10d5281ea5cadfbe6de8485"
 toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
 [agent]
 timeout_sec = 3600.0
 
 [verifier]
-timeout_sec = 480.0
+timeout_sec = 600.0
 environment_mode = "separate"
 network_mode = "no-network"
 

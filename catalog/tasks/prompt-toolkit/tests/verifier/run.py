@@ -9,10 +9,9 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
-
+from pathlib import Path
 
 ADAPTER = Path(__file__).with_name("adapter.py")
 SCHEMA_VERSION = "prompt-toolkit-headless-v1"
@@ -215,8 +214,7 @@ def invoke(operation: str) -> dict[str, object]:
         completed = subprocess.run(
             command,
             input=ADAPTER.read_bytes(),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             timeout=CHILD_TIMEOUT_SEC,
             check=False,
         )
