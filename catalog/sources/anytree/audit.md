@@ -1,20 +1,20 @@
 # `anytree` Static Authoring Audit
 
-Status: **blocked**. This directory contains a public declarative task source,
-public behavior specification, and bounded provenance/validation evidence. It
-contains no upstream test bytes copied as a verifier bundle, hidden tests,
-private command artifact, dependency cache, wheelhouse, Dockerfile, Harbor
-task, separate grader, Oracle solution, reward, secret, or shared catalog/index
-edit.
+Status: **controls-passed** for the bounded, Graphviz-free production contract.
+This file began as a static authoring audit; the remediation now materializes
+the private lock, verifier, Oracle bundle, Docker image definitions, controls,
+and generated Harbor task under their task-local/content-addressed locations.
+The historical source-only observations below remain useful provenance, but
+they do not override the current lifecycle or production evidence.
 
 ## Decision and Scope
 
 The exact source revision is coherent and the local tree, traversal, search,
-resolver, rendering, JSON/dictionary, and Mermaid behavior is a feasible
-candidate boundary. The candidate stays `blocked` because the source-only
-probes do not establish a final image, an offline dependency closure, a
-private adapted test bundle, a separate verifier, a frozen metric denominator,
-or Oracle/control gates.
+resolver, rendering, JSON/dictionary, and Mermaid behavior forms the bounded
+candidate boundary. The initial source-only audit was blocked by missing
+packaging and verifier evidence; remediation subsequently supplied those
+artifacts, froze a 19-leaf child-side contract, and passed the production
+Oracle and controls. The task does not claim full upstream pytest parity.
 
 The public task deliberately excludes Graphviz. The upstream package includes
 DOT generators, but `DotExporter.to_picture()` writes a temporary file and
@@ -211,9 +211,11 @@ python -m pytest -q -p no:cacheprovider -o addopts='' \
 148 passed in 0.74s
 ```
 
-This is a source baseline only. It is not an Oracle run, a final verifier
-result, or a frozen benchmark denominator. The task keeps
-`tests.expected_total_source = "unknown"` for that reason.
+This remains a source baseline only; it is not the production Oracle result.
+The remediation separately freezes a 19-leaf child-side contract in
+`tests.expected_total = 19` and records collection against that denominator
+in the Harbor evidence. The 148-item upstream baseline must not be substituted
+for the bounded production denominator.
 
 ## Deterministic Tree and Rendering Boundary
 
@@ -263,26 +265,17 @@ was executed. DOT names, DOT refdata, `UniqueDotExporter`, and the legacy
 Mermaid generation is retained because it only returns/writes deterministic
 text and does not invoke a renderer.
 
-## Exact Blockers and Reopen Conditions
+## Bounded Contract and Reopen Conditions
 
-Reopen this task only after all of the following are independently recorded:
-
-1. A final CPython/OS/base-image lock and a content-addressed offline closure
-   for the PDM build backend and selected pytest/test adapter.
-2. A deterministic policy for the SCM-derived version mismatch and an archive
-   build that does not rely on `.git`.
-3. A private, allowlisted adapted test/command bundle whose every leaf is
-   traceable to the public safe boundary and whose collection occurs in the
-   final verifier environment.
-4. A separate child-side verifier adapter for stateful Python nodes, mixins,
-   callbacks, custom attributes, file methods, and exception projections.
-5. Three valid Oracle runs, followed by empty, stub, forgery, Graphviz-offline,
-   and offline controls.
-6. A bidirectional test-to-spec review and a frozen structured denominator.
-
-No Docker, Harbor execution, private artifact materialization, hidden test,
-Oracle execution, negative control, shared-index mutation, or secret use was
-performed in this audit.
+The production task freezes 19 deterministic JSON scenarios covering the safe
+tree, traversal, path, rendering, and import/export surface. The separate
+verifier imports candidate code only in an unprivileged child process, and the
+Graphviz/DOT surface remains explicitly excluded because it requires the
+external `dot` executable. Reopen the task if the public instruction, source
+revision, dependency closure, verifier bundle, or frozen denominator changes;
+those changes require a new production compile and fresh Oracle/control
+evidence. Review, traceability review, and model pilot are publication-stage
+follow-ups outside this remediation goal.
 
 ## Validation Commands
 

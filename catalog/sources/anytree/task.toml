@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "anytree"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -9,13 +9,11 @@ category = "tree-data-structure"
 tags = [
   "python",
   "tree",
-  "nodes",
   "iterators",
   "rendering",
-  "import-export",
+  "json",
   "mermaid",
-  "repository-generation",
-  "pytest",
+  "scenario-adapter",
   "separate-verifier",
 ]
 language = "python"
@@ -25,53 +23,82 @@ status = "known"
 upstream_url = "https://github.com/c0fec0de/anytree"
 revision = "2e0a1b956172654d75aff93277ce3d883355e0bf"
 license_spdx = "Apache-2.0"
-# Unprefixed `git archive --format=tar HEAD`; three independent hashes matched.
 source_digest = "sha256:bc253cb8287fdbeae24cf78801f81024fcc4317541a6334419582378940b28ce"
 submodules = []
 
 [environment]
-# Source-only probes ran on CPython 3.12.11. No immutable task image or OS
-# lock is approved for this audit candidate.
-status = "unknown"
-python_version = ">=3.9.2,<4.0"
-os_name = "unknown"
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Build-time dependencies are installed from the private hash lock; agent and verifier runs are network-isolated. Oracle receives only the private digest-verified source archive."
+
 [dependencies]
-# `project.dependencies = []` was parsed from the locked pyproject. The
-# entries below are build/test observations, not an offline DependencyBundle.
-status = "unknown"
-installer = "uv"
+status = "known"
+installer = "pip"
 packages = [
-  "pdm-backend",
-  "pytest==8.3.5",
-  "test2ref==0.8.1",
-  "pytest-cov",
-  "coveralls",
-  "mypy",
-  "ruff",
-  "pre-commit",
-  "sphinx",
-  "sphinx-rtd-theme",
-  "sphinxemoji",
+  "annotated-doc==0.0.4",
+  "markdown-it-py==4.0.0",
+  "mdurl==0.1.2",
+  "pdm-backend==2.4.9",
+  "pygments==2.20.0",
+  "rich==15.0.0",
+  "setuptools==80.9.0",
+  "shellingham==1.5.4",
+  "wheel==0.45.1",
 ]
+lock_artifact = { digest = "sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", size_bytes = 922, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# Two source-only collect-only runs found 163 item node IDs. This is not a
-# final private-bundle denominator and therefore remains non-frozen.
-expected_total = 163
-expected_total_source = "unknown"
-# Provisional audit command. A production command must be a private,
-# allowlisted artifact collected in the final verifier environment.
-commands = [
-  "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m pytest --collect-only -q -p no:cacheprovider -o addopts='' tests",
-]
-protected_paths = ["tests", "tests/refdata"]
+expected_total = 19
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build anytree from an empty workspace and satisfy a bounded JSON scenario suite for its public tree, traversal, path, rendering, and import-export APIs."
+keywords = ["python", "tree", "iterators", "scenario-adapter", "json", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:dede9730f20ed93e4114a6425ce14f7b9443ac161d7d66fc4994287b70021395"
+size_bytes = 706560
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:dede9730f20ed93e4114a6425ce14f7b9443ac161d7d66fc4994287b70021395"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "repair/anytree"
+reason = "Production Harbor compile passed; Oracle was valid at 19/19 reward 1.0, nop was valid model-zero, and stub/forgery controls were valid at 0/19. Review and publication remain pending."
