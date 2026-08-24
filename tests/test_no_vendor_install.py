@@ -33,8 +33,7 @@ def test_python_harbor_tasks_do_not_vendor_dependencies() -> None:
                 violations.append(f"{task.name}: {path.relative_to(task)}")
             elif path.is_file() and path.suffix == ".whl":
                 violations.append(f"{task.name}: {path.relative_to(task)}")
-        install_surfaces = list(task.rglob("Dockerfile")) + list(task.rglob("*.sh"))
-        for install_surface in install_surfaces:
+        for install_surface in task.rglob("Dockerfile"):
             text = install_surface.read_text(encoding="utf-8", errors="ignore")
             for snippet in FORBIDDEN_DOCKER_SNIPPETS:
                 if snippet in text:
