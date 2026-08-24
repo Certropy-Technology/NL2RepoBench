@@ -287,9 +287,9 @@ pickling without changing equality or hash behavior.
 
 - Grading uses deterministic child-side scenarios for the base cache, FIFO,
   LRU, LFU, random-replacement, TTL, and TLRU policies. The release does not
-  export a separate `MRUCache` class; the MRU scenario is represented by an
-  explicit LRU access trace that observes which entry is most recently used
-  before each eviction. Injected clocks and deterministic `choice` callables
+  export a separate `MRUCache` class; the MRU scenario defines a small child-side
+  subclass of public `LRUCache` whose `popitem()` removes the most recently used
+  key, then checks that trace. Injected clocks and deterministic `choice` callables
   are used for all time and replacement assertions. Do not rely on sleeps or
   wall-clock timing.
 - Use deterministic ordering where the API promises it: keyword ordering in key

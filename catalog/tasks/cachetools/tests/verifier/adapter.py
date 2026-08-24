@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 import pickle
 import sys
@@ -148,6 +149,51 @@ def lru_mru_policy(_candidate_site: Path):
     _ = cache["a"]
     second = cache.popitem()
     cache["d"] = 40
+    third = cache.popitem()
+    return {
+        "remaining": sorted(cache.items()),
+        "victims": [list(first), list(second), list(third)],
+    }
+
+
+def mru_policy(_candidate_site: Path):
+    from cachetools import LRUCache
+
+    class MRUCache(LRUCache):
+        def __init__(self, maxsize):
+            super().__init__(maxsize)
+            self.order = collections.OrderedDict()
+
+        def __getitem__(self, key):
+            value = super().__getitem__(key)
+            self.order.move_to_end(key)
+            return value
+
+        def __setitem__(self, key, value):
+            super().__setitem__(key, value)
+            self.order[key] = None
+            self.order.move_to_end(key)
+
+        def __delitem__(self, key):
+            super().__delitem__(key)
+            del self.order[key]
+
+        def popitem(self):
+            try:
+                key = next(reversed(self.order))
+            except StopIteration:
+                raise KeyError("MRUCache is empty") from None
+            return key, self.pop(key)
+
+    cache = MRUCache(3)
+    cache.update(a=1, b=2, c=3)
+    _ = cache["a"]
+    first = cache.popitem()
+    cache["d"] = 4
+    _ = cache["c"]
+    second = cache.popitem()
+    cache["e"] = 5
+    _ = cache["b"]
     third = cache.popitem()
     return {
         "remaining": sorted(cache.items()),
@@ -514,6 +560,7 @@ OPERATIONS = {
     "fifo_policy": fifo_policy,
     "key_functions": key_functions,
     "lfu_policy": lfu_policy,
+    "mru_policy": mru_policy,
     "lru_mru_policy": lru_mru_policy,
     "missing_mapping": missing_mapping,
     "rr_policy": rr_policy,

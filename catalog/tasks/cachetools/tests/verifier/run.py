@@ -39,6 +39,11 @@ CASES = [
         {"remaining": [["d", 40]], "victims": [["b", 2], ["c", 3], ["a", 1]]},
     ),
     (
+        "mru-child-subclass-most-recent-eviction",
+        "mru_policy",
+        {"remaining": [["d", 4], ["e", 5]], "victims": [["a", 1], ["c", 3], ["b", 2]]},
+    ),
+    (
         "lfu-unique-frequency-evictions",
         "lfu_policy",
         {"after_first_eviction": ["a", "b", "d"], "final_items": [["a", 1], ["d", 4], ["e", 5]]},

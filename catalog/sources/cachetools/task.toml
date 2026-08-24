@@ -41,14 +41,14 @@ lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6
 
 [tests]
 framework = "pytest"
-expected_total = 17
+expected_total = 18
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:3dd59f8c036fd5414ddf49aa7d56158d8daadade8b7c44b194648adb0e41aa80", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3dd59f8c036fd5414ddf49aa7d56158d8daadade8b7c44b194648adb0e41aa80", visibility = "private" }
+bundle = { digest = "sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380", visibility = "private" }
 entrypoint = "run.py"
 environment = {}
 
@@ -83,4 +83,4 @@ visibility = "private"
 [lifecycle]
 status = "controls-passed"
 owner = "worker"
-reason = "Official Harbor Oracle passed 17/17 with reward 1.0; stub and forgery controls each collected 17/17 and scored 0.0 under the no-network separate verifier."
+reason = "Official Harbor Oracle passed 18/18 with reward 1.0; empty, stub, and forgery controls each scored 0.0 under the no-network separate verifier."
