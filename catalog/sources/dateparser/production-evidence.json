@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dateparser",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Resolve the package-index project links to one canonical upstream, freeze a full commit and license/archive evidence, then close locale/time-zone dependencies before authoring any runtime task.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The candidate audit could not establish a canonical upstream identity, complete revision, license/archive evidence, or deterministic source authority.",
+      "audit_sha256": "sha256:f03ce8a673ac61d06a9baa46a48cfb934047e3b5b8099c5e7766ad7e33df9275"
+    },
+    "commands": [
+      {
+        "command": "find catalog/sources/dateparser -maxdepth 3 -type f -printf '%P %s\\n'; uv --version; git status --short -- catalog/sources/dateparser catalog/tasks/dateparser",
+        "tool_version": "uv 0.12.3; Git checkout under audit",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/dateparser/evidence/descriptor-validation.log",
+          "sha256": "sha256:ad2525223fdb51736e22d37838503aca3fa7169bbbb44855618206e8d8f9ff30"
+        }
+      }
+    ]
+  }
+}

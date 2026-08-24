@@ -2,19 +2,20 @@
 
 **Status: blocked at discovery/source-freeze gates.**
 
-This is a task-local audit record, not a publishable task. The bounded lane did
-not establish the immutable upstream evidence required to create `task.toml` or
-an implementable public `instruction.md`. It therefore fails closed rather than
-turning a likely repository name, mutable branch, package release, installed
-wheel, or model recollection into a source lock.
+This is a task-local blocked audit record paired with a parseable declarative
+descriptor. The bounded lane did not establish the immutable upstream evidence
+required to create a runtime task or an implementable public instruction. It
+therefore fails closed rather than turning a likely repository name, mutable
+branch, package release, installed wheel, or model recollection into a source
+lock.
 
 ## Scope
 
-Only `catalog/tasks/dateparser/` is changed. This directory contains no copied
-upstream source, license bytes, official or hidden tests, test commands,
-dependency artifacts, source archives, Harbor/Docker assets, candidate adapter,
-Oracle, controls, generated manifest, legacy projection, or shared catalog or
-dataset edit.
+The source authority contains no copied upstream source, license bytes,
+official or hidden tests, dependency artifacts, source archives, Harbor/Docker
+assets, candidate adapter, Oracle, controls, generated manifest, or legacy
+projection. The blocked descriptor and hashed remediation evidence are the only
+durable additions; `catalog/tasks/dateparser/` remains absent.
 
 The repository name `scrapinghub/dateparser` is only the user-supplied likely
 lead in this lane. Its authority for the `dateparser` distribution, redirect or

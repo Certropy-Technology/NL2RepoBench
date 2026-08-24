@@ -1,0 +1,66 @@
+schema_version = "1.0"
+task_id = "feedparser"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "feed-parsing"
+tags = ["python", "rss", "atom", "rdf", "json-feed", "unicode", "parsing"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/kurtmckee/feedparser"
+revision = "a22c5521cbb109871f1a2318948581901bd47e26"
+license_spdx = "BSD-2-Clause"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "No immutable source archive, hash-locked dependency closure, or private verifier/Oracle bundle is present; runtime remains excluded and no source retrieval is permitted for agents."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["feedparser-sgmllib", "requests", "chardet"]
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "unknown"
+commands = ["not run: no frozen private test bundle or verifier exists"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate audit for a bounded local feed parsing contract; no production runtime is generated."
+keywords = ["python", "feed", "rss", "atom", "parsing", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "feedparser-remediation"
+reason = "Static audit and bounded remediation recorded the candidate revision and declared BSD-2-Clause license, but no detached archive digest, immutable image lock, hash-locked dependency closure, private adapted verifier/test bundle, or Oracle bundle is available. No catalog/tasks/feedparser runtime exists. Failure class: environment. Next step: freeze the detached archive and license bytes, build the approved dependency lock and child-side verifier, then rerun production compile and Harbor Oracle/controls."

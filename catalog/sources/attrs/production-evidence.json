@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/attrs -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/attrs-final-empty/2026-08-25__02-46-44/attrs__LAh4X4n/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/attrs-final-empty/2026-08-25__02-46-44/attrs__LAh4X4n/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/attrs -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/attrs-final-forgery/2026-08-25__01-51-50/attrs-forgery__NRFktXc/verifier/grading.json",
+        "sha256": "sha256:6c022150dfc7514e591922706ae06b5b5767ccec3de32298fde9ec0a0d8ee790"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/attrs-final-forgery/2026-08-25__01-51-50/attrs-forgery__NRFktXc/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from attrs Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/integration-attrs/2026-08-25__01-34-59/attrs__GBJGN6A/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/attrs -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/attrs-final-stub/2026-08-25__01-51-09/attrs-stub__StWgQZD/verifier/grading.json",
+        "sha256": "sha256:6c022150dfc7514e591922706ae06b5b5767ccec3de32298fde9ec0a0d8ee790"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/attrs-final-stub/2026-08-25__01-51-09/attrs-stub__StWgQZD/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/attrs -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/integration-attrs/2026-08-25__01-34-59/attrs__GBJGN6A/verifier/grading.json",
+      "sha256": "sha256:202b9c6fd94affa4dc8b61bf84096637dc9dc7248de9f0265975db9d8c816076"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/integration-attrs/2026-08-25__01-34-59/attrs__GBJGN6A/verifier/network.json",
+      "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "attrs",
+  "terminal_kind": "valid"
+}

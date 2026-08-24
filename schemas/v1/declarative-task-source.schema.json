@@ -998,7 +998,8 @@
           "default": null
         },
         "expected_total": {
-          "exclusiveMinimum": 0,
+          "default": 0,
+          "minimum": 0,
           "title": "Expected Total",
           "type": "integer"
         },
@@ -1055,9 +1056,6 @@
           "default": null
         }
       },
-      "required": [
-        "expected_total"
-      ],
       "title": "TestManifest",
       "type": "object",
       "x-nl2repobench-model": "TestManifest",

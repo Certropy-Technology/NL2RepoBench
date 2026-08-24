@@ -1,0 +1,14 @@
+command: uv run nl2repo task validate-source catalog/sources/feedparser
+{
+  "instruction": "catalog/sources/feedparser/instruction.md",
+  "source_digest": "sha256:074d138018283235b8da8bf332485e8709b836b66329629b0d23e9757de0589c",
+  "status": "blocked",
+  "task_id": "feedparser",
+  "version": "0.1.0"
+}
+command: git status --short -- catalog/sources/feedparser catalog/tasks/feedparser
+ M catalog/sources/feedparser/audit.md
+?? catalog/sources/feedparser/evidence/
+?? catalog/sources/feedparser/instruction.md
+?? catalog/sources/feedparser/production-evidence.json
+?? catalog/sources/feedparser/task.toml

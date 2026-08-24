@@ -178,8 +178,11 @@ class TestManifestV2(V2RecordModel):
 
     framework: Literal["node:test"] = "node:test"
     report_format: Literal["node-test-json-v1"] = "node-test-json-v1"
-    expected_total: Annotated[int, Field(gt=0)]
-    expected_total_source: Literal["frozen-collection"] = "frozen-collection"
+    # Blocked/excluded descriptors must be able to say that collection was
+    # never frozen. Production task validation separately requires a positive
+    # denominator and ``frozen-collection`` before a runtime can be valid.
+    expected_total: Annotated[int, Field(ge=0)]
+    expected_total_source: Literal["frozen-collection", "unknown"] = "unknown"
     commands_artifact: ArtifactRef | None = None
     test_bundle: ArtifactRef | None = None
 

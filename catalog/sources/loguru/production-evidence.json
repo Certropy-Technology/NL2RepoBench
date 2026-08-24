@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "loguru",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Resolve and detach the intended upstream commit, hash its archive and license, then freeze dependencies, collection, verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "Immutable upstream revision, archive/license hashes, and source authority were not established by the bounded audit.",
+      "candidate_url": "https://github.com/Delgan/loguru",
+      "audit_sha256": "sha256:83fadb7b324b6c3a523123ebddacdd693341239907b6aa6cfd8dd8f9bc5e71a5"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/loguru",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/loguru/evidence/descriptor-validation.log",
+          "sha256": "sha256:27711ec8add6d12a8bb7b699eed7c1ac96b51dca78f9877d610f1104677217f7"
+        }
+      }
+    ]
+  }
+}

@@ -11,10 +11,11 @@ memory.
 
 ## Scope and decision
 
-Only `catalog/tasks/loguru/` is changed. This directory contains no upstream or
-hidden test bytes, private commands, source archive, dependency artifacts,
-Harbor files, Docker files, verifier, candidate adapter, Oracle implementation,
-or shared catalog/dataset edit.
+The source authority contains no upstream or hidden test bytes, private
+commands, source archive, dependency artifacts, Harbor files, Docker files,
+verifier, candidate adapter, Oracle implementation, or shared catalog/dataset
+edit. The blocked descriptor and remediation evidence are task-local; the
+`catalog/tasks/loguru/` runtime directory remains absent.
 
 The candidate cannot advance past discovery until all evidence below is
 collected from one detached, clean checkout and retained with exact commands and
@@ -128,3 +129,24 @@ Reopen this candidate only when a task-local follow-up can record:
 
 Until then, this audit is a blocker record only and must not be compiled into a
 Harbor task or included in a scored dataset.
+
+## Remediation record (2026-08-25)
+
+A bounded descriptor remediation was attempted with Python 3.14.7 and uv
+0.12.3. The only retained inventory identity is the historical
+`source_tree_sha1` `5262c831f5547977ffbfccfb8f07a05cb1aa9728`; it is not a Git
+revision and cannot freeze source bytes. The audit itself hashes to
+`sha256:bc318c58a450b1c646aff16603b4ec391faa9d9b5387b8354434dcae168ad96f`
+(6,826 bytes). `reports/harbor-production-input-v1.json` records the same
+source-tree inventory key but provides no revision, license, archive, lock, or
+verifier artifact. The bounded commands `python3 --version` (exit 0),
+`uv --version` (exit 0), `sha256sum catalog/sources/loguru/audit.md` (exit 0),
+and `test ! -e catalog/tasks/loguru` (exit 0) were run; no source checkout,
+Oracle, collection, or control run was claimed. `uv run nl2repo task
+validate-source catalog/sources/loguru` exits 0 after descriptor creation and
+`uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated`
+exits 0 with no loguru error. The task remains **blocked** with failure class
+`source`; next step is to resolve and verify a real 40-hex upstream commit,
+archive/license hashes, then reopen dependency, collection, verifier, Oracle,
+and control gates. The zero-valued revision/digest fields in the descriptor are
+schema placeholders only and must never be treated as provenance.

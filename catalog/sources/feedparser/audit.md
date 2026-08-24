@@ -37,3 +37,23 @@ loopback mock inside the verifier.
 
 This record remains a candidate audit until all blockers are independently
 verified. It must not be counted as a published Harbor task.
+
+## Remediation record (2026-08-25)
+
+A declarative blocked descriptor was added after reviewing the candidate audit.
+The immutable revision and declared BSD-2-Clause license are recorded as
+provisional provenance, but the audit did not contain a detached Git archive
+hash or license-byte hash. The remediation therefore does not promote
+`source.status` to `known` and does not claim source-freeze completion.
+
+The dependency names are observations from the audit, not an approved lock:
+`feedparser-sgmllib`, `requests`, and optional `chardet`. No private test
+bundle, child-side verifier, Oracle source bundle, or Harbor runtime exists.
+The runtime directory `catalog/tasks/feedparser/` is intentionally absent.
+
+The executed remediation commands and outcomes are recorded in
+`evidence/remediation.log`; no Oracle, control, or source archive command was
+represented as successful. The sole blocker is `environment`, because the
+reproducible image/dependency/verifier closure is not available. Reopen by
+freezing the detached source archive and license bytes, then materializing the
+hash-locked build closure, separate verifier, Oracle bundle, and controls.

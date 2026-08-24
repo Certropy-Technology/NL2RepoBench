@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/anytree -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/anytree-final-empty/2026-08-25__02-46-11/anytree__oXrXgst/verifier/grading.json",
+        "sha256": "sha256:79087c3bf73d1970c6ca82aadcafab24c6699e3d560b1f9527e5b0452f719164"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/anytree-final-empty/2026-08-25__02-46-11/anytree__oXrXgst/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/anytree -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/anytree-final-forgery/2026-08-25__02-07-49/anytree-forgery__QDxzkQk/verifier/grading.json",
+        "sha256": "sha256:0487a4846992321513b1480728ebcd6279efb0fc3a1911b80827c060d671d978"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/anytree-final-forgery/2026-08-25__02-07-49/anytree-forgery__QDxzkQk/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from anytree Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/anytree-final-independent/2026-08-25__02-06-38/anytree__Sb92fzm/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/anytree -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/anytree-final-stub/2026-08-25__02-07-14/anytree-stub__RFEjg9X/verifier/grading.json",
+        "sha256": "sha256:0487a4846992321513b1480728ebcd6279efb0fc3a1911b80827c060d671d978"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/anytree-final-stub/2026-08-25__02-07-14/anytree-stub__RFEjg9X/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/anytree -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/anytree-final-independent/2026-08-25__02-06-38/anytree__Sb92fzm/verifier/grading.json",
+      "sha256": "sha256:a72030a122196207fa6ad6fa8a692d713a20e96c71475bc95cae4b298c3eb0bb"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/anytree-final-independent/2026-08-25__02-06-38/anytree__Sb92fzm/verifier/network.json",
+      "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "anytree",
+  "terminal_kind": "valid"
+}

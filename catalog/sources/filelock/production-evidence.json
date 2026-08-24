@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/filelock -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/filelock-final-empty/2026-08-25__02-47-51/filelock__Eejwf6T/verifier/grading.json",
+        "sha256": "sha256:2d286e6fd41c4a3ab01620295274648cbc95e9b9497b2878dbaf99a3f9e5cdcb"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/filelock-final-empty/2026-08-25__02-47-51/filelock__Eejwf6T/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/filelock -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/filelock-final-forgery/2026-08-25__01-53-07/filelock-forgery__BQyFygm/verifier/grading.json",
+        "sha256": "sha256:7dc0f0ed3c471bcda44e37ca0b8856f0f4ced4083ee4957b87b19d6622792b1d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/filelock-final-forgery/2026-08-25__01-53-07/filelock-forgery__BQyFygm/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from filelock Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/integration-filelock/2026-08-25__01-35-41/filelock__qsYZLmv/verifier/network.json",
+        "sha256": "sha256:8432b3f47745bc8c638ff72824ec305aaaf028383924c5131661a031835deab3"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/filelock -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/filelock-final-stub/2026-08-25__01-52-30/filelock-stub__6CBiSSN/verifier/grading.json",
+        "sha256": "sha256:7dc0f0ed3c471bcda44e37ca0b8856f0f4ced4083ee4957b87b19d6622792b1d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/filelock-final-stub/2026-08-25__01-52-30/filelock-stub__6CBiSSN/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/filelock -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/integration-filelock/2026-08-25__01-35-41/filelock__qsYZLmv/verifier/grading.json",
+      "sha256": "sha256:a8d23fc30dab68139bd582d6221466632f1fa81e4b545ff27dd18499984982e3"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/integration-filelock/2026-08-25__01-35-41/filelock__qsYZLmv/verifier/network.json",
+      "sha256": "sha256:8432b3f47745bc8c638ff72824ec305aaaf028383924c5131661a031835deab3"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "filelock",
+  "terminal_kind": "valid"
+}

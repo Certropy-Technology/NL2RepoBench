@@ -1,0 +1,12 @@
+command: uv run nl2repo task validate-source catalog/sources/loguru
+{
+  "instruction": "catalog/sources/loguru/audit.md",
+  "source_digest": "sha256:88e1551a3e5a1296b9e5fc164a0d9a980d59a7dadb46e1e95cda539cc5d7449c",
+  "status": "blocked",
+  "task_id": "loguru",
+  "version": "0.1.0"
+}
+command: git status --short -- catalog/sources/loguru catalog/tasks/loguru
+ M catalog/sources/loguru/audit.md
+?? catalog/sources/loguru/production-evidence.json
+?? catalog/sources/loguru/task.toml

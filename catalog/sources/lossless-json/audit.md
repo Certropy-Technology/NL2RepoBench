@@ -1,17 +1,18 @@
 # lossless-json candidate audit
 
-Status: `blocked` / audit-only. This record does not contain a task manifest,
-Harbor bundle, hidden tests, Oracle bytes, or npm cache.
+Status: `blocked`. The parseable source descriptor and hashed remediation
+evidence now live beside this audit. No Harbor bundle, hidden tests, Oracle
+bytes, or complete private npm cache exists, so no runtime task is generated.
 
 ## Source candidate
 
 - Repository: `https://github.com/josdejong/lossless-json`
 - Candidate revision: `7e89e3b789617e97e370dc8d923a124d6407a463`
-- License: MIT, to be re-hashed from the detached source archive during
-  `freeze-source`.
+- License: MIT, root file `LICENSE.md`, SHA-256
+  `sha256:c5075e9ebeac2efabaddeb7ff8f215ef180f76da7837a79e3107868271693114`.
 - The selected revision has a committed npm lockfile and zero declared runtime
   dependencies according to the discovery audit. Archive and license byte
-  digests remain unrecorded in this checkout.
+  digests are recorded in `blocked.md` and `production-evidence.json`.
 
 ## Public scope proposal
 
@@ -46,5 +47,6 @@ over the JSON request/response protocol.
 4. Adapt the JSON-safe scope to a private structured `node:test` bundle.
 5. Freeze collection and run Oracle three times plus all negative controls.
 
-Until these gates pass, this is evidence for candidate discovery only and must
-not be counted as a published Harbor task.
+Until these gates pass, this source remains blocked and must not be counted as
+a published Harbor task. The exact failed offline-install command and output
+are preserved under `evidence/remediation.log`.

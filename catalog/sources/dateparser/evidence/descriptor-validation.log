@@ -1,0 +1,11 @@
+command: uv run nl2repo task validate-source catalog/sources/dateparser
+{
+  "instruction": "catalog/sources/dateparser/audit.md",
+  "source_digest": "sha256:a9226fb033afbd85ee4315dcec8a08786e1095c28dd9ea1d4ef89b7ea3ffc3b6",
+  "status": "blocked",
+  "task_id": "dateparser",
+  "version": "0.1.0"
+}
+command: git status --short -- catalog/sources/dateparser catalog/tasks/dateparser
+?? catalog/sources/dateparser/production-evidence.json
+?? catalog/sources/dateparser/task.toml

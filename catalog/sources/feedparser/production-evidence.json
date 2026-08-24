@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "feedparser",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze the detached archive and license bytes, build the approved dependency lock and child-side verifier, then rerun production compile and Harbor Oracle/controls.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The candidate revision and declared license are recorded, but the detached archive digest and immutable license bytes are not available.",
+      "revision": "a22c5521cbb109871f1a2318948581901bd47e26",
+      "license_spdx": "BSD-2-Clause"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/feedparser",
+        "tool_version": "repository authoring toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/feedparser/evidence/descriptor-validation.log",
+          "sha256": "sha256:f3e4cd74b86ba6e4f1f18d6d6425b486f24826dd3526887d5568f54051073ea7"
+        }
+      }
+    ]
+  }
+}

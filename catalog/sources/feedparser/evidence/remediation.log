@@ -1,0 +1,9 @@
+feedparser remediation probe (2026-08-25)
+command: uv run nl2repo harbor compile catalog/sources/feedparser --output /tmp/feedparser-task --artifact-root .nl2repo/artifacts --toolchain toolchain.lock.toml --allow-private
+result: not-run; source descriptor was created only after static audit review and no private lock, verifier bundle, or Oracle bundle was available.
+command: git archive --format=tar a22c5521cbb109871f1a2318948581901bd47e26
+result: not-run in this remediation checkout; audit evidence did not include detached source bytes or an archive digest.
+command: uv run --frozen --project harbor-runner harbor run -p catalog/tasks/feedparser -a oracle
+result: not-run; catalog/tasks/feedparser was absent and no Oracle bundle existed.
+command: uv run nl2repo harbor prepare-control catalog/tasks/feedparser stub
+result: not-run; no production runtime was generated.

@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/cachetools -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/cachetools-final-empty/2026-08-25__02-47-18/cachetools__FMygXAM/verifier/grading.json",
+        "sha256": "sha256:1452e1c4bb23a5cb6c378bd6778e32d4cc63bb5db7489e1f5f2b4a9b97694e57"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/cachetools-final-empty/2026-08-25__02-47-18/cachetools__FMygXAM/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/cachetools -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/cachetools-18-forgery/2026-08-25__01-43-50/cachetools-forgery__TPKyTj7/verifier/grading.json",
+        "sha256": "sha256:ab540603a1f774b4d6cc0e4376a794305d757dcd1bc739213674053846001e41"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/cachetools-18-forgery/2026-08-25__01-43-50/cachetools-forgery__TPKyTj7/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from cachetools Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/cachetools-18-independent/2026-08-25__01-42-12/cachetools__kfoNnN4/verifier/network.json",
+        "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/cachetools -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/cachetools-18-stub/2026-08-25__01-43-10/cachetools-stub__Z3aHqNB/verifier/grading.json",
+        "sha256": "sha256:ab540603a1f774b4d6cc0e4376a794305d757dcd1bc739213674053846001e41"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/cachetools-18-stub/2026-08-25__01-43-10/cachetools-stub__Z3aHqNB/verifier/network.json",
+        "sha256": "sha256:4bc27d6640c5f422c799d757b0e190108a5a0c336366c0ec27d0416c9e261c7e"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/cachetools -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/cachetools-18-independent/2026-08-25__01-42-12/cachetools__kfoNnN4/verifier/grading.json",
+      "sha256": "sha256:3e62fc16d4143e6d444eeedd8eaaebc67f48e0d9982ab1a12b94e6433e2215e2"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/cachetools-18-independent/2026-08-25__01-42-12/cachetools__kfoNnN4/verifier/network.json",
+      "sha256": "sha256:3d7683086f1d235ecd77bc921cb80391d217c3aecc59861bfa9d25494c9b9d56"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "cachetools",
+  "terminal_kind": "valid"
+}

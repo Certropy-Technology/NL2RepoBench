@@ -962,13 +962,16 @@
           "default": null
         },
         "expected_total": {
-          "exclusiveMinimum": 0,
+          "minimum": 0,
           "title": "Expected Total",
           "type": "integer"
         },
         "expected_total_source": {
-          "const": "frozen-collection",
-          "default": "frozen-collection",
+          "default": "unknown",
+          "enum": [
+            "frozen-collection",
+            "unknown"
+          ],
           "title": "Expected Total Source",
           "type": "string"
         },
