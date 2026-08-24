@@ -1,0 +1,84 @@
+schema_version = "1.0"
+task_id = "textual"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = ["python", "tui", "text-processing", "geometry", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Textualize/textual"
+revision = "06dbeef4bb70fb718236aa418ed658ef4667a126"
+license_spdx = "MIT"
+source_digest = "sha256:11b33d38322628be2107dab33facd4532773e9368d4d699069c4dfed712c878e"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+build_command = "python -m pip install ."
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Hash-locked Python dependencies are installed during Docker build; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["linkify-it-py==2.1.0", "markdown-it-py==4.2.0", "mdit-py-plugins==0.6.1", "mdurl==0.1.2", "platformdirs==4.11.3", "poetry-core==2.2.1", "pygments==2.21.0", "rich==15.0.0", "typing-extensions==4.16.0", "uc-micro-py==2.0.0"]
+lock_artifact = { digest = "sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09", size_bytes = 3011, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["python -I -m nl2repobench.verification.custom_verifier --entrypoint /tests/verifier/run.py --expected 24 --junit /logs/verifier/junit.xml --collection /logs/verifier/collection.json --timeout-sec 300"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the deterministic text, color, geometry, markup, and validation core of Textual from an empty workspace."
+keywords = ["python", "tui", "text-processing", "geometry", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-gpt56-restart-20260824-r4"
+reason = "Oracle and empty/stub/forgery/timeout/offline controls passed; blind review and Harbor model run remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:94c2c8b486648ea11e4699292c18384717e509ae87481a51d81d7103d118d7f1"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:94c2c8b486648ea11e4699292c18384717e509ae87481a51d81d7103d118d7f1"
+visibility = "private"
