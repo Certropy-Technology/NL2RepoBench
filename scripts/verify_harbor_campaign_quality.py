@@ -92,16 +92,20 @@ def _schema_snapshot(root: Path) -> dict[str, Any]:
                 "passed": not mismatches,
                 "mismatches": mismatches,
             }
-    return results
+    return {"passed": all(result.get("passed") is True for result in results.values()), **results}
 
 
 def _gitignore_check(root: Path) -> dict[str, Any]:
     ignored: list[str] = []
-    for path in sorted((root / "catalog/tasks").rglob("*")):
+    tracked = subprocess.check_output(
+        ["git", "ls-files", "catalog/tasks"], cwd=root, text=True
+    ).splitlines()
+    for relative in tracked:
+        path = root / relative
         if not path.is_file() or path.name == ".gitignore":
             continue
         result = subprocess.run(
-            ["git", "check-ignore", "-q", str(path.relative_to(root))],
+            ["git", "check-ignore", "--no-index", "-q", relative],
             cwd=root,
             check=False,
         )
