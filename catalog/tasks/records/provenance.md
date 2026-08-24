@@ -1,9 +1,79 @@
 # Records Provenance Audit
 
-Status: `packaged`; Oracle and control runs are intentionally pending the parent
-orchestrator. This task-local package contains the public specification and
-Harbor scripts only. It does not contain hidden test bytes, a copied test
-archive, or a generated run artifact.
+Status: `oracle-passed`. This task-local package contains the public
+specification and Harbor scripts only. It does not contain hidden test bytes,
+wheels, a copied source archive, or a generated run artifact; the private
+assets are referenced by content digest into the shared artifact store at
+`.nl2repo/artifacts/`.
+
+## Publication Artifacts
+
+The production Harbor task is the compiler output, not the `harbor/**` tree in
+this directory. Three private bundles were built and registered into the shared
+content-addressed store:
+
+| Bundle | Digest | Bytes | Tar root |
+| --- | --- | ---: | --- |
+| `dependencies.artifact` | `sha256:8f9b3941b17e2432ac7f5e72f327fc851b1f37c8bb78e9fe539cffe84316b733` | 9,799,680 | 10 wheels + `requirements.lock.txt` |
+| `verifier.bundle` | `sha256:93936ab95cc75c76050b09b66f5c660189aa637c7a02287a64326da9ee6d5844` | 20,480 | `run.py` |
+| `oracle_bundle` | `sha256:fd6f422a6d1608561be3188189f5749e9d7bd14ce4837861ec42b48e43bd00de` | 61,440 | `solve.sh` (0755) + `source.tar` |
+
+The dependency wheelhouse pins every distribution with a `--hash=sha256:` line
+and keeps every wheel at the tar root, because the candidate install runs
+`pip install --target ... --no-deps --no-build-isolation`. `setuptools==72.1.0`
+and `wheel==0.43.0` are included as the build backend for the candidate's
+`setup.py`; the remaining pins reproduce the legacy image runtime closure
+(`docopt`, `et_xmlfile`, `greenlet`, `openpyxl`, `psycopg2-binary`,
+`SQLAlchemy`, `tablib`, `typing_extensions`).
+
+### Verifier Protocol
+
+`[verifier] protocol = "custom-json-v1"`, `entrypoint = "run.py"`. This replaces
+`tests.commands_artifact` entirely. `run.py` is root/trusted and never imports
+candidate code: each of the 31 leaves runs an adapter in an unprivileged child
+(`runuser -u candidate`, `python -I`) that speaks a one-shot JSON
+request/response contract over pipes. Because `python -I` ignores `PYTHONPATH`,
+the adapter inserts `/tmp/candidate-site` and
+`/opt/candidate-dependencies/site` on `sys.path` explicitly. The trusted parent
+prints exactly one line of JSON with 31 unique leaf ids.
+
+### Denominator: Preserved, Not Rescoped
+
+The frozen denominator stays `31` with
+`expected_total_source = "frozen-collection"`. No rescope was needed: the 31
+leaves map one-for-one onto the frozen upstream collection.
+
+| Upstream node group | Leaves |
+| --- | ---: |
+| `tests/test_records.py::TestRecordCollection` | 21 |
+| `tests/test_records.py::TestRecord` | 2 |
+| `tests/test_105.py::test_issue105[sqlite_memory]` | 1 |
+| `tests/test_69.py::test_issue69[sqlite_memory]` | 1 |
+| `tests/test_transactions.py` (`sqlite_memory` param) | 6 |
+
+The `db` fixture is parametrized with `sqlite:///:memory:` only (the `psql` and
+`sqlite_file` params are commented out upstream), and the adapter reproduces
+the `db` + `foo_table` fixture pair including its `DROP TABLE` teardown. The
+slice therefore stays offline with sqlite only and needs no external database
+service. The `transaction_failing` leaf asserts the frozen v0.6.0 behaviour in
+which `Database.transaction` rolls back and suppresses the raised exception.
+
+### Oracle Solution Is Local
+
+`solve.sh` in the Oracle bundle performs no `git fetch`. The agent image is
+`no-network`, and fetching upstream would also leak the reference
+implementation, so the frozen tree travels inside the private bundle and is
+unpacked from `/solution/source.tar` after a `sha256sum --check --strict`
+against `a052449f71402b8e53d0121e08a79d2c6a10e65cbc43cdfdb715ff077a8b6e12`.
+That archive is `git archive HEAD` minus `.git`, `.github` and `tests`; it
+retains `README.rst` and `HISTORY.rst` because upstream `setup.py` reads both
+at build time. `solve.sh` asserts `/workspace/tests` is absent so the
+denominator is never shipped to the agent.
+
+The legacy `harbor/solution/solve.sh` in this directory still pins and verifies
+an upstream fetch. It is unused by the production compile and is retained only
+as the historical legacy asset; `lint-network` reports
+`oracle-requires-host-authorization` for it, which is a warning, not an error.
 
 ## Legacy And Verifier Inputs
 
@@ -116,10 +186,59 @@ remain byte-identical to the source lock. This setup-only difference does not
 change the tested API, but the parent Oracle gate should confirm that the
 pinned upstream checkout installs and collects 31 tests before promotion.
 
-## Recommendation
+The upstream v0.6.0 source lock was re-fetched for this campaign and
+`git archive --format=tar HEAD | sha256sum` reproduced
+`4e0a1b23d7d38f96182d2be29d915fa45165fddd8ec14f193acb5304a57b0e04`, matching
+`[source].source_digest` exactly. The setup-only difference recorded above is
+moot for the production verifier, which installs the candidate rather than the
+image copy.
 
-Keep lifecycle at `packaged` pending three independent parent Oracle runs with
-`valid=true`, stable collection `31`, and reward at least `0.80`, followed by
-empty/stub/forgery/offline controls. If the upstream v0.6.0 Oracle install or
-collection differs from the image evidence, classify the task as an environment
-or verifier blocker rather than changing the denominator or source pin.
+A separate check confirmed the legacy verifier image leaks no reference
+implementation: it carries a dangling `records.egg-link` and an
+`easy-install.pth` pointing at `/records`, but `/records` does not exist in the
+image, so `import records` fails there until the candidate is installed.
+
+## Oracle And Control Evidence
+
+Commands, in order:
+
+```bash
+uv run nl2repo harbor compile catalog/tasks/records --toolchain toolchain.lock.toml \
+  --output /tmp/records-cmp --artifact-root .nl2repo/artifacts --allow-private
+env PYTHONPATH=src uv run --frozen --project harbor-runner \
+  python scripts/harbor_safe_entry.py run -p /tmp/records-cmp/records -a oracle \
+  --jobs-dir "$PWD/.nl2repo/runs/oracle/records-cmp"
+uv run nl2repo harbor prepare-control /tmp/records-cmp/records stub \
+  --output /tmp/records-ctl --toolchain toolchain.lock.toml
+uv run nl2repo harbor prepare-control /tmp/records-cmp/records forgery \
+  --output /tmp/records-ctl --toolchain toolchain.lock.toml
+```
+
+The compile succeeded without `--allow-incomplete`;
+`TaskManifest.publication_gaps()` returns `()`.
+
+| Run | valid | collected | passed | reward | failure_class | Evidence |
+| --- | --- | ---: | ---: | ---: | --- | --- |
+| Oracle | `true` | 31 | 31 | `1.0` | none | `.nl2repo/runs/oracle/records-cmp/2026-08-24__17-34-31/records__3Q9pomu/verifier/grading.json` |
+| stub | `true` | 31 | 0 | `0.0` | none | `.nl2repo/runs/oracle/records-control-stub/` |
+| forgery | `true` | 31 | 0 | `0.0` | none | `.nl2repo/runs/oracle/records-control-forgery/` |
+| empty | `true` | 0 | 0 | `0.0` | `model` | `.nl2repo/runs/oracle/records-control-empty/` |
+
+The forgery control writes `/logs/verifier/reward.json`,
+`/logs/verifier/grading.json`, `/workspace/reward.json` and attempts to
+overwrite `/tests/verifier/run.py` from the agent phase. It scored `0.0`: the
+verifier writes its own reward inside its own container, so agent-side files
+cannot affect grading. The empty control (compiled bundle with `solve.sh`
+reduced to clearing `/workspace`) scored `0.0` with `failure_class=model`.
+
+Offline evidence for the same Oracle trial
+(`verifier/network.json`): `public_network_available: false`, with
+`pypi.org:443` and `1.1.1.1:443` both unreachable.
+`uv run nl2repo task lint-network` exits 0 with no errors; the only finding for
+this task is the expected `oracle-requires-host-authorization` warning.
+
+## Remaining Work
+
+Blind review and spec traceability review are still outstanding, so the task is
+`oracle-passed` rather than `published`. Cross-run Oracle stability was not
+measured; the current Package campaign contract requires one passing run.

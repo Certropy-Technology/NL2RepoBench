@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "autojump"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -27,30 +27,48 @@ system_packages = ["ca-certificates", "git"]
 build_command = "apt-get install --no-install-recommends ca-certificates git"
 network_mode = "no-network"
 
-# The immutable verifier image carries the legacy pytest and mock runtime.
-# A standalone hash-locked wheelhouse is not part of this task-local package.
-
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+# Verifier-side runtime for the frozen upstream fixture, resolved offline from a
+# hash-locked wheelhouse at Docker build time. setuptools and wheel are required
+# because the candidate install runs pip with --no-build-isolation.
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = ["pytest==8.4.1", "mock==5.2.0"]
+packages = [
+  "iniconfig==2.3.0",
+  "mock==5.2.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==8.4.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+artifact = { digest = "sha256:c7d188e13c3cc9b83093dad2458b9efe9b7ed17e48c988b417177f7e1be0f53d", size_bytes = 2959360, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c7d188e13c3cc9b83093dad2458b9efe9b7ed17e48c988b417177f7e1be0f53d", visibility = "private" }
 
+# The frozen upstream fixture collects 32 items at the pinned revision: 23 scored
+# nodes, 4 xfail nodes and 5 Python-2-only skipif nodes. Only the 23 scored nodes
+# form the denominator, so platform-detection changes cannot move it.
 [tests]
 framework = "pytest"
 expected_total = 23
 expected_total_source = "frozen-collection"
-commands = ["python install.py", "pytest --continue-on-collection-errors tests"]
-protected_paths = ["tests"]
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/fixture/tests", "/tests/verifier/scored-nodes.json"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:7e1cabf2ad9afb7feaffb4a1f27da38c3fa26e90b054bfd40ce9d381b0def5e6", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:7e1cabf2ad9afb7feaffb4a1f27da38c3fa26e90b054bfd40ce9d381b0def5e6", visibility = "private" }
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -69,5 +87,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-reason = "Immutable verifier image, upstream source lock, GPL-3.0-or-later license evidence, frozen collection, and image-backed Harbor assets are recorded; Oracle and controls remain pending parent orchestration."
+status = "oracle-passed"
+reason = "Generic private-bundle compiled Oracle passed 23/23 with reward 1.0, collected == expected_total = 23. Stub and forgery controls scored 1/23 = 0.043 and the empty workspace scored 0.0 with failure_class=model. Blind and traceability review remain pending."
+
+[oracle_bundle]
+digest = "sha256:54f24a030373c9af6d4dc06f77d97eaf017ad30a80714587e163305290b7af5c"
+size_bytes = 235520
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:54f24a030373c9af6d4dc06f77d97eaf017ad30a80714587e163305290b7af5c"
+visibility = "private"
