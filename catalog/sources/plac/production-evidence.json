@@ -1,0 +1,42 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/plac",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/plac/evidence/remediation-validation.txt",
+          "sha256": "sha256:4723ffc3ba2ea7db54523f5ba25863189d04bd078437ce22b7915ea25e8bfadc"
+        },
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu)"
+      }
+    ],
+    "failure_class": "verifier",
+    "next_step": "Obtain an owner-approved immutable artifact for the doc/test_runp.py and doc/test_server.py skip overlays, or replace them with the exact upstream blobs at revision 0da08718131023893894e484d1a8133647e55e1d; then freeze collection, hash-locked dependencies, a separate verifier, Oracle, and controls before creating any runtime.",
+    "provenance_audit": {
+      "immutable_legacy_verifier_image": "ghcr.io/multimodal-art-projection/nl2repobench/plac@sha256:300c6477c35e43d05021f07652dbad70adc3641472eafd02434df1e5df0449e1",
+      "legacy_test_manifest_sha256": "sha256:5486a9f2ee26f4c85243b055105b4672400cacb37deee5a57001cd0b959c5449",
+      "legacy_verifier_config_digest": "sha256:6070fa07479b9a83f4c226464abefc9fd45b6b0e7bf5b4a9418af339a552469f",
+      "unprovenanced_overlays": [
+        {
+          "normalized_git_blob": "9925af6b9e0babdddbd33231351a23617c2deb08",
+          "path": "doc/test_runp.py"
+        },
+        {
+          "normalized_git_blob": "0daaaede3937af6740fb9d6847e09cdbdabb35df",
+          "path": "doc/test_server.py"
+        }
+      ]
+    },
+    "source_freeze": {
+      "license_spdx": "BSD-2-Clause",
+      "revision": "0da08718131023893894e484d1a8133647e55e1d",
+      "source_digest": "sha256:9b58509fedcb5d1a07e3bebd5756e699764bfaa60d514d5aa3e6978bdd10fdb7",
+      "status": "known",
+      "upstream_url": "https://github.com/micheles/plac"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "plac",
+  "terminal_kind": "blocked"
+}

@@ -1,0 +1,64 @@
+schema_version = "1.0"
+task_id = "plac"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "unknown"
+category = "python-library"
+tags = ["python", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/micheles/plac"
+revision = "0da08718131023893894e484d1a8133647e55e1d"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:9b58509fedcb5d1a07e3bebd5756e699764bfaa60d514d5aa3e6978bdd10fdb7"
+
+[environment]
+status = "unknown"
+python_version = "3.10.11"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "BLOCKER: no hash-locked build or verifier dependency closure exists. Freeze that closure during remediation; run-time source fetch remains forbidden, and any model-provider host must be injected per run rather than declared here."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 28
+expected_total_source = "legacy-file"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors doc"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the plac package from an empty workspace."
+keywords = ["python", "repository-generation", "nl2repobench"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+reason = "Two frozen legacy test files contain Windows skip overlays absent from every upstream revision checked, and no owner-approved immutable overlay artifact identifies their provenance."

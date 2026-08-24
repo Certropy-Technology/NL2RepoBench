@@ -1,0 +1,30 @@
+plac blocked-task remediation evidence
+
+audit source:
+  upstream_url: https://github.com/micheles/plac
+  revision: 0da08718131023893894e484d1a8133647e55e1d
+  source_digest: sha256:9b58509fedcb5d1a07e3bebd5756e699764bfaa60d514d5aa3e6978bdd10fdb7
+  license_spdx: BSD-2-Clause
+  immutable_legacy_verifier_image: ghcr.io/multimodal-art-projection/nl2repobench/plac@sha256:300c6477c35e43d05021f07652dbad70adc3641472eafd02434df1e5df0449e1
+
+blocking verifier provenance finding:
+  doc/test_runp.py normalized blob 9925af6b9e0babdddbd33231351a23617c2deb08 is absent from upstream history.
+  doc/test_server.py normalized blob 0daaaede3937af6740fb9d6847e09cdbdabb35df is absent from upstream history.
+
+command: uv run nl2repo task validate-source catalog/sources/plac
+tool_version: uv 0.12.3 (x86_64-unknown-linux-gnu)
+exit_code: 0
+stdout_and_stderr:
+{
+  "instruction": "catalog/sources/plac/blocked.md",
+  "source_digest": "sha256:74303871dc664c34699a9d4dd2bcb11da38e7af8e1615e8a9375e435c7783014",
+  "status": "blocked",
+  "task_id": "plac",
+  "version": "0.1.0"
+}
+
+runtime postcondition:
+  command: test ! -e catalog/tasks/plac
+  tool_version: GNU bash 5.3.9(1)-release (x86_64-redhat-linux-gnu)
+  exit_code: 0
+  result: catalog/tasks/plac is absent; no runtime was created.
