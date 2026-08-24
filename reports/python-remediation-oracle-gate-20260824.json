@@ -106,6 +106,34 @@
         "pin setuptools/wheel in a private offline dependency bundle",
         "adapt the 15-case verifier to custom-json-v1 subprocess isolation"
       ]
+    },
+    {
+      "task_id": "docstring-parser",
+      "status": "oracle-passed",
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 20,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/docstring-parser-custom-compiled-current/2026-08-24__14-15-41/docstring-parser__6rRTZ8Q/verifier/grading.json",
+      "remediations": [
+        "freeze the post-tag exact revision and MIT source archive",
+        "close Hatchling build dependencies in a private offline bundle",
+        "bound the object-heavy parser suite to a JSON-safe parse/composition slice"
+      ]
+    },
+    {
+      "task_id": "icecream",
+      "status": "oracle-passed",
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 20,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/icecream-custom-compiled-current/2026-08-24__14-28-29/icecream__iCtwqFW/verifier/grading.json",
+      "remediations": [
+        "replace the terminal-dependent legacy denominator with a mocked-output slice",
+        "freeze the pure-Python dependency closure and source revision",
+        "run candidate behavior through the private JSON verifier subprocess"
+      ]
     }
   ],
   "controls": {

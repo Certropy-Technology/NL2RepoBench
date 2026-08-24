@@ -1,11 +1,10 @@
 # `docstring-parser` static authoring audit and blocker
 
-Status: **blocked**. This directory contains public, task-local authoring
-metadata, the public instruction, and this audit only. It contains no upstream
-test copy, private test or command artifact, dependency wheelhouse, Dockerfile,
-Harbor bundle, Oracle solution, reward, or shared catalog edit. The public
-upstream revision was inspected in disposable paths under `/tmp`; those paths
-are not task artifacts.
+Status: **oracle-passed remediation; historical blocker retained below**. The
+current task has a pinned source/instruction, private dependency/verifier/Oracle
+bundles, a generic compiled `20/20` Oracle and empty/stub/forgery control
+evidence. The analysis below records why the original broad upstream suite was
+not used as the frozen denominator; current evidence is in `provenance/`.
 
 Audit timestamp: `2026-08-22T12:24:03Z`.
 

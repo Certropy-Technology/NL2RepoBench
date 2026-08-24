@@ -110,6 +110,58 @@
       "valid": true,
       "reward": 0.0,
       "evidence": ".nl2repo/runs/controls/pytz-custom-forgery-v2/2026-08-24__13-18-48/pytz-forgery__Shnhn8n/verifier/grading.json"
+    },
+    {
+      "task_id": "docstring-parser",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/docstring-parser-custom-empty-v1/2026-08-24__14-18-29/docstring-parser-empty__tH96TMY/verifier/grading.json"
+    },
+    {
+      "task_id": "docstring-parser",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/docstring-parser-custom-stub-v1/2026-08-24__14-16-56/docstring-parser-stub__V62T6gq/verifier/grading.json"
+    },
+    {
+      "task_id": "docstring-parser",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/docstring-parser-custom-forgery-v1/2026-08-24__14-16-56/docstring-parser-forgery__cYkU6XF/verifier/grading.json"
+    },
+    {
+      "task_id": "icecream",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/icecream-custom-empty-v1/2026-08-24__14-32-08/icecream-empty__8dwLnde/verifier/grading.json"
+    },
+    {
+      "task_id": "icecream",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/icecream-custom-stub-v1/2026-08-24__14-30-10/icecream-stub__FRcLdxc/verifier/grading.json"
+    },
+    {
+      "task_id": "icecream",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/icecream-custom-forgery-v1/2026-08-24__14-30-10/icecream-forgery__JY24Xne/verifier/grading.json"
     }
   ],
   "offline": {

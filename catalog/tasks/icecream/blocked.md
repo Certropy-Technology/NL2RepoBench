@@ -1,8 +1,9 @@
 # `icecream` Static Provenance Audit
 
-Status: **blocked**. This directory is an audit record only. It is not a
-publishable Harbor task. No `task.toml`, public instruction copy, Harbor tree,
-Oracle solution, verifier script, or hidden fixture is included.
+Status: **oracle-passed remediation; historical blocker retained below**. The
+current task has a pinned source/instruction, private dependency/verifier/Oracle
+bundles, a generic compiled `20/20` Oracle and empty/stub/forgery controls. The
+legacy 40-case terminal/platform contract below is historical context only.
 
 ## Legacy Identity
 
