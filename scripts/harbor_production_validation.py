@@ -365,7 +365,6 @@ def validate_catalog(
                     category = "excluded"
                     excluded_ids.add(task_id)
                 else:
-                    category = "incomplete"
                     raise ProductionGateError(f"lifecycle status is not terminal: {status}")
                 row["category"] = category
                 evidence_path = source_root / "production-evidence.json"
