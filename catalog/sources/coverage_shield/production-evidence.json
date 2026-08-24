@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "coverage_shield",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Create a hash-locked Python dependency closure and a separate candidate subprocess verifier for the public CLI/API, freeze collection in the final image, then run a production compile, Harbor Oracle, and controls before recreating any runtime task.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/JosephCrispell/coverage_shield",
+      "revision": "fd8b4511f6ec1c8a2730b9c82188d16d0d968cd3",
+      "source_digest": "sha256:e8cf4d502c1d2b0a0443ecdec1f57d55df5a49fff32052e4dfde0ba0acc3c3f0",
+      "license_spdx": "GPL-3.0",
+      "base_image_digest": "sha256:78b52f4c9cbf18b368a958cb3b933727c0a30b064b1fa33492e887129565f4c9"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/coverage_shield",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/coverage_shield/evidence/remediation.txt",
+          "sha256": "sha256:68b3fdc98ca9efbdaf2185f357195ae599558f4086b88841fe2c7ed8a856480e"
+        }
+      },
+      {
+        "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/coverage_shield -a oracle",
+        "tool_version": "Harbor runner 0.21.0; not run because legacy runtime was invalid",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/coverage_shield/evidence/remediation.txt",
+          "sha256": "sha256:68b3fdc98ca9efbdaf2185f357195ae599558f4086b88841fe2c7ed8a856480e"
+        }
+      }
+    ]
+  }
+}

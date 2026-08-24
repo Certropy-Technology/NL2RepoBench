@@ -1,0 +1,36 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/boltons",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/boltons/evidence/remediation-validation.txt",
+          "sha256": "sha256:7dad7e328e3f53691e6d4fe94ff00e73757b05862a55826e6b0475da1b2b71a6"
+        },
+        "tool_version": "repository toolchain"
+      },
+      {
+        "command": "rm -rf catalog/tasks/boltons",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/boltons/evidence/remediation-validation.txt",
+          "sha256": "sha256:7dad7e328e3f53691e6d4fe94ff00e73757b05862a55826e6b0475da1b2b71a6"
+        },
+        "tool_version": "GNU coreutils rm"
+      }
+    ],
+    "failure_class": "verifier",
+    "next_step": "Freeze the dependency closure and author a separate candidate verifier against a reviewed bounded API scope; rerun collection and Oracle before regenerating any Harbor runtime.",
+    "source_freeze": {
+      "license_spdx": "BSD-3-Clause",
+      "revision": "673e010d0afabc2f530e8d1f67f0a47c37afa7f4",
+      "source_digest": "sha256:2aa88c3aff69c427e758ef1408068be9a5e588e57430103d0dc2893c4618f832",
+      "status": "known",
+      "upstream_url": "https://github.com/mahmoud/boltons"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "boltons",
+  "terminal_kind": "blocked"
+}

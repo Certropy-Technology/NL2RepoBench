@@ -1,0 +1,13 @@
+command: uv run nl2repo task validate-source catalog/sources/boltons
+{
+  "instruction": "catalog/sources/boltons/instruction.md",
+  "source_digest": "sha256:5f911e2b87492812616943e4e7d79bc52744c502bda1f201c0be7191bc17932f",
+  "status": "blocked",
+  "task_id": "boltons",
+  "version": "0.1.0"
+}
+command: inspect legacy runtime before removal
+observed before removal: no bundle.manifest.json; tests/test.sh used raw pytest and candidate override .pth; solution/solve.sh fetched mutable runtime source with no separate verifier contract.
+command: rm -rf catalog/tasks/boltons
+exit_code: 0
+postcondition: catalog/tasks/boltons absent

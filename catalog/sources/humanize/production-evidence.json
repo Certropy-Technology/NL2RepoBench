@@ -1,0 +1,45 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/humanize --output /tmp/humanize-compile-check --artifact-root .nl2repo/artifacts --toolchain toolchain.lock.toml --allow-private",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/humanize/evidence/production-compile-failed.txt",
+          "sha256": "sha256:b99a84c49cde1ae015ca01c2f860ff1e668a140b4b542d09f8d6010d8fa26dfc"
+        },
+        "tool_version": "uv repository toolchain"
+      },
+      {
+        "command": "timeout 300 bash catalog/tasks/humanize/solution/solve.sh",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/humanize/evidence/legacy-solve-failed.txt",
+          "sha256": "sha256:7e3b4f843502447017b7d1cd0cd4c452dfa1caab7669b835767bef7520d030c4"
+        },
+        "tool_version": "legacy Harbor solve script; workspace absent outside Harbor container"
+      },
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/humanize",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/humanize/evidence/descriptor-validation.txt",
+          "sha256": "sha256:2144e6f40d212c2a40eee4574ce1ade4ae11b448cf220433422e4103fa3bb58e"
+        },
+        "tool_version": "uv repository toolchain"
+      }
+    ],
+    "failure_class": "verifier",
+    "next_step": "Resolve the pinned-source versus legacy-test mismatch by freezing tests from revision ce4147b6c8f8a132f772be0929d58305eb22c5d9 or selecting the matching immutable source revision; then freeze a hash-locked dependency closure, structured separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "license_spdx": "MIT",
+      "revision": "ce4147b6c8f8a132f772be0929d58305eb22c5d9",
+      "source_digest": "sha256:23c29f074162ab33862b66c6b94056987230b9527efeb502ed20031fc4bddbd6",
+      "status": "known",
+      "upstream_url": "https://github.com/python-humanize/humanize"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "humanize",
+  "terminal_kind": "blocked"
+}

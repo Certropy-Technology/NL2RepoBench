@@ -67,7 +67,8 @@ claim an Oracle baseline:
 
 ## Decision
 
-This task is `blocked`. No Harbor bundle, private test artifact, Oracle
+This task is `blocked`; its standardized production evidence is in
+`production-evidence.json`. No Harbor bundle, private test artifact, Oracle
 bundle, dependency wheelhouse, or frozen collection record is published from
 this conversion. Do not run Docker or Oracle for this task until the test
 fixture is reconciled with the legacy denominator, packaging/source behavior

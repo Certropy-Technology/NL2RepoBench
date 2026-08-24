@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "autorccar",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Freeze the bounded computer.model contract with a complete dependency lock, private verifier, and Oracle bundle; reconcile the legacy denominator 13 with the image fixture's 22 parametrized cases before any runtime generation.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/hamuchiwa/AutoRCCar",
+      "revision": "c5776aebff517361fb5473c36fd9918ae90a1a0b",
+      "source_digest": "sha256:730b441114359e818cd90349868c1a23550c8afc2a8522aaaba71b5d919fb9d9",
+      "license_spdx": "BSD-2-Clause",
+      "license_path": "LICENSE.md",
+      "license_digest": "sha256:d17410657e9d1316719057548552af9008e6059941f29fada92a0735702959a8"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/autorccar",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/autorccar/post-descriptor-validation.txt",
+          "sha256": "sha256:2b2a71e1d427c228523bd9ab65ffe6bf9c4e51417324d2d33641c0826eee65f9"
+        }
+      },
+      {
+        "command": "inspect pinned verifier image layers and legacy fixture collection",
+        "tool_version": "Docker image audit; provenance-audit.md",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/autorccar/provenance-audit.md",
+          "sha256": "sha256:fc4dd7511ce8e1a9c064b4d38cbf2f1310726963d8a82ef1b3e917d479e4988b"
+        }
+      }
+    ]
+  }
+}

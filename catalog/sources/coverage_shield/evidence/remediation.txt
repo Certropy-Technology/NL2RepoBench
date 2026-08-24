@@ -1,0 +1,6 @@
+command: uv run nl2repo task validate-source catalog/sources/coverage_shield
+result: source descriptor parsed, but lifecycle remains blocked and no production evidence/runtime gate exists
+command: uv run nl2repo harbor compile catalog/sources/coverage_shield --output /tmp/coverage-shield-production --artifact-root .nl2repo/artifacts --toolchain toolchain.lock.toml --allow-private
+result: not-run as production compile; source dependency lock and separate verifier are absent
+command: uv run --frozen --project harbor-runner harbor run -p catalog/tasks/coverage_shield -a oracle
+result: not-run; legacy runtime was removed because the source is blocked and the verifier directly imports candidate code
