@@ -1,0 +1,70 @@
+{
+  "bundle": {
+    "path": "catalog/tasks/chalk/bundle.manifest.json",
+    "sha256": "sha256:d375854788522133774101491351f88af44c27f5c3f1b1ea19514bf8aca63811"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p chalk-control -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/production-evidence-chalk-empty-final/2026-08-25__04-26-26/chalk__tN36Mfy/verifier/grading.json",
+        "sha256": "sha256:0c1cbf7253583c8f2e66a40047bf742a5aa9832f5114cc7fdb6bd061ed8fa0ae"
+      },
+      "network": {
+        "path": "catalog/sources/chalk/evidence/network-probe.json",
+        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p chalk-control -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/production-evidence-chalk-forgery-final/2026-08-25__04-25-50/chalk-forgery__H7wXqDT/verifier/grading.json",
+        "sha256": "sha256:5dda180b40195a6c888e8fcde9b74a7cb19df50b52d6d3945c4d7ca964f51d85"
+      },
+      "network": {
+        "path": "catalog/sources/chalk/evidence/network-probe.json",
+        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Docker network-none probe for chalk verifier image",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": "catalog/sources/chalk/evidence/network-probe.json",
+        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p chalk-control -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/production-evidence-chalk-stub-final/2026-08-25__04-25-15/chalk-stub__umNk9Dy/verifier/grading.json",
+        "sha256": "sha256:5dda180b40195a6c888e8fcde9b74a7cb19df50b52d6d3945c4d7ca964f51d85"
+      },
+      "network": {
+        "path": "catalog/sources/chalk/evidence/network-probe.json",
+        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/chalk -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/production-evidence-chalk-final/2026-08-25__04-24-37/chalk__mfdKfeY/verifier/grading.json",
+      "sha256": "sha256:31270bc315ef3ab3453c2e3e7f49c205c3b49f7bdc63d93b4dcddfc8250fb64d"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": "catalog/sources/chalk/evidence/network-probe.json",
+      "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "chalk",
+  "terminal_kind": "valid"
+}
