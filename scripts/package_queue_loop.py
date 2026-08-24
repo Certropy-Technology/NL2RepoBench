@@ -154,6 +154,9 @@ def command_claim(args: argparse.Namespace) -> int:
             if len(selected) >= args.limit:
                 break
             record = items[candidate_id]
+            candidate_filter = getattr(args, "candidate_id", None)
+            if candidate_filter and candidate_id not in candidate_filter:
+                continue
             if args.language and record.get("language") != args.language:
                 continue
             if record.get("status") == "running":
@@ -251,6 +254,11 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--lease-seconds", type=int, default=7200)
             sub.add_argument("--max-attempts", type=int, default=3)
             sub.add_argument("--language", choices=("python", "node"))
+            sub.add_argument(
+                "--candidate-id",
+                action="append",
+                help="Claim only the named candidate; repeatable.",
+            )
         elif name == "record":
             sub.add_argument("candidate_id")
             sub.add_argument("--owner", required=True)

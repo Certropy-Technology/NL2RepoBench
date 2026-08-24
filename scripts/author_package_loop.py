@@ -191,7 +191,7 @@ def build_plan(
             candidate_path.read_bytes()
         ).hexdigest(),
         "oss_inventory": str(oss_inventory) if oss_inventory else None,
-        "parallelism": {"workers": min(limit, 5), "shared_integrator_writers": 1},
+        "parallelism": {"workers": min(limit, 3), "shared_integrator_writers": 1},
         "stages": list(STAGES),
         "tasks": tasks,
         "skipped": skipped,

@@ -135,3 +135,37 @@ def test_queue_terminalizes_expired_lease_at_attempt_limit(tmp_path: Path) -> No
         record = payload["items"]["python-demo"]
         assert record["status"] == "blocked"
         assert record["failure_class"] == "infrastructure"
+
+
+def test_queue_claim_can_target_one_candidate(tmp_path: Path) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    queue.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "queue": [
+                    {"candidate_id": "first", "package": "first", "language": "python"},
+                    {"candidate_id": "second", "package": "second", "language": "python"},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    loop.command_init(_args(queue=queue, state=state))
+
+    assert loop.command_claim(
+        _args(
+            queue=queue,
+            state=state,
+            owner="worker",
+            limit=1,
+            lease_seconds=60,
+            max_attempts=3,
+            language="python",
+            candidate_id=["second"],
+        )
+    ) == 0
+    with loop.locked_state(state) as payload:
+        assert payload["items"]["second"]["status"] == "running"
+        assert payload["items"]["first"]["status"] == "pending"
