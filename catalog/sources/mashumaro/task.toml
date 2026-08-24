@@ -1,0 +1,65 @@
+schema_version = "1.0"
+task_id = "mashumaro"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "dataclass-serialization"
+tags = ["python", "dataclass", "serialization", "code-generation", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Fatal1ty/mashumaro"
+revision = "0ad3eaed34f09e4a361613b607aa78e9a51d9999"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:683e34d5493a1d3ed47960970174aba1fa1207ebcfa385aa2c23efe96de30fb1"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The post-release source requires an approved platform-specific dependency closure, final image, and task-specific verifier before offline execution."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["codec and test dependencies are not a hash-locked offline closure"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate: stateful generated dataclass serialization lacks a reviewed bounded verifier and offline dependency closure."
+keywords = ["python", "dataclass", "serialization", "code-generation", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/mashumaro"
+reason = "The exact post-v3.22 source and Apache-2.0 archive/license evidence are known, but registry release artifacts differ, no hash-locked closure/final image or frozen collection exists, and generated class/type/callable behavior lacks a reviewed child-side verifier. No runtime task is generated."

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mashumaro",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Materialize the exact post-v3.22 archive through the authorized artifact path, freeze a platform-specific hash-locked closure and final image, then review a child-side scenario adapter, structured collection, private verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/Fatal1ty/mashumaro",
+      "revision": "0ad3eaed34f09e4a361613b607aa78e9a51d9999",
+      "source_digest": "sha256:683e34d5493a1d3ed47960970174aba1fa1207ebcfa385aa2c23efe96de30fb1",
+      "license_spdx": "Apache-2.0",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:a769736570209708705e78bc1626294303f4bf605526c9e22bf60f5d20d27e57",
+      "audit_sha256": "sha256:c80949cbe465f90c8dc925f3c3e6889b52bc648558519826693ee4cfc39ff2f1"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/mashumaro",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/mashumaro/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:549668361e17f5d43335ffb55ea3952a584fdafc46c33bcddb4c3fe43ac94ffb"
+        }
+      },
+      {
+        "command": "git archive --format=tar 0ad3eaed34f09e4a361613b607aa78e9a51d9999",
+        "tool_version": "Git archive probe recorded in blocked.md",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/mashumaro/blocked.md",
+          "sha256": "sha256:c80949cbe465f90c8dc925f3c3e6889b52bc648558519826693ee4cfc39ff2f1"
+        }
+      }
+    ]
+  }
+}
