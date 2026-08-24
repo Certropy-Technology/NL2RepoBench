@@ -1,10 +1,9 @@
 # `platformdirs` Static Screening Audit
 
-Status: **blocked**. This directory contains an audit record only. It does
-not contain a task descriptor, public instruction, Harbor bundle, verifier,
-Oracle, private test artifact, dependency wheelhouse, or copied upstream
-source/test bytes. No legacy task, dataset, conversion-loop state, or shared
-file was changed.
+Status: **oracle-passed remediation; historical blocker retained below**. The
+current task has a bounded Unix/XDG instruction, private dependency/verifier/
+Oracle bundles, generic compiled `20/20` Oracle and empty/stub/forgery controls.
+The broad multi-platform direct-import suite below remains historical context.
 
 The requested upstream revision is a coherent pure-Python filesystem/platform
 candidate, but it cannot advance past static screening. The local authoring

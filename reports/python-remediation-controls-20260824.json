@@ -162,6 +162,32 @@
       "valid": true,
       "reward": 0.0,
       "evidence": ".nl2repo/runs/controls/icecream-custom-forgery-v1/2026-08-24__14-30-10/icecream-forgery__JY24Xne/verifier/grading.json"
+    },
+    {
+      "task_id": "platformdirs",
+      "control": "empty",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "evidence": ".nl2repo/runs/controls/platformdirs-custom-empty-v1/2026-08-24__14-58-55/platformdirs-empty__4BrDcrM/verifier/grading.json"
+    },
+    {
+      "task_id": "platformdirs",
+      "control": "stub",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/platformdirs-custom-stub-v2/2026-08-24__14-56-59/platformdirs-stub__mMTLXXA/verifier/grading.json"
+    },
+    {
+      "task_id": "platformdirs",
+      "control": "forgery",
+      "status": "passed",
+      "valid": true,
+      "reward": 0.0,
+      "evidence": ".nl2repo/runs/controls/platformdirs-custom-forgery-v2/2026-08-24__14-56-59/platformdirs-forgery__uDdohct/verifier/grading.json"
     }
   ],
   "offline": {

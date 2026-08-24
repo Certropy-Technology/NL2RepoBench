@@ -134,6 +134,20 @@
         "freeze the pure-Python dependency closure and source revision",
         "run candidate behavior through the private JSON verifier subprocess"
       ]
+    },
+    {
+      "task_id": "platformdirs",
+      "status": "oracle-passed",
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 20,
+      "reward": 1,
+      "evidence": ".nl2repo/runs/oracle/platformdirs-custom-compiled-v2/2026-08-24__14-55-00/platformdirs__h8jF3Rw/verifier/grading.json",
+      "remediations": [
+        "bound the platform-heavy suite to deterministic Unix/XDG behavior",
+        "add git/ca-certificates to the pinned agent image for exact source fetch",
+        "pin setuptools/wheel build closure and isolate candidate imports"
+      ]
     }
   ],
   "controls": {

@@ -23,6 +23,7 @@ failure classification and next gate in task-local provenance.
 | `pytz` | `661bca921e29dc3eedd4430bac70816c9154c05e` | 15 | `15/15`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 | `docstring-parser` | `8347d8fb347bd66e4bf5711d3df586357166944a` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 | `icecream` | `816e6c6bbac50f16fda8f801c658fe5ebcfd50bc` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
+| `platformdirs` | `d3cf61ce5e729f2c35f830b69e14adb7b6970a00` | 20 | `20/20`, reward `1.0` | empty, stub, forgery, offline | timeout, review, pilot |
 
 Evidence paths and structured grading details are recorded in:
 
@@ -37,8 +38,8 @@ denominator uses a fixture adapter and does not claim a desktop clipboard.
 
 ## Active Repairs
 
-The next task-local worker is repairing `platformdirs`. It must leave `packaged`
-evidence if the generic image
+The next task-local workers are now free to select the next entries from
+`catalog/tasks/*/blocked.md`. Each worker must leave `packaged` evidence if the generic image
 or verifier gate is still open; missing artifacts alone are not a final
 `blocked` decision. Integration into the shared catalog and reports is
 serialized after worker validation.

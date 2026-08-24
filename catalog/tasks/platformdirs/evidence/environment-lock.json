@@ -1,0 +1,15 @@
+{
+  "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "candidate_install": "pip --target --no-deps --no-build-isolation",
+  "network": {
+    "agent": "public for exact immutable source fetch",
+    "verifier": "no-network"
+  },
+  "os": "debian-12-amd64",
+  "python": "3.12.14",
+  "source_commit": "d3cf61ce5e729f2c35f830b69e14adb7b6970a00",
+  "source_tree": "9a2e1a4f3e8bfcda7896d35c4e156e3d90090dbd",
+  "system_packages": [],
+  "toolchain_lock": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42"
+}
