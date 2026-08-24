@@ -4,6 +4,11 @@
 真实开源 Package、固定完整 revision、自然语言规格、空 workspace、官方测试执行式评分；
 只把产物和 verifier 改成更严格的 Harbor separate-verifier 格式。
 
+Worker 的具体 remediation contract 见
+[`authoring-agent-remediation-guide.zh-CN.md`](authoring-agent-remediation-guide.zh-CN.md)。
+缺 image/lock/wheelhouse/build backend 是待完成工作，不是自动 Block；authoring loop
+只到 catalog handoff，Agent Run 由下游独立 loop 执行。
+
 旧的四文件转换和“先写 instruction、再人工补测试映射”的流程不再作为扩展主路径。
 新 Pipeline 以 source/test AST inventory 为廉价前置证据，用动态 collection 和 Oracle
 做后置事实确认；任何阶段都不允许用 AST 猜测未观察到的语义。

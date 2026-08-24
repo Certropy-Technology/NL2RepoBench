@@ -23,12 +23,37 @@ STAGES = (
     "ast-inventory",
     "test-inventory",
     "dependency-probe",
+    "environment-remediation",
+    "dependency-closure",
     "harbor-package",
     "verifier-build",
     "oracle-once",
     "controls",
     "review-handoff",
 )
+
+REMEDIATION_POLICY = {
+    "missing_immutable_image_or_digest": "must-remediate",
+    "missing_runtime_or_dev_pin": "must-remediate",
+    "missing_hash_locked_offline_closure": "must-remediate",
+    "missing_build_backend_or_dockerfile": "must-remediate",
+    "risk_flags": "adapt-and-probe-before-decision",
+    "automatic_block_only": [
+        "no-executable-tests-after-remediation",
+        "license-unclear-or-undistributable",
+        "revision-cannot-be-frozen-after-fetch-attempts",
+        "paid-or-unreproducible-external-service",
+        "resource-budget-exceeded-after-bounded-probes",
+    ],
+    "blocked_requires": [
+        "attempted_commands",
+        "tool_versions",
+        "exit_codes",
+        "failure_logs",
+        "failure_class",
+        "next_unblock_action",
+    ],
+}
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -135,6 +160,8 @@ def build_plan(
                 "revision": record.get("revision"),
                 "source_digest": record.get("source_digest"),
                 "stages": list(STAGES),
+                "remediation_policy": REMEDIATION_POLICY,
+                "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md",
                 "worker_boundary": f"catalog/tasks/{record['package']}/** only",
                 "remediation_required": bool(remediation_reasons),
                 "remediation_reasons": remediation_reasons,
@@ -170,6 +197,8 @@ def build_plan(
         "skipped": skipped,
         "status": "planned",
         "risk_policy": "allow-risk" if allow_risk else "remediate-before-gate",
+        "remediation_policy": REMEDIATION_POLICY,
+        "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md",
         "agent_run_loop": "separate downstream consumer; not executed by this plan",
     }
 
