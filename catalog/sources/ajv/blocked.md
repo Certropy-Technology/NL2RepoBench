@@ -1,10 +1,11 @@
 # `ajv` Node/npm authoring audit - blocked
 
 **Status: blocked / audit-only.** This file is a task-local evidence record
-for a possible Node/npm candidate. It is not a `task.toml`, public task
-instruction, Harbor bundle, publication approval, hidden-test package, Oracle,
-verifier, Docker asset, dependency cache, or shared catalog update. Only this
-file is intentionally present under `catalog/tasks/ajv/`.
+for a possible Node/npm candidate. It is not a public task instruction, Harbor
+bundle, publication approval, hidden-test package, Oracle, verifier, Docker
+asset, dependency cache, or shared catalog update. This audit and its terminal
+descriptor are intentionally present under `catalog/sources/ajv/`; no
+`catalog/tasks/ajv/` runtime exists.
 
 The source and license gates are sufficiently identified for continued
 authoring review, but the package is not currently reproducible as an exact

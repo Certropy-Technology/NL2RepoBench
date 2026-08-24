@@ -1,0 +1,67 @@
+schema_version = "2.0"
+task_id = "arxiv-mcp-server"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "model-context-protocol"
+tags = ["python", "mcp", "arxiv", "prompts", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/blazickjp/arxiv-mcp-server"
+revision = "057e2000be7b56823239815b0fe7c7fc0dbced96"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:5dc518ca180b1222a9ced442a86e8f758f80e2f0f45d4ba80ae9b790b5a7b6e3"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-linux-amd64"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/arxiv-mcp-server@sha256:1e8074506767811ba7445749212b1f4eece516b003766112ce76b07c4fc2f3c8"
+base_image_digest = "sha256:1e8074506767811ba7445749212b1f4eece516b003766112ce76b07c4fc2f3c8"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the historical image is not an approved dependency lock/runtime contract and Oracle source acquisition is not authorized."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["legacy image installed Python .[test,dev]; hash-locked production closure not available"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/arxiv-mcp-server"
+reason = "The frozen image/source boundary has 31 collected tests for revision 057e2000/project 0.3.1 while the public legacy instruction specifies version 0.2.11 and denominator 23; pyproject license metadata also conflicts with the Apache-2.0 LICENSE. No coherent production task, dependency lock, verifier, Oracle, or controls can be generated without a version-boundary decision."

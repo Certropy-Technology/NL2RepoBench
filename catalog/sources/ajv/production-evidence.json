@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ajv",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze an approved package-lock v3 and content-addressed private npm cache for the exact revision under Node 22.23.1/npm 10.9.8, then rerun the offline install before deterministic dist build and adapter authoring.",
+    "source_freeze": {
+      "status": "known",
+      "revision": "f177fe323420ccb23e1a79445fd470cbf80aee7c",
+      "source_digest": "sha256:54cc5df21593d589cd905b5a9a85161c08e8fa07d10cf8739ee056ed1d12a893",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:a05350a88e318e4f5f2c2a1ff1e2e88daa4dd38e6e78b71cccae422bdc762cc3",
+      "submodules": [
+        "spec/JSON-Schema-Test-Suite@e82bfdfa59c63cc74175d35fac81bb95e61db24b",
+        "spec/json-typedef-spec@71ca275847318717c36f5a2322a8061070fe185d"
+      ]
+    },
+    "commands": [
+      {
+        "command": "npm ci --offline --ignore-scripts --no-audit --no-fund",
+        "tool_version": "Node 22.23.1, npm 10.9.8",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/ajv/blocked.md",
+          "sha256": "sha256:be51ec47b50376a5ea8d50025fdfadea7d27a1749839984302b559765b7eab45"
+        }
+      }
+    ]
+  }
+}

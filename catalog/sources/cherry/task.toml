@@ -1,0 +1,69 @@
+schema_version = "1.0"
+task_id = "cherry"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "machine-learning-classification"
+tags = ["python", "machine-learning", "classification", "legacy-overlay", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Windsooon/cherry"
+revision = "8246824e7b50b84be6697bb4cc2a6381ddcd0ca9"
+license_spdx = "MIT"
+source_digest = "sha256:28c6fff07d2f94ef3c305addaa4fb1a6aa6322a51ab79905ef91faaaf0cf67da"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = "3.7.9"
+os_name = "linux-amd64"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/cherry@sha256:a99b8029e934fc887491ef41cbdc950e8aa08ea182fa3f4ed4fa2a344421421d"
+base_image_digest = "sha256:a99b8029e934fc887491ef41cbdc950e8aa08ea182fa3f4ed4fa2a344421421d"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The legacy image is immutable but is not an approved production environment: its dependency closure was installed online and its modified test overlay lacks an owner-approved provenance manifest."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked legacy Cherry classification candidate pending overlay provenance, dependency closure, and separate-verifier adaptation."
+keywords = ["python", "machine-learning", "classification", "legacy-overlay", "blocked"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/cherry"
+reason = "The exact upstream source and MIT license are frozen, but the immutable legacy image contains an unapproved six-file overlay, directly imports candidate code, and lacks a hash-locked dependency closure, structured collection, separate verifier, Oracle, and controls. No catalog/tasks/cherry runtime exists."

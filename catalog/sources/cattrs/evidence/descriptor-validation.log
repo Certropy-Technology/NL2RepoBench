@@ -1,0 +1,3 @@
+command: uv run nl2repo task validate-source catalog/sources/cattrs
+exit_code: 1
+command: git status --short -- catalog/sources/cattrs catalog/tasks/cattrs

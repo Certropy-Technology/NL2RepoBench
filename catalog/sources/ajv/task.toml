@@ -1,0 +1,68 @@
+schema_version = "2.0"
+task_id = "ajv"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "json-schema-validator"
+tags = ["node", "npm", "typescript", "json-schema", "code-generation", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/ajv-validator/ajv"
+revision = "f177fe323420ccb23e1a79445fd470cbf80aee7c"
+license_spdx = "MIT"
+source_digest = "sha256:54cc5df21593d589cd905b5a9a85161c08e8fa07d10cf8739ee056ed1d12a893"
+submodules = [
+  "spec/JSON-Schema-Test-Suite@e82bfdfa59c63cc74175d35fac81bb95e61db24b",
+  "spec/json-typedef-spec@71ca275847318717c36f5a2322a8061070fe185d",
+]
+
+[environment]
+status = "unknown"
+base_image = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+base_image_digest = "sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "22.23.1"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; the package-lock v3, npm cache, generated dist build closure, and approved candidate package are missing."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/ajv"
+reason = "The exact superproject revision, archive digest, MIT license, and gitlink commits are known. Publication remains blocked by the missing npm lock/cache and generated-dist build closure, script-bearing package metadata, unfrozen collection, unresolved JSON-safe adapter scope, and absent verifier, Oracle, and controls. No catalog/tasks/ajv runtime exists."

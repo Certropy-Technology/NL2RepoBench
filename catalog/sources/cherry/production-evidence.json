@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cherry",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Obtain an owner-approved immutable and licensed manifest for the six-file overlay or replace it with exact upstream tests, then freeze the dependency closure and collection and adapt the assertions to a candidate_client separate verifier before running Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/Windsooon/cherry",
+      "revision": "8246824e7b50b84be6697bb4cc2a6381ddcd0ca9",
+      "source_digest": "sha256:28c6fff07d2f94ef3c305addaa4fb1a6aa6322a51ab79905ef91faaaf0cf67da",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE.txt",
+      "license_digest": "sha256:cfd192784e29bdf972c96466af6ae97bb06bae0e5ae0bf5e80eb57fd6add0521",
+      "audit_sha256": "sha256:84d8ac5b3fe47aed1b93791490c223890a8b68e92124fa7cee74073d440735aa"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/cherry",
+        "tool_version": "uv 0.12.3; descriptor absent at invocation",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/cherry/evidence/pre-descriptor-validation.txt",
+          "sha256": "sha256:ec8d3ea647aec8c7bae86cbf2437c8fed9f42c8cda547366b2fe569714f2e90f"
+        }
+      }
+    ]
+  }
+}

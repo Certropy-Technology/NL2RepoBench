@@ -1,0 +1,69 @@
+schema_version = "1.0"
+task_id = "binaryalert"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "security-scanning"
+tags = ["python", "aws", "lambda", "yara", "native-dependencies", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/airbnb/binaryalert"
+revision = "a9c0f06affc35e1f8e45bb77f835b92350c68a0b"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:b2041bbabf5432941bc46def3ff033185ec64dc13f3a80b08e734e4fb18e1bf0"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = "3.7.9"
+os_name = "linux/amd64"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/binaryalert@sha256:63d558916bbd258b98507ad99bcab5022dfc38f92e1b39eb66e3cb265f4dd392"
+base_image_digest = "sha256:63d558916bbd258b98507ad99bcab5022dfc38f92e1b39eb66e3cb265f4dd392"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen image uses networked, partly unpinned dependencies and native AWS/YARA artifacts; no approved offline closure exists."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["legacy image requirements and native yara/libarchive artifacts are not a reproducible lock"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate: the frozen BinaryAlert image contains unapproved source/test overlays and lacks an offline separate-verifier contract."
+keywords = ["python", "aws", "lambda", "yara", "native-dependencies", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/binaryalert"
+reason = "The nearest upstream revision and archive/license hashes are known, but the frozen image contains six source/dependency/test overlays absent from every upstream revision, uses a different networked dependency setup, and has no separate candidate verifier or offline native dependency closure. No catalog/tasks/binaryalert runtime exists."

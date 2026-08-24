@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "binaryalert",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Obtain an owner-approved overlay manifest or rebuild from exact upstream test/source blobs, then freeze collection with the legacy command, provide offline dependency/native locks, implement a task-specific candidate boundary, and run Oracle/control gates.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The nearest clean upstream revision is known, but the frozen image includes six modified source/dependency/test files with no matching upstream commit.",
+      "candidate_url": "https://github.com/airbnb/binaryalert",
+      "revision": "a9c0f06affc35e1f8e45bb77f835b92350c68a0b",
+      "source_digest": "sha256:b2041bbabf5432941bc46def3ff033185ec64dc13f3a80b08e734e4fb18e1bf0",
+      "license_spdx": "Apache-2.0",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/binaryalert",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/binaryalert/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:02d403c8ffd7e7cdf1db7906b83752b660115d1ff0e30dbbf2668c4a823af767"
+        }
+      },
+      {
+        "command": "git -C /tmp/binaryalert-source-static archive --format=tar a9c0f06 | sha256sum",
+        "tool_version": "git archive",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/binaryalert/blocked.md",
+          "sha256": "sha256:0fdbbb69476b82aac14abd924e98defb89c94dc50764ed08f19bd0219366e894"
+        }
+      }
+    ]
+  }
+}

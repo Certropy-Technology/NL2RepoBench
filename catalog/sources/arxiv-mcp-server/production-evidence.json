@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "arxiv-mcp-server",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "spec",
+    "next_step": "Choose one coherent version boundary: rebuild the verifier from revision 6d3419a3ea43cfd95391d2ef3b59ef58d2bf557d with the 0.2.11 instruction and 23-item collection, or author a new 0.3.1 task for revision 057e2000be7b56823239815b0fe7c7fc0dbced96 with a reviewed 31-item collection; then close the dependency lock, separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "revision": "057e2000be7b56823239815b0fe7c7fc0dbced96",
+      "source_digest": "sha256:5dc518ca180b1222a9ced442a86e8f758f80e2f0f45d4ba80ae9b790b5a7b6e3",
+      "license_spdx": "Apache-2.0",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "metadata_license_conflict": "pyproject.toml declares MIT while LICENSE and GitHub detection identify Apache-2.0",
+      "legacy_revision": "6d3419a3ea43cfd95391d2ef3b59ef58d2bf557d",
+      "legacy_expected_total": 23,
+      "image_expected_total": 31
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/arxiv-mcp-server",
+        "tool_version": "uv repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/arxiv-mcp-server/evidence/descriptor-validation.log",
+          "sha256": "sha256:5dd6ea0f9e16e4a2a4f1a16ba3cfe17952b892ea74ac37b69709e63dd3d68e0b"
+        }
+      },
+      {
+        "command": "git archive --format=tar 057e2000be7b56823239815b0fe7c7fc0dbced96; inspect legacy instruction and image pytest nodeids",
+        "tool_version": "Git archive and image-layer audit recorded in blocked.md",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/arxiv-mcp-server/blocked.md",
+          "sha256": "sha256:5e6d543a6bd4113bbe64e77e130df50fb84060c8946d69d08adc2bd3f40333d1"
+        }
+      }
+    ]
+  }
+}

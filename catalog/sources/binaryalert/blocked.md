@@ -1,8 +1,9 @@
 # `binaryalert` Static Provenance Audit
 
-Status: **blocked**. This directory is an audit record only. No Harbor task
-descriptor, public instruction, Oracle bundle, verifier script, hidden test,
-or binary fixture is included.
+Status: **blocked**. This audit is paired with a parseable blocked descriptor
+and hash-bound production evidence. No Harbor runtime, Oracle bundle, verifier
+script, hidden test, or binary fixture is included; `catalog/tasks/binaryalert/`
+remains absent.
 
 ## Legacy Identity
 

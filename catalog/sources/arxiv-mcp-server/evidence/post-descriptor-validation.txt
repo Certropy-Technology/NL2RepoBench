@@ -1,0 +1,10 @@
+command: uv run nl2repo task validate-source catalog/sources/arxiv-mcp-server
+{
+  "instruction": "catalog/sources/arxiv-mcp-server/blocked.md",
+  "source_digest": "sha256:0bad8ac90ed2bf0a844b37e6f9c1f4a4f6c466320c2780c1912f000a64e4c61a",
+  "status": "blocked",
+  "task_id": "arxiv-mcp-server",
+  "version": "0.1.0"
+}
+command: test ! -e catalog/tasks/arxiv-mcp-server
+runtime_absent=true

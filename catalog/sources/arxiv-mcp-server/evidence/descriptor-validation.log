@@ -1,0 +1,2 @@
+command: uv run nl2repo task validate-source catalog/sources/arxiv-mcp-server
+command: git status --short -- catalog/sources/arxiv-mcp-server catalog/tasks/arxiv-mcp-server

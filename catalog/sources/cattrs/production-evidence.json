@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cattrs",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Freeze the approved Python/base-image and hash-locked dependency closure, narrow the modern/legacy and optional-backend scope, then build a separate child-side verifier and rerun collection, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/python-attrs/cattrs",
+      "revision": "f2e42f3c69dabd48dd1a5b8fb1aad9c1d39c339a",
+      "source_digest": "sha256:fa31f0fd7b0764cd9f142e70988113e2b2852790144b7cb81064614170c5e470",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:f5fb9d1ede37a88ca47f420c499dca0f4a05bc993e12c77d23520aad291c01bf"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/cattrs",
+        "tool_version": "repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/cattrs/evidence/descriptor-validation.log",
+          "sha256": "sha256:c02f2e8db0dda813a5971dad2b969e699599160dd28361bd3c198d339bea799d"
+        }
+      }
+    ]
+  }
+}
