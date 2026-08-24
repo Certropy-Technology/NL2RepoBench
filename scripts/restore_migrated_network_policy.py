@@ -8,9 +8,10 @@ need separate updates:
 * ``catalog/sources`` remains the human-maintained declaration and receives an
   explicit ``[environment.network_policy]`` plus an agent no-network mode.
 * ``catalog/tasks`` is the current flat Harbor runtime tree and receives
-  ``[environment].network_mode = "no-network"`` plus the compose isolation
-  fragment. Existing bundle manifests are refreshed after those generated-file
-  changes.
+  ``[environment].network_mode = "no-network"``. Legacy agent-side Compose
+  ``network_mode: none`` fragments are removed so Harbor can route the service
+  through its egress sidecar and apply run-scoped Provider/Oracle allowlists.
+  Existing bundle manifests are refreshed after those generated-file changes.
 
 This script is deliberately idempotent and only operates on task IDs present in
 the current ``catalog/tasks`` tree. It does not touch incomplete source-only
@@ -30,7 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCE_ROOT = ROOT / "catalog" / "sources"
 TASK_ROOT = ROOT / "catalog" / "tasks"
 
-COMPOSE = "services:\n  main:\n    network_mode: none\n"
+LEGACY_AGENT_COMPOSE = "services:\n  main:\n    network_mode: none\n"
 
 
 def _table_bounds(lines: list[str], table: str) -> tuple[int, int]:
@@ -130,15 +131,20 @@ def _runtime_policy(task_id: str) -> bool:
     original = path.read_text()
     text = _replace_table_key(original, "environment", "network_mode", "no-network")
     changed = text != original
-    compose = task_dir / "environment" / "docker-compose.yaml"
-    current_compose = compose.read_text() if compose.is_file() else ""
-    if current_compose != COMPOSE:
-        compose.write_text(COMPOSE)
-        changed = True
     if text != original:
         tomllib.loads(text)
         path.write_text(text)
     manifest = task_dir / "bundle.manifest.json"
+    compose = task_dir / "environment" / "docker-compose.yaml"
+    if compose.is_file():
+        current_compose = compose.read_text()
+        if current_compose == LEGACY_AGENT_COMPOSE:
+            compose.unlink()
+            changed = True
+        else:
+            raise ValueError(
+                f"{task_id}: custom agent Compose networking requires manual review: {compose}"
+            )
     if changed and manifest.is_file():
         _refresh_bundle_manifest(manifest)
     return changed
@@ -164,11 +170,13 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="Report drift without writing.")
     args = parser.parse_args()
     if args.check:
-        # Run the same logic in a temporary copy is intentionally avoided: the
-        # caller should use git diff for exact review. This mode only reports the
-        # current task count and is kept for CI discoverability.
-        print(f"current tasks: {sum((p / 'task.toml').is_file() for p in TASK_ROOT.iterdir())}")
-        return 0
+        legacy = sorted(
+            path.parent.parent.name
+            for path in TASK_ROOT.glob("*/environment/docker-compose.yaml")
+            if path.read_text() == LEGACY_AGENT_COMPOSE
+        )
+        print(f"legacy agent compose fragments: {len(legacy)} {legacy}")
+        return 1 if legacy else 0
     sources, tasks = restore()
     print(f"source policies changed: {len(sources)} {sources}")
     print(f"runtime task trees changed: {len(tasks)} {tasks}")

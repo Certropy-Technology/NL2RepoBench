@@ -28,8 +28,8 @@
     },
     {
       "path": "task.toml",
-      "sha256": "c21d41299816bd7e6dfe5c9935e31a1411b6942beab2b4fa9f8bc301d936ccbe",
-      "size_bytes": 1248
+      "sha256": "d952bca7922b135c528bef3569496f5f9f26abe8390e661e354a4fc3aa7a9013",
+      "size_bytes": 1252
     },
     {
       "path": "tests/Dockerfile",
@@ -40,6 +40,11 @@
       "path": "tests/command-plan.json",
       "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
       "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "d605f23ffe395b6b1b0d2a6f0b7ee6fdbb928e28bdf8c75fb0ba60b8cfcb3ca3",
+      "size_bytes": 34448
     },
     {
       "path": "tests/dependencies/npm-cache/_cacache/_lastverified",
@@ -1425,16 +1430,6 @@
       "path": "tests/dependencies/npm-cache/_cacache/index-v5/fb/ea/7f7a0679c52edb767a55df3d93f847884d7909cf16c2f148ba11d53e9f7c",
       "sha256": "e6d0502a518814e2b0c0d2642657dbda71529c6d0bb01087263b88ba69b5d7fd",
       "size_bytes": 670
-    },
-    {
-      "path": "tests/dependencies/npm-cache/_logs/2026-08-23T12_34_25_778Z-debug-0.log",
-      "sha256": "4bf975e6c9135a2def41833364711377002f384780dba542d01bd3c33ebad3bd",
-      "size_bytes": 62385
-    },
-    {
-      "path": "tests/dependencies/npm-cache/_logs/2026-08-23T12_34_27_511Z-debug-0.log",
-      "sha256": "90568c4820281338a39f9747a06a8f4faff79e24b219f5cacc302f46f8d79bc6",
-      "size_bytes": 699
     },
     {
       "path": "tests/dependencies/npm-cache/_update-notifier-last-checked",

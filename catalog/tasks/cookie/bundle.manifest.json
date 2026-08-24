@@ -12,11 +12,6 @@
       "size_bytes": 143
     },
     {
-      "path": "environment/docker-compose.yaml",
-      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
-      "size_bytes": 41
-    },
-    {
       "path": "instruction.md",
       "sha256": "be2b971cc0f714c68357ef765822b3fe27cc97c424c00059e81396fa7f9f09a2",
       "size_bytes": 7111
@@ -45,6 +40,11 @@
       "path": "tests/command-plan.json",
       "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
       "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "42396fc7cc4499c6707a2df41c0ce4e163e60630a1b71c8f2749c7aa14ff7585",
+      "size_bytes": 388
     },
     {
       "path": "tests/dependencies/package-lock.json",
