@@ -31,3 +31,30 @@ upstream TypeScript test file. It covers the five valid source examples,
 host/URL semantics, loose SemVer preservation, five invalid/null cases, and
 the two assertion/error cases. The verifier-owned adapter returns only JSON
 values and bounded exception metadata.
+
+## Missing test-bundle remediation evidence
+
+The originally referenced test bundle digest
+`sha256:b5f00cb69c10fb8e6019abd8fbdf46016e0cc0e67c165964ff704d323116daa7`
+was present in the local private artifact store as a 3,426-byte gzip-tar at the
+legacy flat path `artifacts/private/sha256/<full-digest>`, not at the resolver's
+prefix path. Its three members were the task-local `contract.test.mjs`,
+`test_client.mjs`, and `candidate_adapter.mjs`; their contents match the
+private boundary source and the 14-leaf contract. It was not treated as a
+publishable runtime artifact.
+
+A task-local, content-addressed rebuild renamed only the helper to
+`candidate_adapter.txt` and changed `test_client.mjs`'s private helper path.
+This preserves the adapter protocol and all assertions while preventing the
+Node test collector from counting the helper as a test file. The rebuilt bundle
+is `sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824`,
+3,430 bytes, with members `candidate_adapter.txt`, `contract.test.mjs`, and
+`test_client.mjs`.
+
+The first compile's Oracle run collected 15 and was invalid against the frozen
+14 denominator; the corrected bounded retry collected exactly 14, was valid,
+and passed 13/14 for reward `0.9285714285714286`. These authoring runs were
+temporary and are summarized in `blocked.md`; private bundles remain in the
+content-addressed artifact store rather than under the public source catalog.
+The task remains blocked and no generated runtime is retained because empty,
+stub, forgery, and offline controls were not completed.

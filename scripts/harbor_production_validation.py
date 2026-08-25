@@ -17,13 +17,15 @@ import subprocess
 import tempfile
 import tomllib
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, Literal
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 
 JsonObject = dict[str, Any]
+BundleManifestSchema = Literal["1.0", "2.0"]
+RuntimeLanguage = Literal["python", "node"]
 
 VALID_STATUSES = frozenset({"controls-passed", "reviewed", "piloted", "published"})
 BLOCKED_STATUSES = frozenset({"blocked", "excluded"})
@@ -223,11 +225,35 @@ def _file_inventory(root: Path, *, exclude_manifest: bool = False) -> dict[str, 
     return inventory
 
 
-def _validate_bundle_manifest(task_id: str, task_root: Path) -> JsonObject:
+def _bundle_manifest_schema_for_source(
+    task_id: str, source_data: JsonObject
+) -> tuple[RuntimeLanguage, BundleManifestSchema]:
+    metadata = source_data.get("metadata")
+    if not isinstance(metadata, dict):
+        raise ProductionGateError(f"{task_id}: source metadata must be an object")
+    language = metadata.get("language")
+    if language == "python":
+        return "python", "1.0"
+    if language == "node":
+        return "node", "2.0"
+    raise ProductionGateError(
+        f"{task_id}: source metadata.language must be python or node, got {language!r}"
+    )
+
+
+def _validate_bundle_manifest(
+    task_id: str,
+    task_root: Path,
+    *,
+    language: RuntimeLanguage,
+    expected_schema: BundleManifestSchema,
+) -> JsonObject:
     manifest_path = task_root / "bundle.manifest.json"
     manifest = read_json_object(manifest_path)
-    if manifest.get("schema_version") != "1.0":
-        raise ProductionGateError(f"{task_id}: bundle manifest schema must be 1.0")
+    if manifest.get("schema_version") != expected_schema:
+        raise ProductionGateError(
+            f"{task_id}: {language} bundle manifest schema must be {expected_schema}"
+        )
     if manifest.get("mode") != "production":
         raise ProductionGateError(f"{task_id}: bundle manifest is not production mode")
     rows = manifest.get("files")
@@ -301,7 +327,13 @@ def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Pa
     )
     if not any(path.is_file() for path in grader_paths):
         raise ProductionGateError(f"{task_id}: structured grader entrypoint is missing")
-    manifest = _validate_bundle_manifest(task_id, task_root)
+    language, expected_schema = _bundle_manifest_schema_for_source(task_id, source_data)
+    manifest = _validate_bundle_manifest(
+        task_id,
+        task_root,
+        language=language,
+        expected_schema=expected_schema,
+    )
     if manifest.get("canonical_manifest_digest") != metadata.get("canonical_manifest_digest"):
         raise ProductionGateError(
             f"{task_id}: canonical manifest digest differs across bundle files"

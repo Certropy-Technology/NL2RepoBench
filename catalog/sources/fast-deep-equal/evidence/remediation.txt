@@ -1,18 +1,1 @@
-fast-deep-equal production receipt audit
-
-Command:
-find .nl2repo/authoring-work/repairs/fast-deep-equal .nl2repo/runs/oracle/recheck-fast-deep-equal-final jobs/2026-08-25__00-38-28 jobs/2026-08-25__00-40-10 jobs/2026-08-25__00-40-48 jobs/2026-08-25__00-42-46 -type f -name network.json -print
-Exit: 0
-Output: (empty)
-
-The task-local repair evidence contains Harbor result, trial result, grading,
-report, and reward receipts for the final Oracle plus empty, stub, and forgery
-controls. Their observed grading results are Oracle 20/20 reward 1.0, empty
-candidate-installation failure reward 0.0, and stub/forgery 20 failed leaves
-with reward 0.0. The corresponding task runs and the later Oracle recheck have
-no verifier/network.json receipt.
-
-The Oracle/control/network receipt set is therefore incomplete and cannot be
-hash-bound into valid production evidence. Keep the source blocked until the
-four runs produce verifier/network.json receipts and the evidence is
-revalidated; no runtime task is retained.
+The prior verifier-evidence blocker is resolved. Fresh Harbor 0.21.0 Oracle, empty, stub, and forgery runs are recorded under .nl2repo/runs/fast-deep-equal-repair-20260825; the independent Docker network-none probe is persisted as network-probe.json. Hash-bound production evidence and controls-passed.json now reference the exact receipts.

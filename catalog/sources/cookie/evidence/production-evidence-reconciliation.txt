@@ -10,6 +10,55 @@ $ uv run --frozen --project harbor-runner harbor --version
 # Task-local network and offline receipt inventory
 .nl2repo/authoring-work/repairs/cookie/network-lint.log
 
-# Required durable receipt paths
+# Fresh production repair attempt (2026-08-25)
+set -euo pipefail; rm -rf catalog/tasks/cookie; uv run nl2repo harbor compile catalog/sources/cookie --output catalog/tasks --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private
+exit_code=0
+compile_log=.nl2repo/authoring-work/repairs/cookie/production-compile-current.log
+compile_log_sha256=sha256:47c0b52689658067e0f2e2d6736fc7e9b7222e3a66c5273397964160c501ddb7
+result=catalog/tasks/cookie/bundle.manifest.json (production compile succeeded before the failed Oracle gate)
+
+set -o pipefail; uv run --frozen --project harbor-runner harbor run -p catalog/tasks/cookie -a oracle --jobs-dir .nl2repo/runs/cookie-oracle-production-20260825 --job-name cookie-oracle-production-20260825 --n-concurrent 1 --yes
+exit_code=0
+oracle_log=.nl2repo/authoring-work/repairs/cookie/oracle-production-current.log
+oracle_log_sha256=sha256:16dc2bb4636ce64770f4abce3be26fc3514516a0fc090985af85338509fd6f4d
+grading=.nl2repo/runs/cookie-oracle-production-20260825/cookie-oracle-production-20260825/cookie__35Yj5Tq/verifier/grading.json
+grading_sha256=sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd
+grading_summary='valid=true expected_total=32 collected=0 passed=0 reward=0.0 failure_class=model failure_reason=candidate-installation-failed'
+
+# Required durable receipt paths remain absent; the invalid runtime was removed.
 MISSING catalog/sources/cookie/evidence/network-probe.json
 MISSING .nl2repo/authoring-work/repairs/cookie/runs/cookie-offline
+REMOVED catalog/tasks/cookie (the production compile artifact was not retained after the Oracle gate failed)
+
+# Bounded follow-up (2026-08-25)
+The identical source and locked Node toolchain were recompiled and rerun once.
+The npm core dump did not recur, proving the first candidate-installation-failed
+result was transient infrastructure rather than a cookie package-shape defect.
+
+Oracle retry:
+  grading=.nl2repo/runs/cookie-oracle-install-retry-20260825/cookie-oracle-install-retry-20260825/cookie__RDU6nig/verifier/grading.json
+  grading_sha256=sha256:96fdd5bed9aa746ea9271247ee97129cace3d09a2e6dd9175d2ee0f8cd82bc8b
+  valid=true expected_total=32 collected=32 passed=32 reward=1.0
+
+Empty control:
+  grading=.nl2repo/runs/cookie-empty-followup-20260825/cookie-empty-followup-20260825/cookie__5bguWCR/verifier/grading.json
+  grading_sha256=sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd
+  valid=true reward=0.0 failure_reason=candidate-installation-failed
+
+Stub control:
+  grading=.nl2repo/runs/cookie-stub-followup-20260825/cookie-stub-followup-20260825/cookie-stub__MK8Tn3V/verifier/grading.json
+  grading_sha256=sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c
+  valid=true collected=32 passed=1 reward=0.03125
+
+Forgery control:
+  grading=.nl2repo/runs/cookie-forgery-followup-20260825/cookie-forgery-followup-20260825/cookie-forgery__qUzaPQk/verifier/grading.json
+  grading_sha256=sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c
+  valid=true collected=32 passed=1 reward=0.03125
+  forged_workspace_grading_sha256=sha256:f48485cfa2aca87331e358fda01672b1f233539d7fef158c246aaa189af6e927
+
+The generated Node verifier does not write verifier/network.json and the Node
+compiler exposes no source-local test-script or network-probe hook. Therefore
+the required offline receipt cannot be produced without a shared compiler
+change or a generated-runtime edit. The latter is forbidden. The runtime was
+removed and cookie remains blocked despite the successful Oracle and score
+controls.

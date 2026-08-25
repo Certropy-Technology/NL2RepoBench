@@ -144,7 +144,9 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
         )
 
 
-def _runtime_fixture(root: Path) -> tuple[dict[str, object], Path]:
+def _runtime_fixture(
+    root: Path, *, language: str = "python"
+) -> tuple[dict[str, object], Path]:
     task_root = root / "task"
     files = {
         "environment/Dockerfile": "FROM python:3.12-slim\n",
@@ -173,26 +175,51 @@ network_mode = "no-network"
     _write_json(
         task_root / "bundle.manifest.json",
         {
-            "schema_version": "1.0",
+            "schema_version": "1.0" if language == "python" else "2.0",
             "mode": "production",
             "canonical_manifest_digest": "sha256:abc",
             "files": rows,
         },
     )
     source = {
+        "schema_version": "1.0" if language == "python" else "2.0",
+        "metadata": {"language": language},
         "environment": {"network_policy": {"mode": "no-network"}},
         "tests": {"expected_total": 3},
     }
     return source, task_root
 
 
-def test_runtime_shape_validates_schema_network_and_bundle_hashes(tmp_path: Path) -> None:
+def test_runtime_shape_accepts_python_v1_bundle_manifest_and_validates_hashes(
+    tmp_path: Path,
+) -> None:
     source, task_root = _runtime_fixture(tmp_path)
     result = gate._validate_runtime_shape("fixture", source, task_root)
     assert result["schema_version"] == "1.4"
     (task_root / "instruction.md").write_text("changed\n", encoding="utf-8")
     with pytest.raises(gate.ProductionGateError, match="bundle manifest mismatch"):
         gate._validate_runtime_shape("fixture", source, task_root)
+
+
+def test_runtime_shape_accepts_node_v2_bundle_manifest(tmp_path: Path) -> None:
+    source, task_root = _runtime_fixture(tmp_path, language="node")
+
+    result = gate._validate_runtime_shape("node-fixture", source, task_root)
+
+    assert result["schema_version"] == "1.4"
+
+
+def test_runtime_shape_rejects_bundle_manifest_schema_for_source_language(
+    tmp_path: Path,
+) -> None:
+    source, task_root = _runtime_fixture(tmp_path, language="node")
+    manifest_path = task_root / "bundle.manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["schema_version"] = "1.0"
+    _write_json(manifest_path, manifest)
+
+    with pytest.raises(gate.ProductionGateError, match="node bundle manifest schema must be 2.0"):
+        gate._validate_runtime_shape("node-fixture", source, task_root)
 
 
 def _valid_gate_report(root: Path) -> tuple[Path, dict[str, object]]:

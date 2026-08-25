@@ -6,13 +6,73 @@
         "exit_code": 0,
         "log": {
           "path": "catalog/sources/cookie/evidence/production-evidence-reconciliation.txt",
-          "sha256": "sha256:cf9baee7963e4a24a96186b6405f0852019ae8e8c5e053bea8a4bdaed90f73c0"
+        "sha256": "sha256:1b67ff892cdd8611d772385d4710a257b81957429b5fec615a5df14d9e10e30d"
         },
         "tool_version": "Harbor 0.21.0"
       }
     ],
     "failure_class": "verifier",
-    "next_step": "Recompile the source with its private artifacts, run an official Harbor 0.21.0 Oracle and complete empty, stub, forgery, and offline controls, preserve a task-local structured no-network probe, and restore the runtime only with hash-bound valid evidence.",
+    "next_step": "Add a source-authoritative Node verifier network-probe hook in the shared Node compiler, recompile cookie, and rerun the official Harbor Oracle plus empty, stub, forgery, and offline controls so each run has hash-bound grading and network receipts. Restore catalog/tasks/cookie only after that complete evidence gate passes.",
+    "followup_attempt": {
+      "oracle": {
+        "path": ".nl2repo/runs/cookie-oracle-install-retry-20260825/cookie-oracle-install-retry-20260825/cookie__RDU6nig/verifier/grading.json",
+        "sha256": "sha256:96fdd5bed9aa746ea9271247ee97129cace3d09a2e6dd9175d2ee0f8cd82bc8b",
+        "valid": true,
+        "expected_total": 32,
+        "collected": 32,
+        "passed": 32,
+        "reward": 1.0
+      },
+      "empty": {
+        "path": ".nl2repo/runs/cookie-empty-followup-20260825/cookie-empty-followup-20260825/cookie__5bguWCR/verifier/grading.json",
+        "sha256": "sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd",
+        "valid": true,
+        "reward": 0.0,
+        "failure_reason": "candidate-installation-failed"
+      },
+      "stub": {
+        "path": ".nl2repo/runs/cookie-stub-followup-20260825/cookie-stub-followup-20260825/cookie-stub__MK8Tn3V/verifier/grading.json",
+        "sha256": "sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c",
+        "valid": true,
+        "collected": 32,
+        "passed": 1,
+        "reward": 0.03125
+      },
+      "forgery": {
+        "path": ".nl2repo/runs/cookie-forgery-followup-20260825/cookie-forgery-followup-20260825/cookie-forgery__qUzaPQk/verifier/grading.json",
+        "sha256": "sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c",
+        "valid": true,
+        "collected": 32,
+        "passed": 1,
+        "reward": 0.03125,
+        "verifier_owned_reward": true
+      },
+      "offline_network_receipt": "missing-node-compiler-network-probe-hook"
+    },
+    "latest_attempt": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/cookie -a oracle --jobs-dir .nl2repo/runs/cookie-oracle-production-20260825 --job-name cookie-oracle-production-20260825 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "harbor_version": "0.21.0",
+      "grading": {
+        "path": ".nl2repo/runs/cookie-oracle-production-20260825/cookie-oracle-production-20260825/cookie__35Yj5Tq/verifier/grading.json",
+        "sha256": "sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd",
+        "valid": true,
+        "expected_total": 32,
+        "collected": 0,
+        "passed": 0,
+        "reward": 0.0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed"
+      },
+      "compile_log": {
+        "path": ".nl2repo/authoring-work/repairs/cookie/production-compile-current.log",
+        "sha256": "sha256:47c0b52689658067e0f2e2d6736fc7e9b7222e3a66c5273397964160c501ddb7"
+      },
+      "oracle_log": {
+        "path": ".nl2repo/authoring-work/repairs/cookie/oracle-production-current.log",
+        "sha256": "sha256:16dc2bb4636ce64770f4abce3be26fc3514516a0fc090985af85338509fd6f4d"
+      }
+    },
     "source_freeze": {
       "license_spdx": "MIT",
       "revision": "51c485421a95ee796de6d8dab53a5ade0a20db8a",

@@ -275,3 +275,25 @@ or private test authoring, cache publication, offline verifier execution, or
 control experiments. All disposable generated source, package, lock, cache,
 and tarball bytes remained outside the repository and were removed after the
 audit.
+
+## Repair attempt record (2026-08-25)
+
+- The referenced test bundle was found in the private local artifact store at
+  the legacy flat path and verified byte-for-byte against digest
+  `sha256:b5f00cb69c10fb8e6019abd8fbdf46016e0cc0e67c165964ff704d323116daa7`
+  and size 3,426 bytes.
+- The bundle contained the authoritative 14-leaf contract plus a helper named
+  `candidate_adapter.mjs`. The Node runner collected that helper as a 15th
+  leaf, so the first production Oracle attempt was invalid (`collected=15`,
+  expected `14`, reward `0`).
+- The task-local remediation renamed only that helper to
+  `candidate_adapter.txt` and updated the task-local client path. The rebuilt
+  bundle is content-addressed as
+  `sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824`
+  with size 3,430 bytes.
+- A bounded corrected Harbor 0.21 Oracle run collected exactly 14 leaves,
+  was valid, and scored `13/14 = 0.9285714285714286`. The failed and corrected
+  run artifacts are under `runs/oracle/` and `runs/oracle-corrected/`.
+- No controls were run before the worker budget ended. The lifecycle therefore
+  remains `blocked`, and the generated `catalog/tasks/parse-npm-tarball-url/`
+  runtime was removed. Controls and a later promotion decision remain required.

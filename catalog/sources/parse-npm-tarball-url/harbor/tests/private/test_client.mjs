@@ -2,7 +2,7 @@ import {chmodSync, readFileSync, writeFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 
 const NODE = '/usr/local/bin/node';
-const ADAPTER_SOURCE = '/tests/private/candidate_adapter.mjs';
+const ADAPTER_SOURCE = '/tests/private/candidate_adapter.txt';
 const ADAPTER = '/tmp/parse-npm-tarball-url-candidate-adapter.mjs';
 const PACKAGE = 'parse-npm-tarball-url';
 let sequence = 0;

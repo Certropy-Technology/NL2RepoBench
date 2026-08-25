@@ -72,10 +72,10 @@ uri = "artifact://private/sha256:cab621dcaf7260f80d7c66f04c60ed005c26aa2b0a37485
 visibility = "private"
 
 [tests.test_bundle]
-digest = "sha256:b5f00cb69c10fb8e6019abd8fbdf46016e0cc0e67c165964ff704d323116daa7"
-size_bytes = 3426
+digest = "sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824"
+size_bytes = 3430
 media_type = "application/vnd.nl2repobench.node-tests+tar"
-uri = "artifact://private/sha256:b5f00cb69c10fb8e6019abd8fbdf46016e0cc0e67c165964ff704d323116daa7"
+uri = "artifact://private/sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824"
 visibility = "private"
 
 [metric]
@@ -99,7 +99,7 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "parse-npm-tarball-url-repair"
-reason = "Production compile blocked: referenced private artifact sha256:b5f00cb69c10fb8e6019abd8fbdf46016e0cc0e67c165964ff704d323116daa7 is missing; no parse task Oracle was run. The unrelated jobs/2026-08-25__00-42-46 result is not evidence for this task."
+reason = "Blocked after bounded evidence run: rebuilt task-local private test bundle sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824 (3430 bytes) fixed helper auto-collection; corrected Harbor Oracle collected 14/14 and was valid at reward 0.9285714285714286, but controls were not run because the worker tool budget ended. No runtime is retained; rerun required for empty/stub/forgery/offline controls before controls-passed."
 
 [oracle_bundle]
 digest = "sha256:3e4f7b8a4624900ad83a82abcdd61f3aab41b7a18188f86a46850f49b8acc4e3"

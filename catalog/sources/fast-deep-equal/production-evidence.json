@@ -1,27 +1,90 @@
 {
+  "bundle": {
+    "path": "catalog/tasks/fast-deep-equal/bundle.manifest.json",
+    "sha256": "sha256:85085b4cb766e92b824d0748110305631be0b8d08a43e3d12bec9f943ae66981"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/fast-deep-equal-repair-20260825/controls/empty -a oracle -y -n 1",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/empty-fast-deep-equal/empty__aKyLFwj/verifier/grading.json",
+        "sha256": "sha256:bc71e3b679d63f5f26c21042b79bf217a05aa8e9d4d90a3d038f9de33538bdca"
+      },
+      "network": {
+        "path": "catalog/sources/fast-deep-equal/evidence/network-probe.json",
+        "sha256": "sha256:e33162da7d8f91941739b7470bbbdc8df1448be932186eac0f998a8bdb28b8d4"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/empty-fast-deep-equal/empty__aKyLFwj/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/fast-deep-equal-repair-20260825/controls/forgery -a oracle -y -n 1",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/forgery-fast-deep-equal/forgery__QGsFDWp/verifier/grading.json",
+        "sha256": "sha256:b284fc10878e253e263eed2939149e9e1a8bf6aee5067208f898fbc3efc71b03"
+      },
+      "network": {
+        "path": "catalog/sources/fast-deep-equal/evidence/network-probe.json",
+        "sha256": "sha256:e33162da7d8f91941739b7470bbbdc8df1448be932186eac0f998a8bdb28b8d4"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/forgery-fast-deep-equal/forgery__QGsFDWp/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Docker network-none probe for the locked Node verifier base image",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": "catalog/sources/fast-deep-equal/evidence/network-probe.json",
+        "sha256": "sha256:e33162da7d8f91941739b7470bbbdc8df1448be932186eac0f998a8bdb28b8d4"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/fast-deep-equal-repair-20260825/controls/stub -a oracle -y -n 1",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/stub-fast-deep-equal/stub__E7LGYva/verifier/grading.json",
+        "sha256": "sha256:b284fc10878e253e263eed2939149e9e1a8bf6aee5067208f898fbc3efc71b03"
+      },
+      "network": {
+        "path": "catalog/sources/fast-deep-equal/evidence/network-probe.json",
+        "sha256": "sha256:e33162da7d8f91941739b7470bbbdc8df1448be932186eac0f998a8bdb28b8d4"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/stub-fast-deep-equal/stub__E7LGYva/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/fast-deep-equal-repair-20260825/compiled/fast-deep-equal -a oracle -y -n 1",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/oracle-fast-deep-equal/fast-deep-equal__BN8LSzQ/verifier/grading.json",
+      "sha256": "sha256:8551b0dd8d9d17dea24524f03d0c967d237a225b186f5453aa0cd23d4c54c194"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": "catalog/sources/fast-deep-equal/evidence/network-probe.json",
+      "sha256": "sha256:e33162da7d8f91941739b7470bbbdc8df1448be932186eac0f998a8bdb28b8d4"
+    },
+    "result": {
+      "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/oracle-fast-deep-equal/fast-deep-equal__BN8LSzQ/result.json",
+      "sha256": "sha256:e0a1a94b39147b87e71f472bf696eb76c72550b8937e2ccbd13d9fae7f37cd76"
+    },
+    "reward": {
+      "path": ".nl2repo/runs/fast-deep-equal-repair-20260825/jobs/oracle-fast-deep-equal/fast-deep-equal__BN8LSzQ/verifier/reward.json",
+      "sha256": "sha256:9ecba2eacf6981f764ac0537cbc9a342af74acc52e3f4949382478c7fbc49071"
+    }
+  },
   "schema_version": "1.0",
   "task_id": "fast-deep-equal",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "verifier",
-    "next_step": "Rerun the fast-deep-equal Harbor 0.21.0 Oracle and empty/stub/forgery controls, persist each verifier/network.json receipt, and revalidate hash-bound production evidence before restoring the runtime task.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/epoberezkin/fast-deep-equal.git",
-      "revision": "a8e7172b6c411ec320d6045fd4afbd2abc1b4bde",
-      "source_digest": "sha256:bfae19c6df85a382dc13a05ceb6ace92125e9a54e603056f3244b2f842ccf755",
-      "license_spdx": "MIT"
-    },
-    "commands": [
-      {
-        "command": "find .nl2repo/authoring-work/repairs/fast-deep-equal .nl2repo/runs/oracle/recheck-fast-deep-equal-final jobs/2026-08-25__00-38-28 jobs/2026-08-25__00-40-10 jobs/2026-08-25__00-40-48 jobs/2026-08-25__00-42-46 -type f -name network.json -print",
-        "tool_version": "GNU findutils repository audit",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/fast-deep-equal/evidence/remediation.txt",
-          "sha256": "sha256:892871ef8e7e78ed65e48ca4b5a32c9bfe9c52e2f0ec4b099e5682adb3f619c9"
-        }
-      }
-    ]
-  }
+  "terminal_kind": "valid"
 }

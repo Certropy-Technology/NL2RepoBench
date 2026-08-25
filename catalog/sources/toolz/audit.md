@@ -307,3 +307,18 @@ resolved and recorded:
 
 No hidden tests, Harbor assets, Oracle, shared catalog/dataset update, secret,
 large persistent cache, or full source baseline was created by this audit.
+
+## 2026-08-25 Bounded Harbor Remediation
+
+- The bounded local adapter passed all 49 cases.
+- Source and Harbor compilation passed in temporary output.
+- Oracle candidate installation failed because the frozen `pyproject.toml`
+  license metadata was incompatible with the resolved setuptools closure.
+- No controls were run.
+- Partial runtime and private assets were removed.
+- Exact next step: regenerate the hash-locked dependency artifact with a
+  setuptools closure compatible with the frozen metadata and its
+  `setuptools >=77` requirement, update the source
+  `[dependencies].lock_artifact` digest and private bundle, repopulate the
+  task-local artifact store, compile without `--allow-incomplete`, and rerun
+  one Oracle before any controls.
