@@ -1,122 +1,139 @@
 {
   "schema_version": "1.0",
   "task_id": "cookie",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "environment",
-    "next_step": "Investigate the npm installation failure, then compile and prepare the official stub again and run it alone under a new isolated output root. Do not reuse this run root or its job paths.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/jshttp/cookie",
-      "revision": "51c485421a95ee796de6d8dab53a5ade0a20db8a",
-      "source_digest": "sha256:e4f8342e3b6d89c5dc8d03e086d2f5faa8c5a09ca6f76b7ac9b4a06fa610d0b0",
-      "license_spdx": "MIT"
-    },
-    "commands": [
-      {
-        "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/controls/stub/cookie-stub -a oracle --jobs-dir .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/stub --n-concurrent 1 --max-retries 0 --yes",
-        "tool_version": "Harbor 0.21.0 / Node 24.19.0 / npm 11.17.0",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/cookie/evidence/official-node-controls-blocked.txt",
-          "sha256": "sha256:7ced078eec011444a6cc34e916ab9fcbe861aa91e1881e22f97e3e544eb629fc"
-        }
-      }
-    ],
-    "attempt": {
-      "run_root": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final",
-      "expected_total": 32,
-      "compile": {
-        "allow_incomplete": false,
-        "mode": "production",
-        "bundle_manifest": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/compiled/cookie/bundle.manifest.json",
-          "sha256": "sha256:0cc9f30749f24fa9e328e148a0cdef87ead88101d3179bb24591c14b39eff146"
-        }
-      },
-      "oracle": {
-        "valid": true,
-        "expected_total": 32,
-        "collected": 32,
-        "passed": 32,
-        "reward": 1.0,
-        "grading": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/oracle/2026-08-25__16-15-09/cookie__aEVEJjj/verifier/grading.json",
-          "sha256": "sha256:96fdd5bed9aa746ea9271247ee97129cace3d09a2e6dd9175d2ee0f8cd82bc8b"
-        },
-        "network": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/oracle/2026-08-25__16-15-09/cookie__aEVEJjj/verifier/network.json",
-          "sha256": "sha256:676769792d4d260858f29eaff518b93b227269b1e0a6e2f7c29260c5c335c00a",
-          "public_network_available": false
-        }
-      },
-      "empty": {
-        "valid": true,
-        "expected_total": 32,
-        "collected": 0,
-        "passed": 0,
-        "reward": 0.0,
-        "failure_reason": "candidate-installation-failed",
-        "grading": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/empty/2026-08-25__16-16-02/cookie__AjSfVmZ/verifier/grading.json",
-          "sha256": "sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd"
-        },
-        "network": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/empty/2026-08-25__16-16-02/cookie__AjSfVmZ/verifier/network.json",
-          "sha256": "sha256:64c112cd12e081efd7ba7fff0f1cba5aafdafe38189d9b6e8dc986dbbe5fdd01",
-          "public_network_available": false
-        }
-      },
-      "stub": {
-        "gate": "failed",
-        "valid": true,
-        "expected_total": 32,
-        "collected": 0,
-        "passed": 0,
-        "reward": 0.0,
-        "failure_class": "model",
-        "failure_reason": "candidate-installation-failed",
-        "grading": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/stub/2026-08-25__16-17-27/cookie-stub__j2dtq36/verifier/grading.json",
-          "sha256": "sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd"
-        },
-        "network": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/stub/2026-08-25__16-17-27/cookie-stub__j2dtq36/verifier/network.json",
-          "sha256": "sha256:7f92ee36af3a16d3c320ec5bb954fbf035ad3cdf4cdea5fb2786ed0ad97dc85a",
-          "public_network_available": false
-        },
-        "stdout": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/stub/2026-08-25__16-17-27/cookie-stub__j2dtq36/verifier/test-stdout.txt",
-          "sha256": "sha256:1ef506c21888d7e06d118222fffe6e6861bad580a5de87e77dd2bd9cfc3f2ece",
-          "summary": "/usr/local/bin/npm failed"
-        }
-      },
-      "forgery": {
-        "valid": true,
-        "expected_total": 32,
-        "collected": 32,
-        "passed": 1,
-        "reward": 0.03125,
-        "verifier_owned_reward": true,
-        "grading": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery/2026-08-25__16-17-27/cookie-forgery__CSAuN4t/verifier/grading.json",
-          "sha256": "sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c"
-        },
-        "network": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery/2026-08-25__16-17-27/cookie-forgery__CSAuN4t/verifier/network.json",
-          "sha256": "sha256:1a887c0969e62be070fd865cfa9de365e4350c066c9f62be9bfaef2853f45522",
-          "public_network_available": false
-        },
-        "forged_workspace_grading": {
-          "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery/2026-08-25__16-17-27/cookie-forgery__CSAuN4t/artifacts/workspace/grading.json",
-          "sha256": "sha256:f48485cfa2aca87331e358fda01672b1f233539d7fef158c246aaa189af6e927",
-          "claimed_reward": 1.0
-        }
-      }
-    },
-    "prior_remediation_history": {
-      "path": "catalog/sources/cookie/evidence/production-evidence-reconciliation.txt",
-      "sha256": "sha256:1b67ff892cdd8611d772385d4710a257b81957429b5fec615a5df14d9e10e30d"
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 32,
+  "bundle": {
+    "path": "catalog/tasks/cookie/bundle.manifest.json",
+    "sha256": "sha256:d43f5c275c7f54572af1b61c57f31c7a68d10669b12e91f9d75ee1e8928e2a11",
+    "canonical_manifest_digest": "sha256:cfae6a26c1a3d5324b23a174c3c400bac4f70fb0f28252f172d2c6c8ec6e58d8",
+    "mode": "production"
+  },
+  "receipt_binding": {
+    "source_revision": "51c485421a95ee796de6d8dab53a5ade0a20db8a",
+    "source_digest": "sha256:e4f8342e3b6d89c5dc8d03e086d2f5faa8c5a09ca6f76b7ac9b4a06fa610d0b0",
+    "instruction_sha256": "sha256:be2b971cc0f714c68357ef765822b3fe27cc97c424c00059e81396fa7f9f09a2",
+    "dependency_artifact": "sha256:0465771fa2162c197c01e0fbf91097cb083e1d34df867386add3c2b9399c6d34",
+    "commands_artifact": "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7",
+    "test_bundle": "sha256:fafcf9cc348d7b2d39d38862563860fc16e7dfb8968f01bd254453930bc08587",
+    "oracle_bundle": "sha256:6880843c56fbb2812265e32874ede71387f6a1559c240c785c25344fac2cc0fc",
+    "stub_dispatch_sha256": "sha256:43e010e77b7ed8793eb42772f74d5a47246266e067c31936c44870465e524772",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:24436f869cecbc32881a7473578ee067d6f7144e39a111167a2ce0f6fb58ff23",
+    "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "runtime_projection_check": "The prior matrix bundle and fresh remediation bundle differ only in bundle.manifest.json and the lifecycle-derived canonical_manifest_digest line in generated task.toml; all instruction, control, Oracle, dependency, test, verifier, image, and toolchain bytes match."
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/cookie --output .nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_manifest": {
+      "path": ".nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/compiled/cookie/bundle.manifest.json",
+      "sha256": "sha256:6c8f9363b6eb5755417c510d4eb1ca3a466c2bfe08e05f45e8b0a2b2d76d8532"
     }
-  }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/compiled/cookie -a oracle --jobs-dir .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/oracle/2026-08-25__16-15-09/cookie__aEVEJjj/verifier/grading.json",
+      "sha256": "sha256:96fdd5bed9aa746ea9271247ee97129cace3d09a2e6dd9175d2ee0f8cd82bc8b"
+    },
+    "network": {
+      "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/oracle/2026-08-25__16-15-09/cookie__aEVEJjj/verifier/network.json",
+      "sha256": "sha256:676769792d4d260858f29eaff518b93b227269b1e0a6e2f7c29260c5c335c00a",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/compiled/cookie -a nop --jobs-dir .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/empty/2026-08-25__16-16-02/cookie__AjSfVmZ/verifier/grading.json",
+        "sha256": "sha256:5f3c11fa733c52bb6a666073788a5b98886b5d671a3c2e79db2cd4bbaee951bd"
+      },
+      "network": {
+        "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/empty/2026-08-25__16-16-02/cookie__AjSfVmZ/verifier/network.json",
+        "sha256": "sha256:64c112cd12e081efd7ba7fff0f1cba5aafdafe38189d9b6e8dc986dbbe5fdd01",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/compiled/cookie stub --output .nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/controls/stub --toolchain toolchain.node.lock.toml",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/controls/stub/cookie-stub -a oracle --jobs-dir .nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/jobs/stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "isolated": true,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "control_bundle_manifest": {
+        "path": ".nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/controls/stub/cookie-stub/bundle.manifest.json",
+        "sha256": "sha256:567413195e83f1acf0687ab6ac2d95abbeae5954eda871de3aa9e9473511260a"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/jobs/stub/2026-08-25__18-49-13/cookie-stub__URWHNWy/verifier/grading.json",
+        "sha256": "sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4/jobs/stub/2026-08-25__18-49-13/cookie-stub__URWHNWy/verifier/network.json",
+        "sha256": "sha256:6c264d9620e8902c5e19103970bd6744b274677f967a3485ed365812488938c4",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/controls/forgery/cookie-forgery -a oracle --jobs-dir .nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery/2026-08-25__16-17-27/cookie-forgery__CSAuN4t/verifier/grading.json",
+        "sha256": "sha256:8a7a94a60e87ff04c9d043e6da4e166a3efb72eaa265b6c8be187b7ca1c9ab3c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery/2026-08-25__16-17-27/cookie-forgery__CSAuN4t/verifier/network.json",
+        "sha256": "sha256:1a887c0969e62be070fd865cfa9de365e4350c066c9f62be9bfaef2853f45522",
+        "public_network_available": false
+      },
+      "forged_workspace_grading": {
+        "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/forgery/2026-08-25__16-17-27/cookie-forgery__CSAuN4t/artifacts/workspace/grading.json",
+        "sha256": "sha256:f48485cfa2aca87331e358fda01672b1f233539d7fef158c246aaa189af6e927",
+        "claimed_reward": 1.0
+      }
+    },
+    "offline": {
+      "command": "Verifier-integrated network-check.mjs in Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network_receipts": 4,
+      "network": {
+        "path": ".nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final/jobs/oracle/2026-08-25__16-15-09/cookie__aEVEJjj/verifier/network.json",
+        "sha256": "sha256:676769792d4d260858f29eaff518b93b227269b1e0a6e2f7c29260c5c335c00a"
+      }
+    }
+  },
+  "notes": "Only the stale stub gate was rerun. The valid current Oracle, empty, and forgery receipts were reused after byte-level projection comparison. Review, pilot, and publication remain out of scope."
 }

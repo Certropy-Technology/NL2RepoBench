@@ -1,0 +1,135 @@
+{
+  "canonical_manifest_digest": "sha256:cfae6a26c1a3d5324b23a174c3c400bac4f70fb0f28252f172d2c6c8ec6e58d8",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "b82e0d415cdd4846ba6119fc5e4079843e1872affa9e90e7bf9cfdb6ece21cf6",
+      "size_bytes": 318
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "a097271c64939c5af3f62eb5e1ffb82718e1bf542c2741ffdaa882146f3d88fd",
+      "size_bytes": 948
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "43e010e77b7ed8793eb42772f74d5a47246266e067c31936c44870465e524772",
+      "size_bytes": 571
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "be2b971cc0f714c68357ef765822b3fe27cc97c424c00059e81396fa7f9f09a2",
+      "size_bytes": 7111
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "d42f6a08cabf308b54938234440818e5d81ff41da984c4c72f6eaed2701e668c",
+      "size_bytes": 161
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "419bd1d6bc9bf77a731a56d0c6c9dd4ec7131e8866cf21e0c2890bfc8a95b743",
+      "size_bytes": 30720
+    },
+    {
+      "path": "task.toml",
+      "sha256": "4d0677964841d498f7b22921c88d68f6847c6e729f61524205f10a6807b666b0",
+      "size_bytes": 1306
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "42396fc7cc4499c6707a2df41c0ce4e163e60630a1b71c8f2749c7aa14ff7585",
+      "size_bytes": 388
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "bffb819a6197d33521f572e0d9ff64f944ae8eeba90779a3d30163482163a6d5",
+      "size_bytes": 175
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/adapter-source.js.txt",
+      "sha256": "9a7382ab96e56580a697048b23d3ce1af01c5976faceb2eca8e9b08e45cbf704",
+      "size_bytes": 4122
+    },
+    {
+      "path": "tests/private/contract.test.mjs",
+      "sha256": "4cabf4dfbd942aa5bffc43f820a7a114dd1d18c4f52765724b235a71ad8b41eb",
+      "size_bytes": 8941
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "3f1c11e573e8334efd3c26670c2c2e266df8142c752e17b00cf145e103cb2709",
+      "size_bytes": 1937
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "7de26c3a53d8a03a8924a8101d060dab95fae4b07f126df0cfe9d61e264b3734",
+      "size_bytes": 2959
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "cookie",
+  "task_version": "2.0.0",
+  "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
+}

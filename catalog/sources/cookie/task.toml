@@ -79,9 +79,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "cookie-repair"
-reason = "Fresh production compilation and official Harbor Oracle, empty, and forgery runs passed with expected_total=32 and verifier-owned no-egress network receipts, but the one allowed official stub run failed candidate installation and collected 0/32. The canonical gate does not accept setup failure as a passing stub control, so the runtime remains absent pending an isolated stub rerun after npm failure investigation."
+reason = "Hash-bound Harbor 0.21 evidence is complete for the current source and locked Node toolchain: Oracle passed 32/32; empty failed closed at reward 0; the isolated committed-dispatch stub collected 32 and scored 1/32; forgery collected 32 and scored 1/32 despite a forged workspace reward; and every gate has a verifier-owned no-egress network receipt. Reviews and pilots remain pending."
 
 [oracle_bundle]
 digest = "sha256:6880843c56fbb2812265e32874ede71387f6a1559c240c785c25344fac2cc0fc"

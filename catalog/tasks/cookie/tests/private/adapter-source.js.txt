@@ -1,0 +1,138 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const MAX_DEPTH = 16;
+const MAX_NODES = 4096;
+const METHODS = new Set([
+	'parseCookie',
+	'parseSetCookie',
+	'stringifyCookie',
+	'stringifySetCookie',
+]);
+
+function emit(payload, code = 0) {
+	const encoded = JSON.stringify(payload);
+	if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+		process.stderr.write('candidate response exceeds the bound\n');
+		process.exit(70);
+	}
+	process.stdout.write(`${encoded}\n`);
+	process.exit(code);
+}
+
+function parseRequest() {
+	const input = readFileSync(0);
+	if (input.byteLength > MAX_REQUEST_BYTES) {
+		emit({ok: false, error: 'request-too-large'}, 64);
+	}
+	let request;
+	try {
+		request = JSON.parse(input.toString('utf8'));
+	} catch {
+		emit({ok: false, error: 'malformed-json'}, 64);
+	}
+	if (!request || typeof request !== 'object' || Array.isArray(request)) {
+		emit({ok: false, error: 'request-must-be-object'}, 64);
+	}
+	return request;
+}
+
+function project(value, depth = 0, budget = {nodes: 0}) {
+	budget.nodes++;
+	if (depth > MAX_DEPTH || budget.nodes > MAX_NODES) {
+		throw new TypeError('candidate result exceeds the JSON boundary');
+	}
+	if (value === null || typeof value === 'string' || typeof value === 'boolean') {
+		return value;
+	}
+	if (typeof value === 'number') {
+		if (!Number.isFinite(value)) throw new TypeError('non-finite result is forbidden');
+		return value;
+	}
+	if (Array.isArray(value)) {
+		return value.map(item => project(item, depth + 1, budget));
+	}
+	if (typeof value === 'object') {
+		if (value instanceof Date) {
+			throw new TypeError('Date result is outside the scored JSON boundary');
+		}
+		const output = {};
+		for (const key of Object.keys(value)) {
+			if (value[key] !== undefined) output[key] = project(value[key], depth + 1, budget);
+		}
+		return output;
+	}
+	throw new TypeError('candidate result is not JSON-safe');
+}
+
+function safeEntry(packageJson) {
+	const exportsValue = packageJson.exports;
+	const entry = typeof exportsValue === 'string'
+		? exportsValue
+		: exportsValue?.['.']?.import
+			?? exportsValue?.['.']?.default
+			?? exportsValue?.import
+			?? exportsValue?.default;
+	if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+		throw new Error('cookie package has no safe ESM entry');
+	}
+	return entry;
+}
+
+async function loadCookie() {
+	const root = join(process.cwd(), 'node_modules', 'cookie');
+	const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+	const entry = safeEntry(packageJson);
+	return {
+		api: await import(pathToFileURL(join(root, entry)).href),
+		packageJson,
+		root,
+	};
+}
+
+async function main() {
+	const request = parseRequest();
+	const {api, packageJson, root} = await loadCookie();
+	if (request.operation === 'inventory') {
+		const entry = safeEntry(packageJson);
+		readFileSync(join(root, entry));
+		emit({
+			ok: true,
+			value: {
+				name: packageJson.name,
+				version: packageJson.version,
+				type: packageJson.type,
+				runtimeDependencies: Object.keys(packageJson.dependencies ?? {}),
+				scriptNames: Object.keys(packageJson.scripts ?? {}),
+				exports: Object.fromEntries([...METHODS].map(name => [name, typeof api[name]])),
+			},
+		});
+	}
+	if (request.operation !== 'call' || !METHODS.has(request.method)) {
+		emit({ok: false, error: 'operation-not-allowlisted'}, 64);
+	}
+	if (!Array.isArray(request.args) || request.args.length > 2) {
+		emit({ok: false, error: 'args-not-bounded'}, 64);
+	}
+	try {
+		const result = await api[request.method](...request.args);
+		emit({ok: true, value: project(result)});
+	} catch (error) {
+		emit({
+			ok: false,
+			error: 'candidate-call-failed',
+			exceptionType: String(error?.constructor?.name ?? 'Error').slice(0, 128),
+			message: String(error?.message ?? error).slice(0, 2048),
+		}, 1);
+	}
+}
+
+main().catch(error => emit({
+	ok: false,
+	error: 'candidate-adapter-failed',
+	exceptionType: String(error?.constructor?.name ?? 'Error').slice(0, 128),
+	message: String(error?.message ?? error).slice(0, 2048),
+}, 1));
