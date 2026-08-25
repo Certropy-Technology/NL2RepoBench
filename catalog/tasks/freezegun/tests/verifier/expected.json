@@ -1,0 +1,151 @@
+{
+  "auto_tick": [
+    "2030-01-02T03:04:05",
+    "2030-01-02T03:04:20",
+    "2030-01-02T03:04:35"
+  ],
+  "aware_datetime": {
+    "east": "2042-03-04T07:06:07+02:00",
+    "west": "2042-03-03T22:06:07-07:00"
+  },
+  "context_restoration": {
+    "date_restored": true,
+    "datetime_restored": true,
+    "fixed_constructor": "2000-01-02T03:04:05",
+    "inside": {
+      "date_patched": true,
+      "datetime_patched": true,
+      "now": "2030-01-02T03:04:05",
+      "time_patched": true
+    },
+    "time_restored": true
+  },
+  "date_datetime_operations": {
+    "combined": "2040-02-28T04:05:06",
+    "date_isinstance": true,
+    "datetime_isinstance": true,
+    "later": "2040-02-29T01:00:00",
+    "tomorrow": "2040-02-29"
+  },
+  "date_input": {
+    "now": "2031-07-08T00:00:00",
+    "today": "2031-07-08"
+  },
+  "datetime_input": {
+    "now": "2031-07-08T09:10:11.120000",
+    "utcnow": "2031-07-08T09:10:11.120000"
+  },
+  "decorator_as_arg": {
+    "after": "2035-04-05T06:07:10",
+    "before": "2035-04-05T06:07:08",
+    "label": "kept"
+  },
+  "decorator_as_kwarg": {
+    "after": "2040-01-02T03:04:05",
+    "before": "2035-04-05T06:07:08",
+    "label": "kept"
+  },
+  "decorator_function": {
+    "name": "original",
+    "result": {
+      "label": "kept",
+      "now": "2035-04-05T06:07:08",
+      "today": "2035-04-05"
+    },
+    "wrapped": true
+  },
+  "epoch_time": {
+    "time": 0.000001,
+    "time_ns": 1000,
+    "utcnow": "1970-01-01T00:00:00.000001"
+  },
+  "explicit_start_stop": {
+    "active": {
+      "factory": "2030-01-02T03:04:05",
+      "now": "2030-01-02T03:04:05"
+    },
+    "date_restored": true,
+    "datetime_restored": true,
+    "time_restored": true
+  },
+  "invalid_input": {
+    "integer": "TypeError",
+    "object": "TypeError"
+  },
+  "move_to_date": "2044-05-06T00:00:00",
+  "move_to_datetime": "2044-05-06T07:08:09.100000",
+  "move_to_string": {
+    "now": "2044-05-06T07:08:09.100000",
+    "today": "2044-05-06"
+  },
+  "nested_contexts": [
+    "2030-01-02T03:04:05",
+    "2040-06-07T08:09:10",
+    "2030-01-02T03:04:05"
+  ],
+  "package_surface": {
+    "distribution_version": "1.5.5",
+    "exports": [
+      "configure",
+      "freeze_time"
+    ],
+    "freeze_time_callable": true,
+    "module_version": "1.5.5"
+  },
+  "string_context": {
+    "now": "2042-03-04T05:06:07.123456",
+    "time": 2277522367.123456,
+    "time_ns": 2277522367123456000,
+    "today": "2042-03-04",
+    "utcnow": "2042-03-04T05:06:07.123456"
+  },
+  "tick_date_boundary": {
+    "now": "2031-01-01T00:00:01",
+    "today": "2031-01-01"
+  },
+  "tick_numeric": {
+    "after": "2030-01-02T03:04:07.500000",
+    "before": "2030-01-02T03:04:05",
+    "returned": "2030-01-02T03:04:07.500000",
+    "timestamp": 1893553447.5
+  },
+  "tick_timedelta": {
+    "after": "2030-01-04T03:04:08.000004",
+    "returned": "2030-01-04T03:04:08.000004"
+  },
+  "time_functions": {
+    "gmtime": [
+      2001,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      34,
+      -1
+    ],
+    "localtime": [
+      2001,
+      2,
+      3,
+      4,
+      5,
+      6,
+      5,
+      34,
+      -1
+    ],
+    "strftime": "2001-02-03 04:05:06"
+  },
+  "tz_offset_hours": {
+    "now": "2042-03-04T01:06:07",
+    "today": "2042-03-04",
+    "utcnow": "2042-03-04T05:06:07"
+  },
+  "tz_offset_timedelta": {
+    "now": "2042-03-05T01:30:00",
+    "today": "2042-03-05",
+    "utcnow": "2042-03-04T20:00:00"
+  }
+}
