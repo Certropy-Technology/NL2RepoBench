@@ -1,26 +1,54 @@
 schema_version = "1.4"
-artifacts = ["/workspace"]
+artifacts = [
+    "/workspace",
+]
 
 [task]
 name = "nl2repobench/funcy"
-version = "0.1.0"
-description = "Build the funcy package from an empty workspace."
-authors = [{ name = "NL2RepoBench" }]
-keywords = ["python", "repository-generation", "nl2repobench"]
+version = "1.0.0"
+description = "Build funcy 2.0 from an empty workspace and reproduce deterministic sequence, lazy iterator, collection, higher-order function, and caching behavior through a separate child-side JSON adapter with a named callback vocabulary."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "collections",
+    "memoization",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python"]
+category = "functional-utilities"
+tags = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "collections",
+    "memoization",
+    "separate-verifier",
+]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 203
+expected_test_count = 40
+canonical_manifest_digest = "sha256:e6ea1d8d5a9cc7cd811ec95ba6931dcb3aefacea279517c2806f9fc2ee3db509"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
 [agent]
 timeout_sec = 3600.0
 
 [verifier]
-timeout_sec = 600.0
+timeout_sec = 480.0
 environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
 [environment]
 network_mode = "no-network"
@@ -28,10 +56,3 @@ build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-
-[verifier.environment]
-network_mode = "no-network"
-build_timeout_sec = 600.0
-cpus = 2
-memory_mb = 2048
-storage_mb = 4096
