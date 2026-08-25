@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-html",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze an offline Python/Chromium dependency and fixture closure, reconcile the undocumented source/test overlay, and author a separate local-fixture verifier before Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/psf/requests-html",
+      "revision": "075ac162dc62fc532037df0d98954ab840a97516",
+      "source_digest": "sha256:8531f3f942267b8841c551d436e00c550b22566c815553cc7c39fac356756aca",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "bounded requests-html production remediation audit",
+        "tool_version": "repository authoring toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/requests-html/evidence/production-remediation.txt",
+          "sha256": "sha256:43acfacf57da1bdcc4f0f7613af1e1f293ce84d827ae488356d152b2f61ecf71"
+        }
+      }
+    ]
+  }
+}

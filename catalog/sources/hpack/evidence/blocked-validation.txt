@@ -1,0 +1,21 @@
+$ uv --version
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+exit_code=0
+$ python --version
+Python 3.14.7
+exit_code=0
+$ uv run --frozen nl2repo task validate-source catalog/sources/hpack
+{
+  "instruction": "catalog/sources/hpack/instruction.md",
+  "source_digest": "sha256:5b9a200db4643c12ada65a0e9cfb6e831a08dce1fa36677d313c6c834cc3680d",
+  "status": "blocked",
+  "task_id": "hpack",
+  "version": "0.1.0"
+}
+exit_code=0
+$ uv run --frozen python -c 'import json, tomllib; from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; source = Path("catalog/sources/hpack"); data = tomllib.loads((source / "task.toml").read_text()); policy = data["environment"]["network_policy"]; findings, has_bundle, has_policy = lint_task(source); errors = [finding.rule for finding in findings if finding.severity == "error"]; assert data["lifecycle"]["status"] == "blocked"; assert policy["mode"] == "no-network"; assert policy["offline_dependencies"] == "missing"; assert policy["reference_source_fetch"] == "forbidden"; assert policy["reason"]; assert has_policy and not has_bundle and not errors; assert not Path("catalog/tasks/hpack").exists(); print(json.dumps({"errors": len(errors), "has_bundle": has_bundle, "has_policy": has_policy, "runtime_exists": False}, sort_keys=True))'
+{"errors": 0, "has_bundle": false, "has_policy": true, "runtime_exists": false}
+exit_code=0
+$ test ! -e catalog/tasks/hpack && ! git check-ignore -q catalog/sources/hpack/evidence/blocked-validation.txt && printf "%s\\n" "runtime_path=absent; evidence_log=not-ignored"
+runtime_path=absent; evidence_log=not-ignored
+exit_code=0

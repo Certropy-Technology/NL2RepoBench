@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hpack",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Freeze a final image and hash-locked build/test closure, establish fixture provenance and a candidate adapter/private separate verifier, freeze the denominator, then run Oracle and required controls before generating catalog/tasks/hpack.",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "No final verifier image, hash-locked build/test dependency closure, or private verifier assets are frozen; agent and verifier run phases must remain offline and must not retrieve the reference source."
+    },
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/python-hyper/hpack",
+      "revision": "d05cff4cd462658847f67c48700aab40b2ba8cf1",
+      "source_digest": "sha256:85c3b998329e464f054e725830d0fc4437ffed9dbea4732e611c499b083403c0",
+      "license_spdx": "MIT"
+    },
+    "task_local_audit": {
+      "present": false,
+      "reason": "No task-local audit file is present; task.toml and instruction.md are the available local records."
+    },
+    "collection": {
+      "frozen_collection_available": false,
+      "provisional_source_expected_total": 502,
+      "expected_total_source": "unknown",
+      "reason": "The recorded 502-test source-tree count is not a final private-verifier denominator."
+    },
+    "runtime_task": {
+      "path": "catalog/tasks/hpack",
+      "present": false
+    },
+    "observed_state": {
+      "descriptor_status": "blocked",
+      "runtime_path_exists": false,
+      "oracle": "not-run",
+      "controls": "not-run",
+      "score": "not-claimed"
+    },
+    "commands": [
+      {
+        "command": "uv run --frozen nl2repo task validate-source catalog/sources/hpack",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/hpack/evidence/blocked-validation.txt",
+          "sha256": "sha256:eace9404365e641154f2370cd8271268d7bb70bdf843eb21f7d52de5adad9546"
+        }
+      },
+      {
+        "command": "uv run --frozen python -c 'import json, tomllib; from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; source = Path(\"catalog/sources/hpack\"); data = tomllib.loads((source / \"task.toml\").read_text()); policy = data[\"environment\"][\"network_policy\"]; findings, has_bundle, has_policy = lint_task(source); errors = [finding.rule for finding in findings if finding.severity == \"error\"]; assert data[\"lifecycle\"][\"status\"] == \"blocked\"; assert policy[\"mode\"] == \"no-network\"; assert policy[\"offline_dependencies\"] == \"missing\"; assert policy[\"reference_source_fetch\"] == \"forbidden\"; assert policy[\"reason\"]; assert has_policy and not has_bundle and not errors; assert not Path(\"catalog/tasks/hpack\").exists(); print(json.dumps({\"errors\": len(errors), \"has_bundle\": has_bundle, \"has_policy\": has_policy, \"runtime_exists\": False}, sort_keys=True))'",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/hpack/evidence/blocked-validation.txt",
+          "sha256": "sha256:eace9404365e641154f2370cd8271268d7bb70bdf843eb21f7d52de5adad9546"
+        }
+      }
+    ],
+    "evidence_log": {
+      "path": "catalog/sources/hpack/evidence/blocked-validation.txt",
+      "sha256": "sha256:eace9404365e641154f2370cd8271268d7bb70bdf843eb21f7d52de5adad9546"
+    }
+  }
+}

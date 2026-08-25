@@ -26,6 +26,12 @@ python_version = ">=3.10"
 os_name = "unknown"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "No final verifier image, hash-locked build/test dependency closure, or private verifier assets are frozen; agent and verifier run phases must remain offline and must not retrieve the reference source."
+
 [dependencies]
 # hpack has no runtime dependencies. These are the exact direct build/test/
 # tooling versions selected by the source uv.lock, not a task-local requirements lock.

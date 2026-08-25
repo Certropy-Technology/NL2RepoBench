@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-pytest-cases",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve and version the image source/test overlays, freeze a hash-locked dependency closure, implement a pytest-cases-specific child-side candidate adapter, and collect a structured effective denominator before running Harbor Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/smarie/python-pytest-cases",
+      "revision": "f030486cd5d9c05417c91d272b2afdc80d3dfc08",
+      "source_digest": "sha256:8dbc7cde28a6b0ac1b6f5ad16e0223f3bf1e29ce4de6b3afdb1d997f9dc6323e",
+      "license_spdx": "BSD-3-Clause",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:612c0cca8f6accec769ef7b2d0fee578a2a95bbbaef912f74c541364a38ef02e",
+      "audit_sha256": "sha256:b18eaa4ddc9a550037238418659c66ed1918a1ab227c8db68883bb307f9abe41"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/python-pytest-cases",
+        "tool_version": "uv 0.12.3; Python 3.14.7; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/python-pytest-cases/evidence/remediation-validation.txt",
+          "sha256": "sha256:c8ec14842093a0c266c887d278b89a4e7316686af6bb7cbf6184c9bb2144cb2f"
+        }
+      },
+      {
+        "command": "scoped network policy lint and runtime absence check",
+        "tool_version": "repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/python-pytest-cases/evidence/remediation-validation.txt",
+          "sha256": "sha256:c8ec14842093a0c266c887d278b89a4e7316686af6bb7cbf6184c9bb2144cb2f"
+        }
+      }
+    ]
+  }
+}

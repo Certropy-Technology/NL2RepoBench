@@ -1,0 +1,69 @@
+schema_version = "1.0"
+task_id = "python-pytest-cases"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "pytest-plugin"
+tags = ["python", "pytest", "testing", "plugin", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/smarie/python-pytest-cases"
+revision = "f030486cd5d9c05417c91d272b2afdc80d3dfc08"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:8dbc7cde28a6b0ac1b6f5ad16e0223f3bf1e29ce4de6b3afdb1d997f9dc6323e"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "linux/amd64"
+base_image = "ghcr.io/multimodal-art-projection/nl2repobench/python-pytest-cases@sha256:327e70a15c0c033f5186e9b3e8575ddd16c7ae999e6d3b692d29e7384d90b68b"
+base_image_digest = "sha256:327e70a15c0c033f5186e9b3e8575ddd16c7ae999e6d3b692d29e7384d90b68b"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier must remain offline, but no hash-locked dependency closure or offline install evidence exists. The reference source is frozen for audit provenance only and must not be fetched during a task run."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors"]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked pytest-cases candidate: the legacy test tree has no frozen effective denominator and its in-process pytest interactions have no separate candidate verifier boundary."
+keywords = ["python", "pytest", "testing", "plugin", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+reason = "The upstream revision, archive digest, BSD-3-Clause license, and immutable image identity are known, but the image carries packaging and test overlays, the historical cache records 1491 nodes without a valid effective denominator, dependencies are not hash-locked, and the pytest object interactions cannot cross a separate candidate verifier boundary. No Oracle, controls, or catalog/tasks/python-pytest-cases runtime exists."
