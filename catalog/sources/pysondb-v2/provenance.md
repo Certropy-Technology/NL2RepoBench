@@ -1,10 +1,10 @@
 # pysonDB-v2 Provenance Audit
 
-Status: **packaged**. This task-local record captures the legacy contract,
-the immutable verifier image, the upstream source lock, the image/source
-comparison, and the frozen denominator. It does not contain hidden tests,
-fixtures, a copied upstream tree, or run results. Oracle and negative controls
-remain parent-owned gates.
+Status: **controls-passed**. This task-local record captures the legacy
+contract, upstream source lock, image/source comparison, hash-locked dependency
+closure, private subprocess verifier and Oracle artifacts, one official Harbor
+Oracle, and the required negative controls. Reviews, pilots, and publication
+remain out of scope.
 
 ## Legacy Contract
 
@@ -21,7 +21,7 @@ remain parent-owned gates.
 - The public Harbor instruction is copied from this legacy instruction. It
   retains the repository-generation contract without copying test assertions.
 
-## Pinned Verifier Image
+## Historical Pinned Verifier Image
 
 The canonical conversion-loop record observed at
 `/root/NL2RepoBench/.nl2repo/conversion-loop/state.json` records this available
@@ -71,9 +71,10 @@ inspected. Docker and Harbor were not run.
   `1,071` bytes; SHA-256
   `317c55eb731a2d8e3c4bec9cadf6e451ae02c09ccb909905a8c698b82a018a73`.
 
-The Oracle script fetches the full revision, verifies the resolved commit and
-archive hash, and materializes the archive into `/workspace`. It does not use
-a branch, tag, or floating image reference.
+The production Oracle artifact contains a tree produced by `git archive` at
+this revision and a `solve.sh` that copies that immutable tree into
+`/workspace`. The Oracle run therefore performs no source fetch and requires
+no source-host authorization.
 
 ## Image Test Comparison And Denominator
 
@@ -85,9 +86,10 @@ functions contribute 46 cases and the remaining functions contribute 50:
 
 No skip or xfail decorator was found in the image test tree. Every image test
 file and migration JSON fixture compares byte-for-byte with the corresponding
-upstream file after normalizing CRLF to LF. The raw image test bytes remain
-private; the Harbor verifier copies them from the pinned image at build time,
-checks the listed hashes, and never commits them under this task directory.
+upstream file after normalizing CRLF to LF. The production verifier does not
+direct-import that tree: it maps the same 96 source-named cases to bounded
+candidate-user subprocess operations and returns the custom JSON leaf report
+to the trusted grader.
 
 The image checkout's `.git` metadata resolves to the same full upstream
 revision and remote. The only normalized source difference is a packaging
@@ -100,31 +102,43 @@ materializes the unmodified upstream archive.
 
 ## Dependency And Boundary Notes
 
-- The image history installs `prettytable==3.3.0` from `requirements.txt` and
-  the unpinned `requirements-dev.txt` set (`pytest`, `pytest-mock`, `mypy`, and
-  `pre-commit`), then installs the package and runs its tests. The verifier
-  therefore owns the frozen test dependency closure; no wheelhouse is copied
-  into this public task package.
-- The agent image is separate, digest-pinned Python 3.10.11 with `git` and
-  `ca-certificates`; the verifier is derived from the immutable legacy image
-  and runs with `no-network`.
-- The verifier copies the candidate to `/tmp/candidate`, installs it in a
-  candidate-owned `venv --system-site-packages` as UID 10001, replaces the
-  candidate's `tests` path with the root-owned private fixture, and checks
-  JUnit collection against both `96` collected and `96` effective cases.
-- `grade.py` alone writes `/logs/verifier/reward.json` and
-  `/logs/verifier/grading.json`; it rejects missing/malformed JUnit output,
-  collection mismatch, abnormal pytest exit, and symlinked JUnit output.
+- The production build/runtime closure is a private raw requirements lock for
+  `prettytable==3.3.0`, `setuptools==75.8.0`, `wcwidth==0.8.2`, and
+  `wheel==0.45.1`, with SHA-256 hashes for every distribution. Both images use
+  package-index access only during Docker build; no wheelhouse, `--no-index`,
+  or vendored wheel is present in the task.
+- Agent and verifier use digest-pinned Python 3.12.14 on Debian 13. Both run
+  phases are `no-network`; the verifier additionally proves that
+  `pypi.org:443` and `1.1.1.1:443` are unreachable.
+- The generic supervisor copies the candidate, installs it as UID 10001 into
+  `/tmp/candidate-site`, and never exposes the private verifier source to that
+  user. Each of the 96 checks imports candidate code only in an isolated child
+  process with a ten-second timeout.
+- The trusted custom-verifier wrapper creates collection and JUnit reports;
+  the generic grader alone writes `/logs/verifier/reward.json` and
+  `/logs/verifier/grading.json`.
 
-## Decision And Parent Gates
+## Oracle And Control Evidence
 
-The source URL, immutable revision/license/archive, image digest, exact test
-overlay (none in behavior), and fixed denominator are coherent. Keep this
-task at lifecycle `packaged`, not `oracle-passed` or `published`, until the
-parent records three independent valid Oracle runs with stable collection and
-reward at least `0.80`, plus empty/stub/forgery/offline controls.
+Harbor `0.21.0` compiled this source in production mode without
+`--allow-incomplete`. The single Package-campaign Oracle completed with
+`valid=true`, `96` collected, `96` passed, no collection errors, and reward
+`1.0`. Empty completed with valid model-class installation failure and reward
+`0.0`. The packaging stub and forgery controls each retained all 96 leaves,
+passed 3 inert checks, failed 93 behavioral checks, and scored `0.03125`.
+The forgery's candidate-side `reward.json`, `grading.json`, and verifier-source
+write attempts did not affect trusted grading.
 
-Residual risks are the recorded packaging-only `setup.cfg` overlay, unpinned
-development requirements inside the frozen legacy image, and the need for
-parent-side verifier boundary/forgery controls. No dataset, shared script,
-conversion-loop state, legacy artifact, or other task directory was modified.
+Every Oracle/control `network.json` records
+`public_network_available=false`; both hostname and numeric probes failed.
+Exact commands and repository-relative receipts are listed in
+`evidence/production-integration.txt`.
+
+## Decision And Remaining Gates
+
+The task is `controls-passed`. The source, license, archive, environment,
+dependency lock, fixed denominator, separate verifier boundary, Oracle, empty,
+stub, forgery, and offline gates are coherent. No review, pilot, dataset,
+publication, shared code, commit, or push is claimed. The historical
+packaging-only `setup.cfg` overlay remains recorded, but the production Oracle
+uses the unmodified pinned source archive and passed all 96 leaves.

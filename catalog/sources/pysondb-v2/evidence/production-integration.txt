@@ -1,0 +1,82 @@
+pysondb-v2 production integration receipt (2026-08-25)
+
+Scope
+  task: pysondb-v2 only
+  Harbor: 0.21.0 from harbor-runner/uv.lock
+  task schema: 1.4
+  artifact store: .nl2repo/artifacts
+  run root: .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume
+  official Oracle attempts: exactly 1, max retries 0
+
+Source validation
+  command: uv run nl2repo task validate-source catalog/sources/pysondb-v2
+  exit_code: 0
+  task_id: pysondb-v2
+  version: 0.2.0
+
+Production compile used for Oracle
+  command: uv run nl2repo harbor compile catalog/sources/pysondb-v2 --output .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private
+  exit_code: 0
+  allow_incomplete: false
+  mode: production
+  files: 79
+
+Official Oracle
+  command: uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/compiled/pysondb-v2 -a oracle --jobs-dir .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/oracle --job-name pysondb-v2-production-oracle --n-concurrent 1 --max-retries 0 --yes
+  exit_code: 0
+  result: valid=true, collected=96, passed=96, failed=0, reward=1.0
+  grading: .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/oracle/pysondb-v2-production-oracle/pysondb-v2__GikaUjU/verifier/grading.json
+  network: .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/oracle/pysondb-v2-production-oracle/pysondb-v2__GikaUjU/verifier/network.json
+
+Empty control
+  command: uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/compiled-controls/pysondb-v2 -a nop --jobs-dir .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/empty --job-name pysondb-v2-empty --n-concurrent 1 --max-retries 0 --yes
+  exit_code: 0
+  result: valid=true, failure_class=model, failure_reason=candidate-installation-failed, reward=0.0
+  grading: .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/empty/pysondb-v2-empty/pysondb-v2__fCLzR2M/verifier/grading.json
+
+Stub control
+  prepare: uv run nl2repo harbor prepare-control .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/compiled-controls/pysondb-v2 stub --output .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/controls --toolchain toolchain.lock.toml
+  command: uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/controls/pysondb-v2-stub -a oracle --jobs-dir .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/stub --job-name pysondb-v2-stub --n-concurrent 1 --max-retries 0 --yes
+  exit_code: 0
+  result: valid=true, collected=96, passed=3, failed=93, reward=0.03125
+  grading: .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/stub/pysondb-v2-stub/pysondb-v2-stub__apFNszo/verifier/grading.json
+
+Forgery control
+  prepare: uv run nl2repo harbor prepare-control .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/compiled-controls/pysondb-v2 forgery --output .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/controls --toolchain toolchain.lock.toml
+  command: uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/controls/pysondb-v2-forgery -a oracle --jobs-dir .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/forgery --job-name pysondb-v2-forgery --n-concurrent 1 --max-retries 0 --yes
+  exit_code: 0
+  result: valid=true, collected=96, passed=3, failed=93, reward=0.03125
+  grading: .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/jobs/forgery/pysondb-v2-forgery/pysondb-v2-forgery__LEe2kGn/verifier/grading.json
+
+Offline control
+  Oracle, empty, stub, and forgery network.json receipts all record:
+    public_network_available=false
+    probes["pypi.org:443"]=false
+    probes["1.1.1.1:443"]=false
+
+Controls-aware compile comparison
+  Production compile after adding only controls emitted 81 files.
+  diff -qr --exclude=controls --exclude=bundle.manifest.json between the
+  Oracle bundle and controls-aware bundle exited 0.
+
+Compose preservation
+  path: catalog/tasks/pysondb-v2/environment/docker-compose.yaml
+  size: 41 bytes
+  sha256 before integration: 17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388
+  sha256 after integration: 17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388
+
+Canonical production runtime
+  command: uv run nl2repo harbor compile catalog/sources/pysondb-v2 --output .nl2repo/runs/oracle/pysondb-v2-production-integration-20260825-worker-resume/canonical --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private
+  exit_code: 0
+  allow_incomplete: false
+  lifecycle: controls-passed
+  mode: production
+  files: 81
+  projection: catalog/tasks/pysondb-v2
+  source task.toml sha256: 2327780899cef07ac7750b8f24f5d877b081ff80a88742a13f3ed329470dd9df
+  bundle.manifest.json sha256: 5555ffede65ade5077b2d41bfd57eab4fa2eab93fac468fff254c03e69e789e5
+  generated task.toml sha256: 5f616d0562abbe394d172fdae82ea7d6a3d33c2e1834e06891dd4e52c70a3786
+  verifier run.py sha256: df4ab4aa6942050157659c81d1430276e9e3b31b3cb5c560c5a9cefbb193972d
+  requirements lock sha256: af5dfe8c3afa459b6e99db7699eb865e9179b2d70a9a2d1947b29c9ba57128a0
+  private verifier artifact sha256: 62077eb660aa0bc5687968aaccbabd5671e820e63f4e734d8308a536591458ca
+  private Oracle artifact sha256: 4bfed9da3d0cc0341519ce079fa95ffcdc95567ddca57738fa7bc0acee8670a0

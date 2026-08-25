@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "pysondb-v2"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -19,12 +19,10 @@ source_digest = "sha256:4a80fa0f2e29fa613bd946c536159a5769607c0bd6748d1feb7f65db
 
 [environment]
 status = "known"
-python_version = "3.10.11"
-os_name = "debian-12"
-base_image = "python:3.10.11"
-base_image_digest = "sha256:fc1d7d6e1df26c603b5729e92fff684a56e9d1b8c6db263c6169a1f250e80787"
-system_packages = ["ca-certificates", "git"]
-build_command = "apt-get install --no-install-recommends ca-certificates git"
+python_version = "3.12.14"
+os_name = "debian-13"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 network_mode = "no-network"
 
 [environment.network_policy]
@@ -34,16 +32,22 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = ["prettytable==3.3.0", "pytest", "pytest-mock", "mypy", "pre-commit"]
+packages = ["prettytable==3.3.0", "setuptools==75.8.0", "wcwidth==0.8.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:af5dfe8c3afa459b6e99db7699eb865e9179b2d70a9a2d1947b29c9ba57128a0", size_bytes = 747, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:af5dfe8c3afa459b6e99db7699eb865e9179b2d70a9a2d1947b29c9ba57128a0", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 96
 expected_total_source = "frozen-collection"
 protected_paths = ["tests"]
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:62077eb660aa0bc5687968aaccbabd5671e820e63f4e734d8308a536591458ca", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:62077eb660aa0bc5687968aaccbabd5671e820e63f4e734d8308a536591458ca", visibility = "private" }
+entrypoint = "run.py"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -67,5 +71,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-reason = "Pinned verifier image, upstream source/license/archive locks, image-backed private tests, and a static 96-case denominator are recorded; Oracle and controls remain pending parent orchestration."
+status = "controls-passed"
+reason = "One official Harbor 0.21.0 Oracle passed 96/96 with reward 1.0 and valid grading; empty scored 0.0, stub and forgery each scored 3/96, and every verifier receipt proved no public network. Reviews and pilots remain out of scope."
+
+[oracle_bundle]
+digest = "sha256:4bfed9da3d0cc0341519ce079fa95ffcdc95567ddca57738fa7bc0acee8670a0"
+size_bytes = 122880
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4bfed9da3d0cc0341519ce079fa95ffcdc95567ddca57738fa7bc0acee8670a0"
+visibility = "private"
