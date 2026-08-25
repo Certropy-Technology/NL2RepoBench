@@ -93,8 +93,8 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-reason = "Generic private-bundle compiled Oracle passed 46/46 with reward 1.0 and collected == expected_total = 46. Stub and forgery controls both scored 1/46 = 0.022 and the empty workspace scored 0.0 with failure_class=model. Blind and traceability review remain pending."
+status = "controls-passed"
+reason = "Receipt paths and SHA-256 digests revalidated. Production compile requires no --allow-incomplete; Harbor 0.21.0 Oracle is valid at 46/46 with reward 1.0. Empty is a valid model-zero; stub and forgery are valid at 1/46 (reward 0.021739, below 0.20); verifier-owned forgery grading and offline network probes passed. Blind review, pilot, and publication remain pending."
 
 [oracle_bundle]
 digest = "sha256:73c0719e6e03b954dd9cad7a6ef61e2676fed769ead482bdf92aab6199d556a4"

@@ -85,6 +85,6 @@ entrypoint = "run.py"
 environment = {}
 
 [lifecycle]
-status = "oracle-passed"
+status = "controls-passed"
 owner = "integrator"
-reason = "Re-based to the python:3.12.14-slim-bookworm verifier runtime with the frozen denominator of four re-collected on that base. Generic private-bundle compiled Oracle passed 4/4 with reward 1.0; stub, forgery and empty controls all scored 0.0. Blind and traceability review remain pending."
+reason = "Hash-bound official Harbor 0.21.0 receipts were revalidated for the generic production compile: Oracle valid=true with 4/4 and reward 1.0; empty, stub, and forgery controls are valid with reward 0.0; forged workspace reward files are ignored; and every verifier network receipt reports no public egress. Blind review, traceability review, pilot, and publication remain pending."

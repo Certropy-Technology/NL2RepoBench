@@ -1,9 +1,9 @@
 # Autojump Provenance Audit
 
-Status: `packaged`; Oracle and control runs remain pending the parent
-orchestrator. This task-local package contains the public specification and
-Harbor scripts only. It does not contain hidden test bytes, binary fixtures,
-run artifacts, or a copied upstream source tree.
+Status: `controls-passed`. The official Harbor 0.21 Oracle, empty, stub,
+forgery, and offline verifier receipts are recorded by repository-relative
+path and SHA-256 in `production-evidence.json`. This task-local package does
+not contain hidden test bytes, binary fixtures, or copied run artifacts.
 
 ## Legacy Identity And Contract
 
@@ -110,31 +110,25 @@ from the private image fixture, integrity-checked, owned by root, and made
 read-only before pytest. The grader is copied by the verifier image and writes
 `/logs/verifier/reward.json` and `grading.json` itself.
 
-The candidate environment is public-network by Harbor task convention, while
-the separate verifier is `no-network`. Autojump's runtime implementation uses
-only the Python standard library; the image's test-only packages are
+The candidate and separate-verifier run phases are both `no-network`.
+Hash-locked dependencies are installed during image build, and the official
+receipts' structured network probes confirm that public endpoints were not
+available to the verifier. Autojump's runtime implementation uses only the
+Python standard library; the test-only packages are
 `pytest==8.4.1` and `mock==5.2.0` (with image-provided transitive tooling).
 There are no native runtime dependencies, database services, GUI services, or
 binary fixtures required by the frozen tests.
 
-Dependency closure is intentionally recorded as `unknown` in the catalog:
-the immutable image provides the test runtime, but no standalone
-hash-locked wheelhouse artifact is committed by this task. This leaves the
-lifecycle at `packaged` pending the parent Oracle and control gates.
+Dependency closure is recorded through the private hash-locked requirements
+artifact declared in `task.toml`; no wheelhouse is committed or copied into
+the runtime bundle.
 
 ## Static Decision
 
-The source URL, full SHA, GPL evidence, archive digest, image digest, test
-inventory, legacy command shape, and fixed denominator are coherent. A
-publishable bundle is therefore appropriate as a task-local packaged draft.
-Do not promote it to `oracle-passed`, `controls-passed`, or `published` until
-three independent valid Oracle runs and empty/stub/forgery/offline controls
-are recorded by the parent.
-
-No Docker, Harbor, pytest, Oracle, or negative-control process was run in this
-lane. Static work used registry manifest/config/layer inspection, private
-layer extraction under `/tmp`, Git revision/tree/archive/license hashing,
-exhaustive path/blob comparison, AST/cache inventory, TOML parsing, shell
-syntax checks, and repository diff inspection. Shared scripts, datasets,
-conversion-loop state, legacy files, and other task directories were not
-edited.
+The official distribution-path Oracle receipt is valid at 23/23 with reward
+1.0. The empty workspace scored 0/23 with an honest model-class installation
+failure, while stub and forgery each scored 1/23. All four structured network
+receipts report no public network availability. These results satisfy the
+Oracle and negative-control gates for lifecycle `controls-passed`; blind
+review, traceability review, model pilots, and publication remain out of
+scope and pending.

@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "task_id": "autojump",
+  "terminal_kind": "controls-passed",
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p harbor-tasks/autojump -a oracle",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "result": {
+      "path": ".nl2repo/runs/oracle/dist-official/autojump/2026-08-24__17-57-06/autojump__KCQg5Ly/result.json",
+      "sha256": "sha256:72d7008186fb930f300d4d947077ef9a7a16d46b14e354e8838ae642e28dd542"
+    },
+    "grading": {
+      "path": ".nl2repo/runs/oracle/dist-official/autojump/2026-08-24__17-57-06/autojump__KCQg5Ly/verifier/grading.json",
+      "sha256": "sha256:44daa841373db2d7de44acb336e9d40309335ef101434ab89b1a938ddedceef1"
+    },
+    "network": {
+      "path": ".nl2repo/runs/oracle/dist-official/autojump/2026-08-24__17-57-06/autojump__KCQg5Ly/verifier/network.json",
+      "sha256": "sha256:89ba6ae3d90b800eefb15e55d5d55508b4c0ba70c806d33ecb0f9736f5c906a0"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/repairs/autojump/.work/ctl/autojump-empty -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/autojump-empty/2026-08-24__17-42-07/autojump-empty__j38uK87/verifier/grading.json",
+        "sha256": "sha256:95c200064b771921dfec7ec41bf4a2b59e2e875488c25b1373e52648821184b8"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/autojump-empty/2026-08-24__17-42-07/autojump-empty__j38uK87/verifier/network.json",
+        "sha256": "sha256:6cdcb6cc6338379d5c9580014ff45f271021107330e5c1222ca0acfe4b7dbad5"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/repairs/autojump/.work/ctl/autojump-stub -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/autojump-stub/2026-08-24__17-40-21/autojump-stub__8DbtMB3/verifier/grading.json",
+        "sha256": "sha256:2718e5e1a4a3d51ee9c29c754bd0dfb7c83171265842a7f623c8fd3762a87fbf"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/autojump-stub/2026-08-24__17-40-21/autojump-stub__8DbtMB3/verifier/network.json",
+        "sha256": "sha256:683e65dc8d1a0a0a1bdfbb0bfd38badc0e9094e17e84dd169d2ed41d4d089731"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/repairs/autojump/.work/ctl/autojump-forgery -a oracle",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/controls/autojump-forgery/2026-08-24__17-41-02/autojump-forgery__P3vpL6y/verifier/grading.json",
+        "sha256": "sha256:2718e5e1a4a3d51ee9c29c754bd0dfb7c83171265842a7f623c8fd3762a87fbf"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/autojump-forgery/2026-08-24__17-41-02/autojump-forgery__P3vpL6y/verifier/network.json",
+        "sha256": "sha256:00355cfacae2ece63b00a7c5b7f858a74b62613103498d87397a062a93e488d4"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p harbor-tasks/autojump -a oracle",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/oracle/dist-official/autojump/2026-08-24__17-57-06/autojump__KCQg5Ly/verifier/network.json",
+        "sha256": "sha256:89ba6ae3d90b800eefb15e55d5d55508b4c0ba70c806d33ecb0f9736f5c906a0"
+      }
+    }
+  }
+}

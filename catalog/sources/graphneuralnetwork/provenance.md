@@ -53,13 +53,13 @@ archive are stored in the catalog tree.
 
 | bundle | digest | size_bytes |
 | --- | --- | --- |
-| dependency | `sha256:cebc072443f1a5aec0662d7330779b9c61f93951a83325f3cc9588648d7e64fd` | 395120640 |
+| dependency lock | `sha256:a30e649e38343eebfe8322f4c75c14e36752e5d3a48bae529988273f0cfa4b1c` | 5118 |
 | verifier | `sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b` | 30720 |
 | oracle | `sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e` | 34099200 |
 
-- Dependency bundle: 50 `cp312` wheels at the tar root plus `requirements.lock.txt` in which
-  every pin carries `--hash=sha256:`. The `setuptools==80.10.2` / `wheel==0.45.1` build backend
-  is included because candidate install runs `pip install --no-deps --no-build-isolation`.
+- Dependency lock: `requirements.lock.txt` only, with every pin carrying `--hash=sha256:`.
+  The compiler copies the lock into both Docker build contexts and installs the closure during
+  image build; no wheelhouse or vendored dependency directory enters the generated task.
 - Verifier bundle: `run.py` (entrypoint) and `adapter.py`, protocol `custom-json-v1`.
 - Oracle bundle: `solve.sh` (mode 0755) and `source.tar` at the tar root.
 
@@ -104,12 +104,12 @@ Frozen denominator source: `frozen-collection`, 4 items, re-collected on the re-
 | check | result | artifact |
 | --- | --- | --- |
 | publication gaps | `[]` | `TaskManifest.publication_gaps()` |
-| compile without `--allow-incomplete` | exit 0 | `/tmp/graphneuralnetwork-cmp/graphneuralnetwork` |
+| compile without `--allow-incomplete` | exit 0 | `uv run nl2repo harbor compile catalog/sources/graphneuralnetwork --toolchain toolchain.lock.toml --output /tmp/graphneuralnetwork-verify --artifact-root .nl2repo/artifacts --allow-private` |
 | Oracle | `valid=true`, collected 4 == expected 4, passed 4, reward 1.0, 51s | `.nl2repo/runs/oracle/graphneuralnetwork-final/2026-08-24__18-42-30/graphneuralnetwork__x6YZhLs/verifier/grading.json` |
-| stub control | reward 0.0, passed 0/4 | `.nl2repo/runs/oracle/graphneuralnetwork-stub/` |
-| forgery control | reward 0.0, passed 0/4, forged reward files ignored | `.nl2repo/runs/oracle/graphneuralnetwork-forgery/` |
-| empty control | reward 0.0, collected 0 | `.nl2repo/runs/oracle/graphneuralnetwork-empty/` |
-| offline verifier | `public_network_available: false`, `pypi.org:443` and `1.1.1.1:443` unreachable | `network.json` in the Oracle run |
+| stub control | `valid=true`, reward 0.0, passed 0/4 | `.nl2repo/runs/oracle/graphneuralnetwork-stub/2026-08-24__18-38-19/graphneuralnetwork-stub__vm9SHmc/verifier/grading.json` |
+| forgery control | `valid=true`, reward 0.0, passed 0/4, forged reward files ignored | `.nl2repo/runs/oracle/graphneuralnetwork-forgery/2026-08-24__18-39-06/graphneuralnetwork-forgery__kJTqkm6/verifier/grading.json` |
+| empty control | `valid=true`, reward 0.0, collected 0 | `.nl2repo/runs/oracle/graphneuralnetwork-empty/2026-08-24__18-40-07/graphneuralnetwork-empty__FJH9mb9/verifier/grading.json` |
+| offline verifier | `public_network_available: false`, `pypi.org:443` and `1.1.1.1:443` unreachable in Oracle and all control receipts | receipt-specific `network.json` paths in `production-evidence.json` |
 | network policy lint | 0 errors, 0 findings for this task | `uv run nl2repo task lint-network` |
 
 ## Decisions
@@ -133,4 +133,4 @@ Frozen denominator source: `frozen-collection`, 4 items, re-collected on the re-
 ## Remaining gates
 
 Blind review and spec traceability review are still pending, as is pilot execution. Lifecycle is
-therefore `oracle-passed`, not `published`.
+therefore `controls-passed`, not `published`.

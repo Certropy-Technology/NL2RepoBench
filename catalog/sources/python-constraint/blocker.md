@@ -263,3 +263,20 @@ and recorded:
 Until those gates exist, `expected_total = 52` remains a local compiled-suite
 observation rather than a publishable denominator. No Harbor, Docker, Oracle,
 private-artifact materialization, or negative-control run was performed.
+
+## RESOLVED: Production Integration (2026-08-25)
+
+The historical blocker above is preserved as the original audit record. The
+shared Python Harbor compiler was subsequently fixed to project declared
+`environment.system_packages` into the separate verifier Dockerfile. A strict
+compile of the versioned `0.2.0` task now emits the required
+`build-essential` installation and was regenerated into
+`catalog/tasks/python-constraint/` without `--allow-incomplete`.
+
+Fresh official Harbor `0.21.0` evidence is bound in
+`production-evidence.json`: Oracle `valid=true`, `16/16`, reward `1.0`; empty
+reward `0.0` with candidate installation failure classified as model; stub and
+forgery each collected all 16 leaves and scored `0.0`; and the Oracle verifier
+completed with no network access. The network receipts record false probes for
+`pypi.org:443` and `1.1.1.1:443`. The source lifecycle is now
+`controls-passed`.

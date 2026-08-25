@@ -1,0 +1,82 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/pss-ctl/pss-empty -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/pss-empty/2026-08-24__18-19-00/pss-empty__rLzWLZX/verifier/grading.json",
+        "sha256": "sha256:5f6d3babb4ddc944e4e1781027e326e80ab63f8f0af663cc3e3bde2aef4384e9"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/pss-empty/2026-08-24__18-19-00/pss-empty__rLzWLZX/verifier/network.json",
+        "sha256": "sha256:652394715c6a17b308fdb5ae4ad9bbd638771e677fef38e279f70d11845c0180"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/controls/pss-empty/2026-08-24__18-19-00/pss-empty__rLzWLZX/verifier/reward.json",
+        "sha256": "sha256:c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/pss-ctl/pss-forgery -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/pss-forgery/2026-08-24__18-18-24/pss-forgery__aPekcjt/verifier/grading.json",
+        "sha256": "sha256:a01d949f4f8419fa4151052f5b6e6e531f61172a193a0e8330b507f0b7a0d2b7"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/pss-forgery/2026-08-24__18-18-24/pss-forgery__aPekcjt/verifier/network.json",
+        "sha256": "sha256:652394715c6a17b308fdb5ae4ad9bbd638771e677fef38e279f70d11845c0180"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/controls/pss-forgery/2026-08-24__18-18-24/pss-forgery__aPekcjt/verifier/reward.json",
+        "sha256": "sha256:30e2c99a641140a460d958845ed86af986ff808c22c2be05730803cf5f11d681"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Harbor separate-verifier no-network probe from the pss Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/pss-final/2026-08-24__18-19-58/pss__RJG3mRb/verifier/network.json",
+        "sha256": "sha256:47de71cf328ca505234638dee4509439c1239205d759cdff3b9c5b42c2212f13"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/pss-ctl/pss-stub -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/pss-stub/2026-08-24__18-17-48/pss-stub__88BeJAZ/verifier/grading.json",
+        "sha256": "sha256:a01d949f4f8419fa4151052f5b6e6e531f61172a193a0e8330b507f0b7a0d2b7"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/pss-stub/2026-08-24__18-17-48/pss-stub__88BeJAZ/verifier/network.json",
+        "sha256": "sha256:c6d2eb60b22d227b14d2023cf628b8d7938ade4555933a3c3c9cbcffbadac6c6"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/controls/pss-stub/2026-08-24__18-17-48/pss-stub__88BeJAZ/verifier/reward.json",
+        "sha256": "sha256:30e2c99a641140a460d958845ed86af986ff808c22c2be05730803cf5f11d681"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/pss-cmp/pss -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/pss-final/2026-08-24__18-19-58/pss__RJG3mRb/verifier/grading.json",
+      "sha256": "sha256:170b402879aa1d13cb78db6319b952257a0ad138227b08e9eb70ce071f6d3eed"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/pss-final/2026-08-24__18-19-58/pss__RJG3mRb/verifier/network.json",
+      "sha256": "sha256:47de71cf328ca505234638dee4509439c1239205d759cdff3b9c5b42c2212f13"
+    },
+    "reward": {
+      "path": ".nl2repo/runs/oracle/pss-final/2026-08-24__18-19-58/pss__RJG3mRb/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "pss",
+  "terminal_kind": "valid"
+}

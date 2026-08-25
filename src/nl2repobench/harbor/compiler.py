@@ -167,14 +167,7 @@ class HarborCompiler:
         dependency_lock: bytes,
     ) -> None:
         image = self.toolchain.images.agent_base
-        packages = tuple(manifest.environment_lock.system_packages)
-        install = ""
-        if packages:
-            quoted = " ".join(shlex.quote(package) for package in packages)
-            install = (
-                "RUN apt-get update && apt-get install -y --no-install-recommends "
-                f"{quoted} && rm -rf /var/lib/apt/lists/*\n\n"
-            )
+        install = self._system_packages_install(manifest)
         # The Docker build phase still has network, so the third-party build and
         # test dependency closure is baked into the image here. That is what lets
         # the agent phase run with no-network: nothing has to be fetched later.
@@ -191,6 +184,18 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 """
         dockerfile = f"FROM --platform=linux/amd64 {image}\n\n" + install + "WORKDIR /workspace\n"
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
+
+    @staticmethod
+    def _system_packages_install(manifest: TaskManifest) -> str:
+        packages = tuple(manifest.environment_lock.system_packages)
+        if not packages:
+            return ""
+        quoted = " ".join(shlex.quote(package) for package in packages)
+        return (
+            "RUN apt-get update && apt-get install -y --no-install-recommends "
+            f"{quoted} && rm -rf /var/lib/apt/lists/*\n\n"
+        )
+
     def _write_verifier(
         self,
         source_dir: Path,
@@ -253,6 +258,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
         image = self._verifier_image(manifest, allow_incomplete)
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
+{self._system_packages_install(manifest)}\
 COPY requirements.lock.txt /tmp/requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
 

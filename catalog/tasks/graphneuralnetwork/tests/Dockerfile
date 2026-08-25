@@ -1,5 +1,7 @@
 FROM --platform=linux/amd64 python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e
 
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libgomp1 && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.lock.txt /tmp/requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
 

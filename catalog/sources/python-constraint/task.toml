@@ -81,7 +81,7 @@ uri = "artifact://private/sha256:652b067acd0267e78f7e364df9c29e79ecf58047df344c7
 visibility = "private"
 
 [lifecycle]
-status = "oracle-passed"
+status = "controls-passed"
 owner = "repair/python-constraint"
-reason = "Official Harbor 0.21 Oracle passed 16/16 with valid=true and reward=1.0 after adding the verifier build toolchain; stub and forgery controls each collected 16/16 and scored 0.0."
+reason = "Strict compiler output includes the declared build-essential package in the separate verifier image. Official Harbor 0.21.0 Oracle passed 16/16 at reward 1.0; empty, stub, forgery, and offline controls passed with hash-bound receipts."
 evidence = [{ digest = "sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a", size_bytes = 1337, media_type = "application/json", uri = "artifact://private/sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a", visibility = "private" }]

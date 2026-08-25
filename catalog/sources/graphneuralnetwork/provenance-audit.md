@@ -1,6 +1,6 @@
 # GraphNeuralNetwork Provenance Audit
 
-Status: `packaged`; Oracle and negative controls remain pending the parent. This audit records the immutable image evidence without copying its tests, model file, or Cora fixtures into the public task tree.
+Status: historical packaging audit, superseded by `provenance.md` and `production-evidence.json`. Oracle and negative controls have since passed against the re-based production runtime. This audit remains as the immutable legacy-image evidence without copying its tests, model file, or Cora fixtures into the public task tree.
 
 ## Legacy Contract
 - Task identity: `test_files/graphneuralnetwork/`.
@@ -60,11 +60,11 @@ The image fixture contains `tests/__init__.py`, `tests/gat_test.py`, `tests/gcn_
 - `grade.py` reads only verifier-owned JUnit output, rejects collection mismatches against `4`, and writes `reward.json` and `grading.json` itself.
 - The agent image is separate, digest-pinned Python 3.10.11; only the Oracle solve script has public network access to fetch the locked source.
 
-## Decision
+## Historical Decision
 - Provenance, denominator, and candidate/verifier separation are coherent after documenting the CRLF and setup.py build overlays.
-- Package the task at lifecycle `packaged`; do not claim Oracle validity or publication until the parent runs three Oracle trials and empty/stub/forgery/offline controls.
+- This audit originally authorized lifecycle `packaged`; the later production evidence now authorizes `controls-passed`, but not publication.
 
-## Parent Gates
-- Confirm three independent runs produce `valid=true`, collection `4`, and reward at least `0.80`.
+## Superseded Parent Gates
+- The current Package campaign contract uses one Oracle gate. The official receipt is `valid=true`, collection `4`, and reward `1.0`.
 - Treat TensorFlow import, Keras optimizer compatibility, native library failures, or runtime timeout as environment/infrastructure evidence rather than changing the denominator.
 - Keep the verifier image reference and source revision immutable when recording results.

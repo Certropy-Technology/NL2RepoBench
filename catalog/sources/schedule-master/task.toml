@@ -83,5 +83,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-reason = "Re-based to python:3.12.14-slim-bookworm with a private hash-locked dependency lock plus verifier and Oracle bundles. Generic private-bundle compiled Oracle passed 81/81 with reward 1.0 and collected == expected_total; empty, stub, forgery and offline controls all scored 0.0. Blind and traceability review remain pending."
+status = "controls-passed"
+reason = "Re-based to python:3.12.14-slim-bookworm with a private hash-locked dependency lock plus verifier and Oracle bundles. Hash-bound production receipts record a valid 81/81 Oracle, valid zero-score empty/stub/forgery controls, and unavailable public verifier networking for every run. Blind and traceability review remain pending."

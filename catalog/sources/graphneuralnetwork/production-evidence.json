@@ -1,0 +1,70 @@
+{
+  "bundle": {
+    "path": "catalog/tasks/graphneuralnetwork/bundle.manifest.json",
+    "sha256": "sha256:26e7a147d113786d5480fa1226e00cabfb42f27393b7929752e6d810f8d38e1d"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/repairs/graphneuralnetwork/.work/empty/graphneuralnetwork-empty -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-empty/2026-08-24__18-40-07/graphneuralnetwork-empty__FJH9mb9/verifier/grading.json",
+        "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-empty/2026-08-24__18-40-07/graphneuralnetwork-empty__FJH9mb9/verifier/network.json",
+        "sha256": "sha256:652394715c6a17b308fdb5ae4ad9bbd638771e677fef38e279f70d11845c0180"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/graphneuralnetwork-ctl/graphneuralnetwork-forgery -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-forgery/2026-08-24__18-39-06/graphneuralnetwork-forgery__kJTqkm6/verifier/grading.json",
+        "sha256": "sha256:7980577c837feeefdcbb6bc18f2b7e9ce104dee546f1927c2e8fb65029641569"
+      },
+      "network": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-forgery/2026-08-24__18-39-06/graphneuralnetwork-forgery__kJTqkm6/verifier/network.json",
+        "sha256": "sha256:67f165d740272eb9c6e0d22debaee695ba842cb688af70cf9c88c66a44e71fed"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "official Harbor separate-verifier network probe from graphneuralnetwork Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-final/2026-08-24__18-42-30/graphneuralnetwork__x6YZhLs/verifier/network.json",
+        "sha256": "sha256:652394715c6a17b308fdb5ae4ad9bbd638771e677fef38e279f70d11845c0180"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/graphneuralnetwork-ctl/graphneuralnetwork-stub -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-stub/2026-08-24__18-38-19/graphneuralnetwork-stub__vm9SHmc/verifier/grading.json",
+        "sha256": "sha256:7980577c837feeefdcbb6bc18f2b7e9ce104dee546f1927c2e8fb65029641569"
+      },
+      "network": {
+        "path": ".nl2repo/runs/oracle/graphneuralnetwork-stub/2026-08-24__18-38-19/graphneuralnetwork-stub__vm9SHmc/verifier/network.json",
+        "sha256": "sha256:aab0a982c3b20613ffcc7a00ad82d5f2687db9427f7883aa90db802059f884b8"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/graphneuralnetwork-cmp/graphneuralnetwork -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/graphneuralnetwork-final/2026-08-24__18-42-30/graphneuralnetwork__x6YZhLs/verifier/grading.json",
+      "sha256": "sha256:08b6be7ca0395d6aafe19a15a3b6a240b13ed1242cd5ad5d915ff4400c3addb6"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/graphneuralnetwork-final/2026-08-24__18-42-30/graphneuralnetwork__x6YZhLs/verifier/network.json",
+      "sha256": "sha256:652394715c6a17b308fdb5ae4ad9bbd638771e677fef38e279f70d11845c0180"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "graphneuralnetwork",
+  "terminal_kind": "valid"
+}

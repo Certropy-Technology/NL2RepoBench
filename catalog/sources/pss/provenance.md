@@ -1,6 +1,6 @@
 # PSS Provenance Audit
 
-Status: `oracle-passed`. See "Production Package Repair (2026-08-24)" at the end
+Status: `controls-passed`. See "Production Package Repair (2026-08-24)" at the end
 of this file for the current authoritative record: the base image was re-based to
 the 3.12 production base, private dependency/verifier/Oracle bundles were
 registered, and the generic compiled Oracle plus stub/forgery/empty controls were
@@ -359,7 +359,15 @@ The base-image re-base was pre-approved by the parent for this class of legacy
 3.10 image, conditional on the denominator surviving. It survived at 46, so the
 task proceeded without escalation.
 
+### Canonical production evidence
+
+`production-evidence.json` is the canonical machine-readable receipt index. Its
+paths and SHA-256 digests bind the Harbor 0.21.0 Oracle, empty, stub, forgery,
+and offline receipts. The forgery record explicitly asserts verifier ownership;
+the candidate-written `/workspace/reward.json` says `1.0`, while the separate
+verifier-owned reward and grading receipts say `1/46 = 0.021739130434782608`.
+
 ### Remaining gates
 
 Blind review and spec-traceability review are still outstanding, and no pilot has
-been run. Status is therefore `oracle-passed`, not `published`.
+been run. Status is therefore `controls-passed`, not `published`.

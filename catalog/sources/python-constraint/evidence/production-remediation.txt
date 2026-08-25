@@ -1,0 +1,21 @@
+python-constraint production integration audit
+Audit date: 2026-08-25
+
+The current shared Python compiler projects declared system_packages into both
+the agent and separate verifier Dockerfiles. A strict compile without
+--allow-incomplete emitted the declared build-essential installation in
+tests/Dockerfile.
+
+Frozen denominator: 16.
+Official Harbor version: 0.21.0.
+
+Fresh strict-bundle results:
+- Oracle: valid=true, collected=16, passed=16, reward=1.0.
+- Empty: valid=true, candidate-installation-failed classified as model, reward=0.0.
+- Stub: valid=true, collected=16, passed=0, reward=0.0.
+- Forgery: valid=true, collected=16, passed=0, reward=0.0; trusted grading ignored planted reward files.
+- Offline: the Oracle verifier completed in no-network mode; pypi.org:443 and 1.1.1.1:443 probes both returned false and public_network_available=false.
+
+All grading and network receipts are path- and SHA-256-bound in the sibling
+production-evidence.json. The lifecycle is controls-passed and the checked-in
+runtime is regenerated strictly from the current source and compiler.

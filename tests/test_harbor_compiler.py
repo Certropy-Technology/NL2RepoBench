@@ -114,6 +114,41 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert not list((task_root / "environment").rglob("test_ministats.py"))
 
 
+def test_system_packages_are_installed_in_agent_and_verifier_images(tmp_path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(SOURCE, source)
+    task_toml = source / "task.toml"
+    task_text = task_toml.read_text(encoding="utf-8").replace(
+        '[environment]\nstatus = "unknown"',
+        '[environment]\nstatus = "unknown"\nsystem_packages = ["build-essential", "odd package"]',
+    )
+    task_toml.write_text(task_text, encoding="utf-8")
+
+    task_root = HarborCompiler(TOOLCHAIN).compile_task(
+        source,
+        tmp_path / "output",
+        allow_incomplete=True,
+    )
+
+    apt_install = (
+        "RUN apt-get update && apt-get install -y --no-install-recommends "
+        "build-essential 'odd package' && rm -rf /var/lib/apt/lists/*"
+    )
+    assert apt_install in (task_root / "environment/Dockerfile").read_text(encoding="utf-8")
+    assert apt_install in (task_root / "tests/Dockerfile").read_text(encoding="utf-8")
+
+
+def test_empty_system_packages_emit_no_apt_stanza(tmp_path) -> None:
+    task_root = HarborCompiler(TOOLCHAIN).compile_task(
+        SOURCE,
+        tmp_path / "output",
+        allow_incomplete=True,
+    )
+
+    assert "apt-get" not in (task_root / "environment/Dockerfile").read_text(encoding="utf-8")
+    assert "apt-get" not in (task_root / "tests/Dockerfile").read_text(encoding="utf-8")
+
+
 def test_catalog_network_policy_controls_generated_agent_runtime(tmp_path) -> None:
     source = tmp_path / "source"
     shutil.copytree(SOURCE, source)

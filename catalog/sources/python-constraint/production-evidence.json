@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/python-constraint-production-compile-fixed/python-constraint -a nop --jobs-dir .nl2repo/runs/controls --job-name python-constraint-production-fixed-empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-constraint-production-fixed-empty/python-constraint__JSPC6Q8/verifier/grading.json",
+        "sha256": "sha256:3725efe3bd17b437b0ab747a908bbb40b3bb485913a9451ddfb9348c3142ccf3"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-constraint-production-fixed-empty/python-constraint__JSPC6Q8/verifier/network.json",
+        "sha256": "sha256:5ebb7eeaefd63eb2660ee26c264ee41eabaecd4a399c6ef265a0e331d5df1d24"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/python-constraint-production-fixed-controls/python-constraint-forgery -a oracle --jobs-dir .nl2repo/runs/controls --job-name python-constraint-production-fixed-forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-constraint-production-fixed-forgery/python-constraint-forgery__sjxTGRM/verifier/grading.json",
+        "sha256": "sha256:275f4d73ce2b7526257cb36e44d9eae3c1a49c9c312f6b22c2b42764ca7f74bc"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-constraint-production-fixed-forgery/python-constraint-forgery__sjxTGRM/verifier/network.json",
+        "sha256": "sha256:5ebb7eeaefd63eb2660ee26c264ee41eabaecd4a399c6ef265a0e331d5df1d24"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Official Harbor 0.21.0 Oracle verifier no-network probes for the strict python-constraint bundle",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/oracle/python-constraint-production-fixed-oracle/python-constraint__Z5s9QqF/verifier/network.json",
+        "sha256": "sha256:2d1a7009d5c87377b417b6b697b91a599f0aa2d3a185c10e3cb74ce8f1b13970"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/python-constraint-production-fixed-controls/python-constraint-stub -a oracle --jobs-dir .nl2repo/runs/controls --job-name python-constraint-production-fixed-stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-constraint-production-fixed-stub/python-constraint-stub__hTTxkrG/verifier/grading.json",
+        "sha256": "sha256:275f4d73ce2b7526257cb36e44d9eae3c1a49c9c312f6b22c2b42764ca7f74bc"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-constraint-production-fixed-stub/python-constraint-stub__hTTxkrG/verifier/network.json",
+        "sha256": "sha256:55125138df1361e53cf74a30bdc5d03f9fc19b214abba0de0de8f1cef3932313"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/python-constraint-production-compile-fixed/python-constraint -a oracle --jobs-dir .nl2repo/runs/oracle --job-name python-constraint-production-fixed-oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/python-constraint-production-fixed-oracle/python-constraint__Z5s9QqF/verifier/grading.json",
+      "sha256": "sha256:381ef642cd451150d4a9b1abd91e9b88a8ddf757057d7bfe0ae9129028d1f972"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/oracle/python-constraint-production-fixed-oracle/python-constraint__Z5s9QqF/verifier/network.json",
+      "sha256": "sha256:2d1a7009d5c87377b417b6b697b91a599f0aa2d3a185c10e3cb74ce8f1b13970"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "python-constraint",
+  "terminal_kind": "valid"
+}
