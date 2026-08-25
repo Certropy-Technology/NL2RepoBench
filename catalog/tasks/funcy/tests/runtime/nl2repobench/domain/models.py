@@ -473,6 +473,9 @@ class MetricContract(RecordModel):
 
     contract_id: str = "fixed-test-pass-rate-v1"
     passed_statuses: tuple[Literal["passed"], ...] = ("passed",)
+    # Legacy v1 schema field. The current runtime contract is defined by
+    # verification.metric_contract and rejects this historical exclusion field
+    # at the evaluator boundary rather than silently applying it.
     excluded_statuses: tuple[Literal["skipped", "xfail"], ...] = ("skipped",)
     collection_mismatch: Literal["fail", "record-only"] = "fail"
     formula: str = "clamp(passed / frozen_total, 0, 1)"
