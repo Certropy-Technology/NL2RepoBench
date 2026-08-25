@@ -49,7 +49,7 @@ def _build_secret_exec(
     exec_command.extend(
         [
             MAIN_SERVICE_NAME,
-            "/opt/openhands-sdk-venv/bin/python",
+            "python3",
             "-c",
             _SECRET_WRAPPER,
             command,

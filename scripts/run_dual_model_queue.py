@@ -14,7 +14,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from run_model_from_pi import normalize_harbor_model, provider_config
+from run_model_from_pi import provider_config, runtime_provider_config
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 
@@ -25,6 +25,7 @@ class ModelSpec:
     model_id: str
     harbor_model: str
     run_prefix: str
+    credential_env: str | None = None
 
 
 MODEL_SPECS = (
@@ -124,13 +125,26 @@ def build_plan(
         raise ValueError("campaign_id must be a safe name")
     queues: list[dict[str, Any]] = []
     for spec in MODEL_SPECS:
-        api, _, _ = provider_config(models_file, spec.provider, spec.model_id)
+        api, base_url, _ = provider_config(
+            models_file,
+            spec.provider,
+            spec.model_id,
+            allow_unresolved_credential=bool(spec.credential_env),
+        )
+        runtime_api, runtime_base_url, runtime_model = runtime_provider_config(
+            spec.provider,
+            api,
+            base_url,
+            spec.model_id,
+            spec.harbor_model,
+        )
         missing_tasks = [task for task in tasks if task not in existing_tasks]
         queues.append(
             {
                 **asdict(spec),
-                "api": api,
-                "harbor_model": normalize_harbor_model(api, spec.harbor_model),
+                "api": runtime_api,
+                "base_url": runtime_base_url,
+                "harbor_model": runtime_model,
                 "tasks": missing_tasks,
                 "skipped_existing_tasks": sorted(set(tasks) - set(missing_tasks)),
                 "run_root": str((run_root / spec.run_prefix).resolve()),
@@ -190,6 +204,8 @@ def _run_queue(queue: dict[str, Any], models_file: Path) -> dict[str, Any]:
     ]
     if queue.get("harbor_task_root"):
         command.extend(["--harbor-task-root", queue["harbor_task_root"]])
+    if queue.get("credential_env"):
+        command.extend(["--credential-env", queue["credential_env"]])
     completed = subprocess.run(command, cwd=Path(__file__).parents[1], check=False)
     return {
         "model": queue["model_id"],

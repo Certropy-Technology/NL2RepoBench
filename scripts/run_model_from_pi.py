@@ -78,6 +78,23 @@ def normalize_harbor_model(api: str, harbor_model: str) -> str:
     return harbor_model
 
 
+def runtime_provider_config(
+    provider: str,
+    api: str,
+    base_url: str,
+    model_id: str,
+    harbor_model: str,
+) -> tuple[str, str, str]:
+    """Resolve the protocol/model endpoint used inside the Harbor container."""
+
+    if provider == "z-open-api-fabel5" and model_id == "claude-fable-5":
+        endpoint = base_url.rstrip("/")
+        if not endpoint.endswith("/v1"):
+            endpoint += "/v1"
+        return "openai-completions", endpoint, f"openai/{model_id}"
+    return api, base_url, normalize_harbor_model(api, harbor_model)
+
+
 def provider_hostname(base_url: str) -> str:
     """Return the exact HTTPS hostname used for the run-scoped allowlist."""
 
@@ -116,18 +133,18 @@ def check_compiled_task_network_policy(task_root: Path) -> None:
         )
 
 
-def provider_runtime_env(api: str, model_id: str) -> dict[str, str]:
-    """Return protocol-specific runtime knobs without changing Pi config.
+def provider_runtime_env(
+    api: str,
+    model_id: str,
+    provider: str | None = None,
+) -> dict[str, str]:
+    """Return the selected OpenHands runtime knobs without changing Pi config."""
 
-    The Fable relay rejects OpenHands' verbose built-in security policy with a
-    ``content_filter`` finish reason. Keep the remaining OpenHands prompt and
-    select the concise adapter-owned policy verified against the relay.
-    """
-
-    if api == "anthropic-messages" and model_id == "claude-fable-5":
+    if provider == "z-open-api-fabel5" and model_id == "claude-fable-5":
         return {
-            "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
+            "HARBOR_AGENT": "nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction",
             "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
+            "LLM_STREAM": "1",
         }
     return {}
 
@@ -204,13 +221,12 @@ def main() -> int:
     if run_root.exists():
         raise SystemExit(f"run root already exists: {run_root}")
 
-    api, base_url, configured_key = provider_config(
+    configured_api, base_url, configured_key = provider_config(
         args.models_file,
         args.provider,
         args.model_id,
         allow_unresolved_credential=bool(args.credential_env),
     )
-    harbor_model = normalize_harbor_model(api, args.harbor_model)
     api_key = configured_key
     if args.credential_env:
         if not SAFE_NAME.fullmatch(args.credential_env):
@@ -222,6 +238,13 @@ def main() -> int:
         if not args.base_url.startswith("https://"):
             raise SystemExit("--base-url must use HTTPS")
         base_url = args.base_url
+    api, base_url, harbor_model = runtime_provider_config(
+        args.provider,
+        configured_api,
+        base_url,
+        args.model_id,
+        args.harbor_model,
+    )
     provider_host = provider_hostname(base_url)
     environment = os.environ.copy()
     environment.update(
@@ -251,7 +274,9 @@ def main() -> int:
             "LLM_RETRY_MAX_WAIT": "120",
         }
     )
-    environment.update(provider_runtime_env(api, args.model_id))
+    environment.update(
+        provider_runtime_env(configured_api, args.model_id, args.provider)
+    )
     print(f"launch task={args.task} model={harbor_model} run_root={run_root}")
     completed = subprocess.run(
         [str(ROOT / "scripts/run_model_queue.sh")],

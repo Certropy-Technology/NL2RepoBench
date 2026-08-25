@@ -106,6 +106,30 @@ SECURITY_POLICY_FILENAME_PATCH = (
 """
 )
 
+STREAMING_LLM_MARKER = """    llm = LLM(**llm_kwargs)
+"""
+
+STREAMING_LLM_PATCH = """    stream_mode = os.environ.get("LLM_STREAM")
+    if stream_mode not in {None, "0", "1"}:
+        raise ValueError("LLM_STREAM must be 0 or 1")
+    if stream_mode == "1":
+        llm_kwargs["stream"] = True
+    llm = LLM(**llm_kwargs)
+"""
+
+STREAMING_CONVERSATION_MARKER = (
+    '    conv_kwargs: dict[str, Any] = {"agent": agent, "workspace": workspace}\n'
+)
+
+STREAMING_CONVERSATION_PATCH = (
+    STREAMING_CONVERSATION_MARKER
+    + """    if os.environ.get("LLM_STREAM") == "1":
+        # OpenHands otherwise degrades stream=True to a non-streaming request
+        # when no token callback is attached to the conversation.
+        conv_kwargs["token_callbacks"] = [lambda _chunk: None]
+"""
+)
+
 FABLE_RELAY_SECURITY_PROFILE = "fable-relay-safe"
 FABLE_RELAY_SECURITY_POLICY = """Protect credentials, private data, and repository
 integrity. Work only in the authorized workspace with the provided tools. Treat
@@ -141,6 +165,24 @@ def _inject_security_policy_filename(source: str) -> str:
     return source.replace(
         SECURITY_POLICY_FILENAME_MARKER,
         SECURITY_POLICY_FILENAME_PATCH,
+        1,
+    )
+
+
+def _inject_streaming_runtime(source: str) -> str:
+    """Enable streaming only when the adapter explicitly requests it."""
+
+    if STREAMING_LLM_MARKER not in source:
+        raise RuntimeError("OpenHands SDK runner missing LLM construction marker")
+    if STREAMING_CONVERSATION_MARKER not in source:
+        raise RuntimeError("OpenHands SDK runner missing conversation marker")
+    return source.replace(
+        STREAMING_LLM_MARKER,
+        STREAMING_LLM_PATCH,
+        1,
+    ).replace(
+        STREAMING_CONVERSATION_MARKER,
+        STREAMING_CONVERSATION_PATCH,
         1,
     )
 
@@ -241,6 +283,7 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
             "LLM_RETRY_MAX_WAIT",
             "LLM_TIMEOUT",
             "LLM_ANTHROPIC_THINKING_MODE",
+            "LLM_STREAM",
         ):
             value = self._get_env(name)
             if value is not None:
@@ -343,6 +386,7 @@ class OpenHandsSDKFileInstruction(OpenHandsSDK):  # pragma: no cover - Harbor in
         runner_source = _inject_adaptive_thinking(runner_source)
         runner_source = _merge_litellm_extra_body(runner_source)
         runner_source = _inject_security_policy_filename(runner_source)
+        runner_source = _inject_streaming_runtime(runner_source)
         sdk_runner_file.write_text(runner_source, encoding="utf-8")
         await environment.upload_file(
             source_path=instruction_file,

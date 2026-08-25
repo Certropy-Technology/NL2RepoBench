@@ -83,10 +83,12 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
         {
             "AGENT_TIMEOUT_SECONDS": "18000",
             "CAPTURE": str(capture),
+            "HARBOR_AGENT": "nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction",
             "LLM_API_KEY": "test-secret",
             "LLM_BASE_URL": "https://example.invalid/v1",
             "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
             "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
+            "LLM_STREAM": "1",
             "MODEL": "openai/test-model",
             "PATH": f"{fake_bin}:{env['PATH']}",
             "TASK_ID": "demo",
@@ -113,6 +115,10 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
     assert arguments[environment_index + 1] == (
         "nl2repobench.harbor_docker:StdinSecretDockerEnvironment"
     )
+    agent_index = arguments.index("-a")
+    assert arguments[agent_index + 1] == (
+        "nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction"
+    )
     assert all(not argument.startswith("LLM_API_KEY=") for argument in arguments)
     assert "LLM_ANTHROPIC_THINKING_MODE=adaptive" in arguments
     assert "LLM_OPENHANDS_SECURITY_PROFILE=fable-relay-safe" in arguments
@@ -120,6 +126,7 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
         not argument.startswith("LLM_ANTHROPIC_NATIVE_TOOLS=")
         for argument in arguments
     )
+    assert "LLM_STREAM=1" in arguments
     assert "test-secret" not in "\n".join(arguments)
     assert "test-secret" not in completed.stdout
     assert "test-secret" not in completed.stderr
@@ -259,6 +266,34 @@ def test_stdin_secret_environment_keeps_secret_out_of_docker_argv() -> None:
     assert probe.stdout.strip() == "ok"
     assert secret not in probe.stdout
     assert secret not in probe.stderr
+
+
+def test_openhands_runner_requires_real_streaming_callback() -> None:
+    probe_code = '''from nl2repobench.harbor_openhands import _inject_streaming_runtime
+
+source = """llm_kwargs = {}
+    llm = LLM(**llm_kwargs)
+workspace = "/workspace"
+agent = object()
+    conv_kwargs: dict[str, Any] = {"agent": agent, "workspace": workspace}
+conversation = Conversation(**conv_kwargs)
+"""
+patched = _inject_streaming_runtime(source)
+assert 'llm_kwargs["stream"] = True' in patched
+assert 'conv_kwargs["token_callbacks"] = [lambda _chunk: None]' in patched
+print("ok")
+'''
+    probe = subprocess.run(
+        [str(ROOT / "harbor-runner/.venv/bin/python"), "-c", probe_code],
+        cwd=ROOT,
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src")},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "ok"
 
 
 def test_secret_command_builder_and_compose_sanitizer(monkeypatch) -> None:
@@ -418,14 +453,31 @@ def test_pi_launcher_rejects_agent_compose_that_bypasses_sidecar(
         launcher.check_compiled_task_network_policy(task)
 
 
-def test_pi_launcher_scopes_fable_adaptive_thinking_to_fable() -> None:
+def test_pi_launcher_routes_fable_through_openai_compatible_endpoint() -> None:
+    launcher = _load_pi_launcher()
+
+    assert launcher.runtime_provider_config(
+        "z-open-api-fabel5",
+        "anthropic-messages",
+        "https://z.open-api.ai",
+        "claude-fable-5",
+        "anthropic/claude-fable-5",
+    ) == (
+        "openai-completions",
+        "https://z.open-api.ai/v1",
+        "openai/claude-fable-5",
+    )
+
+
+def test_pi_launcher_scopes_fable_streaming_to_fable() -> None:
     launcher = _load_pi_launcher()
 
     assert launcher.provider_runtime_env(
-        "anthropic-messages", "claude-fable-5"
+        "anthropic-messages", "claude-fable-5", "z-open-api-fabel5"
     ) == {
-        "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
+        "HARBOR_AGENT": "nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction",
         "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
+        "LLM_STREAM": "1",
     }
     assert launcher.provider_runtime_env(
         "anthropic-messages", "claude-sonnet-5"

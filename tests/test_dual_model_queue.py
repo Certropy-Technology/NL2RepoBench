@@ -78,7 +78,56 @@ def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
     }
     assert all(item["concurrency"] == 2 for item in plan["models"])
     assert plan["max_total_concurrency"] == 4
+    by_model = {item["model_id"]: item for item in plan["models"]}
+    assert by_model["claude-fable-5"]["provider"] == "z-open-api-fabel5"
+    assert by_model["claude-fable-5"]["credential_env"] is None
+    assert by_model["claude-fable-5"]["api"] == "openai-completions"
+    assert by_model["claude-fable-5"]["base_url"].endswith("/v1")
+    assert by_model["claude-fable-5"]["harbor_model"] == "openai/claude-fable-5"
     assert "test-key-not-written-to-plan" not in json.dumps(plan)
+
+
+def test_dual_plan_allows_fable_provider_env_override_without_old_env(
+    tmp_path: Path, monkeypatch
+) -> None:
+    models = tmp_path / "models.json"
+    models.write_text(
+        json.dumps(
+            {
+                "providers": {
+                    "z-open-api-gpt-openai-responses": {
+                        "api": "openai-responses",
+                        "baseUrl": "https://example.invalid/v1",
+                        "apiKey": "gpt-key",
+                        "models": [{"id": "gpt-5.6-sol"}],
+                    },
+                    "z-open-api-fabel5": {
+                        "api": "anthropic-messages",
+                        "baseUrl": "https://example.invalid",
+                        "apiKey": "${TEST_MODEL_KEY}",
+                        "models": [{"id": "claude-fable-5"}],
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    models.chmod(0o600)
+    monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps({"campaign_id": "pilot", "tasks": [{"task_id": "demo"}]}),
+        encoding="utf-8",
+    )
+
+    plan = dual.build_plan(
+        campaign,
+        run_root=tmp_path / "runs",
+        lock_root=tmp_path / "locks",
+        models_file=models,
+    )
+
+    assert len(plan["models"]) == 2
 
 
 def test_dual_queue_invocation_keeps_credentials_out_of_argv(tmp_path: Path, monkeypatch) -> None:
@@ -111,7 +160,41 @@ def test_dual_queue_invocation_keeps_credentials_out_of_argv(tmp_path: Path, mon
     assert result["status"] == "completed"
     assert calls
     assert "--models-file" in calls[0]
+    assert "--credential-env" not in calls[0]
     assert all("test-key" not in value for value in calls[0])
+
+
+def test_fable_queue_uses_explicit_credential_environment(
+    tmp_path: Path, monkeypatch
+) -> None:
+    calls: list[list[str]] = []
+
+    class Result:
+        returncode = 0
+
+    def fake_run(command, **kwargs):
+        calls.append(command)
+        del kwargs
+        return Result()
+
+    monkeypatch.setattr(dual.subprocess, "run", fake_run)
+    queue = {
+        "provider": "z-open-api-fabel5",
+        "model_id": "claude-fable-5",
+        "harbor_model": "openai/claude-fable-5",
+        "run_prefix": "fable",
+        "run_root": str(tmp_path / "runs"),
+        "lock_root": str(tmp_path / "locks"),
+        "tasks": ["demo"],
+    }
+    models = tmp_path / "models.json"
+    models.write_text("{}", encoding="utf-8")
+
+    result = dual._run_queue(queue, models)
+
+    assert result["status"] == "completed"
+    assert calls
+    assert "--credential-env" not in calls[0]
 
 
 def test_dual_plan_skips_only_oss_backed_existing_runs(tmp_path: Path, monkeypatch) -> None:
