@@ -1,0 +1,236 @@
+{
+  "package_surface": {
+    "cli_string": "dotenv -q auto -f config.env set GREETING \"hello world\"",
+    "exports": [
+      "dotenv_values",
+      "find_dotenv",
+      "get_cli_string",
+      "get_key",
+      "load_dotenv",
+      "set_key",
+      "unset_key"
+    ],
+    "version": "1.1.1"
+  },
+  "parse_basics": {
+    "EMPTY": "",
+    "HASH": "a#b",
+    "NOVALUE": null,
+    "PLAIN": "value",
+    "SPACED": "hello world"
+  },
+  "parse_quotes": {
+    "DOUBLE": "line\n\tquoted\"",
+    "MULTI": "a\nb",
+    "SINGLE": "it's ok",
+    "UNICODE": "雪"
+  },
+  "parse_invalid": {
+    "A": "one",
+    "B": "two"
+  },
+  "parse_no_interpolate": {
+    "A": "one",
+    "B": "${A}",
+    "C": "$A"
+  },
+  "interpolate_environment": {
+    "A": "outside",
+    "B": "",
+    "C": "fallback"
+  },
+  "interpolate_file_order": {
+    "A": "last",
+    "B": "first",
+    "C": "last"
+  },
+  "interpolation_bare_and_default": {
+    "A": "$X",
+    "B": "xdy",
+    "C": ""
+  },
+  "get_key_values": [
+    "thé",
+    null,
+    null
+  ],
+  "find_parent": ".env",
+  "find_missing": "",
+  "find_raise": "OSError",
+  "load_no_override": [
+    true,
+    "outside",
+    "outside"
+  ],
+  "load_override": [
+    true,
+    "file",
+    "file"
+  ],
+  "load_stream_none_value": [
+    true,
+    "雪",
+    false
+  ],
+  "load_empty_missing": [
+    false,
+    false
+  ],
+  "load_no_interpolate": [
+    true,
+    "${A}"
+  ],
+  "set_create_always": [
+    [
+      true,
+      "A",
+      "hello world"
+    ],
+    "A='hello world'\n"
+  ],
+  "set_replace_preserve": [
+    [
+      true,
+      "A",
+      "new"
+    ],
+    "# head\nA='new'\nB=keep"
+  ],
+  "set_quote_modes": [
+    "K=a b\n",
+    "K=abc123\n",
+    "K='a b'\n"
+  ],
+  "set_export_escape": [
+    [
+      true,
+      "K",
+      "it's"
+    ],
+    "export K='it\\'s'\n"
+  ],
+  "set_invalid_mode": [
+    "ValueError",
+    "Unknown quote_mode: sometimes"
+  ],
+  "set_encoding": [
+    [
+      true,
+      "é",
+      "è"
+    ],
+    "e93d27e8270a"
+  ],
+  "unset_existing": [
+    [
+      true,
+      "A"
+    ],
+    "B=two\n"
+  ],
+  "unset_missing_key": [
+    [
+      null,
+      "B"
+    ],
+    "A=one\n"
+  ],
+  "unset_missing_file": [
+    null,
+    "A"
+  ],
+  "cli_version": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "python -m dotenv, version 1.1.1\n"
+  },
+  "cli_list_formats": [
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "A=one\nB=a b\n"
+    },
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\n  \"A\": \"one\",\n  \"B\": \"a b\",\n  \"NOVALUE\": null\n}\n"
+    },
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "A=one\nB='a b'\n"
+    },
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "export A=one\nexport B='a b'\n"
+    }
+  ],
+  "cli_get": [
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "one\n"
+    },
+    {
+      "code": 1,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "code": 1,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "cli_set": [
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "A=a b\n"
+    },
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "B=two\n"
+    },
+    "A='a b'\nexport B='two'\n"
+  ],
+  "cli_unset": [
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "Successfully removed A\n"
+    },
+    {
+      "code": 1,
+      "stderr": "Key A not removed from <tmp>/.env - key doesn't exist.\n",
+      "stdout": ""
+    },
+    "B=two\n"
+  ],
+  "cli_run_override": [
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "file\nFalse\n"
+    },
+    {
+      "code": 0,
+      "stderr": "",
+      "stdout": "outside\nFalse\n"
+    }
+  ],
+  "cli_errors": [
+    {
+      "code": 2,
+      "stderr": "Error opening env file: [Errno 2] No such file or directory: '<tmp>/missing'\n",
+      "stdout": ""
+    },
+    {
+      "code": 1,
+      "stderr": "",
+      "stdout": "No command given.\n"
+    }
+  ]
+}
