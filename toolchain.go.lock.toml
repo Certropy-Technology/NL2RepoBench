@@ -1,0 +1,19 @@
+schema_version = "1.0"
+status = "locked"
+go_runtime_sha256 = "sha256:9d086428463494848eb909bd328f4d62c977825c716a52d115d31d005c52aa33"
+go_report_schema = "go-test-json-v1"
+verifier_requirements_lock = "verifier/requirements.lock.txt"
+verifier_requirements_sha256 = "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
+
+[harbor]
+version = "0.21.0"
+task_schema = "1.4"
+runner = "uv run --frozen --project harbor-runner harbor"
+lock_file = "harbor-runner/uv.lock"
+lock_sha256 = "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42"
+
+[go]
+version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+platform = "linux/amd64"
+executable = "/usr/local/go/bin/go"

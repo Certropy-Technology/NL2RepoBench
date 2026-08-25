@@ -25,7 +25,7 @@ from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResol
 
 JsonObject = dict[str, Any]
 BundleManifestSchema = Literal["1.0", "2.0"]
-RuntimeLanguage = Literal["python", "node"]
+RuntimeLanguage = Literal["python", "node", "go"]
 
 VALID_STATUSES = frozenset({"controls-passed", "reviewed", "piloted", "published"})
 BLOCKED_STATUSES = frozenset({"blocked", "excluded"})
@@ -236,8 +236,10 @@ def _bundle_manifest_schema_for_source(
         return "python", "1.0"
     if language == "node":
         return "node", "2.0"
+    if language == "go":
+        return "go", "1.0"
     raise ProductionGateError(
-        f"{task_id}: source metadata.language must be python or node, got {language!r}"
+        f"{task_id}: source metadata.language must be python, node, or go, got {language!r}"
     )
 
 
@@ -289,9 +291,7 @@ def _validate_bundle_manifest(
 
 def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Path) -> JsonObject:
     actual_files = {
-        path.relative_to(task_root).as_posix()
-        for path in task_root.rglob("*")
-        if path.is_file()
+        path.relative_to(task_root).as_posix() for path in task_root.rglob("*") if path.is_file()
     }
     missing = sorted(REQUIRED_RUNTIME_FILES - actual_files)
     if missing:
@@ -328,6 +328,11 @@ def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Pa
     if not any(path.is_file() for path in grader_paths):
         raise ProductionGateError(f"{task_id}: structured grader entrypoint is missing")
     language, expected_schema = _bundle_manifest_schema_for_source(task_id, source_data)
+    if language == "go":
+        if metadata.get("language") != "go" or metadata.get("package_manager") != "go-modules":
+            raise ProductionGateError(
+                f"{task_id}: generated Go runtime identity must be go+go-modules"
+            )
     manifest = _validate_bundle_manifest(
         task_id,
         task_root,
@@ -377,6 +382,7 @@ def validate_catalog(
     artifact_root: Path,
     python_toolchain: Path,
     node_toolchain: Path,
+    go_toolchain: Path,
     verify_git: bool = True,
     compile_tasks: bool = True,
     require_evidence: bool = True,
@@ -401,7 +407,8 @@ def validate_catalog(
             _task_issue(
                 "<catalog>",
                 "current source IDs differ from frozen input; "
-                f"missing={sorted(frozen_ids-current_ids)}, extra={sorted(current_ids-frozen_ids)}",
+                f"missing={sorted(frozen_ids - current_ids)}, "
+                f"extra={sorted(current_ids - frozen_ids)}",
             )
         )
 
@@ -475,9 +482,17 @@ def validate_catalog(
                     )
                     if compile_tasks:
                         output_root = Path(compile_parent.name) / task_id
+                        source_metadata = source_data.get("metadata")
+                        source_language = (
+                            source_metadata.get("language")
+                            if isinstance(source_metadata, dict)
+                            else None
+                        )
                         toolchain = (
                             node_toolchain
-                            if source_data.get("schema_version") == "2.0"
+                            if source_language == "node"
+                            else go_toolchain
+                            if source_language == "go"
                             else python_toolchain
                         )
                         compiled = registry.compile_task(
@@ -508,7 +523,8 @@ def validate_catalog(
             _task_issue(
                 "<catalog>",
                 "catalog/tasks does not equal valid task IDs; "
-                f"missing={sorted(valid_ids-runtime_ids)}, extra={sorted(runtime_ids-valid_ids)}",
+                f"missing={sorted(valid_ids - runtime_ids)}, "
+                f"extra={sorted(runtime_ids - valid_ids)}",
             )
         )
     counts = {
@@ -756,9 +772,7 @@ def _validate_blocked_row(row: JsonObject, repository_root: Path) -> None:
         version = raw.get("tool_version")
         if not isinstance(version, str) or not version:
             raise ProductionGateError(f"{task_id}: blocked command {index} lacks tool_version")
-        log = _file_from_record(
-            raw, "log", repository_root=repository_root, task_id=task_id
-        )
+        log = _file_from_record(raw, "log", repository_root=repository_root, task_id=task_id)
         if log.stat().st_size == 0:
             raise ProductionGateError(f"{task_id}: blocked command {index} log is empty")
     source = blocked.get("source_freeze")

@@ -282,3 +282,36 @@ def test_remediation_selects_missing_incomplete_and_repairable_blocked_sources(
         "source-missing": "source-missing",
         "terminal-blocked": "blocked-terminal",
     }
+
+
+def test_author_loop_plans_go_foundation_gate(tmp_path: Path) -> None:
+    candidates = tmp_path / "go.json"
+    candidates.write_text(
+        json.dumps(
+            {
+                "queue": [
+                    {
+                        "candidate_id": "go-gjson",
+                        "package": "gjson",
+                        "language": "go",
+                        "status": "candidate",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    plan = loop.build_plan(
+        candidates,
+        language="go",
+        catalog_root=tmp_path / "sources",
+        tasks_root=tmp_path / "tasks",
+        oss_inventory=None,
+        limit=1,
+        batch_id="go-pilot",
+    )
+
+    assert [task["package"] for task in plan["tasks"]] == ["gjson"]
+    assert "typed bridge" in plan["tasks"][0]["production_gate"]
+    assert "three Oracle runs" in plan["tasks"][0]["production_gate"]

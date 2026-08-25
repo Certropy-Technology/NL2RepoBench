@@ -11,6 +11,7 @@ future policy explicitly enables it.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -46,6 +47,15 @@ AUTHORING_RETRY_SETTINGS = {
     }
 }
 QUEUE_OUTPUT_LOCK = threading.Lock()
+GO_RUNTIME_LOCK_FILES = (
+    "src/nl2repobench/verification/go_bridge.py",
+    "src/nl2repobench/verification/go_bridge_proxy.py",
+    "src/nl2repobench/verification/go_contract_runner.py",
+    "src/nl2repobench/verification/go_grader.py",
+    "src/nl2repobench/verification/go_supervisor.py",
+    "src/nl2repobench/verification/normalize/go_json.py",
+    "src/nl2repobench/package_managers/go_modules.py",
+)
 
 
 def _load_queue_loop() -> Any:
@@ -91,7 +101,7 @@ def _claim(
     language: str,
     lease: int,
     attempts: int,
-    reclaim_statuses: list[str] | None = None,
+    remediation_plan: Path | None = None,
 ) -> dict[str, Any] | None:
     loop = _load_queue_loop()
     args = type(
@@ -106,7 +116,7 @@ def _claim(
             "max_attempts": attempts,
             "language": language,
             "candidate_id": [candidate_id],
-            "reclaim_status": reclaim_statuses or [],
+            "remediation_plan": remediation_plan,
         },
     )()
     output = StringIO()
@@ -230,6 +240,25 @@ def _task_catalog_paths(task: dict[str, Any], package: str) -> tuple[Path, Path]
     return source, harbor
 
 
+def _language_guidance(language: str) -> str:
+    if language != "go":
+        return ""
+    return """
+Go first-lane constraints are strict. Use one go.mod module on Linux/amd64,
+pure Go only, no cgo/plugin/unsafe-heavy behavior, no go generate, no workspace
+or external replace directive, and no toolchain auto-download. Freeze GOOS,
+GOARCH, GOWORK=off, GOPROXY=off, GOSUMDB=off, and GOTOOLCHAIN=local for offline
+validation. Inventory the real package with go/packages/go/types and dynamic
+go test evidence. Build a reviewed typed bridge that contains only public API
+mapping and serialization; hidden inputs, assertions, expected values, and the
+grader belong in a private verifier artifact. The Oracle and offline module
+closure must also be private content-addressed artifacts. Run the candidate
+bridge as UID 10001 under the bounded supervisor. Production handoff requires
+three stable Oracle runs plus empty, stub, forgery, install-failure, panic,
+hang, oversized-output, background-process, and offline controls.
+""".strip()
+
+
 def _agent_prompt(
     *,
     plan: dict[str, Any],
@@ -241,6 +270,7 @@ def _agent_prompt(
 ) -> str:
     package = task["package"]
     source_root, harbor_task_root = _task_catalog_paths(task, package)
+    language_guidance = _language_guidance(str(plan["language"]))
     remediation_context = (
         "This is an existing-source remediation lane. Read the current source, "
         "production evidence, blocked reason, and any generated runtime before editing. "
@@ -277,6 +307,7 @@ Do not edit the parent checkout, another worktree, shared catalog/dataset files,
 or OSS data. Do not start a Harbor Agent Run from this lane.
 {subagent_guidance}
 {remediation_context}
+{language_guidance}
 
 Turn the candidate into a real, testable Harbor task. Freeze and verify the
 exact source revision, inventory the public API and tests, debug the actual
@@ -531,6 +562,187 @@ def _run_network_policy_check(worktree: Path, task_root: Path) -> dict[str, Any]
     }
 
 
+def _authoring_toolchain(worktree: Path, language: str | None) -> Path:
+    if language == "node":
+        return worktree / "toolchain.node.lock.toml"
+    if language == "go":
+        return worktree / "toolchain.go.lock.toml"
+    return worktree / "toolchain.lock.toml"
+
+
+def _private_artifact(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    digest = value.get("digest")
+    return (
+        isinstance(digest, str)
+        and re.fullmatch(r"sha256:[0-9a-f]{64}", digest) is not None
+        and value.get("visibility") == "private"
+        and value.get("uri") == f"artifact://private/{digest}"
+        and isinstance(value.get("size_bytes"), int)
+        and not isinstance(value.get("size_bytes"), bool)
+        and value["size_bytes"] >= 0
+    )
+
+
+def _go_runtime_digest(repository_root: Path) -> str:
+    digest = hashlib.sha256()
+    for relative in GO_RUNTIME_LOCK_FILES:
+        path = repository_root / relative
+        digest.update(relative.removeprefix("src/nl2repobench/").encode())
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    return f"sha256:{digest.hexdigest()}"
+
+
+def _go_toolchain_errors(toolchain: Path) -> list[str]:
+    errors: list[str] = []
+    try:
+        lock = tomllib.loads(toolchain.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        return [f"invalid production Go toolchain lock: {exc}"]
+    repository_root = toolchain.parent
+    if lock.get("status") != "locked":
+        errors.append("toolchain.go.lock.toml status must be locked")
+    if lock.get("schema_version") != "1.0":
+        errors.append("Go toolchain schema must be 1.0")
+    if lock.get("go_report_schema") != "go-test-json-v1":
+        errors.append("Go report schema must be go-test-json-v1")
+    go = lock.get("go")
+    if not isinstance(go, dict) or not re.fullmatch(r"1\.[0-9]+\.[0-9]+", str(go.get("version"))):
+        errors.append("Go toolchain version must be exact")
+    elif re.fullmatch(r"[A-Za-z0-9._/-]+@sha256:[0-9a-f]{64}", str(go.get("base_image"))) is None:
+        errors.append("Go toolchain base image must be digest pinned")
+    elif go.get("platform") != "linux/amd64" or go.get("executable") != "/usr/local/go/bin/go":
+        errors.append("Go toolchain platform or executable is invalid")
+    try:
+        runtime_digest = _go_runtime_digest(repository_root)
+    except OSError as exc:
+        errors.append(f"cannot hash Go runtime: {exc}")
+    else:
+        if lock.get("go_runtime_sha256") != runtime_digest:
+            errors.append("Go runtime digest does not match toolchain lock")
+    for table_name, path_field, digest_field in (
+        (None, "verifier_requirements_lock", "verifier_requirements_sha256"),
+        ("harbor", "lock_file", "lock_sha256"),
+    ):
+        table = lock if table_name is None else lock.get(table_name)
+        if not isinstance(table, dict):
+            errors.append(f"Go toolchain {table_name or 'root'} table is invalid")
+            continue
+        relative = table.get(path_field)
+        expected = table.get(digest_field)
+        if (
+            not isinstance(relative, str)
+            or Path(relative).is_absolute()
+            or ".." in Path(relative).parts
+        ):
+            errors.append(f"Go toolchain {path_field} is unsafe")
+            continue
+        path = repository_root / relative
+        try:
+            actual = f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}"
+        except OSError as exc:
+            errors.append(f"cannot hash Go toolchain file {relative}: {exc}")
+            continue
+        if expected != actual:
+            errors.append(f"Go toolchain {digest_field} does not match {relative}")
+    harbor = lock.get("harbor")
+    if isinstance(harbor, dict) and (
+        harbor.get("version") != "0.21.0" or harbor.get("task_schema") != "1.4"
+    ):
+        errors.append("Go Harbor contract must be 0.21.0/task 1.4")
+    return errors
+
+
+def _go_production_contract(
+    task_root: Path,
+    source: dict[str, Any],
+    compiled_root: Path,
+    toolchain: Path,
+) -> dict[str, Any]:
+    errors = _go_toolchain_errors(toolchain)
+    environment = source.get("environment")
+    if not isinstance(environment, dict) or environment.get("status") != "known":
+        errors.append("Go environment.status must be known")
+    elif not environment.get("runtime_version"):
+        errors.append("Go environment.runtime_version is required")
+    dependencies = source.get("dependencies")
+    if not isinstance(dependencies, dict) or dependencies.get("status") != "known":
+        errors.append("Go dependencies.status must be known")
+    elif not _private_artifact(dependencies.get("module_bundle")):
+        errors.append("Go dependencies.module_bundle must be a private CAS artifact")
+    verifier = source.get("verifier")
+    if not isinstance(verifier, dict) or not _private_artifact(verifier.get("bundle")):
+        errors.append("Go verifier.bundle must be a private CAS artifact")
+    if not _private_artifact(source.get("oracle_bundle")):
+        errors.append("Go oracle_bundle must be a private CAS artifact")
+    public_bridge = task_root / "harbor/tests/bridge.go"
+    tests_root = task_root / "harbor/tests"
+    if tests_root.exists() and any(
+        path.is_file() and path != public_bridge for path in tests_root.rglob("*")
+    ):
+        errors.append("public Go source retains private verifier material")
+    for relative in ("harbor/dependencies", "harbor/solution"):
+        if (task_root / relative).exists():
+            errors.append(f"public Go source retains private material: {relative}")
+    manifest_path = compiled_root / "bundle.manifest.json"
+    generated_task_path = compiled_root / "task.toml"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        generated = tomllib.loads(generated_task_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, tomllib.TOMLDecodeError) as exc:
+        errors.append(f"invalid generated Go Harbor task: {exc}")
+    else:
+        metadata = generated.get("metadata")
+        if manifest.get("mode") != "production":
+            errors.append("generated Go Harbor manifest must be production")
+        rows = manifest.get("files")
+        declared: dict[str, tuple[str, int]] = {}
+        if not isinstance(rows, list) or not rows:
+            errors.append("generated Go Harbor manifest files must be non-empty")
+        else:
+            for row in rows:
+                if not isinstance(row, dict):
+                    errors.append("generated Go Harbor manifest contains a non-object row")
+                    break
+                row_path = row.get("path")
+                digest = row.get("sha256")
+                size = row.get("size_bytes")
+                if (
+                    not isinstance(row_path, str)
+                    or Path(row_path).is_absolute()
+                    or ".." in Path(row_path).parts
+                    or row_path in declared
+                    or not isinstance(digest, str)
+                    or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+                    or isinstance(size, bool)
+                    or not isinstance(size, int)
+                    or size < 0
+                ):
+                    errors.append("generated Go Harbor manifest contains an invalid file row")
+                    break
+                declared[row_path] = (digest, size)
+            if any(path.is_symlink() for path in compiled_root.rglob("*")):
+                errors.append("generated Go Harbor task contains a symlink")
+            else:
+                actual = {
+                    path.relative_to(compiled_root).as_posix(): (
+                        hashlib.sha256(path.read_bytes()).hexdigest(),
+                        path.stat().st_size,
+                    )
+                    for path in compiled_root.rglob("*")
+                    if path.is_file() and path != manifest_path
+                }
+                if declared != actual:
+                    errors.append("generated Go Harbor manifest inventory does not match files")
+        if not isinstance(metadata, dict) or metadata.get("language") != "go":
+            errors.append("generated Harbor task metadata.language must be go")
+        elif metadata.get("package_manager") != "go-modules":
+            errors.append("generated Harbor task package_manager must be go-modules")
+    return {"status": "passed" if not errors else "failed", "errors": errors}
+
+
 def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
     report = worktree / ".nl2repo/evidence/authoring-task-lint.json"
     report.parent.mkdir(parents=True, exist_ok=True)
@@ -555,11 +767,7 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
         source = tomllib.loads((task_root / "task.toml").read_text(encoding="utf-8"))
         metadata = source.get("metadata")
         language = metadata.get("language") if isinstance(metadata, dict) else None
-        toolchain = (
-            worktree / "toolchain.node.lock.toml"
-            if language == "node"
-            else worktree / "toolchain.lock.toml"
-        )
+        toolchain = _authoring_toolchain(worktree, language)
         compile_parent = worktree / ".nl2repo/authoring-gate"
         compile_parent.mkdir(parents=True, exist_ok=True)
         compile_output = Path(tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent))
@@ -584,12 +792,26 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
             text=True,
             check=False,
         )
+    go_contract: dict[str, Any] | None = None
+    if (
+        language == "go"
+        and compile_result is not None
+        and compile_result.returncode == 0
+        and compile_output is not None
+    ):
+        go_contract = _go_production_contract(
+            task_root,
+            source,
+            compile_output / str(source.get("task_id") or task_root.name),
+            toolchain,
+        )
     payload = {
         "status": (
             "passed"
             if validation.returncode == 0
             and compile_result is not None
             and compile_result.returncode == 0
+            and (go_contract is None or go_contract["status"] == "passed")
             else "failed"
         ),
         "language": language,
@@ -608,6 +830,7 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
             if compile_result is not None
             else None
         ),
+        "go_production_contract": go_contract,
     }
     report.write_text(
         json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
@@ -615,17 +838,23 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
     )
     return {
         "status": payload["status"],
-        "exit_code": (
+        "exit_code": 1
+        if go_contract is not None and go_contract["status"] != "passed"
+        else (
             validation.returncode
             if validation.returncode != 0 or compile_result is None
             else compile_result.returncode
         ),
         "report": str(report),
         "output": (
-            validation.stdout
-            or validation.stderr
-            or (compile_result.stdout if compile_result else "")
-            or (compile_result.stderr if compile_result else "")
+            "\n".join(go_contract["errors"])
+            if go_contract is not None and go_contract["status"] != "passed"
+            else (
+                validation.stdout
+                or validation.stderr
+                or (compile_result.stdout if compile_result else "")
+                or (compile_result.stderr if compile_result else "")
+            )
         ).strip()[-4000:],
     }
 
@@ -662,7 +891,7 @@ def _prepare_task(
         language,
         args.lease_seconds,
         args.max_attempts,
-        reclaim_statuses=raw_reclaim,
+        remediation_plan=args.plan if raw_reclaim else None,
     )
     if claimed is None:
         return None
@@ -871,6 +1100,9 @@ def _queue_refill_tasks(
                 set(planner._remediation_reasons(selected))
                 | set(selected.pop("existing_task_remediation_reasons", []))
             )
+            # Refill candidates are not present in the signed/bound plan. They may
+            # consume pending queue records, but terminal reopen requires a new plan.
+            selected["queue_reclaim_statuses"] = []
             yield selected
             continue
         if record.get("status") not in {"candidate", "needs-evidence"}:
@@ -916,8 +1148,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(tasks, list):
         raise ValueError("author plan requires tasks")
     language = plan.get("language")
-    if language not in {"python", "node"}:
-        raise ValueError("author plan language must be python or node")
+    if language not in {"python", "node", "go"}:
+        raise ValueError("author plan language must be python, node, or go")
     batch_id = plan.get("batch_id")
     if not isinstance(batch_id, str) or not SAFE_NAME.fullmatch(batch_id):
         raise ValueError("author plan requires a safe batch_id")

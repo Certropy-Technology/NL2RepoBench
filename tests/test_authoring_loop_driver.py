@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -187,6 +188,67 @@ def test_pi_command_can_explicitly_allow_internal_subagent(tmp_path: Path) -> No
         session_id="batch-one-attempt-1",
     )
     assert command[command.index("--exclude-tools") + 1] == "subagent_wait"
+
+
+def _private_artifact(digest: str = "a" * 64) -> dict[str, object]:
+    value = f"sha256:{digest}"
+    return {
+        "digest": value,
+        "size_bytes": 1,
+        "uri": f"artifact://private/{value}",
+        "visibility": "private",
+    }
+
+
+def test_go_authoring_uses_production_toolchain_and_fail_closed_contract(
+    tmp_path: Path,
+) -> None:
+    assert driver._authoring_toolchain(tmp_path, "go") == tmp_path / "toolchain.go.lock.toml"
+    assert "go/packages" in driver._language_guidance("go")
+    source_root = tmp_path / "catalog/sources/demo"
+    compiled = tmp_path / "compiled/demo"
+    source_root.mkdir(parents=True)
+    compiled.mkdir(parents=True)
+    toolchain = driver.SCRIPT_ROOT.parent / "toolchain.go.lock.toml"
+    assert driver._go_toolchain_errors(toolchain) == []
+    source = {
+        "environment": {"status": "known", "runtime_version": "1.26.5"},
+        "dependencies": {
+            "status": "known",
+            "module_bundle": _private_artifact("b" * 64),
+        },
+        "verifier": {"bundle": _private_artifact("c" * 64)},
+        "oracle_bundle": _private_artifact("d" * 64),
+    }
+    generated_task = compiled / "task.toml"
+    generated_task.write_text(
+        'schema_version = "1.4"\n\n[metadata]\nlanguage = "go"\npackage_manager = "go-modules"\n',
+        encoding="utf-8",
+    )
+    task_bytes = generated_task.read_bytes()
+    (compiled / "bundle.manifest.json").write_text(
+        json.dumps(
+            {
+                "mode": "production",
+                "files": [
+                    {
+                        "path": "task.toml",
+                        "sha256": hashlib.sha256(task_bytes).hexdigest(),
+                        "size_bytes": len(task_bytes),
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    passed = driver._go_production_contract(source_root, source, compiled, toolchain)
+    assert passed == {"status": "passed", "errors": []}
+    (source_root / "harbor/tests").mkdir(parents=True)
+    (source_root / "harbor/tests/contract.sh").write_text("hidden\n", encoding="utf-8")
+    failed = driver._go_production_contract(source_root, source, compiled, toolchain)
+    assert failed["status"] == "failed"
+    assert "public Go source retains private" in failed["errors"][0]
 
 
 def test_driver_refills_from_pending_queue_after_plan_is_exhausted(
@@ -423,7 +485,17 @@ def test_remediation_refill_selects_existing_source_and_reclaims_blocked_state(
                 "batch_id": "python-remediation-refill",
                 "language": "python",
                 "remediation_mode": True,
-                "tasks": [],
+                "candidate_input_sha256": queue_loop._sha256(queue),
+                "tasks": [
+                    {
+                        "candidate_id": "python-repair",
+                        "package": "repair",
+                        "source_root": "catalog/sources/repair",
+                        "harbor_task_root": "catalog/tasks/repair",
+                        "remediation_mode": True,
+                        "queue_reclaim_statuses": ["blocked", "complete"],
+                    }
+                ],
             }
         ),
         encoding="utf-8",

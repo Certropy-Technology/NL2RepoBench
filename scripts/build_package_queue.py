@@ -2,7 +2,7 @@
 """Normalize discovery reports into independent Package queue records.
 
 This stage never creates a Harbor task and never upgrades a candidate to
-publishable.  It only merges heterogeneous PyPI/npm/GitHub discovery reports,
+publishable.  It only merges heterogeneous PyPI/npm/Go/GitHub discovery reports,
 deduplicates them against the catalog, and marks missing evidence so workers
 can claim one Package at a time.
 """
@@ -59,11 +59,15 @@ def _source_kind(report: Path, raw: dict[str, Any]) -> str:
             return "npm"
         if folded in {"pypi", "python"}:
             return "pypi"
+        if folded in {"go", "golang", "gomod", "go-modules"}:
+            return "go-modules"
         if folded == "github":
             return "github"
     name = report.name.casefold()
     if "npm" in name or "node" in name:
         return "npm"
+    if "golang" in name or re.search(r"(?:^|[-_.])go(?:[-_.]|$)", name):
+        return "go-modules"
     if "github" in name:
         return "github"
     return "pypi"
@@ -72,11 +76,9 @@ def _source_kind(report: Path, raw: dict[str, Any]) -> str:
 def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]]:
     source_kind = _source_kind(report, payload)
     report_language = payload.get("language")
-    if report_language not in {"python", "node"}:
+    if report_language not in {"python", "node", "go"}:
         report_language = (
-            "python"
-            if "python" in str(payload.get("dataset_target", "")).casefold()
-            else None
+            "python" if "python" in str(payload.get("dataset_target", "")).casefold() else None
         )
     merged: dict[str, dict[str, Any]] = {}
 
@@ -92,16 +94,17 @@ def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]
             identity,
             {
                 "candidate_id": (
-                    f"{_slug(identity)}-"
-                    f"{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:12]}"
+                    f"{_slug(identity)}-{hashlib.sha256(identity.encode('utf-8')).hexdigest()[:12]}"
                 ),
                 "package": package,
                 "language": (
                     str(raw.get("language"))
-                    if raw.get("language") in {"python", "node"}
+                    if raw.get("language") in {"python", "node", "go"}
                     else (
                         "node"
                         if source_kind == "npm"
+                        else "go"
+                        if source_kind == "go-modules"
                         else "python"
                         if source_kind == "pypi"
                         else report_language
@@ -183,7 +186,7 @@ def _status(record: dict[str, Any], existing_ids: set[str], observed_at: str) ->
     normalized = {_slug(package), _slug(str(repository or ""))}
     if package in existing_ids or normalized.intersection({_slug(item) for item in existing_ids}):
         return "existing"
-    if record.get("language") not in {"python", "node"}:
+    if record.get("language") not in {"python", "node", "go"}:
         return "needs-evidence"
     revision = record.get("revision")
     license_spdx = record.get("license_spdx")
@@ -194,11 +197,16 @@ def _status(record: dict[str, Any], existing_ids: set[str], observed_at: str) ->
         return "needs-evidence"
     if not isinstance(revision, str) or SHA_PATTERN.fullmatch(revision) is None:
         return "needs-evidence"
-    if not isinstance(license_spdx, str) or not license_spdx.strip() or license_spdx.casefold() in {
-        "unknown",
-        "unresolved",
-        "noassertion",
-    }:
+    if (
+        not isinstance(license_spdx, str)
+        or not license_spdx.strip()
+        or license_spdx.casefold()
+        in {
+            "unknown",
+            "unresolved",
+            "noassertion",
+        }
+    ):
         return "needs-evidence"
     if not isinstance(last_activity, str):
         return "needs-evidence"
@@ -228,11 +236,15 @@ def build_queue(
     catalog_root: Path,
     observed_at: str,
 ) -> dict[str, Any]:
-    existing_ids = {
-        path.name
-        for path in catalog_root.iterdir()
-        if path.is_dir() and not path.name.startswith(".")
-    } if catalog_root.is_dir() else set()
+    existing_ids = (
+        {
+            path.name
+            for path in catalog_root.iterdir()
+            if path.is_dir() and not path.name.startswith(".")
+        }
+        if catalog_root.is_dir()
+        else set()
+    )
     records: dict[str, dict[str, Any]] = {}
     for report in sorted(reports):
         for record in _merge_records(report, _load(report)):
@@ -257,9 +269,7 @@ def build_queue(
                         current["conflicts"].append(key)
                         current[key] = min(
                             (current[key], value),
-                            key=lambda item: json.dumps(
-                                item, ensure_ascii=False, sort_keys=True
-                            ),
+                            key=lambda item: json.dumps(item, ensure_ascii=False, sort_keys=True),
                         )
                 current["conflicts"] = sorted(set(current["conflicts"]))
     queue = []

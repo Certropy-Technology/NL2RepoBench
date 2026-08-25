@@ -8,7 +8,10 @@ import json
 import sys
 from pathlib import Path
 
-from harbor_production_validation import validate_catalog, write_report
+from harbor_production_validation import (  # type: ignore[import-not-found]
+    validate_catalog,
+    write_report,
+)
 
 
 def main() -> int:
@@ -21,6 +24,7 @@ def main() -> int:
     parser.add_argument("--artifact-root", type=Path, default=Path(".nl2repo/artifacts"))
     parser.add_argument("--python-toolchain", type=Path, default=Path("toolchain.lock.toml"))
     parser.add_argument("--node-toolchain", type=Path, default=Path("toolchain.node.lock.toml"))
+    parser.add_argument("--go-toolchain", type=Path, default=Path("toolchain.go.lock.toml"))
     parser.add_argument("--no-compile", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     repository_root = Path.cwd().resolve()
@@ -34,6 +38,7 @@ def main() -> int:
             artifact_root=args.artifact_root.resolve(),
             python_toolchain=args.python_toolchain.resolve(),
             node_toolchain=args.node_toolchain.resolve(),
+            go_toolchain=args.go_toolchain.resolve(),
             compile_tasks=not args.no_compile,
         )
         write_report(args.report, report)

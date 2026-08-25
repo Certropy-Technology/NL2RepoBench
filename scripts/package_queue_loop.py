@@ -145,14 +145,55 @@ def command_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def _authorized_reclaim_statuses(
+    plan_path: Path | None,
+    *,
+    queue_path: Path,
+    candidate_id: str,
+) -> set[str]:
+    if plan_path is None:
+        return set()
+    try:
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid remediation plan {plan_path}: {exc}") from exc
+    if not isinstance(plan, dict) or plan.get("remediation_mode") is not True:
+        raise ValueError("terminal reclaim requires a remediation plan")
+    if plan.get("candidate_input_sha256") != _sha256(queue_path):
+        raise ValueError("remediation plan is not bound to this queue")
+    tasks = plan.get("tasks")
+    if not isinstance(tasks, list):
+        raise ValueError("remediation plan tasks must be an array")
+    matches = [
+        task
+        for task in tasks
+        if isinstance(task, dict) and task.get("candidate_id") == candidate_id
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"remediation plan does not authorize {candidate_id}")
+    raw_statuses = matches[0].get("queue_reclaim_statuses")
+    if not isinstance(raw_statuses, list):
+        raise ValueError("remediation task must declare queue_reclaim_statuses")
+    statuses = set(raw_statuses)
+    if statuses - {"blocked", "complete"}:
+        raise ValueError("remediation plan may reclaim only blocked or complete")
+    return statuses
+
+
 def command_claim(args: argparse.Namespace) -> int:
     if args.limit < 1 or args.lease_seconds < 1 or args.max_attempts < 1:
         raise ValueError("claim limits, lease-seconds, and max-attempts must be positive")
-    reclaim_statuses = set(getattr(args, "reclaim_status", []) or [])
-    if reclaim_statuses - {"blocked", "complete"}:
-        raise ValueError("only blocked or complete records may be reclaimed")
-    if reclaim_statuses and not getattr(args, "candidate_id", None):
-        raise ValueError("terminal reclaim requires an explicit candidate-id")
+    candidate_filter = getattr(args, "candidate_id", None)
+    plan_path = getattr(args, "remediation_plan", None)
+    reclaim_statuses: set[str] = set()
+    if plan_path is not None:
+        if not isinstance(candidate_filter, list) or len(candidate_filter) != 1 or args.limit != 1:
+            raise ValueError("remediation claim requires exactly one candidate-id and limit=1")
+        reclaim_statuses = _authorized_reclaim_statuses(
+            Path(plan_path),
+            queue_path=args.queue,
+            candidate_id=candidate_filter[0],
+        )
     with locked_state(args.state) as state:
         items = sync_queue(state, args.queue)
         selected: list[dict[str, Any]] = []
@@ -160,7 +201,6 @@ def command_claim(args: argparse.Namespace) -> int:
             if len(selected) >= args.limit:
                 break
             record = items[candidate_id]
-            candidate_filter = getattr(args, "candidate_id", None)
             if candidate_filter and candidate_id not in candidate_filter:
                 continue
             if args.language and record.get("language") != args.language:
@@ -258,6 +298,8 @@ def command_record(args: argparse.Namespace) -> int:
             raise ValueError(f"unknown candidate: {args.candidate_id}")
         if record.get("owner") != args.owner or record.get("status") != "running":
             raise ValueError(f"{args.candidate_id} is not claimed by {args.owner}")
+        if lease_expired(record):
+            raise ValueError(f"claim lease expired for {args.candidate_id}")
         record.update(
             {
                 "status": args.status,
@@ -284,6 +326,8 @@ def command_release(args: argparse.Namespace) -> int:
             raise ValueError(f"unknown candidate: {args.candidate_id}")
         if record.get("owner") != args.owner or record.get("status") != "running":
             raise ValueError(f"{args.candidate_id} is not claimed by {args.owner}")
+        if lease_expired(record):
+            raise ValueError(f"claim lease expired for {args.candidate_id}")
         record.update(
             {
                 "status": "pending",
@@ -310,20 +354,11 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--limit", type=int, default=1)
             sub.add_argument("--lease-seconds", type=int, default=7200)
             sub.add_argument("--max-attempts", type=int, default=3)
-            sub.add_argument("--language", choices=("python", "node"))
+            sub.add_argument("--language", choices=("python", "node", "go"))
             sub.add_argument(
                 "--candidate-id",
                 action="append",
                 help="Claim only the named candidate; repeatable.",
-            )
-            sub.add_argument(
-                "--reclaim-status",
-                action="append",
-                choices=("blocked", "complete"),
-                help=(
-                    "Explicitly reopen a targeted terminal record before claiming. "
-                    "Reserved for remediation controllers."
-                ),
             )
         elif name in {"record", "release"}:
             sub.add_argument("candidate_id")

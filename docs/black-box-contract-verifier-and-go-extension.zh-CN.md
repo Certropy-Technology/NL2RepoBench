@@ -409,6 +409,30 @@ hardened lane 分开报告。
 - blind review 证明不同内部实现仍可从 instruction 推导并通过测试；
 - task version、content hash、tool versions、reports 和 artifacts 可追踪。
 
+### 13.1 Authoring Pilot Rollout
+
+Go authoring controller 现在可以识别 `language=go` 和
+`package_manager=go-modules`，但 rollout 仍按两阶段执行：
+
+1. 先用 `go-google-uuid` 跑一个 `--remediation --no-refill-queue` foundation lane，关闭
+   production toolchain、private module closure、private verifier/Oracle 和 production catalog
+   gate 的剩余缺口。
+2. 只有该 lane 在当前实现上重跑三次 Oracle 和完整 controls 后，才从
+   `reports/go-package-candidates.v1.json` 领取 `go-gjson`、`go-sjson`、`go-toml`、`go-xid`
+   等新 Source；首个新包 wave 最多 2 个并发。
+
+`toolchain.go.dev.lock.toml` 只用于 development vertical slice；production authoring 使用
+`toolchain.go.lock.toml`。Runner 的 Go post-authoring gate 会额外拒绝以下情况：
+
+- toolchain status 或 Go runtime/verifier/Harbor lock hash 不匹配；
+- environment/runtime version 未冻结；
+- offline module bundle、verifier bundle 或 Oracle bundle 不是 private CAS artifact；
+- public Source 仍包含 hidden contract 或 Oracle solution；
+- generated bundle 不是 production mode，或 runtime identity 不是 `go+go-modules`。
+
+因此 Worker 可以修改 Source 和提出通用 compiler remediation，但不能只改 lifecycle 字符串绕过
+production gate。失败的 foundation handoff 保留 worktree/evidence 并 release queue claim，不能发布。
+
 ## 14. 已决定与尚未决定
 
 已经决定：

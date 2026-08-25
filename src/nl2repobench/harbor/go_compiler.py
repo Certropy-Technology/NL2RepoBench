@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 import shutil
@@ -30,6 +31,17 @@ class GoHarborCompileError(ValueError):
     """Raised when a Go task cannot satisfy the first production profile."""
 
 
+GO_RUNTIME_LOCK_FILES = (
+    "src/nl2repobench/verification/go_bridge.py",
+    "src/nl2repobench/verification/go_bridge_proxy.py",
+    "src/nl2repobench/verification/go_contract_runner.py",
+    "src/nl2repobench/verification/go_grader.py",
+    "src/nl2repobench/verification/go_supervisor.py",
+    "src/nl2repobench/verification/normalize/go_json.py",
+    "src/nl2repobench/package_managers/go_modules.py",
+)
+
+
 class GoHarborCompiler:
     """Registry-facing Go compiler shell.
 
@@ -49,13 +61,72 @@ class GoHarborCompiler:
         self.artifact_resolver = artifact_resolver
         try:
             data = tomllib.loads(toolchain_path.read_text(encoding="utf-8"))
+            self.status = str(data.get("status") or "development-only")
             self.go_version = str(data["go"]["version"])
             self.base_image = str(data["go"]["base_image"])
-            self.requirements_path = toolchain_path.parent / "verifier/requirements.lock.txt"
+            requirements_lock = str(
+                data.get("verifier_requirements_lock") or "verifier/requirements.lock.txt"
+            )
+            self.requirements_path = toolchain_path.parent / requirements_lock
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, KeyError, TypeError) as exc:
             raise GoHarborCompileError(f"invalid Go toolchain lock: {toolchain_path}") from exc
+        if self.status not in {"development-only", "locked"}:
+            raise GoHarborCompileError(f"invalid Go toolchain status: {self.status}")
         if not re.fullmatch(r"[A-Za-z0-9._/-]+@sha256:[0-9a-f]{64}", self.base_image):
             raise GoHarborCompileError("Go toolchain base image must be digest pinned")
+        if self.status == "locked":
+            self._validate_locked_toolchain(data)
+
+    def _validate_locked_toolchain(self, data: dict[str, Any]) -> None:
+        repository_root = self.toolchain_path.parent
+        if data.get("schema_version") != "1.0":
+            raise GoHarborCompileError("locked Go toolchain schema must be 1.0")
+        if data.get("go_report_schema") != "go-test-json-v1":
+            raise GoHarborCompileError("locked Go report schema must be go-test-json-v1")
+        go = data.get("go")
+        if not isinstance(go, dict) or go.get("platform") != "linux/amd64":
+            raise GoHarborCompileError("locked Go toolchain platform must be linux/amd64")
+        if go.get("executable") != "/usr/local/go/bin/go":
+            raise GoHarborCompileError("locked Go executable must be /usr/local/go/bin/go")
+        runtime_digest = hashlib.sha256()
+        try:
+            for relative in GO_RUNTIME_LOCK_FILES:
+                path = repository_root / relative
+                runtime_digest.update(relative.removeprefix("src/nl2repobench/").encode())
+                runtime_digest.update(b"\0")
+                runtime_digest.update(hashlib.sha256(path.read_bytes()).digest())
+        except OSError as exc:
+            raise GoHarborCompileError(f"cannot hash locked Go runtime: {exc}") from exc
+        expected_runtime = f"sha256:{runtime_digest.hexdigest()}"
+        if data.get("go_runtime_sha256") != expected_runtime:
+            raise GoHarborCompileError("Go runtime digest does not match toolchain lock")
+        harbor = data.get("harbor")
+        if not isinstance(harbor, dict):
+            raise GoHarborCompileError("locked Go toolchain requires [harbor]")
+        if harbor.get("version") != "0.21.0" or harbor.get("task_schema") != "1.4":
+            raise GoHarborCompileError("locked Go Harbor contract must be 0.21.0/task 1.4")
+        self._validate_locked_file(
+            str(data.get("verifier_requirements_lock") or ""),
+            data.get("verifier_requirements_sha256"),
+            "verifier requirements",
+        )
+        self._validate_locked_file(
+            str(harbor.get("lock_file") or ""),
+            harbor.get("lock_sha256"),
+            "Harbor runner",
+        )
+
+    def _validate_locked_file(self, relative: str, expected: Any, description: str) -> None:
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts or relative in {"", "."}:
+            raise GoHarborCompileError(f"locked {description} path is unsafe")
+        try:
+            payload = (self.toolchain_path.parent / path).read_bytes()
+            actual = f"sha256:{hashlib.sha256(payload).hexdigest()}"
+        except OSError as exc:
+            raise GoHarborCompileError(f"cannot hash locked {description}: {exc}") from exc
+        if expected != actual:
+            raise GoHarborCompileError(f"locked {description} digest does not match")
 
     def compile_task(
         self,
@@ -67,6 +138,12 @@ class GoHarborCompiler:
         source = CatalogCompiler.load_task(source_dir)
         if not isinstance(source, DeclarativeTaskSource) or source.metadata.language != "go":
             raise GoHarborCompileError("Go compiler accepts only an explicit language=go source")
+        if allow_incomplete and self.status != "development-only":
+            raise GoHarborCompileError(
+                "allow_incomplete is only valid for the development Go toolchain"
+            )
+        if not allow_incomplete and self.status != "locked":
+            raise GoHarborCompileError("Go production output requires toolchain.go.lock.toml")
         if not allow_incomplete and source.lifecycle.status.value not in {
             "oracle-passed",
             "controls-passed",
@@ -75,6 +152,15 @@ class GoHarborCompiler:
             "published",
         }:
             raise GoHarborCompileError("Go production output requires a completed source lifecycle")
+        if source.tests.expected_total != 1:
+            raise GoHarborCompileError(
+                "the first Go bridge profile supports exactly one verifier-owned leaf"
+            )
+        if not allow_incomplete:
+            raise GoHarborCompileError(
+                "Go production output requires private module, verifier, and Oracle "
+                "artifact materialization; the development fixture cannot be published"
+            )
         fixture = source_dir / "harbor"
         for relative in ("tests/bridge.go", "tests/contract.sh", "solution/solve.sh"):
             if not (fixture / relative).is_file():

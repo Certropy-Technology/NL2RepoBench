@@ -117,9 +117,7 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
         return ""
 
     monkeypatch.setattr(gate, "_git_output", clean_git)
-    gate.validate_current_source_freeze(
-        frozen, repository_root=tmp_path, sources_root=sources
-    )
+    gate.validate_current_source_freeze(frozen, repository_root=tmp_path, sources_root=sources)
 
     def changed_git(_root: Path, *args: str) -> str:
         if args[0] == "ls-tree":
@@ -128,9 +126,7 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
 
     monkeypatch.setattr(gate, "_git_output", changed_git)
     with pytest.raises(gate.ProductionGateError, match="current HEAD source trees differ"):
-        gate.validate_current_source_freeze(
-            frozen, repository_root=tmp_path, sources_root=sources
-        )
+        gate.validate_current_source_freeze(frozen, repository_root=tmp_path, sources_root=sources)
 
     def dirty_git(_root: Path, *args: str) -> str:
         if args[0] == "ls-tree":
@@ -139,26 +135,25 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
 
     monkeypatch.setattr(gate, "_git_output", dirty_git)
     with pytest.raises(gate.ProductionGateError, match="source worktree differs"):
-        gate.validate_current_source_freeze(
-            frozen, repository_root=tmp_path, sources_root=sources
-        )
+        gate.validate_current_source_freeze(frozen, repository_root=tmp_path, sources_root=sources)
 
 
-def _runtime_fixture(
-    root: Path, *, language: str = "python"
-) -> tuple[dict[str, object], Path]:
+def _runtime_fixture(root: Path, *, language: str = "python") -> tuple[dict[str, object], Path]:
     task_root = root / "task"
+    runtime_metadata = (
+        'language = "go"\npackage_manager = "go-modules"\n' if language == "go" else ""
+    )
     files = {
         "environment/Dockerfile": "FROM python:3.12-slim\n",
         "instruction.md": "# Task\n",
         "solution/solve.sh": "#!/bin/sh\n",
         "tests/test.sh": "#!/bin/sh\n",
         "tests/verifier/run.py": "print('ok')\n",
-        "task.toml": """schema_version = "1.4"
+        "task.toml": f"""schema_version = "1.4"
 [metadata]
 expected_test_count = 3
 canonical_manifest_digest = "sha256:abc"
-[environment]
+{runtime_metadata}[environment]
 network_mode = "no-network"
 [verifier]
 environment_mode = "separate"
@@ -175,14 +170,14 @@ network_mode = "no-network"
     _write_json(
         task_root / "bundle.manifest.json",
         {
-            "schema_version": "1.0" if language == "python" else "2.0",
+            "schema_version": "2.0" if language == "node" else "1.0",
             "mode": "production",
             "canonical_manifest_digest": "sha256:abc",
             "files": rows,
         },
     )
     source = {
-        "schema_version": "1.0" if language == "python" else "2.0",
+        "schema_version": "2.0" if language == "node" else "1.0",
         "metadata": {"language": language},
         "environment": {"network_policy": {"mode": "no-network"}},
         "tests": {"expected_total": 3},
@@ -207,6 +202,22 @@ def test_runtime_shape_accepts_node_v2_bundle_manifest(tmp_path: Path) -> None:
     result = gate._validate_runtime_shape("node-fixture", source, task_root)
 
     assert result["schema_version"] == "1.4"
+
+
+def test_runtime_shape_accepts_go_v1_bundle_manifest(tmp_path: Path) -> None:
+    source, task_root = _runtime_fixture(tmp_path, language="go")
+
+    result = gate._validate_runtime_shape("go-fixture", source, task_root)
+
+    assert result["schema_version"] == "1.4"
+    (task_root / "task.toml").write_text(
+        (task_root / "task.toml")
+        .read_text()
+        .replace('package_manager = "go-modules"', 'package_manager = "npm"'),
+        encoding="utf-8",
+    )
+    with pytest.raises(gate.ProductionGateError, match=r"go\+go-modules"):
+        gate._validate_runtime_shape("go-fixture", source, task_root)
 
 
 def test_runtime_shape_rejects_bundle_manifest_schema_for_source_language(
@@ -321,9 +332,7 @@ def test_blocked_evidence_requires_hashed_real_command_log(tmp_path: Path) -> No
         "report_kind": "harbor-production-gate",
         "repository_root": ".",
         "ok": True,
-        "tasks": [
-            {"task_id": "blocked-task", "category": "blocked", "evidence": evidence}
-        ],
+        "tasks": [{"task_id": "blocked-task", "category": "blocked", "evidence": evidence}],
         "errors": [],
     }
     report["content_sha256"] = gate.canonical_sha256(report)

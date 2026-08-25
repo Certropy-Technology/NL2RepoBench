@@ -87,10 +87,10 @@ def test_typed_go_bridge_compiles_and_calls_public_string_api(tmp_path) -> None:
     package.mkdir()
     (package / "stringsx.go").write_text(
         "package stringsx\n\n"
-        "import \"fmt\"\n\n"
+        'import "fmt"\n\n'
         "func Normalize(value string) (string, error) {\n"
-        "    if value == \"\" { return \"\", fmt.Errorf(\"empty\") }\n"
-        "    return value + \"!\", nil\n"
+        '    if value == "" { return "", fmt.Errorf("empty") }\n'
+        '    return value + "!", nil\n'
         "}\n",
         encoding="utf-8",
     )
@@ -173,3 +173,34 @@ def test_go_compiler_rejects_unimplemented_control_bundles(tmp_path: Path) -> No
 
     with pytest.raises(GoHarborCompileError, match="unsupported Go control kind: stub"):
         compiler.prepare_control_bundle(tmp_path / "task", "stub", tmp_path / "controls")
+
+
+def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path) -> None:
+    root = Path(__file__).parents[1]
+    development = GoHarborCompiler(root / "toolchain.go.dev.lock.toml")
+    locked = GoHarborCompiler(root / "toolchain.go.lock.toml")
+
+    with pytest.raises(GoHarborCompileError, match="toolchain.go.lock.toml"):
+        development.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
+    with pytest.raises(GoHarborCompileError, match="completed source lifecycle"):
+        locked.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
+
+    source = tmp_path / "source"
+    shutil.copytree(root / "catalog/sources/go-google-uuid", source)
+    descriptor = source / "task.toml"
+    descriptor.write_text(
+        descriptor.read_text().replace('status = "blocked"', 'status = "controls-passed"'),
+        encoding="utf-8",
+    )
+    with pytest.raises(GoHarborCompileError, match="private module, verifier, and Oracle"):
+        locked.compile_task(source, tmp_path / "production")
+
+    multi_leaf = tmp_path / "multi-leaf"
+    shutil.copytree(root / "catalog/sources/go-google-uuid", multi_leaf)
+    descriptor = multi_leaf / "task.toml"
+    descriptor.write_text(
+        descriptor.read_text().replace("expected_total = 1", "expected_total = 2"),
+        encoding="utf-8",
+    )
+    with pytest.raises(GoHarborCompileError, match="exactly one verifier-owned leaf"):
+        development.compile_task(multi_leaf, tmp_path / "multi-output", allow_incomplete=True)

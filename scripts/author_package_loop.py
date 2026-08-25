@@ -431,8 +431,14 @@ def build_plan(
                         "controls, review"
                     )
                     if language == "node"
-                    else "Python locked toolchain, AST/test inventory, active remediation, "
-                    "Harbor gates, review"
+                    else (
+                        "Go locked toolchain, go/packages API/test inventory, offline module "
+                        "closure, typed bridge, private verifier and Oracle artifacts, three "
+                        "Oracle runs, controls, review"
+                        if language == "go"
+                        else "Python locked toolchain, AST/test inventory, active remediation, "
+                        "Harbor gates, review"
+                    )
                 ),
                 "handoff_status": "authoring-in-progress",
             }
@@ -461,7 +467,7 @@ def build_plan(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", type=Path, required=True)
-    parser.add_argument("--language", choices=("python", "node"), required=True)
+    parser.add_argument("--language", choices=("python", "node", "go"), required=True)
     parser.add_argument(
         "--source-root",
         "--catalog-root",

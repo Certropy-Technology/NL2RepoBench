@@ -146,3 +146,36 @@ def test_queue_is_order_independent_and_preserves_github_language(tmp_path: Path
     assert left["queue"][0]["language"] == "node"
     assert left["queue"][0]["status"] == "needs-evidence"
     assert left["queue"][0]["conflicts"] == ["revision"]
+
+
+def test_queue_accepts_evidence_complete_go_module_candidate(tmp_path: Path) -> None:
+    catalog = tmp_path / "catalog"
+    catalog.mkdir()
+    report = tmp_path / "go-package-candidates.json"
+    report.write_text(
+        json.dumps(
+            {
+                "language": "go",
+                "source_kind": "go-modules",
+                "candidates": [
+                    {
+                        "package": "gjson",
+                        "repository": "tidwall/gjson",
+                        "revision": "a" * 40,
+                        "license_spdx": "MIT",
+                        "stars": 15_000,
+                        "last_activity": "2026-08-20",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = queue_builder.build_queue(
+        [report], catalog_root=catalog, observed_at="2026-08-23T00:00:00Z"
+    )
+
+    assert result["counts"] == {"candidate": 1}
+    assert result["queue"][0]["language"] == "go"
+    assert result["queue"][0]["source_kind"] == "go-modules"

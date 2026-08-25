@@ -46,6 +46,30 @@ def _args(**values):
     return type("Args", (), values)()
 
 
+def _remediation_plan(
+    path: Path,
+    queue: Path,
+    *,
+    statuses: list[str],
+) -> Path:
+    path.write_text(
+        json.dumps(
+            {
+                "remediation_mode": True,
+                "candidate_input_sha256": loop._sha256(queue),
+                "tasks": [
+                    {
+                        "candidate_id": "python-demo",
+                        "queue_reclaim_statuses": statuses,
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 def test_queue_claim_and_record_are_owner_bound(tmp_path: Path) -> None:
     queue = tmp_path / "queue.json"
     state = tmp_path / "state.json"
@@ -116,7 +140,6 @@ def test_queue_terminalizes_expired_lease_at_attempt_limit(tmp_path: Path) -> No
                 "attempts": 1,
             }
         )
-
     assert (
         loop.command_claim(
             _args(
@@ -226,6 +249,7 @@ def test_queue_can_explicitly_reopen_targeted_remediation_record(
                 "attempts": 3,
             }
         )
+    plan = _remediation_plan(tmp_path / "plan.json", queue, statuses=[terminal_status])
 
     assert (
         loop.command_claim(
@@ -238,7 +262,7 @@ def test_queue_can_explicitly_reopen_targeted_remediation_record(
                 max_attempts=3,
                 language="python",
                 candidate_id=["python-demo"],
-                reclaim_status=[],
+                remediation_plan=None,
             )
         )
         == 2
@@ -254,7 +278,7 @@ def test_queue_can_explicitly_reopen_targeted_remediation_record(
                 max_attempts=3,
                 language="python",
                 candidate_id=["python-demo"],
-                reclaim_status=[terminal_status],
+                remediation_plan=plan,
             )
         )
         == 0
@@ -286,7 +310,8 @@ def test_queue_reclaim_requires_target_and_never_steals_running_claim(
     state = tmp_path / "state.json"
     _queue(queue)
     loop.command_init(_args(queue=queue, state=state))
-    with pytest.raises(ValueError, match="explicit candidate-id"):
+    plan = _remediation_plan(tmp_path / "plan.json", queue, statuses=["blocked", "complete"])
+    with pytest.raises(ValueError, match="exactly one candidate-id"):
         loop.command_claim(
             _args(
                 queue=queue,
@@ -296,22 +321,22 @@ def test_queue_reclaim_requires_target_and_never_steals_running_claim(
                 lease_seconds=60,
                 max_attempts=3,
                 language="python",
-                reclaim_status=["blocked"],
+                remediation_plan=plan,
             )
         )
-    with pytest.raises(ValueError, match="only blocked or complete"):
-        loop.command_claim(
-            _args(
-                queue=queue,
-                state=state,
-                owner="repair-worker",
-                limit=1,
-                lease_seconds=60,
-                max_attempts=3,
-                language="python",
-                candidate_id=["python-demo"],
-                reclaim_status=["excluded"],
-            )
+    with pytest.raises(SystemExit):
+        loop.build_parser().parse_args(
+            [
+                "claim",
+                "--queue",
+                str(queue),
+                "--owner",
+                "ordinary-worker",
+                "--candidate-id",
+                "python-demo",
+                "--reclaim-status",
+                "blocked",
+            ]
         )
     assert (
         loop.command_claim(
@@ -324,7 +349,7 @@ def test_queue_reclaim_requires_target_and_never_steals_running_claim(
                 max_attempts=3,
                 language="python",
                 candidate_id=["python-demo"],
-                reclaim_status=[],
+                remediation_plan=None,
             )
         )
         == 0
@@ -340,7 +365,7 @@ def test_queue_reclaim_requires_target_and_never_steals_running_claim(
                 max_attempts=3,
                 language="python",
                 candidate_id=["python-demo"],
-                reclaim_status=["blocked", "complete"],
+                remediation_plan=plan,
             )
         )
         == 2
@@ -349,3 +374,64 @@ def test_queue_reclaim_requires_target_and_never_steals_running_claim(
         record = payload["items"]["python-demo"]
         assert record["status"] == "running"
         assert record["owner"] == "active-worker"
+
+
+@pytest.mark.parametrize("transition", ["record", "release"])
+def test_queue_rejects_stale_owner_after_lease_expiry(
+    tmp_path: Path,
+    transition: str,
+) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    with loop.locked_state(state) as payload:
+        payload["items"]["python-demo"].update(
+            {
+                "status": "running",
+                "owner": "stale-worker",
+                "lease_expires_at": "2000-01-01T00:00:00+00:00",
+                "attempts": 1,
+            }
+        )
+
+    with pytest.raises(ValueError, match="lease expired"):
+        if transition == "record":
+            loop.command_record(
+                _args(
+                    queue=queue,
+                    state=state,
+                    candidate_id="python-demo",
+                    owner="stale-worker",
+                    status="complete",
+                    reason=None,
+                    failure_class=None,
+                    artifact=[],
+                )
+            )
+        else:
+            loop.command_release(
+                _args(
+                    queue=queue,
+                    state=state,
+                    candidate_id="python-demo",
+                    owner="stale-worker",
+                    reason="late release",
+                )
+            )
+
+
+def test_queue_parser_accepts_go_claim_filter() -> None:
+    args = loop.build_parser().parse_args(
+        [
+            "claim",
+            "--queue",
+            "queue.json",
+            "--owner",
+            "go-worker",
+            "--language",
+            "go",
+        ]
+    )
+
+    assert args.language == "go"

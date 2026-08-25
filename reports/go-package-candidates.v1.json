@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "language": "go",
+  "source_kind": "go-modules",
+  "observed_at": "2026-08-26T00:00:00Z",
+  "selection_profile": {
+    "go_lane": "pure-go-single-module-public-api-v1",
+    "excluded": [
+      "cgo",
+      "go-generate",
+      "plugin",
+      "multi-module",
+      "external-service",
+      "timing-sensitive-api"
+    ]
+  },
+  "candidates": [
+    {
+      "package": "go-google-uuid",
+      "repository": "google/uuid",
+      "revision": "0f11ee6918f41a04c201eceeadf612a377bc7fbc",
+      "license_spdx": "BSD-3-Clause",
+      "license_evidence": "https://github.com/google/uuid/blob/0f11ee6918f41a04c201eceeadf612a377bc7fbc/LICENSE",
+      "stars": 6141,
+      "last_activity": "2024-11-14T17:05:06Z",
+      "category": "identifier-library",
+      "difficulty": "medium",
+      "test_files": 5,
+      "test_count": 43,
+      "risk_flags": [
+        "custom go.mod toolchain directive required for locked runtime",
+        "typed bridge required"
+      ]
+    },
+    {
+      "package": "go-gjson",
+      "repository": "tidwall/gjson",
+      "revision": "7d8b3821e9d2acf35e8a226b63fcf801078e9b96",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/tidwall/gjson/blob/7d8b3821e9d2acf35e8a226b63fcf801078e9b96/LICENSE",
+      "stars": 15554,
+      "last_activity": "2026-05-14T15:10:24Z",
+      "category": "json-query",
+      "difficulty": "medium",
+      "test_files": 1,
+      "test_count": 98,
+      "risk_flags": [
+        "typed bridge required",
+        "path expression scope must be bounded",
+        "two-module offline dependency closure"
+      ]
+    },
+    {
+      "package": "go-sjson",
+      "repository": "tidwall/sjson",
+      "revision": "3a21ce7b0cab4e0f0d91eb8db4a3d0434622eeb8",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/tidwall/sjson/blob/3a21ce7b0cab4e0f0d91eb8db4a3d0434622eeb8/LICENSE",
+      "stars": 2737,
+      "last_activity": "2026-05-19T13:36:07Z",
+      "category": "json-mutation",
+      "difficulty": "medium",
+      "test_files": 1,
+      "test_count": 10,
+      "risk_flags": [
+        "typed bridge required",
+        "raw JSON mutation semantics",
+        "transitive offline dependency closure"
+      ]
+    },
+    {
+      "package": "go-toml",
+      "repository": "BurntSushi/toml",
+      "revision": "d733fc535e4a9f3c454e421a87b90ade5d49bf31",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/BurntSushi/toml/blob/d733fc535e4a9f3c454e421a87b90ade5d49bf31/COPYING",
+      "stars": 5000,
+      "last_activity": "2026-08-18T20:04:59Z",
+      "category": "configuration-parser",
+      "difficulty": "hard",
+      "test_files": 8,
+      "test_count": 73,
+      "risk_flags": [
+        "typed bridge required",
+        "reflection and struct mapping",
+        "contract must avoid implementation-specific decoder internals"
+      ]
+    },
+    {
+      "package": "go-xid",
+      "repository": "rs/xid",
+      "revision": "40a728ce78a40c2c2ef30d2fad55402e74ae920d",
+      "license_spdx": "MIT",
+      "license_evidence": "https://github.com/rs/xid/blob/40a728ce78a40c2c2ef30d2fad55402e74ae920d/LICENSE",
+      "stars": 4282,
+      "last_activity": "2026-07-24T08:45:50Z",
+      "category": "identifier-library",
+      "difficulty": "medium",
+      "test_files": 2,
+      "test_count": 30,
+      "risk_flags": [
+        "typed bridge required",
+        "time and machine identity must be excluded from deterministic contract"
+      ]
+    }
+  ]
+}
