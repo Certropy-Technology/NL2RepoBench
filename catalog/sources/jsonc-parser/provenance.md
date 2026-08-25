@@ -1,6 +1,6 @@
 # `jsonc-parser` Node v2 Authoring Provenance
 
-Status: `oracle-passed` production task. This record contains source, license,
+Status: `controls-passed` production task. This record contains source, license,
 build, dependency, adapter, and denominator evidence. Hidden tests and private
 artifact bytes remain in the private content-addressed store, not in this
 public source directory.

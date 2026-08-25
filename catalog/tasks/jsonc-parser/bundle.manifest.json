@@ -1,10 +1,20 @@
 {
-  "canonical_manifest_digest": "sha256:e550903d635a0c17d56ca37f7babf1bf0a127e6ede0eebbb6c8daff1a3146d0f",
+  "canonical_manifest_digest": "sha256:5535b2700e14b56557284fc994e688b9dd09c24176197820293330ef8377ba03",
   "files": [
     {
       "path": "README.md",
       "sha256": "3d3e31ee1976f52259c10c0aa824d1a44116a0061ba2ba237405a47a89c0df52",
       "size_bytes": 324
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "534d5c61ad39fd45630580a64b7888dbe1028fd24b460b410732cc0a1c5c0e55",
+      "size_bytes": 1138
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "b8b4ee7b44d14e1728fab154e55d7faaef46267737d2512cd8b67a1d2669d268",
+      "size_bytes": 840
     },
     {
       "path": "environment/Dockerfile",
@@ -33,7 +43,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "1b9205966e7680e8ca00d2f1057ad4d563f622ed375f62e5fbaa9f22f3a12146",
+      "sha256": "3eff805201ff843321fd6e7ccad82b4cdc9802625da2deb1bc2f3ef539f7c418",
       "size_bytes": 1299
     },
     {
@@ -97,6 +107,11 @@
       "size_bytes": 2373
     },
     {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
       "path": "tests/runtime/node/run_tests.mjs",
       "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
       "size_bytes": 3607
@@ -113,13 +128,13 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "16580c80a7275f6dd3bb3f9e99dd56bde8babd1efd5a6f52389201b9b0d238a6",
-      "size_bytes": 2255
+      "sha256": "71aa6ee122ab0477548e978a4310fa394e8f1d20efcb565193ca0c2e7b3f7cc9",
+      "size_bytes": 2959
     }
   ],
   "mode": "production",
   "schema_version": "2.0",
   "task_id": "jsonc-parser",
   "task_version": "2.0.0",
-  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+  "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
 }
