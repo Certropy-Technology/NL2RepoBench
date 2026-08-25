@@ -1,0 +1,73 @@
+{
+  "controls": {
+    "empty": {
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/typing-extensions-production/empty/typing_extensions__Em64aSw/verifier/grading.json",
+        "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/empty/typing_extensions__Em64aSw/verifier/network.json",
+        "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 32,
+      "grading": {
+        "path": ".nl2repo/runs/typing-extensions-production/forgery/typing_extensions-forgery__v4sprNX/verifier/grading.json",
+        "sha256": "sha256:6e5c4642d1a0567beb068ab3dc49f058974b2098772987080a60c13d762e5f0b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/forgery/typing_extensions-forgery__v4sprNX/verifier/network.json",
+        "sha256": "sha256:55125138df1361e53cf74a30bdc5d03f9fc19b214abba0de0de8f1cef3932313"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "completed": true,
+      "probes": ["pypi.org:443", "1.1.1.1:443"],
+      "public_network_available": false,
+      "receipts": 4
+    },
+    "stub": {
+      "collected": 32,
+      "grading": {
+        "path": ".nl2repo/runs/typing-extensions-production/stub/typing_extensions-stub__aMwK9XG/verifier/grading.json",
+        "sha256": "sha256:6e5c4642d1a0567beb068ab3dc49f058974b2098772987080a60c13d762e5f0b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/stub/typing_extensions-stub__aMwK9XG/verifier/network.json",
+        "sha256": "sha256:f724298c5ad444765c3eb8eb9f0bc23494b2098772987080a60c13d42102b5d143"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "expected_total": 32,
+  "oracle": {
+    "collected": 32,
+    "grading": {
+      "path": ".nl2repo/runs/typing-extensions-production/oracle/typing_extensions__NQcyf9U/verifier/grading.json",
+      "sha256": "sha256:d828865a06a4d5d33ba461aeb3499aff2c3aec01f69c82834896d5dcb0a79f80"
+    },
+    "network": {
+      "path": ".nl2repo/runs/typing-extensions-production/oracle/typing_extensions__NQcyf9U/verifier/network.json",
+      "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"
+    },
+    "passed": 32,
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "source_digest": "sha256:34f3316e0c4d93aefe33a10ceb5ba35487f14b9e7751e00aed323b7c6856264f",
+  "status": "controls-passed",
+  "task_id": "typing_extensions",
+  "toolchain": "Harbor 0.21.0 / task schema 1.4 / Python 3.12 / linux-amd64"
+}

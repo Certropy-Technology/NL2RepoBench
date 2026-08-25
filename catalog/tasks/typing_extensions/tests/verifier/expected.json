@@ -1,0 +1,520 @@
+{
+  "annotated_runtime": {
+    "form": {
+      "args": [
+        "<class 'int'>",
+        "'first'",
+        "{'level': 2}",
+        "3"
+      ],
+      "origin": "<class 'typing.Annotated'>",
+      "repr": "typing.Annotated[int, 'first', {'level': 2}, 3]"
+    },
+    "hashable_error": {
+      "type": "TypeError"
+    },
+    "metadata": [
+      "first",
+      {
+        "level": 2
+      },
+      3
+    ],
+    "origin_attribute": "<class 'int'>"
+  },
+  "assertion_helpers": {
+    "assert_identity": true,
+    "assert_never_long": {
+      "message": "Expected code to be unreachable, but got: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...",
+      "type": "AssertionError"
+    },
+    "assert_never_short": {
+      "message": "Expected code to be unreachable, but got: 'unexpected'",
+      "type": "AssertionError"
+    },
+    "reveal_identity": true,
+    "reveal_stderr": "Runtime type is 'dict'"
+  },
+  "buffer_runtime": {
+    "instances": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "repr": "<class 'collections.abc.Buffer'>",
+    "subclasses": [
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "callable_protocol_runtime": {
+    "good_instance": true,
+    "good_subclass": true,
+    "members": [
+      "run"
+    ],
+    "missing_instance": false,
+    "missing_subclass": false
+  },
+  "dataclass_transform_marker": {
+    "eq_default": false,
+    "field_specifiers": [
+      "str",
+      "int"
+    ],
+    "frozen_default": true,
+    "kw_only_default": true,
+    "kwargs": {
+      "custom": "value"
+    },
+    "order_default": true
+  },
+  "decorator_markers": {
+    "calls": [
+      "stopped",
+      "child"
+    ],
+    "class_final": true,
+    "method_final": true,
+    "override": true
+  },
+  "deprecated_class": {
+    "marker": "Legacy is obsolete",
+    "value": 9,
+    "warning": [
+      "DeprecationWarning",
+      "Legacy is obsolete"
+    ]
+  },
+  "deprecated_function": {
+    "marker": "use replacement()",
+    "result": 5,
+    "warnings": [
+      [
+        "FutureWarning",
+        "use replacement()"
+      ]
+    ]
+  },
+  "doc_metadata": {
+    "doc": "positive count",
+    "doc_repr": "Doc('positive count')",
+    "form": "typing.Annotated[int, Doc('positive count')]",
+    "origin": "<class 'typing.Annotated'>"
+  },
+  "evaluate_forward_reference": {
+    "args": [
+      "<class 'int'>"
+    ],
+    "evaluated": "list[int]",
+    "origin": "<class 'list'>",
+    "unresolved": {
+      "type": "NameError"
+    }
+  },
+  "export_surface": {
+    "all_unique": true,
+    "required": {
+      "Annotated": true,
+      "Concatenate": true,
+      "Doc": true,
+      "Literal": true,
+      "LiteralString": true,
+      "Never": true,
+      "NoDefault": true,
+      "NotRequired": true,
+      "ParamSpec": true,
+      "Protocol": true,
+      "ReadOnly": true,
+      "Required": true,
+      "Self": true,
+      "Sentinel": true,
+      "TypeAliasType": true,
+      "TypeGuard": true,
+      "TypeIs": true,
+      "TypeVarTuple": true,
+      "TypedDict": true,
+      "Unpack": true,
+      "assert_never": true,
+      "assert_type": true,
+      "clear_overloads": true,
+      "dataclass_transform": true,
+      "deprecated": true,
+      "evaluate_forward_ref": true,
+      "final": true,
+      "get_annotations": true,
+      "get_args": true,
+      "get_origin": true,
+      "get_original_bases": true,
+      "get_overloads": true,
+      "get_protocol_members": true,
+      "get_type_hints": true,
+      "is_protocol": true,
+      "is_typeddict": true,
+      "overload": true,
+      "override": true,
+      "reveal_type": true,
+      "runtime_checkable": true
+    }
+  },
+  "get_annotations_runtime": {
+    "evaluated": {
+      "return": "typing.Annotated[str, 'result']",
+      "value": "list[int]"
+    },
+    "raw": {
+      "return": "te.Annotated[str, 'result']",
+      "value": "list[int]"
+    }
+  },
+  "guard_forms": {
+    "literal_string": "typing.LiteralString",
+    "never": "typing.Never",
+    "self": "typing.Self",
+    "type_guard": {
+      "args": [
+        "list[str]"
+      ],
+      "origin": "typing.TypeGuard",
+      "repr": "typing.TypeGuard[list[str]]"
+    },
+    "type_is": {
+      "args": [
+        "tuple[int, ...]"
+      ],
+      "origin": "typing_extensions.TypeIs",
+      "repr": "typing_extensions.TypeIs[tuple[int, ...]]"
+    }
+  },
+  "literal_and_qualifiers": {
+    "classvar": {
+      "args": [
+        "<class 'str'>"
+      ],
+      "origin": "typing.ClassVar",
+      "repr": "typing.ClassVar[str]"
+    },
+    "final": {
+      "args": [
+        "<class 'int'>"
+      ],
+      "origin": "typing.Final",
+      "repr": "typing.Final[int]"
+    },
+    "literal": {
+      "args": [
+        "1",
+        "'x'",
+        "None"
+      ],
+      "origin": "typing.Literal",
+      "repr": "typing.Literal[1, 'x', None]"
+    },
+    "not_required": {
+      "args": [
+        "<class 'str'>"
+      ],
+      "origin": "typing.NotRequired",
+      "repr": "typing.NotRequired[str]"
+    },
+    "read_only": {
+      "args": [
+        "<class 'bytes'>"
+      ],
+      "origin": "typing_extensions.ReadOnly",
+      "repr": "typing_extensions.ReadOnly[bytes]"
+    },
+    "required": {
+      "args": [
+        "<class 'int'>"
+      ],
+      "origin": "typing.Required",
+      "repr": "typing.Required[int]"
+    }
+  },
+  "named_tuple_runtime": {
+    "annotations": {
+      "x": "ForwardRef('int')",
+      "y": "ForwardRef('int')"
+    },
+    "asdict": {
+      "x": 2,
+      "y": 5
+    },
+    "defaults": {
+      "y": 5
+    },
+    "fields": [
+      "x",
+      "y"
+    ],
+    "replace": [
+      2,
+      8
+    ],
+    "tuple_instance": true,
+    "value": [
+      2,
+      5
+    ]
+  },
+  "new_type_runtime": {
+    "call": 12,
+    "instance_error": {
+      "type": "TypeError"
+    },
+    "name": "UserId",
+    "qualname": "UserId",
+    "repr": "__main__.UserId",
+    "same_object": true,
+    "supertype": "<class 'int'>"
+  },
+  "no_type_check_runtime": {
+    "class_marker": true,
+    "function_hints": {},
+    "function_marker": true,
+    "method_marker": true
+  },
+  "original_bases": {
+    "builtin": [
+      "list[int]"
+    ],
+    "fallback": [],
+    "generic": [
+      "__main__.original_bases.<locals>.Box[int]"
+    ]
+  },
+  "overload_registry": {
+    "after": [],
+    "annotations": [
+      {
+        "return": "'str'",
+        "value": "'int'"
+      },
+      {
+        "return": "'int'",
+        "value": "'str'"
+      }
+    ],
+    "before": [
+      "(value: 'int') -> 'str'",
+      "(value: 'str') -> 'int'"
+    ],
+    "implementation": [
+      "5",
+      4
+    ]
+  },
+  "package_identity": {
+    "distribution_version": "4.14.1",
+    "file_name": "typing_extensions.py",
+    "module": "typing_extensions"
+  },
+  "protocol_errors": {
+    "instance": {
+      "type": "TypeError"
+    },
+    "members": {
+      "type": "TypeError"
+    },
+    "runtime_checkable": {
+      "type": "TypeError"
+    }
+  },
+  "protocol_introspection": {
+    "instance": true,
+    "is_protocol": true,
+    "members": [
+      "close",
+      "label"
+    ],
+    "non_protocol_members_error": {
+      "type": "TypeError"
+    },
+    "runtime": true,
+    "subclass_error": {
+      "type": "TypeError"
+    }
+  },
+  "sentinel_runtime": {
+    "bool": true,
+    "call_error": {
+      "type": "TypeError"
+    },
+    "class_repr": "<class 'typing_extensions.Sentinel'>",
+    "custom_repr": "not-set",
+    "equality": false,
+    "identity": false,
+    "left_union": "typing.Union[int, <MISSING>]",
+    "name": "MISSING",
+    "pickle_error": {
+      "type": "TypeError"
+    },
+    "repr": "<MISSING>",
+    "right_union": "typing.Union[<MISSING>, str]"
+  },
+  "special_form_errors": {
+    "annotated_instance": {
+      "type": "TypeError"
+    },
+    "literal_instance": {
+      "type": "TypeError"
+    },
+    "required_parameters": {
+      "type": "TypeError"
+    },
+    "type_guard_parameters": {
+      "type": "TypeError"
+    },
+    "unpack_parameters": {
+      "type": "TypeError"
+    }
+  },
+  "standard_reexports": {
+    "Any": true,
+    "Callable": true,
+    "ClassVar": true,
+    "Final": true,
+    "Generic": true,
+    "NamedTuple": false,
+    "NewType": true,
+    "Optional": true,
+    "TypeVar": false,
+    "Union": true,
+    "get_args": true,
+    "get_origin": true,
+    "get_type_hints": false,
+    "no_type_check": true
+  },
+  "type_alias_runtime": {
+    "cannot_instantiate": {
+      "type": "TypeError"
+    },
+    "module": "__main__",
+    "name": "Pair",
+    "repr": "Pair",
+    "specialized": {
+      "args": [
+        "<class 'int'>"
+      ],
+      "origin": "Pair",
+      "repr": "Pair[int]"
+    },
+    "type_params": [
+      "~Item"
+    ],
+    "value": "tuple[~Item, ~Item]"
+  },
+  "type_hints_extras": {
+    "extras": {
+      "name": "typing.Required[str]",
+      "note": "typing.NotRequired[typing.Annotated[str, Doc('display note')]]"
+    },
+    "plain": {
+      "name": "<class 'str'>",
+      "note": "<class 'str'>"
+    }
+  },
+  "type_parameter_defaults": {
+    "no_default": [
+      "typing_extensions.NoDefault",
+      false
+    ],
+    "paramspec": [
+      "[<class 'int'>, <class 'str'>]",
+      true
+    ],
+    "sentinel_repr": "typing_extensions.NoDefault",
+    "type_var": [
+      "<class 'str'>",
+      true
+    ],
+    "typevartuple": [
+      "typing.Unpack[tuple[int, ...]]",
+      true
+    ]
+  },
+  "typed_dict_errors": {
+    "bad_field_map": {
+      "type": "TypeError"
+    },
+    "duplicate_closed_extra": {
+      "type": "TypeError"
+    },
+    "instance": {
+      "type": "TypeError"
+    }
+  },
+  "typed_dict_inheritance": {
+    "dict_subclass": true,
+    "factory": {
+      "current": true,
+      "forced": "yes",
+      "optional": 1
+    },
+    "optional": [
+      "optional"
+    ],
+    "orig_bases": [
+      "<class '__main__.Base'>"
+    ],
+    "required": [
+      "current",
+      "forced"
+    ]
+  },
+  "typed_dict_metadata": {
+    "annotations": {
+      "checksum": "typing_extensions.ReadOnly[bytes]",
+      "identifier": "<class 'int'>",
+      "nickname": "typing.NotRequired[str]"
+    },
+    "instance_error": {
+      "type": "TypeError"
+    },
+    "is_typeddict": true,
+    "mutable": [
+      "identifier",
+      "nickname"
+    ],
+    "optional": [
+      "nickname"
+    ],
+    "readonly": [
+      "checksum"
+    ],
+    "required": [
+      "checksum",
+      "identifier"
+    ],
+    "runtime_value": {
+      "checksum": {
+        "bytes_hex": "78"
+      },
+      "identifier": 7
+    },
+    "total": true
+  },
+  "unpack_and_concatenate": {
+    "concatenate": {
+      "args": [
+        "<class 'bytes'>",
+        "~Parameters"
+      ],
+      "origin": "typing.Concatenate",
+      "repr": "typing.Concatenate[bytes, ~Parameters]"
+    },
+    "paramspec_args_origin": "~Parameters",
+    "paramspec_kwargs_origin": "~Parameters",
+    "unpack": {
+      "args": [
+        "tuple[int, str]"
+      ],
+      "origin": "typing.Unpack",
+      "repr": "typing.Unpack[tuple[int, str]]"
+    }
+  }
+}

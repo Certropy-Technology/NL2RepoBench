@@ -1,0 +1,122 @@
+{
+  "bundle": {
+    "canonical_manifest_digest": "sha256:7d22a1c43d731080bb637cd9f2bac1454c9d2fdfe6975854383209126e387ca3",
+    "path": "catalog/tasks/typing_extensions/bundle.manifest.json",
+    "sha256": "sha256:d232a4118b4358a883aa15e28fc22d73f099eeb39fddef969872a771c6962a9e"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/typing_extensions --output .nl2repo/task-artifacts/typing-extensions-production/final-compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "log": {
+      "path": ".nl2repo/task-artifacts/typing-extensions-production/final-production-compile.log",
+      "sha256": "sha256:49be3cdf252eb959985eef14218a586fb80fda8aeb069629d2de618a79ab10fb"
+    },
+    "mode": "production",
+    "used_allow_incomplete": false
+  },
+  "compose_preservation": {
+    "path": "catalog/tasks/typing_extensions/environment/docker-compose.yaml",
+    "sha256_after": "sha256:17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+    "sha256_before": "sha256:17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/typing-extensions-production/compiled/typing_extensions -a nop --job-name empty --jobs-dir .nl2repo/runs/typing-extensions-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/typing-extensions-production/empty/typing_extensions__Em64aSw/verifier/grading.json",
+        "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/empty/typing_extensions__Em64aSw/verifier/network.json",
+        "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/typing-extensions-production/controls/typing_extensions-forgery -a oracle --job-name forgery --jobs-dir .nl2repo/runs/typing-extensions-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/typing-extensions-production/forgery/typing_extensions-forgery__v4sprNX/verifier/grading.json",
+        "sha256": "sha256:6e5c4642d1a0567beb068ab3dc49f058974b2098772987080a60c13d762e5f0b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/forgery/typing_extensions-forgery__v4sprNX/verifier/network.json",
+        "sha256": "sha256:55125138df1361e53cf74a30bdc5d03f9fc19b214abba0de0de8f1cef3932313"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Official Harbor Oracle verifier network-none probe",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/oracle/typing_extensions__NQcyf9U/verifier/network.json",
+        "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"
+      },
+      "network_receipts": [
+        ".nl2repo/runs/typing-extensions-production/oracle/typing_extensions__NQcyf9U/verifier/network.json",
+        ".nl2repo/runs/typing-extensions-production/empty/typing_extensions__Em64aSw/verifier/network.json",
+        ".nl2repo/runs/typing-extensions-production/stub/typing_extensions-stub__aMwK9XG/verifier/network.json",
+        ".nl2repo/runs/typing-extensions-production/forgery/typing_extensions-forgery__v4sprNX/verifier/network.json"
+      ],
+      "public_network_available": false
+    },
+    "stub": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/typing-extensions-production/controls/typing_extensions-stub -a oracle --job-name stub --jobs-dir .nl2repo/runs/typing-extensions-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/typing-extensions-production/stub/typing_extensions-stub__aMwK9XG/verifier/grading.json",
+        "sha256": "sha256:6e5c4642d1a0567beb068ab3dc49f058974b2098772987080a60c13d762e5f0b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/typing-extensions-production/stub/typing_extensions-stub__aMwK9XG/verifier/network.json",
+        "sha256": "sha256:f724298c5ad444765c3eb8eb9f0bc23494b09d5dfd6b8555db13d42102b5d143"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependency_lock": {
+    "digest": "sha256:bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe",
+    "packages": ["flit_core==3.12.0"],
+    "vendor_wheels": false
+  },
+  "oracle": {
+    "collected": 32,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/typing-extensions-production/compiled/typing_extensions -a oracle --job-name oracle --jobs-dir .nl2repo/runs/typing-extensions-production --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/typing-extensions-production/oracle/typing_extensions__NQcyf9U/verifier/grading.json",
+      "sha256": "sha256:d828865a06a4d5d33ba461aeb3499aff2c3aec01f69c82834896d5dcb0a79f80"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/typing-extensions-production/oracle/typing_extensions__NQcyf9U/verifier/network.json",
+      "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"
+    },
+    "passed": 32,
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_file_sha256": "sha256:3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+    "license_spdx": "PSF-2.0",
+    "revision": "42027aba3558c9d9133a90bca17f6fecaecc48d8",
+    "source_digest": "sha256:34f3316e0c4d93aefe33a10ceb5ba35487f14b9e7751e00aed323b7c6856264f",
+    "source_size_bytes": 645120,
+    "status": "known",
+    "upstream_url": "https://github.com/python/typing_extensions"
+  },
+  "task_id": "typing_extensions",
+  "terminal_kind": "valid",
+  "typechecker_parity_claimed": false
+}
