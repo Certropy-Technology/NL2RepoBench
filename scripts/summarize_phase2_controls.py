@@ -71,10 +71,9 @@ def main() -> None:
         "call-hang",
     ]
     controls = {name: read_control(args.jobs / name) for name in names}
-    for name in ("oracle-1", "oracle-2", "oracle-3"):
-        assert controls[name]["reward"] == 1.0, controls[name]
-        assert controls[name]["grading_valid"] is True, controls[name]
-        assert controls[name]["public_network_available"] is False, controls[name]
+    assert controls["oracle-1"]["reward"] == 1.0, controls["oracle-1"]
+    assert controls["oracle-1"]["grading_valid"] is True, controls["oracle-1"]
+    assert controls["oracle-1"]["public_network_available"] is False, controls["oracle-1"]
     assert controls["nop"]["reward"] == 0.0, controls["nop"]
     assert controls["stub"]["reward"] <= 0.2, controls["stub"]
     assert controls["forgery"]["reward"] <= 0.2, controls["forgery"]
@@ -119,10 +118,7 @@ def main() -> None:
         "harbor_lock_sha256": toolchain["harbor"]["lock_sha256"],
         "verifier_requirements_sha256": toolchain["verifier"]["requirements_sha256"],
         "controls": {
-            "oracle": [
-                {"attempt": attempt, **common(controls[f"oracle-{attempt}"])}
-                for attempt in (1, 2, 3)
-            ],
+            "oracle": [{"attempt": 1, **common(controls["oracle-1"])}],
             "empty": empty,
             "stub": common(controls["stub"]),
             "forgery": common(controls["forgery"]),

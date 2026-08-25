@@ -27,6 +27,12 @@ base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee320
 network_mode = "no-network"
 build_command = "printf 2026c > tz/version && make PYTHON=/usr/local/bin/python3 PYTHON3=/usr/local/bin/python3 build"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+
 [dependencies]
 status = "known"
 installer = "pip"
@@ -42,7 +48,7 @@ commands = ["custom-json-v1 verifier entrypoint"]
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -59,7 +65,7 @@ agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096

@@ -64,7 +64,7 @@ bundle = { digest = "sha256:d9adcae4345746eb166cc0e367d22580f6587a1f42b471205d6f
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

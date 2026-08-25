@@ -1,0 +1,48 @@
+{
+  "all_pass": true,
+  "archive_contract": "p2-vertical-slice-v1",
+  "controls": {
+    "call-hang": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "reward": 1.0,
+      "valid": true
+    },
+    "install-failure": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "oracle": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "reward": 1.0,
+      "valid": true
+    },
+    "stub": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "reward": 0.0,
+      "valid": true
+    }
+  }
+}

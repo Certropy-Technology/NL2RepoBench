@@ -16,20 +16,22 @@ import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
-from nl2repobench.domain.models import ArtifactRef, TaskManifest
+from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile, TaskManifest
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 
 from .bundle_io import (
-    BundleArchiveError,
-    BundleArchiveIOError,
     BundleLimits,
-    BundleTreeError,
-    BundleTreeSourceError,
-    copy_bundle_tree,
-    extract_bundle_archive,
 )
 from .models import VerifierCommandPlan, load_command_plan, load_toolchain_lock
+from .task_writer import (
+    TaskWriterError,
+    copy_python_verifier_runtime,
+    copy_tree,
+    extract_private_bundle,
+    write_file_manifest,
+    write_instruction,
+)
 
 
 class HarborCompileError(ValueError):
@@ -43,6 +45,19 @@ class HarborCompiler:
     MAX_BUNDLE_MEMBER_BYTES = 512 * 1024 * 1024
     MAX_BUNDLE_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
     MAX_DEPENDENCY_LOCK_BYTES = 4 * 1024 * 1024
+
+    @staticmethod
+    def _effective_profile(manifest: TaskManifest) -> HarborExecutionProfile:
+        """Project an explicit environment network mode into Harbor settings."""
+
+        profile = manifest.harbor
+        assert profile is not None
+        if (
+            manifest.environment_lock.network_mode == "no-network"
+            and profile.agent_network_mode == "public"
+        ):
+            return profile.model_copy(update={"agent_network_mode": "no-network"})
+        return profile
 
     def __init__(
         self,
@@ -157,8 +172,10 @@ class HarborCompiler:
         return target
 
     def _write_instruction(self, source_dir: Path, relative: str, task_root: Path) -> None:
-        source = source_dir / relative
-        atomic_write(task_root / "instruction.md", source.read_bytes())
+        try:
+            write_instruction(source_dir, relative, task_root)
+        except TaskWriterError as exc:
+            raise HarborCompileError(str(exc)) from exc
 
     def _write_environment(
         self,
@@ -191,8 +208,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 """
         dockerfile = f"FROM --platform=linux/amd64 {image}\n\n" + install + "WORKDIR /workspace\n"
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
-        profile = manifest.harbor
-        assert profile is not None
+        profile = self._effective_profile(manifest)
         if profile.agent_network_mode == "no-network":
             compose = """services:
   main:
@@ -402,8 +418,7 @@ WORKDIR /tests
             self._copy_tree(controls, task_root / "controls")
 
     def _write_task_toml(self, manifest: TaskManifest, task_root: Path) -> None:
-        profile = manifest.harbor
-        assert profile is not None
+        profile = self._effective_profile(manifest)
         data: dict[str, Any] = {
             "schema_version": self.toolchain.harbor.task_schema,
             "artifacts": [profile.workspace_artifact],
@@ -455,8 +470,7 @@ WORKDIR /tests
             return self._custom_test_script(manifest)
         expected = manifest.tests.expected_total
         metric = shlex.quote(manifest.metric.contract_id)
-        profile = manifest.harbor
-        assert profile is not None
+        profile = self._effective_profile(manifest)
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
         return f"""#!/usr/bin/env bash
@@ -474,6 +488,7 @@ if ! python -m nl2repobench.verification.network_check \
   --output /logs/verifier/network.json; then
   python -m nl2repobench.verification.cli \
     --expected {expected} \
+    --runtime python \
     --metric-contract {metric} \
     --reason verifier-network-available
   exit 0
@@ -483,6 +498,7 @@ if ! python -I -m nl2repobench.verification.command_plan \
   --path /tests/command-plan.json; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} \
+    --runtime python \
     --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
@@ -501,6 +517,7 @@ if [[ "$copy_exit_code" -ne 0 ]]; then
   fi
   python -m nl2repobench.verification.cli \
     --expected {expected} \
+    --runtime python \
     --metric-contract {metric} \
     --reason "$copy_reason"
   exit 0
@@ -522,6 +539,7 @@ if [[ "$install_exit_code" -ne 0 ]]; then
   fi
   python -m nl2repobench.verification.cli \
     --expected {expected} \
+    --runtime python \
     --metric-contract {metric} \
     --reason "$install_reason"
   exit 0
@@ -548,6 +566,7 @@ pytest_exit_code=$?
 if ! python -I -m nl2repobench.verification.process_cleanup --uid 10001; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} \
+    --runtime python \
     --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
@@ -560,6 +579,7 @@ if ! python -I -m nl2repobench.verification.integrity verify \
   /usr/local/lib/python3.12/site-packages/nl2repobench; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} \
+    --runtime python \
     --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
@@ -574,6 +594,7 @@ fi
 
 python -I -m nl2repobench.verification.cli \
   --expected {expected} \
+  --runtime python \
   --metric-contract {metric} \
   --collection /logs/verifier/collection.json \
   --junit /logs/verifier/junit.xml \
@@ -582,7 +603,7 @@ exit 0
         """
 
     def _custom_test_script(self, manifest: TaskManifest) -> str:
-        assert manifest.harbor is not None
+        profile = self._effective_profile(manifest)
         assert manifest.verifier is not None
         expected = manifest.tests.expected_total
         entrypoint = shlex.quote(f"/tests/verifier/{manifest.verifier.entrypoint}")
@@ -602,7 +623,7 @@ python -I -m nl2repobench.verification.network_check \
   --output /logs/verifier/network.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli \
-    --expected {expected} --metric-contract {metric} \
+    --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-network-available
   exit 0
 fi
@@ -610,18 +631,18 @@ python -I -B -m nl2repobench.verification.workspace_copy \
   --source /workspace --destination /tmp/candidate
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli \
-    --expected {expected} --metric-contract {metric} \
+    --expected {expected} --runtime python --metric-contract {metric} \
     --reason candidate-workspace-rejected
   exit 0
 fi
 chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
 python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate --target /tmp/candidate-site \
-  --timeout-sec {manifest.harbor.candidate_install_timeout_sec} \
+  --timeout-sec {profile.candidate_install_timeout_sec} \
   --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli \
-    --expected {expected} --metric-contract {metric} \
+    --expected {expected} --runtime python --metric-contract {metric} \
     --reason candidate-installation-failed
   exit 0
 fi
@@ -629,80 +650,52 @@ python -I -m nl2repobench.verification.custom_verifier \
   --entrypoint {entrypoint} --expected {expected} \
   --junit /logs/verifier/junit.xml \
   --collection /logs/verifier/collection.json \
-  --timeout-sec {manifest.harbor.candidate_total_timeout_sec} \
+  --timeout-sec {profile.candidate_total_timeout_sec} \
   > /logs/verifier/custom-stdout.txt \
   2> /logs/verifier/custom-stderr.txt
 custom_exit=$?
 if [[ "$custom_exit" -ne 0 && "$custom_exit" -ne 1 ]]; then
   python -I -m nl2repobench.verification.cli \
-    --expected {expected} --metric-contract {metric} \
+    --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
 fi
 python -I -m nl2repobench.verification.cli \
-  --expected {expected} --metric-contract {metric} \
+  --expected {expected} --runtime python --metric-contract {metric} \
   --collection /logs/verifier/collection.json \
   --junit /logs/verifier/junit.xml --pytest-exit-code "$custom_exit"
 exit 0
 """
 
     def _copy_verifier_runtime(self, destination: Path) -> None:
-        package_root = Path(__file__).parents[1]
-        files = (
-            "__init__.py",
-            "domain/__init__.py",
-            "domain/canonical.py",
-            "domain/models.py",
-            "domain/network_policy.py",
-            "verification/__init__.py",
-            "verification/cli.py",
-            "verification/candidate_client.py",
-            "verification/candidate_install.py",
-            "verification/candidate_runner.py",
-            "verification/command_plan.py",
-            "verification/grader.py",
-            "verification/junit.py",
-            "verification/models.py",
-            "verification/network_check.py",
-            "verification/integrity.py",
-            "verification/process_cleanup.py",
-            "verification/pytest_plugin.py",
-            "verification/run_pytest.py",
-            "verification/workspace_copy.py",
-            "verification/custom_verifier.py",
-        )
-        for relative in files:
-            source = package_root / relative
-            target = destination / "nl2repobench" / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            atomic_write(target, source.read_bytes())
+        try:
+            copy_python_verifier_runtime(destination)
+        except TaskWriterError as exc:
+            raise HarborCompileError(str(exc)) from exc
 
     def _extract_private_bundle(self, reference: ArtifactRef, destination: Path) -> None:
-        if self.artifact_resolver is None:
-            raise HarborCompileError("private artifact resolver is required")
-        archive = self.artifact_resolver.resolve(reference)
         try:
-            extract_bundle_archive(
-                archive,
+            extract_private_bundle(
+                reference,
                 destination,
+                artifact_resolver=self.artifact_resolver,
                 limits=BundleLimits(
                     max_members=self.MAX_BUNDLE_MEMBERS,
                     max_member_bytes=self.MAX_BUNDLE_MEMBER_BYTES,
                     max_total_bytes=self.MAX_BUNDLE_TOTAL_BYTES,
                 ),
             )
-        except BundleArchiveIOError as exc:
-            raise HarborCompileError(f"cannot extract private bundle: {exc}") from exc
-        except BundleArchiveError as exc:
+        except TaskWriterError as exc:
             raise HarborCompileError(str(exc)) from exc
 
     def _copy_tree(self, source: Path, destination: Path) -> None:
         try:
-            copy_bundle_tree(source, destination)
-        except BundleTreeSourceError as exc:
-            raise HarborCompileError(f"development fixture directory is missing: {source}") from exc
-        except BundleTreeError as exc:
-            raise HarborCompileError(str(exc)) from exc
+            copy_tree(source, destination)
+        except TaskWriterError as exc:
+            message = str(exc).replace(
+                "fixture directory is missing", "development fixture directory is missing"
+            )
+            raise HarborCompileError(message) from exc
 
     def _write_readme(
         self,
@@ -736,29 +729,14 @@ Run with Harbor {self.toolchain.harbor.version}:
         task_root: Path,
         allow_incomplete: bool,
     ) -> None:
-        files = []
-        for path in sorted(item for item in task_root.rglob("*") if item.is_file()):
-            data = path.read_bytes()
-            files.append(
-                {
-                    "path": path.relative_to(task_root).as_posix(),
-                    "sha256": hashlib.sha256(data).hexdigest(),
-                    "size_bytes": len(data),
-                }
-            )
         payload = {
-            "schema_version": "1.0",
             "task_id": manifest.task_id,
             "task_version": manifest.version,
             "mode": "development" if allow_incomplete else "production",
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
-            "files": files,
         }
-        atomic_write(
-            task_root / "bundle.manifest.json",
-            json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2).encode() + b"\n",
-        )
+        write_file_manifest(task_root, payload=payload, schema_version="1.0")
 
     def _refresh_bundle_manifest(self, task_root: Path, kind: str) -> None:
         path = task_root / "bundle.manifest.json"
@@ -766,21 +744,7 @@ Run with Harbor {self.toolchain.harbor.version}:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as exc:
             raise HarborCompileError(f"invalid source bundle manifest: {path}: {exc}") from exc
-        files = []
-        for item in sorted(entry for entry in task_root.rglob("*") if entry.is_file()):
-            if item == path:
-                continue
-            data = item.read_bytes()
-            files.append(
-                {
-                    "path": item.relative_to(task_root).as_posix(),
-                    "sha256": hashlib.sha256(data).hexdigest(),
-                    "size_bytes": len(data),
-                }
-            )
         payload["mode"] = f"control-{kind}"
-        payload["files"] = files
-        atomic_write(
-            path,
-            json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2).encode() + b"\n",
-        )
+        payload.pop("files", None)
+        payload.pop("schema_version", None)
+        write_file_manifest(task_root, payload=payload, schema_version="1.0")

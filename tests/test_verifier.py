@@ -237,6 +237,8 @@ def test_verifier_cli_writes_outputs(tmp_path, monkeypatch) -> None:
             "grade",
             "--expected",
             "1",
+            "--runtime",
+            "python",
             "--junit",
             str(junit),
             "--collection",

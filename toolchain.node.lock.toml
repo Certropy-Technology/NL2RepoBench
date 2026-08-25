@@ -1,8 +1,10 @@
 schema_version = "2.0"
 status = "locked"
 node_grader = "locked"
-node_runtime_sha256 = "sha256:f3d988ea38f439082388183bb825eb5001c903b0cbeee3bc48f005a8a7d7e756"
+node_runtime_sha256 = "sha256:dda6f8560abe59a082fa822094a86ff14228db59f6e2a691cd8771f29466fa5e"
 node_report_schema = "node-test-json-v1"
+verifier_requirements_lock = "verifier/requirements.lock.txt"
+verifier_requirements_sha256 = "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
 
 [harbor]
 version = "0.21.0"
@@ -14,6 +16,7 @@ lock_sha256 = "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf38
 [images]
 agent_base = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 verifier_base = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+verifier_python_base = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 platform = "linux/amd64"
 status = "locked"
 
@@ -23,3 +26,4 @@ npm_version = "11.17.0"
 libc = "glibc"
 executable = "/usr/local/bin/node"
 npm_executable = "/usr/local/bin/npm"
+pnpm_version = "9.15.0"

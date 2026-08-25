@@ -14,7 +14,7 @@ NodeTestStatus = Literal["passed", "failed", "error", "skipped", "todo"]
 
 
 class NodeVerificationReason(StrEnum):
-    """Failure reasons kept separate from the v1 pytest/JUnit enum."""
+    """Legacy Node reason enum retained for v2 report compatibility."""
 
     REPORT_MISSING = "node-report-missing"
     REPORT_MALFORMED = "node-report-malformed"
@@ -31,7 +31,6 @@ class NodeVerificationReason(StrEnum):
     VERIFIER_INTERNAL_ERROR = "verifier-internal-error"
     INTEGRITY_FAILURE = "integrity-failure"
 
-    # Descriptive aliases support callers that use the longer v2 names.
     NODE_REPORT_MISSING = REPORT_MISSING
     NODE_REPORT_MALFORMED = REPORT_MALFORMED
     NODE_DUPLICATE_TEST_ID = DUPLICATE_TEST_ID

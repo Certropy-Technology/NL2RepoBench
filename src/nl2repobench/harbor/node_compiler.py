@@ -11,7 +11,6 @@ import hashlib
 import json
 import os
 import shutil
-import tarfile
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -26,17 +25,18 @@ from nl2repobench.storage.files import atomic_write
 from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
 
 from .bundle_io import (
-    BundleArchiveError,
-    BundleArchiveIOError,
-    BundleArchiveMemberSizeError,
     BundleLimits,
-    BundleTreeError,
-    BundleTreeSourceError,
-    copy_bundle_tree,
-    extract_bundle_archive,
 )
 from .models_v2 import load_node_toolchain_lock
 from .node_dependencies import NodeDependencyError, validate_npm_dependency_bundle
+from .task_writer import (
+    TaskWriterError,
+    copy_python_verifier_runtime,
+    copy_tree,
+    extract_private_bundle,
+    write_file_manifest,
+    write_instruction,
+)
 
 
 class NodeHarborCompileError(ValueError):
@@ -74,6 +74,16 @@ class NodeHarborCompiler:
                 raise NodeHarborCompileError(
                     "locked Node toolchain runtime helper digest does not match"
                 )
+        requirements = toolchain_path.parent / self.toolchain.verifier_requirements_lock
+        if not requirements.is_file():
+            raise NodeHarborCompileError(f"verifier requirements lock is missing: {requirements}")
+        if self.toolchain.verifier_requirements_sha256 is not None:
+            digest = f"sha256:{hashlib.sha256(requirements.read_bytes()).hexdigest()}"
+            if digest != self.toolchain.verifier_requirements_sha256:
+                raise NodeHarborCompileError(
+                    "verifier requirements lock digest does not match Node toolchain"
+                )
+        self.verifier_requirements_path = requirements
 
     @staticmethod
     def _node_runtime_digest() -> str:
@@ -144,14 +154,12 @@ class NodeHarborCompiler:
         return final_root
 
     def _write_instruction(self, source_dir: Path, relative: str, task_root: Path) -> None:
-        source = source_dir / relative
-        if (
-            source.is_symlink()
-            or not source.is_file()
-            or not source.resolve().is_relative_to(source_dir.resolve())
-        ):
-            raise NodeHarborCompileError("Node instruction must be a regular in-tree file")
-        atomic_write(task_root / "instruction.md", source.read_bytes())
+        try:
+            write_instruction(source_dir, relative, task_root)
+        except TaskWriterError as exc:
+            raise NodeHarborCompileError(
+                str(exc).replace("instruction", "Node instruction", 1)
+            ) from exc
 
     def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
         image = self.toolchain.images.agent_base
@@ -180,6 +188,7 @@ WORKDIR /workspace
         runtime_root.mkdir()
         node_runtime = Path(__file__).parents[1] / "verification/node"
         self._copy_tree(node_runtime, runtime_root / "node")
+        self._write_python_verifier_runtime(tests_root)
         atomic_write(
             tests_root / "command-plan.json",
             json.dumps(EXPECTED_NODE_PLAN, sort_keys=True, separators=(",", ":")).encode() + b"\n",
@@ -209,14 +218,26 @@ WORKDIR /workspace
             self._copy_tree(fixture, private_root)
 
         image = self.toolchain.images.verifier_base
-        dockerfile = f"""FROM --platform=linux/amd64 {image}
+        python_image = self.toolchain.images.verifier_python_base
+        dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
+FROM --platform=linux/amd64 {python_image}
 
+COPY --from=node-runtime /usr/local/bin/node /usr/local/bin/node
+COPY --from=node-runtime /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \\
+  && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+
+COPY python-runtime /opt/nl2repobench-runtime
+COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
+RUN python -m pip install --no-cache-dir --require-hashes \\
+  -r /tmp/verifier-requirements.lock.txt
 COPY dependencies /opt/npm-bundle
 COPY runtime /tests/runtime
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0500 private /tests/private
 COPY --chmod=0555 test.sh /tests/test.sh
 RUN useradd --uid 10001 --create-home candidate \\
+  && chmod -R 0555 /opt/nl2repobench-runtime \\
   && chmod -R 0500 /tests/private \\
   && chmod -R 0555 /tests/runtime
 WORKDIR /tests
@@ -227,6 +248,16 @@ WORKDIR /tests
         )
         atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
         os.chmod(tests_root / "test.sh", 0o755)
+
+    def _write_python_verifier_runtime(self, tests_root: Path) -> None:
+        try:
+            copy_python_verifier_runtime(tests_root / "python-runtime")
+        except TaskWriterError as exc:
+            raise NodeHarborCompileError(str(exc)) from exc
+        atomic_write(
+            tests_root / "verifier-requirements.lock.txt",
+            self.verifier_requirements_path.read_bytes(),
+        )
 
     def _write_empty_npm_bundle(self, root: Path) -> None:
         atomic_write(
@@ -396,36 +427,24 @@ exit 0
 """
 
     def _extract_private_bundle(self, reference: ArtifactRef, destination: Path) -> None:
-        if self.artifact_resolver is None:
-            raise NodeHarborCompileError("private artifact resolver is required")
         try:
-            archive = self.artifact_resolver.resolve(reference)
-            extract_bundle_archive(
-                archive,
+            extract_private_bundle(
+                reference,
                 destination,
+                artifact_resolver=self.artifact_resolver,
                 limits=BundleLimits(
                     max_members=self.MAX_BUNDLE_MEMBERS,
                     max_member_bytes=self.MAX_BUNDLE_MEMBER_BYTES,
                     max_total_bytes=self.MAX_BUNDLE_TOTAL_BYTES,
                 ),
             )
-        except BundleArchiveMemberSizeError as exc:
-            raise NodeHarborCompileError(
-                f"archive member exceeds limit: {exc.member_name}"
-            ) from exc
-        except BundleArchiveIOError as exc:
-            raise NodeHarborCompileError(f"cannot extract private bundle: {exc}") from exc
-        except BundleArchiveError as exc:
+        except TaskWriterError as exc:
             raise NodeHarborCompileError(str(exc)) from exc
-        except (OSError, RuntimeError, tarfile.TarError) as exc:
-            raise NodeHarborCompileError(f"cannot extract private bundle: {exc}") from exc
 
     def _copy_tree(self, source: Path, destination: Path) -> None:
         try:
-            copy_bundle_tree(source, destination)
-        except BundleTreeSourceError as exc:
-            raise NodeHarborCompileError(f"fixture directory is missing: {source}") from exc
-        except BundleTreeError as exc:
+            copy_tree(source, destination)
+        except TaskWriterError as exc:
             raise NodeHarborCompileError(str(exc)) from exc
 
     def _write_readme(
@@ -451,28 +470,11 @@ This task is excluded from the Python dataset.
     def _write_bundle_manifest(
         self, manifest: TaskManifestV2, task_root: Path, allow_incomplete: bool
     ) -> None:
-        files = []
-        for path in sorted(item for item in task_root.rglob("*") if item.is_file()):
-            if path.name == "bundle.manifest.json":
-                continue
-            data = path.read_bytes()
-            files.append(
-                {
-                    "path": path.relative_to(task_root).as_posix(),
-                    "sha256": hashlib.sha256(data).hexdigest(),
-                    "size_bytes": len(data),
-                }
-            )
         payload = {
-            "schema_version": "2.0",
             "task_id": manifest.task_id,
             "task_version": manifest.version,
             "mode": "development" if allow_incomplete else "production",
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
-            "files": files,
         }
-        atomic_write(
-            task_root / "bundle.manifest.json",
-            json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2).encode() + b"\n",
-        )
+        write_file_manifest(task_root, payload=payload, schema_version="2.0")

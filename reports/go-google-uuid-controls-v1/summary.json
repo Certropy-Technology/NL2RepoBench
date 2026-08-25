@@ -1,0 +1,85 @@
+{
+  "abstract_gate": "pass",
+  "archive_contract": "p2-vertical-slice-v1",
+  "blocked_reason": null,
+  "controls": "pass",
+  "harbor_controls": {
+    "all_pass": true,
+    "controls": {
+      "call-hang": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "job": "/tmp/p2-go-controls-final5/jobs/call-hang/2026-08-25__06-52-36",
+        "reward": 0.0,
+        "valid": true
+      },
+      "empty": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "job": "/tmp/p2-go-controls-final5/jobs/empty/2026-08-25__06-48-39",
+        "reward": 0.0,
+        "valid": true
+      },
+      "forgery": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/p2-go-controls-final5/jobs/forgery/2026-08-25__06-51-05",
+        "reward": 1.0,
+        "valid": true
+      },
+      "install-failure": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "job": "/tmp/p2-go-controls-final5/jobs/install-failure/2026-08-25__06-51-58",
+        "reward": 0.0,
+        "valid": true
+      },
+      "oracle": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/p2-go-controls-final5/jobs/oracle/2026-08-25__06-49-18",
+        "reward": 1.0,
+        "valid": true
+      },
+      "stub": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "job": "/tmp/p2-go-controls-final5/jobs/stub/2026-08-25__06-50-12",
+        "reward": 0.0,
+        "valid": true
+      }
+    },
+    "gates": {
+      "call-hang": true,
+      "empty": true,
+      "forgery": true,
+      "install-failure": true,
+      "oracle": true,
+      "stub": true
+    }
+  },
+  "local_controls": {
+    "empty": "model-zero",
+    "forgery": "ignored-by-trusted-result",
+    "hang": "timeout-guarded",
+    "offline": "pass",
+    "oracle": "pass",
+    "stub": "model-zero"
+  },
+  "lock_validator": "go-modules",
+  "oracle_runs_requested": 1,
+  "package_manager": "go-modules",
+  "real_bridge_build": "pass",
+  "release_blocked_reason": "source lifecycle/environment publication evidence is not complete",
+  "release_status": "blocked",
+  "runtime": "go",
+  "source_digest": "sha256:e24d1eb2f3787e8e47cacff5c9ef5e7286ef6406a22da2da036fd2a19fa5c049",
+  "source_revision": "0f11ee6918f41a04c201eceeadf612a377bc7fbc",
+  "status": "pass"
+}

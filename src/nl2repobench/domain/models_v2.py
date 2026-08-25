@@ -66,7 +66,7 @@ class RuntimeProfileV2(V2RecordModel):
     language: Literal["python", "node"]
     runtime: Literal["cpython", "node"]
     version: str = Field(min_length=1)
-    package_manager: Literal["uv", "pip", "npm", "none"]
+    package_manager: Literal["uv", "pip", "npm", "pnpm", "none"]
     package_manager_version: str | None = None
     architecture: Literal["linux/amd64"] = "linux/amd64"
     libc: Literal["glibc", "musl"]
@@ -80,13 +80,13 @@ class RuntimeProfileV2(V2RecordModel):
                 raise ValueError(
                     "Node runtime version must be an exact supported 22.x.y or 24.x.y version"
                 )
-            if self.package_manager not in {"npm", "none"}:
-                raise ValueError("Node runtime supports npm or no package manager")
-            if self.package_manager == "npm":
+            if self.package_manager not in {"npm", "pnpm", "none"}:
+                raise ValueError("Node runtime supports npm, pnpm, or no package manager")
+            if self.package_manager in {"npm", "pnpm"}:
                 if self.package_manager_version is None or not re.fullmatch(
                     SEMVER_PATTERN, self.package_manager_version
                 ):
-                    raise ValueError("npm requires an exact semantic version")
+                    raise ValueError("Node package managers require an exact semantic version")
             elif self.package_manager_version is not None:
                 raise ValueError("package manager version is only valid with a package manager")
         else:
@@ -146,9 +146,9 @@ class DependencyBundleV2(V2RecordModel):
     ecosystem: Literal["python", "npm"]
     consumer: Literal["candidate-runtime", "verifier-runtime"]
     artifact: ArtifactRef | None = None
-    lockfile_name: Literal["requirements.lock.txt", "package-lock.json"]
+    lockfile_name: Literal["requirements.lock.txt", "package-lock.json", "pnpm-lock.yaml"]
     lockfile_version: str
-    package_manager: Literal["uv", "pip", "npm"]
+    package_manager: Literal["uv", "pip", "npm", "pnpm"]
     package_manager_version: str
     install_mode: Literal["offline"] = "offline"
     lifecycle_scripts: Literal["ignore-scripts"] = "ignore-scripts"
@@ -157,17 +157,25 @@ class DependencyBundleV2(V2RecordModel):
     @model_validator(mode="after")
     def validate_dependency_identity(self) -> DependencyBundleV2:
         if self.ecosystem == "npm":
-            if self.lockfile_name != "package-lock.json":
-                raise ValueError("npm dependency bundles require package-lock.json")
-            if self.lockfile_version != "3":
-                raise ValueError("npm dependency bundles require lockfile version 3")
-            if self.package_manager != "npm":
-                raise ValueError("npm dependency bundles require npm as package manager")
+            if self.package_manager == "npm":
+                if self.lockfile_name != "package-lock.json":
+                    raise ValueError("npm dependency bundles require package-lock.json")
+                if self.lockfile_version != "3":
+                    raise ValueError("npm dependency bundles require lockfile version 3")
+            elif self.package_manager == "pnpm":
+                if self.lockfile_name != "pnpm-lock.yaml":
+                    raise ValueError("pnpm dependency bundles require pnpm-lock.yaml")
+                if not self.lockfile_version.startswith("9"):
+                    raise ValueError("pnpm dependency bundles require lockfile version 9")
+            else:
+                raise ValueError("Node dependency bundles require npm or pnpm")
             if not re.fullmatch(SEMVER_PATTERN, self.package_manager_version):
-                raise ValueError("npm dependency bundles require an exact npm version")
+                raise ValueError("Node package managers require an exact semantic version")
         else:
-            if self.lockfile_name == "package-lock.json" or self.package_manager == "npm":
-                raise ValueError("Python dependency bundles cannot use npm metadata")
+            if self.lockfile_name in {"package-lock.json", "pnpm-lock.yaml"} or (
+                self.package_manager in {"npm", "pnpm"}
+            ):
+                raise ValueError("Python dependency bundles cannot use Node metadata")
         if self.status == "known" and self.artifact is None:
             raise ValueError("known dependency bundle requires an artifact")
         return self
@@ -197,7 +205,9 @@ class TestManifestV2(V2RecordModel):
 class NodeMetricContractV2(V2RecordModel):
     """Fixed-denominator leaf-test score semantics for Node tasks."""
 
-    contract_id: Literal["node-test-leaf-pass-rate-v1"] = "node-test-leaf-pass-rate-v1"
+    contract_id: Literal["fixed-test-pass-rate-v1", "node-test-leaf-pass-rate-v1"] = (
+        "fixed-test-pass-rate-v1"
+    )
     passed_statuses: tuple[Literal["passed"], ...] = ("passed",)
     denominator_statuses: tuple[Literal["passed", "failed", "error", "skipped", "todo"], ...] = (
         "passed",
@@ -287,8 +297,11 @@ class TaskManifestV2(V2RecordModel):
             raise ValueError("Node task requires an npm dependency bundle")
         if self.tests.framework != "node:test":
             raise ValueError("Node task requires the node:test framework")
-        if self.metric.contract_id != "node-test-leaf-pass-rate-v1":
-            raise ValueError("Node task requires node-test-leaf-pass-rate-v1")
+        if self.metric.contract_id not in {
+            "fixed-test-pass-rate-v1",
+            "node-test-leaf-pass-rate-v1",
+        }:
+            raise ValueError("Node task requires the canonical fixed-test-pass-rate-v1 metric")
         return self
 
     def publication_gaps(self) -> tuple[str, ...]:
@@ -339,6 +352,9 @@ class TaskManifestV2(V2RecordModel):
             gaps.append("oracle_bundle.visibility=private")
         if self.harbor is None:
             gaps.append("harbor")
-        if self.metric.contract_id != "node-test-leaf-pass-rate-v1":
-            gaps.append("metric.contract_id=node-test-leaf-pass-rate-v1")
+        if self.metric.contract_id not in {
+            "fixed-test-pass-rate-v1",
+            "node-test-leaf-pass-rate-v1",
+        }:
+            gaps.append("metric.contract_id=fixed-test-pass-rate-v1")
         return tuple(gaps)

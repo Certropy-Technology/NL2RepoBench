@@ -21,6 +21,7 @@ status = "unknown"
 python_version = "3.12"
 network_mode = "no-network"
 
+
 [dependencies]
 status = "unknown"
 installer = "uv"
@@ -35,7 +36,7 @@ commands = ["python -m pytest --continue-on-collection-errors /tests/test_minist
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

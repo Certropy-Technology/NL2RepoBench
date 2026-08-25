@@ -2,6 +2,8 @@ schema_version = "2.0"
 status = "development-only"
 node_grader = "absent"
 node_report_schema = "node-test-json-v1"
+verifier_requirements_lock = "verifier/requirements.lock.txt"
+verifier_requirements_sha256 = "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
 
 [harbor]
 version = "0.21.0"
@@ -13,6 +15,7 @@ lock_sha256 = "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf38
 [images]
 agent_base = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
 verifier_base = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fcf9cff361d04642d5971e6cd76d39e27"
+verifier_python_base = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 platform = "linux/amd64"
 status = "development-only"
 

@@ -73,6 +73,20 @@ class HarborCompilerRegistry:
 
             return NodeHarborCompiler(toolchain, artifact_resolver=resolver)
 
+        def node_pnpm_factory(
+            toolchain: Path, resolver: LocalArtifactResolver | None
+        ) -> HarborRuntimeCompiler:
+            from nl2repobench.harbor.pnpm_compiler import PnpmHarborCompiler
+
+            return PnpmHarborCompiler(toolchain, artifact_resolver=resolver)
+
+        def go_modules_factory(
+            toolchain: Path, resolver: LocalArtifactResolver | None
+        ) -> HarborRuntimeCompiler:
+            from nl2repobench.harbor.go_compiler import GoHarborCompiler
+
+            return GoHarborCompiler(toolchain, artifact_resolver=resolver)
+
         python_keys = {
             (RuntimeLanguage.PYTHON, PackageManager.UV),
             (RuntimeLanguage.PYTHON, PackageManager.PIP),
@@ -80,6 +94,8 @@ class HarborCompilerRegistry:
         }
         factories = {key: python_factory for key in python_keys}
         factories[(RuntimeLanguage.NODE, PackageManager.NPM)] = node_npm_factory
+        factories[(RuntimeLanguage.NODE, PackageManager.PNPM)] = node_pnpm_factory
+        factories[(RuntimeLanguage.GO, PackageManager.GO_MODULES)] = go_modules_factory
         return cls(factories=factories)
 
     def resolve(self, identity: RuntimeDiscriminator) -> CompilerFactory:

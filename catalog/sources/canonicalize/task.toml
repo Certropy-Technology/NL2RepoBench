@@ -24,6 +24,12 @@ base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a8
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+
 [environment.runtime]
 language = "node"
 runtime = "node"
@@ -56,7 +62,7 @@ commands_artifact = { digest = "sha256:cee1b3612813db19dbc6c5ef687b4cb81418b9376
 test_bundle = { digest = "sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -66,7 +72,7 @@ agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 1
 memory_mb = 1024

@@ -38,8 +38,8 @@
     },
     {
       "path": "task.toml",
-      "sha256": "20edbaf9c66aa7970e2d266b5f1278e5da01d81fdc3d3d320be8d717f032a29d",
-      "size_bytes": 1295
+      "sha256": "93ac160774ee55f1497b792aa39277601120485bc8e9d8b49a2ffcd680f9fcff",
+      "size_bytes": 1291
     },
     {
       "path": "tests/Dockerfile",
@@ -50,6 +50,11 @@
       "path": "tests/command-plan.json",
       "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
       "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "bfb5af3f8e8aeb3869ff6ceb810ae3c23bc33e481dd9977702fffc03851b4231",
+      "size_bytes": 9441
     },
     {
       "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/02/e3/f32eb2bd837c8e528bc254e0cf988c6af948698000943e8322f4bdcb31e7b977f3ac909e066fcc4e6aea9aea60c49dfa74143928a2e9558f5a0263e24de1",
@@ -458,8 +463,8 @@
     },
     {
       "path": "tests/runtime/node/grade-report.mjs",
-      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
-      "size_bytes": 4308
+      "sha256": "ecab1695ff2fe0dc7d0b8170e24cbcc4e5accd0b36287c081bb40754f6250593",
+      "size_bytes": 2043
     },
     {
       "path": "tests/runtime/node/install_candidate.mjs",

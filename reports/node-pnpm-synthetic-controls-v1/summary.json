@@ -1,0 +1,1208 @@
+{
+  "abstract_gate": "pass",
+  "blocked_reason": null,
+  "controls": "pass",
+  "diff_measure": {
+    "files": [
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/aiofiles/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/anytree/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/arguably/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/asteval/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/attrs/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/autopep8/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/autorccar/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/axios/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/bleach/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/boltons/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/boto/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/box/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/cachetools/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/cachier/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/canonicalize/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/cerberus/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/chalk/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/cookiecutter/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/coverage_shield/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/coxeter/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/databases/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/dataclasses-json/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/dbutils/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/decouple/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/deepdiff/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/deslib/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/dictdatabase/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/docopt-ng/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/docstring-parser/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/doit/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/emoji/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/fast-glob/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/fastapi-users/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 1,
+        "path": "catalog/sources/fastjsonschema/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/filelock/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/flask-restful/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/flasky/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/freezegun/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/ftfy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/funcy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/fuzzywuzzy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/gitingest/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/graphneuralnetwork/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/hpack/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/httpx/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/humanize/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/icecream/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/jsonlines/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/lark/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/markdownify/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/markupsafe/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/marshmallow/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/math-verify/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/mechanicalsoup/task.toml"
+      },
+      {
+        "added": 2,
+        "deleted": 1,
+        "path": "catalog/sources/ministats/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/mistune/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/more-Itertools/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/natsort/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 1,
+        "path": "catalog/sources/node-synthetic/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/paillier/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pandarallel/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/parse/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/parsy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pathlib2/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pdfplumber-stable/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/petl/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 1,
+        "path": "catalog/sources/platformdirs/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/prompt-toolkit/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pss/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 1,
+        "path": "catalog/sources/pydantic-settings/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pyjwt/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pyparsing/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 1,
+        "path": "catalog/sources/pyperclip/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pypinyin/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pyquery/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pysondb-v2/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pytest-cov/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/python-constraint/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/python-dotenv/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/python-fire/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/python-fsutil/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/python-pathspec/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/python-slugify/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/pythonprojecttemplate/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/pytz/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/qs/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/records/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/retrying/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/rich-click/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/rich/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/salib/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/schedule-master/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/schema/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/simple-parsing/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/six/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/sortedcontainers/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/sqlparse/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/stable-baselines3/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/stamina/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/structlog/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 2,
+        "path": "catalog/sources/sympy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/tablib/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/tabulate/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/tenacity/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/tinydb/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/toolz/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/tqdm/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/typing_extensions/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/unidecode/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/unittest-parametrize/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/uuid/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/validators/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/voluptuous/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/sources/xlrd/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/aiofiles/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/arguably/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/asteval/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/autopep8/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/bleach/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/boltons/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/boto/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/box/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/cachier/task.toml"
+      },
+      {
+        "added": 13,
+        "deleted": 13,
+        "path": "catalog/tasks/canonicalize/bundle.manifest.json"
+      },
+      {
+        "added": 2,
+        "deleted": 2,
+        "path": "catalog/tasks/canonicalize/task.toml"
+      },
+      {
+        "added": 54,
+        "deleted": 58,
+        "path": "catalog/tasks/canonicalize/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/cerberus/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/cookiecutter/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/coverage_shield/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/databases/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/dataclasses-json/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/dataclasses-json/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/dbutils/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/decouple/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/deepdiff/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/deslib/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/dictdatabase/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/docopt-ng/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/docstring-parser/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/docstring-parser/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/emoji/task.toml"
+      },
+      {
+        "added": 9,
+        "deleted": 4,
+        "path": "catalog/tasks/fast-glob/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/fast-glob/task.toml"
+      },
+      {
+        "added": 54,
+        "deleted": 58,
+        "path": "catalog/tasks/fast-glob/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/fastapi-users/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/fastjsonschema/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/fastjsonschema/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/flask-restful/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/flasky/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/freezegun/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/ftfy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/funcy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/fuzzywuzzy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/gitingest/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/httpx/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/httpx/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/humanize/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/icecream/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/icecream/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/jsonlines/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/markdownify/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/markupsafe/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/marshmallow/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/marshmallow/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/math-verify/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/mechanicalsoup/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/more-Itertools/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/paillier/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pandarallel/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/parse/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pathlib2/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pdfplumber-stable/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/platformdirs/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/platformdirs/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/pydantic-settings/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pydantic-settings/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pyjwt/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/pyperclip/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pyperclip/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pypinyin/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pyquery/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pysondb-v2/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pytest-cov/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/python-dotenv/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/python-fire/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/python-fire/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/python-fsutil/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/python-pathspec/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/python-slugify/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/pytz/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/pytz/task.toml"
+      },
+      {
+        "added": 9,
+        "deleted": 4,
+        "path": "catalog/tasks/qs/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/qs/task.toml"
+      },
+      {
+        "added": 54,
+        "deleted": 58,
+        "path": "catalog/tasks/qs/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/rich-click/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/schema/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/six/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/sortedcontainers/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/sqlparse/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/stable-baselines3/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/stamina/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/structlog/task.toml"
+      },
+      {
+        "added": 7,
+        "deleted": 2,
+        "path": "catalog/tasks/sympy/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/sympy/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/tablib/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/tenacity/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/tinydb/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/tqdm/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/typing_extensions/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/unidecode/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/unittest-parametrize/task.toml"
+      },
+      {
+        "added": 9,
+        "deleted": 4,
+        "path": "catalog/tasks/uuid/bundle.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/uuid/task.toml"
+      },
+      {
+        "added": 54,
+        "deleted": 58,
+        "path": "catalog/tasks/uuid/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/voluptuous/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 1,
+        "path": "catalog/tasks/xlrd/task.toml"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "pyproject.toml"
+      },
+      {
+        "added": 4,
+        "deleted": 8,
+        "path": "scripts/summarize_phase2_controls.py"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "src/nl2repobench/domain/models.py"
+      },
+      {
+        "added": 37,
+        "deleted": 21,
+        "path": "src/nl2repobench/domain/models_v2.py"
+      },
+      {
+        "added": 6,
+        "deleted": 1,
+        "path": "src/nl2repobench/domain/runtime.py"
+      },
+      {
+        "added": 62,
+        "deleted": 98,
+        "path": "src/nl2repobench/harbor/compiler.py"
+      },
+      {
+        "added": 9,
+        "deleted": 0,
+        "path": "src/nl2repobench/harbor/models_v2.py"
+      },
+      {
+        "added": 56,
+        "deleted": 54,
+        "path": "src/nl2repobench/harbor/node_compiler.py"
+      },
+      {
+        "added": 16,
+        "deleted": 0,
+        "path": "src/nl2repobench/harbor/registry.py"
+      },
+      {
+        "added": 24,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/__init__.py"
+      },
+      {
+        "added": 28,
+        "deleted": 34,
+        "path": "src/nl2repobench/verification/cli.py"
+      },
+      {
+        "added": 98,
+        "deleted": 113,
+        "path": "src/nl2repobench/verification/grader.py"
+      },
+      {
+        "added": 54,
+        "deleted": 58,
+        "path": "src/nl2repobench/verification/node/grade-report.mjs"
+      },
+      {
+        "added": 95,
+        "deleted": 210,
+        "path": "src/nl2repobench/verification/node_grader.py"
+      },
+      {
+        "added": 1,
+        "deleted": 2,
+        "path": "src/nl2repobench/verification/node_models.py"
+      },
+      {
+        "added": 8,
+        "deleted": 13,
+        "path": "tests/test_harbor_registry.py"
+      },
+      {
+        "added": 3,
+        "deleted": 1,
+        "path": "tests/test_node_foundation.py"
+      },
+      {
+        "added": 2,
+        "deleted": 0,
+        "path": "tests/test_verifier.py"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "toolchain.node.dev.lock.toml"
+      },
+      {
+        "added": 5,
+        "deleted": 1,
+        "path": "toolchain.node.lock.toml"
+      },
+      {
+        "added": 57,
+        "deleted": 0,
+        "path": "uv.lock"
+      }
+    ],
+    "outside_allowed_lines": 2288
+  },
+  "lock_summary": {
+    "digest": "f1ab02cef0e1606f5c007b0a55ace8ffeeff50559dc7bd4f7b21518cf2cf1973",
+    "importer_count": 1,
+    "lockfile_version": "9.0",
+    "package_count": 0,
+    "snapshot_count": 0
+  },
+  "oracle_runs_requested": 1,
+  "package_manager": "pnpm",
+  "release_blocked_reason": "source lifecycle/image/store artifacts are not approved for publication",
+  "release_status": "blocked",
+  "runtime": "node",
+  "status": "pass"
+}

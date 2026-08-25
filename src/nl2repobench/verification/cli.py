@@ -7,8 +7,8 @@ import os
 import stat
 from pathlib import Path
 
-from .grader import grade_verification, write_grading_outputs
-from .models import VerificationReason
+from .registry import VerifierRuntimeRegistry
+from .taxonomy import canonical_reason
 
 MAX_COLLECTION_BYTES = 4 * 1024 * 1024
 MAX_JUNIT_BYTES = 64 * 1024 * 1024
@@ -37,52 +37,46 @@ def _optional_bytes(path: Path | None, *, max_bytes: int) -> bytes | None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--expected", type=int, required=True)
+    parser.add_argument(
+        "--runtime",
+        choices=("python", "node", "go"),
+        required=True,
+        help="Explicit verifier runtime identity.",
+    )
     parser.add_argument("--metric-contract", default="fixed-test-pass-rate-v1")
     parser.add_argument("--junit", type=Path)
     parser.add_argument("--collection", type=Path)
     parser.add_argument("--pytest-exit-code", type=int)
     parser.add_argument("--report", type=Path, help="Verifier-owned node:test JSON report.")
     parser.add_argument("--runner-exit-code", type=int)
-    # Do not import v2 Node modules while the v1 verifier runtime is running.
-    # Each mode validates its own reason after the mode is selected.
     parser.add_argument("--reason")
     parser.add_argument("--output", type=Path, default=Path("/logs/verifier"))
     args = parser.parse_args()
 
-    node_mode = args.report is not None or args.runner_exit_code is not None
-    if node_mode:
-        from .node_grader import (
-            MAX_NODE_REPORT_BYTES,
-            grade_node_test_report,
-            write_node_grading_outputs,
-        )
-        from .node_models import NodeVerificationReason
-
-        node_reason = None
-        if args.reason is not None:
-            try:
-                node_reason = NodeVerificationReason(args.reason)
-            except ValueError as exc:
-                raise SystemExit(f"Node report mode received a v1 reason: {args.reason}") from exc
-        node_result = grade_node_test_report(
-            expected_total=args.expected,
-            metric_contract=args.metric_contract,
-            report_data=_optional_bytes(args.report, max_bytes=MAX_NODE_REPORT_BYTES),
-            runner_exit_code=args.runner_exit_code,
-            explicit_reason=node_reason,
-        )
-        write_node_grading_outputs(node_result, args.output)
-        return
-
-    result = grade_verification(
+    runtime = args.runtime
+    if runtime == "python" and (args.report is not None or args.runner_exit_code is not None):
+        parser.error("--runtime python cannot receive Node report arguments")
+    if runtime in {"node", "go"} and (args.junit is not None or args.collection is not None):
+        parser.error("Node/Go runtimes cannot receive pytest report arguments")
+    adapter = VerifierRuntimeRegistry.default().resolve(runtime)
+    reason = canonical_reason(args.reason) if args.reason else None
+    result = adapter.grade(
         expected_total=args.expected,
         metric_contract=args.metric_contract,
-        junit_data=_optional_bytes(args.junit, max_bytes=MAX_JUNIT_BYTES),
-        collection_data=_optional_bytes(args.collection, max_bytes=MAX_COLLECTION_BYTES),
+        junit_data=_optional_bytes(
+            args.junit, max_bytes=adapter.limits.get("junit", MAX_JUNIT_BYTES)
+        ),
+        collection_data=_optional_bytes(
+            args.collection, max_bytes=adapter.limits.get("collection", MAX_COLLECTION_BYTES)
+        ),
+        report_data=_optional_bytes(
+            args.report, max_bytes=adapter.limits.get("report", MAX_JUNIT_BYTES)
+        ),
         pytest_exit_code=args.pytest_exit_code,
-        explicit_reason=VerificationReason(args.reason) if args.reason else None,
+        runner_exit_code=args.runner_exit_code,
+        explicit_reason=reason,
     )
-    write_grading_outputs(result, args.output)
+    adapter.write(result, args.output)
 
 
 if __name__ == "__main__":

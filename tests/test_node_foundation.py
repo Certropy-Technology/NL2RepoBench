@@ -179,7 +179,7 @@ def test_locked_node_toolchain_rejects_runtime_helper_drift(tmp_path: Path) -> N
     (tmp_path / "harbor-runner").mkdir()
     shutil.copy2(ROOT / "harbor-runner/uv.lock", tmp_path / "harbor-runner/uv.lock")
     text = NODE_PRODUCTION_TOOLCHAIN.read_text(encoding="utf-8").replace(
-        "f3d988ea38f439082388183bb825eb5001c903b0cbeee3bc48f005a8a7d7e756",
+        "dda6f8560abe59a082fa822094a86ff14228db59f6e2a691cd8771f29466fa5e",
         "0" * 64,
     )
     toolchain.write_text(text, encoding="utf-8")
@@ -727,6 +727,8 @@ def test_node_verifier_cli_writes_v2_outputs(
             "grade-node",
             "--expected",
             "1",
+            "--runtime",
+            "node",
             "--report",
             str(report),
             "--runner-exit-code",

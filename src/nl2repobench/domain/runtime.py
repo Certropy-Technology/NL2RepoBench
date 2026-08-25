@@ -25,6 +25,7 @@ class RuntimeLanguage(StrEnum):
 
     PYTHON = "python"
     NODE = "node"
+    GO = "go"
 
 
 class PackageManager(StrEnum):
@@ -34,6 +35,7 @@ class PackageManager(StrEnum):
     PIP = "pip"
     NPM = "npm"
     PNPM = "pnpm"
+    GO_MODULES = "go-modules"
     NONE = "none"
 
 
@@ -67,6 +69,7 @@ class RuntimeDiscriminator(BaseModel):
             RuntimeLanguage.NODE: frozenset(
                 {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE}
             ),
+            RuntimeLanguage.GO: frozenset({PackageManager.GO_MODULES}),
         }
         if self.package_manager not in allowed[self.language]:
             accepted = ", ".join(
@@ -102,9 +105,11 @@ class RuntimeDiscriminator(BaseModel):
                     "environment.runtime.language must explicitly match metadata.language"
                 )
             package_manager = runtime.get("package_manager")
+        elif language == RuntimeLanguage.GO.value:
+            package_manager = PackageManager.GO_MODULES.value
         else:
             raise RuntimeContractError(
-                "metadata.language must explicitly be one of: python, node"
+                "metadata.language must explicitly be one of: python, node, go"
             )
 
         if not isinstance(package_manager, str) or not package_manager:

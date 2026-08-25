@@ -18,6 +18,12 @@ os_name = "debian-bookworm"
 base_image = "node:22.23.1-bookworm-slim"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Synthetic Node foundation fixture has no runtime network dependency."
+
 [environment.runtime]
 language = "node"
 runtime = "node"
@@ -46,7 +52,7 @@ expected_total = 8
 expected_total_source = "frozen-collection"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
