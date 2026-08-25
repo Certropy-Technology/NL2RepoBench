@@ -81,7 +81,7 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "cookie-repair"
-reason = "The retained Oracle and empty/stub/forgery grading receipts are hashable, but no task-local completed offline verifier or structured network-probe receipt exists in this checkout. The runtime was removed until a complete hash-bound control set is available."
+reason = "Fresh production compilation and official Harbor Oracle, empty, and forgery runs passed with expected_total=32 and verifier-owned no-egress network receipts, but the one allowed official stub run failed candidate installation and collected 0/32. The canonical gate does not accept setup failure as a passing stub control, so the runtime remains absent pending an isolated stub rerun after npm failure investigation."
 
 [oracle_bundle]
 digest = "sha256:6880843c56fbb2812265e32874ede71387f6a1559c240c785c25344fac2cc0fc"

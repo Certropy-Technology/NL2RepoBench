@@ -1,10 +1,11 @@
 # `cookie` Node 24 Authoring Evidence
 
-Status: `blocked`. Historical Oracle, empty, stub, and forgery grading receipts
-remain available, but the required completed offline-verifier and structured
-network-probe receipts are not present in this checkout. This file records
-task-local provenance and gate evidence; it does not claim upstream parity or
-dataset publication.
+Status: `blocked`. The committed Node verifier now emits structured network
+receipts, and the fresh Oracle, empty, and forgery gates passed. The one
+allowed official stub run failed candidate installation and collected 0/32,
+so the canonical control gate remains incomplete. This file records task-local
+provenance and gate evidence; it does not claim upstream parity or dataset
+publication.
 
 ## Frozen Source And License
 
@@ -128,3 +129,29 @@ The accepted isolated stub run is `cookie-stub-isolated`; the forgery run wrote
 candidate-controlled reward/grading files in the workspace, and verifier-owned
 grading remained authoritative. No cross-language or upstream parity claim is
 made.
+
+## Official Node Control Dispatch Attempt
+
+After the shared Node network-proof and `prepare-control` dispatch were
+committed, cookie was compiled in production mode without
+`--allow-incomplete` under the fresh root
+`.nl2repo/runs/cookie-production-official-controls-20260825T081436Z-worker-final`.
+The compiled bundle included source-owned `stub.sh` and `forgery.sh` controls.
+
+The fresh Oracle passed 32/32 with reward 1.0. Empty failed closed with reward
+0.0. The official forgery control collected 32, passed 1, and scored 0.03125;
+its candidate-owned grading claimed reward 1 while verifier-owned grading
+remained 0.03125. Every run wrote `verifier/network.json` with both public
+probes false.
+
+The official stub control was executed once, concurrently with forgery as two
+independent Harbor jobs. It returned `valid=true`, `expected_total=32`, and
+reward 0.0, but candidate installation failed (`/usr/local/bin/npm failed`)
+and collection remained 0. Canonical production validation permits that
+closed installation result only for empty, not stub. Cookie therefore remains
+blocked and `catalog/tasks/cookie` remains absent.
+
+Exact paths and hashes are recorded in
+`evidence/official-node-controls-blocked.txt`. The next bounded step is to
+investigate the npm failure and run the official stub alone in a new isolated
+compile/control/output root. This attempt is not rerun in place.
