@@ -1,0 +1,70 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/ftfy-controls/ftfy-stub -a oracle --jobs-dir .nl2repo/runs/controls/ftfy-stub",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/ftfy/evidence/stub-control.txt",
+          "sha256": "sha256:6878230c788dc7a57754a37c9a2bfb18b7be285bc4ddd9d376043f407ea449d5"
+        },
+        "tool_version": "Harbor 0.21.0; Python 3.12; linux/amd64"
+      }
+    ],
+    "diagnostic_receipts": {
+      "empty": {
+        "grading": {
+          "path": ".nl2repo/runs/controls/ftfy-empty/2026-08-25__17-47-59/ftfy__4uA88Ad/verifier/grading.json",
+          "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+        },
+        "network": {
+          "path": ".nl2repo/runs/controls/ftfy-empty/2026-08-25__17-47-59/ftfy__4uA88Ad/verifier/network.json",
+          "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+        }
+      },
+      "forgery": {
+        "grading": {
+          "path": ".nl2repo/runs/controls/ftfy-forgery/2026-08-25__17-49-13/ftfy-forgery__YLBFKwm/verifier/grading.json",
+          "sha256": "sha256:d3e57e69b69778aaf0179fb6aeccb760902dd82ec8dad90189d616719cf8dd0e"
+        },
+        "network": {
+          "path": ".nl2repo/runs/controls/ftfy-forgery/2026-08-25__17-49-13/ftfy-forgery__YLBFKwm/verifier/network.json",
+          "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+        }
+      },
+      "oracle": {
+        "grading": {
+          "path": ".nl2repo/runs/oracle/ftfy-final/2026-08-25__17-47-21/ftfy__tTEUVKw/verifier/grading.json",
+          "sha256": "sha256:0e48849dbbdc382f8572dc6a678baec5d5333326556963e249e60639a128fcf3"
+        },
+        "network": {
+          "path": ".nl2repo/runs/oracle/ftfy-final/2026-08-25__17-47-21/ftfy__tTEUVKw/verifier/network.json",
+          "sha256": "sha256:190d9fd8e388e6136c03e7117984d989aee4b96b40109158b3e1a031a773fe26"
+        }
+      },
+      "stub": {
+        "grading": {
+          "path": ".nl2repo/runs/controls/ftfy-stub/2026-08-25__17-48-36/ftfy-stub__KAXh7MG/verifier/grading.json",
+          "sha256": "sha256:839abc1ff6462bc33348433f83a5b9b2e54beaea9a8912c40b94df38f4f03879"
+        },
+        "network": {
+          "path": ".nl2repo/runs/controls/ftfy-stub/2026-08-25__17-48-36/ftfy-stub__KAXh7MG/verifier/network.json",
+          "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+        }
+      }
+    },
+    "failure_class": "verifier",
+    "next_step": "Make the trusted custom verifier convert missing, empty, or malformed child reports into deterministic failed leaves rather than raising JSONDecodeError; rebuild the private verifier artifact, compile without --allow-incomplete, and rerun Oracle, empty, stub, forgery, and offline controls into fresh task-local run roots.",
+    "source_freeze": {
+      "audit_sha256": "sha256:839656f6dd2972a4a730ee5f8be8766cfea1e6eaff103ba3a8a7bcc355efbd9d",
+      "license_spdx": "Apache-2.0",
+      "revision": "74dd0452b48286a3770013b3a02755313bd5575e",
+      "source_digest": "sha256:c4bb6cb686c1f1e56cbe50dafcaf575512763acd4d7ebdda4dd3d4da41aad1ec",
+      "status": "known",
+      "upstream_url": "https://github.com/rspeer/python-ftfy"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "ftfy",
+  "terminal_kind": "blocked"
+}

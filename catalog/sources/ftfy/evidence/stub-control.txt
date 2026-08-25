@@ -1,0 +1,40 @@
+ftfy final production receipt audit
+===================================
+
+Harbor version: 0.21.0
+Frozen expected_total: 15
+
+Oracle command:
+uv run --frozen --project harbor-runner harbor run -p catalog/tasks/ftfy -a oracle --jobs-dir .nl2repo/runs/oracle/ftfy-final
+Receipt: .nl2repo/runs/oracle/ftfy-final/2026-08-25__17-47-21/ftfy__tTEUVKw/verifier/grading.json
+Receipt SHA-256: 0e48849dbbdc382f8572dc6a678baec5d5333326556963e249e60639a128fcf3
+Network SHA-256: 190d9fd8e388e6136c03e7117984d989aee4b96b40109158b3e1a031a773fe26
+Result: valid=true, passed=15, collected=15, expected_total=15, reward=1.0
+
+Empty command:
+uv run --frozen --project harbor-runner harbor run -p catalog/tasks/ftfy -a nop --jobs-dir .nl2repo/runs/controls/ftfy-empty
+Receipt: .nl2repo/runs/controls/ftfy-empty/2026-08-25__17-47-59/ftfy__4uA88Ad/verifier/grading.json
+Receipt SHA-256: 887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef
+Network SHA-256: 96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4
+Result: valid=true, failure_class=model, failure_reason=candidate-installation-failed, expected_total=15, reward=0.0
+
+Stub command:
+uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/ftfy-controls/ftfy-stub -a oracle --jobs-dir .nl2repo/runs/controls/ftfy-stub
+Receipt: .nl2repo/runs/controls/ftfy-stub/2026-08-25__17-48-36/ftfy-stub__KAXh7MG/verifier/grading.json
+Receipt SHA-256: 839abc1ff6462bc33348433f83a5b9b2e54beaea9a8912c40b94df38f4f03879
+Network SHA-256: 96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4
+Candidate installation: success, returncode=0
+Result: valid=false, failure_class=verifier, failure_reason=verifier-internal-error, collected=0, expected_total=15, reward=0.0
+Trusted stderr: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+Forgery command:
+uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/ftfy-controls/ftfy-forgery -a oracle --jobs-dir .nl2repo/runs/controls/ftfy-forgery
+Receipt: .nl2repo/runs/controls/ftfy-forgery/2026-08-25__17-49-13/ftfy-forgery__YLBFKwm/verifier/grading.json
+Receipt SHA-256: d3e57e69b69778aaf0179fb6aeccb760902dd82ec8dad90189d616719cf8dd0e
+Network SHA-256: 96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4
+Result: valid=true, passed=0, failed=15, collected=15, expected_total=15, reward=0.0
+
+All network receipts: public_network_available=false; probes pypi.org:443=false and 1.1.1.1:443=false.
+
+Blocker classification: verifier
+Reopen condition: make the trusted custom runner turn a missing, empty, or malformed child report into deterministic failed leaves instead of an internal exception; rebuild the private verifier artifact, recompile without --allow-incomplete, and rerun Oracle plus all controls into fresh run roots.
