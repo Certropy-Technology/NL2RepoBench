@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:2781fd9d2d69d9bdd843cba179e96311b3c2b7c8518cbc8d66e11dfad61a61ff",
+  "canonical_manifest_digest": "sha256:ed7f1d09b6e949956b3cdd48644e8a93412b60a3a3ddafd2d4a89014b495c96a",
   "files": [
     {
       "path": "README.md",
@@ -58,7 +58,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "89aa822fb714e9d918a47425d052b2e4b91a8d0d52ff40ed846be19b698a6431",
+      "sha256": "ac0d164f337c59a1162f19b5334587958e48efad1653386d33cbeadb2df986c8",
       "size_bytes": 1265
     },
     {
@@ -122,6 +122,11 @@
       "size_bytes": 2373
     },
     {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
       "path": "tests/runtime/node/run_tests.mjs",
       "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
       "size_bytes": 3607
@@ -138,13 +143,13 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "07ecb1fbc642340d2d28bcb9e79ef8035ea674404c593e87ba9e2ca11f3b4171",
-      "size_bytes": 2255
+      "sha256": "cd15e6ceed80ee7cd53aa81ade8f517dc8f111765f4722e94c8040b1f23b316e",
+      "size_bytes": 2959
     }
   ],
   "mode": "production",
   "schema_version": "2.0",
   "task_id": "uuid",
   "task_version": "2.0.1",
-  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+  "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
 }

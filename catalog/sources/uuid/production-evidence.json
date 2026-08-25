@@ -1,0 +1,143 @@
+{
+  "bundle": {
+    "path": "catalog/tasks/uuid/bundle.manifest.json",
+    "sha256": "sha256:b755e967bea7de269bb0d70108118fd6c943d2a61bcc2554fd14e30de6071118"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/uuid --output catalog/tasks --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "incomplete_mode": false
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/uuid-network-proof-20260825T073913Z/compiled/uuid -a nop --jobs-dir .nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/empty --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "expected_total": 11,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/empty/2026-08-25__15-42-30/uuid__UAkHgJN/verifier/grading.json",
+        "sha256": "sha256:9371a2801fc2f15da9f0639d86d49d48108836af820f8169a28f6822fa2f194a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/empty/2026-08-25__15-42-30/uuid__UAkHgJN/verifier/network.json",
+        "sha256": "sha256:1284ecc1583a94f20cf796cd494bc1c668ae638dd1634a041fa47b984d462a7b"
+      },
+      "passed": 0,
+      "result": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/empty/2026-08-25__15-42-30/uuid__UAkHgJN/result.json",
+        "sha256": "sha256:88c4437e4232e0b69cd635fdcb7a4b526d0bbd13d9070a0913b78a4756edc60b"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/empty/2026-08-25__15-42-30/uuid__UAkHgJN/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      },
+      "reward_value": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 11,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/uuid-network-proof-20260825T073913Z/controls/uuid-forgery -a oracle --jobs-dir .nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/forgery --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "expected_total": 11,
+      "grading": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/forgery/2026-08-25__15-44-15/uuid-forgery__BVB2dxZ/verifier/grading.json",
+        "sha256": "sha256:81dd5c10c28a65bf75254387afa380de4a49c28efd21b8db162d08b36ca2dd91"
+      },
+      "network": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/forgery/2026-08-25__15-44-15/uuid-forgery__BVB2dxZ/verifier/network.json",
+        "sha256": "sha256:1284ecc1583a94f20cf796cd494bc1c668ae638dd1634a041fa47b984d462a7b"
+      },
+      "passed": 0,
+      "result": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/forgery/2026-08-25__15-44-15/uuid-forgery__BVB2dxZ/result.json",
+        "sha256": "sha256:d20853d6d157dea69942f1a3c295cd197e3c2ed0e1c3392b3cceb7a0aa9f4f85"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/forgery/2026-08-25__15-44-15/uuid-forgery__BVB2dxZ/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      },
+      "reward_value": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Verifier-integrated network-check.mjs in every fresh Oracle and control run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle/2026-08-25__15-39-26/uuid__XJZypeW/verifier/network.json",
+        "sha256": "sha256:c49eece6996c6f1556d2fe77c0ad1685eedf022d542787c50d75623278d480a6"
+      },
+      "public_network_available": false
+    },
+    "stub": {
+      "collected": 11,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/uuid-network-proof-20260825T073913Z/controls/uuid-stub -a oracle --jobs-dir .nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/stub --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "expected_total": 11,
+      "grading": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/stub/2026-08-25__15-43-22/uuid-stub__go4ZhqM/verifier/grading.json",
+        "sha256": "sha256:81dd5c10c28a65bf75254387afa380de4a49c28efd21b8db162d08b36ca2dd91"
+      },
+      "network": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/stub/2026-08-25__15-43-22/uuid-stub__go4ZhqM/verifier/network.json",
+        "sha256": "sha256:1284ecc1583a94f20cf796cd494bc1c668ae638dd1634a041fa47b984d462a7b"
+      },
+      "passed": 0,
+      "result": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/stub/2026-08-25__15-43-22/uuid-stub__go4ZhqM/result.json",
+        "sha256": "sha256:030f886f764cb18555dc8df98195002b95e1ba6e8d654edc7862e77aa1cab6ed"
+      },
+      "reward": {
+        "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/stub/2026-08-25__15-43-22/uuid-stub__go4ZhqM/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      },
+      "reward_value": 0.0,
+      "valid": true
+    }
+  },
+  "oracle": {
+    "collected": 11,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/uuid-network-proof-20260825T073913Z/compiled/uuid -a oracle --jobs-dir .nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "expected_total": 11,
+    "grading": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle/2026-08-25__15-39-26/uuid__XJZypeW/verifier/grading.json",
+      "sha256": "sha256:ade0d6bef65a02c599c80ed84235d85f8434157f7dbe6dfe591fcc438146c861"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle/2026-08-25__15-39-26/uuid__XJZypeW/verifier/network.json",
+      "sha256": "sha256:c49eece6996c6f1556d2fe77c0ad1685eedf022d542787c50d75623278d480a6"
+    },
+    "passed": 11,
+    "result": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle/2026-08-25__15-39-26/uuid__XJZypeW/result.json",
+      "sha256": "sha256:b6be6994658678af714d7e56687682259e702800687511a099f6a305433bee34"
+    },
+    "reward": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle/2026-08-25__15-39-26/uuid__XJZypeW/verifier/reward.json",
+      "sha256": "sha256:9ecba2eacf6981f764ac0537cbc9a342af74acc52e3f4949382478c7fbc49071"
+    },
+    "reward_value": 1.0,
+    "valid": true
+  },
+  "preservation": {
+    "command_plan_sha256": "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+    "expected_total": 11,
+    "instruction_sha256": "sha256:be6cb71536ea18d9e8f11cb3ef029b9be69adb48d173279f39119cc5d5bbe9c7",
+    "private_adapter_sha256": "sha256:53d5adc03ea2e976e90b54d3cb2247f1255385ad4b4ade7ee1a235532ad59664",
+    "private_assertions_sha256": "sha256:127b0088bb0e87d77353c77c7a1bf27341afaa79b04259b67096f0864a471f85",
+    "source_digest": "sha256:fbf7e9c3a1bd5132ab04286855533c2b5f1607c1f97e1878cd568c41d58bdda8"
+  },
+  "schema_version": "1.0",
+  "task_id": "uuid",
+  "terminal_kind": "valid",
+  "toolchain": {
+    "content_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92",
+    "path": "toolchain.node.lock.toml",
+    "sha256": "sha256:24436f869cecbc32881a7473578ee067d6f7144e39a111167a2ce0f6fb58ff23"
+  }
+}

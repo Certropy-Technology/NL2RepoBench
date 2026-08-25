@@ -1,0 +1,44 @@
+{
+  "generated_by": "per-run-verifier-network-check",
+  "public_network_available": false,
+  "runs": {
+    "empty": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/empty/2026-08-25__15-42-30/uuid__UAkHgJN/verifier/network.json",
+      "probes": {
+        "1.1.1.1:443": false,
+        "registry.npmjs.org:443": false
+      },
+      "public_network_available": false,
+      "sha256": "sha256:1284ecc1583a94f20cf796cd494bc1c668ae638dd1634a041fa47b984d462a7b"
+    },
+    "forgery": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/forgery/2026-08-25__15-44-15/uuid-forgery__BVB2dxZ/verifier/network.json",
+      "probes": {
+        "1.1.1.1:443": false,
+        "registry.npmjs.org:443": false
+      },
+      "public_network_available": false,
+      "sha256": "sha256:1284ecc1583a94f20cf796cd494bc1c668ae638dd1634a041fa47b984d462a7b"
+    },
+    "oracle": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/oracle/2026-08-25__15-39-26/uuid__XJZypeW/verifier/network.json",
+      "probes": {
+        "1.1.1.1:443": false,
+        "registry.npmjs.org:443": false
+      },
+      "public_network_available": false,
+      "sha256": "sha256:c49eece6996c6f1556d2fe77c0ad1685eedf022d542787c50d75623278d480a6"
+    },
+    "stub": {
+      "path": ".nl2repo/runs/uuid-network-proof-20260825T073913Z/jobs/stub/2026-08-25__15-43-22/uuid-stub__go4ZhqM/verifier/network.json",
+      "probes": {
+        "1.1.1.1:443": false,
+        "registry.npmjs.org:443": false
+      },
+      "public_network_available": false,
+      "sha256": "sha256:1284ecc1583a94f20cf796cd494bc1c668ae638dd1634a041fa47b984d462a7b"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "uuid"
+}

@@ -104,6 +104,6 @@ uri = "artifact://private/sha256:32061c8cecbcc32135456832c087ddb7844ca073eea8d2f
 visibility = "private"
 
 [lifecycle]
-status = "oracle-passed"
+status = "controls-passed"
 owner = "uuid-repair"
-reason = "Official Harbor Oracle passed valid=true with the actual frozen 11/11 leaf collection and reward 1.0."
+reason = "After the shared Node verifier network-proof change, production compilation with the Node lock succeeded without --allow-incomplete; fresh official Harbor 0.21.0 runs passed Oracle 11/11 at reward 1.0 and empty, stub, and forgery controls at reward 0.0, with every verifier run emitting network.json that proves no public egress. Review, pilot, and publication remain out of scope."

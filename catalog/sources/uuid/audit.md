@@ -1,12 +1,12 @@
 # `uuid` Authoring Audit
 
-Status: **specified / development-only**.
+Status: **controls-passed / pre-review**.
 
-This task-local directory contains the public task source and evidence needed
-for authoring review. It is not a Harbor bundle, a private test package, an
-Oracle, a verifier, a grader, or a publication approval. No upstream source,
-upstream test bytes, npm cache/tarball bytes, credential, or shared catalog
-asset is stored here.
+This task-local directory contains the public task source and hash-bound
+production evidence needed for authoring review. The generated Harbor bundle
+is under `catalog/tasks/uuid/`; private artifact bytes remain in the
+content-addressed artifact store and are not duplicated here. This record is
+not a review, pilot, or publication approval.
 
 ## Candidate And Source Lock
 
@@ -159,8 +159,10 @@ The separate tracked `test/browser/browser.spec.js` suite uses a browser
 webdriver configuration and was not run. Browser behavior is outside the
 Node-only JSON contract.
 
-No Docker, Harbor, Oracle, hidden-test, negative-control, or candidate-agent
-run was performed.
+Those source-development probes predate the production task. Fresh production
+Harbor Oracle and negative-control results are recorded in
+`production-evidence.json`; they preserve the frozen 11-leaf private contract
+rather than replacing it with the 82-leaf upstream development suite.
 
 ## Lockfile And Offline Closure
 
@@ -174,9 +176,9 @@ The exact source commits `package-lock.json` with lockfile version `3`:
   integrity fields;
 - 47 entries are optional and 3 dependency entries declare install scripts.
 
-The lock is a full development dependency graph. The candidate runtime itself
-is intentionally dependency-free, and the task does not publish the lock's
-cache bytes. A temporary npm 10.9.8 cache was used only as an evidence probe:
+The lock above is the upstream development dependency graph and is not the
+production candidate-runtime lock. A temporary npm 10.9.8 cache was used only
+as an early evidence probe:
 
 ```text
 npm ci --ignore-scripts --no-audit --no-fund       passed with the temporary cache
@@ -185,15 +187,11 @@ npm ci --offline --ignore-scripts --no-audit --no-fund  failed with an empty cac
 ```
 
 The empty-cache failure was closed with `ENOTCACHED` for
-`yocto-queue@0.1.0`. This proves the lockfile is consumable and that network
-access is not silently substituted, but it does not prove a distributable
-offline closure. Accordingly `[dependencies].status = "unknown"` is
-intentional. Before packaging, an authoring stage must produce and review a
-content-addressed npm cache/tarball artifact, including integrity, license,
-registry provenance, optional-platform behavior, and the ignore-scripts
-policy. The package metadata's `npm@11.12.1` declaration also differs from
-the locked probe npm `10.9.8`; the production toolchain must resolve that
-version choice explicitly rather than infer parity.
+`yocto-queue@0.1.0`. Production does not install that development graph. The
+candidate runtime is dependency-free and now uses an immutable npm v3 lock
+plus an empty cache closure, installed offline with npm `11.17.0` and
+`--ignore-scripts`. The content-addressed dependency artifact and exact Node
+`24.19.0`/npm `11.17.0` toolchain are declared in `task.toml`.
 
 ## Crypto, Time, And Randomness Policy
 
@@ -251,22 +249,22 @@ of complete in-process upstream parity. In particular, upstream tests that
 mock `crypto`, inspect mutable buffers, or call private state helpers require
 a task-specific private adapter and are not copied into this public directory.
 
-## Publication Gaps
+## Production Terminalization
 
-The source is intentionally held at `specified` and must not be compiled into
-a production Harbor task until all of the following are supplied outside this
-directory:
+The production Node compiler was run with `toolchain.node.lock.toml`, private
+artifact authorization, and without `--allow-incomplete`. The source digest,
+public instruction, private assertions, and frozen denominator of 11 were not
+changed. Official Harbor `0.21.0` then produced fresh task-local receipts for:
 
-1. A reviewed, immutable npm v3 candidate/runtime lock and offline cache
-   closure. The current source lock is evidence, not that closure.
-2. A private `node:test` JSON adapter with bidirectional traceability to the
-   public contract and a frozen leaf denominator. The official 82-leaf count
-   is a development observation, not automatic private verifier evidence.
-3. A separate verifier and report writer that cannot be controlled by the
-   candidate, plus empty, stub, forgery, install-script, loader, hang, and
-   offline controls.
-4. Three independent valid Oracle runs with stable collection and reward at
-   least `0.80`, followed by blind and traceability review.
+- Oracle: valid, 11 collected, 11 passed, reward `1.0`;
+- empty workspace: valid model-zero with installation failure, reward `0.0`;
+- importable stub: valid, 11 collected, 0 passed, reward `0.0`;
+- forged workspace test/reward files: valid, 11 collected, 0 passed, verifier
+  reward `0.0`;
+- all four verifier runs: `network.json` present, both registry-host and
+  numeric-address probes unavailable, and `public_network_available=false`.
 
-No `harbor/` tree, Dockerfile, solution, hidden test, private command, grader,
-reward file, npm cache, or shared dataset entry is included by design.
+The exact paths and SHA-256 digests are in `production-evidence.json` and the
+task-local `evidence/` summaries. The lifecycle stops at `controls-passed`.
+Blind review, traceability review, pilot execution, dataset integration, and
+publication were not performed and remain separate gates.
