@@ -1,0 +1,5 @@
+command: uv run nl2repo harbor compile catalog/sources/semver --output /tmp/nl2repobench-semver-production-compile --toolchain toolchain.node.lock.toml --artifact-root /tmp/nl2repobench-semver-production-artifacts --allow-private
+tool_version: nl2repobench 0.1.0
+working_directory: /home/ayi/dev/NL2RepoBench
+Harbor compile failed: runtime must be an explicit object
+exit_code: 1

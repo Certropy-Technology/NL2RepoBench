@@ -1,0 +1,50 @@
+schema_version = "2.0"
+task_id = "semver"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "unknown"
+category = "unknown"
+tags = []
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/npm/node-semver"
+revision = "6e05b7637396ac66522cff8731f07cfe0ef49a29"
+license_spdx = "ISC"
+source_digest = "sha256:b4c4f3682bbb55f07c8125c3eecc648e75b9c378171b510dd150fa30bead6e07"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+allowed_hosts = []
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "No reviewed npm v3 development/test lock and content-addressed offline cache exist."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "verifier-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[lifecycle]
+status = "blocked"
+reason = "The npm 10.9.8 offline development/test closure attempt failed because its disposable lock did not match the resolved manifest; no reviewed offline dependency bundle exists."

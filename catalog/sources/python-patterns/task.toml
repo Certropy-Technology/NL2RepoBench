@@ -1,0 +1,49 @@
+schema_version = "1.0"
+task_id = "python-patterns"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "unknown"
+category = "design-pattern-library"
+tags = ["python", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/faif/python-patterns"
+revision = "3c0725a9e667c76641d6c5899346fdda940b5bc1"
+source_digest = "sha256:ef6b1889cfcf826ebcbee0b4b6a809b954dd0ecda96ef5ef310d73aa96bc2339"
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "No hash-locked offline build and test dependency closure is available."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/python-patterns"
+reason = "The immutable upstream revision has no verified redistributable license evidence."

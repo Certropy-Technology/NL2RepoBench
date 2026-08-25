@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-patterns",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Obtain an owner or legal determination that identifies a valid SPDX license expression for revision 3c0725a9e667c76641d6c5899346fdda940b5bc1 and cites exact evidence.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/faif/python-patterns",
+      "revision": "3c0725a9e667c76641d6c5899346fdda940b5bc1",
+      "source_digest": "sha256:ef6b1889cfcf826ebcbee0b4b6a809b954dd0ecda96ef5ef310d73aa96bc2339",
+      "license_status": "unresolved",
+      "image_reference": "ghcr.io/multimodal-art-projection/nl2repobench/python-patterns@sha256:edff5bb715056497181080dab11470d077748e40667093dfb432471df180e9ad",
+      "image_manifest_digest": "sha256:edff5bb715056497181080dab11470d077748e40667093dfb432471df180e9ad",
+      "image_config_digest": "sha256:b39c10663ad0a68ab7b70ddacf0a65ed11a61c0e4b9362ab329977c9d29ce8fe",
+      "platform": "linux/amd64",
+      "audit": {
+        "path": "catalog/sources/python-patterns/blocked.md",
+        "sha256": "sha256:4621e211ec97bf66b2720098bebfa411d8ac9fb551aca8d0545e220e7e51a221"
+      },
+      "descriptor": {
+        "path": "catalog/sources/python-patterns/task.toml",
+        "sha256": "sha256:4d8fa1ce7708902c24a5623150c63a9db307f9ca442a5b8038f1acf5e273c796"
+      }
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/python-patterns > catalog/sources/python-patterns/evidence/post-descriptor-validation.txt",
+        "tool_version": "nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/python-patterns/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:c1e74eb89bb3af1313b7f1512251207bafd98ad281023c8c4a3df88caaeb961b"
+        }
+      }
+    ]
+  }
+}

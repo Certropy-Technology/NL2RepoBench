@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "semver",
+  "terminal_kind": "blocked",
+  "descriptor": {
+    "path": "catalog/sources/semver/task.toml",
+    "sha256": "sha256:7518f1785faf0c1c6600b5cf258c5c00798afe20c47e6325252958a01d1cfdf3"
+  },
+  "instruction_notice": {
+    "path": "catalog/sources/semver/instruction.md",
+    "sha256": "sha256:98b25fb95f2b1ffb2f9a505477c0b13875d12e85666fb6e05eab4246e0e848e5"
+  },
+  "source_audit": {
+    "path": "catalog/sources/semver/audit.md",
+    "sha256": "sha256:610807b6f56153b225cfd531dd56a34ba4951779686a7f1120f4c4a41d03eb54"
+  },
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Select and digest-pin the final Node 22 image, record its exact OS, libc, Node, and npm identity in the descriptor, then rerun the recorded production compile; the reviewed offline npm development/test closure remains the next gate.",
+    "network_policy": {
+      "mode": "no-network",
+      "allowed_hosts": [],
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden"
+    },
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/npm/node-semver",
+      "revision": "6e05b7637396ac66522cff8731f07cfe0ef49a29",
+      "tree_sha1": "9b60d2f8e9fcfb506797bcd77d703541442c11b8",
+      "parent_revision": "9c8692ae05416e9dbe88d95ffe2b80e6964550fe",
+      "package_version": "7.8.5",
+      "license_spdx": "ISC",
+      "archive": {
+        "size_bytes": 440320,
+        "sha256": "sha256:b4c4f3682bbb55f07c8125c3eecc648e75b9c378171b510dd150fa30bead6e07"
+      },
+      "audit": {
+        "path": "catalog/sources/semver/audit.md",
+        "sha256": "sha256:610807b6f56153b225cfd531dd56a34ba4951779686a7f1120f4c4a41d03eb54"
+      }
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/semver --output /tmp/nl2repobench-semver-production-compile --toolchain toolchain.node.lock.toml --artifact-root /tmp/nl2repobench-semver-production-artifacts --allow-private",
+        "tool_version": "nl2repobench 0.1.0",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/semver/evidence/production-compile-failed.txt",
+          "sha256": "sha256:419130c4d4f76292ff199134509fb4fb7bbc34beeb76bea42ff32b38e7b3beed"
+        }
+      }
+    ]
+  }
+}
