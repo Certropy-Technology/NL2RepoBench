@@ -1,0 +1,39 @@
+# pytorch-grad-cam blocked production-evidence receipt
+# This receipt records local descriptor validation only; no upstream fetch, Docker, Harbor runtime, Oracle, or hidden-test run was performed.
+
+$ uv --version && uv run python --version && uv run python -c "import importlib.metadata as m; print(\"nl2repobench\", m.version(\"nl2repobench\"))" && git --version && sha256sum --version | head -1
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+Python 3.14.7
+nl2repobench 0.1.0
+git version 2.55.0
+sha256sum (GNU coreutils) 9.10
+
+$ uv run nl2repo task validate-source catalog/sources/pytorch-grad-cam
+{
+  "instruction": "catalog/sources/pytorch-grad-cam/blocked.md",
+  "source_digest": "sha256:d368d7e03ec933e41d1f6c89e9ea9172a6c5a0511f69b6134c8432aad809b22e",
+  "status": "blocked",
+  "task_id": "pytorch-grad-cam",
+  "version": "0.1.0"
+}
+
+$ uv run python -c "from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; findings, has_bundle, has_policy = lint_task(Path('catalog/sources/pytorch-grad-cam')); print('network_policy=', has_policy); print('runtime_bundle=', has_bundle); print('findings=', [(item.rule, item.severity, item.detail) for item in findings]); assert has_policy and not has_bundle; assert not any(item.severity == 'error' for item in findings)"
+network_policy= True
+runtime_bundle= False
+findings= [('offline-dependencies-missing', 'warning', 'dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached')]
+
+$ uv run nl2repo harbor compile catalog/sources/pytorch-grad-cam --output /tmp/pytorch-grad-cam-blocked-compile --artifact-root /tmp/pytorch-grad-cam-blocked-artifacts --toolchain toolchain.lock.toml
+Harbor compile failed: task is not publishable: metadata.difficulty, environment_lock.status=known, dependency_bundle.status=known, dependency_bundle.lock_artifact, tests.expected_total_source=frozen-collection, tests.expected_total>0, tests.test_bundle, tests.commands_artifact, oracle_bundle
+[expected blocked compile exit_code=1]
+
+$ uv run python -c "import json, tomllib; from pathlib import Path; d=tomllib.loads(Path('catalog/sources/pytorch-grad-cam/task.toml').read_text()); p=d['environment']['network_policy']; assert d['lifecycle']['status']=='blocked'; assert d['source']['revision']=='781dbc0d16ffa95b6d18b96b7b829840a82d93d1'; assert d['source']['source_digest']=='sha256:ea3fc94c1e32e972dd4b3c45609fa511798e93e552acff512714225901c89024'; assert d['environment']['network_mode']=='no-network' and p['mode']=='no-network' and p['reference_source_fetch']=='forbidden'; assert not Path('catalog/tasks/pytorch-grad-cam').exists(); print(json.dumps({'task_id':d['task_id'],'status':d['lifecycle']['status'],'revision':d['source']['revision'],'source_digest':d['source']['source_digest'],'network_mode':p['mode'],'reference_source_fetch':p['reference_source_fetch'],'runtime_exists':False}, sort_keys=True))"
+{"network_mode": "no-network", "reference_source_fetch": "forbidden", "revision": "781dbc0d16ffa95b6d18b96b7b829840a82d93d1", "runtime_exists": false, "source_digest": "sha256:ea3fc94c1e32e972dd4b3c45609fa511798e93e552acff512714225901c89024", "status": "blocked", "task_id": "pytorch-grad-cam"}
+
+$ git check-ignore -v catalog/sources/pytorch-grad-cam/evidence/remediation.txt
+remediation log is not ignored
+
+$ sha256sum catalog/sources/pytorch-grad-cam/blocked.md catalog/sources/pytorch-grad-cam/task.toml
+889ab16fa21851ade75325636996a3486187a96c107ba40558d5f44cd3b9de4b  catalog/sources/pytorch-grad-cam/blocked.md
+7e167108945fe876aff14033f41146377b5bf30b3ac7c6cec44ed66879d7b47b  catalog/sources/pytorch-grad-cam/task.toml
+
+No upstream fetch, dependency installation, Docker/Harbor runtime, pytest collection, Oracle, or negative-control run was performed.

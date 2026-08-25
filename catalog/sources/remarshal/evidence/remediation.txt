@@ -1,0 +1,10 @@
+remarshal blocked remediation record
+recorded_at_utc: 2026-08-25T00:33:15Z
+command: uv run --offline nl2repo harbor compile catalog/sources/remarshal --output /tmp/nl2repo-remarshal-remediation-task --artifact-root /tmp/nl2repo-remarshal-remediation-artifacts --toolchain toolchain.lock.toml
+tool_version: uv 0.12.3; Python 3.14.7; nl2repobench 0.1.0
+network_policy: no-network; uv run used --offline
+
+output:
+Harbor compile failed: task source is missing [harbor] execution settings
+
+exit_code=1

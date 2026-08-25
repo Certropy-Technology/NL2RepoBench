@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "remarshal",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a bounded binary-safe CLI adapter, freeze the platform dependency closure and collection, add Harbor execution settings/private verifier/Oracle, then run all controls.",
+    "source_freeze": {"status":"known","upstream_url":"https://github.com/remarshal-project/remarshal","revision":"2300f5dfc39411020c86ade0d202aaea2897ccf0","source_digest":"sha256:fe8563f10fdadd96820ecce004cb00a4d9777004d12f3019733872ddad7e041f","license_spdx":"MIT","license_path":"LICENSE","license_digest":"sha256:3f1052ac54eeaf2fa1340b2887ce9a854ddb3446eceecd7bc4b10fbd866abcfe"},
+    "commands": [{"command":"uv run --offline nl2repo harbor compile catalog/sources/remarshal --output /tmp/nl2repo-remarshal-remediation-task --artifact-root /tmp/nl2repo-remarshal-remediation-artifacts --toolchain toolchain.lock.toml","tool_version":"uv 0.12.3; Python 3.14.7; nl2repobench 0.1.0","exit_code":1,"log":{"path":"catalog/sources/remarshal/evidence/remediation.txt","sha256":"sha256:fb552c85c3132581fa33cf6f5e5a94ffa4b5f2e16c06a5d51fb7e53d984c93ef"}},{"command":"static source, collection, and binary CLI boundary audit","tool_version":"audit recorded in blocked.md","exit_code":1,"log":{"path":"catalog/sources/remarshal/blocked.md","sha256":"sha256:313dad2e356af9486764b3ecd576c57cdd68c458a0251717649fad99ef9e865d"}}]
+  }
+}

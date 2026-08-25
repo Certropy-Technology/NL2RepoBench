@@ -1,0 +1,15 @@
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+Python 3.14.7
+nl2repobench 0.1.0
+{
+  "instruction": "catalog/sources/query-string/blocked.md",
+  "source_digest": "sha256:e5d7d72187834933f1ece21aa54d832a8a577b2f20ea7864b81229a73e5517e9",
+  "status": "blocked",
+  "task_id": "query-string",
+  "version": "0.1.0"
+}
+network_policy= True
+runtime_bundle= False
+findings= [('offline-dependencies-missing', 'warning', 'dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached')]
+catalog/tasks/query-string absent
+no staged query-string files

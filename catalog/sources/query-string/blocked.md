@@ -1,9 +1,10 @@
 # `query-string` Node v2 authoring audit — blocked
 
-**Status: blocked.** This is a development-only authoring evidence record, not a
-Harbor task or a production dataset entry. It contains no hidden tests, private
-bytes, dependency cache, Oracle solution, Docker artifact, credentials, or
-shared-index changes.
+**Status: blocked.** This task-local authoring audit is paired with a parseable
+blocked descriptor and hash-bound production evidence. It is not a Harbor task
+or a production dataset entry. It contains no hidden tests, private bytes,
+dependency cache, Oracle solution, Docker artifact, credentials, or
+shared-index changes; `catalog/tasks/query-string/` does not exist.
 
 ## Candidate lock and license evidence
 

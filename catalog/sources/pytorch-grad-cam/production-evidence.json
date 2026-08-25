@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytorch-grad-cam",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Obtain an owner-approved examples/both.png asset contract, freeze the complete Python dependency closure under an immutable image without private-index runtime retrieval, then establish final collection, a separate verifier, Oracle, empty/stub/forgery/offline controls, and only afterward generate catalog/tasks/pytorch-grad-cam.",
+    "descriptor": {
+      "path": "catalog/sources/pytorch-grad-cam/task.toml",
+      "sha256": "sha256:7e167108945fe876aff14033f41146377b5bf30b3ac7c6cec44ed66879d7b47b"
+    },
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/jacobgil/pytorch-grad-cam",
+      "revision": "781dbc0d16ffa95b6d18b96b7b829840a82d93d1",
+      "source_digest": "sha256:ea3fc94c1e32e972dd4b3c45609fa511798e93e552acff512714225901c89024",
+      "source_digest_kind": "git-archive-tar-sha256",
+      "license_spdx": "MIT",
+      "audit": {
+        "path": "catalog/sources/pytorch-grad-cam/blocked.md",
+        "sha256": "sha256:889ab16fa21851ade75325636996a3486187a96c107ba40558d5f44cd3b9de4b"
+      }
+    },
+    "collection": {
+      "legacy_declared_total": 178,
+      "static_ast_expansion": 178,
+      "frozen_collection_available": false,
+      "reason": "The audit records a legacy denominator and static expansion only; no fresh final-image collection or structured JUnit denominator is available."
+    },
+    "environment_observation": {
+      "status": "observed-not-production",
+      "image": "ghcr.io/multimodal-art-projection/nl2repobench/pytorch-grad-cam@sha256:d706241fe9aecd394b172aa6ddd361c466d43678e8ee04063844152b25c410e6",
+      "platform": "linux/amd64",
+      "reason": "The audit identifies an immutable verifier image, but it does not establish an approved production environment or a hash-locked dependency closure; the image used mutable/private-index installation."
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "Candidate and verifier runtime egress must remain disabled until dependencies are frozen into an approved image or private lock artifact; the reference source must not be fetched at runtime."
+    },
+    "asset_observation": {
+      "path": "examples/both.png",
+      "upstream_bytes": 90226,
+      "upstream_sha256": "sha256:8d30785a513e22a2f574c839c7e1751db943d0b5399347e7bb37736f6c5a95c2",
+      "final_image_status": "absent",
+      "reason": "The retained tests require this public asset, but the legacy post-processor removes protected examples/ and the final image does not contain the asset."
+    },
+    "runtime_task": {
+      "path": "catalog/tasks/pytorch-grad-cam",
+      "present": false
+    },
+    "production_gates": {
+      "oracle": "not-run",
+      "controls": "not-run",
+      "offline_verifier": "not-run",
+      "harbor_runtime": "absent"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/pytorch-grad-cam",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pytorch-grad-cam/evidence/remediation.txt",
+          "sha256": "sha256:bb06c64d5a3f3f8030bbb73ad62ad771a8bd153029834c812d975e4d3201429f"
+        }
+      },
+      {
+        "command": "uv run python -c \"from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; findings, has_bundle, has_policy = lint_task(Path('catalog/sources/pytorch-grad-cam')); print('network_policy=', has_policy); print('runtime_bundle=', has_bundle); print('findings=', [(item.rule, item.severity, item.detail) for item in findings]); assert has_policy and not has_bundle; assert not any(item.severity == 'error' for item in findings)\"",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pytorch-grad-cam/evidence/remediation.txt",
+          "sha256": "sha256:bb06c64d5a3f3f8030bbb73ad62ad771a8bd153029834c812d975e4d3201429f"
+        }
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/pytorch-grad-cam --output /tmp/pytorch-grad-cam-blocked-compile --artifact-root /tmp/pytorch-grad-cam-blocked-artifacts --toolchain toolchain.lock.toml",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7; nl2repobench 0.1.0; repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/pytorch-grad-cam/evidence/remediation.txt",
+          "sha256": "sha256:bb06c64d5a3f3f8030bbb73ad62ad771a8bd153029834c812d975e4d3201429f"
+        }
+      },
+      {
+        "command": "uv run python -c \"import json, tomllib; from pathlib import Path; d=tomllib.loads(Path('catalog/sources/pytorch-grad-cam/task.toml').read_text()); p=d['environment']['network_policy']; assert d['lifecycle']['status']=='blocked'; assert d['source']['revision']=='781dbc0d16ffa95b6d18b96b7b829840a82d93d1'; assert d['source']['source_digest']=='sha256:ea3fc94c1e32e972dd4b3c45609fa511798e93e552acff512714225901c89024'; assert d['environment']['network_mode']=='no-network' and p['mode']=='no-network' and p['reference_source_fetch']=='forbidden'; assert not Path('catalog/tasks/pytorch-grad-cam').exists(); print(json.dumps({'task_id':d['task_id'],'status':d['lifecycle']['status'],'revision':d['source']['revision'],'source_digest':d['source']['source_digest'],'network_mode':p['mode'],'reference_source_fetch':p['reference_source_fetch'],'runtime_exists':False}, sort_keys=True))\"",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pytorch-grad-cam/evidence/remediation.txt",
+          "sha256": "sha256:bb06c64d5a3f3f8030bbb73ad62ad771a8bd153029834c812d975e4d3201429f"
+        }
+      }
+    ],
+    "evidence_log": {
+      "path": "catalog/sources/pytorch-grad-cam/evidence/remediation.txt",
+      "sha256": "sha256:bb06c64d5a3f3f8030bbb73ad62ad771a8bd153029834c812d975e4d3201429f"
+    }
+  }
+}

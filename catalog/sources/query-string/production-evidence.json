@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "query-string",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a fixed child-side Node adapter that can invoke default.parse and default.stringify without importing candidate code into the trusted verifier, then freeze the private npm v3 cache/lock closure, node:test bundle, separate verifier, Oracle, and controls.",
+    "audit": {
+      "path": "catalog/sources/query-string/blocked.md",
+      "sha256": "sha256:cefb9a2cc790d709ecc3403ce1a6ffc0186990efc5aa9acc2845d95f731624ed"
+    },
+    "descriptor": {
+      "path": "catalog/sources/query-string/task.toml",
+      "sha256": "sha256:836395201bf3cfea3e6903168edaed4a6910c2126275b4bccd461219dc73ae30"
+    },
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/sindresorhus/query-string",
+      "revision": "aae373a54526c7b297f60e4d7b77eb0709d2ae9c",
+      "source_digest": "sha256:12cb02c8cb732a9baf76a8799c452529b1e0a7506dc250161bc5021102d1f8fb",
+      "license_spdx": "MIT",
+      "license_path": "license",
+      "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+      "package_manifest_digest": "sha256:3b42454731e8600a46f849b4a04ac930a128c555c71d4f447d772d8b3deb94fa"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "The private npm cache/lock closure, candidate adapter, and separate-verifier artifacts are not frozen; neither the agent nor verifier may use runtime egress."
+    },
+    "runtime_task": {
+      "path": "catalog/tasks/query-string",
+      "present": false
+    },
+    "production_gates": {
+      "harbor_runtime": "absent",
+      "oracle": "not-run",
+      "controls": "not-run"
+    },
+    "commands": [
+      {
+        "command": "uv --version && uv run python --version && uv run python -c \"import importlib.metadata as m; print('nl2repobench', m.version('nl2repobench'))\" && uv run nl2repo task validate-source catalog/sources/query-string && uv run python -c \"from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; findings, has_bundle, has_policy = lint_task(Path('catalog/sources/query-string')); print('network_policy=', has_policy); print('runtime_bundle=', has_bundle); print('findings=', [(item.rule, item.severity, item.detail) for item in findings]); assert has_policy and not has_bundle; assert not any(item.severity == 'error' for item in findings)\" && test ! -e catalog/tasks/query-string && git diff --check -- catalog/sources/query-string && test -z \"$(git diff --cached --name-only -- catalog/sources/query-string catalog/tasks/query-string)\"",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/query-string/evidence/remediation.txt",
+          "sha256": "sha256:12f7e28c6cb7390086228d91f1e72f18f533b5d9fad91446a785bc11b13d1df4"
+        }
+      }
+    ]
+  }
+}
