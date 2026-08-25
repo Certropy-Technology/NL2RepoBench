@@ -17,6 +17,16 @@ LLM_RETRY_MIN_WAIT="${LLM_RETRY_MIN_WAIT:-8}"
 LLM_RETRY_MAX_WAIT="${LLM_RETRY_MAX_WAIT:-120}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)-${TASK_ID}}"
 RUN_ROOT="${RUN_ROOT:-.nl2repo/runs/model}"
+HARBOR_AGENT="${HARBOR_AGENT:-nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction}"
+
+case "$HARBOR_AGENT" in
+  nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction)
+    ;;
+  *)
+    echo "unsupported HARBOR_AGENT: $HARBOR_AGENT" >&2
+    exit 2
+    ;;
+esac
 
 provider_host="$({
   python3 - "$LLM_BASE_URL" <<'PY'
@@ -25,7 +35,8 @@ from urllib.parse import urlsplit
 import re
 import sys
 
-parsed = urlsplit(sys.argv[1])
+value = sys.argv[1]
+parsed = urlsplit(value)
 if parsed.scheme.lower() != "https" or not parsed.hostname:
     raise SystemExit("LLM_BASE_URL must be an HTTPS URL with a hostname")
 if parsed.username or parsed.password:
@@ -45,7 +56,12 @@ except ValueError:
         host,
     ):
         raise SystemExit(f"invalid LLM Provider hostname: {host}")
-for suffix in ("github.com", "gitlab.com", "bitbucket.org", "sourceforge.net"):
+for suffix in (
+    "github.com",
+    "gitlab.com",
+    "bitbucket.org",
+    "sourceforge.net",
+):
     if host == suffix or host.endswith("." + suffix):
         raise SystemExit(f"source-host LLM Provider hostname is forbidden: {host}")
 print(host)
@@ -112,6 +128,13 @@ fi
 if [[ -n "${LLM_OPENHANDS_SECURITY_PROFILE:-}" ]]; then
   agent_env_args+=(--ae "LLM_OPENHANDS_SECURITY_PROFILE=$LLM_OPENHANDS_SECURITY_PROFILE")
 fi
+if [[ -n "${LLM_STREAM:-}" ]]; then
+  [[ "$LLM_STREAM" == "0" || "$LLM_STREAM" == "1" ]] || {
+    echo "LLM_STREAM must be 0 or 1" >&2
+    exit 2
+  }
+  agent_env_args+=(--ae "LLM_STREAM=$LLM_STREAM")
+fi
 
 cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup
@@ -152,7 +175,7 @@ env PYTHONPATH=../src:${PYTHONPATH:-} \
   uv run --frozen python ../scripts/harbor_safe_entry.py run \
   -p "$harbor_task_path" \
   -e nl2repobench.harbor_docker:StdinSecretDockerEnvironment \
-  -a nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction \
+  -a "$HARBOR_AGENT" \
   -m "$MODEL" \
   --ak "reasoning_effort=$REASONING_EFFORT" \
   --ae "LLM_BASE_URL=$LLM_BASE_URL" \
