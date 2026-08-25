@@ -1,0 +1,27 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/flasky/evidence/dependency-lock-timeout.txt",
+          "sha256": "sha256:1b9448f87db7f5e93a5ae156ed2597db5b588eed3d44ff41c5042de31df5503a"
+        },
+        "tool_version": "pip in python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a; Docker 29.7.2"
+      }
+    ],
+    "failure_class": "environment",
+    "next_step": "Regenerate and validate the hash-only Python 3.12 lock under an explicitly approved timeout, author private subprocess-verifier and local Oracle bundles, compile without --allow-incomplete, and run one Oracle with valid=true, frozen effective collection 34, and reward at least 0.8 before any controls.",
+    "source_freeze": {
+      "license_spdx": "MIT",
+      "revision": "3beedd640b9146b0bd65c8c2ecf402b01798bc33",
+      "source_digest": "sha256:d70278ce85aadc6127ef9f997c0410076488b744c01631a45499dc03bcd698d6",
+      "status": "known",
+      "upstream_url": "https://github.com/miguelgrinberg/flasky"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "flasky",
+  "terminal_kind": "blocked"
+}

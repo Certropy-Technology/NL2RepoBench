@@ -111,4 +111,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
+owner = "integrator"
+reason = "Production integration stopped after the dependency-lock image-install process exceeded the bounded 587-second authoring window. No production bundle or Oracle result is valid; the generated runtime was removed and controls were not run."

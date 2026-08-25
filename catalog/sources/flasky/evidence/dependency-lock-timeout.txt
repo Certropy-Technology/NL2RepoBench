@@ -1,0 +1,18 @@
+Flasky production integration termination record
+timestamp_utc: 2026-08-25T09:48:16Z
+failure_class: environment
+stage: dependency-lock image installation
+bounded_elapsed_seconds: 587
+command: python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
+container_base: python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a
+tool_versions: uv 0.12.3; Docker 29.7.2; git 2.55.0
+termination_instruction: terminate the 587s pip process; classify as bounded environment/dependency-lock timeout; no retry
+termination_check: ps -eo pid,etimes,args | rg 'pip|flasky-production-integration' | rg -v 'rg '
+termination_check_result: no Flasky pip process remained at the next safe point, so no signal was delivered
+result: failed; the attempt is classified as a bounded dependency-lock timeout by orchestration authority
+production_compile: not run
+oracle: not run
+controls: not run because no valid Oracle at reward >= 0.8 and frozen collection 34 exists
+partial_runtime: tracked catalog/tasks/flasky runtime removed
+preserved_compose_sha256: 17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388
+next_step: regenerate and validate the hash-only Python 3.12 lock under an explicitly approved timeout, author private subprocess-verifier and local Oracle bundles, compile without --allow-incomplete, and run one Oracle before any controls

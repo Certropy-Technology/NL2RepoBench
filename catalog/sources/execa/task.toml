@@ -49,7 +49,7 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:0aabb3fa1810a627d73d569d6603d121156ae75bdc162e63777513636def3314", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:0aabb3fa1810a627d73d569d6603d121156ae75bdc162e63777513636def3314", visibility = "private" }
+artifact = { digest = "sha256:bbbc601a828344afcee2ef02b102c499119b50e651632436babf6c2112a9e827", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:bbbc601a828344afcee2ef02b102c499119b50e651632436babf6c2112a9e827", visibility = "private" }
 packages = []
 
 [tests]
@@ -57,8 +57,8 @@ framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 11
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", visibility = "private" }
-test_bundle = { digest = "sha256:1c37b833d9d30debf48463a9f898601393ea757d474d29e5ec6849291484f994", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1c37b833d9d30debf48463a9f898601393ea757d474d29e5ec6849291484f994", visibility = "private" }
+commands_artifact = { digest = "sha256:0479e4c2b2bf86642c6fe36b0a86ca6cb5d26cc06e9e26818f71c7ccbf903d0a", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:0479e4c2b2bf86642c6fe36b0a86ca6cb5d26cc06e9e26818f71c7ccbf903d0a", visibility = "private" }
+test_bundle = { digest = "sha256:a8fbcf849703077772683bf66bfab21eec023148d3ca959fa31b4765b0c7affc", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a8fbcf849703077772683bf66bfab21eec023148d3ca959fa31b4765b0c7affc", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -80,12 +80,12 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-reason = "Frozen MIT source and deterministic no-network private node:test adaptation are packaged; local Oracle/controls evidence is attached and the task awaits integrator review before any Agent Run."
+status = "blocked"
+reason = "The production bundle compiled and emitted valid Oracle/control/network receipts, but the Oracle Harbor process remained active beyond the supervisor's 601-second orchestration bound after grading. The campaign was declared non-promotable, no retry was authorized, and no generated runtime is retained."
 
 [oracle_bundle]
-digest = "sha256:9ea1ea1697056af41bfb3dc886d991d0206cfc62091ecc326f349a8ca83940eb"
+digest = "sha256:b55ef9fb5bc477e120ac1353bf4c7a093bed59e58f54b063714269ed9af81fba"
 size_bytes = 20480
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:9ea1ea1697056af41bfb3dc886d991d0206cfc62091ecc326f349a8ca83940eb"
+uri = "artifact://private/sha256:b55ef9fb5bc477e120ac1353bf4c7a093bed59e58f54b063714269ed9af81fba"
 visibility = "private"

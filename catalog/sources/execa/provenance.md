@@ -19,3 +19,23 @@
   solution is a private contract implementation and does not install from npm;
   this keeps Agent and Verifier phases offline and prevents the model from
   receiving the frozen implementation.
+
+## Production integration attempt
+
+The private dependency, command, test, and Oracle payloads were normalized into
+content-addressed archives without changing the frozen test bytes or the
+11-leaf denominator. A production compile with `toolchain.node.lock.toml`,
+private-artifact authorization, and no incomplete-output override succeeded.
+
+One fresh Harbor matrix emitted technically valid receipts: Oracle passed
+`11/11` with reward `1.0`; empty collected `0` with reward `0`; stub and forgery
+each passed `0/11` with reward `0`; and each verifier wrote `network.json`.
+The forged workspace grading file did not affect the verifier-owned result.
+
+This matrix is not promoted. The Oracle Harbor process remained active past the
+supervisor's 601-second orchestration bound after its grading receipt had been
+written. The termination directive arrived after the process returned exit code
+zero, but the campaign was explicitly declared non-promotable and no retry was
+authorized. `production-evidence.json` records the bounded run and receipt
+paths. The generated `catalog/tasks/execa` runtime is therefore absent and the
+task remains `blocked`.
