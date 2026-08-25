@@ -34,6 +34,12 @@ python_version = ">=3.9"
 os_name = "unknown"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The parser fixtures, dependency closure, and separate verifier are not frozen; candidate and verifier execution remain network-isolated."
+
 [dependencies]
 # Source-declared build/unit/doctest/type/dev requirements. These names are
 # observations, not a hash-locked offline DependencyBundle.

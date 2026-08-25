@@ -1,8 +1,7 @@
-# Development descriptor only. This is intentionally not a runnable Harbor
-# bundle: private tests, command plan, hash-locked dependency lock, Oracle, and a
-# task-specific subprocess scenario adapter are omitted until authorized private
-# artifacts are provisioned in task.toml. The expected test count below is a
-# source-only observation, not a frozen production denominator.
+# Historical pre-production Harbor metadata snapshot retained as authoring
+# evidence. It is not compiler input or a runnable bundle. The authoritative
+# production source is ../task.toml; its private artifacts compile to the
+# generated runtime under catalog/tasks/parsy, and 88 is the frozen denominator.
 schema_version = "1.4"
 artifacts = ["/workspace"]
 

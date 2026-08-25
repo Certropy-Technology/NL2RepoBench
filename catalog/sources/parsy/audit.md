@@ -1,22 +1,26 @@
 # Parsy Authoring Audit
 
-Status: `blocked` development source. This task-local record contains public
-provenance, source/package inventory, and source-only validation evidence. It
-does not contain upstream test bytes, a verifier, an allowlisted command-plan
-artifact, dependency wheels, an Oracle bundle, or a private artifact handoff.
+Status: `controls-passed` production source. The authoritative descriptor is
+`task.toml`; immutable artifact references compile to the production runtime in
+`catalog/tasks/parsy`, and `production-evidence.json` records the Harbor 0.21.0
+Oracle, empty, stub, forgery, and offline receipts.
 
-## Decision And Scope
+## Production Promotion
 
-Keep the task at lifecycle status `blocked`. The exact requested revision,
-source archive, license evidence, and source-only collection/baseline probes
-were revalidated below. Those probes do **not** freeze a production denominator
-or establish a runnable Harbor task. Do not add placeholder private references,
-copy upstream tests into this public catalog, advance the lifecycle, or run
-Docker/Harbor/Oracle from this lane.
+The frozen production denominator is 88 tests. The Oracle receipt is valid at
+86/88 (reward `0.9772727272727273`), and the negative/offline controls satisfy
+the production evidence gate. The hash-locked dependency closure, private
+verifier bundle, and Oracle bundle are content-addressed in `task.toml` and were
+resolved from `.nl2repo/artifacts` by a production compile without
+`--allow-incomplete`.
 
-The only durable write root authorized for this audit is
-`catalog/tasks/parsy/`. Temporary checkouts and virtual environments mentioned
-below are disposable validation inputs, not task artifacts.
+## Historical Development Audit
+
+The remainder of this file records the earlier source-only authoring audit.
+Statements below that describe the task as blocked, dependencies as unknown,
+or private artifacts and controls as absent are historical and are superseded
+by the production descriptor and evidence named above. Provenance and baseline
+observations remain useful audit history.
 
 ## Source Provenance
 

@@ -26,6 +26,12 @@ python_version = "3.12"
 os_name = "unknown"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The source/license audit and base-lane dependency closure are incomplete; candidate and verifier execution remain network-isolated."
+
 [dependencies]
 # The base lane intentionally has no runtime extras. numpy, pandas and wcwidth
 # are excluded; the offline closure still needs a separate, hash-locked probe.

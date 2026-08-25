@@ -28,6 +28,12 @@ python_version = ">=3.10"
 os_name = "unknown"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The package and tool dependency closure is not frozen; candidate and verifier execution remain network-isolated."
+
 [dependencies]
 # doit declares no runtime requirements. These are its unpinned build/dev and
 # behavior-changing optional requirements, plus pytest from the provisional

@@ -25,6 +25,12 @@ python_version = "3.12.11"
 os_name = "linux-amd64"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The CLI fixture and dependency closure are not frozen; candidate and verifier execution remain network-isolated."
+
 [dependencies]
 status = "unknown"
 installer = "uv"

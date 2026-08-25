@@ -25,6 +25,12 @@ python_version = "3.13.14"
 os_name = "linux/amd64"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The scientific dependency and data closure is not frozen; candidate and verifier execution remain network-isolated."
+
 # SALib declares lower bounds and no committed lock or requirements lock exists at the
 # pinned revision. The list records declared direct/runtime-test requirements,
 # not a resolved offline closure.

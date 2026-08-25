@@ -1,0 +1,33 @@
+Textual production remediation audit
+====================================
+
+Command:
+  uv run nl2repo harbor compile catalog/sources/textual \
+    --output /tmp/textual-production-probe \
+    --toolchain toolchain.lock.toml \
+    --artifact-root .nl2repo/artifacts \
+    --allow-private
+
+Result:
+  exit code 1
+
+Compiler failure:
+  ArtifactStoreError: artifact is missing:
+  sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09
+
+Current private artifact-store checks:
+  dependency lock sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09: missing
+  verifier bundle sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979: missing
+  Oracle bundle sha256:94c2c8b486648ea11e4699292c18384717e509ae87481a51d81d7103d118d7f1: missing
+
+Receipt audit:
+  No textual grading.json, network.json, result.json, or junit.xml artifacts
+  were found under .nl2repo/runs or .nl2repo/authoring-work in this checkout.
+  Therefore the controls-passed lifecycle claim cannot yet be represented by
+  a canonical production-evidence.json without fabricating evidence.
+
+Next remediation:
+  Restore or reproducibly regenerate the three declared private artifacts,
+  recompile without --allow-incomplete, and run official Harbor 0.21 Oracle,
+  empty, stub, forgery, and offline probes. Record verifier-owned reward and
+  hash-bound grading/network receipts before adding production-evidence.json.

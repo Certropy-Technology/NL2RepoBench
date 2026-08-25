@@ -173,3 +173,37 @@ production evidence without re-execution under the locked image.
    `11.17.0`, and define the lifecycle-script-stripping packaging adaptation.
 5. Only then compile, run one Oracle gate, and run the
    empty/stub/forgery/install-script/loader-hook/hang/offline controls.
+
+## Current v2 revalidation
+
+The source and private artifact references were revalidated in the locked Node
+lane after the historical blockers above were recorded. This addendum is
+evidence only; it does not claim publication approval or replace review/pilot
+gates.
+
+- `uv run nl2repo task validate-source catalog/sources/fast-glob` passed.
+  The validator reported task `fast-glob`, version `0.1.0`, lifecycle status
+  `controls-passed`, and source content digest
+  `sha256:3942bcc242b8e70ddb0bc42d8a0b14418951f4a98d605ad0f67091af6ea3605f`.
+- Production compilation passed without `--allow-incomplete` using
+  `toolchain.node.lock.toml`, `--allow-private`, and
+  `.nl2repo/artifacts`; output was written to a temporary directory outside
+  the catalog source. No compiler or schema failure remains for this source.
+- The declared production bundle path
+  `catalog/tasks/fast-glob/bundle.manifest.json` exists and hashes to the
+  declared `sha256:54d540fa9c2b0dbe5bf6c15340dd3c283a89b380209d6d393090501363a279da`.
+- Every path in `production-evidence.json` was present and its bytes matched
+  the declared SHA-256: all four grading records, the shared network probe,
+  and the bundle manifest.
+- The four private artifact references used by the source were present in
+  `.nl2repo/artifacts/private/` and matched their declared digests: dependency
+  bundle `4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b`,
+  command bundle `ae0d5dc22c9d5bf46ee967a7fffef897063c31a78046afc47d753287d5a61081`,
+  test bundle `56428100ac69806e55c009c8465c530d88dd3021637e8a33dc4c8d21793e5854`,
+  and Oracle bundle `e448c9fec7a1a8809a6ec6dda68be55673e54cca44f391a770b6beceaa8558d0`.
+
+No source-local remediation was necessary. The historical TypeScript,
+denominator, lifecycle, lock/cache, and JSON-boundary findings remain
+authoring-history context and should not be treated as current compiler
+failures; any remaining publication work is review/pilot or production
+execution policy, not a fast-glob source/schema defect.

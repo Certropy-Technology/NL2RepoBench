@@ -69,7 +69,8 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-# Development profile only; this descriptor is not a runnable Harbor bundle.
+# Production compiler settings. The private verifier, dependency lock, and
+# Oracle artifacts declared above resolve from the authorized artifact store.
 description = "Build the parsy parser-combinator library from an empty workspace."
 keywords = ["python", "parser-combinators", "pytest", "separate-verifier", "no-network"]
 agent_timeout_sec = 1800.0

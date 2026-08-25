@@ -21,6 +21,12 @@ status = "unknown"
 python_version = "3.12"
 network_mode = "no-network"
 
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Synthetic development fixture; the production dependency lock and immutable image are intentionally absent."
+
 [dependencies]
 status = "unknown"
 installer = "uv"
