@@ -1,0 +1,58 @@
+{
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/tinydb --output .nl2repo/task-artifacts/tinydb-production/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/task-artifacts/tinydb-production/artifacts --allow-private",
+    "executed_bundle_manifest_sha256": "sha256:443c22075ceafa4398ad7bfd0b9e4578f328937f55ff8bd9660d5c6880aeb4ea",
+    "mode": "production",
+    "used_allow_incomplete": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/tinydb-production/compiled/tinydb -a nop --jobs-dir .nl2repo/task-artifacts/tinydb-production/runs/empty --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/empty/2026-08-25__19-28-46/tinydb__4CkUevo/verifier/grading.json", "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2"},
+      "network": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/empty/2026-08-25__19-28-46/tinydb__4CkUevo/verifier/network.json", "sha256": "sha256:2d5142b6f7627d20a23503f430849bfb66cffc8f2d61080d4386c201d2966afd"},
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/tinydb-production/controls-forgery/tinydb-forgery -a oracle --jobs-dir .nl2repo/task-artifacts/tinydb-production/runs/forgery --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/forgery/2026-08-25__19-28-46/tinydb-forgery__Rhp6wM2/verifier/grading.json", "sha256": "sha256:8bfaed668bac0d666d6b56dec9584dd1ce9304a0cc072c460e4e2ba13350d9cf"},
+      "network": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/forgery/2026-08-25__19-28-46/tinydb-forgery__Rhp6wM2/verifier/network.json", "sha256": "sha256:00355cfacae2ece63b00a7c5b7f858a74b62613103498d87397a062a93e488d4"},
+      "reward": 0.05555555555555555,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Verifier-integrated no-network probes in the Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/oracle/2026-08-25__19-27-48/tinydb__RRHkG7w/verifier/network.json", "sha256": "sha256:953158999e504c2d0ab9d764518838cc53ac57257d9b736aa253f19e6ad168c6"},
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/tinydb-production/controls-stub/tinydb-stub -a oracle --jobs-dir .nl2repo/task-artifacts/tinydb-production/runs/stub --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/stub/2026-08-25__19-28-46/tinydb-stub__megJVNY/verifier/grading.json", "sha256": "sha256:8bfaed668bac0d666d6b56dec9584dd1ce9304a0cc072c460e4e2ba13350d9cf"},
+      "network": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/stub/2026-08-25__19-28-46/tinydb-stub__megJVNY/verifier/network.json", "sha256": "sha256:17326aa90d74939edefdb672e8184073e368de9770da2912fbc5ca51b8c5ac55"},
+      "reward": 0.05555555555555555,
+      "valid": true
+    }
+  },
+  "dependency_lock": {
+    "digest": "sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4",
+    "vendor_wheels": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/tinydb-production/compiled/tinydb -a oracle --jobs-dir .nl2repo/task-artifacts/tinydb-production/runs/oracle --n-attempts 1 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "grading": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/oracle/2026-08-25__19-27-48/tinydb__RRHkG7w/verifier/grading.json", "sha256": "sha256:34cfb27169bd5539c4a4784cf75436ad53be7ece172692fba4e7b2aa7d853b8a"},
+    "harbor_version": "0.21.0",
+    "network": {"path": ".nl2repo/task-artifacts/tinydb-production/runs/oracle/2026-08-25__19-27-48/tinydb__RRHkG7w/verifier/network.json", "sha256": "sha256:953158999e504c2d0ab9d764518838cc53ac57257d9b736aa253f19e6ad168c6"},
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "task_id": "tinydb",
+  "terminal_kind": "valid"
+}

@@ -1,26 +1,31 @@
 #!/usr/bin/env bash
 set -uo pipefail
-mkdir -p /logs/verifier
+mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
+chmod 0700 /logs/verifier /tmp/trusted-results
+rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 
-rm -rf /tmp/candidate
-if ! cp -a /workspace /tmp/candidate     > /logs/verifier/copy-stdout.txt 2> /logs/verifier/copy-stderr.txt; then
-    python /tests/grade.py --expected 204 --reason artifact-copy-failed
-    exit 0
+export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
+python -I -m nl2repobench.verification.network_check   --output /logs/verifier/network.json
+if [[ "$?" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli     --expected 36 --metric-contract fixed-test-pass-rate-v1     --reason verifier-network-available
+  exit 0
 fi
-
-# Replace candidate-created tests with the frozen test paths.
-rm -rf /tmp/candidate/tests
-mkdir -p /tmp/candidate/$(dirname tests)
-cp -a /tests/fixture/tests /tmp/candidate/tests
-
-# Executable .pth lines run at interpreter start and put candidate code first.
-SITEPKG=$(cat /opt/sitepkg)
-printf "import sys; sys.path[:0] = ['/tmp/candidate/src', '/tmp/candidate']
-"     > "$SITEPKG/_candidate_override.pth"
-
-
-chown -R candidate:candidate /tmp/candidate /logs/verifier
-runuser -u candidate -- env HOME=/home/candidate     sh -c "cd /tmp/candidate && python -m pytest --continue-on-collection-errors tests            --junitxml=/logs/verifier/junit.xml --tb=short"     > /logs/verifier/pytest-stdout.txt 2> /logs/verifier/pytest-stderr.txt
-pytest_exit_code=$?
-
-python /tests/grade.py --expected 204     --junit /logs/verifier/junit.xml --pytest-exit-code "$pytest_exit_code"
+python -I -B -m nl2repobench.verification.workspace_copy   --source /workspace --destination /tmp/candidate
+if [[ "$?" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli     --expected 36 --metric-contract fixed-test-pass-rate-v1     --reason candidate-workspace-rejected
+  exit 0
+fi
+chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
+python -I -B -m nl2repobench.verification.candidate_install   --source /tmp/candidate --target /tmp/candidate-site   --timeout-sec 90.0   --status /logs/verifier/candidate-install.json
+if [[ "$?" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli     --expected 36 --metric-contract fixed-test-pass-rate-v1     --reason candidate-installation-failed
+  exit 0
+fi
+python -I -m nl2repobench.verification.custom_verifier   --entrypoint /tests/verifier/run.py --expected 36   --junit /logs/verifier/junit.xml   --collection /logs/verifier/collection.json   --timeout-sec 300.0   > /logs/verifier/custom-stdout.txt   2> /logs/verifier/custom-stderr.txt
+custom_exit=$?
+if [[ "$custom_exit" -ne 0 && "$custom_exit" -ne 1 ]]; then
+  python -I -m nl2repobench.verification.cli     --expected 36 --metric-contract fixed-test-pass-rate-v1     --reason verifier-internal-error
+  exit 0
+fi
+python -I -m nl2repobench.verification.cli   --expected 36 --metric-contract fixed-test-pass-rate-v1   --collection /logs/verifier/collection.json   --junit /logs/verifier/junit.xml --pytest-exit-code "$custom_exit"
+exit 0

@@ -1,35 +1,57 @@
 schema_version = "1.4"
-artifacts = ["/workspace"]
+artifacts = [
+    "/workspace",
+]
 
 [task]
 name = "nl2repobench/tinydb"
-version = "0.1.0"
-description = "Build the tinydb package from an empty workspace."
-authors = [{ name = "NL2RepoBench" }]
-keywords = ["python", "repository-generation", "nl2repobench"]
+version = "1.0.0"
+description = "Build TinyDB 4.9.0 from an empty workspace and satisfy a bounded storage, query, table, update, middleware, and cache contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "document-database",
+    "json-storage",
+    "query-builder",
+    "middleware",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python"]
+category = "embedded-document-database"
+tags = [
+    "python",
+    "document-database",
+    "json-storage",
+    "queries",
+    "middleware",
+    "lru-cache",
+    "separate-verifier",
+]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 204
+expected_test_count = 36
+canonical_manifest_digest = "sha256:ac7206fce5cb0bd3efa9f959364c397f633c3c76d6c32e83b9d97c47ed2ced99"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
 [agent]
-timeout_sec = 3600.0
+timeout_sec = 2400.0
 
 [verifier]
 timeout_sec = 600.0
 environment_mode = "separate"
-
-[environment]
 network_mode = "no-network"
-build_timeout_sec = 600.0
-cpus = 2
-memory_mb = 4096
-storage_mb = 8192
 
 [verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
 network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 2
