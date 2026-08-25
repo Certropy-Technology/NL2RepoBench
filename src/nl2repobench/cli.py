@@ -33,7 +33,7 @@ from nl2repobench.domain.models import (
     MetadataGapReport,
     TaskManifest,
 )
-from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
+from nl2repobench.harbor.compiler import HarborCompileError
 from nl2repobench.harbor.models import HarborToolchainLock
 from nl2repobench.harbor.registry import (
     HarborCompilerRegistry,
@@ -286,10 +286,11 @@ def prepare_harbor_control(
     """Prepare a control bundle that Harbor executes with the Oracle agent."""
 
     try:
-        output = HarborCompiler(toolchain).prepare_control_bundle(
+        output = HarborCompilerRegistry.default().prepare_control_bundle(
             task_root,
             kind,
             output_root,
+            toolchain,
         )
     except (HarborCompileError, OSError, ValueError) as exc:
         typer.echo(f"control preparation failed: {exc}", err=True)

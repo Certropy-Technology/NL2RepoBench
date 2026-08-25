@@ -31,6 +31,7 @@ from nl2repobench.harbor.node_dependencies import (
     validate_npm_dependency_bundle,
     validate_npm_package_tarball,
 )
+from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.verification import cli as verifier_cli
 from nl2repobench.verification import node_candidate_install
@@ -186,6 +187,51 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     declared_paths = {entry["path"] for entry in bundle_manifest["files"]}
     assert "bundle.manifest.json" not in declared_paths
     assert "tests/dependencies/bundle.manifest.json" in declared_paths
+
+
+def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    controls = source / "harbor/controls"
+    controls.mkdir()
+    (controls / "stub.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    (controls / "forgery.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "tasks", allow_incomplete=True
+    )
+    control = HarborCompilerRegistry.default().prepare_control_bundle(
+        task_root, "stub", tmp_path / "controls", NODE_TOOLCHAIN
+    )
+
+    assert (task_root / "solution/solve.sh").read_bytes() != (
+        control / "solution/solve.sh"
+    ).read_bytes()
+    manifest = json.loads((control / "bundle.manifest.json").read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == "2.0"
+    assert manifest["mode"] == "control-stub"
+    assert "controls/stub.sh" in {entry["path"] for entry in manifest["files"]}
+    for entry in manifest["files"]:
+        file_path = control / entry["path"]
+        assert file_path.is_file()
+        assert entry["size_bytes"] == file_path.stat().st_size
+        assert entry["sha256"] == hashlib.sha256(file_path.read_bytes()).hexdigest()
+
+
+def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    controls = source / "harbor/controls"
+    controls.mkdir()
+    (controls / "install-hang.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "tasks", allow_incomplete=True
+    )
+
+    with pytest.raises(NodeHarborCompileError, match="unsupported control kind"):
+        HarborCompilerRegistry.default().prepare_control_bundle(
+            task_root, "install-hang", tmp_path / "controls", NODE_TOOLCHAIN
+        )
 
 
 def test_node_network_runtime_writes_bounded_receipt(tmp_path: Path) -> None:

@@ -9,6 +9,8 @@ fail closed instead of silently using a similar toolchain.
 
 from __future__ import annotations
 
+import json
+import tomllib
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -32,6 +34,13 @@ class HarborRuntimeCompiler(Protocol):
         output_root: Path,
         *,
         allow_incomplete: bool = False,
+    ) -> Path: ...
+
+    def prepare_control_bundle(
+        self,
+        task_root: Path,
+        kind: str,
+        output_root: Path,
     ) -> Path: ...
 
 
@@ -134,6 +143,71 @@ class HarborCompilerRegistry:
             output_root,
             allow_incomplete=allow_incomplete,
         )
+
+    def prepare_control_bundle(
+        self,
+        task_root: Path,
+        kind: str,
+        output_root: Path,
+        toolchain_path: Path,
+        *,
+        artifact_resolver: LocalArtifactResolver | None = None,
+    ) -> Path:
+        """Prepare a control through the compiler matching the bundle runtime.
+
+        Compiled Harbor bundles carry their runtime identity in ``task.toml``.
+        Reading that generated metadata keeps the CLI free of language branches
+        and prevents a Node bundle from being passed to the Python lock parser.
+        """
+
+        identity = self._runtime_for_compiled_task(task_root)
+        compiler = self.resolve(identity)(toolchain_path, artifact_resolver)
+        return compiler.prepare_control_bundle(task_root, kind, output_root)
+
+    @staticmethod
+    def _runtime_for_compiled_task(task_root: Path) -> RuntimeDiscriminator:
+        path = task_root / "task.toml"
+        if path.is_symlink() or not path.is_file():
+            raise UnknownRuntimeAdapterError(f"compiled task metadata is missing: {path}")
+        try:
+            data = tomllib.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+            raise UnknownRuntimeAdapterError(
+                f"invalid compiled task metadata {path}: {exc}"
+            ) from exc
+
+        metadata = data.get("metadata")
+        if not isinstance(metadata, Mapping):
+            raise UnknownRuntimeAdapterError("compiled task metadata must contain [metadata]")
+        language = metadata.get("language")
+        package_manager = metadata.get("package_manager")
+        if language is None:
+            manifest_path = task_root / "bundle.manifest.json"
+            try:
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise UnknownRuntimeAdapterError(
+                    f"compiled task runtime identity is missing: {manifest_path}"
+                ) from exc
+            if manifest.get("schema_version") == "1.0":
+                # v1 Harbor task metadata predates the unified runtime fields.
+                # Its compiler is Python-only, so preserve that established
+                # dispatch while rejecting unknown bundle shapes.
+                language = RuntimeLanguage.PYTHON.value
+                package_manager = PackageManager.NONE.value
+        if not isinstance(language, str) or not isinstance(package_manager, str):
+            raise UnknownRuntimeAdapterError(
+                "compiled task metadata must declare language and package_manager"
+            )
+        try:
+            return RuntimeDiscriminator(
+                language=RuntimeLanguage(language),
+                package_manager=PackageManager(package_manager),
+            )
+        except ValueError as exc:
+            raise UnknownRuntimeAdapterError(
+                f"invalid compiled task runtime: {language}+{package_manager}"
+            ) from exc
 
 
 __all__ = [

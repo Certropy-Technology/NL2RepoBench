@@ -22,6 +22,15 @@ class _FakeCompiler:
         del source_dir, allow_incomplete
         return output_root / "fake"
 
+    def prepare_control_bundle(
+        self,
+        task_root: Path,
+        kind: str,
+        output_root: Path,
+    ) -> Path:
+        del task_root, kind
+        return output_root / "control"
+
 
 def test_registry_resolves_exact_identity_without_language_branch() -> None:
     calls: list[tuple[Path, bool]] = []

@@ -134,6 +134,7 @@ class NodeHarborCompiler:
             self._write_solution(
                 source_dir, manifest.oracle_bundle, temporary_root, allow_incomplete
             )
+            self._write_controls(source_dir, temporary_root)
             self._write_task_toml(manifest, temporary_root)
             self._write_readme(manifest, temporary_root, allow_incomplete)
             self._write_bundle_manifest(manifest, temporary_root, allow_incomplete)
@@ -142,6 +143,42 @@ class NodeHarborCompiler:
             shutil.rmtree(temporary_root, ignore_errors=True)
             raise
         return final_root
+
+    def prepare_control_bundle(
+        self,
+        task_root: Path,
+        kind: str,
+        output_root: Path,
+    ) -> Path:
+        """Create a supported Node control without mutating the source bundle."""
+
+        if kind not in {"stub", "forgery"}:
+            raise NodeHarborCompileError(f"unsupported control kind: {kind}")
+        script = task_root / "controls" / f"{kind}.sh"
+        if not script.is_file():
+            raise NodeHarborCompileError(f"control script is missing: {script}")
+        target_name = f"{task_root.name}-{kind}"
+        target = output_root / target_name
+        if target.exists() or target.is_symlink():
+            raise NodeHarborCompileError(f"control output already exists: {target}")
+        output_root.mkdir(parents=True, exist_ok=True)
+        temporary = Path(tempfile.mkdtemp(prefix=f".{target_name}-", dir=output_root))
+        try:
+            self._copy_tree(task_root, temporary)
+            solve = temporary / "solution/solve.sh"
+            atomic_write(solve, script.read_bytes())
+            os.chmod(solve, 0o755)
+            self._refresh_bundle_manifest(temporary, kind)
+            os.rename(temporary, target)
+        except Exception:
+            shutil.rmtree(temporary, ignore_errors=True)
+            raise
+        return target
+
+    def _write_controls(self, source_dir: Path, task_root: Path) -> None:
+        controls = source_dir / "harbor/controls"
+        if controls.is_dir():
+            self._copy_tree(controls, task_root / "controls")
 
     def _write_instruction(self, source_dir: Path, relative: str, task_root: Path) -> None:
         source = source_dir / relative
@@ -492,5 +529,30 @@ This task is excluded from the Python dataset.
         }
         atomic_write(
             task_root / "bundle.manifest.json",
+            json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2).encode() + b"\n",
+        )
+
+    def _refresh_bundle_manifest(self, task_root: Path, kind: str) -> None:
+        path = task_root / "bundle.manifest.json"
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise NodeHarborCompileError(f"invalid source bundle manifest: {path}: {exc}") from exc
+        files = []
+        for item in sorted(entry for entry in task_root.rglob("*") if entry.is_file()):
+            if item == path:
+                continue
+            data = item.read_bytes()
+            files.append(
+                {
+                    "path": item.relative_to(task_root).as_posix(),
+                    "sha256": hashlib.sha256(data).hexdigest(),
+                    "size_bytes": len(data),
+                }
+            )
+        payload["mode"] = f"control-{kind}"
+        payload["files"] = files
+        atomic_write(
+            path,
             json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2).encode() + b"\n",
         )

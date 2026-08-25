@@ -13,6 +13,7 @@ import tomli_w
 from nl2repobench.domain.models import Visibility
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import load_command_plan, load_toolchain_lock
+from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.verification.command_plan import validate_command_plan
 
@@ -485,3 +486,17 @@ def test_prepare_control_rejects_unknown_kind(tmp_path) -> None:
 
     with pytest.raises(HarborCompileError, match="unsupported control kind"):
         compiler.prepare_control_bundle(task_root, "unknown", tmp_path / "controls")
+
+
+def test_prepare_control_via_registry_preserves_python_dispatch(tmp_path) -> None:
+    output = HarborCompilerRegistry.default().prepare_control_bundle(
+        HarborCompiler(TOOLCHAIN).compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True),
+        "stub",
+        tmp_path / "controls",
+        TOOLCHAIN,
+    )
+
+    assert output.name == "ministats-stub"
+    assert (output / "solution/solve.sh").read_bytes() == (
+        output.parent.parent / "tasks/ministats/controls/stub.sh"
+    ).read_bytes()
