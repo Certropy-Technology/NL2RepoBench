@@ -1,1 +1,74 @@
-{"archive_contract": "p2-vertical-slice-v1", "empty_reward": 0.0, "oracle_reward": 1.0}
+{
+  "all_pass": true,
+  "archive_contract": "p2-vertical-slice-v1",
+  "controls": {
+    "call-hang": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "public_network_available": false,
+      "reward": 0.125,
+      "valid": true
+    },
+    "install-failure": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "public_network_available": false,
+      "reward": 1.0,
+      "valid": true
+    },
+    "oracle": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "public_network_available": false,
+      "reward": 1.0,
+      "valid": true
+    },
+    "stub": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "public_network_available": false,
+      "reward": 0.125,
+      "valid": true
+    }
+  },
+  "provenance": {
+    "bundle_manifest_sha256": "0582b72dfd893ab21011da009db08c2b11fc2ef1a0cc23ef28dba6adfc0c8e16",
+    "canonical_manifest_digest": "sha256:eb7b923fcf8d4d0e705b560269cc35017096f9ad8f373e668dc371dd9533b65a",
+    "control_script_sha256": "347243e54e22f50d4a4057b35d773849db4f23f617f12afa7edddd3da39f8f1f",
+    "implementation_tree_sha256": "2724cfb80a879be9a5ede770486163dea0b577ee22dd51bbd889ade58ac5f6b6",
+    "package_manager": "pnpm",
+    "runtime": "node",
+    "schema_version": "p2-slice-provenance-v1",
+    "slice_verifier_sha256": "1161dd47bfd229d4228d539d15e6dfefa60c36496bd3a817f34aec3a1cc00f7a",
+    "source_tree_sha256": "aeb521e55fa9a5c51e31094ab3f00cd0f2959a237878018ba4745e9e345e52ad",
+    "toolchain_sha256": "ca2d27caac3c316e9ce9c9e7dcb1582992bbb6f8b5f9bb053999b0a6badba287"
+  }
+}

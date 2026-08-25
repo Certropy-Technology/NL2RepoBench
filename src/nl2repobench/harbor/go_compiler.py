@@ -159,6 +159,10 @@ WORKDIR /tests
 """.encode(),
         )
         atomic_write(tests_root / "test.sh", self._test_script().encode())
+        atomic_write(
+            tests_root / "docker-compose.yaml",
+            b"services:\n  main:\n    network_mode: none\n",
+        )
         os.chmod(tests_root / "test.sh", 0o755)
 
     def _write_dependencies(self, fixture: Path, task_root: Path) -> None:
@@ -234,12 +238,19 @@ WORKDIR /tests
     def _test_script(self) -> str:
         return """#!/usr/bin/env bash
 set -uo pipefail
-mkdir -p /logs/verifier
 PYTHON_ROOT='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime")'
+NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
+NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
 grade() {
   python3 -I -c "$PYTHON_ROOT; from nl2repobench.verification.cli import main; main()" \
     --runtime go --expected 1 --metric-contract fixed-test-pass-rate-v1 --output /logs/verifier "$@"
 }
+mkdir -p /logs/verifier
+if ! python3 -I -c "$NETWORK_CHECK" \
+  --output /logs/verifier/network.json; then
+  grade --reason verifier-network-available
+  exit 0
+fi
 COPY_WORKSPACE='from nl2repobench.verification.workspace_copy import main; main()'
 if ! python3 -I -c "$PYTHON_ROOT; $COPY_WORKSPACE" \
   --source /workspace --destination /tmp/go-candidate; then
@@ -250,7 +261,9 @@ chown -R candidate:candidate /tmp/go-candidate
 GO_VALIDATE=$(cat <<'PY'
 from pathlib import Path
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
-GoModulesPackageManager().validate_lock(Path("/tmp/go-candidate/go.mod"), expected_version="1.26.5")
+GoModulesPackageManager().validate_lock(
+    Path("/tmp/go-candidate/go.mod"), expected_version="__GO_VERSION__"
+)
 PY
 )
 if ! runuser -u candidate -- python3 -I -c "$PYTHON_ROOT; $GO_VALIDATE"; then
@@ -281,7 +294,7 @@ cat > /tmp/go-report.json <<'JSON'
 JSON
 grade --report /tmp/go-report.json --runner-exit-code 0
 exit 0
-"""
+""".replace("__GO_VERSION__", self.go_version)
 
 
 __all__ = ["GoHarborCompileError", "GoHarborCompiler"]

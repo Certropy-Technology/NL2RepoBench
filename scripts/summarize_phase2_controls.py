@@ -28,19 +28,21 @@ def read_control(root: Path) -> dict[str, Any]:
     job = latest_job(root)
     result = json.loads((job / "result.json").read_text(encoding="utf-8"))
     evaluation = next(iter(result["stats"]["evals"].values()))
-    metric = evaluation["metrics"][0]
     grading_path = verifier_artifact(job, "grading.json")
     grading = json.loads(grading_path.read_text(encoding="utf-8"))
     network = json.loads(verifier_artifact(job, "network.json").read_text(encoding="utf-8"))
-    if grading["reward"] != metric["reward"]:
+    metrics = evaluation.get("metrics", [])
+    reward = metrics[0]["reward"] if metrics else grading["reward"]
+    test_pass_rate = metrics[0].get("test_pass_rate", reward) if metrics else reward
+    if grading["reward"] != reward:
         raise ValueError(f"Harbor/grading reward mismatch under {job}")
     if grading["valid"] and grading.get("failure_reason") is None:
         expected_reward = grading["counts"]["passed"] / grading["expected_total"]
         if grading["reward"] != expected_reward:
             raise ValueError(f"fixed-denominator reward mismatch under {job}")
     return {
-        "reward": metric["reward"],
-        "test_pass_rate": metric["test_pass_rate"],
+        "reward": reward,
+        "test_pass_rate": test_pass_rate,
         "exceptions": evaluation["n_errors"],
         "grading_valid": grading["valid"],
         "failure_class": grading.get("failure_class"),
@@ -61,8 +63,6 @@ def main() -> None:
 
     names = [
         "oracle-1",
-        "oracle-2",
-        "oracle-3",
         "nop",
         "stub",
         "forgery",

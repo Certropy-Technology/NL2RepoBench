@@ -17,8 +17,8 @@
     },
     {
       "path": "environment/go-module-bundle/go.mod",
-      "sha256": "33817d72052cf8b029eb92c562813fd5edd762d0eacc2a24ec23048d54fd643a",
-      "size_bytes": 42
+      "sha256": "e9ac67efbef4881abb3a2c43c4cb9014d3ce9c666de067ff2a8604dc0e3497d6",
+      "size_bytes": 41
     },
     {
       "path": "environment/go-module-bundle/go.sum",
@@ -27,7 +27,7 @@
     },
     {
       "path": "environment/go-module-bundle/module.manifest.json",
-      "sha256": "3c07ccd2dfe7c6a324e12e81fa046944b30a05d554e9ef9eb31a8728b017fefe",
+      "sha256": "ece91229ad2cd9c7d27e17df805a698d3b80cbb9b766322cb08ab5d83ef49dd7",
       "size_bytes": 655
     },
     {
@@ -37,13 +37,13 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "64717f72b2eadf8b74e2c02b0c91c2d7c9dd809c9b41af994da570cb45866beb",
-      "size_bytes": 426
+      "sha256": "b681360da094c4c75a639468197701789bc9393f5ed16e6aea82b39f9a607b9e",
+      "size_bytes": 425
     },
     {
       "path": "solution/solve.sh",
-      "sha256": "8fbcf03bc3cc0bbc8e6c2e7516d804e078e855a59dc9d09b35faa697fe630a60",
-      "size_bytes": 783
+      "sha256": "e07642f273096ac12b7bdfac9a9036b3c6b347d002a9754ccbe84760f0f39fd1",
+      "size_bytes": 782
     },
     {
       "path": "solution/vendor/modules.txt",
@@ -62,8 +62,8 @@
     },
     {
       "path": "tests/dependencies/go.mod",
-      "sha256": "33817d72052cf8b029eb92c562813fd5edd762d0eacc2a24ec23048d54fd643a",
-      "size_bytes": 42
+      "sha256": "e9ac67efbef4881abb3a2c43c4cb9014d3ce9c666de067ff2a8604dc0e3497d6",
+      "size_bytes": 41
     },
     {
       "path": "tests/dependencies/go.sum",
@@ -72,7 +72,7 @@
     },
     {
       "path": "tests/dependencies/module.manifest.json",
-      "sha256": "3c07ccd2dfe7c6a324e12e81fa046944b30a05d554e9ef9eb31a8728b017fefe",
+      "sha256": "ece91229ad2cd9c7d27e17df805a698d3b80cbb9b766322cb08ab5d83ef49dd7",
       "size_bytes": 655
     },
     {
@@ -81,14 +81,19 @@
       "size_bytes": 1
     },
     {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
       "path": "tests/private/bridge.go",
-      "sha256": "ad02d491d37cd8b30c01be11470058e81d071b3e701ba683e2ab6d0296e0f646",
-      "size_bytes": 1392
+      "sha256": "4e6a56b54026bb88f60287219f37f999193b8a5344307d2439546455547b9a17",
+      "size_bytes": 1391
     },
     {
       "path": "tests/private/contract.sh",
-      "sha256": "9286607f9ee37dcea86915b75fe9657949c262df29b84eb2e71cc97f06bc51ff",
-      "size_bytes": 300
+      "sha256": "dcd68ab4e1ac8cdd93520172bace2c7d809157bbf769c9dedb8215b3adddbaf9",
+      "size_bytes": 299
     },
     {
       "path": "tests/python-runtime/nl2repobench/__init__.py",
@@ -127,18 +132,18 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/package_managers/__init__.py",
-      "sha256": "a6b9cd179283f5e3458e0b4133764f6088905c2a1e3e5dc9896100b63de8c501",
-      "size_bytes": 1121
+      "sha256": "3a2636d788e41dd7a31a20e422c3af2442c2ad6bee39e9cd6e4554666ac1a468",
+      "size_bytes": 1120
     },
     {
       "path": "tests/python-runtime/nl2repobench/package_managers/base.py",
-      "sha256": "1af249848312732447b1b0ce7980aa671e886f3e73e2379c047162ebf7cf7629",
-      "size_bytes": 785
+      "sha256": "77c4a81eb31541db2343e80872e9649f32dc5e3434a689bb25d2dca83d47ca29",
+      "size_bytes": 784
     },
     {
       "path": "tests/python-runtime/nl2repobench/package_managers/go_modules.py",
-      "sha256": "1fdebb6a1d964ef4589064b984701b1496421257e26a5ad893c92ad9259a7d81",
-      "size_bytes": 6420
+      "sha256": "897c9a34b3b7300b0020c78ab124f12143fd25d13b0261674db25aad15bfe7fd",
+      "size_bytes": 6419
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/__init__.py",
@@ -177,28 +182,28 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/evaluator.py",
-      "sha256": "dd14c99a2310db06c113585b84b7378eee8722d161c280fb1e85f7d97073c93e",
-      "size_bytes": 9041
+      "sha256": "20f9ad77f637b5232acafc0af7d00b2eccd701e8a13b60d9858f838cff97d265",
+      "size_bytes": 9040
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/go_bridge_proxy.py",
-      "sha256": "68df9ed18b237cf21d7db5b6a2b1a81fca35f8b151c81bb9708b50f4da983587",
-      "size_bytes": 662
+      "sha256": "b9aadf2e8d45be4f17d595b907ba45e2e75a81a28146f56e917e242f3443d7b6",
+      "size_bytes": 661
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/go_contract_runner.py",
-      "sha256": "4a4bd88ae9a26e54c6273f74075762c1c23d7bd0c9ffbf326a0cfb1a47edf1f8",
-      "size_bytes": 1479
+      "sha256": "e3df4ba4f47de59c77fdb0c9d3dad5471fb9ba1547fe2c2248ad3919310d08a6",
+      "size_bytes": 1478
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/go_grader.py",
-      "sha256": "c75dcb6703235a7b8c496456b012a432b940053af7e3c3fe2b0abd923555539e",
-      "size_bytes": 2574
+      "sha256": "767bbd785eb07633f25a2c6c28d4e4109524978967412c1b3413ebc9c566aaf1",
+      "size_bytes": 2573
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/go_supervisor.py",
-      "sha256": "3bf2cf1922c9c70a4b879a3506a9f6af38f096f31f09172ae2bd17da64a7848b",
-      "size_bytes": 2022
+      "sha256": "03b98283b778f30949c20052aa7ce1397f2f3e37cada77148ac119111b9c51b2",
+      "size_bytes": 5358
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/grader.py",
@@ -217,13 +222,13 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/leaf_report.py",
-      "sha256": "375edbe5785e9946d4567a81aa4db41e6667793cd4bd7e8ed8abcbda4a6c1d78",
-      "size_bytes": 2204
+      "sha256": "dda410859278a8d6ce0ac01d833fa2789ed5a0199ddaef12ae6630a54954b69e",
+      "size_bytes": 2203
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/metric_contract.py",
-      "sha256": "7bd0261139ac49f7e6d0fdf9f0c20e987c1a3c4960d44ec60fe75819257ab52b",
-      "size_bytes": 1659
+      "sha256": "0615e0bdf0d573aa89618752f5569059b4b3a93454678d58d0542f2b32bb6a85",
+      "size_bytes": 1658
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/models.py",
@@ -247,23 +252,23 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/normalize/__init__.py",
-      "sha256": "2ac32cfa2dcabe71921fc6495369cecf28293fa41d69655b0eac91988b922b3e",
-      "size_bytes": 191
+      "sha256": "658c03542888fad58f9a83de7c8c8d5d4d981050094c7b9733a2422f314b1a67",
+      "size_bytes": 190
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/normalize/go_json.py",
-      "sha256": "cb1b70422dab4332b20e75235668b5731ebd589d239284c18c3ec28f6a96fb2c",
-      "size_bytes": 3708
+      "sha256": "e0f457a1e68717c29b05b861598b2c46292e6d4305bc756718d6222d63821112",
+      "size_bytes": 3707
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/normalize/node_test_json.py",
-      "sha256": "6cd9988c62a1ced5323f08b32718ed5250da885e31a5c518b103a1403c37a728",
-      "size_bytes": 4032
+      "sha256": "2b4029de215f52a038689c2fbcb6d9b1af2ea94acc413430b7c122f6adae58da",
+      "size_bytes": 4031
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/normalize/pytest_junit.py",
-      "sha256": "8b541ef4201d29179fbf4252029d94f0635753993d93b38889c1481915d1a4f7",
-      "size_bytes": 5101
+      "sha256": "e53ef39639676ee596f977f338ef2ac576922a727867be903b37f7e7d9f32350",
+      "size_bytes": 5100
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/process_cleanup.py",
@@ -277,8 +282,8 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/registry.py",
-      "sha256": "1ee4d1550a3c70ad3cee1dcc8c76c212f34c8d598c21c7b3251e99cd2f13628c",
-      "size_bytes": 4146
+      "sha256": "3a75909aa2c8238825f90475b40257096f527b4e4acdf6002e406d3ae42b897f",
+      "size_bytes": 4145
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/run_pytest.py",
@@ -287,8 +292,8 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/taxonomy.py",
-      "sha256": "1ce73f7766472380f7af55c585aa6f3fa2bdc5ebce3301786bef7a435595f5bc",
-      "size_bytes": 4886
+      "sha256": "ae1dec2ec2c8123a01a5f8ac733fd82de56c998a11ebacc4cd01947e7bd19b47",
+      "size_bytes": 4885
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/workspace_copy.py",
@@ -297,8 +302,8 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "811ad3af8adf02fe8060f0d72f58dcd67e157fecc8b4e311a1ac1186ed75c11b",
-      "size_bytes": 2235
+      "sha256": "5d27dd17f55a69a24e4c62d20d52c5c93f6480680b0741ed7cd67be52d107613",
+      "size_bytes": 2537
     },
     {
       "path": "tests/verifier-requirements.lock.txt",

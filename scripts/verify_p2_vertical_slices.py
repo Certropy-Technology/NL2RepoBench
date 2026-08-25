@@ -12,6 +12,8 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+from nl2repobench.verification.provenance import slice_provenance
+
 
 def _diff_measure(root: Path, base: str) -> dict[str, Any]:
     completed = subprocess.run(
@@ -87,10 +89,16 @@ def _pnpm(root: Path, base: str) -> dict[str, Any]:
     if archived.is_file() and all(path.is_file() for path in required):
         evidence = json.loads(archived.read_text(encoding="utf-8"))
         manifest = json.loads((compiled / "bundle.manifest.json").read_text(encoding="utf-8"))
+        provenance = slice_provenance(
+            root,
+            runtime="node",
+            package_manager="pnpm",
+            bundle_manifest=compiled / "bundle.manifest.json",
+        )
         if (
             evidence.get("archive_contract") == "p2-vertical-slice-v1"
-            and evidence.get("oracle_reward") == 1.0
-            and evidence.get("empty_reward") == 0.0
+            and evidence.get("all_pass") is True
+            and evidence.get("provenance") == provenance
             and isinstance(manifest.get("files"), list)
             and manifest.get("files")
         ):
@@ -189,8 +197,22 @@ def _latest_job(root: Path) -> Path:
     return jobs[-1]
 
 
-def _harbor_controls(jobs_root: Path) -> dict[str, Any]:
-    names = ("oracle", "empty", "stub", "forgery", "install-failure", "call-hang")
+def _harbor_controls(
+    jobs_root: Path,
+    *,
+    root: Path,
+    runtime: str,
+    package_manager: str,
+) -> dict[str, Any]:
+    names = (
+        "oracle",
+        "empty",
+        "stub",
+        "forgery",
+        "install-failure",
+        "call-hang",
+        "offline",
+    )
     controls: dict[str, Any] = {}
     for name in names:
         job = _latest_job(jobs_root / name)
@@ -200,25 +222,56 @@ def _harbor_controls(jobs_root: Path) -> dict[str, Any]:
         trial = trials[0]
         result = json.loads((job / "result.json").read_text(encoding="utf-8"))
         evaluation = next(iter(result["stats"]["evals"].values()))
-        metric = evaluation["metrics"][0]
         grading = json.loads((trial / "verifier/grading.json").read_text(encoding="utf-8"))
+        network = json.loads((trial / "verifier/network.json").read_text(encoding="utf-8"))
+        metrics = evaluation.get("metrics", [])
+        reward = metrics[0]["reward"] if metrics else grading.get("reward", 0.0)
         controls[name] = {
-            "reward": metric["reward"],
+            "reward": reward,
             "exceptions": evaluation["n_errors"],
             "valid": grading.get("valid"),
             "failure_class": grading.get("failure_class"),
             "failure_reason": grading.get("failure_reason"),
+            "public_network_available": network["public_network_available"],
             "job": str(job),
         }
+    evidence_path = jobs_root.parent / (
+        "pnpm-evidence.json" if runtime == "node" else "go-evidence.json"
+    )
+    bundle_manifest = jobs_root.parent / "tasks" / (
+        "node-pnpm-synthetic" if runtime == "node" else "go-google-uuid"
+    ) / "bundle.manifest.json"
+    expected_provenance = slice_provenance(
+        root,
+        runtime=runtime,
+        package_manager=package_manager,
+        bundle_manifest=bundle_manifest,
+    )
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    provenance_bound = evidence.get("provenance") == expected_provenance
     expected = {
         "oracle": controls["oracle"]["valid"] is True and controls["oracle"]["reward"] >= 0.8,
         "empty": controls["empty"]["reward"] == 0.0,
         "stub": controls["stub"]["reward"] <= 0.2,
-        "forgery": controls["forgery"]["reward"] >= 0.8,
+        "forgery": controls["forgery"]["reward"] <= 0.2 and controls["forgery"]["valid"] is True,
         "install-failure": controls["install-failure"]["valid"] is True,
         "call-hang": controls["call-hang"]["valid"] is True,
+        "offline": (
+            controls["offline"]["valid"] is True
+            and controls["offline"]["reward"] >= 0.8
+            and controls["offline"]["public_network_available"] is False
+        ),
+        "network-isolated": all(
+            control["public_network_available"] is False for control in controls.values()
+        ),
+        "provenance-bound": provenance_bound,
     }
-    return {"controls": controls, "gates": expected, "all_pass": all(expected.values())}
+    return {
+        "controls": controls,
+        "gates": expected,
+        "provenance": expected_provenance,
+        "all_pass": all(expected.values()),
+    }
 
 
 def main() -> int:
@@ -235,13 +288,20 @@ def main() -> int:
         raise SystemExit("node vertical slice only supports pnpm in P2")
     if args.runtime == "go" and args.package_manager != "go-modules":
         raise SystemExit("go vertical slice only supports go-modules")
+    if args.oracle_runs != 1:
+        raise SystemExit("P2 vertical slices use the current one-run Oracle contract")
     result = (
         _pnpm(root, args.base)
         if args.runtime == "node"
         else _go(root)
     )
     if args.jobs_dir is not None:
-        harbor = _harbor_controls(args.jobs_dir)
+        harbor = _harbor_controls(
+            args.jobs_dir,
+            root=root,
+            runtime=args.runtime,
+            package_manager=args.package_manager,
+        )
         result["harbor_controls"] = harbor
         if harbor["all_pass"]:
             result["status"] = "pass"
@@ -255,10 +315,23 @@ def main() -> int:
             harbor_controls = evidence.get("harbor_controls", {})
             compiled = root / "reports/go-google-uuid-compiled-v1"
             manifest_path = compiled / "bundle.manifest.json"
+            provenance = slice_provenance(
+                root,
+                runtime="go",
+                package_manager="go-modules",
+                bundle_manifest=manifest_path,
+            )
+            archived_controls = json.loads(
+                (root / "reports/go-google-uuid-controls-v1/go-evidence.json").read_text(
+                    encoding="utf-8"
+                )
+            )
             if (
                 evidence.get("status") == "pass"
                 and evidence.get("archive_contract") == "p2-vertical-slice-v1"
                 and harbor_controls.get("all_pass") is True
+                and archived_controls.get("provenance") == provenance
+                and harbor_controls.get("provenance") == provenance
                 and manifest_path.is_file()
             ):
                 result["harbor_controls"] = harbor_controls

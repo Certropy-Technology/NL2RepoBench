@@ -6,6 +6,7 @@
       "exceptions": 0,
       "failure_class": "model",
       "failure_reason": "candidate-call-failed",
+      "public_network_available": false,
       "reward": 0.0,
       "valid": true
     },
@@ -13,27 +14,39 @@
       "exceptions": 0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
       "reward": 0.0,
       "valid": true
     },
     "forgery": {
       "exceptions": 0,
-      "failure_class": null,
-      "failure_reason": null,
-      "reward": 1.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "public_network_available": false,
+      "reward": 0.0,
       "valid": true
     },
     "install-failure": {
       "exceptions": 0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
       "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "exceptions": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "public_network_available": false,
+      "reward": 1.0,
       "valid": true
     },
     "oracle": {
       "exceptions": 0,
       "failure_class": null,
       "failure_reason": null,
+      "public_network_available": false,
       "reward": 1.0,
       "valid": true
     },
@@ -41,8 +54,21 @@
       "exceptions": 0,
       "failure_class": "model",
       "failure_reason": "candidate-call-failed",
+      "public_network_available": false,
       "reward": 0.0,
       "valid": true
     }
+  },
+  "provenance": {
+    "bundle_manifest_sha256": "ea4d969cc3fc6eed85719da755db1b46f9e92f4f5aee8963758169cfe0cabb18",
+    "canonical_manifest_digest": null,
+    "control_script_sha256": "9989f680e55ca34b19a8dee357e914fca25b29d77da016d613c26684b11fc302",
+    "implementation_tree_sha256": "2724cfb80a879be9a5ede770486163dea0b577ee22dd51bbd889ade58ac5f6b6",
+    "package_manager": "go-modules",
+    "runtime": "go",
+    "schema_version": "p2-slice-provenance-v1",
+    "slice_verifier_sha256": "1161dd47bfd229d4228d539d15e6dfefa60c36496bd3a817f34aec3a1cc00f7a",
+    "source_tree_sha256": "26625c8ed7e291ab72a5bf3111c0e1c9501f73900612c1b6b7903658c44d4442",
+    "toolchain_sha256": "c3ec57c4fcb6889f32fc39b4b7a867356598c61792804aea4f0771829e64b507"
   }
 }

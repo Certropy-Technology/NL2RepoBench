@@ -4,6 +4,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -123,6 +124,33 @@ def test_typed_go_bridge_compiles_and_calls_public_string_api(tmp_path) -> None:
     assert json.loads(result.stdout) == {"value": "hi!"}
 
 
+def test_go_supervisor_caps_output_flood() -> None:
+    result = run_go_bridge(
+        (sys.executable, "-c", "import sys; sys.stdout.write('x' * 1000000)"),
+        b"",
+        timeout_sec=5,
+        max_output_bytes=1024,
+    )
+    assert result.output_limit_exceeded is True
+    assert result.returncode == 125
+    assert len(result.stdout) <= 1024
+
+
+def test_go_supervisor_caps_stdout_and_stderr_together() -> None:
+    result = run_go_bridge(
+        (
+            sys.executable,
+            "-c",
+            "import sys; sys.stdout.write('o' * 800); sys.stderr.write('e' * 800)",
+        ),
+        b"",
+        timeout_sec=5,
+        max_output_bytes=1024,
+    )
+    assert result.output_limit_exceeded is True
+    assert len(result.stdout) + len(result.stderr) <= 1024
+
+
 def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     root = Path(__file__).parents[1]
     output = GoHarborCompiler(root / "toolchain.go.dev.lock.toml").compile_task(
@@ -135,3 +163,6 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert 'package_manager = "go-modules"' in task
     assert (output / "tests/private/bridge.go").is_file()
     assert (output / "tests/test.sh").stat().st_mode & 0o111
+    assert "network_mode: none" in (output / "environment/docker-compose.yaml").read_text()
+    assert "network_mode: none" in (output / "tests/docker-compose.yaml").read_text()
+    assert 'expected_version="1.26.5"' in (output / "tests/test.sh").read_text()

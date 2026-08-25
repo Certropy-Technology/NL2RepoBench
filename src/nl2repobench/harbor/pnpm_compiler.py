@@ -167,6 +167,14 @@ mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json /logs/verifier/report.json
 rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/pnpm-store
+NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
+NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
+if ! python3 -I -c "$NETWORK_CHECK" \\
+  --output /logs/verifier/network.json; then
+  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+    --reason verifier-network-available --output /logs/verifier
+  exit 0
+fi
 install -d -o candidate -g candidate -m 0700 /tmp/pnpm-store
 cp -a /opt/pnpm-bundle/pnpm-store/. /tmp/pnpm-store/
 chown -R candidate:candidate /tmp/pnpm-store
@@ -196,6 +204,11 @@ export NODE_TEST_CLIENT=/tests/private/test_client.mjs
 runner_exit_code=0
 node /tests/runtime/node/run_tests.mjs --tests /tests/private --candidate /tmp/candidate-site \\
   --expected {expected} --output /logs/verifier/report.json || runner_exit_code=$?
+if [[ "$runner_exit_code" -eq 70 ]]; then
+  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+    --reason candidate-call-failed --output /logs/verifier
+  exit 0
+fi
 node /tests/runtime/node/grade-report.mjs --expected {expected} \\
   --report /logs/verifier/report.json \\
   --runner-exit-code "$runner_exit_code" --output /logs/verifier

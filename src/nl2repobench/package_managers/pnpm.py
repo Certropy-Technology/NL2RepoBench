@@ -98,13 +98,14 @@ class PnpmPackageManager:
         for name, entry in packages.items() if isinstance(packages, Mapping) else ():
             if not isinstance(name, str) or not isinstance(entry, Mapping):
                 raise PackageManagerError("pnpm packages entries are malformed")
-            resolution = entry.get("resolution", {})
-            if isinstance(resolution, Mapping) and resolution:
-                integrity = resolution.get("integrity")
-                if integrity is not None and (
-                    not isinstance(integrity, str) or not integrity.startswith("sha512-")
-                ):
-                    raise PackageManagerError(f"package integrity is missing: {name}")
+            resolution = entry.get("resolution")
+            if name == "":
+                continue
+            if not isinstance(resolution, Mapping):
+                raise PackageManagerError(f"package resolution is missing: {name}")
+            integrity = resolution.get("integrity")
+            if not isinstance(integrity, str) or not integrity.startswith("sha512-"):
+                raise PackageManagerError(f"package integrity is missing: {name}")
             if entry.get("hasInstallScript") or entry.get("requiresBuild"):
                 raise PackageManagerError(f"lifecycle/native package is forbidden: {name}")
         if (

@@ -91,7 +91,7 @@ def write_file_manifest(
 
     files: list[dict[str, object]] = []
     for path in sorted(item for item in task_root.rglob("*") if item.is_file()):
-        if path.name == "bundle.manifest.json":
+        if path == task_root / "bundle.manifest.json":
             continue
         data = path.read_bytes()
         files.append(

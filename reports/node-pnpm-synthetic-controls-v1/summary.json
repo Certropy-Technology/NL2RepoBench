@@ -1,9 +1,15 @@
 {
   "abstract_gate": "pass",
+  "archive_contract": "p2-vertical-slice-v1",
   "blocked_reason": null,
   "controls": "pass",
   "diff_measure": {
     "files": [
+      {
+        "added": 37,
+        "deleted": 0,
+        "path": ".github/workflows/p2-contract.yml"
+      },
       {
         "added": 1,
         "deleted": 1,
@@ -215,6 +221,106 @@
         "path": "catalog/sources/gitingest/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/dependencies/go.mod"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/dependencies/go.sum"
+      },
+      {
+        "added": 22,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/dependencies/module.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/dependencies/vendor/modules.txt"
+      },
+      {
+        "added": 35,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/solution/solve.sh"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/solution/vendor/modules.txt"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/tests/bridge.go"
+      },
+      {
+        "added": 7,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/harbor/tests/contract.sh"
+      },
+      {
+        "added": 7,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/instruction.md"
+      },
+      {
+        "added": 64,
+        "deleted": 0,
+        "path": "catalog/sources/go-google-uuid/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/dependencies/go.mod"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/dependencies/go.sum"
+      },
+      {
+        "added": 13,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/dependencies/module.manifest.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/dependencies/vendor/modules.txt"
+      },
+      {
+        "added": 19,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/solution/solve.sh"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/solution/vendor/modules.txt"
+      },
+      {
+        "added": 50,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/tests/bridge.go"
+      },
+      {
+        "added": 7,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/harbor/tests/contract.sh"
+      },
+      {
+        "added": 7,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/instruction.md"
+      },
+      {
+        "added": 60,
+        "deleted": 0,
+        "path": "catalog/sources/go-synthetic/task.toml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/sources/graphneuralnetwork/task.toml"
@@ -293,6 +399,36 @@
         "added": 1,
         "deleted": 1,
         "path": "catalog/sources/natsort/task.toml"
+      },
+      {
+        "added": 8,
+        "deleted": 0,
+        "path": "catalog/sources/node-pnpm-synthetic/harbor/solution/pnpm-lock.yaml"
+      },
+      {
+        "added": 42,
+        "deleted": 0,
+        "path": "catalog/sources/node-pnpm-synthetic/harbor/solution/solve.sh"
+      },
+      {
+        "added": 30,
+        "deleted": 0,
+        "path": "catalog/sources/node-pnpm-synthetic/harbor/tests/contract.test.mjs"
+      },
+      {
+        "added": 15,
+        "deleted": 0,
+        "path": "catalog/sources/node-pnpm-synthetic/harbor/tests/test_client.mjs"
+      },
+      {
+        "added": 7,
+        "deleted": 0,
+        "path": "catalog/sources/node-pnpm-synthetic/instruction.md"
+      },
+      {
+        "added": 74,
+        "deleted": 0,
+        "path": "catalog/sources/node-pnpm-synthetic/task.toml"
       },
       {
         "added": 7,
@@ -575,9 +711,19 @@
         "path": "catalog/sources/xlrd/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/aiofiles/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/aiofiles/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/arguably/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -585,9 +731,19 @@
         "path": "catalog/tasks/arguably/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/asteval/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/asteval/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/autopep8/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -595,9 +751,19 @@
         "path": "catalog/tasks/autopep8/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/bleach/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/bleach/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/boltons/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -605,9 +771,19 @@
         "path": "catalog/tasks/boltons/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/boto/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/boto/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/box/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -615,14 +791,24 @@
         "path": "catalog/tasks/box/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/cachier/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/cachier/task.toml"
       },
       {
-        "added": 13,
-        "deleted": 13,
+        "added": 225,
+        "deleted": 15,
         "path": "catalog/tasks/canonicalize/bundle.manifest.json"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/canonicalize/environment/docker-compose.yaml"
       },
       {
         "added": 2,
@@ -630,9 +816,19 @@
         "path": "catalog/tasks/canonicalize/task.toml"
       },
       {
+        "added": 11,
+        "deleted": 1,
+        "path": "catalog/tasks/canonicalize/tests/Dockerfile"
+      },
+      {
         "added": 54,
         "deleted": 58,
         "path": "catalog/tasks/canonicalize/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/cerberus/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -640,14 +836,29 @@
         "path": "catalog/tasks/cerberus/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/cookiecutter/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/cookiecutter/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/coverage_shield/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/coverage_shield/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/databases/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -660,9 +871,19 @@
         "path": "catalog/tasks/dataclasses-json/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/dataclasses-json/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/dataclasses-json/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/dbutils/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -670,9 +891,19 @@
         "path": "catalog/tasks/dbutils/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/decouple/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/decouple/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/deepdiff/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -680,14 +911,29 @@
         "path": "catalog/tasks/deepdiff/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/deslib/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/deslib/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/dictdatabase/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/dictdatabase/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/docopt-ng/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -700,9 +946,19 @@
         "path": "catalog/tasks/docstring-parser/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/docstring-parser/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/docstring-parser/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/emoji/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -710,8 +966,8 @@
         "path": "catalog/tasks/emoji/task.toml"
       },
       {
-        "added": 9,
-        "deleted": 4,
+        "added": 221,
+        "deleted": 6,
         "path": "catalog/tasks/fast-glob/bundle.manifest.json"
       },
       {
@@ -720,9 +976,19 @@
         "path": "catalog/tasks/fast-glob/task.toml"
       },
       {
+        "added": 11,
+        "deleted": 1,
+        "path": "catalog/tasks/fast-glob/tests/Dockerfile"
+      },
+      {
         "added": 54,
         "deleted": 58,
         "path": "catalog/tasks/fast-glob/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/fastapi-users/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -735,9 +1001,19 @@
         "path": "catalog/tasks/fastjsonschema/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/fastjsonschema/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/fastjsonschema/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/flask-restful/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -745,9 +1021,19 @@
         "path": "catalog/tasks/flask-restful/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/flasky/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/flasky/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/freezegun/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -755,9 +1041,19 @@
         "path": "catalog/tasks/freezegun/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/ftfy/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/ftfy/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/funcy/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -765,9 +1061,19 @@
         "path": "catalog/tasks/funcy/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/fuzzywuzzy/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/fuzzywuzzy/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/gitingest/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -780,9 +1086,19 @@
         "path": "catalog/tasks/httpx/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/httpx/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/httpx/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/humanize/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -795,9 +1111,19 @@
         "path": "catalog/tasks/icecream/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/icecream/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/icecream/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/jsonlines/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -805,9 +1131,19 @@
         "path": "catalog/tasks/jsonlines/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/markdownify/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/markdownify/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/markupsafe/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -820,9 +1156,19 @@
         "path": "catalog/tasks/marshmallow/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/marshmallow/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/marshmallow/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/math-verify/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -830,9 +1176,19 @@
         "path": "catalog/tasks/math-verify/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/mechanicalsoup/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/mechanicalsoup/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/more-Itertools/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -840,9 +1196,19 @@
         "path": "catalog/tasks/more-Itertools/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/paillier/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/paillier/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pandarallel/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -850,14 +1216,29 @@
         "path": "catalog/tasks/pandarallel/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/parse/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/parse/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pathlib2/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/pathlib2/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pdfplumber-stable/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -870,6 +1251,11 @@
         "path": "catalog/tasks/platformdirs/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/platformdirs/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/platformdirs/task.toml"
@@ -880,9 +1266,19 @@
         "path": "catalog/tasks/pydantic-settings/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pydantic-settings/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/pydantic-settings/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pyjwt/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -895,9 +1291,19 @@
         "path": "catalog/tasks/pyperclip/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pyperclip/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/pyperclip/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pypinyin/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -905,9 +1311,19 @@
         "path": "catalog/tasks/pypinyin/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pyquery/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/pyquery/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pysondb-v2/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -915,9 +1331,19 @@
         "path": "catalog/tasks/pysondb-v2/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pytest-cov/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/pytest-cov/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/python-dotenv/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -930,9 +1356,19 @@
         "path": "catalog/tasks/python-fire/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/python-fire/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/python-fire/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/python-fsutil/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -940,9 +1376,19 @@
         "path": "catalog/tasks/python-fsutil/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/python-pathspec/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/python-pathspec/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/python-slugify/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -955,13 +1401,18 @@
         "path": "catalog/tasks/pytz/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/pytz/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/pytz/task.toml"
       },
       {
-        "added": 9,
-        "deleted": 4,
+        "added": 221,
+        "deleted": 6,
         "path": "catalog/tasks/qs/bundle.manifest.json"
       },
       {
@@ -970,9 +1421,19 @@
         "path": "catalog/tasks/qs/task.toml"
       },
       {
+        "added": 11,
+        "deleted": 1,
+        "path": "catalog/tasks/qs/tests/Dockerfile"
+      },
+      {
         "added": 54,
         "deleted": 58,
         "path": "catalog/tasks/qs/tests/runtime/node/grade-report.mjs"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/rich-click/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -980,9 +1441,19 @@
         "path": "catalog/tasks/rich-click/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/schema/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/schema/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/six/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -990,9 +1461,19 @@
         "path": "catalog/tasks/six/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/sortedcontainers/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/sortedcontainers/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/sqlparse/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1000,14 +1481,29 @@
         "path": "catalog/tasks/sqlparse/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/stable-baselines3/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/stable-baselines3/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/stamina/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/stamina/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/structlog/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1020,9 +1516,19 @@
         "path": "catalog/tasks/sympy/bundle.manifest.json"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/sympy/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/sympy/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/tablib/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1030,9 +1536,19 @@
         "path": "catalog/tasks/tablib/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/tenacity/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/tenacity/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/tinydb/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1040,9 +1556,19 @@
         "path": "catalog/tasks/tinydb/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/tqdm/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/tqdm/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/typing_extensions/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1050,9 +1576,19 @@
         "path": "catalog/tasks/typing_extensions/task.toml"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/unidecode/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/unidecode/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/unittest-parametrize/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1060,8 +1596,8 @@
         "path": "catalog/tasks/unittest-parametrize/task.toml"
       },
       {
-        "added": 9,
-        "deleted": 4,
+        "added": 221,
+        "deleted": 6,
         "path": "catalog/tasks/uuid/bundle.manifest.json"
       },
       {
@@ -1070,14 +1606,29 @@
         "path": "catalog/tasks/uuid/task.toml"
       },
       {
+        "added": 11,
+        "deleted": 1,
+        "path": "catalog/tasks/uuid/tests/Dockerfile"
+      },
+      {
         "added": 54,
         "deleted": 58,
         "path": "catalog/tasks/uuid/tests/runtime/node/grade-report.mjs"
       },
       {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/voluptuous/environment/docker-compose.yaml"
+      },
+      {
         "added": 1,
         "deleted": 1,
         "path": "catalog/tasks/voluptuous/task.toml"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "catalog/tasks/xlrd/environment/docker-compose.yaml"
       },
       {
         "added": 1,
@@ -1091,8 +1642,218 @@
       },
       {
         "added": 4,
-        "deleted": 8,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-compiled-v1/agent.Dockerfile"
+      },
+      {
+        "added": 319,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-compiled-v1/bundle.manifest.json"
+      },
+      {
+        "added": 50,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-compiled-v1/task.toml"
+      },
+      {
+        "added": 15,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-compiled-v1/verifier.Dockerfile"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/call-hang.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/call-hang.job-result.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/call-hang.reward.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/empty.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/empty.job-result.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/empty.reward.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/forgery.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/forgery.job-result.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/forgery.reward.json"
+      },
+      {
+        "added": 48,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/go-evidence.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/install-failure.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/install-failure.job-result.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/install-failure.reward.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/oracle.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/oracle.job-result.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/oracle.reward.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/stub.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/stub.job-result.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/stub.reward.json"
+      },
+      {
+        "added": 85,
+        "deleted": 0,
+        "path": "reports/go-google-uuid-controls-v1/summary.json"
+      },
+      {
+        "added": 340,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-compiled-v1/bundle.manifest.json"
+      },
+      {
+        "added": 60,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-compiled-v1/task.toml"
+      },
+      {
+        "added": 23,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-compiled-v1/verifier.Dockerfile"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/empty.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/empty.job-result.json"
+      },
+      {
+        "added": 4,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/empty.reward.json"
+      },
+      {
+        "added": 1,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/oracle.grading.json"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/oracle.job-result.json"
+      },
+      {
+        "added": 4,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/oracle.reward.json"
+      },
+      {
+        "added": 55,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/pnpm-evidence.json"
+      },
+      {
+        "added": 2145,
+        "deleted": 0,
+        "path": "reports/node-pnpm-synthetic-controls-v1/summary.json"
+      },
+      {
+        "added": 89,
+        "deleted": 0,
+        "path": "reports/p2-unified-verifier-state.md"
+      },
+      {
+        "added": 50,
+        "deleted": 66,
+        "path": "reports/phase2-ministats-controls.v1.json"
+      },
+      {
+        "added": 159,
+        "deleted": 0,
+        "path": "scripts/run_go_harbor_controls.sh"
+      },
+      {
+        "added": 152,
+        "deleted": 0,
+        "path": "scripts/run_pnpm_harbor_controls.sh"
+      },
+      {
+        "added": 10,
+        "deleted": 14,
         "path": "scripts/summarize_phase2_controls.py"
+      },
+      {
+        "added": 131,
+        "deleted": 0,
+        "path": "scripts/sync_unified_verifier_projection.py"
+      },
+      {
+        "added": 118,
+        "deleted": 0,
+        "path": "scripts/verify_p2_contract.py"
+      },
+      {
+        "added": 347,
+        "deleted": 0,
+        "path": "scripts/verify_p2_vertical_slices.py"
       },
       {
         "added": 3,
@@ -1115,6 +1876,11 @@
         "path": "src/nl2repobench/harbor/compiler.py"
       },
       {
+        "added": 300,
+        "deleted": 0,
+        "path": "src/nl2repobench/harbor/go_compiler.py"
+      },
+      {
         "added": 9,
         "deleted": 0,
         "path": "src/nl2repobench/harbor/models_v2.py"
@@ -1125,9 +1891,54 @@
         "path": "src/nl2repobench/harbor/node_compiler.py"
       },
       {
+        "added": 231,
+        "deleted": 0,
+        "path": "src/nl2repobench/harbor/pnpm_compiler.py"
+      },
+      {
         "added": 16,
         "deleted": 0,
         "path": "src/nl2repobench/harbor/registry.py"
+      },
+      {
+        "added": 178,
+        "deleted": 0,
+        "path": "src/nl2repobench/harbor/task_writer.py"
+      },
+      {
+        "added": 38,
+        "deleted": 0,
+        "path": "src/nl2repobench/package_managers/__init__.py"
+      },
+      {
+        "added": 31,
+        "deleted": 0,
+        "path": "src/nl2repobench/package_managers/base.py"
+      },
+      {
+        "added": 151,
+        "deleted": 0,
+        "path": "src/nl2repobench/package_managers/go_modules.py"
+      },
+      {
+        "added": 190,
+        "deleted": 0,
+        "path": "src/nl2repobench/package_managers/pnpm.py"
+      },
+      {
+        "added": 36,
+        "deleted": 0,
+        "path": "src/nl2repobench/package_managers/registry.py"
+      },
+      {
+        "added": 5,
+        "deleted": 0,
+        "path": "src/nl2repobench/runtimes/__init__.py"
+      },
+      {
+        "added": 18,
+        "deleted": 0,
+        "path": "src/nl2repobench/runtimes/go.py"
       },
       {
         "added": 24,
@@ -1140,14 +1951,64 @@
         "path": "src/nl2repobench/verification/cli.py"
       },
       {
+        "added": 266,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/evaluator.py"
+      },
+      {
+        "added": 136,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/go_bridge.py"
+      },
+      {
+        "added": 25,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/go_bridge_proxy.py"
+      },
+      {
+        "added": 47,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/go_contract_runner.py"
+      },
+      {
+        "added": 76,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/go_grader.py"
+      },
+      {
+        "added": 151,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/go_supervisor.py"
+      },
+      {
         "added": 98,
         "deleted": 113,
         "path": "src/nl2repobench/verification/grader.py"
       },
       {
+        "added": 65,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/leaf_report.py"
+      },
+      {
+        "added": 45,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/metric_contract.py"
+      },
+      {
         "added": 54,
         "deleted": 58,
         "path": "src/nl2repobench/verification/node/grade-report.mjs"
+      },
+      {
+        "added": 53,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/node/install_candidate_pnpm.mjs"
+      },
+      {
+        "added": 21,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/node/validate-pnpm-command-plan.mjs"
       },
       {
         "added": 95,
@@ -1160,6 +2021,46 @@
         "path": "src/nl2repobench/verification/node_models.py"
       },
       {
+        "added": 11,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/node_pnpm_command_plan.py"
+      },
+      {
+        "added": 7,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/normalize/__init__.py"
+      },
+      {
+        "added": 98,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/normalize/go_json.py"
+      },
+      {
+        "added": 116,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/normalize/node_test_json.py"
+      },
+      {
+        "added": 143,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/normalize/pytest_junit.py"
+      },
+      {
+        "added": 131,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/registry.py"
+      },
+      {
+        "added": 108,
+        "deleted": 0,
+        "path": "src/nl2repobench/verification/taxonomy.py"
+      },
+      {
+        "added": 165,
+        "deleted": 0,
+        "path": "tests/test_go_adapter.py"
+      },
+      {
         "added": 8,
         "deleted": 13,
         "path": "tests/test_harbor_registry.py"
@@ -1170,9 +2071,24 @@
         "path": "tests/test_node_foundation.py"
       },
       {
+        "added": 110,
+        "deleted": 0,
+        "path": "tests/test_package_managers.py"
+      },
+      {
+        "added": 147,
+        "deleted": 0,
+        "path": "tests/test_unified_verifier.py"
+      },
+      {
         "added": 2,
         "deleted": 0,
         "path": "tests/test_verifier.py"
+      },
+      {
+        "added": 3,
+        "deleted": 0,
+        "path": "toolchain.go.dev.lock.toml"
       },
       {
         "added": 3,
@@ -1190,10 +2106,101 @@
         "path": "uv.lock"
       }
     ],
-    "outside_allowed_lines": 2288
+    "outside_allowed_lines": 10044
+  },
+  "harbor_controls": {
+    "all_pass": true,
+    "controls": {
+      "call-hang": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/call-hang/2026-08-25__13-25-21",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "empty": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/empty/2026-08-25__13-21-32",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "forgery": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/forgery/2026-08-25__13-24-01",
+        "public_network_available": false,
+        "reward": 0.125,
+        "valid": true
+      },
+      "install-failure": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/install-failure/2026-08-25__13-24-42",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "offline": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/offline/2026-08-25__13-22-44",
+        "public_network_available": false,
+        "reward": 1.0,
+        "valid": true
+      },
+      "oracle": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/oracle/2026-08-25__13-22-07",
+        "public_network_available": false,
+        "reward": 1.0,
+        "valid": true
+      },
+      "stub": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/p2-pnpm-controls-final3/jobs/stub/2026-08-25__13-23-21",
+        "public_network_available": false,
+        "reward": 0.125,
+        "valid": true
+      }
+    },
+    "gates": {
+      "call-hang": true,
+      "empty": true,
+      "forgery": true,
+      "install-failure": true,
+      "network-isolated": true,
+      "offline": true,
+      "oracle": true,
+      "provenance-bound": true,
+      "stub": true
+    },
+    "provenance": {
+      "bundle_manifest_sha256": "0582b72dfd893ab21011da009db08c2b11fc2ef1a0cc23ef28dba6adfc0c8e16",
+      "canonical_manifest_digest": "sha256:eb7b923fcf8d4d0e705b560269cc35017096f9ad8f373e668dc371dd9533b65a",
+      "control_script_sha256": "347243e54e22f50d4a4057b35d773849db4f23f617f12afa7edddd3da39f8f1f",
+      "implementation_tree_sha256": "2724cfb80a879be9a5ede770486163dea0b577ee22dd51bbd889ade58ac5f6b6",
+      "package_manager": "pnpm",
+      "runtime": "node",
+      "schema_version": "p2-slice-provenance-v1",
+      "slice_verifier_sha256": "1161dd47bfd229d4228d539d15e6dfefa60c36496bd3a817f34aec3a1cc00f7a",
+      "source_tree_sha256": "aeb521e55fa9a5c51e31094ab3f00cd0f2959a237878018ba4745e9e345e52ad",
+      "toolchain_sha256": "ca2d27caac3c316e9ce9c9e7dcb1582992bbb6f8b5f9bb053999b0a6badba287"
+    }
   },
   "lock_summary": {
-    "digest": "f1ab02cef0e1606f5c007b0a55ace8ffeeff50559dc7bd4f7b21518cf2cf1973",
+    "digest": "0acc982155e4d145f4dd0e1cc113b53fc29115026395979dd016fae6af8d7247",
     "importer_count": 1,
     "lockfile_version": "9.0",
     "package_count": 0,

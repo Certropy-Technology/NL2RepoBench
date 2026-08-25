@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -14,6 +15,7 @@ from nl2repobench.verification.leaf_report import (
 from nl2repobench.verification.metric_contract import MetricContract
 from nl2repobench.verification.normalize.node_test_json import normalize_node_test_json
 from nl2repobench.verification.normalize.pytest_junit import normalize_pytest_junit
+from nl2repobench.verification.provenance import slice_provenance
 from nl2repobench.verification.registry import (
     UnknownVerifierRuntimeError,
     VerifierRuntimeRegistry,
@@ -33,6 +35,33 @@ def _report(*statuses: str, exit_code: int | None = None) -> LeafReport:
         trusted_runner_exit_code=exit_code,
         frozen_total=len(statuses),
     )
+
+
+def test_slice_provenance_binds_required_inputs(tmp_path: Path) -> None:
+    for relative, content in (
+        ("catalog/sources/node-pnpm-synthetic/source.txt", "source"),
+        ("src/nl2repobench/runtime.py", "implementation"),
+        ("toolchain.node.dev.lock.toml", "toolchain"),
+        ("scripts/run_pnpm_harbor_controls.sh", "controls"),
+        ("scripts/verify_p2_vertical_slices.py", "slice-verifier"),
+    ):
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+    bundle = tmp_path / "bundle.manifest.json"
+    bundle.write_text(
+        json.dumps({"canonical_manifest_digest": "sha256:test"}), encoding="utf-8"
+    )
+    result = slice_provenance(
+        tmp_path,
+        runtime="node",
+        package_manager="pnpm",
+        bundle_manifest=bundle,
+    )
+    assert result["schema_version"] == "p2-slice-provenance-v1"
+    assert result["runtime"] == "node"
+    assert result["canonical_manifest_digest"] == "sha256:test"
+    assert all(isinstance(result[key], str) for key in result if key.endswith("sha256"))
 
 
 def test_evaluator_keeps_skipped_in_the_fixed_denominator() -> None:
