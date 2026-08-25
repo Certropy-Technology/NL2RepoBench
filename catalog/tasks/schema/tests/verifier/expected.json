@@ -1,0 +1,1106 @@
+{
+  "and-or": {
+    "and": {
+      "ok": true,
+      "value": 3
+    },
+    "and-args": [
+      "Use(<class 'int'>)",
+      "<lambda>"
+    ],
+    "and-fail": {
+      "autos": [
+        "<lambda>(7) should evaluate to True"
+      ],
+      "code": "<lambda>(7) should evaluate to True",
+      "errors": [
+        null
+      ],
+      "message": "<lambda>(7) should evaluate to True",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "or-dict": {
+      "ok": true,
+      "value": {
+        "a": 1
+      }
+    },
+    "or-empty": {
+      "autos": [
+        "Or() did not validate 2"
+      ],
+      "code": "Or() did not validate 2",
+      "errors": [
+        null
+      ],
+      "message": "Or() did not validate 2",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "or-fail": {
+      "autos": [
+        "Or(<class 'int'>, <class 'dict'>) did not validate 'hai'",
+        "'hai' should be instance of 'int'",
+        "'hai' should be instance of 'dict'"
+      ],
+      "code": "Or(<class 'int'>, <class 'dict'>) did not validate 'hai'\n'hai' should be instance of 'int'\n'hai' should be instance of 'dict'",
+      "errors": [
+        null,
+        null,
+        null
+      ],
+      "message": "Or(<class 'int'>, <class 'dict'>) did not validate 'hai'\n'hai' should be instance of 'int'\n'hai' should be instance of 'dict'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "or-int": {
+      "ok": true,
+      "value": 5
+    }
+  },
+  "api-surface": {
+    "all": [
+      "Schema",
+      "And",
+      "Or",
+      "Regex",
+      "Optional",
+      "Use",
+      "Forbidden",
+      "Const",
+      "Literal",
+      "SchemaError",
+      "SchemaWrongKeyError",
+      "SchemaMissingKeyError",
+      "SchemaForbiddenKeyError",
+      "SchemaUnexpectedTypeError",
+      "SchemaOnlyOneAllowedError"
+    ],
+    "exception_bases": {
+      "SchemaError": [
+        "Exception",
+        "BaseException"
+      ],
+      "SchemaForbiddenKeyError": [
+        "SchemaError",
+        "Exception"
+      ],
+      "SchemaMissingKeyError": [
+        "SchemaError",
+        "Exception"
+      ],
+      "SchemaOnlyOneAllowedError": [
+        "SchemaError",
+        "Exception"
+      ],
+      "SchemaUnexpectedTypeError": [
+        "SchemaError",
+        "Exception"
+      ],
+      "SchemaWrongKeyError": [
+        "SchemaError",
+        "Exception"
+      ]
+    },
+    "exports": {
+      "And": true,
+      "Const": true,
+      "Forbidden": true,
+      "Literal": true,
+      "Optional": true,
+      "Or": true,
+      "Regex": true,
+      "Schema": true,
+      "SchemaError": true,
+      "SchemaForbiddenKeyError": true,
+      "SchemaMissingKeyError": true,
+      "SchemaOnlyOneAllowedError": true,
+      "SchemaUnexpectedTypeError": true,
+      "SchemaWrongKeyError": true,
+      "Use": true
+    },
+    "hook_available": true,
+    "version": "0.7.8"
+  },
+  "callable-errors": {
+    "predicate-schema": {
+      "autos": [
+        null,
+        "inner auto"
+      ],
+      "code": "inner public",
+      "errors": [
+        null,
+        "inner public"
+      ],
+      "message": "inner public",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "predicate-value": {
+      "autos": [
+        "value_error('x') raised ValueError('bad')"
+      ],
+      "code": "value_error('x') raised ValueError('bad')",
+      "errors": [
+        null
+      ],
+      "message": "value_error('x') raised ValueError('bad')",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "schema-use": {
+      "autos": [
+        null,
+        null,
+        "inner auto"
+      ],
+      "code": "inner public",
+      "errors": [
+        null,
+        null,
+        "inner public"
+      ],
+      "message": "inner public",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "use-schema": {
+      "autos": [
+        null,
+        "inner auto"
+      ],
+      "code": "inner public",
+      "errors": [
+        null,
+        "inner public"
+      ],
+      "message": "inner public",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "use-value": {
+      "autos": [
+        "value_error('x') raised ValueError('bad')"
+      ],
+      "code": "value_error('x') raised ValueError('bad')",
+      "errors": [
+        null
+      ],
+      "message": "value_error('x') raised ValueError('bad')",
+      "ok": false,
+      "type": "SchemaError"
+    }
+  },
+  "callable-validation": {
+    "false": {
+      "autos": [
+        "<lambda>(-1) should evaluate to True"
+      ],
+      "code": "<lambda>(-1) should evaluate to True",
+      "errors": [
+        null
+      ],
+      "message": "<lambda>(-1) should evaluate to True",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "object": {
+      "ok": true,
+      "value": 2
+    },
+    "object-false": {
+      "autos": [
+        "positive-check(-2) should evaluate to True"
+      ],
+      "code": "positive-check(-2) should evaluate to True",
+      "errors": [
+        null
+      ],
+      "message": "positive-check(-2) should evaluate to True",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "raises": {
+      "autos": [
+        "explode('x') raised ValueError('boom')"
+      ],
+      "code": "explode('x') raised ValueError('boom')",
+      "errors": [
+        null
+      ],
+      "message": "explode('x') raised ValueError('boom')",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "true": {
+      "ok": true,
+      "value": 3
+    }
+  },
+  "custom-errors": {
+    "and": {
+      "autos": [
+        "<lambda>(-1) should evaluate to True"
+      ],
+      "code": "not positive",
+      "errors": [
+        "not positive"
+      ],
+      "message": "not positive",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "nested": {
+      "autos": [
+        "Key 'count' error:",
+        null,
+        "int('x') raised ValueError(\"invalid literal for int() with base 10: 'x'\")"
+      ],
+      "code": "payload invalid\ncount is invalid",
+      "errors": [
+        "payload invalid",
+        "payload invalid",
+        "count is invalid"
+      ],
+      "message": "payload invalid\ncount is invalid",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "or": {
+      "autos": [
+        "Or(<class 'int'>, <class 'float'>) did not validate 'x'",
+        "'x' should be instance of 'int'",
+        "'x' should be instance of 'float'"
+      ],
+      "code": "not numeric: x",
+      "errors": [
+        "not numeric: x",
+        "not numeric: x",
+        "not numeric: x"
+      ],
+      "message": "not numeric: x",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "schema": {
+      "autos": [
+        "'x' should be instance of 'int'"
+      ],
+      "code": "must be int",
+      "errors": [
+        "must be int"
+      ],
+      "message": "must be int",
+      "ok": false,
+      "type": "SchemaUnexpectedTypeError"
+    },
+    "use": {
+      "autos": [
+        "int('x') raised ValueError(\"invalid literal for int() with base 10: 'x'\")"
+      ],
+      "code": "bad integer: x",
+      "errors": [
+        "bad integer: x"
+      ],
+      "message": "bad integer: x",
+      "ok": false,
+      "type": "SchemaError"
+    }
+  },
+  "custom-hook": {
+    "calls": [
+      {
+        "error": null,
+        "key": "deprecated",
+        "scope": {
+          "deprecated": "value"
+        }
+      }
+    ],
+    "first": {
+      "deprecated": "value"
+    },
+    "key": "deprecated",
+    "second": {
+      "deprecated": "value"
+    }
+  },
+  "defaults-callable": {
+    "fresh": {
+      "data": {}
+    },
+    "kwargs": {
+      "message": "Hello, World"
+    },
+    "no-args": {
+      "data": {
+        "created": true
+      }
+    }
+  },
+  "defaults-invalid": {
+    "complex-key": {
+      "message": "Optional keys with defaults must have simple, predictable values, like literal strings or ints. \"And(<class 'str'>, Use(<class 'int'>))\" is too complex.",
+      "ok": false,
+      "type": "TypeError"
+    },
+    "simple-type-key": {
+      "message": "Optional keys with defaults must have simple, predictable values, like literal strings or ints. \"<class 'str'>\" is too complex.",
+      "ok": false,
+      "type": "TypeError"
+    }
+  },
+  "defaults-static": {
+    "filled": {
+      "a": 11,
+      "b": 2
+    },
+    "literal-key": {
+      "data": {}
+    },
+    "verbatim": {
+      "count": "not-an-int"
+    }
+  },
+  "forbidden-keys": {
+    "fallback": {
+      "ok": true,
+      "value": {
+        "age": 50
+      }
+    },
+    "match": {
+      "autos": [
+        "Forbidden key encountered: 'secret' in {'secret': 1}"
+      ],
+      "code": "Forbidden key encountered: 'secret' in {'secret': 1}",
+      "errors": [
+        null
+      ],
+      "message": "Forbidden key encountered: 'secret' in {'secret': 1}",
+      "ok": false,
+      "type": "SchemaForbiddenKeyError"
+    },
+    "priority": {
+      "autos": [
+        "Forbidden key encountered: 'age' in {'age': 50}"
+      ],
+      "code": "Forbidden key encountered: 'age' in {'age': 50}",
+      "errors": [
+        null
+      ],
+      "message": "Forbidden key encountered: 'age' in {'age': 50}",
+      "ok": false,
+      "type": "SchemaForbiddenKeyError"
+    },
+    "value-mismatch": {
+      "autos": [
+        "Wrong key 'age' in {'age': 50}"
+      ],
+      "code": "Wrong key 'age' in {'age': 50}",
+      "errors": [
+        null
+      ],
+      "message": "Wrong key 'age' in {'age': 50}",
+      "ok": false,
+      "type": "SchemaWrongKeyError"
+    }
+  },
+  "ignore-extra-keys": {
+    "dropped": {
+      "key": 5,
+      "nested": {
+        "keep": "yes"
+      }
+    },
+    "retained": {
+      "bad": 4,
+      "key": 5
+    }
+  },
+  "iterable-validation": {
+    "empty": {
+      "ok": true,
+      "value": []
+    },
+    "frozenset": [
+      1,
+      2
+    ],
+    "list": {
+      "ok": true,
+      "value": [
+        1,
+        "two",
+        3
+      ]
+    },
+    "list-bad": {
+      "autos": [
+        "Or(<class 'int'>) did not validate '2'",
+        "'2' should be instance of 'int'"
+      ],
+      "code": "Or(<class 'int'>) did not validate '2'\n'2' should be instance of 'int'",
+      "errors": [
+        null,
+        null
+      ],
+      "message": "Or(<class 'int'>) did not validate '2'\n'2' should be instance of 'int'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "set": [
+      1,
+      2,
+      3
+    ],
+    "tuple": [
+      1,
+      "two"
+    ],
+    "wrong-container": {
+      "autos": [
+        "[1, 2] should be instance of 'tuple'"
+      ],
+      "code": "[1, 2] should be instance of 'tuple'",
+      "errors": [
+        null
+      ],
+      "message": "[1, 2] should be instance of 'tuple'",
+      "ok": false,
+      "type": "SchemaUnexpectedTypeError"
+    }
+  },
+  "json-input": {
+    "bad-json": {
+      "autos": [
+        null,
+        null,
+        "loads('{') raised JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 2 (char 1)')"
+      ],
+      "code": "loads('{') raised JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 2 (char 1)')",
+      "errors": [
+        null,
+        null,
+        null
+      ],
+      "message": "loads('{') raised JSONDecodeError('Expecting property name enclosed in double quotes: line 1 column 2 (char 1)')",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "bad-shape": {
+      "autos": [
+        null,
+        "['not', 'an', 'object'] should be instance of 'dict'"
+      ],
+      "code": "['not', 'an', 'object'] should be instance of 'dict'",
+      "errors": [
+        null,
+        null
+      ],
+      "message": "['not', 'an', 'object'] should be instance of 'dict'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "valid": {
+      "ok": true,
+      "value": {
+        "description": "sample",
+        "files": {
+          "one.txt": {
+            "content": "hello"
+          }
+        },
+        "public": true
+      }
+    }
+  },
+  "json-schema-additional-properties": {
+    "closed": {
+      "$id": "closed-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {
+        "known": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "dynamic": {
+      "$id": "dynamic-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": true,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    },
+    "forbidden": {
+      "$id": "forbidden-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "ignored": {
+      "$id": "ignored-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": true,
+      "properties": {},
+      "required": [],
+      "type": "object"
+    }
+  },
+  "json-schema-basic": {
+    "$id": "https://example.test/person.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "description": "A person",
+    "properties": {
+      "age": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "age"
+    ],
+    "title": "Person",
+    "type": "object"
+  },
+  "json-schema-combinators": {
+    "all-of": {
+      "$id": "all-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "allOf": [
+            {
+              "type": "string"
+            },
+            {
+              "const": "exact"
+            }
+          ]
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    },
+    "any-of": {
+      "$id": "any-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    },
+    "enum": {
+      "$id": "enum-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "read",
+            "write"
+          ]
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    },
+    "single": {
+      "$id": "single-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "const": true
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    }
+  },
+  "json-schema-definitions": {
+    "$id": "person-id",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+      "Address": {
+        "additionalProperties": false,
+        "description": "Postal address",
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "zip": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "city",
+          "zip"
+        ],
+        "title": "Address",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "home": {
+        "$ref": "#/definitions/Address",
+        "description": "Postal address"
+      },
+      "work": {
+        "$ref": "#/definitions/Address",
+        "description": "Postal address"
+      }
+    },
+    "required": [
+      "home",
+      "work"
+    ],
+    "type": "object"
+  },
+  "json-schema-metadata-defaults": {
+    "$id": "product-id",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "description": "Catalog product",
+    "properties": {
+      "enabled": {
+        "default": false,
+        "type": "boolean"
+      },
+      "note": {
+        "default": null,
+        "type": "string"
+      },
+      "productId": {
+        "description": "Identifier",
+        "title": "Product ID",
+        "type": "integer"
+      },
+      "tags": {
+        "default": [
+          "one",
+          "two"
+        ],
+        "type": "array"
+      }
+    },
+    "required": [
+      "productId"
+    ],
+    "title": "Product",
+    "type": "object"
+  },
+  "json-schema-types": {
+    "array": {
+      "$id": "array-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "bool": {
+      "$id": "bool-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "boolean"
+    },
+    "float": {
+      "$id": "float-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "number"
+    },
+    "int": {
+      "$id": "int-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "integer"
+    },
+    "null": {
+      "$id": "null-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "null"
+    },
+    "regex": {
+      "$id": "regex-id",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "pattern": "^v\\d+$",
+      "type": "string"
+    }
+  },
+  "literal-metadata": {
+    "description": "Identifier",
+    "invalid": {
+      "autos": [
+        "'productId' does not match 'other'"
+      ],
+      "code": "'productId' does not match 'other'",
+      "errors": [
+        null
+      ],
+      "message": "'productId' does not match 'other'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "repr": "Literal(\"productId\", description=\"Identifier\")",
+    "schema": "productId",
+    "str": "productId",
+    "title": "Product ID",
+    "valid": {
+      "ok": true,
+      "value": "productId"
+    }
+  },
+  "mapping-errors": {
+    "missing-one": {
+      "autos": [
+        "Missing key: 'key'"
+      ],
+      "code": "Missing key: 'key'",
+      "errors": [
+        null
+      ],
+      "message": "Missing key: 'key'",
+      "ok": false,
+      "type": "SchemaMissingKeyError"
+    },
+    "missing-two": {
+      "autos": [
+        "Missing keys: 'key', 'other'"
+      ],
+      "code": "Missing keys: 'key', 'other'",
+      "errors": [
+        null
+      ],
+      "message": "Missing keys: 'key', 'other'",
+      "ok": false,
+      "type": "SchemaMissingKeyError"
+    },
+    "nested-type": {
+      "autos": [
+        "Key 'outer' error:",
+        "Key 'value' error:",
+        "'x' should be instance of 'int'"
+      ],
+      "code": "Key 'outer' error:\nKey 'value' error:\n'x' should be instance of 'int'",
+      "errors": [
+        null,
+        null,
+        null
+      ],
+      "message": "Key 'outer' error:\nKey 'value' error:\n'x' should be instance of 'int'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "wrong-one": {
+      "autos": [
+        "Wrong key 'bad' in {'bad': 1}"
+      ],
+      "code": "Wrong key 'bad' in {'bad': 1}",
+      "errors": [
+        null
+      ],
+      "message": "Wrong key 'bad' in {'bad': 1}",
+      "ok": false,
+      "type": "SchemaWrongKeyError"
+    },
+    "wrong-two": {
+      "autos": [
+        "Wrong keys 'a', 'b' in {'a': 1, 'b': 2}"
+      ],
+      "code": "Wrong keys 'a', 'b' in {'a': 1, 'b': 2}",
+      "errors": [
+        null
+      ],
+      "message": "Wrong keys 'a', 'b' in {'a': 1, 'b': 2}",
+      "ok": false,
+      "type": "SchemaWrongKeyError"
+    }
+  },
+  "mapping-validation": {
+    "dynamic": {
+      "1": 3,
+      "3.14": 1
+    },
+    "nested": {
+      "items": [
+        {
+          "active": true,
+          "id": 4
+        }
+      ],
+      "name": "sample"
+    }
+  },
+  "named-errors-and-validity": {
+    "invalid": false,
+    "nested": {
+      "autos": [
+        "'Settings' Key 'key' error:",
+        "'x' should be instance of 'int'"
+      ],
+      "code": "'Settings' Key 'key' error:\n'x' should be instance of 'int'",
+      "errors": [
+        null,
+        null
+      ],
+      "message": "'Settings' Key 'key' error:\n'x' should be instance of 'int'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "type": {
+      "autos": [
+        "'Count' 'x' should be instance of 'int'"
+      ],
+      "code": "'Count' 'x' should be instance of 'int'",
+      "errors": [
+        null
+      ],
+      "message": "'Count' 'x' should be instance of 'int'",
+      "ok": false,
+      "type": "SchemaUnexpectedTypeError"
+    },
+    "valid": true
+  },
+  "only-one-key": {
+    "both": {
+      "autos": [
+        "There are multiple keys present from the Or('left', 'right') condition"
+      ],
+      "code": "There are multiple keys present from the Or('left', 'right') condition",
+      "errors": [
+        null
+      ],
+      "message": "There are multiple keys present from the Or('left', 'right') condition",
+      "ok": false,
+      "type": "SchemaOnlyOneAllowedError"
+    },
+    "left": {
+      "ok": true,
+      "value": {
+        "left": "x"
+      }
+    },
+    "nested": {
+      "ok": true,
+      "value": {
+        "left": "x",
+        "nested": {
+          "right": "y"
+        }
+      }
+    },
+    "right": {
+      "ok": true,
+      "value": {
+        "right": "y"
+      }
+    }
+  },
+  "optional-keys": {
+    "absent": {
+      "a": 1
+    },
+    "deduplicated": 2,
+    "present": {
+      "a": 1,
+      "b": 2
+    },
+    "priority": {
+      "a": 1,
+      "b": 2
+    }
+  },
+  "primitive-validation": {
+    "int-bool": {
+      "autos": [
+        "True should be instance of 'int'"
+      ],
+      "code": "True should be instance of 'int'",
+      "errors": [
+        null
+      ],
+      "message": "True should be instance of 'int'",
+      "ok": false,
+      "type": "SchemaUnexpectedTypeError"
+    },
+    "int-ok": {
+      "ok": true,
+      "value": 3
+    },
+    "int-string": {
+      "autos": [
+        "'3' should be instance of 'int'"
+      ],
+      "code": "'3' should be instance of 'int'",
+      "errors": [
+        null
+      ],
+      "message": "'3' should be instance of 'int'",
+      "ok": false,
+      "type": "SchemaUnexpectedTypeError"
+    },
+    "literal-bad": {
+      "autos": [
+        "1 does not match 9"
+      ],
+      "code": "1 does not match 9",
+      "errors": [
+        null
+      ],
+      "message": "1 does not match 9",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "literal-ok": {
+      "ok": true,
+      "value": 1
+    },
+    "object": {
+      "ok": true,
+      "value": [
+        1,
+        2
+      ]
+    },
+    "str-ok": {
+      "ok": true,
+      "value": "hai"
+    }
+  },
+  "regex-validation": {
+    "bad-pattern": {
+      "message": "first argument must be string or compiled pattern",
+      "ok": false,
+      "type": "TypeError"
+    },
+    "match": {
+      "ok": true,
+      "value": "Letters"
+    },
+    "mismatch": {
+      "autos": [
+        "'letters + spaces' does not match '^[a-z]+$'"
+      ],
+      "code": "'letters + spaces' does not match '^[a-z]+$'",
+      "errors": [
+        null
+      ],
+      "message": "'letters + spaces' does not match '^[a-z]+$'",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "pattern": "^[a-z]+$",
+    "repr": "Regex('^[a-z]+$', flags=re.IGNORECASE)",
+    "wrong-type": {
+      "autos": [
+        "3 is not string nor buffer"
+      ],
+      "code": "3 is not string nor buffer",
+      "errors": [
+        null
+      ],
+      "message": "3 is not string nor buffer",
+      "ok": false,
+      "type": "SchemaError"
+    }
+  },
+  "schema-error-code": {
+    "automatic": "auto one\nauto two",
+    "autos": [
+      "auto one",
+      null,
+      "auto one",
+      "auto two"
+    ],
+    "code": "public\nsecond",
+    "errors": [
+      null,
+      "public",
+      "public",
+      "second"
+    ],
+    "str": "public\nsecond"
+  },
+  "schema-properties": {
+    "description": "A person",
+    "ignore_extra_keys": true,
+    "name": "Person",
+    "reference_without_name": {
+      "message": "Schema used as reference should have a name",
+      "ok": false,
+      "type": "ValueError"
+    },
+    "repr": "Schema({'name': <class 'str'>})",
+    "schema": "{'name': <class 'str'>}"
+  },
+  "use-and-const": {
+    "bad": {
+      "autos": [
+        null,
+        "int('seven') raised ValueError(\"invalid literal for int() with base 10: 'seven'\")"
+      ],
+      "code": "int('seven') raised ValueError(\"invalid literal for int() with base 10: 'seven'\")",
+      "errors": [
+        null,
+        null
+      ],
+      "message": "int('seven') raised ValueError(\"invalid literal for int() with base 10: 'seven'\")",
+      "ok": false,
+      "type": "SchemaError"
+    },
+    "const": {
+      "raw": "7"
+    },
+    "int": {
+      "ok": true,
+      "value": 7
+    },
+    "lower": {
+      "ok": true,
+      "value": "mixed"
+    },
+    "noncallable": {
+      "message": "Expected a callable, not 3",
+      "ok": false,
+      "type": "TypeError"
+    }
+  }
+}
