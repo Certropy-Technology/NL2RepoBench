@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "task_id": "qs",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 17,
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "runtime": "Node 24.19.0",
+    "npm": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/qs --output /tmp/qs-revival-final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "result": "passed",
+    "allow_incomplete": false,
+    "runtime": "catalog/tasks/qs"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/qs-revival-compile/qs -a oracle --jobs-dir .nl2repo/runs/qs-revival-20260825T160000Z/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "result": "passed",
+    "valid": true,
+    "expected_total": 17,
+    "collected": 17,
+    "passed": 17,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/qs-revival-20260825T160000Z/oracle/2026-08-25__16-13-39/qs__zkDnpd5/verifier/grading.json",
+      "sha256": "sha256:f85faa5c090033ef679c15a227020668f8eb4ce62c2052c3869943acedc743c1"
+    },
+    "reward_artifact": {
+      "path": ".nl2repo/runs/qs-revival-20260825T160000Z/oracle/2026-08-25__16-13-39/qs__zkDnpd5/verifier/reward.json",
+      "sha256": "sha256:9ecba2eacf6981f764ac0537cbc9a342af74acc52e3f4949382478c7fbc49071"
+    },
+    "network": {
+      "path": ".nl2repo/runs/qs-revival-20260825T160000Z/oracle/2026-08-25__16-13-39/qs__zkDnpd5/verifier/network.json",
+      "sha256": "sha256:bf32e26942366aaa5d96bffe77037dc94b4a488559635159ad833cc0db44f069",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/qs-revival-compile/qs -a nop --jobs-dir .nl2repo/runs/qs-revival-20260825T160000Z/empty --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "result": "passed",
+      "expected_total": 17,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/empty/2026-08-25__16-14-24/qs__LNBPqxk/verifier/grading.json",
+        "sha256": "sha256:56c4030d0aef16b574bebd60589d5d2cc48573854c4ea0b2ac5eb4f573361426"
+      },
+      "network": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/empty/2026-08-25__16-14-24/qs__LNBPqxk/verifier/network.json",
+        "sha256": "sha256:bf32e26942366aaa5d96bffe77037dc94b4a488559635159ad833cc0db44f069",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/qs-revival-controls/qs-stub -a oracle --jobs-dir .nl2repo/runs/qs-revival-20260825T160000Z/stub --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "result": "passed",
+      "expected_total": 17,
+      "collected": 17,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/stub/2026-08-25__16-15-02/qs-stub__SED3284/verifier/grading.json",
+        "sha256": "sha256:66808c1ca320fada3b5c8f9692c8524785ba10444db9d25c545be1c2e556575f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/stub/2026-08-25__16-15-02/qs-stub__SED3284/verifier/network.json",
+        "sha256": "sha256:64c112cd12e081efd7ba7fff0f1cba5aafdafe38189d9b6e8dc986dbbe5fdd01",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/qs-revival-controls/qs-forgery -a oracle --jobs-dir .nl2repo/runs/qs-revival-20260825T160000Z/forgery --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "result": "passed",
+      "expected_total": 17,
+      "collected": 17,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/forgery/2026-08-25__16-15-44/qs-forgery__PpT8aEY/artifacts/workspace/reward.json",
+        "content": "{\"reward\":1,\"passed\":17,\"total\":17}"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/forgery/2026-08-25__16-15-44/qs-forgery__PpT8aEY/verifier/grading.json",
+        "sha256": "sha256:66808c1ca320fada3b5c8f9692c8524785ba10444db9d25c545be1c2e556575f"
+      },
+      "reward_artifact": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/forgery/2026-08-25__16-15-44/qs-forgery__PpT8aEY/verifier/reward.json",
+        "sha256": "sha256:8e991c12858df178d71222388e2022ff3d4f2740ff54906eaf46ba0b3ec88963"
+      },
+      "network": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/forgery/2026-08-25__16-15-44/qs-forgery__PpT8aEY/verifier/network.json",
+        "sha256": "sha256:bf32e26942366aaa5d96bffe77037dc94b4a488559635159ad833cc0db44f069",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "Verifier-integrated network-check.mjs in the fresh Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/qs-revival-20260825T160000Z/oracle/2026-08-25__16-13-39/qs__zkDnpd5/verifier/network.json",
+        "sha256": "sha256:bf32e26942366aaa5d96bffe77037dc94b4a488559635159ad833cc0db44f069"
+      }
+    }
+  },
+  "source_freeze": {
+    "revision": "3a890d4ecd3deb72a45d90be36f4f8c5970467c7",
+    "source_digest": "sha256:f5bb4b5c13cb29aba6441d5781bb17de37b473f74aec203898b28f980ff95402"
+  },
+  "notes": "Fresh controls were prepared through the committed Node v2 prepare-control dispatch. Review, pilot, and publication remain out of scope."
+}

@@ -1,0 +1,12 @@
+QS production terminalization attempt (2026-08-25)
+
+Production compilation with toolchain.node.lock.toml completed without
+--allow-incomplete. Official Harbor 0.21.0 Oracle collected and passed 17/17
+with reward 1.0. The empty control completed with reward 0.0. Stub and forgery
+were not run because the then-current prepare-control command routed through
+the legacy Python toolchain parser and rejected toolchain.node.lock.toml.
+
+The generated runtime was removed fail-closed. The shared registry/compiler
+has since gained Node v2 stub/forgery preparation; rerun only those missing
+controls, require per-run network.json receipts, then regenerate the final
+runtime and canonical valid evidence before advancing lifecycle.

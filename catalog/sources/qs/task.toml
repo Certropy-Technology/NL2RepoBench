@@ -79,9 +79,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
+status = "controls-passed"
 owner = "qs-repair"
-reason = "Official Harbor Oracle passed valid=true with 17/17 fixed leaves and reward 1.0."
+reason = "Fresh Harbor 0.21.0 Node production revalidation passed Oracle 17/17 with reward 1.0; empty, stub, and forgery controls returned reward 0.0; every verifier emitted network.json with public_network_available=false; and the forged workspace reward did not affect verifier-owned grading. Review, pilot, and publication remain out of scope."
 
 [oracle_bundle]
 digest = "sha256:4a8830b28168e71bf06afd5f1741da3b5d1445ae5ee637a38fa65eb64482537d"
