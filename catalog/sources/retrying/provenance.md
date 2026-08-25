@@ -2,7 +2,7 @@
 
 ## Status
 
-`oracle-passed`. The inherited `task.toml` already claimed `oracle-passed` ("three
+`controls-passed`. The inherited `task.toml` already claimed `oracle-passed` ("three
 independent Harbor Oracle runs") but carried no dependency bundle, no test
 bundle and no Oracle bundle, so that claim could not be compiled or reproduced.
 It has been replaced with evidence from a generic compiled run: the task now
@@ -133,5 +133,5 @@ note the compiled Oracle here is fully local and needed no host authorization.
 ## Remaining gates
 
 Blind review, spec traceability review and pilot are still pending, so this task
-is `oracle-passed`, not `published`. Cross-run Oracle stability was not measured;
+is `controls-passed`, not `published`. Cross-run Oracle stability was not measured;
 the current Package campaign contract requires one run.
