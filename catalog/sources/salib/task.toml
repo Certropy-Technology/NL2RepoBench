@@ -62,7 +62,7 @@ contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
 # xfail handling still needs an explicit verifier decision; the source suite
 # contains one xfail marker and no final metric artifact has been authored.
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

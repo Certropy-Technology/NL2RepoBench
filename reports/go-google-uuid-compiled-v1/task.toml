@@ -1,0 +1,50 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-google-uuid"
+version = "0.1.0"
+description = "Recreate the serializable Parse API of google/uuid through a Go bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "uuid",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = [
+    "go",
+    "go-modules",
+    "uuid",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

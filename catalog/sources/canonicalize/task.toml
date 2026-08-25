@@ -62,7 +62,7 @@ commands_artifact = { digest = "sha256:cee1b3612813db19dbc6c5ef687b4cb81418b9376
 test_bundle = { digest = "sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1d0804c94875e62734e0cb6a78130282e77a0696b1d2ecee36d83878120d9488", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]

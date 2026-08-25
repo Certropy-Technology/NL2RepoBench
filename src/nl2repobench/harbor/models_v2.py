@@ -22,6 +22,9 @@ from .models import PINNED_IMAGE, HarborVersionLock
 class NodeImageLockV2(V2RecordModel):
     agent_base: str
     verifier_base: str
+    verifier_python_base: str = (
+        "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+    )
     platform: Literal["linux/amd64"] = "linux/amd64"
     status: Literal["locked", "development-only"] = "development-only"
 
@@ -30,6 +33,7 @@ class NodeImageLockV2(V2RecordModel):
         for name, value in {
             "agent_base": self.agent_base,
             "verifier_base": self.verifier_base,
+            "verifier_python_base": self.verifier_python_base,
         }.items():
             if self.status == "locked":
                 if not re.fullmatch(PINNED_IMAGE, value):
@@ -42,6 +46,7 @@ class NodeImageLockV2(V2RecordModel):
 class NodeRuntimeLockV2(V2RecordModel):
     runtime_version: str = Field(pattern=r"^(?:22|24)\.[0-9]+\.[0-9]+$")
     npm_version: str = Field(pattern=SEMVER_PATTERN)
+    pnpm_version: str | None = Field(default=None, pattern=SEMVER_PATTERN)
     libc: Literal["glibc", "musl"]
     executable: str = "/usr/local/bin/node"
     npm_executable: str = "/usr/local/bin/npm"
@@ -54,6 +59,8 @@ class NodeHarborToolchainLockV2(V2RecordModel):
     runtime: NodeRuntimeLockV2
     node_grader: Literal["absent", "locked"] = "absent"
     node_runtime_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")
+    verifier_requirements_lock: str = "verifier/requirements.lock.txt"
+    verifier_requirements_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")
     node_report_schema: Literal["node-test-json-v1"] = "node-test-json-v1"
 
     @model_validator(mode="after")
@@ -66,6 +73,8 @@ class NodeHarborToolchainLockV2(V2RecordModel):
             raise ValueError("production Node toolchain requires a locked Node grader")
         if self.status == "locked" and self.node_runtime_sha256 is None:
             raise ValueError("production Node toolchain requires a Node runtime hash")
+        if self.status == "locked" and self.verifier_requirements_sha256 is None:
+            raise ValueError("production Node toolchain requires verifier requirements hash")
         return self
 
 

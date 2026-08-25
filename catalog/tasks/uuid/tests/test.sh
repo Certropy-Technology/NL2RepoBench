@@ -4,6 +4,12 @@ mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json   /logs/verifier/report.json /logs/verifier/network.json
 rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/npm-cache
+NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
+NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
+if ! python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json; then
+  node /tests/runtime/node/grade-report.mjs --expected 11 --reason verifier-network-available --output /logs/verifier
+  exit 0
+fi
 
 /usr/local/bin/node /tests/runtime/node/network-check.mjs \
   --output /logs/verifier/network.json
@@ -79,6 +85,10 @@ node /tests/runtime/node/run_tests.mjs \
   --candidate /tmp/candidate-site \
   --expected 11 \
   --output /logs/verifier/report.json || runner_exit_code=$?
+if [[ "$runner_exit_code" -eq 70 ]]; then
+  node /tests/runtime/node/grade-report.mjs --expected 11 --reason candidate-call-failed --output /logs/verifier
+  exit 0
+fi
 node /tests/runtime/node/grade-report.mjs \
   --expected 11 \
   --report /logs/verifier/report.json \

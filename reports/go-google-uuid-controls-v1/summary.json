@@ -1,0 +1,115 @@
+{
+  "abstract_gate": "pass",
+  "archive_contract": "p2-vertical-slice-v1",
+  "blocked_reason": null,
+  "controls": "pass",
+  "harbor_controls": {
+    "all_pass": true,
+    "controls": {
+      "call-hang": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "job": "/tmp/merge-go-controls/jobs/call-hang/2026-08-25__19-44-50",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "empty": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "job": "/tmp/merge-go-controls/jobs/empty/2026-08-25__19-36-46",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "forgery": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "job": "/tmp/merge-go-controls/jobs/forgery/2026-08-25__19-43-13",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "install-failure": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "job": "/tmp/merge-go-controls/jobs/install-failure/2026-08-25__19-44-08",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "offline": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/merge-go-controls/jobs/offline/2026-08-25__19-41-25",
+        "public_network_available": false,
+        "reward": 1.0,
+        "valid": true
+      },
+      "oracle": {
+        "exceptions": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "job": "/tmp/merge-go-controls/jobs/oracle/2026-08-25__19-40-32",
+        "public_network_available": false,
+        "reward": 1.0,
+        "valid": true
+      },
+      "stub": {
+        "exceptions": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "job": "/tmp/merge-go-controls/jobs/stub/2026-08-25__19-42-20",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      }
+    },
+    "gates": {
+      "call-hang": true,
+      "empty": true,
+      "forgery": true,
+      "install-failure": true,
+      "network-isolated": true,
+      "offline": true,
+      "oracle": true,
+      "provenance-bound": true,
+      "stub": true
+    },
+    "provenance": {
+      "bundle_manifest_sha256": "95780fe6df967af8ef30699785d64c2940b5923007a4d002b57aaa4747ab375e",
+      "canonical_manifest_digest": null,
+      "control_script_sha256": "9989f680e55ca34b19a8dee357e914fca25b29d77da016d613c26684b11fc302",
+      "implementation_tree_sha256": "a2c35b97a883222f8b43bc288ff63eba38c1ba3c6ae9122ffcd52e9b3d79205b",
+      "package_manager": "go-modules",
+      "runtime": "go",
+      "schema_version": "p2-slice-provenance-v1",
+      "slice_verifier_sha256": "0e13a74d32950098695393b17e8220cf8b9f1fc7c514a5505e21920436893599",
+      "source_tree_sha256": "26625c8ed7e291ab72a5bf3111c0e1c9501f73900612c1b6b7903658c44d4442",
+      "toolchain_sha256": "c3ec57c4fcb6889f32fc39b4b7a867356598c61792804aea4f0771829e64b507"
+    }
+  },
+  "local_controls": {
+    "empty": "model-zero",
+    "forgery": "ignored-by-trusted-result",
+    "hang": "timeout-guarded",
+    "offline": "pass",
+    "oracle": "pass",
+    "stub": "model-zero"
+  },
+  "lock_validator": "go-modules",
+  "oracle_runs_requested": 1,
+  "package_manager": "go-modules",
+  "real_bridge_build": "pass",
+  "release_blocked_reason": "source lifecycle/environment publication evidence is not complete",
+  "release_status": "blocked",
+  "runtime": "go",
+  "source_digest": "sha256:e24d1eb2f3787e8e47cacff5c9ef5e7286ef6406a22da2da036fd2a19fa5c049",
+  "source_revision": "0f11ee6918f41a04c201eceeadf612a377bc7fbc",
+  "status": "pass"
+}

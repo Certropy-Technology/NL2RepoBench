@@ -1,0 +1,340 @@
+{
+  "canonical_manifest_digest": "sha256:eb7b923fcf8d4d0e705b560269cc35017096f9ad8f373e668dc371dd9533b65a",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "9f32def59730d934de7fd6044e758a88642f9fddd60328ef62d2a7229fbc03f5",
+      "size_bytes": 236
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "517bb8f1dcd86be7924092ec531f8ec1475ccf19b70d97bb03e2eca91c70cac9",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "8175af6349bd6de1f3f0b6a8dafc48c716eeb6391dce5d9c0d0393fbbff0853e",
+      "size_bytes": 417
+    },
+    {
+      "path": "solution/pnpm-lock.yaml",
+      "sha256": "0acc982155e4d145f4dd0e1cc113b53fc29115026395979dd016fae6af8d7247",
+      "size_bytes": 139
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "cd63a3cf69a0381bde5dc0bcfb4421256bf87f1e54721b234cc99f04bf7f3f99",
+      "size_bytes": 1112
+    },
+    {
+      "path": "task.toml",
+      "sha256": "30e4f07f272c4360a67aa98e439a1c7898f8357ffa9dee19a5c33a8c4be26122",
+      "size_bytes": 1234
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "bdcc0a7535a56f1195f77ba35b2156b2f13e0f52e471cd1a1b788a2e0e8c1eb5",
+      "size_bytes": 1182
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "5986130fa71958a61ad8e4d834bf7667c07f26efd7227197a78db13dc0fdeb98",
+      "size_bytes": 177
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "ee8bb9e31149a3d7a20a8a917bb6d60a3b759b014986c542761316c815e0f074",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/dependencies/pnpm-lock.yaml",
+      "sha256": "0acc982155e4d145f4dd0e1cc113b53fc29115026395979dd016fae6af8d7247",
+      "size_bytes": 139
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/contract.test.mjs",
+      "sha256": "aab1517e8f59fa4b86283f59e1c5323174bf2c87f799a3524998099cd90850b0",
+      "size_bytes": 1323
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "6855fd33e19ebfb51fd0e2f13f3c5e5fb20f31c70c09159c1e8c2dd28c491c02",
+      "size_bytes": 1000
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/domain/models.py",
+      "sha256": "b0788c4376fc4bc8d6345238ae9111eee81b05522aa0cc20c5a6e44b6d01c04b",
+      "size_bytes": 28603
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/domain/models_v2.py",
+      "sha256": "f633603fa360842cbc68d3a516ead78e9ce4ab8782da5536195345f30e8ab862",
+      "size_bytes": 15094
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/domain/runtime.py",
+      "sha256": "b72eb097de0e25a01c9117bcbd7cbc4e10bcf1e9e9fcdf550b6a609f4efd12c8",
+      "size_bytes": 5529
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/package_managers/__init__.py",
+      "sha256": "3a2636d788e41dd7a31a20e422c3af2442c2ad6bee39e9cd6e4554666ac1a468",
+      "size_bytes": 1120
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/package_managers/base.py",
+      "sha256": "77c4a81eb31541db2343e80872e9649f32dc5e3434a689bb25d2dca83d47ca29",
+      "size_bytes": 784
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/package_managers/go_modules.py",
+      "sha256": "897c9a34b3b7300b0020c78ab124f12143fd25d13b0261674db25aad15bfe7fd",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/__init__.py",
+      "sha256": "2f97d1d1f2eb417a01310aae6ea7d15000451c088efba5c575f5ff6615a933c9",
+      "size_bytes": 1159
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "8f0047ee52ac29dafb61fbf9a0894281f42359f9a0b6ae28c663eceab78b6101",
+      "size_bytes": 7485
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "684528089ccf130e32f889bc76c6693f4ca2e2a10e253b3f33171c5c38e99a31",
+      "size_bytes": 5017
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3483a52bae169b117dc538130fdc898bd023966d6b454ebadcd9a871d8d43ad1",
+      "size_bytes": 6147
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/cli.py",
+      "sha256": "8427c0b606f76a1c73528dcb4588e7b18b5b35b7d3bf797a5a43758e1c745eb8",
+      "size_bytes": 3012
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/evaluator.py",
+      "sha256": "20f9ad77f637b5232acafc0af7d00b2eccd701e8a13b60d9858f838cff97d265",
+      "size_bytes": 9040
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/go_bridge_proxy.py",
+      "sha256": "b9aadf2e8d45be4f17d595b907ba45e2e75a81a28146f56e917e242f3443d7b6",
+      "size_bytes": 661
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/go_contract_runner.py",
+      "sha256": "e3df4ba4f47de59c77fdb0c9d3dad5471fb9ba1547fe2c2248ad3919310d08a6",
+      "size_bytes": 1478
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/go_grader.py",
+      "sha256": "767bbd785eb07633f25a2c6c28d4e4109524978967412c1b3413ebc9c566aaf1",
+      "size_bytes": 2573
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/go_supervisor.py",
+      "sha256": "03b98283b778f30949c20052aa7ce1397f2f3e37cada77148ac119111b9c51b2",
+      "size_bytes": 5358
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/grader.py",
+      "sha256": "5ef7fd8572e80b88a9ba5057ee72a9fdd12e449fd81365c3c09a0bda51e8477b",
+      "size_bytes": 5497
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/leaf_report.py",
+      "sha256": "dda410859278a8d6ce0ac01d833fa2789ed5a0199ddaef12ae6630a54954b69e",
+      "size_bytes": 2203
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/metric_contract.py",
+      "sha256": "0615e0bdf0d573aa89618752f5569059b4b3a93454678d58d0542f2b32bb6a85",
+      "size_bytes": 1658
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/node_grader.py",
+      "sha256": "66587ad1481c445dcd46a16c13cb96898b99dce92a10d1db848cd6828fb8d411",
+      "size_bytes": 5230
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/node_models.py",
+      "sha256": "d08b3c42350e11f55969b7f52b923a454949969b01b79e47c04556823aeb64aa",
+      "size_bytes": 4199
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/normalize/__init__.py",
+      "sha256": "658c03542888fad58f9a83de7c8c8d5d4d981050094c7b9733a2422f314b1a67",
+      "size_bytes": 190
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/normalize/go_json.py",
+      "sha256": "e0f457a1e68717c29b05b861598b2c46292e6d4305bc756718d6222d63821112",
+      "size_bytes": 3707
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/normalize/node_test_json.py",
+      "sha256": "2b4029de215f52a038689c2fbcb6d9b1af2ea94acc413430b7c122f6adae58da",
+      "size_bytes": 4031
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/normalize/pytest_junit.py",
+      "sha256": "e53ef39639676ee596f977f338ef2ac576922a727867be903b37f7e7d9f32350",
+      "size_bytes": 5100
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/registry.py",
+      "sha256": "3a75909aa2c8238825f90475b40257096f527b4e4acdf6002e406d3ae42b897f",
+      "size_bytes": 4145
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/taxonomy.py",
+      "sha256": "ae1dec2ec2c8123a01a5f8ac733fd82de56c998a11ebacc4cd01947e7bd19b47",
+      "size_bytes": 4885
+    },
+    {
+      "path": "tests/python-runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "01560bb4bde787771440e7fe29906d03765f14a88fa5231830c1764c0fee2b5a",
+      "size_bytes": 2042
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/install_candidate_pnpm.mjs",
+      "sha256": "e7c8618c576ef8ced0f30b4267934ed88fda9b1484f8d20c4dabbd2059ca0385",
+      "size_bytes": 2007
+    },
+    {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/runtime/node/validate-pnpm-command-plan.mjs",
+      "sha256": "dbe0484546e69fc82757b74d4ced2d67cd54ddb6c87c3234e6386216b043535c",
+      "size_bytes": 648
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "9cbfdf7e75b6f6356e9cc57310ba3f9de46ccb08edec2db53b376b8eaa8fe0b5",
+      "size_bytes": 2414
+    },
+    {
+      "path": "tests/verifier-requirements.lock.txt",
+      "sha256": "1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb",
+      "size_bytes": 4194
+    }
+  ],
+  "mode": "development",
+  "schema_version": "2.0",
+  "task_id": "node-pnpm-synthetic",
+  "task_version": "2.0.0",
+  "toolchain_lock_digest": "sha256:b212f4c3064fe4510ae5b8a035814577bd8b0994c913ae45724a6f1505edd540"
+}

@@ -176,9 +176,9 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "NODE_CANDIDATE_SITE=/tmp/candidate-site" in generated_test_script
     assert "NODE_TEST_CLIENT=/tests/private/test_client.mjs" in generated_test_script
     assert "candidate-installation-failed" in generated_test_script
-    assert "network-check.mjs" in generated_test_script
+    assert "nl2repobench.verification.network_check" in generated_test_script
     assert "network.json" in generated_test_script
-    assert 'network_reason=verifier-internal-error' in generated_test_script
+    assert "candidate-call-failed" in generated_test_script
     assert 'schema_version = "1.4"' in (first / "task.toml").read_text()
     assert 'language = "node"' in (first / "task.toml").read_text()
     assert not (first / "environment/docker-compose.yaml").exists()
@@ -823,6 +823,8 @@ def test_node_verifier_cli_writes_v2_outputs(
             "grade-node",
             "--expected",
             "1",
+            "--runtime",
+            "node",
             "--report",
             str(report),
             "--runner-exit-code",

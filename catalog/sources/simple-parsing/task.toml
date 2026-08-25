@@ -61,7 +61,7 @@ commands = ["python -m pytest -q"]
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 # xfail/xpass handling is intentionally unresolved while lifecycle=blocked;
 # no production metric may be derived from this provisional contract.
 collection_mismatch = "fail"

@@ -2,13 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
-from nl2repobench.harbor.registry import (
-    HarborCompilerRegistry,
-    UnknownRuntimeAdapterError,
-)
+from nl2repobench.harbor.registry import HarborCompilerRegistry
 
 
 class _FakeCompiler:
@@ -54,12 +49,12 @@ def test_registry_resolves_exact_identity_without_language_branch() -> None:
     assert calls == [(Path("toolchain.lock.toml"), True)]
 
 
-def test_registry_fails_closed_for_unregistered_identity() -> None:
+def test_registry_resolves_registered_pnpm_identity() -> None:
     registry = HarborCompilerRegistry.default()
-    with pytest.raises(UnknownRuntimeAdapterError, match=r"node\+pnpm"):
-        registry.resolve(
-            RuntimeDiscriminator(
-                language=RuntimeLanguage.NODE,
-                package_manager=PackageManager.PNPM,
-            )
+    factory = registry.resolve(
+        RuntimeDiscriminator(
+            language=RuntimeLanguage.NODE,
+            package_manager=PackageManager.PNPM,
         )
+    )
+    assert factory.__name__ == "node_pnpm_factory"

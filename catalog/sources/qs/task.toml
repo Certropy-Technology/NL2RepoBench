@@ -61,7 +61,7 @@ commands_artifact = { digest = "sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177
 test_bundle = { digest = "sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]

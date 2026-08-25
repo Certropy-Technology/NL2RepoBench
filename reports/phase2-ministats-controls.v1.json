@@ -1,87 +1,71 @@
 {
-  "schema_version": "1.0",
-  "recorded_at": "2026-08-17",
-  "harbor_version": "0.21.0",
-  "task_schema": "1.4",
-  "canonical_manifest_digest": "sha256:cde5706d0a36ac7a3de5b1d237c8e719f21e87d695416e6ab173ad468f66f284",
-  "bundle_manifest_sha256": "f28772f815fe5e0d6c5c0456245ce1dd36f59c345faafd8d49c1ee1bdc493fb6",
-  "toolchain_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff",
-  "harbor_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
-  "verifier_requirements_sha256": "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb",
+  "bundle_manifest_sha256": "fe4e7b6314ff4e6857140713abf603a09349ef856f71f5db51b20736626ba028",
+  "canonical_manifest_digest": "sha256:4e898b7dce52f8fdd720691545001627634cf7fb9dad3e3c71896637e9ba72f8",
   "controls": {
+    "call_hang": {
+      "exceptions": 0,
+      "grading_valid": true,
+      "public_network_available": false,
+      "reward": 0.1111111111111111,
+      "test_pass_rate": 0.1111111111111111
+    },
+    "empty": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_valid": true,
+      "public_network_available": false,
+      "reward": 0.0,
+      "test_pass_rate": 0.0
+    },
+    "forgery": {
+      "exceptions": 0,
+      "grading_valid": true,
+      "public_network_available": false,
+      "reward": 0.05555555555555555,
+      "test_pass_rate": 0.05555555555555555
+    },
+    "install_hang": {
+      "exceptions": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_valid": true,
+      "public_network_available": false,
+      "reward": 0.0,
+      "test_pass_rate": 0.0
+    },
     "oracle": [
       {
         "attempt": 1,
-        "reward": 1.0,
-        "test_pass_rate": 1.0,
-        "grading_valid": true,
         "exceptions": 0,
-        "public_network_available": false
-      },
-      {
-        "attempt": 2,
-        "reward": 1.0,
-        "test_pass_rate": 1.0,
         "grading_valid": true,
-        "exceptions": 0,
-        "public_network_available": false
-      },
-      {
-        "attempt": 3,
+        "public_network_available": false,
         "reward": 1.0,
-        "test_pass_rate": 1.0,
-        "grading_valid": true,
-        "exceptions": 0,
-        "public_network_available": false
+        "test_pass_rate": 1.0
       }
     ],
-    "empty": {
-      "reward": 0.0,
-      "test_pass_rate": 0.0,
-      "grading_valid": true,
-      "exceptions": 0,
-      "public_network_available": false,
-      "failure_class": "model",
-      "failure_reason": "candidate-installation-failed"
-    },
     "stub": {
-      "reward": 0.05555555555555555,
-      "test_pass_rate": 0.05555555555555555,
-      "grading_valid": true,
       "exceptions": 0,
-      "public_network_available": false
-    },
-    "forgery": {
-      "reward": 0.05555555555555555,
-      "test_pass_rate": 0.05555555555555555,
       "grading_valid": true,
-      "exceptions": 0,
-      "public_network_available": false
-    },
-    "install_hang": {
-      "reward": 0.0,
-      "test_pass_rate": 0.0,
-      "grading_valid": true,
-      "exceptions": 0,
       "public_network_available": false,
-      "failure_class": "model",
-      "failure_reason": "candidate-installation-failed"
+      "reward": 0.05555555555555555,
+      "test_pass_rate": 0.05555555555555555
     },
     "workspace_invalid": {
-      "reward": 0.0,
-      "test_pass_rate": 0.0,
-      "grading_valid": true,
       "exceptions": 0,
-      "public_network_available": false,
       "failure_class": "model",
-      "failure_reason": "candidate-workspace-rejected"
-    },
-    "call_hang": {
-      "reward": 0.1111111111111111,
-      "test_pass_rate": 0.1111111111111111,
+      "failure_reason": "candidate-workspace-rejected",
       "grading_valid": true,
-      "exceptions": 0,
-      "public_network_available": false
+      "public_network_available": false,
+      "reward": 0.0,
+      "test_pass_rate": 0.0
     }
-  }
+  },
+  "harbor_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+  "harbor_version": "0.21.0",
+  "recorded_at": "2026-08-25T03:45:25.600047Z",
+  "schema_version": "1.0",
+  "task_schema": "1.4",
+  "toolchain_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff",
+  "verifier_requirements_sha256": "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
 }
