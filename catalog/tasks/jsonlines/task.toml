@@ -1,35 +1,56 @@
 schema_version = "1.4"
-artifacts = ["/workspace"]
+artifacts = [
+    "/workspace",
+]
 
 [task]
 name = "nl2repobench/jsonlines"
-version = "0.1.0"
-description = "Build the jsonlines package from an empty workspace."
-authors = [{ name = "NL2RepoBench" }]
-keywords = ["python", "repository-generation", "nl2repobench"]
+version = "1.0.0"
+description = "Build jsonlines 4.0.0 from an empty workspace and satisfy a bounded Reader, Writer, JSON, error, iteration, and file-mode contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "json-lines",
+    "streaming",
+    "reader",
+    "writer",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "easy"
-category = "python-library"
-tags = ["python"]
+category = "data-serialization"
+tags = [
+    "python",
+    "json-lines",
+    "streaming",
+    "reader",
+    "writer",
+    "separate-verifier",
+]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 27
+expected_test_count = 30
+canonical_manifest_digest = "sha256:3ce9824f3232394e5d18b6908f0ebf8c48a12e78e6584482cff3e252a1e470be"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
 [agent]
-timeout_sec = 3600.0
+timeout_sec = 1800.0
 
 [verifier]
 timeout_sec = 600.0
 environment_mode = "separate"
-
-[environment]
 network_mode = "no-network"
-build_timeout_sec = 600.0
-cpus = 2
-memory_mb = 4096
-storage_mb = 8192
 
 [verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
 network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 2
