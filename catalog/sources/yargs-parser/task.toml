@@ -1,0 +1,44 @@
+schema_version = "2.0"
+task_id = "yargs-parser"
+version = "0.1.0"
+instruction = "blocked.md"
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "argument-parser"
+tags = ["node", "npm", "cli", "parser", "blocked"]
+[source]
+status = "unknown"
+upstream_url = "https://github.com/yargs/yargs-parser.git"
+revision = "6a974f493742dba3726cb2c3f602b25745853d99"
+submodules = []
+[environment]
+status = "unknown"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The npm lock/cache and separate node:test verifier contract are not frozen."
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+[lifecycle]
+status = "blocked"
+owner = "repair/yargs-parser"
+reason = "Static audit is blocked pending compliant npm closure, collection, verifier, Oracle, and controls."

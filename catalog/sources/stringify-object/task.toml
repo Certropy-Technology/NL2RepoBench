@@ -1,0 +1,44 @@
+schema_version = "2.0"
+task_id = "stringify-object"
+version = "0.1.0"
+instruction = "blocked.md"
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "object-stringifier"
+tags = ["node", "npm", "stringify", "blocked"]
+[source]
+status = "unknown"
+upstream_url = "https://github.com/sindresorhus/stringify-object"
+revision = "c359727290822d9cabf7c07fb86cdb08701c1010"
+submodules = []
+[environment]
+status = "unknown"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The development audit lacks a compliant npm v3 closure, verifier, and frozen collection."
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+[lifecycle]
+status = "blocked"
+owner = "repair/stringify-object"
+reason = "No production dependency/cache closure, private adapter, Oracle, or controls are available."

@@ -1,0 +1,40 @@
+schema_version = "1.0"
+task_id = "uiautomator"
+version = "0.1.0"
+instruction = "blocked.md"
+[metadata]
+difficulty = "hard"
+category = "android-automation"
+tags = ["python", "android", "uiautomator", "blocked"]
+language = "python"
+[source]
+status = "unknown"
+upstream_url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+submodules = []
+[environment]
+status = "unknown"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Device/ADB environment and dependency closure are not reproducibly frozen."
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+[lifecycle]
+status = "blocked"
+owner = "repair/uiautomator"
+reason = "The audit cannot establish a reproducible device/runtime, source authority, verifier, Oracle, or controls."

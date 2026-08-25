@@ -1,0 +1,41 @@
+schema_version = "1.0"
+task_id = "soupsieve"
+version = "0.1.0"
+instruction = "audit.md"
+[metadata]
+difficulty = "hard"
+category = "html-selector"
+tags = ["python", "css", "selector", "blocked"]
+language = "python"
+[source]
+status = "unknown"
+upstream_url = "https://github.com/facelessuser/soupsieve"
+revision = "4caaf89344dc9a9baaedb7f0ab04d45526e61293"
+submodules = []
+[environment]
+status = "unknown"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "License, dependency closure, collection, and separate verifier evidence are not independently verified."
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+[lifecycle]
+status = "blocked"
+owner = "repair/soupsieve"
+reason = "Static audit remains blocked: license and source freeze, dependency closure, collection, verifier, Oracle, and controls are incomplete."

@@ -1,0 +1,41 @@
+schema_version = "1.0"
+task_id = "tsfresh"
+version = "0.1.0"
+instruction = "blocked.md"
+[metadata]
+difficulty = "hard"
+category = "time-series"
+tags = ["python", "time-series", "scientific", "blocked"]
+language = "python"
+[source]
+status = "unknown"
+upstream_url = "https://github.com/blue-yonder/tsfresh.git"
+revision = "6e3786bea915b72a4eabfa7b7ed163b62b87da18"
+submodules = []
+[environment]
+status = "unknown"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Scientific/native dependency closure and deterministic collection are not frozen."
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+[lifecycle]
+status = "blocked"
+owner = "repair/tsfresh"
+reason = "No approved scientific dependency closure, separate verifier, frozen denominator, Oracle, or controls exist."

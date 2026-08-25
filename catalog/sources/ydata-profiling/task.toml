@@ -1,0 +1,41 @@
+schema_version = "1.0"
+task_id = "ydata-profiling"
+version = "0.1.0"
+instruction = "blocked.md"
+[metadata]
+difficulty = "hard"
+category = "data-profiling"
+tags = ["python", "pandas", "profiling", "scientific", "blocked"]
+language = "python"
+[source]
+status = "unknown"
+upstream_url = "https://github.com/ydataai/ydata-profiling"
+revision = "de97bd4a50ed49ef0c7aad452c9f5fc389cd2d48"
+submodules = []
+[environment]
+status = "unknown"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Scientific dependency closure, data fixtures, collection, and separate verifier are not frozen."
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+[lifecycle]
+status = "blocked"
+owner = "repair/ydata-profiling"
+reason = "The audit lacks a frozen scientific dependency/data closure, separate verifier, Oracle, and controls."
