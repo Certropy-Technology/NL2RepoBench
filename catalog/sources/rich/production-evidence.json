@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rich",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Freeze an immutable Linux/Python image and hash-locked dependency closure, approve the terminal/TTY/platform test policy and stable denominator, implement the proposed task-specific subprocess verifier, materialize private verifier and Oracle artifacts, compile without --allow-incomplete, and run the official Harbor Oracle and control matrix.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/Textualize/rich",
+      "revision": "9d8f9a372cc5916fd4781fec207ced7ddac2f08f",
+      "source_digest": "sha256:f921363393f98d285226590333b41bf254dd311de46422d9a9d39f97deab25dd",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "Bounded Rich production remediation and source descriptor validation",
+        "tool_version": "repository Python/Harbor authoring toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/rich/evidence/production-remediation.txt",
+          "sha256": "sha256:e250935ae17039d8a9287298947560f9a3df51fd10a007a010524726eb1c8e17"
+        }
+      }
+    ]
+  }
+}

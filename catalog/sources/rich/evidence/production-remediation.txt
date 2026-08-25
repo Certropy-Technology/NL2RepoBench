@@ -1,0 +1,23 @@
+Rich production remediation (2026-08-25)
+
+The source descriptor pins upstream commit
+9d8f9a372cc5916fd4781fec207ced7ddac2f08f and records the reproducible
+git-archive digest sha256:f921363393f98d285226590333b41bf254dd311de46422d9a9d39f97deab25dd.
+The MIT license, static source/test inventory, dependency observations, and
+terminal determinism risks are documented in audit.md. candidate-boundary.json
+records only a proposed JSONL/text subprocess boundary; it is not an executed
+or approved verifier.
+
+Production remains blocked because the final OS/image and hash-locked offline
+dependency closure are absent, pytest collection has not established a frozen
+denominator, and no content-addressed private verifier or Oracle bundle exists.
+No Oracle or negative controls have been run or claimed, and catalog/tasks/rich
+is intentionally absent.
+
+Reopen by freezing an immutable Linux/Python image and hash-locked build/runtime
+closure; defining an explicit TTY, timing, Windows, Jupyter, locale, and Unicode
+test policy; collecting a stable denominator in that environment; implementing
+and reviewing a task-specific subprocess verifier from the proposed boundary;
+materializing verifier and local Oracle artifacts in the private artifact store;
+then compiling without --allow-incomplete and running official Harbor Oracle,
+empty, stub, forgery, offline, and network-policy gates.

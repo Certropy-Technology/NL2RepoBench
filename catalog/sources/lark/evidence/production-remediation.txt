@@ -1,0 +1,27 @@
+Lark production terminalization remediation (2026-08-25)
+
+Bounded validation command:
+  uv run nl2repo task validate-source catalog/sources/lark
+
+Observed result: exit code 0. The descriptor is explicitly lifecycle=blocked,
+with a pinned source revision and source digest, MIT license, and an explicit
+no-network policy. The descriptor intentionally has dependencies.status=unknown
+and offline_dependencies=missing. Its expected_total_source is unknown because
+the 1,312-node source-only observation was provisional: optional Js2Py failed to
+import on CPython 3.12 and Nearley tests were omitted. No final environment or
+hash-locked dependency bundle, private adapted verifier/command artifact,
+child-side Lark subprocess adapter, Oracle bundle, or controls evidence exists.
+
+The generated runtime was checked separately and is absent:
+  test ! -e catalog/tasks/lark
+
+Exact reopen steps:
+1. Freeze the supported CPython/OS image and resolve the complete optional
+   dependency/build closure into the standard content-addressed private CAS.
+2. Re-run collection with an explicit policy for optional Js2Py and Nearley
+   coverage, then freeze a positive denominator and preserve collection logs.
+3. Implement and review a Lark-specific child-side JSON-safe subprocess
+   adapter; package private tests and commands separately from the candidate.
+4. Compile without --allow-incomplete, verify the generated manifest, and run
+   the official Harbor Oracle followed by empty, stub, forgery, and offline
+   controls. Record fresh receipts before changing lifecycle from blocked.

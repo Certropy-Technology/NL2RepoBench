@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "doit",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze the final image and hash-locked dependency closure, recollect and freeze the denominator, author a separate doit subprocess verifier, then compile and run Oracle plus all controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/pydoit/doit",
+      "revision": "1f9cbbce78a93f96a35abf2db5425361e2abf142",
+      "source_digest": "sha256:d9765a508bc4ba6a61c586883de7fa9cc38abc7acdc8caf32c98d64834c2cfcd",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/doit",
+        "tool_version": "repository uv/nl2repo CLI",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/doit/evidence/production-remediation.txt",
+          "sha256": "sha256:079a2bd0cb283aebef6bb4eab76732332b313dd9c49d34d4d922f661c30946ac"
+        }
+      }
+    ]
+  }
+}

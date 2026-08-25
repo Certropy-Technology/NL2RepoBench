@@ -1,0 +1,24 @@
+Pyparsing production remediation (2026-08-25)
+
+Observed facts from evidence.json and task.toml:
+
+- The source revision is pinned to efd56db4e59f36b1673ce0eb0823e3afaa9d1201
+  with archive digest sha256:a5dfb002ae8c378326c1f3395a0f2531080c5b5d0b480e33a3a4a29526a3c737;
+  the MIT license and archive repeatability are recorded.
+- Source-only collection was repeatable at 2,157 pytest items on CPython 3.12
+  and 3.13, but expected_total_source remains unknown and the JUnit expansion
+  reports a different testcase/subtest shape. The minimal dependency probe
+  also failed collection because railroad was absent.
+- The dependency list is an observation, not a hash-locked offline artifact.
+  No final OS/base-image lock, separate-verifier bundle, private adapted
+  commands/tests, Oracle bundle, frozen denominator, or controls receipts exist.
+- catalog/tasks/pyparsing is intentionally absent; no Oracle or controls result
+  is claimed.
+
+Reopen steps: freeze the final OS/Python/image and locale policy; resolve the
+full build/test dependency closure into the private hash-locked artifact store;
+adapt the parser, diagram, Unicode, and unittest-subtest behavior behind a
+separate candidate subprocess protocol; choose and freeze one structured
+denominator after collection/JUnit reconciliation; compile without
+--allow-incomplete; then run official Harbor Oracle, empty, stub, forgery, and
+offline controls and record their content-addressed receipts.

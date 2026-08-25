@@ -1,0 +1,24 @@
+go-google-uuid production remediation (2026-08-25)
+
+Observed facts:
+- The pinned source is google/uuid revision 0f11ee6918f41a04c201eceeadf612a377bc7fbc.
+- The descriptor records BSD-3-Clause and source digest
+  sha256:e24d1eb2f3787e8e47cacff5c9ef5e7286ef6406a22da2da036fd2a19fa5c049.
+- Source validation passed with the descriptor status blocked.
+- The environment is not frozen: no Go toolchain image digest is declared and
+  dependencies.status is unknown with offline_dependencies = missing.
+- No Oracle, separate-verifier control matrix, or fixed production receipt was
+  run. catalog/tasks/go-google-uuid is intentionally absent.
+
+Exact reopen steps:
+1. Freeze the Go toolchain image digest and the module closure, materializing
+   content-addressed offline artifacts and changing dependencies.status from
+   unknown only after hash verification.
+2. Validate the existing bridge and contract against the frozen environment,
+   including deterministic collection and a positive fixed denominator.
+3. Compile with the production compiler without --allow-incomplete and retain
+   only the generated runtime from that compile.
+4. Run the official Harbor Oracle, empty, stub, forgery, and offline controls;
+   record structured receipts and verify the separate verifier owns grading.
+5. Re-run source validation, network lint, evidence validation, and runtime
+   manifest checks before changing lifecycle from blocked.

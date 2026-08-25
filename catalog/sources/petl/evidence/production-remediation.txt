@@ -1,0 +1,20 @@
+PETL production remediation (2026-08-25)
+
+The declarative source pins upstream revision
+2e01e169d83e4f66bef108bc2f20cde878d0a8a1 and archive digest
+sha256:19d01de1786e1f12343d12c46f8992477b25d0b99dd303e4d76628045a6ed0f8
+under the MIT license. Source-only probes recorded a provisional 543-item
+collection, but expected_total_source remains unknown because pytest collection
+items and JUnit leaves do not establish a production fixed denominator.
+
+The environment and dependency closure remain unknown: there is no immutable
+image policy or content-addressed hash lock. No private adapted tests, command
+artifact, PETL-specific subprocess table protocol, or local Oracle bundle is
+declared. catalog/tasks/petl is absent. No Oracle or control result is claimed.
+
+To reopen, freeze the final image and locale policy; create an authorized
+hash-locked build/test dependency artifact; define a JSON-safe subprocess
+protocol for table rows, lazy iteration, errors, and file-backed CSV/JSON
+behavior; adapt and freeze the selected verifier leaves and denominator; build
+a digest-verified local Oracle bundle; compile without --allow-incomplete; then
+run official Harbor Oracle, empty, stub, forgery, and offline controls.

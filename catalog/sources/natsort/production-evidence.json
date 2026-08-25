@@ -1,0 +1,28 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/natsort",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/natsort/evidence/production-remediation.txt",
+          "sha256": "sha256:e4f420979fabb21c0604348dd59c6d300b738a53e7f6828ebad79581f226ca41"
+        },
+        "tool_version": "repository uv/nl2repo toolchain"
+      }
+    ],
+    "failure_class": "environment",
+    "next_step": "Freeze the pinned source archive, LICENSE bytes, immutable image, hash-locked offline dependencies, deterministic test denominator, and natsort-specific separate verifier; then compile without --allow-incomplete and run Oracle plus controls.",
+    "source_freeze": {
+      "license_spdx": "MIT",
+      "reason": "The pinned revision is recorded, but archive/LICENSE bytes, final image, and dependency closure are not independently frozen.",
+      "revision": "e90771d7c39157d079425b655763938c2709d486",
+      "source_digest": "sha256:00f0c4fa534a47621b3e907c63e2a4e8b56e170da5df20631bef54869ff3fe5e",
+      "status": "failed",
+      "upstream_url": "https://github.com/SethMMorton/natsort"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "natsort",
+  "terminal_kind": "blocked"
+}

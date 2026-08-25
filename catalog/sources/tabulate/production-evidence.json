@@ -1,0 +1,36 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/tabulate",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/tabulate/audit.md",
+          "sha256": "sha256:4b761f7046a885b79a09e8d9ea8ba7680c399d0bfa4af860119eb234abe1454d"
+        },
+        "tool_version": "repository uv toolchain"
+      },
+      {
+        "command": "Strict Harbor compile probe was not run because the descriptor is explicitly blocked with unknown source and dependency locks; catalog/tasks/tabulate must remain absent.",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/tabulate/audit.md",
+          "sha256": "sha256:4b761f7046a885b79a09e8d9ea8ba7680c399d0bfa4af860119eb234abe1454d"
+        },
+        "tool_version": "repository Harbor compiler"
+      }
+    ],
+    "failure_class": "environment",
+    "next_step": "Freeze the exact archive and license bytes, record source-only LOC and official pytest/doctest collection, materialize a hash-locked offline dependency closure and immutable image, then implement and validate the separate JSON/text subprocess verifier before any Oracle or controls run.",
+    "source_freeze": {
+      "license_spdx": "unknown",
+      "reason": "The revision is pinned, but the archive digest and extracted license bytes have not been independently captured; source-only LOC and the final test collection are also unverified.",
+      "revision": "268615a5c27dc40e5c22454c07b44d5c50410da0",
+      "status": "failed",
+      "upstream_url": "https://github.com/astanin/python-tabulate"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "tabulate",
+  "terminal_kind": "blocked"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-google-uuid",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze the Go toolchain image digest and hash-locked offline module closure, validate the bridge contract, compile without --allow-incomplete, then run Oracle and all separate-verifier controls before reopening this task.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/google/uuid",
+      "revision": "0f11ee6918f41a04c201eceeadf612a377bc7fbc",
+      "source_digest": "sha256:e24d1eb2f3787e8e47cacff5c9ef5e7286ef6406a22da2da036fd2a19fa5c049",
+      "license_spdx": "BSD-3-Clause"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/go-google-uuid",
+        "tool_version": "repository uv toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-google-uuid/evidence/production-remediation.txt",
+          "sha256": "sha256:ce14712a5368da8405914548f0c121cbc51c15642d32a6ebabc94b1019fae72f"
+        }
+      },
+      {
+        "command": "test ! -e catalog/tasks/go-google-uuid",
+        "tool_version": "repository shell",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-google-uuid/evidence/production-remediation.txt",
+          "sha256": "sha256:ce14712a5368da8405914548f0c121cbc51c15642d32a6ebabc94b1019fae72f"
+        }
+      }
+    ]
+  }
+}

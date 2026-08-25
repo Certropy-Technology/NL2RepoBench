@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "petl",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Freeze the final image, locale policy, and hash-locked dependency closure; implement a PETL-specific JSON-safe subprocess protocol; adapt and freeze the verifier leaves and denominator; build a digest-verified local Oracle bundle; compile without --allow-incomplete; then run official Harbor Oracle, empty, stub, forgery, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/petl-developers/petl",
+      "revision": "2e01e169d83e4f66bef108bc2f20cde878d0a8a1",
+      "source_digest": "sha256:19d01de1786e1f12343d12c46f8992477b25d0b99dd303e4d76628045a6ed0f8",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "Inspect the PETL source descriptor and verify catalog/tasks/petl is absent",
+        "tool_version": "repository catalog and filesystem inspection",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/petl/evidence/production-remediation.txt",
+          "sha256": "sha256:93edab87e9013ade029c08c223f187027a08d3cb61a1c1e0ccbd0cf61e18e930"
+        }
+      }
+    ]
+  }
+}

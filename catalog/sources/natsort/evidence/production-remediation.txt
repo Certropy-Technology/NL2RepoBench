@@ -1,0 +1,35 @@
+natsort production remediation (2026-08-25)
+
+Observed facts from the bounded source check:
+
+- `uv run nl2repo task validate-source catalog/sources/natsort` passed and
+  reported task_id=natsort, version=0.1.0, status=blocked, and source digest
+  sha256:00f0c4fa534a47621b3e907c63e2a4e8b56e170da5df20631bef54869ff3fe5e.
+- `catalog/tasks/natsort` is absent; no Harbor runtime, Oracle bundle, private
+  verifier, or controls are present.
+- The source descriptor intentionally has source status=unknown and
+  environment status=unknown. It does not provide independently verified
+  archive or LICENSE bytes, a final image lock, or a hash-locked offline
+  dependency artifact.
+- The descriptor's expected_total=1 is explicitly an unknown-denominator
+  schema sentinel, not a frozen test denominator. The pytest/Hypothesis
+  collection, locale/Unicode repeatability, and JSON-safe subprocess scope
+  still require bounded replay in the final environment.
+
+Exact reopen steps:
+
+1. Independently fetch the pinned revision e90771d7c39157d079425b655763938c2709d486,
+   verify the archive and LICENSE byte digests, and record the final source
+   freeze and immutable image details.
+2. Resolve the standard-library fallback plus test/build closure into a
+   content-addressed hash-locked dependency artifact; keep the run-time
+   network policy no-network.
+3. Repeat deterministic pytest and Hypothesis collection under the pinned
+   locale/Python image, resolve the expected denominator and skipped/xfail
+   policy, and record source-only baseline results.
+4. Author and review a natsort-specific JSON-safe separate-verifier adapter
+   covering sorting, locale, Unicode, and fallback behavior. Build private
+   verifier and Oracle bundles, compile without --allow-incomplete, and run
+   official Harbor Oracle plus empty, stub, forgery, and offline controls.
+5. Only after all gates pass may a generated `catalog/tasks/natsort` runtime
+   be created and the lifecycle leave blocked.

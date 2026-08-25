@@ -1,0 +1,27 @@
+validators production remediation (2026-08-25)
+
+Status remains blocked. The pinned source archive is known and reproducible:
+revision 70de324322def13a49a93d222f798ec1ab700885,
+source_digest sha256:0706c0c18ad618adfc253d7e3630a9571018295139443044ec0dfa30e0876dc1,
+and the tracked license is MIT (LICENSE.txt SHA-256
+43f5c5d4ed194818baae8b6e2d2d09e9630752392efaa4b3f8da673d9a1a844a).
+
+The authoring audit records three direct-source baselines at 895 passed tests,
+but no production artifact exists: the dependency/build closure is not
+authorized as a durable hash-locked artifact, the final environment is not
+locked, and no private adapted verifier command plan, task-specific child-side
+scenario adapter, or Oracle bundle is available. Direct-import upstream pytest
+cannot be promoted because the tests exercise rich values, callables,
+ValidationError objects, and candidate internals in the trusted process.
+
+Exact reopen steps:
+1. Implement and review a validators-specific subprocess scenario adapter that
+   reconstructs rich inputs/callables in the untrusted child and emits only
+   normalized JSON observations.
+2. Materialize content-addressed private test, command-plan, dependency-lock,
+   and Oracle artifacts; pin Python/base image and setuptools.
+3. Recollect in the final offline verifier and freeze the structured denominator.
+4. Compile without --allow-incomplete, then run Oracle, empty, stub, forgery,
+   and offline controls before review or publication.
+
+No Harbor runtime, Oracle result, control result, or production score is claimed.

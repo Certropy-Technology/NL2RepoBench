@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "simple-parsing",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Replay pytest 8.3.4 with explicit configuration and retained item/JUnit evidence; resolve xfail/xpass semantics; freeze the Python, OS, image, and hash-locked build/test dependency closure; author an authorized child-side scenario adapter for dataclass, argparse, serialization, and docstring behavior; provision private command, test, and Oracle artifacts; then compile without --allow-incomplete and run valid Oracle, empty, stub, forgery, and offline gates.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/lebrice/SimpleParsing",
+      "revision": "7a706bee8b258b548cb979c7321c1ba0cf8413e6",
+      "source_digest": "sha256:ad8a0b99dc079b03ba3091671f451c7c593aff01371a6c7313777fd120445b2f",
+      "license_spdx": "MIT"
+    },
+    "commands": [
+      {
+        "command": "Bounded source, dependency, collection, and candidate-boundary audit recorded in catalog/sources/simple-parsing/audit.md",
+        "tool_version": "CPython 3.12.11; pytest 8.3.4; repository authoring toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/simple-parsing/audit.md",
+          "sha256": "sha256:123d8986df90db8bbbe1b425b68d237a7c943663f16e8417ed121250c8c77bd2"
+        }
+      }
+    ]
+  }
+}

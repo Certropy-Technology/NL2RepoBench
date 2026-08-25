@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "salib",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze a platform-specific hash-locked build/runtime/test dependency closure and verifier image; define xfail and floating-point/seed semantics; implement and review a SALib-specific subprocess adapter for callable, array, dataframe, CLI, and multiprocessing behavior; then collect the frozen denominator and run the official Oracle, empty, stub, forgery, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/SALib/SALib",
+      "revision": "aa2c5545b3bfd0a982e9fad7625070a8ea340d38",
+      "source_digest": "sha256:484d5d062d3cedcd0a1ce13d3431e945e12177330badc39517ec0ee2c65337d0",
+      "license_spdx": "MIT",
+      "license_file_sha256": "sha256:954fea77d90439a34c285a0989b31350c6f9c3e32bd44ad373fbe235995e56d1"
+    },
+    "commands": [
+      {
+        "command": "Audit-only source provenance, dependency closure, collection, determinism, and verifier-boundary review",
+        "tool_version": "repository authoring audit",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/salib/audit.md",
+          "sha256": "sha256:6c2e010bca4d127b9601044835df30fc7f323191ed278fa1b80070e3b841e943"
+        }
+      }
+    ]
+  }
+}

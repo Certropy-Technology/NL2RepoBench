@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "coxeter",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze the final image and hash-locked NumPy/SciPy/rowan/test closure; resolve package-data and vendored-license notices; define and replay fixed collection/skip/xfail semantics; prove deterministic numerical behavior; implement and review a coxeter-specific JSON-safe child-side adapter and separate verifier; then compile without --allow-incomplete and run official Oracle, empty, stub, forgery, and offline gates.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/glotzerlab/coxeter",
+      "revision": "9056679b197f0e835c04dd317cc1049359a0ee7c",
+      "source_digest": "sha256:ffbb73420cc80e12530d37cb2e197d687d432c83a764f2dd3f0d1d7a58c17b12",
+      "license_spdx": "BSD-3-Clause"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/coxeter",
+        "tool_version": "repository uv/nl2repo CLI",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/coxeter/evidence/production-remediation.txt",
+          "sha256": "sha256:480b27ed8efa092904d534b274ff2db25f03f8976d7592dfc471dae5ee159c6f"
+        }
+      }
+    ]
+  }
+}

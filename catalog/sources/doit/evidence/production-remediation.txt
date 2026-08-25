@@ -1,0 +1,25 @@
+doit production terminalization (2026-08-25)
+
+Observed facts:
+- `uv run nl2repo task validate-source catalog/sources/doit` passed with
+  exit code 0 and reported the pinned revision/source digest and blocked
+  lifecycle.
+- `catalog/tasks/doit` is absent, so this blocked source has no generated
+  Harbor runtime.
+- The descriptor records `expected_total_source = "unknown"`; the observed
+  891-node collection is explicitly not a frozen denominator.
+- The descriptor and audit.md record no final OS/base-image policy, no
+  hash-locked offline dependency artifact, no reviewed doit-specific
+  subprocess adapter, no private verifier bundle, and no Oracle or controls.
+
+Reopen steps:
+1. Freeze the final Python/OS/image and shell/filesystem/locale/process
+   policy, then materialize a hash-locked dependency closure in the private
+   artifact store.
+2. Recollect the source suite in that final image and resolve skips, xfails,
+   platform-sensitive behavior, and the denominator policy.
+3. Adapt task-runner, CLI, plugin, subprocess, timestamp, and filesystem
+   behavior to a separate candidate subprocess verifier with protected tests.
+4. Compile without `--allow-incomplete`, run the official Harbor Oracle, then
+   run empty, stub, forgery, and offline controls; replace this blocked
+   evidence only with receipts bound to the resulting artifacts.

@@ -1,0 +1,25 @@
+Mistune production remediation (2026-08-25)
+
+Bounded checks performed in the source checkout:
+
+* `uv run nl2repo task validate-source catalog/sources/mistune` passed and
+  returned the pinned task id and source digest.
+* `catalog/tasks/mistune` is absent, so this blocked source has no generated
+  runtime.
+
+The source remains blocked for production. The existing audit records the
+BSD-3-Clause revision and archive digest, but the environment is still
+unknown, the dependency status is unknown, setuptools is not pinned in the
+lock, and no content-addressed offline dependency bundle, separate verifier,
+private command/test artifact, or Oracle/control receipt exists. The source
+test observation also has an unresolved denominator mismatch: 1,158 pytest
+items versus 1,164 JUnit subtest counts.
+
+Exact reopen steps: freeze an immutable OS/Python image and complete
+hash-locked runtime, build, and verifier dependencies; choose and record one
+frozen denominator; author and review a Mistune-specific JSON-safe subprocess
+adapter for parser/render/plugin/callback/directive/filesystem behavior; build
+the private verifier and digest-verified Oracle bundle; compile without
+`--allow-incomplete`; then run official Harbor Oracle, empty, stub, forgery,
+and offline network controls. Do not create a runtime or claim scores before
+all gates pass.

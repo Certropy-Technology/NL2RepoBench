@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "validators",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Implement and review a validators-specific subprocess scenario adapter, materialize authorized content-addressed private test/command/dependency/Oracle artifacts, freeze the final offline denominator, compile without --allow-incomplete, and run Oracle plus empty, stub, forgery, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/python-validators/validators",
+      "revision": "70de324322def13a49a93d222f798ec1ab700885",
+      "source_digest": "sha256:0706c0c18ad618adfc253d7e3630a9571018295139443044ec0dfa30e0876dc1",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE.txt",
+      "license_sha256": "sha256:43f5c5d4ed194818baae8b6e2d2d09e9630752392efaa4b3f8da673d9a1a844a"
+    },
+    "commands": [
+      {
+        "command": "Review the bounded validators production remediation and exact reopen steps",
+        "tool_version": "repository authoring audit",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/validators/evidence/production-remediation.txt",
+          "sha256": "sha256:dfed24e366e34cd2243f035e8e44f904c7d6b0f602ad0d261393284ff926f9ca"
+        }
+      }
+    ]
+  }
+}
