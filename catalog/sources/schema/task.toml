@@ -1,45 +1,56 @@
 schema_version = "1.0"
 task_id = "schema"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python", "repository-generation"]
+category = "data-validation"
+tags = ["python", "validation", "data-structures", "json-schema", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/keleshev/schema"
 revision = "7434a6b3c9cd1672f0d491ed45114054750627af"
-license_spdx = "unknown"
+license_spdx = "MIT"
 source_digest = "sha256:2579256cf635a4053aaf5b0abb64f0ab403b3cb4a319e2fa8f0879e9682c5e8f"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.10"
-os_name = "debian-12"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "pip install --no-deps --no-build-isolation"
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The hash-locked setuptools/wheel build closure is installed during Docker build. Agent and separate verifier runs have no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 118
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors test_schema.py"]
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:031ab6ff57dbc19f31036810b78f51c1dfc7b90524e47854513895742b896394", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:031ab6ff57dbc19f31036810b78f51c1dfc7b90524e47854513895742b896394", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -49,19 +60,27 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the schema package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
-agent_timeout_sec = 3600.0
+description = "Build schema 0.7.8 from an empty workspace and satisfy a bounded validation, transform, default, hook, error, and JSON Schema contract."
+keywords = ["python", "validation", "data-structures", "json-schema", "separate-verifier"]
+agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
-candidate_total_timeout_sec = 300.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 360.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
-memory_mb = 4096
-storage_mb = 8192
+memory_mb = 2048
+storage_mb = 4096
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:7bbb73a8548a650ee83f7beccb19539bf800b87f6e7db90da9b5569775dff29f"
+size_bytes = 184320
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:7bbb73a8548a650ee83f7beccb19539bf800b87f6e7db90da9b5569775dff29f"
+visibility = "private"
+
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "controls-passed"
+owner = "worker/schema"
+reason = "Harbor 0.21.0 production gates passed with an exact 30-leaf collection: Oracle 30/30 at reward 1.0; empty, stub, and forgery reward 0.0; every verifier-owned network receipt proves no public egress. Reviews and pilots remain out of scope."

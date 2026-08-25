@@ -1,0 +1,983 @@
+{
+  "package_surface": {
+    "all": [
+      "TinyDB",
+      "Storage",
+      "JSONStorage",
+      "Query",
+      "where"
+    ],
+    "classes": [
+      "TinyDB",
+      "Storage",
+      "JSONStorage",
+      "Query",
+      "Document",
+      "Table",
+      "Middleware",
+      "CachingMiddleware",
+      "LRUCache"
+    ],
+    "module_all": {
+      "queries": [
+        "Query",
+        "QueryLike",
+        "where"
+      ],
+      "storages": [
+        "Storage",
+        "JSONStorage",
+        "MemoryStorage"
+      ],
+      "table": [
+        "Document",
+        "Table"
+      ],
+      "utils": [
+        "LRUCache",
+        "freeze",
+        "with_typehint"
+      ]
+    },
+    "operations": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "version": "4.9.0"
+  },
+  "storage_memory": {
+    "close_result": null,
+    "initial": null,
+    "observed": {
+      "items": {
+        "1": {
+          "value": [
+            1,
+            2
+          ]
+        }
+      }
+    },
+    "same_object": true,
+    "write_result": null
+  },
+  "storage_json": {
+    "closed": true,
+    "first_raw": "{\"alpha\":{\"1\":{\"n\":7}},\"beta\":{\"2\":{\"text\":\"café\"}}}",
+    "initial": null,
+    "parent_created": true,
+    "second": {
+      "x": {}
+    },
+    "second_raw": "{\"x\":{}}"
+  },
+  "storage_json_modes": {
+    "loaded": {
+      "t": {
+        "1": {
+          "v": 1
+        }
+      }
+    },
+    "missing_error": {
+      "errno": 2,
+      "type": "FileNotFoundError"
+    },
+    "touch_preserved": "keep",
+    "warning_mentions_corruption": true,
+    "warning_type": "UserWarning",
+    "write_error": {
+      "message": "Cannot write to the database. Access mode is \"r\"",
+      "type": "OSError"
+    }
+  },
+  "storage_contract": {
+    "abstract_error": "TypeError",
+    "close_count": 1,
+    "init": {
+      "args": [
+        "path"
+      ],
+      "kwargs": {
+        "mode": "safe"
+      }
+    },
+    "initial": null,
+    "observed": {
+      "table": {}
+    },
+    "reads": 2,
+    "write_count": 1
+  },
+  "query_comparisons": {
+    "eq": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "ge": [
+      false,
+      true,
+      true,
+      false
+    ],
+    "gt": [
+      false,
+      false,
+      true,
+      false
+    ],
+    "le": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "lt": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "ne": [
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "query_logic": {
+    "and": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "cacheable": [
+      true,
+      true
+    ],
+    "commutative_equality": true,
+    "commutative_hash": true,
+    "not": [
+      false,
+      false,
+      true,
+      true
+    ],
+    "or": [
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "query_paths": {
+    "mapped": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "mapped_cacheable": false,
+    "nested": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "where_repr": "Query()"
+  },
+  "query_regex": {
+    "matches": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "search": [
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "query_collections": {
+    "all_query": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "all_values": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "any_query": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "any_values": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "one_of": [
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "query_fragment": {
+    "exists": [
+      true,
+      false,
+      false
+    ],
+    "fragment": [
+      true,
+      false,
+      false
+    ],
+    "nested": [
+      true,
+      false,
+      false
+    ],
+    "noop": [
+      true,
+      true,
+      true
+    ]
+  },
+  "query_custom_cacheability": {
+    "cacheable": true,
+    "equal": true,
+    "frozen_argument": [
+      true,
+      false,
+      true
+    ],
+    "same_hash": true,
+    "uncacheable": false,
+    "values": [
+      true,
+      false,
+      true
+    ]
+  },
+  "query_errors": {
+    "empty_evaluation": {
+      "message": "Empty query was evaluated",
+      "type": "RuntimeError"
+    },
+    "missing_path": {
+      "message": "Query has no path",
+      "type": "ValueError"
+    },
+    "missing_path_comparison": {
+      "message": "Query has no path",
+      "type": "ValueError"
+    }
+  },
+  "table_insert": {
+    "all": [
+      {
+        "doc_id": 1,
+        "value": {
+          "name": "Ada"
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "name": "Bob"
+        }
+      },
+      {
+        "doc_id": 10,
+        "value": {
+          "name": "Grace"
+        }
+      },
+      {
+        "doc_id": 11,
+        "value": {
+          "name": "Linus"
+        }
+      }
+    ],
+    "ids": [
+      1,
+      2,
+      10,
+      11
+    ],
+    "length": 4,
+    "raw": {
+      "_default": {
+        "1": {
+          "name": "Ada"
+        },
+        "10": {
+          "name": "Grace"
+        },
+        "11": {
+          "name": "Linus"
+        },
+        "2": {
+          "name": "Bob"
+        }
+      }
+    }
+  },
+  "table_insert_multiple": {
+    "all": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 1
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "v": 2
+        }
+      },
+      {
+        "doc_id": 8,
+        "value": {
+          "v": 8
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "v": 3
+        }
+      }
+    ],
+    "duplicate": {
+      "message": "Document with ID 8 already exists",
+      "type": "ValueError"
+    },
+    "first": [
+      1,
+      2
+    ],
+    "invalid": {
+      "message": "Document is not a Mapping",
+      "type": "ValueError"
+    },
+    "second": [
+      8,
+      3
+    ]
+  },
+  "table_get": {
+    "by_id": [
+      {
+        "doc_id": 2,
+        "value": {
+          "v": 2
+        }
+      }
+    ],
+    "by_ids": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 1
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "v": 3
+        }
+      }
+    ],
+    "by_query": [
+      {
+        "doc_id": 2,
+        "value": {
+          "v": 2
+        }
+      }
+    ],
+    "missing": null
+  },
+  "table_search": {
+    "contains_id": true,
+    "contains_missing": false,
+    "contains_query": true,
+    "count": 2,
+    "iteration": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 3
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "v": 1
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "v": 2
+        }
+      },
+      {
+        "doc_id": 4,
+        "value": {
+          "v": 4
+        }
+      }
+    ],
+    "search": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 3
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "v": 2
+        }
+      }
+    ]
+  },
+  "table_update_mapping": {
+    "all": [
+      {
+        "doc_id": 1,
+        "value": {
+          "all": "yes",
+          "flag": true,
+          "group": "a",
+          "n": 1
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "all": "yes",
+          "group": "b",
+          "n": 2,
+          "selected": true
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "all": "yes",
+          "flag": true,
+          "group": "a",
+          "n": 3,
+          "selected": true
+        }
+      }
+    ],
+    "all_ids": [
+      1,
+      2,
+      3
+    ],
+    "matched": [
+      1,
+      3
+    ],
+    "selected": [
+      3,
+      2
+    ]
+  },
+  "table_update_operations": {
+    "affected": [
+      [
+        1
+      ],
+      [
+        1
+      ],
+      [
+        1
+      ],
+      [
+        1
+      ],
+      [
+        1
+      ],
+      [
+        1
+      ]
+    ],
+    "document": [
+      {
+        "doc_id": 1,
+        "value": {
+          "m": 5,
+          "n": 6,
+          "text": "z"
+        }
+      }
+    ]
+  },
+  "table_update_multiple": {
+    "affected": [
+      1,
+      2,
+      3,
+      3
+    ],
+    "all": [
+      {
+        "doc_id": 1,
+        "value": {
+          "first": true,
+          "kind": "a",
+          "n": 1
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "kind": "b",
+          "n": 3
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "first": true,
+          "kind": "a",
+          "n": 4
+        }
+      }
+    ]
+  },
+  "table_remove": {
+    "by_ids": [
+      4,
+      3
+    ],
+    "by_query": [
+      1,
+      2
+    ],
+    "remaining": []
+  },
+  "table_upsert": {
+    "all": [
+      {
+        "doc_id": 1,
+        "value": {
+          "flag": true,
+          "kind": "a",
+          "n": 1
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "flag": true,
+          "kind": "a",
+          "n": 2
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "kind": "b",
+          "n": 3
+        }
+      },
+      {
+        "doc_id": 10,
+        "value": {
+          "flag": true,
+          "kind": "c"
+        }
+      }
+    ],
+    "explicit_insert": [
+      10
+    ],
+    "explicit_update": [
+      10
+    ],
+    "inserted": [
+      3
+    ],
+    "updated": [
+      1,
+      2
+    ]
+  },
+  "table_truncate_persist": {
+    "empty_length": 0,
+    "items": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 3
+        }
+      }
+    ],
+    "raw": {
+      "empty": {},
+      "items": {
+        "1": {
+          "v": 3
+        }
+      }
+    },
+    "reset_id": 1,
+    "tables": [
+      "empty",
+      "items"
+    ]
+  },
+  "table_errors": {
+    "contains": {
+      "message": "You have to pass either cond or doc_id",
+      "type": "RuntimeError"
+    },
+    "get": {
+      "message": "You have to pass either cond or doc_id or doc_ids",
+      "type": "RuntimeError"
+    },
+    "insert": {
+      "message": "Document is not a Mapping",
+      "type": "ValueError"
+    },
+    "remove": {
+      "message": "Use truncate() to remove all documents",
+      "type": "RuntimeError"
+    },
+    "upsert": {
+      "message": "If you don't specify a search query, you must specify a doc_id. Hint: use a table.Document object.",
+      "type": "ValueError"
+    }
+  },
+  "database_tables": {
+    "after_all": [],
+    "after_one": [
+      "beta"
+    ],
+    "before": [
+      "alpha",
+      "beta"
+    ],
+    "raw": {},
+    "recreated_is_old": false,
+    "same_instance": true
+  },
+  "database_default": {
+    "all": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 1
+        }
+      }
+    ],
+    "inserted": 1,
+    "iterated": [
+      {
+        "doc_id": 1,
+        "value": {
+          "v": 1
+        }
+      }
+    ],
+    "length": 1,
+    "name": "_default",
+    "same_storage": true,
+    "tables": [
+      "_default"
+    ]
+  },
+  "database_json_persistence": {
+    "ids": [
+      1,
+      2
+    ],
+    "observed": [
+      {
+        "doc_id": 1,
+        "value": {
+          "name": "café"
+        }
+      },
+      {
+        "doc_id": 2,
+        "value": {
+          "name": "Ada"
+        }
+      }
+    ],
+    "raw": {
+      "_default": {
+        "1": {
+          "name": "café"
+        },
+        "2": {
+          "name": "Ada"
+        }
+      },
+      "other": {
+        "1": {
+          "v": 3
+        }
+      }
+    },
+    "tables": [
+      "_default",
+      "other"
+    ]
+  },
+  "database_context": {
+    "close_count": 2,
+    "opened": false,
+    "propagated": {
+      "message": "body-error",
+      "type": "ValueError"
+    }
+  },
+  "middleware_forwarding": {
+    "data": {
+      "x": {}
+    },
+    "init": {
+      "args": [
+        "path"
+      ],
+      "kwargs": {
+        "mode": "safe"
+      }
+    },
+    "marker": "forwarded",
+    "nested_init": {
+      "args": [
+        "nested"
+      ],
+      "kwargs": {}
+    },
+    "nested_returned_self": true,
+    "nested_types": [
+      "Middleware",
+      "RecordingStorage"
+    ],
+    "returned_self": true
+  },
+  "middleware_caching": {
+    "after_threshold": 1,
+    "before_threshold": 0,
+    "close_count": 1,
+    "modified_count": 0,
+    "reads": [
+      null,
+      null
+    ],
+    "underlying_reads": 2,
+    "writes": [
+      {
+        "v": 3
+      },
+      {
+        "v": 4
+      }
+    ]
+  },
+  "middleware_json": {
+    "after_close": {
+      "_default": {
+        "1": {
+          "name": "café"
+        }
+      }
+    },
+    "before_close": "",
+    "handle_closed": true,
+    "observed": [
+      {
+        "doc_id": 1,
+        "value": {
+          "name": "café"
+        }
+      }
+    ]
+  },
+  "query_cache": {
+    "after_write": [
+      {
+        "doc_id": 2,
+        "value": {
+          "v": 2
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "v": 3
+        }
+      },
+      {
+        "doc_id": 4,
+        "value": {
+          "v": 4
+        }
+      }
+    ],
+    "calls_after_write": 7,
+    "calls_before_write": 3,
+    "first": [
+      {
+        "doc_id": 2,
+        "value": {
+          "mutated": true,
+          "v": 2
+        }
+      },
+      {
+        "doc_id": 3,
+        "value": {
+          "v": 3
+        }
+      }
+    ],
+    "fresh_list": true,
+    "mutation_visible": true,
+    "same_document": true,
+    "uncacheable_calls": 8
+  },
+  "lru_eviction": {
+    "contains_b": false,
+    "length": 3,
+    "orders": [
+      [
+        "a",
+        "b",
+        "c"
+      ],
+      [
+        "b",
+        "c",
+        "a"
+      ],
+      [
+        "c",
+        "a",
+        "d"
+      ],
+      [
+        "c",
+        "d",
+        "a"
+      ]
+    ],
+    "values": [
+      2,
+      4,
+      5
+    ]
+  },
+  "lru_mapping": {
+    "capacity": null,
+    "default": "fallback",
+    "keys_before_clear": [
+      "zero",
+      "none"
+    ],
+    "length_after_clear": 0,
+    "missing": {
+      "message": "'missing'",
+      "type": "KeyError"
+    },
+    "none_value": {
+      "message": "'none'",
+      "type": "KeyError"
+    }
+  },
+  "freeze_values": {
+    "hashable": true,
+    "pop_error": {
+      "message": "object is immutable",
+      "type": "TypeError"
+    },
+    "set_error": {
+      "message": "object is immutable",
+      "type": "TypeError"
+    },
+    "types": [
+      "tuple",
+      "FrozenDict",
+      "tuple",
+      "frozenset",
+      "tuple",
+      "FrozenDict"
+    ],
+    "update_error": {
+      "message": "object is immutable",
+      "type": "TypeError"
+    },
+    "values": [
+      1,
+      {
+        "b": [
+          2,
+          {
+            "a": 3
+          }
+        ]
+      },
+      [
+        4,
+        5
+      ],
+      [
+        6,
+        {
+          "c": 7
+        }
+      ]
+    ]
+  },
+  "document_behavior": {
+    "dict": {
+      "name": "Grace",
+      "nested": {
+        "v": 1
+      }
+    },
+    "doc_id": 7,
+    "equality": true,
+    "is_dict": true,
+    "original": {
+      "name": "Ada",
+      "nested": {
+        "v": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "custom_loads": {
+    "argument_types": [
+      "str"
+    ],
+    "value": {
+      "raw": "payload"
+    }
+  },
+  "error_hierarchy": {
+    "base_error": "base",
+    "is_error": true,
+    "is_value_error": true,
+    "line": "value",
+    "lineno": 7,
+    "message": "broken (line 7)"
+  },
+  "iter_direct": {
+    "after": [],
+    "iterator_is_self": false,
+    "values": [
+      1,
+      2
+    ]
+  },
+  "iter_skip_invalid": [
+    1,
+    {
+      "ok": true
+    },
+    3
+  ],
+  "open_append": {
+    "raw": "1\n2\n",
+    "values": [
+      1,
+      2
+    ]
+  },
+  "open_bom": [
+    1,
+    2
+  ],
+  "open_custom": {
+    "argument_types": [
+      "str"
+    ],
+    "raw": "<4>\n",
+    "value": "4"
+  },
+  "open_exclusive_invalid": {
+    "exists_error": "FileExistsError",
+    "mode_error": "ValueError",
+    "mode_message": "'mode' must be either 'r', 'w', 'a', or 'x'"
+  },
+  "open_roundtrip": {
+    "closed_errors": [
+      "RuntimeError",
+      "RuntimeError"
+    ],
+    "raw": "{\"a\": 1}\n\"café\"\n",
+    "types": [
+      "Writer",
+      "Reader"
+    ],
+    "values": [
+      {
+        "a": 1
+      },
+      "café"
+    ]
+  },
+  "package_surface": {
+    "all": [
+      "Error",
+      "InvalidLineError",
+      "Reader",
+      "Writer",
+      "open"
+    ],
+    "callable_open": true,
+    "classes": [
+      "Reader",
+      "Writer",
+      "Error",
+      "InvalidLineError"
+    ],
+    "version": "4.0.0"
+  },
+  "read_bytes_unicode": {
+    "eof": "EOFError",
+    "value": "snowman: ☃"
+  },
+  "read_empty_policy": {
+    "error": {
+      "cause": "JSONDecodeError",
+      "line": "",
+      "line_is_bytes": false,
+      "lineno": 1,
+      "mentions_line": true,
+      "type": "InvalidLineError"
+    },
+    "next": 2
+  },
+  "read_eof": {
+    "first": 1,
+    "message": "",
+    "type": "EOFError"
+  },
+  "read_invalid_json": {
+    "cause": "JSONDecodeError",
+    "line": "{\"x\":",
+    "line_is_bytes": false,
+    "lineno": 1,
+    "mentions_line": true,
+    "message_prefix": true,
+    "type": "InvalidLineError"
+  },
+  "read_invalid_type": {
+    "message": "invalid type specified",
+    "type": "ValueError"
+  },
+  "read_invalid_utf8": {
+    "cause": "UnicodeDecodeError",
+    "line": "fffe",
+    "line_is_bytes": true,
+    "lineno": 1,
+    "mentions_line": true,
+    "message_prefix": true,
+    "type": "InvalidLineError"
+  },
+  "read_json_values": [
+    {
+      "a": [
+        1,
+        true,
+        null,
+        "café"
+      ]
+    },
+    [
+      1,
+      2
+    ],
+    "hello",
+    3.5,
+    7,
+    false
+  ],
+  "read_null": {
+    "allowed": null,
+    "strict": {
+      "cause": null,
+      "line": "null",
+      "line_is_bytes": false,
+      "lineno": 1,
+      "mentions_line": true,
+      "message": "line contains null value (line 1)",
+      "type": "InvalidLineError"
+    }
+  },
+  "read_prefixes": {
+    "third": {
+      "cause": "JSONDecodeError",
+      "line": "﻿3",
+      "line_is_bytes": false,
+      "lineno": 3,
+      "mentions_line": true,
+      "type": "InvalidLineError"
+    },
+    "values": [
+      1,
+      2
+    ]
+  },
+  "read_skip_empty": [
+    1,
+    2
+  ],
+  "read_typed_mismatch": {
+    "errors": [
+      {
+        "cause": null,
+        "line": "true",
+        "line_is_bytes": false,
+        "lineno": 1,
+        "mentions_line": true,
+        "message": "line does not match requested type (line 1)",
+        "type": "InvalidLineError"
+      },
+      {
+        "cause": null,
+        "line": "1",
+        "line_is_bytes": false,
+        "lineno": 2,
+        "mentions_line": true,
+        "message": "line does not match requested type (line 2)",
+        "type": "InvalidLineError"
+      }
+    ]
+  },
+  "read_typed_values": [
+    1,
+    1.5,
+    true,
+    "x",
+    {},
+    []
+  ],
+  "reader_lifecycle": {
+    "inside": 1,
+    "reader_error": "RuntimeError",
+    "repr_ok": true,
+    "stream_closed": false
+  },
+  "writer_binary_all": {
+    "bytes": "{\"a\": 1}\n[2, 3]\ntrue\n",
+    "count": 21
+  },
+  "writer_custom_bytes": {
+    "count": 17,
+    "text": "{\"a\": 1, \"b\": 2}\n"
+  },
+  "writer_custom_str": {
+    "bytes": "value=3\n",
+    "calls": [
+      {},
+      3
+    ],
+    "count": 8
+  },
+  "writer_flags": {
+    "count": 14,
+    "text": "{\"a\":1,\"b\":2}\n"
+  },
+  "writer_flush": {
+    "flushes": 2,
+    "text": "1\n2\n"
+  },
+  "writer_lifecycle": {
+    "count": 4,
+    "repr_ok": true,
+    "stream_closed": false,
+    "writer_error": "RuntimeError"
+  },
+  "writer_text": {
+    "counts": [
+      17,
+      5
+    ],
+    "text": "{\"text\": \"café\"}\nnull\n"
+  }
+}

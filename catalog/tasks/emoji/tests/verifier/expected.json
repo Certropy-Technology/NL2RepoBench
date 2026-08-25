@@ -1,0 +1,615 @@
+{
+  "aliases_and_variants": {
+    "alias": "👍",
+    "demojize_alias": ":thumbsup:",
+    "english_unknown": ":thumbsup:",
+    "heart_base": "❤️",
+    "heart_emoji": "❤️",
+    "heart_text": "❤︎"
+  },
+  "analyze_non_emoji": [
+    {
+      "chars": "x",
+      "kind": "text",
+      "value": "x"
+    },
+    {
+      "chars": "😀",
+      "emoji": "😀",
+      "end": 2,
+      "is_zwj": false,
+      "kind": "EmojiMatch",
+      "start": 1
+    },
+    {
+      "chars": "!",
+      "kind": "text",
+      "value": "!"
+    }
+  ],
+  "analyze_positions": [
+    {
+      "chars": "😀",
+      "emoji": "😀",
+      "end": 2,
+      "is_zwj": false,
+      "kind": "EmojiMatch",
+      "start": 1
+    },
+    {
+      "chars": "❤️",
+      "emoji": "❤️",
+      "end": 5,
+      "is_zwj": false,
+      "kind": "EmojiMatch",
+      "start": 3
+    }
+  ],
+  "api_signatures": {
+    "analyze": [
+      [
+        "string",
+        "required"
+      ],
+      [
+        "non_emoji",
+        "False"
+      ],
+      [
+        "join_emoji",
+        "True"
+      ]
+    ],
+    "demojize": [
+      [
+        "string",
+        "required"
+      ],
+      [
+        "delimiters",
+        "(':', ':')"
+      ],
+      [
+        "language",
+        "'en'"
+      ],
+      [
+        "version",
+        "None"
+      ],
+      [
+        "handle_version",
+        "None"
+      ]
+    ],
+    "distinct_emoji_list": [
+      [
+        "string",
+        "required"
+      ]
+    ],
+    "emoji_count": [
+      [
+        "string",
+        "required"
+      ],
+      [
+        "unique",
+        "False"
+      ]
+    ],
+    "emoji_list": [
+      [
+        "string",
+        "required"
+      ]
+    ],
+    "emojize": [
+      [
+        "string",
+        "required"
+      ],
+      [
+        "delimiters",
+        "(':', ':')"
+      ],
+      [
+        "variant",
+        "None"
+      ],
+      [
+        "language",
+        "'en'"
+      ],
+      [
+        "version",
+        "None"
+      ],
+      [
+        "handle_version",
+        "None"
+      ]
+    ],
+    "is_emoji": [
+      [
+        "string",
+        "required"
+      ]
+    ],
+    "purely_emoji": [
+      [
+        "string",
+        "required"
+      ]
+    ],
+    "replace_emoji": [
+      [
+        "string",
+        "required"
+      ],
+      [
+        "replace",
+        "''"
+      ],
+      [
+        "version",
+        "-1"
+      ]
+    ],
+    "version": [
+      [
+        "string",
+        "required"
+      ]
+    ]
+  },
+  "custom_delimiters": {
+    "demojized": "A <snake> B <butterfly>",
+    "multi_character": "🐍",
+    "rendered": "A 🐍 B 🦋"
+  },
+  "direct_lookup": {
+    "alias": "👍",
+    "english": "🐍",
+    "unknown": null,
+    "wrong_case": null
+  },
+  "empty_and_plain": {
+    "analyze_plain": [],
+    "counts": [
+      0,
+      0
+    ],
+    "demojize_empty": "",
+    "emoji_list_plain": [],
+    "emojize_empty": "",
+    "replace_plain": "plain text"
+  },
+  "english_conversion": {
+    "adjacent": "🐍🦋",
+    "rendered": "Python 👍 ❤️ :does_not_exist:",
+    "round_trip": "Python :thumbs_up: :red_heart: :does_not_exist:"
+  },
+  "error_contracts": {
+    "demojize_language": "NotImplementedError",
+    "emojize_language": "NotImplementedError",
+    "load_language": "NotImplementedError",
+    "missing_metadata": "KeyError",
+    "variant": "ValueError"
+  },
+  "language_loading": {
+    "repeat": null,
+    "rocket": {
+      "en": ":rocket:",
+      "es": ":cohete:",
+      "fr": ":fusée:",
+      "ja": ":ロケット:"
+    },
+    "unsupported_error": "NotImplementedError"
+  },
+  "list_and_count": {
+    "count": 3,
+    "distinct_sorted": [
+      "👨‍👩‍👧‍👦",
+      "😀"
+    ],
+    "list": [
+      {
+        "emoji": "😀",
+        "match_end": 2,
+        "match_start": 1
+      },
+      {
+        "emoji": "😀",
+        "match_end": 3,
+        "match_start": 2
+      },
+      {
+        "emoji": "👨‍👩‍👧‍👦",
+        "match_end": 11,
+        "match_start": 4
+      }
+    ],
+    "unique_count": 2
+  },
+  "match_object": {
+    "base_is_zwj": false,
+    "base_split_identity": true,
+    "copy": {
+      "E": 1,
+      "en": ":grinning_face:",
+      "match_end": 3,
+      "match_start": 2,
+      "status": 2
+    },
+    "plain_copy": {
+      "match_end": 5,
+      "match_start": 4
+    },
+    "repr": "EmojiMatch(😀, 2:3)"
+  },
+  "metadata": {
+    "❤️": {
+      "E": 0.6,
+      "aliases": [
+        ":heart:"
+      ],
+      "en": ":red_heart:",
+      "status": 2,
+      "variant": true
+    },
+    "🐍": {
+      "E": 0.6,
+      "aliases": [],
+      "en": ":snake:",
+      "status": 2,
+      "variant": null
+    },
+    "👨‍👩‍👧‍👦": {
+      "E": 2,
+      "aliases": [],
+      "en": ":family_man_woman_girl_boy:",
+      "status": 2,
+      "variant": null
+    },
+    "😀": {
+      "E": 1,
+      "aliases": [
+        ":grinning:"
+      ],
+      "en": ":grinning_face:",
+      "status": 2,
+      "variant": null
+    },
+    "🧠": {
+      "E": 5,
+      "aliases": [],
+      "en": ":brain:",
+      "status": 2,
+      "variant": null
+    }
+  },
+  "multilingual_conversion": {
+    "french": "🚀",
+    "german_back": ":schlange:",
+    "japanese": "🚀",
+    "spanish": "🚀",
+    "spanish_back": ":cohete:"
+  },
+  "non_rgi_zwj": {
+    "joined": [
+      {
+        "chars": "👨‍👩🏿‍👧🏻‍👦🏾",
+        "emoji": "👨‍👩🏿‍👧🏻‍👦🏾",
+        "end": 10,
+        "is_zwj": true,
+        "kind": "EmojiMatchZWJNonRGI",
+        "start": 0
+      }
+    ],
+    "kept": ":man:‍:woman_dark_skin_tone:‍:girl_light_skin_tone:‍:boy_medium-dark_skin_tone:",
+    "kept_round_trip": true,
+    "removed": ":man::woman_dark_skin_tone::girl_light_skin_tone::boy_medium-dark_skin_tone:",
+    "split": [
+      {
+        "chars": "👨",
+        "emoji": "👨",
+        "end": 1,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 0
+      },
+      {
+        "chars": "👩🏿",
+        "emoji": "👩🏿",
+        "end": 4,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 2
+      },
+      {
+        "chars": "👧🏻",
+        "emoji": "👧🏻",
+        "end": 7,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 5
+      },
+      {
+        "chars": "👦🏾",
+        "emoji": "👦🏾",
+        "end": 10,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 8
+      }
+    ]
+  },
+  "package_identity": {
+    "author": "Taehoon Kim, Kevin Wurster",
+    "languages": [
+      "en",
+      "es",
+      "ja",
+      "ko",
+      "pt",
+      "it",
+      "fr",
+      "de",
+      "fa",
+      "id",
+      "zh",
+      "ru",
+      "tr",
+      "ar"
+    ],
+    "license_marker": true,
+    "status": {
+      "component": 1,
+      "fully_qualified": 2,
+      "minimally_qualified": 3,
+      "unqualified": 4
+    },
+    "version": "2.15.0"
+  },
+  "predicates": {
+    "is_emoji": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "purely": [
+      true,
+      true,
+      false,
+      true
+    ]
+  },
+  "public_exports": {
+    "all": [
+      "emojize",
+      "demojize",
+      "analyze",
+      "config",
+      "emoji_list",
+      "distinct_emoji_list",
+      "emoji_count",
+      "replace_emoji",
+      "is_emoji",
+      "purely_emoji",
+      "version",
+      "Token",
+      "EmojiMatch",
+      "EmojiMatchZWJ",
+      "EmojiMatchZWJNonRGI",
+      "EMOJI_DATA",
+      "STATUS",
+      "LANGUAGES"
+    ],
+    "callables": {
+      "analyze": true,
+      "demojize": true,
+      "distinct_emoji_list": true,
+      "emoji_count": true,
+      "emoji_list": true,
+      "emojize": true,
+      "is_emoji": true,
+      "purely_emoji": true,
+      "replace_emoji": true,
+      "version": true
+    },
+    "data_type": "dict"
+  },
+  "replace_behavior": {
+    "callable": "A <snake> meets <brain>",
+    "calls": [
+      [
+        "🐍",
+        ":snake:",
+        0.6,
+        2,
+        3
+      ],
+      [
+        "🧠",
+        ":brain:",
+        5,
+        10,
+        11
+      ]
+    ],
+    "constant": "A X meets X",
+    "newer_than_3": "A 🐍 meets N",
+    "remove_all": "A  meets "
+  },
+  "rgi_zwj": {
+    "demojized": ":family_man_woman_girl_boy:",
+    "joined": "👨‍👩‍👧‍👦",
+    "parts": [
+      [
+        "👨",
+        0,
+        1,
+        true
+      ],
+      [
+        "👩",
+        2,
+        3,
+        true
+      ],
+      [
+        "👧",
+        4,
+        5,
+        true
+      ],
+      [
+        "👦",
+        6,
+        7,
+        true
+      ]
+    ],
+    "round_trip": "👨‍👩‍👧‍👦",
+    "split_kind": "EmojiMatchZWJ",
+    "token": {
+      "chars": "👨‍👩‍👧‍👦",
+      "emoji": "👨‍👩‍👧‍👦",
+      "end": 7,
+      "is_zwj": true,
+      "kind": "EmojiMatch",
+      "start": 0
+    }
+  },
+  "skin_tone_and_flags": {
+    "demojized": ":thumbs_up_medium_skin_tone::France::keycap_1:",
+    "list": [
+      {
+        "emoji": "👍🏽",
+        "match_end": 2,
+        "match_start": 0
+      },
+      {
+        "emoji": "🇫🇷",
+        "match_end": 4,
+        "match_start": 2
+      },
+      {
+        "emoji": "1️⃣",
+        "match_end": 7,
+        "match_start": 4
+      }
+    ],
+    "round_trip": true,
+    "versions": [
+      1,
+      0.6,
+      0.6
+    ]
+  },
+  "tokenize_behavior": {
+    "keep": [
+      {
+        "chars": "x",
+        "kind": "text",
+        "value": "x"
+      },
+      {
+        "chars": "❤️",
+        "emoji": "❤️",
+        "end": 3,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 1
+      },
+      {
+        "chars": "y",
+        "kind": "text",
+        "value": "y"
+      },
+      {
+        "chars": "👍🏽",
+        "emoji": "👍🏽",
+        "end": 6,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 4
+      },
+      {
+        "chars": "z",
+        "kind": "text",
+        "value": "z"
+      }
+    ],
+    "remove": [
+      {
+        "chars": "x",
+        "kind": "text",
+        "value": "x"
+      },
+      {
+        "chars": "❤️",
+        "emoji": "❤️",
+        "end": 3,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 1
+      },
+      {
+        "chars": "y",
+        "kind": "text",
+        "value": "y"
+      },
+      {
+        "chars": "👍🏽",
+        "emoji": "👍🏽",
+        "end": 6,
+        "is_zwj": false,
+        "kind": "EmojiMatch",
+        "start": 4
+      },
+      {
+        "chars": "z",
+        "kind": "text",
+        "value": "z"
+      }
+    ]
+  },
+  "version_filter_demojize": {
+    "at": "A :T-Rex: B",
+    "below": "A  B",
+    "callable_handler": "A [new] B",
+    "calls": [
+      [
+        "🦖",
+        5,
+        2,
+        3
+      ]
+    ],
+    "string_handler": "A [unsupported] B"
+  },
+  "version_filter_emojize": {
+    "at": "🥣",
+    "below": "",
+    "callable_handler": "x[new]y",
+    "calls": [
+      [
+        "🥣",
+        5,
+        1,
+        18
+      ]
+    ],
+    "string_handler": "x[unsupported]y"
+  },
+  "version_lookup": {
+    "missing_error": "ValueError",
+    "name": 3,
+    "text_alias": 0.6,
+    "text_unicode": 5,
+    "unicode": 0.6
+  }
+}

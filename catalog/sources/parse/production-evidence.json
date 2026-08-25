@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parse",
+  "terminal_kind": "controls-passed",
+  "bundle": {
+    "path": "catalog/tasks/parse/bundle.manifest.json",
+    "sha256": "sha256:913700203bdc4d3ca628e83481d45a34399b731f2293e3fb21a7eb67b5bbb703"
+  },
+  "executed_bundle": {
+    "path": ".nl2repo/runs/parse-final-rebinding-20260826/compiled/parse/bundle.manifest.json",
+    "sha256": "sha256:d5fe605e1160fe3c74351ac6982e0ca7fd040552de2000f7a9dfd0e599a90aef"
+  },
+  "verifier_bundle": {
+    "artifact_digest": "sha256:34c5369de94a0a17da612822ce17cf5619777ca43b4e6287f238932926845755",
+    "size_bytes": 71680,
+    "traceability_fixtures_retained": true
+  },
+  "oracle": {
+    "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/runs/parse-final-rebinding-20260826/compiled/parse -a oracle --jobs-dir .nl2repo/runs/parse-final-rebinding-20260826/harbor/oracle --n-attempts 1 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "result": {
+      "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/oracle/2026-08-25__18-49-40/parse__geBHRji/result.json",
+      "sha256": "sha256:75f28d22a5de746a72ab5a72e9dac0d376757d27ea248bd416c38587fe5b6d4b"
+    },
+    "grading": {
+      "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/oracle/2026-08-25__18-49-40/parse__geBHRji/verifier/grading.json",
+      "sha256": "sha256:7ab930a4b45a3d9a5e5baea8bb1be17b937b67e40eda71fc95385bb715622901"
+    },
+    "network": {
+      "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/oracle/2026-08-25__18-49-40/parse__geBHRji/verifier/network.json",
+      "sha256": "sha256:f645eddc9ce11c150b941cb6ad1da1e1391237606aeb62a95a4f69176d204364"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/runs/parse-final-rebinding-20260826/compiled/parse -a nop --jobs-dir .nl2repo/runs/parse-final-rebinding-20260826/harbor/empty --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/empty/2026-08-25__18-50-53/parse__bpdeV8j/verifier/grading.json",
+        "sha256": "sha256:e9a845b96eda962f9799a26e26d02617995ca0aaead04273a547f3f47849b14f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/empty/2026-08-25__18-50-53/parse__bpdeV8j/verifier/network.json",
+        "sha256": "sha256:b7da610d487637a6958919c4a684433573adae102b3c05328297f83e04044cd3"
+      }
+    },
+    "stub": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/runs/parse-final-rebinding-20260826/controls-stub/parse-stub -a oracle --jobs-dir .nl2repo/runs/parse-final-rebinding-20260826/harbor/stub --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/stub/2026-08-25__18-50-53/parse-stub__vdBd2pX/verifier/grading.json",
+        "sha256": "sha256:1240bdb7c7b3df557426059bec5e29211b99b32eeb51ecd809efa4c2ec08673e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/stub/2026-08-25__18-50-53/parse-stub__vdBd2pX/verifier/network.json",
+        "sha256": "sha256:a3748764984a5c5180909ed60c67ad497d57e1540f876cfc4cb5524a276e83af"
+      }
+    },
+    "forgery": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/runs/parse-final-rebinding-20260826/controls-forgery/parse-forgery -a oracle --jobs-dir .nl2repo/runs/parse-final-rebinding-20260826/harbor/forgery --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/forgery/2026-08-25__18-50-53/parse-forgery__jRkkkRR/artifacts/workspace/reward.json",
+        "sha256": "sha256:1199a2b37a0a878d6ebf1b7d53826c88f25d8d7e8eab96aad6737bb29c7fc81a"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/forgery/2026-08-25__18-50-53/parse-forgery__jRkkkRR/verifier/grading.json",
+        "sha256": "sha256:8360d60af3ba1d207258ab05f849abcc89200b920752ac5632a44f663cf93b62"
+      },
+      "network": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/forgery/2026-08-25__18-50-53/parse-forgery__jRkkkRR/verifier/network.json",
+        "sha256": "sha256:1f8e9532b3a801f4d1335cc7c9f2ae13437a22d21f875ac5289d436c5e29f8e5"
+      }
+    },
+    "offline": {
+      "command": "Verifier-integrated no-network probes in the fresh Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/parse-final-rebinding-20260826/harbor/oracle/2026-08-25__18-49-40/parse__geBHRji/verifier/network.json",
+        "sha256": "sha256:f645eddc9ce11c150b941cb6ad1da1e1391237606aeb62a95a4f69176d204364"
+      }
+    }
+  }
+}

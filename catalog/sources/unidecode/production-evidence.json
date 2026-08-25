@@ -1,0 +1,107 @@
+{
+  "bundle": {
+    "canonical_manifest_digest": "sha256:dbf1e52b9d89624bfdab7e26da4acde8c3be58950dfc343a3cd3281dd9420e1d",
+    "path": "catalog/tasks/unidecode/bundle.manifest.json",
+    "sha256": "sha256:3b010fec23e3b51c69b5dd994733fc16bd4a0138cb55a5f36976caedf78d335d"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/unidecode --output .nl2repo/task-artifacts/unidecode-production/final-compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "log": {
+      "path": ".nl2repo/task-artifacts/unidecode-production/final-compile.log"
+    },
+    "mode": "production",
+    "used_allow_incomplete": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/unidecode-production/compiled/unidecode -a nop --job-name empty --jobs-dir .nl2repo/task-artifacts/unidecode-production/runs --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/empty/unidecode__HCLGYHc/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/empty/unidecode__HCLGYHc/verifier/network.json",
+        "sha256": "sha256:5ebb7eeaefd63eb2660ee26c264ee41eabaecd4a399c6ef265a0e331d5df1d24"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/unidecode-production/controls/unidecode-forgery -a oracle --job-name forgery --jobs-dir .nl2repo/task-artifacts/unidecode-production/runs --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/forgery/unidecode-forgery__xW4BcN7/verifier/grading.json",
+        "sha256": "sha256:cb418ca5cf8fb07c2ad6c39a6784f4f35839b637438cf5e57c277e8f8194f3ae"
+      },
+      "network": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/forgery/unidecode-forgery__xW4BcN7/verifier/network.json",
+        "sha256": "sha256:5ebb7eeaefd63eb2660ee26c264ee41eabaecd4a399c6ef265a0e331d5df1d24"
+      },
+      "reward": 0.15,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Verifier-integrated no-network probes in Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/oracle/unidecode__L9BySrN/verifier/network.json",
+        "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"
+      },
+      "network_receipts": [
+        ".nl2repo/task-artifacts/unidecode-production/runs/oracle/unidecode__L9BySrN/verifier/network.json",
+        ".nl2repo/task-artifacts/unidecode-production/runs/empty/unidecode__HCLGYHc/verifier/network.json",
+        ".nl2repo/task-artifacts/unidecode-production/runs/stub/unidecode-stub__pKmMTyf/verifier/network.json",
+        ".nl2repo/task-artifacts/unidecode-production/runs/forgery/unidecode-forgery__xW4BcN7/verifier/network.json"
+      ],
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/unidecode-production/controls/unidecode-stub -a oracle --job-name stub --jobs-dir .nl2repo/task-artifacts/unidecode-production/runs --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/stub/unidecode-stub__pKmMTyf/verifier/grading.json",
+        "sha256": "sha256:cb418ca5cf8fb07c2ad6c39a6784f4f35839b637438cf5e57c277e8f8194f3ae"
+      },
+      "network": {
+        "path": ".nl2repo/task-artifacts/unidecode-production/runs/stub/unidecode-stub__pKmMTyf/verifier/network.json",
+        "sha256": "sha256:b7da610d487637a6958919c4a684433573adae102b3c05328297f83e04044cd3"
+      },
+      "reward": 0.15,
+      "valid": true
+    }
+  },
+  "dependency_lock": {
+    "digest": "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b",
+    "packages": ["setuptools==80.10.2"],
+    "vendor_wheels": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/unidecode-production/compiled/unidecode -a oracle --job-name oracle --jobs-dir .nl2repo/task-artifacts/unidecode-production/runs --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/task-artifacts/unidecode-production/runs/oracle/unidecode__L9BySrN/verifier/grading.json",
+      "sha256": "sha256:6c2d51debcffdb9fec8b010741b6e272d717635ed92faf0ebefc0f57daec898f"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/task-artifacts/unidecode-production/runs/oracle/unidecode__L9BySrN/verifier/network.json",
+      "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"
+    },
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "GPL-2.0-or-later",
+    "revision": "8d83b7c70c39678c2b95cb0caf3d3c4425cb2cc2",
+    "source_digest": "sha256:a33c1751226d4cca24d0b3cf457a31932ee496f161713d654cfc07c10ef13c28",
+    "status": "known",
+    "upstream_url": "https://github.com/avian2/unidecode"
+  },
+  "task_id": "unidecode",
+  "terminal_kind": "valid"
+}

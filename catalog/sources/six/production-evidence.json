@@ -1,0 +1,110 @@
+{
+  "bundle": {
+    "canonical_manifest_digest": "sha256:464ba3a06ec25eb423312ae1c905eb854f667ba695d1f76e08f61b893e3662bf",
+    "path": "catalog/tasks/six/bundle.manifest.json",
+    "sha256": "sha256:e7538eb508a56e12727408d0f4d81cd005a9907a2ac168679659267e4e93eca1"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/six --output .nl2repo/task-artifacts/six-production/final-compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "log": {
+      "path": ".nl2repo/task-artifacts/six-production/final-production-compile.log",
+      "sha256": "sha256:2c73cef7125cbcb3a285cb006cb3ff3a213b9300e8fe7cb6ec4a11ae4727ecbd"
+    },
+    "mode": "production",
+    "used_allow_incomplete": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/six-production/compiled/six -a nop --job-name empty --jobs-dir .nl2repo/runs/six-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/six-production/empty/six__Fo2mtRs/verifier/grading.json",
+        "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"
+      },
+      "network": {
+        "path": ".nl2repo/runs/six-production/empty/six__Fo2mtRs/verifier/network.json",
+        "sha256": "sha256:4a25a2f85f0b74d6471f8af34568a9d9f87314aefe8db01cb4bc5cf96b566809"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/six-production/controls/six-forgery -a oracle --job-name forgery --jobs-dir .nl2repo/runs/six-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/six-production/forgery/six-forgery__Pra5RY9/verifier/grading.json",
+        "sha256": "sha256:9260d912b0541b736518a79fd55e3a02d0d840e185ebecf85a5424fbd3c83ba5"
+      },
+      "network": {
+        "path": ".nl2repo/runs/six-production/forgery/six-forgery__Pra5RY9/verifier/network.json",
+        "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+      },
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Official Harbor Oracle verifier network-none probe",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/six-production/oracle/six__yr59siA/verifier/network.json",
+        "sha256": "sha256:67f165d740272eb9c6e0d22debaee695ba842cb688af70cf9c88c66a44e71fed"
+      },
+      "network_receipts": [
+        ".nl2repo/runs/six-production/oracle/six__yr59siA/verifier/network.json",
+        ".nl2repo/runs/six-production/empty/six__Fo2mtRs/verifier/network.json",
+        ".nl2repo/runs/six-production/stub/six-stub__jzLyg3r/verifier/network.json",
+        ".nl2repo/runs/six-production/forgery/six-forgery__Pra5RY9/verifier/network.json"
+      ],
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/six-production/controls/six-stub -a oracle --job-name stub --jobs-dir .nl2repo/runs/six-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/six-production/stub/six-stub__jzLyg3r/verifier/grading.json",
+        "sha256": "sha256:98f4d7d464138f1e9ae7bb215dda0cc8c4d86cb5a83ab1c4b59c8b9e68ca3a68"
+      },
+      "network": {
+        "path": ".nl2repo/runs/six-production/stub/six-stub__jzLyg3r/verifier/network.json",
+        "sha256": "sha256:0eb9bc69be15576f3a664df16a4cb11bee27e374fec61e589cfdf942deded33c"
+      },
+      "reward": 0.047619047619047616,
+      "valid": true
+    }
+  },
+  "dependency_lock": {
+    "digest": "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b",
+    "packages": [
+      "setuptools==80.10.2"
+    ],
+    "vendor_wheels": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/six-production/compiled/six -a oracle --job-name oracle --jobs-dir .nl2repo/runs/six-production --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/six-production/oracle/six__yr59siA/verifier/grading.json",
+      "sha256": "sha256:11b3db54c0c218f5f0c084eef001df447e2813506ef6e5639e8236f42a1c8ee4"
+    },
+    "network": {
+      "path": ".nl2repo/runs/six-production/oracle/six__yr59siA/verifier/network.json",
+      "sha256": "sha256:67f165d740272eb9c6e0d22debaee695ba842cb688af70cf9c88c66a44e71fed"
+    },
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "c8e394065cd541a16c040515dc0afb85cf22a7c3",
+    "source_digest": "sha256:4e2ea68f7238cdb11813a33867a4caa43737d84d03bfe2c54ae5e855be8a6fe3",
+    "status": "known",
+    "upstream_url": "https://github.com/benjaminp/six"
+  },
+  "task_id": "six",
+  "terminal_kind": "valid"
+}

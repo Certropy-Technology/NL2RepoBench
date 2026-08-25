@@ -1,11 +1,10 @@
 # `cookie` Node 24 Authoring Evidence
 
-Status: `blocked`. The committed Node verifier now emits structured network
-receipts, and the fresh Oracle, empty, and forgery gates passed. The one
-allowed official stub run failed candidate installation and collected 0/32,
-so the canonical control gate remains incomplete. This file records task-local
-provenance and gate evidence; it does not claim upstream parity or dataset
-publication.
+Status: `controls-passed`. The committed Node verifier emits structured network
+receipts, the current Oracle, empty, and forgery gates are valid, and the
+isolated committed-dispatch stub remediation collected 32/32 leaves with a
+low score. This file records task-local provenance and gate evidence; it does
+not claim upstream parity, completed review, pilot results, or publication.
 
 ## Frozen Source And License
 
@@ -130,7 +129,7 @@ candidate-controlled reward/grading files in the workspace, and verifier-owned
 grading remained authoritative. No cross-language or upstream parity claim is
 made.
 
-## Official Node Control Dispatch Attempt
+## Official Node Control Dispatch Remediation
 
 After the shared Node network-proof and `prepare-control` dispatch were
 committed, cookie was compiled in production mode without
@@ -144,14 +143,30 @@ its candidate-owned grading claimed reward 1 while verifier-owned grading
 remained 0.03125. Every run wrote `verifier/network.json` with both public
 probes false.
 
-The official stub control was executed once, concurrently with forgery as two
-independent Harbor jobs. It returned `valid=true`, `expected_total=32`, and
-reward 0.0, but candidate installation failed (`/usr/local/bin/npm failed`)
-and collection remained 0. Canonical production validation permits that
-closed installation result only for empty, not stub. Cookie therefore remains
-blocked and `catalog/tasks/cookie` remains absent.
+The first official stub control was executed concurrently with forgery and
+failed candidate installation before collection. That historical attempt is
+retained in `evidence/official-node-controls-blocked.txt`; it is not accepted
+as the stub gate.
 
-Exact paths and hashes are recorded in
-`evidence/official-node-controls-blocked.txt`. The next bounded step is to
-investigate the npm failure and run the official stub alone in a new isolated
-compile/control/output root. This attempt is not rerun in place.
+The source was compiled again under the unique root
+`.nl2repo/runs/cookie-stub-remediation-20260825T104829Z-29f14b4`. The committed
+Node `prepare-control` dispatch copied the source-owned stub script byte for
+byte into the control bundle. The stub then ran alone with concurrency one,
+zero retries, and a fresh jobs root:
+
+```text
+valid=true
+expected_total=32
+collected=32
+passed=1
+reward=0.03125
+public_network_available=false
+```
+
+The prior matrix bundle and fresh remediation bundle differ only in the
+lifecycle-derived canonical manifest digest embedded in generated metadata.
+All instruction, control, Oracle, dependency, test, verifier, image, and
+toolchain bytes match, so Oracle, empty, and forgery were not rerun. Exact
+paths and hashes are recorded in `production-evidence.json`. The canonical
+runtime is present at `catalog/tasks/cookie`; review and pilot gates remain
+pending.

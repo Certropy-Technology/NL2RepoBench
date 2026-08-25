@@ -1,45 +1,54 @@
 schema_version = "1.0"
 task_id = "parse"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "easy"
-category = "python-library"
-tags = ["python", "repository-generation"]
+difficulty = "medium"
+category = "format-string-parsing"
+tags = ["python", "parsing", "format-strings", "repository-generation", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = 'https://github.com/r1chardj0n3s/parse'
-revision = '8059e320eccf40d750843006dd2ef25197bbff74'
-license_spdx = 'MIT'
-source_digest = 'sha256:eb48010aafcc5a9699285f59fbe5abce50bacba1e6da175072163a7ed3c38176'
+upstream_url = "https://github.com/r1chardj0n3s/parse"
+revision = "8059e320eccf40d750843006dd2ef25197bbff74"
+license_spdx = "MIT"
+source_digest = "sha256:eb48010aafcc5a9699285f59fbe5abce50bacba1e6da175072163a7ed3c38176"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12"
-os_name = "debian-12"
-base_image = 'python:3.12-slim'
-base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The hash-locked build closure is installed during image build. Runtime candidate and verifier containers need no egress; provider hosts are injected per run and are not task metadata."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 96
-expected_total_source = "unknown"
-commands = ["pip install -e . & pip install -r tests/requirements.txt", "pytest --continue-on-collection-errors"]
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/probe.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:34c5369de94a0a17da612822ce17cf5619777ca43b4e6287f238932926845755", size_bytes = 71680, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:34c5369de94a0a17da612822ce17cf5619777ca43b4e6287f238932926845755", visibility = "private" }
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -49,19 +58,27 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the parse package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
-agent_timeout_sec = 3600.0
+description = "Build the bounded parse format-string parsing library from an empty workspace."
+keywords = ["python", "parsing", "format-strings", "separate-verifier", "no-network"]
+agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
-memory_mb = 4096
-storage_mb = 8192
+memory_mb = 2048
+storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "controls-passed"
+owner = "worker"
+reason = "Fresh Harbor 0.21.0 receipts are bound to the final verifier artifact that retains the frozen upstream traceability fixtures: Oracle passed 96/96 at reward 1.0, empty scored 0.0, stub passed 9/96 at reward 0.09375, forgery scored 0.0 despite a forged workspace reward, and every verifier network probe confirmed no public connectivity. Reviews, pilots, and publication remain pending."
+
+[oracle_bundle]
+digest = "sha256:2725090f72efa86930fd19c6abf806b68f0c03373696e27b44c376891b85365d"
+size_bytes = 143360
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2725090f72efa86930fd19c6abf806b68f0c03373696e27b44c376891b85365d"
+visibility = "private"

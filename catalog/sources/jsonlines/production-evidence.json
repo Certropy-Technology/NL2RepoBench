@@ -1,0 +1,55 @@
+{
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/jsonlines --output .nl2repo/task-artifacts/jsonlines-production/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/task-artifacts/jsonlines-production/artifacts --allow-private",
+    "mode": "production",
+    "used_allow_incomplete": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/jsonlines -a nop",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/jsonlines-production-gates/empty/jsonlines__o3JFtVt/verifier/grading.json", "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"},
+      "network": {"path": ".nl2repo/runs/jsonlines-production-gates/empty/jsonlines__o3JFtVt/verifier/network.json", "sha256": "sha256:55125138df1361e53cf74a30bdc5d03f9fc19b214abba0de0de8f1cef3932313"},
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p jsonlines-forgery -a oracle",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/jsonlines-production-gates/forgery/jsonlines-forgery__YzYiSwt/verifier/grading.json", "sha256": "sha256:c09b678fca57a02a97a15824206635c5987bab6826a871effed7f91f5ba6cef3"},
+      "network": {"path": ".nl2repo/runs/jsonlines-production-gates/forgery/jsonlines-forgery__YzYiSwt/verifier/network.json", "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"},
+      "reward": 0.03333333333333333,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Official Harbor Oracle verifier network-none probe",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network_receipts": 4,
+      "network": {"path": ".nl2repo/runs/jsonlines-production-gates/oracle/jsonlines__fSktbKR/verifier/network.json", "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p jsonlines-stub -a oracle",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/jsonlines-production-gates/stub/jsonlines-stub__3TZCxxm/verifier/grading.json", "sha256": "sha256:c09b678fca57a02a97a15824206635c5987bab6826a871effed7f91f5ba6cef3"},
+      "network": {"path": ".nl2repo/runs/jsonlines-production-gates/stub/jsonlines-stub__3TZCxxm/verifier/network.json", "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"},
+      "reward": 0.03333333333333333,
+      "valid": true
+    }
+  },
+  "dependency_lock": {"digest": "sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034", "vendor_wheels": false},
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/jsonlines -a oracle",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {"path": ".nl2repo/runs/jsonlines-production-gates/oracle/jsonlines__fSktbKR/verifier/grading.json", "sha256": "sha256:d3b1b266480b63ab121017b74b59924b75891ec3fd5b87c2c9721d35964b0036"},
+    "network": {"path": ".nl2repo/runs/jsonlines-production-gates/oracle/jsonlines__fSktbKR/verifier/network.json", "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"},
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "task_id": "jsonlines",
+  "terminal_kind": "valid"
+}

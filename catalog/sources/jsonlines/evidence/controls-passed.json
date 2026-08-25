@@ -1,0 +1,14 @@
+{
+  "controls": {
+    "empty": {"collected": 0, "reward": 0.0, "valid": true},
+    "forgery": {"collected": 30, "passed": 1, "reward": 0.03333333333333333, "valid": true, "verifier_owned_reward": true},
+    "offline": {"completed": true, "public_network_available": false, "receipts": 4},
+    "stub": {"collected": 30, "passed": 1, "reward": 0.03333333333333333, "valid": true}
+  },
+  "expected_total": 30,
+  "oracle": {"collected": 30, "passed": 30, "reward": 1.0, "valid": true},
+  "schema_version": "1.0",
+  "status": "controls-passed",
+  "task_id": "jsonlines",
+  "toolchain": "Harbor 0.21.0 / task schema 1.4 / Python 3.12.14 / linux-amd64"
+}

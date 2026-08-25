@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-dotenv",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/theskumar/python-dotenv",
+    "revision": "02b68577f37da2c4f4b9377d7a0ca2b58fdacf20",
+    "source_digest": "sha256:e6ec01e11aa990e59b45e40b3f44b597cef8d107fc270e261974ab15fa40371e",
+    "license_spdx": "BSD-3-Clause"
+  },
+  "dependency_lock": {
+    "digest": "sha256:84b7960ac5889a6173ec11d0a5fe8cf135e213336ece4607548886ea998d793e",
+    "packages": ["click==8.4.2", "setuptools==80.10.2", "wheel==0.45.1"],
+    "vendor_wheels": false
+  },
+  "executed_bundle": {
+    "path": ".nl2repo/task-artifacts/python-dotenv-production/final-compiled/python-dotenv/bundle.manifest.json",
+    "sha256": "sha256:1c7bd5e5264b61584634c996895606c324b44ce6f1fd4fb7bd16b648846282da"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/python-dotenv --output .nl2repo/task-artifacts/python-dotenv-production/final-compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "mode": "production",
+    "used_allow_incomplete": false,
+    "log": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-compile.log", "sha256": "sha256:f1174750307f99c33257e56e190b96df8ddb36b8b41c4b73cc6ce1c708c275fb"}
+  },
+  "oracle": {
+    "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/task-artifacts/python-dotenv-production/final-compiled/python-dotenv -a oracle --job-name oracle --jobs-dir .nl2repo/task-artifacts/python-dotenv-production/final-jobs --n-attempts 1 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/oracle/python-dotenv__gXQ47RN/verifier/grading.json", "sha256": "sha256:eb2eca9a2124903bd9ba68913eda6d36af215fe54128e7844b70f0cd7b322981"},
+    "network": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/oracle/python-dotenv__gXQ47RN/verifier/network.json", "sha256": "sha256:6ff39f0670b38ea6ecd7f8dc37be74bb61789438a84a506d7d406b0151f94343"}
+  },
+  "controls": {
+    "empty": {
+      "command": "Harbor nop against final compiled task",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/empty/python-dotenv__Wmwdfqv/verifier/grading.json", "sha256": "sha256:69ad76caf40f2031671365d8a48b1ec3bf7eb2d5c32ef539e7f319690329b711"},
+      "network": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/empty/python-dotenv__Wmwdfqv/verifier/network.json", "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"}
+    },
+    "stub": {
+      "command": "Harbor Oracle against final compiler-prepared stub control",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/stub/python-dotenv-stub__ActTpWS/verifier/grading.json", "sha256": "sha256:a75e85111e6849b379a76fbe0dcec53419fd59537664383d72e67f175b1a6641"},
+      "network": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/stub/python-dotenv-stub__ActTpWS/verifier/network.json", "sha256": "sha256:6f06b37157020ead192dab80b8a56c484514fa17f0dc9599aa2220565a721553"}
+    },
+    "forgery": {
+      "command": "Harbor Oracle against final compiler-prepared forgery control",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/forgery/python-dotenv-forgery__fbaopzi/verifier/grading.json", "sha256": "sha256:a75e85111e6849b379a76fbe0dcec53419fd59537664383d72e67f175b1a6641"},
+      "network": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/forgery/python-dotenv-forgery__fbaopzi/verifier/network.json", "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"}
+    },
+    "offline": {
+      "command": "Verifier-integrated no-network probes in final Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {"path": ".nl2repo/task-artifacts/python-dotenv-production/final-jobs/oracle/python-dotenv__gXQ47RN/verifier/network.json", "sha256": "sha256:6ff39f0670b38ea6ecd7f8dc37be74bb61789438a84a506d7d406b0151f94343"}
+    }
+  }
+}

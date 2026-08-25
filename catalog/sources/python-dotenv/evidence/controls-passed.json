@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-dotenv",
+  "status": "controls-passed",
+  "expected_total": 33,
+  "oracle": {"valid": true, "collected": 33, "passed": 33, "reward": 1.0},
+  "controls": {
+    "empty": {"valid": true, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "collected": 33, "passed": 2, "reward": 0.06060606060606061},
+    "forgery": {"valid": true, "collected": 33, "passed": 2, "reward": 0.06060606060606061, "verifier_owned_reward": true},
+    "offline": {"completed": true, "receipts": 4, "public_network_available": false}
+  },
+  "toolchain": "Harbor 0.21.0 / task schema 1.4 / Python 3.12 / linux-amd64"
+}

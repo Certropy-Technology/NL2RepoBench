@@ -1,45 +1,56 @@
 schema_version = "1.0"
 task_id = "unidecode"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "hard"
-category = "python-library"
-tags = ["python", "repository-generation"]
+category = "text-transliteration"
+tags = ["python", "unicode", "transliteration", "lazy-cache", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/avian2/unidecode"
 revision = "8d83b7c70c39678c2b95cb0caf3d3c4425cb2cc2"
-license_spdx = "unknown"
+license_spdx = "GPL-2.0-or-later"
 source_digest = "sha256:a33c1751226d4cca24d0b3cf457a31932ee496f161713d654cfc07c10ef13c28"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.10"
-os_name = "debian-12"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "install the hash-locked setuptools build dependency during Docker build"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The sole third-party build dependency is installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==80.10.2"]
+lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 65
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:577d74244039893a732d831ccd4bea93a2bc410513d4dfb75f8440c8452f3a07", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:577d74244039893a732d831ccd4bea93a2bc410513d4dfb75f8440c8452f3a07", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -49,11 +60,11 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the unidecode package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+description = "Build Unidecode 1.4.0 from an empty workspace and satisfy a bounded transliteration, error-policy, lazy-cache, API, packaging, and CLI contract."
+keywords = ["python", "unicode", "transliteration", "lazy-cache", "separate-verifier"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
+candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
@@ -62,6 +73,14 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:1228215903cccbf3887421ac98d2bee1230d48b973aeaf2eb122627be925908a"
+size_bytes = 1116160
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1228215903cccbf3887421ac98d2bee1230d48b973aeaf2eb122627be925908a"
+visibility = "private"
+
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "controls-passed"
+owner = "worker/unidecode"
+reason = "Official Harbor 0.21.0 production gates passed: the local digest-checked Oracle passed 20/20 at reward 1.0; empty scored 0.0; stub and forgery each passed 3/20 at reward 0.15; all verifier network receipts proved no public egress. Reviews, pilots, and publication remain out of scope."

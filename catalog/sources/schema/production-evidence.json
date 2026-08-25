@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/schema -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/empty/schema-empty-final/schema__ZKBWNzK/verifier/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/empty/schema-empty-final/schema__ZKBWNzK/verifier/network.json",
+        "sha256": "sha256:3eed4f163423d04a7edf9564931c3b2617013b562e4cfb4d97e54bfec4066519"
+      }
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control catalog/tasks/schema forgery; harbor run -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/forgery-v2/schema-forgery-final-v2/schema-forgery__AAuLCTB/verifier/grading.json",
+        "sha256": "sha256:fd6f9a0d2bca38e2500013e0e5bec00f33469edbd926ae7f26516ca35b330c6e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/forgery-v2/schema-forgery-final-v2/schema-forgery__AAuLCTB/verifier/network.json",
+        "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Harbor verifier network probes for final Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/oracle/schema-oracle-final/schema__Qp7xSMM/verifier/network.json",
+        "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"
+      }
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control catalog/tasks/schema stub; harbor run -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/stub/schema-stub-final/schema-stub__YH4Zagd/verifier/grading.json",
+        "sha256": "sha256:fd6f9a0d2bca38e2500013e0e5bec00f33469edbd926ae7f26516ca35b330c6e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/schema/runs/final/stub/schema-stub-final/schema-stub__YH4Zagd/verifier/network.json",
+        "sha256": "sha256:e9b8ae0ca2b8e810420a3d320822a6f7edd19dd9b10c836b4fcc9a04d61d6dcf"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/schema -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/schema/runs/final/oracle/schema-oracle-final/schema__Qp7xSMM/verifier/grading.json",
+      "sha256": "sha256:68381d956f7adc43c99a5eee22e2b019da566d64894ee48a29f7bb419d23d527"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/authoring-work/schema/runs/final/oracle/schema-oracle-final/schema__Qp7xSMM/verifier/network.json",
+      "sha256": "sha256:3c1c92fae08f1f20c2c8b703c8327378ae3189039ec15ae19d62948f879cd2d6"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "schema",
+  "terminal_kind": "valid"
+}

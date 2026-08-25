@@ -1,0 +1,44 @@
+{
+  "bundle": {
+    "path": "catalog/tasks/six/bundle.manifest.json",
+    "sha256": "sha256:e7538eb508a56e12727408d0f4d81cd005a9907a2ac168679659267e4e93eca1"
+  },
+  "controls": {
+    "empty": {
+      "expected_total": 21,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 21,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "completed": true,
+      "receipts": 4,
+      "public_network_available": false
+    },
+    "stub": {
+      "collected": 21,
+      "passed": 1,
+      "reward": 0.047619047619047616,
+      "valid": true
+    }
+  },
+  "expected_total": 21,
+  "oracle": {
+    "collected": 21,
+    "passed": 21,
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "status": "controls-passed",
+  "task_id": "six",
+  "toolchain": "Harbor 0.21.0 / task schema 1.4 / Python 3.12 / linux-amd64"
+}
