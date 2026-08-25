@@ -46,6 +46,9 @@ digest-checked local source tar from its private bundle and performs no source
 fetch. Verifier and Oracle bytes are content-addressed private artifacts and
 are not embedded in this public source directory.
 
-`production-evidence.json` records the final Oracle, empty, stub, forgery, and
-offline receipts after Harbor execution. Reviews and pilots are intentionally
-outside this authoring task.
+`production-evidence.json` records fresh, hash-bound Oracle, empty, stub,
+forgery, and offline receipts produced from verifier artifact
+`sha256:34c5369de94a0a17da612822ce17cf5619777ca43b4e6287f238932926845755`.
+The Oracle passed 96/96, the empty and forgery controls scored 0, and the stub
+scored 9/96. All four verifier network receipts report no public connectivity.
+Reviews and pilots are intentionally outside this authoring task.

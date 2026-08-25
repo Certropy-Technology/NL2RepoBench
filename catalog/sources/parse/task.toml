@@ -72,9 +72,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker"
-reason = "The bounded verifier and controls passed, but the final verifier artifact was rebuilt to retain the frozen upstream traceability fixtures after those runs. The final verifier digest is therefore not bound to the recorded Oracle/control receipts. Rerun the complete matrix against the final artifact before restoring a runtime or advancing lifecycle."
+reason = "Fresh Harbor 0.21.0 receipts are bound to the final verifier artifact that retains the frozen upstream traceability fixtures: Oracle passed 96/96 at reward 1.0, empty scored 0.0, stub passed 9/96 at reward 0.09375, forgery scored 0.0 despite a forged workspace reward, and every verifier network probe confirmed no public connectivity. Reviews, pilots, and publication remain pending."
 
 [oracle_bundle]
 digest = "sha256:2725090f72efa86930fd19c6abf806b68f0c03373696e27b44c376891b85365d"
