@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/sortedcontainers/compiled/sortedcontainers -a nop --jobs-dir .nl2repo/authoring-work/sortedcontainers/runs --job-name empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/empty/sortedcontainers__kJoxLyV/verifier/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/empty/sortedcontainers__kJoxLyV/verifier/network.json",
+        "sha256": "sha256:5c885500a20c662fd691ed8bc568fb4bb7e9010dc5445b61eff1e6bfc2bd5bb3"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/sortedcontainers/controls/sortedcontainers-stub -a oracle --jobs-dir .nl2repo/authoring-work/sortedcontainers/runs --job-name stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/stub/sortedcontainers-stub__tTsjpyz/verifier/grading.json",
+        "sha256": "sha256:8e3f200d6905142b0d52995819f389741ea3d91ec499608c37d84da1b742bf10"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/stub/sortedcontainers-stub__tTsjpyz/verifier/network.json",
+        "sha256": "sha256:a06fca464be10afa5df0badd858eded127a055cad847012aa37d8434d4ef59cc"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/sortedcontainers/controls/sortedcontainers-forgery -a oracle --jobs-dir .nl2repo/authoring-work/sortedcontainers/runs --job-name forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/forgery/sortedcontainers-forgery__7Efknjo/verifier/grading.json",
+        "sha256": "sha256:8e3f200d6905142b0d52995819f389741ea3d91ec499608c37d84da1b742bf10"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/forgery/sortedcontainers-forgery__7Efknjo/verifier/network.json",
+        "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+      }
+    },
+    "offline": {
+      "command": "Official Harbor 0.21.0 Oracle verifier no-network probe",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/sortedcontainers/runs/oracle/sortedcontainers__6A6bn3J/verifier/network.json",
+        "sha256": "sha256:cdaa1c49a7e31078adf5449ac29846c8ace1b7d740da4606a530553cedde2324"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/sortedcontainers/compiled/sortedcontainers -a oracle --jobs-dir .nl2repo/authoring-work/sortedcontainers/runs --job-name oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/sortedcontainers/runs/oracle/sortedcontainers__6A6bn3J/verifier/grading.json",
+      "sha256": "sha256:1e971bb29d460705ea0f7c20ed38783bac7db7d1dbb3882368508e86f80f2f0b"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/sortedcontainers/runs/oracle/sortedcontainers__6A6bn3J/verifier/network.json",
+      "sha256": "sha256:cdaa1c49a7e31078adf5449ac29846c8ace1b7d740da4606a530553cedde2324"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "sortedcontainers",
+  "terminal_kind": "valid"
+}

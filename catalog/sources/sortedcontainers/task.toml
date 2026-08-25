@@ -1,60 +1,65 @@
 schema_version = "1.0"
 task_id = "sortedcontainers"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "hard"
-category = "python-library"
-tags = ["python", "repository-generation"]
+category = "data-structures"
+tags = ["python", "sorted-containers", "sequences", "sets", "mappings", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/grantjenks/python-sortedcontainers"
 revision = "a1f52d6713dd2c2713a881d4f4d86ed68ff71cab"
-license_spdx = "unknown"
+license_spdx = "Apache-2.0"
 source_digest = "sha256:5044ecd7cf9c94fda3eb3120b8400d335eb2df75a4c1a8c6d85dd10be4020329"
+submodules = []
 
 [environment]
 status = "known"
-os_name = "debian-12"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-python_version = "3.10"
+system_packages = []
 network_mode = "no-network"
+build_command = "pip install --no-deps --no-build-isolation"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The hash-locked setuptools build dependency is installed during Docker build. Agent and separate verifier runs have no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==84.0.0"]
+lock_artifact = { digest = "sha256:1131088e92e1d95ea433c538a636bbd1be03bdc2f568d1c4807ba646bf84694a", size_bytes = 272, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1131088e92e1d95ea433c538a636bbd1be03bdc2f568d1c4807ba646bf84694a", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 299
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the sortedcontainers package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+description = "Build sortedcontainers 2.4.0 from an empty workspace and satisfy a bounded sorted list, set, dictionary, and view scenario suite."
+keywords = ["python", "sorted-list", "sorted-set", "sorted-dict", "stateful-api", "separate-verifier"]
 agent_timeout_sec = 3600.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
-candidate_total_timeout_sec = 300.0
+verifier_timeout_sec = 480.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
@@ -62,6 +67,23 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273ec9042b2d445dc644"
+size_bytes = 10926080
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273ec9042b2d445dc644"
+visibility = "private"
+
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "controls-passed"
+owner = "worker/sortedcontainers"
+reason = "Strict Harbor 0.21.0 Oracle passed 30/30 at reward 1.0; empty, stub, forgery, and offline controls passed with path- and SHA-bound canonical evidence. Reviews and pilots remain separate stages."
+evidence = [
+  { digest = "sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5", size_bytes = 3726, media_type = "application/json", uri = "artifact://private/sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5", visibility = "private" },
+]

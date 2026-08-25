@@ -1,67 +1,86 @@
 schema_version = "1.0"
 task_id = "six"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python", "repository-generation"]
+category = "python-compatibility-library"
+tags = ["python", "compatibility", "metaclasses", "lazy-imports", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = 'https://github.com/benjaminp/six'
-revision = 'c8e394065cd541a16c040515dc0afb85cf22a7c3'
-license_spdx = 'MIT'
-source_digest = 'sha256:4e2ea68f7238cdb11813a33867a4caa43737d84d03bfe2c54ae5e855be8a6fe3'
+upstream_url = "https://github.com/benjaminp/six"
+revision = "c8e394065cd541a16c040515dc0afb85cf22a7c3"
+license_spdx = "MIT"
+source_digest = "sha256:4e2ea68f7238cdb11813a33867a4caa43737d84d03bfe2c54ae5e855be8a6fe3"
+submodules = []
 
 [environment]
 status = "known"
 python_version = "3.12"
-os_name = "debian-12"
-base_image = 'python:3.12-slim'
-base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "install the hash-locked setuptools build dependency during Docker build"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The sole third-party build dependency is installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle uses a local digest-verified source archive."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["setuptools==80.10.2"]
+lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 200
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors test_six.py"]
+expected_total = 21
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:d0e27dd3221c980a9ea4d17d5304f58c4bd3aa7e740ab69d9eb7aa743e8fd96a", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d0e27dd3221c980a9ea4d17d5304f58c4bd3aa7e740ab69d9eb7aa743e8fd96a", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the six package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
-agent_timeout_sec = 3600.0
+description = "Build six 1.17.0 from an empty workspace and satisfy a bounded Python 3 compatibility contract through a separate subprocess verifier."
+keywords = ["python", "compatibility", "metaclasses", "lazy-imports", "separate-verifier"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
+candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
-memory_mb = 4096
-storage_mb = 8192
+memory_mb = 2048
+storage_mb = 4096
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:6692cd25576d4f28f9704074ada80a2ef16dd2e55a859df68ecf4f952408f33d"
+size_bytes = 163840
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:6692cd25576d4f28f9704074ada80a2ef16dd2e55a859df68ecf4f952408f33d"
+visibility = "private"
+
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "controls-passed"
+owner = "worker/six"
+reason = "Official Harbor 0.21.0 production gates passed: Oracle was valid at 21/21 and reward 1.0; empty and forgery were valid at reward 0.0; stub was valid at 1/21 and reward 0.047619; all four verifier network receipts proved no public egress. Review, pilot, and publication remain out of scope."

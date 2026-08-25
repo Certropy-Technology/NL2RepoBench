@@ -1,19 +1,40 @@
 schema_version = "1.4"
-artifacts = ["/workspace"]
+artifacts = [
+    "/workspace",
+]
 
 [task]
 name = "nl2repobench/sqlparse"
-version = "0.1.0"
-description = "Build the sqlparse package from an empty workspace."
-authors = [{ name = "NL2RepoBench" }]
-keywords = ["python", "repository-generation", "nl2repobench"]
+version = "0.2.0"
+description = "Build sqlparse 0.5.4.dev0 from an empty workspace and satisfy a bounded parsing, formatting, splitting, tokenization, grouping, and lexer-customization contract through a separate subprocess adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "sql",
+    "parser",
+    "tokenizer",
+    "formatter",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "hard"
-category = "python-library"
-tags = ["python"]
+category = "sql-parser-formatter"
+tags = [
+    "python",
+    "sql",
+    "parser",
+    "tokenizer",
+    "formatter",
+    "scenario-adapter",
+    "separate-verifier",
+]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 462
+expected_test_count = 26
+canonical_manifest_digest = "sha256:3f73f12bfe447ec4208d6c9ef631726bf2a693be8f9fd73e5b6b92a0f329cdf7"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
 [agent]
 timeout_sec = 3600.0
@@ -21,6 +42,14 @@ timeout_sec = 3600.0
 [verifier]
 timeout_sec = 600.0
 environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
 
 [environment]
 network_mode = "no-network"
@@ -28,10 +57,3 @@ build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
 storage_mb = 8192
-
-[verifier.environment]
-network_mode = "no-network"
-build_timeout_sec = 600.0
-cpus = 2
-memory_mb = 2048
-storage_mb = 4096

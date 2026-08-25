@@ -1,0 +1,66 @@
+{
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/sqlparse -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/empty/sqlparse__M9x4t6P/verifier/grading.json",
+        "sha256": "sha256:8af036397ef9698f948d05e6846dec66d0844b584723e97ab41655d4c28f6ebe"
+      },
+      "network": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/empty/sqlparse__M9x4t6P/verifier/network.json",
+        "sha256": "sha256:f44eb8b2d179187af1ad75210e81b62fe6cc319bc7f8979dbceb753d60a6f1b8"
+      }
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control catalog/tasks/sqlparse forgery; harbor run -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/forgery/sqlparse-forgery__N5SAGrt/verifier/grading.json",
+        "sha256": "sha256:eebfb9db2a55077050a8fa352244c1d57c6fb46d73f18054e12e666d2ba0044f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/forgery/sqlparse-forgery__N5SAGrt/verifier/network.json",
+        "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "Official Harbor verifier network probes for Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/oracle-final/sqlparse__fLPa3GT/verifier/network.json",
+        "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+      }
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control catalog/tasks/sqlparse stub; harbor run -a oracle",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/stub/sqlparse-stub__bSPGNdD/verifier/grading.json",
+        "sha256": "sha256:eebfb9db2a55077050a8fa352244c1d57c6fb46d73f18054e12e666d2ba0044f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/stub/sqlparse-stub__bSPGNdD/verifier/network.json",
+        "sha256": "sha256:b7240e10f7b426bf6c0f8e7bf949cda8847fb745960bfba73bc9ac630bfa52fd"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/sqlparse -a oracle",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/oracle-final/sqlparse__fLPa3GT/verifier/grading.json",
+      "sha256": "sha256:3c983c74e598a4aba3137ad278b3dc7696ea0d0169df0400da72b4aa664cf1ec"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/sqlparse-production-20260825T102400Z/oracle-final/sqlparse__fLPa3GT/verifier/network.json",
+      "sha256": "sha256:96a91d6e09e13d071d5f4e69cb1dadfc0f819c29140debb7d61eb8925df9b3e4"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "sqlparse",
+  "terminal_kind": "valid"
+}

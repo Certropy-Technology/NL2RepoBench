@@ -1,35 +1,54 @@
 schema_version = "1.4"
-artifacts = ["/workspace"]
+artifacts = [
+    "/workspace",
+]
 
 [task]
 name = "nl2repobench/six"
-version = "0.1.0"
-description = "Build the six package from an empty workspace."
-authors = [{ name = "NL2RepoBench" }]
-keywords = ["python", "repository-generation", "nl2repobench"]
+version = "1.0.0"
+description = "Build six 1.17.0 from an empty workspace and satisfy a bounded Python 3 compatibility contract through a separate subprocess verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "compatibility",
+    "metaclasses",
+    "lazy-imports",
+    "separate-verifier",
+]
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python"]
+category = "python-compatibility-library"
+tags = [
+    "python",
+    "compatibility",
+    "metaclasses",
+    "lazy-imports",
+    "separate-verifier",
+]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 200
+expected_test_count = 21
+canonical_manifest_digest = "sha256:464ba3a06ec25eb423312ae1c905eb854f667ba695d1f76e08f61b893e3662bf"
+toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
 
 [agent]
-timeout_sec = 3600.0
+timeout_sec = 1800.0
 
 [verifier]
 timeout_sec = 600.0
 environment_mode = "separate"
-
-[environment]
 network_mode = "no-network"
-build_timeout_sec = 600.0
-cpus = 2
-memory_mb = 4096
-storage_mb = 8192
 
 [verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
 network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 2
