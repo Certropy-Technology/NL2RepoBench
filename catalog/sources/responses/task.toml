@@ -1,0 +1,50 @@
+schema_version = "1.0"
+task_id = "responses"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "http-mocking"
+tags = ["python", "requests", "mocking", "loopback", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/getsentry/responses"
+revision = "2827d43f9ac5637baae4ba7740dbe61d934d3e16"
+license_spdx = "Apache-2.0"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The candidate contract requires loopback-only mocking; source/package/test/verifier closure is not frozen and agent/verifier runs must remain offline."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/responses"
+reason = "The exact commit and project-level Apache-2.0 claim are known, but archive/license bytes, packaging/dependency closure, collection, loopback-only separate verifier, Oracle, and controls are not established. No runtime task exists."

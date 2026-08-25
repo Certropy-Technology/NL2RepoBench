@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "responses",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Freeze exact archive/license/package evidence and a deterministic loopback-only candidate boundary, then author the separate verifier, collection, Oracle, and controls.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "The candidate commit and license claim are recorded, but archive bytes, source tree digest, and exact license bytes were not established.",
+      "upstream_url": "https://github.com/getsentry/responses",
+      "revision": "2827d43f9ac5637baae4ba7740dbe61d934d3e16",
+      "license_spdx": "Apache-2.0",
+      "audit_sha256": "sha256:08f6f09a3579a79baf57cc2f5f590c9e6f4c52f17406286942920678bf380807"
+    },
+    "commands": [
+      {
+        "command": "python3 -c 'parse descriptor/evidence, bind audit hash, and assert no-network policy'",
+        "tool_version": "Python 3.14.7; repository consistency probe",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/responses/evidence/post-descriptor-validation.txt",
+          "sha256": "sha256:87ca51add90de7bacf1ac75c272c8b9756d4a38926618cba21efadecef76e5ac"
+        }
+      }
+    ]
+  }
+}
