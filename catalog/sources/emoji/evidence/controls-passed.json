@@ -1,0 +1,73 @@
+{
+  "controls": {
+    "empty": {
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/emoji-production/empty/emoji__e5ikdJZ/verifier/grading.json",
+        "sha256": "sha256:f000584376e7ee5ebc3e4a9542ff7f8973fc6dac8a9f0ed6bf4d98f671fd9b8e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/emoji-production/empty/emoji__e5ikdJZ/verifier/network.json",
+        "sha256": "sha256:55125138df1361e53cf74a30bdc5d03f9fc19b214abba0de0de8f1cef3932313"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 25,
+      "grading": {
+        "path": ".nl2repo/runs/emoji-production/forgery/emoji-forgery__qmajziz/verifier/grading.json",
+        "sha256": "sha256:a0144c40cd814004583ea0071436d1187f497974ec1bf5d49b07089cdf5544c1"
+      },
+      "network": {
+        "path": ".nl2repo/runs/emoji-production/forgery/emoji-forgery__qmajziz/verifier/network.json",
+        "sha256": "sha256:a3748764984a5c5180909ed60c67ad497d57e1540f876cfc4cb5524a276e83af"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "completed": true,
+      "probes": ["pypi.org:443", "1.1.1.1:443"],
+      "public_network_available": false,
+      "receipts": 4
+    },
+    "stub": {
+      "collected": 25,
+      "grading": {
+        "path": ".nl2repo/runs/emoji-production/stub/emoji-stub__HxEZSW5/verifier/grading.json",
+        "sha256": "sha256:a0144c40cd814004583ea0071436d1187f497974ec1bf5d49b07089cdf5544c1"
+      },
+      "network": {
+        "path": ".nl2repo/runs/emoji-production/stub/emoji-stub__HxEZSW5/verifier/network.json",
+        "sha256": "sha256:d75d0a9da7c337649fe13809102478cdd1278c2a532d0daf403b8e6b239de230"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "expected_total": 25,
+  "oracle": {
+    "collected": 25,
+    "grading": {
+      "path": ".nl2repo/runs/emoji-production/oracle/emoji__KqegVEJ/verifier/grading.json",
+      "sha256": "sha256:0078b58716d6a3c3ff814534b8a0c3f9edc39ab95ed717f172532f400bb21a50"
+    },
+    "network": {
+      "path": ".nl2repo/runs/emoji-production/oracle/emoji__KqegVEJ/verifier/network.json",
+      "sha256": "sha256:2a7d103666604f98f602fbbf81548654ee4199359dddbec3ee6ec0a32f366cc1"
+    },
+    "passed": 25,
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "source_digest": "sha256:0ab5a04e57bc580c66c78743cbfa413612f305bf151755ea72bddf5c9fb919ae",
+  "status": "controls-passed",
+  "task_id": "emoji",
+  "toolchain": "Harbor 0.21.0 / task schema 1.4 / Python 3.12 / linux-amd64"
+}
