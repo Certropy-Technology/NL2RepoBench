@@ -111,6 +111,41 @@ def _git_output(repository_root: Path, *args: str) -> str:
         ) from exc
 
 
+def validate_current_source_freeze(
+    frozen_rows: list[JsonObject],
+    *,
+    repository_root: Path,
+    sources_root: Path,
+) -> None:
+    source_path = repository_relative(sources_root, repository_root, "source root")
+    expected = {str(row["task_id"]): str(row["source_tree_sha1"]) for row in frozen_rows}
+    lines = _git_output(repository_root, "ls-tree", f"HEAD:{source_path}").splitlines()
+    actual: dict[str, str] = {}
+    for line in lines:
+        metadata, task_id = line.split("\t", 1)
+        _mode, kind, object_id = metadata.split()
+        if kind == "tree":
+            actual[task_id] = object_id
+    if actual != expected:
+        raise ProductionGateError(
+            "current HEAD source trees differ from the frozen input; regenerate the input "
+            "after all source changes are committed"
+        )
+    dirty = _git_output(
+        repository_root,
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all",
+        "--",
+        source_path,
+    )
+    if dirty:
+        raise ProductionGateError(
+            "source worktree differs from current HEAD; "
+            "commit or remove source changes before gating"
+        )
+
+
 def validate_frozen_input(
     input_path: Path,
     *,
@@ -321,6 +356,12 @@ def validate_catalog(
         verify_git=verify_git,
     )
     frozen_ids = {str(row["task_id"]) for row in frozen_rows}
+    if verify_git:
+        validate_current_source_freeze(
+            frozen_rows,
+            repository_root=repository_root,
+            sources_root=sources_root,
+        )
     current_ids = _visible_directories(sources_root)
     errors: list[JsonObject] = []
     if current_ids != frozen_ids:

@@ -104,6 +104,46 @@ def test_repository_relative_rejects_external_gate_input(tmp_path: Path) -> None
         gate.repository_relative(tmp_path / "outside.json", repository, "production input")
 
 
+def test_current_source_freeze_rejects_head_or_worktree_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sources = tmp_path / "catalog/sources"
+    sources.mkdir(parents=True)
+    frozen = [{"task_id": "alpha", "source_tree_sha1": "a" * 40}]
+
+    def clean_git(_root: Path, *args: str) -> str:
+        if args[0] == "ls-tree":
+            return f"040000 tree {'a' * 40}\talpha"
+        return ""
+
+    monkeypatch.setattr(gate, "_git_output", clean_git)
+    gate.validate_current_source_freeze(
+        frozen, repository_root=tmp_path, sources_root=sources
+    )
+
+    def changed_git(_root: Path, *args: str) -> str:
+        if args[0] == "ls-tree":
+            return f"040000 tree {'b' * 40}\talpha"
+        return ""
+
+    monkeypatch.setattr(gate, "_git_output", changed_git)
+    with pytest.raises(gate.ProductionGateError, match="current HEAD source trees differ"):
+        gate.validate_current_source_freeze(
+            frozen, repository_root=tmp_path, sources_root=sources
+        )
+
+    def dirty_git(_root: Path, *args: str) -> str:
+        if args[0] == "ls-tree":
+            return f"040000 tree {'a' * 40}\talpha"
+        return " M catalog/sources/alpha/task.toml"
+
+    monkeypatch.setattr(gate, "_git_output", dirty_git)
+    with pytest.raises(gate.ProductionGateError, match="source worktree differs"):
+        gate.validate_current_source_freeze(
+            frozen, repository_root=tmp_path, sources_root=sources
+        )
+
+
 def _runtime_fixture(root: Path) -> tuple[dict[str, object], Path]:
     task_root = root / "task"
     files = {
