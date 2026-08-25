@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sklearn",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Obtain reviewed license provenance for the exact revision, then freeze the final Python/image/dependency contract, structured collection, separate verifier, Oracle, and controls.",
+    "source_freeze": {
+      "status": "failed",
+      "reason": "Archive and commit observations exist, but the license is unresolved and cannot be promoted to a redistributable source lock.",
+      "upstream_url": "https://github.com/scikit-learn-contrib/sklearn-pandas",
+      "revision": "c9db2d6dcbf515eade751073f43318e43cae5177",
+      "archive_sha256": "sha256:edba02f6df85331bf769f220530e58c7d5da137cf932be94c385fae23b9bdff7",
+      "license_status": "unresolved"
+    },
+    "commands": [
+      {
+        "command": "python3 -c \"parse task metadata and bind blocked audit evidence\"",
+        "tool_version": "Python 3.14.7; repository toolchain",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/sklearn/production-remediation-validation.txt",
+          "sha256": "sha256:f3da53c53e8e26ef3b5597e1f303bd859f9729b2cb4fb898a83a7b2f9cbeeea7"
+        }
+      }
+    ]
+  }
+}

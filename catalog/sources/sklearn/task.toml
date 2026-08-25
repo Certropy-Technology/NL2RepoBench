@@ -1,0 +1,49 @@
+schema_version = "1.0"
+task_id = "sklearn"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "dataframe-adapter"
+tags = ["python", "pandas", "scikit-learn", "overlay", "blocked"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/scikit-learn-contrib/sklearn-pandas"
+revision = "c9db2d6dcbf515eade751073f43318e43cae5177"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "License provenance is unresolved and the Python/image dependency closure, collection, and separate verifier are not frozen."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/sklearn"
+reason = "The candidate report has unresolved license metadata; the frozen image/source boundary has no hash-locked offline closure, final collection, separate verifier, Oracle, or controls. No runtime task exists."
