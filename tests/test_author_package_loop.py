@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -17,6 +18,75 @@ def _load_script():
 
 
 loop = _load_script()
+
+
+def _write_source(
+    root: Path,
+    *,
+    status: str,
+    reason: str = "",
+    failure_class: str | None = None,
+    next_step: str | None = None,
+) -> None:
+    root.mkdir(parents=True)
+    (root / "instruction.md").write_text("# task\n", encoding="utf-8")
+    (root / "task.toml").write_text(
+        'schema_version = "1.0"\n'
+        f'task_id = "{root.name}"\n'
+        'instruction = "instruction.md"\n\n'
+        "[lifecycle]\n"
+        f'status = "{status}"\n'
+        f"reason = {json.dumps(reason)}\n",
+        encoding="utf-8",
+    )
+    if failure_class is not None:
+        (root / "production-evidence.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0",
+                    "task_id": root.name,
+                    "terminal_kind": "blocked",
+                    "blocked": {
+                        "failure_class": failure_class,
+                        "next_step": next_step or "",
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+
+def _write_complete_harbor_task(root: Path) -> None:
+    files = {
+        "environment/Dockerfile": "FROM scratch\n",
+        "instruction.md": "# task\n",
+        "solution/solve.sh": "#!/bin/sh\n",
+        "task.toml": 'schema_version = "1.4"\n',
+        "tests/test.sh": "#!/bin/sh\n",
+    }
+    rows = []
+    for relative, content in files.items():
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        payload = content.encode()
+        rows.append(
+            {
+                "path": relative,
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "size_bytes": len(payload),
+            }
+        )
+    (root / "bundle.manifest.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "mode": "production",
+                "files": sorted(rows, key=lambda row: row["path"]),
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def test_author_loop_filters_catalog_and_oss_but_remediates_candidates(tmp_path: Path) -> None:
@@ -103,3 +173,112 @@ def test_author_loop_can_resume_selected_packages_only(tmp_path: Path) -> None:
     )
 
     assert [task["package"] for task in plan["tasks"]] == ["second"]
+
+
+def test_remediation_selects_missing_incomplete_and_repairable_blocked_sources(
+    tmp_path: Path,
+) -> None:
+    sources = tmp_path / "catalog/sources"
+    tasks = tmp_path / "catalog/tasks"
+    _write_source(sources / "missing-task", status="discovered")
+    _write_source(sources / "incomplete-task", status="discovered")
+    (tasks / "incomplete-task").mkdir(parents=True)
+    (tasks / "incomplete-task/instruction.md").write_text("# partial\n", encoding="utf-8")
+    _write_source(sources / "complete-task", status="controls-passed")
+    _write_complete_harbor_task(tasks / "complete-task")
+    _write_source(sources / "drifted-task", status="controls-passed")
+    _write_complete_harbor_task(tasks / "drifted-task")
+    (tasks / "drifted-task/environment/Dockerfile").write_text("FROM changed\n", encoding="utf-8")
+    _write_source(
+        sources / "repairable-blocked",
+        status="blocked",
+        reason="The npm dependency closure is missing.",
+        failure_class="environment",
+        next_step="Freeze the package lock and rerun the offline install.",
+    )
+    _write_source(
+        sources / "manual-blocked",
+        status="blocked",
+        reason="Two incompatible public contracts remain.",
+        failure_class="spec",
+        next_step="Choose one coherent version boundary.",
+    )
+    _write_source(
+        sources / "terminal-blocked",
+        status="blocked",
+        reason="The only API requires a paid external service.",
+        failure_class="environment",
+        next_step="Obtain a paid service subscription.",
+    )
+    candidates = tmp_path / "candidates.json"
+    packages = [
+        "missing-task",
+        "incomplete-task",
+        "complete-task",
+        "drifted-task",
+        "repairable-blocked",
+        "manual-blocked",
+        "terminal-blocked",
+        "source-missing",
+    ]
+    candidates.write_text(
+        json.dumps(
+            {
+                "queue": [
+                    {
+                        "candidate_id": f"python-{package}",
+                        "package": package,
+                        "language": "python",
+                        "status": "existing",
+                    }
+                    for package in packages
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    inventory = tmp_path / "oss.json"
+    inventory.write_text(
+        json.dumps({"runs": [{"source": "oss", "task_id": "missing-task"}]}),
+        encoding="utf-8",
+    )
+
+    plan = loop.build_plan(
+        candidates,
+        language="python",
+        catalog_root=sources,
+        tasks_root=tasks,
+        oss_inventory=inventory,
+        limit=10,
+        remediation=True,
+        batch_id="python-remediation",
+    )
+
+    assert [task["package"] for task in plan["tasks"]] == [
+        "drifted-task",
+        "incomplete-task",
+        "missing-task",
+        "repairable-blocked",
+    ]
+    by_package = {task["package"]: task for task in plan["tasks"]}
+    assert by_package["incomplete-task"]["remediation_reasons"] == ["harbor-task-incomplete"]
+    assert by_package["drifted-task"]["remediation_reasons"] == ["harbor-task-incomplete"]
+    assert by_package["missing-task"]["remediation_reasons"] == ["harbor-task-missing"]
+    assert by_package["repairable-blocked"]["remediation_reasons"] == [
+        "blocked-source-repairable",
+        "harbor-task-missing",
+    ]
+    assert by_package["repairable-blocked"]["queue_reclaim_statuses"] == [
+        "blocked",
+        "complete",
+    ]
+    assert by_package["missing-task"]["source_root"] == "catalog/sources/missing-task"
+    assert by_package["missing-task"]["harbor_task_root"] == ("catalog/tasks/missing-task")
+    assert plan["remediation_mode"] is True
+    skipped = {item["package"]: item["reason"] for item in plan["skipped"]}
+    assert skipped == {
+        "complete-task": "harbor-task-complete",
+        "manual-blocked": "blocked-manual",
+        "source-missing": "source-missing",
+        "terminal-blocked": "blocked-terminal",
+    }

@@ -27,7 +27,7 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -48,11 +48,21 @@ AUTHORING_RETRY_SETTINGS = {
 QUEUE_OUTPUT_LOCK = threading.Lock()
 
 
-def _load_queue_loop():
+def _load_queue_loop() -> Any:
     path = Path(__file__).with_name("package_queue_loop.py")
     spec = importlib.util.spec_from_file_location("package_queue_loop_driver", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load queue loop: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_author_planner() -> Any:
+    path = Path(__file__).with_name("author_package_loop.py")
+    spec = importlib.util.spec_from_file_location("author_package_loop_driver", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load author planner: {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -81,6 +91,7 @@ def _claim(
     language: str,
     lease: int,
     attempts: int,
+    reclaim_statuses: list[str] | None = None,
 ) -> dict[str, Any] | None:
     loop = _load_queue_loop()
     args = type(
@@ -95,6 +106,7 @@ def _claim(
             "max_attempts": attempts,
             "language": language,
             "candidate_id": [candidate_id],
+            "reclaim_status": reclaim_statuses or [],
         },
     )()
     output = StringIO()
@@ -108,7 +120,7 @@ def _claim(
     claimed = payload.get("claimed")
     if not isinstance(claimed, list) or len(claimed) != 1:
         raise RuntimeError(f"queue claim returned unexpected payload for {candidate_id}")
-    return claimed[0]
+    return cast(dict[str, Any], claimed[0])
 
 
 def _queue_transition(
@@ -208,6 +220,16 @@ def _agent_environment(args: argparse.Namespace) -> dict[str, str]:
     return environment
 
 
+def _task_catalog_paths(task: dict[str, Any], package: str) -> tuple[Path, Path]:
+    expected_source = Path("catalog/sources") / package
+    expected_harbor = Path("catalog/tasks") / package
+    source = Path(str(task.get("source_root") or expected_source))
+    harbor = Path(str(task.get("harbor_task_root") or expected_harbor))
+    if source != expected_source or harbor != expected_harbor:
+        raise ValueError(f"task catalog paths must be {expected_source} and {expected_harbor}")
+    return source, harbor
+
+
 def _agent_prompt(
     *,
     plan: dict[str, Any],
@@ -218,6 +240,15 @@ def _agent_prompt(
     allow_internal_subagent: bool,
 ) -> str:
     package = task["package"]
+    source_root, harbor_task_root = _task_catalog_paths(task, package)
+    remediation_context = (
+        "This is an existing-source remediation lane. Read the current source, "
+        "production evidence, blocked reason, and any generated runtime before editing. "
+        "Preserve valid evidence, repair the declarative source, and regenerate the "
+        "Harbor task; do not restart from a blank task."
+        if task.get("remediation_mode")
+        else "This is a new-source authoring lane."
+    )
     subagent_guidance = (
         "You may use subagent only for bounded read-only probes or independent analysis; "
         "the Loop still owns task concurrency and you remain the sole writer."
@@ -234,17 +265,18 @@ Work only in this existing detached worktree:
 
 Read these files first:
 - AGENTS.md
-- {worktree / '.nl2repo/authoring-claim.json'}
+- {worktree / ".nl2repo/authoring-claim.json"}
 - {brief_path}
-- {worktree / 'docs/authoring-agent-remediation-guide.zh-CN.md'}
+- {worktree / "docs/authoring-agent-remediation-guide.zh-CN.md"}
 
-Your package is {package!r}, language is {plan['language']!r}, and your only
-authoring source target is catalog/sources/{package}/ plus task-local private
-artifacts and evidence under .nl2repo/. `catalog/tasks/{package}/` is generated
+Your package is {package!r}, language is {plan["language"]!r}, and your only
+authoring source target is {source_root.as_posix()}/ plus task-local private
+artifacts and evidence under .nl2repo/. `{harbor_task_root.as_posix()}/` is generated
 compiler output: do not hand-edit it. You are the sole writer for this worktree.
 Do not edit the parent checkout, another worktree, shared catalog/dataset files,
 or OSS data. Do not start a Harbor Agent Run from this lane.
 {subagent_guidance}
+{remediation_context}
 
 Turn the candidate into a real, testable Harbor task. Freeze and verify the
 exact source revision, inventory the public API and tests, debug the actual
@@ -281,7 +313,7 @@ bypass Harbor's egress sidecar and break run-scoped Provider/Oracle allowlists.
 
 Before handoff, run these gates from the worktree and fix every task-local
 finding:
-- `uv run nl2repo task validate-source catalog/sources/{package}`
+- `uv run nl2repo task validate-source {source_root.as_posix()}`
 - `uv run nl2repo task lint-network --tasks-root catalog/sources`
 - a production `uv run nl2repo harbor compile` using the language toolchain,
   `.nl2repo/artifacts`, `--allow-private`, and a task-local output directory
@@ -367,10 +399,7 @@ def _write_authoring_settings(worktree: Path) -> Path:
         for package in packages
         if not (
             package == "npm:pi-lark-notify"
-            or (
-                isinstance(package, dict)
-                and package.get("source") == "npm:pi-lark-notify"
-            )
+            or (isinstance(package, dict) and package.get("source") == "npm:pi-lark-notify")
         )
     ]
     authoring_settings = {
@@ -533,9 +562,7 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
         )
         compile_parent = worktree / ".nl2repo/authoring-gate"
         compile_parent.mkdir(parents=True, exist_ok=True)
-        compile_output = Path(
-            tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent)
-        )
+        compile_output = Path(tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent))
         compile_result = subprocess.run(
             [
                 "uv",
@@ -618,6 +645,15 @@ def _prepare_task(
         raise ValueError(f"unsafe package name: {package!r}")
     if not isinstance(candidate_id, str):
         raise ValueError(f"missing candidate id for {package}")
+    source_root, harbor_task_root = _task_catalog_paths(task, package)
+    remediation_mode = bool(
+        plan.get("remediation_mode") or getattr(args, "remediation_mode", False)
+    )
+    raw_reclaim = task.get("queue_reclaim_statuses", []) if remediation_mode else []
+    if not isinstance(raw_reclaim, list) or any(
+        status not in {"blocked", "complete"} for status in raw_reclaim
+    ):
+        raise ValueError(f"invalid queue reclaim statuses for {package}")
     claimed = _claim(
         args.queue,
         args.queue_state,
@@ -626,6 +662,7 @@ def _prepare_task(
         language,
         args.lease_seconds,
         args.max_attempts,
+        reclaim_statuses=raw_reclaim,
     )
     if claimed is None:
         return None
@@ -641,18 +678,22 @@ def _prepare_task(
         "language": language,
         "claim": claimed,
         "worktree": str(worktree),
-        "task_scope": f"catalog/sources/{package}/** plus task-local .nl2repo artifacts",
+        "task_scope": f"{source_root.as_posix()}/** plus task-local .nl2repo artifacts",
         "stages": plan.get("stages", []),
         "remediation_policy": plan.get("remediation_policy", {}),
         "worker_guidance": plan.get("worker_guidance"),
+        "remediation_mode": remediation_mode,
+        "remediation_reasons": task.get("remediation_reasons", []),
+        "existing_source_status": task.get("existing_source_status"),
+        "existing_source_reason": task.get("existing_source_reason"),
+        "existing_harbor_task_state": task.get("existing_harbor_task_state"),
+        "blocked_reason_kind": task.get("blocked_reason_kind"),
+        "source_root": source_root.as_posix(),
+        "harbor_task_root": harbor_task_root.as_posix(),
         "agent_run_boundary": "direct top-level pi CLI session; no pi-subagents",
         "must_not": [
             "start a Harbor Agent Run",
-            *(
-                []
-                if getattr(args, "allow_internal_subagent", False)
-                else ["invoke subagent tools"]
-            ),
+            *([] if getattr(args, "allow_internal_subagent", False) else ["invoke subagent tools"]),
             "edit shared datasets/reports or the parent checkout",
             "publish without integrator",
         ],
@@ -686,7 +727,7 @@ def _prepare_task(
         "session_root": str(session_root),
         "log": str(log_path),
         "handoff": str(handoff_path),
-        "task_root": str(worktree / "catalog/sources" / package),
+        "task_root": str(worktree / source_root),
         "plan": plan,
         "task": task,
     }
@@ -784,13 +825,16 @@ def _queue_refill_tasks(
     *,
     language: str,
     scheduled: set[str],
-    catalog_root: Path,
+    source_root: Path,
+    tasks_root: Path,
+    remediation_mode: bool,
 ) -> Iterator[dict[str, Any]]:
     queue = _load_json(queue_path)
     records = queue.get("queue")
     if not isinstance(records, list):
         raise ValueError("authoring queue requires a queue list for refill")
-    existing_catalog = _catalog_packages(catalog_root)
+    existing_catalog = _catalog_packages(source_root)
+    planner = _load_author_planner() if remediation_mode else None
     for record in records:
         if not isinstance(record, dict):
             raise ValueError("authoring queue candidate must be an object")
@@ -803,11 +847,36 @@ def _queue_refill_tasks(
         scheduled.add(candidate_id)
         if record.get("language") != language:
             continue
+        if remediation_mode:
+            assert planner is not None
+            if record.get("status") not in {
+                "candidate",
+                "needs-evidence",
+                "existing",
+                "blocked",
+                "needs-remediation",
+            }:
+                continue
+            selected, _skip_reason = planner.classify_existing_remediation(
+                record,
+                source_root=source_root / package,
+                task_root=tasks_root / package,
+            )
+            if selected is None:
+                continue
+            selected["source_root"] = f"catalog/sources/{package}"
+            selected["harbor_task_root"] = f"catalog/tasks/{package}"
+            selected["remediation_mode"] = True
+            selected["remediation_reasons"] = sorted(
+                set(planner._remediation_reasons(selected))
+                | set(selected.pop("existing_task_remediation_reasons", []))
+            )
+            yield selected
+            continue
         if record.get("status") not in {"candidate", "needs-evidence"}:
             continue
-        if package in existing_catalog:
-            continue
-        yield record
+        if package not in existing_catalog:
+            yield record
 
 
 def _task_stream(
@@ -816,7 +885,9 @@ def _task_stream(
     refill_queue: bool,
     queue_path: Path,
     language: str,
-    catalog_root: Path,
+    source_root: Path,
+    tasks_root: Path,
+    remediation_mode: bool,
 ) -> Iterator[dict[str, Any]]:
     scheduled: set[str] = set()
     for task in _next_tasks(tasks):
@@ -829,7 +900,9 @@ def _task_stream(
             queue_path,
             language=language,
             scheduled=scheduled,
-            catalog_root=catalog_root,
+            source_root=source_root,
+            tasks_root=tasks_root,
+            remediation_mode=remediation_mode,
         )
 
 
@@ -849,9 +922,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(batch_id, str) or not SAFE_NAME.fullmatch(batch_id):
         raise ValueError("author plan requires a safe batch_id")
     refill_queue = getattr(args, "refill_queue", True)
-    catalog_root = Path(getattr(args, "catalog_root", Path("catalog/sources")))
-    if not catalog_root.is_absolute():
-        catalog_root = (Path.cwd() / catalog_root).resolve()
+    remediation_mode = bool(
+        plan.get("remediation_mode") or getattr(args, "remediation_mode", False)
+    )
+    configured_source_root = getattr(args, "source_root", None)
+    if configured_source_root is None:
+        configured_source_root = getattr(args, "catalog_root", None) or Path("catalog/sources")
+    source_root = Path(configured_source_root)
+    tasks_root = Path(getattr(args, "tasks_root", Path("catalog/tasks")))
+    if not source_root.is_absolute():
+        source_root = (Path.cwd() / source_root).resolve()
+    if not tasks_root.is_absolute():
+        tasks_root = (Path.cwd() / tasks_root).resolve()
     state_root = _ensure_disk_root(args.state_root)
     worktree_root = _ensure_disk_root(args.worktree_root) / batch_id
     claims_root = state_root / batch_id / "claims"
@@ -863,7 +945,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             refill_queue=refill_queue,
             queue_path=args.queue,
             language=language,
-            catalog_root=catalog_root,
+            source_root=source_root,
+            tasks_root=tasks_root,
+            remediation_mode=remediation_mode,
         )
     )
     active: dict[Any, dict[str, Any]] = {}
@@ -939,6 +1023,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "model": args.model,
         "max_concurrency": args.max_concurrency,
         "queue_refill": refill_queue,
+        "remediation_mode": remediation_mode,
         "results": results,
     }
 
@@ -949,10 +1034,18 @@ def main() -> int:
     parser.add_argument("--queue", type=Path, required=True)
     parser.add_argument("--queue-state", type=Path, required=True)
     parser.add_argument(
+        "--source-root",
         "--catalog-root",
+        dest="source_root",
         type=Path,
         default=Path("catalog/sources"),
-        help="Skip queue candidates that already have a catalog task.",
+        help="Human-maintained declarative source root.",
+    )
+    parser.add_argument(
+        "--tasks-root",
+        type=Path,
+        default=Path("catalog/tasks"),
+        help="Generated production Harbor task root.",
     )
     parser.add_argument("--state-root", type=Path, default=Path(".nl2repo/authoring"))
     parser.add_argument(
@@ -970,6 +1063,14 @@ def main() -> int:
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Continue with pending queue candidates after plan tasks are exhausted.",
+    )
+    parser.add_argument(
+        "--remediation-mode",
+        action="store_true",
+        help=(
+            "Refill from existing incomplete sources and explicitly reopen only "
+            "targeted blocked/complete queue records selected for remediation."
+        ),
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--pi-command", default=os.environ.get("PI_COMMAND", "pi"))
@@ -999,9 +1100,7 @@ def main() -> int:
     parser.add_argument(
         "--allow-internal-subagent",
         action="store_true",
-        help=(
-            "Allow a child Pi Agent to use subagent for bounded parallel probes."
-        ),
+        help=("Allow a child Pi Agent to use subagent for bounded parallel probes."),
     )
     args = parser.parse_args()
     try:

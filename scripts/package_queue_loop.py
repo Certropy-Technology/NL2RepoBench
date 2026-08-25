@@ -9,6 +9,7 @@ import fcntl
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
@@ -147,6 +148,11 @@ def command_status(args: argparse.Namespace) -> int:
 def command_claim(args: argparse.Namespace) -> int:
     if args.limit < 1 or args.lease_seconds < 1 or args.max_attempts < 1:
         raise ValueError("claim limits, lease-seconds, and max-attempts must be positive")
+    reclaim_statuses = set(getattr(args, "reclaim_status", []) or [])
+    if reclaim_statuses - {"blocked", "complete"}:
+        raise ValueError("only blocked or complete records may be reclaimed")
+    if reclaim_statuses and not getattr(args, "candidate_id", None):
+        raise ValueError("terminal reclaim requires an explicit candidate-id")
     with locked_state(args.state) as state:
         items = sync_queue(state, args.queue)
         selected: list[dict[str, Any]] = []
@@ -159,6 +165,34 @@ def command_claim(args: argparse.Namespace) -> int:
                 continue
             if args.language and record.get("language") != args.language:
                 continue
+            current_status = str(record.get("status"))
+            if current_status in reclaim_statuses:
+                record["reopen_history"] = [
+                    *record.get("reopen_history", []),
+                    {
+                        "status": current_status,
+                        "reason": record.get("reason"),
+                        "failure_class": record.get("failure_class"),
+                        "artifacts": list(record.get("artifacts", [])),
+                        "attempts": int(record.get("attempts", 0)),
+                        "recorded_at": record.get("updated_at"),
+                        "reopened_at": now(),
+                        "reopened_by": args.owner,
+                    },
+                ]
+                record.update(
+                    {
+                        "status": "pending",
+                        "owner": None,
+                        "lease_expires_at": None,
+                        "attempts": 0,
+                        "reason": None,
+                        "failure_class": None,
+                        "artifacts": [],
+                        "release_reason": None,
+                        "updated_at": now(),
+                    }
+                )
             if record.get("status") == "running":
                 if not lease_expired(record):
                     continue
@@ -282,6 +316,15 @@ def build_parser() -> argparse.ArgumentParser:
                 action="append",
                 help="Claim only the named candidate; repeatable.",
             )
+            sub.add_argument(
+                "--reclaim-status",
+                action="append",
+                choices=("blocked", "complete"),
+                help=(
+                    "Explicitly reopen a targeted terminal record before claiming. "
+                    "Reserved for remediation controllers."
+                ),
+            )
         elif name in {"record", "release"}:
             sub.add_argument("candidate_id")
             sub.add_argument("--owner", required=True)
@@ -307,7 +350,7 @@ def main() -> int:
             "release": command_release,
         }[args.command](args)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
-        print(f"package queue failed: {exc}", file=os.sys.stderr)
+        print(f"package queue failed: {exc}", file=sys.stderr)
         return 1
 
 

@@ -154,18 +154,21 @@ def test_queue_claim_can_target_one_candidate(tmp_path: Path) -> None:
     )
     loop.command_init(_args(queue=queue, state=state))
 
-    assert loop.command_claim(
-        _args(
-            queue=queue,
-            state=state,
-            owner="worker",
-            limit=1,
-            lease_seconds=60,
-            max_attempts=3,
-            language="python",
-            candidate_id=["second"],
+    assert (
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                candidate_id=["second"],
+            )
         )
-    ) == 0
+        == 0
+    )
     with loop.locked_state(state) as payload:
         assert payload["items"]["second"]["status"] == "running"
         assert payload["items"]["first"]["status"] == "pending"
@@ -187,15 +190,162 @@ def test_queue_release_returns_claim_without_consuming_attempt(tmp_path: Path) -
         candidate_id=["python-demo"],
     )
     assert loop.command_claim(claim) == 0
-    assert loop.command_release(
-        _args(
-            queue=queue,
-            state=state,
-            candidate_id="python-demo",
-            owner="worker",
-            reason="concurrency-window",
+    assert (
+        loop.command_release(
+            _args(
+                queue=queue,
+                state=state,
+                candidate_id="python-demo",
+                owner="worker",
+                reason="concurrency-window",
+            )
         )
-    ) == 0
+        == 0
+    )
     with loop.locked_state(state) as payload:
         assert payload["items"]["python-demo"]["status"] == "pending"
         assert payload["items"]["python-demo"]["attempts"] == 1
+
+
+@pytest.mark.parametrize("terminal_status", ["blocked", "complete"])
+def test_queue_can_explicitly_reopen_targeted_remediation_record(
+    tmp_path: Path,
+    terminal_status: str,
+) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    with loop.locked_state(state) as payload:
+        payload["items"]["python-demo"].update(
+            {
+                "status": terminal_status,
+                "reason": "previous terminal result",
+                "failure_class": "environment",
+                "artifacts": ["old-evidence.json"],
+                "attempts": 3,
+            }
+        )
+
+    assert (
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="ordinary-worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                candidate_id=["python-demo"],
+                reclaim_status=[],
+            )
+        )
+        == 2
+    )
+    assert (
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="repair-worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                candidate_id=["python-demo"],
+                reclaim_status=[terminal_status],
+            )
+        )
+        == 0
+    )
+    with loop.locked_state(state) as payload:
+        record = payload["items"]["python-demo"]
+        assert record["status"] == "running"
+        assert record["owner"] == "repair-worker"
+        assert record["attempts"] == 1
+        assert record["reason"] is None
+        assert record["reopen_history"] == [
+            {
+                "status": terminal_status,
+                "reason": "previous terminal result",
+                "failure_class": "environment",
+                "artifacts": ["old-evidence.json"],
+                "attempts": 3,
+                "recorded_at": record["reopen_history"][0]["recorded_at"],
+                "reopened_at": record["reopen_history"][0]["reopened_at"],
+                "reopened_by": "repair-worker",
+            }
+        ]
+
+
+def test_queue_reclaim_requires_target_and_never_steals_running_claim(
+    tmp_path: Path,
+) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    with pytest.raises(ValueError, match="explicit candidate-id"):
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="repair-worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                reclaim_status=["blocked"],
+            )
+        )
+    with pytest.raises(ValueError, match="only blocked or complete"):
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="repair-worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                candidate_id=["python-demo"],
+                reclaim_status=["excluded"],
+            )
+        )
+    assert (
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="active-worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                candidate_id=["python-demo"],
+                reclaim_status=[],
+            )
+        )
+        == 0
+    )
+    assert (
+        loop.command_claim(
+            _args(
+                queue=queue,
+                state=state,
+                owner="repair-worker",
+                limit=1,
+                lease_seconds=60,
+                max_attempts=3,
+                language="python",
+                candidate_id=["python-demo"],
+                reclaim_status=["blocked", "complete"],
+            )
+        )
+        == 2
+    )
+    with loop.locked_state(state) as payload:
+        record = payload["items"]["python-demo"]
+        assert record["status"] == "running"
+        assert record["owner"] == "active-worker"

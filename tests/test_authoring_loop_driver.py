@@ -53,11 +53,7 @@ def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypat
     state = tmp_path / "state.json"
     queue.write_text(
         json.dumps(
-            {
-                "queue": [
-                    {"candidate_id": "python-one", "package": "one", "language": "python"}
-                ]
-            }
+            {"queue": [{"candidate_id": "python-one", "package": "one", "language": "python"}]}
         ),
         encoding="utf-8",
     )
@@ -360,6 +356,129 @@ def test_driver_can_disable_queue_refill(tmp_path: Path, monkeypatch) -> None:
 
     assert output["queue_refill"] is False
     assert [item["package"] for item in output["results"]] == ["one"]
+
+
+def test_remediation_refill_selects_existing_source_and_reclaims_blocked_state(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(driver, "TMPFS_ROOTS", ())
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    queue.write_text(
+        json.dumps(
+            {
+                "queue": [
+                    {
+                        "candidate_id": "python-repair",
+                        "package": "repair",
+                        "language": "python",
+                        "status": "existing",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    queue_loop = driver._load_queue_loop()
+    queue_loop.command_init(type("Args", (), {"queue": queue, "state": state})())
+    with queue_loop.locked_state(state) as payload:
+        payload["items"]["python-repair"].update(
+            {
+                "status": "blocked",
+                "reason": "dependency closure missing",
+                "failure_class": "environment",
+                "attempts": 3,
+            }
+        )
+    sources = tmp_path / "catalog/sources"
+    source = sources / "repair"
+    source.mkdir(parents=True)
+    (source / "instruction.md").write_text("# repair\n", encoding="utf-8")
+    (source / "task.toml").write_text(
+        'schema_version = "1.0"\n'
+        'task_id = "repair"\n'
+        'instruction = "instruction.md"\n\n'
+        "[lifecycle]\n"
+        'status = "blocked"\n'
+        'reason = "dependency closure missing"\n',
+        encoding="utf-8",
+    )
+    (source / "production-evidence.json").write_text(
+        json.dumps(
+            {
+                "task_id": "repair",
+                "terminal_kind": "blocked",
+                "blocked": {
+                    "failure_class": "environment",
+                    "next_step": "Freeze the dependency lock and rerun offline install.",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "batch_id": "python-remediation-refill",
+                "language": "python",
+                "remediation_mode": True,
+                "tasks": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    args = _args(tmp_path, plan, queue, state)
+    args.source_root = sources
+    args.tasks_root = tmp_path / "catalog/tasks"
+    monkeypatch.setattr(driver, "_worktree", lambda path: "created")
+    monkeypatch.setattr(
+        driver,
+        "_run_network_policy_check",
+        lambda *args: {
+            "status": "passed",
+            "exit_code": 0,
+            "report": "network",
+            "output": "passed",
+        },
+    )
+    monkeypatch.setattr(
+        driver,
+        "_run_authoring_task_lint",
+        lambda *args: {
+            "status": "passed",
+            "exit_code": 0,
+            "report": "lint",
+            "output": "passed",
+        },
+    )
+
+    def fake_launch(_args, **kwargs):
+        task_root = Path(kwargs["worktree"]) / "catalog/sources/repair"
+        task_root.mkdir(parents=True, exist_ok=True)
+        (task_root / "task.toml").write_text('task_id = "repair"\n', encoding="utf-8")
+        (task_root / "instruction.md").write_text("# repaired\n", encoding="utf-8")
+        handoff = Path(kwargs["handoff_path"])
+        handoff.write_text('{"status":"review-handoff"}\n', encoding="utf-8")
+        return {
+            "status": "exited",
+            "exit_code": 0,
+            "log": str(kwargs["log_path"]),
+            "handoff": str(handoff),
+        }
+
+    monkeypatch.setattr(driver, "_launch_agent", fake_launch)
+    output = driver.run(args)
+
+    assert output["remediation_mode"] is True
+    assert [(item["package"], item["status"]) for item in output["results"]] == [
+        ("repair", "complete")
+    ]
+    with queue_loop.locked_state(state) as payload:
+        record = payload["items"]["python-repair"]
+        assert record["status"] == "complete"
+        assert record["attempts"] == 1
+        assert record["reopen_history"][0]["status"] == "blocked"
 
 
 def test_authoring_settings_keep_capabilities_but_disable_lark_and_raise_retry(

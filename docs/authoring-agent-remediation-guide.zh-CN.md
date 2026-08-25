@@ -40,6 +40,36 @@ Dockerfile、build backend、candidate boundary 和 verifier。每次尝试必�
 `attempted_commands`、`tool_versions`、`exit_codes`、`failure_logs`、`failure_class` 和
 `next_unblock_action`。没有这些字段的 Block handoff 不可合入。
 
+## Controller Remediation 模式
+
+普通 authoring 默认只领取新候选，不会重开已有或 terminal queue record。修复已有 Source
+时必须显式生成 remediation plan：
+
+```bash
+uv run python scripts/author_package_loop.py \
+  --candidates <package-queue.json> \
+  --language python \
+  --source-root catalog/sources \
+  --tasks-root catalog/tasks \
+  --remediation \
+  --limit 5 \
+  --output .nl2repo/plans/python-remediation.json
+```
+
+`catalog/sources/<task>` 是唯一人工维护入口；`catalog/tasks/<task>` 是 production compiler
+projection。Planner 只选择以下已有 Source：
+
+- Harbor Task 缺失；
+- Harbor Task 缺必需文件、不是 production manifest，或 manifest 与实际文件哈希不一致；
+- lifecycle 为 `blocked`，且 `production-evidence.json` 提供结构化 `failure_class` 和
+  `next_step`，分类为可自动修复的 environment/verifier/infrastructure 问题。
+
+license、无可执行测试、付费服务、不可冻结 revision、资源上限，以及需要人工选择的
+source/spec 冲突继续保持 terminal。Runner 只会对 plan 精确指定的 candidate ID 执行
+`blocked|complete` reclaim，并保留 `reopen_history`；`running` 和 `excluded` 永不被抢占或
+自动重开。Plan 已携带 `remediation_mode=true`，也可在手工 plan 场景显式传
+`run_authoring_loop.py --remediation-mode`。
+
 ## 执行顺序
 
 ```text
