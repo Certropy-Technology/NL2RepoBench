@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyfakefs",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze one approved Linux/CPython image and a complete hash-locked dependency closure for the unittest aggregator, pytest plugin tests, and deliberately selected optional integrations; then freeze collection, implement a separate verifier, and run Oracle plus empty/stub/forgery/offline controls before creating any runtime.",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "No approved image or offline dependency closure exists; agent and verifier run phases must not reach the upstream source or fetch a registry dependency."
+    },
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/pytest-dev/pyfakefs",
+      "revision": "a07cb07ee9ae0f78233fa382bf48dcaf6ccc2d99",
+      "tree": "ffedf18248d95c8170106a6add2bb89628fb33c4",
+      "source_digest": "sha256:667cc2737b759f02491d24c04bbf73daf5e409bcd1d5ee3dd86e5fed1764c788",
+      "archive_size_bytes": 1464320,
+      "archive_members": 121,
+      "license_spdx": "Apache-2.0",
+      "license_path": "COPYING",
+      "license_digest": "sha256:09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "audit_path": "catalog/sources/pyfakefs/audit.md",
+      "audit_sha256": "sha256:11d038780f0bcc26261a2f81940f1577c10a441562e5a68aac686566e8d9cf7e",
+      "audit": {
+        "path": "catalog/sources/pyfakefs/audit.md",
+        "sha256": "sha256:11d038780f0bcc26261a2f81940f1577c10a441562e5a68aac686566e8d9cf7e"
+      }
+    },
+    "collection": {
+      "frozen_collection_available": false,
+      "reason": "The audit recorded static test definitions and official commands, but no final-image collection or frozen denominator."
+    },
+    "runtime_task": {
+      "path": "catalog/tasks/pyfakefs",
+      "present": false
+    },
+    "observed_state": {
+      "descriptor_status": "blocked",
+      "runtime_path": "catalog/tasks/pyfakefs",
+      "runtime_path_exists": false,
+      "oracle": "not-run",
+      "controls": "not-run",
+      "score": "not-claimed"
+    },
+    "commands": [
+      {
+        "command": "uv run nl2repo task validate-source catalog/sources/pyfakefs | python -c 'import json,sys; p=json.load(sys.stdin); print(json.dumps({k:p[k] for k in (\"instruction\",\"status\",\"task_id\",\"version\")}, sort_keys=True))'",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pyfakefs/evidence/remediation.txt",
+          "sha256": "sha256:9c5089ca7b82b944d89cc3300c63c20d5158a59a546d86f28a6c98a51bf16bbd"
+        }
+      },
+      {
+        "command": "uv run nl2repo task lint-network --tasks-root /tmp/pyfakefs-network-root",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu)",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pyfakefs/evidence/remediation.txt",
+          "sha256": "sha256:9c5089ca7b82b944d89cc3300c63c20d5158a59a546d86f28a6c98a51bf16bbd"
+        }
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/pyfakefs --output /tmp/pyfakefs-blocked-compile --artifact-root /tmp/pyfakefs-blocked-artifacts --toolchain toolchain.lock.toml",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); repository toolchain",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/pyfakefs/evidence/remediation.txt",
+          "sha256": "sha256:9c5089ca7b82b944d89cc3300c63c20d5158a59a546d86f28a6c98a51bf16bbd"
+        }
+      },
+      {
+        "command": "python -c 'import json,tomllib; from pathlib import Path; d=tomllib.loads(Path(\"catalog/sources/pyfakefs/task.toml\").read_text()); p=d[\"environment\"][\"network_policy\"]; assert d[\"lifecycle\"][\"status\"]==\"blocked\" and d[\"environment\"][\"network_mode\"]==\"no-network\" and p[\"mode\"]==\"no-network\" and p[\"reference_source_fetch\"]==\"forbidden\" and not Path(\"catalog/tasks/pyfakefs\").exists(); print(json.dumps({\"task_id\":d[\"task_id\"],\"status\":d[\"lifecycle\"][\"status\"],\"network_mode\":p[\"mode\"],\"reference_source_fetch\":p[\"reference_source_fetch\"],\"runtime_exists\":False}, sort_keys=True))'",
+        "tool_version": "Python 3.14.7",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pyfakefs/evidence/remediation.txt",
+          "sha256": "sha256:9c5089ca7b82b944d89cc3300c63c20d5158a59a546d86f28a6c98a51bf16bbd"
+        }
+      },
+      {
+        "command": "test ! -e catalog/tasks/pyfakefs; sha256sum catalog/sources/pyfakefs/audit.md; wc -c < catalog/sources/pyfakefs/audit.md",
+        "tool_version": "GNU bash 5.3.9; coreutils 9.10",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pyfakefs/evidence/remediation.txt",
+          "sha256": "sha256:9c5089ca7b82b944d89cc3300c63c20d5158a59a546d86f28a6c98a51bf16bbd"
+        }
+      }
+    ],
+    "evidence_log": {
+      "path": "catalog/sources/pyfakefs/evidence/remediation.txt",
+      "sha256": "sha256:9c5089ca7b82b944d89cc3300c63c20d5158a59a546d86f28a6c98a51bf16bbd"
+    }
+  }
+}

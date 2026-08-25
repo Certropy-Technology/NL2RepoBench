@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytestify",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Implement and review a pytestify-specific child-side verifier boundary, then freeze the final image and hash-locked dependencies, collect the private tests in that boundary, and run Oracle, empty, stub, forgery, and offline controls before generating catalog/tasks/pytestify.",
+    "audit": {
+      "path": "catalog/sources/pytestify/blocked.md",
+      "sha256": "sha256:4ba0b41652b84f6a84ebf11caa9b2e913e5a930bd2fee609021a62c4e1831601"
+    },
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/dannysepler/pytestify.git",
+      "revision": "bee94a399074927f55a034a84b7987474dd9c9c8",
+      "source_digest": "sha256:41b8f6b961c5f9475e20dbe0d7087ef0c4989bc2493064804c1d13c3cfe00c50",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:45bddda5d7f62bbf366f66e8fc1b8f5bf054aea4ada0dcd34756b404c63d347e"
+    },
+    "environment_observation": {
+      "status": "observed-not-production",
+      "image": "ghcr.io/multimodal-art-projection/nl2repobench/pytestify@sha256:2eba74e9ae27fa58dddeec96e287ec5405151e926379683fdee73272ce51423b",
+      "platform": "linux/amd64",
+      "python_version": "3.9.23",
+      "reason": "The audit records a pinned image, but complete merged-filesystem source proof and an approved production environment lock are absent."
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden",
+      "reason": "Candidate and verifier runtime egress is forbidden until dependencies are frozen into an approved image or private lock artifact; the reference source must not be fetched at runtime."
+    },
+    "runtime_task": {
+      "path": "catalog/tasks/pytestify",
+      "present": false
+    },
+    "production_gates": {
+      "oracle": "not-run",
+      "controls": "not-run",
+      "harbor_runtime": "absent"
+    },
+    "commands": [
+      {
+        "command": "uv --version && uv run python --version && uv run python -c \"import importlib.metadata as m; print('nl2repobench', m.version('nl2repobench'))\" && uv run nl2repo task validate-source catalog/sources/pytestify && uv run python -c \"from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; findings, has_bundle, has_policy = lint_task(Path('catalog/sources/pytestify')); print('network_policy=', has_policy); print('runtime_bundle=', has_bundle); print('findings=', [(item.rule, item.severity, item.detail) for item in findings]); assert has_policy and not has_bundle; assert not any(item.severity == 'error' for item in findings)\" && test ! -e catalog/tasks/pytestify && echo 'catalog/tasks/pytestify absent'",
+        "tool_version": "uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7; nl2repobench 0.1.0",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/pytestify/evidence/remediation.txt",
+          "sha256": "sha256:f9f5c97b9beb132c7b227d31a44e5c80aaa9ffaad46cf0f2cce065504339b311"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pylama",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Obtain an owner-approved immutable manifest for setup.cfg and tests/test_linters.py overlays or replace them with exact upstream blobs, then freeze dependencies, collection, separate verifier, Oracle, and controls.",
+    "source_freeze": {"status":"known","upstream_url":"https://github.com/klen/pylama","revision":"53ad214de0aa9534e59bcd5f97d9d723d16cfdb8","source_digest":"sha256:f0285a20650d73f2bccd24d2f08935fe743cf17454f5e31eac0090acaccf6c5e","license_spdx":"MIT","license_path":"LICENSE","license_digest":"sha256:48a99ec7c6538b527657d8e79838d9ff3b76063ee62009cc7196e94575578f93"},
+    "commands": [{"command":"uv run nl2repo task validate-source catalog/sources/pylama","tool_version":"repository toolchain","exit_code":0,"log":{"path":"catalog/sources/pylama/evidence/post-descriptor-validation.txt","sha256":"sha256:3a54be11448521dac0deefb4ceb50967d14ab7aadbc5204b6e5473283422664c"}},{"command":"static image/upstream overlay audit","tool_version":"audit recorded in blocked.md","exit_code":1,"log":{"path":"catalog/sources/pylama/blocked.md","sha256":"sha256:17071e948144575a04d36717ea5f8ae73967af623d16205aef208419fc2b51f4"}}]
+  }
+}

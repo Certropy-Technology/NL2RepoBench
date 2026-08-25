@@ -1,0 +1,84 @@
+schema_version = "1.0"
+task_id = "pyfakefs"
+version = "0.1.0"
+instruction = "audit.md"
+
+[metadata]
+difficulty = "unknown"
+category = "filesystem-testing"
+tags = ["python", "filesystem", "testing", "unittest", "pytest", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pytest-dev/pyfakefs"
+revision = "a07cb07ee9ae0f78233fa382bf48dcaf6ccc2d99"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:667cc2737b759f02491d24c04bbf73daf5e409bcd1d5ee3dd86e5fed1764c788"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "No final image or hash-locked offline dependency closure is approved; agent and verifier run phases must stay offline and must not retrieve the frozen upstream source."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "pytest>=6.2.5",
+  "pandas==2.3.3",
+  "xlrd==2.0.2",
+  "openpyxl==3.1.5",
+  "parquet",
+  "pyarrow",
+  "zstandard",
+  "cffi",
+  "Django",
+]
+
+[tests]
+# The v1 schema exposes pytest as the integration framework; the audit records
+# the upstream unittest aggregator separately. No production collection is frozen.
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = [
+  "python -m pyfakefs.tests.all_tests",
+  "python -m pytest pyfakefs/pytest_tests/pytest_plugin_test.py",
+  "pytest pyfakefs/pytest_tests",
+  "cd pyfakefs/pytest_tests/ns_package && pytest --log-cli-level=INFO test",
+]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked candidate: upstream provenance is bounded, but no immutable image, offline dependency closure, frozen collection, separate verifier, Oracle, or controls exist."
+keywords = ["python", "filesystem", "testing", "unittest", "pytest", "blocked"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/pyfakefs"
+reason = "The upstream unittest and pytest suites are present, but tests are unavailable as a frozen production collection and denominator. The environment remains unapproved because no final image or hash-locked offline dependency closure exists; no production verifier, Oracle, controls, or runtime is authorized. No catalog/tasks/pyfakefs runtime exists."
+evidence = [{ digest = "sha256:fefa1be509786ea1a2988915d2595da336ecabfa21b6fa64103223e15a21fcd9", size_bytes = 5267, media_type = "application/json", uri = "artifact://public/sha256:fefa1be509786ea1a2988915d2595da336ecabfa21b6fa64103223e15a21fcd9", visibility = "public" }]
+approval_refs = ["catalog/sources/pyfakefs/production-evidence.json"]

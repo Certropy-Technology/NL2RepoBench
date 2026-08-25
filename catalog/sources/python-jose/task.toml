@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "python-jose"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "jwt-library"
+tags = ["python", "jose", "jwt", "crypto", "overlay", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/mpdavis/python-jose"
+revision = "018b310ddb8b50dcfd09a0c152117835a21dd656"
+license_spdx = "MIT"
+source_digest = "sha256:29c61d9b78824ef3934abe5d9ad9602a11ef5e6d80525a07001ca47d800a13b6"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The immutable verifier image differs from upstream in 18 paths and no approved crypto dependency closure or separate candidate verifier exists."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["crypto backends and test dependencies are not a hash-locked offline closure"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/python-jose"
+reason = "The exact source and MIT archive/license evidence are known, but the immutable image contains 18 changed paths without an approved overlay manifest, the legacy denominator is not a structured collection, and no hash-locked crypto closure, separate verifier, Oracle, or controls exist."

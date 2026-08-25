@@ -1,0 +1,63 @@
+schema_version = "1.0"
+task_id = "pytestify"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "unknown"
+category = "pytest-plugin-boundary"
+tags = ["python", "pytest", "code-generation", "plugin-boundary", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/dannysepler/pytestify.git"
+revision = "bee94a399074927f55a034a84b7987474dd9c9c8"
+license_spdx = "MIT"
+source_digest = "sha256:41b8f6b961c5f9475e20dbe0d7087ef0c4989bc2493064804c1d13c3cfe00c50"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = "3.9.23"
+os_name = "linux-amd64"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline. The audit has no approved hash-locked dependency closure or separate verifier, and runtime reference-source retrieval is forbidden."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "tokenize-rt>=4.0.0",
+  "pytest==8.4.1",
+  "pytest-xdist==3.8.0",
+  "setuptools==58.1.0",
+  "wheel==0.45.1",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 122
+expected_total_source = "unknown"
+commands = [
+  "pip install -e .",
+  "pytest --continue-on-collection-errors tests",
+]
+protected_paths = ["tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "pytestify-authoring"
+reason = "Failure class: verifier. The audit records exact upstream provenance and static test shape, but the in-process private tests have no approved candidate-client/RPC adapter or trusted report boundary. The final environment, hash-locked dependency closure, source materialization proof, frozen collection, Oracle, controls, and Harbor runtime are absent. Next step: implement and review the pytestify-specific child-side verifier boundary, then freeze the final image/dependencies and rerun collection, Oracle, controls, and production compilation."

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-jose",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Approve an immutable overlay manifest for the 18 image-only differences or rebuild from exact upstream tests, then freeze the crypto closure, collection, separate verifier, Oracle, and controls.",
+    "source_freeze": {"status":"known","upstream_url":"https://github.com/mpdavis/python-jose","revision":"018b310ddb8b50dcfd09a0c152117835a21dd656","source_digest":"sha256:29c61d9b78824ef3934abe5d9ad9602a11ef5e6d80525a07001ca47d800a13b6","license_spdx":"MIT","license_path":"LICENSE","license_digest":"sha256:a5e618eee6d496f77ad8ae70fea6edf148159558e2d228787d9076c900a2f926"},
+    "commands": [{"command":"uv run nl2repo task validate-source catalog/sources/python-jose","tool_version":"repository toolchain","exit_code":0,"log":{"path":"catalog/sources/python-jose/evidence/post-descriptor-validation.txt","sha256":"sha256:93a677012741296f6fe792868604061466f2bac2080b39ccc25bffa27f329a0a"}},{"command":"static image/upstream overlay audit","tool_version":"audit recorded in blocked.md","exit_code":1,"log":{"path":"catalog/sources/python-jose/blocked.md","sha256":"sha256:79e0f1dc46d40fa0acfe588bf4157d06d9ac3dcacf4c4523f5b674ee5f9bfc4c"}}]
+  }
+}

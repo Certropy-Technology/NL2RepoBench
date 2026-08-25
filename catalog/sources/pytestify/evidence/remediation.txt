@@ -1,0 +1,18 @@
+command: uv --version && uv run python --version && uv run python -c "import importlib.metadata as m; print('nl2repobench', m.version('nl2repobench'))" && uv run nl2repo task validate-source catalog/sources/pytestify && uv run python -c "from pathlib import Path; from nl2repobench.authoring.network_lint import lint_task; findings, has_bundle, has_policy = lint_task(Path('catalog/sources/pytestify')); print('network_policy=', has_policy); print('runtime_bundle=', has_bundle); print('findings=', [(item.rule, item.severity, item.detail) for item in findings]); assert has_policy and not has_bundle; assert not any(item.severity == 'error' for item in findings)" && test ! -e catalog/tasks/pytestify && echo 'catalog/tasks/pytestify absent'
+tool_versions: uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7; nl2repobench 0.1.0
+exit_code: 0
+stdout:
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+Python 3.14.7
+nl2repobench 0.1.0
+{
+  "instruction": "catalog/sources/pytestify/blocked.md",
+  "source_digest": "sha256:d7493f17156cf6121c6c784313be6d57e954788705a7f38e7bd9915dad0d8192",
+  "status": "blocked",
+  "task_id": "pytestify",
+  "version": "0.1.0"
+}
+network_policy= True
+runtime_bundle= False
+findings= [('offline-dependencies-missing', 'warning', 'dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached')]
+catalog/tasks/pytestify absent

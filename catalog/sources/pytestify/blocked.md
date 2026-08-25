@@ -1,10 +1,10 @@
 # `pytestify` Static Provenance Audit
 
-Status: **blocked**. This directory is an audit record only. It contains no
-`task.toml`, public instruction projection, Harbor bundle, Oracle solution,
-verifier script, grader, or hidden test bytes. The task is not ready for
-Harbor publication because its frozen tests import candidate code directly
-inside pytest and there is no approved candidate-client/RPC adapter or
+Status: **blocked**. This directory contains the audit, a blocked task
+descriptor, and hash-bound production evidence. It contains no Harbor bundle,
+Oracle solution, verifier script, grader, or hidden test bytes. The task is not
+ready for Harbor publication because its frozen tests import candidate code
+directly inside pytest and there is no approved candidate-client/RPC adapter or
 trusted report boundary for this plugin-sensitive contract.
 
 No legacy file, dataset file, conversion-loop state, or other task directory
@@ -222,4 +222,4 @@ Completed without Docker, Harbor, or pytest execution:
   overlay digest;
 - parsed the image tests with Python `ast`, expanded literal parametrization,
   and checked plugin/skip/hook markers;
-- ran repository diff checks after writing this audit. No files are staged.
+- validated the blocked descriptor, explicit no-network policy, and hash-bound production-evidence record; no files are staged.

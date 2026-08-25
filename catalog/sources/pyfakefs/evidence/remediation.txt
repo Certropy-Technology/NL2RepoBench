@@ -1,0 +1,80 @@
+# pyfakefs blocked production evidence
+
+This receipt supports the blocked source descriptor only. It contains no
+runtime task, private tests, verifier, Oracle bundle, dependency artifact, or
+score. The source-freeze facts below are transcribed from the hash-bound audit;
+this receipt intentionally does not fetch the upstream repository.
+
+Tool versions used for this receipt:
+
+```text
+GNU bash, version 5.3.9(1)-release (x86_64-redhat-linux-gnu)
+uv 0.12.3 (x86_64-unknown-linux-gnu)
+Python 3.14.7
+git version 2.55.0
+sha256sum (GNU coreutils) 9.10
+```
+
+Audit source:
+
+```text
+path: catalog/sources/pyfakefs/audit.md
+sha256: 11d038780f0bcc26261a2f81940f1577c10a441562e5a68aac686566e8d9cf7e
+bytes: 7413
+revision: a07cb07ee9ae0f78233fa382bf48dcaf6ccc2d99
+tree: ffedf18248d95c8170106a6add2bb89628fb33c4
+archive_bytes: 1464320
+archive_sha256: 667cc2737b759f02491d24c04bbf73daf5e409bcd1d5ee3dd86e5fed1764c788
+license: Apache-2.0; COPYING sha256 09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b
+```
+
+Command: uv run nl2repo task validate-source catalog/sources/pyfakefs | python -c 'import json,sys; p=json.load(sys.stdin); print(json.dumps({k:p[k] for k in ("instruction","status","task_id","version")}, sort_keys=True))'
+Tool version: uv 0.12.3 (x86_64-unknown-linux-gnu); Python 3.14.7
+Exit code: 0
+Observed stdout:
+
+```json
+{"instruction": "catalog/sources/pyfakefs/audit.md", "status": "blocked", "task_id": "pyfakefs", "version": "0.1.0"}
+```
+
+Command: uv run nl2repo task lint-network --tasks-root /tmp/pyfakefs-network-root
+Tool version: uv 0.12.3 (x86_64-unknown-linux-gnu)
+Exit code: 0
+Observed stdout: one task scanned, one explicit policy, zero errors, one warning for the intentionally missing dependency closure. The declared mode is no-network and reference-source fetching remains forbidden.
+
+```json
+{"error_count": 0, "tasks_scanned": 1, "tasks_with_explicit_policy": 1, "warning_count": 1}
+```
+
+Command: uv run nl2repo harbor compile catalog/sources/pyfakefs --output /tmp/pyfakefs-blocked-compile --artifact-root /tmp/pyfakefs-blocked-artifacts --toolchain toolchain.lock.toml
+Tool version: uv 0.12.3 (x86_64-unknown-linux-gnu); repository toolchain
+Exit code: 1
+Observed stderr:
+
+```text
+Harbor compile failed: task is not publishable: metadata.difficulty, environment_lock.status=known, dependency_bundle.status=known, dependency_bundle.lock_artifact, tests.expected_total_source=frozen-collection, tests.expected_total>0, tests.test_bundle, tests.commands_artifact, oracle_bundle
+```
+
+Command: python -c 'import json,tomllib; from pathlib import Path; d=tomllib.loads(Path("catalog/sources/pyfakefs/task.toml").read_text()); p=d["environment"]["network_policy"]; assert d["lifecycle"]["status"]=="blocked" and d["environment"]["network_mode"]=="no-network" and p["mode"]=="no-network" and p["reference_source_fetch"]=="forbidden" and not Path("catalog/tasks/pyfakefs").exists(); print(json.dumps({"task_id":d["task_id"],"status":d["lifecycle"]["status"],"network_mode":p["mode"],"reference_source_fetch":p["reference_source_fetch"],"runtime_exists":False}, sort_keys=True))'
+Tool version: Python 3.14.7
+Exit code: 0
+Observed stdout:
+
+```json
+{"network_mode": "no-network", "reference_source_fetch": "forbidden", "runtime_exists": false, "status": "blocked", "task_id": "pyfakefs"}
+```
+
+Command: test ! -e catalog/tasks/pyfakefs; sha256sum catalog/sources/pyfakefs/audit.md; wc -c < catalog/sources/pyfakefs/audit.md
+Tool version: GNU bash 5.3.9; coreutils 9.10
+Exit code: 0
+Observed stdout:
+
+```text
+catalog/tasks/pyfakefs absent
+audit_sha256=11d038780f0bcc26261a2f81940f1577c10a441562e5a68aac686566e8d9cf7e
+audit_bytes=7413
+```
+
+No upstream test run, Oracle, hidden test, control, Harbor runtime, or
+production score is claimed. The audit explicitly records that those actions
+were not performed.

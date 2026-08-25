@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "pylama"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-linter"
+tags = ["python", "lint", "plugins", "overlay", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/klen/pylama"
+revision = "53ad214de0aa9534e59bcd5f97d9d723d16cfdb8"
+license_spdx = "MIT"
+source_digest = "sha256:f0285a20650d73f2bccd24d2f08935fe743cf17454f5e31eac0090acaccf6c5e"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The immutable image contains unapproved setup/test overlays and no hash-locked plugin dependency closure or separate verifier."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["linter plugin and test dependencies are not a hash-locked offline closure"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/pylama"
+reason = "The exact source and MIT archive/license evidence are known, but the image has two unapproved overlays, the legacy denominator 34 conflicts with 35 static test items, and no approved dependency closure, structured collection, separate verifier, Oracle, or controls exist."
