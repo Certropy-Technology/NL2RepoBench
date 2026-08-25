@@ -1,0 +1,10 @@
+Voluptuous production remediation (2026-08-25)
+
+The authoring attempt outlined a JSON-safe validation scenario contract and
+control scripts, but no authorized dependency lock, verifier bundle, Oracle
+bundle, or official Harbor receipt was completed. The partial verifier metadata
+was removed because it was not backed by a content-addressed artifact.
+
+The task remains blocked with no runtime. Reopen by materializing and validating
+the private artifacts, compiling without --allow-incomplete, and running Oracle
+plus empty, stub, forgery, and offline controls.

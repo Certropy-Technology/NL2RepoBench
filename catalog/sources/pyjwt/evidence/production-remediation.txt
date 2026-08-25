@@ -1,0 +1,11 @@
+PyJWT production remediation (2026-08-25)
+
+The legacy task had an unfrozen dependency closure, a legacy-file denominator,
+and no production separate verifier or local Oracle bundle. A bounded HMAC-only
+contract was investigated, but the authoring command exceeded the bounded
+execution window before production artifacts and an Oracle gate were complete.
+
+Result: no valid production compile, Oracle, or controls were recorded. The
+legacy runtime was removed. Reopen by freezing the license and dependency
+closure, building a deterministic HMAC-only subprocess verifier and local
+Oracle, then compiling without --allow-incomplete and running the full gate.

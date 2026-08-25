@@ -5,30 +5,30 @@ instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python", "repository-generation"]
+category = "validation-library"
+tags = ["python", "schema-validation", "coercion", "markers", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/alecthomas/voluptuous"
 revision = "dcaaf3dd68be156253518a045feb1c4172dbd2d5"
-license_spdx = "unknown"
+license_spdx = "BSD-3-Clause"
 source_digest = "sha256:30927e7f2445e3aba14c6a36b3f17cb7edd40e558046631b4e06654cbf4e5d70"
 
 [environment]
 status = "known"
-python_version = "3.10"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "Voluptuous has no runtime dependency; the candidate environment uses the pinned Python image and a hash-locked empty third-party dependency set."
 
 [dependencies]
 status = "unknown"
@@ -38,8 +38,8 @@ packages = []
 [tests]
 framework = "pytest"
 expected_total = 152
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -50,7 +50,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the voluptuous package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+keywords = ["python", "schema-validation", "coercion", "markers", "json-scenarios", "separate-verifier"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -63,5 +63,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "blocked"
+reason = "No authorized private dependency/verifier artifacts or local Oracle/control evidence is available; do not publish or run this task until the strict gates pass."

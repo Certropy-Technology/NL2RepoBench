@@ -6,34 +6,37 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "repository-generation"]
+tags = ["python", "formatter", "pycodestyle", "repository-generation", "separate-verifier"]
 language = "python"
 
 [source]
-status = "known"
+status = "unknown"
 upstream_url = "https://github.com/hhatto/autopep8"
 revision = "4046ad49e25b7fa1db275bf66b1b7d60600ac391"
-license_spdx = "unknown"
+license_spdx = "MIT"
 source_digest = "sha256:b0604345a9ac804f5eb6d30a0f779f61f64e679d651f43d16b2445b8ba799114"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12"
-os_name = "debian-12"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "python -m pip install --no-deps --no-build-isolation"
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The exact pycodestyle and setuptools/wheel build closure was resolved with hashes during the bounded remediation attempt, but no authorized private lock artifact was created. Candidate and verifier runtime must remain no-network; no legacy image dependency state is accepted."
 
 [dependencies]
 status = "unknown"
 installer = "pip"
-packages = []
+packages = ["pycodestyle==2.12.1", "setuptools==80.10.2", "wheel==0.45.1"]
 
 [tests]
 framework = "pytest"
@@ -61,5 +64,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source and collection locks require freeze."
+status = "blocked"
+owner = "worker/autopep8"
+reason = "Strict production compile failed because no authorized hash-locked dependency artifact, frozen bounded custom verifier bundle, or Oracle bundle exists. The legacy in-process runtime was removed; no Oracle or control result is claimed."

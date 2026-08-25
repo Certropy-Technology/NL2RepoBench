@@ -1,0 +1,11 @@
+Tqdm production remediation (2026-08-25)
+
+The bounded authoring lane produced a deterministic eight-leaf progress and
+iterator contract, a hash-locked setuptools closure, a private verifier bundle,
+and a local Oracle bundle. Terminal refresh timing and live wall-clock behavior
+were explicitly excluded from the deterministic contract.
+
+Official Harbor Oracle, empty, stub, forgery, and offline controls were not run
+before the tool budget ended. The task therefore remains blocked and no runtime
+is retained. Reopen by resolving the declared private artifacts in the standard
+CAS, compiling without --allow-incomplete, and executing the full matrix.

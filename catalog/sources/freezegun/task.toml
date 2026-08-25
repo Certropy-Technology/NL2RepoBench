@@ -1,45 +1,56 @@
 schema_version = "1.0"
 task_id = "freezegun"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = ["python", "repository-generation"]
+category = "time-control-testing"
+tags = ["python", "datetime", "time-freezing", "decorators", "separate-verifier"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = 'https://github.com/spulec/freezegun'
-revision = '92d61b3f5c31942a1039713574487bdcfcdbbfff'
-license_spdx = 'Apache-2.0'
-source_digest = 'sha256:3ffdbdaf8a3b15a5d4a79608885e114ed8a2b3f72712301b2342c697bfd24823'
+upstream_url = "https://github.com/spulec/freezegun"
+revision = "92d61b3f5c31942a1039713574487bdcfcdbbfff"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:3ffdbdaf8a3b15a5d4a79608885e114ed8a2b3f72712301b2342c697bfd24823"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12"
-os_name = "debian-12"
-base_image = 'python:3.12-slim'
-base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "pip installs the hash-locked runtime and build closure during Docker build"
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "python-dateutil, six, setuptools, and wheel are installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = ["python-dateutil==2.9.0.post0", "setuptools==80.10.2", "six==1.17.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:22b0ccfd39dfcf82a9b7367da41a8bd6be98b4ee365fbcd5839a02842205b884", size_bytes = 1388, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:22b0ccfd39dfcf82a9b7367da41a8bd6be98b4ee365fbcd5839a02842205b884", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 133
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:253bbf64c2964cad8a0f06e51dcd1a212da4bb62bbb68aceb657c654db3d4fe2", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:253bbf64c2964cad8a0f06e51dcd1a212da4bb62bbb68aceb657c654db3d4fe2", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -49,19 +60,27 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the freezegun package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
-agent_timeout_sec = 3600.0
+description = "Build freezegun 1.5.5 from an empty workspace and satisfy a bounded deterministic freeze_time, date, datetime, tick, move_to, timezone, decorator, and context contract through isolated subprocesses."
+keywords = ["python", "datetime", "time-freezing", "decorators", "separate-verifier"]
+agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 60.0
-candidate_total_timeout_sec = 300.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 180.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
-memory_mb = 4096
-storage_mb = 8192
+memory_mb = 2048
+storage_mb = 4096
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:0461dddad21fc9f5fd2830832f89abac505bd3bc0d0f671bb6bfbb374e6129bf"
+size_bytes = 194560
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0461dddad21fc9f5fd2830832f89abac505bd3bc0d0f671bb6bfbb374e6129bf"
+visibility = "private"
+
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "controls-passed"
+owner = "worker/freezegun"
+reason = "Harbor 0.21.0 production gates passed: the local digest-checked Oracle was valid at 24/24 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress."
