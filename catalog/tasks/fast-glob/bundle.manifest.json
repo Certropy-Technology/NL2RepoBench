@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:3f69ecdf78f1cbf967e3d3489613f02504fd5956a77b4d5739da3e7628c1c03a",
+  "canonical_manifest_digest": "sha256:8771434c7999f6e2c6155914ef77b8f71f471e1f011d6948600d488365fb27b3",
   "files": [
     {
       "path": "README.md",
@@ -318,7 +318,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "a291f3d37e7cbbf12e96ae0452d0c795ef4cb6809f092c83b5a96019f4e22360",
+      "sha256": "e699c81616561bfe4a94b54219024d3e368fca58d1d534b161b26b70d99d4335",
       "size_bytes": 1231
     },
     {
@@ -330,6 +330,11 @@
       "path": "tests/command-plan.json",
       "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
       "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "1350a0321f7b426b16835e6f59da7367848fa0dc03d5d9f5d9b06c619b434328",
+      "size_bytes": 25754
     },
     {
       "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/00/b1/057f597391d4454c7b40841200021844aab411da835d0727c8f38d332069d9e6b16a6f0e8309153801ee27d728dd6c9c3cd3620046d567d5603ada8d0d17",
@@ -712,6 +717,11 @@
       "size_bytes": 2373
     },
     {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
       "path": "tests/runtime/node/run_tests.mjs",
       "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
       "size_bytes": 3607
@@ -728,13 +738,13 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "2cdaaf9670208b6558b4433eb6a65bdd7efeadf31ca39d02b856bbfb0abd469b",
-      "size_bytes": 2255
+      "sha256": "c8f619c7d1e1b07f2c1274d6134af9ae4fef69a07f6499127a8f1ec1685ac083",
+      "size_bytes": 2959
     }
   ],
   "mode": "production",
   "schema_version": "2.0",
   "task_id": "fast-glob",
   "task_version": "0.1.0",
-  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+  "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
 }

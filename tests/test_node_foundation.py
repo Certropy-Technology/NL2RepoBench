@@ -175,6 +175,9 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "NODE_CANDIDATE_SITE=/tmp/candidate-site" in generated_test_script
     assert "NODE_TEST_CLIENT=/tests/private/test_client.mjs" in generated_test_script
     assert "candidate-installation-failed" in generated_test_script
+    assert "network-check.mjs" in generated_test_script
+    assert "network.json" in generated_test_script
+    assert 'network_reason=verifier-internal-error' in generated_test_script
     assert 'schema_version = "1.4"' in (first / "task.toml").read_text()
     assert 'language = "node"' in (first / "task.toml").read_text()
     assert not (first / "environment/docker-compose.yaml").exists()
@@ -183,6 +186,34 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     declared_paths = {entry["path"] for entry in bundle_manifest["files"]}
     assert "bundle.manifest.json" not in declared_paths
     assert "tests/dependencies/bundle.manifest.json" in declared_paths
+
+
+def test_node_network_runtime_writes_bounded_receipt(tmp_path: Path) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not installed")
+    receipt = tmp_path / "logs/verifier/network.json"
+    completed = subprocess.run(
+        [
+            node,
+            str(ROOT / "src/nl2repobench/verification/node/network-check.mjs"),
+            "--output",
+            str(receipt),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    assert completed.returncode in {0, 1}, completed.stderr
+    payload = json.loads(receipt.read_text(encoding="utf-8"))
+    assert payload["schema_version"] == "1.0"
+    assert payload["public_network_available"] == any(payload["probes"].values())
+    assert set(payload["probes"]) == {"registry.npmjs.org:443", "1.1.1.1:443"}
+    assert all(isinstance(value, bool) for value in payload["probes"].values())
+    assert isinstance(payload["network_namespace"], str)
+    assert isinstance(payload["route_table"], str)
+    assert len(payload["route_table"].encode()) <= 64 * 1024
 
 
 def test_v2_production_compilation_fails_closed(tmp_path: Path) -> None:
@@ -194,10 +225,13 @@ def test_locked_node_toolchain_rejects_runtime_helper_drift(tmp_path: Path) -> N
     toolchain = tmp_path / "toolchain.node.lock.toml"
     (tmp_path / "harbor-runner").mkdir()
     shutil.copy2(ROOT / "harbor-runner/uv.lock", tmp_path / "harbor-runner/uv.lock")
-    text = NODE_PRODUCTION_TOOLCHAIN.read_text(encoding="utf-8").replace(
-        "f3d988ea38f439082388183bb825eb5001c903b0cbeee3bc48f005a8a7d7e756",
-        "0" * 64,
+    text = NODE_PRODUCTION_TOOLCHAIN.read_text(encoding="utf-8")
+    current_digest = next(
+        line.split('"', 2)[1]
+        for line in text.splitlines()
+        if line.startswith("node_runtime_sha256")
     )
+    text = text.replace(current_digest, "sha256:" + "0" * 64)
     toolchain.write_text(text, encoding="utf-8")
     with pytest.raises(NodeHarborCompileError, match="runtime helper digest"):
         NodeHarborCompiler(toolchain)

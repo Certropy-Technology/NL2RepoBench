@@ -1,10 +1,28 @@
 {
-  "schema_version": "1.0",
-  "probes": {
-    "1.1.1.1:443": false,
-    "pypi.org:443": false
-  },
+  "generated_by": "per-run-verifier-network-check",
   "public_network_available": false,
-  "network_namespace": "net:[4026533873]",
-  "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n"
+  "runs": {
+    "empty": {
+      "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/empty/2026-08-25__15-23-33/empty__Jkne4q7/verifier/network.json",
+      "public_network_available": false,
+      "sha256": "sha256:a3b6e9b28260ef279f313bb2a3d4b189a7caae24a936f0870041212cb8cfc407"
+    },
+    "forgery": {
+      "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/forgery/2026-08-25__15-24-52/forgery__AxJ546z/verifier/network.json",
+      "public_network_available": false,
+      "sha256": "sha256:9cd1b2256c82d76be6e5f02a88122b0ac3d2a155dfa501a6aec1ce9f38c827a9"
+    },
+    "oracle": {
+      "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/oracle/2026-08-25__15-22-53/fast-deep-equal__SLm5fPH/verifier/network.json",
+      "public_network_available": false,
+      "sha256": "sha256:a3b6e9b28260ef279f313bb2a3d4b189a7caae24a936f0870041212cb8cfc407"
+    },
+    "stub": {
+      "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/stub/2026-08-25__15-24-10/stub__5Wmj8JY/verifier/network.json",
+      "public_network_available": false,
+      "sha256": "sha256:a3b6e9b28260ef279f313bb2a3d4b189a7caae24a936f0870041212cb8cfc407"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "fast-deep-equal"
 }

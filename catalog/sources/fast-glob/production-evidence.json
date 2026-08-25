@@ -1,67 +1,67 @@
 {
   "bundle": {
     "path": "catalog/tasks/fast-glob/bundle.manifest.json",
-    "sha256": "sha256:54d540fa9c2b0dbe5bf6c15340dd3c283a89b380209d6d393090501363a279da"
+    "sha256": "sha256:ec3bac4c76db508f99eca3ab7f3f63660135796d4342d98931b991edd6cb4a61"
   },
   "controls": {
     "empty": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p fast-glob-control -a oracle",
+      "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/nl2repo-fast-glob-revalidation/fast-glob -a nop --job-name empty --jobs-dir .nl2repo/runs/revalidation-fast-glob --n-concurrent 1 --yes",
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/controls/production-evidence-fast-glob-empty-final/2026-08-25__04-28-51/fast-glob__VWoyQ5z/verifier/grading.json",
+        "path": ".nl2repo/runs/revalidation-fast-glob/empty/fast-glob__EtV24MG/verifier/grading.json",
         "sha256": "sha256:4c2a1408af8c94739696f462babba85312bdeb426df95f16c8b8188d4491b0d3"
       },
       "network": {
         "path": "catalog/sources/fast-glob/evidence/network-probe.json",
-        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+        "sha256": "sha256:7ef023714659284df3d7304c0348ab9d34f4de985f5bd0313a428f2355d80528"
       }
     },
     "forgery": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p fast-glob-control -a oracle",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/revalidation-fast-glob/control-tasks/fast-glob-forgery -a oracle --job-name forgery --jobs-dir .nl2repo/runs/revalidation-fast-glob --n-concurrent 1 --yes",
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/controls/production-evidence-fast-glob-forgery-final/2026-08-25__04-28-15/fast-glob-forgery__h4EHhMf/verifier/grading.json",
+        "path": ".nl2repo/runs/revalidation-fast-glob/forgery/fast-glob-forgery__toGDJiY/verifier/grading.json",
         "sha256": "sha256:3c2c5b87625ad267c7dca705e0b092e80506c34ac2a4a57d5c53d642b5f98432"
       },
       "network": {
         "path": "catalog/sources/fast-glob/evidence/network-probe.json",
-        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+        "sha256": "sha256:7ef023714659284df3d7304c0348ab9d34f4de985f5bd0313a428f2355d80528"
       },
       "verifier_owned_reward": true
     },
     "offline": {
-      "command": "Docker network-none probe for fast-glob verifier image",
+      "command": "Fresh verifier network-check.mjs probe in the no-network Oracle/control runs",
       "completed": true,
       "exit_code": 0,
       "network": {
         "path": "catalog/sources/fast-glob/evidence/network-probe.json",
-        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+        "sha256": "sha256:7ef023714659284df3d7304c0348ab9d34f4de985f5bd0313a428f2355d80528"
       }
     },
     "stub": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p fast-glob-control -a oracle",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/revalidation-fast-glob/control-tasks/fast-glob-stub -a oracle --job-name stub --jobs-dir .nl2repo/runs/revalidation-fast-glob --n-concurrent 1 --yes",
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/controls/production-evidence-fast-glob-stub-final/2026-08-25__04-27-38/fast-glob-stub__BVydxxp/verifier/grading.json",
+        "path": ".nl2repo/runs/revalidation-fast-glob/stub/fast-glob-stub__JGKFsew/verifier/grading.json",
         "sha256": "sha256:3c2c5b87625ad267c7dca705e0b092e80506c34ac2a4a57d5c53d642b5f98432"
       },
       "network": {
         "path": "catalog/sources/fast-glob/evidence/network-probe.json",
-        "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+        "sha256": "sha256:7ef023714659284df3d7304c0348ab9d34f4de985f5bd0313a428f2355d80528"
       }
     }
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/fast-glob -a oracle",
+    "command": "uv run --frozen --project harbor-runner harbor run -p /tmp/nl2repo-fast-glob-revalidation/fast-glob -a oracle --job-name oracle --jobs-dir .nl2repo/runs/revalidation-fast-glob --n-concurrent 1 --yes",
     "exit_code": 0,
     "grading": {
-      "path": ".nl2repo/runs/oracle/production-evidence-fast-glob-final/2026-08-25__04-27-00/fast-glob__driiRD8/verifier/grading.json",
+      "path": ".nl2repo/runs/revalidation-fast-glob/oracle/fast-glob__C6BqCKv/verifier/grading.json",
       "sha256": "sha256:2f27e03e310ce193d8a0507d733893a2f012946c1bba27e99395ead9c9bed54a"
     },
     "harbor_version": "0.21.0",
     "network": {
       "path": "catalog/sources/fast-glob/evidence/network-probe.json",
-      "sha256": "sha256:edf26241878bbdef65ee684b495bfc23e25b4eb4a5284316d8b3f3a8edf5855a"
+      "sha256": "sha256:7ef023714659284df3d7304c0348ab9d34f4de985f5bd0313a428f2355d80528"
     }
   },
   "schema_version": "1.0",

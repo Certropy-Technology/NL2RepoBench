@@ -68,10 +68,15 @@ The source compiled without `--allow-incomplete` using:
 
 ```bash
 uv run nl2repo harbor compile catalog/sources/fast-deep-equal \
-  --output .nl2repo/authoring-work/repairs/fast-deep-equal/build/harbor \
+  --output .nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/compiled \
   --toolchain toolchain.node.lock.toml \
   --artifact-root .nl2repo/artifacts --allow-private
 ```
+
+The recompiled production bundle binds toolchain content digest
+`sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92`
+and canonical manifest digest
+`sha256:b88a3e53e5559076312b9de7df1a60db42512abc30bf4a8ad18b53cd3aecbfca`.
 
 The official Harbor `0.21.0` Oracle command used the locked runner and final
 Node toolchain:
@@ -82,8 +87,8 @@ uv run --frozen --project harbor-runner harbor run \
 ```
 
 Its result was `valid=true`, `collected=20`, `passed=20`, and reward `1.0`.
-The job result and verifier reports are copied into the task-local repair
-evidence directory.
+The exact job result, verifier reports, and generated network receipt are
+hash-bound from `production-evidence.json` to the task-local run directory.
 
 Three derived control bundles changed only `solution/solve.sh` and refreshed
 their bundle manifest before the same official Harbor command:
@@ -95,5 +100,9 @@ their bundle manifest before the same official Harbor command:
 | fake workspace `reward.json` and `report.json` | `valid=true`, 20 failed leaves, reward `0.0` |
 
 The control results show that the verifier owns its report/reward paths and
-does not consume candidate-written workspace score files. The task is at
-`controls-passed`; it has not been added to a dataset or marked published.
+does not consume candidate-written workspace score files. Oracle, empty,
+stub, and forgery each generated a verifier-owned `network.json`; all four
+receipts record failed probes to `registry.npmjs.org:443` and `1.1.1.1:443`
+and `public_network_available=false`. The frozen denominator remains 20. The
+task is at `controls-passed`; review, pilot, and publication remain out of
+scope.

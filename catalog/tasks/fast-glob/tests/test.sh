@@ -2,8 +2,31 @@
 set -uo pipefail
 mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
-rm -f /logs/verifier/reward.json /logs/verifier/grading.json /logs/verifier/report.json
+rm -f /logs/verifier/reward.json /logs/verifier/grading.json   /logs/verifier/report.json /logs/verifier/network.json
 rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/npm-cache
+
+/usr/local/bin/node /tests/runtime/node/network-check.mjs \
+  --output /logs/verifier/network.json
+network_exit_code=$?
+if [[ "$network_exit_code" -ne 0 ]]; then
+  network_reason=verifier-network-available
+  if [[ "$network_exit_code" -ne 1 ]] || [[ ! -s /logs/verifier/network.json ]]; then
+    network_reason=verifier-internal-error
+  fi
+  node /tests/runtime/node/grade-report.mjs \
+    --expected 36 \
+    --reason "$network_reason" \
+    --output /logs/verifier
+  exit 0
+fi
+if [[ ! -s /logs/verifier/network.json ]]; then
+  node /tests/runtime/node/grade-report.mjs \
+    --expected 36 \
+    --reason verifier-internal-error \
+    --output /logs/verifier
+  exit 0
+fi
+
 install -d -o candidate -g candidate -m 0700 /tmp/npm-cache
 cp -a /opt/npm-bundle/npm-cache/. /tmp/npm-cache/
 chown -R candidate:candidate /tmp/npm-cache

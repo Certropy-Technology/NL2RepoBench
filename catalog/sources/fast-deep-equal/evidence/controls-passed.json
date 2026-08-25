@@ -1,38 +1,56 @@
 {
   "empty": {
+    "collected": 0,
+    "expected_total": 20,
     "failure_reason": "candidate-installation-failed",
     "passed": 0,
-    "reward": 0.0,
-    "total": 20
+    "reward": 0.0
   },
   "forgery": {
+    "collected": 20,
+    "expected_total": 20,
     "passed": 0,
     "reward": 0.0,
-    "total": 20,
     "verifier_owned_reward": true
   },
-  "offline": {
-    "network_receipt": {
-      "path": "catalog/sources/fast-deep-equal/evidence/network-probe.json",
-      "sha256": "sha256:e33162da7d8f91941739b7470bbbdc8df1448be932186eac0f998a8bdb28b8d4"
-    },
-    "public_network_available": false
+  "network": {
+    "public_network_available": false,
+    "receipts": {
+      "empty": {
+        "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/empty/2026-08-25__15-23-33/empty__Jkne4q7/verifier/network.json",
+        "sha256": "sha256:a3b6e9b28260ef279f313bb2a3d4b189a7caae24a936f0870041212cb8cfc407"
+      },
+      "forgery": {
+        "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/forgery/2026-08-25__15-24-52/forgery__AxJ546z/verifier/network.json",
+        "sha256": "sha256:9cd1b2256c82d76be6e5f02a88122b0ac3d2a155dfa501a6aec1ce9f38c827a9"
+      },
+      "oracle": {
+        "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/oracle/2026-08-25__15-22-53/fast-deep-equal__SLm5fPH/verifier/network.json",
+        "sha256": "sha256:a3b6e9b28260ef279f313bb2a3d4b189a7caae24a936f0870041212cb8cfc407"
+      },
+      "stub": {
+        "path": ".nl2repo/runs/fast-deep-equal-network-proof-20260825T071552Z/final/jobs/stub/2026-08-25__15-24-10/stub__5Wmj8JY/verifier/network.json",
+        "sha256": "sha256:a3b6e9b28260ef279f313bb2a3d4b189a7caae24a936f0870041212cb8cfc407"
+      }
+    }
   },
   "oracle": {
+    "collected": 20,
+    "expected_total": 20,
     "passed": 20,
-    "reward": 1.0,
-    "total": 20
+    "reward": 1.0
   },
   "production_evidence": {
     "path": "catalog/sources/fast-deep-equal/production-evidence.json",
-    "sha256": "sha256:983fd754bdd198084545b3fe64219a4b5c4171cdacdff0d8d6c6d5ba78cefcf1"
+    "sha256": "sha256:6f17974eb4ab439d44703b4173b187577820ca6f12ae61bd475929f6c8417248"
   },
   "schema_version": "1.0",
   "status": "controls-passed",
   "stub": {
+    "collected": 20,
+    "expected_total": 20,
     "passed": 0,
-    "reward": 0.0,
-    "total": 20
+    "reward": 0.0
   },
   "task_id": "fast-deep-equal"
 }

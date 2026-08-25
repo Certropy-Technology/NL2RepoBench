@@ -79,7 +79,7 @@ collection_mismatch = "fail"
 [lifecycle]
 status = "controls-passed"
 owner = "integrator"
-reason = "Official Harbor Oracle passed 36/36 with reward 1.0; empty, stub, and forgery controls were valid and bounded below 0.20, and an independent Docker network-none probe confirmed no public egress. Review and pilot remain publication-stage work."
+reason = "Fresh Node 24 production revalidation passed: Oracle 36/36 reward 1.0; empty reward 0.0; stub and forgery each 2/36 reward 0.05555555555555555; every verifier emitted expected_total=36 and a fresh network.json with public_network_available=false. Review and pilot remain publication-stage work."
 
 [oracle_bundle]
 digest = "sha256:e448c9fec7a1a8809a6ec6dda68be55673e54cca44f391a770b6beceaa8558d0"

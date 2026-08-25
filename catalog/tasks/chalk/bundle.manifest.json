@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:a5b8f950fe6dc911e36b1f0e7ae6af9867b927746b7b4a2cb01b442702797b86",
+  "canonical_manifest_digest": "sha256:43478c788fe16c59db4ff0c0d61c65edd375462073837f00c1e540f0daa95cd2",
   "files": [
     {
       "path": "README.md",
@@ -28,7 +28,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "f79dd34faca6e70f4fefbbb571371c800102a55929f9b67b97f2e0caa72a4675",
+      "sha256": "acbce09ea0eb4e5c15ba04b263bcf6d73b2bed7a0f01963ea74d43fc3b77482b",
       "size_bytes": 1299
     },
     {
@@ -40,6 +40,11 @@
       "path": "tests/command-plan.json",
       "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
       "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "b4fa3825d6e42b039a8d8c617e3edc16f3bc53006a291ec9a2e244dcadcad6b1",
+      "size_bytes": 388
     },
     {
       "path": "tests/dependencies/package-lock.json",
@@ -82,6 +87,11 @@
       "size_bytes": 2373
     },
     {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
       "path": "tests/runtime/node/run_tests.mjs",
       "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
       "size_bytes": 3607
@@ -98,13 +108,13 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "0dbd56e564d38d351c751f88c1b95393c902397c6822d36007abe3a8179ac2c2",
-      "size_bytes": 2255
+      "sha256": "c887a51680b4fc971e1cd83a02b3c19b403f02d2879558a5b4735038b9b51f75",
+      "size_bytes": 2959
     }
   ],
   "mode": "production",
   "schema_version": "2.0",
   "task_id": "chalk",
   "task_version": "2.0.0",
-  "toolchain_lock_digest": "sha256:4e222ed0c6365cf28523680f325940b8767744363f5c9cd3f1acf8ba77aa82b2"
+  "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
 }
