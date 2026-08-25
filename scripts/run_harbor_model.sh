@@ -17,6 +17,57 @@ LLM_RETRY_MIN_WAIT="${LLM_RETRY_MIN_WAIT:-8}"
 LLM_RETRY_MAX_WAIT="${LLM_RETRY_MAX_WAIT:-120}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)-${TASK_ID}}"
 RUN_ROOT="${RUN_ROOT:-.nl2repo/runs/model}"
+HARBOR_AGENT="${HARBOR_AGENT:-nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction}"
+
+case "$HARBOR_AGENT" in
+  nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction)
+    ;;
+  *)
+    echo "unsupported HARBOR_AGENT: $HARBOR_AGENT" >&2
+    exit 2
+    ;;
+esac
+
+provider_host="$({
+  python3 - "$LLM_BASE_URL" <<'PY'
+from ipaddress import ip_address
+from urllib.parse import urlsplit
+import re
+import sys
+
+value = sys.argv[1]
+parsed = urlsplit(value)
+if parsed.scheme.lower() != "https" or not parsed.hostname:
+    raise SystemExit("LLM_BASE_URL must be an HTTPS URL with a hostname")
+if parsed.username or parsed.password:
+    raise SystemExit("LLM_BASE_URL must not contain URL credentials")
+try:
+    parsed.port
+except ValueError as exc:
+    raise SystemExit("LLM_BASE_URL contains an invalid port") from exc
+
+host = parsed.hostname.rstrip(".").lower()
+try:
+    ip_address(host)
+except ValueError:
+    if not re.fullmatch(
+        r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"
+        r"(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+",
+        host,
+    ):
+        raise SystemExit(f"invalid LLM Provider hostname: {host}")
+for suffix in (
+    "github.com",
+    "gitlab.com",
+    "bitbucket.org",
+    "sourceforge.net",
+):
+    if host == suffix or host.endswith("." + suffix):
+        raise SystemExit(f"source-host LLM Provider hostname is forbidden: {host}")
+print(host)
+PY
+})"
+[[ -n "$provider_host" ]] || { echo "LLM Provider hostname is empty" >&2; exit 1; }
 
 if [[ -n "${HARBOR_TASK_PATH:-}" ]]; then
   task_path="$HARBOR_TASK_PATH"
@@ -77,6 +128,16 @@ fi
 if [[ -n "${LLM_ANTHROPIC_NATIVE_TOOLS:-}" ]]; then
   agent_env_args+=(--ae "LLM_ANTHROPIC_NATIVE_TOOLS=$LLM_ANTHROPIC_NATIVE_TOOLS")
 fi
+if [[ -n "${LLM_OPENHANDS_SECURITY_PROFILE:-}" ]]; then
+  agent_env_args+=(--ae "LLM_OPENHANDS_SECURITY_PROFILE=$LLM_OPENHANDS_SECURITY_PROFILE")
+fi
+if [[ -n "${LLM_STREAM:-}" ]]; then
+  [[ "$LLM_STREAM" == "0" || "$LLM_STREAM" == "1" ]] || {
+    echo "LLM_STREAM must be 0 or 1" >&2
+    exit 2
+  }
+  agent_env_args+=(--ae "LLM_STREAM=$LLM_STREAM")
+fi
 
 cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup
@@ -117,10 +178,11 @@ env PYTHONPATH=../src:${PYTHONPATH:-} \
   uv run --frozen python ../scripts/harbor_safe_entry.py run \
   -p "$harbor_task_path" \
   -e nl2repobench.harbor_docker:StdinSecretDockerEnvironment \
-  -a nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction \
+  -a "$HARBOR_AGENT" \
   -m "$MODEL" \
   --ak "reasoning_effort=$REASONING_EFFORT" \
   --ae "LLM_BASE_URL=$LLM_BASE_URL" \
+  --allow-agent-host "$provider_host" \
   "${agent_env_args[@]}" \
   --agent-timeout-multiplier "$agent_timeout_multiplier" \
   --agent-setup-timeout-multiplier "$AGENT_SETUP_TIMEOUT_MULTIPLIER" \

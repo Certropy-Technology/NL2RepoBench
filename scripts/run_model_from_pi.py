@@ -11,12 +11,43 @@ import stat
 import subprocess
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
-def provider_config(models_file: Path, provider: str, model_id: str) -> tuple[str, str, str]:
+def check_agent_network_policy(task_root: Path) -> None:
+    """Refuse to launch a new Harbor trial with public agent egress."""
+
+    checker = ROOT / "scripts/check_agent_network_policy.py"
+    completed = subprocess.run(
+        [
+            os.fspath(Path(os.sys.executable)),
+            os.fspath(checker),
+            "--task-root",
+            os.fspath(task_root),
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        detail = (completed.stdout or completed.stderr).strip()
+        raise SystemExit(
+            f"agent network policy rejected for {task_root}; "
+            f"repair task policy before starting a new Harbor trial: {detail}"
+        )
+
+
+def provider_config(
+    models_file: Path,
+    provider: str,
+    model_id: str,
+    *,
+    allow_unresolved_credential: bool = False,
+) -> tuple[str, str, str]:
     mode = stat.S_IMODE(models_file.stat().st_mode)
     if mode & 0o077:
         raise ValueError(f"Pi models file must not be group/world accessible: mode {mode:o}")
@@ -47,7 +78,7 @@ def provider_config(models_file: Path, provider: str, model_id: str) -> tuple[st
         if match is None:
             raise ValueError("Pi apiKey environment reference is malformed")
         api_key = os.environ.get(match.group(1), "")
-        if not api_key:
+        if not api_key and not allow_unresolved_credential:
             raise ValueError(f"Pi credential environment variable is empty: {match.group(1)}")
     return api, base_url, api_key
 
@@ -70,18 +101,56 @@ def normalize_harbor_model(api: str, harbor_model: str) -> str:
     return harbor_model
 
 
-def provider_runtime_env(api: str, model_id: str) -> dict[str, str]:
-    """Return protocol-specific runtime knobs without changing Pi config.
+def runtime_provider_config(
+    provider: str,
+    api: str,
+    base_url: str,
+    model_id: str,
+    harbor_model: str,
+) -> tuple[str, str, str]:
+    """Resolve the protocol/model endpoint used inside the Harbor container.
 
-    The relay's Anthropic ``thinking=enabled`` path can emit empty tool input
-    for Fable.  Fable's supported adaptive-thinking path preserves the tool
-    schema, so keep this workaround explicit and model-scoped.
+    The Fable relay exposes an OpenAI-compatible chat endpoint whose tool
+    argument stream is complete. Its Anthropic-compatible adapter can emit an
+    empty first tool-input block, so Fable intentionally follows the same
+    OpenAI-compatible path as the GPT runner.
     """
 
-    if api == "anthropic-messages" and model_id == "claude-fable-5":
+    if provider == "z-open-api-fabel5" and model_id == "claude-fable-5":
+        endpoint = base_url.rstrip("/")
+        if not endpoint.endswith("/v1"):
+            endpoint += "/v1"
+        return "openai-completions", endpoint, f"openai/{model_id}"
+    return api, base_url, normalize_harbor_model(api, harbor_model)
+
+
+def provider_hostname(base_url: str) -> str:
+    """Return the exact HTTPS hostname used for the run-scoped agent allowlist."""
+
+    parsed = urlsplit(base_url)
+    if parsed.scheme.lower() != "https" or not parsed.hostname:
+        raise ValueError("Pi provider requires an HTTPS URL with a hostname")
+    if parsed.username or parsed.password:
+        raise ValueError("Pi provider base URL must not contain URL credentials")
+    try:
+        _ = parsed.port
+    except ValueError as exc:
+        raise ValueError("Pi provider base URL contains an invalid port") from exc
+    return parsed.hostname.rstrip(".").lower()
+
+
+def provider_runtime_env(
+    api: str,
+    model_id: str,
+    provider: str | None = None,
+) -> dict[str, str]:
+    """Return the selected agent runtime without changing Pi config."""
+
+    if provider == "z-open-api-fabel5" and model_id == "claude-fable-5":
         return {
-            "LLM_ANTHROPIC_THINKING_MODE": "adaptive",
-            "LLM_ANTHROPIC_NATIVE_TOOLS": "0",
+            "HARBOR_AGENT": "nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction",
+            "LLM_OPENHANDS_SECURITY_PROFILE": "fable-relay-safe",
+            "LLM_STREAM": "1",
         }
     return {}
 
@@ -152,15 +221,23 @@ def main() -> int:
             raise SystemExit(f"Harbor task path must not be a symlink: {task_root}")
         if not (task_root / "task.toml").is_file():
             raise SystemExit(f"missing Harbor task: {task_root}")
+        policy_root = (
+            task_root.parent
+            if args.harbor_task_path is None and args.harbor_task_root is None
+            else task_root
+        )
+        check_agent_network_policy(policy_root)
     run_root = args.run_root if args.run_root.is_absolute() else ROOT / args.run_root
     lock_root = args.lock_root if args.lock_root.is_absolute() else ROOT / args.lock_root
     if run_root.exists():
         raise SystemExit(f"run root already exists: {run_root}")
 
-    api, base_url, configured_key = provider_config(
-        args.models_file, args.provider, args.model_id
+    configured_api, base_url, configured_key = provider_config(
+        args.models_file,
+        args.provider,
+        args.model_id,
+        allow_unresolved_credential=bool(args.credential_env),
     )
-    harbor_model = normalize_harbor_model(api, args.harbor_model)
     api_key = configured_key
     if args.credential_env:
         if not SAFE_NAME.fullmatch(args.credential_env):
@@ -172,12 +249,21 @@ def main() -> int:
         if not args.base_url.startswith("https://"):
             raise SystemExit("--base-url must use HTTPS")
         base_url = args.base_url
+    api, base_url, harbor_model = runtime_provider_config(
+        args.provider,
+        configured_api,
+        base_url,
+        args.model_id,
+        args.harbor_model,
+    )
+    provider_host = provider_hostname(base_url)
     environment = os.environ.copy()
     environment.update(
         {
             "TASKS": ",".join(task_names),
             "MODEL": harbor_model,
             "LLM_BASE_URL": base_url,
+            "LLM_PROVIDER_HOST": provider_host,
             "LLM_API_KEY": api_key,
             "RUN_ROOT": str(run_root),
             "HARBOR_TASK_PATH": str(args.harbor_task_path.resolve())
@@ -199,7 +285,9 @@ def main() -> int:
             "LLM_RETRY_MAX_WAIT": "120",
         }
     )
-    environment.update(provider_runtime_env(api, args.model_id))
+    environment.update(
+        provider_runtime_env(configured_api, args.model_id, args.provider)
+    )
     print(f"launch task={args.task} model={harbor_model} run_root={run_root}")
     completed = subprocess.run(
         [str(ROOT / "scripts/run_model_queue.sh")],
