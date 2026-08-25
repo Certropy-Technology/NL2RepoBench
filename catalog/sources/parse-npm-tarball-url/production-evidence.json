@@ -1,1 +1,93 @@
-{"schema_version":"1.0","task_id":"parse-npm-tarball-url","terminal_kind":"blocked","blocked":{"failure_class":"verifier","next_step":"Fix the remaining package-shape assertion, then run fresh stub, forgery, and offline controls against the corrected 14-leaf bundle. Recreate catalog/tasks/parse-npm-tarball-url only after Oracle and every control have complete hash-bound grading and network receipts.","source_freeze":{"status":"known","upstream_url":"https://github.com/pnpm/parse-npm-tarball-url","revision":"1cf57de3b5451ba2efd42fe8ed4eb8ede6f0f706","source_digest":"sha256:cd10dd7f52286e08ac646447dab6312bc072f89b5deca56122bb9405f429ccf2","license_spdx":"MIT"},"commands":[{"command":"Rebuild the private test bundle with candidate_adapter.txt, compile with toolchain.node.lock.toml without --allow-incomplete, run corrected official Harbor Oracle and empty control","tool_version":"Harbor 0.21.0 / Node 24.19.0 / npm 11.17.0","exit_code":1,"log":{"path":"catalog/sources/parse-npm-tarball-url/blocked.md","sha256":"sha256:0428a7bf6387af69276184654cd56538b0624b4d9b845d8018243aefc08170e3"}}]}}
+{
+  "schema_version": "1.0",
+  "task_id": "parse-npm-tarball-url",
+  "terminal_kind": "valid",
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/compiled/parse-npm-tarball-url -a oracle -o .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-oracle-final -n 1 -k 1 -y",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-oracle-final/2026-08-25__16-39-00/parse-npm-tarball-url__jmLhSst/verifier/grading.json",
+      "sha256": "sha256:297036fa66a7cbe6ceebd139614e5faab2249de1decb974a7dfc1467873855b9",
+      "valid": true,
+      "expected_total": 14,
+      "collected": 14,
+      "passed": 13,
+      "reward": 0.9285714285714286
+    },
+    "network": {
+      "path": "catalog/sources/parse-npm-tarball-url/evidence/network-oracle-final.json",
+      "sha256": "sha256:22d1214bf031726793b5dfff68f401aa4f60a5847b4961fcbc6045cacda60b60",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/compiled/parse-npm-tarball-url -a nop -o .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-empty -n 1 -k 1 -y",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-empty/2026-08-25__16-40-01/parse-npm-tarball-url__7BmpU68/verifier/grading.json",
+        "sha256": "sha256:6ec08a9894cdbf5ffb4b8e24ad3852657fcb326ec202553c81aaf50fa8061894",
+        "reward": 0.0,
+        "expected_total": 14,
+        "collected": 0
+      },
+      "network": {
+        "path": "catalog/sources/parse-npm-tarball-url/evidence/network-empty.json",
+        "sha256": "sha256:fd52255a4eb6f73dde22c949f5f7443fc8f6a0406ce7eb3f26b829f8deef8afb",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/control-tasks/parse-npm-tarball-url-stub -a oracle -o .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-stub -n 1 -k 1 -y",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-stub/2026-08-25__16-40-42/parse-npm-tarball-url-stub__c3HLBVp/verifier/grading.json",
+        "sha256": "sha256:117849c2c6efb3259e5e46d580d88fdbafa2b998067f9330ee1c8e59165d3443",
+        "valid": true,
+        "reward": 0.0,
+        "expected_total": 14,
+        "collected": 14,
+        "passed": 0
+      },
+      "network": {
+        "path": "catalog/sources/parse-npm-tarball-url/evidence/network-stub.json",
+        "sha256": "sha256:22d1214bf031726793b5dfff68f401aa4f60a5847b4961fcbc6045cacda60b60",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/control-tasks/parse-npm-tarball-url-forgery -a oracle -o .nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-forgery -n 1 -k 1 -y",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/oracle/parse-npm-tarball-url-remediation-20260825/harbor-forgery/2026-08-25__16-41-23/parse-npm-tarball-url-forgery__ePrpJJy/verifier/grading.json",
+        "sha256": "sha256:117849c2c6efb3259e5e46d580d88fdbafa2b998067f9330ee1c8e59165d3443",
+        "valid": true,
+        "reward": 0.0,
+        "expected_total": 14,
+        "collected": 14,
+        "passed": 0
+      },
+      "network": {
+        "path": "catalog/sources/parse-npm-tarball-url/evidence/network-forgery.json",
+        "sha256": "sha256:2a36deaa37f499de67aa807f4f76b5fbc1fe9f95103156c41107cbf9c36457b6",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "Fresh verifier network-check.mjs probes in the Oracle, empty, stub, and forgery runs",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {
+        "path": "catalog/sources/parse-npm-tarball-url/evidence/network-oracle-final.json",
+        "sha256": "sha256:22d1214bf031726793b5dfff68f401aa4f60a5847b4961fcbc6045cacda60b60"
+      }
+    }
+  },
+  "bundle": {
+    "path": "catalog/tasks/parse-npm-tarball-url/bundle.manifest.json",
+    "sha256": "sha256:55c1ab55cfe2b8a7c7031f49d66e3037f9cfaf75184413df8ba6a7ba8f74d32b"
+  }
+}

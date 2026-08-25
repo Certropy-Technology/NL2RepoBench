@@ -1,45 +1,60 @@
 schema_version = "1.0"
 task_id = "arguably"
-version = "0.1.0"
+version = "0.2.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "repository-generation"]
+tags = ["python", "cli", "argparse", "repository-generation", "pytest"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = 'https://github.com/treykeown/arguably'
-revision = '86648796c4a28fa59f6f059b673694929c7df534'
-license_spdx = 'MIT'
-source_digest = 'sha256:125938624742c388ef9130408a620769742b5388b5ce1a04d028751224f6650e'
+upstream_url = "https://github.com/treykeown/arguably"
+revision = "86648796c4a28fa59f6f059b673694929c7df534"
+license_spdx = "MIT"
+source_digest = "sha256:125938624742c388ef9130408a620769742b5388b5ce1a04d028751224f6650e"
 
 [environment]
 status = "known"
 python_version = "3.12"
 os_name = "debian-12"
-base_image = 'python:3.12-slim'
-base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "All candidate and verifier dependencies are installed during image build from a hash-locked package-index requirements file; run-time egress is disabled."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = [
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==9.1.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", size_bytes = 707, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 70
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors test"]
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/fixture"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:82d7d5fa8586372994b805b30433069c4b9a2e76095bb64fafc0ee7d486596c4", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:82d7d5fa8586372994b805b30433069c4b9a2e76095bb64fafc0ee7d486596c4", visibility = "private" }
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -49,9 +64,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the arguably package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
-agent_timeout_sec = 3600.0
+description = "Build the arguably command-line argument parsing library from an empty workspace."
+keywords = ["python", "cli", "argparse", "pytest", "separate-verifier", "no-network"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
 candidate_total_timeout_sec = 300.0
@@ -63,5 +78,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "blocked"
+reason = "Production compile is blocked because the registered private Oracle bundle does not contain the required solve.sh entrypoint. The 70-test denominator and subprocess verifier therefore remain unvalidated in Harbor. Rebuild the Oracle bundle from the frozen source with solve.sh at its root, update the artifact reference, compile without --allow-incomplete, and run Oracle plus controls before promotion."
+
+[oracle_bundle]
+digest = "sha256:01012df1d872f76ad260d17138c5e56062c9a1d347720318c9138a8ccaba6843"
+size_bytes = 532480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:01012df1d872f76ad260d17138c5e56062c9a1d347720318c9138a8ccaba6843"
+visibility = "private"

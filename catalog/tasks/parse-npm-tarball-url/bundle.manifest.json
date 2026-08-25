@@ -1,0 +1,185 @@
+{
+  "canonical_manifest_digest": "sha256:0e26a27319a6cf8bfb084ed184d5174f2fd847a0fb603dfdaba61d2cddb9f112",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "30df8466dbc170fe2b6f62dde267da29fee58b3d8932fb706c74752687e7f21c",
+      "size_bytes": 333
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "d5cede7ad1644a6e9c0f18ca30e3932317a0a08bdc4365df09ff4778b7f1ba45",
+      "size_bytes": 1204
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "4dd095caec92c165c1f802d6a7251b6fe4842f72b2620a16aa87e0b5264b70bf",
+      "size_bytes": 871
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "a259152bbde1a2d22c0c5f465b6ccd044bea5d79c62014bb04497cca66ec0a8b",
+      "size_bytes": 143
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "5024d94fa4ba3c1698572017e8f4b08d3d037d57b807a6c095ec260c2e9b1bed",
+      "size_bytes": 5254
+    },
+    {
+      "path": "solution/provenance.txt",
+      "sha256": "3bbc61ea1c0e8d7fa6ee4bce616fec2a5dc176c23a747ea7b5d8b41d6b59816b",
+      "size_bytes": 283
+    },
+    {
+      "path": "solution/runtime.tar",
+      "sha256": "7ff1ea2e1371c67677bcc089331fb96648c50e3f24157bb8fe7fd2daacfa1c1f",
+      "size_bytes": 2285
+    },
+    {
+      "path": "solution/runtime.tar.sha256",
+      "sha256": "b645f9692b4fb1f8ad0c4766678fc2666c5c8a8d1e4ae42df1aebca6c1874073",
+      "size_bytes": 78
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "95441f2f46851d5bdaf99943126501bcfce09d09ada7a1d6f0f6115ff8ece2dc",
+      "size_bytes": 878
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "cd10dd7f52286e08ac646447dab6312bc072f89b5deca56122bb9405f429ccf2",
+      "size_bytes": 51200
+    },
+    {
+      "path": "solution/source.tar.sha256",
+      "sha256": "7774a66671caf3b4a5ffd4945d84306b9f94a0f7ffcc3e74ebc50e871bae10ea",
+      "size_bytes": 77
+    },
+    {
+      "path": "task.toml",
+      "sha256": "ddfe2bd0bc2929a3c2704c19f1c60bd216983d163bebe40407b08cb6cc1cdc51",
+      "size_bytes": 1282
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "03fcf8fe16e45e9ff5a44658082af2ee4160024cc063d018825f2fa394160657",
+      "size_bytes": 451
+    },
+    {
+      "path": "tests/command-plan.json",
+      "sha256": "ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176
+    },
+    {
+      "path": "tests/dependencies/bundle.manifest.json",
+      "sha256": "849958d5f578a64c01d9e03c80a4e42fa449b121eb2e15fb778246b1fbc7a094",
+      "size_bytes": 1159
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/5b/16/dbfbad719dd13ef171d455b006b95dead821e9d4c652f7bb30889446c04ccd53841c7afec75b0fc6f1e58df7590893799fc4e5c5e7179d1670fdf2483586",
+      "sha256": "9884f50974d4156d035121b589ef7c8a93f51b2ec28fc1d37ec39ff42b5fa9c3",
+      "size_bytes": 101435
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/bc/52/82d8812d427561a53efc875629f30cf0adff0233e33328c1c62597c1b738593727111675ec1e4e84e53c4892432c80d4bb99d5f700607bc7640cd9d8b894",
+      "sha256": "09267ad08cfe300e6790c9b8dc3db079103b4700cc465a67779b15662fe9418c",
+      "size_bytes": 28442
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/content-v2/sha512/f4/4d/09da5b007e5f4b9df5789908f13c9d499e43db38322c4ce86b8c444693ceceeecf45dfe54fbbf6edff8367f2ce31efbe039c268b465767833d077925784c",
+      "sha256": "a7274fb7b650810977803c8a8267a389eeb1272bd11e567d05d58aa95aa6a2c9",
+      "size_bytes": 246069
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/45/0b/05bb0dae7e7004d1cfe6673820b5a4ef7d5f0c3822f39440183baee52ae2",
+      "sha256": "c5cc7214c3bcd81446a29bb216a152231540c640e9c57dd4fc5378a198860f80",
+      "size_bytes": 223
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/67/5f/28c12321d8b73cabed8e5f6d334222738f3757d989855c298742f545c38d",
+      "sha256": "5db0fb5d340e7c11eeaa1cb7bf591b9f7484ce38d734eaaebfa0df514c090ea5",
+      "size_bytes": 1455
+    },
+    {
+      "path": "tests/dependencies/npm-cache/_cacache/index-v5/d5/ed/c335f15c5e60271d167b8468ee446614a76a1bee37e0fcc08643dc5818a4",
+      "sha256": "de77d5db4f49c93da92569dae804ec066e8c711761dc6c45f5c4e18fe3a99c8e",
+      "size_bytes": 663
+    },
+    {
+      "path": "tests/dependencies/package-lock.json",
+      "sha256": "bd0cac9d9d4851fa3644b66e786adfcb1857751183e0b0e40a3e56cebf7f9040",
+      "size_bytes": 728
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/candidate_adapter.txt",
+      "sha256": "48b0dc7cf397478d57daa552055f3c8ed22d643101c20cebd9e09ee191678ba3",
+      "size_bytes": 5075
+    },
+    {
+      "path": "tests/private/contract.test.mjs",
+      "sha256": "38e847e0349ea00b327fe890c0d066bbd9cc18f5153a6eea8d0109a971e11660",
+      "size_bytes": 3365
+    },
+    {
+      "path": "tests/private/test_client.mjs",
+      "sha256": "ca5bb3a417c9af57a9e5e9290be5404309330110d74136b4e95f636a605eec21",
+      "size_bytes": 2322
+    },
+    {
+      "path": "tests/runtime/node/candidate_runner.mjs",
+      "sha256": "be6bbb8d7e8e28a6091751c2b629b3b020da6dd5bcf2fc2669ca5d6cc6239a9a",
+      "size_bytes": 3209
+    },
+    {
+      "path": "tests/runtime/node/copy_workspace.mjs",
+      "sha256": "f51501aba2e6f0930620e00dbffdd2f09594fec8cd0ee20e7abab76374d84fe8",
+      "size_bytes": 1361
+    },
+    {
+      "path": "tests/runtime/node/grade-report.mjs",
+      "sha256": "8184699c13df9dcf9ad102d78c56596da186177e6ee2270ee0d5933a1ba5edd7",
+      "size_bytes": 4308
+    },
+    {
+      "path": "tests/runtime/node/install_candidate.mjs",
+      "sha256": "886a021cb2b32fb9e2e32f5381dc3fdffe11a71b5f30aced9c4d9d569c4b1a78",
+      "size_bytes": 2373
+    },
+    {
+      "path": "tests/runtime/node/network-check.mjs",
+      "sha256": "407205fe22b989d2a7f05859f4b6e952dc974983e58c3eb6b3db4b5f5247b70a",
+      "size_bytes": 2723
+    },
+    {
+      "path": "tests/runtime/node/run_tests.mjs",
+      "sha256": "66147a28e304ddf74d5bbc48664ea219043e5d1152c5db5ebec0335b28345127",
+      "size_bytes": 3607
+    },
+    {
+      "path": "tests/runtime/node/validate-command-plan.mjs",
+      "sha256": "d38a9318143ae8d9fddd7ab0abfad0e4eee85c6844ed501511c5a2f3ef8f3822",
+      "size_bytes": 651
+    },
+    {
+      "path": "tests/runtime/node/validate-package.mjs",
+      "sha256": "6fd78682ba21345cd12373ae79869e05bb7314977b97914575e7d1fa65a6e4f9",
+      "size_bytes": 1951
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "b82d2c443eda27a7dd0d16cb9faaa751a3fd7772d0c11bf43340b11ab945aea2",
+      "size_bytes": 2959
+    }
+  ],
+  "mode": "production",
+  "schema_version": "2.0",
+  "task_id": "parse-npm-tarball-url",
+  "task_version": "2.0.0",
+  "toolchain_lock_digest": "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
+}

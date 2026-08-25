@@ -1,0 +1,17 @@
+Arguably production remediation (2026-08-25)
+
+Command:
+  uv run nl2repo harbor compile catalog/sources/arguably \
+    --output /tmp/arguably-parent \
+    --toolchain toolchain.lock.toml \
+    --artifact-root .nl2repo/artifacts \
+    --allow-private
+
+Result: exit code 1
+Failure: Harbor compile failed: Oracle bundle must contain solve.sh
+
+The source descriptor, frozen dependency lock, private verifier bundle, and
+70-item provisional denominator validate syntactically. The Oracle bundle must
+be rebuilt from the pinned source with solve.sh at its root before collection,
+Oracle, or controls can establish production validity. No generated runtime is
+retained. The pre-existing environment/docker-compose.yaml is preserved.
