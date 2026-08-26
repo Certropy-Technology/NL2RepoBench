@@ -1,386 +1,461 @@
 # NL2RepoBench Agent Guide
 
-本文件是仓库级执行协议，供需要解释 Benchmark、批量生产题目、验证题目或运行评测的 LLM/coding agent 使用。它不替代详细设计文档；遇到冲突时，按下面的权威顺序执行。
+本文件是仓库级执行协议。它约束出题、编译、验证、运行和提交行为；详细设计以
+`docs/` 和实际代码为准。遇到数字、状态或命令与旧报告不一致时，以当前 Git
+checkout、声明式 catalog 和已实现 CLI 为准，不以历史记忆或旧报告为准。
 
-## 1. 权威来源与仓库现状
+## 1. 权威来源与当前架构
 
-按以下顺序读取并核对：
+开始工作时按以下顺序核对：
 
-1. `AGENTS.md`：工作方式、门禁和汇报格式。
-2. `docs/task-authoring-guide.zh-CN.md`：出题原理、质量门禁、评分风险和 Harbor 迁移设计。
-3. `docs/engineering-roadmap.zh-CN.md`：目标架构、metadata schema、实施阶段和 legacy 退出计划。
-4. `docs/metadata-core.zh-CN.md`：现代 uv 技术栈、声明式 catalog、schema 和 Phase 1 CLI。
-5. `docs/phase2-harbor-verifier.zh-CN.md`：Harbor compiler、通用 grader、控制实验和真实题 blocker。
-6. `examples/harbor/ministats/`：Harbor `0.21.0`、task schema `1.4` 的历史 E2E 示例。
-7. `readme.md`：当前 OpenHands 批量运行入口和数据目录。
-8. 实际代码：`src/nl2repobench/` 优先；legacy 兼容代码包括 `main.py`、`test_data_service.py`、`openhands/openhands_app.py`、`openhands/post_processor.py`。
+1. 本文件，以及更具体目录中的 `AGENTS.md` 或 `CLAUDE.md`；
+2. `docs/task-authoring-guide.zh-CN.md`、`docs/engineering-roadmap.zh-CN.md`、
+   `docs/phase2-harbor-verifier.zh-CN.md` 和 `docs/network-policy.md`；
+3. `src/nl2repobench/`、`tests/`、`harbor-runner/` 和 `examples/harbor/ministats/`；
+4. 当前 `catalog/sources/`、`catalog/tasks/`、`catalog/datasets/` 和 reports。
 
-当前 checkout 有 104 道发布题，位于 `test_files/<task-id>/`，共声明 25,640 个测试。每题现有发布视图固定为：
-
-```text
-test_files/<task-id>/
-├── start.md
-├── test_case_count.txt
-├── test_commands.json
-└── test_files.json
-```
-
-不要把当前实现描述成 Harbor。当前默认 agent harness 是 OpenHands 0.56 CodeAct，run/eval harness 是本仓库的 Python、Docker 和 pytest 后处理代码。`examples/harbor/ministats` 是迁移示例，不代表 104 题已经完成 Harbor 转换。
-
-## 2. Benchmark 的固定解释
-
-NL2RepoBench 测量 LLM/coding agent 从一份自然语言规格和空工作区出发，生成完整、可安装、可运行代码仓库的能力。它是 0-to-1 repository generation，不是已有仓库修复、补函数或根据公开测试做 test-driven patch。
-
-一次可信评测必须同时固定：
-
-- 公开 instruction 的精确内容；
-- 上游仓库 revision、license 和测试版本；
-- OS、Python、依赖锁和镜像 digest；
-- agent framework、版本、工具、网络和预算；
-- 隐藏测试、collection 行为、固定分母和评分公式；
-- attempts、infra retry、timeout 和 termination reason。
-
-单题主指标是固定隐藏测试的 pass rate：
+当前的声明与生成边界是：
 
 ```text
-task_score = clamp(passed / frozen_total, 0, 1)
-dataset_score = mean(task_score for every valid task)
+catalog/sources/<task-id>/task.toml + instruction.md
+    -> canonical catalog manifest
+    -> language/package-manager compiler
+    -> catalog/tasks/<task-id>/ Harbor runtime
 ```
 
-数据集使用逐题宏平均，不能汇总所有 passed 后再除以所有测试数，否则测试多的项目会获得更高权重。环境、verifier 或基础设施失败必须单独标注，不能无条件当作模型得 0 分。
+- `catalog/sources/<task-id>/` 是人编辑的声明式 source。任务级 authoring truth、
+  API inventory、审计记录和小型 evidence 也放在这里。
+- `catalog/tasks/<task-id>/` 是 compiler 生成的、可由 Harbor 直接消费的 runtime
+  projection。有效 production task 的生成 runtime 必须可追溯并提交；blocked task
+  不得保留对应 runtime。
+- `catalog/sources/<task-id>/harbor/` 可以是 compiler 的 source asset 或 legacy
+  兼容输入。不能仅凭是否存在 `harbor/` 判断题目是否满足当前 production gate。
+- `test_files/`、`main.py`、`only_test.py` 和旧 OpenHands harness 仅是 legacy 兼容
+  路径，不是当前 catalog 或 Harbor production 的事实来源。
 
-论文复现、现有 104 题扩展和新版本数据集是三种不同声明。只要候选门槛、题目内容、网络、agent、环境或 metric contract 有变化，就使用新的 dataset/version 名称，不声称与论文结果直接等价。
-
-## 3. 先识别工作模式
-
-开始工作前明确属于哪种模式；不明确时先询问范围、候选来源、目标题数、输出格式和算力预算。
-
-- `explain`：只解释 Benchmark、架构、指标、局限和运行方式，不修改题目。
-- `author-one`：为一个固定 revision 创建完整 authoring truth、发布视图或 Harbor task。
-- `author-batch`：按本文件的状态机批量出题，必须维护逐题状态和失败原因。
-- `validate`：只运行静态校验、Oracle、负向控制、盲审或 parity 检查。
-- `run-benchmark`：运行已发布题，不在运行过程中改题。
-- `analyze-results`：汇总 reward、失败类型、成本和覆盖率，不混入 authoring 改动。
-
-不要在同一次正式 benchmark run 中边跑边修改 instruction、测试、镜像或分母。任何此类修改都使已产生结果失效，必须提升版本并从头重跑受影响的控制和 trials。
-
-只改变**获取方式**而不改变**内容**的维护不在此列：例如把 Oracle 的无校验 `git fetch` 换成固定 revision + 摘要校验（见 §9.1）。revision 不变、内容由摘要证明一致，因此已有结果不失效，也不需要提升版本。判据是内容能否被证明未变，而不是文件是否被编辑过。
-
-## 4. 批量出题总原则
-
-大规模出题采用“小批次、可重跑 stage、单题隔离、统一集成”的方式：
-
-1. 首批只做 5 到 10 题 pilot，覆盖 Easy、Medium、Hard 和不同项目形态。
-2. pilot 稳定后，每批建议 10 到 20 题；并发受 Docker、磁盘、API rate limit 和 reviewer 数量约束。
-3. 不同 task 可以并发；同一 task 的 source freeze、spec、tests 和 verifier 不允许多个 writer 并发修改。
-4. 并行 worker 只写各自 `catalog/sources/<task-id>/` 或独立 worktree。canonical manifest、共享索引、dataset manifest、`config.json` 和发布目录由 compiler/integrator 串行更新。
-5. 每个 stage 只消费上一阶段已版本化 artifact。失败后从最后一个可信 stage 恢复，不从头盲目重做。
-6. LLM 可起草规格和 traceability，但不能自行批准 license、Oracle、测试覆盖或最终发布门禁。
-
-推荐流水线：
-
-```text
-discover
-  -> freeze-source
-  -> build-ground-truth-image
-  -> collect-tests
-  -> extract-api-inventory
-  -> draft-spec
-  -> trace-tests-to-spec
-  -> build-task-package
-  -> oracle
-  -> negative-controls
-  -> blind-review
-  -> pilot
-  -> publish
-```
-
-## 5. 单题状态机与产物
-
-每题只能按下面状态向前推进。记录 `status`、`owner`、输入 hash、输出 hash、开始/结束时间、重试次数和失败分类。
-
-| 状态 | 必需输出 | 通过条件 |
-| --- | --- | --- |
-| `discovered` | 候选 manifest | revision 不可变，license 可接受，项目不与现有题重复 |
-| `frozen` | source lock、镜像定义、baseline logs | 冻结上游代码在最终环境稳定 collection，三次独立基线的 pass rate 均不低于 0.80 |
-| `inventoried` | API inventory、test plan | public API、CLI、fixtures、test-to-behavior 映射完整 |
-| `specified` | `instruction.md` | 只看规格可推导所有隐藏断言，不泄漏实现 |
-| `packaged` | private tests、verifier、发布视图/Harbor task | 隐藏资产与 agent 环境隔离 |
-| `oracle-passed` | Oracle reward、JUnit、日志 | 当前 Package campaign 发布前要求一次运行 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；保存失败集合与 Oracle ceiling。稳定性实验另建版本 |
-| `controls-passed` | empty/stub/forgery/offline 结果 | 无异常高分，verifier 不被候选篡改 |
-| `reviewed` | 两份 review 记录 | blind review 和 traceability review 均通过 |
-| `piloted` | 多 agent/model 结果 | 难度和失败归因合理，无系统性 spec/env/verifier 问题 |
-| `published` | version、content hash、dataset entry | 所有门禁完整，发布内容不可变 |
-
-Human 只编辑声明式 catalog；canonical manifest 是 compiler 的机器输出，`test_files/` 是 legacy projection：
-
-```text
-catalog/
-├── datasets/<dataset-id>/dataset.toml
-└── tasks/<task-id>/
-    ├── task.toml
-    └── instruction.md
-
-catalog source -> canonical manifest -> Harbor bundle / legacy projection
-```
-
-禁止人工修改 generated `manifest.json`、Harbor bundle 或 `test_files/` 来绕过 catalog。当前可用命令以 `uv run nl2repo --help` 为准；不要声称路线图中的未实现命令已经可用。
-
-网络策略也是声明式 catalog 的一部分，不是 Harbor 输出文件的手工开关。每个运行中的 task 在 `catalog/sources/<task-id>/task.toml` 的 `[environment.network_policy]` 声明 `mode`、依赖预置方式和 reference-source 禁止规则；compiler 将它投影为 Harbor 的 agent network mode 和精确 allowlist，并让 Harbor egress sidecar 管理 Agent 网络。Agent compose 不得显式声明 `network_mode`/`networks`，否则 run-scoped Provider/Oracle host 授权无法生效；separate verifier 仍使用 `network_mode: none`。canonical manifest 构建时 policy 覆盖 legacy `harbor.agent_network_mode`，因此 compiler 是 runtime policy 的唯一权威。迁移后的 flat `catalog/tasks/<task-id>/` 仍是生成的 runtime 视图，修复必须回到 source 或通过 integrator/compiler 重建。完整规则见 `docs/network-policy.md`。
-
-## 6. Candidate 与 Ground Truth 门禁
-
-候选 manifest 至少包含：`task_id`、`upstream_url`、完整 commit SHA、license、Python 版本、LOC、public API 数、test count、最近更新时间、difficulty 和 category。
-
-拒绝或暂停以下候选：
-
-- revision 是 branch、`latest` 或其他浮动引用；
-- license 不清楚或不允许所需分发方式；
-- 依赖真实付费账号、不可冻结服务、专用硬件或不确定远端数据；
-- 冻结源码在最终环境的三次独立基线中任一次 pass rate 低于 0.80，或 collection/失败集合不稳定；
-- 测试主要检查 lint、文档、元数据，不能代表核心行为；
-- 是既有题的 fork、改名包、兼容层或高度近似实现；
-- 隐藏断言依赖无法在公开规格中合法说明的信息。
-
-冻结时保存 commit、submodule、lockfile、build command、test command、stdout、stderr、JUnit、collected count、wall time 和 image digest。只允许修复环境，不允许修改功能源码来迎合测试。
-
-错误必须归入且只归入一个主类：
-
-- `source`：冻结上游实现自身失败；
-- `spec`：公开规格不足、矛盾或泄漏；
-- `environment`：OS/Python/依赖/构建不兼容；
-- `verifier`：collection、评分、隔离或 artifact 错误；
-- `model`：环境与题目有效，但 agent 未完成实现；
-- `infrastructure`：镜像拉取、磁盘、容器、API、机器故障。
-
-只有 `infrastructure` 可在不改变 trial 身份的前提下自动重试。其他类别先修题或接受模型失败，并保留审计记录。
-
-## 7. 规格撰写协议
-
-公开规格统一包含：
-
-1. `Project Description`：目标、用户和边界；
-2. `Supports`：Python、依赖、安装、目录和入口要求；
-3. `API Usage Guide`：逐个 public API/CLI 的行为契约；
-4. `Implementation Notes`：跨模块约束和少量可验证示例，不给算法答案。
-
-每个 API 条目至少写清 import path、完整 signature、输入域、返回类型与形状、状态/副作用、顺序与确定性、异常契约、普通示例和必要的边界示例。
-
-规格审核采用双向 traceability：
-
-- 每个隐藏 assertion 都能映射到公开行为；
-- 每个核心公开承诺至少有一个测试覆盖；
-- packaging、re-export、CLI entry point、Unicode、空输入、错误输入和状态变化不能因只提取 AST 而遗漏。
-
-禁止复制函数体、内部 helper、上游测试断言、完整算法或大段源码。也禁止只写“实现一个类似 X 的库”却在隐藏测试中要求未公开的精确行为。标准库模块不得列为 PyPI runtime dependency。
-
-## 8. Verifier 与评分协议
-
-优先保留冻结 revision 的原始上游断言与行为覆盖，但 Harbor production verifier 不得让 root/trusted pytest 直接 import candidate。需要把上游测试适配为 `candidate_client` 的 subprocess contract；无法适配的题保持 `blocked`，不能退回 candidate 与 report writer 同进程。Verifier 必须：
-
-- 使用固定、自动 collection 得到的 `frozen_total`；
-- 生成 JUnit/JSON 等结构化结果，不依赖 pytest 控制台正则；
-- 检查每条 setup/test 命令退出码和 collection error；
-- 由 verifier 自己写 `/logs/verifier/reward.json`；
-- 默认断网运行；Python verifier 依赖只允许在 Docker build 阶段从 package index
-  按 hash lock 联网安装，禁止把 wheelhouse vendor 到 task 或使用 `--no-index`；
-- 看不到 agent 写入的伪造 reward，并防止隐藏测试被覆盖；
-- 把安装失败、JUnit 缺失和 collection error 记录到 grading details。
-
-当前旧 harness 的 `start_app()` 和 `only_test.py` 把 raw `passed` 写入 `score`。在该代码修复前，结果分析必须读取 `post_process_result.pytest_results.success_rate`，不能跨题比较 `score`。旧 harness 还使用 pytest 文本正则和人工分母，因此正式新数据集优先采用结构化 verifier，并明确声明与旧结果的差异。
-
-每题最低控制集：
-
-```text
-Oracle/upstream implementation -> >= 0.80（一次运行，collection 与固定分母一致）
-empty workspace                -> near 0
-packaging + stub functions     -> low score
-forged test/reward files       -> cannot affect grading
-offline verifier               -> completes successfully
-network policy lint            -> 0 error（uv run nl2repo task lint-network）
-```
-
-网络策略是静态门禁，不需要跑容器：`uv run nl2repo task lint-network` 检查每题是否声明了显式 `[environment.network_policy]`、allowlist 是否只含精确 registry/provider hostname、Oracle 取源码是否有摘要校验，以及公开 instruction 是否泄漏了可取回上游源码的 endpoint。详见 §9.1。
-
-当前 Package campaign contract v2 使用一次 Oracle gate：Oracle `valid=false` 或 reward 低于 0.80 时，依次检查 environment、artifact 路径、安装、collection、固定分母和 reward 输出。一次 Oracle 结果不证明跨运行稳定性；需要稳定性研究时必须另建实验版本，不能把 v2 结果与历史三次 Oracle 结果直接合并。不得通过删除真实功能断言来跨过 0.80 门槛，并保存 passed/total、原因和 Oracle ceiling。
-
-## 9. Harbor 任务协议
-
-生产题优先使用 separate verifier。参考 `examples/harbor/ministats/`，但用冻结真实项目和上游测试替换示例内容。
-
-标准布局：
-
-```text
-<task>/
-├── instruction.md
-├── task.toml
-├── environment/Dockerfile
-├── solution/solve.sh
-└── tests/
-    ├── Dockerfile
-    ├── test.sh
-    ├── grade.py
-    └── <hidden tests>
-```
-
-`task.toml` 必须填写 task name/version、3 到 8 个 keywords、difficulty/category/tags、metric contract、expected count、agent/verifier timeout、资源、network mode、artifact 和 separate verifier。Python 依赖必须引用只含 `requirements.lock.txt` 的 `lock_artifact`；禁止 verifier dependency wheelhouse、`COPY dependencies`、`--no-index` 和 vendor 安装。Oracle、隐藏测试、judge prompt 和 grader dependency 不得进入 agent image。
-
-先检查 CLI 版本。该仓库示例要求 Harbor `0.21.0` 和 schema `1.4`；旧的 `0.15.0` CLI 不兼容。实际命令为：
+不要把当前 source 数量、valid 数量或 task 数量写死在脚本、报告或回答中。需要计数时
+使用 Git：
 
 ```bash
-harbor run -p examples/harbor/ministats -a oracle
-harbor run -p examples/harbor/ministats -a openhands -m '<provider>/<model>'
+git ls-files 'catalog/sources/*/task.toml' | wc -l
+git ls-files 'catalog/sources/*/task.toml' | sort
 ```
 
-本仓库 compiler/control 的固定入口由 `harbor-runner/uv.lock` 提供：
+`.pi-glla`、未跟踪目录和旧报告快照不计入 source 集合。若需要冻结输入，必须在所有
+相关 source 改动提交后重新运行 `scripts/freeze_harbor_production_input.py`，并让
+报告记录当前 HEAD、source 列表、revision、tree/content digest 和工作树状态。
 
-```bash
-uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle
+当前 runtime adapter 由 `HarborCompilerRegistry` 解析，不能在 CLI 或任务中猜测语言。
+已实现的 Python、Node/npm、Node/pnpm 和 Go/modules lane 必须使用各自声明的
+runtime/package-manager identity；未知组合必须 fail closed。Python bundle manifest
+使用 schema `1.0`，Node 使用 schema `2.0`；其他 adapter 的 schema 以对应 compiler
+和 lock 文件为准。
+
+## 2. 工作模式与不变量
+
+开始前先说明本次属于哪一种模式：
+
+- `author-one`：为一个固定 revision 形成 source、规格、测试和 verifier truth；
+- `author-batch`：小批次并发 authoring，维护逐题状态和失败原因；
+- `validate`：只做 source、compile、evidence、network 或 controls 校验；
+- `run-benchmark`：只运行已经冻结的任务，不在 run 中修改 instruction、测试、镜像
+  或分母；
+- `analyze-results`：只汇总已保存的结果、失败分类和资源数据；
+- `explain`：只解释系统，不修改 catalog。
+
+当前生产化维护默认不运行 model pilot、blind review、traceability review、OSS
+上传或 legacy harness 改造；只有用户明确要求时才进入这些阶段。不要把本轮 Oracle
+或 controls 结果描述成模型能力、跨版本 parity 或完整发布批准。
+
+固定不变量：
+
+- 一题只能有一个 writer；不同题可以并行，shared compiler、dataset manifest、
+  统一报告和发布索引由父 agent 串行集成。
+- worker 只能修改自己负责的 `catalog/sources/<task-id>/` 和必要的对应 generated
+  runtime；父 agent 复核 source、runtime、evidence、hash 和门禁后再提交。
+- 不修改与任务无关的用户 dirty worktree。不要使用 `git reset --hard`、
+  `git checkout --`、批量删除或 force-push。
+- 发生镜像、Docker、网络、API、磁盘或 Harbor 调度故障时，分类为
+  `infrastructure`，有限重试并保存原始失败；不能把它写成 model、source 或
+  verifier 失败。
+- 任何“通过”“可复现”“等价”“valid”声明都必须有实际命令、版本、路径和摘要
+  证据。工具未运行时不得填推测值。
+
+## 3. Lifecycle 与 task 终态
+
+声明式 lifecycle 可以使用：
+
+```text
+discovered -> frozen -> inventoried -> specified -> packaged
+           -> oracle-passed -> controls-passed -> reviewed -> piloted -> published
 ```
 
-新题先运行 Oracle，再运行 empty/nop 和 stub 控制，最后才运行真实 agent。不要仅因 Harbor 能执行就声称与旧 harness parity；必须在 Easy/Medium/Hard 的 5 到 10 题上比较 passed/total、setup errors、runtime、steps 和 termination reason。
+`blocked` 和 `excluded` 是带理由和证据的终态。`packaged`、`oracle-passed` 不是
+可发布终态；至少要有当前 runtime、Oracle、固定分母和 controls evidence 才能进入
+`controls-passed`。`published` 还需要 dataset/version、审批和不可变 content
+manifest；不要仅因 `controls-passed` 就声称已经发布。
 
-### 9.1 Oracle 取源码与网络的当前做法
+每题至少记录：task id、version、upstream URL、完整 commit SHA、license、source
+digest、runtime identity、Python/Node/Go 版本、OS/base image digest、依赖 lock、
+测试 collection、frozen denominator、命令、开始/结束时间、重试次数、exit code、
+失败分类和 artifact 路径。
 
-Oracle 是参考实现，它拿冻结源码是合法的；模型 agent 拿源码不合法。两者靠“题目元数据恒为断网 + 运行时授权”区分，不靠给题目放宽网络。
+阻塞题必须同时满足：
 
-隔离依据（`harbor/agents/oracle.py`）：`harbor/solution/` 只有 Oracle agent 会 `upload_dir`，而 agent image 的 build context 只有 `environment/`。所以参考实现不会进模型镜像。也因此不得把冻结源码烘进 agent image（见 §9 关于 Oracle 不进 agent image 的规定）。
+- source 的 `[lifecycle] status = "blocked"` 或 `excluded`；
+- 有真实 remediation，不能以“尚未处理”作为唯一理由；
+- 有 `catalog/sources/<id>/production-evidence.json`；
+- evidence 的 `blocked.failure_class`、`next_step`、`source_freeze` 和非空
+  `commands[].log` 均存在，日志 path 是仓库相对路径且 SHA-256 与实际 bytes 一致；
+- `catalog/tasks/<id>/` 不存在；
+- 没有 Oracle、controls 或 reward 时不得伪造结果。blocked source 可以使用
+  `expected_total = 0` 或 `unknown`，但这不构成 valid task 的分母。
 
-每题 `task.toml` 固定声明断网：
+blocked 的 source authority 必须明确：`source_freeze.status` 使用 `known`，或
+使用 `failed` 并给出真实 reason；不能用 `unknown` 掩盖没有核实的 source authority。
+
+## 4. Source、规格与冻结
+
+冻结候选时至少核对：
+
+- upstream URL 和不可变完整 commit SHA；
+- license SPDX、license 文件 bytes 和 source archive/tree digest；
+- package metadata、public API、CLI/entry point、fixtures 和依赖闭包；
+- Python/Node/Go toolchain、OS、base image digest 和 build command；
+- source-only test collection、固定分母和 collection error；
+- 隐藏测试到公开行为的双向 traceability。
+
+公开 `instruction.md` 至少包含：
+
+```text
+Project Description
+Supports
+API Usage Guide
+Implementation Notes
+```
+
+每个核心 API 要说明 import path、完整 signature、输入域、返回类型/形状、顺序与
+确定性、状态或副作用、异常契约、普通示例和必要边界。不要复制实现函数体、完整
+算法、上游测试断言、private tests 或能直接取回参考源码的 endpoint。标准库模块
+不能作为 PyPI runtime dependency。
+
+如果上游行为涉及 callback、native object、filesystem、TTY、随机数、locale、
+时间、multiprocessing、CLI 或不可 JSON 序列化状态，必须在 source inventory 和
+verifier 设计中明确 adapter 边界。没有可靠 child-side adapter 时保持 blocked，
+不能让 trusted/root pytest 直接 import candidate 来绕过边界。
+
+## 5. Dependencies 与网络策略
+
+每个可运行 task 必须在 source 的 `task.toml` 显式声明：
 
 ```toml
 [environment.network_policy]
-mode = "no-network"              # 只允许 no-network 或 allowlist，public 不可表达
+mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
+reason = "Dependencies are installed during the Docker build phase."
 ```
 
-第三方依赖在 **Docker build 阶段**安装（build 阶段有网络）。Python compiler 将 hash-locked
-`lock_artifact` 写入两个 Docker build context，并生成 `pip install --require-hashes`；Verifier
-绝不复制或读取 wheelhouse，也不使用 `--no-index`。因此 run 阶段不需要 registry。Node/npm
-lane 仍由独立 v2 compiler 管理其 npm lock/cache contract。`allowlist` 只收精确 hostname，
-用于确实无法预装的情况；`ALLOWED_REGISTRY_HOSTS` 命中会被 lint 提示优先改为预装。
+规则如下：
 
-LLM provider host 是**运行时**配置，不写进题目：Harbor `trial/network_policy.py:merge_extra_allowlists` 会把 `agent.extra_allowed_hosts` 合并进 agent 阶段策略。注意题目若声明 `public`，运行时注入会被忽略并告警。
+- `mode` 只允许 `no-network` 或 `allowlist`；`public` 不可表达；
+- allowlist 只能包含精确 hostname，不能包含通配符、URL、端口、GitHub/raw GitHub、
+  code host 或 generic mirror；registry allowlist 会产生 lint warning；
+- build 阶段可以从 package index 联网安装 hash-locked dependency lock；run 阶段
+  的 agent 和 verifier 默认断网；
+- Python verifier 只接受私有、hash-locked `requirements.lock.txt` 的
+  `lock_artifact`。禁止 wheelhouse、vendor、`.whl`、`tests/dependencies/`、
+  `COPY dependencies`、`--no-index` 和 `--find-links`；
+- Node/npm、Node/pnpm 和 Go/modules 使用对应的 lock/cache/module contract，不把
+  Python 规则机械套到其他 lane；
+- agent compose 不得自行声明 `network_mode` 或 `networks`，否则 Harbor egress
+  sidecar 和 run-scoped host authorization 可能失效；separate verifier 保留显式
+  `network_mode: none`；
+- LLM provider host 是运行时参数，不写入每个 task 的 metadata；需要时通过 Harbor
+  `agent.extra_allowed_hosts` 或等价运行时配置注入。
 
-`solve.sh` 必须固定 revision 并校验内容，不允许无校验 fetch。标准形态（`scripts/pin_oracle_source.py` 生成）：
+静态网络门禁：
 
 ```bash
-git -C "$SOURCE_DIR" fetch -q --depth 1 origin "$UPSTREAM_REVISION"
-resolved_revision="$(git -C "$SOURCE_DIR" rev-parse HEAD)"   # 断言等于 UPSTREAM_REVISION
-git -C "$SOURCE_DIR" archive --format=tar "$UPSTREAM_REVISION" > "$SOURCE_ARCHIVE"
-printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check --strict
+uv run nl2repo task lint-network
+uv run nl2repo task lint-network --include-generated
 ```
 
-摘要直接复用该题 `[source].source_digest`（等于 `sha256(git archive <revision>)`），不需要新增 artifact。
+正式生产 gate 要求 error 为零。warning 必须在报告中解释，尤其是 dependency closure、
+registry allowlist 和 Oracle host authorization。
 
-例外：上游在 `.gitattributes` 标了 `export-subst` 且用 git 推导版本（hatch-vcs / setuptools-scm）时，按 commit SHA 浅取会同时坏两件事——`git archive` 替换 `describe-name`/`ref-names` 导致摘要不可复现，且无 tag 使版本解析成 `0.0`（`structlog` 的上游 `tests/test_packaging.py` 会因此失败）。这类题改为取 **tag ref**、仍断言 commit SHA，并且**不做 checkout**（`checkout --detach` 会把 `HEAD` 写进 `ref-names` 从而改变 tar）。已知例外记录在 `scripts/pin_oracle_source.py` 的 `_TAG_REFS`。
+### Oracle 源码获取
 
-运行 Oracle 时显式授权源码 host；跑模型时不授权：
+Oracle 可以从 `solution/` 上传中取得冻结参考源码；模型 agent 不得取得该源码，也
+不得获得 Oracle 专用 source host authorization。Oracle 的 `solve.sh` 必须：
+
+1. fetch 固定 revision 或文档化的固定 tag ref；
+2. 断言解析出的 commit 等于 source revision；
+3. 生成 archive 并用 source digest 严格校验；
+4. 在 Oracle run 时显式授权所需的精确 host。
+
+`.gitattributes` 的 `export-subst` 且版本由 git 推导的项目可以使用 tag-ref 例外：
+仍断言 commit，不做 `checkout --detach`，避免改变 archive bytes。除该例外外不得
+使用无校验的 `git fetch` 或 floating branch。
+
+## 6. Compiler 与 Harbor runtime
+
+先用当前 CLI 检查命令和版本：
 
 ```bash
-# Oracle：授权取源码
-uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle \
-  --allow-agent-hosts codeload.github.com
-
-# 模型：不授权，源码不可达
-uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a openhands -m '<provider>/<model>'
+uv run nl2repo --help
+uv run --frozen --project harbor-runner harbor --version
 ```
 
-静态检查全仓库网络策略（有 error 时退出码非 0）：
+source 校验：
 
 ```bash
-uv run nl2repo task lint-network [--strict]
+uv run nl2repo task validate-source catalog/sources/<task-id>
 ```
 
-`oracle-source-unverified` 表示某题 Oracle 还在无校验取源码；`oracle-requires-host-authorization` 是提示该题 Oracle 需要上面的授权参数，属预期状态而非缺陷。
-
-维护 Oracle 执行路径（例如把无校验 fetch 换成 pin + 校验）不改变题目语义：revision 不变，内容由摘要证明一致。这类改动不使已有结果失效，也不需要提升版本。真正改变 instruction、隐藏测试、镜像或分母时才按 §3 处理。
-
-## 10. 旧 OpenHands Harness 的运行协议
-
-旧 harness 从 `config.json` 读取模型节点、`proNameList` 和 `max_pool_size`，然后执行：
+正式编译必须使用当前 source、锁定 toolchain、本地 artifact store 和 private read
+授权，并且不得使用 `--allow-incomplete`：
 
 ```bash
-python main.py
+uv run nl2repo harbor compile catalog/sources/<task-id> \
+  --output catalog/tasks \
+  --toolchain toolchain.lock.toml \
+  --artifact-root .nl2repo/artifacts \
+  --allow-private
 ```
 
-运行前：
+`--allow-incomplete` 仅用于公开 synthetic/development fixture，不能用于 production
+evidence。compiler 失败时先区分 source、artifact、environment、verifier 和
+infrastructure 根因，不要手改 generated runtime 过门禁。
 
-- 确认 Docker daemon、OpenHands app/runtime 镜像和每题测试镜像存在；
-- 确认 `proNameList` 与 `test_files/` 目录名完全一致；
-- 根据 CPU、内存、磁盘和模型 rate limit 设置并发，不机械使用 20；
-- 不在日志、提交或汇报中暴露 `sk`；
-- 为多机运行准备共享文件系统或显式 artifact 传输。
+compiler 生成的 bundle 是 closed-world projection：bundle manifest 中不应有未声明
+的 extra file、private run tree、用户 compose 或旧 runtime 文件。生成后至少检查：
 
-`only_test.py` 当前硬编码 task UUID 和项目名，不是通用批量入口。不要直接用它批量跑题，除非先把参数化改造作为独立、经过测试的代码变更。
+- bundle manifest 和 runtime identity；
+- task.toml、instruction.md、environment、solution、tests、controls 的完整性；
+- verifier 与 candidate 的隔离；
+- dependency lock、network policy 和 source digest；
+- runtime 与 source evidence 的 bundle digest 一致。
 
-运行产物位于 `workspaces/` 和 `result/`。保留 workspace zip、agent trajectory、post-process log、每条命令结果和 pytest details。当前 app 容器 `auto_remove=True` 后代码假定 exit code 为 0，因此分析时不能把记录的 0 当作可靠的 agent 正常退出证据。
+控制 bundle 通过统一 registry 生成：
 
-## 11. 批量执行与恢复
+```bash
+uv run nl2repo harbor prepare-control catalog/tasks/<task-id> stub \
+  --output .nl2repo/controls/<task-id>
+uv run nl2repo harbor prepare-control catalog/tasks/<task-id> forgery \
+  --output .nl2repo/controls/<task-id>
+```
 
-批量 orchestration 必须满足：
+不要手工编辑 `catalog/tasks/<id>/bundle.manifest.json`、Dockerfile、verifier runtime
+或 controls 来修复 source 问题。改回 `catalog/sources/<id>/`，再重新编译。
 
-- 先输出本批 task list、版本、模型、attempt 数、并发、预计成本和停止条件；
-- 任务 ID 唯一，重复运行使用新的 run/trial ID，不覆盖旧结果；
-- 同一 task 的多个 attempts 相互隔离；
-- 每完成一题立即持久化结果，不等整批结束；
-- 失败记录 stage、分类、命令、exit code 和 artifact 路径；
-- infra retry 有上限和退避，不能无限循环；
-- 收到停止信号后不再启动新任务，允许在途任务收尾并保存状态；
-- 恢复时只重跑未完成或纯 infra 失败的 trials。
+## 7. Verifier、评分与 controls
 
-并发 worker 不得共同编辑 `config.json`。需要不同模型或批次时，为每次运行生成独立配置或串行切换，并保存脱敏后的 resolved config。
+production verifier 必须是 separate verifier。trusted/root 进程不能直接把 candidate
+放入自身 `sys.path`，不能直接 import candidate，也不能让 candidate 写 trusted
+reports。candidate API、CLI 和 entry point 通过 UID 隔离的 subprocess/JSON contract
+调用；复杂对象必须使用题目专用 child-side adapter。
 
-## 12. 结果分析与讲解
+Verifier 必须：
 
-报告至少包含四层：
+- 自动 collection 并使用正数、冻结的 `frozen_total`；
+- 生成结构化 collection、JUnit、grading 和 numeric reward；
+- 检查 setup/test exit code、collection error、JUnit leaf 数量和固定分母；
+- 使用固定 metric contract，不能依赖 console 正则或手工分母；
+- 由 verifier 自己写 reward，不信任 candidate 写入的 reward/JUnit/collection；
+- 在 verifier 内生成并校验 `network.json`，公网和 numeric IP 探测都 fail closed；
+- 对 workspace、路径、symlink、special file、进程、FD、CPU、地址空间、累计 wall
+  time 和 report size 设置有界约束，并清理 candidate process group；
+- 把安装失败、JUnit 缺失、collection mismatch、verifier internal error 和网络
+  暴露写入 grading details。
 
-1. **Dataset**：名称、版本、题数、难度分布、有效题数、排除题及原因；
-2. **Experiment**：agent/model/version、网络、预算、attempts、并发和环境 digest；
-3. **Scores**：逐题 passed/total/pass rate、宏平均、按难度/类别分组；
-4. **Reliability**：model/spec/environment/verifier/infra 失败数，timeout/crash 数，trajectory/token/cost 覆盖率。
-
-不要：
-
-- 用 raw passed count 排名不同题；
-- 把缺失 token/cost 当作 0；
-- 把 infra failure 解释成模型不会做；
-- 只报总均分而隐藏有效题数和 excluded tasks；
-- 用一次随机 attempt 推断稳定能力；
-- 在未做 parity validation 时把 Harbor 与论文/旧 harness 分数直接合并。
-
-推荐批次汇报表：
+当前 Package campaign 的 Oracle gate 是一次运行：
 
 ```text
-task_id | version | status | oracle | empty | pilot mean | failure class | artifacts
+valid = true
+collected = frozen_total
+reward = passed / frozen_total >= 0.80
 ```
 
-推荐 benchmark 结论顺序：先说明测量对象和实验约束，再给总体与分组结果，然后解释失败构成、成本/覆盖率和不可比较因素，最后列出下一步。把“模型失败”和“题/系统无效”明确分开。
+低于 `1.0` 时保存失败集合、原因和 Oracle ceiling。多次稳定性实验必须作为独立
+experiment/version，不能与一次 Oracle gate 或历史版本直接合并。空 workspace 只允许
+以 `candidate-installation-failed` 的安装失败例外得到 `0/0`；stub/forgery 必须收集
+冻结分母，不能用安装失败掩盖 verifier 缺陷。
 
-## 13. LLM 工作纪律
+最低 controls：
 
-- 开始前读取相关文档和一个最接近的完整样例，不凭记忆发明 Harbor schema 或仓库命令。
-- 复杂批次先建立任务清单，始终只有一个共享集成任务处于写入状态。
-- 可以让子 agent 并行分析不同候选，但要求结构化交付；主 agent 负责合并、验证和最终决定。
-- 不修改与当前 task 无关的用户变更，不重置 dirty worktree。
-- 不提交 secret、私有测试内容到公开位置，也不在公开 instruction 中透露 grader。
-- 生成的 JSON/TOML/YAML 必须用解析器校验；shell 使用 `set -euo pipefail` 或显式处理所有退出码。
-- 任何“已通过”“可复现”“等价”声明都必须附实际命令、版本和 artifact 证据。
-- 工具或版本不可用时明确阻塞原因；不要伪造测试结果或把未运行写成已验证。
+```text
+Oracle/reference implementation -> valid=true, fixed denominator, reward >= 0.80
+empty workspace                -> near zero; only allowed empty install exception
+stub                           -> frozen denominator, low score
+forgery                        -> cannot change verifier-owned grading/reward
+offline verifier               -> completes with public_network_available=false
+network policy lint            -> zero errors
+```
 
-## 14. Definition of Done
+分数定义：
 
-单题完成必须同时满足：
+```text
+task_score    = clamp(passed / frozen_total, 0, 1)
+dataset_score = mean(task_score for every valid task)
+```
 
-- source lock、license、依赖和 image digest 完整；
+不同题不能按 raw passed count 排名；invalid verifier、环境和 infrastructure 结果
+不能无条件解释成模型得零分。当前 legacy harness 的 `score` 字段不作为跨题主指标，
+应读取结构化 `grading`/`pytest_results` evidence。
+
+## 8. Canonical evidence 与 artifact hygiene
+
+valid task 的 `catalog/sources/<id>/production-evidence.json` 顶层应包含：
+
+- `schema_version`、`task_id`、`terminal_kind = "valid"`；
+- 当前 generated bundle manifest digest；
+- `oracle`：Harbor 版本、命令、exit code、valid、grading/network 路径和摘要；
+- `controls.empty/stub/forgery/offline`：每项命令、exit code、grading/network 路径
+  和摘要；
+- 不声称未运行的 gates，不复用旧 bundle 的 receipt。
+
+blocked evidence 顶层使用 `terminal_kind = "blocked"`，并绑定真实 source-local
+remediation log。验证方式：
+
+```bash
+python3 scripts/validate_harbor_evidence.py --report reports/<gate>.json --kind oracle
+python3 scripts/validate_harbor_evidence.py --report reports/<gate>.json --kind controls
+python3 scripts/validate_harbor_evidence.py --report reports/<gate>.json --kind blocked
+```
+
+完整 production catalog gate 需要使用当前冻结 input 和当前 source/task roots 运行
+`scripts/validate_harbor_production_catalog.py`；参数以 `--help` 为准，不能凭旧报告
+猜测 `--expected-sources`。统一 campaign quality 使用
+`scripts/verify_harbor_campaign_quality.py`，输入必须是当前 gate report。
+
+目录约束：
+
+- private dependency、verifier、Oracle bytes 存在 `.nl2repo/artifacts` 的标准 CAS，
+  不放入公开 source 或 agent image；
+- 完整 Harbor run tree 放 `.nl2repo/runs`，不提交到 source；source 只保留小型、
+  脱敏、hash-bound evidence；
+- 用户原有 compose 或 generated runtime 若需保护，先按原 bytes/hash 迁移到
+  `.nl2repo/preserved-worktree/`，不能丢弃或覆盖；
+- 不把 secret、API key、private test、judge prompt、未脱敏 trajectory 或 provider
+  response 写入 Git、日志、提交信息或公开 instruction。
+
+## 9. 运行 Harbor 与 benchmark
+
+官方 Harbor 统一入口：
+
+```bash
+uv run --frozen --project harbor-runner harbor run \
+  -p catalog/tasks/<task-id> \
+  -a oracle \
+  --job-name <unique-name> \
+  -o .nl2repo/runs/<run-id> \
+  --n-concurrent 1 \
+  --yes
+```
+
+Oracle 需要源码时，只在 Oracle run 显式加入精确 source host authorization；模型 run
+不得继承该授权。每个 retry 使用新的 run/trial root，不能追加旧 job 或覆盖旧结果。
+
+正式批次开始前记录 task list、dataset/version、source input digest、agent/model、
+attempt 数、并发、预算、镜像/toolchain digest、network policy、停止条件和 artifact
+目录。每完成一题立即保存 result；失败记录 stage、唯一 failure class、命令、exit
+code、reason 和 artifact 路径。
+
+benchmark 期间：
+
+- 不修改 instruction、hidden tests、verifier、image、denominator 或 network policy；
+- 只对纯 infrastructure failure 有界重试；
+- 收到停止信号后不启动新 trial，让在途 trial 保存结果；
+- 不把缺失 token/cost 当成 0；不把 timeout/crash 直接归为 model failure；
+- 不在同一份结果中混合不同 task version、runtime、source revision 或 metric contract。
+
+旧 OpenHands 批量入口只有在用户明确要求 legacy experiment 时使用。它不替代当前
+Harbor production verifier，不能用 `only_test.py` 作为通用批量入口，也不能根据旧
+`config.json`、`workspaces/` 或 `result/` 快照宣称当前 task 已通过 production gate。
+
+Docker 资源异常时，先停止启动新任务并记录影响范围。可以按用户约定清理未连接网络
+和无用缓存，例如：
+
+```bash
+docker network prune -f
+docker image prune -af
+docker builder prune -f
+docker volume prune -f
+```
+
+不要重启 Docker daemon，也不要删除其他 campaign 正在使用的容器、volume 或 lease。
+
+## 10. Git 与提交
+
+提交前只加入本题或本次明确授权的路径：
+
+```bash
+git diff --check
+git add -- catalog/sources/<task-id> catalog/tasks/<task-id>
+git commit -m "..." -- catalog/sources/<task-id> catalog/tasks/<task-id>
+```
+
+共享 compiler、脚本、测试和文档变更必须使用明确 pathspec 单独提交。提交前检查：
+
+- `git status --short` 中没有误暂存的 `pyproject.toml`、`jobs/`、`temp/`、用户 workflow
+  或其他 worker 文件；
+- generated task 与 source/evidence 的 digest 相符；
+- blocked task 没有 runtime；
+- JSON/TOML/YAML 可由 parser 读取；
+- `git diff --check` 通过。
+
+push 使用已配置的 `fork` remote 和当前分支，禁止 force-push。若远端领先，先 fetch
+并在干净的 integration worktree 合并、重跑受影响的 compiler/runtime/evidence gate，
+再推送；不要在大量用户 dirty change 上盲目 rebase 或 reset。
+
+## 11. 验证清单与汇报
+
+窄改动至少运行对应的 source validation、runtime/evidence gate 和 `git diff --check`。
+跨 compiler/verifier/network 改动应运行：
+
+```bash
+uv run pytest -q
+uv run ruff check src tests scripts
+uv run mypy src/nl2repobench
+uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py
+uv run nl2repo task lint-network --include-generated
+```
+
+命令必须使用当前 lock 和实际 checkout；coverage、网络、Docker 或依赖故障导致未运行
+时如实报告。
+
+汇报顺序：
+
+1. 当前 source/task input、版本、runtime 和 network 约束；
+2. 每题 status、Oracle passed/total/reward、controls、失败分类和 artifact；
+3. valid、blocked、excluded 和 intermediate 的动态统计；
+4. verifier/environment/infrastructure 风险和未解决 blocker；
+5. 运行过的命令、版本、commit 和测试结果。
+
+不要只报总均分，不要混合 invalid 与 model zero，不要把一次随机 attempt 当作稳定
+能力，也不要把 Harbor 结果描述成论文或旧 harness 的 parity，除非已经完成同版本、
+同环境、同 metric contract 的显式 parity validation。
+
+## 12. Definition of Done
+
+单题 production-valid 必须同时满足：
+
+- source revision、license、环境、依赖 lock、network policy 和 image/toolchain digest
+  完整；
 - instruction 与 hidden assertions 双向可追溯；
-- frozen total 自动生成并与实际 collection 一致；
-- Oracle 一次运行 `valid=true`、collection 与固定分母一致且 reward 不低于 0.80；低于 1.0 时保存失败集合、原因和 Oracle ceiling；
-- empty、stub、forgery 和 offline 控制通过；
-- 两名审核人完成 blind/spec traceability review；
-- pilot 没有未解决的 spec/environment/verifier 系统性问题；
-- task version、content hash、日志、JUnit、reward details 和 artifact manifest 可追踪；
-- README 或任务说明包含准确的运行命令和 verifier 维度。
+- frozen denominator 正数、自动 collection 与实际 collection 一致；
+- 当前 compiler 无 `--allow-incomplete` 生成 closed-world Harbor runtime；
+- 一次官方 Harbor Oracle `valid=true`、固定分母一致、reward `>= 0.80`；
+- empty、stub、forgery、offline controls 通过；
+- verifier 是 separate、candidate 不可篡改 trusted report；
+- canonical production evidence 绑定当前 bundle 和全部 receipt；
+- network lint 无 error，Python verifier 无 vendor/wheelhouse 违规；
+- 未声称未完成的 review、pilot、publish 或 parity。
 
-整批完成还要求：所有题达到终态；失败和排除项有原因；dataset manifest 不引用可变资源；宏平均只使用有效且 metric contract 一致的题；最终报告能复现本批使用的配置、版本和输入集合。
+单题 blocked 必须有真实 blocker、source-local remediation、canonical blocked evidence、
+可验证日志 hash，并且没有对应 `catalog/tasks/<id>` runtime。
+
+整批完成还要求：所有 source 达到明确终态或有排除原因，当前 frozen input 与 dataset
+manifest 不含可变资源，gate report 可复现，且所有动态统计均由当前 Git source 集合
+计算。
