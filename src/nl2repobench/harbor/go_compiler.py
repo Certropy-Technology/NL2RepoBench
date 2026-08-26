@@ -6,6 +6,7 @@ import hashlib
 import os
 import re
 import shutil
+import tempfile
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -13,15 +14,18 @@ from typing import Any
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler, DeclarativeTaskSource
+from nl2repobench.domain.models import ArtifactRef, TaskManifest
 from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
-from nl2repobench.storage.artifacts import LocalArtifactResolver
+from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 
+from .bundle_io import BundleLimits
 from .task_writer import (
     TaskWriterError,
     copy_python_verifier_runtime,
     copy_tree,
+    extract_private_bundle,
     write_file_manifest,
     write_instruction,
 )
@@ -138,33 +142,40 @@ class GoHarborCompiler:
         source = CatalogCompiler.load_task(source_dir)
         if not isinstance(source, DeclarativeTaskSource) or source.metadata.language != "go":
             raise GoHarborCompileError("Go compiler accepts only an explicit language=go source")
+        if source.harbor is None:
+            raise GoHarborCompileError("Go task source is missing [harbor] settings")
         if allow_incomplete and self.status != "development-only":
             raise GoHarborCompileError(
                 "allow_incomplete is only valid for the development Go toolchain"
             )
         if not allow_incomplete and self.status != "locked":
             raise GoHarborCompileError("Go production output requires toolchain.go.lock.toml")
-        if not allow_incomplete and source.lifecycle.status.value not in {
-            "oracle-passed",
-            "controls-passed",
-            "reviewed",
-            "piloted",
-            "published",
-        }:
-            raise GoHarborCompileError("Go production output requires a completed source lifecycle")
+        with tempfile.TemporaryDirectory(prefix="nl2repo-go-canonical-") as canonical_temp:
+            root = Path(canonical_temp)
+            compiled = CatalogCompiler(FileArtifactStore(root / "artifacts")).compile_task(
+                source_dir, root / "canonical"
+            )
+            manifest = compiled.manifest
+        if not isinstance(manifest, TaskManifest):
+            raise GoHarborCompileError("Go source did not produce a v1 manifest")
+        gaps = manifest.publication_gaps()
+        if gaps and not allow_incomplete:
+            raise GoHarborCompileError(
+                "Go production source is incomplete: " + ", ".join(gaps)
+            )
         if source.tests.expected_total != 1:
             raise GoHarborCompileError(
                 "the first Go bridge profile supports exactly one verifier-owned leaf"
             )
-        if not allow_incomplete:
-            raise GoHarborCompileError(
-                "Go production output requires private module, verifier, and Oracle "
-                "artifact materialization; the development fixture cannot be published"
-            )
         fixture = source_dir / "harbor"
-        for relative in ("tests/bridge.go", "tests/contract.sh", "solution/solve.sh"):
+        required = (
+            ("tests/bridge.go", "tests/contract.sh", "solution/solve.sh")
+            if allow_incomplete
+            else ("tests/bridge.go",)
+        )
+        for relative in required:
             if not (fixture / relative).is_file():
-                raise GoHarborCompileError(f"Go synthetic profile is missing harbor/{relative}")
+                raise GoHarborCompileError(f"Go profile is missing harbor/{relative}")
         final_root = output_root / source.task_id
         if final_root.exists() or final_root.is_symlink():
             raise GoHarborCompileError(f"Harbor output already exists: {final_root}")
@@ -175,10 +186,11 @@ class GoHarborCompiler:
         try:
             write_instruction(source_dir, source.instruction, temporary)
             self._write_environment(temporary)
-            self._write_dependencies(fixture, temporary)
-            copy_tree(fixture / "tests", temporary / "tests/private")
-            copy_tree(fixture / "solution", temporary / "solution")
-            self._write_task_toml(source, temporary)
+            self._write_dependencies(source, fixture, temporary, allow_incomplete)
+            self._write_verifier(source, fixture, temporary, allow_incomplete)
+            self._write_solution(source, fixture, temporary, allow_incomplete)
+            self._write_controls(fixture, temporary)
+            self._write_task_toml(manifest, temporary)
             self._write_readme(source, temporary, allow_incomplete)
             write_file_manifest(
                 temporary,
@@ -187,6 +199,8 @@ class GoHarborCompiler:
                     "task_version": source.version,
                     "mode": "development" if allow_incomplete else "production",
                     "toolchain_version": self.go_version,
+                    "canonical_manifest_digest": manifest.content_digest(),
+                    "toolchain_lock_digest": self._toolchain_digest(),
                 },
                 schema_version="1.0",
             )
@@ -204,9 +218,41 @@ class GoHarborCompiler:
         kind: str,
         output_root: Path,
     ) -> Path:
-        """Fail closed until Go controls have catalog-owned solution scripts."""
+        """Create a Go control bundle without mutating the compiled task."""
 
-        raise GoHarborCompileError(f"unsupported Go control kind: {kind}")
+        supported = {
+            "stub",
+            "forgery",
+            "install-failure",
+            "panic",
+            "hang",
+            "oversized-output",
+            "background-process",
+        }
+        if kind not in supported:
+            raise GoHarborCompileError(f"unsupported Go control kind: {kind}")
+        script = task_root / "controls" / f"{kind}.sh"
+        if not script.is_file() or script.is_symlink():
+            raise GoHarborCompileError(f"Go control script is missing: {script}")
+        target = output_root / f"{task_root.name}-{kind}"
+        if target.exists() or target.is_symlink():
+            raise GoHarborCompileError(f"Go control output already exists: {target}")
+        output_root.mkdir(parents=True, exist_ok=True)
+        temporary = output_root / f".{target.name}-tmp"
+        if temporary.exists():
+            shutil.rmtree(temporary)
+        try:
+            copy_tree(task_root, temporary)
+            atomic_write(temporary / "solution/solve.sh", script.read_bytes())
+            os.chmod(temporary / "solution/solve.sh", 0o755)
+            manifest = self._read_bundle_payload(temporary / "bundle.manifest.json")
+            manifest["control_kind"] = kind
+            write_file_manifest(temporary, payload=manifest, schema_version="1.0")
+            os.rename(temporary, target)
+        except (OSError, TaskWriterError) as exc:
+            shutil.rmtree(temporary, ignore_errors=True)
+            raise GoHarborCompileError(str(exc)) from exc
+        return target
 
     def _write_environment(self, task_root: Path) -> None:
         atomic_write(
@@ -220,7 +266,7 @@ class GoHarborCompiler:
         tests_root = task_root / "tests"
         tests_root.mkdir(parents=True, exist_ok=True)
         try:
-            copy_python_verifier_runtime(tests_root / "python-runtime")
+            copy_python_verifier_runtime(tests_root / "runtime")
         except TaskWriterError as exc:
             raise GoHarborCompileError(str(exc)) from exc
         if not self.requirements_path.is_file():
@@ -238,7 +284,7 @@ class GoHarborCompiler:
 RUN apt-get update \\
   && apt-get install -y --no-install-recommends python3 python3-pip \\
   && rm -rf /var/lib/apt/lists/*
-COPY python-runtime /opt/nl2repobench-runtime
+COPY runtime /opt/nl2repobench-runtime
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
 RUN python3 -m pip install --break-system-packages --no-cache-dir --require-hashes \\
   -r /tmp/verifier-requirements.lock.txt
@@ -257,14 +303,30 @@ WORKDIR /tests
         )
         os.chmod(tests_root / "test.sh", 0o755)
 
-    def _write_dependencies(self, fixture: Path, task_root: Path) -> None:
-        dependencies = fixture / "dependencies"
-        if not dependencies.is_dir():
-            raise GoHarborCompileError("Go task is missing a frozen dependencies closure")
+    def _write_dependencies(
+        self,
+        source: DeclarativeTaskSource,
+        fixture: Path,
+        task_root: Path,
+        allow_incomplete: bool,
+    ) -> None:
         destination = task_root / "tests/dependencies"
         try:
-            copy_tree(dependencies, destination)
-            copy_tree(dependencies, task_root / "environment/go-module-bundle")
+            if allow_incomplete:
+                dependencies = fixture / "dependencies"
+                if not dependencies.is_dir():
+                    raise GoHarborCompileError(
+                        "Go task is missing a frozen dependencies closure"
+                    )
+                copy_tree(dependencies, destination)
+            else:
+                reference = source.dependencies.module_bundle
+                if reference is None:
+                    raise GoHarborCompileError(
+                        "Go production task requires dependencies.module_bundle"
+                    )
+                self._extract_private_bundle(reference, destination)
+            copy_tree(destination, task_root / "environment/go-module-bundle")
             GoModulesPackageManager().validate_offline_store(
                 destination,
                 lockfile=destination / "go.mod",
@@ -274,29 +336,88 @@ WORKDIR /tests
         except (TaskWriterError, PackageManagerError) as exc:
             raise GoHarborCompileError(f"invalid Go module closure: {exc}") from exc
 
-    def _write_task_toml(self, source: DeclarativeTaskSource, task_root: Path) -> None:
-        profile = source.harbor
+    def _write_verifier(
+        self,
+        source: DeclarativeTaskSource,
+        fixture: Path,
+        task_root: Path,
+        allow_incomplete: bool,
+    ) -> None:
+        private_root = task_root / "tests/private"
+        if allow_incomplete:
+            copy_tree(fixture / "tests", private_root)
+            entrypoint = "contract.sh"
+        else:
+            verifier = source.verifier
+            if verifier is None:
+                raise GoHarborCompileError("Go production task requires [verifier]")
+            if verifier.entrypoint != "contract.sh":
+                raise GoHarborCompileError(
+                    "the first Go verifier profile requires entrypoint=contract.sh"
+                )
+            self._extract_private_bundle(verifier.bundle, private_root)
+            entrypoint = verifier.entrypoint
+            bridge = fixture / "tests/bridge.go"
+            if bridge.is_symlink() or not bridge.is_file():
+                raise GoHarborCompileError("Go task requires a reviewed public bridge.go")
+            atomic_write(private_root / "bridge.go", bridge.read_bytes())
+        contract = private_root / entrypoint
+        bridge = private_root / "bridge.go"
+        if contract.is_symlink() or not contract.is_file():
+            raise GoHarborCompileError("Go verifier bundle must contain contract.sh")
+        if bridge.is_symlink() or not bridge.is_file():
+            raise GoHarborCompileError("Go verifier is missing bridge.go")
+
+    def _write_solution(
+        self,
+        source: DeclarativeTaskSource,
+        fixture: Path,
+        task_root: Path,
+        allow_incomplete: bool,
+    ) -> None:
+        solution_root = task_root / "solution"
+        if allow_incomplete:
+            copy_tree(fixture / "solution", solution_root)
+        else:
+            if source.oracle_bundle is None:
+                raise GoHarborCompileError("Go production task requires oracle_bundle")
+            self._extract_private_bundle(source.oracle_bundle, solution_root)
+        solve = solution_root / "solve.sh"
+        if solve.is_symlink() or not solve.is_file():
+            raise GoHarborCompileError("Go Oracle bundle must contain solve.sh")
+        os.chmod(solve, 0o755)
+
+    @staticmethod
+    def _write_controls(fixture: Path, task_root: Path) -> None:
+        controls = fixture / "controls"
+        if controls.is_dir():
+            copy_tree(controls, task_root / "controls")
+
+    def _write_task_toml(self, manifest: TaskManifest, task_root: Path) -> None:
+        profile = manifest.harbor
         assert profile is not None
         data: dict[str, Any] = {
             "schema_version": "1.4",
             "artifacts": [profile.workspace_artifact],
             "task": {
-                "name": f"nl2repobench/{source.task_id}",
-                "version": source.version,
+                "name": f"nl2repobench/{manifest.task_id}",
+                "version": manifest.version,
                 "description": profile.description,
                 "authors": [{"name": "NL2RepoBench"}],
                 "keywords": list(profile.keywords),
             },
             "metadata": {
-                "difficulty": source.metadata.difficulty,
-                "category": source.metadata.category,
-                "tags": list(source.metadata.tags),
+                "difficulty": manifest.metadata.difficulty,
+                "category": manifest.metadata.category,
+                "tags": list(manifest.metadata.tags),
                 "language": "go",
                 "runtime": "go",
                 "runtime_version": self.go_version,
                 "package_manager": "go-modules",
                 "metric_contract": "fixed-test-pass-rate-v1",
-                "expected_test_count": source.tests.expected_total,
+                "expected_test_count": manifest.tests.expected_total,
+                "canonical_manifest_digest": manifest.content_digest(),
+                "toolchain_lock_digest": self._toolchain_digest(),
             },
             "agent": {"timeout_sec": profile.agent_timeout_sec},
             "verifier": {
@@ -305,13 +426,45 @@ WORKDIR /tests
                 "network_mode": "no-network",
             },
             "environment": {
-                "network_mode": "no-network",
+                "network_mode": profile.agent_network_mode,
                 "cpus": profile.cpus,
                 "memory_mb": profile.memory_mb,
                 "storage_mb": profile.storage_mb,
             },
         }
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
+
+    def _extract_private_bundle(self, reference: ArtifactRef, destination: Path) -> None:
+        try:
+            extract_private_bundle(
+                reference,
+                destination,
+                artifact_resolver=self.artifact_resolver,
+                limits=BundleLimits(
+                    max_members=10_000,
+                    max_member_bytes=512 * 1024 * 1024,
+                    max_total_bytes=2 * 1024 * 1024 * 1024,
+                ),
+            )
+        except TaskWriterError as exc:
+            raise GoHarborCompileError(str(exc)) from exc
+
+    def _toolchain_digest(self) -> str:
+        return f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
+
+    @staticmethod
+    def _read_bundle_payload(path: Path) -> dict[str, object]:
+        try:
+            import json
+
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, ValueError) as exc:
+            raise GoHarborCompileError(f"invalid Go bundle manifest: {exc}") from exc
+        if not isinstance(payload, dict):
+            raise GoHarborCompileError("invalid Go bundle manifest object")
+        payload.pop("schema_version", None)
+        payload.pop("files", None)
+        return payload
 
     def _write_readme(
         self, source: DeclarativeTaskSource, task_root: Path, allow_incomplete: bool
@@ -367,6 +520,7 @@ mkdir -p /tmp/go-candidate/cmd/bridge
 mv /tmp/go-candidate/bridge.go /tmp/go-candidate/cmd/bridge/main.go
 if ! runuser -u candidate -- sh -c 'cd /tmp/go-candidate && \\
   env PATH=/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin \\
+  GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off \\
   GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local \\
   /usr/local/go/bin/go build -mod=vendor -o /tmp/go-candidate/bridge ./cmd/bridge'; then
   grade --reason candidate-installation-failed

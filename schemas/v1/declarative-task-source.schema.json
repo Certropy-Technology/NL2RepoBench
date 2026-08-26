@@ -59,15 +59,31 @@
             ]
           },
           "then": {
-            "properties": {
-              "lock_artifact": {
-                "not": {
-                  "type": "null"
-                }
+            "oneOf": [
+              {
+                "properties": {
+                  "lock_artifact": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "lock_artifact"
+                ]
+              },
+              {
+                "properties": {
+                  "module_bundle": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "module_bundle"
+                ]
               }
-            },
-            "required": [
-              "lock_artifact"
             ]
           }
         }
@@ -97,6 +113,17 @@
           "type": "string"
         },
         "lock_artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "module_bundle": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -146,6 +173,18 @@
             ]
           },
           "then": {
+            "oneOf": [
+              {
+                "required": [
+                  "python_version"
+                ]
+              },
+              {
+                "required": [
+                  "runtime_version"
+                ]
+              }
+            ],
             "properties": {
               "base_image": {
                 "minLength": 1,
@@ -162,10 +201,13 @@
               "python_version": {
                 "minLength": 1,
                 "type": "string"
+              },
+              "runtime_version": {
+                "minLength": 1,
+                "type": "string"
               }
             },
             "required": [
-              "python_version",
               "os_name",
               "base_image",
               "base_image_digest"
@@ -173,7 +215,7 @@
           }
         }
       ],
-      "description": "Reproducible execution environment metadata.",
+      "description": "Reproducible execution environment metadata across supported runtimes.",
       "properties": {
         "base_image": {
           "anyOf": [
@@ -263,6 +305,18 @@
           ],
           "default": null,
           "title": "Python Version"
+        },
+        "runtime_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Runtime Version"
         },
         "schema_version": {
           "const": "1.0",
