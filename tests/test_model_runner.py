@@ -125,6 +125,40 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
     assert "agent_setup_timeout_multiplier=3" in completed.stdout
 
 
+def test_repaired_task_images_use_pinned_openhands_runtime() -> None:
+    tasks = (
+        "autojump",
+        "flasky",
+        "graphneuralnetwork",
+        "pandarallel",
+        "pss",
+        "pysondb-v2",
+        "pythonprojecttemplate",
+        "records",
+        "retrying",
+        "schedule-master",
+    )
+    for task in tasks:
+        dockerfile = (
+            ROOT / "catalog/tasks" / task / "harbor/environment/Dockerfile"
+        ).read_text(encoding="utf-8")
+        assert dockerfile.startswith(
+            "FROM nl2repobench/openhands-sdk-fork:930e9b1da"
+        )
+        assert "openhands-sdk==1.43.1" not in dockerfile
+        assert "uv pip install" not in dockerfile
+
+    graph_dockerfile = (
+        ROOT / "catalog/tasks/graphneuralnetwork/harbor/environment/Dockerfile"
+    ).read_text(encoding="utf-8")
+    pandarallel_dockerfile = (
+        ROOT / "catalog/tasks/pandarallel/harbor/environment/Dockerfile"
+    ).read_text(encoding="utf-8")
+    assert "build-essential" in graph_dockerfile
+    assert "libgomp1" in graph_dockerfile
+    assert "build-essential" in pandarallel_dockerfile
+
+
 def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
     task_root = tmp_path / "catalog/tasks/demo/harbor"
     task_root.mkdir(parents=True)
