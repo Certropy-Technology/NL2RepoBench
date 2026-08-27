@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "upstream_url": "https://github.com/emirpasic/gods",
+  "revision": "1d83d5ae39fbb0de45a60365791ff1c8b9bae953",
+  "source_archive": {
+    "command": "git archive --format=tar HEAD",
+    "sha256": "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34"
+  },
+  "license": {
+    "spdx": "BSD-3-Clause",
+    "path": "LICENSE",
+    "bytes": 2148
+  },
+  "inventory": {
+    "tracked_files": 142,
+    "go_files": 133,
+    "test_files": 24,
+    "go_packages": 58,
+    "test_leaf_passed": 411,
+    "test_leaf_failed": 0,
+    "test_leaf_skipped": 0
+  },
+  "risk_flags": {
+    "cgo_import": false,
+    "unsafe_import": false,
+    "go_generate": false,
+    "replace_directive": false,
+    "non_git_symlink": false,
+    "external_runtime_dependency": false
+  },
+  "toolchain": {
+    "go": "1.26.5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "network": "no-network"
+  },
+  "source_authority": "known"
+}

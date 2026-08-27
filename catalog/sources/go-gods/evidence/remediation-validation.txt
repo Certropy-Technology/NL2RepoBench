@@ -1,0 +1,22 @@
+go-gods remediation record
+
+1. Source freeze
+   - git rev-parse HEAD -> 1d83d5ae39fbb0de45a60365791ff1c8b9bae953 (exit 0)
+   - git archive --format=tar HEAD -> sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34 (exit 0)
+   - LICENSE -> BSD-3-Clause, 2148 bytes
+
+2. Dependency closure
+   - go mod graph with GOPROXY=off/GOSUMDB=off -> main module only (exit 0)
+   - go mod verify with GOPROXY=off/GOSUMDB=off -> all modules verified (exit 0)
+   - private module bundle -> go.mod, go.sum, vendor/modules.txt, module.manifest.json
+   - candidate build go directive adapted from upstream 1.21 to locked runtime 1.26.5
+
+3. Environment
+   - locked Go runtime -> 1.26.5, linux/amd64, CGO_ENABLED=0
+   - base image -> docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd
+   - agent network -> no-network; static agent hosts -> empty
+
+4. Boundary and verifier
+   - typed newline-delimited JSON bridge built from the public source contract (exit 0)
+   - 15 local contract cases passed against the compiled bridge (exit 0)
+   - Harbor Agent Run and official Oracle/control receipts are intentionally not run in this lane

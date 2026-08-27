@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "api_inventory": {
+    "method": "go list ./... plus go/parser/go/ast inventory and go test -json",
+    "package_count": 58,
+    "tracked_file_count": 142,
+    "go_file_count": 133,
+    "test_file_count": 24,
+    "static_test_function_count": 411,
+    "upstream_package_tests_passed": 411,
+    "stored_at": ".nl2repo/authoring-work/go-gods/probe/go-list.json"
+  },
+  "source_baseline": {
+    "revision": "1d83d5ae39fbb0de45a60365791ff1c8b9bae953",
+    "archive_digest": "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34",
+    "license": "BSD-3-Clause",
+    "upstream_test_exit_code": 0,
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false
+  },
+  "risk_adaptation": {
+    "generic_scope": "The repository exports generic containers and callback-based enumerable APIs; the bridge uses comparable int/string instantiations and excludes callbacks from the serializable boundary.",
+    "ordering_scope": "Hash containers are checked as sets or sorted before comparison; linked and tree containers retain their documented order.",
+    "dependency_scope": "The frozen revision has no external runtime requirements; the private module closure contains the exact go.mod, go.sum, and vendor/modules.txt contract."
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "array and linked list mutation, bounds, sorting, and copies",
+      "stack LIFO and queue FIFO semantics",
+      "circular buffer overwrite and full state",
+      "hash, linked, and ordered map lookup and range queries",
+      "hash and tree set uniqueness and set algebra",
+      "binary heap ordering and bulk push",
+      "JSON serialization round trip",
+      "malformed bridge input, bounded subprocess behavior, and verifier-owned scoring"
+    ]
+  },
+  "authoring_verification": {
+    "candidate_bridge_build": {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go build -mod=vendor -o bridge ./cmd/bridge",
+      "exit_code": 0
+    },
+    "contract_execution": {
+      "command": "bash tests/private/contract.sh <candidate-bridge> <direct-proxy>",
+      "exit_code": 0,
+      "cases": 15
+    },
+    "harbor_agent_run": "not-run-by-lane-policy"
+  }
+}
