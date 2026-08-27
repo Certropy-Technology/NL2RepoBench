@@ -41,3 +41,18 @@ def test_inventory_writer_emits_canonical_json(tmp_path: Path) -> None:
 def test_inventory_rejects_empty_or_non_directory(tmp_path: Path) -> None:
     with pytest.raises(InventoryError, match="no Python files"):
         scan_python_source(tmp_path)
+
+
+def test_inventory_honors_python_source_encoding(tmp_path: Path) -> None:
+    source = tmp_path / "legacy.py"
+    source.write_bytes(
+        b"# -*- coding: iso-8859-1 -*-\n"
+        b"\n"
+        b"def caf\xe9(value):\n"
+        b"    return value\n"
+    )
+
+    inventory = scan_python_source(tmp_path)
+
+    assert inventory.metrics.python_files == 1
+    assert inventory.syntax_diagnostics == ()

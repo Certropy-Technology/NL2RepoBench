@@ -388,3 +388,48 @@ def test_candidate_install_kills_process_group(monkeypatch: pytest.MonkeyPatch) 
     candidate_install._kill_group(SimpleNamespace(pid=123))  # type: ignore[arg-type]  # noqa: SLF001
 
     assert killed == [(123, candidate_install.signal.SIGKILL)]
+
+
+def test_candidate_install_rejects_nonpositive_address_space(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="address-space limit"):
+        candidate_install.install_candidate(tmp_path, tmp_path / "target", 1, 0)
+
+
+def test_candidate_install_defaults_to_low_memory_build_flags() -> None:
+    import inspect
+
+    assert inspect.signature(candidate_install.install_candidate).parameters["cflags"].default == (
+        "-O0 -g0"
+    )
+
+
+def test_candidate_install_disables_pip_version_check(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    command: list[str] = []
+
+    class CompletedProcess:
+        returncode = 1
+        pid = 123
+
+        def poll(self) -> int:
+            return self.returncode
+
+        def wait(self, timeout: float | None = None) -> int:
+            del timeout
+            return self.returncode
+
+    def capture(arguments: list[str], **kwargs: object) -> CompletedProcess:
+        del kwargs
+        command.extend(arguments)
+        return CompletedProcess()
+
+    monkeypatch.setattr(candidate_install.subprocess, "Popen", capture)
+    monkeypatch.setattr(candidate_install, "_kill_group", lambda process: None)
+    monkeypatch.setattr(candidate_install, "terminate_uid_processes", lambda uid: None)
+    monkeypatch.setattr(candidate_install.os, "chown", lambda *args: None)
+    monkeypatch.setattr(candidate_install.os, "chmod", lambda *args: None)
+
+    candidate_install.install_candidate(tmp_path, tmp_path / "target", 1)
+
+    assert "PIP_DISABLE_PIP_VERSION_CHECK=1" in command

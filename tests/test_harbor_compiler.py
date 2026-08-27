@@ -453,6 +453,9 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
 
     assert (output / "tests/verifier/run.py").is_file()
     assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
+    assert "--address-space-bytes 1073741824" in (
+        output / "tests/test.sh"
+    ).read_text(encoding="utf-8")
     assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
         encoding="utf-8"
     )

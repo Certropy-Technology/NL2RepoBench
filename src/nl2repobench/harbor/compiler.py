@@ -417,6 +417,7 @@ WORKDIR /tests
 
     def _write_task_toml(self, manifest: TaskManifest, task_root: Path) -> None:
         profile = self._effective_profile(manifest)
+        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         data: dict[str, Any] = {
             "schema_version": self.toolchain.harbor.task_schema,
             "artifacts": [profile.workspace_artifact],
@@ -469,6 +470,7 @@ WORKDIR /tests
         expected = manifest.tests.expected_total
         metric = shlex.quote(manifest.metric.contract_id)
         profile = self._effective_profile(manifest)
+        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
         return f"""#!/usr/bin/env bash
@@ -526,6 +528,8 @@ python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate \
   --target /tmp/candidate-site \
   --timeout-sec {install_timeout} \
+  --address-space-bytes {verifier_memory_bytes} \
+  --cflags '-O0 -g0' \
   --status /logs/verifier/candidate-install.json \
   > /logs/verifier/install-stdout.txt \
   2> /logs/verifier/install-stderr.txt
@@ -604,6 +608,7 @@ exit 0
         profile = self._effective_profile(manifest)
         assert manifest.verifier is not None
         expected = manifest.tests.expected_total
+        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         entrypoint = shlex.quote(f"/tests/verifier/{manifest.verifier.entrypoint}")
         metric = shlex.quote(manifest.metric.contract_id)
         environment = "\n".join(
@@ -637,6 +642,8 @@ chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
 python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate --target /tmp/candidate-site \
   --timeout-sec {profile.candidate_install_timeout_sec} \
+  --address-space-bytes {verifier_memory_bytes} \
+  --cflags '-O0 -g0' \
   --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli \

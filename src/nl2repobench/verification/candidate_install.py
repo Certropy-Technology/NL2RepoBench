@@ -57,7 +57,15 @@ def _kill_group(process: subprocess.Popen[bytes]) -> None:
         pass
 
 
-def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[str, object]:
+def install_candidate(
+    source: Path,
+    target: Path,
+    timeout_sec: float,
+    address_space_bytes: int = 512 * 1024 * 1024,
+    cflags: str = "-O0 -g0",
+) -> dict[str, object]:
+    if address_space_bytes <= 0:
+        raise ValueError("address-space limit must be positive")
     writable_root = Path("/tmp/candidate-build")
     home = writable_root / "home"
     temporary = writable_root / "tmp"
@@ -75,6 +83,8 @@ def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[st
         f"HOME={home}",
         f"TMPDIR={temporary}",
         "PYTHONDONTWRITEBYTECODE=1",
+        "PIP_DISABLE_PIP_VERSION_CHECK=1",
+        f"CFLAGS={cflags}",
     ]
     if dependency_root:
         environment.append(f"PYTHONPATH={dependency_root}")
@@ -86,7 +96,7 @@ def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[st
         "env",
         *environment,
         "prlimit",
-        "--as=536870912",
+        f"--as={address_space_bytes}",
         "--cpu=60",
         "--fsize=67108864",
         "--nofile=128",
@@ -138,10 +148,18 @@ def main() -> None:
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--target", type=Path, required=True)
     parser.add_argument("--timeout-sec", type=float, default=90.0)
+    parser.add_argument("--address-space-bytes", type=int, default=512 * 1024 * 1024)
+    parser.add_argument("--cflags", default="-O0 -g0")
     parser.add_argument("--status", type=Path, required=True)
     args = parser.parse_args()
     try:
-        result = install_candidate(args.source, args.target, args.timeout_sec)
+        result = install_candidate(
+            args.source,
+            args.target,
+            args.timeout_sec,
+            args.address_space_bytes,
+            args.cflags,
+        )
     except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
         args.status.write_text(
             json.dumps({"outcome": "internal-error", "message": str(exc)}, sort_keys=True)

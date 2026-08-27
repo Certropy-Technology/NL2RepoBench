@@ -11,6 +11,7 @@ from __future__ import annotations
 import ast
 import hashlib
 import json
+import tokenize
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, cast
@@ -462,7 +463,10 @@ def _module_name(path: Path) -> str:
 
 def _read_text(path: Path) -> str:
     try:
-        return path.read_text(encoding="utf-8")
+        # Match Python's parser by honoring a PEP 263 encoding declaration.
+        # Upstream test trees can legitimately retain historical source encodings.
+        with tokenize.open(path) as source:
+            return source.read()
     except (OSError, UnicodeDecodeError) as exc:
         raise InventoryError(f"cannot read Python source {path}: {exc}") from exc
 
