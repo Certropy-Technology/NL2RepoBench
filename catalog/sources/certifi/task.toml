@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "certifi"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "packaging", "pem", "resources", "cli", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/certifi/python-certifi"
+revision = "9d0a8f1f3a0d6b2e38d5773db7afe1a37e4527b6"
+license_spdx = "MPL-2.0"
+source_digest = "sha256:b3217053a0e844b3449c4f59b5c9c3537c90343203f2b05a92e96ab4a5d23095"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "no-network"
+build_command = "pip install --target with the hash-locked setuptools and wheel build closure"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build closure is installed during the image build from a hash-locked package-index requirements file; candidate and separate verifier runs have no network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:cbbf1a2dbe1e74cce8dfe174273afcd5549120c2126b7a5a50a9b5900a76055e", size_bytes = 192, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:cbbf1a2dbe1e74cce8dfe174273afcd5549120c2126b7a5a50a9b5900a76055e", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/child_adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the certifi Python package from an empty workspace, including its deterministic PEM resource and resource-path CLI."
+keywords = ["python", "packaging", "pem", "resources", "cli", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:9168b6f6d0cd0b132d459ccf47eb30e4aa808ec95e8589f6e852fdcd79d6ca31", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9168b6f6d0cd0b132d459ccf47eb30e4aa808ec95e8589f6e852fdcd79d6ca31", visibility = "private" }
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:eee0e650eb0882822cb23f26434655f53b40b2dd0532b106de1506a59a41c79f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:eee0e650eb0882822cb23f26434655f53b40b2dd0532b106de1506a59a41c79f"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, offline, and bounded install-timeout controls passed. Review, pilot, and publication remain separate integrator stages."

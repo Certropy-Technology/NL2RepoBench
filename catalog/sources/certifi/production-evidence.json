@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "task_id": "certifi",
+  "terminal_kind": "valid",
+  "source_revision": "9d0a8f1f3a0d6b2e38d5773db7afe1a37e4527b6",
+  "source_archive_sha256": "sha256:b3217053a0e844b3449c4f59b5c9c3537c90343203f2b05a92e96ab4a5d23095",
+  "license": "MPL-2.0",
+  "environment": {
+    "python": "3.12.11 authoring; python:3.12-slim runtime",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_image_digest": "sha256:c4f81ed416aebfa9e10fd8531a7118a73f3ad5c85a99643d6af57e842547891a",
+    "verifier_image_digest": "sha256:da109e9df4901f23aa171f8f6c0a300c9c972d423117ca830b237ae687560789",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "packages": ["setuptools==80.10.2", "wheel==0.45.1"],
+    "lock_artifact": {
+      "digest": "sha256:cbbf1a2dbe1e74cce8dfe174273afcd5549120c2126b7a5a50a9b5900a76055e",
+      "size_bytes": 192,
+      "uri": "artifact://private/sha256:cbbf1a2dbe1e74cce8dfe174273afcd5549120c2126b7a5a50a9b5900a76055e",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "api_path": ".nl2repo/evidence/api-inventory.json",
+    "api_sha256": "sha256:12b0490f694cb37b01aa72990fa265d55369f3089618be8d12168b30eb653d4d",
+    "test_path": ".nl2repo/evidence/test-inventory.json",
+    "test_sha256": "sha256:12b0490f694cb37b01aa72990fa265d55369f3089618be8d12168b30eb653d4d",
+    "upstream_tests": 3,
+    "deterministic_verifier_leaves": 20
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled-certifi/certifi/bundle.manifest.json",
+    "manifest_sha256": "sha256:e08b93bb4ae59d32a71ef8c0a76de144c8989dc9107f153740d8a80692997066",
+    "verifier_bundle": "artifact://private/sha256:9168b6f6d0cd0b132d459ccf47eb30e4aa808ec95e8589f6e852fdcd79d6ca31",
+    "oracle_bundle": "artifact://private/sha256:eee0e650eb0882822cb23f26434655f53b40b2dd0532b106de1506a59a41c79f"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 20,
+    "collection": 20,
+    "metric_contract": "fixed-test-pass-rate-v1"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-certifi/certifi -a oracle --job-name certifi-oracle-20260828-r3 -o .nl2repo/runs/certifi-oracle-20260828-r3 --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 20,
+    "total": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/verifier/grading.json",
+      "sha256": "sha256:a2b16e39a6d813640e054041b19426e35926a0003cfe834e0da3b1a13465d2a9"
+    },
+    "network": {
+      "path": ".nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/verifier/network.json",
+      "sha256": "sha256:c992745dd88fc19da010c6fa69bc10bf35552010f0254282bce491153188a59e"
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none verifier-image /tests/test.sh with an empty workspace",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/certifi/empty-logs/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/certifi/empty-logs/verifier/network.json",
+        "sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/certifi/certifi-stub -a oracle --job-name certifi-stub-20260828-r2 -o .nl2repo/runs/certifi-stub-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 5,
+      "total": 20,
+      "reward": 0.25,
+      "grading": {
+        "path": ".nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/verifier/grading.json",
+        "sha256": "sha256:73d5c399eaaedc1c9e5845108086ad8e20b27974737ece484f90abadcedc057b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/verifier/network.json",
+        "sha256": "sha256:3b835b8ade755c7e9fcb5f48cfd475ac19989012a39dee64a2400906bae2f05a"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/certifi/certifi-forgery -a oracle --job-name certifi-forgery-20260828-r2 -o .nl2repo/runs/certifi-forgery-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 4,
+      "total": 20,
+      "reward": 0.2,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/verifier/grading.json",
+        "sha256": "sha256:91e0d61d9ec5520bd566f2887784a8e7519b844d642ced4736d7baa03816085d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/verifier/network.json",
+        "sha256": "sha256:e3fee389a2b33000d52264269ad71dfe44867bff47ad120a38ad43de505bde1a"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none verifier-image /tests/test.sh with the Oracle workspace",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/evidence/certifi/docker-logs/verifier/network.json",
+        "sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+      }
+    },
+    "install_timeout": {
+      "command": "docker run --rm --network none verifier-image /tests/test.sh with harbor/controls/install-hang.sh workspace",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {
+        "path": ".nl2repo/evidence/certifi/install-hang-logs/verifier/candidate-install.json",
+        "sha256": "sha256:435c1126635805982abaaf756de4fee055d1ce54c58fbb21ac04058b3ad19283",
+        "outcome": "timeout",
+        "returncode": -9
+      },
+      "grading": {
+        "path": ".nl2repo/evidence/certifi/install-hang-logs/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/certifi/install-hang-logs/verifier/network.json",
+        "sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522"
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/certifi",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 136,
+      "warning_scope": "pre-existing findings in other catalog tasks; no certifi finding"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/certifi --output .nl2repo/compiled-certifi --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    "syntax": {
+      "command": "python3 -m py_compile verifier/run.py verifier/child_adapter.py && bash -n catalog/sources/certifi/harbor/controls/*.sh",
+      "exit_code": 0
+    },
+    "upstream_tests": {
+      "command": "PYTHONPATH=.nl2repo/authoring-work/python-author-wave2-20260828/certifi/source uv run --with pytest==9.1.1 python -m pytest -o addopts='' .nl2repo/authoring-work/python-author-wave2-20260828/certifi/source/certifi/tests -q",
+      "exit_code": 0,
+      "passed": 3
+    },
+    "image_build": {
+      "agent_exit_code": 0,
+      "verifier_exit_code": 0,
+      "agent_log": ".nl2repo/evidence/certifi/agent-image-build.log",
+      "verifier_log": ".nl2repo/evidence/certifi/verifier-image-build.log"
+    }
+  },
+  "residual_risks": [
+    "The upstream repository only contains three tests at the frozen revision; the production denominator is a documented 20-leaf deterministic offline contract covering the public resource and CLI behavior.",
+    "The Oracle solve script fetches only the exact frozen commit from github.com and verifies the archive digest; this host authorization is supplied only to the trusted Oracle run.",
+    "Harbor build emitted the existing constant-platform warning for FROM --platform=linux/amd64; it did not affect the locked linux/amd64 image identity.",
+    "Review, pilot, and publication are not claimed; no Harbor model Agent Run was started from this lane."
+  ],
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run"
+}
