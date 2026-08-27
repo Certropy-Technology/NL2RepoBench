@@ -43,8 +43,8 @@
     },
     {
       "path": "environment/Dockerfile",
-      "sha256": "69d434efc73368e0ed6d226de743f990dbc743fc6cfaf725a12f1eb8b8daa8b6",
-      "size_bytes": 963
+      "sha256": "8732e2751cacf7a6fe36836f3779c04b14a1381356b5a1a72d63d10d80a98a2e",
+      "size_bytes": 857
     },
     {
       "path": "environment/go-module-bundle/go.mod",
@@ -158,7 +158,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "be70b123e7d39cec5097a84b33d7b13dc971a84c27b737b059f9aa1adf05aa8b",
+      "sha256": "e9f8f83b71bacb1bebc2fe92334295f678630c2c6cf6d9c9eaedfe5893751ac9",
       "size_bytes": 1080
     },
     {
@@ -456,6 +456,6 @@
   "schema_version": "1.0",
   "task_id": "go-gjson",
   "task_version": "0.1.0",
-  "toolchain_lock_digest": "sha256:a82e6f82b50777b1919152b896ed2c11d4a4c404f424f7f98005ad52107b3b0a",
+  "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
   "toolchain_version": "1.26.5"
 }

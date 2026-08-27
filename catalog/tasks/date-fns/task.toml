@@ -40,7 +40,7 @@ test_framework = "node:test"
 metric_contract = "node-test-leaf-pass-rate-v1"
 expected_test_count = 39
 canonical_manifest_digest = "sha256:33b6a85c61a7a52f89f5ec6d8a81328418e2c7db1ba7076306461294c648c342"
-toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
 
 [agent]
 timeout_sec = 1200.0

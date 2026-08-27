@@ -1,8 +1,8 @@
 FROM --platform=linux/amd64 docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd AS go-runtime
 
-FROM --platform=linux/amd64 nl2repobench/openhands-sdk-fork@sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f
+FROM --platform=linux/amd64 nl2repobench/openhands-sdk-fork:930e9b1da-bookworm
 
-LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork@sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f" \
+LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork:930e9b1da-bookworm" \
   org.nl2repobench.agent-runtime-image-id="sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f" \
   org.nl2repobench.agent-dependency-build="go-offline-module-bundle-v1"
 

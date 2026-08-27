@@ -6,7 +6,7 @@ verifier_requirements_lock = "verifier/requirements.lock.txt"
 verifier_requirements_sha256 = "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
 
 [agent_runtime]
-image = "nl2repobench/openhands-sdk-fork@sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+image = "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm"
 image_id = "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
 fork_commit = "930e9b1daee0f5d2c7f3b261f045527a0ddae87d"
 python_executable = "/opt/openhands-sdk-venv/bin/python"

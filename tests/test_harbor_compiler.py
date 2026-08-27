@@ -54,7 +54,7 @@ def test_toolchain_images_are_digest_pinned() -> None:
     assert "@sha256:" in lock.images.agent_base
     assert "@sha256:" in lock.images.verifier_base
     assert lock.agent_runtime.image == (
-        "nl2repobench/openhands-sdk-fork@sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+        "nl2repobench/openhands-sdk-fork:930e9b1da"
     )
     assert lock.agent_runtime.image_id.startswith("sha256:")
     assert lock.agent_runtime.fork_commit == "930e9b1daee0f5d2c7f3b261f045527a0ddae87d"
@@ -63,10 +63,13 @@ def test_toolchain_images_are_digest_pinned() -> None:
 
 def test_agent_runtime_digest_is_bound_to_locked_image_id() -> None:
     lock = load_toolchain_lock(TOOLCHAIN).agent_runtime
-    assert lock.image.rsplit("@", 1)[1] == lock.image_id
+    digest_reference = lock.model_copy(
+        update={"image": f"nl2repobench/openhands-sdk-fork@{lock.image_id}"}
+    )
+    assert digest_reference.image.rsplit("@", 1)[1] == digest_reference.image_id
     with pytest.raises(ValueError, match="image digest must match image_id"):
         AgentRuntimeImageLock.model_validate(
-            lock.model_dump(mode="python")
+            digest_reference.model_dump(mode="python")
             | {"image_id": "sha256:" + "0" * 64}
         )
 
@@ -84,7 +87,7 @@ def test_runtime_metadata_records_both_locked_variants() -> None:
         assert metadata["variant"] == variant
         assert metadata["image"] == runtime["image"]
         assert metadata["image_id"] == runtime["image_id"]
-        assert metadata["image"].rsplit("@", 1)[1] == metadata["image_id"]
+        assert metadata["image_tag"] == metadata["image"]
         assert metadata["image_digest"] == runtime["image_id"]
 
 
@@ -113,8 +116,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert task["metadata"]["expected_test_count"] == 18
     agent_dockerfile = (task_root / "environment/Dockerfile").read_text()
     assert (
-        "nl2repobench/openhands-sdk-fork@sha256:"
-        "70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+        "nl2repobench/openhands-sdk-fork:930e9b1da"
         in agent_dockerfile
     )
     assert "agent-runtime-image-id" in agent_dockerfile

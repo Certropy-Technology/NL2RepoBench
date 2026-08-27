@@ -37,7 +37,7 @@ package_manager = "go-modules"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 1
 canonical_manifest_digest = "sha256:09da0cd24ad3f2b5a0541f68c086006362fffa6a288cd313fb689316f1ba4816"
-toolchain_lock_digest = "sha256:a82e6f82b50777b1919152b896ed2c11d4a4c404f424f7f98005ad52107b3b0a"
+toolchain_lock_digest = "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
 
 [agent]
 timeout_sec = 900.0

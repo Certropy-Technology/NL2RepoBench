@@ -42,7 +42,7 @@ test_framework = "node:test"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 24
 canonical_manifest_digest = "sha256:50b067059ff4706e5fd6227abc171160bb1f51b3ec71ac0d6a5a214b739ef33a"
-toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
 
 [agent]
 timeout_sec = 1800.0

@@ -1,0 +1,93 @@
+{
+  "commit": "23a6b5ab1c454d1f29eb58dfdc4f831bfd527a72",
+  "images": [
+    {
+      "check_output_marker": "PYTHON_AGENT_OK",
+      "image": "nl2repo/integration-final-python-agent:20260828",
+      "image_id": "sha256:e1eaa2868b1954371e574757491712fb43e18c71b1dd5436c4277d5838977ef0",
+      "kind": "agent",
+      "language": "python",
+      "network_mode": "none",
+      "task_id": "lxml"
+    },
+    {
+      "check_output_marker": "NODE_AGENT_OK",
+      "image": "nl2repo/integration-final-node-agent:20260828",
+      "image_id": "sha256:5c7020054045091401ac974703eca34e2e13f8b54bb305cfcd4f269884b991d2",
+      "kind": "agent",
+      "language": "node",
+      "network_mode": "none",
+      "task_id": "sharp"
+    },
+    {
+      "check_output_marker": "GO_AGENT_OK",
+      "image": "nl2repo/integration-final-go-agent:20260828",
+      "image_id": "sha256:17f8c398ab700cc86ecbb728960cc8c6bacb6ccb62b0437de6d396bd7ab1702c",
+      "kind": "agent",
+      "language": "go",
+      "network_mode": "none",
+      "task_id": "go-google-uuid"
+    },
+    {
+      "image": "nl2repo/integration-final-python-verifier:20260828",
+      "image_id": "sha256:e6dc2e6c8ce3d4b26b51d5c4e3893ac011c814bb9e248af0f9298a950bc56e8c",
+      "kind": "verifier",
+      "language": "python",
+      "network_mode": "none",
+      "network_probe": {
+        "network_namespace": "net:[4026532305]",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+        "schema_version": "1.0"
+      },
+      "task_id": "dacite"
+    },
+    {
+      "image": "nl2repo/integration-final-node-verifier:20260828",
+      "image_id": "sha256:bbe9d92bcb237a5506079de815a528ebd6ffa9a2fb02006ba63cd2e57e59c1d8",
+      "kind": "verifier",
+      "language": "node",
+      "network_mode": "none",
+      "network_probe": {
+        "network_namespace": "net:[4026532305]",
+        "probes": {
+          "1.1.1.1:443": false,
+          "registry.npmjs.org:443": false
+        },
+        "public_network_available": false,
+        "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+        "schema_version": "1.0"
+      },
+      "task_id": "sharp"
+    },
+    {
+      "image": "nl2repo/integration-final-go-verifier:20260828",
+      "image_id": "sha256:60452d87305014d302b7416e630feec725e9d8ad41d067af9e4a743523d7333c",
+      "kind": "verifier",
+      "language": "go",
+      "network_mode": "none",
+      "network_probe": {
+        "network_namespace": "net:[4026532305]",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+        "schema_version": "1.0"
+      },
+      "task_id": "go-google-uuid"
+    }
+  ],
+  "ok": true,
+  "report_kind": "integration-docker-smoke",
+  "runtime_build_log": {
+    "path": ".nl2repo/validation/runtime-build-20260828.log",
+    "sha256": "sha256:bf7856d515253ba93d25fc5be6a5fb068bceabc66be3e10239fb87fc8d034435"
+  },
+  "schema_version": "1.0"
+}

@@ -65,7 +65,13 @@ def _toolchain_name(source_data: dict[str, object]) -> str:
     raise SelectedGateError(f"unsupported selected language: {language!r}")
 
 
-def _assert_agent_context(task_id: str, source_data: dict[str, object], task_root: Path) -> None:
+def _assert_agent_context(
+    task_id: str,
+    source_data: dict[str, object],
+    task_root: Path,
+    expected_runtime_image: str,
+    expected_runtime_image_id: str,
+) -> None:
     environment = task_root / "environment"
     dockerfile = (environment / "Dockerfile").read_text(encoding="utf-8")
     task_data = tomllib.loads((task_root / "task.toml").read_text(encoding="utf-8"))
@@ -106,7 +112,9 @@ def _assert_agent_context(task_id: str, source_data: dict[str, object], task_roo
     missing = sorted(value for value in required if value not in dockerfile)
     if missing:
         raise SelectedGateError(f"{task_id}: Agent Dockerfile is missing {missing}")
-    if "agent-runtime-image-id=\"sha256:" not in dockerfile:
+    if expected_runtime_image not in dockerfile:
+        raise SelectedGateError(f"{task_id}: Agent Dockerfile has the wrong runtime image")
+    if f'agent-runtime-image-id="{expected_runtime_image_id}"' not in dockerfile:
         raise SelectedGateError(f"{task_id}: Agent Dockerfile has no runtime image identity label")
 
     forbidden = {"private", "verifier", "solution", "command-plan.json"}
@@ -155,8 +163,16 @@ def validate(
             raise SelectedGateError(f"{task_id}: production-evidence.json is missing")
         if json.loads(evidence.read_text(encoding="utf-8")).get("task_id") != task_id:
             raise SelectedGateError(f"{task_id}: production evidence task_id mismatch")
-        _assert_agent_context(task_id, source_data, checked_in)
         toolchain = repository_root / _toolchain_name(source_data)
+        toolchain_data = tomllib.loads(toolchain.read_text(encoding="utf-8"))
+        runtime = toolchain_data["agent_runtime"]
+        _assert_agent_context(
+            task_id,
+            source_data,
+            checked_in,
+            str(runtime["image"]),
+            str(runtime["image_id"]),
+        )
         first = registry.compile_task(
             source_root,
             first_root,

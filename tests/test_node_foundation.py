@@ -199,8 +199,7 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert not list((first / "environment").rglob("contract.test.mjs"))
     agent_dockerfile = (first / "environment/Dockerfile").read_text()
     assert (
-        "nl2repobench/openhands-sdk-fork@sha256:"
-        "c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+        "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm"
         in agent_dockerfile
     )
     assert (

@@ -3,7 +3,7 @@
   "files": [
     {
       "path": "README.md",
-      "sha256": "37ac70786754d77a7be7990078d9866281bf17f1dbe907a44e3608780b4ebe27",
+      "sha256": "9bc7253dd6c21bc279058136beeee7ac5ba170c385b5f7d335a919df14d592d7",
       "size_bytes": 511
     },
     {
@@ -23,8 +23,8 @@
     },
     {
       "path": "environment/Dockerfile",
-      "sha256": "7837e6415119f70947484152445c4be111edf87e4e7c6c65bceb0c0fceb31883",
-      "size_bytes": 773
+      "sha256": "5b7b4f5c8177e890a586047cd1f0d3c5aadbf7096c847087f443dbc21b73198b",
+      "size_bytes": 649
     },
     {
       "path": "environment/candidate-requirements.lock.txt",
@@ -48,7 +48,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "926dbe95ecadc507f52926315ae62756a10b0c6c7bbe595d951293ba8ca3843b",
+      "sha256": "7bd693ef8884a6699eeaab5257109d145961bfdfe7a3d1c4fd9886cd402bd54c",
       "size_bytes": 1358
     },
     {
@@ -521,5 +521,5 @@
   "schema_version": "1.0",
   "task_id": "boto3",
   "task_version": "0.1.0",
-  "toolchain_lock_digest": "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+  "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
 }
