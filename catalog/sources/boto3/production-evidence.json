@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "boto3",
+  "source_revision": "722e01b074c67db38ad226ac1a2dab5c36c1577c",
+  "source_archive_sha256": "sha256:2b56d8a2d4193499e3c3ed6685622e5c75af11c0cfa1e6173d59f10090be3208",
+  "license_spdx": "Apache-2.0",
+  "environment": {
+    "python": "3.12.14 image / 3.12.11 authoring host",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network"
+  },
+  "dependency_lock": {
+    "sha256": "sha256:b60bc17b2558fc212aaa469f7d26d9cdb8f72803a6acc9b96326fd6d028187c8",
+    "size_bytes": 3580,
+    "packages": [
+      "botocore==1.43.78",
+      "jmespath==1.0.1",
+      "s3transfer==0.19.0",
+      "pytest==8.4.2",
+      "setuptools==80.10.2",
+      "wheel==0.45.1"
+    ]
+  },
+  "tests": {
+    "framework": "pytest",
+    "scope": "upstream tests/unit",
+    "collected": 552,
+    "passed": 539,
+    "skipped": 13,
+    "failed": 0,
+    "frozen_total": 552
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-next-20260826-r1/boto3/compiled/boto3 -a oracle",
+    "exit_code": 0,
+    "reward": 0.9764492753623188,
+    "test_pass_rate": 0.9764492753623188,
+    "valid": true,
+    "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/oracle-final"
+  },
+  "controls": {
+    "empty": {"reward": 0.0, "test_pass_rate": 0.0, "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/empty"},
+    "stub": {"reward": 0.0, "test_pass_rate": 0.0, "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/stub"},
+    "forgery": {"reward": 0.0, "test_pass_rate": 0.0, "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/forgery"},
+    "offline_network_probes": {"oracle": false, "empty": false, "stub": false, "forgery": false}
+  },
+  "gates": {
+    "validate_source_exit_code": 0,
+    "lint_network_exit_code": 0,
+    "lint_network_error_count": 0,
+    "production_compile_exit_code": 0,
+    "syntax_and_shell_exit_code": 0
+  },
+  "status": "awaiting-agent-run"
+}
