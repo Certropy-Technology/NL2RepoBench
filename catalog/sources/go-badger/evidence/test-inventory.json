@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "upstream_static_test_functions": 286,
+  "upstream_test_files": 37,
+  "selected_probe": [
+    "TestWrite", "TestGet", "TestUpdateAndView", "TestIterate2Basic"
+  ],
+  "selected_probe_exit_code": 0,
+  "frozen_harbor_total": 1,
+  "leaf_id": "contract::public-api",
+  "collection_source": "private verifier contract emits one trusted leaf after all bridge assertions",
+  "private_assertion_classes": [
+    "committed write and ValueCopy result",
+    "user metadata, key/value sizes, and positive version",
+    "forward and reverse lexical iteration with Prefix",
+    "read-your-write and discarded transaction isolation",
+    "Update callback rollback and error propagation",
+    "delete and absent-key behavior",
+    "empty-key, read-only, and discarded-transaction sentinel errors",
+    "malformed/unknown bridge operation structured error"
+  ]
+}

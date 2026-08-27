@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "inventory_method": "go/ast plus go/types review of frozen source; public contract narrowed to the bridge-backed symbols",
+  "package": "github.com/dgraph-io/badger/v4",
+  "bridge_operations": ["put_get", "scan", "transaction", "errors"],
+  "public_contract_symbols": [
+    "Options", "DefaultOptions", "Options.WithInMemory", "Options.WithLogger", "Open",
+    "DB.Close", "DB.IsClosed", "DB.NewTransaction", "DB.View", "DB.Update",
+    "Txn.Set", "Txn.SetEntry", "Txn.Get", "Txn.Delete", "Txn.Commit", "Txn.Discard",
+    "Entry", "NewEntry", "Entry.WithMeta", "Item.Key", "Item.KeyCopy", "Item.Value",
+    "Item.ValueCopy", "Item.Version", "Item.UserMeta", "Item.KeySize", "Item.ValueSize",
+    "Item.IsDeletedOrExpired", "IteratorOptions", "DefaultIteratorOptions",
+    "Txn.NewIterator", "Iterator.Rewind", "Iterator.Seek", "Iterator.Next", "Iterator.Valid",
+    "Iterator.ValidForPrefix", "Iterator.Item", "Iterator.Close", "ErrKeyNotFound",
+    "ErrReadOnlyTxn", "ErrDiscardedTxn", "ErrEmptyKey", "ErrDBClosed"
+  ],
+  "excluded_surface": [
+    "persistent filesystem paths", "TTL and wall-clock expiry", "value-log GC", "encryption",
+    "managed transactions", "stream and backup APIs", "callbacks retaining Item", "long-running concurrency"
+  ],
+  "dependency_probe": {
+    "upstream_module": "github.com/dgraph-io/badger/v4",
+    "runtime_direct_dependencies": 11,
+    "vendor_file_count": 1055,
+    "vendor_payload_bytes": 15154403,
+    "module_bundle_tar_sha256": "b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc"
+  }
+}

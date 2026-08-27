@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "instruction_sections": {
+    "project_description": ["put_get", "scan", "transaction", "errors"],
+    "supports": ["module path", "Go 1.26.5", "offline vendor closure", "bounded bridge input"],
+    "api_usage_guide": ["Options and database lifecycle", "Transactions", "Entries and items", "Iteration", "Error values"],
+    "implementation_notes": ["in-memory adaptation", "excluded persistence/TTL/stream surface", "copy and isolation requirements"]
+  },
+  "leaf_traceability": [
+    {
+      "leaf_id": "contract::public-api",
+      "frozen_total": 1,
+      "public_behavior": [
+        "instruction.md#options-and-database-lifecycle",
+        "instruction.md#transactions",
+        "instruction.md#entries-and-items",
+        "instruction.md#iteration",
+        "instruction.md#error-values"
+      ],
+      "private_assertions": [
+        "put_get committed value/meta/copy/size/version",
+        "scan forward/reverse/prefix order",
+        "transaction commit, rollback, read-your-write, discard",
+        "errors.Is sentinel contracts",
+        "structured unknown-operation response"
+      ],
+      "verifier": "artifact://private/sha256:98de3f3f037ad08c20c221559d3e384a6535c839a6477c78ba5a3ec0279dc67a"
+    }
+  ],
+  "adaptations": [
+    {
+      "risk": "filesystem and wall-clock behavior",
+      "adaptation": "bridge uses DefaultOptions(\"\").WithInMemory(true); persistence and TTL are excluded",
+      "reason": "keeps each request deterministic and bounded"
+    },
+    {
+      "risk": "candidate process and dependency access",
+      "adaptation": "bridge is compiled in candidate-owned workspace while verifier supplies a private vendor closure",
+      "reason": "separate UID/no-network boundary prevents trusted verifier imports and network installs"
+    }
+  ]
+}

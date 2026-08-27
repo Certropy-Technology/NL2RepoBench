@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "go-badger"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:36a95678fa75bdea404830f2c80227bc413a6122c5493a5972625e7f230616bc", size_bytes = 663, uri = "artifact://private/sha256:36a95678fa75bdea404830f2c80227bc413a6122c5493a5972625e7f230616bc", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-database"
+tags = ["go", "go-modules", "badger", "key-value", "transactions", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/dgraph-io/badger"
+revision = "679bf5b72c9e1788fe7454a28fb4e140221b6668"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:af7b42e0d2322dcbaf7517db422be67f0fc62070c9e0204c9ac2f49d6a6110e9"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier use a private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped authorization for the frozen source host."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = [
+  "github.com/cespare/xxhash/v2@v2.3.0",
+  "github.com/dgraph-io/ristretto/v2@v2.2.0",
+  "github.com/dustin/go-humanize@v1.0.1",
+  "github.com/google/flatbuffers@v25.2.10+incompatible",
+  "github.com/klauspost/compress@v1.18.0",
+  "github.com/spf13/cobra@v1.9.1",
+  "github.com/stretchr/testify@v1.11.1",
+  "go.opentelemetry.io/contrib/zpages@v0.66.0",
+  "go.opentelemetry.io/otel@v1.41.0",
+  "golang.org/x/sys@v0.41.0",
+  "google.golang.org/protobuf@v1.36.7",
+]
+module_bundle = { digest = "sha256:b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc", size_bytes = 2623622, uri = "artifact://private/sha256:b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate a bounded, deterministic slice of Badger's pure-Go transactional key-value API through a typed subprocess bridge."
+keywords = ["go", "badger", "key-value", "transactions", "iterator", "go-modules", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "go-author-wave2-20260828"
+reason = "Frozen source, private module closure, typed bridge, separate verifier, and production compilation are complete; official Oracle and model Agent Run remain for the parent loop."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:98de3f3f037ad08c20c221559d3e384a6535c839a6477c78ba5a3ec0279dc67a", size_bytes = 924, uri = "artifact://private/sha256:98de3f3f037ad08c20c221559d3e384a6535c839a6477c78ba5a3ec0279dc67a", visibility = "private" }
+entrypoint = "contract.sh"

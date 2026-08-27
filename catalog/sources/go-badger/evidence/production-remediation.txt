@@ -1,0 +1,26 @@
+go-badger production remediation
+
+Frozen source: dgraph-io/badger at 679bf5b72c9e1788fe7454a28fb4e140221b6668
+Archive SHA-256: af7b42e0d2322dcbaf7517db422be67f0fc62070c9e0204c9ac2f49d6a6110e9
+License: Apache-2.0
+
+The upstream module declares go 1.24.0. The task contract requires the locked
+Go 1.26.5 runtime; the Oracle solve script verifies the source archive first,
+then updates the workspace go directive to 1.26.5 before the offline build.
+
+The first local verifier probe used a read-only /workspace bind mount. The
+workspace copier rejected it while normalizing file permissions, with exit 0
+from the verifier wrapper and grading reason candidate-workspace-rejected. This
+was a harness invocation error, not a candidate or task result. A writable
+workspace probe was rerun and passed 1/1 with reward 1.0.
+
+The Go compiler required a minimal generic remediation: materialize the private
+vendor closure into /tmp/go-candidate before the candidate-owned offline build.
+Without this, -mod=vendor could not resolve dependencies even though the
+closure had been copied into the image. The change is in
+src/nl2repobench/harbor/go_compiler.py and is covered by the production compile
+and the writable separate-verifier smoke.
+
+No Harbor Agent Run or official Oracle Run was started in this lane by contract.
+The parent loop must run the compiled task's Oracle with the exact source-host
+authorization and then run the model Agent Run and controls.

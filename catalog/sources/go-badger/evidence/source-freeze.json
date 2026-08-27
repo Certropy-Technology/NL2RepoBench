@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "upstream_url": "https://github.com/dgraph-io/badger",
+  "revision": "679bf5b72c9e1788fe7454a28fb4e140221b6668",
+  "archive_format": "tar",
+  "archive_sha256": "af7b42e0d2322dcbaf7517db422be67f0fc62070c9e0204c9ac2f49d6a6110e9",
+  "license_spdx": "Apache-2.0",
+  "license_file": "LICENSE",
+  "license_sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+  "toolchain": {
+    "go": "1.26.5",
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false,
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+  },
+  "upstream_probe": {
+    "command": "env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOTOOLCHAIN=local go test -count=1 -run 'TestWrite$|TestGet$|TestUpdateAndView$|TestIterate2Basic$' ./...",
+    "exit_code": 0,
+    "log": ".nl2repo/authoring-work/go-badger/provenance/upstream-go-test.log"
+  }
+}
