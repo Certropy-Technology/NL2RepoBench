@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "aiobotocore",
+  "source_revision": "c92e345814ad97e5ec0633dbd34be5d26ee90dd3",
+  "package_modules": 38,
+  "public_contract": [
+    "aiobotocore.__version__",
+    "aiobotocore.session.AioSession",
+    "aiobotocore.session.get_session",
+    "aiobotocore.config.AioConfig",
+    "aiobotocore.credentials.AioCredentials",
+    "aiobotocore.awsrequest.AioAWSResponse",
+    "aiobotocore.response.AioStreamingBody",
+    "aiobotocore.paginate.AioPaginator",
+    "aiobotocore.waiter.AIOWaiter",
+    "aiobotocore.stub.AioStubber"
+  ],
+  "adaptation_boundaries": [
+    "No live AWS endpoint or metadata service",
+    "No credential-process or subprocess credential provider",
+    "No proxy/TLS/native CRT integration",
+    "Async API calls are exercised through a child-side JSON-safe verifier"
+  ]
+}

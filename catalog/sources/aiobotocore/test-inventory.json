@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "aiobotocore",
+  "source_revision": "c92e345814ad97e5ec0633dbd34be5d26ee90dd3",
+  "upstream_test_files": 61,
+  "upstream_named_test_functions": 572,
+  "frozen_total": 24,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_ids": [
+    "version", "session_factory", "user_agent", "services", "regions",
+    "config_merge", "invalid_config", "service_model", "client_metadata",
+    "paginator", "waiters", "request_response", "stream_read",
+    "stream_lines", "stream_short_body", "stub_response", "stub_context",
+    "stub_mismatch", "stub_client_error", "stream_async_context", "exports",
+    "credentials", "config_user_agent", "dynamodb_model"
+  ],
+  "excluded_upstream_categories": [
+    "live AWS service integration", "proxy and TLS integration", "Docker/Moto",
+    "credential process and metadata service", "optional httpx backend"
+  ]
+}

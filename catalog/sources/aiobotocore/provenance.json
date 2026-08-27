@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "task_id": "aiobotocore",
+  "owner": "python-author-wave2-20260828",
+  "attempts": [
+    {
+      "stage": "source-freeze",
+      "command": "git fetch --depth=1 origin c92e345814ad97e5ec0633dbd34be5d26ee90dd3; git archive --format=tar c92e345814ad97e5ec0633dbd34be5d26ee90dd3 | sha256sum",
+      "tool_versions": {"git": "2.51.0", "python": "3.12.11", "uv": "0.11.32"},
+      "exit_code": 0,
+      "result": "revision c92e345814ad97e5ec0633dbd34be5d26ee90dd3; archive sha256:6118ac737ce18ff5e3ed0190e7cf8298a98ef2acd68e046f733050fe8934bc0d",
+      "next_action": "retain frozen revision and continue inventory"
+    },
+    {
+      "stage": "dependency-probe",
+      "command": "uv pip compile --generate-hashes --python-version 3.12 --output-file requirements.lock.txt requirements.in",
+      "tool_versions": {"uv": "0.11.32", "python": "3.12.11"},
+      "exit_code": 0,
+      "result": "26-package hash-locked closure; CAS sha256:ed2c1e136e723c10b1d9b830411572588e795ac6faac6d8b897e69892c9796b2",
+      "next_action": "attach lock artifact to source contract"
+    },
+    {
+      "stage": "verifier-probe",
+      "command": "python verifier/run.py against frozen upstream installed from the task lock",
+      "tool_versions": {"python": "3.12.11", "aiobotocore": "3.9.1", "botocore": "1.43.75"},
+      "exit_code": 0,
+      "result": "24/24 deterministic leaves passed",
+      "next_action": "build private verifier bundle and compile production task"
+    },
+    {
+      "stage": "harbor-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/aiobotocore --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_versions": {"harbor": "0.21.0", "uv": "0.11.32"},
+      "exit_code": 0,
+      "result": "production bundle manifest sha256:b0cac5a7ae1741416fd252cb35fea4bc9d2525cc65a2731bf4f2b619ba930dba",
+      "next_action": "run one Oracle and negative controls"
+    },
+    {
+      "stage": "oracle-and-controls",
+      "command": "Harbor Oracle, nop empty, stub, and forgery runs with verifier network probes",
+      "tool_versions": {"harbor": "0.21.0"},
+      "exit_code": 0,
+      "result": "Oracle 24/24 reward 1.0; empty/stub/forgery reward 0.0; public_network_available=false",
+      "next_action": "handoff for independent Agent Run and integrator review"
+    }
+  ]
+}

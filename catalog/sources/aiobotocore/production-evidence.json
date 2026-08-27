@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "task_id": "aiobotocore",
+  "terminal_kind": "valid",
+  "source_revision": "c92e345814ad97e5ec0633dbd34be5d26ee90dd3",
+  "source_archive_sha256": "sha256:6118ac737ce18ff5e3ed0190e7cf8298a98ef2acd68e046f733050fe8934bc0d",
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/compiled-final/aiobotocore/bundle.manifest.json",
+    "sha256": "sha256:b0cac5a7ae1741416fd252cb35fea4bc9d2525cc65a2731bf4f2b619ba930dba"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "sha256:ed2c1e136e723c10b1d9b830411572588e795ac6faac6d8b897e69892c9796b2",
+    "lock_size_bytes": 65273,
+    "packages": [
+      "aiohttp==3.14.3", "aioitertools==0.13.0", "botocore==1.43.75",
+      "jmespath==1.1.0", "multidict==6.7.1", "python-dateutil==2.9.0.post0",
+      "six==1.17.0", "urllib3==2.5.0", "wrapt==2.3.0",
+      "hatch-fancy-pypi-readme==25.1.0", "hatchling==1.32.0",
+      "setuptools==83.0.0", "wheel==0.45.1"
+    ]
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 24,
+    "collection": 24,
+    "verifier_bundle": "sha256:0967f4078fd55cae526291a0b87d1ef124aa706d82ed8dc9ca230c7a8f1c8a01"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/compiled-final/aiobotocore -a oracle --job-name aiobotocore-oracle-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/oracle --allow-agent-host github.com --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 24,
+    "total": 24,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/oracle/aiobotocore-oracle-20260828/aiobotocore__3jXpsXF/verifier/grading.json",
+      "sha256": "sha256:3b2d26341e673070adf753e0d33fef5456ea3aacf3b6c514ce95eafcbd897c28"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/oracle/aiobotocore-oracle-20260828/aiobotocore__3jXpsXF/verifier/network.json",
+      "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+    },
+    "source_fetch": "revision and archive digest assertions passed in solve.sh"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/compiled-final/aiobotocore -a nop --job-name aiobotocore-empty-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/empty/aiobotocore-empty-20260828/aiobotocore__G4MVT7T/verifier/grading.json", "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/empty/aiobotocore-empty-20260828/aiobotocore__G4MVT7T/verifier/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/controls/stub/aiobotocore-stub -a oracle --job-name aiobotocore-stub-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 24,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/stub/aiobotocore-stub-20260828/aiobotocore-stub__S9C8XjM/verifier/grading.json", "sha256": "sha256:966079fa261ec98790f2aec522965d5779a7e6725b9bb1b9a4916fd4f54967ba"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/stub/aiobotocore-stub-20260828/aiobotocore-stub__S9C8XjM/verifier/network.json", "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/controls/forgery/aiobotocore-forgery -a oracle --job-name aiobotocore-forgery-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 24,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/forgery/aiobotocore-forgery-20260828/aiobotocore-forgery__SmcFLJD/verifier/grading.json", "sha256": "sha256:966079fa261ec98790f2aec522965d5779a7e6725b9bb1b9a4916fd4f54967ba"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/forgery/aiobotocore-forgery-20260828/aiobotocore-forgery__SmcFLJD/verifier/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"}
+    },
+    "offline": {
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/aiobotocore/runs/oracle/aiobotocore-oracle-20260828/aiobotocore__3jXpsXF/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"}
+    }
+  },
+  "residual_risks": [
+    "The full upstream suite is not the denominator because it includes live-service, proxy/TLS, Docker/Moto, and optional backend paths.",
+    "The source host authorization is used only for the trusted Oracle solve; model Agent metadata remains no-network with no allowed hosts.",
+    "Blind review, model Agent Run, and publication approval remain outside this lane."
+  ],
+  "status": "controls-passed"
+}
