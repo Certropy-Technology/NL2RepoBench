@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dasel",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/TomWright/dasel",
+    "revision": "c5cf675972e68f17d0072c0e29801d09ca5c3951",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:721efc08d83c9c24c20fe61758fa379d3d6ede5dd750811289b400563946ddb9",
+    "source_archive_bytes": 4198400
+  },
+  "runtime": {
+    "identity": "go/go-modules",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "network_mode": "agent and verifier no-network; source host authorized only for Oracle"
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:1614d318bea93da429dced0e338071c59c971cfc879d9910e06f5db63fc3fab2", "size_bytes": 4401408},
+    "verifier_bundle": {"digest": "sha256:66ea8b65e6a9ca426d0f71303ffcda4064e15198834b3791be1b4cfc37798469", "size_bytes": 1255},
+    "oracle_bundle": {"digest": "sha256:950bd43644fbf749c44b86894d7729c66a8ca01227236312ccc0d0ece913a930", "size_bytes": 842},
+    "compiled_bundle": {
+      "path": ".nl2repo/compiled-final/go-dasel/bundle.manifest.json",
+      "sha256": "sha256:4b5d0a9966d3793db990b506888c3ed7e54a474f11f4893025dbd0048f3dd6ce",
+      "canonical_manifest_digest": "sha256:18251623ccd2efa1faf2252bf3d610c3de2caa3d71bf6bd2816bab3577dbddb6",
+      "file_count": 2376
+    }
+  },
+  "tests": {
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "upstream_baseline": "2050 passing test events and 6 skips across 20 packages in each of 3 offline source runs",
+    "local_bridge_contract": "PASS"
+  },
+  "commands": [
+    {"command": "go version", "exit_code": 0, "result": "go1.26.5 linux/amd64"},
+    {"command": "uv run --frozen --project harbor-runner harbor --version", "exit_code": 0, "result": "0.21.0"},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "runs": 3, "exit_codes": [0, 0, 0], "evidence": ".nl2repo/evidence/go-dasel/source-test-1.jsonl"},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet -mod=vendor ./...", "exit_code": 0, "evidence": ".nl2repo/evidence/go-dasel/go-vet-final.log"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-dasel", "exit_code": 0, "evidence": ".nl2repo/evidence/go-dasel/validate-source-final.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "0 errors; shared catalog warnings are unrelated to go-dasel", "evidence": ".nl2repo/evidence/go-dasel/lint-network-final.log"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-dasel --output .nl2repo/compiled-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "evidence": ".nl2repo/evidence/go-dasel/compile-final.log"},
+    {"command": "gofmt -d bridge.go; bash -n task-local scripts", "exit_code": 0, "evidence": ".nl2repo/evidence/go-dasel/syntax.log"},
+    {"command": "Harbor Oracle current compiled bundle with --allow-agent-host github.com", "exit_code": 0, "evidence": ".nl2repo/evidence/go-dasel/oracle-current.log"}
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/go-dasel -a oracle --job-name go-dasel-oracle-current -o .nl2repo/runs-final/go-dasel/current --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "total": 1,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-oracle-current/go-dasel__bmQW3uk/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+    "network": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-oracle-current/go-dasel__bmQW3uk/verifier/network.json", "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"},
+    "source_host_authorization": "github.com only for Oracle",
+    "remediation": "The first Oracle attempt lacked source-host authorization and the second lacked the preinstalled vendor closure; the final solve reuses the digest-verified private module bundle and passes."
+  },
+  "controls": {
+    "empty": {"command": "Harbor nop control on current compiled bundle", "exit_code": 0, "valid": true, "reward": 0.0, "grading": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-empty-current/go-dasel__RpVKE35/verifier/grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"}, "network": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-empty-current/go-dasel__RpVKE35/verifier/network.json", "sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c"}},
+    "stub": {"command": "Harbor stub control prepared from current bundle", "exit_code": 0, "valid": true, "reward": 0.0, "grading": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-stub-current/go-dasel-stub__GAQEuuj/verifier/grading.json", "sha256": "sha256:7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457"}, "network": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-stub-current/go-dasel-stub__GAQEuuj/verifier/network.json", "sha256": "sha256:f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8"}},
+    "forgery": {"command": "Harbor forgery control prepared from current bundle", "exit_code": 0, "valid": true, "reward": 0.0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-forgery-current/go-dasel-forgery__vho5CFB/verifier/grading.json", "sha256": "sha256:7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457"}, "network": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-forgery-current/go-dasel-forgery__vho5CFB/verifier/network.json", "sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9"}},
+    "offline": {"command": "Harbor Oracle verifier network probe with no-network verifier", "exit_code": 0, "valid": true, "reward": 1.0, "passed": 1, "total": 1, "network": {"path": ".nl2repo/runs-final/go-dasel/current/go-dasel-offline-current/go-dasel__xj926oh/verifier/network.json", "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"}}
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane; agent evaluation remains pending integrator workflow.",
+    "The contract freezes one verifier-owned public-api leaf; the upstream suite is retained as source baseline evidence.",
+    "The task carries the complete upstream module closure because the root API imports selector/model packages; the closure is private and hash-addressed."
+  ]
+}

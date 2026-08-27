@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dasel",
+  "source_freeze": {
+    "revision": "c5cf675972e68f17d0072c0e29801d09ca5c3951",
+    "source_digest": "sha256:721efc08d83c9c24c20fe61758fa379d3d6ede5dd750811289b400563946ddb9"
+  },
+  "api_inventory": {
+    "path": "evidence/api-inventory.json",
+    "selected_symbols": ["Query", "Select", "Modify"]
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "Query and Select return values in selector order",
+      "map, spread, property access, filtering, conditionals, and arithmetic",
+      "root index selection",
+      "in-place nested and indexed Modify updates",
+      "invalid selector errors and unchanged siblings",
+      "bounded bridge input and structured errors"
+    ]
+  },
+  "bidirectional_traceability": [
+    {"assertion_class": "Query and Select return values in selector order", "instruction": "instruction.md#api-usage-guide", "api": "Query, Select", "private_case_group": "selection-basics"},
+    {"assertion_class": "map, spread, property access, filtering, conditionals, and arithmetic", "instruction": "instruction.md#api-usage-guide", "api": "Select", "private_case_group": "selector-evaluation"},
+    {"assertion_class": "root index selection", "instruction": "instruction.md#api-usage-guide", "api": "Select", "private_case_group": "index-selection"},
+    {"assertion_class": "in-place nested and indexed Modify updates", "instruction": "instruction.md#api-usage-guide", "api": "Modify", "private_case_group": "mutation"},
+    {"assertion_class": "invalid selector errors and unchanged siblings", "instruction": "instruction.md#api-usage-guide", "api": "Modify, Select", "private_case_group": "error-contract"},
+    {"assertion_class": "bounded bridge input and structured errors", "instruction": "instruction.md#implementation-notes", "api": "typed bridge", "private_case_group": "bridge-boundaries"}
+  ],
+  "source_baseline": {
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false,
+    "runs": 3,
+    "passed_test_events_each_run": 2050,
+    "skipped_events_each_run": 6,
+    "failed_test_events_each_run": 0
+  }
+}

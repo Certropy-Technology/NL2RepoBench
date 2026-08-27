@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dasel",
+  "method": "go/ast static review of the root package plus go list",
+  "package": "github.com/tomwright/dasel/v3",
+  "public_symbol_count_root": 3,
+  "public_symbols": ["Query", "Select", "Modify"],
+  "implementation_files_root": ["api.go"],
+  "source_packages": 20,
+  "source_test_pass_events": 2050,
+  "source_skipped_events": 6,
+  "risk_flags": [
+    "filesystem-and-tty-adapters-out-of-scope",
+    "multi-format-parsers-out-of-scope",
+    "in-place-mutation-adapted-through-json-compatible-values",
+    "map-ordering-not-promised-by-select"
+  ],
+  "dependency_closure": "full upstream Go module closure frozen in a private vendor bundle",
+  "source_revision": "c5cf675972e68f17d0072c0e29801d09ca5c3951",
+  "source_digest": "sha256:721efc08d83c9c24c20fe61758fa379d3d6ede5dd750811289b400563946ddb9"
+}
