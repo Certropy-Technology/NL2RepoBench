@@ -162,7 +162,15 @@ class NodeHarborCompiler:
     ) -> Path:
         """Create a supported Node control without mutating the source bundle."""
 
-        if kind not in {"stub", "forgery"}:
+        if kind not in {
+            "empty",
+            "stub",
+            "forgery",
+            "install-script",
+            "loader-hook",
+            "hang",
+            "oversized-output",
+        }:
             raise NodeHarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"
         if not script.is_file():
@@ -201,6 +209,12 @@ class NodeHarborCompiler:
     def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
         image = self.toolchain.images.agent_base
         dockerfile = f"""FROM --platform=linux/amd64 {image}
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    ca-certificates=20250419~deb12u1 \
+    git=1:2.39.5-0+deb12u3 \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
 """

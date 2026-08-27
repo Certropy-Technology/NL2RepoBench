@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nock",
+  "source_revision": "1ee467c68d601ddc22629d7a657061e6c27097c2",
+  "upstream": {
+    "framework": "mocha",
+    "test_files": 59,
+    "suites": 114,
+    "collected": 649,
+    "passes_offline": 635,
+    "pending_offline": 11,
+    "failures_offline": 3,
+    "passes_networked": 637,
+    "pending_networked": 11,
+    "failures_networked": 1,
+    "stable_offline_runs": 3,
+    "offline_failure_titles": [
+      "Nock lifecycle functions `cleanAll()` removes a half-consumed mock",
+      "Nock lifecycle functions `cleanAll()` removes persistent mocks",
+      "Native Fetch should return a url for cloned response URL"
+    ],
+    "networked_failure_titles": [
+      "Native Fetch should return a url for cloned response URL"
+    ]
+  },
+  "private_contract": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 37,
+    "boundary": "fresh bounded candidate subprocess per leaf through a private JSON adapter",
+    "categories": {
+      "package_and_exports": 1,
+      "methods_and_generic_intercept": 8,
+      "request_matching": 6,
+      "reply_shapes_and_headers": 7,
+      "cardinality_and_state": 8,
+      "activation_errors_and_definitions": 4,
+      "filtering_and_fetch": 3
+    },
+    "oracle_direct": {
+      "node": "24.19.0",
+      "npm": "11.17.0",
+      "network": "none",
+      "collected": 37,
+      "passed": 37,
+      "failed": 0
+    }
+  }
+}

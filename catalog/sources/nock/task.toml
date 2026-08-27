@@ -1,0 +1,89 @@
+schema_version = "2.0"
+task_id = "nock"
+version = "1.0.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:06bfc02406c08733c17c9e10dbfc7c158e11098bfa619135b72b890b9e3baca3", size_bytes = 10240, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:06bfc02406c08733c17c9e10dbfc7c158e11098bfa619135b72b890b9e3baca3", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "http-mocking"
+tags = ["node", "npm", "commonjs", "http", "mocking", "interception", "fetch", "node-test"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/nock/nock"
+revision = "1ee467c68d601ddc22629d7a657061e6c27097c2"
+license_spdx = "MIT"
+source_digest = "sha256:8c54a05e667935a42b69be72e1a95d0fb027805068dcc11b0d42b654525e0918"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen npm closure is installed from a private cache before verification; candidate and verifier execution require no egress, while only the trusted Oracle receives a run-scoped source-host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+artifact = { digest = "sha256:ba76c029f45f2c6077bd6f9e5693b16fafacc7c8852ffac41c2f228d0f8b9bae", size_bytes = 1863680, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:ba76c029f45f2c6077bd6f9e5693b16fafacc7c8852ffac41c2f228d0f8b9bae", visibility = "private" }
+packages = ["@mswjs/interceptors", "json-stringify-safe", "propagate"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 37
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:582caa23f4e24f2ca36d3447de8b720aec74cc5e0f6079f9b56909b0aaf801a7", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:582caa23f4e24f2ca36d3447de8b720aec74cc5e0f6079f9b56909b0aaf801a7", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+passed_statuses = ["passed"]
+denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build a Nock-compatible CommonJS HTTP mocking and interception package from an empty Node workspace."
+keywords = ["node", "npm", "http", "mocking", "interception", "fetch", "node-test"]
+agent_timeout_sec = 1500.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-discovery-20260826-r1/nock"
+reason = "Source, runtime closure, private subprocess verifier, and Oracle bundle are frozen; Harbor Oracle and negative controls remain to be recorded."
