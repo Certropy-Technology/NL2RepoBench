@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "private-artifact-expansion",
+  "task_id": "typescript",
+  "expanded_path": "catalog/tasks/typescript/solution/source.tar",
+  "expanded_sha256": "sha256:d3de9628ec8a782ccc5e0f0261a23fc642b9b20d5e614f78a324e5abf8b3be3b",
+  "expanded_size_bytes": 263444480,
+  "parent_artifact": {
+    "digest": "sha256:70685ebbe86dc938a75a23ed64635acb6d99f9c3061bb89158f1a1f3bdb0ae77",
+    "size_bytes": 25739456,
+    "cas_path": ".nl2repo/artifacts/private/sha256/70/70685ebbe86dc938a75a23ed64635acb6d99f9c3061bb89158f1a1f3bdb0ae77",
+    "oss_key": "nl2repobench/private-artifacts/sha256/70/70685ebbe86dc938a75a23ed64635acb6d99f9c3061bb89158f1a1f3bdb0ae77"
+  },
+  "reason_not_in_git": "The expanded private archive is larger than GitHub's 100 MiB blob limit; the parent content-addressed artifact is retained in the verified private CAS/OSS archive and deterministically expands to this file.",
+  "recoverable": true
+}

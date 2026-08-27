@@ -13,6 +13,9 @@ build/
 dist/
 htmlcov/
 .nl2repo/runs/
+# Expanded private Oracle archives over the hosting provider's blob limit;
+# recover them from the content-addressed private artifact store.
+/catalog/tasks/typescript/solution/source.tar
 results/
 *.log
 *.out
