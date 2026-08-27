@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-until",
+  "framework": "node:test",
+  "expected_total": 18,
+  "adapter": "allowlisted JSON scenarios executed in an unprivileged candidate child",
+  "coverage": [
+    {"area": "package identity, exports, dependency and script policy", "leaves": 1},
+    {"area": "generic TypeScript discriminated tuple declaration", "leaves": 1},
+    {"area": "fulfilled strings, structures, falsey values, null and undefined", "leaves": 6},
+    {"area": "Error and non-Error promise rejection reasons", "leaves": 4},
+    {"area": "synchronous Error and non-Error throws", "leaves": 2},
+    {"area": "single callback invocation and delayed settlement", "leaves": 3},
+    {"area": "independent parallel calls", "leaves": 1}
+  ],
+  "upstream_baseline": {
+    "runtime_tests": 2,
+    "type_tests": 2,
+    "total": 4,
+    "result": "passed"
+  },
+  "determinism": "setImmediate turns replace elapsed-time assertions; no random input or external I/O is used."
+}

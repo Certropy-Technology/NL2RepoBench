@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-until",
+  "catalog_source_path": "catalog/sources/@open-draft/until",
+  "source_revision": "213f19957095cd0e4219e671c159068f451d9661",
+  "discovery_package": "@open-draft/until",
+  "frozen_package": {
+    "name": "until-async",
+    "version": "3.0.2",
+    "module_system": "esm",
+    "runtime_entry": "build/index.js",
+    "types_entry": "build/index.d.ts",
+    "runtime_dependencies": {}
+  },
+  "public_exports": [
+    {
+      "export": "until",
+      "kind": "named-function",
+      "signature": "until<RejectionReason = Error, ResolveData = unknown>(callback: () => Promise<ResolveData>): Promise<UntilResult<RejectionReason, ResolveData>>"
+    },
+    {
+      "export": "UntilResult",
+      "kind": "type",
+      "signature": "[reason: RejectionReason, data: null] | [reason: null, data: ResolveData]"
+    }
+  ],
+  "source_metrics": {
+    "tracked_files": 15,
+    "runtime_source_loc": 24,
+    "runtime_test_leaves": 2,
+    "type_test_leaves": 2
+  },
+  "inventory_notes": [
+    "The fixed revision renamed the npm package from @open-draft/until to until-async before version 3.0.2.",
+    "The callback boundary requires a declarative child-side adapter; raw functions never cross the trusted verifier boundary.",
+    "Build, release, lint, and test devDependencies are not part of the candidate runtime contract."
+  ]
+}

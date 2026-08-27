@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "open-draft-until"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "async-error-handling"
+tags = ["node", "npm", "esm", "promise", "async", "tuple", "typescript", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/open-draft/until"
+revision = "213f19957095cd0e4219e671c159068f451d9661"
+license_spdx = "MIT"
+source_digest = "sha256:45017ae63db183e97f725607cd6e01e5f543241d187b8f44407bd89372605178"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The package has no runtime dependencies. A verifier-owned root-only npm v3 lock and empty cache allow offline candidate installation. The model Agent receives no source or registry host; only the trusted Oracle may receive the exact upstream host at run time."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:18724f4e0d3e6517fe9b314534849f87850ad9d5a0105a24563d69beb00dfd5a", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:18724f4e0d3e6517fe9b314534849f87850ad9d5a0105a24563d69beb00dfd5a", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 18
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
+test_bundle = { digest = "sha256:b7b598098e85dea4736995b229568279dc80ef0d7d59513e38e68ecf2c693564", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:b7b598098e85dea4736995b229568279dc80ef0d7d59513e38e68ecf2c693564", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build until-async 3.0.2 as a dependency-free ESM promise-to-tuple utility with matching TypeScript declarations."
+keywords = ["node", "npm", "esm", "promise", "async", "tuple", "typescript", "until-async"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 420.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c2"
+reason = "Frozen source, API/test inventory, root-only npm v3 closure, private 18-leaf verifier, production compile, Harbor Oracle 18/18 reward 1.0, and empty/stub/forgery/hang/install-script/loader-hook/offline controls passed. No model Agent Run was started."
+
+[oracle_bundle]
+digest = "sha256:d45f763f4c9955dcf1d730c37d6a1bb8ac5b6e91714ab7f120707dc327da4de2"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:d45f763f4c9955dcf1d730c37d6a1bb8ac5b6e91714ab7f120707dc327da4de2"
+visibility = "private"

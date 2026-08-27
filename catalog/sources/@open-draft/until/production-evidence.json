@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-until",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 18,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/open-draft/until",
+    "revision": "213f19957095cd0e4219e671c159068f451d9661",
+    "source_digest": "sha256:45017ae63db183e97f725607cd6e01e5f543241d187b8f44407bd89372605178",
+    "license_spdx": "MIT",
+    "license_path": "LICENSE",
+    "license_digest": "sha256:40fa61cad189e31256c0483cf454045dbef07b098d9f02642a4e9517b3c13f59",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "discovery_package": "@open-draft/until",
+    "frozen_package": "until-async@3.0.2"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:f90581434fa21829d252b071219dabc481939fbae99783d4c4a9471f5f8b6670",
+    "dependency_artifact": "sha256:18724f4e0d3e6517fe9b314534849f87850ad9d5a0105a24563d69beb00dfd5a",
+    "commands_artifact": "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7",
+    "test_bundle": "sha256:b7b598098e85dea4736995b229568279dc80ef0d7d59513e38e68ecf2c693564",
+    "oracle_bundle": "sha256:d45f763f4c9955dcf1d730c37d6a1bb8ac5b6e91714ab7f120707dc327da4de2",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/@open-draft/until --output .nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/compiled-final/open-draft-until",
+    "bundle_manifest_sha256": "sha256:654a870b35ffb4fd8d7935721ed8b78ee394b9025ed62da4855635cd02657fa7",
+    "canonical_manifest_digest": "sha256:8755275d9e3546d673ec3263b405cff5faddf7bdf438ed91964edc2ee0d999aa",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 79,
+    "manifest_mismatches": 0
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "local_agent_image_id": "sha256:e1395b97432ccc01a2f4e903319f1a94d4bffd4b8c37f4c1419cbe01e961ad6e",
+    "local_verifier_image_id": "sha256:f2f34950688f01e2e46052bd2b95cb3fad4444e76f21b2f624e0ba297b9994b6",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": "3",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:18724f4e0d3e6517fe9b314534849f87850ad9d5a0105a24563d69beb00dfd5a",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:18724f4e0d3e6517fe9b314534849f87850ad9d5a0105a24563d69beb00dfd5a",
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/compiled-final/open-draft-until -a oracle --allow-agent-host github.com --job-name open-draft-until-oracle-final -o .nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/harbor-oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "trial": "open-draft-until__a2Pfboq",
+    "harbor_exceptions": 0,
+    "valid": true,
+    "expected_total": 18,
+    "collected": 18,
+    "passed": 18,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/harbor-oracle-final/open-draft-until-oracle-final/open-draft-until__a2Pfboq/verifier/grading.json",
+      "sha256": "sha256:86d7f7c6315492a6a1a0ffc233c83f428bdfc44b5542300c5a5d4b6761e727c7"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/harbor-oracle-final/open-draft-until-oracle-final/open-draft-until__a2Pfboq/verifier/network.json",
+      "sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c"
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/empty/logs/verifier/grading.json",
+      "grading_sha256": "sha256:a0553e0e1bc6d260c867f036950921e31ca45c3dcdd6aa43dab997435db484ce",
+      "network_sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 18,
+      "passed": 3,
+      "failed": 15,
+      "reward": 0.16666666666666666,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/stub/logs/verifier/grading.json",
+      "grading_sha256": "sha256:e691173244b02f6e72268cab0e74f6b2a3db81c47384f988c31c520ffdd950f2",
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 18,
+      "passed": 3,
+      "failed": 15,
+      "reward": 0.16666666666666666,
+      "public_network_available": false,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward": 1.0,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/forgery/logs/verifier/grading.json",
+      "grading_sha256": "sha256:e691173244b02f6e72268cab0e74f6b2a3db81c47384f988c31c520ffdd950f2",
+      "network_sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+    },
+    "hang": {
+      "exit_code": 0,
+      "valid": true,
+      "bounded": true,
+      "collected": 18,
+      "passed": 2,
+      "failed": 16,
+      "reward": 0.1111111111111111,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/hang/logs/verifier/grading.json",
+      "grading_sha256": "sha256:ac44c80d0ce405779f609f50b49536e9167f3d2600eddecca07b5274042a409e",
+      "network_sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+    },
+    "install_script": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/install-script/logs/verifier/grading.json",
+      "grading_sha256": "sha256:a0553e0e1bc6d260c867f036950921e31ca45c3dcdd6aa43dab997435db484ce",
+      "network_sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"
+    },
+    "loader_hook": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 18,
+      "passed": 3,
+      "failed": 15,
+      "reward": 0.16666666666666666,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/loader-hook/logs/verifier/grading.json",
+      "grading_sha256": "sha256:e691173244b02f6e72268cab0e74f6b2a3db81c47384f988c31c520ffdd950f2",
+      "network_sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 18,
+      "passed": 2,
+      "failed": 16,
+      "reward": 0.1111111111111111,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/control-results-final/offline/logs/verifier/grading.json",
+      "grading_sha256": "sha256:ac44c80d0ce405779f609f50b49536e9167f3d2600eddecca07b5274042a409e",
+      "network_sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+    }
+  },
+  "commands": [
+    {
+      "stage": "upstream-baseline",
+      "command": "Node 24.19.0 image: pnpm 9.15.0 frozen install; vitest --run; tsdown; publint",
+      "exit_code": 0,
+      "result": "2 runtime tests and 2 type tests passed; build and publint passed"
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/@open-draft/until",
+      "exit_code": 0,
+      "result": "controls-passed"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/@open-draft/until --output .nl2repo/authoring-work/node-author-wave2-20260828/open-draft-until/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "result": "79 entries; 0 integrity mismatches"
+    },
+    {
+      "stage": "final-oracle",
+      "command": "Harbor 0.21.0 oracle with run-scoped --allow-agent-host github.com",
+      "exit_code": 0,
+      "result": "valid=true; 18/18; reward=1.0; no exception"
+    },
+    {
+      "stage": "final-controls",
+      "command": "prepare-control plus direct Agent/Verifier Docker runs for empty, stub, forgery, hang, install-script, loader-hook, and offline",
+      "exit_code": 0,
+      "result": "all bounded low-score controls completed under --network none"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "235 tasks scanned; 0 errors; 136 unrelated warnings; 0 findings for open-draft-until"
+    },
+    {
+      "stage": "deterministic-compile",
+      "command": "repeat production compile and recursive byte comparison against compiled-final",
+      "exit_code": 0,
+      "result": "byte-identical; repeated bundle manifest SHA-256 sha256:654a870b35ffb4fd8d7935721ed8b78ee394b9025ed62da4855635cd02657fa7"
+    },
+    {
+      "stage": "focused-tests",
+      "command": "uv run pytest -q --no-cov tests/test_node_foundation.py tests/test_node_controls.py tests/test_node_control_summary.py tests/test_node_production_gate.py",
+      "exit_code": 0,
+      "result": "50 passed"
+    },
+    {
+      "stage": "syntax-and-serialization",
+      "command": "node --check private modules; bash -n Oracle/control scripts; parse source JSON/TOML",
+      "exit_code": 0,
+      "result": "all checks passed"
+    }
+  ],
+  "residual_risks": [
+    "Independent blind review and spec-traceability approval remain integrator/reviewer work.",
+    "No model Agent Run was started, as required by this lane boundary.",
+    "The upstream identity changed from the discovery package @open-draft/until to until-async; the public instruction and provenance state that mapping explicitly.",
+    "The local image IDs prove this host's build; publication still requires the integrator to retain or publish immutable production image references."
+  ],
+  "notes": "The task is ready for an independent Agent Run. Dataset integration, model pilot, review approval, and publication are intentionally outside this lane."
+}
