@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "esbuild",
+  "source_revision": "f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
+  "target_package": {
+    "name": "esbuild",
+    "version": "0.28.2",
+    "entry": "lib/entry.cjs",
+    "runtime_boundary": "CommonJS require from a clean consumer directory"
+  },
+  "public_api_slice": [
+    { "export": "transformSync", "signature_source": "lib/main.d.ts:623", "behaviors": ["typescript", "javascript", "syntax minification", "jsx", "cjs/esm format", "inline source map", "invalid-source error"] },
+    { "export": "buildSync", "signature_source": "lib/main.d.ts:613", "behaviors": ["stdin", "write=false", "bundle", "cjs/esm format", "outputFiles", "metafile"] },
+    { "export": "formatMessagesSync", "signature_source": "lib/main.d.ts:631", "behaviors": ["error marker", "file location", "deterministic formatting"] },
+    { "export": "analyzeMetafileSync", "signature_source": "lib/main.d.ts:641", "behaviors": ["JSON metafile", "input/output names"] }
+  ],
+  "test_framework": "node:test",
+  "test_file": "tests/private/api.test.mjs",
+  "expected_total": 11,
+  "tests": [
+    "transforms TypeScript with the ts loader",
+    "minifies syntax without changing the expression result",
+    "supports JSX through the jsx loader",
+    "returns a source map when requested",
+    "builds stdin into outputFiles without writing to disk",
+    "bundles an entry point and emits a metafile",
+    "rejects invalid JavaScript with a structured error",
+    "formats an error message deterministically",
+    "analyzes a JSON metafile",
+    "returns a stable version from the synchronous API surface",
+    "returns empty warnings and errors for a valid transform"
+  ],
+  "traceability": {
+    "public_api_to_tests": "Each listed API has at least one direct assertion; transformSync and buildSync cover the primary behavior matrix.",
+    "error_and_packaging_coverage": "Invalid source, CommonJS entry loading, npm pack/install, and clean-consumer resolution are covered by private tests and verifier runtime.",
+    "fixed_denominator": "Frozen collection is 11 node:test leaves; collection mismatch fails grading."
+  }
+}

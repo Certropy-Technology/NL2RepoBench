@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/evanw/esbuild"
 revision = "f6058f8364fe7ab91ca57a83e02577ed74c9cae4"
 license_spdx = "MIT"
-source_digest = "sha256:93c9ac8c1e6afba13f21749180b5a4ee79e36f145cfe180a8b6a1afeb75b8a6e"
+source_digest = "sha256:76373fd9b4db6885490f44f3744c8845f6c554c186f601d1d76214b067f2aa65"
 submodules = []
 
 [environment]
@@ -49,7 +49,7 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:aa416bda29b7abe7bc918632746f594b28c50b523c2738acc54d2da0f103c345", size_bytes = 449, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:aa416bda29b7abe7bc918632746f594b28c50b523c2738acc54d2da0f103c345", visibility = "private" }
+artifact = { digest = "sha256:3ee676c55a94eb68d531ecd2b9d4b8074bb04eb652a58e48cfb3ce25546db6eb", size_bytes = 447, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3ee676c55a94eb68d531ecd2b9d4b8074bb04eb652a58e48cfb3ce25546db6eb", visibility = "private" }
 packages = []
 
 [tests]
@@ -57,8 +57,8 @@ framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 11
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
-test_bundle = { digest = "sha256:6a0f8014a2b15889a787a286c0e375fbe25bc93f91a089a1f21a0e2a5d815d01", size_bytes = 1863, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6a0f8014a2b15889a787a286c0e375fbe25bc93f91a089a1f21a0e2a5d815d01", visibility = "private" }
+commands_artifact = { digest = "sha256:364b410639eb2650fdd26115626b23cad2d3ecc25f1eb3be44228342e278f6c2", size_bytes = 260, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:364b410639eb2650fdd26115626b23cad2d3ecc25f1eb3be44228342e278f6c2", visibility = "private" }
+test_bundle = { digest = "sha256:b5423836b1fcbedc3888ca3aa120b0c139208781e0b87d0f2e3efa109402af9f", size_bytes = 1860, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:b5423836b1fcbedc3888ca3aa120b0c139208781e0b87d0f2e3efa109402af9f", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -79,13 +79,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-owner = "repair/esbuild"
-reason = "The previous controls-passed claim is not reproducible in this checkout: production compile fails because the referenced private npm bundle is missing, and no task-specific Harbor Oracle/control/network receipts are discoverable. The invalid runtime is removed."
+status = "packaged"
+owner = "node-author-gpt56-wide-20260826-r2"
 
 [oracle_bundle]
-digest = "sha256:8531700a15c8bdd44a9ee283b89d1efcd64c60d6fe166a0b8bd16bb1434e03b3"
-size_bytes = 4740525
+digest = "sha256:d2214195d5babab8fb72ca340d30265f8788993ff7c1df22e2c56b9d534108fe"
+size_bytes = 4740534
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:8531700a15c8bdd44a9ee283b89d1efcd64c60d6fe166a0b8bd16bb1434e03b3"
+uri = "artifact://private/sha256:d2214195d5babab8fb72ca340d30265f8788993ff7c1df22e2c56b9d534108fe"
 visibility = "private"

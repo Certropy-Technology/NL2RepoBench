@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "task_id": "esbuild",
+  "upstream_url": "https://github.com/evanw/esbuild",
+  "revision": "f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
+  "source_archive_sha256": "sha256:76373fd9b4db6885490f44f3744c8845f6c554c186f601d1d76214b067f2aa65",
+  "license": {
+    "spdx": "MIT",
+    "file": "source/LICENSE.md",
+    "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+  },
+  "commands": [
+    {
+      "command": "git clone --no-checkout https://github.com/evanw/esbuild <work>/source && git -C <work>/source fetch --depth 1 origin f6058f8364fe7ab91ca57a83e02577ed74c9cae4 && git -C <work>/source checkout --detach f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
+      "exit_code": 0,
+      "stdout": "<work>/source-probes/source-fetch.stdout",
+      "stderr": "<work>/source-probes/source-fetch.stderr"
+    },
+    {
+      "command": "git -C <work>/source archive --format=tar f6058f8364fe7ab91ca57a83e02577ed74c9cae4 | sha256sum",
+      "exit_code": 0,
+      "observed": "76373fd9b4db6885490f44f3744c8845f6c554c186f601d1d76214b067f2aa65"
+    },
+    {
+      "command": "GOTOOLCHAIN=local go test ./cmd/... ./internal/... ./pkg/...",
+      "exit_code": 0,
+      "stdout": "<work>/source-probes/go-test.stdout",
+      "stderr": "<work>/source-probes/go-test.stderr"
+    },
+    {
+      "command": "CGO_ENABLED=0 GOTOOLCHAIN=local go build -trimpath -o <work>/source-probes/esbuild ./cmd/esbuild",
+      "exit_code": 0,
+      "observed": "binary reports version 0.28.2",
+      "stdout": "<work>/source-probes/go-build.stdout",
+      "stderr": "<work>/source-probes/go-build.stderr"
+    }
+  ],
+  "tool_versions": {
+    "node": "v22.23.1",
+    "npm": "10.9.8",
+    "go": "go1.26.5-X:nodwarf5",
+    "target_runtime": "node 24.19.0 / npm 11.17.0"
+  },
+  "inventory_summary": {
+    "tracked_files": 350,
+    "go_files": 157,
+    "typescript_javascript_files": 40,
+    "go_test_files": 34,
+    "javascript_test_files": 15,
+    "source_loc": 192795
+  },
+  "notes": [
+    "The prior catalog source digest did not match the reproducible git archive at this revision; the task contract now records the verified archive digest.",
+    "The upstream tree contains a tracked symlink for scripts/browser/esbuild.wasm.bagel; the Oracle source archive preserves it, while the model task remains source-isolated and no-network."
+  ]
+}

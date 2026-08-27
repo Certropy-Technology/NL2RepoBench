@@ -1,27 +1,61 @@
 {
   "schema_version": "1.0",
   "task_id": "esbuild",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "environment",
-    "next_step": "Restore or re-register the referenced private npm bundle, recompile without --allow-incomplete, then rerun Harbor 0.21.0 Oracle and every control with hash-bound grading and network receipts before reopening.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/evanw/esbuild",
-      "revision": "f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
-      "source_digest": "sha256:93c9ac8c1e6afba13f21749180b5a4ee79e36f145cfe180a8b6a1afeb75b8a6e",
-      "license_spdx": "MIT"
+  "terminal_kind": "awaiting-agent-run",
+  "status": "packaged",
+  "source": {
+    "revision": "f6058f8364fe7ab91ca57a83e02577ed74c9cae4",
+    "source_archive_sha256": "sha256:76373fd9b4db6885490f44f3744c8845f6c554c186f601d1d76214b067f2aa65",
+    "license": "MIT"
+  },
+  "production_compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/esbuild --output .nl2repo/authoring-work/node-author-wide-20260826/esbuild/compiled-production-final --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/authoring-work/node-author-wide-20260826/esbuild/compiled-production-final/esbuild/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:5c3bce76d096cd267747575292bbc33c8c5decf2ee7846be5025183ac23080b3"
+  },
+  "trusted_verifier_probe": {
+    "image": "nl2repobench/esbuild-verifier-probe@sha256:ed3de63452b1af0636148a024a6fb3d1fcaceb4a9eea78b8932279a27cd73832",
+    "network_mode": "none",
+    "full_candidate": {
+      "collected": 11,
+      "passed": 11,
+      "reward": 1.0,
+      "valid": true,
+      "logs": ".nl2repo/authoring-work/node-author-wide-20260826/esbuild/verifier-logs/full/verifier"
     },
-    "commands": [
-      {
-        "command": "uv run nl2repo harbor compile catalog/sources/esbuild --output /tmp/esbuild-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
-        "tool_version": "repository toolchain",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/esbuild/evidence/production-compile-missing-artifact.txt",
-          "sha256": "sha256:9b227d7e457a55a1784b779d1704728a7ee75acda25ab0fef19f3227d02bd3f1"
-        }
-      }
-    ]
-  }
+    "empty": {
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "logs": ".nl2repo/authoring-work/node-author-wide-20260826/esbuild/verifier-logs/empty/verifier"
+    },
+    "stub": {
+      "collected": 11,
+      "passed": 1,
+      "reward": 0.09090909090909091,
+      "valid": true,
+      "logs": ".nl2repo/authoring-work/node-author-wide-20260826/esbuild/verifier-logs/stub/verifier"
+    },
+    "forgery": {
+      "collected": 11,
+      "passed": 1,
+      "reward": 0.09090909090909091,
+      "valid": true,
+      "forged_reward_write_did_not_change_grading": true,
+      "logs": ".nl2repo/authoring-work/node-author-wide-20260826/esbuild/verifier-logs/forgery/verifier"
+    }
+  },
+  "harbor_oracle": {
+    "status": "not-run-by-lane",
+    "reason": "The authoring lane is prohibited from starting a Harbor Agent Run; the integrator/Agent Run Loop must execute the Oracle with the pinned source-host authorization."
+  },
+  "residual_gates": [
+    "Harbor 0.21.0 Oracle receipt with valid=true and reward >= 0.80",
+    "Harbor timeout control and independent offline control receipt",
+    "blind review and specification traceability review"
+  ]
 }

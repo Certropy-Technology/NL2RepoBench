@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "esbuild",
+  "ecosystem": "npm",
+  "runtime": "node 24.19.0",
+  "package_manager": "npm 11.17.0",
+  "install_contract": "npm ci --offline --ignore-scripts --no-audit --no-fund",
+  "lockfile": {
+    "version": 3,
+    "packages": 0,
+    "sha256": "2d48dbed6151e653adc9ab5d8869cba012d167f13352e45880e59104e1e02b9b"
+  },
+  "cache_entries": 0,
+  "artifact": {
+    "digest": "sha256:3ee676c55a94eb68d531ecd2b9d4b8074bb04eb652a58e48cfb3ce25546db6eb",
+    "size_bytes": 447,
+    "path": ".nl2repo/artifacts/private/sha256/3e/3ee676c55a94eb68d531ecd2b9d4b8074bb04eb652a58e48cfb3ce25546db6eb"
+  },
+  "validation": {
+    "command": "uv run nl2repo harbor compile catalog/sources/esbuild --output <task-local>/compiled-production --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+    "exit_code": 0,
+    "validator": "validate_npm_dependency_bundle"
+  },
+  "notes": [
+    "The candidate package intentionally has no runtime dependencies, no lifecycle hooks, and no native addon dependency metadata.",
+    "The trusted Oracle package contains a prebuilt Linux amd64 esbuild binary; it is private and is not copied into the Agent image."
+  ]
+}
