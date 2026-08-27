@@ -1,0 +1,109 @@
+schema_version = "2.0"
+task_id = "luxon"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "date-time-library"
+tags = ["node", "npm", "date-time", "duration", "interval", "timezone", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/moment/luxon"
+revision = "f427515a38f6a671f8de663e6bcc040ed81f114e"
+license_spdx = "MIT"
+source_digest = "sha256:d7bffd1685fbefa37084674a85ce1a088dffa1fee775e58ac64604ff937bb939"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Luxon has no runtime dependencies. Candidate installation uses an empty npm v3 closure offline, while the trusted Oracle alone receives the pinned source host at run scope."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:ecdf6cad4df23498be82c423ec371ec71d8de429bb194891d88c3ecf8c3ce113"
+size_bytes = 477
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:ecdf6cad4df23498be82c423ec371ec71d8de429bb194891d88c3ecf8c3ce113"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 58
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:5d0849c4332460d7de2b347bbb7e2eb041948e0b87783ccf11afb29112ba2fa0"
+size_bytes = 244
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:5d0849c4332460d7de2b347bbb7e2eb041948e0b87783ccf11afb29112ba2fa0"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:7b096be7f52c79410fa37931aa71ca013bab38d1010b54ce4ff9f4fbbe2d1056"
+size_bytes = 6688
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:7b096be7f52c79410fa37931aa71ca013bab38d1010b54ce4ff9f4fbbe2d1056"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Implement a deterministic JSON boundary over Luxon's DateTime, Duration, Interval, Info, and fixed-zone APIs."
+keywords = ["node", "npm", "date-time", "duration", "interval", "timezone", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 480.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:765c6ddd442852aa446e130b885c9b331a2be5a99de830d3d890f3256297609a"
+size_bytes = 930953
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:765c6ddd442852aa446e130b885c9b331a2be5a99de830d3d890f3256297609a"
+visibility = "private"
+
+[lifecycle]
+status = "specified"
+owner = "node-author-discovery-20260826-r1"
+reason = "Source, 58-leaf contract, private npm/test/Oracle artifacts, production compilation, Oracle, and negative controls are complete. The authoring lane is awaiting-agent-run; the shared lifecycle enum has no such value, and this lane did not start a model Agent Run."

@@ -179,6 +179,10 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "nl2repobench.verification.network_check" in generated_test_script
     assert "network.json" in generated_test_script
     assert "candidate-call-failed" in generated_test_script
+    generated_dockerfile = (first / "tests/Dockerfile").read_text()
+    assert "COPY --chmod=0555 private/candidate_bridge.mjs" not in generated_dockerfile
+    assert "/tests/private/candidate_bridge.mjs.in" in generated_dockerfile
+    assert "/opt/nl2repobench-candidate-bridge.mjs" in generated_dockerfile
     assert 'schema_version = "1.4"' in (first / "task.toml").read_text()
     assert 'language = "node"' in (first / "task.toml").read_text()
     assert not (first / "environment/docker-compose.yaml").exists()
@@ -196,6 +200,7 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
     controls.mkdir()
     (controls / "stub.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
     (controls / "forgery.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    (controls / "call-hang.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
 
     task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
         source, tmp_path / "tasks", allow_incomplete=True
@@ -216,6 +221,12 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
         assert file_path.is_file()
         assert entry["size_bytes"] == file_path.stat().st_size
         assert entry["sha256"] == hashlib.sha256(file_path.read_bytes()).hexdigest()
+
+    hang_control = HarborCompilerRegistry.default().prepare_control_bundle(
+        task_root, "call-hang", tmp_path / "hang-controls", NODE_TOOLCHAIN
+    )
+    hang_manifest = json.loads((hang_control / "bundle.manifest.json").read_text())
+    assert hang_manifest["mode"] == "control-call-hang"
 
 
 def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:

@@ -162,7 +162,7 @@ class NodeHarborCompiler:
     ) -> Path:
         """Create a supported Node control without mutating the source bundle."""
 
-        if kind not in {"stub", "forgery"}:
+        if kind not in {"empty", "stub", "forgery", "call-hang"}:
             raise NodeHarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"
         if not script.is_file():
@@ -267,6 +267,10 @@ COPY runtime /tests/runtime
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0500 private /tests/private
 COPY --chmod=0555 test.sh /tests/test.sh
+RUN if [ -f /tests/private/candidate_bridge.mjs.in ]; then \\
+      install -m 0555 /tests/private/candidate_bridge.mjs.in \\
+        /opt/nl2repobench-candidate-bridge.mjs; \\
+    fi
 RUN useradd --uid 10001 --create-home candidate \\
   && chmod -R 0555 /opt/nl2repobench-runtime \\
   && chmod -R 0500 /tests/private \\

@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "luxon",
+  "source": {
+    "upstream_url": "https://github.com/moment/luxon",
+    "revision": "f427515a38f6a671f8de663e6bcc040ed81f114e",
+    "tree": "56481e7b5540e011f616196154fd1d892c67bfb5",
+    "archive_sha256": "sha256:d7bffd1685fbefa37084674a85ce1a088dffa1fee775e58ac64604ff937bb939",
+    "archive_bytes": 2017280,
+    "license": "MIT",
+    "license_sha256": "sha256:6cb2f2bf697ee9c6fa9eb8f227c63ee6e7a3cba42d4717f14c745ef9b6cbc006",
+    "package_json_sha256": "sha256:8284e68bb4f286c77fb15d3227ed7e6d50a9de344e19af8a09128a4fade11818"
+  },
+  "inventory": {
+    "source_files": 25,
+    "test_files": 60,
+    "upstream_leaf_tests": 1222,
+    "contract_leaf_tests": 58,
+    "contract_scope": "explicit timestamp and zone JSON bridge over DateTime, Duration, Interval, Info, and FixedOffsetZone"
+  },
+  "probes": [
+    {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund --cache=.nl2repo/authoring-work/node-discovery-20260826-r1/luxon-npm-cache",
+      "runtime": "node v22.23.1; npm 10.9.8",
+      "exit_code": 0,
+      "result": "upstream development dependency install completed"
+    },
+    {
+      "command": "TZ=America/New_York npm test -- --runInBand",
+      "runtime": "node v22.23.1; npm 10.9.8",
+      "exit_code": 0,
+      "result": "1222 passed; 0 failed; 60 files"
+    },
+    {
+      "command": "npm ci --offline --ignore-scripts --no-audit --no-fund followed by npm pack",
+      "runtime": "author-built root-only npm v3 closure",
+      "exit_code": 0,
+      "result": "candidate package installed offline and packed successfully"
+    },
+    {
+      "command": "node --test private/contract.test.mjs through the isolated candidate bridge",
+      "runtime": "node v22.23.1; isolated candidate child; explicit NODE_LUXON_EXECUTABLE=/usr/bin/node",
+      "exit_code": 0,
+      "result": "58 collected; 58 passed"
+    }
+  ],
+  "artifacts": {
+    "dependency_bundle": "artifact://private/sha256:ecdf6cad4df23498be82c423ec371ec71d8de429bb194891d88c3ecf8c3ce113",
+    "commands_bundle": "artifact://private/sha256:5d0849c4332460d7de2b347bbb7e2eb041948e0b87783ccf11afb29112ba2fa0",
+    "test_bundle": "artifact://private/sha256:7b096be7f52c79410fa37931aa71ca013bab38d1010b54ce4ff9f4fbbe2d1056",
+    "oracle_bundle": "artifact://private/sha256:765c6ddd442852aa446e130b885c9b331a2be5a99de830d3d890f3256297609a"
+  },
+  "notes": [
+    "The package-lock artifact is a root-only npm v3 lock because Luxon has no runtime dependencies.",
+    "The upstream package build and test graph is not installed during candidate evaluation.",
+    "Harbor Oracle source fetch is pinned and digest checked; model agent runtime is no-network."
+  ]
+}
