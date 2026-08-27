@@ -162,7 +162,7 @@ class NodeHarborCompiler:
     ) -> Path:
         """Create a supported Node control without mutating the source bundle."""
 
-        if kind not in {"stub", "forgery"}:
+        if kind not in {"stub", "forgery", "timeout", "install-script"}:
             raise NodeHarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"
         if not script.is_file():

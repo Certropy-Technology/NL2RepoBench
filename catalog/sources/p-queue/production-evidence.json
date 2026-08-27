@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-26T19:18:54Z",
+  "task_id": "p-queue",
+  "terminal_kind": "controls-passed",
+  "handoff_status": "awaiting-agent-run",
+  "agent_run_started": false,
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/p-queue",
+    "revision": "180ab9e25cd10b6f548767d7176076b50d25e188",
+    "tree": "e8e63896c7368b45ead03441d007c76f2b2591e5",
+    "archive_sha256": "sha256:2dd1f460de3562b9c6b84f6de66ecf722ed52730dfcc877c02b6f9731351e79b",
+    "archive_size_bytes": 245760,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "checkout_clean": true
+  },
+  "environment": {
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "verifier_python": "3.12.14",
+    "agent_image_id": "sha256:5836ce05c1cb3e31ce3059cef264924e73564ea4030e7a605ec8e7a9d6bacc1b",
+    "verifier_image_id": "sha256:32c4c5703a0d94c098d700c5fc630d312d6b1173baab38222f13c5113aeec4b8",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden",
+      "agent_compose_network_override_present": false
+    }
+  },
+  "dependency_closure": {
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": {
+      "eventemitter3": "5.0.4",
+      "p-timeout": "7.0.1"
+    },
+    "artifact": {
+      "uri": "artifact://private/sha256:a5b2e71f921ab4178915df8c9f97e28f7f249afdc0e7da9fdaca9390e9709629",
+      "size_bytes": 204800
+    }
+  },
+  "inventory": {
+    "upstream_runtime_test_leaves": 206,
+    "upstream_baselines": [
+      {"run": 1, "passed": 206, "failed": 0, "exit_code": 0},
+      {"run": 2, "passed": 206, "failed": 0, "exit_code": 0},
+      {"run": 3, "passed": 206, "failed": 0, "exit_code": 0}
+    ],
+    "frozen_contract_total": 46,
+    "verifier_protocol": "node-test-json-v1 over an unprivileged subprocess JSON boundary",
+    "metric_contract": "fixed-test-pass-rate-v1"
+  },
+  "private_artifacts": {
+    "commands": {
+      "uri": "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661",
+      "size_bytes": 10240
+    },
+    "tests": {
+      "uri": "artifact://private/sha256:c6b3310a0d30b62a2213516abd0baaaa1dc2f75a946e2e253c1a11ae90b08948",
+      "size_bytes": 40960
+    },
+    "oracle": {
+      "uri": "artifact://private/sha256:8d2e87d889edae1564656cac5f22984d7a2f282543589dd34386901dea39ecb0",
+      "size_bytes": 317440
+    }
+  },
+  "toolchain": {
+    "harbor": "0.21.0",
+    "task_schema": "1.4",
+    "lock": ".nl2repo/p-queue-toolchain-mirror/toolchain.node.lock.toml",
+    "lock_sha256": "sha256:cc10b6a04be8c3f6461a116276a3f2f7d4425b27750f01a652591363f8fcc122",
+    "semantic_lock_digest": "sha256:a33b4a62b03e9f88698666dec20841624f65ba280f3cbebfa48135dea4e93b18",
+    "harbor_uv_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "mirror_reason": "The worktree inherited deleted root Harbor runner files; a byte-identical task-local mirror was used without restoring those unrelated deletions."
+  },
+  "production_bundle": {
+    "path": ".nl2repo/final-compile/p-queue",
+    "manifest_path": ".nl2repo/final-compile/p-queue/bundle.manifest.json",
+    "manifest_sha256": "sha256:784144266d1a694d4461f28eb9d1a1334b8ac5be955fc6d2e2a9ad7a97bff2ba",
+    "canonical_manifest_digest": "sha256:6808aebff2caee2d33c00db6aa11035f220ff7f1bd5438a8762375d55cb00bfd",
+    "file_count": 92,
+    "manifest_integrity_errors": [],
+    "repeat_compile_byte_identical": true,
+    "agent_private_material_findings": [],
+    "agent_compose_network_overrides": []
+  },
+  "validation": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_errors": 0,
+    "network_lint_warnings": 139,
+    "p_queue_network_findings": [],
+    "artifact_rebuild_exit_code": 0,
+    "bash_syntax_exit_code": 0,
+    "node_syntax_exit_code": 0,
+    "ruff_exit_code": 0,
+    "focused_tests": {
+      "passed": 45,
+      "deselected": 1,
+      "exit_code": 0,
+      "deselection_reason": "The omitted fixture directly reads the pre-existing deleted root harbor-runner/uv.lock; all compiler tests use the byte-identical task-local mirror."
+    },
+    "git_diff_check_exit_code": 0,
+    "lsp": "Unavailable because the configured ty executable is missing at /home/ayi/.local/share/nvim/mason/bin/ty."
+  },
+  "oracle": {
+    "command_exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 46,
+    "failed": 0,
+    "collected": 46,
+    "expected_total": 46,
+    "grading": ".nl2repo/final-harbor-jobs/oracle/2026-08-27__02-17-27/p-queue__gXQERH6/verifier/grading.json",
+    "reward_file": ".nl2repo/final-harbor-jobs/oracle/2026-08-27__02-17-27/p-queue__gXQERH6/verifier/reward.json",
+    "network": ".nl2repo/final-harbor-jobs/oracle/2026-08-27__02-17-27/p-queue__gXQERH6/verifier/network.json",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command_exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "reason": "candidate-installation-failed",
+      "grading": ".nl2repo/final-harbor-jobs/empty/2026-08-27__02-37-50/p-queue__NNehT9Q/verifier/grading.json"
+    },
+    "stub": {
+      "command_exit_code": 0,
+      "valid": true,
+      "passed": 2,
+      "failed": 44,
+      "collected": 46,
+      "reward": 0.043478260869565216,
+      "grading": ".nl2repo/final-harbor-jobs/stub/2026-08-27__02-48-03/p-queue-stub__xhYCMQk/verifier/grading.json"
+    },
+    "forgery": {
+      "command_exit_code": 0,
+      "valid": true,
+      "passed": 2,
+      "failed": 44,
+      "collected": 46,
+      "reward": 0.043478260869565216,
+      "forged_workspace_reports_ignored": true,
+      "grading": ".nl2repo/final-harbor-jobs/forgery/2026-08-27__02-49-10/p-queue-forgery__AWXsdHm/verifier/grading.json"
+    },
+    "install_script": {
+      "command_exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "reason": "candidate-installation-failed",
+      "grading": ".nl2repo/final-harbor-jobs/install-script/2026-08-27__02-51-56/p-queue-install-script__G47XULA/verifier/grading.json"
+    },
+    "timeout": {
+      "command_exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "reason": "candidate-call-failed",
+      "grading": ".nl2repo/final-harbor-jobs/timeout/2026-08-27__02-53-03/p-queue-timeout__8wVRFNp/verifier/grading.json"
+    },
+    "offline": {
+      "passed": true,
+      "public_network_available": false,
+      "probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      }
+    }
+  },
+  "residual_risks": [
+    "The 46-leaf deterministic JSON contract is a broad public API slice, not parity with all 206 upstream runtime leaves or compile-time TypeScript assertions.",
+    "Independent human blind/spec review and the downstream model pilot remain publication gates outside this lane.",
+    "The stub passes two basic package/value leaves, which bounds its expected ceiling at 2/46 rather than zero."
+  ],
+  "blocker": null,
+  "next_unblock_action": null
+}
