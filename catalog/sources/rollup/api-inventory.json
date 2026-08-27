@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rollup",
+  "revision": "89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb",
+  "package_version": "4.62.5",
+  "tracked_files": 13527,
+  "implementation_files": 288,
+  "implementation_loc": 36789,
+  "root_exports": [
+    {"name": "VERSION", "kind": "string"},
+    {"name": "defineConfig", "kind": "function"},
+    {"name": "rollup", "kind": "async-function"},
+    {"name": "watch", "kind": "function"}
+  ],
+  "package_subpaths": [
+    ".",
+    "./loadConfigFile",
+    "./getLogFilter",
+    "./parseAst",
+    "./dist/*",
+    "./package.json"
+  ],
+  "cli": {"name": "rollup", "path": "dist/bin/rollup"},
+  "runtime_assets": ["dist/wasm-node/bindings_wasm_bg.wasm"],
+  "inventory_method": "Static package metadata and TypeScript declaration inspection plus a built-artifact export probe; candidate source was never imported by authoring scanners."
+}

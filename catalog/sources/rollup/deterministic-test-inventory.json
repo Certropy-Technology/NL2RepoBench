@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rollup",
+  "revision": "89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb",
+  "upstream": {
+    "framework": "mocha",
+    "tracked_test_files": 12368,
+    "tracked_test_loc": 275119,
+    "static_registrations": 529,
+    "dynamic_collected_leaves": 5444,
+    "baseline_attempts": [
+      {"attempt": 1, "exit_code": 0, "passed": 5444, "failed": 0, "wall_seconds": 153},
+      {"attempt": 2, "exit_code": 0, "passed": 5444, "failed": 0, "wall_seconds": 136},
+      {"attempt": 3, "exit_code": 0, "passed": 5444, "failed": 0, "wall_seconds": 135}
+    ]
+  },
+  "production": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "fixed_denominator": 11,
+    "candidate_boundary": "one bounded, JSON-only subprocess per operation",
+    "behavior_groups": [
+      "package metadata, CommonJS exports, WASM asset, and package hygiene",
+      "defineConfig",
+      "ES, CommonJS, and IIFE generation",
+      "local graph resolution and tree-shaking",
+      "deterministic multi-entry code splitting",
+      "resolveId, load, and transform plugin hooks",
+      "external module preservation",
+      "bundle write and close lifecycle",
+      "stable unresolved-entry diagnostics",
+      "CLI version, file build, stdin, and stdout"
+    ]
+  }
+}

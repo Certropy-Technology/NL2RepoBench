@@ -28,7 +28,7 @@ network_mode = "no-network"
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+reason = "Candidate and verifier runs are network-isolated; the empty npm runtime closure is preinstalled from a private hash-bound artifact, and the exact source plus WASM build are available only to the Oracle solution."
 
 [environment.runtime]
 language = "node"
@@ -52,10 +52,10 @@ lifecycle_scripts = "ignore-scripts"
 packages = []
 
 [dependencies.artifact]
-digest = "sha256:8c92e7fbbdcc8184d403279fc29d65d355ff0aa4669edbb684eb1390d65c2219"
-size_bytes = 439
+digest = "sha256:354d09540f8578f335fed1936d2fe0a863bcbc1ae4b397c4c12aed9ff3eeb236"
+size_bytes = 10240
 media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:8c92e7fbbdcc8184d403279fc29d65d355ff0aa4669edbb684eb1390d65c2219"
+uri = "artifact://private/sha256:354d09540f8578f335fed1936d2fe0a863bcbc1ae4b397c4c12aed9ff3eeb236"
 visibility = "private"
 
 [tests]
@@ -65,17 +65,17 @@ expected_total = 11
 expected_total_source = "frozen-collection"
 
 [tests.commands_artifact]
-digest = "sha256:895f08b5239989cf514e707b443c7025462e182aa3292c5f9d95ef661bd5532e"
-size_bytes = 244
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
 media_type = "application/vnd.nl2repobench.node-commands+tar"
-uri = "artifact://private/sha256:895f08b5239989cf514e707b443c7025462e182aa3292c5f9d95ef661bd5532e"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
 visibility = "private"
 
 [tests.test_bundle]
-digest = "sha256:5adb4620db7e16958b510d53f59fdde01482a6b4ac94c25dc137c8f88382b8ec"
-size_bytes = 2342
+digest = "sha256:fa409c95c84c7773244502438fce96d2a73706c93ce4d452c0b3377db7136c67"
+size_bytes = 20480
 media_type = "application/vnd.nl2repobench.node-tests+tar"
-uri = "artifact://private/sha256:5adb4620db7e16958b510d53f59fdde01482a6b4ac94c25dc137c8f88382b8ec"
+uri = "artifact://private/sha256:fa409c95c84c7773244502438fce96d2a73706c93ce4d452c0b3377db7136c67"
 visibility = "private"
 
 [metric]
@@ -97,13 +97,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-owner = "node-author-direct-gpt-20260824-r1"
-reason = "Production terminalization is blocked: the locked npm dependency artifact sha256:8c92e7fbbdcc8184d403279fc29d65d355ff0aa4669edbb684eb1390d65c2219 is absent from the configured private artifact store; no runtime or control evidence was promoted."
+status = "packaged"
+owner = "rollup-remediation"
+reason = "Exact source, Node-WASM build, empty npm runtime closure, and 11-leaf subprocess verifier are hash-bound; production compile and runtime controls are pending."
 
 [oracle_bundle]
-digest = "sha256:f913a80afea1bdfcdac3b5ee5eb045a20928fd4290fd507f33187aac0980ca6c"
-size_bytes = 3081526
+digest = "sha256:e44467c4e6072888e20f19df82bf4365b80642d9b0cf50203646e698ff3cadf5"
+size_bytes = 36648960
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:f913a80afea1bdfcdac3b5ee5eb045a20928fd4290fd507f33187aac0980ca6c"
+uri = "artifact://private/sha256:e44467c4e6072888e20f19df82bf4365b80642d9b0cf50203646e698ff3cadf5"
 visibility = "private"
