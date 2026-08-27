@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -37,8 +39,19 @@ RISKY_PACKAGES = {
 
 def _get_json(url: str) -> dict[str, Any]:
     request = urllib.request.Request(url, headers={"User-Agent": "NL2RepoBench-authoring/1.0"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        value = json.loads(response.read())
+    for attempt in range(5):
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                value = json.loads(response.read())
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429 and not 500 <= exc.code < 600:
+                raise
+            if attempt == 4:
+                raise
+            retry_after = exc.headers.get("Retry-After")
+            delay = float(retry_after) if retry_after and retry_after.isdigit() else 2**attempt
+            time.sleep(min(delay, 30))
     if not isinstance(value, dict):
         raise ValueError(f"JSON response is not an object: {url}")
     return value
@@ -87,9 +100,14 @@ def discover(package: str, observed_at: str) -> dict[str, Any]:
         raise ValueError(f"npm metadata has no GitHub repository: {package}")
     time_map = metadata.get("time", {})
     published = time_map.get(latest) if isinstance(time_map, dict) else None
-    downloads = _get_json(
-        f"https://api.npmjs.org/downloads/point/last-month/{encoded}"
-    )
+    evidence_gaps: list[str] = []
+    try:
+        downloads = _get_json(
+            f"https://api.npmjs.org/downloads/point/last-month/{encoded}"
+        )
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        downloads = {}
+        evidence_gaps.append(f"monthly-downloads: {type(exc).__name__}")
     return {
         "package": package,
         "language": "node",
@@ -103,6 +121,7 @@ def discover(package: str, observed_at: str) -> dict[str, Any]:
         "latest_version": latest,
         "observed_at": observed_at,
         "test_evidence": "requires source-freeze AST/test inventory",
+        "evidence_gaps": evidence_gaps,
         "risk_flags": RISKY_PACKAGES.get(package, []),
         "status": "needs-evidence",
     }

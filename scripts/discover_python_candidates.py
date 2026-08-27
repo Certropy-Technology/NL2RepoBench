@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -38,9 +40,22 @@ RISKY_PACKAGES = {
 
 
 def _get_json(url: str) -> dict[str, Any]:
-    request = urllib.request.Request(url, headers={"User-Agent": "NL2RepoBench-authoring/1.0"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        value = json.loads(response.read())
+    request = urllib.request.Request(
+        url, headers={"User-Agent": "NL2RepoBench-authoring/1.0"}
+    )
+    for attempt in range(5):
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                value = json.loads(response.read())
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code != 429 and not 500 <= exc.code < 600:
+                raise
+            if attempt == 4:
+                raise
+            retry_after = exc.headers.get("Retry-After")
+            delay = float(retry_after) if retry_after and retry_after.isdigit() else 2**attempt
+            time.sleep(min(delay, 30))
     if not isinstance(value, dict):
         raise ValueError(f"JSON response is not an object: {url}")
     return value
@@ -51,10 +66,41 @@ def _repo_url(value: Any) -> str | None:
         value = value.get("url")
     if not isinstance(value, str) or not value:
         return None
-    value = value.removeprefix("git+").removesuffix(".git")
+    value = value.removeprefix("git+")
     if value.startswith("git@github.com:"):
         value = "https://github.com/" + value.removeprefix("git@github.com:")
-    return value.rstrip("/")
+    if value.startswith("http://github.com/"):
+        value = "https://github.com/" + value.removeprefix("http://github.com/")
+    parsed = urllib.parse.urlparse(value)
+    if parsed.netloc.casefold() != "github.com":
+        return None
+    parts = parsed.path.strip("/").split("/")
+    if len(parts) < 2:
+        return None
+    return f"https://github.com/{parts[0]}/{parts[1].removesuffix('.git')}"
+
+
+def _repository(info: dict[str, Any]) -> str | None:
+    project_urls = info.get("project_urls")
+    candidates: list[Any] = []
+    if isinstance(project_urls, dict):
+        preferred = sorted(
+            project_urls,
+            key=lambda key: (
+                not any(
+                    token in key.casefold()
+                    for token in ("source", "repository", "repo", "code", "github")
+                ),
+                key.casefold(),
+            ),
+        )
+        candidates.extend(project_urls[key] for key in preferred)
+    candidates.append(info.get("home_page"))
+    for value in candidates:
+        repository = _repo_url(value)
+        if repository is not None:
+            return repository
+    return None
 
 
 def _revision(repository: str) -> str | None:
@@ -82,11 +128,7 @@ def discover(package: str, observed_at: str) -> dict[str, Any]:
     info = metadata.get("info")
     if not isinstance(info, dict):
         raise ValueError(f"PyPI info missing: {package}")
-    repository = _repo_url(
-        info.get("project_urls", {}).get("Source")
-        or info.get("project_urls", {}).get("Repository")
-        or info.get("home_page")
-    )
+    repository = _repository(info)
     if repository is None:
         raise ValueError(f"PyPI package has no upstream repository: {package}")
     releases = metadata.get("releases", {})
