@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import tempfile
 from pathlib import Path
@@ -200,11 +201,24 @@ class NodeHarborCompiler:
 
     def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
         image = self.toolchain.images.agent_base
+        install = self._system_packages_install(manifest)
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
+{install}\
 WORKDIR /workspace
 """
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
+
+    @staticmethod
+    def _system_packages_install(manifest: TaskManifestV2) -> str:
+        packages = tuple(manifest.environment_lock.system_packages)
+        if not packages:
+            return ""
+        quoted = " ".join(shlex.quote(package) for package in packages)
+        return (
+            "RUN apt-get update && apt-get install -y --no-install-recommends "
+            f"{quoted} && rm -rf /var/lib/apt/lists/*\n\n"
+        )
 
     def _write_verifier(
         self,
@@ -369,7 +383,7 @@ WORKDIR /tests
                 "environment": {
                     "network_mode": "no-network",
                     "build_timeout_sec": 600.0,
-                    "cpus": 1,
+                    "cpus": manifest.harbor.cpus,
                     "memory_mb": max(1024, manifest.harbor.memory_mb // 2),
                     "storage_mb": max(4096, manifest.harbor.storage_mb * 2),
                 },

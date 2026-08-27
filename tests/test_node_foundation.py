@@ -133,6 +133,36 @@ def test_v2_environment_rejects_runtime_language_mismatch() -> None:
         )
 
 
+def test_node_compiler_installs_declared_agent_system_packages_only(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    task_toml = source / "task.toml"
+    task_toml.write_text(
+        task_toml.read_text(encoding="utf-8").replace(
+            '[environment]\nstatus = "unknown"',
+            '[environment]\nstatus = "unknown"\n'
+            'system_packages = ["ca-certificates=20250419~deb12u1", '
+            '"git=1:2.39.5-0+deb12u3", "git-man=1:2.39.5-0+deb12u3"]',
+        ).replace("cpus = 1", "cpus = 2"),
+        encoding="utf-8",
+    )
+
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "output", allow_incomplete=True
+    )
+
+    agent = (task_root / "environment/Dockerfile").read_text(encoding="utf-8")
+    verifier = (task_root / "tests/Dockerfile").read_text(encoding="utf-8")
+    generated_task = (task_root / "task.toml").read_text(encoding="utf-8")
+    assert (
+        "apt-get install -y --no-install-recommends "
+        "'ca-certificates=20250419~deb12u1' git=1:2.39.5-0+deb12u3 "
+        "git-man=1:2.39.5-0+deb12u3"
+    ) in agent
+    assert "apt-get install" not in verifier
+    assert generated_task.count("cpus = 2") == 2
+
+
 def test_v2_blocked_task_can_record_unfrozen_collection() -> None:
     tests = NodeTestsManifest(expected_total=0, expected_total_source="unknown")
 
@@ -617,6 +647,106 @@ def test_npm_dependency_bundle_accepts_integrity_and_cache_closure(tmp_path: Pat
     }
     (root / "bundle.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
+
+
+def test_npm_dependency_bundle_accepts_declared_linux_x64_native_package(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "bundle"
+    cache = root / "npm-cache"
+    cache.mkdir(parents=True)
+    integrity = "sha512-native"
+    lock = {
+        "lockfileVersion": 3,
+        "packages": {
+            "": {"name": "root", "version": "1.0.0"},
+            "node_modules/@img/native-linux-x64": {
+                "version": "1.2.3",
+                "resolved": "https://registry.invalid/native.tgz",
+                "integrity": integrity,
+                "os": ["linux"],
+                "cpu": ["x64"],
+            },
+        },
+    }
+    (root / "package-lock.json").write_text(json.dumps(lock), encoding="utf-8")
+    manifest = {
+        "schema_version": "1.0",
+        "ecosystem": "npm",
+        "lockfile_version": "3",
+        "package_manager": "npm",
+        "package_manager_version": "10.9.8",
+        "install_mode": "offline",
+        "lifecycle_scripts": "ignore-scripts",
+        "cache_entries": [],
+        "native_packages": [
+            {
+                "package": "@img/native-linux-x64",
+                "version": "1.2.3",
+                "integrity": integrity,
+                "os": "linux",
+                "cpu": "x64",
+                "libc": "glibc",
+            }
+        ],
+    }
+    (root / "bundle.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+    validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
+
+
+def test_npm_dependency_bundle_rejects_undeclared_or_mismatched_native_package(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "bundle"
+    cache = root / "npm-cache"
+    cache.mkdir(parents=True)
+    lock = {
+        "lockfileVersion": 3,
+        "packages": {
+            "": {"name": "root", "version": "1.0.0"},
+            "node_modules/native": {
+                "version": "1.2.3",
+                "resolved": "https://registry.invalid/native.tgz",
+                "integrity": "sha512-lock",
+                "os": ["linux"],
+                "cpu": ["x64"],
+            },
+        },
+    }
+    (root / "package-lock.json").write_text(json.dumps(lock), encoding="utf-8")
+    base_manifest = {
+        "schema_version": "1.0",
+        "ecosystem": "npm",
+        "lockfile_version": "3",
+        "package_manager": "npm",
+        "package_manager_version": "10.9.8",
+        "install_mode": "offline",
+        "lifecycle_scripts": "ignore-scripts",
+        "cache_entries": [],
+    }
+    (root / "bundle.manifest.json").write_text(json.dumps(base_manifest), encoding="utf-8")
+    with pytest.raises(NodeDependencyError, match="undeclared native or platform"):
+        validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
+
+    mismatched_manifest = {
+        **base_manifest,
+        "native_packages": [
+            {
+                "package": "native",
+                "version": "1.2.3",
+                "integrity": "sha512-other",
+                "os": "linux",
+                "cpu": "x64",
+                "libc": "glibc",
+            }
+        ],
+    }
+    (root / "bundle.manifest.json").write_text(
+        json.dumps(mismatched_manifest), encoding="utf-8"
+    )
+    with pytest.raises(NodeDependencyError, match="metadata mismatch"):
+        validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
 
 
 @pytest.mark.parametrize(

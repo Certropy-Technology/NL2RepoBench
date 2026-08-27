@@ -104,6 +104,7 @@ class EnvironmentLockV2(V2RecordModel):
     os_name: str | None = None
     base_image: str | None = None
     base_image_digest: Annotated[str | None, Field(pattern=r"^sha256:[0-9a-f]{64}$")] = None
+    system_packages: tuple[str, ...] = ()
     runtime: RuntimeProfileV2 | None = None
     network_mode: Literal["public", "no-network", "allowlist"] | None = None
     network_policy: NetworkPolicy | None = None

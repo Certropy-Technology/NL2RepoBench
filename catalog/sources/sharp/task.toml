@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "sharp"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "image-processing"
+tags = ["node", "npm", "native", "image", "libvips", "buffer", "commonjs", "esm"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/lovell/sharp"
+revision = "ea5bef24c187b2c7ee3fe3cad3b45c8cb67a46fd"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:d5b8bf9290848a376a7ceeacd2c32bdd3f289d77e464d69de570919a74fae54d"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+system_packages = ["ca-certificates=20250419~deb12u1", "git=1:2.39.5-0+deb12u3", "git-man=1:2.39.5-0+deb12u3"]
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The model and verifier have no egress. Five exact npm dependencies, including the only two allowed Linux x64 glibc native packages, are installed from the private integrity-checked npm cache. Only the trusted Oracle receives a run-scoped github.com source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@img/colour", "@img/sharp-libvips-linux-x64", "@img/sharp-linux-x64", "detect-libc", "semver"]
+
+[dependencies.artifact]
+digest = "sha256:e75a9da90ef9110bfb734a7e81cb20fe5f2a27beee4d4eab132fafb04b645e71"
+size_bytes = 9185280
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:e75a9da90ef9110bfb734a7e81cb20fe5f2a27beee4d4eab132fafb04b645e71"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 31
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:6bc6f80e0e2d775c26bf380fff89d9e41b1f2443c88dde45750a6fe37f7d0252"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:6bc6f80e0e2d775c26bf380fff89d9e41b1f2443c88dde45750a6fe37f7d0252"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:eda799134d45eb286ce400ba586b33ce324d7d37ac9462507d444ff32d610715"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:eda799134d45eb286ce400ba586b33ce324d7d37ac9462507d444ff32d610715"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build sharp 0.35.3 for deterministic Linux x64 image metadata, transforms, and buffer encoding."
+keywords = ["node", "npm", "native", "image", "libvips", "buffer", "commonjs", "esm"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-wide-20260826-remediation-sharp"
+reason = "Frozen source, exact native npm closure, 31-leaf private verifier, pinned Oracle, and negative controls are packaged for production validation."
+
+[oracle_bundle]
+digest = "sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7"
+visibility = "private"
