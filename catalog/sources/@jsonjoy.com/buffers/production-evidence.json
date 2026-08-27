@@ -1,0 +1,228 @@
+{
+  "schema_version": "1.0",
+  "task_id": "@jsonjoy.com/buffers",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/streamich/json-joy",
+    "revision": "6ac8a8968260c88cb5e1819f177db4aab5897f7a",
+    "license_spdx": "Apache-2.0",
+    "source_digest": "sha256:89c8a3db0edf738fb45e4205103a266fb40f121bc4477ceb062851f6ad67a2dd",
+    "submodules": []
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-gate/buffers-final-20260828/@jsonjoy.com/buffers/bundle.manifest.json",
+    "sha256": "sha256:299d4a5405e74169d4cb9bf8294a28122c07e2f371c49082b2d011f016fd94f5",
+    "canonical_manifest_digest": "sha256:a337e2224b88da7a6e55abad241cadd77d6334d1292df8cdc4c0853cad7155b6",
+    "mode": "production",
+    "file_count": 124
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden"
+    },
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "dependencies": {
+    "ecosystem": "npm",
+    "consumer": "candidate-runtime",
+    "status": "known",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["@types/node", "tslib", "typescript", "undici-types"],
+    "artifact": {
+      "digest": "sha256:8c539cd3885c92efc037693bab6ccf1d16f757b51faa8e5842851a71ce6fedfd",
+      "size_bytes": 11279198,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:8c539cd3885c92efc037693bab6ccf1d16f757b51faa8e5842851a71ce6fedfd",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 28,
+    "collection": "28 node:test leaves; no collection errors",
+    "test_bundle": {
+      "digest": "sha256:34b082abc6782daecf10f45922f303a0eab086614d52598867be5baeb3fc6a1d",
+      "size_bytes": 2487,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar",
+      "uri": "artifact://private/sha256:34b082abc6782daecf10f45922f303a0eab086614d52598867be5baeb3fc6a1d",
+      "visibility": "private"
+    },
+    "commands_artifact": {
+      "digest": "sha256:dd6db3af605ec8fff1a0bd4b3f5c6957354d16901a014692fb7388d1789a7316",
+      "size_bytes": 277,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar",
+      "uri": "artifact://private/sha256:dd6db3af605ec8fff1a0bd4b3f5c6957354d16901a014692fb7388d1789a7316",
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p $PWD/.nl2repo/authoring-gate/buffers-final-20260828/@jsonjoy.com/buffers -a oracle --allow-environment-host github.com --job-name buffers-authoring-20260828-oracle-r5 -o .nl2repo/runs/buffers-authoring-20260828-oracle-r5 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 28,
+    "collected": 28,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/buffers-authoring-20260828-oracle-r5/buffers-authoring-20260828-oracle-r5/buffers__WayQhYu/verifier/grading.json",
+      "sha256": "sha256:f760ae5185d3cc26eeeca776107d90f56554947b72d708c6463253bb18eef7c5"
+    },
+    "network": {
+      "path": ".nl2repo/runs/buffers-authoring-20260828-oracle-r5/buffers-authoring-20260828-oracle-r5/buffers__WayQhYu/verifier/network.json",
+      "sha256": "sha256:cdf744142241ecbbf1c81b6514ca3895ada6650aab7315e5987c46bde13a1c9f"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p $PWD/.nl2repo/authoring-gate/buffers-final-20260828/@jsonjoy.com/buffers -a nop --job-name buffers-authoring-20260828-empty-r5 -o .nl2repo/runs/buffers-authoring-20260828-empty-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-empty-r5/buffers-authoring-20260828-empty-r5/buffers__igC2faX/verifier/grading.json",
+        "sha256": "sha256:9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97"
+      },
+      "network": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-empty-r5/buffers-authoring-20260828-empty-r5/buffers__igC2faX/verifier/network.json",
+        "sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p $PWD/.nl2repo/controls/buffers-authoring-20260828-final/buffers-stub -a oracle --job-name buffers-authoring-20260828-stub-r5 -o .nl2repo/runs/buffers-authoring-20260828-stub-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 28,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-stub-r5/buffers-authoring-20260828-stub-r5/buffers-stub__HbeyFEm/verifier/grading.json",
+        "sha256": "sha256:1ceef91daeedfa64693404d9a99331548a178c6f1d647ccac5897c8345d89c66"
+      },
+      "network": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-stub-r5/buffers-authoring-20260828-stub-r5/buffers-stub__HbeyFEm/verifier/network.json",
+        "sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p $PWD/.nl2repo/controls/buffers-authoring-20260828-final/buffers-forgery -a oracle --job-name buffers-authoring-20260828-forgery-r5 -o .nl2repo/runs/buffers-authoring-20260828-forgery-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "forged_workspace_reports_ignored": true,
+      "passed": 0,
+      "collected": 28,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-forgery-r5/buffers-authoring-20260828-forgery-r5/buffers-forgery__Bv87HxX/verifier/grading.json",
+        "sha256": "sha256:1ceef91daeedfa64693404d9a99331548a178c6f1d647ccac5897c8345d89c66"
+      },
+      "network": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-forgery-r5/buffers-authoring-20260828-forgery-r5/buffers-forgery__Bv87HxX/verifier/network.json",
+        "sha256": "sha256:cdf744142241ecbbf1c81b6514ca3895ada6650aab7315e5987c46bde13a1c9f"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p $PWD/.nl2repo/controls/buffers-authoring-20260828-final/buffers-offline -a oracle --job-name buffers-authoring-20260828-offline-r5 -o .nl2repo/runs/buffers-authoring-20260828-offline-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "passed": 0,
+      "collected": 28,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-offline-r5/buffers-authoring-20260828-offline-r5/buffers-offline__AV8Em6E/verifier/grading.json",
+        "sha256": "sha256:1ceef91daeedfa64693404d9a99331548a178c6f1d647ccac5897c8345d89c66"
+      },
+      "network": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-offline-r5/buffers-authoring-20260828-offline-r5/buffers-offline__AV8Em6E/verifier/network.json",
+        "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7"
+      }
+    },
+    "timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p $PWD/.nl2repo/controls/buffers-authoring-20260828-final/buffers-timeout -a oracle --job-name buffers-authoring-20260828-timeout-r5 -o .nl2repo/runs/buffers-authoring-20260828-timeout-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 28,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-timeout-r5/buffers-authoring-20260828-timeout-r5/buffers-timeout__FNWug6z/verifier/grading.json",
+        "sha256": "sha256:1ceef91daeedfa64693404d9a99331548a178c6f1d647ccac5897c8345d89c66"
+      },
+      "network": {
+        "path": ".nl2repo/runs/buffers-authoring-20260828-timeout-r5/buffers-authoring-20260828-timeout-r5/buffers-timeout__FNWug6z/verifier/network.json",
+        "sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+      }
+    }
+  },
+  "commands": [
+    {
+      "command": "git -C .nl2repo/authoring-work/node-author-wave2-20260828/@jsonjoy.com/buffers-upstream rev-parse HEAD && sha256sum .nl2repo/authoring-work/node-author-wave2-20260828/@jsonjoy.com/buffers-oracle/source.tar",
+      "tool_version": "git 2.x; sha256sum coreutils",
+      "exit_code": 0,
+      "result": "revision 6ac8a8968260c88cb5e1819f177db4aab5897f7a; source archive sha256:89c8a3db0edf738fb45e4205103a266fb40f121bc4477ceb062851f6ad67a2dd"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/@jsonjoy.com/buffers",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "status controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "error_count 0; 136 warnings are unrelated existing catalog warnings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/@jsonjoy.com/buffers --output .nl2repo/authoring-gate/buffers-final-20260828 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "nl2repobench current checkout; Node toolchain lock",
+      "exit_code": 0,
+      "result": "production bundle compiled; manifest sha256:22a891cc4d7adda1d013efc9e8803c0b6220f37bc34f7f7b3e59b23b11ec3e70; 124 files"
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_node_foundation.py -k 'scoped_task or uses_valid_harbor_name'",
+      "tool_version": "pytest current locked project",
+      "exit_code": 0,
+      "result": "2 passed, 47 deselected"
+    },
+    {
+      "command": "bash -n catalog/sources/@jsonjoy.com/buffers/harbor/controls/*.sh && node --check .nl2repo/authoring-work/node-author-wave2-20260828/@jsonjoy.com/buffers-oracle/build.mjs && bash -n .nl2repo/authoring-work/node-author-wave2-20260828/@jsonjoy.com/buffers-oracle/solve.sh",
+      "tool_version": "Node 22.23.1 host syntax probe; bash 5.x",
+      "exit_code": 0,
+      "result": "all task-local shell and Oracle builder syntax checks passed"
+    }
+  ],
+  "residual_risks": [
+    "Independent blind/spec traceability review and model Agent Run remain pending; this lane did not start an Agent Run.",
+    "The fixed black-box slice covers 28 pure utility leaves. Reader, Writer, StreamingReader, StreamingOctetReader, Slice, Uint8ArrayCut, and encode remain documented public surfaces but are not represented in the generic JSON subprocess slice.",
+    "The first two Harbor invocations exposed runner/task-name compatibility and the first three Oracle attempts exposed archive extraction, npm dev omission, and npm bin-link issues; all were remediated and the final Oracle/control runs passed their required contracts."
+  ]
+}

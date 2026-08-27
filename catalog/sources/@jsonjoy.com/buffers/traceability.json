@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "source_revision": "6ac8a8968260c88cb5e1819f177db4aab5897f7a",
+  "coverage_statement": "Every fixed private leaf maps to a named API contract in instruction.md; every fixed-slice API has at least one leaf.",
+  "mappings": {
+    "utilities.test.mjs": [
+      "b", "concat", "concatList", "listToUint8", "copy", "cmpUint8Array",
+      "cmpUint8Array2", "cmpUint8Array3", "toUint8Array", "printOctets", "decodeF16",
+      "isFloat32", "ascii", "utf8", "toBuf", "decodeAscii", "decodeUtf8", "isUtf8"
+    ]
+  },
+  "excluded_with_reason": {
+    "Reader/Writer/StreamingReader": "stateful objects cannot be retained across generic one-call JSON subprocess requests; the public contract still requires their implementation",
+    "json-pack-napi v19": "optional native development experiment is not part of the package root or deterministic offline closure",
+    "upstream .vi tests": "require the monorepo Jest/Vitest harness and are not the fixed node:test adapter"
+  }
+}

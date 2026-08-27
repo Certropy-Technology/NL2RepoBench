@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "@jsonjoy.com/buffers"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "binary-data-library"
+tags = ["node", "npm", "typescript", "buffers", "utf8", "binary", "streaming"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/streamich/json-joy"
+revision = "6ac8a8968260c88cb5e1819f177db4aab5897f7a"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:89c8a3db0edf738fb45e4205103a266fb40f121bc4477ceb062851f6ad67a2dd"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate installs from a frozen npm cache during image build; candidate and verifier phases have no egress, and only the trusted Oracle receives the exact upstream source-host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/node", "tslib", "typescript", "undici-types"]
+artifact = { digest = "sha256:8c539cd3885c92efc037693bab6ccf1d16f757b51faa8e5842851a71ce6fedfd", size_bytes = 11279198, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:8c539cd3885c92efc037693bab6ccf1d16f757b51faa8e5842851a71ce6fedfd", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 28
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:dd6db3af605ec8fff1a0bd4b3f5c6957354d16901a014692fb7388d1789a7316", size_bytes = 277, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:dd6db3af605ec8fff1a0bd4b3f5c6957354d16901a014692fb7388d1789a7316", visibility = "private" }
+test_bundle = { digest = "sha256:34b082abc6782daecf10f45922f303a0eab086614d52598867be5baeb3fc6a1d", size_bytes = 2487, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:34b082abc6782daecf10f45922f303a0eab086614d52598867be5baeb3fc6a1d", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the scoped @jsonjoy.com/buffers CommonJS binary-data utility package from an empty Node workspace."
+keywords = ["node", "npm", "typescript", "buffers", "utf8", "binary", "streaming"]
+agent_timeout_sec = 1500.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source, standalone Node 24/npm 11 build context, private black-box test slice, locked npm dependency closure, production compile, Oracle, and deterministic no-network controls are complete; review and model Agent Run remain pending."
+
+[oracle_bundle]
+digest = "sha256:ba6685e868c6b728285d95614d4a1c56b6175e1064d91abc430e718c2dccd862"
+size_bytes = 2268
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:ba6685e868c6b728285d95614d4a1c56b6175e1064d91abc430e718c2dccd862"
+visibility = "private"

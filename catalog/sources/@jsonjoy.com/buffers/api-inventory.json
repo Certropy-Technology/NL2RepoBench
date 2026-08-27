@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "package": "@jsonjoy.com/buffers",
+  "package_version": "18.28.0",
+  "runtime_entry": "lib/index.js",
+  "source_revision": "6ac8a8968260c88cb5e1819f177db4aab5897f7a",
+  "source_files": 37,
+  "test_files": 9,
+  "public_modules": [
+    "b", "bufferToUint8Array", "cmpUint8Array", "cmpUint8Array2", "cmpUint8Array3",
+    "concat", "copy", "f16", "isArrayBuffer", "isFloat32", "isUint8Array",
+    "printOctets", "strings", "toBuf", "toUint8Array", "Reader", "Writer",
+    "Slice", "StreamingReader", "StreamingOctetReader", "Uint8ArrayCut",
+    "utf8/decodeAscii", "utf8/decodeUtf8", "utf8/encode", "utf8/isUtf8",
+    "utf8/CachedUtf8Decoder"
+  ],
+  "public_functions_in_fixed_slice": [
+    "b", "concat", "concatList", "listToUint8", "copy", "cmpUint8Array",
+    "cmpUint8Array2", "cmpUint8Array3", "toUint8Array", "printOctets", "decodeF16",
+    "isFloat32", "ascii", "utf8", "toBuf", "decodeAscii", "decodeUtf8", "isUtf8"
+  ],
+  "excluded_surfaces": [
+    "json-pack-napi native decoder v19", "Jest/Vitest monorepo runner", "benchmarks",
+    "browser-only behavior", "mutable class sessions in generic JSON RPC"
+  ],
+  "risk_flags": ["filesystem-access-in-build", "optional-native-development-dependency", "monorepo-build-inheritance"]
+}

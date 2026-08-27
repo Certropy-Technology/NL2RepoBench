@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "source_revision": "6ac8a8968260c88cb5e1819f177db4aab5897f7a",
+  "framework": "node:test",
+  "fixed_private_leaf_count": 28,
+  "private_test_files": {
+    "utilities.test.mjs": {
+      "count": 28,
+      "contract_sections": [
+        "package layout", "byte construction", "concatenation", "copy and comparison",
+        "conversion", "hex formatting", "half precision", "ASCII", "UTF-8",
+        "UTF-8 validation", "boundary behavior"
+      ]
+    }
+  },
+  "upstream_test_files": 9,
+  "upstream_vi_tests_excluded": true,
+  "collection": "28 node:test leaves; no collection errors",
+  "verifier_boundary": "candidate_runner.mjs subprocess per API call"
+}
