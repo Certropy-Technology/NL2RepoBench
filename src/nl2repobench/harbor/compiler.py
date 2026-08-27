@@ -143,6 +143,7 @@ class HarborCompiler:
         """Create a stub/forgery Oracle bundle without mutating the source task."""
 
         if kind not in {
+            "empty",
             "stub",
             "forgery",
             "install-hang",
@@ -615,6 +616,7 @@ set -uo pipefail
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
 rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
+mkdir -p /tmp/candidate-site
 {environment}
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 python -I -m nl2repobench.verification.network_check \

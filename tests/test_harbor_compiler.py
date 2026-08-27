@@ -453,6 +453,11 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
 
     assert (output / "tests/verifier/run.py").is_file()
     assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
+    custom_test_script = (output / "tests/test.sh").read_text(encoding="utf-8")
+    cleanup = "rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site"
+    assert custom_test_script.index(cleanup) < custom_test_script.index(
+        "mkdir -p /tmp/candidate-site", custom_test_script.index(cleanup)
+    )
     assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
         encoding="utf-8"
     )
@@ -478,6 +483,20 @@ def test_prepare_stub_control_replaces_only_control_solution(tmp_path) -> None:
         task_root / "controls/stub.sh"
     ).read_bytes()
     assert json.loads((control / "bundle.manifest.json").read_text())["mode"] == "control-stub"
+
+
+def test_prepare_empty_control_is_supported(tmp_path) -> None:
+    compiler = HarborCompiler(TOOLCHAIN)
+    task_root = compiler.compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True)
+    empty_script = task_root / "controls/empty.sh"
+    empty_script.write_text("#!/usr/bin/env bash\n", encoding="utf-8")
+
+    control = compiler.prepare_control_bundle(task_root, "empty", tmp_path / "controls")
+
+    assert control.name == "ministats-empty"
+    assert (control / "solution/solve.sh").read_bytes() == (
+        task_root / "controls/empty.sh"
+    ).read_bytes()
 
 
 def test_prepare_control_rejects_unknown_kind(tmp_path) -> None:
