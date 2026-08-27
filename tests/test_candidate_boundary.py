@@ -199,6 +199,26 @@ def test_candidate_runner_metadata_protocol(
     assert emitted == {"ok": True, "value": None}
 
 
+def test_candidate_runner_script_protocol(monkeypatch: pytest.MonkeyPatch) -> None:
+    stream = io.TextIOWrapper(
+        io.BytesIO(json.dumps({"source": 'result = {"answer": 42}'}).encode())
+    )
+    monkeypatch.setattr(sys, "stdin", stream)
+    emitted: dict[str, object] = {}
+
+    def capture(payload: dict[str, object], exit_code: int = 0) -> None:
+        del exit_code
+        emitted.update(payload)
+        raise SystemExit
+
+    monkeypatch.setattr(candidate_runner, "_emit", capture)
+
+    with pytest.raises(SystemExit):
+        candidate_runner._script()  # noqa: SLF001
+
+    assert emitted == {"ok": True, "value": {"answer": 42}}
+
+
 def test_candidate_runner_rejects_wrong_site(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="candidate site is unavailable"):
         candidate_runner._candidate_site(str(tmp_path))  # noqa: SLF001

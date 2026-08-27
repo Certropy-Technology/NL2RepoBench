@@ -96,6 +96,25 @@ def _call() -> NoReturn:
     _emit(payload)
 
 
+def _script() -> NoReturn:
+    """Run a trusted JSON scenario inside the isolated candidate process."""
+
+    request = _read_request()
+    if set(request) != {"source"} or not isinstance(request["source"], str):
+        raise ValueError("invalid script request")
+    namespace: dict[str, Any] = {"__name__": "__main__"}
+    try:
+        exec(compile(request["source"], "<candidate-scenario>", "exec"), namespace)
+        payload = {"ok": True, "value": namespace["result"]}
+    except BaseException as exc:  # scenario failures are verifier observations
+        payload = {
+            "exception_message": str(exc),
+            "exception_type": f"{type(exc).__module__}.{type(exc).__qualname__}",
+            "ok": False,
+        }
+    _emit(payload)
+
+
 def _metadata_requires(site: Path, distribution: str) -> NoReturn:
     normalized = distribution.casefold().replace("_", "-")
     for candidate in importlib.metadata.distributions(path=[str(site)]):
@@ -142,6 +161,7 @@ def main() -> None:
     parser.add_argument("--candidate-site", required=True)
     subcommands = parser.add_subparsers(dest="operation", required=True)
     subcommands.add_parser("call")
+    subcommands.add_parser("script")
     metadata = subcommands.add_parser("metadata-requires")
     metadata.add_argument("distribution")
     module = subcommands.add_parser("module")
@@ -156,6 +176,8 @@ def main() -> None:
     site = _candidate_site(args.candidate_site)
     if args.operation == "call":
         _call()
+    if args.operation == "script":
+        _script()
     if args.operation == "metadata-requires":
         _metadata_requires(site, args.distribution)
     if args.operation == "module":

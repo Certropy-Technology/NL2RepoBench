@@ -415,9 +415,9 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
                 },
                 "environment": {
                     "status": "known",
-                    "python_version": "3.12",
+                    "python_version": "3.13.15",
                     "os_name": "linux",
-                    "base_image": "python:3.12-slim",
+                    "base_image": "python:3.13-slim",
                     "base_image_digest": "sha256:" + "3" * 64,
                     "network_mode": "no-network",
                 },
@@ -454,6 +454,15 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
     assert (output / "tests/verifier/run.py").is_file()
     assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
     assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
+        encoding="utf-8"
+    )
+    assert "FROM --platform=linux/amd64 python:3.13-slim@sha256:" in (
+        output / "environment/Dockerfile"
+    ).read_text(encoding="utf-8")
+    assert "python3.13/site-packages/nl2repobench" in (
+        output / "tests/Dockerfile"
+    ).read_text(encoding="utf-8")
+    assert "{python_minor}" not in (output / "tests/Dockerfile").read_text(
         encoding="utf-8"
     )
     assert "COPY dependencies" not in (output / "tests/Dockerfile").read_text(encoding="utf-8")

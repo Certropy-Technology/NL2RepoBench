@@ -200,6 +200,34 @@ def get(module: str, attribute: str) -> CandidateCallResult:
     )
 
 
+def execute_script(source: str, *, timeout_sec: float = DEFAULT_TIMEOUT_SEC) -> CandidateCallResult:
+    """Run a trusted scenario as the unprivileged candidate user."""
+
+    request = json.dumps({"source": source}, ensure_ascii=False, separators=(",", ":"))
+    completed = run_candidate(["script"], input_text=request, timeout_sec=timeout_sec)
+    lines = [line for line in completed.stdout.splitlines() if line.startswith(RESULT_PREFIX)]
+    if completed.returncode != 0 or len(lines) != 1:
+        return CandidateCallResult(
+            ok=False,
+            exception_type="CandidateProcessError",
+            exception_message=(completed.stderr or completed.stdout or "no response")[-2000:],
+        )
+    try:
+        payload = json.loads(lines[0][len(RESULT_PREFIX) :])
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        return CandidateCallResult(
+            ok=False,
+            exception_type="CandidateProtocolError",
+            exception_message=str(exc),
+        )
+    return CandidateCallResult(
+        ok=payload.get("ok") is True,
+        value=payload.get("value"),
+        exception_type=payload.get("exception_type"),
+        exception_message=payload.get("exception_message"),
+    )
+
+
 def metadata_requires(distribution: str) -> CandidateCallResult:
     completed = run_candidate(["metadata-requires", distribution])
     lines = [line for line in completed.stdout.splitlines() if line.startswith(RESULT_PREFIX)]
