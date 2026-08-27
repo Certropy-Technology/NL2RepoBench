@@ -1,0 +1,109 @@
+schema_version = "2.0"
+task_id = "undici"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "http-client"
+tags = ["node", "npm", "commonjs", "http", "fetch", "dispatcher", "mock-agent", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/nodejs/undici"
+revision = "7eb7c8ec8f23acd9c3da93a286162f8c1dc68326"
+license_spdx = "MIT"
+source_digest = "sha256:7408cc3b641f94b392622ab81aecb8a4aa35cbc1f81d9843ff8edab8f981afff"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier use only the locked Node runtime and a zero-root npm closure; the Oracle alone fetches the frozen source under a run-scoped source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:PLACEHOLDER_DEPENDENCY_DIGEST"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:PLACEHOLDER_DEPENDENCY_DIGEST"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:PLACEHOLDER_COMMAND_DIGEST"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:PLACEHOLDER_COMMAND_DIGEST"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:PLACEHOLDER_TEST_DIGEST"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:PLACEHOLDER_TEST_DIGEST"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the undici HTTP client and deterministic local HTTP/Web API contract from an empty workspace."
+keywords = ["node", "npm", "http", "fetch", "dispatcher", "mock-agent", "json"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-gpt56-wide-restart-20260826-r3"
+reason = "Task-local authoring package; production validation and controls are recorded in the handoff."
+
+[oracle_bundle]
+digest = "sha256:PLACEHOLDER_ORACLE_DIGEST"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:PLACEHOLDER_ORACLE_DIGEST"
+visibility = "private"
