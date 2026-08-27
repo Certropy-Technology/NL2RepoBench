@@ -55,7 +55,7 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b", size_bytes = 1423360, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b", visibility = "private" }
+artifact = { digest = "sha256:e1028d88285ee5dd60eb24a8a1fc7b097e2bcf46e24b62a7b7a4f05a76efe0a2", size_bytes = 1454080, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:e1028d88285ee5dd60eb24a8a1fc7b097e2bcf46e24b62a7b7a4f05a76efe0a2", visibility = "private" }
 packages = [
   "@nodelib/fs.stat",
   "@nodelib/fs.walk",
@@ -69,8 +69,8 @@ framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 36
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ae0d5dc22c9d5bf46ee967a7fffef897063c31a78046afc47d753287d5a61081", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ae0d5dc22c9d5bf46ee967a7fffef897063c31a78046afc47d753287d5a61081", visibility = "private" }
-test_bundle = { digest = "sha256:56428100ac69806e55c009c8465c530d88dd3021637e8a33dc4c8d21793e5854", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:56428100ac69806e55c009c8465c530d88dd3021637e8a33dc4c8d21793e5854", visibility = "private" }
+commands_artifact = { digest = "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", visibility = "private" }
+test_bundle = { digest = "sha256:ecf78bbaaeb2d5fb2f11f901b2eb9660f9b77838270c0dfe873d0f5bc019fa3c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:ecf78bbaaeb2d5fb2f11f901b2eb9660f9b77838270c0dfe873d0f5bc019fa3c", visibility = "private" }
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -82,10 +82,10 @@ owner = "integrator"
 reason = "Fresh Node 24 production revalidation passed: Oracle 36/36 reward 1.0; empty reward 0.0; stub and forgery each 2/36 reward 0.05555555555555555; every verifier emitted expected_total=36 and a fresh network.json with public_network_available=false. Review and pilot remain publication-stage work."
 
 [oracle_bundle]
-digest = "sha256:e448c9fec7a1a8809a6ec6dda68be55673e54cca44f391a770b6beceaa8558d0"
-size_bytes = 194560
+digest = "sha256:e20152809afd64c1a80efe537faa7e55ccbf4d503b2a0a5b015e5d7de446afbf"
+size_bytes = 133120
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:e448c9fec7a1a8809a6ec6dda68be55673e54cca44f391a770b6beceaa8558d0"
+uri = "artifact://private/sha256:e20152809afd64c1a80efe537faa7e55ccbf4d503b2a0a5b015e5d7de446afbf"
 visibility = "private"
 
 [harbor]
