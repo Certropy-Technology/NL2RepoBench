@@ -9,6 +9,7 @@ import fcntl
 import hashlib
 import json
 import os
+import sys
 import tempfile
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
@@ -276,7 +277,7 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--limit", type=int, default=1)
             sub.add_argument("--lease-seconds", type=int, default=7200)
             sub.add_argument("--max-attempts", type=int, default=3)
-            sub.add_argument("--language", choices=("python", "node"))
+            sub.add_argument("--language", choices=("python", "node", "go"))
             sub.add_argument(
                 "--candidate-id",
                 action="append",
@@ -307,7 +308,7 @@ def main() -> int:
             "release": command_release,
         }[args.command](args)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
-        print(f"package queue failed: {exc}", file=os.sys.stderr)
+        print(f"package queue failed: {exc}", file=sys.stderr)
         return 1
 
 

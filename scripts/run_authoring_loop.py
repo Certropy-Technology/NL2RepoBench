@@ -27,7 +27,7 @@ from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -48,7 +48,7 @@ AUTHORING_RETRY_SETTINGS = {
 QUEUE_OUTPUT_LOCK = threading.Lock()
 
 
-def _load_queue_loop():
+def _load_queue_loop() -> Any:
     path = Path(__file__).with_name("package_queue_loop.py")
     spec = importlib.util.spec_from_file_location("package_queue_loop_driver", path)
     if spec is None or spec.loader is None:
@@ -108,7 +108,7 @@ def _claim(
     claimed = payload.get("claimed")
     if not isinstance(claimed, list) or len(claimed) != 1:
         raise RuntimeError(f"queue claim returned unexpected payload for {candidate_id}")
-    return claimed[0]
+    return cast(dict[str, Any], claimed[0])
 
 
 def _queue_transition(
@@ -261,7 +261,8 @@ able to clone or download the reference implementation from GitHub. Set
 an explicit `[environment.network_policy]` with `mode = "no-network"` for
 normal tasks. Python tasks must use a hash-locked `lock_artifact` installed at
 Docker build time and must not vendor a wheelhouse. Node tasks use the pinned
-npm lock/cache contract. Do not make the evaluation Agent run
+npm lock/cache contract. Go tasks use the locked module bundle and typed bridge
+contract. Do not make the evaluation Agent run
 `pip install`, `npm install`, `git clone`, `curl`, or `wget` to discover or
 install dependencies. If a special package needs an extra system library or
 runtime dependency, declare and freeze it in the source contract, then compile
@@ -529,7 +530,11 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
         toolchain = (
             worktree / "toolchain.node.lock.toml"
             if language == "node"
-            else worktree / "toolchain.lock.toml"
+            else (
+                worktree / "toolchain.go.lock.toml"
+                if language == "go"
+                else worktree / "toolchain.lock.toml"
+            )
         )
         compile_parent = worktree / ".nl2repo/authoring-gate"
         compile_parent.mkdir(parents=True, exist_ok=True)
@@ -843,8 +848,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(tasks, list):
         raise ValueError("author plan requires tasks")
     language = plan.get("language")
-    if language not in {"python", "node"}:
-        raise ValueError("author plan language must be python or node")
+    if language not in {"python", "node", "go"}:
+        raise ValueError("author plan language must be python, node, or go")
     batch_id = plan.get("batch_id")
     if not isinstance(batch_id, str) or not SAFE_NAME.fullmatch(batch_id):
         raise ValueError("author plan requires a safe batch_id")
