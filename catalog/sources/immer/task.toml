@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "immer"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "immutable-state"
+tags = ["node", "npm", "esm", "immutable", "proxy", "patches", "drafts", "json"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/immerjs/immer"
+revision = "061c2425e1c9dff89e4e4189d42af1b7839dfe0a"
+license_spdx = "MIT"
+source_digest = "sha256:df0a2fcf83800ad4878408db7d3d7cb8f4fd5a77352246a770b988e7d2401cbc"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier run without egress. Immer has no runtime dependencies in this slice; only the trusted Oracle bundle contains the built reference package."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:5d5cfbdae89e89efaf7ed14a2204975f327ebc99ce5117dbb2ab3a1d3c2456e8"
+size_bytes = 415
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:5d5cfbdae89e89efaf7ed14a2204975f327ebc99ce5117dbb2ab3a1d3c2456e8"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 28
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:bd32bd01511331bd5b0e41b3ecfd893ca67934eb03b3b3459d744c636652acac"
+size_bytes = 276
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:bd32bd01511331bd5b0e41b3ecfd893ca67934eb03b3b3459d744c636652acac"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:e0db1fda84cf67f695450d7143a141ef5ec47702f43d0a9bcdd426aa8282e863"
+size_bytes = 4333
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:e0db1fda84cf67f695450d7143a141ef5ec47702f43d0a9bcdd426aa8282e863"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the Immer immutable-state library from an empty workspace using a deterministic JSON mutation contract."
+keywords = ["node", "npm", "esm", "immutable", "proxy", "patches", "drafts", "json"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 6144
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-discovery-20260826-r1"
+reason = "Production Node 24 compile, one Harbor Oracle run, empty/nop, stub, forgery, offline, syntax, dependency, and network controls passed. Review, pilot, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:99389a0a007dcc3895bc453cfbc1c291880497cf35b9f8eeb8200f80d212cc24"
+size_bytes = 17405
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:99389a0a007dcc3895bc453cfbc1c291880497cf35b9f8eeb8200f80d212cc24"
+visibility = "private"

@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "task_id": "immer",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/immerjs/immer",
+    "revision": "061c2425e1c9dff89e4e4189d42af1b7839dfe0a",
+    "archive_sha256": "sha256:df0a2fcf83800ad4878408db7d3d7cb8f4fd5a77352246a770b988e7d2401cbc",
+    "archive_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/source.tar",
+    "license": "MIT",
+    "license_sha256": "sha256:99cf22f6960a6fe228ec84ea9aefb0d75b27999ece83a3a9801e1c2081fa270b",
+    "package_json_sha256": "sha256:5e2c16b27903e7713d7317dd6ce46087755e20639522d22ed43cd854b34a8fc6"
+  },
+  "toolchain": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor": "0.21.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "platform": "linux/amd64"
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/immer", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/validate-source.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/lint-network.log", "note": "Repository-wide lint has warnings for pre-existing tasks; no error was reported."},
+    {"command": "uv run nl2repo harbor compile catalog/sources/immer --toolchain toolchain.node.lock.toml --output .nl2repo/authoring-work/node-discovery-20260826-r1/immer/compiled-root --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/compile-root.log"},
+    {"command": "node --check private Node helpers; bash -n control scripts", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/local-contract.log"},
+    {"command": "npm ci --offline --ignore-scripts --no-audit --no-fund", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/offline-install.log"}
+  ],
+  "frozen_collection": {"framework": "node:test", "expected_total": 28, "observed_total": 28, "report_format": "node-test-json-v1"},
+  "artifacts": {
+    "dependency_bundle": {"digest": "sha256:5d5cfbdae89e89efaf7ed14a2204975f327ebc99ce5117dbb2ab3a1d3c2456e8", "size_bytes": 415, "path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/artifacts/private/sha256/5d/5d5cfbdae89e89efaf7ed14a2204975f327ebc99ce5117dbb2ab3a1d3c2456e8"},
+    "commands": {"digest": "sha256:bd32bd01511331bd5b0e41b3ecfd893ca67934eb03b3b3459d744c636652acac", "size_bytes": 276, "path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/artifacts/private/sha256/bd/bd32bd01511331bd5b0e41b3ecfd893ca67934eb03b3b3459d744c636652acac"},
+    "tests": {"digest": "sha256:e0db1fda84cf67f695450d7143a141ef5ec47702f43d0a9bcdd426aa8282e863", "size_bytes": 4333, "path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/artifacts/private/sha256/e0/e0db1fda84cf67f695450d7143a141ef5ec47702f43d0a9bcdd426aa8282e863"},
+    "oracle": {"digest": "sha256:99389a0a007dcc3895bc453cfbc1c291880497cf35b9f8eeb8200f80d212cc24", "size_bytes": 17405, "path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/artifacts/private/sha256/99/99389a0a007dcc3895bc453cfbc1c291880497cf35b9f8eeb8200f80d212cc24"}
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-discovery-20260826-r1/immer/compiled/immer -a oracle --jobs-dir .nl2repo/authoring-work/node-discovery-20260826-r1/immer/oracle-jobs --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 28,
+    "total": 28,
+    "compiled_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/compiled/immer",
+    "final_compile_equivalence": "The later compiled-final bundle differs from this Oracle-tested bundle only in lifecycle-derived canonical metadata and the forged-control script; runtime, verifier, test, dependency, and Oracle package assets are unchanged.",
+    "grading_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/oracle-jobs/2026-08-26__13-18-37/immer__p5Zbcoa/verifier/grading.json",
+    "network_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/oracle-jobs/2026-08-26__13-18-37/immer__p5Zbcoa/verifier/network.json"
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "reward": 0.0, "collected": 0, "grading_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/empty-jobs/2026-08-26__13-20-26/immer__EDUzBQu/verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/empty-jobs/2026-08-26__13-20-26/immer__EDUzBQu/verifier/network.json"},
+    "stub": {"exit_code": 0, "reward": 0.0, "collected": 0, "grading_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/control-jobs/stub/2026-08-26__13-22-21/immer-stub__aP4tosT/verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/control-jobs/stub/2026-08-26__13-22-21/immer-stub__aP4tosT/verifier/network.json"},
+    "forgery": {"exit_code": 0, "reward": 0.0, "collected": 0, "grading_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/final-jobs/forgery/2026-08-26__13-31-44/immer-forgery__rs7cdTE/verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/final-jobs/forgery/2026-08-26__13-31-44/immer-forgery__rs7cdTE/verifier/network.json"},
+    "offline": {"exit_code": 0, "command": "npm ci --offline --ignore-scripts --no-audit --no-fund on Oracle package; private npm bundle validator; verifier network probes", "network_proven_false": true}
+  },
+  "revalidation_attempts": [
+    {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-discovery-20260826-r1/immer/compiled-final/immer -a oracle", "exit_code": 0, "reported_reward": 0.0, "failure_class": "infrastructure", "reason": "Verifier npm process reported pthread_create: Resource temporarily unavailable and timeout core dump; no test cases were collected. This is not treated as a model result."}
+  ],
+  "residual_risks": [
+    "Only one Oracle run is recorded; cross-run stability, blind review, pilot, and publication remain integrator gates.",
+    "The production contract is a JSON action adaptation of the 3772-leaf Vitest upstream suite, not full upstream parity.",
+    "The Oracle package is a built private artifact derived from the frozen source; the Oracle solution does not fetch GitHub because source bytes are already content-addressed and private.",
+    "The authoring host upstream npm test chain requires Yarn after the Vitest phase; this did not affect the production no-dependency package or Harbor Oracle."
+  ],
+  "blocker": null
+}
