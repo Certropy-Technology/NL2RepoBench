@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "package": "@typescript/typescript",
+  "revision": "d6c4afddb2c55f4a9dea7b59293a99a8fdea1799",
+  "entrypoints": {
+    ".": ["version", "versionMajorMinor"],
+    "./unstable/ast/scanner": ["createScanner", "tokenToString", "stringToToken", "computeLineStarts", "skipTrivia", "getShebang", "isIdentifierText", "getLeadingCommentRanges", "getTrailingCommentRanges"],
+    "./unstable/ast": ["SpanMap", "SpanMapFeature", "SpanMapFidelity", "SpanMapKind"]
+  },
+  "excluded": ["async API transport", "native child process protocol", "callbacks", "typed-array identity", "full 847-export AST surface"]
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "node-test-leaf-pass-rate-v1",
+  "leaves": [
+    {"ids": [1, 2, 3], "behavior": "package identity, version and dependency/script surface", "instruction": "Package metadata and root export"},
+    {"ids": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "behavior": "scanner tokens, trivia, literals, identifiers, operators and bounds", "instruction": "Scanner"},
+    {"ids": [14, 15, 16, 17, 18, 19, 20], "behavior": "token and text utilities, trivia ranges and identifier helpers", "instruction": "Scanner utilities"},
+    {"ids": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30], "behavior": "SpanMap exact, gap, atom, approximate and feature-aware projections", "instruction": "SpanMap"}
+  ],
+  "coverage": {"all_public_promises_have_leaf": true, "all_leaves_have_public_behavior": true}
+}
