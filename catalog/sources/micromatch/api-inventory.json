@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromatch",
+  "module_system": "commonjs",
+  "package_export": "callable",
+  "source_revision": "8bd704ec0d9894693d35da425d827819916be920",
+  "exports": [
+    {"name": "<callable>", "signature": "micromatch(list, patterns, options?) -> string[]"},
+    {"name": "match", "signature": "match(list, patterns, options?) -> string[]", "alias_of": "<callable>"},
+    {"name": "matcher", "signature": "matcher(pattern, options?) -> (input: string) -> boolean"},
+    {"name": "isMatch", "signature": "isMatch(input, patterns, options?) -> boolean"},
+    {"name": "any", "signature": "any(input, patterns, options?) -> boolean", "alias_of": "isMatch"},
+    {"name": "not", "signature": "not(list, patterns, options?) -> string[]"},
+    {"name": "contains", "signature": "contains(input, patterns, options?) -> boolean"},
+    {"name": "matchKeys", "signature": "matchKeys(object, patterns, options?) -> object"},
+    {"name": "some", "signature": "some(list, patterns, options?) -> boolean"},
+    {"name": "every", "signature": "every(list, patterns, options?) -> boolean"},
+    {"name": "all", "signature": "all(input, patterns, options?) -> boolean"},
+    {"name": "capture", "signature": "capture(pattern, input, options?) -> string[] | undefined"},
+    {"name": "makeRe", "signature": "makeRe(pattern, options?) -> RegExp"},
+    {"name": "scan", "signature": "scan(pattern, options?) -> object"},
+    {"name": "parse", "signature": "parse(patterns, options?) -> object[]"},
+    {"name": "braces", "signature": "braces(pattern, options?) -> string[]"},
+    {"name": "braceExpand", "signature": "braceExpand(pattern, options?) -> string[]"},
+    {"name": "hasBraces", "signature": "hasBraces(pattern) -> boolean"}
+  ],
+  "cli_entrypoints": [],
+  "side_effects": [],
+  "inventory_source": "Frozen index.js export assignments plus package.json main metadata"
+}

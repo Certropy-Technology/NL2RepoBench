@@ -196,6 +196,8 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
     controls.mkdir()
     (controls / "stub.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
     (controls / "forgery.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    (controls / "timeout.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    (controls / "offline.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
 
     task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
         source, tmp_path / "tasks", allow_incomplete=True
@@ -216,6 +218,18 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
         assert file_path.is_file()
         assert entry["size_bytes"] == file_path.stat().st_size
         assert entry["sha256"] == hashlib.sha256(file_path.read_bytes()).hexdigest()
+
+    for kind in ("timeout", "offline"):
+        extra = HarborCompilerRegistry.default().prepare_control_bundle(
+            task_root, kind, tmp_path / "controls", NODE_TOOLCHAIN
+        )
+        extra_manifest = json.loads(
+            (extra / "bundle.manifest.json").read_text(encoding="utf-8")
+        )
+        assert extra_manifest["mode"] == f"control-{kind}"
+        assert f"controls/{kind}.sh" in {
+            entry["path"] for entry in extra_manifest["files"]
+        }
 
 
 def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:
