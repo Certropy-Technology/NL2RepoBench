@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "iso8601"
+version = "0.1.1"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "datetime", "iso8601", "parsing", "timezone", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/micktwomey/pyiso8601"
+revision = "00c9262b9ad141f287b3263be7f2244fa01988c2"
+license_spdx = "MIT"
+source_digest = "sha256:6253d109a195cd118c204e64b513b14d8d07e0293c6089bf1dd1167cc2e2a97f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["ca-certificates", "git"]
+build_command = "apt-get install --no-install-recommends ca-certificates git"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Build dependencies are installed during Docker build from a hash-locked requirements artifact. Agent and separate verifier phases run without egress; only the trusted Oracle receives a run-scoped authorization for github.com."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "poetry-core==2.1.3",
+]
+lock_artifact = { digest = "sha256:7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d", size_bytes = 543, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 31
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:d71cc028e6560e4344b093c30e5dfc5a5654152a224cce9f5f80cc48df00c5af", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d71cc028e6560e4344b093c30e5dfc5a5654152a224cce9f5f80cc48df00c5af", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the iso8601 datetime parsing library from an empty workspace with deterministic ISO 8601, timezone, error, and round-trip behavior."
+keywords = ["python", "datetime", "iso8601", "parsing", "timezone", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-discovery-20260826-r1"
+reason = "Harbor 0.21 Oracle passed 31/31 with reward 1.0 on version 0.1.1; existing empty/stub/forgery/install-hang/call-hang controls remain applicable because verifier and control bytes are unchanged, and all verifier network probes are offline. Review and pilot remain separate stages."
+
+[oracle_bundle]
+digest = "sha256:44fdda4299350e28f2aa2d45347bcf405437c197fe197b978d3481d37760e157"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:44fdda4299350e28f2aa2d45347bcf405437c197fe197b978d3481d37760e157"
+visibility = "private"
