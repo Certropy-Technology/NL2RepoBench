@@ -1,0 +1,74 @@
+{
+  "api_inventory": {
+    "full_public_symbols": 58,
+    "inventory_sha256": "sha256:a5524673c31437f5ebd44f3b2479728064b6c991b0bc906ad0e255da5f5a414a",
+    "method": "golang.org/x/tools/go/packages v0.36.0 plus go/types",
+    "package": "github.com/Masterminds/semver/v3",
+    "selected_contract_symbols": [
+      "NewVersion",
+      "StrictNewVersion",
+      "Version.Major",
+      "Version.Minor",
+      "Version.Patch",
+      "Version.Prerelease",
+      "Version.Metadata",
+      "Version.String",
+      "Version.Original",
+      "Version.Compare",
+      "Version.IncMajorE",
+      "Version.IncMinorE",
+      "Version.IncPatchE",
+      "Version.SetPrerelease",
+      "Version.SetMetadata",
+      "NewConstraint",
+      "Constraints.Check",
+      "Collection.Len",
+      "Collection.Less",
+      "Collection.Swap"
+    ],
+    "stored_at": ".nl2repo/work/go-semver/evidence/api-inventory.json"
+  },
+  "bridge": {
+    "path": "harbor/tests/bridge.go",
+    "operations": [
+      "parse",
+      "compare",
+      "increment",
+      "set_prerelease",
+      "set_metadata",
+      "constraint_check",
+      "sort"
+    ],
+    "serialization": "newline-delimited JSON with JSON-safe scalar, object, and array values",
+    "trust_boundary": "public API mapping only; hidden inputs, expected values, assertions, and grading are absent"
+  },
+  "contract_leaf": {
+    "frozen_total": 1,
+    "id": "contract::public-api",
+    "private_assertion_classes": [
+      "strict and loose parsing",
+      "normalized fields and original input",
+      "invalid core, prerelease, and metadata syntax",
+      "SemVer precedence and metadata exclusion",
+      "safe increments and uint64 overflow",
+      "validated prerelease and metadata mutation",
+      "AND, OR, caret, tilde, wildcard, and hyphen constraints",
+      "prerelease range exclusion",
+      "collection sorting",
+      "empty collection and invalid member handling"
+    ],
+    "private_checks": 41,
+    "public_contract": "instruction.md#api-usage-guide"
+  },
+  "schema_version": "1.0",
+  "source_baseline": {
+    "failed_leaf_tests_each_run": 0,
+    "goarch": "amd64",
+    "goos": "linux",
+    "passed_leaf_tests_each_run": 92,
+    "runs": 3,
+    "source_revision": "dd2b995c61c39ddd668b23ac919b04d607be35ab"
+  },
+  "task_id": "go-semver"
+}
+

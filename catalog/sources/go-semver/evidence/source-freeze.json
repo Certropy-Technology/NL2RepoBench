@@ -1,0 +1,36 @@
+{
+  "api_inventory": {
+    "method": "golang.org/x/tools/go/packages v0.36.0 plus go/types",
+    "package": "github.com/Masterminds/semver/v3",
+    "public_symbols": 58,
+    "sha256": "sha256:a5524673c31437f5ebd44f3b2479728064b6c991b0bc906ad0e255da5f5a414a",
+    "stored_at": ".nl2repo/work/go-semver/evidence/api-inventory.json"
+  },
+  "first_lane_scan": {
+    "cgo": false,
+    "external_replace": false,
+    "go_generate": false,
+    "go_linkname": false,
+    "go_workspace": false,
+    "plugin": false,
+    "submodules": false,
+    "symlinks": 0,
+    "toolchain_directive": false,
+    "unsafe_import": false
+  },
+  "license_spdx": "MIT",
+  "module_path": "github.com/Masterminds/semver/v3",
+  "revision": "dd2b995c61c39ddd668b23ac919b04d607be35ab",
+  "schema_version": "1.0",
+  "source_digest": "sha256:883b1aa28b1a3920344950359343bdc2e43b5a70d854fb0850913b2c548325e2",
+  "task_id": "go-semver",
+  "upstream_url": "https://github.com/Masterminds/semver",
+  "upstream_tests": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "failed_leaf_tests_each_run": 0,
+    "passed_leaf_tests_each_run": 92,
+    "runs": 3,
+    "skipped_leaf_tests_each_run": 0
+  }
+}
+

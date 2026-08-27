@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "go-semver"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:a4a2abf6822ef3199138ea0350982fb1312d00f6db5666dfd7c3e9e68d0acd46", size_bytes = 734, uri = "artifact://private/sha256:a4a2abf6822ef3199138ea0350982fb1312d00f6db5666dfd7c3e9e68d0acd46", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "semver", "constraints", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Masterminds/semver"
+revision = "dd2b995c61c39ddd668b23ac919b04d607be35ab"
+license_spdx = "MIT"
+source_digest = "sha256:883b1aa28b1a3920344950359343bdc2e43b5a70d854fb0850913b2c548325e2"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution is offline; only the trusted Oracle receives a run-scoped github.com authorization for the frozen source."
+
+[dependencies]
+status = "known"
+installer = "system"
+module_bundle = { digest = "sha256:b9bf47e58cb4c81a841b26fb23ad73768d9e6624b1f3bdb93eac1dd1bdb583a0", size_bytes = 425, uri = "artifact://private/sha256:b9bf47e58cb4c81a841b26fb23ad73768d9e6624b1f3bdb93eac1dd1bdb583a0", visibility = "private" }
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate semantic version parsing, comparison, increments, constraints, and sorting through a bounded Go bridge."
+keywords = ["go", "semver", "constraints", "go-modules", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-gpt56-scale-pilot-20260826-r1"
+reason = "Three stable Oracle runs, eight negative controls, explicit offline verification, and UID 10001 supervisor evidence passed; awaiting independent review and model pilot."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:0e76e0c9566953dbd22af1360cb26e40c01c98317e15fceb77e64a5cda605d97", size_bytes = 1763, uri = "artifact://private/sha256:0e76e0c9566953dbd22af1360cb26e40c01c98317e15fceb77e64a5cda605d97", visibility = "private" }
+entrypoint = "contract.sh"
+
