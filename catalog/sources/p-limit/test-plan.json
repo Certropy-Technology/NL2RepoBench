@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-limit",
+  "framework": "node:test",
+  "expected_total": 24,
+  "adapter": "declarative bounded async-task scenarios in an unprivileged candidate child",
+  "coverage": [
+    {"area": "package and public exports", "leaves": 1},
+    {"area": "constructor and option validation", "leaves": 4},
+    {"area": "concurrency, ordering, arguments, values, and errors", "leaves": 8},
+    {"area": "counts and clearQueue", "leaves": 3},
+    {"area": "map over arrays and other iterables", "leaves": 4},
+    {"area": "dynamic concurrency", "leaves": 2},
+    {"area": "limitFunction", "leaves": 1},
+    {"area": "AsyncLocalStorage propagation", "leaves": 1}
+  ],
+  "excluded_upstream_checks": [
+    "wall-clock throughput windows",
+    "randomized sleep durations",
+    "lint configuration",
+    "benchmark scripts",
+    "tsd compile-time inference assertions beyond declaration entry presence"
+  ],
+  "determinism": "Controlled promises and setImmediate turns replace random delays and elapsed-time assertions."
+}
