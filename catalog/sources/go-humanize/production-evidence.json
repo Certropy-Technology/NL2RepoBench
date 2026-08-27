@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-humanize",
+  "status": "controls-passed",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/dustin/go-humanize",
+    "revision": "4d1d9082551ec085912e7d2253a33ae547fca000",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:ce579ea6d7e8afd59ea2c9b3f8040984cc7ccb1fddc52e938a52ce64f265b9d4"
+  },
+  "environment": {
+    "go_version": "1.26.5",
+    "go_runtime_lock": "toolchain.go.lock.toml",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "platform": "linux/amd64",
+    "network_mode": "no-network",
+    "candidate_uid": 10001
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:ed5e8103205597cbf2294e04870b5278c31f1f23e51299f697f5652ae7058453", "size_bytes": 477},
+    "verifier_bundle": {"digest": "sha256:e59d7e1bf2e35fabf43fc8aa155b9cef8ad923a4a2453c2c5759422d753265a9", "size_bytes": 1068},
+    "oracle_bundle": {"digest": "sha256:2f30447997dd0e3dece96ea66e38208a297aa67e89f6ec81361f55d433e38964", "size_bytes": 600}
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-humanize", "exit_code": 0, "evidence": ".nl2repo/evidence/go-humanize/validate-source-final.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "0 errors; 139 warnings belong to unrelated sources", "evidence": ".nl2repo/evidence/go-humanize/lint-network-final.log"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-humanize --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled-final", "exit_code": 0, "evidence": ".nl2repo/compiled-final/go-humanize/bundle.manifest.json"},
+    {"command": "bash -n all task shell scripts; python -m py_compile verifier runtime", "exit_code": 0, "evidence": ".nl2repo/evidence/go-humanize/focused-tests-nocov.log"},
+    {"command": "uv run --frozen pytest -q -o addopts='-ra' tests/test_go_adapter.py", "exit_code": 0, "result": "9 passed", "evidence": ".nl2repo/evidence/go-humanize/focused-tests-nocov.log"}
+  ],
+  "oracle": {
+    "runs": 3,
+    "valid_each_run": true,
+    "passed_each_run": 1,
+    "frozen_total": 1,
+    "reward_each_run": 1.0,
+    "run_roots": [
+      ".nl2repo/runs-final/go-humanize/oracle-1",
+      ".nl2repo/runs-final/go-humanize/oracle-2",
+      ".nl2repo/runs-final/go-humanize/oracle-3"
+    ],
+    "source_host_authorization": "github.com only for Oracle"
+  },
+  "controls": {
+    "matrix": ".nl2repo/evidence/go-humanize/control-matrix-final.json",
+    "network_receipts": "all final verifier network.json files report public_network_available=false",
+    "empty": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "forgery": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "install-failure": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "panic": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "hang": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "oversized-output": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "background-process": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "offline-verifier": {"valid": true, "reward": 1.0, "passed": 1, "frozen_total": 1}
+  },
+  "final_bundle": {
+    "path": ".nl2repo/compiled-final/go-humanize/bundle.manifest.json",
+    "sha256": "sha256:b6a07eafeb10ba87f8583331f8ef190da9bd5e7a7d5b4502531cdca5a71a6667",
+    "canonical_manifest_digest": "sha256:4617d3adf2abba2d110adc155b622bc554f4276bafd471e4fb68f1d49d98285f"
+  },
+  "residual_risks": [
+    "The first Go profile freezes one verifier-owned contract leaf; the upstream suite remains source-baseline evidence, not the published denominator.",
+    "The public source tree intentionally contains only the reviewed bridge and controls; Oracle, verifier, and module closure bytes are private CAS artifacts.",
+    "Independent blind review and model pilot are pending; no Harbor Agent Run was started in this lane."
+  ]
+}
