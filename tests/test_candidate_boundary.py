@@ -315,6 +315,16 @@ def test_candidate_tree_usage_is_bounded_summary(tmp_path: Path) -> None:
     assert total_bytes == 6
 
 
+def test_candidate_build_environment_allows_only_safe_shell_names() -> None:
+    assert candidate_install._parse_build_environment(("BUILD_VERSION=0.0.0",)) == (  # noqa: SLF001
+        "BUILD_VERSION=0.0.0",
+    )
+    with pytest.raises(ValueError, match="cannot override PATH"):
+        candidate_install._parse_build_environment(("PATH=/unsafe",))  # noqa: SLF001
+    with pytest.raises(ValueError, match="invalid candidate build environment"):
+        candidate_install._parse_build_environment(("lowercase=value",))  # noqa: SLF001
+
+
 @pytest.mark.parametrize(
     ("outcome", "expected_exit"),
     [("success", None), ("timeout", candidate_install.CANDIDATE_FAILURE_EXIT)],

@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 import tomli_w
 
+from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.models import Visibility
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import load_command_plan, load_toolchain_lock
@@ -113,6 +114,15 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert (task_root / "solution/solve.sh").stat().st_mode & 0o111
     assert (task_root / "controls/stub.sh").stat().st_mode & 0o111
     assert not list((task_root / "environment").rglob("test_ministats.py"))
+
+
+def test_custom_verifier_passes_validated_build_environment_to_candidate_install(tmp_path) -> None:
+    catalog = CatalogCompiler(FileArtifactStore(tmp_path / "artifacts"))
+    manifest = catalog.compile_task(
+        ROOT / "catalog/sources/dataclasses-json", tmp_path / "canonical"
+    ).manifest
+    script = HarborCompiler(TOOLCHAIN)._custom_test_script(manifest)  # noqa: SLF001
+    assert "--build-env POETRY_DYNAMIC_VERSIONING_BYPASS=0.0.0" in script
 
 
 def test_system_packages_are_installed_in_agent_and_verifier_images(tmp_path) -> None:

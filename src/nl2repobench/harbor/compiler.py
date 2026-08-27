@@ -610,6 +610,10 @@ exit 0
             f"export {name}={shlex.quote(value)}"
             for name, value in sorted(manifest.verifier.environment.items())
         )
+        build_environment_args = " ".join(
+            f"--build-env {shlex.quote(f'{name}={value}') }"
+            for name, value in sorted(manifest.verifier.environment.items())
+        )
         return f"""#!/usr/bin/env bash
 set -uo pipefail
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
@@ -637,6 +641,7 @@ chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
 python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate --target /tmp/candidate-site \
   --timeout-sec {profile.candidate_install_timeout_sec} \
+  {build_environment_args} \
   --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli \

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import signal
 import stat
 import subprocess
@@ -57,7 +58,29 @@ def _kill_group(process: subprocess.Popen[bytes]) -> None:
         pass
 
 
-def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[str, object]:
+def _parse_build_environment(entries: tuple[str, ...]) -> tuple[str, ...]:
+    """Validate trusted, task-declared environment entries for the build child."""
+
+    parsed: list[str] = []
+    forbidden = {"PATH", "PYTHONPATH", "LD_PRELOAD", "LD_LIBRARY_PATH"}
+    for entry in entries:
+        name, separator, value = entry.partition("=")
+        if not separator or not re.fullmatch(r"[A-Z_][A-Z0-9_]*", name):
+            raise ValueError(f"invalid candidate build environment entry: {entry!r}")
+        if name in forbidden:
+            raise ValueError(f"candidate build environment cannot override {name}")
+        if len(value) > 512:
+            raise ValueError("candidate build environment value is too long")
+        parsed.append(entry)
+    return tuple(parsed)
+
+
+def install_candidate(
+    source: Path,
+    target: Path,
+    timeout_sec: float,
+    build_environment: tuple[str, ...] = (),
+) -> dict[str, object]:
     writable_root = Path("/tmp/candidate-build")
     home = writable_root / "home"
     temporary = writable_root / "tmp"
@@ -78,6 +101,7 @@ def install_candidate(source: Path, target: Path, timeout_sec: float) -> dict[st
     ]
     if dependency_root:
         environment.append(f"PYTHONPATH={dependency_root}")
+    environment.extend(_parse_build_environment(build_environment))
     command = [
         "runuser",
         "-u",
@@ -139,10 +163,16 @@ def main() -> None:
     parser.add_argument("--target", type=Path, required=True)
     parser.add_argument("--timeout-sec", type=float, default=90.0)
     parser.add_argument("--status", type=Path, required=True)
+    parser.add_argument("--build-env", action="append", default=[])
     args = parser.parse_args()
     try:
-        result = install_candidate(args.source, args.target, args.timeout_sec)
-    except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+        result = install_candidate(
+            args.source,
+            args.target,
+            args.timeout_sec,
+            tuple(args.build_env),
+        )
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
         args.status.write_text(
             json.dumps({"outcome": "internal-error", "message": str(exc)}, sort_keys=True)
             + "\n",

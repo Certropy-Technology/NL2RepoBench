@@ -46,7 +46,7 @@ commands = ["python -m pytest /tests/private/test_contract.py --junitxml=/logs/v
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:3bd865362b789eddf3a3b456fcfb2548cfde64dc211870008a560455b56801c4", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3bd865362b789eddf3a3b456fcfb2548cfde64dc211870008a560455b56801c4", visibility = "private" }
+bundle = { digest = "sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153", visibility = "private" }
 entrypoint = "run.py"
 environment = { POETRY_DYNAMIC_VERSIONING_BYPASS = "0.0.0" }
 
@@ -72,13 +72,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Remediated source/build/dependency closure and task-local JSON contract; Harbor Oracle and controls remain pending."
+status = "controls-passed"
+owner = "python-author-gpt56-wide-20260826-r2"
+reason = "Task-local production bundle passed direct no-network Oracle-equivalent grading and empty, stub, forgery, and install-timeout controls; independent review and Harbor trial execution remain pending."
 
 [oracle_bundle]
-digest = "sha256:6f59a06f3697e5fc9840f75cb6c39e914c24c23f7e22948ee9daa50ba6340bcf"
+digest = "sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:6f59a06f3697e5fc9840f75cb6c39e914c24c23f7e22948ee9daa50ba6340bcf"
+uri = "artifact://private/sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78"
 visibility = "private"
