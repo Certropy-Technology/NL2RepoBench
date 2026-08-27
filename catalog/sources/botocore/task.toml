@@ -1,0 +1,92 @@
+schema_version = "1.0"
+task_id = "botocore"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = ["python", "aws", "models", "signing", "stubbing", "offline", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/boto/botocore"
+revision = "577f39f278bec5635ffdc7efd6d99f17687419e2"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:13720b9e9a36c235c45535e1364ec7e5faddd47789b87cd27865b1ec9eafa9a3"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "All candidate and verifier dependencies are installed during image build from hash-locked requirements; agent and verifier runs are network-isolated."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "jmespath==1.0.1",
+  "python-dateutil==2.9.0.post0",
+  "urllib3==2.5.0",
+  "six==1.17.0",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:3a91a7b8c6f6e932308c2d440feed9234f360588a02dc20f643366cb4b0c1cfd", size_bytes = 2003, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:3a91a7b8c6f6e932308c2d440feed9234f360588a02dc20f643366cb4b0c1cfd", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/worker.py", "/tests/verifier/scenarios.json"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:aabd6f2e85f20726f994330511d8cfa919bfcb2b12f5ddf635ef941cfc23e2f9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:aabd6f2e85f20726f994330511d8cfa919bfcb2b12f5ddf635ef941cfc23e2f9", visibility = "private" }
+
+[harbor]
+description = "Build botocore from an empty workspace and satisfy deterministic offline session, model, request, signing, retry, and stubber scenarios."
+keywords = ["python", "aws", "models", "signing", "stubbing", "offline", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:08b8fb942831b48c3054eebee9a6198ef1a7447285620853b26d0c7c7b12d4b1"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:08b8fb942831b48c3054eebee9a6198ef1a7447285620853b26d0c7c7b12d4b1"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-discovery-20260826-r1"
+reason = "Source, dependency closure, production compile, Oracle, empty, stub, forgery, and offline controls passed. Awaiting independent Agent Run; no Agent Run was started from this lane."
