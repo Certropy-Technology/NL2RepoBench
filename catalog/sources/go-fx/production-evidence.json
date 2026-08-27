@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fx",
+  "status": "controls-passed",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/antonmedv/fx",
+    "revision": "4f31cd3a0c5d66f1b4290a2719bab14a5cee8ebe",
+    "source_digest": "sha256:efe539dae8dab090b45e4224eaae1e476e61fc3ec4156212087d67dd39f5297c",
+    "license_spdx": "MIT AND Apache-2.0",
+    "license_file_sha256": "sha256:f2c369e1796dc84c37cf34a966033e8850e535567fde32ef74b672726ed61d23"
+  },
+  "environment": {
+    "runtime": "go1.26.5-X:nodwarf5",
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false,
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "harbor_version": "0.21.0"
+  },
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:3fb6d7d41b10fd6f7340a6c02b90f0c00201057c097bb89b49e543762e374014",
+      "size_bytes": 267079,
+      "path": ".nl2repo/artifacts/private/sha256/3f/3fb6d7d41b10fd6f7340a6c02b90f0c00201057c097bb89b49e543762e374014"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:9d9a54451c6f8af95e33a83908ce390faec30baff5070fa531c72885715e1669",
+      "size_bytes": 863,
+      "path": ".nl2repo/artifacts/private/sha256/9d/9d9a54451c6f8af95e33a83908ce390faec30baff5070fa531c72885715e1669"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:7e1a9be3b4e8ce2853a0dc102a841b6fd4373698de15f475905ae81a1904ea94",
+      "size_bytes": 267779,
+      "path": ".nl2repo/artifacts/private/sha256/7e/7e1a9be3b4e8ce2853a0dc102a841b6fd4373698de15f475905ae81a1904ea94"
+    }
+  },
+  "collection": {
+    "framework": "custom-json-v1",
+    "frozen_total": 1,
+    "leaf_ids": ["contract::public-api"],
+    "assertion_classes": 2
+  },
+  "commands": [
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+      "exit_code": 0,
+      "result": "745 collected leaf tests, 745 passed, 0 failed",
+      "log": ".nl2repo/authoring-work/go-fx/evidence/upstream-test.log"
+    },
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go build ./...",
+      "exit_code": 0,
+      "result": "upstream build passed",
+      "log": ".nl2repo/authoring-work/go-fx/evidence/upstream-build.log"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-fx",
+      "exit_code": 0,
+      "result": "source schema and policy accepted"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; 0 go-fx findings; unrelated catalog warnings retained",
+      "log": ".nl2repo/authoring-work/go-fx/network-lint.json"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-fx --output .nl2repo/authoring-work/go-fx/compiled --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "result": "closed-world production bundle compiled",
+      "artifact": ".nl2repo/authoring-work/go-fx/compiled/go-fx/bundle.manifest.json"
+    }
+  ],
+  "final_bundle": {
+    "path": ".nl2repo/authoring-work/go-fx/compiled/go-fx/bundle.manifest.json",
+    "sha256": "sha256:e07de3ca9f32bb98fbc454a2399a1e0840efff98a32840e1b80d5a2d289ffef9"
+  },
+  "images": {
+    "verifier": "sha256:c2a22c8a1a70b5e1e1266d113e75ba4daaffaf13322c5b96e1f0af7116d1550d",
+    "verifier_build": "docker build --no-cache -f compiled/tests/Dockerfile"
+  },
+  "oracle": {
+    "runner": "direct separate-verifier Docker replay; Harbor Agent Run intentionally not started in this lane",
+    "command": "docker run --rm --network none -v local-oracle-workspace:/workspace -v docker-oracle-logs:/logs nl2repo-go-fx-verifier:local /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-oracle-logs/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/go-fx/local-evidence/docker-oracle-logs/verifier/network.json"
+  },
+  "controls": {
+    "empty": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/empty/verifier/grading.json"},
+    "stub": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/stub/verifier/grading.json"},
+    "forgery": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/forgery/verifier/grading.json"},
+    "install-failure": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/install-failure/verifier/grading.json"},
+    "panic": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/panic/verifier/grading.json"},
+    "hang": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/hang/verifier/grading.json"},
+    "oversized-output": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/oversized-output/verifier/grading.json"},
+    "background-process": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/authoring-work/go-fx/local-evidence/docker-controls/background-process/verifier/grading.json"}
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started per lane instruction; independent model pilot and publication review remain integrator responsibilities.",
+    "The full upstream repository has interactive and external-dependency packages outside this task's declared bridge scope.",
+    "The network linter reports unrelated warnings in the shared catalog, but zero errors and zero go-fx findings."
+  ]
+}

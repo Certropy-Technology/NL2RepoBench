@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fx",
+  "api_inventory": {
+    "method": "go/types and source inventory at frozen revision",
+    "packages": [
+      "github.com/antonmedv/fx/internal/shlex",
+      "github.com/antonmedv/fx/internal/fuzzy"
+    ],
+    "public_symbols": ["shlex.Parse", "fuzzy.StringWidth"],
+    "stored_at": ".nl2repo/authoring-work/go-fx/evidence/api-inventory.json"
+  },
+  "source_baseline": {
+    "revision": "4f31cd3a0c5d66f1b4290a2719bab14a5cee8ebe",
+    "archive_digest": "sha256:efe539dae8dab090b45e4224eaae1e476e61fc3ec4156212087d67dd39f5297c",
+    "license": "MIT AND Apache-2.0",
+    "static_test_functions": 745,
+    "dynamic_leaf_tests_each_run": 745,
+    "failed_leaf_tests_each_run": 0,
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false
+  },
+  "risk_adaptation": {
+    "interactive_scope": "TUI, terminal, clipboard, image, and JavaScript runtime behavior are excluded from the typed bridge.",
+    "package_scope": "The bridge exposes only deterministic shell-string and Unicode-width helpers.",
+    "dependency_scope": "The private module closure freezes github.com/rivo/uniseg v0.4.7; bridge imports otherwise use the standard library."
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "shell whitespace, quoting, escaping, comments, and unfinished input",
+      "ASCII, combining-mark, wide-rune, emoji, and invalid-UTF8 display width",
+      "structured bridge errors and deterministic newline-delimited transport"
+    ]
+  }
+}

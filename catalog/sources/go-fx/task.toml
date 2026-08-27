@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "go-fx"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:7e1a9be3b4e8ce2853a0dc102a841b6fd4373698de15f475905ae81a1904ea94", size_bytes = 267779, uri = "artifact://private/sha256:7e1a9be3b4e8ce2853a0dc102a841b6fd4373698de15f475905ae81a1904ea94", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "typed-bridge", "shell-lexer", "unicode"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/antonmedv/fx"
+revision = "4f31cd3a0c5d66f1b4290a2719bab14a5cee8ebe"
+license_spdx = "MIT AND Apache-2.0"
+source_digest = "sha256:efe539dae8dab090b45e4224eaae1e476e61fc3ec4156212087d67dd39f5297c"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution is offline; only the trusted Oracle receives a run-scoped authorization for the frozen GitHub source."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = ["github.com/rivo/uniseg@v0.4.7"]
+module_bundle = { digest = "sha256:3fb6d7d41b10fd6f7340a6c02b90f0c00201057c097bb89b49e543762e374014", size_bytes = 267079, uri = "artifact://private/sha256:3fb6d7d41b10fd6f7340a6c02b90f0c00201057c097bb89b49e543762e374014", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate deterministic string and Unicode helper behavior from the pure-Go fx codebase through a typed subprocess bridge."
+keywords = ["go", "go-modules", "typed-bridge", "shell-lexer", "unicode"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-wave2-20260828-c3"
+reason = "Frozen source, typed bridge, Oracle bundle, private verifier, and task-local negative controls are authored; awaiting independent review and model Agent Run."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:9d9a54451c6f8af95e33a83908ce390faec30baff5070fa531c72885715e1669", size_bytes = 863, uri = "artifact://private/sha256:9d9a54451c6f8af95e33a83908ce390faec30baff5070fa531c72885715e1669", visibility = "private" }
+entrypoint = "contract.sh"
