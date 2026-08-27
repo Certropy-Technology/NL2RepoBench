@@ -1,36 +1,102 @@
 {
   "schema_version": "1.0",
   "task_id": "eslint",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "verifier",
-    "next_step": "Recompile from the source authority with the private npm/cache/verifier artifacts, run official Harbor 0.21.0 Oracle and all controls, then reopen only with hash-bound grading and network receipts.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/eslint/eslint",
-      "revision": "c27bc926e496985eb7911c09eb60914b2e4b5d0f",
-      "source_digest": "sha256:a02160c6f87fa83ba6082361d085ea32d5937dd2063bb6735b8d649d04b03ca0",
-      "license_spdx": "MIT"
+  "terminal_kind": "awaiting-agent-run",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/eslint/eslint",
+    "revision": "c27bc926e496985eb7911c09eb60914b2e4b5d0f",
+    "version": "10.9.0",
+    "license_spdx": "MIT",
+    "git_archive_sha256": "sha256:a02160c6f87fa83ba6082361d085ea32d5937dd2063bb6735b8d649d04b03ca0",
+    "oracle_codeload_sha256": "sha256:0fa7691ed4b4efe49b7789410d6763c6d27f6f4b8dada81f28377a08a97e3a0f"
+  },
+  "inventory": {
+    "source_files": 2358,
+    "published_package_files": 420,
+    "private_leaf_tests": 20,
+    "builtin_rule_count": 292
+  },
+  "environment": {
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "platform": "linux/amd64 glibc",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "toolchain_lock_sha256": "sha256:cc10b6a04be8c3f6461a116276a3f2f7d4425b27750f01a652591363f8fcc122"
+  },
+  "artifacts": {
+    "dependency_bundle": {
+      "digest": "sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573",
+      "size_bytes": 11806720
     },
-    "commands": [
-      {
-        "command": "uv run nl2repo harbor compile catalog/sources/eslint --output /tmp/eslint-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
-        "tool_version": "repository toolchain",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/eslint/evidence/remediation.txt",
-          "sha256": "sha256:abefa9efa0e50c6f3313466d154a8ea7431892727cc8b45a8e64ffa80524396c"
-        }
-      },
-      {
-        "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/eslint -a oracle",
-        "tool_version": "Harbor runner 0.21.0; no task-specific receipts available",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/eslint/evidence/remediation.txt",
-          "sha256": "sha256:abefa9efa0e50c6f3313466d154a8ea7431892727cc8b45a8e64ffa80524396c"
-        }
-      }
-    ]
-  }
+    "test_bundle": {
+      "digest": "sha256:924a6b6366e3a63f56c4d3e2fa5e3cc209bcd2098492072221974e87765bd073",
+      "size_bytes": 20480
+    },
+    "commands_bundle": {
+      "digest": "sha256:5dfd03f3f2b3b9277e32bdbb3b3f39f0d228aca278d0686ae823352640634c1e",
+      "size_bytes": 10240
+    },
+    "oracle_bundle": {
+      "digest": "sha256:8737925e27ba190fa20dc3cfa4ec19bc014e638ee65a7197cdeac03c0bfdfc87",
+      "size_bytes": 40960
+    },
+    "compiled_bundle_manifest_sha256": "sha256:a26d49d38662227c030443db192e56da9ed381f3297b0b1815da616991bd0175"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/eslint",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/eslint --output .nl2repo/eslint-compiled-final --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/eslint-compiled-final/eslint -a oracle --allow-agent-host codeload.github.com --jobs-dir .nl2repo/eslint-final-jobs-retry2",
+      "exit_code": 0,
+      "retry_count": 1
+    }
+  ],
+  "oracle": {
+    "valid": true,
+    "reward": 1.0,
+    "collected": 20,
+    "passed": 20,
+    "failed": 0,
+    "grading_path": ".nl2repo/eslint-final-jobs-retry2/2026-08-26__17-29-23/eslint__9ZwvwqT/verifier/grading.json",
+    "network_path": ".nl2repo/eslint-final-jobs-retry2/2026-08-26__17-29-23/eslint__9ZwvwqT/verifier/network.json"
+  },
+  "controls": {
+    "stub": {
+      "valid": true,
+      "reward": 0.05,
+      "passed": 1,
+      "total": 20,
+      "grading_glob": ".nl2repo/eslint-final-control-jobs/stub/**/verifier/grading.json"
+    },
+    "forgery": {
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "total": 20,
+      "grading_glob": ".nl2repo/eslint-final-control-jobs/forgery/**/verifier/grading.json"
+    },
+    "offline": {
+      "public_network_available": false,
+      "pypi_org_443": false,
+      "one_one_one_one_443": false
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane by contract.",
+    "Integrator blind/spec traceability review and pilot remain outstanding.",
+    "The Oracle uses an immutable codeload URL plus a recorded codeload digest because the pinned Node image has no git executable; the authoring git-archive digest remains recorded separately."
+  ]
 }
