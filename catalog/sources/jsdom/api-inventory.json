@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsdom",
+  "source_revision": "52be38ea0ce303b0756c7086ce8b3b9d74b0553b",
+  "source_digest": "sha256:ff4dd76eced724319ff27c9a57f3de19e73d366e2705b504955cf62efddc6eb5",
+  "package_version": "30.0.1",
+  "package_entry": "lib/api.js",
+  "package_type": "commonjs",
+  "root_exports": ["JSDOM", "VirtualConsole", "CookieJar", "requestInterceptor", "toughCookie"],
+  "jsdom_members": ["window", "virtualConsole", "cookieJar", "serialize", "nodeLocation", "getInternalVMContext", "reconfigure", "fragment", "fromURL", "fromFile"],
+  "scored_surface": ["constructor", "window.document", "serialize", "nodeLocation", "reconfigure", "fragment", "selectors", "mutations", "cookies", "storage", "inline scripts", "events", "forms", "templates", "DOMParser", "CSS declarations"],
+  "excluded_nondeterministic_surface": ["fromURL", "fromFile", "external resources", "XHR/fetch networking", "WebSocket transport", "Canvas", "image decoding", "Web Platform Tests"],
+  "implementation_files": 599,
+  "implementation_bytes": 1385365,
+  "generated_overlay_files": 287,
+  "generated_overlay_bytes": 5952266,
+  "runtime_dependency_count": 21,
+  "upstream_test_files": 713,
+  "upstream_test_bytes": 44718335,
+  "observed_mocha_wpt_registrations": 2433
+}

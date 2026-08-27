@@ -1,0 +1,96 @@
+schema_version = "2.0"
+task_id = "jsdom"
+version = "30.0.1-nl2repo.1"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "dom-implementation"
+tags = ["node", "npm", "commonjs", "dom", "html", "xml", "css", "browser-emulation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jsdom/jsdom"
+revision = "52be38ea0ce303b0756c7086ce8b3b9d74b0553b"
+license_spdx = "MIT"
+source_digest = "sha256:ff4dd76eced724319ff27c9a57f3de19e73d366e2705b504955cf62efddc6eb5"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The complete runtime npm closure is installed from a private cache. Scored DOM operations use only in-memory documents and fixed example.test URLs; no agent or verifier egress is required."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+artifact = { digest = "sha256:574e15f5a5dd1adf6858cbfc9e2d9423d56777e04c5f1c4cf98ee7d7f27be2b8", size_bytes = 16220160, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:574e15f5a5dd1adf6858cbfc9e2d9423d56777e04c5f1c4cf98ee7d7f27be2b8", visibility = "private" }
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@asamuzakjp/css-color", "@asamuzakjp/dom-selector", "@bramus/specificity", "@csstools/css-syntax-patches-for-csstree", "@exodus/bytes", "css-tree", "data-urls", "decimal.js", "html-encoding-sniffer", "is-potential-custom-element-name", "lru-cache", "parse5", "saxes", "symbol-tree", "tough-cookie", "undici", "w3c-xmlserializer", "webidl-conversions", "whatwg-mimetype", "whatwg-url", "xml-name-validator"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 39
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:cb54c24275e4c67f37c02c4b7819df68c188b79ee9423f26c55f2d16e388e48f", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:cb54c24275e4c67f37c02c4b7819df68c188b79ee9423f26c55f2d16e388e48f", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+passed_statuses = ["passed"]
+denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an installable CommonJS implementation of jsdom's deterministic in-memory DOM surface."
+keywords = ["node", "npm", "dom", "html", "xml", "css", "commonjs", "node-test"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 3072
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-gpt56-wide-20260826-r2"
+reason = "Frozen jsdom 30.0.1 core DOM surface adapted to a no-network custom JSON subprocess boundary with 39 deterministic node:test leaves."
+approval_refs = ["node-author-wide-20260826-remediation/jsdom"]
+
+[oracle_bundle]
+digest = "sha256:ed4cd4564a02f0af9a89cbc20d4ba8c412c7662a040b4183359ecc2ba5b8b218"
+size_bytes = 53903360
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:ed4cd4564a02f0af9a89cbc20d4ba8c412c7662a040b4183359ecc2ba5b8b218"
+visibility = "private"
