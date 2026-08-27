@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-map",
+  "source_revision": "bc26cf03f81292325236a1188063dac8e7a4de0f",
+  "language": "node",
+  "module_system": "esm",
+  "package_name": "p-map",
+  "package_version": "7.0.6",
+  "runtime_dependencies": [],
+  "exports": [
+    {
+      "name": "default",
+      "public_name": "pMap",
+      "kind": "async-function",
+      "signature": "pMap(input, mapper, options?) => Promise<Array>"
+    },
+    {
+      "name": "pMapIterable",
+      "kind": "function",
+      "signature": "pMapIterable(input, mapper, options?) => AsyncIterable"
+    },
+    {
+      "name": "pMapSkip",
+      "kind": "symbol",
+      "signature": "unique symbol"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "index.js",
+      "bytes": 7204,
+      "sha256": "7ad50a54ad1a52c120590e00fa0b2f66eca365ca3e093f1d1c25b2b6334f52d5"
+    },
+    {
+      "path": "index.d.ts",
+      "bytes": 6245,
+      "sha256": "69de0ba2ccff2e655e19f0402afb37547e0fe17e40b2fedbf49cec2bc8816f03"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-map",
+  "expected_total": 54,
+  "assertion_to_spec": [
+    {"group": "packaging_and_exports", "count": 4, "instruction_sections": ["Supports", "Default export: pMap", "Named export: pMapIterable", "Named export: pMapSkip"]},
+    {"group": "pmap_mapping", "count": 14, "instruction_sections": ["Default export: pMap", "JSON Boundary"]},
+    {"group": "pmap_validation", "count": 8, "instruction_sections": ["pMap options", "Default export: pMap"]},
+    {"group": "pmap_errors_and_abort", "count": 9, "instruction_sections": ["pMap options", "Implementation Notes"]},
+    {"group": "pmap_concurrency", "count": 5, "instruction_sections": ["pMap options", "Implementation Notes"]},
+    {"group": "pmap_iterable_and_backpressure", "count": 14, "instruction_sections": ["Named export: pMapIterable", "Named export: pMapSkip"]}
+  ],
+  "spec_to_assertion": [
+    {"promise": "installable offline ESM package and root exports", "covered_by": ["packaging_and_exports"]},
+    {"promise": "sync/async input, promised values, mapper indexes, ordered results", "covered_by": ["pmap_mapping", "pmap_concurrency"]},
+    {"promise": "skip sentinel behavior", "covered_by": ["pmap_mapping", "pmap_iterable_and_backpressure"]},
+    {"promise": "validation and error classes", "covered_by": ["pmap_validation", "pmap_iterable_and_backpressure"]},
+    {"promise": "stopOnError, AggregateError, source errors, abort", "covered_by": ["pmap_errors_and_abort"]},
+    {"promise": "concurrency and backpressure bounds", "covered_by": ["pmap_concurrency", "pmap_iterable_and_backpressure"]}
+  ],
+  "excluded_upstream_behaviors": [
+    "exact elapsed-time windows",
+    "randomized timing cases",
+    "TypeScript generic inference",
+    "algorithmic complexity benchmark",
+    "arbitrary callback identity or side effects outside JSON observations"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-map",
+  "source_revision": "bc26cf03f81292325236a1188063dac8e7a4de0f",
+  "upstream": {
+    "framework": "ava+xo+tsd",
+    "ava_reported_leaves": 51,
+    "direct_ava_declarations": 49,
+    "files": [
+      {
+        "path": "test.js",
+        "bytes": 19103,
+        "sha256": "32244480d7169ee3ada6913c50fa12ac27dad88c127826535963e4a3631e79ab"
+      },
+      {
+        "path": "test-multiple-pmapskips-performance.js",
+        "bytes": 1345,
+        "sha256": "604da27dd50d7eb08c21558c8a25dd7f10cd7bd6a4500da7998939babbc6e229"
+      },
+      {
+        "path": "index.test-d.ts",
+        "bytes": 2557,
+        "sha256": "d17e132044999428e960d2ada61c25e79106fd86974180d0746cf534d83466e8"
+      }
+    ],
+    "baselines": [
+      {"run": 1, "exit_code": 0, "ava_passed": 51},
+      {"run": 2, "exit_code": 0, "ava_passed": 51},
+      {"run": 3, "exit_code": 0, "ava_passed": 51}
+    ]
+  },
+  "production": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 54,
+    "boundary": "uid-10001-json-subprocess",
+    "groups": {
+      "packaging_and_exports": 4,
+      "pmap_mapping": 14,
+      "pmap_validation": 8,
+      "pmap_errors_and_abort": 9,
+      "pmap_concurrency": 5,
+      "pmap_iterable_and_backpressure": 14
+    }
+  }
+}

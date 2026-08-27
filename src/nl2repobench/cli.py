@@ -273,7 +273,15 @@ def compile_harbor_task(
 @harbor_app.command("prepare-control")
 def prepare_harbor_control(
     task_root: Annotated[Path, typer.Argument(help="Compiled Harbor task directory.")],
-    kind: Annotated[str, typer.Argument(help="Control kind: stub or forgery.")],
+    kind: Annotated[
+        str,
+        typer.Argument(
+            help=(
+                "Control kind: stub, forgery, install-script, loader-hook, hang, "
+                "oversized-output, or offline."
+            )
+        ),
+    ],
     output_root: Annotated[
         Path,
         typer.Option("--output", help="Directory for generated control bundles."),

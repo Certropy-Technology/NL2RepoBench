@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "p-map"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "async-concurrency"
+tags = ["node", "npm", "esm", "promise", "async-iterable", "concurrency", "backpressure", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/p-map"
+revision = "bc26cf03f81292325236a1188063dac8e7a4de0f"
+license_spdx = "MIT"
+source_digest = "sha256:dca5fc93afc8590a18952c091d5929dfce1f175ad5517b6312b0fe6f5ae84062"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The package has no runtime dependency roots. The verifier owns a root-only npm v3 lock with an empty integrity-checked cache, while the trusted Oracle receives a private hash-verified source archive that never enters the model agent image."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:fbdc87e8933423fe7c6fb5c758d89337cf494e1a41499fef6a24d773f467d3b6", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:fbdc87e8933423fe7c6fb5c758d89337cf494e1a41499fef6a24d773f467d3b6", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 54
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:cca83f866431bc6efc2c5028d31b3c8b88f0e03dc3e8a25075a335b2056e1cf8", size_bytes = 40960, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:cca83f866431bc6efc2c5028d31b3c8b88f0e03dc3e8a25075a335b2056e1cf8", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Pinned p-map ESM async concurrency contract with 54 deterministic node:test leaves."
+keywords = ["node", "npm", "esm", "promise", "async-iterable", "concurrency", "backpressure", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-discovery-restart-20260826-r3"
+reason = "Exact source, license, runtime, root-only npm closure, 54-leaf private subprocess verifier, Oracle archive, and negative-control scripts are frozen. The first Oracle exposed and remediated root-only adapter permissions; a fresh production compile, Oracle, and controls remain to be executed."
+
+[oracle_bundle]
+digest = "sha256:bb5ef0fe58cdf9a0b1f8d9c9f14abb4a47ba350a15dfd1243d24a625a29199b3"
+size_bytes = 71680
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:bb5ef0fe58cdf9a0b1f8d9c9f14abb4a47ba350a15dfd1243d24a625a29199b3"
+visibility = "private"

@@ -234,6 +234,31 @@ def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.parametrize(
+    "kind",
+    ("install-script", "loader-hook", "hang", "oversized-output", "offline"),
+)
+def test_node_control_dispatch_supports_adversarial_kinds(
+    tmp_path: Path, kind: str
+) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    controls = source / "harbor/controls"
+    controls.mkdir()
+    (controls / f"{kind}.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "tasks", allow_incomplete=True
+    )
+
+    control = HarborCompilerRegistry.default().prepare_control_bundle(
+        task_root, kind, tmp_path / "controls", NODE_TOOLCHAIN
+    )
+
+    manifest = json.loads((control / "bundle.manifest.json").read_text(encoding="utf-8"))
+    assert manifest["mode"] == f"control-{kind}"
+    assert (control / "solution/solve.sh").read_text(encoding="utf-8").endswith("exit 0\n")
+
+
 def test_node_network_runtime_writes_bounded_receipt(tmp_path: Path) -> None:
     node = shutil.which("node")
     if node is None:
