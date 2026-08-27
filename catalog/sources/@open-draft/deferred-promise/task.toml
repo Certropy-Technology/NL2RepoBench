@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "open-draft-deferred-promise"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "promise-abstraction"
+tags = ["node", "npm", "esm", "promise", "deferred", "thenable", "typescript", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/open-draft/deferred-promise"
+revision = "d534e74206ffbfc64a0e268eb3d7d43de44e7eae"
+license_spdx = "MIT"
+source_digest = "sha256:1d7bcc02451e0decbfa5e4f5c665a47c7119676d4c522244d69d14802f091d9b"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases use a private integrity-checked npm cache closure; only the trusted Oracle may fetch the frozen Git revision with a run-scoped source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:a1ae0f13e4aa29198a7032b89e790ef8f8ab062b656693ba5272c5012f482e91"
+size_bytes = 426
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:a1ae0f13e4aa29198a7032b89e790ef8f8ab062b656693ba5272c5012f482e91"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:7d3df3630682bec4be8865cce0776870d6231c91c8913de87f02fbdd46612ed2"
+size_bytes = 281
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:7d3df3630682bec4be8865cce0776870d6231c91c8913de87f02fbdd46612ed2"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:564d4c3cbad7de4ffe2fe6f0041d22cff520d9fbdfab41ec748b367470189326"
+size_bytes = 3411
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:564d4c3cbad7de4ffe2fe6f0041d22cff520d9fbdfab41ec748b367470189326"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Recreate the @open-draft/deferred-promise ESM package with a deferred Promise executor, explicit settlement state, and Promise-compatible chaining."
+keywords = ["node", "npm", "esm", "promise", "deferred", "thenable", "node-test"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c3"
+reason = "Frozen source and license, executable upstream baseline, production Node/npm bundle, separate verifier, Oracle, and negative controls passed. The task is awaiting an independent model Agent Run and integrator review."
+
+[oracle_bundle]
+digest = "sha256:54050084e33ee8a992bd7b33ebec366a7b526e54dc6e3ddc4a523afe8dbbd110"
+size_bytes = 1938
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:54050084e33ee8a992bd7b33ebec366a7b526e54dc6e3ddc4a523afe8dbbd110"
+visibility = "private"

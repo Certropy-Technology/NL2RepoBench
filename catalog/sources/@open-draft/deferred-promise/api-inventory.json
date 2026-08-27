@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-deferred-promise",
+  "package_name": "@open-draft/deferred-promise",
+  "source_revision": "d534e74206ffbfc64a0e268eb3d7d43de44e7eae",
+  "runtime_entry": "build/index.mjs",
+  "exports": ["createDeferredExecutor", "DeferredPromise"],
+  "public_api": [
+    {"name": "createDeferredExecutor", "kind": "function", "signature": "createDeferredExecutor<Input = never, Output = Input>(): DeferredPromiseExecutor<Input, Output>"},
+    {"name": "DeferredPromise", "kind": "class", "signature": "new DeferredPromise<Input, Output = Input>(executor?: Executor<Input> | null)"},
+    {"name": "DeferredPromise.resolve", "kind": "method", "signature": "resolve(value?: Output): void"},
+    {"name": "DeferredPromise.reject", "kind": "method", "signature": "reject(reason?: any): void"},
+    {"name": "DeferredPromise.state", "kind": "getter", "returns": "pending | fulfilled | rejected"},
+    {"name": "DeferredPromise.rejectionReason", "kind": "getter", "returns": "unknown | undefined"},
+    {"name": "DeferredPromise.then", "kind": "method", "signature": "then(onFulfilled?, onRejected?): Promise-compatible derived value"},
+    {"name": "DeferredPromise.catch", "kind": "method", "signature": "catch(onRejected?): Promise-compatible derived value"},
+    {"name": "DeferredPromise.finally", "kind": "method", "signature": "finally(onfinally?): Promise-compatible derived value"}
+  ],
+  "source_files": [
+    "src/create-deferred-executor.ts",
+    "src/deferred-promise.standalone.ts",
+    "src/deferred-promise.ts",
+    "src/index.ts"
+  ],
+  "notes": [
+    "The standalone implementation is source material, not a separately exported public entry point.",
+    "The class extends native Promise in the public implementation and decorates derived promises with the original controls."
+  ]
+}

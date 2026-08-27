@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-deferred-promise",
+  "protocol": "node-subprocess-json-v1",
+  "candidate_package": "@open-draft/deferred-promise",
+  "candidate_user": "candidate",
+  "candidate_site": "verifier-owned temporary npm prefix",
+  "runtime_entry": "package.json exports['.'].default",
+  "request_limit_bytes": 65536,
+  "response_limit_bytes": 262144,
+  "per_call_timeout_seconds": 30,
+  "package_allowlist": ["@open-draft/deferred-promise"],
+  "hidden_inputs": ["operation and JSON payload only"],
+  "trusted_outputs": ["node:test TAP report", "grading.json", "reward.json", "network.json"],
+  "isolation": [
+    "candidate is imported only by a UID-10001 child process",
+    "private tests and verifier runtime are root-owned",
+    "candidate receives no static network access",
+    "candidate cannot write verifier logs or reports"
+  ]
+}

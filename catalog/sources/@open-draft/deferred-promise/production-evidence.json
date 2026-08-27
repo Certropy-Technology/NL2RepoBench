@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-deferred-promise",
+  "task_version": "1.0.0",
+  "status": "controls-passed",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/open-draft/deferred-promise",
+    "revision": "d534e74206ffbfc64a0e268eb3d7d43de44e7eae",
+    "source_digest": "sha256:1d7bcc02451e0decbfa5e4f5c665a47c7119676d4c522244d69d14802f091d9b",
+    "license_spdx": "MIT",
+    "license_file_sha256": "sha256:76c336153ddc1200bb6a3f824efce83683155f52df3851e0861fa873b1e9d1d3",
+    "submodules": []
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "agent_image_id": "sha256:0d979ec9ba580b12a8013a00b311c58d278cd01fcff71ea6d7437317e8faf871",
+    "verifier_image_id": "sha256:7b3a438fdd8879e1706a761288b42931d106c5e3806e5e02ada6994e9b9c9016",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "lockfile": "package-lock.json v3",
+    "packages": [],
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:a1ae0f13e4aa29198a7032b89e790ef8f8ab062b656693ba5272c5012f482e91",
+      "size_bytes": 426,
+      "uri": "artifact://private/sha256:a1ae0f13e4aa29198a7032b89e790ef8f8ab062b656693ba5272c5012f482e91"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 24,
+    "test_bundle": {
+      "digest": "sha256:564d4c3cbad7de4ffe2fe6f0041d22cff520d9fbdfab41ec748b367470189326",
+      "size_bytes": 3411,
+      "uri": "artifact://private/sha256:564d4c3cbad7de4ffe2fe6f0041d22cff520d9fbdfab41ec748b367470189326"
+    },
+    "commands_bundle": {
+      "digest": "sha256:7d3df3630682bec4be8865cce0776870d6231c91c8913de87f02fbdd46612ed2",
+      "size_bytes": 281,
+      "uri": "artifact://private/sha256:7d3df3630682bec4be8865cce0776870d6231c91c8913de87f02fbdd46612ed2"
+    }
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/build/compiled-final2/open-draft-deferred-promise",
+    "bundle_manifest_sha256": "sha256:f0ab4a4e33aad6dfe6d4e300d676047486bd8c38b94987b680f6ef3fbd77e707",
+    "file_count": 78,
+    "integrity_errors": 0
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "docker run --rm --network none <verifier-image> /tests/test.sh against the frozen-reference workspace",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/oracle-verifier-2/grading.json",
+    "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/oracle-verifier-2/network.json",
+    "network_public_available": false,
+    "solve_log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/oracle-solve.stderr"
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/empty-verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/empty-verifier/network.json"},
+    "stub": {"exit_code": 0, "valid": true, "collected": 24, "passed": 1, "reward": 0.041666666666666664, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/stub-verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/stub-verifier/network.json"},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 24, "passed": 1, "reward": 0.041666666666666664, "verifier_owned_reward": true, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/forgery-verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/forgery-verifier/network.json"},
+    "hang": {"agent_exit_code": 137, "verifier_exit_code": 0, "valid": true, "collected": 24, "passed": 1, "reward": 0.041666666666666664, "bounded_timeout_seconds": 20, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/hang-verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/hang-verifier/network.json"},
+    "install-hang": {"agent_exit_code": 137, "verifier_exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "bounded_timeout_seconds": 20, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/install-hang-verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/install-hang-verifier/network.json"},
+    "offline": {"exit_code": 0, "valid": true, "collected": 24, "passed": 24, "reward": 1.0, "network_public_available": false, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/offline-verifier/grading.json", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/runs/controls/offline-verifier/network.json"}
+  },
+  "commands": [
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/@open-draft/deferred-promise", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/validate-source-final.log"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/network-lint-final.log", "outcome": "0 errors; 136 unrelated warnings"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/@open-draft/deferred-promise --output .nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/build/compiled-final2 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/compile-final.log"},
+    {"stage": "syntax-and-manifest-integrity", "command": "bash -n all shell entrypoints; node --check all generated mjs files; verify every bundle manifest entry", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/syntax-integrity-final.log", "outcome": "78/78 manifest entries verified"},
+    {"stage": "verifier-docker-build", "command": "docker build --platform linux/amd64 -t nl2repobench/open-draft-deferred-promise-verifier:authoring compiled/tests", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/verifier-docker-build-final.log"},
+    {"stage": "private-reference-probe", "command": "node --test --test-reporter=tap private contract against built reference", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/_open-draft_deferred-promise/evidence/private-tests-final.stdout"}
+  ],
+  "remediation": [
+    {"issue": "npm bundle omitted empty npm-cache directory", "resolution": "added and validated the empty cache directory; dependency artifact refreshed"},
+    {"issue": "test bundle extracted under /tests/private/private", "resolution": "flattened bundle root and refreshed test artifact; full verifier rerun passed 24/24"},
+    {"issue": "first full verifier attempt scored 20/24", "resolution": "clean rerun after image refresh passed 24/24; result retained as oracle-verifier-2"}
+  ],
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "Blind review, traceability approval, pilot, and publish remain integrator-stage gates.",
+    "The upstream npm dev lock root version is stale (2.2.0) relative to package.json 3.0.0; the task runtime closure intentionally uses a separate empty npm v3 closure."
+  ]
+}

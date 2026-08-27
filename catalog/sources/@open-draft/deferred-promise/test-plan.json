@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "open-draft-deferred-promise",
+  "framework": "node:test",
+  "frozen_total": 24,
+  "contract": "node-test-leaf-pass-rate-v1",
+  "layers": ["packaging", "executor-state", "deferred-promise", "thenable-assimilation", "error-and-finally"],
+  "coverage": [
+    {"id": "packaging", "leaves": 2, "behaviors": ["root ESM exports", "native Promise compatibility"]},
+    {"id": "executor-state", "leaves": 6, "behaviors": ["pending state", "async fulfillment", "async rejection", "first settlement wins", "reason retention", "repeated await"]},
+    {"id": "deferred-promise", "leaves": 6, "behaviors": ["resolve values", "resolve undefined", "reject values", "executor constructor", "derived controls", "derived chain identity"]},
+    {"id": "thenable-assimilation", "leaves": 5, "behaviors": ["value transforms", "async transforms", "native Promise returns", "DeferredPromise returns", "thenable rejection"]},
+    {"id": "error-and-finally", "leaves": 5, "behaviors": ["catch recovery", "catch propagation", "finally on fulfillment", "finally on rejection", "finally exception"]}
+  ],
+  "collection_source": "private test bundle was collected with node:test-compatible TAP leaf parsing at authoring time"
+}
