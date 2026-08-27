@@ -1,0 +1,3630 @@
+{
+  "bytes_uploaded": 6664471,
+  "bytes_verified": 6664471,
+  "errors": 0,
+  "integration_head": "949f9dc99b3dbdee84f39edb6b8450b273bda1c9",
+  "manifest_kind": "authoring-live-completed-evidence",
+  "object_count": 443,
+  "objects": [
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "6b0f01cc4c1a5f46fe5c65f4aaa792beb72170f8bf1214251e8fb16b3708ba10",
+      "size": 2569
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7cee4ad74dbdf7735a102d8af9aef99b444353831557a806cd3cd92460e1d4a4",
+      "size": 6173
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "374d5d0d718afa0d25dd3601153cd65151dfd48d0764b94fc34e488605abef91",
+      "size": 1555
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "4aa9ff58f63de18657317c9ab6a44584e224c688a9d84020b3ced58512e85024",
+      "size": 57385
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "79ac9344905f7dae1d58afe755d678c33e135e44a11e88034b364a430b9b0f5b",
+      "size": 3970
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "9161a66d725d2850505c74dc6f832977a0c1ae3f359ff99a9d1bf941b451e1d5",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "878677d46ba59d1c3da5f2410af21b4706afb4d6efe226b8f642b238d38c2b99",
+      "size": 1354
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "cb9dfb6921c8a091d74ab8625a4b6f306956c7fd324abbc4102b628d10167807",
+      "size": 3871
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "1ede0523d3e37a27b33672d306b2c764e53c99bda93a238125d782502ad31c4c",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "47f84bd167128a157cc2fd199e98006eba867b3fde11af6ac29239e01eaebf03",
+      "size": 3844
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e0d9623d210500bbc6382e8f64bb038df1e088d8c20a2fddb5b29ed6b8f78737",
+      "size": 1326
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "f2e36ec934590a329cdbb420eaa8244b84d6545339d18fae1375ca1bd09d2c4c",
+      "size": 3943
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+      "size": 310
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "b23691baf1e08195b9bfad28e63946fd299f9037c43090fe5bc12baea4ead69a",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "ad469629d01309afdc7a43da36b93660d7514686845bf76814c9922e192bbb08",
+      "size": 1348
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "bd3bfb6b840d71dc442d61e3ca771785c22c2b06b3d67f7e11439bf50cff6e95",
+      "size": 3952
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "471839ee5319d50a930070fa8f5cbe35d833712cb4e9d841c25bdf2342d80347",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "af4f08ecbc272a05603ad6d854a69ddf1c35839488bd482bc8d45acf43cc12a1",
+      "size": 1350
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "5c6d1c7355e716c4b32ab6a1a4c954ff026b69cfac4cfe38421549fc589bdb38",
+      "size": 3853
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "25b8f8bfcc9e9cffdf76faa821aca1e33cafd686ccd307536909565c7ed6a98c",
+      "size": 1328
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "87eaf7240ebe83b66c98cfccc7be7e2985d11d62ab52b88630a707294d65bd1a",
+      "size": 3844
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "6bbae01900e0a81cd982fbfe33e9df0a4a027190aa724ed487eff6a1324f198f",
+      "size": 1326
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/go-cron-forgery__wthLYXo/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8815991c3769d176f40dd4ab131acce83762585bc7e290fab510a29aaa1c9229",
+      "size": 3863
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/go-cron-forgery__wthLYXo/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/go-cron-forgery__wthLYXo/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/go-cron-forgery__wthLYXo/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/go-cron-forgery__wthLYXo/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/go-cron-forgery__wthLYXo/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/forgery/go-cron-forgery-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "2477d760d8773440ca2e79fc14313af60cfe87396f8e83bf4fc758a031cc0522",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/go-cron-stub__SBrMjwu/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "2348017243bc8be8e75419116cbafd567cb78696876f5def03aa8115ba9db0ec",
+      "size": 3836
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/go-cron-stub__SBrMjwu/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/go-cron-stub__SBrMjwu/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/go-cron-stub__SBrMjwu/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/go-cron-stub__SBrMjwu/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/go-cron-stub__SBrMjwu/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-controls-20260828/stub/go-cron-stub-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "ebab9c62af0cf83dab477cf8089a5850a70cff455f28abaf1ebf9c1997885e96",
+      "size": 1326
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "17696e94b6b25b7f54ad963a9b512152ea5f92cc92444e6bd3a976d87b28bbae",
+      "size": 3851
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+      "size": 531
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "ab6e00fd9d734da65d42689d7e4420175410f9f95f79ea3247c761007e4aa728",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "1b46b1dfe3103a293135c62ca09394447553fd2355bb795a9f34651dff523ce3",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "6b246924fc6b6ec4b6edbb4fceb817c8030e440f3fe0d0b516e4df8151c0c873",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/go-cron__hjDHR4x/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "cc8266fbc3824ea1ddcc71e8ef02781f04fb2b22e40c74d716cb184b10ef47ff",
+      "size": 3839
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/go-cron__hjDHR4x/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "189e9d9f9d8a64b80167f369e7680c51375522f419595a5d0b05637fcc6f2b80",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/go-cron__hjDHR4x/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/go-cron__hjDHR4x/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "1c047977edf3289d30ee1677cde97cb9925a0350fefbb8314000770c652f0d2c",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/go-cron__hjDHR4x/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/go-cron__hjDHR4x/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "189e9d9f9d8a64b80167f369e7680c51375522f419595a5d0b05637fcc6f2b80",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r2/go-cron-oracle-20260828-r2/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "decd89ec7d42c0fa4c129e8bbb3252ae624bbbf31e03fa186fc6c5d11d8b336d",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/go-cron__oiq5URc/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "f7659fab1f26e2e4d2946bfeef5dee64fb26cf1327193802d0dac773766cbdf7",
+      "size": 3839
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/go-cron__oiq5URc/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/go-cron__oiq5URc/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+      "size": 531
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/go-cron__oiq5URc/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/go-cron__oiq5URc/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "1b46b1dfe3103a293135c62ca09394447553fd2355bb795a9f34651dff523ce3",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/go-cron__oiq5URc/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "dedbe1ee265c255ed8c96692744f99fa8b25907abc5be854ec1c18733b1541c3",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828-r3/go-cron-oracle-20260828-r3/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "2d12dce3db1fc51f5b79f9ea083eae4fff7a3eec27590e13f8c817b8aee75f25",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/go-cron__XQ9FPYb/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "77bb16d66ee0f20e2697b1b942e1ddd257221b6bba26c3de714e2c37282aa856",
+      "size": 3827
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/go-cron__XQ9FPYb/trial.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "189e9d9f9d8a64b80167f369e7680c51375522f419595a5d0b05637fcc6f2b80",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/go-cron__XQ9FPYb/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "7708b3768ec9aced46bc3226a51f10acc06f08fe7820e5c64f97cce0ddca6457",
+      "size": 302
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/go-cron__XQ9FPYb/verifier/network.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/go-cron__XQ9FPYb/verifier/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/go-cron__XQ9FPYb/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/job.log",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "189e9d9f9d8a64b80167f369e7680c51375522f419595a5d0b05637fcc6f2b80",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/.nl2repo/runs/go-cron-oracle-20260828/go-cron-oracle-20260828/result.json",
+      "kind": "receipt",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "8e50bdcc0c2f2f0c229b0abc7229b77c3333f0f24780eb50da5b46107f537318",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-cron/controller/go-cron.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "go",
+      "package": "go-cron",
+      "sha256": "3ebf504bf4901d470911a1509b01714faedd58415998884be8a71fc03679f191",
+      "size": 6166
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "bdeee3a29b69e772cad7b96f9d0b0102a0b7fc8eaff878105914371f9543ec56",
+      "size": 2582
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "d68f2e217aaf0671b1dcdc8918bd281f0e2e0695377a05eefd73315a8133f60f",
+      "size": 6496
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "ec6d78745eab30b148f007f866ad7e48296e08e28910dc2bbf25a3eb10019a33",
+      "size": 1567
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/bridge-contract.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "1b46b1dfe3103a293135c62ca09394447553fd2355bb795a9f34651dff523ce3",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/compile-final.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "964dfaa8b294958a66f5339df5474de53f8ae2fc5b2da821a7181ff31e84fb6c",
+      "size": 349
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/compile.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "964dfaa8b294958a66f5339df5474de53f8ae2fc5b2da821a7181ff31e84fb6c",
+      "size": 349
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/control-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "bd8b09efef089986508e3902c14f73e2b7275e25d6db30af3317014acca7e30d",
+      "size": 39
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/control-empty.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "5c696587353b278734a667e8bf9009614a609671d37c46fbabaabdaa4a104f5a",
+      "size": 1489
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/control-forgery.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "86a69b72349d26267b73d4b4672b05ec52196c47428bd3848e7598bfae885851",
+      "size": 1498
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/control-offline.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "1280bde139f40c286cc42285677d2c790b8ba484d3f9fa8e6e768555e9b254ce",
+      "size": 1472
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/control-stub.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "f47a8778d5b3e5a108ea42d00643aa263efa0359a31e5b9b26ef8136a96bbd8d",
+      "size": 1492
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/empty-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "b1da21032125f9e49ff802822185a2e9e7bd12cb019332a604a414a6adb9032b",
+      "size": 1490
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/forgery-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "2455809085d8950d791437a1c7b178ec8c34787bec37f1725089f7ec5e94a84a",
+      "size": 1500
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/go-vet-final.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "7c0fb9e865bf6195a1c50e0a8dd776ae3f827e967ba5a165551636fbe51bcbf5",
+      "size": 14
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/lint-network-final.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "4b09735c4f2689d14420a985b84bb20bed21a01bf3525b498a7d26d1c1f0c757",
+      "size": 43903
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/lint-network.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "341155ad6b775560ccb5385cb454104f37d8a5b162a25f40e361c6a608c5d996",
+      "size": 44101
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/offline-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "fe52bd41f84cc90fa745d1cc0fc5e00884219abb39fcd87a21362a98e7c15cc9",
+      "size": 1500
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/oracle-build-test.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "328480a7f3214ee0153f98ca86b22e507d725f8094a1cb85677f444e16e72b4f",
+      "size": 1327
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/oracle-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "5cba051df00b43081f6e5e254330c75d8a111b244002e8aa6c35c74201d012ac",
+      "size": 1498
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/oracle-run-auth.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "267b13a5920488e2055ed672e3646d9c959af7b53bc692bebb447e755d574d77",
+      "size": 1479
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/oracle-run-final.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "5b124518de1b427c518df8c0048ed8445dd0ab0e418ddb625825888e11de5418",
+      "size": 1476
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/oracle-run.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "cecab0d7eae029c53f2fcc5fb4de4f95e274b6a7e6b5fa7339ff6a9c32acb903",
+      "size": 1467
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/prepare-forgery-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "c69e7680d127a308f9138525ee4647fe4c94f83913a353a10b6674cfd8030601",
+      "size": 289
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/prepare-forgery.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "10db1a4b3616009d282be81525349bc97e465df0ba45736eb2d164d4c7ff4f4c",
+      "size": 281
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/prepare-stub-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "fe181d4489c26bbbfbede01059e2ff68a215c994d62db992c6bafdc12579c37b",
+      "size": 283
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/prepare-stub.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "b7a759c139a95434595a4454c56b87368771fe62fed1cce0274b7aac9f91bc4a",
+      "size": 275
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/source-test-1.jsonl",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "1a5a7ebd70cb49f7bca217ee92587257daff9db6c63d4549a7cce094a63c4a9f",
+      "size": 1660453
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/source-test-1.stderr",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/source-test-2.jsonl",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "1cb8758250647be6571262843e5dd0505b06deff6c75150bddf2b089247261a8",
+      "size": 1660471
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/source-test-2.stderr",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/source-test-3.jsonl",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "7ae0088556ec02d0f39d13bd913992f3017e7207455f42d1aa68d2ed2b0c0e85",
+      "size": 1660446
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/source-test-3.stderr",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/stub-current.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "2d03be9f879a4776febb1b97534edaddddacb084753f43363cf814e41692eaa9",
+      "size": 1494
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/syntax.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "d6e579a99792fce84e43bd3c2bb785de6ba06a14bea8a531bd474a8fc558e15d",
+      "size": 25
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/validate-source-final.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "659b83bbefba34415337ca74d28e5751a15acd7187c221f51a5a330a9e112668",
+      "size": 433
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/go-dasel/validate-source.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "570331e6d14ea4242351c4bfe8ec1d2230aa9f3c7a6107697d70d87d827f82a2",
+      "size": 427
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "177743587f1abeb84f635f9602177fadd30b1401965577f0befff449f4cc3958",
+      "size": 57511
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-dasel/controller/go-dasel.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "go",
+      "package": "go-dasel",
+      "sha256": "b5964095f4f6015047d7556a87cd958f71ee710815e5eb7dba51b22a1b18520d",
+      "size": 5604
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-fx/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-fx",
+      "sha256": "f9320873adc51c65cfa4dbcc271cac491a24aa884573ff7001cf32135b9a306a",
+      "size": 2564
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-fx/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-fx",
+      "sha256": "4a03e044a686433c5be4fcea37dd5ee9aa89bf238bf8b3e141bbd10d53f11abe",
+      "size": 5750
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-fx/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-fx",
+      "sha256": "d47281dbaf14ed29b74775def69eb5f3750a2dbbb4992847a9837871512343b0",
+      "size": 1531
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-fx/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-fx",
+      "sha256": "3182e03ab53bcee4325320cc267da828b883c5960c6072b76f1b539a294bf812",
+      "size": 57133
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-fx/controller/go-fx.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "go",
+      "package": "go-fx",
+      "sha256": "e3b19cabd8c8efe4ab2b20f4e55e13d2359cca7355396d2a9481ca77651ea8f5",
+      "size": 5433
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "eacd0ef3476c0544d92e1f428940d328659fd9ba7ef680ab6484ecb43322a738",
+      "size": 2630
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "425c49150a6384301af3e73d7e6421c4475fd42557ce1b2013bd949c442e5a97",
+      "size": 6015
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/api-inventory.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "5572f7189863c534cb6b7289c884654a5d9704948dd0580149a00219a29df478",
+      "size": 1931
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/authoring-evidence.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "142ce053c57b171a6ef89454fc6da39d2d313fdcd948e5fee581524cbfadcb11",
+      "size": 3425
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "81c628e9d4780aaa0818f457bd20bdff805bcbd8f93e4e4d96940a8186be9a73",
+      "size": 1632
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-background-call.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "d7840894c6f857be7c17524e64026a7b971f41ddb3f149c87f1395cd4a0a1209",
+      "size": 16
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-background-process-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-background-process-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-forgery-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-forgery-contract.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "ed48df36ac32ecb27c64609e6c4ac38790830da3625d36d35956d88e6683c96b",
+      "size": 206
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-forgery-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-hang-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-hang-call.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-hang-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-install-failure-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-install-failure-validation.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "743530fbee47a70284d7d1f5d1c94a23e6d95b38f077d2333909f1362a18f6da",
+      "size": 767
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-oversized-call.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "3f34518e6c461dd3d66dcd90ccfd3782c8f56386019ee62f53d2f75956c5f752",
+      "size": 300013
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-oversized-output-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-oversized-output-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-panic-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-panic-call.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "d7840894c6f857be7c17524e64026a7b971f41ddb3f149c87f1395cd4a0a1209",
+      "size": 16
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-panic-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-stub-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-stub-contract.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "ed48df36ac32ecb27c64609e6c4ac38790830da3625d36d35956d88e6683c96b",
+      "size": 206
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/control-stub-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/final-network-lint.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "341155ad6b775560ccb5385cb454104f37d8a5b162a25f40e361c6a608c5d996",
+      "size": 44101
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/final-network-summary.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "1ed2fd126061a8863849cfdbea49c23c09f3646e685ac8a7fa33a2633b430c6c",
+      "size": 67
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/final-oracle-contract.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "6e2f26edc9a3269c477f523d4e6606c07e95b23a5e9cabd5c9409f6e66f568f2",
+      "size": 86
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/final-production-compile.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "33132358939dac56831118672c0d420a5d6891868309d787918fab2dbe1ff09b",
+      "size": 355
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/final-source-validation.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "db9a4ea6860bfd23a2f5c820e8aac73f6008fff8e842ca7afbd8dcf2144d635d",
+      "size": 438
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "fbc0f47a1e8a17f5f518f2c156621ec4e0bc75b3962dfd69a044d3a1b9e9c4c7",
+      "size": 58267
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/oracle-build.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/oracle-contract.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "6e2f26edc9a3269c477f523d4e6606c07e95b23a5e9cabd5c9409f6e66f568f2",
+      "size": 86
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/oracle-solve.log",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "505fa79bf9329a10e34a6e670a08377f7456f41d2e893343d4c4b416d9aeab49",
+      "size": 35
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/.nl2repo/evidence/test-inventory.json",
+      "kind": "evidence",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "a989046cbb66c608970360799b1cdb7e742b56c9516c204b0f7de1e8d0581662",
+      "size": 886
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/go/go-govalidator/controller/go-govalidator.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "go",
+      "package": "go-govalidator",
+      "sha256": "85fdd8651bf17c720fe4cee264a1356ede2cfe0a5bd04f092ff6813f62045817",
+      "size": 6538
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/deferred-promise/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "node",
+      "package": "@open-draft/deferred-promise",
+      "sha256": "7736817ad011f59f6e30e3c814472aa254ae36ebdc8dc6535896de735875710f",
+      "size": 2704
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/deferred-promise/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "node",
+      "package": "@open-draft/deferred-promise",
+      "sha256": "f5e693e5e549db5e405a17f34d1f1389a99a297c5611071f83c227bd64d67b3f",
+      "size": 8379
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/deferred-promise/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "node",
+      "package": "@open-draft/deferred-promise",
+      "sha256": "2ce8b8a62e6b0ad1e7b9d4cacccb1d4a7109271d13198de462aef06b40007096",
+      "size": 1777
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/deferred-promise/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "node",
+      "package": "@open-draft/deferred-promise",
+      "sha256": "0150a959402ba431641ea6db5b6447e35cdd006595382368e62d1e9ff07b11e7",
+      "size": 153
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/deferred-promise/controller/_open-draft_deferred-promise.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "node",
+      "package": "@open-draft/deferred-promise",
+      "sha256": "1380ef988652c257faf48b2366d663d1bf55212aa0794f145d874a6966201d8a",
+      "size": 5597
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/until/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "node",
+      "package": "@open-draft/until",
+      "sha256": "f9ffae679e9be60cfd5ff0d7c1de901d75c2b5a98a72520cc2253d323fe1018e",
+      "size": 2627
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/until/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "node",
+      "package": "@open-draft/until",
+      "sha256": "9036f367509c02cb19c0bfe605794be7ea7ffd7978640292d7e602199292b4f2",
+      "size": 11019
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/until/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "node",
+      "package": "@open-draft/until",
+      "sha256": "4e31dfc032f03bac50e2da9644a40f9683ec5983476207b98934d50fe493cbb2",
+      "size": 1645
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/until/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "node",
+      "package": "@open-draft/until",
+      "sha256": "0150a959402ba431641ea6db5b6447e35cdd006595382368e62d1e9ff07b11e7",
+      "size": 153
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/node/@open-draft/until/controller/_open-draft_until.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "node",
+      "package": "@open-draft/until",
+      "sha256": "1948993333425986e8dd51a52221610a8d171850f00e60027d4a63961cd23040",
+      "size": 5355
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiobotocore/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "aiobotocore",
+      "sha256": "e716eb1c1acb922247ab9a53923e645817131fc335451c4b86cd5a6b0d4689ab",
+      "size": 2623
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiobotocore/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "aiobotocore",
+      "sha256": "dc271b0623412cce1e32d1f3e0dd1730f63715176d44de4da0669fe2149176da",
+      "size": 6560
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiobotocore/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "aiobotocore",
+      "sha256": "ffaeb8dbb22ef4022df0cd1eb7698798258c201c9d5ea117261685ba13bab6db",
+      "size": 1623
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiobotocore/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "aiobotocore",
+      "sha256": "953ba6518f240d0d2cc925c7b7aa59e223fe8d924b4f7a012dd141df9b45eedc",
+      "size": 58393
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiobotocore/controller/aiobotocore.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "python",
+      "package": "aiobotocore",
+      "sha256": "9c0107d50f8b7cf12b01fc86a70d0e1c388eb1ca8dc1806e4a4cb83d70d1e019",
+      "size": 6166
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiosignal/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "aiosignal",
+      "sha256": "5f31f3462841b9e3c2d25c550ed898308ea495c1b40618315b75b38d823e8d42",
+      "size": 2612
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiosignal/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "aiosignal",
+      "sha256": "3cac89b694adfaa1ec2c4989266ec01dffffb13a3fb079ddbdae64d7aa49ed12",
+      "size": 5137
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiosignal/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "aiosignal",
+      "sha256": "fceae358e15345f4024576cc40c4552861a3c70fe67cc2814dbb23b4bfccb531",
+      "size": 1592
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiosignal/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "aiosignal",
+      "sha256": "dd36cbff15730e22f0cd51f8c72a34c6383a4eeb15995e09c6ed1be69a5118ca",
+      "size": 58556
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/aiosignal/controller/aiosignal.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "python",
+      "package": "aiosignal",
+      "sha256": "3ca164222470dee3e2384555ac104e92a7940f1d32c96c7fa134d5926d8380e9",
+      "size": 4949
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-doc/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "annotated-doc",
+      "sha256": "06eefca3d5d0c844312634df98def19b4cc0849f252791fccef2c35c5eebbcef",
+      "size": 2637
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-doc/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "annotated-doc",
+      "sha256": "efc18a0bea2d96a011b47a4130045548f139ad38d08c29cf58287ed39175fc50",
+      "size": 6469
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-doc/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "annotated-doc",
+      "sha256": "e35f2ebee5f366a5480c4a2e05ab4540ebedc3f3a535b779119d4bb54194a5d6",
+      "size": 1640
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-doc/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "annotated-doc",
+      "sha256": "398faf71cdab0f9fc027fd4d62f631514f2128f64a53db48406c488452d2b96f",
+      "size": 58645
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-doc/controller/annotated-doc.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "python",
+      "package": "annotated-doc",
+      "sha256": "6ff0d02895847ff5125ef72aff5090441a1185627fd32c859bab46a73b5919b8",
+      "size": 5699
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8dfb36094de1ef895e8da06a3025dcd9b4bf42bbc8571a1bb6fd5964dd5ed7e6",
+      "size": 2675
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "dde3fa3ac2920ce6b8d982fae241f458981d3a6918fbd77bd8b062d6f021d946",
+      "size": 7184
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "78a4d02a93441106bcdece44f3c2e0a5cd97f299e05f95733306fc88b145153f",
+      "size": 1671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "5d68cc49d74fcfce922a057c7228f8a4cd4917520563b66978a27a507fc77b9e",
+      "size": 58897
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/annotated-types__6Lup8ut/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "d61978b72a40a87be78bafcce4a5135f56d53373be6e9e66f2acbcf560c3b62e",
+      "size": 3855
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/annotated-types__6Lup8ut/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/annotated-types__6Lup8ut/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7",
+      "size": 294
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/annotated-types__6Lup8ut/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "619bd565fcfe5c02f070a58849e801bdc33fafc6621fb8e533f0e20964174274",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/annotated-types__6Lup8ut/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3-r2/annotated-types-empty-c3-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "0dd6bc70147aa079313deb226e01a95ff92b79eb3cc4269a0e54f9dced2b9c99",
+      "size": 1329
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/annotated-types__Zhu5Vzv/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "794f55dd110a5095d6c926bf6c5dc31aa624d22f2b9a47e7071e5191b10ce3a1",
+      "size": 3843
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/annotated-types__Zhu5Vzv/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2c120c66ec77393c947aa35c53d074bbf733e410597539796925bfcbb1c6d9a8",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/annotated-types__Zhu5Vzv/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7",
+      "size": 294
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/annotated-types__Zhu5Vzv/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/annotated-types__Zhu5Vzv/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2c120c66ec77393c947aa35c53d074bbf733e410597539796925bfcbb1c6d9a8",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c3/annotated-types-empty-c3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "3cee1fe8f13e23cc0bfbd2646b4121606a026b754e9b6bba4185cf473d2069f5",
+      "size": 1329
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "59b2ac38587087f28a1544154a4f87b9840af6b2c0eae6e40266284cf3e20cec",
+      "size": 3843
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7",
+      "size": 294
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "415bd553b33316f0b6121d34f015b7abb0391cf39da6a86bd77aa4d0edc2721f",
+      "size": 1329
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/artifacts/workspace/logs/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8a8d8aedb964563610512e7243a09c3ce93b6e516fe3c13157cc00424d839a6d",
+      "size": 47
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/artifacts/workspace/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f6c65ee6149b44de9f3114d32e59e752c04321d5c099ac1069e9a6799bb1fc8f",
+      "size": 31
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "6972848cfa9bb5ff941c8f44e3a5763e02d8abcfbc67b5c32058cfa50c7d9ea9",
+      "size": 3941
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2c120c66ec77393c947aa35c53d074bbf733e410597539796925bfcbb1c6d9a8",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a591dd78eca3e97f2423f82ecb1960ae9a299a4a7b10c681ed0b780498f54099",
+      "size": 292
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/annotated-types-forgery__pD7vM8J/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2c120c66ec77393c947aa35c53d074bbf733e410597539796925bfcbb1c6d9a8",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r2/annotated-types-forgery-c3-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "0d547b6faeaf5bead4bbc8fa2aab9138fc2eed5da4ede874c4f6a01c2bacd1cc",
+      "size": 1348
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/artifacts/workspace/logs/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8a8d8aedb964563610512e7243a09c3ce93b6e516fe3c13157cc00424d839a6d",
+      "size": 47
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/artifacts/workspace/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f6c65ee6149b44de9f3114d32e59e752c04321d5c099ac1069e9a6799bb1fc8f",
+      "size": 31
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "6b6f3c51828ac2b9622da2d7d98dd154fec582a54a48f3f9f806882988413c27",
+      "size": 3973
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "d0e93d8a86725315a8db545efde27523b7c263570b72a45c8561ac0397905665",
+      "size": 1542
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f3ec5b21cb9c7943461df36a1489a6e449e18aa7aad7ff396d4431137c01081b",
+      "size": 9099
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "3369889dcaa1be0a9d262f48401ca9882c3ede1f6988c7ed79bbf3c5d48b5d07",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/annotated-types-forgery__uFSFen4/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "5fc57d74736e74b9614eafe6dabb02065b3b970a524b5fd246db5f77e4be6480",
+      "size": 77
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3-r3/annotated-types-forgery-c3-r3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "0e9e896e159189bb068860c86578519a9fbbaba1121cf47436642e88206e1d23",
+      "size": 1412
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/artifacts/workspace/logs/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8a8d8aedb964563610512e7243a09c3ce93b6e516fe3c13157cc00424d839a6d",
+      "size": 47
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/artifacts/workspace/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f6c65ee6149b44de9f3114d32e59e752c04321d5c099ac1069e9a6799bb1fc8f",
+      "size": 31
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "99ab4804169fe524f4d18ce4004a1a2d3896c20d2759c8ab9dbd3e8298f29a2e",
+      "size": 3929
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a01a526055cb4c16bc019c0d735ad6eb699b047bdf4fc10301df9021790e0a79",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a591dd78eca3e97f2423f82ecb1960ae9a299a4a7b10c681ed0b780498f54099",
+      "size": 292
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "7a44c248d44c292e26bbeabba7252f1f97610211d72a46159532dc7d0ea26390",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/annotated-types-forgery__4zgreY2/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a01a526055cb4c16bc019c0d735ad6eb699b047bdf4fc10301df9021790e0a79",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c3/annotated-types-forgery-c3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "17eef76c864d3aac342ef099a5b8ce4a012177a1530b30ad7d6a980ff95d5878",
+      "size": 1348
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/artifacts/workspace/logs/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8a8d8aedb964563610512e7243a09c3ce93b6e516fe3c13157cc00424d839a6d",
+      "size": 47
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/artifacts/workspace/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f6c65ee6149b44de9f3114d32e59e752c04321d5c099ac1069e9a6799bb1fc8f",
+      "size": 31
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "260312622e2979135abb4097d385f925357228d7f1fc2150df93e113a195840e",
+      "size": 3961
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "d0e93d8a86725315a8db545efde27523b7c263570b72a45c8561ac0397905665",
+      "size": 1542
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f3ec5b21cb9c7943461df36a1489a6e449e18aa7aad7ff396d4431137c01081b",
+      "size": 9099
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "958ef33e60cce075dc798f7dcf3371992d7c9d2ce5b3c968e7e1880fa9a4f3b0",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "5fc57d74736e74b9614eafe6dabb02065b3b970a524b5fd246db5f77e4be6480",
+      "size": 77
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8d7cd016e7a09c729260bfdd3655ed2cf75131ddece3a7c223076bb31cfe8e42",
+      "size": 1412
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/annotated-types__P7QyDPN/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "eb238214570621768cf1ec001bf157e47c1ad0c0f89f4a183559a6ed13948e58",
+      "size": 3865
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/annotated-types__P7QyDPN/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/annotated-types__P7QyDPN/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "b25901a970735ad3f54af304bf9d1e8124e8b243d705c8d171a2b444c9667989",
+      "size": 1526
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/annotated-types__P7QyDPN/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "41f5b35d62b3302f9b693a88d65df29d01938aae843d760dd54481a3d2384ce8",
+      "size": 3496
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/annotated-types__P7QyDPN/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/annotated-types__P7QyDPN/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3-r2/annotated-types-oracle-c3-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "e9e7f3ac28e082d9b64345eb3cf7d76747627e12922676e7fad63961c9be07f3",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/annotated-types__djGzyQf/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "b9479b9642487bd4e96f28e798926ec8fe0dac3e68f801d976f1947b472e661d",
+      "size": 3853
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/annotated-types__djGzyQf/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a01a526055cb4c16bc019c0d735ad6eb699b047bdf4fc10301df9021790e0a79",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/annotated-types__djGzyQf/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "b25901a970735ad3f54af304bf9d1e8124e8b243d705c8d171a2b444c9667989",
+      "size": 1526
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/annotated-types__djGzyQf/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "41f5b35d62b3302f9b693a88d65df29d01938aae843d760dd54481a3d2384ce8",
+      "size": 3496
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/annotated-types__djGzyQf/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "3b835b8ade755c7e9fcb5f48cfd475ac19989012a39dee64a2400906bae2f05a",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/annotated-types__djGzyQf/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a01a526055cb4c16bc019c0d735ad6eb699b047bdf4fc10301df9021790e0a79",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c3/annotated-types-oracle-c3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "d7efd1ab23058757fa395e82469d92e61b28f68d9af69aa9fed9445ca71541e0",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "ffe448035ec0caadfa17626e9232a4745981356339f475774be4b38668244603",
+      "size": 3853
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "b25901a970735ad3f54af304bf9d1e8124e8b243d705c8d171a2b444c9667989",
+      "size": 1526
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "41f5b35d62b3302f9b693a88d65df29d01938aae843d760dd54481a3d2384ce8",
+      "size": 3496
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c6a2a98834ef0fe180254424f10575f1f9b2a3a25c955ee3dbeedd763938fe3a",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/annotated-types-stub__L34fQSn/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "415e9cdad153a95ea6347a2239014ce57c93e1101430f451a10e6889a886bd8a",
+      "size": 3914
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/annotated-types-stub__L34fQSn/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2c120c66ec77393c947aa35c53d074bbf733e410597539796925bfcbb1c6d9a8",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/annotated-types-stub__L34fQSn/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a591dd78eca3e97f2423f82ecb1960ae9a299a4a7b10c681ed0b780498f54099",
+      "size": 292
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/annotated-types-stub__L34fQSn/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "9a49c62a75c9000da444b78e2ba5d6d44ff25a5c977d4fd20bfaa648f1394190",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/annotated-types-stub__L34fQSn/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2c120c66ec77393c947aa35c53d074bbf733e410597539796925bfcbb1c6d9a8",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r2/annotated-types-stub-c3-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "431bd1dc655acab4b8643cc937e41db775c16297a9d5d49568ad1d30aef61992",
+      "size": 1342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/annotated-types-stub__DQuB9bi/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "561b5a4f9b26ad6c188141083f5c7dd06e6eca211fa6f0cacb1fec2387619166",
+      "size": 3948
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/annotated-types-stub__DQuB9bi/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/annotated-types-stub__DQuB9bi/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "599bfe28d2ee8625967e997b51e15067b5730eb0e8458eef14e876cc2de6a853",
+      "size": 1543
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/annotated-types-stub__DQuB9bi/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "31974f8ea9272cbaf70e8a25a29f42b2f109cc34da22c58ed94bf8b5e3b7de95",
+      "size": 9197
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/annotated-types-stub__DQuB9bi/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "218320115490129eea846775b9e02f95aaacfd0fda376c419dbb3bf5af42868d",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/annotated-types-stub__DQuB9bi/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "e655c2b1a7c49bae8a596b4e4ff74943bad0507ac4463cebfab4c5e91453a630",
+      "size": 79
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3-r3/annotated-types-stub-c3-r3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "3717b5c58b1329bbef064c182ca498cc4c57b7867e3721480f375f0155d9d434",
+      "size": 1410
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/annotated-types-stub__AYYUCpb/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "bb34408624e2af69babd87ab8aa160a83b20bd154b04a82374114b624ca857fe",
+      "size": 3902
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/annotated-types-stub__AYYUCpb/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a01a526055cb4c16bc019c0d735ad6eb699b047bdf4fc10301df9021790e0a79",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/annotated-types-stub__AYYUCpb/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a591dd78eca3e97f2423f82ecb1960ae9a299a4a7b10c681ed0b780498f54099",
+      "size": 292
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/annotated-types-stub__AYYUCpb/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/annotated-types-stub__AYYUCpb/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "a01a526055cb4c16bc019c0d735ad6eb699b047bdf4fc10301df9021790e0a79",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c3/annotated-types-stub-c3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "cd675a49e337ac0692d4d7ae34ce38d134226170afd4cb89a52355171f0fbe33",
+      "size": 1342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "deccc4532a572e505331227cf82977d0f746f433f9efb5f0e872b3b88e4b8e91",
+      "size": 3936
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "599bfe28d2ee8625967e997b51e15067b5730eb0e8458eef14e876cc2de6a853",
+      "size": 1543
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "31974f8ea9272cbaf70e8a25a29f42b2f109cc34da22c58ed94bf8b5e3b7de95",
+      "size": 9197
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "452553e30517e1cb6d7e65fbd1e6f21e58fe2a71e5f1726035afc35abd0f5be3",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "e655c2b1a7c49bae8a596b4e4ff74943bad0507ac4463cebfab4c5e91453a630",
+      "size": 79
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "f27672af97754e64686dc6fd1a05c56d4da7618d8c459f99c305b3927f2a5fd2",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/.nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "2af81c4d6fec8689bb6c51b626ebab5e88996a370f98f542fb93b93e0dd65b04",
+      "size": 1410
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/annotated-types/controller/annotated-types.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "python",
+      "package": "annotated-types",
+      "sha256": "bb91775ae5a785461b74f4a62a8ba2f888fa01d9e247c4c1a9b91c4ecfeb55a8",
+      "size": 5465
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "97689c0c242a31af78258e6ca1a5b1188fd812865252e9ba2b89dfb1d750ebe0",
+      "size": 2613
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "953e1af7dec05bd332d7eafe22cb5f0d18bcd97a47b3a91b0dc4fa4a0c13dfe0",
+      "size": 6057
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/api-inventory.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "12b0490f694cb37b01aa72990fa265d55369f3089618be8d12168b30eb653d4d",
+      "size": 4696
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8ae0b86acce0b0d910cf1c283e14fc93a8b41be3262e40e3ac9212fec9a3d75c",
+      "size": 1575
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/agent-image-build.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "84d5a10b4270dfc2a1b9c975bc8b199040ad96d90b2a9765f714cff74b5d7048",
+      "size": 3326
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/candidate-install.stderr",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "45b794bb58c9c3644aea8ce859ce6363b9ea1d7f9217ac5fba3411c114e08ff9",
+      "size": 198
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/candidate-install.stdout",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "45fab38be1fa563e6d2c3fca4473f509d7bf8a784e178ba489683edf5dc98564",
+      "size": 878
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/direct-verifier-run.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "84d0b05b42ef108fc834a3b18cb8ef43aa938477ad27f820f09e15804ca03a76",
+      "size": 728
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/candidate-install.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "69dacb1c61fcbe702740cbd3418057f10d8220d72222fe3b39446e2db4ba888f",
+      "size": 78
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/collection.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "3b15bafb4e27ca1fea7d9b0400921c4f45812056d155962ed000d0fa5657c8f3",
+      "size": 440
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/custom-stderr.txt",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/custom-stdout.txt",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/grading.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a2b16e39a6d813640e054041b19426e35926a0003cfe834e0da3b1a13465d2a9",
+      "size": 671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/junit.xml",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "1e65ad1fbc827f025561e7f4c8d422c44c0afab016e5d4a33c08d955b587282a",
+      "size": 1201
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/network.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-logs/verifier/reward.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/docker-pull.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "5651cc7fd1f459f960d9ef6044bf90f50458c78bb9ab4252edab4d301d1be261",
+      "size": 414
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/empty-logs/verifier/candidate-install.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7",
+      "size": 82
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/empty-logs/verifier/grading.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c",
+      "size": 294
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/empty-logs/verifier/network.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/empty-logs/verifier/reward.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/empty-verifier-run.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "7022615c40b88d870348314b065de261bfa580cc01a1ee792f68392efb656e5e",
+      "size": 101
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/forgery-run-r2.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "fa3e4ab631de20a8e263d6c4bf73900d07bf2209dc796f45494a6caed9ae1f5f",
+      "size": 1520
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/forgery-run.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8f57535cafe6934ba54d35ea63df7b77e4d9e104c648319582054391b0718ec8",
+      "size": 1503
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-logs/verifier/candidate-install.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "435c1126635805982abaaf756de4fee055d1ce54c58fbb21ac04058b3ad19283",
+      "size": 76
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-logs/verifier/grading.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c",
+      "size": 294
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-logs/verifier/network.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-logs/verifier/reward.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-verifier.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "df171d9fcf0e9ee0689e955b6b6dad7423d587a810293f09f880a4b5e68b75fb",
+      "size": 73
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-workspace/backend.py",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "7eaecb82187b5f0c525f8175cdc2484728c0d096371bd69fe329bfe905c1725a",
+      "size": 28
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/install-hang-workspace/pyproject.toml",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "268caf7c67b1c5632e61075991ce2cda453829e9f2f0aff83c4082cd0c7856f1",
+      "size": 165
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/network-lint-final.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "4b09735c4f2689d14420a985b84bb20bed21a01bf3525b498a7d26d1c1f0c757",
+      "size": 43903
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/network-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "4b09735c4f2689d14420a985b84bb20bed21a01bf3525b498a7d26d1c1f0c757",
+      "size": 43903
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/oracle-run-r2.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "9fd06dd4633b73b87f67bc468ef75cc7fb0ef91e4d7ccbb7f2ed8987425134b0",
+      "size": 1514
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/oracle-run-r3.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8cbccdf32ebdd229697d23961be7c837fb705bd39adbe1db88ce3f035a8a2a75",
+      "size": 1514
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/oracle-run.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "d4b00ef0eff9b0fbf68651ebca07ec8f4337f366bdaf392ead9bcfa7931aa5b8",
+      "size": 1498
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/production-compile-final.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "9133fed35468a7dca27f7d6cd48ecde06045c4e1ed24abc1e518e2310d71a3a8",
+      "size": 164
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/production-compile.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "baf488dfec6b8af47cc9daa14be183e6041f0e84167edf07fb7e56164e49ae18",
+      "size": 350
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/requirements.lock.txt",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "cbbf1a2dbe1e74cce8dfe174273afcd5549120c2126b7a5a50a9b5900a76055e",
+      "size": 192
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/source-validation-final.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "d0e9bca574701ffd555e91107c2410d99bcb3187dc63a3cb51a9d2516cd6855b",
+      "size": 233
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/source-validation.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "d0e9bca574701ffd555e91107c2410d99bcb3187dc63a3cb51a9d2516cd6855b",
+      "size": 233
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/stub-run-r2.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "7625366684f87f68f51a6a8f7d7fab227c4ffc3e7ea57aed9dc4444792deae24",
+      "size": 1503
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/stub-run.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "2b4dfa316f4356264a5f870bc4bf85b17f0d6750d99730da09cc2e0bbcb1ad6a",
+      "size": 1490
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/upstream-pytest.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "28079476a9267e4a9bc9438129a28ffcaa8c10d89bda8043dfcff992316214ea",
+      "size": 296
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/verifier-image-build.log",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a1e2b5aa4336f97d5be7fc1ba876f559ed95aa2b85cb632402e7ff3ebdabb562",
+      "size": 2895
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/verifier-local.stderr",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/certifi/verifier-local.stdout",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a6b398186aae9c87f089388cfe0a5308fef3a9906163f4da5df4448798ab95d4",
+      "size": 1297
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "37be862949c24745be2d4eee358fc893080794b2af820a82afcaf553070ddcaa",
+      "size": 57889
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/evidence/test-inventory.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "12b0490f694cb37b01aa72990fa265d55369f3089618be8d12168b30eb653d4d",
+      "size": 4696
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/artifacts/workspace/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "1199a2b37a0a878d6ebf1b7d53826c88f25d8d7e8eab96aad6737bb29c7fc81a",
+      "size": 28
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a1ae3a9a9cab76cb27771ce19bf46f180c5a5092dbc51cda1e35f141ddfec81f",
+      "size": 3861
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "91e0d61d9ec5520bd566f2887784a8e7519b844d642ced4736d7baa03816085d",
+      "size": 671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "6a94f211e57d2e7c8336a7486132799b2ba47d48148fa5ae0d48ec2376371689",
+      "size": 7489
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e3fee389a2b33000d52264269ad71dfe44867bff47ad120a38ad43de505bde1a",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/certifi-forgery__GCrPLKW/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a446bd6ae06b98f1b2fb28bcc2ac4193c362b629e113104681ded73fd461ef29",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828-r2/certifi-forgery-20260828-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "7fcb46ec7778f60aec4271a4c3aba41f69416dc8ed3980aee10d0c6cb6c7a5b8",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/artifacts/workspace/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "1199a2b37a0a878d6ebf1b7d53826c88f25d8d7e8eab96aad6737bb29c7fc81a",
+      "size": 28
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "7dfa95cdf0386e74f27ca9db3d88fcd2c8f294b196fc29692bce44c303a9bd61",
+      "size": 3849
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "91e0d61d9ec5520bd566f2887784a8e7519b844d642ced4736d7baa03816085d",
+      "size": 671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "6a94f211e57d2e7c8336a7486132799b2ba47d48148fa5ae0d48ec2376371689",
+      "size": 7489
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e41d147c86aeb8af96ad9e9abe71e11e85de3316c6283a0510f6199ad40c86be",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/certifi-forgery__nbXHRdD/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a446bd6ae06b98f1b2fb28bcc2ac4193c362b629e113104681ded73fd461ef29",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-forgery-20260828/certifi-forgery-20260828/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "0dd2b2881bc0545a04d8b16ae10bd2ff5741a7b0b589c2997a3dd0bca1badc83",
+      "size": 1332
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/certifi__9Zc54tE/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "3aa9bad1b7e1a32e2b9382405650f71d67f4ef4184a77a28beeac577f211a1cd",
+      "size": 3859
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/certifi__9Zc54tE/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/certifi__9Zc54tE/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a2b16e39a6d813640e054041b19426e35926a0003cfe834e0da3b1a13465d2a9",
+      "size": 671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/certifi__9Zc54tE/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "1e65ad1fbc827f025561e7f4c8d422c44c0afab016e5d4a33c08d955b587282a",
+      "size": 1201
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/certifi__9Zc54tE/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/certifi__9Zc54tE/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r2/certifi-oracle-20260828-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "4eab9ffc6d9cbdf469b60ea33460bb9217229e2766dd034d4ebe11e7654cf33c",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8096ca6e41fb134aca89ff680f28611e8099832d33f960902be265a7f354f894",
+      "size": 3859
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a2b16e39a6d813640e054041b19426e35926a0003cfe834e0da3b1a13465d2a9",
+      "size": 671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "1e65ad1fbc827f025561e7f4c8d422c44c0afab016e5d4a33c08d955b587282a",
+      "size": 1201
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c992745dd88fc19da010c6fa69bc10bf35552010f0254282bce491153188a59e",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/certifi__3BZi9ug/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828-r3/certifi-oracle-20260828-r3/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "9f24bc1a3d5ff631ef271a2ffb68bb9fa9089583a01a1155529134d90f1b016b",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/certifi__ibbNUMB/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "80cf1e43d6c8c62f89da35ca82285a0b0bf96b6260f2cace8f8f3911a5af746e",
+      "size": 3847
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/certifi__ibbNUMB/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "fab4bc68820a0a5ae7a70855ccac35f2300de8dfa63c97dc8f7da6ec59d45974",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/certifi__ibbNUMB/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "72fa4893331631407437f61273039db2b576510f860537f1812ba4c815424797",
+      "size": 671
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/certifi__ibbNUMB/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "fddc48a4c22988c8a0183688b5953bcd9418eab6c1c6365ccac64278d8aabbde",
+      "size": 4861
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/certifi__ibbNUMB/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e41d147c86aeb8af96ad9e9abe71e11e85de3316c6283a0510f6199ad40c86be",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/certifi__ibbNUMB/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56",
+      "size": 45
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "fab4bc68820a0a5ae7a70855ccac35f2300de8dfa63c97dc8f7da6ec59d45974",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-oracle-20260828/certifi-oracle-20260828/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "a0df4117b78500bb4972ae2fe557a64ab4ff6ba58d3c0ae70b03c5d829185909",
+      "size": 1316
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "982793b75d01a228eadd54fc3a1f42ec88b0d3c1c1fed1a9abfd316436323056",
+      "size": 3836
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "73d5c399eaaedc1c9e5845108086ad8e20b27974737ece484f90abadcedc057b",
+      "size": 672
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "d676b44975605a22beb322c45379fb55846b5b81d967573552f67704c43dd592",
+      "size": 6887
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "3b835b8ade755c7e9fcb5f48cfd475ac19989012a39dee64a2400906bae2f05a",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/certifi-stub__LHVw5o2/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c3e8c5543e751440f7e3c849a8962afe4c248e036617984fc3f87107fa00041c",
+      "size": 47
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828-r2/certifi-stub-20260828-r2/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "95df0dbce16225280c0582b493afeadfa0b8efe3456c295e8271d2c901005872",
+      "size": 1330
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/certifi-stub__TMCB34R/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "bb7349b73286b277342cd6e0780091a995436c6e88d1e16e45194bbf144fa1f9",
+      "size": 3824
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/certifi-stub__TMCB34R/trial.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/certifi-stub__TMCB34R/verifier/grading.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "73d5c399eaaedc1c9e5845108086ad8e20b27974737ece484f90abadcedc057b",
+      "size": 672
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/certifi-stub__TMCB34R/verifier/junit.xml",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "d676b44975605a22beb322c45379fb55846b5b81d967573552f67704c43dd592",
+      "size": 6887
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/certifi-stub__TMCB34R/verifier/network.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "e41d147c86aeb8af96ad9e9abe71e11e85de3316c6283a0510f6199ad40c86be",
+      "size": 342
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/certifi-stub__TMCB34R/verifier/reward.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c3e8c5543e751440f7e3c849a8962afe4c248e036617984fc3f87107fa00041c",
+      "size": 47
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/job.log",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "c427b62aecb58c57746636eae05343c1931d285901e52d1d852c17ab49ac5279",
+      "size": 228
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/.nl2repo/runs/certifi-stub-20260828/certifi-stub-20260828/result.json",
+      "kind": "receipt",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "4c13b025b944cab06ed3eff223de2764e5021bfd97013d4d8841a2250eb88d80",
+      "size": 1330
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/certifi/controller/certifi.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "python",
+      "package": "certifi",
+      "sha256": "3ca3972956b36ad6e9207994233cffb351388e9be4270209dcace3d69b0f79ef",
+      "size": 6705
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/dnspython/.nl2repo/authoring-claim.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "dnspython",
+      "sha256": "41010d9410b560d0e3db3f541566f81a8a49466140631a5cad56478a4dd2b0ee",
+      "size": 2609
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/dnspython/.nl2repo/authoring-handoff.json",
+      "kind": "handoff",
+      "lang": "python",
+      "package": "dnspython",
+      "sha256": "498c56022b63c847974de5bd6c97318dc64e99a82a8a33ea6d03bdd7184e72ed",
+      "size": 8309
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/dnspython/.nl2repo/evidence/authoring-task-lint.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "dnspython",
+      "sha256": "b518fe2bd146b4211a8800a75da4c4ed1e401fc145001c44bcda07abc2d1d08d",
+      "size": 1592
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/dnspython/.nl2repo/evidence/network-policy.json",
+      "kind": "evidence",
+      "lang": "python",
+      "package": "dnspython",
+      "sha256": "6bcdf54b27c949ea8928f8f6c937f173c40efcc20b776c69684cccae6b61a5eb",
+      "size": 58141
+    },
+    {
+      "key": "nl2repobench/authoring-live/20260828/python/dnspython/controller/dnspython.attempt-1.log",
+      "kind": "agent-log",
+      "lang": "python",
+      "package": "dnspython",
+      "sha256": "510e2d57690049e18be1516432c64c98aae4b8df59707d3285548826bf787585",
+      "size": 6061
+    }
+  ],
+  "schema_version": "1.0",
+  "task_count": 12,
+  "tasks": [
+    {
+      "commit": "7904a502768a6b92bbb46dc49aebfd471501787f",
+      "lang": "python",
+      "package": "aiobotocore",
+      "private_refs": 3
+    },
+    {
+      "commit": "8672c1cbea381eaae41aa7d9d3487cc8b13d96e0",
+      "lang": "python",
+      "package": "aiosignal",
+      "private_refs": 3
+    },
+    {
+      "commit": "8f9223d373dafc9f22ade5abaf6ccf2b912b39ff",
+      "lang": "python",
+      "package": "annotated-doc",
+      "private_refs": 3
+    },
+    {
+      "commit": "6f422b4156527f42b9ba12ab04671f93f56f964e",
+      "lang": "python",
+      "package": "annotated-types",
+      "private_refs": 3
+    },
+    {
+      "commit": "050187f7dbfc27ea57629be7802e84322b8c03c0",
+      "lang": "python",
+      "package": "certifi",
+      "private_refs": 3
+    },
+    {
+      "commit": "9b20ca2076b3f3eeb2716a2b6206982bfffe6b48",
+      "lang": "python",
+      "package": "dnspython",
+      "private_refs": 3
+    },
+    {
+      "commit": "4245781544dbbff5fb8c11fc97471d7075cd1034",
+      "lang": "node",
+      "package": "@open-draft/deferred-promise",
+      "private_refs": 4
+    },
+    {
+      "commit": "62629fa41cead591bdcd9360d1f360505c5f5478",
+      "lang": "node",
+      "package": "@open-draft/until",
+      "private_refs": 4
+    },
+    {
+      "commit": "3da72ead1ccf4518c3d1a667e6e6d41680fce4f5",
+      "lang": "go",
+      "package": "go-cron",
+      "private_refs": 3
+    },
+    {
+      "commit": "e75a05d7d773c591c3434b92cc1eaf9af03884d7",
+      "lang": "go",
+      "package": "go-dasel",
+      "private_refs": 3
+    },
+    {
+      "commit": "a04009ad30373e622b2c5f75b8038793229dafbd",
+      "lang": "go",
+      "package": "go-fx",
+      "private_refs": 3
+    },
+    {
+      "commit": "0aeaf989f86252a54a1c9c9064f0b24d239626a8",
+      "lang": "go",
+      "package": "go-govalidator",
+      "private_refs": 3
+    }
+  ]
+}
