@@ -45,7 +45,7 @@ commands = ["bash /tests/test.sh"]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:1ee8681e67476c4a6325aff8d85b170ff3563b1e3b98b36a8ac88ad28aa10e7d", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:1ee8681e67476c4a6325aff8d85b170ff3563b1e3b98b36a8ac88ad28aa10e7d", visibility = "private" }
+bundle = { digest = "sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723", visibility = "private" }
 entrypoint = "run.py"
 
 [metric]
@@ -60,8 +60,8 @@ description = "Build the core pydantic-settings API from an empty workspace."
 keywords = ["python", "configuration", "pydantic", "repository-generation"]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 300.0
+candidate_install_timeout_sec = 30.0
+candidate_total_timeout_sec = 45.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
@@ -70,12 +70,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-reason = "Harbor 0.21.0 Oracle passed 20/20 with valid=true and reward=1.0; nop control scored 0.0; stub, forgery, blind review, and pilot remain."
+status = "controls-passed"
+reason = "Fresh production compilation succeeded. A no-network archive-materialized Oracle passed 20/20 with reward=1.0; empty, stub, forged-reward, invalid-workspace, install-timeout, and call-timeout controls each produced a valid verifier-owned 0.0 result. No Harbor model Agent Run was started."
 
 [oracle_bundle]
-digest = "sha256:3af5b012306b3349fa8aab34bff98a3382ee4f861d42612424178ce0b44c01ca"
+digest = "sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:3af5b012306b3349fa8aab34bff98a3382ee4f861d42612424178ce0b44c01ca"
+uri = "artifact://private/sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e"
 visibility = "private"

@@ -633,7 +633,7 @@ if [[ "$?" -ne 0 ]]; then
     --reason candidate-workspace-rejected
   exit 0
 fi
-chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
+chown -R candidate:candidate /tmp/candidate
 python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate --target /tmp/candidate-site \
   --timeout-sec {profile.candidate_install_timeout_sec} \
