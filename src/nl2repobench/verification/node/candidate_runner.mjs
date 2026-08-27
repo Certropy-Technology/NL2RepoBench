@@ -60,20 +60,42 @@ async function main() {
       const packageRoot = join(process.cwd(), "node_modules", packageName);
       const packageManifest = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
       const exports = packageManifest.exports;
+      const rootExport = exports?.["."];
       const entry = typeof exports === "string"
         ? exports
-        : exports?.["."]?.import ?? exports?.import ?? packageManifest.module ?? packageManifest.main;
+        : typeof rootExport === "string"
+          ? rootExport
+          : rootExport?.import ?? exports?.import ?? packageManifest.module ?? packageManifest.main;
       if (typeof entry !== "string" || !entry.startsWith("./") || entry.includes("..")) {
         throw new Error("allowlisted package has no safe ESM entry");
       }
       candidate = await import(pathToFileURL(join(packageRoot, entry)).href);
     }
-    const value = candidate[exportName];
+    const segments = exportName.split(".");
+    if (segments.some((segment) => (
+      !segment
+      || segment === "__proto__"
+      || segment === "prototype"
+      || segment === "constructor"
+    ))) {
+      emit({ ok: false, error: "export-name-not-allowlisted" }, 64);
+    }
+    let value = candidate;
+    for (const segment of segments) {
+      if (
+        value === null
+        || (typeof value !== "object" && typeof value !== "function")
+        || !Object.prototype.hasOwnProperty.call(value, segment)
+      ) {
+        emit({ ok: false, error: "export-is-not-callable" }, 65);
+      }
+      value = value[segment];
+    }
     if (typeof value !== "function") {
       emit({ ok: false, error: "export-is-not-callable" }, 65);
     }
     const result = await value(...args);
-    emit({ ok: true, value: result });
+    emit({ ok: true, value: result, args });
   } catch (error) {
     emit({
       ok: false,

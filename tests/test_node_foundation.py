@@ -262,6 +262,71 @@ def test_node_network_runtime_writes_bounded_receipt(tmp_path: Path) -> None:
     assert len(payload["route_table"].encode()) <= 64 * 1024
 
 
+def test_node_candidate_runner_supports_string_root_exports_and_safe_nested_calls(
+    tmp_path: Path,
+) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not installed")
+    package_root = tmp_path / "node_modules/demo-package"
+    package_root.mkdir(parents=True)
+    (tmp_path / "package.json").write_text(
+        json.dumps({"private": True, "type": "module"}), encoding="utf-8"
+    )
+    (package_root / "package.json").write_text(
+        json.dumps(
+            {
+                "name": "demo-package",
+                "version": "1.0.0",
+                "type": "module",
+                "exports": {".": "./index.js"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (package_root / "index.js").write_text(
+        "const echo = value => { value.changed = true; return value; };\n"
+        "export { echo };\n"
+        "export default { echo };\n",
+        encoding="utf-8",
+    )
+    runner = ROOT / "src/nl2repobench/verification/node/candidate_runner.mjs"
+    completed = subprocess.run(
+        [node, str(runner)],
+        cwd=tmp_path,
+        env={"PATH": str(Path(node).parent), "NODE_ALLOWED_PACKAGE": "demo-package"},
+        input=json.dumps(
+            {"package": "demo-package", "export": "default.echo", "args": [{"x": 1}]}
+        ),
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    assert completed.returncode == 0, completed.stderr
+    response = json.loads(completed.stdout)
+    assert response == {
+        "ok": True,
+        "value": {"x": 1, "changed": True},
+        "args": [{"x": 1, "changed": True}],
+    }
+
+    rejected = subprocess.run(
+        [node, str(runner)],
+        cwd=tmp_path,
+        env={"PATH": str(Path(node).parent), "NODE_ALLOWED_PACKAGE": "demo-package"},
+        input=json.dumps(
+            {"package": "demo-package", "export": "default.constructor", "args": []}
+        ),
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=5,
+    )
+    assert rejected.returncode == 64
+    assert json.loads(rejected.stdout)["error"] == "export-name-not-allowlisted"
+
+
 def test_v2_production_compilation_fails_closed(tmp_path: Path) -> None:
     with pytest.raises(NodeHarborCompileError, match="development-only|unsupported"):
         NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(NODE_TASK, tmp_path / "output")
