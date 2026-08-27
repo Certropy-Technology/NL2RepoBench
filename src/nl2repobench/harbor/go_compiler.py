@@ -515,6 +515,12 @@ if ! runuser -u candidate -- python3 -I -c "$PYTHON_ROOT; $GO_VALIDATE"; then
   grade --reason candidate-installation-failed
   exit 0
 fi
+if ! runuser -u candidate -- sh -c \
+  'rm -rf /tmp/go-candidate/vendor &&
+   cp -a /opt/go-module-bundle/vendor /tmp/go-candidate/vendor'; then
+  grade --reason candidate-installation-failed
+  exit 0
+fi
 install -m 0444 /tests/private/bridge.go /tmp/go-candidate/bridge.go
 mkdir -p /tmp/go-candidate/cmd/bridge
 mv /tmp/go-candidate/bridge.go /tmp/go-candidate/cmd/bridge/main.go

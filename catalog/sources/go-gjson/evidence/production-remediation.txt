@@ -1,0 +1,32 @@
+go-gjson production evidence
+
+Source: tidwall/gjson at 7d8b3821e9d2acf35e8a226b63fcf801078e9b96
+Archive SHA-256: 91ec8257d29e04f0b67cac8641197ddb86d975138a8588d128bf4f27b447692a
+License: MIT
+Toolchain: Go 1.26.5, linux/amd64, CGO_ENABLED=0
+
+The first Oracle probe produced a valid zero because solve.sh passed the
+catalog-style sha256: prefix to sha256sum and did not materialize the private
+vendor closure into the Oracle workspace. The task-local Oracle bundle was
+repaired to strip the prefix and copy its private vendor tree. The final
+compiled bundle then passed three independent Harbor Oracle runs at 1/1.
+
+The compiler received one generic Go fix: after validating candidate go.mod
+and go.sum, tests/test.sh removes any candidate vendor tree and copies the
+trusted private vendor closure into the candidate workspace before
+`go build -mod=vendor`. A focused regression test asserts this materialization
+contract.
+
+Final gates:
+- frozen upstream: three offline go test -json runs, 100 dynamic leaves, zero failures;
+- public inventory: go/packages v0.36.0 plus go/types, 45 public symbols;
+- source validation: exit 0;
+- full catalog network lint: exit 0, no go-gjson finding;
+- locked production compile: exit 0;
+- final Harbor Oracle: three runs, valid=true, reward=1.0, 1/1;
+- empty/stub/forgery/install-failure/panic/hang/oversized-output/background-process: valid model-zero;
+- direct verifier with Docker --network none: valid=true, reward=1.0, 1/1;
+- bounded supervisor UID probe: UID 10001.
+
+No Harbor model Agent Run was started. Independent blind/spec review and pilot
+remain integrator responsibilities.
