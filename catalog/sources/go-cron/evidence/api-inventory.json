@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cron",
+  "package": "github.com/robfig/cron/v3",
+  "method": "go doc -all plus AST/public symbol review",
+  "public_types": [
+    "Chain", "ConstantDelaySchedule", "Cron", "Entry", "EntryID", "FuncJob",
+    "Job", "JobWrapper", "Logger", "Option", "ParseOption", "Parser",
+    "Schedule", "ScheduleParser", "SpecSchedule"
+  ],
+  "selected_contract_symbols": [
+    "NewParser", "Parser.Parse", "ParseStandard", "SpecSchedule.Next", "Every",
+    "ConstantDelaySchedule.Next", "New", "Cron.AddFunc", "Cron.AddJob",
+    "Cron.Schedule", "Cron.Entries", "Cron.Location", "Cron.Entry", "Cron.Remove",
+    "Entry.Valid", "NewChain", "Chain.Then", "Recover", "DelayIfStillRunning",
+    "SkipIfStillRunning", "FuncJob.Run", "WithLocation", "WithSeconds",
+    "WithParser", "WithChain", "WithLogger"
+  ],
+  "stored_at": "catalog/sources/go-cron/harbor/tests/bridge.go"
+}

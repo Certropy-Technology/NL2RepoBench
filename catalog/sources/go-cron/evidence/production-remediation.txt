@@ -1,0 +1,34 @@
+go-cron authoring record (2026-08-28)
+
+Frozen source: robfig/cron at bc59245fe10efaed9d51b56900192527ed733435.
+The raw git archive digest is 0cedb5d66d073dc2201d192e0ca89c11b722134a03d9323134280ec647570139;
+LICENSE is MIT and hashes to 8f650581478707182f3306d9a86676d4e03e2d4edc868344378cf4d6fe6c927a.
+
+Inventory:
+- upstream module: github.com/robfig/cron/v3, one pure-Go module, no third-party modules;
+- 19 frozen tree files, 48 upstream Test functions, 75 passing upstream Go test leaves;
+- bridge contract covers parser fields/options, descriptors, time zones, Every, Cron entry
+  snapshots/removal, FuncJob/Chain, Recover, DelayIfStillRunning, and SkipIfStillRunning;
+- candidate and verifier run with no network; only Oracle fetches the exact GitHub host.
+
+Commands and exit codes:
+- git clone/fetch/checkout exact revision: 0;
+- GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOWORK=off CGO_ENABLED=0 go test -json ./...: 0
+  (75 passed, 0 failed);
+- python3 -m py_compile contract.py: 0;
+- bash -n contract.sh and all control scripts: 0;
+- uv run nl2repo task validate-source catalog/sources/go-cron: 0;
+- uv run nl2repo task lint-network --tasks-root catalog/sources: 0 errors;
+- production Go compile with toolchain.go.lock.toml, private CAS, and --allow-private: 0;
+- Harbor 0.21.0 Oracle on the final compiled bundle, one run: exit 0, valid=true, 1/1,
+  reward=1.0, verifier public_network_available=false;
+- Harbor stub, forgery, install-failure, panic, hang, oversized-output, and
+  background-process controls: each exit 0 with valid=true and reward=0.0;
+- direct Docker verifier replay against an empty workspace with --network none: exit 0,
+  valid=true, reward=0.0, candidate-workspace-rejected, public_network_available=false.
+
+Remediation completed: the original upstream Go 1.12 module is normalized to Go 1.26.5
+only inside the trusted Oracle workspace; the candidate contract requires its own exact
+module path, offline module closure, and vendored build. No shared compiler or dataset
+files were changed. Remaining review items are independent blind/spec review and a later
+model Agent Run.

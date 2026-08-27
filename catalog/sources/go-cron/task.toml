@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "go-cron"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:51a2e3ef7cbecfc6bd924d46f6aeaf86417b0456bd78351290a630179528be33", size_bytes = 10240, uri = "artifact://private/sha256:51a2e3ef7cbecfc6bd924d46f6aeaf86417b0456bd78351290a630179528be33", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "cron", "scheduling", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/robfig/cron"
+revision = "bc59245fe10efaed9d51b56900192527ed733435"
+license_spdx = "MIT"
+source_digest = "sha256:0cedb5d66d073dc2201d192e0ca89c11b722134a03d9323134280ec647570139"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution is offline; only the trusted Oracle receives a run-scoped github.com authorization for the frozen source."
+
+[dependencies]
+status = "known"
+installer = "system"
+module_bundle = { digest = "sha256:dbd077902bf333014c9a15de08af5b3a641907ec10d25a9d638e36aefc2bf7a4", size_bytes = 10240, uri = "artifact://private/sha256:dbd077902bf333014c9a15de08af5b3a641907ec10d25a9d638e36aefc2bf7a4", visibility = "private" }
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic parser, schedule, timezone, cron-entry, and job-wrapper APIs of robfig/cron through a bounded typed Go bridge."
+keywords = ["go", "cron", "scheduling", "parser", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-wave2-20260828-c3"
+reason = "Pinned source, typed bridge, private verifier, offline module closure, one Harbor Oracle run, direct empty-verifier replay, and all prepared negative controls passed; awaiting independent review and model pilot."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:e1270b7643c372448ef4483ea84d740ecd85350a214d9547ddcf8c5af2215412", size_bytes = 10240, uri = "artifact://private/sha256:e1270b7643c372448ef4483ea84d740ecd85350a214d9547ddcf8c5af2215412", visibility = "private" }
+entrypoint = "contract.sh"

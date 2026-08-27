@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cron",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/robfig/cron",
+    "revision": "bc59245fe10efaed9d51b56900192527ed733435",
+    "source_digest": "sha256:0cedb5d66d073dc2201d192e0ca89c11b722134a03d9323134280ec647570139",
+    "license_spdx": "MIT"
+  },
+  "environment": {
+    "go": "1.26.5",
+    "goos": "linux",
+    "goarch": "amd64",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "harbor": "0.21.0"
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:dbd077902bf333014c9a15de08af5b3a641907ec10d25a9d638e36aefc2bf7a4", "size_bytes": 10240},
+    "verifier_bundle": {"digest": "sha256:e1270b7643c372448ef4483ea84d740ecd85350a214d9547ddcf8c5af2215412", "size_bytes": 10240},
+    "oracle_bundle": {"digest": "sha256:51a2e3ef7cbecfc6bd924d46f6aeaf86417b0456bd78351290a630179528be33", "size_bytes": 10240},
+    "compiled_bundle_manifest": {"path": ".nl2repo/compiled/go-cron/bundle.manifest.json", "sha256": "sha256:0ee09f6f59ef4bc4273dd129eaf8b648bcdbae05c5aafb8be66ac16d6000ff38"}
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-cron -a oracle --job-name go-cron-oracle-20260828-r3 -o .nl2repo/runs/go-cron-oracle-20260828-r3 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "total": 1,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/verifier/grading.json",
+    "network": ".nl2repo/runs/go-cron-oracle-20260828-final/go-cron-oracle-20260828-final/go-cron__KFkMWb5/verifier/network.json",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none -v empty-workspace:/workspace:ro -v empty-verifier-output:/logs/verifier nl2repo-go-cron-verifier:20260828 /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-cron/empty-verifier-output/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-cron/empty-verifier-output/network.json",
+      "public_network_available": false
+    },
+    "stub": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/stub/go-cron-stub-20260828/go-cron-stub__2MJ8zZD/verifier/network.json"},
+    "forgery": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/forgery/go-cron-forgery-20260828/go-cron-forgery__hBPLDF8/verifier/network.json"},
+    "install-failure": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/install-failure/go-cron-install-failure-20260828/go-cron-install-failure__dF2fNPU/verifier/network.json"},
+    "panic": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/panic/go-cron-panic-20260828/go-cron-panic__triCb3t/verifier/network.json"},
+    "hang": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/hang/go-cron-hang-20260828/go-cron-hang__87gsgFP/verifier/network.json"},
+    "oversized-output": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/oversized-output/go-cron-oversized-output-20260828/go-cron-oversized-output__viqfwqn/verifier/network.json"},
+    "background-process": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading": ".nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/verifier/grading.json", "network": ".nl2repo/runs/go-cron-controls-20260828-all/background-process/go-cron-background-process-20260828/go-cron-background-process__NYkyMqk/verifier/network.json"},
+    "offline": {"valid": true, "reward": 1.0, "public_network_available": false, "source": "oracle verifier network probe"}
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-cron", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "errors": 0},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-cron --output .nl2repo/compiled --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"command": "GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOWORK=off CGO_ENABLED=0 go test -json ./...", "exit_code": 0, "passed": 75, "failed": 0}
+  ],
+  "residual_risks": [
+    "Independent blind/spec review and model Agent Run remain integrator responsibilities.",
+    "The upstream scheduler's real wall-clock goroutine lifecycle is bounded by the bridge and is not exposed as unbounded user input."
+  ]
+}

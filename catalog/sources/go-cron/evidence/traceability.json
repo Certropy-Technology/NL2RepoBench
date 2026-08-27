@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cron",
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "private_assertion_classes": [
+      "standard parser fields, ranges, lists, names, and invalid inputs",
+      "descriptor schedules and deterministic next activation times",
+      "seconds, optional fields, descriptors, and timezone overrides",
+      "constant delay rounding and next-time calculation",
+      "cron options, entry IDs, snapshots, lookup, and removal",
+      "FuncJob, chain order, panic recovery, delay, and skip wrappers"
+    ]
+  },
+  "bridge": {
+    "path": "harbor/tests/bridge.go",
+    "serialization": "newline-delimited JSON with bounded scalar and array values",
+    "operations": ["parse_next", "every_next", "cron_entries", "chain_recover", "chain_skip", "chain_delay"],
+    "trust_boundary": "public API mapping only; hidden inputs, expected values, assertions, and grading are private"
+  },
+  "source_baseline": {
+    "upstream_test_functions": 48,
+    "upstream_test_leaves": 75,
+    "upstream_go_test": "75 passed, 0 failed",
+    "goos": "linux",
+    "goarch": "amd64",
+    "runtime": "go1.26.5"
+  }
+}
