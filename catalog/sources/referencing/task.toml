@@ -1,0 +1,98 @@
+schema_version = "1.0"
+task_id = "referencing"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "json-reference-library"
+tags = ["python", "json-reference", "json-schema", "immutable-registry", "uri-resolution", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-jsonschema/referencing"
+revision = "b081312fdf2567324d0c11fb07b630d7fcecea35"
+license_spdx = "MIT"
+source_digest = "sha256:b8edfe7c6ddc3e90be5a73f4fd4a72e3d9f54b60deb14bb2b55081775bb49fba"
+submodules = ["suite@e70fee8c4d4a1c128f5c55e395ce154ed87e1f24"]
+
+[environment]
+status = "known"
+python_version = "3.14.6"
+os_name = "debian-12-amd64"
+base_image = "python:3.14.6-slim-bookworm"
+base_image_digest = "sha256:4c92ffcde4dd6f1ff72a24518f49fd4990b27134987dfa31a733badde66df9f8"
+system_packages = ["build-essential", "git", "ca-certificates"]
+build_command = "python -m pip install --no-deps --no-build-isolation ."
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked Python 3.14 build and runtime closure is installed during Docker build; model and verifier phases have no egress, while only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "attrs==26.1.0",
+  "hatch-vcs==0.5.0",
+  "hatchling==1.27.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "rpds-py==2026.6.3",
+  "setuptools==84.0.0",
+  "setuptools-scm==10.2.1",
+  "trove-classifiers==2026.6.1.19",
+  "vcs-versioning==2.3.1",
+]
+lock_artifact = { digest = "sha256:6c6950b314f1e3a08878717be45cc0ab8688b73307953e9c1450a1b565cade7c", size_bytes = 11768, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6c6950b314f1e3a08878717be45cc0ab8688b73307953e9c1450a1b565cade7c", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 56
+expected_total_source = "frozen-collection"
+commands = ["python -I -m nl2repobench.verification.custom_verifier --entrypoint /tests/verifier/run.py --expected 56 --junit /logs/verifier/junit.xml --collection /logs/verifier/collection.json --timeout-sec 240"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:6c9ece788008a1b1992ad3c7b6de8fba27e8aef854d5a83858af75bf809f46e8", size_bytes = 51200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6c9ece788008a1b1992ad3c7b6de8fba27e8aef854d5a83858af75bf809f46e8", visibility = "private" }
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an immutable JSON-reference registry and resolver with JSON Schema dialect, anchor, pointer, retrieval, and exception behavior from an empty workspace."
+keywords = ["python", "json-reference", "json-schema", "registry", "uri-resolution", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8334f985786037200912c012b47a865080d02a3832482c1c4a428b06231ccc18"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8334f985786037200912c012b47a865080d02a3832482c1c4a428b06231ccc18"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-wide-20260826-r2/referencing"
+reason = "Exact source, Python 3.14 environment, hash-locked closure, 56-leaf private verifier, Oracle restoration, and controls are packaged; official Harbor Oracle and negative-control receipts are pending."

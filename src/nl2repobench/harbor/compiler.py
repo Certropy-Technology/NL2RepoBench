@@ -110,7 +110,12 @@ class HarborCompiler:
         try:
             dependency_lock = self._resolve_dependency_lock(manifest, allow_incomplete)
             self._write_instruction(source_dir, source.instruction, temporary_root)
-            self._write_environment(manifest, temporary_root, dependency_lock)
+            self._write_environment(
+                manifest,
+                temporary_root,
+                dependency_lock,
+                allow_incomplete,
+            )
             self._write_verifier(
                 source_dir,
                 manifest,
@@ -182,8 +187,9 @@ class HarborCompiler:
         manifest: TaskManifest,
         task_root: Path,
         dependency_lock: bytes,
+        allow_incomplete: bool,
     ) -> None:
-        image = self.toolchain.images.agent_base
+        image = self._python_image(manifest, allow_incomplete)
         install = self._system_packages_install(manifest)
         # The Docker build phase still has network, so the third-party build and
         # test dependency closure is baked into the image here. That is what lets
@@ -272,7 +278,8 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
         else:
             raise HarborCompileError("production task requires tests.test_bundle")
 
-        image = self._verifier_image(manifest, allow_incomplete)
+        image = self._python_image(manifest, allow_incomplete)
+        runtime_site = self._runtime_site(manifest, allow_incomplete)
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
 {self._system_packages_install(manifest)}\
@@ -286,7 +293,7 @@ RUN python -m pip install \
   --require-hashes \
   -r /tmp/candidate-requirements.lock.txt
 
-COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
+COPY runtime/nl2repobench {runtime_site}
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0555 test.sh /tests/test.sh
 """
@@ -294,12 +301,12 @@ COPY --chmod=0555 test.sh /tests/test.sh
             dockerfile += "COPY --chmod=0500 verifier /tests/verifier\n"
         else:
             dockerfile += "COPY --chmod=0500 private /tests/private\n"
-        dockerfile += """
+        dockerfile += f"""
 
 RUN useradd --uid 10001 --create-home candidate \
   && mkdir -p /tests/private \
   && chmod -R 0500 /tests/private \
-  && chmod -R 0555 /usr/local/lib/python3.12/site-packages/nl2repobench
+  && chmod -R 0555 {runtime_site}
 WORKDIR /tests
 """
         atomic_write(tests_root / "Dockerfile", dockerfile.encode())
@@ -308,17 +315,29 @@ WORKDIR /tests
     network_mode: none
 """
         atomic_write(tests_root / "docker-compose.yaml", verifier_compose.encode())
-        atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
+        atomic_write(
+            tests_root / "test.sh",
+            self._test_script(manifest, allow_incomplete).encode(),
+        )
         os.chmod(tests_root / "test.sh", 0o755)
 
-    def _verifier_image(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
+    def _python_image(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
         if allow_incomplete:
             return self.toolchain.images.verifier_base
         environment = manifest.environment_lock
         if environment.base_image is None or environment.base_image_digest is None:
-            raise HarborCompileError("production verifier image is not locked")
+            raise HarborCompileError("production Python image is not locked")
         image_name = environment.base_image.split("@", 1)[0]
         return f"{image_name}@{environment.base_image_digest}"
+
+    def _runtime_site(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
+        version = "3.12" if allow_incomplete else manifest.environment_lock.python_version
+        if version is None:
+            raise HarborCompileError("production Python version is not locked")
+        match = re.match(r"^(\d+\.\d+)(?:\.|$)", version)
+        if match is None:
+            raise HarborCompileError("environment.python_version must begin with major.minor")
+        return f"/usr/local/lib/python{match.group(1)}/site-packages/nl2repobench"
 
     def _resolve_command_plan(self, reference: ArtifactRef) -> VerifierCommandPlan:
         if self.artifact_resolver is None:
@@ -463,12 +482,13 @@ WORKDIR /tests
             data["environment"]["allowed_hosts"] = list(profile.agent_allowed_hosts)
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
-    def _test_script(self, manifest: TaskManifest) -> str:
+    def _test_script(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
         if manifest.verifier is not None:
-            return self._custom_test_script(manifest)
+            return self._custom_test_script(manifest, allow_incomplete)
         expected = manifest.tests.expected_total
         metric = shlex.quote(manifest.metric.contract_id)
         profile = self._effective_profile(manifest)
+        runtime_site = self._runtime_site(manifest, allow_incomplete)
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
         return f"""#!/usr/bin/env bash
@@ -548,7 +568,7 @@ python -I -m nl2repobench.verification.integrity snapshot \
   --record /logs/verifier/trusted-files.json \
   /tests/private \
   /tests/command-plan.json \
-  /usr/local/lib/python3.12/site-packages/nl2repobench
+  {runtime_site}
 
 env HOME=/root \
 NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC={candidate_total_timeout} \
@@ -574,7 +594,7 @@ if ! python -I -m nl2repobench.verification.integrity verify \
   --record /logs/verifier/trusted-files.json \
   /tests/private \
   /tests/command-plan.json \
-  /usr/local/lib/python3.12/site-packages/nl2repobench; then
+  {runtime_site}; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} \
     --runtime python \
@@ -600,21 +620,22 @@ python -I -m nl2repobench.verification.cli \
 exit 0
         """
 
-    def _custom_test_script(self, manifest: TaskManifest) -> str:
+    def _custom_test_script(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
         profile = self._effective_profile(manifest)
         assert manifest.verifier is not None
         expected = manifest.tests.expected_total
         entrypoint = shlex.quote(f"/tests/verifier/{manifest.verifier.entrypoint}")
         metric = shlex.quote(manifest.metric.contract_id)
+        runtime_site = self._runtime_site(manifest, allow_incomplete)
         environment = "\n".join(
             f"export {name}={shlex.quote(value)}"
             for name, value in sorted(manifest.verifier.environment.items())
         )
         return f"""#!/usr/bin/env bash
 set -uo pipefail
+rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
-rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 {environment}
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 python -I -m nl2repobench.verification.network_check \
@@ -644,7 +665,11 @@ if [[ "$?" -ne 0 ]]; then
     --reason candidate-installation-failed
   exit 0
 fi
-python -I -m nl2repobench.verification.custom_verifier \
+python -I -m nl2repobench.verification.process_cleanup --uid 10001
+python -I -m nl2repobench.verification.integrity snapshot \
+  --record /logs/verifier/trusted-files.json \
+  /tests/verifier /tests/command-plan.json {runtime_site}
+python -I -B -m nl2repobench.verification.custom_verifier \
   --entrypoint {entrypoint} --expected {expected} \
   --junit /logs/verifier/junit.xml \
   --collection /logs/verifier/collection.json \
@@ -653,6 +678,20 @@ python -I -m nl2repobench.verification.custom_verifier \
   2> /logs/verifier/custom-stderr.txt
 custom_exit=$?
 if [[ "$custom_exit" -ne 0 && "$custom_exit" -ne 1 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --runtime python --metric-contract {metric} \
+    --reason verifier-internal-error
+  exit 0
+fi
+if ! python -I -m nl2repobench.verification.process_cleanup --uid 10001; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --runtime python --metric-contract {metric} \
+    --reason verifier-internal-error
+  exit 0
+fi
+if ! python -I -m nl2repobench.verification.integrity verify \
+  --record /logs/verifier/trusted-files.json \
+  /tests/verifier /tests/command-plan.json {runtime_site}; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-internal-error

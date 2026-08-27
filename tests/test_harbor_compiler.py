@@ -298,9 +298,9 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         },
         "environment": {
             "status": "known",
-            "python_version": "3.12",
+            "python_version": "3.14.6",
             "os_name": "linux",
-            "base_image": "python:3.12-slim",
+            "base_image": "python:3.14.6-slim-bookworm",
             "base_image_digest": "sha256:" + "3" * 64,
             "network_mode": "no-network",
         },
@@ -333,7 +333,11 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
     assert (output / "solution/solve.sh").is_file()
     assert (output / "tests/candidate-requirements.lock.txt").is_file()
     verifier_dockerfile = (output / "tests/Dockerfile").read_text()
-    assert "python:3.12-slim@sha256:" in verifier_dockerfile
+    agent_dockerfile = (output / "environment/Dockerfile").read_text()
+    assert "python:3.14.6-slim-bookworm@sha256:" in agent_dockerfile
+    assert "python:3.14.6-slim-bookworm@sha256:" in verifier_dockerfile
+    assert "/usr/local/lib/python3.14/site-packages/nl2repobench" in verifier_dockerfile
+    assert "{runtime_site}" not in verifier_dockerfile
     assert "COPY dependencies" not in verifier_dockerfile
     assert "--no-index" not in verifier_dockerfile
     assert json.loads((output / "bundle.manifest.json").read_text())["mode"] == "production"
@@ -452,7 +456,14 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
     ).compile_task(source_dir, tmp_path / "output")
 
     assert (output / "tests/verifier/run.py").is_file()
-    assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
+    test_script = (output / "tests/test.sh").read_text(encoding="utf-8")
+    assert "custom_verifier" in test_script
+    assert "--status /logs/verifier/candidate-install.json" in test_script
+    assert "verification.integrity snapshot" in test_script
+    assert "verification.integrity verify" in test_script
+    assert "verification.process_cleanup --uid 10001" in test_script
+    assert "rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site\nmkdir -p" in test_script
+    assert "python -I -B -m nl2repobench.verification.custom_verifier" in test_script
     assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
         encoding="utf-8"
     )
