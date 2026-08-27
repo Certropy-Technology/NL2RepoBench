@@ -27,9 +27,10 @@ def test_node_control_summary_classifies_all_control_kinds(tmp_path: Path) -> No
         "install-script": {"valid": True, "failure_reason": "candidate-installation-failed"},
         "loader-hook": {"valid": True, "reward": 0.6},
         "hang": {
-            "valid": False,
-            "failure_class": "verifier",
-            "failure_reason": "node-collection-error",
+            "valid": True,
+            "reward": 0.0,
+            "failure_class": "model",
+            "failure_reason": "candidate-call-failed",
         },
         "offline": {"valid": True, "reward": 0.0},
     }

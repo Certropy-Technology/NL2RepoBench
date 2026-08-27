@@ -63,8 +63,11 @@ def _passed(kind: str, grading: dict[str, Any]) -> tuple[bool, str]:
         )
     if kind == "hang":
         return (
-            valid is False and reason == "node-collection-error" and failure_class == "verifier",
-            "hang terminated as verifier collection error",
+            valid is True
+            and reward == 0
+            and reason == "candidate-call-failed"
+            and failure_class == "model",
+            "hang terminated by the candidate-call supervisor",
         )
     if kind == "offline":
         return (
