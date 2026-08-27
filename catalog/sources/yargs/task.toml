@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "yargs"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "cli-parser"
+tags = ["node", "npm", "esm", "cli", "argument-parser", "commands", "validation", "subprocess"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/yargs/yargs"
+revision = "2a4378bdc2eac9cf7d0cdfe0a52b1b25f779806a"
+license_spdx = "MIT"
+source_digest = "sha256:3f687bc9c8904b92fecad8d73b002e879fa1d7b10543666b4daddfcdfaf4c565"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases are network-isolated. The exact npm runtime closure is supplied through a private cache artifact; only the trusted Oracle receives a run-scoped codeload.github.com source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["ansi-regex", "ansi-styles", "cliui", "emoji-regex", "escalade", "get-caller-file", "get-east-asian-width", "string-width", "strip-ansi", "wrap-ansi", "y18n", "yargs-parser"]
+artifact = { digest = "sha256:de7bee323ff2986972f9981474e4f3e2eb99b28b8fe082eed3ed0097491ec776", size_bytes = 1187840, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:de7bee323ff2986972f9981474e4f3e2eb99b28b8fe082eed3ed0097491ec776", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 42
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", visibility = "private" }
+test_bundle = { digest = "sha256:9195c764a5dba3758c36b47ea05bf6182741f3c67550c2ea837cb40f7f2c9963", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:9195c764a5dba3758c36b47ea05bf6182741f3c67550c2ea837cb40f7f2c9963", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the yargs ESM command-line argument parser from an empty workspace with deterministic parsing, commands, validation, help, and helper exports."
+keywords = ["node", "npm", "esm", "cli", "argument-parser", "commands", "validation", "subprocess"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "authoring/yargs"
+reason = "Source, environment, npm closure, instruction, private contract, and pinned Oracle are complete; production Harbor Oracle and negative controls are pending."
+
+[oracle_bundle]
+digest = "sha256:0569279fcd0e247fb4a56082847fb7bf1ed3e7d0ec9101215093e6a0654de53a"
+size_bytes = 430080
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:0569279fcd0e247fb4a56082847fb7bf1ed3e7d0ec9101215093e6a0654de53a"
+visibility = "private"
