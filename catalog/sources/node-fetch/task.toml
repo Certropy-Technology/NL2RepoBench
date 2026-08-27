@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "node-fetch"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "fetch-api"
+tags = ["node", "npm", "esm", "fetch", "http", "headers", "data-url", "offline"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/node-fetch/node-fetch"
+revision = "8b3320d2a7c07bce4afc6b2bf6c3bbddda85b01f"
+license_spdx = "MIT"
+source_digest = "sha256:c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The model agent and separate verifier use a private npm v3 cache closure and have no package registry or source-host egress. The trusted Oracle receives an isolated source archive whose SHA-256 is bound to the frozen revision. A model provider host, when required, is injected only as a run-scoped Harbor agent override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["data-uri-to-buffer", "fetch-blob", "formdata-polyfill"]
+artifact = { digest = "sha256:f1c2e6234da6efecf93be9009e1e7edc43ba7f4fc0512fcf6a19b2ad318cabfc", size_bytes = 2058240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:f1c2e6234da6efecf93be9009e1e7edc43ba7f4fc0512fcf6a19b2ad318cabfc", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:5465aa94f8e12c6f15463eccf5ee259d7561f21bad115fc8f47b1fd7b41ee3b1", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:5465aa94f8e12c6f15463eccf5ee259d7561f21bad115fc8f47b1fd7b41ee3b1", visibility = "private" }
+test_bundle = { digest = "sha256:57f2177f723ca58dca5a0a0e8ee8f1e7bae931d5fba2b42aa4de00dfc217d0cc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:57f2177f723ca58dca5a0a0e8ee8f1e7bae931d5fba2b42aa4de00dfc217d0cc", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Pinned node-fetch ESM task covering a no-network JSON-safe Fetch API subset with 23 deterministic node:test leaves."
+keywords = ["node", "npm", "esm", "fetch", "http", "headers", "data-url", "offline"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-gpt56-wide-20260826-r2"
+reason = "Frozen source, private Node 24/npm 11 offline closure, JSON subprocess verifier, Oracle archive, and no-network Oracle/empty/stub/forgery/timeout controls passed. Reviews and Agent Run Loop pilots remain pending."
+
+[oracle_bundle]
+digest = "sha256:f3c3906f8159a3ec78e61ea9e96ff4836334295c9fac38a18d476f1371581f85"
+size_bytes = 2416640
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f3c3906f8159a3ec78e61ea9e96ff4836334295c9fac38a18d476f1371581f85"
+visibility = "private"
