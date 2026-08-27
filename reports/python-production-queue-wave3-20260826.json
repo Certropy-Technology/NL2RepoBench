@@ -1,0 +1,1615 @@
+{
+  "counts": {
+    "candidate": 37,
+    "needs-evidence": 30
+  },
+  "global_dedup": {
+    "excluded": {
+      "existing_id": 0,
+      "existing_name": 0,
+      "existing_url": 2,
+      "profile_name": 3,
+      "status": 7,
+      "wave_duplicate": 0
+    },
+    "existing_names": 485,
+    "existing_urls": 304
+  },
+  "observed_at": "2026-08-26T15:43:19.482352+00:00",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-anthropics-anthropic-sdk-python-194a5baa2a53",
+      "conflicts": [],
+      "identity": "https://github.com/anthropics/anthropic-sdk-python",
+      "language": "python",
+      "last_activity": "2026-08-20T19:59:00.565092Z",
+      "license_evidence": "https://pypi.org/project/anthropic/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 209882852,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "anthropic",
+      "revision": "4474f31efa48588eff590f04419230791e22419f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/anthropics/anthropic-sdk-python"
+    },
+    {
+      "candidate_id": "https-github-com-django-asgiref-230412a7d5d1",
+      "conflicts": [],
+      "identity": "https://github.com/django/asgiref",
+      "language": "python",
+      "last_activity": "2026-07-14T09:56:18.087666Z",
+      "license_evidence": "https://pypi.org/project/asgiref/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 149915575,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "asgiref",
+      "revision": "b12f328e464b996ddfa651fe4f236e4321886729",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/django/asgiref"
+    },
+    {
+      "candidate_id": "https-github-com-gristlabs-asttokens-a22f63afdc60",
+      "conflicts": [],
+      "identity": "https://github.com/gristlabs/asttokens",
+      "language": "python",
+      "last_activity": "2026-07-12T03:31:49.084555Z",
+      "license_evidence": "https://pypi.org/project/asttokens/",
+      "license_spdx": "Apache 2.0",
+      "monthly_downloads": 138988249,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "asttokens",
+      "revision": "f97a6e1403d9f0e93940a11b507524550a5c3896",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/gristlabs/asttokens"
+    },
+    {
+      "candidate_id": "https-github-com-aio-libs-async-timeout-bfad6b6949dd",
+      "conflicts": [],
+      "identity": "https://github.com/aio-libs/async-timeout",
+      "language": "python",
+      "last_activity": "2024-11-06T16:41:39.600310Z",
+      "license_evidence": "https://pypi.org/project/async-timeout/",
+      "license_spdx": "Apache 2",
+      "monthly_downloads": 172430984,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "async-timeout",
+      "revision": "7dc0022fb8160e3d7905cefa279e034e37063814",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/aio-libs/async-timeout"
+    },
+    {
+      "candidate_id": "https-github-com-authlib-authlib-66f18949658a",
+      "conflicts": [],
+      "identity": "https://github.com/authlib/authlib",
+      "language": "python",
+      "last_activity": "2026-05-06T08:10:23.116307Z",
+      "license_evidence": "https://pypi.org/project/authlib/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 152732678,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "authlib",
+      "revision": "772bc72fe8440e6c5dd0a6615fb42d7466f85546",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/authlib/authlib"
+    },
+    {
+      "candidate_id": "https-github-com-python-babel-babel-c779628bd55b",
+      "conflicts": [],
+      "identity": "https://github.com/python-babel/babel",
+      "language": "python",
+      "last_activity": "2026-02-01T12:30:56.078194Z",
+      "license_evidence": "https://pypi.org/project/babel/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 135872051,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "babel",
+      "revision": "6ba6701e790f2f4b482ab5919cdf79f9cfef259b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/python-babel/babel"
+    },
+    {
+      "candidate_id": "https-github-com-psf-black-337de49f46fa",
+      "conflicts": [],
+      "identity": "https://github.com/psf/black",
+      "language": "python",
+      "last_activity": "2026-05-18T17:05:45.521116Z",
+      "license_evidence": "https://pypi.org/project/black/",
+      "monthly_downloads": 183486146,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "black",
+      "revision": "8947c48ef2077c3a301b03c1e814dc2e3f78436e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/psf/black"
+    },
+    {
+      "candidate_id": "https-github-com-pallets-eco-blinker-a3c29aae4ed8",
+      "conflicts": [],
+      "identity": "https://github.com/pallets-eco/blinker",
+      "language": "python",
+      "last_activity": "2024-11-08T17:25:47.436760Z",
+      "license_evidence": "https://pypi.org/project/blinker/",
+      "monthly_downloads": 190321039,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "blinker",
+      "revision": "c3364059663df1ddce32799d6b1922af89a345f6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pallets-eco/blinker"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-build-e4f87f8011bd",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/build",
+      "language": "python",
+      "last_activity": "2026-04-30T03:18:25.170465Z",
+      "license_evidence": "https://pypi.org/project/build/",
+      "monthly_downloads": 147646996,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "build",
+      "revision": "66438abaf611d5ac10d55f7e2ac49fb91adc4b6d",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pypa/build"
+    },
+    {
+      "candidate_id": "https-github-com-psf-cachecontrol-a4fd77c1aa01",
+      "conflicts": [],
+      "identity": "https://github.com/psf/cachecontrol",
+      "language": "python",
+      "last_activity": "2025-11-14T04:32:13.138623Z",
+      "license_evidence": "https://pypi.org/project/cachecontrol/",
+      "monthly_downloads": 125158138,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "cachecontrol",
+      "revision": "68a41b5989f28d7693f96d4087ece676d5936f1a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/psf/cachecontrol"
+    },
+    {
+      "candidate_id": "https-github-com-asottile-cfgv-b2f76284bfff",
+      "conflicts": [],
+      "identity": "https://github.com/asottile/cfgv",
+      "language": "python",
+      "last_activity": "2025-11-19T20:55:51.612035Z",
+      "license_evidence": "https://pypi.org/project/cfgv/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 198792417,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "cfgv",
+      "revision": "d5d96672d2841121ac514c431622ab3c85ba9b57",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/asottile/cfgv"
+    },
+    {
+      "candidate_id": "https-github-com-chardet-chardet-08d4cf2b3bba",
+      "conflicts": [],
+      "identity": "https://github.com/chardet/chardet",
+      "language": "python",
+      "last_activity": "2026-08-14T21:04:31.390972Z",
+      "license_evidence": "https://pypi.org/project/chardet/",
+      "monthly_downloads": 230962076,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "chardet",
+      "revision": "372caaee80d069889a9c2bf843fac097e4b9aac9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/chardet/chardet"
+    },
+    {
+      "candidate_id": "https-github-com-cloudpipe-cloudpickle-e7b262a8d2b0",
+      "conflicts": [],
+      "identity": "https://github.com/cloudpipe/cloudpickle",
+      "language": "python",
+      "last_activity": "2025-11-03T09:25:26.604186Z",
+      "license_evidence": "https://pypi.org/project/cloudpickle/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 154157905,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "cloudpickle",
+      "revision": "9608d892e55927b2c3c375a5b952ef23771e7d38",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/cloudpipe/cloudpickle"
+    },
+    {
+      "candidate_id": "https-github-com-contourpy-contourpy-f3a059358f98",
+      "conflicts": [],
+      "identity": "https://github.com/contourpy/contourpy",
+      "language": "python",
+      "last_activity": "2025-07-26T12:03:12.549238Z",
+      "license_evidence": "https://pypi.org/project/contourpy/",
+      "license_spdx": "BSD 3-Clause License\n         \n         Copyright (c) 2021-2025, ContourPy Developers.\n         All rights reserved.\n         \n         Redistribution and use in source and binary forms, with or without\n         modification, are permitted provided that the following conditions are met:\n         \n         1. Redistributions of source code must retain the above copyright notice, this\n            list of conditions and the following disclaimer.\n         \n         2. Redistributions in binary form must reproduce the above copyright notice,\n            this list of conditions and the following disclaimer in the documentation\n            and/or other materials provided with the distribution.\n         \n         3. Neither the name of the copyright holder nor the names of its\n            contributors may be used to endorse or promote products derived from\n            this software without specific prior written permission.\n         \n         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n         AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n         IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n         DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\n         FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n         DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n         SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n         CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n         OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n         ",
+      "monthly_downloads": 214005050,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "contourpy",
+      "revision": "1403562db974920e706771112e80caf54fa1413f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/contourpy/contourpy"
+    },
+    {
+      "candidate_id": "https-github-com-matplotlib-cycler-975f5b4b244f",
+      "conflicts": [],
+      "identity": "https://github.com/matplotlib/cycler",
+      "language": "python",
+      "last_activity": "2023-10-07T05:32:18.335463Z",
+      "license_evidence": "https://pypi.org/project/cycler/",
+      "license_spdx": "Copyright (c) 2015, matplotlib project All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.  * Neither the name of the matplotlib project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+      "monthly_downloads": 193549188,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "cycler",
+      "revision": "d1737eb0a42bd451e8770cef245ebe60ebb36bfc",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/matplotlib/cycler"
+    },
+    {
+      "candidate_id": "https-github-com-cython-cython-33445e9e4479",
+      "conflicts": [],
+      "identity": "https://github.com/cython/cython",
+      "language": "python",
+      "last_activity": "2026-08-22T05:18:04.309047Z",
+      "license_evidence": "https://pypi.org/project/cython/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 129051675,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "cython",
+      "revision": "6ed07674e781f42f9ebbd3cea71b1aa0c769d3a0",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/cython/cython"
+    },
+    {
+      "candidate_id": "https-github-com-databricks-databricks-sql-python-4a83be3afb1a",
+      "conflicts": [],
+      "identity": "https://github.com/databricks/databricks-sql-python",
+      "language": "python",
+      "last_activity": "2026-07-22T10:24:50.018288Z",
+      "license_evidence": "https://pypi.org/project/databricks-sql-connector/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 86037480,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "databricks-sql-connector",
+      "revision": "17c7789d2d98f24b46358f82fb75744ecc7d6107",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/databricks/databricks-sql-python"
+    },
+    {
+      "candidate_id": "https-github-com-huggingface-datasets-014216b2538f",
+      "conflicts": [],
+      "identity": "https://github.com/huggingface/datasets",
+      "language": "python",
+      "last_activity": "2026-07-28T11:09:12.016223Z",
+      "license_evidence": "https://pypi.org/project/datasets/",
+      "license_spdx": "Apache 2.0",
+      "monthly_downloads": 163726311,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "datasets",
+      "revision": "cd6a3406572eb768265ddda2e4d869ed4fe5d951",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/huggingface/datasets"
+    },
+    {
+      "candidate_id": "https-github-com-dbt-labs-dbt-adapters-ba74e9a63e4c",
+      "conflicts": [],
+      "identity": "https://github.com/dbt-labs/dbt-adapters",
+      "language": "python",
+      "last_activity": "2026-07-15T07:18:49.036681Z",
+      "license_evidence": "https://pypi.org/project/dbt-adapters/",
+      "monthly_downloads": 109748524,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "dbt-adapters",
+      "revision": "802d40f0f0eb663c17e5be08d1e3fb2e55b9ee34",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/dbt-labs/dbt-adapters"
+    },
+    {
+      "candidate_id": "https-github-com-laurent-laporte-pro-deprecated-057a07d4630e",
+      "conflicts": [],
+      "identity": "https://github.com/laurent-laporte-pro/deprecated",
+      "language": "python",
+      "last_activity": "2025-10-30T08:19:02.757820Z",
+      "license_evidence": "https://pypi.org/project/deprecated/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 179636562,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "deprecated",
+      "revision": "d135459ef6c1fdd005f28c6e2cf7915e8fb8d0e1",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/laurent-laporte-pro/deprecated"
+    },
+    {
+      "candidate_id": "https-github-com-uqfoundation-dill-75243b24e5cf",
+      "conflicts": [],
+      "identity": "https://github.com/uqfoundation/dill",
+      "language": "python",
+      "last_activity": "2026-01-19T02:36:56.850743Z",
+      "license_evidence": "https://pypi.org/project/dill/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 228462924,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "dill",
+      "revision": "50d93fe52c84cdbfd81c39f5adba68f627fd330b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/uqfoundation/dill"
+    },
+    {
+      "candidate_id": "https-github-com-docker-docker-py-acaa0c409def",
+      "conflicts": [],
+      "identity": "https://github.com/docker/docker-py",
+      "language": "python",
+      "last_activity": "2026-07-09T14:53:46.390485Z",
+      "license_evidence": "https://pypi.org/project/docker/",
+      "monthly_downloads": 202891224,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "docker",
+      "revision": "afc6d1ee308e78b908b96a94298c37fa8c465588",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/docker/docker-py"
+    },
+    {
+      "candidate_id": "https-github-com-alexmojaki-executing-ea3108e2b4b6",
+      "conflicts": [],
+      "identity": "https://github.com/alexmojaki/executing",
+      "language": "python",
+      "last_activity": "2025-09-01T09:48:10.866716Z",
+      "license_evidence": "https://pypi.org/project/executing/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 144140734,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "executing",
+      "revision": "0dc8a1c8ba6baed4a57bd0255afcfd8d4d0c7798",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/alexmojaki/executing"
+    },
+    {
+      "candidate_id": "https-github-com-fsspec-gcsfs-56bed0b8ad0f",
+      "conflicts": [],
+      "identity": "https://github.com/fsspec/gcsfs",
+      "language": "python",
+      "last_activity": "2026-08-13T11:46:49.018169Z",
+      "license_evidence": "https://pypi.org/project/gcsfs/",
+      "monthly_downloads": 136609540,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "gcsfs",
+      "revision": "ab6bc825306c0f772703fbb2dc5145968ec5443b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/fsspec/gcsfs"
+    },
+    {
+      "candidate_id": "https-github-com-googleapis-google-api-python-client-c162ef693eba",
+      "conflicts": [],
+      "identity": "https://github.com/googleapis/google-api-python-client",
+      "language": "python",
+      "last_activity": "2026-08-20T21:38:39.745754Z",
+      "license_evidence": "https://pypi.org/project/google-api-python-client/",
+      "license_spdx": "Apache 2.0",
+      "monthly_downloads": 186199099,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "google-api-python-client",
+      "revision": "b0089df6768a806c3d837f71b5ba7eca79934e5a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/googleapis/google-api-python-client"
+    },
+    {
+      "candidate_id": "https-github-com-googleapis-python-crc32c-69118b6613f7",
+      "conflicts": [],
+      "identity": "https://github.com/googleapis/python-crc32c",
+      "language": "python",
+      "last_activity": "2025-12-16T00:48:12.163932Z",
+      "license_evidence": "https://pypi.org/project/google-crc32c/",
+      "monthly_downloads": 192622552,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "google-crc32c",
+      "revision": "d659b4bf39491c385dba8aaaa361364b666d91eb",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/googleapis/python-crc32c"
+    },
+    {
+      "candidate_id": "https-github-com-benoitc-gunicorn-9f14a6224e73",
+      "conflicts": [],
+      "identity": "https://github.com/benoitc/gunicorn",
+      "language": "python",
+      "last_activity": "2026-08-24T15:05:59.300189Z",
+      "license_evidence": "https://pypi.org/project/gunicorn/",
+      "monthly_downloads": 142989801,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "gunicorn",
+      "revision": "36f2a3c1b80dfa41d70859d12c5bfbbdc23a3c38",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/benoitc/gunicorn"
+    },
+    {
+      "candidate_id": "https-github-com-python-hyper-h2-1308f3612003",
+      "conflicts": [],
+      "identity": "https://github.com/python-hyper/h2",
+      "language": "python",
+      "last_activity": "2026-08-03T11:45:09.509241Z",
+      "license_evidence": "https://pypi.org/project/h2/",
+      "monthly_downloads": 211389650,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "h2",
+      "revision": "bc239af1d1b85bc70482804f30a0e0e587d90a08",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python-hyper/h2"
+    },
+    {
+      "candidate_id": "https-github-com-httplib2-httplib2-6ef74862a864",
+      "conflicts": [],
+      "identity": "https://github.com/httplib2/httplib2",
+      "language": "python",
+      "last_activity": "2026-06-26T10:13:56.265734Z",
+      "license_evidence": "https://pypi.org/project/httplib2/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 174344172,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "httplib2",
+      "revision": "ba9bf505cd899f522f2bb58ca608444adf49afc1",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/httplib2/httplib2"
+    },
+    {
+      "candidate_id": "https-github-com-python-hyper-hyperframe-b7b2b0b868e7",
+      "conflicts": [],
+      "identity": "https://github.com/python-hyper/hyperframe",
+      "language": "python",
+      "last_activity": "2025-01-22T21:41:49.302049Z",
+      "license_evidence": "https://pypi.org/project/hyperframe/",
+      "license_spdx": "The MIT License (MIT)  Copyright (c) 2014 Cory Benfield  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. ",
+      "monthly_downloads": 199164344,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "hyperframe",
+      "revision": "632e309bf6d76d6a3cd04e3cbc0b006eddbf7056",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/python-hyper/hyperframe"
+    },
+    {
+      "candidate_id": "https-github-com-pre-commit-identify-b1f20522a10d",
+      "conflicts": [],
+      "identity": "https://github.com/pre-commit/identify",
+      "language": "python",
+      "last_activity": "2026-04-17T18:39:50.265065Z",
+      "license_evidence": "https://pypi.org/project/identify/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 199160631,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "identify",
+      "revision": "68668e7d11368e039dd2e4a3a8a72f3895dd1ae6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/pre-commit/identify"
+    },
+    {
+      "candidate_id": "https-github-com-pycqa-isort-5bf6ae7331b1",
+      "conflicts": [],
+      "identity": "https://github.com/PyCQA/isort",
+      "language": "python",
+      "last_activity": "2026-02-28T10:08:20.685520Z",
+      "license_evidence": "https://pypi.org/project/isort/",
+      "monthly_downloads": 145755696,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "isort",
+      "revision": "0cba6f6111a07cc05b167008dda0727ecca907c5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/PyCQA/isort"
+    },
+    {
+      "candidate_id": "https-github-com-davidhalter-jedi-f7b5daf20668",
+      "conflicts": [],
+      "identity": "https://github.com/davidhalter/jedi",
+      "language": "python",
+      "last_activity": "2026-05-01T23:38:47.814950Z",
+      "license_evidence": "https://pypi.org/project/jedi/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 138957581,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "jedi",
+      "revision": "ef5d3611210655b6af53596d205c53f0293e0d60",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/davidhalter/jedi"
+    },
+    {
+      "candidate_id": "https-github-com-authlib-joserfc-008eb10ea269",
+      "conflicts": [],
+      "identity": "https://github.com/authlib/joserfc",
+      "language": "python",
+      "last_activity": "2026-07-19T15:43:02.739360Z",
+      "license_evidence": "https://pypi.org/project/joserfc/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 146661768,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "joserfc",
+      "revision": "26a10275e88276184f91ae2a6409647bfac7fea5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/authlib/joserfc"
+    },
+    {
+      "candidate_id": "https-github-com-nucleic-kiwi-1f7c381d40bb",
+      "conflicts": [],
+      "identity": "https://github.com/nucleic/kiwi",
+      "language": "python",
+      "last_activity": "2026-03-09T13:15:53.382287Z",
+      "license_evidence": "https://pypi.org/project/kiwisolver/",
+      "license_spdx": "=========================\n         The Kiwi licensing terms\n        =========================\n        Kiwi is licensed under the terms of the Modified BSD License (also known as\n        New or Revised BSD), as follows:\n        \n        Copyright (c) 2013-2026, Nucleic Development Team\n        \n        All rights reserved.\n        \n        Redistribution and use in source and binary forms, with or without\n        modification, are permitted provided that the following conditions are met:\n        \n        Redistributions of source code must retain the above copyright notice, this\n        list of conditions and the following disclaimer.\n        \n        Redistributions in binary form must reproduce the above copyright notice, this\n        list of conditions and the following disclaimer in the documentation and/or\n        other materials provided with the distribution.\n        \n        Neither the name of the Nucleic Development Team nor the names of its\n        contributors may be used to endorse or promote products derived from this\n        software without specific prior written permission.\n        \n        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\n        ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n        DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE\n        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n        \n        About Kiwi\n        ----------\n        Chris Colbert began the Kiwi project in December 2013 in an effort to\n        create a blisteringly fast UI constraint solver. Chris is still the\n        project lead.\n        \n        The Nucleic Development Team is the set of all contributors to the Nucleic\n        project and its subprojects.\n        \n        The core team that coordinates development on GitHub can be found here:\n        http://github.com/nucleic. The current team consists of:\n        \n        * Chris Colbert\n        \n        Our Copyright Policy\n        --------------------\n        Nucleic uses a shared copyright model. Each contributor maintains copyright\n        over their contributions to Nucleic. But, it is important to note that these\n        contributions are typically only changes to the repositories. Thus, the Nucleic\n        source code, in its entirety is not the copyright of any single person or\n        institution. Instead, it is the collective copyright of the entire Nucleic\n        Development Team. If individual contributors want to maintain a record of what\n        changes/contributions they have specific copyright on, they should indicate\n        their copyright in the commit message of the change, when they commit the\n        change to one of the Nucleic repositories.\n        \n        With this in mind, the following banner should be used in any source code file\n        to indicate the copyright and license terms:\n        \n        #------------------------------------------------------------------------------\n        # Copyright (c) 2013-2026, Nucleic Development Team.\n        #\n        # Distributed under the terms of the Modified BSD License.\n        #\n        # The full license is in the file LICENSE, distributed with this software.\n        #------------------------------------------------------------------------------\n        ",
+      "monthly_downloads": 216256692,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "kiwisolver",
+      "revision": "2e7291da01a8769d5845dcffd3e2d650b1dcb762",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/nucleic/kiwi"
+    },
+    {
+      "candidate_id": "https-github-com-mypyc-librt-adeb684072d9",
+      "conflicts": [],
+      "identity": "https://github.com/mypyc/librt",
+      "language": "python",
+      "last_activity": "2026-08-07T10:49:42.663455Z",
+      "license_evidence": "https://pypi.org/project/librt/",
+      "monthly_downloads": 162631804,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "librt",
+      "revision": "a6d7fada923200793f0aa68a28758034e85dc7fe",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/mypyc/librt"
+    },
+    {
+      "candidate_id": "https-github-com-sqlalchemy-mako-9010e709ad42",
+      "conflicts": [],
+      "identity": "https://github.com/sqlalchemy/mako",
+      "language": "python",
+      "last_activity": "2026-08-05T06:10:58.248725Z",
+      "license_evidence": "https://pypi.org/project/mako/",
+      "monthly_downloads": 222660065,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "mako",
+      "revision": "411b4ac6cf054e61a8fb44c236990fda1e41ade4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/sqlalchemy/mako"
+    },
+    {
+      "candidate_id": "https-github-com-python-markdown-markdown-e597b5ca132f",
+      "conflicts": [],
+      "identity": "https://github.com/Python-Markdown/markdown",
+      "language": "python",
+      "last_activity": "2026-07-30T19:05:29.005179Z",
+      "license_evidence": "https://pypi.org/project/markdown/",
+      "monthly_downloads": 126909283,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "markdown",
+      "revision": "136df23a5ae798347c1edc5f5c023e663254ca26",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/Python-Markdown/markdown"
+    },
+    {
+      "candidate_id": "https-github-com-mpmath-mpmath-3024857cd692",
+      "conflicts": [],
+      "identity": "https://github.com/mpmath/mpmath",
+      "language": "python",
+      "last_activity": "2026-03-15T01:17:38.245457Z",
+      "license_evidence": "https://pypi.org/project/mpmath/",
+      "monthly_downloads": 171195959,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "mpmath",
+      "revision": "46e0959d4d5c0a193eb96adc5d79f2f31a0d0780",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/mpmath/mpmath"
+    },
+    {
+      "candidate_id": "https-github-com-azuread-microsoft-authentication-extensions-for-python-924ce4d5c7f3",
+      "conflicts": [],
+      "identity": "https://github.com/AzureAD/microsoft-authentication-extensions-for-python",
+      "language": "python",
+      "last_activity": "2025-03-14T23:51:03.902941Z",
+      "license_evidence": "https://pypi.org/project/msal-extensions/",
+      "license_spdx": "MIT License",
+      "monthly_downloads": 161981783,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "msal-extensions",
+      "revision": "23ac2da41245361a608d979a58bb160b5d18ef96",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/AzureAD/microsoft-authentication-extensions-for-python"
+    },
+    {
+      "candidate_id": "https-github-com-uqfoundation-multiprocess-3118735491ff",
+      "conflicts": [],
+      "identity": "https://github.com/uqfoundation/multiprocess",
+      "language": "python",
+      "last_activity": "2026-01-19T06:47:39.744478Z",
+      "license_evidence": "https://pypi.org/project/multiprocess/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 305819500,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "multiprocess",
+      "revision": "e88ebae34ba410a366917cf423dcbfda9ceac549",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/uqfoundation/multiprocess"
+    },
+    {
+      "candidate_id": "https-github-com-python-mypy-9bb481e842fe",
+      "conflicts": [],
+      "identity": "https://github.com/python/mypy",
+      "language": "python",
+      "last_activity": "2026-08-15T03:03:38.549479Z",
+      "license_evidence": "https://pypi.org/project/mypy/",
+      "monthly_downloads": 218618814,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "mypy",
+      "revision": "1dab3c5f3d4cf8a3df88e5bcccfd6f3194fbd66f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python/mypy"
+    },
+    {
+      "candidate_id": "https-github-com-narwhals-dev-narwhals-5854e2084404",
+      "conflicts": [],
+      "identity": "https://github.com/narwhals-dev/narwhals",
+      "language": "python",
+      "last_activity": "2026-08-20T18:10:15.454076Z",
+      "license_evidence": "https://pypi.org/project/narwhals/",
+      "monthly_downloads": 161139485,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "narwhals",
+      "revision": "01996c083716b2109a852ed309900e0315fc39a4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/narwhals-dev/narwhals"
+    },
+    {
+      "candidate_id": "https-github-com-ekalinin-nodeenv-2958b96e5bd7",
+      "conflicts": [],
+      "identity": "https://github.com/ekalinin/nodeenv",
+      "language": "python",
+      "last_activity": "2025-12-20T14:08:54.006289Z",
+      "license_evidence": "https://pypi.org/project/nodeenv/",
+      "license_spdx": "BSD",
+      "monthly_downloads": 222986401,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "nodeenv",
+      "revision": "bb12812cf66b2ff5a0a382cda99564d16076fdbf",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ekalinin/nodeenv"
+    },
+    {
+      "candidate_id": "https-github-com-paramiko-paramiko-6f652cf9c94f",
+      "conflicts": [],
+      "identity": "https://github.com/paramiko/paramiko",
+      "language": "python",
+      "last_activity": "2026-05-09T18:28:52.256263Z",
+      "license_evidence": "https://pypi.org/project/paramiko/",
+      "monthly_downloads": 155811630,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "paramiko",
+      "revision": "d60d5c17d78f344b51ed651e796d2931133a9b22",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/paramiko/paramiko"
+    },
+    {
+      "candidate_id": "https-github-com-davidhalter-parso-554c0f946876",
+      "conflicts": [],
+      "identity": "https://github.com/davidhalter/parso",
+      "language": "python",
+      "last_activity": "2026-05-01T23:13:02.138036Z",
+      "license_evidence": "https://pypi.org/project/parso/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 138885433,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "parso",
+      "revision": "7f5b142b54b2a04bcb4df358175d079e046c5bf7",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/davidhalter/parso"
+    },
+    {
+      "candidate_id": "https-github-com-pexpect-pexpect-66ad0e2f38c2",
+      "conflicts": [],
+      "identity": "https://github.com/pexpect/pexpect",
+      "language": "python",
+      "last_activity": "2023-11-25T09:07:26.339278Z",
+      "license_evidence": "https://pypi.org/project/pexpect/",
+      "license_spdx": "ISC license",
+      "monthly_downloads": 202274054,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "pexpect",
+      "revision": "fc8f062518b40bd0862aae870cdedf5d9c0c7fc3",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/pexpect/pexpect"
+    },
+    {
+      "candidate_id": "https-github-com-python-poetry-poetry-core-e3c5b26d4cf4",
+      "conflicts": [],
+      "identity": "https://github.com/python-poetry/poetry-core",
+      "language": "python",
+      "last_activity": "2026-05-23T14:30:37.552729Z",
+      "license_evidence": "https://pypi.org/project/poetry-core/",
+      "monthly_downloads": 168397919,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "poetry-core",
+      "revision": "c213ff2dbc414fe021936c88a7a68477099ac7b0",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python-poetry/poetry-core"
+    },
+    {
+      "candidate_id": "https-github-com-prometheus-client-python-e61e5385ce2e",
+      "conflicts": [],
+      "identity": "https://github.com/prometheus/client_python",
+      "language": "python",
+      "last_activity": "2026-07-24T19:36:41.893641Z",
+      "license_evidence": "https://pypi.org/project/prometheus-client/",
+      "monthly_downloads": 180851972,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "prometheus-client",
+      "revision": "209834673397d48340e3b3bde6dfd4383087a359",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/prometheus/client_python"
+    },
+    {
+      "candidate_id": "https-github-com-pexpect-ptyprocess-5d866654a281",
+      "conflicts": [],
+      "identity": "https://github.com/pexpect/ptyprocess",
+      "language": "python",
+      "last_activity": "2020-12-28T15:15:30.155647Z",
+      "license_evidence": "https://pypi.org/project/ptyprocess/",
+      "license_spdx": "",
+      "monthly_downloads": 207362342,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "ptyprocess",
+      "revision": "97f068c80952c702873d801d2c8b262b79685d38",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pexpect/ptyprocess"
+    },
+    {
+      "candidate_id": "https-github-com-alexmojaki-pure-eval-6075552448e1",
+      "conflicts": [],
+      "identity": "https://github.com/alexmojaki/pure_eval",
+      "language": "python",
+      "last_activity": "2024-07-21T12:58:21.801290Z",
+      "license_evidence": "https://pypi.org/project/pure-eval/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 128084691,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "pure-eval",
+      "revision": "cbb525652850e4fd460dcd4b8be4d58c9858f5c4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/alexmojaki/pure_eval"
+    },
+    {
+      "candidate_id": "https-github-com-pydantic-pydantic-ai-e916d975160d",
+      "conflicts": [],
+      "identity": "https://github.com/pydantic/pydantic-ai",
+      "language": "python",
+      "last_activity": "2026-08-26T01:41:43.869369Z",
+      "license_evidence": "https://pypi.org/project/pydantic-ai-slim/",
+      "monthly_downloads": 141142911,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "pydantic-ai-slim",
+      "revision": "41e503c91ee33a53c4d9529bd1a6425fff69dfca",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pydantic/pydantic-ai"
+    },
+    {
+      "candidate_id": "https-github-com-py-pdf-pypdf-c6f0cfef4c5e",
+      "conflicts": [],
+      "identity": "https://github.com/py-pdf/pypdf",
+      "language": "python",
+      "last_activity": "2026-08-23T13:50:07.135030Z",
+      "license_evidence": "https://pypi.org/project/pypdf/",
+      "monthly_downloads": 158675836,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "pypdf",
+      "revision": "295594900e35f8d7628c13c05f5d28d9b29ef990",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/py-pdf/pypdf"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-pyproject-hooks-1867e9d5dce1",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/pyproject-hooks",
+      "language": "python",
+      "last_activity": "2024-09-29T09:24:13.293934Z",
+      "license_evidence": "https://pypi.org/project/pyproject-hooks/",
+      "monthly_downloads": 158364157,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "pyproject-hooks",
+      "revision": "d9ee8a0fe9f1fe351187ff85965a8b8fcb7e78a6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pypa/pyproject-hooks"
+    },
+    {
+      "candidate_id": "https-github-com-nhairs-python-json-logger-62b1feb46861",
+      "conflicts": [],
+      "identity": "https://github.com/nhairs/python-json-logger",
+      "language": "python",
+      "last_activity": "2026-08-15T11:36:38.232576Z",
+      "license_evidence": "https://pypi.org/project/python-json-logger/",
+      "monthly_downloads": 120348150,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "python-json-logger",
+      "revision": "806dba9d9642fbec4c8538b625494c96b288ce59",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/nhairs/python-json-logger"
+    },
+    {
+      "candidate_id": "https-github-com-rapidfuzz-rapidfuzz-3bc4bbbb88e6",
+      "conflicts": [],
+      "identity": "https://github.com/rapidfuzz/RapidFuzz",
+      "language": "python",
+      "last_activity": "2026-04-07T11:16:31.931499Z",
+      "license_evidence": "https://pypi.org/project/rapidfuzz/",
+      "monthly_downloads": 177654573,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "rapidfuzz",
+      "revision": "24f2ac526bf1ec91db90e7ff02e52816e6bcb603",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/rapidfuzz/RapidFuzz"
+    },
+    {
+      "candidate_id": "https-github-com-alexmojaki-stack-data-893c47ce40bc",
+      "conflicts": [],
+      "identity": "https://github.com/alexmojaki/stack_data",
+      "language": "python",
+      "last_activity": "2023-09-30T13:58:05.479746Z",
+      "license_evidence": "https://pypi.org/project/stack-data/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 128362387,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "stack-data",
+      "revision": "ae11f5f938e3459ca2c54c933f57876844f5bc25",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/alexmojaki/stack_data"
+    },
+    {
+      "candidate_id": "https-github-com-joblib-threadpoolctl-a9f7f8a3466e",
+      "conflicts": [],
+      "identity": "https://github.com/joblib/threadpoolctl",
+      "language": "python",
+      "last_activity": "2025-03-13T13:49:23.031538Z",
+      "license_evidence": "https://pypi.org/project/threadpoolctl/",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 220496873,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "threadpoolctl",
+      "revision": "bcf61968a8509a4da96ff501f715e54f3179eb6e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/joblib/threadpoolctl"
+    },
+    {
+      "candidate_id": "https-github-com-tornadoweb-tornado-16ace8f06b0c",
+      "conflicts": [],
+      "identity": "https://github.com/tornadoweb/tornado",
+      "language": "python",
+      "last_activity": "2026-08-07T02:12:42.971312Z",
+      "license_evidence": "https://pypi.org/project/tornado/",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 122212270,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "tornado",
+      "revision": "0096f2897c98facdcd9716009ee934a7381af5ef",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/tornadoweb/tornado"
+    },
+    {
+      "candidate_id": "https-github-com-ipython-traitlets-1a962028f7b9",
+      "conflicts": [],
+      "identity": "https://github.com/ipython/traitlets",
+      "language": "python",
+      "last_activity": "2026-08-03T08:32:36.848008Z",
+      "license_evidence": "https://pypi.org/project/traitlets/",
+      "license_spdx": "BSD 3-Clause License\n        \n        - Copyright (c) 2001-, IPython Development Team\n        \n        All rights reserved.\n        \n        Redistribution and use in source and binary forms, with or without\n        modification, are permitted provided that the following conditions are met:\n        \n        1. Redistributions of source code must retain the above copyright notice, this\n           list of conditions and the following disclaimer.\n        \n        2. Redistributions in binary form must reproduce the above copyright notice,\n           this list of conditions and the following disclaimer in the documentation\n           and/or other materials provided with the distribution.\n        \n        3. Neither the name of the copyright holder nor the names of its\n           contributors may be used to endorse or promote products derived from\n           this software without specific prior written permission.\n        \n        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\n        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+      "monthly_downloads": 161031999,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "traitlets",
+      "revision": "5b398bea0380cc306858aa269f6957ea2585c841",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ipython/traitlets"
+    },
+    {
+      "candidate_id": "https-github-com-huggingface-transformers-53d940334a2a",
+      "conflicts": [],
+      "identity": "https://github.com/huggingface/transformers",
+      "language": "python",
+      "last_activity": "2026-08-26T14:48:58.789957Z",
+      "license_evidence": "https://pypi.org/project/transformers/",
+      "license_spdx": "Apache 2.0 License",
+      "monthly_downloads": 197681018,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "transformers",
+      "revision": "dabae5fcb924a8eece0e727b627ca5f050b40d40",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/huggingface/transformers"
+    },
+    {
+      "candidate_id": "https-github-com-python-hyper-uritemplate-8235ef51732c",
+      "conflicts": [],
+      "identity": "https://github.com/python-hyper/uritemplate",
+      "language": "python",
+      "last_activity": "2025-06-02T15:12:06.318108Z",
+      "license_evidence": "https://pypi.org/project/uritemplate/",
+      "license_spdx": "BSD 3-Clause OR Apache-2.0",
+      "monthly_downloads": 183221577,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "uritemplate",
+      "revision": "539fb6c398ba2f4d2ae2485ba56e1919ecad6b5f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/python-hyper/uritemplate"
+    },
+    {
+      "candidate_id": "https-github-com-astral-sh-uv-30e283a9b3f7",
+      "conflicts": [],
+      "identity": "https://github.com/astral-sh/uv",
+      "language": "python",
+      "last_activity": "2026-08-25T19:40:02.286618Z",
+      "license_evidence": "https://pypi.org/project/uv/",
+      "monthly_downloads": 201331022,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "uv",
+      "revision": "a3343a269d6b5fe3289128d1030235bc5f905c0b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/astral-sh/uv"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-setuptools-scm-489db98adc58",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/setuptools-scm",
+      "language": "python",
+      "last_activity": "2026-08-19T07:37:21.034281Z",
+      "license_evidence": "https://pypi.org/project/vcs-versioning/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 117468256,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "vcs-versioning",
+      "revision": "ffa8d49233d90dc84787130d05110ca1606e1924",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/pypa/setuptools-scm"
+    },
+    {
+      "candidate_id": "https-github-com-courtbouillon-webencodings-067b4e6b3b69",
+      "conflicts": [],
+      "identity": "https://github.com/CourtBouillon/webencodings",
+      "language": "python",
+      "last_activity": "2026-08-15T14:22:57.549569Z",
+      "license_evidence": "https://pypi.org/project/webencodings/",
+      "monthly_downloads": 148843320,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "webencodings",
+      "revision": "601652c316f99e19d81ea7a35a7b1018f3137ea5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/CourtBouillon/webencodings"
+    },
+    {
+      "candidate_id": "https-github-com-martinblech-xmltodict-b81dd4fd384e",
+      "conflicts": [],
+      "identity": "https://github.com/martinblech/xmltodict",
+      "language": "python",
+      "last_activity": "2026-02-22T02:21:22.074263Z",
+      "license_evidence": "https://pypi.org/project/xmltodict/",
+      "monthly_downloads": 126460326,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "xmltodict",
+      "revision": "6e29fba282e68631034dd2722a413b4e35276584",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/martinblech/xmltodict"
+    },
+    {
+      "candidate_id": "https-github-com-ifduyue-python-xxhash-65f2bc08eedc",
+      "conflicts": [],
+      "identity": "https://github.com/ifduyue/python-xxhash",
+      "language": "python",
+      "last_activity": "2026-08-17T08:36:37.928003Z",
+      "license_evidence": "https://pypi.org/project/xxhash/",
+      "license_spdx": "BSD-2-Clause",
+      "monthly_downloads": 199867212,
+      "observed_at": "2026-08-26T15:43:19.482352+00:00",
+      "package": "xxhash",
+      "revision": "e2c1bcf1e1d86c4e3d43e4d412dccb521498ea88",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+          "report_sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ifduyue/python-xxhash"
+    }
+  ],
+  "queue_id": "python-production-discovery-wave3-20260826",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": ".nl2repo/discovery-wave3-20260826/python-production-discovery.json",
+      "sha256": "sha256:2683b7765e4480f44f8114b88f7f480775d311e3e8a9feeeb69a41a3f3e8d94f"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}

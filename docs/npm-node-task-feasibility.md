@@ -1,12 +1,20 @@
 # npm / Node Harbor 题接入可行性
 
+> **Historical feasibility analysis.** 文中的 production blocker 描述的是 Node
+> foundation 实现前的状态。当前统一 contract 和 runtime adapter 设计见
+> [`runtime-adapter-architecture.zh-CN.md`](runtime-adapter-architecture.zh-CN.md)，
+> 已完成的 Node 生产证据见
+> [`node-foundation-status.v1.md`](node-foundation-status.v1.md)。本文保留早期约束和
+> 风险分析，不作为当前 CLI、schema 或发布状态的事实源。
+
 ## 结论
 
 Harbor `0.21.0` / task schema `1.4` 能运行 Node/npm 题，因为 Task 本身只要求
 Docker environment、`tests/test.sh`、artifact 和数值 reward，并不限定 Python。
-但 NL2RepoBench 当前 compiler、dependency bundle、candidate installer、subprocess
-boundary 和 grader 都是 Python/pytest 专用。因此结论是：**可以做独立 Node pilot，
-现在不能把 npm 题直接混入 Python dataset。**
+早期 NL2RepoBench compiler、dependency bundle、candidate installer、subprocess
+boundary 和 grader 都是 Python/pytest 专用；这促成了后续统一 contract 和独立 Node
+runtime adapter。Node 题仍必须使用自己的冻结 runtime、offline closure 和 report
+normalizer，不能把历史 Python/Node 分数直接合并。
 
 Node 题使用单独的 `nl2repobench-node-pilot-v1`。它不与论文 104 题或现有 Python
 Harbor pilot 合并评分，也不声称 parity。

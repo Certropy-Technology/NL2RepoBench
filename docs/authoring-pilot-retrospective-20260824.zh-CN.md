@@ -1,5 +1,9 @@
 # Package -> Harbor 出题 Pilot 复盘
 
+> **Historical, non-normative incident record.** 本文保留 2026-08-24 的故障和修复经验；
+> 当前 source/projection 路径、Oracle 门禁和 Worker contract 以
+> [`README.md`](README.md) 及其中列出的 current contract 文档为准。
+
 本文记录 2026-08-24 pilot 中真实遇到的失败、修复方式和 QA 门禁，供后续
 Python/Node 出题 Worker 直接执行。它不是发布报告，也不把中间失败计为 Block。
 
@@ -17,8 +21,10 @@ bounded probe，再决定是否完成或留下证据充分的 excluded/blocked�
 - `scripts/run_authoring_loop.py`
 - `scripts/package_queue_loop.py`
 
-出题 Loop 只产生 `catalog` handoff，不启动 GPT/Fable。模型运行由独立 Agent Run Loop
-消费完成前置门禁的 task。
+出题 Loop 由 `run_authoring_loop.py` 直接启动独立顶层 Pi Agent：每个 claim 一个
+session、一个 detached worktree，Loop 控制并发和 lease；它不通过主 Pi 的
+`pi-subagents` 批量派生 worker，也不默认给顶层 task 暴露 `subagent` 工具。Harbor
+模型运行仍由独立 Agent Run Loop 消费完成前置门禁的 task。
 
 ## 实际问题与修复
 
@@ -84,8 +90,9 @@ git archive --format=tar HEAD | sha256sum
 sha256sum LICENSE
 python -m py_compile <verifier-and-adapter-files>
 bash -n <solution-and-verifier-scripts>
-uv run nl2repo task validate-source catalog/tasks/<task>
-uv run nl2repo harbor compile catalog/tasks/<task> \
+uv run nl2repo task validate-source catalog/sources/<task>
+uv run nl2repo harbor compile catalog/sources/<task> \
+  --output catalog/tasks \
   --toolchain <locked-toolchain> --allow-private
 ```
 
@@ -106,9 +113,14 @@ stdout/stderr；不要把 verifier/image/collection failure 写成模型 0。只
 
 ## Loop 运行纪律
 
-- `run_authoring_loop.py` 最大并发 3，claim 使用 `package_queue_loop.py` 文件锁和 lease。
-- 每个 Package 一个 detached worktree，worker 只写自己的 `catalog/tasks/<id>/**`。
+- `run_authoring_loop.py` 最大并发 8，claim 使用 `package_queue_loop.py` 文件锁和 lease；
+  每轮直接调用顶层 `pi --print`，每个会话使用独立 session-dir/worktree。
+- Loop 默认启用 queue refill：plan 中的 task 完成或释放后，会从同一 queue 按 language
+  补充 pending candidate；不需要手动为每三个任务重建 continuation plan。只有需要严格
+  固定 plan 边界时才使用 `--no-refill-queue`。
+- 每个 Package 一个 detached worktree，worker 只写自己的 `catalog/sources/<id>/**`。
 - claim brief 同时写入主 `.nl2repo/authoring/...` 和 worker worktree 的
   `.nl2repo/authoring-claim.json`，避免 ignored state 在 worktree 中丢失。
-- Worker 不运行 GPT/Fable；integrator 串行合并 catalog/private refs/dataset/report。
+- Worker 不启动 Harbor GPT/Fable Agent Run；它本身是 Loop 直接启动的 Pi Agent。Integrator
+  串行合并 catalog/private refs/dataset/report。
 - 只有 infrastructure failure 可新 run-root 重试；model failure 不静默重试。

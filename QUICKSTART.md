@@ -6,13 +6,11 @@ For the full operator guide see
 [`docs/benchmark-operations-guide.zh-CN.md`](docs/benchmark-operations-guide.zh-CN.md).
 For high-throughput Python/Node authoring see the current
 [`docs/authoring-pipeline-ast.zh-CN.md`](docs/authoring-pipeline-ast.zh-CN.md).
-The older [`docs/authoring-at-scale-plan.v1.md`](docs/authoring-at-scale-plan.v1.md)
-is retained as historical background only.
 For trajectory retention see
 [`docs/trajectory-artifacts.zh-CN.md`](docs/trajectory-artifacts.zh-CN.md).
 
 NL2RepoBench measures whether an LLM agent can build a complete, installable
-Python repository from a natural-language specification and an **empty**
+repository for the task's declared runtime from a natural-language specification and an **empty**
 `/workspace`. Scoring is a fixed-test pass rate produced by a separate Harbor
 verifier that the agent never sees.
 
@@ -55,14 +53,15 @@ uv run --frozen --project harbor-runner harbor --version
 catalog/
 ├── datasets/<dataset-id>/
 │   └── dataset.toml     # authoritative task set for that version
-└── tasks/<task-id>/
-    ├── task.toml        # catalog metadata: upstream revision, digest, denominator
-    ├── instruction.md   # the ONLY input the agent sees
-    └── harbor/          # runnable Harbor task
-        ├── task.toml
-        ├── environment/Dockerfile   # agent container
-        ├── solution/solve.sh        # Oracle (clones frozen upstream)
-        └── tests/                   # hidden verifier + frozen tests
+├── sources/<task-id>/
+│   ├── task.toml        # Human-maintained declarative source
+│   └── instruction.md   # the ONLY input the agent sees
+└── tasks/<task-id>/     # generated runnable Harbor task
+    ├── task.toml
+    ├── instruction.md
+    ├── environment/Dockerfile
+    ├── solution/solve.sh
+    └── tests/
 ```
 
 List the active tasks:
@@ -96,7 +95,7 @@ environment is healthy before you spend model budget.
 ```bash
 cd harbor-runner
 PYTHONPATH=../src uv run --frozen python ../scripts/harbor_safe_entry.py run \
-  -p ../catalog/tasks/ftfy/harbor \
+  -p ../catalog/tasks/ftfy \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/oracle/ftfy
 python ../scripts/cleanup_harbor_trials.py \
@@ -259,10 +258,10 @@ docker rm -f $(docker ps -q --filter "name=harbor__")   # only when no run is ac
 
 ## 10. Current Dataset State
 
-- 104 legacy tasks are tracked in `.nl2repo/conversion-loop/state.json`; the current
-  reconciliation is 74 complete and 30 pending. Blocked/excluded lifecycle records
-  are audited separately by `scripts/reconcile_task_status.py`.
-- Node/npm tasks use a separate development-only v2 pilot.
+- Query `.nl2repo/conversion-loop/state.json` and the current dataset manifest at
+  runtime; do not copy dated complete/pending counts into operational docs.
+- Python, Node/npm/pnpm, and Go use one canonical contract with runtime-specific
+  adapters. Historical v1/v2 scores remain separate from new releases.
 - New Python/npm candidates remain audit/spec records until private artifacts,
   the current one-run Oracle gate and controls are approved.
 - Do not use stale “37 active task” text in older pilot documents as current state.

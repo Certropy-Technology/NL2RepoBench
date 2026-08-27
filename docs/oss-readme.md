@@ -3,8 +3,9 @@
 **OSS 位置**: `oss://dingshang-sg/nl2repobench/`
 
 NL2RepoBench 评测 LLM agent 能否从一份自然语言规格和**空 workspace** 出发，
-生成完整、可安装、可运行的 Python 仓库。评分由独立 Harbor verifier 产出固定
-隐藏测试的通过率，agent 全程看不到测试。
+生成完整、可安装、可运行的代码仓库。Python、Node 和 Go 题使用统一 canonical
+contract 下的 runtime adapter；评分由独立 Harbor verifier 产出固定隐藏测试的
+通过率，agent 全程看不到测试。
 
 ## 📦 目录结构
 
@@ -12,13 +13,11 @@ NL2RepoBench 评测 LLM agent 能否从一份自然语言规格和**空 workspac
 nl2repobench/
 ├── harbor-tasks/                  # 历史归档任务定义；当前数量以版本化 manifest 为准
 │   ├── aiofiles/
-│   │   ├── task.toml              # catalog 元数据（上游 revision、digest、冻结分母）
+│   │   ├── task.toml              # generated Harbor task definition
 │   │   ├── instruction.md         # agent 唯一输入
-│   │   └── harbor/                # 可直接 harbor run 的任务
-│   │       ├── task.toml
-│   │       ├── environment/       # agent 容器
-│   │       ├── solution/          # Oracle（克隆冻结上游）
-│   │       └── tests/             # 隐藏 verifier + 冻结测试
+│   │   ├── environment/           # agent 容器
+│   │   ├── solution/              # Oracle
+│   │   └── tests/                 # 独立 verifier
 │   ├── boto/
 │   └── ...
 │

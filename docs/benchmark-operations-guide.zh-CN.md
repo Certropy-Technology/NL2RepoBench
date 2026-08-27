@@ -6,15 +6,15 @@ tests、私有依赖 bytes、Oracle bytes 或不可复现的分数。
 
 > **当前交付契约：unified Harbor contract。** 下文中历史性的 “Python v1” 和
 > “Node/npm v2” 只用于解释已有 run、schema 或 artifact，不能作为新任务的两个
-> runtime API。新题和迁移题统一由一个 canonical parser/compiler 处理；Python、npm
-> 和 pnpm 仅作为 runtime/package-manager adapter。新 release 不与旧 v1/v2 分数合并。
+> runtime API。新题和迁移题统一由一个 canonical parser/compiler 处理；Python、npm、
+> pnpm 和 Go 仅作为 runtime/package-manager adapter。新 release 不与旧 v1/v2 分数合并。
 
 ## 当前状态
 
 查询真实状态，不要依赖旧文档中的 active-task 数字：
 
 ```bash
-cd /root/NL2RepoBench
+cd <NL2RepoBench-checkout>
 python3 scripts/convert_testfiles_loop.py status
 ```
 
@@ -23,12 +23,13 @@ python3 scripts/convert_testfiles_loop.py status
 NL2RepoBench 测量 Agent 从自然语言规格和空 `/workspace` 出发，生成完整、可安装、
 可运行代码仓库的能力。它不是已有仓库修复，也不是补一个函数。
 
-当前有两条隔离路线：
+当前工作按生命周期和 runtime 隔离，状态必须从 manifest/queue 查询：
 
 | 路线 | 语言 | 状态 |
 | --- | --- | --- |
-| Legacy conversion | Python | 104 题状态文件当前为 74 complete、30 pending；catalog lifecycle 另由 reconciler 审计 |
-| Node/npm lane | Node 24/npm 11 production lock；Node 22 synthetic dev fixture | `canonicalize` production compile + one Oracle + control matrix passed |
+| Legacy conversion | Python | 104 题；complete/pending/blocked 从当前 conversion state 查询 |
+| Package authoring | Python、Node/npm/pnpm、Go | 从各 lane queue state 和 task handoff 查询，不在文档中固化瞬时数量 |
+| Benchmark Agent Run | 已发布 task runtime | 只消费通过 Oracle/controls/review 的版本化 task 集合 |
 
 `complete` 表示 task-local Harbor 包通过静态来源和结构校验，不代表通过 Oracle、
 empty/stub/forgery/offline controls。`blocked` 必须有证据，不能作为模型得分。
@@ -61,11 +62,11 @@ Human 只编辑：
 
 ```text
 catalog/datasets/<dataset-id>/dataset.toml
-catalog/tasks/<task-id>/task.toml
-catalog/tasks/<task-id>/instruction.md
+catalog/sources/<task-id>/task.toml
+catalog/sources/<task-id>/instruction.md
 ```
 
-Canonical manifest、Harbor bundle 和 `test_files/` projection 都是下游生成物，不能
+Canonical manifest、`catalog/tasks/<task-id>/` Harbor bundle 和 `test_files/` projection 都是下游生成物，不能
 人工修改来绕过门禁。推荐状态机：
 
 ```text
@@ -90,15 +91,14 @@ python3 scripts/convert_testfiles_loop.py block <task> --owner <owner> \
 不能证明 commit、license、denominator、overlay provenance、offline closure 或
 candidate boundary 时，写 blocked audit；不要复制 hidden tests 或伪造 bundle。
 
-Python 与 Node 使用不同 dataset/version、schema、grader、依赖闭包和 metric：
+Python、Node/npm/pnpm 和 Go 使用同一 canonical contract，由 language/package-manager
+选择 runtime adapter、offline dependency closure、candidate boundary 和 report
+normalizer。历史 Python v1/Node v2 artifact 只用于旧结果解释，不是当前 compiler API。
 
-- Python v1：pytest/JUnit，`fixed-test-pass-rate-v1`；
-- Node v2：`node:test`、`node-test-json-v1`、`node-test-leaf-pass-rate-v1`、npm v3。
-
-对于复杂 JSON/回调/状态边界，Python v1 还支持受限的
+对于复杂 JSON/回调/状态边界，Python runtime adapter 还支持受限的
 `verifier.protocol = "custom-json-v1"`。task TOML 只保存 private verifier bundle
 的 digest、URI 和相对 entrypoint；suite、adapter、remote fixture、grader 和
-wheelhouse 不进入 public `catalog/tasks`。`HarborCompiler` 只 materialize private
+wheelhouse 不进入 public `catalog/sources`。`HarborCompiler` 只 materialize private
 bundle 到 separate no-network verifier，并用固定 wrapper 校验 leaf IDs、状态集合、
 固定分母和 JUnit/collection；禁止把 custom `test.sh` 当作公开 task source。候选依赖
 安装到隔离的 candidate site，不能污染 trusted verifier 的 pydantic/pytest runtime。
@@ -127,7 +127,7 @@ Implementation Notes
 ```bash
 PYTHONPATH=src uv run --frozen --project harbor-runner \
   python scripts/harbor_safe_entry.py run \
-  -p catalog/tasks/<task>/harbor -a oracle \
+  -p catalog/tasks/<task> -a oracle \
   --jobs-dir .nl2repo/runs/oracle/<task>/attempt-1
 uv run python scripts/cleanup_harbor_trials.py \
   --jobs-dir .nl2repo/runs/oracle/<task>/attempt-1
@@ -151,6 +151,25 @@ dataset_score = mean(task_score for every VALID task)
 
 优先使用 Pi-aware wrapper；它读取 mode `600` 的 provider 文件，且不把 key 放进
 Harbor/Docker argv：
+
+新 Harbor trial 启动前必须通过：
+
+```bash
+python scripts/check_agent_network_policy.py \
+  --task-root catalog/tasks/<task-id>
+```
+
+生产 Agent Run baseline 默认是 `no-network`。Python/Node runtime、build/test、native
+library、wheelhouse/npm cache 和 Verifier dependency 必须在对应 Dockerfile/private
+artifact 中准备好；Agent/Verifier 运行时不应访问 PyPI、npm registry 或 GitHub。
+model runner 会从 `LLM_BASE_URL` 提取精确 Provider hostname，并通过 Harbor
+`--allow-agent-host` 仅对 Agent phase 注入该 host；该 host 不写入 task metadata。
+
+Oracle 使用同一份 task environment，但属于受信任的参考实现阶段。`batch_oracle.sh` 从
+frozen `[source].upstream_url` 取得 exact source host，并仅在 `harbor run -a oracle` 时
+传入 `--allow-agent-host`，所以 Oracle 的 `solution/solve.sh` 可以拉取 frozen revision；
+模型 Agent 不会获得这个 source-host override。旧 `public` task 不会被静默重跑，需要先
+修 task policy。
 
 ```bash
 python3 scripts/run_model_from_pi.py \

@@ -53,25 +53,22 @@ python scripts/convert_testfiles_to_harbor.py <task> \
   --source-digest sha256:$(cd /tmp/<task>-source && git archive <sha> | sha256sum | cut -d' ' -f1)
 
 # 6. 验证 catalog source
-uv run nl2repo task validate-source catalog/tasks/<task>
+uv run nl2repo task validate-source catalog/sources/<task>
 ```
 
 生成的结构：
 
 ```text
-catalog/tasks/<task>/
+catalog/sources/<task>/                 # Human-maintained source
 ├── task.toml                          # catalog 元数据
-├── instruction.md                     # 公开规格（agent 唯一输入）
-└── harbor/
-    ├── task.toml                      # Harbor 任务定义
-    ├── instruction.md -> ../instruction.md
-    ├── environment/Dockerfile         # agent 容器
-    ├── solution/solve.sh              # Oracle 脚本
-    └── tests/
-        ├── Dockerfile                 # verifier 容器
-        ├── test.sh                    # 测试入口
-        ├── grade.py                   # 判分脚本
-        └── <hidden test files>        # 冻结的上游测试
+└── instruction.md                     # 公开规格（agent 唯一输入）
+
+catalog/tasks/<task>/                   # compiler-generated Harbor task
+├── task.toml
+├── instruction.md
+├── environment/Dockerfile
+├── solution/solve.sh
+└── tests/
 ```
 
 ### Oracle 门禁
@@ -81,7 +78,7 @@ catalog/tasks/<task>/
 ```bash
 cd harbor-runner
 uv run --frozen harbor run \
-  -p ../catalog/tasks/<task>/harbor \
+  -p ../catalog/tasks/<task> \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/oracle-<task>-gate-1
 
@@ -180,7 +177,7 @@ python scripts/convert_testfiles_loop.py claim \
 python scripts/convert_testfiles_loop.py validate icecream
 python scripts/convert_testfiles_loop.py record icecream \
   --owner worker-a --status complete \
-  --artifact catalog/tasks/icecream
+  --artifact catalog/sources/icecream
 
 # 无法可信转换时保存 blocker，不创建半成品发布项
 python scripts/convert_testfiles_loop.py record icecream \
@@ -223,7 +220,7 @@ scripts/run_harbor_model.sh
 ```bash
 cd harbor-runner
 uv run --frozen harbor run \
-  -p ../catalog/tasks/ftfy/harbor \
+  -p ../catalog/tasks/ftfy \
   -a oracle \
   --jobs-dir ../.nl2repo/runs/test-ftfy
 ```
@@ -370,7 +367,7 @@ done | head -20
 ```text
 nl2repobench/
 ├── README.md
-├── harbor-tasks/<task>/...          # 任务定义（catalog/tasks/*/harbor/）
+├── harbor-tasks/<task>/...          # generated runnable task（catalog/tasks/*/）
 └── runs/
     ├── <model>/<task>/<trial>/...   # 模型运行数据
     ├── oracle/<task>/<trial>/...    # Oracle 门禁证据

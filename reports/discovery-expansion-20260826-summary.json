@@ -1,0 +1,65 @@
+{
+  "by_language": {
+    "go": 21,
+    "node": 165,
+    "python": 175
+  },
+  "by_status": {
+    "candidate": 239,
+    "needs-evidence": 122
+  },
+  "expansion_id": "discovery-expansion-20260826",
+  "queues": [
+    {
+      "counts": {
+        "candidate": 48,
+        "needs-evidence": 60
+      },
+      "queue": "reports/python-production-queue-wave2-20260826.json",
+      "records": 108,
+      "sha256": "sha256:5530551c9e293c38ff7f7aead78dc732101ef42c1f309649f8a55ef8ca56f572",
+      "state": ".nl2repo/discovery-wave2-state/python-state.json"
+    },
+    {
+      "counts": {
+        "candidate": 84,
+        "needs-evidence": 13
+      },
+      "queue": "reports/npm-production-queue-wave2-20260826.json",
+      "records": 97,
+      "sha256": "sha256:593c422f8c76dbdb73dc4f5f69e87f0864884fba08b12d2c0bed8cc97c204604",
+      "state": ".nl2repo/discovery-wave2-state/node-state.json"
+    },
+    {
+      "counts": {
+        "candidate": 21
+      },
+      "queue": "reports/go-production-queue-wave2-20260826.json",
+      "records": 21,
+      "sha256": "sha256:a13f49038076ab49477ef66f6b3332b1f77e9ef3a61335445162a4106b7456a6",
+      "state": ".nl2repo/discovery-wave2-state/go-state.json"
+    },
+    {
+      "counts": {
+        "candidate": 37,
+        "needs-evidence": 30
+      },
+      "queue": "reports/python-production-queue-wave3-20260826.json",
+      "records": 67,
+      "sha256": "sha256:34717d01ff416bdf64f6ad24c588a0251d2b10d67b669fa9ac9ac065207f9efa",
+      "state": ".nl2repo/discovery-wave3-state/python-state.json"
+    },
+    {
+      "counts": {
+        "candidate": 49,
+        "needs-evidence": 19
+      },
+      "queue": "reports/npm-production-queue-wave3-20260826.json",
+      "records": 68,
+      "sha256": "sha256:d6242072574a961507fde33fe2b01872fa7d4d85403d2872d959767e4213c2b4",
+      "state": ".nl2repo/discovery-wave3-state/node-state.json"
+    }
+  ],
+  "schema_version": "1.0",
+  "total_new_queue_records": 361
+}

@@ -1,0 +1,669 @@
+{
+  "counts": {
+    "candidate": 21
+  },
+  "global_dedup": {
+    "excluded": {
+      "existing_id": 0,
+      "existing_name": 0,
+      "existing_url": 0,
+      "status": 0,
+      "wave_duplicate": 0
+    },
+    "existing_names": 259,
+    "existing_urls": 78
+  },
+  "observed_at": "2026-08-26T15:37:19.592316+00:00",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-dgraph-io-badger-cdd4bb3ea5e7",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/dgraph-io/badger",
+      "language": "go",
+      "last_activity": "2026-08-22T14:15:18Z",
+      "license_evidence": "https://github.com/dgraph-io/badger/blob/679bf5b72c9e1788fe7454a28fb4e140221b6668/LICENSE",
+      "license_spdx": "Apache-2.0",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-badger",
+      "revision": "679bf5b72c9e1788fe7454a28fb4e140221b6668",
+      "risk_flags": [
+        "network-or-external-io",
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 16387,
+      "stars": 15761,
+      "status": "candidate",
+      "test_count": 303,
+      "test_files": 38,
+      "upstream_url": "https://github.com/dgraph-io/badger"
+    },
+    {
+      "candidate_id": "https-github-com-valyala-bytebufferpool-10932fdb5108",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/valyala/bytebufferpool",
+      "language": "go",
+      "last_activity": "2024-07-20T20:15:17Z",
+      "license_evidence": "https://github.com/valyala/bytebufferpool/blob/18533face0dfe7042f8157bba9010bd7f8df54b1/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-bytebufferpool",
+      "revision": "18533face0dfe7042f8157bba9010bd7f8df54b1",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 174,
+      "stars": 1332,
+      "status": "candidate",
+      "test_count": 13,
+      "test_files": 4,
+      "upstream_url": "https://github.com/valyala/bytebufferpool"
+    },
+    {
+      "candidate_id": "https-github-com-endlesscheng-codeforces-go-bb287e606a5a",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/EndlessCheng/codeforces-go",
+      "language": "go",
+      "last_activity": "2026-08-26T01:40:53Z",
+      "license_evidence": "https://github.com/EndlessCheng/codeforces-go/blob/4996b3d7733aabafe25ba045bbc87f794d963ac4/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-codeforces-go",
+      "revision": "4996b3d7733aabafe25ba045bbc87f794d963ac4",
+      "risk_flags": [
+        "network-or-external-io",
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 313452,
+      "stars": 8675,
+      "status": "candidate",
+      "test_count": 6859,
+      "test_files": 6600,
+      "upstream_url": "https://github.com/EndlessCheng/codeforces-go"
+    },
+    {
+      "candidate_id": "https-github-com-robfig-cron-7cd38629e5ce",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/robfig/cron",
+      "language": "go",
+      "last_activity": "2024-07-08T01:21:14Z",
+      "license_evidence": "https://github.com/robfig/cron/blob/bc59245fe10efaed9d51b56900192527ed733435/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-cron",
+      "revision": "bc59245fe10efaed9d51b56900192527ed733435",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1031,
+      "stars": 14182,
+      "status": "candidate",
+      "test_count": 48,
+      "test_files": 6,
+      "upstream_url": "https://github.com/robfig/cron"
+    },
+    {
+      "candidate_id": "https-github-com-tomwright-dasel-30228db65b83",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/TomWright/dasel",
+      "language": "go",
+      "last_activity": "2026-08-16T19:25:05Z",
+      "license_evidence": "https://github.com/TomWright/dasel/blob/c5cf675972e68f17d0072c0e29801d09ca5c3951/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-dasel",
+      "revision": "c5cf675972e68f17d0072c0e29801d09ca5c3951",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 12730,
+      "stars": 8027,
+      "status": "candidate",
+      "test_count": 475,
+      "test_files": 115,
+      "upstream_url": "https://github.com/TomWright/dasel"
+    },
+    {
+      "candidate_id": "https-github-com-valyala-fastjson-af3a483c6663",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/valyala/fastjson",
+      "language": "go",
+      "last_activity": "2026-02-21T12:17:08Z",
+      "license_evidence": "https://github.com/valyala/fastjson/blob/d652a1b1909d3520389b2c287ca3cf3aa3791451/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-fastjson",
+      "revision": "d652a1b1909d3520389b2c287ca3cf3aa3791451",
+      "risk_flags": [
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1800,
+      "stars": 2466,
+      "status": "candidate",
+      "test_count": 69,
+      "test_files": 16,
+      "upstream_url": "https://github.com/valyala/fastjson"
+    },
+    {
+      "candidate_id": "https-github-com-antonmedv-fx-8b93cf14199a",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/antonmedv/fx",
+      "language": "go",
+      "last_activity": "2026-08-26T14:49:32Z",
+      "license_evidence": "https://github.com/antonmedv/fx/blob/4f31cd3a0c5d66f1b4290a2719bab14a5cee8ebe/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-fx",
+      "revision": "4f31cd3a0c5d66f1b4290a2719bab14a5cee8ebe",
+      "risk_flags": [
+        "toolchain-directive",
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 7699,
+      "stars": 20592,
+      "status": "candidate",
+      "test_count": 144,
+      "test_files": 20,
+      "upstream_url": "https://github.com/antonmedv/fx"
+    },
+    {
+      "candidate_id": "https-github-com-thealgorithms-go-4195b596841f",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/TheAlgorithms/Go",
+      "language": "go",
+      "last_activity": "2026-08-03T19:23:39Z",
+      "license_evidence": "https://github.com/TheAlgorithms/Go/blob/5ba447ec5ff3d1213de65b92e726ee74c5d5cc19/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-go",
+      "revision": "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 10514,
+      "stars": 18199,
+      "status": "candidate",
+      "test_count": 543,
+      "test_files": 222,
+      "upstream_url": "https://github.com/TheAlgorithms/Go"
+    },
+    {
+      "candidate_id": "https-github-com-emirpasic-gods-565d4be22166",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/emirpasic/gods",
+      "language": "go",
+      "last_activity": "2025-03-12T00:01:29Z",
+      "license_evidence": "https://github.com/emirpasic/gods/blob/1d83d5ae39fbb0de45a60365791ff1c8b9bae953/LICENSE",
+      "license_spdx": "BSD-2-Clause",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-gods",
+      "revision": "1d83d5ae39fbb0de45a60365791ff1c8b9bae953",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 6196,
+      "stars": 17457,
+      "status": "candidate",
+      "test_count": 635,
+      "test_files": 24,
+      "upstream_url": "https://github.com/emirpasic/gods"
+    },
+    {
+      "candidate_id": "https-github-com-asaskevich-govalidator-6d7ec2137535",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/asaskevich/govalidator",
+      "language": "go",
+      "last_activity": "2026-08-20T05:19:33Z",
+      "license_evidence": "https://github.com/asaskevich/govalidator/blob/3dd3875e2b081a20d6eed935913a482fea14ecd0/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-govalidator",
+      "revision": "3dd3875e2b081a20d6eed935913a482fea14ecd0",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 2532,
+      "stars": 6205,
+      "status": "candidate",
+      "test_count": 376,
+      "test_files": 16,
+      "upstream_url": "https://github.com/asaskevich/govalidator"
+    },
+    {
+      "candidate_id": "https-github-com-tomnomnom-gron-2cbc3e4d4d98",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/tomnomnom/gron",
+      "language": "go",
+      "last_activity": "2025-05-31T15:00:47Z",
+      "license_evidence": "https://github.com/tomnomnom/gron/blob/88a6234ea2d0c487090988182ad9a7cdf6def924/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-gron",
+      "revision": "88a6234ea2d0c487090988182ad9a7cdf6def924",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1293,
+      "stars": 14498,
+      "status": "candidate",
+      "test_count": 30,
+      "test_files": 6,
+      "upstream_url": "https://github.com/tomnomnom/gron"
+    },
+    {
+      "candidate_id": "https-github-com-simeji-jid-16582fbce0cd",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/simeji/jid",
+      "language": "go",
+      "last_activity": "2026-08-02T01:25:08Z",
+      "license_evidence": "https://github.com/simeji/jid/blob/e5c5a9dd787c6b02e0741b6e1fbc30cc37a83987/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-jid",
+      "revision": "e5c5a9dd787c6b02e0741b6e1fbc30cc37a83987",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 2557,
+      "stars": 7136,
+      "status": "candidate",
+      "test_count": 132,
+      "test_files": 10,
+      "upstream_url": "https://github.com/simeji/jid"
+    },
+    {
+      "candidate_id": "https-github-com-duke-git-lancet-f62c1aa67ce0",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/duke-git/lancet",
+      "language": "go",
+      "last_activity": "2026-03-07T04:35:06Z",
+      "license_evidence": "https://github.com/duke-git/lancet/blob/747dddee8bf8767023297e22b0e6c4efb8dc0f2f/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-lancet",
+      "revision": "747dddee8bf8767023297e22b0e6c4efb8dc0f2f",
+      "risk_flags": [
+        "network-or-external-io",
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 18984,
+      "stars": 5296,
+      "status": "candidate",
+      "test_count": 1476,
+      "test_files": 92,
+      "upstream_url": "https://github.com/duke-git/lancet"
+    },
+    {
+      "candidate_id": "https-github-com-hashicorp-go-multierror-e1f3aac0f3cb",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/hashicorp/go-multierror",
+      "language": "go",
+      "last_activity": "2026-07-06T14:32:51Z",
+      "license_evidence": "https://github.com/hashicorp/go-multierror/blob/6d4d48630db25c3c83fa83ecd41dd8438b82963c/LICENSE",
+      "license_spdx": "MPL-2.0",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-multierror",
+      "revision": "6d4d48630db25c3c83fa83ecd41dd8438b82963c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 185,
+      "stars": 2580,
+      "status": "candidate",
+      "test_count": 25,
+      "test_files": 7,
+      "upstream_url": "https://github.com/hashicorp/go-multierror"
+    },
+    {
+      "candidate_id": "https-github-com-pterm-pterm-af462225c5c4",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/pterm/pterm",
+      "language": "go",
+      "last_activity": "2026-07-11T21:14:49Z",
+      "license_evidence": "https://github.com/pterm/pterm/blob/bacb2fc434b361b8951d1c7649c2029b1d7b6a83/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-pterm",
+      "revision": "bacb2fc434b361b8951d1c7649c2029b1d7b6a83",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 9574,
+      "stars": 5525,
+      "status": "candidate",
+      "test_count": 421,
+      "test_files": 67,
+      "upstream_url": "https://github.com/pterm/pterm"
+    },
+    {
+      "candidate_id": "https-github-com-google-go-querystring-a5d918f408fe",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/google/go-querystring",
+      "language": "go",
+      "last_activity": "2026-08-20T17:11:57Z",
+      "license_evidence": "https://github.com/google/go-querystring/blob/965d79f2113ea0ff039d29828a08a616a0223d48/LICENSE",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-querystring",
+      "revision": "965d79f2113ea0ff039d29828a08a616a0223d48",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 206,
+      "stars": 2147,
+      "status": "candidate",
+      "test_count": 13,
+      "test_files": 1,
+      "upstream_url": "https://github.com/google/go-querystring"
+    },
+    {
+      "candidate_id": "https-github-com-armon-go-radix-9223e0dc1a31",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/armon/go-radix",
+      "language": "go",
+      "last_activity": "2024-07-06T07:38:33Z",
+      "license_evidence": "https://github.com/armon/go-radix/blob/54df44f2176c4a553657a4f0dbe6fdb108288be3/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-radix",
+      "revision": "54df44f2176c4a553657a4f0dbe6fdb108288be3",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 405,
+      "stars": 946,
+      "status": "candidate",
+      "test_count": 9,
+      "test_files": 1,
+      "upstream_url": "https://github.com/armon/go-radix"
+    },
+    {
+      "candidate_id": "https-github-com-rosedblabs-rosedb-785a6e72bfb6",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/rosedblabs/rosedb",
+      "language": "go",
+      "last_activity": "2026-02-10T03:41:42Z",
+      "license_evidence": "https://github.com/rosedblabs/rosedb/blob/bcb43052ada686ec6d1345328e8299f502d3ef01/LICENSE",
+      "license_spdx": "Apache-2.0",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-rosedb",
+      "revision": "bcb43052ada686ec6d1345328e8299f502d3ef01",
+      "risk_flags": [
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 2233,
+      "stars": 4885,
+      "status": "candidate",
+      "test_count": 87,
+      "test_files": 10,
+      "upstream_url": "https://github.com/rosedblabs/rosedb"
+    },
+    {
+      "candidate_id": "https-github-com-gorilla-schema-bfef2ded78a3",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/gorilla/schema",
+      "language": "go",
+      "last_activity": "2024-08-19T14:00:33Z",
+      "license_evidence": "https://github.com/gorilla/schema/blob/cd59f2f12cbdfa9c06aa63e425d1fe4a806967ff/LICENSE",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-schema",
+      "revision": "cd59f2f12cbdfa9c06aa63e425d1fe4a806967ff",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1181,
+      "stars": 1506,
+      "status": "candidate",
+      "test_count": 69,
+      "test_files": 2,
+      "upstream_url": "https://github.com/gorilla/schema"
+    },
+    {
+      "candidate_id": "https-github-com-hashicorp-go-version-3ac58fca1bf6",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/hashicorp/go-version",
+      "language": "go",
+      "last_activity": "2026-08-26T07:23:10Z",
+      "license_evidence": "https://github.com/hashicorp/go-version/blob/e2b1b0b0c4b32767e1570ddce50dff79fdddf092/LICENSE",
+      "license_spdx": "MPL-2.0",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-version",
+      "revision": "e2b1b0b0c4b32767e1570ddce50dff79fdddf092",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+          "report_sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 565,
+      "stars": 1770,
+      "status": "candidate",
+      "test_count": 34,
+      "test_files": 3,
+      "upstream_url": "https://github.com/hashicorp/go-version"
+    },
+    {
+      "candidate_id": "https-github-com-mikefarah-yq-e7158b336204",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/mikefarah/yq",
+      "language": "go",
+      "last_activity": "2026-08-25T10:19:22Z",
+      "license_evidence": "https://github.com/mikefarah/yq/blob/8b5af0694bb82b41d4ae180fac9972029066f90a/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.592316+00:00",
+      "package": "go-yq",
+      "revision": "8b5af0694bb82b41d4ae180fac9972029066f90a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+          "report_sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 14644,
+      "stars": 15878,
+      "status": "candidate",
+      "test_count": 363,
+      "test_files": 111,
+      "upstream_url": "https://github.com/mikefarah/yq"
+    }
+  ],
+  "queue_id": "go-production-discovery-wave2-20260826",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-large.json",
+      "sha256": "sha256:041a3c01e70b6628469fdff0386617abbc330c306fca8912aa639e6703bb2496"
+    },
+    {
+      "path": ".nl2repo/discovery-go-wave2-20260826/go-production-discovery-wave2.json",
+      "sha256": "sha256:34033880417164b74d586c759c851c16f31f42d3c7e59dac72eb0a8c4e8dd7e6"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}

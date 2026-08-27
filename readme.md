@@ -11,17 +11,18 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 
 ## Task Authoring
 
+- [Documentation map](docs/README.md)
 - [中文出题、质量门禁与 Harbor 接入手册](docs/task-authoring-guide.zh-CN.md)
+- [统一 canonical contract ADR](docs/unified-contract-migration-adr.zh-CN.md)
+- [多语言 Runtime Adapter 架构](docs/runtime-adapter-architecture.zh-CN.md)
 - [工程化改造长期路线图](docs/engineering-roadmap.zh-CN.md)
 - [Metadata Core 与声明式 Catalog](docs/metadata-core.zh-CN.md)
 - [Phase 2 Harbor Compiler 与通用 Verifier](docs/phase2-harbor-verifier.zh-CN.md)
 - [Harbor E2E 示例题：ministats](examples/harbor/ministats/README.md)
-- [Harbor Pilot 任务结构与运行指南](docs/harbor-pilot.md)
 - [运行数据 OSS 归档布局](docs/run-artifacts-oss.md)
 - [Benchmark 运行、出题与排障总手册](docs/benchmark-operations-guide.zh-CN.md)
-- [Python/Node 高规模出题计划](docs/authoring-at-scale-plan.v1.md)
 - [AST 驱动批量出题 Pipeline（当前入口）](docs/authoring-pipeline-ast.zh-CN.md)
-- [300 道 Harbor Task 扩展计划](docs/harbor-300-task-expansion-plan.zh-CN.md)
+- [出题 Agent Remediation Guide](docs/authoring-agent-remediation-guide.zh-CN.md)
 - [Modern Toolchain Policy（Polars/uv/AST/Parquet）](docs/modern-toolchain-policy.zh-CN.md)
 - [Harbor/OpenHands trajectory 产物说明](docs/trajectory-artifacts.zh-CN.md)
 
@@ -37,14 +38,15 @@ uv sync
 uv run nl2repo doctor
 uv run nl2repo task import-legacy
 uv run nl2repo dataset validate authoring
-uv run nl2repo harbor compile catalog/tasks/ministats --allow-incomplete
+uv run nl2repo harbor compile catalog/sources/ministats \
+  --output catalog/tasks --allow-incomplete
 ```
 
-The current development Harbor pilot is catalog-backed at
-`catalog/datasets/nl2repobench-harbor-pilot/`. Task sources live under
-`catalog/tasks/<task-id>/`; Harbor assets are under each task's `harbor/`
-directory. `examples/harbor/` is reserved for the `ministats` infrastructure
-example. Run outputs belong under `.nl2repo/runs/` and are not dataset assets.
+Human-maintained task sources live under `catalog/sources/<task-id>/`. The
+compiler emits runnable Harbor tasks under `catalog/tasks/<task-id>/`; generated
+tasks are not a second editing surface. `examples/harbor/` is reserved for the
+`ministats` infrastructure example. Run outputs belong under `.nl2repo/runs/`
+and are not dataset assets.
 
 The importer writes canonical task manifests, a SQLite state index, and
 content-addressed artifacts. Private command/test-path JSON is referenced by

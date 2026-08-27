@@ -1,7 +1,8 @@
 # Run Artifact Storage (Alibaba Cloud OSS)
 
 Task definitions and run artifacts are archived in the shared OSS bucket. The
-repository keeps task sources under `catalog/tasks/`; `.nl2repo/runs/` is
+repository keeps Human-maintained task sources under `catalog/sources/` and
+generated runnable Harbor tasks under `catalog/tasks/`; `.nl2repo/runs/` is
 gitignored and lives only in OSS.
 
 ## Bucket
@@ -26,7 +27,7 @@ names carry the run identity.
 ```text
 nl2repobench/
 ├── README.md
-├── harbor-tasks/<task>/...                    task definitions
+├── harbor-tasks/<task>/...                    generated runnable tasks
 └── runs/
     ├── <model>/<task>/<trial>/...             model runs
     ├── oracle/<task>/<trial>/...              Oracle gate evidence

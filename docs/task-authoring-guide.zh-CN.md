@@ -4,8 +4,8 @@
 
 ```text
 单份自然语言规格 + 空工作区
-  -> Agent 从零生成完整 Python 仓库
-  -> 隐藏的上游 pytest 套件验证
+  -> Agent 从零生成目标 runtime 的完整仓库
+  -> 隐藏的冻结测试经 runtime adapter 验证
   -> 固定分母的 test pass rate
 ```
 
@@ -15,7 +15,7 @@
 
 ### 0. 事实源与发布边界
 
-新题必须先建立 Human-facing declarative source。`catalog/tasks/<task-id>/task.toml + instruction.md` 是唯一人工编辑入口；canonical manifest 是严格校验后的机器契约，Harbor task 和旧 `test_files/<task-id>/` 都是下游单向、确定性生成物。禁止反向修改 generated output 或长期维护双向同步。
+新题必须先建立 Human-facing declarative source。`catalog/sources/<task-id>/task.toml + instruction.md` 是唯一人工编辑入口；canonical manifest 是严格校验后的机器契约，`catalog/tasks/<task-id>/` Harbor task 和旧 `test_files/<task-id>/` 都是下游单向、确定性生成物。禁止反向修改 generated output 或长期维护双向同步。
 
 公开仓库只保存不含 secret/private bytes 的 manifest、schema、content digest 和公开 provenance。private tests、Oracle、license evidence 或受限依赖放在访问受控的私有 Git、对象存储或 registry 中，公开 manifest 只保存 opaque artifact ref、digest、size、visibility 和 provenance classification。
 
@@ -82,9 +82,10 @@ config.json
 ```text
 catalog/
 ├── datasets/<dataset-id>/dataset.toml
-└── tasks/<task-id>/
+├── sources/<task-id>/
     ├── task.toml           # metadata、locks、artifact refs、metric、lifecycle
     └── instruction.md      # 唯一公开给 Agent 的行为规格
+└── tasks/<task-id>/        # compiler-generated runnable Harbor task
 
 catalog source
   -> canonical manifest + content-addressed artifacts
@@ -108,7 +109,7 @@ catalog source
 
 - `TaskManifest`：task ID/version、difficulty/category/tags、公开 instruction ref、运行约束和 artifact refs；
 - `SourceLock`：upstream URL、完整 commit、submodules、license evidence 和 source hash；
-- `EnvironmentLock`：OS、Python、系统包、基础镜像 digest、build/runtime/test dependency locks；
+- `EnvironmentLock`：OS、runtime、package manager、系统包、基础镜像 digest、build/runtime/test dependency locks；
 - `DependencyBundle`：离线 wheelhouse 或等价依赖闭包、文件 hash 和生成记录；
 - `TestManifest`：测试 bundle、命令、冻结 collection 数、测试框架和 test hash；
 - `MetricContract`：passed/failed/error/skipped/xfail/collection mismatch 的精确定义；

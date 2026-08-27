@@ -1,6 +1,6 @@
 # Metadata Core 使用说明
 
-本文是 Phase 1 metadata core 的开发和维护说明。它解释当前代码已经实现的边界，不把路线图中尚未实现的 Harbor compiler、authoring DAG 或 verifier 功能写成现状。
+本文是 metadata core 的开发和维护说明。它解释当前代码已经实现的边界，不把路线图中尚未实现的 authoring DAG 命令写成现状；Harbor compiler 已作为独立 CLI 接入。
 
 ## 依赖与运行
 
@@ -32,7 +32,7 @@ uv run nl2repo schema export
 - `TaskMetadata`：difficulty、category、tags、language；
 - `ArtifactRef`：digest、size、media type、URI、visibility；
 - `SourceLock`：上游 revision、license 和源码 digest；
-- `EnvironmentLock`：Python、OS、基础镜像 digest、网络模式；
+- `EnvironmentLock`：runtime、package manager、OS、基础镜像 digest、网络模式；
 - `DependencyBundle`：离线依赖闭包 artifact；
 - `TestManifest`：冻结测试分母和测试 bundle/私有命令 refs；
 - `MetricContract`：固定分母评分语义；
@@ -48,9 +48,10 @@ uv run nl2repo schema export
 ```text
 catalog/
 ├── datasets/<dataset-id>/dataset.toml
-└── tasks/<task-id>/
+├── sources/<task-id>/
     ├── task.toml
     └── instruction.md
+└── tasks/<task-id>/              # compiler-generated Harbor task
 ```
 
 Human 负责表达目标、行为契约、来源声明、环境约束、测试分母和审核状态；工具负责生成 digest、canonical JSON、artifact ref、SQLite index 和后续 Harbor bundle。
@@ -95,9 +96,10 @@ commands_artifact = { digest = "sha256:...", size_bytes = 128, uri = "artifact:/
 声明式命令：
 
 ```bash
-uv run nl2repo task scaffold my-task --root catalog/tasks
-uv run nl2repo task validate-source catalog/tasks/my-task
-uv run nl2repo task compile catalog/tasks/my-task --output build/catalog
+uv run nl2repo task scaffold my-task --root catalog/sources
+uv run nl2repo task validate-source catalog/sources/my-task
+uv run nl2repo task compile catalog/sources/my-task --output build/catalog
+uv run nl2repo harbor compile catalog/sources/my-task --output catalog/tasks
 uv run nl2repo dataset compile catalog/datasets/my-dataset/dataset.toml --output build/catalog
 uv run nl2repo dataset validate build/catalog
 ```
@@ -163,4 +165,4 @@ uv run nl2repo task show authoring/aiofiles/manifest.json
 - 任何新 stage 都要记录 input/output hash、tool version、owner、retry policy 和日志；
 - 生成物的 canonical JSON 必须经过 parser 校验和 `git diff --check`；
 - 新功能先写 domain/storage 单元测试，再接 CLI；
-- Harbor task compiler 尚未接入前，不要手工声称 `manifest -> Harbor` 已经可用。
+- Harbor task 必须由 compiler 从 declarative source 生成；不要手工维护 `catalog/tasks/` 来声称 production-ready。

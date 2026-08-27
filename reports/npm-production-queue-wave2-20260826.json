@@ -1,0 +1,2448 @@
+{
+  "counts": {
+    "candidate": 84,
+    "needs-evidence": 13
+  },
+  "global_dedup": {
+    "excluded": {
+      "existing_id": 0,
+      "existing_name": 0,
+      "existing_url": 0,
+      "status": 63,
+      "wave_duplicate": 0
+    },
+    "existing_names": 259,
+    "existing_urls": 78
+  },
+  "observed_at": "2026-08-26T15:37:19.583743+00:00",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-discoveryjs-json-ext-e0320649b119",
+      "conflicts": [],
+      "identity": "https://github.com/discoveryjs/json-ext",
+      "language": "node",
+      "last_activity": "2026-05-03T22:17:13.752Z",
+      "license_evidence": "https://www.npmjs.com/package/@discoveryjs/json-ext",
+      "license_spdx": "MIT",
+      "monthly_downloads": 101817818,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@discoveryjs/json-ext",
+      "revision": "457d4d9d4e55bb1e14fde192715114b80e20c4c9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/discoveryjs/json-ext"
+    },
+    {
+      "candidate_id": "https-github-com-eslint-rewrite-a1b12afcbd6d",
+      "conflicts": [],
+      "identity": "https://github.com/eslint/rewrite",
+      "language": "node",
+      "last_activity": "2026-04-08T09:22:34.549Z",
+      "license_evidence": "https://www.npmjs.com/package/@eslint/object-schema",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 441023044,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@eslint/object-schema",
+      "revision": "095661b9e87506b017e2d39fbc86e5d38d7eb91c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/eslint/rewrite"
+    },
+    {
+      "candidate_id": "https-github-com-streamich-json-joy-97b00619d3ef",
+      "conflicts": [
+        "license_evidence",
+        "last_activity",
+        "monthly_downloads"
+      ],
+      "identity": "https://github.com/streamich/json-joy",
+      "language": "node",
+      "last_activity": "2026-06-02T17:38:26.626Z",
+      "license_evidence": "https://www.npmjs.com/package/@jsonjoy.com/buffers",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 103890378,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@jsonjoy.com/buffers",
+      "revision": "6ac8a8968260c88cb5e1819f177db4aab5897f7a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/streamich/json-joy"
+    },
+    {
+      "candidate_id": "https-github-com-open-draft-deferred-promise-e112771a7e95",
+      "conflicts": [],
+      "identity": "https://github.com/open-draft/deferred-promise",
+      "language": "node",
+      "last_activity": "2026-03-24T16:52:59.270Z",
+      "license_evidence": "https://www.npmjs.com/package/@open-draft/deferred-promise",
+      "license_spdx": "MIT",
+      "monthly_downloads": 122332412,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@open-draft/deferred-promise",
+      "revision": "d534e74206ffbfc64a0e268eb3d7d43de44e7eae",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/open-draft/deferred-promise"
+    },
+    {
+      "candidate_id": "https-github-com-open-draft-until-d8f70e84fb4f",
+      "conflicts": [],
+      "identity": "https://github.com/open-draft/until",
+      "language": "node",
+      "last_activity": "2025-09-20T10:35:33.486Z",
+      "license_evidence": "https://www.npmjs.com/package/@open-draft/until",
+      "license_spdx": "MIT",
+      "monthly_downloads": 89699606,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@open-draft/until",
+      "revision": "213f19957095cd0e4219e671c159068f451d9661",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/open-draft/until"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-is-cc8131aaa30a",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/is",
+      "language": "node",
+      "last_activity": "2026-05-11T11:22:36.268Z",
+      "license_evidence": "https://www.npmjs.com/package/@sindresorhus/is",
+      "license_spdx": "MIT",
+      "monthly_downloads": 243701976,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@sindresorhus/is",
+      "revision": "7821031c66cdeb7256a0feb2d506535f9e84fcaf",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/is"
+    },
+    {
+      "candidate_id": "https-github-com-standard-schema-standard-schema-1294b387e71e",
+      "conflicts": [],
+      "identity": "https://github.com/standard-schema/standard-schema",
+      "language": "node",
+      "last_activity": "2025-12-15T20:49:46.431Z",
+      "license_evidence": "https://www.npmjs.com/package/@standard-schema/spec",
+      "license_spdx": "MIT",
+      "monthly_downloads": 418827034,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "@standard-schema/spec",
+      "revision": "a60ec0620dba64ddff8217f19e2ce479120af234",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/standard-schema/standard-schema"
+    },
+    {
+      "candidate_id": "https-github-com-ajv-validator-ajv-formats-be50c0dfec90",
+      "conflicts": [],
+      "identity": "https://github.com/ajv-validator/ajv-formats",
+      "language": "node",
+      "last_activity": "2024-03-30T11:30:26.728Z",
+      "license_evidence": "https://www.npmjs.com/package/ajv-formats",
+      "license_spdx": "MIT",
+      "monthly_downloads": 512921184,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "ajv-formats",
+      "revision": "4ca86d21bd07571a30178cbb3714133db6eada9a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ajv-validator/ajv-formats"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-ansi-escapes-1a81b46f3793",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/ansi-escapes",
+      "language": "node",
+      "last_activity": "2026-02-04T16:21:10.230Z",
+      "license_evidence": "https://www.npmjs.com/package/ansi-escapes",
+      "license_spdx": "MIT",
+      "monthly_downloads": 522953972,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "ansi-escapes",
+      "revision": "73e652efe7a353bdf25f456e592c858e4648db3d",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/ansi-escapes"
+    },
+    {
+      "candidate_id": "https-github-com-chalk-ansi-regex-b26714bbd17e",
+      "conflicts": [],
+      "identity": "https://github.com/chalk/ansi-regex",
+      "language": "node",
+      "last_activity": "2026-08-12T14:33:26.744Z",
+      "license_evidence": "https://www.npmjs.com/package/ansi-regex",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1995981939,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "ansi-regex",
+      "revision": "7cf0228990eb38c27f9897f4fb17d42d39075a20",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/chalk/ansi-regex"
+    },
+    {
+      "candidate_id": "https-github-com-chalk-ansi-styles-9afcbfbc3720",
+      "conflicts": [],
+      "identity": "https://github.com/chalk/ansi-styles",
+      "language": "node",
+      "last_activity": "2026-07-26T14:57:36.835Z",
+      "license_evidence": "https://www.npmjs.com/package/ansi-styles",
+      "license_spdx": "MIT",
+      "monthly_downloads": 2805975689,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "ansi-styles",
+      "revision": "c1c3dd4e017a2938807aaff0d361f46d086aeab7",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/chalk/ansi-styles"
+    },
+    {
+      "candidate_id": "https-github-com-nodeca-argparse-83f40c13eace",
+      "conflicts": [],
+      "identity": "https://github.com/nodeca/argparse",
+      "language": "node",
+      "last_activity": "2026-08-25T16:13:28.620Z",
+      "license_evidence": "https://www.npmjs.com/package/argparse",
+      "license_spdx": "PSF-2.0",
+      "monthly_downloads": 1029393221,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "argparse",
+      "revision": "e9eb9de652dc3f101b7320ceb682c60f407e2af6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/nodeca/argparse"
+    },
+    {
+      "candidate_id": "https-github-com-caolan-async-a75cd095c84a",
+      "conflicts": [],
+      "identity": "https://github.com/caolan/async",
+      "language": "node",
+      "last_activity": "2024-08-19T23:24:23.363Z",
+      "license_evidence": "https://www.npmjs.com/package/async",
+      "license_spdx": "MIT",
+      "monthly_downloads": 428804062,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "async",
+      "revision": "13dfaf13f3fc809ba1c9c39d5e267ac6959cbf4a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/caolan/async"
+    },
+    {
+      "candidate_id": "https-github-com-patrickjuchli-basic-ftp-45a483ea97fa",
+      "conflicts": [],
+      "identity": "https://github.com/patrickjuchli/basic-ftp",
+      "language": "node",
+      "last_activity": "2026-08-02T08:04:44.917Z",
+      "license_evidence": "https://www.npmjs.com/package/basic-ftp",
+      "license_spdx": "MIT",
+      "monthly_downloads": 112148899,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "basic-ftp",
+      "revision": "9cbc5cf23cb2b62231bc1822a868138e4772d4e5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/patrickjuchli/basic-ftp"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-camelcase-e15fc3446ff8",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/camelcase",
+      "language": "node",
+      "last_activity": "2025-11-10T20:38:44.112Z",
+      "license_evidence": "https://www.npmjs.com/package/camelcase",
+      "license_spdx": "MIT",
+      "monthly_downloads": 718820411,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "camelcase",
+      "revision": "3146708d5ffcd91a8cbc483e4a2585a39545da48",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/camelcase"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-camelcase-keys-067a4a4c016a",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/camelcase-keys",
+      "language": "node",
+      "last_activity": "2026-01-25T07:35:35.120Z",
+      "license_evidence": "https://www.npmjs.com/package/camelcase-keys",
+      "license_spdx": "MIT",
+      "monthly_downloads": 92883997,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "camelcase-keys",
+      "revision": "3f304acdc5177aa119f383b3b09557bd70d7916c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/camelcase-keys"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-cli-truncate-9fe8b9665cf2",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/cli-truncate",
+      "language": "node",
+      "last_activity": "2026-07-09T15:40:06.568Z",
+      "license_evidence": "https://www.npmjs.com/package/cli-truncate",
+      "license_spdx": "MIT",
+      "monthly_downloads": 222869244,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "cli-truncate",
+      "revision": "00818cbd97f5bd6c9b8af39f19c0cd1e42971e54",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/cli-truncate"
+    },
+    {
+      "candidate_id": "https-github-com-lquixada-cross-fetch-7a41a135fbc6",
+      "conflicts": [],
+      "identity": "https://github.com/lquixada/cross-fetch",
+      "language": "node",
+      "last_activity": "2024-12-21T15:03:07.027Z",
+      "license_evidence": "https://www.npmjs.com/package/cross-fetch",
+      "license_spdx": "MIT",
+      "monthly_downloads": 153638853,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "cross-fetch",
+      "revision": "9e6898ee848ba6dc942f787f2c35ca6fa30eb014",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/lquixada/cross-fetch"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-crypto-random-string-8461bb88821c",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/crypto-random-string",
+      "language": "node",
+      "last_activity": "2026-07-23T16:43:56.964Z",
+      "license_evidence": "https://www.npmjs.com/package/crypto-random-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 123885120,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "crypto-random-string",
+      "revision": "09e2f1d01be98dff129f52555a733cf25a319067",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/crypto-random-string"
+    },
+    {
+      "candidate_id": "https-github-com-csstree-csstree-a978c5e9dc0a",
+      "conflicts": [],
+      "identity": "https://github.com/csstree/csstree",
+      "language": "node",
+      "last_activity": "2026-03-05T14:12:36.884Z",
+      "license_evidence": "https://www.npmjs.com/package/css-tree",
+      "license_spdx": "MIT",
+      "monthly_downloads": 452117906,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "css-tree",
+      "revision": "88e3d965c0b1628642a30a841745b410d6835052",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/csstree/csstree"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-decamelize-dbe936a13eab",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/decamelize",
+      "language": "node",
+      "last_activity": "2025-08-19T14:50:35.009Z",
+      "license_evidence": "https://www.npmjs.com/package/decamelize",
+      "license_spdx": "MIT",
+      "monthly_downloads": 289312909,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "decamelize",
+      "revision": "365e2e909c93c8a5e7c9398523290ba0b35a3a93",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/decamelize"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-detect-indent-76b2bb6e875c",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/detect-indent",
+      "language": "node",
+      "last_activity": "2025-09-16T01:53:36.911Z",
+      "license_evidence": "https://www.npmjs.com/package/detect-indent",
+      "license_spdx": "MIT",
+      "monthly_downloads": 109923163,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "detect-indent",
+      "revision": "25d3cf12f54807147e56ac3d4f557c9cc7904c96",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/detect-indent"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-dot-prop-b93a387753a1",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/dot-prop",
+      "language": "node",
+      "last_activity": "2026-07-21T12:19:37.088Z",
+      "license_evidence": "https://www.npmjs.com/package/dot-prop",
+      "license_spdx": "MIT",
+      "monthly_downloads": 210756785,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "dot-prop",
+      "revision": "d5d11c71a70bfb643a45d22821ed6d284240fce5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/dot-prop"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-emittery-0690d91e8813",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/emittery",
+      "language": "node",
+      "last_activity": "2026-03-04T20:22:44.524Z",
+      "license_evidence": "https://www.npmjs.com/package/emittery",
+      "license_spdx": "MIT",
+      "monthly_downloads": 195551957,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "emittery",
+      "revision": "147a8591045e00d0fe8088e2393e3eefea3aa4a5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/emittery"
+    },
+    {
+      "candidate_id": "https-github-com-ljharb-es-to-primitive-f3166241ec59",
+      "conflicts": [],
+      "identity": "https://github.com/ljharb/es-to-primitive",
+      "language": "node",
+      "last_activity": "2026-06-26T01:53:06.939Z",
+      "license_evidence": "https://www.npmjs.com/package/es-to-primitive",
+      "license_spdx": "MIT",
+      "monthly_downloads": 360894802,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "es-to-primitive",
+      "revision": "f33dccb3a8950f4abc67f43bec81f776da9cdf13",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ljharb/es-to-primitive"
+    },
+    {
+      "candidate_id": "https-github-com-eslint-js-209fc7a79d35",
+      "conflicts": [],
+      "identity": "https://github.com/eslint/js",
+      "language": "node",
+      "last_activity": "2026-03-06T22:32:40.951Z",
+      "license_evidence": "https://www.npmjs.com/package/espree",
+      "license_spdx": "BSD-2-Clause",
+      "monthly_downloads": 698763882,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "espree",
+      "revision": "8173ecfeb7473bff90d1da11b1347082f47e262e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/eslint/js"
+    },
+    {
+      "candidate_id": "https-github-com-fabiospampinato-fast-string-truncated-width-b370290b47ea",
+      "conflicts": [],
+      "identity": "https://github.com/fabiospampinato/fast-string-truncated-width",
+      "language": "node",
+      "last_activity": "2025-09-30T19:48:51.801Z",
+      "license_evidence": "https://www.npmjs.com/package/fast-string-truncated-width",
+      "license_spdx": "MIT",
+      "monthly_downloads": 109687059,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "fast-string-truncated-width",
+      "revision": "1d50ce0c1497c1399eed50f87926817587049358",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/fabiospampinato/fast-string-truncated-width"
+    },
+    {
+      "candidate_id": "https-github-com-fabiospampinato-fast-string-width-e9ca8c28f96d",
+      "conflicts": [],
+      "identity": "https://github.com/fabiospampinato/fast-string-width",
+      "language": "node",
+      "last_activity": "2025-09-30T10:31:05.462Z",
+      "license_evidence": "https://www.npmjs.com/package/fast-string-width",
+      "license_spdx": "MIT",
+      "monthly_downloads": 109359312,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "fast-string-width",
+      "revision": "f49e7b7662906e0028a68a16b5358500b2f3152d",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/fabiospampinato/fast-string-width"
+    },
+    {
+      "candidate_id": "https-github-com-webreflection-flatted-73a53057bdfe",
+      "conflicts": [],
+      "identity": "https://github.com/WebReflection/flatted",
+      "language": "node",
+      "last_activity": "2026-07-30T09:53:10.155Z",
+      "license_evidence": "https://www.npmjs.com/package/flatted",
+      "license_spdx": "ISC",
+      "monthly_downloads": 644200420,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "flatted",
+      "revision": "e6f5ca700c4ca8104a6a83472c8219e267bd5e84",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/WebReflection/flatted"
+    },
+    {
+      "candidate_id": "https-github-com-ssh-git-github-com-follow-redirects-follow-redirects-9fd33e3a2399",
+      "conflicts": [],
+      "identity": "https://github.com/ssh://git@github.com/follow-redirects/follow-redirects",
+      "language": "node",
+      "last_activity": "2026-04-13T11:03:45.228Z",
+      "license_evidence": "https://www.npmjs.com/package/follow-redirects",
+      "license_spdx": "MIT",
+      "monthly_downloads": 412809069,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "follow-redirects",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/ssh://git@github.com/follow-redirects/follow-redirects"
+    },
+    {
+      "candidate_id": "https-github-com-jprichardson-node-fs-extra-6b0bd59f9592",
+      "conflicts": [],
+      "identity": "https://github.com/jprichardson/node-fs-extra",
+      "language": "node",
+      "last_activity": "2026-07-23T19:52:08.773Z",
+      "license_evidence": "https://www.npmjs.com/package/fs-extra",
+      "license_spdx": "MIT",
+      "monthly_downloads": 889288270,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "fs-extra",
+      "revision": "53a8d1a63c8eb30573110ed0f6528975f98801f0",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/jprichardson/node-fs-extra"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-get-east-asian-width-6d8d4a6383d0",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/get-east-asian-width",
+      "language": "node",
+      "last_activity": "2026-05-08T06:36:55.498Z",
+      "license_evidence": "https://www.npmjs.com/package/get-east-asian-width",
+      "license_spdx": "MIT",
+      "monthly_downloads": 300028496,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "get-east-asian-width",
+      "revision": "75cd90f988bb24afc6e9889485acf21fe86076f8",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/get-east-asian-width"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-get-stream-01c7ee9c87bd",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/get-stream",
+      "language": "node",
+      "last_activity": "2024-03-16T18:05:50.308Z",
+      "license_evidence": "https://www.npmjs.com/package/get-stream",
+      "license_spdx": "MIT",
+      "monthly_downloads": 792719657,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "get-stream",
+      "revision": "cdbd77bebf332f28a2949613fc1534d8a7a04c95",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/get-stream"
+    },
+    {
+      "candidate_id": "https-github-com-chalk-has-ansi-f9c0f23b5b34",
+      "conflicts": [],
+      "identity": "https://github.com/chalk/has-ansi",
+      "language": "node",
+      "last_activity": "2025-09-08T15:08:53.260Z",
+      "license_evidence": "https://www.npmjs.com/package/has-ansi",
+      "license_spdx": "MIT",
+      "monthly_downloads": 61447920,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "has-ansi",
+      "revision": "8ad46b5ecc1f66de8e526c506d72fbe3e092ef20",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/chalk/has-ansi"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-to-jsx-runtime-4ad236a0c441",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-to-jsx-runtime",
+      "language": "node",
+      "last_activity": "2025-03-05T11:30:29.166Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-to-jsx-runtime",
+      "license_spdx": "MIT",
+      "monthly_downloads": 143785833,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "hast-util-to-jsx-runtime",
+      "revision": "b0920cd0837052144ebe94f53d8f792b05619444",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-to-jsx-runtime"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-whitespace-841246ca34f3",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-whitespace",
+      "language": "node",
+      "last_activity": "2023-07-31T15:52:12.042Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-whitespace",
+      "license_spdx": "MIT",
+      "monthly_downloads": 185347946,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "hast-util-whitespace",
+      "revision": "22b88c3f4d51f3777929758e980c257a2838a4b2",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-whitespace"
+    },
+    {
+      "candidate_id": "https-github-com-beaugunderson-ip-address-b452e0be5c96",
+      "conflicts": [],
+      "identity": "https://github.com/beaugunderson/ip-address",
+      "language": "node",
+      "last_activity": "2026-08-10T05:42:55.169Z",
+      "license_evidence": "https://www.npmjs.com/package/ip-address",
+      "license_spdx": "MIT",
+      "monthly_downloads": 363488372,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "ip-address",
+      "revision": "ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/beaugunderson/ip-address"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-is-fullwidth-code-point-73ed086e2318",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/is-fullwidth-code-point",
+      "language": "node",
+      "last_activity": "2025-08-31T07:37:04.805Z",
+      "license_evidence": "https://www.npmjs.com/package/is-fullwidth-code-point",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1077481099,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "is-fullwidth-code-point",
+      "revision": "2696d873463fde9f6b09b49c98380bd49c67b00a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/is-fullwidth-code-point"
+    },
+    {
+      "candidate_id": "https-github-com-inspect-js-is-string-676ea2297eb7",
+      "conflicts": [],
+      "identity": "https://github.com/inspect-js/is-string",
+      "language": "node",
+      "last_activity": "2024-12-16T02:59:00.418Z",
+      "license_evidence": "https://www.npmjs.com/package/is-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 361709525,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "is-string",
+      "revision": "42a850857133d6525a02a623bf45c9e904a347d2",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/inspect-js/is-string"
+    },
+    {
+      "candidate_id": "https-github-com-isaacs-jackspeak-ae54d23dd5ab",
+      "conflicts": [],
+      "identity": "https://github.com/isaacs/jackspeak",
+      "language": "node",
+      "last_activity": "2026-02-07T05:11:22.509Z",
+      "license_evidence": "https://www.npmjs.com/package/jackspeak",
+      "license_spdx": "BlueOak-1.0.0",
+      "monthly_downloads": 477554323,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "jackspeak",
+      "revision": "a58b42f39e2fb04b28b8169005a5ddbc3302730e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/isaacs/jackspeak"
+    },
+    {
+      "candidate_id": "https-github-com-nodeca-js-yaml-51d0585e679e",
+      "conflicts": [],
+      "identity": "https://github.com/nodeca/js-yaml",
+      "language": "node",
+      "last_activity": "2026-08-25T07:03:21.871Z",
+      "license_evidence": "https://www.npmjs.com/package/js-yaml",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1221562737,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "js-yaml",
+      "revision": "6b4ff5e92474186b0c0381021ba4120f883c1995",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/nodeca/js-yaml"
+    },
+    {
+      "candidate_id": "https-github-com-mathiasbynens-jsesc-83cd1f7674b9",
+      "conflicts": [],
+      "identity": "https://github.com/mathiasbynens/jsesc",
+      "language": "node",
+      "last_activity": "2024-12-11T08:24:34.551Z",
+      "license_evidence": "https://www.npmjs.com/package/jsesc",
+      "license_spdx": "MIT",
+      "monthly_downloads": 704976891,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "jsesc",
+      "revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/mathiasbynens/jsesc"
+    },
+    {
+      "candidate_id": "https-github-com-npm-json-parse-even-better-errors-87618ae968a8",
+      "conflicts": [],
+      "identity": "https://github.com/npm/json-parse-even-better-errors",
+      "language": "node",
+      "last_activity": "2026-05-08T18:36:35.149Z",
+      "license_evidence": "https://www.npmjs.com/package/json-parse-even-better-errors",
+      "license_spdx": "MIT",
+      "monthly_downloads": 460002140,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "json-parse-even-better-errors",
+      "revision": "098b8d00e72e4807adba733c2cdde686b2b9bf82",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/npm/json-parse-even-better-errors"
+    },
+    {
+      "candidate_id": "https-github-com-ljharb-json-stable-stringify-3c71c493ae56",
+      "conflicts": [],
+      "identity": "https://github.com/ljharb/json-stable-stringify",
+      "language": "node",
+      "last_activity": "2025-04-22T05:35:29.675Z",
+      "license_evidence": "https://www.npmjs.com/package/json-stable-stringify",
+      "license_spdx": "MIT",
+      "monthly_downloads": 56543272,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "json-stable-stringify",
+      "revision": "4c3d8989da7dd5a341d8ab49b780fbe267411797",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ljharb/json-stable-stringify"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-leven-7ba66946dde7",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/leven",
+      "language": "node",
+      "last_activity": "2025-09-11T12:27:52.301Z",
+      "license_evidence": "https://www.npmjs.com/package/leven",
+      "license_spdx": "MIT",
+      "monthly_downloads": 261497959,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "leven",
+      "revision": "fbc77137f0361b26aaa8465854e0ae8e492db6ba",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/leven"
+    },
+    {
+      "candidate_id": "https-github-com-eventualbuddha-lines-and-columns-18f324cb0e9b",
+      "conflicts": [],
+      "identity": "https://github.com/eventualbuddha/lines-and-columns",
+      "language": "node",
+      "last_activity": "2023-11-07T01:41:53.302Z",
+      "license_evidence": "https://www.npmjs.com/package/lines-and-columns",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "lines-and-columns",
+      "revision": "eea2581b131685f2c21de777fd037c8ddd343354",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/eventualbuddha/lines-and-columns"
+    },
+    {
+      "candidate_id": "https-github-com-ssh-git-github-com-isaacs-node-lru-cache-00de8fe94851",
+      "conflicts": [],
+      "identity": "https://github.com/ssh://git@github.com/isaacs/node-lru-cache",
+      "language": "node",
+      "last_activity": "2026-07-07T23:27:14.327Z",
+      "license_evidence": "https://www.npmjs.com/package/lru-cache",
+      "license_spdx": "BlueOak-1.0.0",
+      "monthly_downloads": 2261391256,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "lru-cache",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/ssh://git@github.com/isaacs/node-lru-cache"
+    },
+    {
+      "candidate_id": "https-github-com-rich-harris-magic-string-688488af9aac",
+      "conflicts": [],
+      "identity": "https://github.com/Rich-Harris/magic-string",
+      "language": "node",
+      "last_activity": "2026-08-26T10:41:06.931Z",
+      "license_evidence": "https://www.npmjs.com/package/magic-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 774676744,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "magic-string",
+      "revision": "5473bfb5138e7b7c2fc91d964c0425f57f1470ce",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/Rich-Harris/magic-string"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-find-and-replace-9f489b5afd8c",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-find-and-replace",
+      "language": "node",
+      "last_activity": "2025-01-03T12:27:35.988Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-find-and-replace",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "mdast-util-find-and-replace",
+      "revision": "fd73ef856ab4f7b6326e3255aea36f439b75e2d5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-find-and-replace"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-from-markdown-33533ebf98a3",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-from-markdown",
+      "language": "node",
+      "last_activity": "2026-02-21T13:23:13.849Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-from-markdown",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "mdast-util-from-markdown",
+      "revision": "f94143765912425fb94ed6518d3a3d1c54f994d4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-from-markdown"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-mdxjs-esm-5317ce0d5db8",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-mdxjs-esm",
+      "language": "node",
+      "last_activity": "2023-08-08T10:13:47.344Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-mdxjs-esm",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "mdast-util-mdxjs-esm",
+      "revision": "8d05c28d15ec5b690e7fbb08d703b0752d431109",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-mdxjs-esm"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-phrasing-502393a8a0fe",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-phrasing",
+      "language": "node",
+      "last_activity": "2024-02-01T10:26:42.249Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-phrasing",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "mdast-util-phrasing",
+      "revision": "67d563d643f75cf4fd26bc3121ddebb89e3a0a9c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-phrasing"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-to-hast-bc67fbb2f2a5",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-to-hast",
+      "language": "node",
+      "last_activity": "2025-11-23T21:08:34.155Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-to-hast",
+      "license_spdx": "MIT",
+      "monthly_downloads": 193432890,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "mdast-util-to-hast",
+      "revision": "174795b21f7757fffb54dd8d5fb4012f4751f791",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-to-hast"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-to-markdown-af81e1e0a812",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-to-markdown",
+      "language": "node",
+      "last_activity": "2024-11-04T10:56:59.698Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-to-markdown",
+      "license_spdx": "MIT",
+      "monthly_downloads": 198889558,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "mdast-util-to-markdown",
+      "revision": "ee3b3458a466c3224800ac7fa688b4a160a91ea2",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-to-markdown"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-meow-9ec160fb49df",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/meow",
+      "language": "node",
+      "last_activity": "2026-02-20T10:30:43.850Z",
+      "license_evidence": "https://www.npmjs.com/package/meow",
+      "license_spdx": "MIT",
+      "monthly_downloads": 166890272,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "meow",
+      "revision": "1f3ec6cfd29a2df43ad637023be57001db49c410",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/meow"
+    },
+    {
+      "candidate_id": "https-github-com-micromark-micromark-git-main-ecfcfb651dbd",
+      "conflicts": [
+        "last_activity",
+        "license_evidence",
+        "monthly_downloads",
+        "package"
+      ],
+      "identity": "https://github.com/micromark/micromark.git#main",
+      "language": "node",
+      "last_activity": "2024-11-12T11:17:13.750Z",
+      "license_evidence": "https://www.npmjs.com/package/micromark-util-character",
+      "license_spdx": "MIT",
+      "monthly_downloads": 189453632,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "micromark-util-character",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/micromark/micromark.git#main"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-normalize-url-0be22c1c4b97",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/normalize-url",
+      "language": "node",
+      "last_activity": "2026-05-20T06:14:07.862Z",
+      "license_evidence": "https://www.npmjs.com/package/normalize-url",
+      "license_spdx": "MIT",
+      "monthly_downloads": 195154037,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "normalize-url",
+      "revision": "863d275c21d6411a7494b8f728a515633bc01d84",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/normalize-url"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-onetime-82d0f6fbfa66",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/onetime",
+      "language": "node",
+      "last_activity": "2026-02-02T07:42:24.047Z",
+      "license_evidence": "https://www.npmjs.com/package/onetime",
+      "license_spdx": "MIT",
+      "monthly_downloads": 737267110,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "onetime",
+      "revision": "481ec583f8303e98c4d1d16bb316ef8e6b04d72c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/onetime"
+    },
+    {
+      "candidate_id": "https-github-com-ljharb-own-keys-2367bd75e9c6",
+      "conflicts": [],
+      "identity": "https://github.com/ljharb/own-keys",
+      "language": "node",
+      "last_activity": "2026-07-21T15:38:04.405Z",
+      "license_evidence": "https://www.npmjs.com/package/own-keys",
+      "license_spdx": "MIT",
+      "monthly_downloads": 294075840,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "own-keys",
+      "revision": "20620ebfd195d384d85fc134e29cc4916297a92f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/ljharb/own-keys"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-p-locate-e7bbacda69d5",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/p-locate",
+      "language": "node",
+      "last_activity": "2026-02-03T07:57:49.916Z",
+      "license_evidence": "https://www.npmjs.com/package/p-locate",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1292341184,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "p-locate",
+      "revision": "b9ccdaaa83f8d2f53f8acf8ff3c97b7aa21f655b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/p-locate"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-p-retry-33811b07a3f1",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/p-retry",
+      "language": "node",
+      "last_activity": "2026-03-26T16:08:04.940Z",
+      "license_evidence": "https://www.npmjs.com/package/p-retry",
+      "license_spdx": "MIT",
+      "monthly_downloads": 201297957,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "p-retry",
+      "revision": "35681f6c70f8ca2bdcb9542281147679184269fa",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/p-retry"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-p-timeout-bf3ab33abf7f",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/p-timeout",
+      "language": "node",
+      "last_activity": "2025-10-07T01:46:05.476Z",
+      "license_evidence": "https://www.npmjs.com/package/p-timeout",
+      "license_spdx": "MIT",
+      "monthly_downloads": 185777680,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "p-timeout",
+      "revision": "245066ef7daa5e74024d5b6a188ae599a1b7bfdf",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/p-timeout"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-parse-json-a7b5d8b0751c",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/parse-json",
+      "language": "node",
+      "last_activity": "2025-04-09T09:02:03.317Z",
+      "license_evidence": "https://www.npmjs.com/package/parse-json",
+      "license_spdx": "MIT",
+      "monthly_downloads": 560040184,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "parse-json",
+      "revision": "6fee59751db59a539fdf53537101a1d7c6378a65",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/parse-json"
+    },
+    {
+      "candidate_id": "https-github-com-brianc-node-postgres-c9accc388a4e",
+      "conflicts": [],
+      "identity": "https://github.com/brianc/node-postgres",
+      "language": "node",
+      "last_activity": "2026-06-19T00:53:53.717Z",
+      "license_evidence": "https://www.npmjs.com/package/pg-connection-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 207861043,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "pg-connection-string",
+      "revision": "c9e57617bc92c2ded23a75345f50eadc527bd131",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/brianc/node-postgres"
+    },
+    {
+      "candidate_id": "https-github-com-alexeyraspopov-picocolors-36e56cce4de7",
+      "conflicts": [],
+      "identity": "https://github.com/alexeyraspopov/picocolors",
+      "language": "node",
+      "last_activity": "2024-10-16T18:20:03.921Z",
+      "license_evidence": "https://www.npmjs.com/package/picocolors",
+      "license_spdx": "ISC",
+      "monthly_downloads": 935396001,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "picocolors",
+      "revision": "0e7c4af2de299dd7bc5916f2bddd151fa2f66740",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/alexeyraspopov/picocolors"
+    },
+    {
+      "candidate_id": "https-github-com-postcss-postcss-d57d17bc3912",
+      "conflicts": [],
+      "identity": "https://github.com/postcss/postcss",
+      "language": "node",
+      "last_activity": "2026-08-06T08:33:00.043Z",
+      "license_evidence": "https://www.npmjs.com/package/postcss",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1148524892,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "postcss",
+      "revision": "6d23bc362203118478bc8051b81f2910907ebe6e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/postcss/postcss"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-pretty-ms-a00f4066fd52",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/pretty-ms",
+      "language": "node",
+      "last_activity": "2025-09-15T10:58:51.548Z",
+      "license_evidence": "https://www.npmjs.com/package/pretty-ms",
+      "license_spdx": "MIT",
+      "monthly_downloads": 149236410,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "pretty-ms",
+      "revision": "93666b389e1ed07912b6c2466468da21d9f834ce",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/pretty-ms"
+    },
+    {
+      "candidate_id": "https-github-com-fastify-process-warning-8e30ab5c7f38",
+      "conflicts": [],
+      "identity": "https://github.com/fastify/process-warning",
+      "language": "node",
+      "last_activity": "2026-07-30T10:25:43.633Z",
+      "license_evidence": "https://www.npmjs.com/package/process-warning",
+      "license_spdx": "MIT",
+      "monthly_downloads": 211815753,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "process-warning",
+      "revision": "d55637b341e21fef9dc7222590b36b14d030a839",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/fastify/process-warning"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-quick-lru-54499e8da2a6",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/quick-lru",
+      "language": "node",
+      "last_activity": "2025-10-10T07:56:05.121Z",
+      "license_evidence": "https://www.npmjs.com/package/quick-lru",
+      "license_spdx": "MIT",
+      "monthly_downloads": 185995015,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "quick-lru",
+      "revision": "f2fe88e2932603c038c61ca29de6ad5286148e1b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/quick-lru"
+    },
+    {
+      "candidate_id": "https-github-com-jshttp-range-parser-ce02db6cabd0",
+      "conflicts": [],
+      "identity": "https://github.com/jshttp/range-parser",
+      "language": "node",
+      "last_activity": "2026-06-25T20:55:41.875Z",
+      "license_evidence": "https://www.npmjs.com/package/range-parser",
+      "license_spdx": "MIT",
+      "monthly_downloads": 512189207,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "range-parser",
+      "revision": "f4bf1736f28a3e574430408c18779cf7fbaf3770",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/jshttp/range-parser"
+    },
+    {
+      "candidate_id": "https-github-com-bridgear-safe-stable-stringify-d5e08dd1a7f3",
+      "conflicts": [],
+      "identity": "https://github.com/BridgeAR/safe-stable-stringify",
+      "language": "node",
+      "last_activity": "2024-08-24T21:31:17.456Z",
+      "license_evidence": "https://www.npmjs.com/package/safe-stable-stringify",
+      "license_spdx": "MIT",
+      "monthly_downloads": 222874464,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "safe-stable-stringify",
+      "revision": "8a02137ac933eff57dd6e49beb9ee766fe8dd372",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/BridgeAR/safe-stable-stringify"
+    },
+    {
+      "candidate_id": "https-github-com-chalk-slice-ansi-3a327f2bc5c3",
+      "conflicts": [],
+      "identity": "https://github.com/chalk/slice-ansi",
+      "language": "node",
+      "last_activity": "2026-04-04T13:19:33.198Z",
+      "license_evidence": "https://www.npmjs.com/package/slice-ansi",
+      "license_spdx": "MIT",
+      "monthly_downloads": 485630740,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "slice-ansi",
+      "revision": "50fc7781f5dd4d1421dbe061822d815708831af4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/chalk/slice-ansi"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-split-on-first-78d744c8ccdc",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/split-on-first",
+      "language": "node",
+      "last_activity": "2025-08-20T09:12:11.738Z",
+      "license_evidence": "https://www.npmjs.com/package/split-on-first",
+      "license_spdx": "MIT",
+      "monthly_downloads": 72819532,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "split-on-first",
+      "revision": "7ef74ece990d3f424bb1128daf44b5a49202b290",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/split-on-first"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-string-length-a50af37afff2",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/string-length",
+      "language": "node",
+      "last_activity": "2026-01-21T14:39:13.979Z",
+      "license_evidence": "https://www.npmjs.com/package/string-length",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "string-length",
+      "revision": "3590b870ab350dc8b4b9f20e58d8bcef4618dd06",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/sindresorhus/string-length"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-string-width-8d3e3c0a75e6",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/string-width",
+      "language": "node",
+      "last_activity": "2026-07-08T20:46:47.396Z",
+      "license_evidence": "https://www.npmjs.com/package/string-width",
+      "license_spdx": "MIT",
+      "monthly_downloads": 2045873096,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "string-width",
+      "revision": "64dc20cddd374df0ff43ba3469491ae98cf0cdfc",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/string-width"
+    },
+    {
+      "candidate_id": "https-github-com-mathiasbynens-string-prototype-includes-5163907c3a76",
+      "conflicts": [],
+      "identity": "https://github.com/mathiasbynens/String.prototype.includes",
+      "language": "node",
+      "last_activity": "2024-10-15T07:06:28.745Z",
+      "license_evidence": "https://www.npmjs.com/package/string.prototype.includes",
+      "license_spdx": "MIT",
+      "monthly_downloads": 162046169,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "string.prototype.includes",
+      "revision": "619300c92e48fe273a535b6de36a9336e38f8f17",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/mathiasbynens/String.prototype.includes"
+    },
+    {
+      "candidate_id": "https-github-com-es-shims-string-prototype-trim-6849c0ab6515",
+      "conflicts": [],
+      "identity": "https://github.com/es-shims/String.prototype.trim",
+      "language": "node",
+      "last_activity": "2026-06-05T22:55:28.966Z",
+      "license_evidence": "https://www.npmjs.com/package/string.prototype.trim",
+      "license_spdx": "MIT",
+      "monthly_downloads": 331147729,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "string.prototype.trim",
+      "revision": "81993cc9f134d72f778bea27d77a4b1ac0e98244",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/es-shims/String.prototype.trim"
+    },
+    {
+      "candidate_id": "https-github-com-es-shims-string-prototype-trimend-ef357dc764a4",
+      "conflicts": [],
+      "identity": "https://github.com/es-shims/String.prototype.trimEnd",
+      "language": "node",
+      "last_activity": "2026-06-06T06:19:59.765Z",
+      "license_evidence": "https://www.npmjs.com/package/string.prototype.trimend",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "string.prototype.trimend",
+      "revision": "9f316ac605e94df4e34c54049be6eb18d3bae83c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/es-shims/String.prototype.trimEnd"
+    },
+    {
+      "candidate_id": "https-github-com-es-shims-string-prototype-trimstart-b54c00a5366e",
+      "conflicts": [],
+      "identity": "https://github.com/es-shims/String.prototype.trimStart",
+      "language": "node",
+      "last_activity": "2024-03-21T16:01:21.571Z",
+      "license_evidence": "https://www.npmjs.com/package/string.prototype.trimstart",
+      "license_spdx": "MIT",
+      "monthly_downloads": 349456981,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "string.prototype.trimstart",
+      "revision": "6f8ee88da5b570d3addc1e8c6caf1461013bce45",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/es-shims/String.prototype.trimStart"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-strip-final-newline-e848b1ca8d91",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/strip-final-newline",
+      "language": "node",
+      "last_activity": "2023-12-13T19:31:50.243Z",
+      "license_evidence": "https://www.npmjs.com/package/strip-final-newline",
+      "license_spdx": "MIT",
+      "monthly_downloads": 466935528,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "strip-final-newline",
+      "revision": "a1bfe78e3a3de2f73ed3a7600932d7cc952732b4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/strip-final-newline"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-strip-indent-f2269f1cc550",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/strip-indent",
+      "language": "node",
+      "last_activity": "2025-10-12T14:55:54.463Z",
+      "license_evidence": "https://www.npmjs.com/package/strip-indent",
+      "license_spdx": "MIT",
+      "monthly_downloads": 356029201,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "strip-indent",
+      "revision": "102b553f9efaec1c2451cd9ac2385269768f1fed",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/strip-indent"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-strip-json-comments-ac631375dad7",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/strip-json-comments",
+      "language": "node",
+      "last_activity": "2025-08-08T14:14:05.044Z",
+      "license_evidence": "https://www.npmjs.com/package/strip-json-comments",
+      "license_spdx": "MIT",
+      "monthly_downloads": 873189841,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "strip-json-comments",
+      "revision": "7355ba42e0ad6e5cd27cc984add85355df50fa34",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/strip-json-comments"
+    },
+    {
+      "candidate_id": "https-github-com-naturalintelligence-strnum-4b92e8bc051c",
+      "conflicts": [],
+      "identity": "https://github.com/NaturalIntelligence/strnum",
+      "language": "node",
+      "last_activity": "2026-08-14T11:49:42.442Z",
+      "license_evidence": "https://www.npmjs.com/package/strnum",
+      "license_spdx": "MIT",
+      "monthly_downloads": 294103407,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "strnum",
+      "revision": "117d6a5f59fbb8f29d2f88c0c292d7dc44d67a7f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/NaturalIntelligence/strnum"
+    },
+    {
+      "candidate_id": "https-github-com-borewit-strtok3-86819726c2db",
+      "conflicts": [],
+      "identity": "https://github.com/Borewit/strtok3",
+      "language": "node",
+      "last_activity": "2026-03-21T20:37:48.757Z",
+      "license_evidence": "https://www.npmjs.com/package/strtok3",
+      "license_spdx": "MIT",
+      "monthly_downloads": 128033707,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "strtok3",
+      "revision": "acac939a405a6dfebcf3fe9b9caba3641c491c95",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/Borewit/strtok3"
+    },
+    {
+      "candidate_id": "https-github-com-blitz-js-superjson-7dcf8edd304e",
+      "conflicts": [],
+      "identity": "https://github.com/blitz-js/superjson",
+      "language": "node",
+      "last_activity": "2025-11-27T13:27:45.738Z",
+      "license_evidence": "https://www.npmjs.com/package/superjson",
+      "license_spdx": "MIT",
+      "monthly_downloads": 39402526,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "superjson",
+      "revision": "aaa65e36e8e31da740265a56b27c965ca1c7b754",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/blitz-js/superjson"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-type-fest-66faa7ce2f04",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/type-fest",
+      "language": "node",
+      "last_activity": "2026-07-04T22:51:13.318Z",
+      "license_evidence": "https://www.npmjs.com/package/type-fest",
+      "license_spdx": "(MIT OR CC0-1.0)",
+      "monthly_downloads": 1559972257,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "type-fest",
+      "revision": "3fe02d33596f8afa167bc465d9d9ac9ab81b497e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/type-fest"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-uint8array-extras-dd7becc0b3aa",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/uint8array-extras",
+      "language": "node",
+      "last_activity": "2025-08-22T06:17:25.662Z",
+      "license_evidence": "https://www.npmjs.com/package/uint8array-extras",
+      "license_spdx": "MIT",
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "uint8array-extras",
+      "revision": "1ba291a510461ebed324d8ccf612368a83168357",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/sindresorhus/uint8array-extras"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-unist-util-is-27d6e9eaf000",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/unist-util-is",
+      "language": "node",
+      "last_activity": "2025-10-16T18:01:47.398Z",
+      "license_evidence": "https://www.npmjs.com/package/unist-util-is",
+      "license_spdx": "MIT",
+      "monthly_downloads": 252778142,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "unist-util-is",
+      "revision": "82b9c2547dfa52e6078a546ab5a1c64bb9381480",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/unist-util-is"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-unist-util-visit-d15a1ed54092",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/unist-util-visit",
+      "language": "node",
+      "last_activity": "2026-01-22T19:02:58.977Z",
+      "license_evidence": "https://www.npmjs.com/package/unist-util-visit",
+      "license_spdx": "MIT",
+      "monthly_downloads": 240824967,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "unist-util-visit",
+      "revision": "5d601df684ca7341646d6b57eb0f20fdfe277bc2",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/unist-util-visit"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-unist-util-visit-parents-1589fbc908fa",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/unist-util-visit-parents",
+      "language": "node",
+      "last_activity": "2025-10-16T18:20:45.045Z",
+      "license_evidence": "https://www.npmjs.com/package/unist-util-visit-parents",
+      "license_spdx": "MIT",
+      "monthly_downloads": 240557262,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "unist-util-visit-parents",
+      "revision": "f06035e9161f25119fb68d178167c30003d32dfb",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/unist-util-visit-parents"
+    },
+    {
+      "candidate_id": "https-github-com-ryanzim-universalify-d11fc403c9d9",
+      "conflicts": [],
+      "identity": "https://github.com/RyanZim/universalify",
+      "language": "node",
+      "last_activity": "2023-11-01T17:12:45.392Z",
+      "license_evidence": "https://www.npmjs.com/package/universalify",
+      "license_spdx": "MIT",
+      "monthly_downloads": 649311680,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "universalify",
+      "revision": "dc17e0e00fb39c8d52e97ce77e494cdadfa8d19c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/RyanZim/universalify"
+    },
+    {
+      "candidate_id": "https-github-com-npm-validate-npm-package-name-80dbea513056",
+      "conflicts": [],
+      "identity": "https://github.com/npm/validate-npm-package-name",
+      "language": "node",
+      "last_activity": "2026-05-08T18:31:08.990Z",
+      "license_evidence": "https://www.npmjs.com/package/validate-npm-package-name",
+      "license_spdx": "ISC",
+      "monthly_downloads": 181943747,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "validate-npm-package-name",
+      "revision": "f63469d58278635630681c2506f05176ff18a7cb",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/npm/validate-npm-package-name"
+    },
+    {
+      "candidate_id": "https-github-com-vfile-vfile-message-a45cd542a513",
+      "conflicts": [],
+      "identity": "https://github.com/vfile/vfile-message",
+      "language": "node",
+      "last_activity": "2025-07-26T15:08:12.656Z",
+      "license_evidence": "https://www.npmjs.com/package/vfile-message",
+      "license_spdx": "MIT",
+      "monthly_downloads": 223132309,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "vfile-message",
+      "revision": "2c782c8580c5b0a14baae19fa8badc628e567461",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/vfile/vfile-message"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-widest-line-36fc75f2cac7",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/widest-line",
+      "language": "node",
+      "last_activity": "2026-01-24T03:25:03.834Z",
+      "license_evidence": "https://www.npmjs.com/package/widest-line",
+      "license_spdx": "MIT",
+      "monthly_downloads": 149121069,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "widest-line",
+      "revision": "d1f04193564d484ca6e24fd8d78d96545ccb0a83",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/widest-line"
+    },
+    {
+      "candidate_id": "https-github-com-chalk-wrap-ansi-178366db0171",
+      "conflicts": [],
+      "identity": "https://github.com/chalk/wrap-ansi",
+      "language": "node",
+      "last_activity": "2026-08-17T22:42:54.710Z",
+      "license_evidence": "https://www.npmjs.com/package/wrap-ansi",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1773830449,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "wrap-ansi",
+      "revision": "c6b6259a58843e491e8703c5010a2a517b5f5738",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+          "report_sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/chalk/wrap-ansi"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-yocto-queue-75d0c47532b0",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/yocto-queue",
+      "language": "node",
+      "last_activity": "2025-11-11T06:32:08.991Z",
+      "license_evidence": "https://www.npmjs.com/package/yocto-queue",
+      "license_spdx": "MIT",
+      "monthly_downloads": 787534073,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "yocto-queue",
+      "revision": "b07eac099753833b29d06c614149904445739776",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+          "report_sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/yocto-queue"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-yoctocolors-d941a324ccf8",
+      "conflicts": [
+        "license_evidence",
+        "last_activity",
+        "monthly_downloads"
+      ],
+      "identity": "https://github.com/sindresorhus/yoctocolors",
+      "language": "node",
+      "last_activity": "2025-08-21T08:24:47.792Z",
+      "license_evidence": "https://www.npmjs.com/package/yoctocolors",
+      "license_spdx": "MIT",
+      "monthly_downloads": 126688955,
+      "observed_at": "2026-08-26T15:37:19.583743+00:00",
+      "package": "yoctocolors",
+      "revision": "a02a16ec36fbd58a0848e95598fb4913c54c7591",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+          "report_sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/sindresorhus/yoctocolors"
+    }
+  ],
+  "queue_id": "node-production-discovery-wave2-20260826",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": ".nl2repo/discovery-wave2-20260826/node-production-discovery-large.json",
+      "sha256": "sha256:682a8f1aac04cd921ff924385e764178c957f58238a2b020425c17c1e5f609f8"
+    },
+    {
+      "path": ".nl2repo/discovery-wave2-20260826/node-production-discovery-retry.json",
+      "sha256": "sha256:f3b38eabbc97fe936efec591f178070961d162ad80eba33f0ae9de294480c1e0"
+    },
+    {
+      "path": ".nl2repo/discovery-wave2-20260826/node-production-discovery-wave2.json",
+      "sha256": "sha256:cb7b66d21276424a75063c6088a08ed1a888c41ee33dafc824dd705465e38798"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}

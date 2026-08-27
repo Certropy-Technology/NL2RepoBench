@@ -17,7 +17,7 @@
 ## 编译链路
 
 ```text
-catalog task.toml + instruction.md
+catalog/sources/<task-id>/task.toml + instruction.md
   -> strict DeclarativeTaskSource
   -> canonical TaskManifest
   -> publication gap check
@@ -35,17 +35,17 @@ Production 编译默认拒绝所有 `publication_gaps()`。Synthetic fixture 需
 
 ```bash
 uv run nl2repo harbor compile \
-  catalog/tasks/ministats \
-  --output build/harbor \
+  catalog/sources/ministats \
+  --output catalog/tasks \
   --toolchain toolchain.lock.toml \
   --allow-incomplete
 ```
 
-Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 private artifact tar。解包采用流式成员计数，并拒绝绝对路径、`..`、symlink、hardlink、device、重复路径、超长成员与超大展开体积。开发 fixture 可以从 `catalog/tasks/<id>/harbor/` 复制公开 synthetic assets，但不能发布。
+Production task 的 `tests.test_bundle` 和 `oracle_bundle` 必须是授权的 private artifact tar。解包采用流式成员计数，并拒绝绝对路径、`..`、symlink、hardlink、device、重复路径、超长成员与超大展开体积。开发 fixture 可以在 `catalog/sources/<id>/` 引用公开 synthetic assets，但 generated `catalog/tasks/<id>/` 不能反向成为 Human source，也不能发布不完整 fixture。
 
 ## Verifier 执行顺序
 
-1. `task.toml` 声明 Agent/Verifier phase policy；Verifier environment 额外生成 `docker-compose.yaml: network_mode: none`，Agent 只有声明 `no-network` 时才生成该 override，避免有效网络与 metadata 矛盾；启动后再证明 verifier 无法连接 `pypi.org:443` 和数字地址 `1.1.1.1:443`，并把 network namespace 与 route table 写入 `network.json`；
+1. `task.toml` 声明 Agent/Verifier phase policy；Verifier environment 额外生成 `docker-compose.yaml: network_mode: none`。Agent environment 不生成显式 `network_mode`/`networks` override，而由 Harbor egress sidecar 应用 `no-network` baseline，确保 Oracle/模型 Provider 的 run-scoped `--allow-agent-host` 可以临时切换为精确 allowlist；启动后再证明 verifier 无法连接 `pypi.org:443` 和数字地址 `1.1.1.1:443`，并把 network namespace 与 route table 写入 `network.json`；
 2. root 用 bounded regular-tree copier 接收 Harbor 恢复的 `/workspace`：最多 20,000 entries、单文件 64 MiB、总计 256 MiB、相对路径 512 bytes；拒绝 symlink 和其他 special file，并把原 workspace 改为 root-owned/read-only；candidate 导致的拒绝记 model zero；
 3. verifier image build 从离线 wheelhouse 使用 `--no-index --require-hashes` 安装依赖；运行时再次读取并精确校验 allowlisted `VerifierCommandPlan`；
 4. root install supervisor 以 UID 10001 和 CPU、地址空间、进程、FD、文件大小上限执行 candidate build backend，持续监控 wall clock、entry count 和 aggregate bytes；所有 success/failure/timeout 路径都终止 process group 并扫描 UID 至 quiescent，再把隔离 target 交给 tests；

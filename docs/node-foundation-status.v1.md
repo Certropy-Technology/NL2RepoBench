@@ -1,5 +1,9 @@
 # Node/npm Foundation Status
 
+> **Dated evidence snapshot, not a current contract.** Current runtime/schema
+> behavior is defined by `runtime-adapter-architecture.zh-CN.md` and the actual
+> CLI/compiler. The values below preserve the Node foundation gate that was run.
+
 The historical Node/npm synthetic foundation remains development-only; the
 production lane is now a separate Node 24 toolchain lock.
 
@@ -33,4 +37,5 @@ production lane is now a separate Node 24 toolchain lock.
 - The synthetic task is excluded from every Python dataset and is never used for a
   Python/Node score parity claim.
 
-Docker and Harbor execution are intentionally not part of this foundation change.
+The synthetic foundation alone did not establish production readiness; the
+separate production vertical-slice evidence above did.

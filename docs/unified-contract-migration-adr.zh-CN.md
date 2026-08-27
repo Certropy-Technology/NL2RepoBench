@@ -91,7 +91,7 @@ protocol，必须整体替换 producer、validator、grader、fixtures 和基线
 迁移方式是一次性生成新 contract，而不是运行时兼容：
 
 1. 冻结 104 道 `test_files/`、当前 conversion state、历史结果和 artifact 输入的 hash；
-2. 将可恢复的 legacy metadata 转成 `catalog/tasks/<task-id>/task.toml` 和
+2. 将可恢复的 legacy metadata 转成 `catalog/sources/<task-id>/task.toml` 和
    `instruction.md`；
 3. 为每题重新确认完整 commit、license、环境 digest、依赖 closure、private tests、
    frozen collection 和 subprocess boundary；
@@ -101,8 +101,10 @@ protocol，必须整体替换 producer、validator、grader、fixtures 和基线
    `blocked`，不能用旧 projection 猜测补齐；
 7. 迁移完成后删除旧运行时 reader/compiler/grader，而不是在新代码中保留 fallback。
 
-旧的 `complete` 只代表静态转换完成，不自动升级为 `published`。发布门槛仍然是三次
-`valid=true`、collection 稳定、Oracle reward 不低于 `0.80`，以及全部控制实验通过。
+旧的 `complete` 只代表静态转换完成，不自动升级为 `published`。当前 Package campaign
+发布门槛是一次 `valid=true`、collection 与固定分母一致、Oracle reward 不低于 `0.80`，
+以及全部控制实验通过。三次独立 Oracle 只作为另行版本化的稳定性实验，不能与当前门禁
+混为一谈。
 
 ### 5. 统一 verifier report 和 metric
 
