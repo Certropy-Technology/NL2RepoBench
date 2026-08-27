@@ -1,8 +1,8 @@
 schema_version = "2.0"
 task_id = "koa"
-version = "2.0.0"
+version = "2.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:45992a718ffe7792d5dcb7fc98c16aa9875e70cd1a1c1497455085fcd1022864", size_bytes = 11212800, media_type = "application/x-tar", uri = "artifact://private/sha256:45992a718ffe7792d5dcb7fc98c16aa9875e70cd1a1c1497455085fcd1022864", visibility = "private" }
+oracle_bundle = { digest = "sha256:a8ce6578bca1b5c86a1a6ce5a2e84eeae3f988604c5dbf40e7b226d9504f221a", size_bytes = 235531, media_type = "application/gzip", uri = "artifact://private/sha256:a8ce6578bca1b5c86a1a6ce5a2e84eeae3f988604c5dbf40e7b226d9504f221a", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
@@ -15,7 +15,7 @@ status = "known"
 upstream_url = "https://github.com/koajs/koa"
 revision = "9c202e0077f4e314795222aff1be0da0bf9b2493"
 license_spdx = "MIT"
-source_digest = "sha256:7fc748340171c9bd930b610b61c783fd21e011882f56474cdb628ba92de6b633"
+source_digest = "sha256:069a16c6ea48c4d9e9f34fa31746c238c081fbce1f67cc99c85b75057faf5245"
 submodules = []
 
 [environment]
@@ -44,7 +44,7 @@ libc = "glibc"
 status = "known"
 ecosystem = "npm"
 consumer = "candidate-runtime"
-artifact = { digest = "sha256:4eaab9ddf9908685afc0a80f048ee28de829b61b2592e139c7c62b3352c673cf", size_bytes = 10496000, media_type = "application/x-tar", uri = "artifact://private/sha256:4eaab9ddf9908685afc0a80f048ee28de829b61b2592e139c7c62b3352c673cf", visibility = "private" }
+artifact = { digest = "sha256:3b26181d4e833ac9f0d3a26b0f55d3af5c8a1bbf434e98d27202346aab0bb291", size_bytes = 247405, media_type = "application/gzip", uri = "artifact://private/sha256:3b26181d4e833ac9f0d3a26b0f55d3af5c8a1bbf434e98d27202346aab0bb291", visibility = "private" }
 lockfile_name = "package-lock.json"
 lockfile_version = "3"
 package_manager = "npm"
@@ -56,10 +56,10 @@ packages = ["accepts", "content-disposition", "content-type", "cookies", "delega
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 17
+expected_total = 16
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
-test_bundle = { digest = "sha256:50444dbfe291d6478623f341c576501991988ba074583ed0055a4b098105b5e9", size_bytes = 20480, media_type = "application/x-tar", uri = "artifact://private/sha256:50444dbfe291d6478623f341c576501991988ba074583ed0055a4b098105b5e9", visibility = "private" }
+commands_artifact = { digest = "sha256:04664ab6ce8b53930fec7f78fd25f0ec187e0facf07afa5ec15dd0b4b37348ba", size_bytes = 503, media_type = "application/json", uri = "artifact://private/sha256:04664ab6ce8b53930fec7f78fd25f0ec187e0facf07afa5ec15dd0b4b37348ba", visibility = "private" }
+test_bundle = { digest = "sha256:0d5895efd2547da43d22cacc946ea599999560fd8e7904379feadad6de5ea90f", size_bytes = 3309, media_type = "application/gzip", uri = "artifact://private/sha256:0d5895efd2547da43d22cacc946ea599999560fd8e7904379feadad6de5ea90f", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -69,9 +69,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
-owner = "repair/koa"
-reason = "The previous controls-passed claim has no discoverable koa-specific Harbor Oracle/control/network receipts, and production recompile fails because the referenced private npm bundle is missing. The invalid runtime is removed; no production status is retained without hash-bound evidence."
+status = "packaged"
+owner = "node-author-gpt56-wide-restart-20260826-r3"
+reason = "Frozen source, private npm closure, private node:test bundle, and hash-verified Oracle solution are materialized; Oracle and controls are pending."
 
 [harbor]
 description = "Build the Koa HTTP middleware framework from an empty Node workspace."
