@@ -1,0 +1,90 @@
+schema_version = "1.0"
+task_id = "annotated-types"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "typing", "annotated", "metadata", "dataclasses", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/annotated-types/annotated-types"
+revision = "ceb950e81a79403c911990ce960ecc6f46733508"
+license_spdx = "MIT"
+source_digest = "sha256:21dc75bcb85e3a2dac6cd1c4d7dfb871b0987d7d612d6b82d9eeb7812cc59a0c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build closure is installed during Docker image construction; candidate and verifier execution have no egress, and the Oracle restores only the private archive of the pinned revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "hatchling==1.27.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "trove-classifiers==2026.6.1.19",
+]
+lock_artifact = { digest = "sha256:fa29aa639cc510c171cb66d5d67817cf25c3d89585868284fd60c9249e9f1356", size_bytes = 1431, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fa29aa639cc510c171cb66d5d67817cf25c3d89585868284fd60c9249e9f1356", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 60
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/child.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the annotated-types typing metadata library from an empty workspace; grading uses isolated deterministic checks for metadata classes, grouped constraints, predicate aliases, and documentation metadata."
+keywords = ["python", "typing", "annotated", "metadata", "dataclasses", "pytest", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:97fe251adaa32dd55cac8c2afb6b7c6539c0a6a57651065d20576bda668561e3", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:97fe251adaa32dd55cac8c2afb6b7c6539c0a6a57651065d20576bda668561e3", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:9b6e153d6245063f041cfc9a1bedd27778046f95c798e62ed259c723999055b8"
+size_bytes = 81920
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9b6e153d6245063f041cfc9a1bedd27778046f95c798e62ed259c723999055b8"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c3"
+reason = "The production Harbor bundle passed the Oracle gate and the empty, stub, forgery, and offline verifier controls; model Agent Run, review, and publication remain separate stages."

@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "task_id": "annotated-types",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/annotated-types/annotated-types",
+    "revision": "ceb950e81a79403c911990ce960ecc6f46733508",
+    "source_digest": "sha256:21dc75bcb85e3a2dac6cd1c4d7dfb871b0987d7d612d6b82d9eeb7812cc59a0c",
+    "license_spdx": "MIT"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/annotated-types/bundle.manifest.json",
+    "sha256": "sha256:2430c44b89ca088c18ed2d131346fe533218a4b41055052a09ce7584668230fc"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/annotated-types -a oracle --job-name annotated-types-oracle-c3-r2 -o .nl2repo/runs/annotated-types-oracle-c3-r2 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/grading.json",
+      "sha256": "sha256:b25901a970735ad3f54af304bf9d1e8124e8b243d705c8d171a2b444c9667989"
+    },
+    "network": {
+      "path": ".nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/network.json",
+      "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 60,
+      "passed": 60,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/annotated-types -a nop --job-name annotated-types-empty-c3-r2 -o .nl2repo/runs/annotated-types-empty-c3-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+      "path": ".nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/verifier/grading.json",
+        "sha256": "sha256:bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7"
+      },
+      "network": {
+        "path": ".nl2repo/runs/annotated-types-empty-c4/annotated-types-empty-c4/annotated-types__QdqgE6N/verifier/network.json",
+        "sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"
+      },
+      "summary": {
+        "valid": true,
+        "failure_reason": "candidate-installation-failed",
+        "collected": 0,
+        "reward": 0.0
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/annotated-types/annotated-types-stub -a oracle --job-name annotated-types-stub-c4 -o .nl2repo/runs/annotated-types-stub-c4 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/verifier/grading.json",
+        "sha256": "sha256:599bfe28d2ee8625967e997b51e15067b5730eb0e8458eef14e876cc2de6a853"
+      },
+      "network": {
+        "path": ".nl2repo/runs/annotated-types-stub-c4/annotated-types-stub-c4/annotated-types-stub__dTucisK/verifier/network.json",
+        "sha256": "sha256:452553e30517e1cb6d7e65fbd1e6f21e58fe2a71e5f1726035afc35abd0f5be3"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 60,
+        "passed": 1,
+        "reward": 0.016666666666666666
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/annotated-types/annotated-types-forgery -a oracle --job-name annotated-types-forgery-c4 -o .nl2repo/runs/annotated-types-forgery-c4 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/verifier/grading.json",
+        "sha256": "sha256:d0e93d8a86725315a8db545efde27523b7c263570b72a45c8561ac0397905665"
+      },
+      "network": {
+        "path": ".nl2repo/runs/annotated-types-forgery-c4/annotated-types-forgery-c4/annotated-types-forgery__W2HunNh/verifier/network.json",
+        "sha256": "sha256:958ef33e60cce075dc798f7dcf3371992d7c9d2ce5b3c968e7e1880fa9a4f3b0"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 60,
+        "passed": 2,
+        "reward": 0.03333333333333333,
+        "candidate_fake_report_ignored": true
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from annotated-types Oracle run",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/annotated-types-oracle-c4/annotated-types-oracle-c4/annotated-types__QBpFMrh/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      }
+    }
+  }
+}
