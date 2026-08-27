@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shlex
 import shutil
 import tempfile
@@ -145,7 +146,8 @@ class NodeHarborCompiler:
         if final_root.exists() or final_root.is_symlink():
             raise NodeHarborCompileError(f"Harbor output already exists: {final_root}")
         output_root.mkdir(parents=True, exist_ok=True)
-        temporary_root = Path(tempfile.mkdtemp(prefix=f".{manifest.task_id}-", dir=output_root))
+        temporary_prefix = re.sub(r"[^A-Za-z0-9._-]+", "_", manifest.task_id)
+        temporary_root = Path(tempfile.mkdtemp(prefix=f".{temporary_prefix}-", dir=output_root))
         try:
             self._write_instruction(source_dir, source.instruction, temporary_root)
             self._write_environment(manifest, temporary_root)
@@ -157,6 +159,7 @@ class NodeHarborCompiler:
             self._write_task_toml(manifest, temporary_root)
             self._write_readme(manifest, temporary_root, allow_incomplete)
             self._write_bundle_manifest(manifest, temporary_root, allow_incomplete)
+            final_root.parent.mkdir(parents=True, exist_ok=True)
             os.rename(temporary_root, final_root)
         except Exception:
             shutil.rmtree(temporary_root, ignore_errors=True)
@@ -432,7 +435,7 @@ WORKDIR /tests
             "schema_version": self.toolchain.harbor.task_schema,
             "artifacts": [manifest.harbor.workspace_artifact],
             "task": {
-                "name": f"nl2repobench/{manifest.task_id}",
+                "name": self._harbor_task_name(manifest.task_id),
                 "version": manifest.version,
                 "description": manifest.harbor.description,
                 "authors": [{"name": "NL2RepoBench"}],
@@ -465,6 +468,15 @@ WORKDIR /tests
             # schema has already restricted these to exact registry hostnames.
             data["environment"]["allowed_hosts"] = list(manifest.harbor.agent_allowed_hosts)
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
+
+    @staticmethod
+    def _harbor_task_name(task_id: str) -> str:
+        """Map an npm task id to Harbor's single-slash package name grammar."""
+
+        if task_id.startswith("@"):
+            scope, package = task_id[1:].split("/", 1)
+            return f"nl2repobench/{scope}-{package}"
+        return f"nl2repobench/{task_id}"
 
     def _test_script(self, manifest: TaskManifestV2) -> str:
         assert manifest.harbor is not None

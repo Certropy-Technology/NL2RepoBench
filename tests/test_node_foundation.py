@@ -230,6 +230,32 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "tests/dependencies/bundle.manifest.json" in declared_paths
 
 
+def test_node_compiler_supports_scoped_task_output(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    task_toml = source / "task.toml"
+    task_toml.write_text(
+        task_toml.read_text(encoding="utf-8").replace(
+            'task_id = "node-synthetic"',
+            'task_id = "@example/node-synthetic"',
+        ),
+        encoding="utf-8",
+    )
+
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "output", allow_incomplete=True
+    )
+
+    assert task_root == tmp_path / "output/@example/node-synthetic"
+    assert (task_root / "bundle.manifest.json").is_file()
+
+
+def test_node_compiler_uses_valid_harbor_name_for_scoped_task() -> None:
+    assert NodeHarborCompiler._harbor_task_name("@example/node-synthetic") == (
+        "nl2repobench/example-node-synthetic"
+    )
+
+
 def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
     source = tmp_path / "source"
     shutil.copytree(NODE_TASK, source)

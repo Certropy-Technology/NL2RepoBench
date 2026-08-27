@@ -193,7 +193,11 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert (output / "tests/test.sh").stat().st_mode & 0o111
     assert not (output / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (output / "tests/docker-compose.yaml").read_text()
-    assert 'expected_version="1.26.5"' in (output / "tests/test.sh").read_text()
+    test_script = (output / "tests/test.sh").read_text()
+    assert 'expected_version="1.26.5"' in test_script
+    assert '"status":"failed"' in test_script
+    assert "--runner-exit-code 1" in test_script
+    assert "cp -a /opt/go-module-bundle/vendor" in test_script
 
 
 def test_go_compiler_rejects_missing_control_script(tmp_path: Path) -> None:
