@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "dnspython"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "dns-toolkit"
+tags = ["python", "dns", "wire-format", "zone-files", "message-building", "parsing", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rthalley/dnspython"
+revision = "b723a83a2f192deda4aa341a1447689967e97889"
+license_spdx = "ISC"
+source_digest = "sha256:4babaa40d1ee3c4c92d3d0abc9d16ca29cac08130ef60e83d820fb2961c9d53c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "install uv-build from the private hash-locked requirement during the Docker build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build closure is installed during image build from a private hash lock; candidate and separate verifier runs have no egress. Only the trusted Oracle receives the exact source-host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["uv-build==0.9.21"]
+lock_artifact = { digest = "sha256:5d512b9d962906055568862b5f8f45fe4344b394d49933c24559ad020c7f0c21", size_bytes = 2021, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d512b9d962906055568862b5f8f45fe4344b394d49933c24559ad020c7f0c21", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:18cd6998c3c28e48867eacda73787a11b1356f1cf1d24860775ded00902baf29", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:18cd6998c3c28e48867eacda73787a11b1356f1cf1d24860775ded00902baf29", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build dnspython from an empty workspace and reproduce deterministic DNS name, RR, zone-file, wire-format, and message-construction behavior through a separate child-side verifier."
+keywords = ["python", "dns", "wire-format", "zone-files", "message-building", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:c3493ea23bf2bdc0d755f6611306fbfe36139b0e1a078d6517d300cc6486c2c4"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c3493ea23bf2bdc0d755f6611306fbfe36139b0e1a078d6517d300cc6486c2c4"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-wave2-20260828"
+reason = "Source, specification, private verifier, dependency lock, and Oracle bundle are authored; Harbor Agent/Oracle and negative controls are intentionally left for the integrator lane."
