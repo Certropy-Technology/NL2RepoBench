@@ -1,1 +1,60 @@
-{"schema_version":"1.0","task_id":"textual","terminal_kind":"blocked","blocked":{"failure_class":"environment","next_step":"Restore or reproducibly regenerate the declared dependency lock, verifier bundle, and Oracle bundle; then compile without --allow-incomplete and run official Harbor 0.21 Oracle plus empty, stub, forgery, and offline controls before recreating the runtime.","source_freeze":{"status":"known","upstream_url":"https://github.com/Textualize/textual","revision":"06dbeef4bb70fb718236aa418ed658ef4667a126","source_digest":"sha256:11b33d38322628be2107dab33facd4532773e9368d4d699069c4dfed712c878e","license_spdx":"MIT"},"commands":[{"command":"uv run nl2repo harbor compile catalog/sources/textual --output /tmp/textual-production-probe --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private","tool_version":"nl2repobench repository toolchain","exit_code":1,"log":{"path":"catalog/sources/textual/evidence/production-remediation.txt","sha256":"sha256:675e2808bc724f139a310f4d88a0ec4fe3999703b9328407fbff2e2f2e741669"}}]}}
+{
+  "schema_version": "1.0",
+  "task_id": "textual",
+  "terminal_kind": "valid",
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/textual-final-gate/textual -a oracle --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/oracle/2026-08-26__15-15-10/textual__MagGhvH/verifier/grading.json",
+      "sha256": "sha256:16b435f928ecbac3c6f91f30b61b6cf0a3b8bb0c96425b49455d0954ccb09893"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/oracle/2026-08-26__15-15-10/textual__MagGhvH/verifier/network.json",
+      "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/textual-final-gate/textual -a nop",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/empty/2026-08-26__15-19-45/textual__mMT34xQ/verifier/grading.json",
+        "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"
+      }
+    },
+    "stub": {
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/stub/2026-08-26__15-16-29/textual-stub__w56JLnE/verifier/grading.json",
+        "sha256": "sha256:a9313c04c27aa3cc06c66f6df6fd3643f98c6bc6a160e5845c75a19f938b4e13"
+      }
+    },
+    "forgery": {
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/forgery/2026-08-26__15-17-24/textual-forgery__sj6WBhQ/verifier/grading.json",
+        "sha256": "sha256:a9313c04c27aa3cc06c66f6df6fd3643f98c6bc6a160e5845c75a19f938b4e13"
+      }
+    },
+    "call_hang": {
+      "exit_code": 0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/call-hang/2026-08-26__15-18-20/textual-call-hang__sw2DAC3/verifier/grading.json",
+        "sha256": "sha256:a9313c04c27aa3cc06c66f6df6fd3643f98c6bc6a160e5845c75a19f938b4e13"
+      }
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "probes": ["pypi.org:443", "1.1.1.1:443"],
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wide-20260826-r2/textual/final-gate/oracle/2026-08-26__15-15-10/textual__MagGhvH/verifier/network.json",
+        "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"
+      }
+    }
+  }
+}

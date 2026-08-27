@@ -12,8 +12,8 @@ and must not require a network connection at runtime.
 - A Poetry-backed `pyproject.toml` with package source under `src/textual/`.
 - Runtime dependencies declared by the package metadata: `markdown-it-py` with its
   `linkify` extra, `mdit-py-plugins`, `rich`, `typing-extensions`, and `platformdirs`.
-- `import textual` and the public version attribute `textual.__version__`.
-- Text, slug, wrapping, geometry, color, markup escaping, and validation behavior
+- `import textual` and normal package imports for the documented modules.
+- Text, slug, wrapping, geometry, color, and markup escaping behavior
   described in the API guide. Results crossing the task boundary are JSON-compatible
   scalars, arrays, and strings.
 
@@ -33,22 +33,18 @@ Implement these import paths and signatures:
 4. `textual._cells.cell_len(text: str) -> int` returns terminal cell width, including
    combining-character behavior. `cell_width_to_column_index(line, cell_width,
    tab_width) -> int` maps a cell offset to a code-point column using tab stops.
-5. `textual._wrap.chunks(text: str)` yields `(start, end, chunk)` tuples for each
-   non-whitespace word together with following whitespace. `compute_wrap_offsets(text,
-   width, tab_size, fold=True) -> list[int]` returns code-point break offsets.
+5. `textual._wrap.compute_wrap_offsets(text, width, tab_size, fold=True) -> list[int]`
+   returns code-point break offsets.
 6. `textual.geometry.clamp(value, minimum, maximum)` clamps comparable values while
    preserving the input type. `Offset(x, y)`, `Size(width, height)`, and `Region(x, y,
    width, height)` are tuple-like value objects. `Region.from_corners(x1, y1, x2, y2)`
    constructs a region from two corners.
-7. `textual.color.Color.parse(value: str) -> Color`, `Color.from_hsl(h, s, l)`, and
-   `Color.from_hsv(h, s, v)` return a six-field tuple-like color
+7. `textual.color.Color.parse(value: str) -> Color` and `Color.from_hsl(h, s, l)`
+   return a six-field tuple-like color
    `(r, g, b, a, ansi, auto)`. Parse common named colors and hex colors, and raise
    `textual.color.ColorParseError` for malformed colors.
 8. `textual.markup.escape(markup: str) -> str` escapes markup opening brackets while
    preserving ordinary text and backslash rules.
-9. `textual.validation.ValidationResult.success()`, `ValidationResult.failure(message)`,
-   and the `is_valid` attribute provide the success/failure value used by validators.
-
 The exact edge cases exercised by the verifier are part of the contract. Preserve
 deterministic ordering, tuple/list shapes when serialized, exception type names, and
 the package's normal import layout. Do not add a benchmark-specific facade or test
