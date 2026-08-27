@@ -1,0 +1,95 @@
+schema_version = "2.0"
+task_id = "parse5"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "html-parser"
+tags = ["node", "npm", "esm", "html", "parser", "serializer", "dom", "unicode"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/inikulin/parse5"
+revision = "e05c47c8caf2eda4c5136310e6f94e7f00c83380"
+license_spdx = "MIT"
+source_digest = "sha256:27a205e827436e03acc87f91d6b1d57e209bf14267c48ed443813ff734113437"
+submodules = [
+  "test/data/html5lib-tests@a9f44960a9fedf265093d22b2aa3c7ca123727b9#sha256:58c8063ff052b8443e501d42530c23ec4321a9fac44843bf3d6c38dbdae4229d",
+  "test/data/html5lib-tests-fork@11c3216c8ec790dbda1494a84f580e0ea41d55a1#sha256:e2d2c0a0c64d73b13a179dc448bf15443730d051b7f487a2fb954d588a9f1a63",
+]
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. Exact entities 8.0.0 bytes are supplied by an integrity-checked private npm v3 cache, while the frozen root and submodule archives are confined to the trusted Oracle bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["entities@8.0.0"]
+artifact = { digest = "sha256:c7f8cec816b6dfc4eb30b391d8cde524c90c2284e83ed3cefe16f0d220914254", size_bytes = 266240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:c7f8cec816b6dfc4eb30b391d8cde524c90c2284e83ed3cefe16f0d220914254", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 54
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", visibility = "private" }
+test_bundle = { digest = "sha256:139c4f72fea52dc4823c0be2c99db5bca6df3001772b0c0d69ed27ec2eb79eed", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:139c4f72fea52dc4823c0be2c99db5bca6df3001772b0c0d69ed27ec2eb79eed", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an offline ESM HTML document and fragment parser with deterministic default-tree serialization."
+keywords = ["node", "npm", "html", "parser", "serializer", "dom", "unicode"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-discovery-restart-20260826-r4"
+reason = "Frozen source and submodules passed three 19,325-test baselines. The production Node 24 bundle passed one 54/54 Harbor Oracle run plus empty, stub, forgery, install-script, timeout, and offline controls; review, pilot, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:2430c9964c8ce92efe00b0235d6b19c197de002d7a5103355b47766d52a97a69"
+size_bytes = 8878080
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:2430c9964c8ce92efe00b0235d6b19c197de002d7a5103355b47766d52a97a69"
+visibility = "private"
