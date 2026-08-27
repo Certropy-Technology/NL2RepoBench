@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -20,6 +21,7 @@ from nl2repobench.domain.models_v2 import (
     DependencyBundleV2,
     EnvironmentLockV2,
     RuntimeProfileV2,
+    TaskManifestV2,
 )
 from nl2repobench.domain.models_v2 import (
     TestManifestV2 as NodeTestsManifest,
@@ -189,6 +191,24 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "tests/dependencies/bundle.manifest.json" in declared_paths
 
 
+def test_locked_node_compiler_honors_task_pinned_runtime_image() -> None:
+    compiler = NodeHarborCompiler(NODE_PRODUCTION_TOOLCHAIN)
+    source = CatalogCompiler.load_task(ROOT / "catalog/sources/fast-glob")
+    with tempfile.TemporaryDirectory(prefix="node-image-test-") as temporary:
+        root = Path(temporary)
+        compiled = CatalogCompiler(FileArtifactStore(root / "artifacts")).compile_task(
+            ROOT / "catalog/sources/fast-glob", root / "canonical"
+        )
+        manifest = compiled.manifest
+    assert isinstance(manifest, TaskManifestV2)
+    assert source.environment.base_image_digest is not None
+    expected = (
+        f"{source.environment.base_image.split('@', 1)[0]}"
+        f"@{source.environment.base_image_digest}"
+    )
+    assert compiler._runtime_image(manifest) == expected  # noqa: SLF001
+
+
 def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
     source = tmp_path / "source"
     shutil.copytree(NODE_TASK, source)
@@ -196,6 +216,9 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
     controls.mkdir()
     (controls / "stub.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
     (controls / "forgery.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    (controls / "call-hang.sh").write_text(
+        "#!/usr/bin/env bash\nexit 0\n", encoding="utf-8"
+    )
 
     task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
         source, tmp_path / "tasks", allow_incomplete=True
@@ -216,6 +239,14 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
         assert file_path.is_file()
         assert entry["size_bytes"] == file_path.stat().st_size
         assert entry["sha256"] == hashlib.sha256(file_path.read_bytes()).hexdigest()
+
+    timeout_control = HarborCompilerRegistry.default().prepare_control_bundle(
+        task_root, "call-hang", tmp_path / "timeout-controls", NODE_TOOLCHAIN
+    )
+    timeout_manifest = json.loads(
+        (timeout_control / "bundle.manifest.json").read_text(encoding="utf-8")
+    )
+    assert timeout_manifest["mode"] == "control-call-hang"
 
 
 def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:

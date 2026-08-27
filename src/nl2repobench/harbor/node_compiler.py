@@ -162,7 +162,7 @@ class NodeHarborCompiler:
     ) -> Path:
         """Create a supported Node control without mutating the source bundle."""
 
-        if kind not in {"stub", "forgery"}:
+        if kind not in {"stub", "forgery", "call-hang"}:
             raise NodeHarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"
         if not script.is_file():
@@ -199,12 +199,23 @@ class NodeHarborCompiler:
             ) from exc
 
     def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
-        image = self.toolchain.images.agent_base
+        image = self._runtime_image(manifest)
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
 WORKDIR /workspace
 """
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
+
+    def _runtime_image(self, manifest: TaskManifestV2) -> str:
+        """Return the task-pinned production image or the fixture default."""
+
+        environment = manifest.environment_lock
+        if self.toolchain.status != "locked":
+            return self.toolchain.images.agent_base
+        if environment.base_image is None or environment.base_image_digest is None:
+            raise NodeHarborCompileError("production Node image is not locked")
+        image_name = environment.base_image.split("@", 1)[0]
+        return f"{image_name}@{environment.base_image_digest}"
 
     def _write_verifier(
         self,
@@ -248,7 +259,7 @@ WORKDIR /workspace
                 raise NodeHarborCompileError("development Node task is missing harbor/tests")
             self._copy_tree(fixture, private_root)
 
-        image = self.toolchain.images.verifier_base
+        image = self._runtime_image(manifest)
         python_image = self.toolchain.images.verifier_python_base
         dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
 FROM --platform=linux/amd64 {python_image}
