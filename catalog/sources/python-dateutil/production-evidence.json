@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-dateutil",
+  "status": "awaiting-agent-run",
+  "source": {
+    "revision": "48bd1af97e71baf8e96fce5b663d589caac8f147",
+    "archive_sha256": "sha256:9c849ab5171036e43f8cbe8bed72ca6d6a0551a2bb83876158168381c1770d39",
+    "license": "BSD-3-Clause OR Apache-2.0",
+    "baseline": "TZ=UTC pytest with pytest 8.4.2: 2031 passed, 47 skipped, 17 xfailed (three independent runs)"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/python-dateutil --output .nl2repo/compiled-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/compiled-final/python-dateutil/bundle.manifest.json",
+    "canonical_manifest_digest": "sha256:ae7ae927166128426be500efbbc40d11847baf720db568886b195248ff7d0db1"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/python-dateutil -a oracle",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 23,
+    "total": 23,
+    "reward": 1.0,
+    "grading": ".nl2repo/authoring-work/python-discovery-20260826-r1/python-dateutil/harbor-runs/2026-08-26__15-12-05/python-dateutil__bqSjD9C/verifier/grading.json",
+    "grading_sha256": "sha256:5cee57b5ff4048063c65e1a6d5e77c1cb64aaa6ab1e88ac48297fef9be2310d3",
+    "network": ".nl2repo/authoring-work/python-discovery-20260826-r1/python-dateutil/harbor-runs/2026-08-26__15-12-05/python-dateutil__bqSjD9C/verifier/network.json",
+    "network_sha256": "sha256:dcf5adec61b5af5e299be7e18e7e78f33fe687fb7e71a516381ea806ee3a8b9e"
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/python-dateutil -a nop", "exit_code": 0, "reward": 0.0, "passed": 0, "total": 23},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/python-dateutil-stub -a oracle", "exit_code": 0, "reward": 0.043478260869565216, "passed": 1, "total": 23},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/python-dateutil-forgery -a oracle", "exit_code": 0, "reward": 0.0, "passed": 0, "total": 23, "verifier_owned_reward": true},
+    "offline": {"completed": true, "network_mode": "no-network"}
+  }
+}
