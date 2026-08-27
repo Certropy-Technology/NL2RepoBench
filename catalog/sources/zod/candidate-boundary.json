@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "protocol": "zod-json-validation-v1",
+  "transport": "one UTF-8 JSON request and one JSON response per isolated child invocation",
+  "request": {"id": "string", "schema": "bounded schema descriptor", "value": "JSON value"},
+  "response": {"id": "string", "success": "boolean", "data": "JSON value when successful", "issues": "nonempty issue records when unsuccessful"},
+  "limits": {"request_bytes": 65536, "response_bytes": 262144, "schema_depth": 8, "object_keys": 32, "array_items": 128},
+  "security": ["candidate package runs only in an unprivileged child", "NODE_OPTIONS and registry/proxy variables are removed", "candidate cannot write trusted reports", "all ordinary calls use explicit JSON values"]
+}
