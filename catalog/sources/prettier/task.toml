@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "prettier"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "code-formatter"
+tags = ["node", "npm", "esm", "formatter", "javascript", "typescript", "json", "markup"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/prettier/prettier"
+revision = "d9969c57343d48a4d1fac12f3f5c4b2fd82d8da5"
+license_spdx = "MIT"
+source_digest = "sha256:5fced228479ca4235fcb722849f8e1f000640109596f9f1fcea69349c9e49523"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases run without egress. The candidate contract has no third-party runtime dependencies; private tests and the frozen Oracle source/build artifacts are available only to the separate verifier and trusted Oracle lane."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:5a8aa0bf14255b209f02b32406efb53b91ddc5375b083e7227bb4256c9b4993e"
+size_bytes = 441
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:5a8aa0bf14255b209f02b32406efb53b91ddc5375b083e7227bb4256c9b4993e"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 20
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+size_bytes = 176
+media_type = "application/vnd.nl2repobench.node-command-plan+json"
+uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:f98a038556db218216adbbbb73aee0b9e5153597bb26311b55175ec6db301c43"
+size_bytes = 4498
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:f98a038556db218216adbbbb73aee0b9e5153597bb26311b55175ec6db301c43"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Recreate a deterministic dependency-free Prettier-compatible formatting API for eight language families."
+keywords = ["node", "npm", "formatter", "javascript", "typescript", "json", "markup", "subprocess"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 6144
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-gpt56-wide-20260826-r2"
+reason = "Exact source, dependency-free npm closure, private JSON subprocess verifier, and Oracle source/build artifacts are frozen; production compile and control evidence remain to be run."
+
+[oracle_bundle]
+digest = "sha256:5b013b000ababaf1f51cd5cc8faad6127e15e51dfe3f7ce16c0391d433b384bf"
+size_bytes = 3109794
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:5b013b000ababaf1f51cd5cc8faad6127e15e51dfe3f7ce16c0391d433b384bf"
+visibility = "private"

@@ -181,6 +181,10 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     assert "candidate-call-failed" in generated_test_script
     assert 'schema_version = "1.4"' in (first / "task.toml").read_text()
     assert 'language = "node"' in (first / "task.toml").read_text()
+    generated_environment = (first / "environment/Dockerfile").read_text()
+    assert "ca-certificates=20250419~deb12u1" in generated_environment
+    assert "git=1:2.39.5-0+deb12u3" in generated_environment
+    assert "git-man=1:2.39.5-0+deb12u3" in generated_environment
     assert not (first / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (first / "tests/docker-compose.yaml").read_text()
     bundle_manifest = json.loads((first / "bundle.manifest.json").read_text())

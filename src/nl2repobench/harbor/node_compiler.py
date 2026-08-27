@@ -49,6 +49,8 @@ class NodeHarborCompiler:
     MAX_BUNDLE_MEMBERS = 10_000
     MAX_BUNDLE_MEMBER_BYTES = 512 * 1024 * 1024
     MAX_BUNDLE_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
+    ORACLE_CA_CERTIFICATES_VERSION = "20250419~deb12u1"
+    ORACLE_GIT_VERSION = "1:2.39.5-0+deb12u3"
 
     def __init__(
         self,
@@ -201,6 +203,13 @@ class NodeHarborCompiler:
     def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
         image = self.toolchain.images.agent_base
         dockerfile = f"""FROM --platform=linux/amd64 {image}
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    ca-certificates={self.ORACLE_CA_CERTIFICATES_VERSION} \
+    git={self.ORACLE_GIT_VERSION} \
+    git-man={self.ORACLE_GIT_VERSION} \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
 """
