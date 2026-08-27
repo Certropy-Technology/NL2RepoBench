@@ -73,6 +73,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
             )
         except ValueError as exc:
             raise NodeHarborCompileError(str(exc)) from exc
+        self._copy_tree(dependencies_root, task_root / "environment/pnpm-bundle")
 
         private_root = tests_root / "private"
         if manifest.tests.test_bundle is not None and not allow_incomplete:
@@ -116,6 +117,14 @@ WORKDIR /tests
         )
         atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
         os.chmod(tests_root / "test.sh", 0o755)
+
+    def _agent_dependency_setup(self) -> str:
+        return f"""RUN npm install --global pnpm@{self.pnpm_version}
+COPY pnpm-bundle /opt/pnpm-bundle
+ENV PNPM_HOME=/usr/local/share/pnpm \\
+    npm_config_offline=true \\
+    npm_config_ignore_scripts=true
+"""
 
     def _write_empty_pnpm_bundle(self, root: Path) -> None:
         lock = b"""lockfileVersion: '9.0'

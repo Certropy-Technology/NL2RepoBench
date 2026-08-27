@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "typescript",
+  "status": "controls-passed",
+  "source": {
+    "revision": "d6c4afddb2c55f4a9dea7b59293a99a8fdea1799",
+    "archive_sha256": "sha256:d3de9628ec8a782ccc5e0f0261a23fc642b9b20d5e614f78a324e5abf8b3be3b",
+    "license": "Apache-2.0"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "platform": "linux/amd64",
+    "node_verifier_runtime_sha256": "sha256:68822c38417c79b446bb94388800d65f97b7b9541641aaf6997f675423bb0dab"
+  },
+  "probes": [
+    {"command": "npm ci --ignore-scripts --no-audit --no-fund", "exit_code": 0, "elapsed_sec": 13},
+    {"command": "npm run -w @typescript/typescript build", "exit_code": 0, "elapsed_sec": 1, "dist_bytes": 2611744},
+    {"command": "node --test packages/typescript/test/spanMap.test.ts packages/typescript/test/wtf8.test.ts", "exit_code": 0, "collected": 17, "passed": 17, "independent_runs": 3},
+    {"command": "private JSON contract", "exit_code": 0, "collected": 30, "passed": 30, "network": "none", "uid": 10001},
+    {"command": "Harbor 0.21.0 Oracle", "exit_code": 0, "valid": true, "collected": 30, "passed": 30, "reward": 1.0, "network": "none"},
+    {"command": "Harbor 0.21.0 empty control", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "network": "none"},
+    {"command": "Harbor 0.21.0 stub control", "exit_code": 0, "valid": true, "collected": 30, "passed": 4, "reward": 0.13333333333333333, "network": "none"},
+    {"command": "Harbor 0.21.0 forgery control", "exit_code": 0, "valid": true, "collected": 30, "passed": 4, "reward": 0.13333333333333333, "network": "none"},
+    {"command": "Harbor 0.21.0 call-hang control", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "network": "none"}
+  ],
+  "artifacts": {
+    "dependency_bundle": "private CAS, generated in task-local authoring work",
+    "test_bundle": "private CAS, generated in task-local authoring work",
+    "oracle_bundle": "private CAS, generated in task-local authoring work"
+  }
+}

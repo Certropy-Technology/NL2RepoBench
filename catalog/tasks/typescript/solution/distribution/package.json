@@ -1,0 +1,29 @@
+{
+  "name": "@typescript/typescript",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "Microsoft Corp.",
+  "description": "Bounded AST scanner and span mapping slice of the native TypeScript preview",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "LICENSE.txt",
+    "README.md"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./lib/version.cjs",
+    "./unstable/ast": "./dist/ast/index.js",
+    "./unstable/ast/scanner": "./dist/ast/scanner.js"
+  },
+  "imports": {
+    "#enums/*": {
+      "types": "./dist/enums/*.enum.d.ts",
+      "default": "./dist/enums/*.js"
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "blocker": null,
+  "commands": [],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:0be093ca511fc472b53841b50c781ad438c2529451081596bfaec3577197ac2f",
+    "mode": "production",
+    "path": "catalog/tasks/zod"
+  },
+  "controls": {
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/controls-final/zod-call-hang -a oracle --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/call-hang --n-concurrent 1 --max-retries 0 --yes",
+      "counts": {
+        "collected": 0,
+        "failed": 0,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/call-hang/2026-08-27__21-19-25/zod-call-hang__zSy9HsD/verifier/grading.json",
+      "grading_sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5",
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true,
+      "wall_seconds": 201
+    },
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/final-compile/zod -a nop --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/empty --n-concurrent 1 --max-retries 0 --yes",
+      "counts": {
+        "collected": 0,
+        "failed": 0,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/empty/2026-08-27__21-14-57/zod__Y5wJN9g/verifier/grading.json",
+      "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/controls-final/zod-forgery -a oracle --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "counts": {
+        "collected": 24,
+        "failed": 23,
+        "passed": 1
+      },
+      "exit_code": 0,
+      "forged_workspace_files": [
+        "grading.json",
+        "reward.json",
+        "tests/grading.json"
+      ],
+      "forged_workspace_reward_ignored": true,
+      "grading_sha256": "sha256:315c0f064696700a7e665c408eac6c4b9a26cc52393a6e816bc82eeba628f9ba",
+      "network_sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+      "public_network_available": false,
+      "reward": 0.041666666666666664,
+      "valid": true
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/controls-final/zod-offline -a oracle --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/offline --n-concurrent 1 --max-retries 0 --yes",
+      "counts": {
+        "collected": 24,
+        "failed": 24,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/controls-final/zod-stub -a oracle --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/stub --n-concurrent 1 --max-retries 0 --yes",
+      "counts": {
+        "collected": 24,
+        "failed": 23,
+        "passed": 1
+      },
+      "exit_code": 0,
+      "grading_sha256": "sha256:315c0f064696700a7e665c408eac6c4b9a26cc52393a6e816bc82eeba628f9ba",
+      "network_sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+      "public_network_available": false,
+      "reward": 0.041666666666666664,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:004e81d7f6260a7b7ea1e8d165c5862f5fad540daf08c7a89812028417f86702",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:004e81d7f6260a7b7ea1e8d165c5862f5fad540daf08c7a89812028417f86702",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The zero-dependency candidate and separate verifier use a verifier-owned empty npm v3 cache. The trusted Oracle receives exact-revision source and build archives only through its private bundle; the model agent has no source or registry access.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "artifact": {
+      "digest": "sha256:6973315b66354891d2bf3772e9d83b92a86cfe7c713bd6241922dcfa8100c90e",
+      "size_bytes": 16332800,
+      "uri": "artifact://private/sha256:6973315b66354891d2bf3772e9d83b92a86cfe7c713bd6241922dcfa8100c90e"
+    },
+    "collected": 24,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/final-compile/zod -a oracle --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/oracle-r2 --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "grading_path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/oracle-r2/2026-08-27__21-25-12/zod__vxj98sQ/verifier/grading.json",
+    "grading_sha256": "sha256:180a9123fa688400005f7a9b73f0fd6e585cb0793410cf1d0c1f55dec68ce432",
+    "harbor_version": "0.21.0",
+    "network_path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/zod/harbor-jobs-final/oracle-r2/2026-08-27__21-25-12/zod__vxj98sQ/verifier/network.json",
+    "network_sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+    "passed": 24,
+    "public_network_available": false,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:6973315b66354891d2bf3772e9d83b92a86cfe7c713bd6241922dcfa8100c90e",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 16332800,
+      "uri": "artifact://private/sha256:6973315b66354891d2bf3772e9d83b92a86cfe7c713bd6241922dcfa8100c90e",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/node-author-wide-20260826-remediation/zod/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this lane by contract.",
+    "Blind review, traceability review sign-off, pilot, dataset integration, and publication remain integrator stages.",
+    "Shared generic Node compiler/verifier/runtime changes and the updated toolchain digest require integrator review.",
+    "Pre-existing unrelated __pycache__ deletions and .pi/ files were not modified by this lane."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "e516c3baf22615e20934116abebfed6c000222c2",
+    "source_digest": "sha256:8d4a60e45991c6d3ca3884f0bc449a8b8229cb6af0eafcf095656037fdc81a5b",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/colinhacks/zod"
+  },
+  "status": "controls-passed",
+  "task_id": "zod",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

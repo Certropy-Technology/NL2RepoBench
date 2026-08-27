@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+import { callScenario } from "./test_client.mjs";
+
+test("serves a string body", () => assert.deepEqual(callScenario("basic-body"), { status: 200, body: "hello", type: "text/plain; charset=utf-8" }));
+test("unwinds middleware in reverse order", () => assert.equal(callScenario("middleware-order").body, "a>,b>,c,<b,<a"));
+test("exposes request context values", () => assert.deepEqual(callScenario("context-values"), { status: 200, header: "yes", body: { method: "GET", path: "/users", query: { active: "true", n: "2" }, host: "api.example.test" } }));
+test("trusts proxy headers when enabled", () => assert.deepEqual(callScenario("proxy-values").body, { protocol: "https", host: "api.eu.example.com", ip: "203.0.113.9", ips: ["203.0.113.9", "10.0.0.1"], subdomains: ["eu", "api"] }));
+test("serializes object bodies as JSON", () => assert.deepEqual(callScenario("json-body"), { status: 200, type: "application/json; charset=utf-8", body: { ok: true, count: 2 } }));
+test("sets status, message-adjacent headers, and body", () => assert.deepEqual(callScenario("status-and-header"), { status: 201, message: "42", body: "done" }));
+test("redirects with a location and body", () => assert.deepEqual(callScenario("redirect"), { status: 302, location: "/target", bodyHasTarget: true }));
+test("supports response header mutation", () => assert.deepEqual(callScenario("response-headers"), { xOne: "1, 2", vary: "Accept-Encoding", body: "ok" }));
+test("suppresses bodies for empty statuses", () => assert.deepEqual(callScenario("empty-status"), { status: 204, body: "", contentLength: null }));
+test("provides isolated state", () => assert.deepEqual(callScenario("state"), { status: 200, body: "7" }));
+test("exposes the current async context", () => assert.deepEqual(callScenario("async-local"), { status: 200, body: "true" }));
+test("turns thrown HTTP errors into responses", () => assert.deepEqual(callScenario("throw-error"), { status: 400, body: "bad request" }));
+test("signs cookies with configured keys", () => { const result = callScenario("signed-cookie"); assert.equal(result.status, 200); assert.equal(result.cookie.length, 2); assert.match(result.cookie[0], /^token=abc/); assert.match(result.cookie[1], /^token\.sig=/); });
+test("exposes stable application metadata", () => { const result = callScenario("application-inspect"); assert.deepEqual(result.json, { subdomainOffset: 3, proxy: true, env: "test" }); assert.deepEqual(result.inspect, result.json); assert.equal(result.sameDefault, true); assert.equal(result.hasErrors, true); });
+test("rejects non-function middleware", () => assert.equal(callScenario("invalid-middleware").error, true));
+test("guards against calling next twice", () => assert.equal(callScenario("next-twice").status, 500));

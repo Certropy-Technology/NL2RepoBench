@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/botocore"
+version = "0.1.0"
+description = "Build botocore from an empty workspace and satisfy deterministic offline session, model, request, signing, retry, and stubber scenarios."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "aws",
+    "models",
+    "signing",
+    "stubbing",
+    "offline",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = [
+    "python",
+    "aws",
+    "models",
+    "signing",
+    "stubbing",
+    "offline",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:402727df2e0ad00c7e01e63bb3228d774bb7271853e8c591f75cc495469fe8ea"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

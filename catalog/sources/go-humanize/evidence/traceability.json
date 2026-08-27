@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-humanize",
+  "source_freeze": {
+    "upstream_url": "https://github.com/dustin/go-humanize",
+    "revision": "4d1d9082551ec085912e7d2253a33ae547fca000",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:ce579ea6d7e8afd59ea2c9b3f8040984cc7ccb1fddc52e938a52ce64f265b9d4"
+  },
+  "api_inventory": {
+    "method": "golang.org/x/tools/go/packages v0.36.0 plus go/types",
+    "scanner": ".nl2repo/evidence/go-humanize/inventory.go",
+    "inventory": ".nl2repo/evidence/go-humanize/inventory.json",
+    "inventory_sha256": "sha256:fdb769bbef1b88a793561ab503076171f29e05dd4306c02900d0733061f4a639",
+    "packages": [
+      "github.com/dustin/go-humanize",
+      "github.com/dustin/go-humanize/english"
+    ],
+    "public_symbol_count_including_test_variants": 190,
+    "reviewed_bridge_operations": [
+      "bytes", "ibytes", "comma", "ftoa", "ftoa_with_digits", "ordinal",
+      "si", "si_with_digits", "plural", "plural_word"
+    ]
+  },
+  "source_baseline": {
+    "command": "GOOS=linux GOARCH=amd64 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+    "runs": 3,
+    "top_level_leaf_tests_each_run": 44,
+    "failed_leaf_tests_each_run": 0,
+    "exit_codes": [0, 0, 0]
+  },
+  "contract_leaf": {
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "decimal and binary byte formatting",
+      "comma grouping and signed boundary",
+      "float formatting and decimal limits",
+      "ordinal suffixes",
+      "SI prefixes, signs, units, and zero",
+      "regular, irregular, and explicit plurals",
+      "invalid JSON bridge requests"
+    ]
+  }
+}

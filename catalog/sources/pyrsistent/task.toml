@@ -1,0 +1,98 @@
+schema_version = "1.0"
+task_id = "pyrsistent"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "immutable-collections"
+tags = ["python", "persistent-data-structures", "immutable-collections", "records", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/tobgu/pyrsistent"
+revision = "0c0b7aec8cd25b1d2d8ba07b10acdefd0f38f2c7"
+license_spdx = "MIT"
+source_digest = "sha256:349f0b11f5eea9c8fa69564a13757352d4136b3c635f4340c695f9da29834aa8"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["ca-certificates", "git"]
+build_command = "Install the hash-locked pytest and setuptools closure during image build; candidate installation uses pip --no-deps --no-build-isolation."
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked Python closure and Git client are installed during Docker build. Agent and separate-verifier phases require no egress. The trusted Oracle alone receives a run-scoped github.com host grant to fetch and digest-check the exact source revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==9.1.1",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", size_bytes = 707, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 72
+expected_total_source = "frozen-collection"
+commands = ["python -I /tests/verifier/run.py"]
+protected_paths = [
+  "/tests/verifier/run.py",
+  "/tests/verifier/adapter.py",
+  "/tests/verifier/nodeids.json",
+  "/tests/verifier/fixture",
+]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:053072a4f128e1733641fffccc806c89d54bd592184c5d3d5c8fe917dc84f407", size_bytes = 81920, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:053072a4f128e1733641fffccc806c89d54bd592184c5d3d5c8fe917dc84f407", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build pyrsistent 0.21.0 from an empty workspace with immutable vectors, maps, sets, bags, lists, deques, records, checked collections, conversions, transformations, and PEP 561 packaging."
+keywords = ["python", "immutable-collections", "persistent-data-structures", "pytest", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 300.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:fc5d99af82e4296b57098a2606995853db6000a441e16a3e00ac1ead142377e7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:fc5d99af82e4296b57098a2606995853db6000a441e16a3e00ac1ead142377e7"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-discovery-20260826-r1"
+reason = "Source freeze, public specification, private 72-leaf subprocess verifier, hash-locked dependency closure, Oracle, production compile, and bounded negative controls are complete. Awaiting integrator blind/spec review and the separate model Agent Run."

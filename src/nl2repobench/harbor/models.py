@@ -13,6 +13,7 @@ from pydantic import Field, model_validator
 from nl2repobench.domain.models import RecordModel
 
 PINNED_IMAGE = r"^[A-Za-z0-9._/-]+@sha256:[0-9a-f]{64}$"
+LOCAL_IMAGE_TAG = r"^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9._-]+$"
 
 
 class HarborVersionLock(RecordModel):
@@ -39,6 +40,33 @@ class ImageLock(RecordModel):
         return self
 
 
+class AgentRuntimeImageLock(RecordModel):
+    """Prebuilt OpenHands runtime shared by every Agent environment."""
+
+    image: str
+    image_id: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    fork_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
+    python_executable: Literal["/opt/openhands-sdk-venv/bin/python"] = (
+        "/opt/openhands-sdk-venv/bin/python"
+    )
+    sdk_version: str
+    tools_version: str
+    litellm_version: str
+
+    @model_validator(mode="after")
+    def validate_image_identity(self) -> AgentRuntimeImageLock:
+        if not (
+            re.fullmatch(PINNED_IMAGE, self.image)
+            or re.fullmatch(LOCAL_IMAGE_TAG, self.image)
+        ):
+            raise ValueError("image must be an immutable digest reference or local tag")
+        if re.fullmatch(PINNED_IMAGE, self.image):
+            image_digest = self.image.rsplit("@", 1)[1]
+            if image_digest != self.image_id:
+                raise ValueError("image digest must match image_id")
+        return self
+
+
 class VerifierRuntimeLock(RecordModel):
     requirements_lock: str
     requirements_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
@@ -55,6 +83,7 @@ class AuthoringRuntimeLock(RecordModel):
 class HarborToolchainLock(RecordModel):
     harbor: HarborVersionLock
     images: ImageLock
+    agent_runtime: AgentRuntimeImageLock
     verifier: VerifierRuntimeLock
     authoring: AuthoringRuntimeLock
 

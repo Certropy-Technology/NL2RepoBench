@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cat > /workspace/package.json <<'JSON'
+{
+  "name": "p-limit",
+  "version": "7.3.1",
+  "type": "module",
+  "exports": {"types": "./index.d.ts", "default": "./index.js"},
+  "files": ["index.js", "index.d.ts"],
+  "dependencies": {"yocto-queue": "1.2.1"}
+}
+JSON
+cat > /workspace/package-lock.json <<'JSON'
+{
+  "name": "p-limit",
+  "version": "7.3.1",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {"name": "p-limit", "version": "7.3.1", "dependencies": {"yocto-queue": "1.2.1"}},
+    "node_modules/yocto-queue": {
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/yocto-queue/-/yocto-queue-1.2.1.tgz",
+      "integrity": "sha512-AyeEbWOu/TAXdxlV9wmGcR0+yh2j3vYPGOECcIj2S7MkrLyC7ne+oye2BKTItt0ii2PHk4cDy+95+LshzbXnGg=="
+    }
+  }
+}
+JSON
+cat > /workspace/index.js <<'JS'
+function createLimit(concurrency) {
+  const limit = () => new Promise(() => {});
+  Object.defineProperties(limit, {
+    activeCount: {get: () => 0},
+    pendingCount: {get: () => 0},
+    concurrency: {get: () => concurrency, set: value => { concurrency = value; }},
+    clearQueue: {value() {}},
+    map: {value: () => new Promise(() => {})},
+  });
+  return limit;
+}
+
+export default createLimit;
+export const limitFunction = () => () => new Promise(() => {});
+JS
+cat > /workspace/index.d.ts <<'TS'
+export default function pLimit(concurrency: number | {concurrency: number; rejectOnClear?: boolean}): any;
+export function limitFunction(function_: (...arguments_: any[]) => PromiseLike<any>, options: {concurrency: number}): (...arguments_: any[]) => Promise<any>;
+TS

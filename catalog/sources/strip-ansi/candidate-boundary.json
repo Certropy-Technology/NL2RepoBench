@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-ansi",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript out of the trusted node:test process while exercising the package root through a bounded JSON request/response boundary.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Read the installed package manifest, resolve the safe ESM root export, import it, and return only package-shape metadata.",
+    "strip": "Call the default export once with one JSON-compatible value and return either the string result or a bounded exception type/message record."
+  },
+  "in_scope_values": [
+    "string",
+    "finite number for TypeError checks",
+    "boolean for TypeError checks",
+    "null, arrays, and plain JSON objects for TypeError checks"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

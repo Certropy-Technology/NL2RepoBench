@@ -1,0 +1,165 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/referencing",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "note": "Repository-wide pre-existing warnings remain; error_count is zero and referencing has no finding."
+    },
+    {
+      "bundle_manifest": ".nl2repo/compiled/referencing/bundle.manifest.json",
+      "bundle_manifest_sha256": "sha256:9e67d8144f7b06685ae6649d07219c0accea9e00ea87ee5d88536cefc5cc843d",
+      "command": "uv run nl2repo harbor compile catalog/sources/referencing --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest --no-cov -q tests/test_harbor_compiler.py tests/test_candidate_boundary.py tests/test_network_policy.py",
+      "exit_code": 0,
+      "result": "93 passed"
+    },
+    {
+      "command": "docker build compiled agent and verifier images",
+      "exit_code": 0
+    },
+    {
+      "command": "frozen source baseline under Python 3.13.15",
+      "exit_code": 0,
+      "result": "503 passed, 132 xfailed, 406 subtests passed"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:407be78c1e24828beadd7d52260a643550371609f2a5944ffa720e8777dfe508",
+    "mode": "production",
+    "path": "catalog/tasks/referencing"
+  },
+  "controls": {
+    "empty": {
+      "path": ".nl2repo/runs/referencing-local/controls/empty/logs/verifier/grading.json",
+      "reason": "candidate-installation-failed",
+      "reward": 0.0
+    },
+    "forgery": {
+      "forged_reward_ignored": true,
+      "passed": 0,
+      "path": ".nl2repo/runs/referencing-local/controls/forgery/logs/verifier/grading.json",
+      "reward": 0.0,
+      "total": 20
+    },
+    "install_timeout": {
+      "installer_outcome": "timeout",
+      "installer_returncode": -9,
+      "path": ".nl2repo/runs/referencing-local/controls/install-hang/logs/verifier/grading.json",
+      "reward": 0.0
+    },
+    "offline": {
+      "path": ".nl2repo/runs/referencing-local/oracle-final/logs/verifier/network.json",
+      "public_network_available": false
+    },
+    "stub": {
+      "passed": 0,
+      "path": ".nl2repo/runs/referencing-local/controls/stub/logs/verifier/grading.json",
+      "reward": 0.0,
+      "total": 20
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:d856eea398d73acc1a1d34cbf986a11757f77046083ea43119bad8c3a9f786f8",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 11959,
+      "uri": "artifact://private/sha256:d856eea398d73acc1a1d34cbf986a11757f77046083ea43119bad8c3a9f786f8",
+      "visibility": "private"
+    },
+    "packages": [
+      "attrs==26.1.0",
+      "hatchling==1.32.0",
+      "packaging==26.3",
+      "pathspec==1.1.1",
+      "pluggy==1.6.0",
+      "rpds-py==2026.6.3",
+      "tomlkit==0.15.1",
+      "trove-classifiers==2026.6.1.19"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.13-slim-bookworm",
+    "base_image_digest": "sha256:b6bd71b0dd3811ddbcbc523ec2965fd1e1bcfdf7a20ab24679273d3bee726129",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "Third-party build and verifier dependencies are installed during Docker build from a hash-locked requirements artifact; Agent and separate verifier runs have no egress. The trusted Oracle receives only its run-scoped source-host authorization.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12-amd64",
+    "python_version": "3.13.15",
+    "status": "known"
+  },
+  "oracle": {
+    "artifacts": {
+      "collection": ".nl2repo/runs/referencing-local/oracle-final/logs/verifier/collection.json",
+      "grading": ".nl2repo/runs/referencing-local/oracle-final/logs/verifier/grading.json",
+      "network": ".nl2repo/runs/referencing-local/oracle-final/logs/verifier/network.json",
+      "reward": ".nl2repo/runs/referencing-local/oracle-final/logs/verifier/reward.json"
+    },
+    "exit_code": 0,
+    "method": "manual Docker execution of final compiled Oracle solution and separate verifier; no Harbor Agent Run started",
+    "passed": 20,
+    "reward": 1.0,
+    "total": 20,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:90f17ff6c785ac30c1f2d4ca681bbd9dc14c6167dc04863bfd52920a26e7cd52",
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "size_bytes": 337920,
+      "uri": "artifact://private/sha256:90f17ff6c785ac30c1f2d4ca681bbd9dc14c6167dc04863bfd52920a26e7cd52",
+      "visibility": "private"
+    },
+    "verifier": {
+      "bundle": {
+        "digest": "sha256:d6fdc4865c961172767f26decd99b4c04a04c4e13ce2c1ed2f2682f8391e49d0",
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "size_bytes": 20480,
+        "uri": "artifact://private/sha256:d6fdc4865c961172767f26decd99b4c04a04c4e13ce2c1ed2f2682f8391e49d0",
+        "visibility": "private"
+      },
+      "entrypoint": "run.py",
+      "protocol": "custom-json-v1"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/python-author-next-20260826-r1/referencing/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "The static language-server check could not run because the configured ty binary is missing; py_compile and focused pytest passed.",
+    "Review and model-pilot stages are intentionally not performed in an authoring lane.",
+    "The Oracle replaces source dynamic Hatch VCS version metadata with local version 0.0.0 after verifying the unmodified source archive; this is required because the frozen commit has no tag/VCS metadata in the archive-only workspace."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "b081312fdf2567324d0c11fb07b630d7fcecea35",
+    "source_digest": "sha256:b8edfe7c6ddc3e90be5a73f4fd4a72e3d9f54b60deb14bb2b55081775bb49fba",
+    "status": "known",
+    "submodules": [
+      "referencing-suite@e70fee8c4d4a1c128f5c55e395ce154ed87e1f24"
+    ],
+    "upstream_url": "https://github.com/python-jsonschema/referencing"
+  },
+  "status": "controls-passed",
+  "task_id": "referencing",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

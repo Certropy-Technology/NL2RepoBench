@@ -1,0 +1,109 @@
+schema_version = "2.0"
+task_id = "typescript"
+version = "2.0.1"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "typescript-tooling"
+tags = ["node", "npm", "esm", "typescript", "scanner", "ast", "span-map"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/microsoft/TypeScript"
+revision = "d6c4afddb2c55f4a9dea7b59293a99a8fdea1799"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:d3de9628ec8a782ccc5e0f0261a23fc642b9b20d5e614f78a324e5abf8b3be3b"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate distribution has an empty npm v3 runtime closure. The trusted Oracle separately verifies the frozen source archive; the model Agent receives neither source bytes nor a source-host allowlist."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:2ccdeb96d62ceb4d733203a01647e2c49782ff183a5fbe74b39019647dd93c02"
+size_bytes = 435
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:2ccdeb96d62ceb4d733203a01647e2c49782ff183a5fbe74b39019647dd93c02"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 30
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:32aac3268272a2cd945b7b70df39ac7281f55767d07427788122d1133769891a"
+size_bytes = 244
+media_type = "application/json"
+uri = "artifact://private/sha256:32aac3268272a2cd945b7b70df39ac7281f55767d07427788122d1133769891a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:7d771d2b0015b08fdcdd9fedf73f44c9f6c995c4a401189d2791e26ed6da948f"
+size_bytes = 5930
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:7d771d2b0015b08fdcdd9fedf73f44c9f6c995c4a401189d2791e26ed6da948f"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the native TypeScript preview's bounded lexical scanner and bidirectional SpanMap API."
+keywords = ["node", "npm", "esm", "typescript", "scanner", "ast", "span-map"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:70685ebbe86dc938a75a23ed64635acb6d99f9c3061bb89158f1a1f3bdb0ae77"
+size_bytes = 25739456
+media_type = "application/vnd.nl2repobench.node-oracle+tar"
+uri = "artifact://private/sha256:70685ebbe86dc938a75a23ed64635acb6d99f9c3061bb89158f1a1f3bdb0ae77"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "typescript-remediation"
+reason = "The exact production bundle passes 30/30 Oracle leaves offline; empty, stub, forgery, and bounded candidate-call timeout controls produce low or zero reward without Harbor exceptions."

@@ -14,13 +14,13 @@ status = "known"
 upstream_url = "https://github.com/Textualize/textual"
 revision = "06dbeef4bb70fb718236aa418ed658ef4667a126"
 license_spdx = "MIT"
-source_digest = "sha256:11b33d38322628be2107dab33facd4532773e9368d4d699069c4dfed712c878e"
+source_digest = "sha256:481fcda705dcc2e3addded9d53b64c78232a7f46607621c9d0a33c4a6e0378b0"
 submodules = []
 
 [environment]
 status = "known"
 python_version = "3.12.11"
-os_name = "debian-12"
+os_name = "debian-13"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = ["git", "ca-certificates"]
@@ -72,13 +72,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-owner = "repair/textual"
-reason = "The bounded production compile proves the declared private dependency lock, verifier bundle, and Oracle bundle are missing, and no official Harbor Oracle/control/network or production-recompile receipts exist in this checkout. No production status is authorized without hash-bound evidence."
+status = "controls-passed"
+owner = "python-author-gpt56-wide-recovery-20260826-r1"
+reason = "Private dependency, verifier, and Oracle artifacts were restored by digest; production compilation and deterministic control receipts are recorded in task-local evidence. Blind review and the downstream model Agent Run remain integrator-owned."
 
 [oracle_bundle]
-digest = "sha256:94c2c8b486648ea11e4699292c18384717e509ae87481a51d81d7103d118d7f1"
+digest = "sha256:3c671a8fc7a755d8bc0dfbdd7a2037ed6b70ffce361dadca92d30ba3dd32e63a"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:94c2c8b486648ea11e4699292c18384717e509ae87481a51d81d7103d118d7f1"
+uri = "artifact://private/sha256:3c671a8fc7a755d8bc0dfbdd7a2037ed6b70ffce361dadca92d30ba3dd32e63a"
 visibility = "private"

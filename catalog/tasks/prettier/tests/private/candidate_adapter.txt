@@ -1,0 +1,113 @@
+if (process.env.NODE_TEST_CONTEXT) process.exit(0);
+
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const PACKAGE = 'prettier';
+const VERSION = '3.10.0-dev';
+const METHODS = new Set(['format', 'check', 'formatWithCursor']);
+const REQUIRED_EXPORTS = ['check', 'format', 'formatWithCursor', 'version'];
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 512 * 1024;
+const MAX_DEPTH = 20;
+
+function emit(id, payload, code = 0) {
+  const encoded = JSON.stringify({id, ...payload});
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stdout.write(JSON.stringify({id, ok: false, error_type: 'response-too-large', message: 'response is too large'}) + '\n');
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function fail(id, errorType, message, code = 64) {
+  emit(id, {ok: false, error_type: errorType, message: String(message).slice(0, 1024)}, code);
+}
+
+function isJsonValue(value, depth = 0) {
+  if (depth > MAX_DEPTH) return false;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.length <= 256 && value.every(item => isJsonValue(item, depth + 1));
+  if (typeof value === 'object') {
+    return Object.keys(value).length <= 256 && Object.entries(value).every(([key, item]) => key.length <= 256 && isJsonValue(item, depth + 1));
+  }
+  return false;
+}
+
+function request() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) fail('', 'request-too-large', 'request is too large');
+  let requestValue;
+  try {
+    requestValue = JSON.parse(data.toString('utf8'));
+  } catch {
+    fail('', 'malformed-json', 'request is malformed');
+  }
+  if (!requestValue || typeof requestValue !== 'object' || Array.isArray(requestValue)) fail('', 'malformed-request', 'request must be an object');
+  const id = requestValue.id;
+  if (typeof id !== 'string' || id.length < 1 || id.length > 128) fail('', 'invalid-id', 'id is not bounded');
+  if (!['call', 'inventory'].includes(requestValue.operation)) fail(id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  if (!requestValue.payload || typeof requestValue.payload !== 'object' || Array.isArray(requestValue.payload)) fail(id, 'malformed-payload', 'payload must be an object');
+  return {id, operation: requestValue.operation, payload: requestValue.payload};
+}
+
+function safeEntry(packageJson, root) {
+  const rootExport = packageJson.exports?.['.'];
+  const runtimeEntry = rootExport?.default ?? rootExport?.import;
+  const declarationEntry = rootExport?.types;
+  if (packageJson.name !== PACKAGE || packageJson.version !== VERSION || packageJson.type !== 'commonjs') throw new Error('package metadata is invalid');
+  if (typeof runtimeEntry !== 'string' || typeof declarationEntry !== 'string') throw new Error('package root exports are invalid');
+  for (const entry of [runtimeEntry, declarationEntry]) {
+    if (!entry.startsWith('./') || entry.includes('..') || entry.includes('\\')) throw new Error('package entry is unsafe');
+    readFileSync(join(root, entry));
+  }
+  return {runtimeEntry, declarationEntry};
+}
+
+async function load() {
+  const root = join(process.cwd(), 'node_modules', PACKAGE);
+  const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const entries = safeEntry(packageJson, root);
+  const api = await import(pathToFileURL(join(root, entries.runtimeEntry)).href);
+  return {api, packageJson, entries};
+}
+
+async function main() {
+  const {id, operation, payload} = request();
+  const {api, packageJson, entries} = await load();
+  if (operation === 'inventory') {
+    if (Object.keys(payload).length !== 0) fail(id, 'malformed-payload', 'inventory payload must be empty');
+    emit(id, {
+      ok: true,
+      value: {
+        packageName: packageJson.name,
+        packageVersion: packageJson.version,
+        packageType: packageJson.type,
+        runtimeEntry: entries.runtimeEntry,
+        declarationEntry: entries.declarationEntry,
+        dependencyCount: Object.keys(packageJson.dependencies ?? {}).length,
+        hasLifecycleHooks: Object.keys(packageJson.scripts ?? {}).some(name => ['preinstall', 'install', 'postinstall', 'prepare', 'prepublish', 'prepublishonly', 'publish', 'postpublish'].includes(name.toLowerCase())),
+        requiredExportTypes: Object.fromEntries(REQUIRED_EXPORTS.map(name => [name, typeof api[name]])),
+        runtimeVersion: api.version,
+      },
+    });
+  }
+  if (Object.keys(payload).sort().join(',') !== 'method,options,text') fail(id, 'malformed-payload', 'call payload fields are invalid');
+  if (!METHODS.has(payload.method) || typeof payload.text !== 'string' || !payload.options || typeof payload.options !== 'object' || Array.isArray(payload.options) || !isJsonValue(payload.options)) {
+    fail(id, 'malformed-arguments', 'call requires an allowlisted method, text, and bounded options');
+  }
+  if (typeof api[payload.method] !== 'function') fail(id, 'export-shape-invalid', 'required runtime export is missing');
+  try {
+    const result = await api[payload.method](payload.text, payload.options);
+    if (!isJsonValue(result)) fail(id, 'non-json-result', 'result is not JSON-safe');
+    emit(id, {ok: true, value: result});
+  } catch (error) {
+    const type = typeof error?.constructor?.name === 'string' ? error.constructor.name : 'Error';
+    fail(id, type, error?.message ?? error, 1);
+  }
+}
+
+main().catch(error => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));

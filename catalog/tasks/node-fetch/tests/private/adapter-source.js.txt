@@ -1,0 +1,112 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+function emit(payload) {
+  process.stdout.write(`${JSON.stringify(payload)}\n`);
+}
+
+function failure(error) {
+  emit({
+    ok: false,
+    error: 'candidate-call-failed',
+    exceptionType: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+  });
+}
+
+async function loadCandidate() {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  try {
+    return require('node-fetch');
+  } catch (error) {
+    if (error?.code !== 'ERR_REQUIRE_ESM' && error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') throw error;
+    const root = join(process.cwd(), 'node_modules', 'node-fetch');
+    const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+    const exports = manifest.exports;
+    const entry = typeof exports === 'string'
+      ? exports
+      : exports?.['.']?.import ?? exports?.import ?? manifest.module ?? manifest.main;
+    if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+      throw new Error('node-fetch has no safe ESM entry');
+    }
+    return import(pathToFileURL(join(root, entry)).href);
+  }
+}
+
+function headerSnapshot(headers) {
+  return {entries: Array.from(headers.entries()), raw: headers.raw()};
+}
+
+async function dispatch(candidate, payload) {
+  const operation = payload?.operation;
+  if (operation === 'inventory') {
+    const manifest = JSON.parse(readFileSync(join(process.cwd(), 'node_modules', 'node-fetch', 'package.json'), 'utf8'));
+    return {
+      name: manifest.name,
+      version: manifest.version,
+      type: manifest.type,
+      dependencies: manifest.dependencies ?? {},
+      scriptNames: Object.keys(manifest.scripts ?? {}).sort(),
+      exports: Object.fromEntries(['default', 'Headers', 'Request', 'Response', 'isRedirect'].map(name => [name, typeof candidate[name]])),
+    };
+  }
+  if (operation === 'headers') {
+    const headers = new candidate.Headers(payload.init);
+    for (const action of payload.actions ?? []) {
+      if (!action || typeof action !== 'object') throw new TypeError('invalid header action');
+      if (action.kind === 'append') headers.append(action.name, action.value);
+      else if (action.kind === 'set') headers.set(action.name, action.value);
+      else if (action.kind === 'delete') headers.delete(action.name);
+      else throw new TypeError('header action is not allowlisted');
+    }
+    const lookup = (payload.lookups ?? []).map(item => ({
+      get: headers.get(item), has: headers.has(item), all: headers.getAll(item),
+    }));
+    return {lookup, ...headerSnapshot(headers)};
+  }
+  if (operation === 'response') {
+    const response = new candidate.Response(payload.body ?? null, payload.init ?? {});
+    if (payload.action === 'snapshot') {
+      return {type: response.type, status: response.status, statusText: response.statusText, ok: response.ok, bodyUsed: response.bodyUsed, ...headerSnapshot(response.headers)};
+    }
+    if (payload.action === 'text') return {value: await response.text(), bodyUsed: response.bodyUsed};
+    if (payload.action === 'json') return {value: await response.json(), bodyUsed: response.bodyUsed};
+    if (payload.action === 'arrayBuffer') return {value: Array.from(new Uint8Array(await response.arrayBuffer())), bodyUsed: response.bodyUsed};
+    if (payload.action === 'clone-text') {
+      const clone = response.clone();
+      return {original: await response.text(), clone: await clone.text(), originalUsed: response.bodyUsed, cloneUsed: clone.bodyUsed};
+    }
+    throw new TypeError('response action is not allowlisted');
+  }
+  if (operation === 'response-static') {
+    let response;
+    if (payload.kind === 'error') response = candidate.Response.error();
+    else if (payload.kind === 'redirect') response = candidate.Response.redirect(payload.url, payload.status);
+    else if (payload.kind === 'json') response = candidate.Response.json(payload.data, payload.init ?? {});
+    else throw new TypeError('response static action is not allowlisted');
+    const result = {type: response.type, status: response.status, statusText: response.statusText, ok: response.ok, ...headerSnapshot(response.headers)};
+    if (payload.kind === 'json') result.text = await response.text();
+    return result;
+  }
+  if (operation === 'request') {
+    const request = new candidate.Request(payload.input, payload.init ?? {});
+    return {url: request.url, method: request.method, redirect: request.redirect, referrer: request.referrer, referrerPolicy: request.referrerPolicy, ...headerSnapshot(request.headers)};
+  }
+  if (operation === 'fetch-data') {
+    if (typeof payload.url !== 'string' || !payload.url.startsWith('data:')) throw new TypeError('only data URLs are allowlisted');
+    const response = await candidate.default(payload.url, payload.init ?? {});
+    return {status: response.status, ok: response.ok, text: await response.text(), ...headerSnapshot(response.headers)};
+  }
+  if (operation === 'is-redirect') return candidate.isRedirect(payload.status);
+  throw new TypeError('operation is not allowlisted');
+}
+
+try {
+  const input = JSON.parse(readFileSync(0, 'utf8'));
+  const candidate = await loadCandidate();
+  emit({ok: true, value: await dispatch(candidate, input)});
+} catch (error) {
+  failure(error);
+}

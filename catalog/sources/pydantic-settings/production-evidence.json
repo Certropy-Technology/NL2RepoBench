@@ -1,0 +1,177 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "git -C .nl2repo/authoring-work/python-author-wide-20260826-r2/pydantic-settings/upstream fetch --depth 1 origin d26fc0c3944fe68cf169f86386988bb83e3df2d8; git archive --format=tar <revision> | sha256sum",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/pydantic-settings",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources/pydantic-settings",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/pydantic-settings --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build -t nl2repo-pydantic-settings-env:authoring-r2 .nl2repo/compiled/pydantic-settings/environment",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build -t nl2repo-pydantic-settings-verifier:authoring-r2 .nl2repo/compiled/pydantic-settings/tests",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q --no-cov tests/test_harbor_compiler.py tests/test_network_policy.py tests/test_custom_verifier.py",
+      "exit_code": 0,
+      "result": "75 passed"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:b46fc4e59d823162bac9a8715704cfaecf32c7e8d3a48bd1ddf760f572439755",
+    "mode": "production",
+    "path": "catalog/tasks/pydantic-settings"
+  },
+  "controls": {
+    "call_hang": {
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "wall_seconds": 24
+    },
+    "empty": {
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "install_hang": {
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true,
+      "wall_seconds": 32
+    },
+    "network": "docker --network none",
+    "stub": {
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "summary": ".nl2repo/evidence/pydantic-settings/final/matrix/summary.json",
+    "workspace_invalid": {
+      "failure_reason": "candidate-workspace-rejected",
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 14279,
+      "uri": "artifact://private/sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89",
+      "visibility": "private"
+    },
+    "packages": [
+      "annotated-types==0.7.0",
+      "editables==0.5",
+      "hatchling==1.28.0",
+      "packaging==26.0",
+      "pathspec==1.0.4",
+      "pluggy==1.6.0",
+      "pydantic==2.13.4",
+      "pydantic-core==2.46.4",
+      "python-dotenv==1.2.2",
+      "setuptools==80.9.0",
+      "trove-classifiers==2026.6.1.19",
+      "typing-extensions==4.15.0",
+      "typing-inspection==0.4.4",
+      "wheel==0.45.1"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12",
+    "python_version": "3.12",
+    "status": "known",
+    "system_packages": [
+      "git",
+      "ca-certificates"
+    ]
+  },
+  "oracle": {
+    "collected": 20,
+    "grading": ".nl2repo/evidence/pydantic-settings/final/matrix/oracle/logs/grading.json",
+    "method": "Direct isolated Docker verifier against the exact git-archive materialization; no Harbor Agent Run was started.",
+    "network": "docker --network none",
+    "passed": 20,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e",
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e",
+      "visibility": "private"
+    },
+    "verifier": {
+      "bundle": {
+        "digest": "sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723",
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "size_bytes": 20480,
+        "uri": "artifact://private/sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723",
+        "visibility": "private"
+      },
+      "entrypoint": "run.py",
+      "protocol": "custom-json-v1"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/python-author-wide-20260826-r2/pydantic-settings/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Blind/spec traceability review and model pilot remain integrator/campaign gates.",
+    "Oracle evidence is a direct Docker verifier reproduction, not a harbor run; it deliberately did not start a Harbor Agent Run per lane instructions.",
+    "The exact GitHub source host must be supplied only to a trusted Oracle Harbor invocation; task metadata remains no-network for model agents."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "d26fc0c3944fe68cf169f86386988bb83e3df2d8",
+    "source_digest": "sha256:57b7dab78777c75bcc2c138d561dea097afe3088c0b3e7f1d67481d6b4bbd5aa",
+    "status": "known",
+    "upstream_url": "https://github.com/pydantic/pydantic-settings"
+  },
+  "status": "controls-passed",
+  "task_id": "pydantic-settings",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

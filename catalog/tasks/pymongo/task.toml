@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pymongo"
+version = "1.1.0"
+description = "Build the deterministic BSON, ObjectId, MongoDB URI parsing, and scalar validation subset of PyMongo."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "pymongo",
+    "bson",
+    "uri-parser",
+    "no-network",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "database-driver-library"
+tags = [
+    "python",
+    "bson",
+    "uri-parser",
+    "packaging",
+    "repository-generation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 51
+canonical_manifest_digest = "sha256:cfcfb0469851aa52d66d11d9af4c9ee8cd115cda61c6c9c9d1b043a2fb5b2362"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 480.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 3072
+storage_mb = 8192

@@ -1,10 +1,34 @@
-command: uv run nl2repo task validate-source catalog/sources/better-sqlite3
-{
-  "instruction": "catalog/sources/better-sqlite3/instruction.md",
-  "source_digest": "sha256:74c389018b932795ca23ee13188936c5580445145528a859a5506b4584b98b21",
-  "status": "controls-passed",
-  "task_id": "better-sqlite3",
-  "version": "2.0.0"
-}
-command: uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output /tmp/better-sqlite3-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
-Harbor compile failed: cannot extract private bundle: artifact is missing: sha256:3dc2c68167d64d2c05bc38c0ef0e67b7cdf47b1fdd2f654d9ce4e45ba07d4ff7
+stage: source-freeze
+command: git fetch --quiet --depth 1 origin f8e2d541208281368129929a96f70f937c0735ef; git archive --format=tar f8e2d541208281368129929a96f70f937c0735ef | sha256sum
+tool_versions: git=2.x; node=v22.23.1; npm=10.9.8
+exit_code: 0
+result: revision=f8e2d541208281368129929a96f70f937c0735ef; source_digest=sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab; license=MIT
+
+stage: upstream-baseline
+command: npm install --package-lock-only; npm ci; npm run build-release; npm test
+tool_versions: node=v22.23.1; npm=10.9.8; node-gyp=10.3.1; mocha=11.7.5
+exit_code: 0
+result: generated-lockfile-v3; native-build-success; 332 passing
+
+stage: dependency-probe
+command: npm ci on frozen tree before generated lockfile
+exit_code: 1
+failure_class: environment
+result: upstream revision does not commit package-lock.json; remediation generated a task-local lock only for the baseline probe. Candidate runtime has a committed root-only lock and no dependencies.
+
+stage: node24-adaptation
+command: docker run --rm --network none -v private/solution:/work:ro docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 node --no-warnings scenario smoke
+tool_versions: node=v24.19.0; npm=11.17.0; docker=29.7.2
+exit_code: 0
+result: all 12 scenarios matched the private contract
+
+stage: production-compile
+command: uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output .nl2repo/compiled/better-sqlite3 --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
+tool_versions: uv=0.11.32; Harbor=0.21.0; task_schema=1.4
+exit_code: 0
+result: compiled task root .nl2repo/compiled/better-sqlite3/better-sqlite3
+
+stage: controls
+command: official Harbor 0.21 oracle, nop, prepared stub, and prepared forgery runs; see .nl2repo/runs/better-sqlite3/
+exit_code: 0
+result: oracle valid=true collected=12 passed=12 reward=1.0; empty reward=0; stub valid=true collected=12 failed=12 reward=0; forgery valid=true collected=12 failed=12 reward=0; every verifier network.json has public_network_available=false

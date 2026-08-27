@@ -140,6 +140,32 @@ def test_v2_blocked_task_can_record_unfrozen_collection() -> None:
     assert tests.expected_total_source == "unknown"
 
 
+def test_node_agent_checks_declared_system_packages_without_runtime_install(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    task_toml = source / "task.toml"
+    task_toml.write_text(
+        task_toml.read_text(encoding="utf-8").replace(
+            '[environment]\nstatus = "unknown"',
+            '[environment]\nstatus = "unknown"\n'
+            'system_packages = ["git=1:2.39.5-0+deb12u3"]',
+        ),
+        encoding="utf-8",
+    )
+
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "output", allow_incomplete=True
+    )
+    dockerfile = (task_root / "environment/Dockerfile").read_text(encoding="utf-8")
+
+    assert "dpkg-query -W -f='${Version}' git" in dockerfile
+    assert "1:2.39.5-0+deb12u3" in dockerfile
+    assert "apt-get" not in dockerfile
+    assert "COPY npm-bundle /opt/npm-bundle" in dockerfile
+
+
 def test_v2_catalog_dispatch_and_determinism(tmp_path: Path) -> None:
     first = CatalogCompiler(FileArtifactStore(tmp_path / "artifacts")).compile_task(
         NODE_TASK, tmp_path / "first"
@@ -171,6 +197,22 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
     }
     assert first_files == second_files
     assert not list((first / "environment").rglob("contract.test.mjs"))
+    agent_dockerfile = (first / "environment/Dockerfile").read_text()
+    assert (
+        "nl2repobench/openhands-sdk-fork@sha256:"
+        "c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+        in agent_dockerfile
+    )
+    assert (
+        'agent-runtime-image-id="sha256:'
+        "c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+        '"' in agent_dockerfile
+    )
+    assert " AS node-runtime" in agent_dockerfile
+    assert "COPY --from=node-runtime /usr/local/bin/node" in agent_dockerfile
+    assert "COPY npm-bundle /opt/npm-bundle" in agent_dockerfile
+    assert "npm_config_offline=true" in agent_dockerfile
+    assert not list((first / "environment").rglob("solution"))
     generated_test_script = (first / "tests/test.sh").read_text()
     assert "install_candidate.mjs" in generated_test_script
     assert "NODE_CANDIDATE_SITE=/tmp/candidate-site" in generated_test_script
@@ -223,14 +265,16 @@ def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:
     shutil.copytree(NODE_TASK, source)
     controls = source / "harbor/controls"
     controls.mkdir()
-    (controls / "install-hang.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    (controls / "workspace-invalid.sh").write_text(
+        "#!/usr/bin/env bash\nexit 0\n", encoding="utf-8"
+    )
     task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
         source, tmp_path / "tasks", allow_incomplete=True
     )
 
     with pytest.raises(NodeHarborCompileError, match="unsupported control kind"):
         HarborCompilerRegistry.default().prepare_control_bundle(
-            task_root, "install-hang", tmp_path / "controls", NODE_TOOLCHAIN
+            task_root, "workspace-invalid", tmp_path / "controls", NODE_TOOLCHAIN
         )
 
 
@@ -617,6 +661,81 @@ def test_npm_dependency_bundle_accepts_integrity_and_cache_closure(tmp_path: Pat
     }
     (root / "bundle.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
+
+
+def test_npm_dependency_bundle_accepts_declared_linux_x64_native_package(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "bundle"
+    (root / "npm-cache").mkdir(parents=True)
+    lock = {
+        "lockfileVersion": 3,
+        "packages": {
+            "": {"name": "root", "version": "1.0.0"},
+            "node_modules/@img/native-linux-x64": {
+                "version": "1.2.3",
+                "resolved": "https://registry.invalid/native.tgz",
+                "integrity": "sha512-native",
+                "os": ["linux"],
+                "cpu": ["x64"],
+            },
+        },
+    }
+    (root / "package-lock.json").write_text(json.dumps(lock), encoding="utf-8")
+    manifest = {
+        "schema_version": "1.0",
+        "ecosystem": "npm",
+        "lockfile_version": "3",
+        "package_manager": "npm",
+        "package_manager_version": "10.9.8",
+        "install_mode": "offline",
+        "lifecycle_scripts": "ignore-scripts",
+        "cache_entries": [],
+        "native_packages": [
+            {
+                "package": "@img/native-linux-x64",
+                "version": "1.2.3",
+                "integrity": "sha512-native",
+                "os": "linux",
+                "cpu": "x64",
+                "libc": "glibc",
+            }
+        ],
+    }
+    (root / "bundle.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
+
+
+def test_npm_dependency_bundle_rejects_undeclared_native_package(tmp_path: Path) -> None:
+    root = tmp_path / "bundle"
+    (root / "npm-cache").mkdir(parents=True)
+    lock = {
+        "lockfileVersion": 3,
+        "packages": {
+            "": {"name": "root", "version": "1.0.0"},
+            "node_modules/native": {
+                "version": "1.2.3",
+                "resolved": "https://registry.invalid/native.tgz",
+                "integrity": "sha512-lock",
+                "os": ["linux"],
+                "cpu": ["x64"],
+            },
+        },
+    }
+    (root / "package-lock.json").write_text(json.dumps(lock), encoding="utf-8")
+    manifest = {
+        "schema_version": "1.0",
+        "ecosystem": "npm",
+        "lockfile_version": "3",
+        "package_manager": "npm",
+        "package_manager_version": "10.9.8",
+        "install_mode": "offline",
+        "lifecycle_scripts": "ignore-scripts",
+        "cache_entries": [],
+    }
+    (root / "bundle.manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(NodeDependencyError, match="undeclared native or platform"):
+        validate_npm_dependency_bundle(root, expected_npm_version="10.9.8")
 
 
 @pytest.mark.parametrize(

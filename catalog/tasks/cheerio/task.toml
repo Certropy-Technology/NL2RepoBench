@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/cheerio"
+version = "1.0.0"
+description = "Build Cheerio 1.2.0 from an empty workspace and satisfy a bounded local HTML/XML parsing, selection, traversal, manipulation, and serialization contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "html",
+    "xml",
+    "dom",
+    "selectors",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "html-parser"
+tags = [
+    "node",
+    "npm",
+    "html",
+    "xml",
+    "dom",
+    "selectors",
+    "separate-verifier",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 51
+canonical_manifest_digest = "sha256:cf63ea5bd2290f52d2c5a38cf896e49b036464a6fb1155f3e2e3930f2d8c0688"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

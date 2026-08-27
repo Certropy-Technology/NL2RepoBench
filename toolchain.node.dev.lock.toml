@@ -3,7 +3,7 @@ status = "development-only"
 node_grader = "absent"
 node_report_schema = "node-test-json-v1"
 verifier_requirements_lock = "verifier/requirements.lock.txt"
-verifier_requirements_sha256 = "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
+verifier_requirements_sha256 = "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
 
 [harbor]
 version = "0.21.0"
@@ -18,6 +18,15 @@ verifier_base = "docker.io/library/node@sha256:8607a9064d4a571140998ae9e52a3b3fc
 verifier_python_base = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 platform = "linux/amd64"
 status = "development-only"
+
+[agent_runtime]
+image = "nl2repobench/openhands-sdk-fork@sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+image_id = "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+fork_commit = "930e9b1daee0f5d2c7f3b261f045527a0ddae87d"
+python_executable = "/opt/openhands-sdk-venv/bin/python"
+sdk_version = "1.43.1"
+tools_version = "1.43.1"
+litellm_version = "1.93.0"
 
 [runtime]
 runtime_version = "22.23.1"

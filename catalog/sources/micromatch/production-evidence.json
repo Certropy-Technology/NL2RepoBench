@@ -1,0 +1,230 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "git -C <task-local-source> rev-parse HEAD; git archive --format=tar HEAD | sha256sum; sha256sum LICENSE",
+      "exit_code": 0,
+      "result": "revision, tree, source archive digest, clean status, and MIT license verified"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/micromatch",
+      "exit_code": 0,
+      "result": "status=controls-passed; source_digest=sha256:6fc736d0821dcb6c6e6fb6e0cbba92bebf9711d6adeed6c2f3eee8825b451ff8"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "201 tasks scanned, 0 errors, 139 unrelated warnings; no micromatch finding"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/micromatch --toolchain <task-local-mirror>/toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output <task-local-production-output>",
+      "exit_code": 0,
+      "result": "production bundle compiled with 95 manifest entries"
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control <compiled-task> <stub|forgery|timeout|offline> --toolchain <task-local-mirror>/toolchain.node.lock.toml --output <task-local-controls>",
+      "exit_code": 0,
+      "result": "all four control bundles prepared and manifest-refreshed"
+    },
+    {
+      "command": "uv run --frozen --project <task-local-mirror>/harbor-runner harbor run -p <compiled-task> -a oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "result": "reward=1.0, 67/67, valid=true"
+    },
+    {
+      "command": "uv run --frozen --project <task-local-mirror>/harbor-runner harbor run -p <compiled-task> -a nop --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "result": "empty reward=0.0, valid=true"
+    },
+    {
+      "command": "uv run --frozen --project <task-local-mirror>/harbor-runner harbor run -p <control-task> -a oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "result": "stub, forgery, timeout, and offline controls completed with low rewards and no infrastructure/verifier errors"
+    },
+    {
+      "command": "uv run ruff check src/nl2repobench/cli.py src/nl2repobench/harbor/node_compiler.py tests/test_node_foundation.py",
+      "exit_code": 0,
+      "result": "all checks passed"
+    },
+    {
+      "command": "uv run python -m compileall -q src/nl2repobench catalog/sources/micromatch <compiled-python-runtime>",
+      "exit_code": 0,
+      "result": "Python syntax check passed"
+    },
+    {
+      "command": "node --check <private mjs files>; node --input-type=module --check < candidate_adapter.js.txt; bash -n <solution/test/control scripts>",
+      "exit_code": 0,
+      "result": "Node and shell syntax checks passed"
+    },
+    {
+      "command": "direct invocation of test_node_control_dispatch_and_manifest_integrity with NODE_TOOLCHAIN redirected to the task-local development mirror",
+      "exit_code": 0,
+      "result": "generic stub, forgery, timeout, and offline control dispatch test passed"
+    },
+    {
+      "command": "uv run pytest tests/test_node_foundation.py -q",
+      "exit_code": 1,
+      "result": "37 tests passed and 7 initialization tests failed because this detached worktree already has harbor-runner/uv.lock deleted; the focused modified control test and production compiler/control path passed using a byte-identical task-local mirror. The command also triggers the repository-wide 80% coverage gate when run alone."
+    },
+    {
+      "command": "lsp_diagnostics for the three generic Python files",
+      "exit_code": 1,
+      "result": "configured ty LSP executable is absent at /home/ayi/.local/share/nvim/mason/bin/ty; Ruff and compileall passed instead"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:92260304511422bd556fb950d274c7df1c5095976f23bd3be657b80ccbc8fd6e",
+    "mode": "production",
+    "path": "catalog/tasks/micromatch"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/empty/2026-08-27__00-03-28/micromatch__aY8BahY/verifier/grading.json",
+      "grading_sha256": "sha256:fabc28b04fd1a92a67089bc0ca061deb8192da78c6448f91fe87a33e855c3d8d",
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "candidate_forged_reward_ignored": true,
+      "collected": 67,
+      "failed": 64,
+      "grading": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/forgery/2026-08-27__00-05-23/micromatch-forgery__GN2CfSy/verifier/grading.json",
+      "grading_sha256": "sha256:7d3a942cb167a6d3ea3f1dc6c169609e932672b31e4cd3fb32753a0660bfa21f",
+      "passed": 3,
+      "public_network_available": false,
+      "reward": 0.04477611940298507,
+      "valid": true
+    },
+    "offline": {
+      "collected": 67,
+      "failed": 60,
+      "grading": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/offline/2026-08-27__00-08-19/micromatch-offline__xprmVaN/verifier/grading.json",
+      "grading_sha256": "sha256:2edf6a22028d8848503bb23ac7a26009658c942806d5a12486f605088c324114",
+      "network_dependent_candidate_failed_closed": true,
+      "passed": 7,
+      "public_network_available": false,
+      "reward": 0.1044776119402985,
+      "valid": true
+    },
+    "stub": {
+      "collected": 67,
+      "failed": 59,
+      "grading": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/stub/2026-08-27__00-04-26/micromatch-stub__LheZY2B/verifier/grading.json",
+      "grading_sha256": "sha256:afbe5828ec89fcf82c5d49cea71170cc6a50443e3a09121bf5793b191792b80a",
+      "passed": 8,
+      "public_network_available": false,
+      "reward": 0.11940298507462686,
+      "valid": true
+    },
+    "timeout": {
+      "bounded_completion": true,
+      "collected": 67,
+      "failed": 59,
+      "grading": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/timeout/2026-08-27__00-06-19/micromatch-timeout__UR4PpK2/verifier/grading.json",
+      "grading_sha256": "sha256:107e73450f2f63e617397b52491282436b040909450ab706d386e8457bdf124b",
+      "passed": 8,
+      "public_network_available": false,
+      "reward": 0.11940298507462686,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:d5b3662d1978b0c00da652ffb1615f37f1fc12dfe2f9eadbf1d03342feab5ee4",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 583680,
+      "uri": "artifact://private/sha256:d5b3662d1978b0c00da652ffb1615f37f1fc12dfe2f9eadbf1d03342feab5ee4",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [
+      "braces",
+      "picomatch"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The model, Oracle, and verifier run without egress. The verifier image receives a private npm v3 cache for exact runtime dependencies at build time, and the trusted Oracle bundle contains only a digest-checked git archive of the frozen revision.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 67,
+    "expected_total": 67,
+    "failed": 0,
+    "grading": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/oracle/2026-08-27__00-02-15/micromatch__RtBS6jC/verifier/grading.json",
+    "grading_sha256": "sha256:58e008ba261d8e6172c42da0c5023c554cd3470e9eaada8e6b99c10988de16b7",
+    "network": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/production-runs-final/oracle/2026-08-27__00-02-15/micromatch__RtBS6jC/verifier/network.json",
+    "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+    "passed": 67,
+    "public_network_available": false,
+    "reward": 1.0,
+    "runner_exit_code": 0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:57823e7d3693383a5eb095c55db2ca694ba32305e0a8ed5e4a679c3336b89363",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 655360,
+      "uri": "artifact://private/sha256:57823e7d3693383a5eb095c55db2ca694ba32305e0a8ed5e4a679c3336b89363",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/node-discovery-20260826-r1/micromatch/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Blind review, independent spec traceability review, publication integration, and multi-model pilot remain for the integrator/campaign stages.",
+    "No Harbor model Agent Run was started, as required by the lane boundary.",
+    "The generic timeout/offline Node control dispatch change is worktree-local and requires integrator review before merging.",
+    "The detached worktree had pre-existing deletions of harbor-runner/uv.lock and harbor-runner/pyproject.toml. Production compilation and Harbor execution used task-local byte-identical copies from the parent checkout without modifying the parent or restoring those deletions.",
+    "The configured ty language server is unavailable; Ruff, compileall, Node syntax, shell syntax, production compilation, Oracle, and controls provide the executed validation evidence."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "8bd704ec0d9894693d35da425d827819916be920",
+    "source_digest": "sha256:cfb37abf1f9134a4160f8db24574d537d533b217c9708047c995dd3d346d6239",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/micromatch/micromatch"
+  },
+  "status": "controls-passed",
+  "task_id": "micromatch",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

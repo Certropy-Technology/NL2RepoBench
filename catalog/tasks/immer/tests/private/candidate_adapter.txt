@@ -1,0 +1,123 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const PACKAGE = 'immer';
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+
+function emit(id, payload, code = 0) {
+  const encoded = JSON.stringify({id, ...payload});
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stdout.write(JSON.stringify({id, ok: false, error_type: 'response-too-large', message: 'response is too large'}) + '\n');
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+function fail(id, type, message, code = 64) { emit(id, {ok: false, error_type: type, message: String(message).slice(0, 512)}, code); }
+function isJsonValue(value, depth = 0) {
+  if (depth > 16) return false;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.length <= 128 && value.every(v => isJsonValue(v, depth + 1));
+  if (typeof value === 'object') return Object.keys(value).length <= 128 && Object.values(value).every(v => isJsonValue(v, depth + 1));
+  return false;
+}
+function pathValue(root, path) {
+  let value = root;
+  for (const part of path ?? []) value = value[part];
+  return value;
+}
+function parentValue(root, path) {
+  if (!Array.isArray(path) || path.length === 0) throw new Error('action path must be non-empty');
+  return pathValue(root, path.slice(0, -1));
+}
+function applyAction(root, action) {
+  if (!action || typeof action !== 'object' || !Array.isArray(action.path)) throw new Error('invalid action');
+  const path = action.path;
+  const op = action.op;
+  if (op === 'set') parentValue(root, path)[path.at(-1)] = action.value;
+  else if (op === 'delete') delete parentValue(root, path)[path.at(-1)];
+  else if (op === 'assign') Object.assign(path.length === 0 ? root : pathValue(root, path), action.value);
+  else if (op === 'push') pathValue(root, path).push(...(action.values ?? []));
+  else if (op === 'unshift') pathValue(root, path).unshift(...(action.values ?? []));
+  else if (op === 'pop') pathValue(root, path).pop();
+  else if (op === 'shift') pathValue(root, path).shift();
+  else if (op === 'splice') pathValue(root, path).splice(action.start, action.deleteCount, ...(action.items ?? []));
+  else throw new Error('action op is not allowlisted');
+}
+function applyActions(root, actions = []) { for (const action of actions) applyAction(root, action); }
+function requestValue() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) fail('', 'request-too-large', 'request is too large');
+  let request;
+  try { request = JSON.parse(data.toString('utf8')); } catch { fail('', 'malformed-json', 'request is malformed'); }
+  if (!request || typeof request !== 'object' || Array.isArray(request)) fail('', 'malformed-request', 'request must be an object');
+  if (typeof request.id !== 'string' || request.id.length < 1 || request.id.length > 128) fail('', 'invalid-id', 'id is not bounded');
+  const allowed = ['inventory', 'produce', 'patches', 'apply-patches', 'draft-lifecycle', 'observe', 'utilities'];
+  if (!allowed.includes(request.operation)) fail(request.id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  if (!request.payload || typeof request.payload !== 'object' || Array.isArray(request.payload)) fail(request.id, 'malformed-payload', 'payload must be an object');
+  if (!isJsonValue(request.payload)) fail(request.id, 'malformed-payload', 'payload is not JSON-safe');
+  return request;
+}
+function packageRoot() { return join(process.env.NODE_CANDIDATE_SITE, 'node_modules', PACKAGE); }
+async function load() {
+  const root = packageRoot();
+  const metadata = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const entry = metadata.exports?.['.']?.default ?? metadata.exports?.['.']?.import;
+  const types = metadata.exports?.['.']?.types;
+  if (metadata.name !== PACKAGE || metadata.version !== '10.0.3-beta' || metadata.type !== 'module' || typeof entry !== 'string' || typeof types !== 'string') throw new Error('package shape is invalid');
+  const api = await import(pathToFileURL(join(root, entry)).href);
+  return {root, metadata, api, entry, types};
+}
+function configured(api, payload) {
+  if (payload.autoFreeze !== undefined) api.setAutoFreeze(payload.autoFreeze);
+  return api;
+}
+async function main() {
+  const {id, operation, payload} = requestValue();
+  const {root, metadata, api, entry, types} = await load();
+  if (operation === 'inventory') {
+    if (Object.keys(payload).length !== 0) fail(id, 'malformed-payload', 'inventory payload must be empty');
+    emit(id, {ok: true, value: {packageName: metadata.name, packageVersion: metadata.version, packageShape: true, runtimeEntry: Boolean(readFileSync(join(root, entry))), declarationEntry: Boolean(readFileSync(join(root, types))), exportNames: Object.keys(api).sort(), defaultIsProduce: api.default === api.produce}});
+  }
+  const I = configured(api, payload);
+  if (operation === 'produce' || operation === 'patches') {
+    if (!isJsonValue(payload.base) || !Array.isArray(payload.actions)) fail(id, 'malformed-payload', 'base and actions are required');
+    const recipe = draft => { applyActions(draft, payload.actions); if (payload.returnNothing) return I.nothing; if (payload.replacement !== undefined) return payload.replacement; };
+    if (operation === 'patches') {
+      I.enablePatches();
+      const [next, patches, inversePatches] = I.produceWithPatches(payload.base, recipe);
+      emit(id, {ok: true, value: {next, patches, inversePatches, sameBase: next === payload.base}});
+    }
+    const next = I.produce(payload.base, recipe);
+    emit(id, {ok: true, value: {next: next === undefined ? null : next, isUndefined: next === undefined, sameBase: next === payload.base, frozen: !!next && typeof next === 'object' ? Object.isFrozen(next) : false, nestedFrozen: !!next?.nested && typeof next.nested === 'object' ? Object.isFrozen(next.nested) : false}});
+  }
+  if (operation === 'apply-patches') {
+    I.enablePatches();
+    const next = I.applyPatches(payload.base, payload.patches);
+    emit(id, {ok: true, value: {next, sameBase: next === payload.base}});
+  }
+  if (operation === 'draft-lifecycle') {
+    const draft = I.createDraft(payload.base);
+    applyActions(draft, payload.actions);
+    const beforeFinish = {current: I.current(draft), original: I.original(draft), isDraft: I.isDraft(draft)};
+    const next = I.finishDraft(draft);
+    let mutationError = false;
+    try { applyActions(draft, payload.afterFinishActions ?? [{op: 'set', path: ['__after_finish__'], value: true}]); } catch { mutationError = true; }
+    emit(id, {ok: true, value: {next, beforeFinish, mutationError}});
+  }
+  if (operation === 'observe') {
+    let observed;
+    const next = I.produce(payload.base, draft => { observed = {isDraft: I.isDraft(draft), original: I.original(draft), currentBefore: I.current(draft)}; applyActions(draft, payload.actions); observed.currentAfter = I.current(draft); });
+    emit(id, {ok: true, value: {next, observed}});
+  }
+  if (operation === 'utilities') {
+    const before = payload.value && typeof payload.value === 'object' ? Object.isFrozen(payload.value) : false;
+    const result = I.freeze(payload.value, payload.deep === true);
+    const after = result && typeof result === 'object' ? Object.isFrozen(result) : false;
+    emit(id, {ok: true, value: {draftable: I.isDraftable(payload.value), same: result === payload.value, frozenBefore: before, frozenAfter: after}});
+  }
+}
+main().catch(error => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));

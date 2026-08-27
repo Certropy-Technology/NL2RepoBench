@@ -19,8 +19,14 @@ dependencies. Command:
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest --continue-on-collection-errors tests --junitxml=/tmp/dcj-baseline-junit.xml
 ```
 
-Observed result: **325 passed, 3 skipped**, exit code 0, 1.08 seconds, 207
-warnings. This is diagnostic evidence only, not this task's denominator. The
+The original diagnostic evidence recorded **325 passed, 3 skipped** with its
+then-current Python 3.10 environment. The reproducible lane baseline used the
+digest-pinned Python 3.12 image plus a temporary, hash-locked *development*
+test closure (`pytest==7.4.0`, `mypy==1.4.1`, `hypothesis==6.79.4` and pinned
+transitives): **323 passed, 5 skipped**, exit code 0, 2.69 seconds. The
+development-only closure is evidence and is not included in the candidate
+runtime closure or Harbor model image. This is diagnostic evidence only, not
+this task's denominator. The
 full upstream surface contains dynamic schema, union, generic, callback,
 Marshmallow and type-resolution behavior that is not suitable for a compact
 JSON-safe subprocess contract.

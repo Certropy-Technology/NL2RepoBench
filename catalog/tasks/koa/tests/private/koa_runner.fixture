@@ -1,0 +1,158 @@
+import http from "node:http";
+import { createRequire } from "node:module";
+
+const site = process.env.NODE_CANDIDATE_SITE;
+if (!site) throw new Error("candidate site is not configured");
+const require = createRequire(`${site}/package.json`);
+const Koa = require("koa");
+
+function request(server, path, headers = {}) {
+  return new Promise((resolve, reject) => {
+    const address = server.address();
+    const req = http.request({
+      host: "127.0.0.1",
+      port: address.port,
+      path,
+      headers,
+    }, (res) => {
+      const chunks = [];
+      res.on("data", (chunk) => chunks.push(chunk));
+      res.on("end", () => resolve({
+        status: res.statusCode,
+        headers: res.headers,
+        body: Buffer.concat(chunks).toString("utf8"),
+      }));
+    });
+    req.on("error", reject);
+    req.end();
+  });
+}
+
+async function withServer(app, path = "/", headers = {}) {
+  const server = http.createServer(app.callback());
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    return await request(server, path, headers);
+  } finally {
+    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  }
+}
+
+async function scenario(name) {
+  if (name === "basic-body") {
+    const app = new Koa();
+    app.use((ctx) => { ctx.body = "hello"; });
+    const response = await withServer(app, "/hello");
+    return { status: response.status, body: response.body, type: response.headers["content-type"] };
+  }
+  if (name === "middleware-order") {
+    const app = new Koa();
+    const order = [];
+    app.use(async (ctx, next) => { order.push("a>"); await next(); order.push("<a"); ctx.body = order.join(","); });
+    app.use(async (ctx, next) => { order.push("b>"); await next(); order.push("<b"); ctx.body = order.join(","); });
+    app.use((ctx) => { order.push("c"); });
+    const response = await withServer(app);
+    return { status: response.status, body: response.body };
+  }
+  if (name === "context-values") {
+    const app = new Koa();
+    app.use((ctx) => {
+      ctx.set("X-Koa-Test", "yes");
+      ctx.body = JSON.stringify({ method: ctx.method, path: ctx.path, query: ctx.query, host: ctx.host });
+    });
+    const response = await withServer(app, "/users?active=true&n=2", { Host: "api.example.test" });
+    return { status: response.status, header: response.headers["x-koa-test"], body: JSON.parse(response.body) };
+  }
+  if (name === "proxy-values") {
+    const app = new Koa({ proxy: true, subdomainOffset: 2 });
+    app.use((ctx) => { ctx.body = JSON.stringify({ protocol: ctx.protocol, host: ctx.host, ip: ctx.ip, ips: ctx.ips, subdomains: ctx.subdomains }); });
+    const response = await withServer(app, "/", {
+      Host: "internal.example.test",
+      "X-Forwarded-Proto": "https",
+      "X-Forwarded-Host": "api.eu.example.com",
+      "X-Forwarded-For": "203.0.113.9, 10.0.0.1",
+    });
+    return { status: response.status, body: JSON.parse(response.body) };
+  }
+  if (name === "json-body") {
+    const app = new Koa();
+    app.use((ctx) => { ctx.body = { ok: true, count: 2 }; });
+    const response = await withServer(app);
+    return { status: response.status, type: response.headers["content-type"], body: JSON.parse(response.body) };
+  }
+  if (name === "status-and-header") {
+    const app = new Koa();
+    app.use((ctx) => { ctx.status = 201; ctx.message = "Created"; ctx.set("X-Answer", "42"); ctx.body = "done"; });
+    const response = await withServer(app);
+    return { status: response.status, message: response.headers["x-answer"], body: response.body };
+  }
+  if (name === "redirect") {
+    const app = new Koa();
+    app.use((ctx) => ctx.redirect("/target"));
+    const response = await withServer(app);
+    return { status: response.status, location: response.headers.location, bodyHasTarget: response.body.includes("/target") };
+  }
+  if (name === "response-headers") {
+    const app = new Koa();
+    app.use((ctx) => { ctx.set("X-One", "1"); ctx.append("X-One", "2"); ctx.vary("Accept-Encoding"); ctx.body = "ok"; });
+    const response = await withServer(app);
+    return { xOne: response.headers["x-one"], vary: response.headers.vary, body: response.body };
+  }
+  if (name === "empty-status") {
+    const app = new Koa();
+    app.use((ctx) => { ctx.status = 204; ctx.body = "discarded"; });
+    const response = await withServer(app);
+    return { status: response.status, body: response.body, contentLength: response.headers["content-length"] ?? null };
+  }
+  if (name === "state") {
+    const app = new Koa();
+    app.use((ctx) => { ctx.state.value = 7; ctx.body = String(ctx.state.value); });
+    const response = await withServer(app);
+    return { status: response.status, body: response.body };
+  }
+  if (name === "async-local") {
+    const app = new Koa({ asyncLocalStorage: true });
+    app.use((ctx) => { ctx.body = String(app.currentContext === ctx); });
+    const response = await withServer(app);
+    return { status: response.status, body: response.body };
+  }
+  if (name === "throw-error") {
+    const app = new Koa();
+    app.on("error", () => {});
+    app.use((ctx) => ctx.throw(400, "bad request"));
+    const response = await withServer(app);
+    return { status: response.status, body: response.body };
+  }
+  if (name === "signed-cookie") {
+    const app = new Koa({ keys: ["secret"] });
+    app.use((ctx) => { ctx.cookies.set("token", "abc", { signed: true }); ctx.body = "cookie"; });
+    const response = await withServer(app);
+    return { status: response.status, cookie: response.headers["set-cookie"] };
+  }
+  if (name === "application-inspect") {
+    const app = new Koa({ env: "test", proxy: true, subdomainOffset: 3 });
+    return { json: app.toJSON(), inspect: app.inspect(), sameDefault: Koa.default === Koa, hasErrors: typeof Koa.createHttpError === "function" };
+  }
+  if (name === "invalid-middleware") {
+    const app = new Koa();
+    try { app.use(null); return { error: false }; } catch (error) { return { error: error instanceof TypeError, message: error.message }; }
+  }
+  if (name === "next-twice") {
+    const app = new Koa();
+    app.on("error", () => {});
+    app.use(async (ctx, next) => { await next(); await next(); });
+    app.use((ctx) => { ctx.body = "ok"; });
+    const response = await withServer(app);
+    return { status: response.status, body: response.body };
+  }
+  throw new Error(`unknown scenario: ${name}`);
+}
+
+const input = await new Promise((resolve, reject) => {
+  let data = "";
+  process.stdin.on("data", (chunk) => { data += chunk; });
+  process.stdin.on("end", () => resolve(data));
+  process.stdin.on("error", reject);
+});
+const { name } = JSON.parse(input);
+process.stdout.write(`${JSON.stringify(await scenario(name))}\n`);

@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import tempfile
 from pathlib import Path
@@ -127,6 +128,14 @@ class NodeHarborCompiler:
                 "Node production output is unsupported until locked artifacts are supplied: "
                 + ", ".join(gaps)
             )
+        assert manifest.harbor is not None
+        if not allow_incomplete and (
+            manifest.harbor.agent_network_mode != "no-network"
+            or manifest.harbor.agent_allowed_hosts
+        ):
+            raise NodeHarborCompileError(
+                "production Agent runtime must be no-network with no static allowed hosts"
+            )
         if self.toolchain.status == "development-only" and not allow_incomplete:
             raise NodeHarborCompileError(
                 "Node toolchain is development-only; pass allow_incomplete for a fixture bundle"
@@ -162,7 +171,19 @@ class NodeHarborCompiler:
     ) -> Path:
         """Create a supported Node control without mutating the source bundle."""
 
-        if kind not in {"stub", "forgery"}:
+        if kind not in {
+            "empty",
+            "stub",
+            "forgery",
+            "hang",
+            "timeout",
+            "call-hang",
+            "offline",
+            "install-hang",
+            "install-script",
+            "loader-hook",
+            "oversized-output",
+        }:
             raise NodeHarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"
         if not script.is_file():
@@ -199,12 +220,68 @@ class NodeHarborCompiler:
             ) from exc
 
     def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
-        image = self.toolchain.images.agent_base
-        dockerfile = f"""FROM --platform=linux/amd64 {image}
+        node_image = self._runtime_image(manifest)
+        agent_image = self.toolchain.agent_runtime.image
+        system_checks = self._system_packages_check(manifest)
+        dependency_setup = self._agent_dependency_setup()
+        dockerfile = f"""FROM --platform=linux/amd64 {node_image} AS node-runtime
+
+FROM --platform=linux/amd64 {agent_image}
+
+LABEL org.nl2repobench.agent-runtime-image="{agent_image}" \\
+  org.nl2repobench.agent-runtime-image-id="{self.toolchain.agent_runtime.image_id}" \\
+  org.nl2repobench.agent-dependency-build="npm-offline-bundle-v1"
+
+COPY --from=node-runtime /usr/local/bin/node /usr/local/bin/node
+COPY --from=node-runtime /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+  && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+  && test "$(node --version)" = "v{self.toolchain.runtime.runtime_version}" \
+  && test "$(npm --version)" = "{self.toolchain.runtime.npm_version}" \
+  && test -x /opt/openhands-sdk-venv/bin/python
+
+{system_checks}{dependency_setup}
 
 WORKDIR /workspace
 """
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
+
+    def _agent_dependency_setup(self) -> str:
+        return """COPY npm-bundle /opt/npm-bundle
+ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
+    npm_config_offline=true \\
+    npm_config_ignore_scripts=true \\
+    npm_config_audit=false \\
+    npm_config_fund=false
+"""
+
+    def _runtime_image(self, manifest: TaskManifestV2) -> str:
+        """Return the task-pinned Node image for production bundles."""
+
+        if self.toolchain.status != "locked":
+            return self.toolchain.images.agent_base
+        environment = manifest.environment_lock
+        if environment.base_image is None or environment.base_image_digest is None:
+            raise NodeHarborCompileError("production Node image is not locked")
+        image_name = environment.base_image.split("@", 1)[0]
+        return f"{image_name}@{environment.base_image_digest}"
+
+    @staticmethod
+    def _system_packages_check(manifest: TaskManifestV2) -> str:
+        checks: list[str] = []
+        for requirement in manifest.environment_lock.system_packages:
+            package, separator, version = requirement.partition("=")
+            quoted_package = shlex.quote(package)
+            if separator:
+                checks.append(
+                    "test \"$(dpkg-query -W -f='${Version}' "
+                    f"{quoted_package})\" = {shlex.quote(version)}"
+                )
+            else:
+                checks.append(f"dpkg-query -W {quoted_package} >/dev/null")
+        if not checks:
+            return ""
+        return "RUN " + " \\\n  && ".join(checks) + "\n\n"
 
     def _write_verifier(
         self,
@@ -238,6 +315,7 @@ WORKDIR /workspace
             )
         except NodeDependencyError as exc:
             raise NodeHarborCompileError(str(exc)) from exc
+        self._copy_tree(dependencies_root, task_root / "environment/npm-bundle")
 
         private_root = tests_root / "private"
         if manifest.tests.test_bundle is not None and not allow_incomplete:
@@ -248,7 +326,7 @@ WORKDIR /workspace
                 raise NodeHarborCompileError("development Node task is missing harbor/tests")
             self._copy_tree(fixture, private_root)
 
-        image = self.toolchain.images.verifier_base
+        image = self._runtime_image(manifest)
         python_image = self.toolchain.images.verifier_python_base
         dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
 FROM --platform=linux/amd64 {python_image}

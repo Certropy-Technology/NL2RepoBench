@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-ansi",
+  "terminal_kind": "valid",
+  "bundle": {
+    "path": ".nl2repo/compiled/strip-ansi-production/strip-ansi/bundle.manifest.json",
+    "sha256": "sha256:375ba969b10518babcf0f586075c597a2423ec9d7ec745bd7b9ccd885c4edfca"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/strip-ansi-production/strip-ansi -a oracle --jobs-dir .nl2repo/evidence/strip-ansi/oracle-release-retry2 --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/evidence/strip-ansi/oracle-release-retry2/2026-08-26__15-40-27/strip-ansi__YCH6n4x/verifier/grading.json",
+      "sha256": "sha256:bf42f404c9b774120fdf8dcff2bfe48b6082de3bed542f0703b70e6815840b32",
+      "valid": true,
+      "reward": 1.0,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 24
+    },
+    "network": {
+      "path": ".nl2repo/evidence/strip-ansi/oracle-release-retry2/2026-08-26__15-40-27/strip-ansi__YCH6n4x/verifier/network.json",
+      "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "summary": {
+      "path": ".nl2repo/evidence/strip-ansi/control-summary.json",
+      "sha256": "sha256:91abcec8c5695d2dfa39c7eb9b3dcd91bce66e2f6ba31c2a571d43cad097448c",
+      "passed": true
+    },
+    "empty": {
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false
+    },
+    "stub": {
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 2,
+      "collected": 24,
+      "public_network_available": false
+    },
+    "forgery": {
+      "valid": true,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "public_network_available": false
+    },
+    "install_script": {
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false
+    },
+    "loader_hook": {
+      "valid": true,
+      "reward": 0.20833333333333334,
+      "loader_activated": false,
+      "public_network_available": false
+    },
+    "bounded_hang": {
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "public_network_available": false
+    },
+    "offline": {
+      "valid": true,
+      "reward": 0.0,
+      "public_network_available": false
+    }
+  },
+  "production_gate": {
+    "path": ".nl2repo/evidence/strip-ansi/production-gate.json",
+    "sha256": "sha256:e45a544cad857c4abdeec6bf76ae55758e15f610e09ecdffb5f07f5e35de79fb",
+    "passed": true
+  },
+  "infrastructure_retries": [
+    {
+      "path": ".nl2repo/evidence/strip-ansi/oracle-release/2026-08-26__15-36-48/strip-ansi__eEQZqgD/verifier/test-stdout.txt",
+      "classification": "infrastructure",
+      "detail": "Node WorkerThreadsTaskRunner could not create a thread while shared UID 10001 lanes were active."
+    },
+    {
+      "path": ".nl2repo/evidence/strip-ansi/oracle-release-retry1/2026-08-26__15-38-30/strip-ansi__jppcYav/verifier/test-stdout.txt",
+      "classification": "infrastructure",
+      "detail": "The same host-wide UID thread-pressure assertion recurred; a bounded retry waited until UID 10001 thread count dropped."
+    }
+  ]
+}

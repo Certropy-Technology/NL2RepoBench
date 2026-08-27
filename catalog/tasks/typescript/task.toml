@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/typescript"
+version = "2.0.1"
+description = "Build the native TypeScript preview's bounded lexical scanner and bidirectional SpanMap API."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "typescript",
+    "scanner",
+    "ast",
+    "span-map",
+]
+
+[metadata]
+difficulty = "medium"
+category = "typescript-tooling"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "typescript",
+    "scanner",
+    "ast",
+    "span-map",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 30
+canonical_manifest_digest = "sha256:70b72fa652488b8d4379e365485a293e9f1dbb4538565b6a275aadf052f9616f"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192

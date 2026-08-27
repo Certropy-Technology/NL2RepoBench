@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromatch",
+  "upstream_url": "https://github.com/micromatch/micromatch",
+  "revision": "8bd704ec0d9894693d35da425d827819916be920",
+  "commit_authored_at": "2024-08-23T12:24:18-04:00",
+  "source_digest": "sha256:cfb37abf1f9134a4160f8db24574d537d533b217c9708047c995dd3d346d6239",
+  "license_spdx": "MIT",
+  "submodules": [],
+  "runtime": {"node": "24.19.0", "npm": "11.17.0", "platform": "linux/amd64", "libc": "glibc"},
+  "upstream_suite": {
+    "framework": "mocha",
+    "command": "npx mocha --reporter json --reporter-option output=<task-local-report>",
+    "runs": [
+      {"report": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/evidence/baselines/mocha-1.json", "tests": 1954, "passes": 1954, "failures": 0, "pending": 0, "duration_ms": 1276, "exit_code": 0},
+      {"report": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/evidence/baselines/mocha-2.json", "tests": 1954, "passes": 1954, "failures": 0, "pending": 0, "duration_ms": 1098, "exit_code": 0},
+      {"report": ".nl2repo/authoring-work/node-discovery-20260826-r1/micromatch/evidence/baselines/mocha-3.json", "tests": 1954, "passes": 1954, "failures": 0, "pending": 0, "duration_ms": 1125, "exit_code": 0}
+    ]
+  },
+  "public_api_count": 18,
+  "upstream_test_file_count": 37,
+  "frozen_private_denominator": 67
+}

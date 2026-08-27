@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/date-fns"
+version = "2.0.0"
+description = "Pinned date-fns ESM date and calendar utility contract with 39 deterministic UTC JSON-boundary leaves."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "date",
+    "calendar",
+    "interval",
+    "json",
+]
+
+[metadata]
+difficulty = "medium"
+category = "date-time-library"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "date",
+    "calendar",
+    "interval",
+    "json",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 39
+canonical_manifest_digest = "sha256:33b6a85c61a7a52f89f5ec6d8a81328418e2c7db1ba7076306461294c648c342"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192

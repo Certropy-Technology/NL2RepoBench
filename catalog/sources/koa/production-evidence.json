@@ -1,62 +1,84 @@
 {
   "schema_version": "1.0",
   "task_id": "koa",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "environment",
-    "next_step": "Materialize the referenced private npm/cache and Oracle artifacts, recompile the source without an incomplete-output override, then run official Harbor 0.21.0 Oracle plus empty, stub, forgery, and offline network controls with hash-bound grading and network receipts before reopening.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/koajs/koa",
-      "revision": "9c202e0077f4e314795222aff1be0da0bf9b2493",
-      "source_digest": "sha256:7fc748340171c9bd930b610b61c783fd21e011882f56474cdb628ba92de6b633",
-      "license_spdx": "MIT"
-    },
-    "audited_inputs": {
-      "task_descriptor": {
-        "path": "catalog/sources/koa/task.toml",
-        "sha256": "sha256:19845e83dacd3124b5d0dde034f858cc38876e1a56202d72b550b0140306ab0f"
-      },
-      "instruction": {
-        "path": "catalog/sources/koa/instruction.md",
-        "sha256": "sha256:498dfc4a1ffd49314f4862abd268a9e5570e4c0dc44e9e50a722e35b9c067d5d"
-      }
-    },
-    "observed_state": {
-      "lifecycle_status_before_transition": "controls-passed",
-      "collection_status": "not-evidenced",
-      "private_node_test_bundle": "referenced-but-not-materialized",
-      "runtime_path_before_transition": "catalog/tasks/koa",
-      "runtime_path_exists_after_transition": false
-    },
-    "commands": [
-      {
-        "command": "koa-specific Harbor Oracle/control/network receipt filesystem audit",
-        "tool_version": "repository filesystem audit",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/koa/evidence/remediation.txt",
-          "sha256": "sha256:e637f4fd6f88742e2e4bd91031fa8c303a30ea0e1062f5d17e618650f81ab15c"
-        }
-      },
-      {
-        "command": "uv run nl2repo harbor compile catalog/sources/koa --output /tmp/koa-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
-        "tool_version": "repository toolchain",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/koa/evidence/remediation.txt",
-          "sha256": "sha256:e637f4fd6f88742e2e4bd91031fa8c303a30ea0e1062f5d17e618650f81ab15c"
-        }
-      },
-      {
-        "command": "if [ -e catalog/tasks/koa ] || [ -L catalog/tasks/koa ]; then printf '%s\\n' 'runtime_path=present'; exit 1; fi; printf '%s\\n' 'runtime_path=absent'",
-        "tool_version": "POSIX shell filesystem inspection",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/koa/evidence/runtime-absence.txt",
-          "sha256": "sha256:aa2338159722abdfbdade53aca88914784a30a79b4020e0df6a156242a345a9a"
-        }
-      }
-    ]
-  }
+  "task_version": "2.1.1",
+  "terminal_kind": "awaiting-agent-run",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/koajs/koa",
+    "revision": "9c202e0077f4e314795222aff1be0da0bf9b2493",
+    "source_digest": "sha256:069a16c6ea48c4d9e9f34fa31746c238c081fbce1f67cc99c85b75057faf5245",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:16943a6ac79711e26289640dcca989be857059b938380b118bca5afc1ea4e7d7",
+    "upstream_baselines": [
+      {"attempt": 1, "passed": 440, "total": 440, "exit_code": 0},
+      {"attempt": 2, "passed": 440, "total": 440, "exit_code": 0},
+      {"attempt": 3, "passed": 440, "total": 440, "exit_code": 0}
+    ],
+    "evidence": ".nl2repo/authoring-evidence/koa/source-inventory.json"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor": "0.21.0",
+    "agent_base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "system_packages": ["ca-certificates", "git"],
+    "network_mode": "no-network",
+    "toolchain_lock_sha256": "sha256:f8bba957c2f7708e3e910c79b38dd9e9eb5dd7cda769b757243dd69fba7c8cfa"
+  },
+  "private_artifacts": {
+    "dependency_bundle": "sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d",
+    "oracle_bundle": "sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577",
+    "test_bundle": "sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b",
+    "command_plan": "sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195",
+    "dependency_lock_sha256": "sha256:0576e74e596e7ae78d3788918c02142679d1b626132e219d3ebff996909bb1a1"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/final-compile/koa/koa",
+    "bundle_manifest_sha256": "sha256:ce7436205ace0b67170b0d29cd3cbccc0bc8a3916c3b2afc733f33e449dee0ae",
+    "canonical_manifest_digest": "sha256:a65e661fdbf61da63b49d7a0804e6426e97ef2e4379035c3082f13739890a80d",
+    "inventory_count": 342,
+    "mode": "production"
+  },
+  "verifier": {
+    "protocol": "separate verifier; candidate package installed offline into a candidate-owned site; hidden node:test cases call candidate subprocesses; trusted Python normalizes the fixed leaf report",
+    "expected_total": 16,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "traceability": ".nl2repo/authoring-evidence/koa/traceability.json"
+  },
+  "oracle": {
+    "valid": true,
+    "passed": 16,
+    "total": 16,
+    "reward": 1.0,
+    "public_network_available_in_verifier": false,
+    "grading": ".nl2repo/authoring-evidence/koa/final-runs/oracle/2026-08-27__16-42-23/koa__7FDtAwE/verifier/grading.json"
+  },
+  "controls": {
+    "empty": 0.0,
+    "stub": 0.0625,
+    "forgery": 0.0625,
+    "install_hang": 0.0,
+    "offline": 0.0625,
+    "candidate_hang": 0.0625,
+    "outer_timeout": 0.0,
+    "all_verifiers_offline": true,
+    "summary": ".nl2repo/authoring-evidence/koa/final-control-summary.json"
+  },
+  "gates": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_error_count": 0,
+    "network_lint_koa_findings": 0,
+    "production_compile_exit_code": 0,
+    "focused_tests": "97 passed",
+    "json_toml_validation_exit_code": 0,
+    "diff_check_exit_code": 0,
+    "lsp": "not run: configured ty command is missing"
+  },
+  "residual_risks": [
+    "The scored suite selects 16 end-to-end behaviors from an upstream suite of 440 leaf tests; secondary convenience APIs are inventoried but not each isolated by a hidden assertion.",
+    "The build-time Debian system package resolution for git and CA certificates is not represented by per-deb hashes; the resulting agent image is retained by Harbor/Docker evidence and the base image is digest pinned."
+  ],
+  "blockers": []
 }

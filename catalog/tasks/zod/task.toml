@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/zod"
+version = "2.0.0"
+description = "Production Zod v4 JSON validation slice with a verifier-owned subprocess boundary."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "validation",
+    "schema",
+    "json",
+    "zod",
+    "node-test",
+]
+
+[metadata]
+difficulty = "hard"
+category = "data-validation"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "validation",
+    "schema",
+    "json",
+    "zod",
+    "repository-generation",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:ba33d7e1d6ce44a2a5822648f62dd185c5863862c9bfe953db67218ec7746d26"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096

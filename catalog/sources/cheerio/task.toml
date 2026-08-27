@@ -1,13 +1,13 @@
 schema_version = "2.0"
 task_id = "cheerio"
-version = "0.1.0"
-instruction = "blocked.md"
+version = "1.0.0"
+instruction = "instruction.md"
 
 [metadata]
 language = "node"
 difficulty = "hard"
 category = "html-parser"
-tags = ["node", "npm", "typescript", "html", "dom", "blocked"]
+tags = ["node", "npm", "html", "xml", "dom", "selectors", "separate-verifier"]
 
 [source]
 status = "known"
@@ -35,12 +35,12 @@ libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
-reason = "The agent and verifier must run without egress; the package requires generated dist outputs, a development build closure with lifecycle/native/browser surfaces, and a verifier scope that has not been frozen."
+reason = "Agent and verifier runs have no egress. The verifier receives a content-addressed npm v3 cache containing the scripts-free runtime closure; the Oracle is a private prebuilt distribution and performs no source or registry fetch."
 
 [dependencies]
-status = "unknown"
+status = "known"
 ecosystem = "npm"
 consumer = "candidate-runtime"
 lockfile_name = "package-lock.json"
@@ -49,19 +49,66 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-packages = ["433 lock entries; complete private cache and build closure not approved"]
+packages = [
+  "boolbase@1.0.0",
+  "cheerio-select@2.1.0",
+  "css-select@5.2.2",
+  "css-what@6.2.2",
+  "dom-serializer@2.0.0",
+  "domelementtype@2.3.0",
+  "domhandler@5.0.3",
+  "domutils@4.0.2",
+  "encoding-sniffer@0.2.1",
+  "entities@4.5.0",
+  "htmlparser2@10.1.0",
+  "iconv-lite@0.6.3",
+  "nth-check@2.1.1",
+  "parse5@7.3.0",
+  "parse5-htmlparser2-tree-adapter@7.1.0",
+  "parse5-parser-stream@7.1.2",
+  "safer-buffer@2.1.2",
+  "undici@8.10.0",
+  "whatwg-encoding@3.1.1",
+  "whatwg-mimetype@5.0.0",
+  "nested runtime entries are frozen by the lock artifact",
+]
+artifact = { digest = "sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb", size_bytes = 4536320, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 0
-expected_total_source = "unknown"
+expected_total = 51
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:9dd3d86620b8e6ffd7930870ff44261f31d8d46831c6ac9b7ed5df9fcd091368", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:9dd3d86620b8e6ffd7930870ff44261f31d8d46831c6ac9b7ed5df9fcd091368", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
+[harbor]
+description = "Build Cheerio 1.2.0 from an empty workspace and satisfy a bounded local HTML/XML parsing, selection, traversal, manipulation, and serialization contract."
+keywords = ["node", "npm", "html", "xml", "dom", "selectors", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+agent_allowed_hosts = []
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:21bc4efbc7b2bb24b34b74019b7699a4a4b3a68bb7f9bf57bc3b115a73d081f4"
+size_bytes = 1064960
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:21bc4efbc7b2bb24b34b74019b7699a4a4b3a68bb7f9bf57bc3b115a73d081f4"
+visibility = "private"
+
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/cheerio"
-reason = "The frozen Cheerio revision requires network-loading, generated dist, lifecycle/native/browser build surfaces, Vitest/type-level tests, and non-JSON APIs. The first safe no-network separate-verifier contract cannot be authored without an approved scope change and reviewed dependency closure; no runtime task was generated."
+reason = "The frozen local HTML/XML subset has a scripts-free runtime package, locked npm cache, 51-leaf subprocess verifier, private Oracle, deterministic production compile, a valid 51/51 Oracle receipt, and passing empty/stub/forgery/install-script/loader-hook/hang/offline controls. Review, pilot, and publication remain integrator work."

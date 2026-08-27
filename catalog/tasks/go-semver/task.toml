@@ -1,0 +1,54 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-semver"
+version = "0.1.0"
+description = "Recreate semantic version parsing, comparison, increments, constraints, and sorting through a bounded Go bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "semver",
+    "constraints",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = [
+    "go",
+    "go-modules",
+    "semver",
+    "constraints",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+canonical_manifest_digest = "sha256:63a49b92109d0fada06ef0bf792b908d8aae67e30ba95cd4f4068f8cd4628bf6"
+toolchain_lock_digest = "sha256:a82e6f82b50777b1919152b896ed2c11d4a4c404f424f7f98005ad52107b3b0a"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

@@ -1,0 +1,192 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/lxml",
+      "evidence": ".nl2repo/authoring-work/python-discovery-20260826-r1/lxml/evidence/validate-source-final.log",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "evidence": ".nl2repo/authoring-work/python-discovery-20260826-r1/lxml/evidence/network-lint-final-lane.log",
+      "exit_code": 0,
+      "repo_warning_count": 140,
+      "task_local_error_count": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/lxml --toolchain <task-local staging lock> --artifact-root .nl2repo/artifacts --allow-private",
+      "evidence": ".nl2repo/authoring-work/python-discovery-20260826-r1/lxml/evidence/compile-final-after-lifecycle.log",
+      "exit_code": 0
+    },
+    {
+      "command": "bash -n harbor shell scripts; py_compile verifier; compile all 8 embedded scenarios",
+      "evidence": ".nl2repo/authoring-work/python-discovery-20260826-r1/lxml/evidence/final-static-checks.log",
+      "exit_code": 0
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:20e14d437f259d17fd212f7afbc36f9358ce54b301eb2c7f39b95fb6db53c0f1",
+    "mode": "production",
+    "path": "catalog/tasks/lxml"
+  },
+  "controls": {
+    "background": {
+      "counts": {
+        "collected": 8,
+        "failed": 8,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "job": "jobs/2026-08-26__23-37-13/lxml-background__uUjcp4B",
+      "kind": "background",
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "counts": {
+        "collected": 0,
+        "failed": 0,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "job": "jobs/2026-08-26__23-42-25/lxml__UxKsJ5B",
+      "kind": "nop",
+      "network_public_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "counts": {
+        "collected": 8,
+        "failed": 8,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "job": "jobs/2026-08-26__23-35-40/lxml-forgery__rQ5VeUk",
+      "kind": "forgery",
+      "reward": 0.0,
+      "valid": true
+    },
+    "matrix_evidence": ".nl2repo/authoring-work/python-discovery-20260826-r1/lxml/evidence/control-matrix-final.jsonl",
+    "stub": {
+      "counts": {
+        "collected": 8,
+        "failed": 8,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "job": "jobs/2026-08-26__23-34-20/lxml-stub__2kaiand",
+      "kind": "stub",
+      "reward": 0.0,
+      "valid": true
+    },
+    "timeout": {
+      "counts": {
+        "collected": 8,
+        "failed": 8,
+        "passed": 0
+      },
+      "exit_code": 0,
+      "job": "jobs/2026-08-26__23-38-39/lxml-timeout__fY2e6aU",
+      "kind": "timeout",
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:56a79992e5df8df4362eb3e119a9b21648f94c0f910ee47f23c8915137721b90",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 4463,
+      "uri": "artifact://private/sha256:56a79992e5df8df4362eb3e119a9b21648f94c0f910ee47f23c8915137721b90",
+      "visibility": "private"
+    },
+    "packages": [
+      "Cython==3.3.0",
+      "packaging==26.3",
+      "setuptools==84.0.0",
+      "wheel==0.48.0"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The hash-locked Python build closure and native system dependencies are installed only during Docker build. Candidate and verifier containers run with no egress; the Oracle alone receives a run-scoped source-host override.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-13-amd64",
+    "python_version": "3.12.14",
+    "status": "known",
+    "system_packages": [
+      "build-essential=12.12",
+      "git=1:2.47.3-0+deb13u1",
+      "pkg-config=1.8.1-4",
+      "libxml2-dev=2.12.7+dfsg+really2.9.14-2.1+deb13u3",
+      "libxslt1-dev=1.1.35-1.2+deb13u3",
+      "zlib1g-dev=1:1.3.dfsg+really1.3.1-1+b1"
+    ]
+  },
+  "oracle": {
+    "command": "uv run --frozen --project /data/NL2RepoBench-authoring-main-20260826/harbor-runner harbor run -p .nl2repo/authoring-work/python-discovery-20260826-r1/lxml/build/harbor-final/lxml -a oracle --allow-agent-host github.com",
+    "evidence": ".nl2repo/authoring-work/python-discovery-20260826-r1/lxml/evidence/oracle-final-bundle.log",
+    "exit_code": 0,
+    "grading": "jobs/2026-08-26__23-45-09/lxml__FJLnbrn/verifier/grading.json",
+    "job": "jobs/2026-08-26__23-45-09/lxml__FJLnbrn",
+    "network_public_available": false,
+    "passed": 8,
+    "reward": 1.0,
+    "total": 8,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:79f0a099b74cb482085c80144be1ff1ebc41ce80cfe6c722c310a9a267b0c95d",
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:79f0a099b74cb482085c80144be1ff1ebc41ce80cfe6c722c310a9a267b0c95d",
+      "visibility": "private"
+    },
+    "verifier": {
+      "bundle": {
+        "digest": "sha256:9530726b11cb52d88f94ba219f38165f60a6a7bb5206c4da7c23e2ed01632545",
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "size_bytes": 10240,
+        "uri": "artifact://private/sha256:9530726b11cb52d88f94ba219f38165f60a6a7bb5206c4da7c23e2ed01632545",
+        "visibility": "private"
+      },
+      "entrypoint": "run.py",
+      "protocol": "custom-json-v1"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/python-discovery-20260826-r1/lxml/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "The upstream source-tree baseline has five stable RWLock test failures caused by the source test expecting counters absent from this frozen revision; this is recorded as source ceiling evidence and is outside the 8-leaf Harbor contract.",
+    "The production compile used a task-local staging copy of the repository Harbor runner and verifier lock files because harbor-runner/pyproject.toml and harbor-runner/uv.lock are pre-existing deleted paths in this detached worktree; the staging runner lock digest matches toolchain.lock.toml. No shared file was restored or changed by this lane.",
+    "Network lint reports 140 warnings from unrelated catalog tasks and one expected lxml oracle-source authorization warning; lxml has 0 task-local errors and explicit no-network agent/verifier policy."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "BSD-3-Clause",
+    "revision": "36f11f9d5edca7e85d20102fa253c1dad42929ee",
+    "source_digest": "sha256:cac1e83f3fa07b77097da8f98cb58bd4b2bc3e6b5a55eb7b6c942ed1b0e66d29",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/lxml/lxml"
+  },
+  "status": "controls-passed",
+  "task_id": "lxml",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

@@ -2,6 +2,7 @@ schema_version = "1.0"
 task_id = "go-google-uuid"
 version = "0.1.0"
 instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:b2e6480ce864c6679e1390fd7e5d18c99caee12048a89cd9b9175ee598ef92b0", size_bytes = 634, uri = "artifact://private/sha256:b2e6480ce864c6679e1390fd7e5d18c99caee12048a89cd9b9175ee598ef92b0", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
@@ -17,26 +18,30 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:e24d1eb2f3787e8e47cacff5c9ef5e7286ef6406a22da2da036fd2a19fa5c049"
 
 [environment]
-status = "unknown"
+status = "known"
 os_name = "debian-bookworm"
 network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
-reason = "Go toolchain image digest and offline module closure are pending the production freeze."
+reason = "The candidate and verifier run without network; private build artifacts are materialized before the run."
 
 [dependencies]
-status = "unknown"
-installer = "unknown"
-packages = ["github.com/google/uuid@v1.6.0"]
+status = "known"
+installer = "system"
+module_bundle = { digest = "sha256:c37e4b325aea1739f2cd129def35c1a5accdbe4b4c8952bf26e214bb18051e0c", size_bytes = 505, uri = "artifact://private/sha256:c37e4b325aea1739f2cd129def35c1a5accdbe4b4c8952bf26e214bb18051e0c", visibility = "private" }
+packages = []
 
 [tests]
 framework = "pytest"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["go test ./..."]
+commands = ["custom-json-v1"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -60,5 +65,11 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Production Go image, offline module closure, Oracle and controls are not frozen in this checkout."
+status = "controls-passed"
+owner = "go-author-remediation-20260826-r1"
+reason = "Three stable Oracle runs and the required separate-verifier controls passed; awaiting independent review and pilot."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:d55dc65ce99a7d706ba1ad135ec9e1d571ae6d9ff1b62a2488074a52c1f09999", size_bytes = 585, uri = "artifact://private/sha256:d55dc65ce99a7d706ba1ad135ec9e1d571ae6d9ff1b62a2488074a52c1f09999", visibility = "private" }
+entrypoint = "contract.sh"

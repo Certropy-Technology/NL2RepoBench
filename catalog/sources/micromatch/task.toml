@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "micromatch"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "developer-tool"
+tags = ["node", "npm", "commonjs", "glob", "pattern-matching", "filesystem-paths", "node-test"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/micromatch/micromatch"
+revision = "8bd704ec0d9894693d35da425d827819916be920"
+license_spdx = "MIT"
+source_digest = "sha256:cfb37abf1f9134a4160f8db24574d537d533b217c9708047c995dd3d346d6239"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The model, Oracle, and verifier run without egress. The verifier image receives a private npm v3 cache for exact runtime dependencies at build time, and the trusted Oracle bundle contains only a digest-checked git archive of the frozen revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["braces", "picomatch"]
+artifact = { digest = "sha256:d5b3662d1978b0c00da652ffb1615f37f1fc12dfe2f9eadbf1d03342feab5ee4", size_bytes = 583680, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:d5b3662d1978b0c00da652ffb1615f37f1fc12dfe2f9eadbf1d03342feab5ee4", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 67
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
+test_bundle = { digest = "sha256:7a8e7257ad49f7829472c838cb98e488a786643406604c389ec9e9b47eb841c0", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:7a8e7257ad49f7829472c838cb98e488a786643406604c389ec9e9b47eb841c0", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the micromatch 4.0.8 CommonJS glob-matching library from an empty workspace."
+keywords = ["node", "npm", "commonjs", "glob", "pattern-matching", "filesystem-paths", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-discovery-20260826-r1"
+reason = "The 67-leaf private contract closes traceability gaps for documented aliases, syntax, ignore arrays, and onIgnore behavior. The production Node bundle passed Oracle at 67/67 with reward 1.0; empty scored 0.0, stub 8/67, forgery 3/67, timeout 8/67, and the network-dependent offline control 7/67. Every run produced a verifier-owned receipt proving public network access was unavailable. Review and pilot remain publication-stage work."
+
+[oracle_bundle]
+digest = "sha256:57823e7d3693383a5eb095c55db2ca694ba32305e0a8ed5e4a679c3336b89363"
+size_bytes = 655360
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:57823e7d3693383a5eb095c55db2ca694ba32305e0a8ed5e4a679c3336b89363"
+visibility = "private"

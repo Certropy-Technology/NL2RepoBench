@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rollup",
+  "upstream_url": "https://github.com/rollup/rollup",
+  "revision": "89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb",
+  "git_archive_sha256": "1be81f7d2cd36f7539701f6f93f107bf28eccb31a8ade43de5fd8c55137983d6",
+  "license_spdx": "MIT",
+  "package_version": "4.62.5",
+  "submodules": [],
+  "runtime": {"node": "24.19.0", "npm": "11.17.0", "architecture": "linux/amd64"},
+  "build": {
+    "mode": "upstream Node-WASM release path",
+    "commands": ["npm ci --ignore-scripts", "npm run build:wasm:node", "npm run build:ast-converters", "npm run build:js:node", "replace dist/native.js with upstream native.wasm.js"],
+    "authoring_image": "sha256:7a8f88a1f4ef3fa021b39f280783413e50824790b7468193b773db47390bd29f",
+    "rust_base": "docker.io/library/rust@sha256:7c4ae649a84014c467d79319bbf17ce2632ae8b8be123ac2fb2ea5be46823f31",
+    "dist_archive_sha256": "37df5a29280332dd46528a358356d0038f0e754e4e444959cd65f4c39214a2be",
+    "exit_code": 0
+  },
+  "baselines": {"attempts": 3, "passed_each": 5444, "failed_each": 0, "exit_codes": [0, 0, 0], "network": "none"},
+  "log_sha256": {
+    "npm_ci": "5178a5a1d5d1f1a69052bfcc500511ad2db1d0be252b51e0a196acb884345b3a",
+    "build": "fd1f726813052f319c0c1f8197e6394da59dfe0c77e6bf80c59699da5f991541",
+    "baseline_1": "05269039589941c4ca25e2a570d5bbd8b84e13952fd9508008e50f82b67f3bf0",
+    "baseline_2": "188c601e331542a3e99d7f077a4b5638a5ca41a16bacd16d6b6dce06e5a5d5a2",
+    "baseline_3": "f72f43ad145505ea35aabb9b37b934c3b2d74fd982d13ba07e5426c337109e0a"
+  }
+}

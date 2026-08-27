@@ -1,0 +1,61 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/boto3"
+version = "0.1.0"
+description = "Build the pinned boto3 AWS SDK for Python from an empty workspace and satisfy its deterministic unit contract for sessions, clients, resources, service models, documenters, utilities, transfers, and error behavior without contacting AWS."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "aws-sdk",
+    "sessions",
+    "clients",
+    "resources",
+    "stubbing",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "aws-sdk"
+tags = [
+    "python",
+    "aws",
+    "sdk",
+    "sessions",
+    "clients",
+    "resources",
+    "stubbing",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 552
+canonical_manifest_digest = "sha256:359c89d4a7a5869c40df2bdd4501dd0ea951d5429d55bd3e04c9b43ab97d849b"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

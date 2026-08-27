@@ -1,0 +1,621 @@
+{
+  "error_count": 0,
+  "ok": true,
+  "report_kind": "selected-source-validation",
+  "schema_version": "1.0",
+  "task_count": 51,
+  "tasks": [
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/axios.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/axios/instruction.md",
+        "source_digest": "sha256:fd2d7ce17988470b91085ef5df896c250af3b2647d3869144539782f398bcffd",
+        "status": "controls-passed",
+        "task_id": "axios",
+        "version": "1.0.0"
+      },
+      "task_id": "axios"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/better-sqlite3.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/better-sqlite3/instruction.md",
+        "source_digest": "sha256:bec3a67067d3573b9229c7d88fd64db8d209ffb5fe1812a46c2c9992bee9dcd6",
+        "status": "controls-passed",
+        "task_id": "better-sqlite3",
+        "version": "2.0.0"
+      },
+      "task_id": "better-sqlite3"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/boto3.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/boto3/instruction.md",
+        "source_digest": "sha256:a46c69f504348b6e88cf89c23628080415199abd9e96a5000c04e502cea30193",
+        "status": "controls-passed",
+        "task_id": "boto3",
+        "version": "0.1.0"
+      },
+      "task_id": "boto3"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/botocore.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/botocore/instruction.md",
+        "source_digest": "sha256:1200fb4abc886c5fd4b3cd0132438ec9fb2e3942152f25d49acdd972944ed4fd",
+        "status": "controls-passed",
+        "task_id": "botocore",
+        "version": "0.1.0"
+      },
+      "task_id": "botocore"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/cheerio.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/cheerio/instruction.md",
+        "source_digest": "sha256:bf12074602aa7c8a0d3883fc7607d7ebf6fe3e192702889d43c5fb3d702c899a",
+        "status": "controls-passed",
+        "task_id": "cheerio",
+        "version": "1.0.0"
+      },
+      "task_id": "cheerio"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/dacite.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/dacite/instruction.md",
+        "source_digest": "sha256:32826939c2c4f2b429537747a815c1cc36c908df7a13d65e8ed5e99a6084e484",
+        "status": "controls-passed",
+        "task_id": "dacite",
+        "version": "0.1.0"
+      },
+      "task_id": "dacite"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/dataclasses-json.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/dataclasses-json/instruction.md",
+        "source_digest": "sha256:ffdfada24b0013c56bd5480f558758b35aeeba5927cd2cf0e4c5e7041f9ea5c5",
+        "status": "controls-passed",
+        "task_id": "dataclasses-json",
+        "version": "0.1.0"
+      },
+      "task_id": "dataclasses-json"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/date-fns.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/date-fns/instruction.md",
+        "source_digest": "sha256:36b24b55587f07a9bb5b635df0fd1e3b1c4df897733e7392644b84ad3c38d9cc",
+        "status": "controls-passed",
+        "task_id": "date-fns",
+        "version": "2.0.0"
+      },
+      "task_id": "date-fns"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/eslint.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/eslint/instruction.md",
+        "source_digest": "sha256:a2b9c116a2b99aa15cc95d02de84ebee9798fff34eb9247caa2101162835496b",
+        "status": "controls-passed",
+        "task_id": "eslint",
+        "version": "2.0.0"
+      },
+      "task_id": "eslint"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/fastjsonschema.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/fastjsonschema/instruction.md",
+        "source_digest": "sha256:dec3464a533c404b8e3a348ebb386c9c0c6a8c62cbc356a09aab833397fd40ff",
+        "status": "controls-passed",
+        "task_id": "fastjsonschema",
+        "version": "0.3.1"
+      },
+      "task_id": "fastjsonschema"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/globby.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/globby/instruction.md",
+        "source_digest": "sha256:a5fbd516f3b8f6d2156bc3e44657d912ca2681a9b7115c93fcf305aaf361c901",
+        "status": "controls-passed",
+        "task_id": "globby",
+        "version": "2.0.0"
+      },
+      "task_id": "globby"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/go-gjson.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/go-gjson/instruction.md",
+        "source_digest": "sha256:4fa887067e300b0d87108f905ff1fe6a6f62f689ad61ab828335a295a6d3b752",
+        "status": "controls-passed",
+        "task_id": "go-gjson",
+        "version": "0.1.0"
+      },
+      "task_id": "go-gjson"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/go-google-uuid.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/go-google-uuid/instruction.md",
+        "source_digest": "sha256:c56d9e2d6b74d86702792b51cf74bffbd4cf6f3e194bed1e8fd7a5a2b50d3fa3",
+        "status": "controls-passed",
+        "task_id": "go-google-uuid",
+        "version": "0.1.0"
+      },
+      "task_id": "go-google-uuid"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/go-humanize.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/go-humanize/instruction.md",
+        "source_digest": "sha256:135c3e9b4f5bc8bbb28ad89bc0c9533040e343c2ef4d575e20b43a8437583565",
+        "status": "controls-passed",
+        "task_id": "go-humanize",
+        "version": "0.1.0"
+      },
+      "task_id": "go-humanize"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/go-semver.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/go-semver/instruction.md",
+        "source_digest": "sha256:8b969f84d5d34827a61c7e4c73af2e48ab0b2564a2b4a678e4b8b689bcdb9dd3",
+        "status": "controls-passed",
+        "task_id": "go-semver",
+        "version": "0.1.0"
+      },
+      "task_id": "go-semver"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/google-auth.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/google-auth/instruction.md",
+        "source_digest": "sha256:714a91464cd57fbe259788b7d0d316da3b93ec9c2d9bef746e043b565c8e703d",
+        "status": "controls-passed",
+        "task_id": "google-auth",
+        "version": "0.2.0"
+      },
+      "task_id": "google-auth"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/immer.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/immer/instruction.md",
+        "source_digest": "sha256:90e4f7f034971fc463b615520e120a5c810acd03735243ff766bf3e3b5a27aaa",
+        "status": "controls-passed",
+        "task_id": "immer",
+        "version": "1.0.0"
+      },
+      "task_id": "immer"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/iso8601.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/iso8601/instruction.md",
+        "source_digest": "sha256:88a3765b6b36b0c76caab4fa5b502cd39cf73804714ab84db44d13779714f8e3",
+        "status": "controls-passed",
+        "task_id": "iso8601",
+        "version": "0.1.1"
+      },
+      "task_id": "iso8601"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/jsonpointer.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/jsonpointer/instruction.md",
+        "source_digest": "sha256:6651caa330c0dcec3efa2674534e6f14d94295412b33ec21ae79fed04809ccef",
+        "status": "controls-passed",
+        "task_id": "jsonpointer",
+        "version": "1.0.0"
+      },
+      "task_id": "jsonpointer"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/koa.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/koa/instruction.md",
+        "source_digest": "sha256:64012f706a24ff01cc8c11126c74ece05ab4c41473ac25e27fc9c34739958538",
+        "status": "controls-passed",
+        "task_id": "koa",
+        "version": "2.1.1"
+      },
+      "task_id": "koa"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/lodash.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/lodash/instruction.md",
+        "source_digest": "sha256:70108df3ac075439719dba192a339a39db3ca47e6c786a45c7e9bd2bb6a6fa03",
+        "status": "controls-passed",
+        "task_id": "lodash",
+        "version": "1.0.0"
+      },
+      "task_id": "lodash"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/lodash-es.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/lodash-es/instruction.md",
+        "source_digest": "sha256:e10e1a64fa89df5cfbac312832c5ff41719f1c69b03aa5c966af6fe172c2e885",
+        "status": "controls-passed",
+        "task_id": "lodash-es",
+        "version": "1.0.0"
+      },
+      "task_id": "lodash-es"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/lxml.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/lxml/instruction.md",
+        "source_digest": "sha256:a847ba1ce6973be4a4eeeb649615f2af9559f4af034a405e1314a664954a5313",
+        "status": "controls-passed",
+        "task_id": "lxml",
+        "version": "0.1.0"
+      },
+      "task_id": "lxml"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/micromatch.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/micromatch/instruction.md",
+        "source_digest": "sha256:08d22bd04498f6207436d3408f2fb5ce118a4aa48da5f31ec4840965e9f86262",
+        "status": "controls-passed",
+        "task_id": "micromatch",
+        "version": "1.0.0"
+      },
+      "task_id": "micromatch"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/mime.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/mime/instruction.md",
+        "source_digest": "sha256:2538fa5b2bbd69faeb9bd87058227df1c1fc9205d9cef1d57b73201fc488f0e7",
+        "status": "controls-passed",
+        "task_id": "mime",
+        "version": "2.0.0"
+      },
+      "task_id": "mime"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/nanoid.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/nanoid/instruction.md",
+        "source_digest": "sha256:737e307703cef3a301a532a95e23919d06e87774ba2ce8704c7ff8ae9aab3290",
+        "status": "controls-passed",
+        "task_id": "nanoid",
+        "version": "1.0.0"
+      },
+      "task_id": "nanoid"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/nock.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/nock/instruction.md",
+        "source_digest": "sha256:43c6427c5a6414bb351f780f9cb7716948722c9f36aa51fa319e7055aa96de61",
+        "status": "controls-passed",
+        "task_id": "nock",
+        "version": "1.0.0"
+      },
+      "task_id": "nock"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/node-fetch.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/node-fetch/instruction.md",
+        "source_digest": "sha256:654e0cff2419462cd24d8f3b3b4a8b57713e31b08f627777d36082ece0b0712d",
+        "status": "controls-passed",
+        "task_id": "node-fetch",
+        "version": "2.0.0"
+      },
+      "task_id": "node-fetch"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/p-limit.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/p-limit/instruction.md",
+        "source_digest": "sha256:d1bc09625ace85034773c49aef2f646c852537ee64633d1a1561d7c6279cc99b",
+        "status": "controls-passed",
+        "task_id": "p-limit",
+        "version": "2.0.0"
+      },
+      "task_id": "p-limit"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/p-queue.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/p-queue/instruction.md",
+        "source_digest": "sha256:72ab2b57449aa935dfb297c920c8503e194053481bac0e7ad28442488e510160",
+        "status": "controls-passed",
+        "task_id": "p-queue",
+        "version": "1.0.0"
+      },
+      "task_id": "p-queue"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/parse5.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/parse5/instruction.md",
+        "source_digest": "sha256:594791bff79c840d24f1addf855387e95736132d8279aca9b67f9a32e135eeb3",
+        "status": "controls-passed",
+        "task_id": "parse5",
+        "version": "2.0.0"
+      },
+      "task_id": "parse5"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/prettier.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/prettier/instruction.md",
+        "source_digest": "sha256:330d7dde4b6127781b2aa200b09e2534b6d6429fbb64d66bdef5c156d191eb7d",
+        "status": "controls-passed",
+        "task_id": "prettier",
+        "version": "2.0.0"
+      },
+      "task_id": "prettier"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/pydantic-settings.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/pydantic-settings/instruction.md",
+        "source_digest": "sha256:c6b9cd7a3c56cb8d6cf846819988600671bf5075a2333432e83f09a617d411fa",
+        "status": "controls-passed",
+        "task_id": "pydantic-settings",
+        "version": "0.1.0"
+      },
+      "task_id": "pydantic-settings"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/pymongo.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/pymongo/instruction.md",
+        "source_digest": "sha256:4c494fc394a101f1344411eb37c409d7be6dad7fee2ef012c720d42e2e252ef3",
+        "status": "controls-passed",
+        "task_id": "pymongo",
+        "version": "1.1.0"
+      },
+      "task_id": "pymongo"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/pyrsistent.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/pyrsistent/instruction.md",
+        "source_digest": "sha256:8883b16c49d22c901d01102d8172f28f3e0b4a14d47ea3f057c8902f5f86020c",
+        "status": "controls-passed",
+        "task_id": "pyrsistent",
+        "version": "1.0.0"
+      },
+      "task_id": "pyrsistent"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/python-dateutil.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/python-dateutil/instruction.md",
+        "source_digest": "sha256:ddae627246a8e31df9e438f8bf2f2d73937a6510169816881fbd8640c15feaa0",
+        "status": "controls-passed",
+        "task_id": "python-dateutil",
+        "version": "1.0.0"
+      },
+      "task_id": "python-dateutil"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/ramda.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/ramda/instruction.md",
+        "source_digest": "sha256:947082b9712eec90fa09b125a9d51160ec9de06e52b214545c46404b045b2a77",
+        "status": "controls-passed",
+        "task_id": "ramda",
+        "version": "2.0.0"
+      },
+      "task_id": "ramda"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/referencing.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/referencing/instruction.md",
+        "source_digest": "sha256:4c14439494ea36846015d9f79aa3fdb294851ee1444334b4e58b7f927f2d88d5",
+        "status": "controls-passed",
+        "task_id": "referencing",
+        "version": "0.1.0"
+      },
+      "task_id": "referencing"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/requests.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/requests/instruction.md",
+        "source_digest": "sha256:98604e5607c6639df15fc3e38b7cb44e1c34ac193bdd976ab7562a02b74684e4",
+        "status": "controls-passed",
+        "task_id": "requests",
+        "version": "1.0.0"
+      },
+      "task_id": "requests"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/rollup.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/rollup/instruction.md",
+        "source_digest": "sha256:6785c282aec97c4368036988db56421672dda36e2c5088dbc9dafd3e7a441eeb",
+        "status": "controls-passed",
+        "task_id": "rollup",
+        "version": "2.0.0"
+      },
+      "task_id": "rollup"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/sharp.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/sharp/instruction.md",
+        "source_digest": "sha256:b79ac83d55aecc8901115e2a7e228fae17848913bb311fd85eaaa5d2e27e2029",
+        "status": "controls-passed",
+        "task_id": "sharp",
+        "version": "2.0.0"
+      },
+      "task_id": "sharp"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/socket.io.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/socket.io/instruction.md",
+        "source_digest": "sha256:92080f2668ce759ecc65c313abe7b0fe599cd1b8d5b1f8ded0ec6b22d3644173",
+        "status": "controls-passed",
+        "task_id": "socket.io",
+        "version": "2.0.0"
+      },
+      "task_id": "socket.io"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/strip-ansi.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/strip-ansi/instruction.md",
+        "source_digest": "sha256:e56d82f13f41a91246c81263999986b3bcdd18d877b3bcdb7cf4cd20cbb8f56d",
+        "status": "controls-passed",
+        "task_id": "strip-ansi",
+        "version": "2.0.0"
+      },
+      "task_id": "strip-ansi"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/sympy.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/sympy/instruction.md",
+        "source_digest": "sha256:3695747193fc6857f2ec517718b788cf91c765ed9bbed265ca17ae4058add53e",
+        "status": "controls-passed",
+        "task_id": "sympy",
+        "version": "0.1.0"
+      },
+      "task_id": "sympy"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/textual.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/textual/instruction.md",
+        "source_digest": "sha256:46897812f4c73bca0f935f2ed757bfb1b7905591da4d9fb3fdbe477aa695deef",
+        "status": "controls-passed",
+        "task_id": "textual",
+        "version": "0.1.0"
+      },
+      "task_id": "textual"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/typescript.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/typescript/instruction.md",
+        "source_digest": "sha256:ab0bd98a47be7a0b539ff70921354aba54a3bf43beaa384af9b44971dde4020a",
+        "status": "controls-passed",
+        "task_id": "typescript",
+        "version": "2.0.1"
+      },
+      "task_id": "typescript"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/vite.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/vite/instruction.md",
+        "source_digest": "sha256:240af0d8046e0fed3d41a270584279fb415cd7642bff44be3df52c6b6f131ef1",
+        "status": "controls-passed",
+        "task_id": "vite",
+        "version": "2.0.0"
+      },
+      "task_id": "vite"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/winston.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/winston/instruction.md",
+        "source_digest": "sha256:977e2d3999b11dd9e76fc12edc966229c0b750654339aea7d0e044ea9d2b0911",
+        "status": "controls-passed",
+        "task_id": "winston",
+        "version": "2.0.0"
+      },
+      "task_id": "winston"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/ws.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/ws/instruction.md",
+        "source_digest": "sha256:64e921f5fc0906a0cca044d5d214663eab866891da4c6aad6eb516b734978f57",
+        "status": "controls-passed",
+        "task_id": "ws",
+        "version": "1.0.0"
+      },
+      "task_id": "ws"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/yargs.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/yargs/instruction.md",
+        "source_digest": "sha256:87f214c5e0a86819e3d9683b293072ce10a1481184033e25c7ce24eb9ed764ff",
+        "status": "controls-passed",
+        "task_id": "yargs",
+        "version": "1.0.0"
+      },
+      "task_id": "yargs"
+    },
+    {
+      "exit_code": 0,
+      "log": ".nl2repo/validation/source-validation-20260828/zod.log",
+      "result": {
+        "instruction": "/data/NL2RepoBench-integration-20260827/catalog/sources/zod/instruction.md",
+        "source_digest": "sha256:ea78e2aaf254b822f3e547ae1cceab806f2079d9e092c1cf2bb435f9db097ee6",
+        "status": "controls-passed",
+        "task_id": "zod",
+        "version": "2.0.0"
+      },
+      "task_id": "zod"
+    }
+  ]
+}

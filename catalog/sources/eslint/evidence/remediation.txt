@@ -1,5 +1,13 @@
-command: uv run nl2repo harbor compile catalog/sources/eslint --output /tmp/eslint-production-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
-result: not-run in this remediation; no private Oracle/control run evidence was available in the checkout.
-command: uv run --frozen --project harbor-runner harbor run -p catalog/tasks/eslint -a oracle
-result: not-run; no ESLint-specific Harbor grading/network artifacts or handoff were present.
-runtime directory removal is required because controls-passed has no verifiable evidence.
+source freeze: c27bc926e496985eb7911c09eb60914b2e4b5d0f; git archive sha256=a02160c6f87fa83ba6082361d085ea32d5937dd2063bb6735b8d649d04b03ca0; immutable codeload tarball sha256=0fa7691ed4b4efe49b7789410d6763c6d27f6f4b8dada81f28377a08a97e3a0f.
+inventory: source tree 2358 files; npm packed publication 420 files; package version 10.9.0; 20 private node:test leaves.
+dependency remediation: generated npm@11.17.0 lock/cache closure with 70 lock packages, no install scripts, native packages, or non-registry sources; bundle sha256=1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573, size=11806720.
+command: uv run nl2repo task validate-source catalog/sources/eslint
+result: exit 0; status=controls-passed.
+command: uv run nl2repo task lint-network --tasks-root catalog/sources
+result: exit 0; global scan reports 0 errors; unrelated legacy warnings remain outside eslint.
+command: uv run nl2repo harbor compile catalog/sources/eslint --output .nl2repo/eslint-compiled-final --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
+result: exit 0; production bundle manifest sha256=a26d49d38662227c030443db192e56da9ed381f3297b0b1815da616991bd0175.
+command: uv run --frozen --project harbor-runner harbor run -p .nl2repo/eslint-compiled-final/eslint -a oracle --allow-agent-host codeload.github.com --jobs-dir .nl2repo/eslint-final-jobs-retry2
+result: exit 0 after one bounded infrastructure retry; valid=true, collected=20, passed=20, reward=1.0; grading=.nl2repo/eslint-final-jobs-retry2/2026-08-26__17-29-23/eslint__9ZwvwqT/verifier/grading.json.
+controls: stub valid=true reward=0.05 (1/20 leaves, low-score packaging/stub control); forgery valid=true reward=0 (0/20 leaves, forged workspace reward ignored); job roots under .nl2repo/eslint-final-control-jobs.
+offline proof: Oracle verifier network.json records public_network_available=false, pypi.org:443=false, and 1.1.1.1:443=false; path=.nl2repo/eslint-final-jobs-retry2/2026-08-26__17-29-23/eslint__9ZwvwqT/verifier/network.json.

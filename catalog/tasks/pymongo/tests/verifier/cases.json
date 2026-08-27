@@ -1,0 +1,743 @@
+{
+  "cases": [
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          "localhost",
+          7
+        ]
+      },
+      "id": "host-case-normalized",
+      "request": {
+        "scenario": "host-case-normalized",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          "localhost",
+          27017
+        ]
+      },
+      "id": "host-default",
+      "request": {
+        "scenario": "host-default",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          "localhost",
+          27018
+        ]
+      },
+      "id": "host-explicit",
+      "request": {
+        "scenario": "host-explicit",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          "127.0.0.1",
+          27019
+        ]
+      },
+      "id": "host-ipv4",
+      "request": {
+        "scenario": "host-ipv4",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          "::1",
+          27017
+        ]
+      },
+      "id": "host-ipv6-default",
+      "request": {
+        "scenario": "host-ipv6-default",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          "2001:db8::1",
+          42
+        ]
+      },
+      "id": "host-ipv6-explicit",
+      "request": {
+        "scenario": "host-ipv6-explicit",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.ValueError"
+      },
+      "id": "host-port-high",
+      "request": {
+        "scenario": "host-port-high",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.ValueError"
+      },
+      "id": "host-port-text",
+      "request": {
+        "scenario": "host-port-text",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.ValueError"
+      },
+      "id": "host-port-zero",
+      "request": {
+        "scenario": "host-port-zero",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "{\"items\": [true, null, 3, \"x\"]}"
+      },
+      "id": "json-dumps-nested",
+      "request": {
+        "scenario": "json-dumps-nested",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "{\"second\": 2, \"first\": \"caf\\u00e9\"}"
+      },
+      "id": "json-dumps-order-unicode",
+      "request": {
+        "scenario": "json-dumps-order-unicode",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "json.decoder.JSONDecodeError"
+      },
+      "id": "json-invalid",
+      "request": {
+        "scenario": "json-invalid",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          1,
+          "two",
+          null,
+          false
+        ]
+      },
+      "id": "json-loads-array",
+      "request": {
+        "scenario": "json-loads-array",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          {
+            "float": 1.25,
+            "integer": 4
+          },
+          "int",
+          "float"
+        ]
+      },
+      "id": "json-loads-numbers",
+      "request": {
+        "scenario": "json-loads-numbers",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "enabled": true,
+          "name": "Ada"
+        }
+      },
+      "id": "json-loads-whitespace",
+      "request": {
+        "scenario": "json-loads-whitespace",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "nested": [
+            {
+              "x": 1
+            }
+          ],
+          "text": "\u2603"
+        }
+      },
+      "id": "json-roundtrip",
+      "request": {
+        "scenario": "json-roundtrip",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": false
+      },
+      "id": "objectid-long",
+      "request": {
+        "scenario": "objectid-long",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": true
+      },
+      "id": "objectid-lower",
+      "request": {
+        "scenario": "objectid-lower",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": false
+      },
+      "id": "objectid-none",
+      "request": {
+        "scenario": "objectid-none",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": false
+      },
+      "id": "objectid-nonhex",
+      "request": {
+        "scenario": "objectid-nonhex",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": false
+      },
+      "id": "objectid-short",
+      "request": {
+        "scenario": "objectid-short",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": false
+      },
+      "id": "objectid-text12",
+      "request": {
+        "scenario": "objectid-text12",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": true
+      },
+      "id": "objectid-upper",
+      "request": {
+        "scenario": "objectid-upper",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "4.18.0.dev0"
+      },
+      "id": "package-version",
+      "request": {
+        "scenario": "package-version",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "pymongo.errors.ConfigurationError"
+      },
+      "id": "split-empty-middle",
+      "request": {
+        "scenario": "split-empty-middle",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "pymongo.errors.ConfigurationError"
+      },
+      "id": "split-empty-trailing",
+      "request": {
+        "scenario": "split-empty-trailing",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          [
+            "::1",
+            27018
+          ],
+          [
+            "example.com",
+            4
+          ]
+        ]
+      },
+      "id": "split-ipv6",
+      "request": {
+        "scenario": "split-ipv6",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          [
+            "localhost",
+            27017
+          ]
+        ]
+      },
+      "id": "split-single",
+      "request": {
+        "scenario": "split-single",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": [
+          [
+            "a",
+            1
+          ],
+          [
+            "b",
+            27017
+          ]
+        ]
+      },
+      "id": "split-two",
+      "request": {
+        "scenario": "split-two",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": "items",
+          "database": "example_db",
+          "fqdn": null,
+          "nodelist": [
+            [
+              "localhost",
+              27017
+            ]
+          ],
+          "options": {},
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-collection",
+      "request": {
+        "scenario": "uri-collection",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": null,
+          "fqdn": null,
+          "nodelist": [
+            [
+              "localhost",
+              27017
+            ]
+          ],
+          "options": {},
+          "password": "p:ass",
+          "username": "u@ser"
+        }
+      },
+      "id": "uri-credentials",
+      "request": {
+        "scenario": "uri-credentials",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": "example_db",
+          "fqdn": null,
+          "nodelist": [
+            [
+              "localhost",
+              27017
+            ]
+          ],
+          "options": {},
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-database",
+      "request": {
+        "scenario": "uri-database",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": null,
+          "fqdn": null,
+          "nodelist": [
+            [
+              "a",
+              1
+            ],
+            [
+              "b",
+              27018
+            ]
+          ],
+          "options": {},
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-host-list",
+      "request": {
+        "scenario": "uri-host-list",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.ValueError"
+      },
+      "id": "uri-invalid-port",
+      "request": {
+        "scenario": "uri-invalid-port",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "pymongo.errors.InvalidURI"
+      },
+      "id": "uri-invalid-scheme",
+      "request": {
+        "scenario": "uri-invalid-scheme",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": "db",
+          "fqdn": null,
+          "nodelist": [
+            [
+              "::1",
+              27018
+            ]
+          ],
+          "options": {},
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-ipv6",
+      "request": {
+        "scenario": "uri-ipv6",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": null,
+          "fqdn": null,
+          "nodelist": [
+            [
+              "localhost",
+              27017
+            ]
+          ],
+          "options": {},
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-minimal",
+      "request": {
+        "scenario": "uri-minimal",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": null,
+          "fqdn": null,
+          "nodelist": [
+            [
+              "localhost",
+              27017
+            ]
+          ],
+          "options": {
+            "connectTimeoutMS": 2.5,
+            "retryWrites": true
+          },
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-options-ampersand",
+      "request": {
+        "scenario": "uri-options-ampersand",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": {
+          "collection": null,
+          "database": null,
+          "fqdn": null,
+          "nodelist": [
+            [
+              "localhost",
+              27017
+            ]
+          ],
+          "options": {
+            "retryWrites": false,
+            "tls": true
+          },
+          "password": null,
+          "username": null
+        }
+      },
+      "id": "uri-options-semicolon",
+      "request": {
+        "scenario": "uri-options-semicolon",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": false
+      },
+      "id": "validator-boolean-false",
+      "request": {
+        "scenario": "validator-boolean-false",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.TypeError"
+      },
+      "id": "validator-boolean-invalid",
+      "request": {
+        "scenario": "validator-boolean-invalid",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": true
+      },
+      "id": "validator-boolean-true",
+      "request": {
+        "scenario": "validator-boolean-true",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": 4
+      },
+      "id": "validator-integer",
+      "request": {
+        "scenario": "validator-integer",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.TypeError"
+      },
+      "id": "validator-integer-invalid",
+      "request": {
+        "scenario": "validator-integer-invalid",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": null
+      },
+      "id": "validator-mapping",
+      "request": {
+        "scenario": "validator-mapping",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.TypeError"
+      },
+      "id": "validator-mapping-invalid",
+      "request": {
+        "scenario": "validator-mapping-invalid",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "Ada"
+      },
+      "id": "validator-string",
+      "request": {
+        "scenario": "validator-string",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.TypeError"
+      },
+      "id": "validator-string-invalid",
+      "request": {
+        "scenario": "validator-string-invalid",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "builtins.TypeError"
+      },
+      "id": "validator-string-or-none-invalid",
+      "request": {
+        "scenario": "validator-string-or-none-invalid",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": null
+      },
+      "id": "validator-string-or-none-none",
+      "request": {
+        "scenario": "validator-string-or-none-none",
+        "schema_version": "1.0"
+      }
+    },
+    {
+      "expected": {
+        "ok": true,
+        "value": "Ada"
+      },
+      "id": "validator-string-or-none-string",
+      "request": {
+        "scenario": "validator-string-or-none-string",
+        "schema_version": "1.0"
+      }
+    }
+  ],
+  "schema_version": "1.0"
+}

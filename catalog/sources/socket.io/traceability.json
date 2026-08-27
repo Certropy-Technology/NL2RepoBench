@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "socket.io",
+  "contract": "node-test-leaf-pass-rate-v1",
+  "frozen_total": 12,
+  "bidirectional": true,
+  "public_to_scored_tests": {
+    "package exports": ["package-exports"],
+    "default namespace connection, events, and client acknowledgement": ["default-namespace-events"],
+    "namespace authentication middleware and connect errors": ["namespace-middleware"],
+    "room membership and targeted broadcasts": ["room-broadcast"],
+    "sender-excluding socket broadcasts": ["sender-excluding-broadcast"],
+    "socket inventory and bulk room operations": ["socket-inventory"],
+    "server-to-client acknowledgement callbacks": ["server-acknowledgement"],
+    "acknowledgement timeout": ["acknowledgement-timeout"],
+    "forced disconnect and inventory cleanup": ["forced-disconnect"],
+    "regular-expression dynamic namespaces": ["dynamic-namespace"],
+    "custom Engine.IO path and unmatched HTTP handling": ["custom-path"],
+    "server close callback, promise, listener, and inventory lifecycle": ["close-lifecycle"]
+  },
+  "tests_to_public_contract": {
+    "package-exports": "Package exports",
+    "default-namespace-events": "Connections and namespaces; Events and acknowledgements",
+    "namespace-middleware": "Connections and namespaces",
+    "room-broadcast": "Rooms and broadcasting",
+    "sender-excluding-broadcast": "Rooms and broadcasting",
+    "socket-inventory": "Rooms and broadcasting",
+    "server-acknowledgement": "Events and acknowledgements",
+    "acknowledgement-timeout": "Events and acknowledgements",
+    "forced-disconnect": "Rooms and broadcasting; Socket listeners and lifecycle",
+    "dynamic-namespace": "Connections and namespaces",
+    "custom-path": "Server construction and options",
+    "close-lifecycle": "Socket listeners and lifecycle"
+  },
+  "source_suite_support": {
+    "framework": "mocha",
+    "collected": 194,
+    "passed": 194,
+    "runs": 3,
+    "modules": [
+      "server-attachment",
+      "handshake",
+      "close",
+      "namespaces",
+      "socket",
+      "messaging-many",
+      "middleware",
+      "socket-middleware",
+      "v2-compatibility",
+      "socket-timeout",
+      "utility-methods",
+      "connection-state-recovery"
+    ]
+  }
+}

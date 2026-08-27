@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "python-dateutil"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "date-time-library"
+tags = ["python", "datetime", "parsing", "recurrence", "timezones", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/dateutil/dateutil"
+revision = "48bd1af97e71baf8e96fce5b663d589caac8f147"
+license_spdx = "BSD-3-Clause OR Apache-2.0"
+source_digest = "sha256:9c849ab5171036e43f8cbe8bed72ca6d6a0551a2bb83876158168381c1770d39"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install candidate-requirements.lock.txt during Docker image build; candidate installs itself from /workspace"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Build-time dependencies are installed from the private hash lock. Agent and separate verifier runs have no network; only the trusted Oracle receives the digest-verified frozen source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["packaging==26.3", "setuptools==80.9.0", "setuptools-scm==7.1.0", "six==1.17.0", "typing-extensions==4.16.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:d2b45016248a7e54777ad3d14cae8d2587a500173c955fc2a2b5dcc9b7e27518", size_bytes = 1594, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d2b45016248a7e54777ad3d14cae8d2587a500173c955fc2a2b5dcc9b7e27518", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:64a6bf4211d85d6231104d6a7be78ae9007f7b83d2bb3bedd16da3dd7660b636", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:64a6bf4211d85d6231104d6a7be78ae9007f7b83d2bb3bedd16da3dd7660b636", visibility = "private" }
+entrypoint = "run.py"
+environment = { SETUPTOOLS_SCM_PRETEND_VERSION = "2.9.0.post1.dev32+g48bd1af" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build python-dateutil from an empty workspace and reproduce deterministic parsing, calendar arithmetic, recurrence, Easter, and time-zone behavior through a separate child-side JSON adapter."
+keywords = ["python", "datetime", "parsing", "recurrence", "timezones", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 660.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:b22020875210dada461150d81629f68ae49c37689909f0ed54838b3882e8c120"
+size_bytes = 1003520
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b22020875210dada461150d81629f68ae49c37689909f0ed54838b3882e8c120"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "worker"
+reason = "Production compile, Oracle, empty, stub, forgery, and offline controls completed; integrator review and model run remain pending."

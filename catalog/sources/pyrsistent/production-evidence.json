@@ -1,0 +1,576 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "python -m py_compile .nl2repo/authoring-work/pyrsistent/private/verifier/run.py .nl2repo/authoring-work/pyrsistent/private/verifier/adapter.py",
+      "exit_code": 0,
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "command": "bash -n .nl2repo/authoring-work/pyrsistent/private/oracle/solve.sh catalog/sources/pyrsistent/harbor/controls/call-hang.sh catalog/sources/pyrsistent/harbor/controls/forgery.sh catalog/sources/pyrsistent/harbor/controls/install-hang.sh catalog/sources/pyrsistent/harbor/controls/stub.sh catalog/sources/pyrsistent/harbor/controls/workspace-invalid.sh",
+      "exit_code": 0,
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/pyrsistent",
+      "exit_code": 0,
+      "stderr_tail": "warning: `VIRTUAL_ENV=/data/NL2RepoBench-authoring-main-20260826/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n",
+      "stdout_tail": "{\n  \"instruction\": \"catalog/sources/pyrsistent/instruction.md\",\n  \"source_digest\": \"sha256:8883b16c49d22c901d01102d8172f28f3e0b4a14d47ea3f057c8902f5f86020c\",\n  \"status\": \"controls-passed\",\n  \"task_id\": \"pyrsistent\",\n  \"version\": \"1.0.0\"\n}\n"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "stderr_tail": "warning: `VIRTUAL_ENV=/data/NL2RepoBench-authoring-main-20260826/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead\n",
+      "stdout_tail": "   \"rule\": \"offline-dependencies-missing\",\n      \"severity\": \"warning\",\n      \"task_id\": \"xlrd\"\n    },\n    {\n      \"detail\": \"dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached\",\n      \"location\": \"catalog/sources/yaml/task.toml\",\n      \"rule\": \"offline-dependencies-missing\",\n      \"severity\": \"warning\",\n      \"task_id\": \"yaml\"\n    },\n    {\n      \"detail\": \"dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached\",\n      \"location\": \"catalog/sources/yargs-parser/task.toml\",\n      \"rule\": \"offline-dependencies-missing\",\n      \"severity\": \"warning\",\n      \"task_id\": \"yargs-parser\"\n    },\n    {\n      \"detail\": \"dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached\",\n      \"location\": \"catalog/sources/ydata-profiling/task.toml\",\n      \"rule\": \"offline-dependencies-missing\",\n      \"severity\": \"warning\",\n      \"task_id\": \"ydata-profiling\"\n    }\n  ],\n  \"tasks_scanned\": 201,\n  \"tasks_with_explicit_policy\": 201,\n  \"tasks_with_harbor_bundle\": 6,\n  \"warning_count\": 139\n}\n"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/pyrsistent --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-work/pyrsistent/compiled-final-3",
+      "exit_code": 0,
+      "stderr_tail": "warning: VIRTUAL_ENV was ignored by uv\n",
+      "stdout_tail": "{\n  \"bundle_manifest\": \".nl2repo/authoring-work/pyrsistent/compiled-final-3/pyrsistent/bundle.manifest.json\",\n  \"output\": \".nl2repo/authoring-work/pyrsistent/compiled-final-3/pyrsistent\",\n  \"task\": \"pyrsistent\"\n}\n"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "stderr_tail": "warning: `VIRTUAL_ENV=/data/NL2RepoBench-authoring-main-20260826/.venv` does not match the project environment path `harbor-runner/.venv` and will be ignored; use `--active` to target the active environment instead\n",
+      "stdout_tail": "0.21.0\n"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:b69110e7f7053d52915049bc06997214cb313b944e0b75282318cccc343d7adc",
+    "mode": "production",
+    "path": "catalog/tasks/pyrsistent"
+  },
+  "controls": {
+    "call-hang": {
+      "artifact_root": ".nl2repo/authoring-work/pyrsistent/harbor/controls-final/call-hang/job/pyrsistent-control-call-hang/pyrsistent-call-hang__RqqDbc3",
+      "grading": {
+        "collection": {
+          "collected": 72,
+          "collection_errors": [],
+          "nodeids": [
+            "tests/test_pyrsistent.py::test_distribution_metadata_and_version",
+            "tests/test_pyrsistent.py::test_package_surface_is_explicit",
+            "tests/test_pyrsistent.py::test_pep561_package_data",
+            "tests/test_pyrsistent.py::test_typing_module_surface",
+            "tests/test_pyrsistent.py::test_variadic_aliases[v-arguments0-PVector-expected0]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[m-arguments1-PMap-expected1]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[s-arguments2-PSet-expected2]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[b-arguments3-PBag-expected3]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[l-arguments4-PList-expected4]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[dq-arguments5-PDeque-expected5]",
+            "tests/test_pyrsistent.py::test_pvector_constructor_sequence_hash_and_repr",
+            "tests/test_pyrsistent.py::test_pvector_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pvector_slicing_and_negative_index",
+            "tests/test_pyrsistent.py::test_pvector_set_append_index_rules",
+            "tests/test_pyrsistent.py::test_pvector_delete_single_and_slice",
+            "tests/test_pyrsistent.py::test_pvector_mset_count_index_remove",
+            "tests/test_pyrsistent.py::test_pvector_add_and_multiply",
+            "tests/test_pyrsistent.py::test_pvector_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pmap_constructor_mapping_protocol_and_hash",
+            "tests/test_pyrsistent.py::test_pmap_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pmap_remove_and_discard",
+            "tests/test_pyrsistent.py::test_pmap_update_precedence_and_add",
+            "tests/test_pyrsistent.py::test_pmap_update_with",
+            "tests/test_pyrsistent.py::test_pmap_views_and_attribute_access",
+            "tests/test_pyrsistent.py::test_pmap_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pset_constructor_protocol_and_hash",
+            "tests/test_pyrsistent.py::test_pset_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pset_standard_operations",
+            "tests/test_pyrsistent.py::test_pset_named_operations",
+            "tests/test_pyrsistent.py::test_pset_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pbag_count_and_updates",
+            "tests/test_pyrsistent.py::test_pbag_remove_and_errors",
+            "tests/test_pyrsistent.py::test_pbag_multiset_arithmetic",
+            "tests/test_pyrsistent.py::test_pbag_value_equality_hash_and_comparison_rules",
+            "tests/test_pyrsistent.py::test_plist_construction_and_links",
+            "tests/test_pyrsistent.py::test_plist_cons_mcons_and_original",
+            "tests/test_pyrsistent.py::test_plist_index_slice_and_reverse",
+            "tests/test_pyrsistent.py::test_plist_split_remove_and_errors",
+            "tests/test_pyrsistent.py::test_empty_plist_contract",
+            "tests/test_pyrsistent.py::test_pdeque_construction_tips_and_hash",
+            "tests/test_pyrsistent.py::test_pdeque_appends_preserve_original",
+            "tests/test_pyrsistent.py::test_pdeque_pop_and_popleft_counts",
+            "tests/test_pyrsistent.py::test_pdeque_bounded_behavior",
+            "tests/test_pyrsistent.py::test_pdeque_sequence_remove_reverse_rotate",
+            "tests/test_pyrsistent.py::test_pdeque_empty_tips_and_remove_errors",
+            "tests/test_pyrsistent.py::test_freeze_and_thaw_nested_builtins",
+            "tests/test_pyrsistent.py::test_freeze_and_thaw_strict_flags",
+            "tests/test_pyrsistent.py::test_mutant_freezes_arguments_and_result",
+            "tests/test_pyrsistent.py::test_get_in_defaults_and_errors",
+            "tests/test_pyrsistent.py::test_immutable_set_and_frozen_members",
+            "tests/test_pyrsistent.py::test_transform_nested_path_and_identity",
+            "tests/test_pyrsistent.py::test_transform_matchers_and_discard",
+            "tests/test_pyrsistent.py::test_transform_multiple_commands",
+            "tests/test_pyrsistent.py::test_precord_fields_defaults_mapping_and_updates",
+            "tests/test_pyrsistent.py::test_precord_type_mandatory_and_unknown_errors",
+            "tests/test_pyrsistent.py::test_precord_invariant_details",
+            "tests/test_pyrsistent.py::test_precord_factories_create_and_ignore_extra",
+            "tests/test_pyrsistent.py::test_precord_collection_fields_and_serialization",
+            "tests/test_pyrsistent.py::test_pclass_fields_updates_and_immutability",
+            "tests/test_pyrsistent.py::test_pclass_create_serialize_and_evolver",
+            "tests/test_pyrsistent.py::test_checked_vector_create_updates_serialize_and_errors",
+            "tests/test_pyrsistent.py::test_checked_map_create_updates_serialize_and_errors",
+            "tests/test_pyrsistent.py::test_checked_set_create_invariant_and_errors",
+            "tests/test_pyrsistent.py::test_optional_type_helper",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value0]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value1]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value2]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value3]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value4]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value5]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value6]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value7]"
+          ],
+          "schema_version": "1.0"
+        },
+        "counts": {
+          "collected": 72,
+          "errors": 0,
+          "failed": 72,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0
+        },
+        "details": [],
+        "expected_total": 72,
+        "metric_contract": "fixed-test-pass-rate-v1",
+        "pytest_exit_code": 1,
+        "reward": 0.0,
+        "schema_version": "1.0",
+        "valid": true
+      },
+      "install": {
+        "entries": 28,
+        "outcome": "success",
+        "returncode": 0,
+        "total_bytes": 1769
+      },
+      "network": {
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false
+      },
+      "reward": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      }
+    },
+    "forgery": {
+      "artifact_root": ".nl2repo/authoring-work/pyrsistent/harbor/controls-final/forgery/job/pyrsistent-control-forgery/pyrsistent-forgery__6bUuDAH",
+      "grading": {
+        "collection": {
+          "collected": 72,
+          "collection_errors": [],
+          "nodeids": [
+            "tests/test_pyrsistent.py::test_distribution_metadata_and_version",
+            "tests/test_pyrsistent.py::test_package_surface_is_explicit",
+            "tests/test_pyrsistent.py::test_pep561_package_data",
+            "tests/test_pyrsistent.py::test_typing_module_surface",
+            "tests/test_pyrsistent.py::test_variadic_aliases[v-arguments0-PVector-expected0]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[m-arguments1-PMap-expected1]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[s-arguments2-PSet-expected2]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[b-arguments3-PBag-expected3]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[l-arguments4-PList-expected4]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[dq-arguments5-PDeque-expected5]",
+            "tests/test_pyrsistent.py::test_pvector_constructor_sequence_hash_and_repr",
+            "tests/test_pyrsistent.py::test_pvector_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pvector_slicing_and_negative_index",
+            "tests/test_pyrsistent.py::test_pvector_set_append_index_rules",
+            "tests/test_pyrsistent.py::test_pvector_delete_single_and_slice",
+            "tests/test_pyrsistent.py::test_pvector_mset_count_index_remove",
+            "tests/test_pyrsistent.py::test_pvector_add_and_multiply",
+            "tests/test_pyrsistent.py::test_pvector_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pmap_constructor_mapping_protocol_and_hash",
+            "tests/test_pyrsistent.py::test_pmap_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pmap_remove_and_discard",
+            "tests/test_pyrsistent.py::test_pmap_update_precedence_and_add",
+            "tests/test_pyrsistent.py::test_pmap_update_with",
+            "tests/test_pyrsistent.py::test_pmap_views_and_attribute_access",
+            "tests/test_pyrsistent.py::test_pmap_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pset_constructor_protocol_and_hash",
+            "tests/test_pyrsistent.py::test_pset_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pset_standard_operations",
+            "tests/test_pyrsistent.py::test_pset_named_operations",
+            "tests/test_pyrsistent.py::test_pset_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pbag_count_and_updates",
+            "tests/test_pyrsistent.py::test_pbag_remove_and_errors",
+            "tests/test_pyrsistent.py::test_pbag_multiset_arithmetic",
+            "tests/test_pyrsistent.py::test_pbag_value_equality_hash_and_comparison_rules",
+            "tests/test_pyrsistent.py::test_plist_construction_and_links",
+            "tests/test_pyrsistent.py::test_plist_cons_mcons_and_original",
+            "tests/test_pyrsistent.py::test_plist_index_slice_and_reverse",
+            "tests/test_pyrsistent.py::test_plist_split_remove_and_errors",
+            "tests/test_pyrsistent.py::test_empty_plist_contract",
+            "tests/test_pyrsistent.py::test_pdeque_construction_tips_and_hash",
+            "tests/test_pyrsistent.py::test_pdeque_appends_preserve_original",
+            "tests/test_pyrsistent.py::test_pdeque_pop_and_popleft_counts",
+            "tests/test_pyrsistent.py::test_pdeque_bounded_behavior",
+            "tests/test_pyrsistent.py::test_pdeque_sequence_remove_reverse_rotate",
+            "tests/test_pyrsistent.py::test_pdeque_empty_tips_and_remove_errors",
+            "tests/test_pyrsistent.py::test_freeze_and_thaw_nested_builtins",
+            "tests/test_pyrsistent.py::test_freeze_and_thaw_strict_flags",
+            "tests/test_pyrsistent.py::test_mutant_freezes_arguments_and_result",
+            "tests/test_pyrsistent.py::test_get_in_defaults_and_errors",
+            "tests/test_pyrsistent.py::test_immutable_set_and_frozen_members",
+            "tests/test_pyrsistent.py::test_transform_nested_path_and_identity",
+            "tests/test_pyrsistent.py::test_transform_matchers_and_discard",
+            "tests/test_pyrsistent.py::test_transform_multiple_commands",
+            "tests/test_pyrsistent.py::test_precord_fields_defaults_mapping_and_updates",
+            "tests/test_pyrsistent.py::test_precord_type_mandatory_and_unknown_errors",
+            "tests/test_pyrsistent.py::test_precord_invariant_details",
+            "tests/test_pyrsistent.py::test_precord_factories_create_and_ignore_extra",
+            "tests/test_pyrsistent.py::test_precord_collection_fields_and_serialization",
+            "tests/test_pyrsistent.py::test_pclass_fields_updates_and_immutability",
+            "tests/test_pyrsistent.py::test_pclass_create_serialize_and_evolver",
+            "tests/test_pyrsistent.py::test_checked_vector_create_updates_serialize_and_errors",
+            "tests/test_pyrsistent.py::test_checked_map_create_updates_serialize_and_errors",
+            "tests/test_pyrsistent.py::test_checked_set_create_invariant_and_errors",
+            "tests/test_pyrsistent.py::test_optional_type_helper",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value0]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value1]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value2]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value3]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value4]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value5]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value6]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value7]"
+          ],
+          "schema_version": "1.0"
+        },
+        "counts": {
+          "collected": 72,
+          "errors": 0,
+          "failed": 72,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0
+        },
+        "details": [],
+        "expected_total": 72,
+        "metric_contract": "fixed-test-pass-rate-v1",
+        "pytest_exit_code": 1,
+        "reward": 0.0,
+        "schema_version": "1.0",
+        "valid": true
+      },
+      "install": {
+        "entries": 30,
+        "outcome": "success",
+        "returncode": 0,
+        "total_bytes": 3185
+      },
+      "network": {
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false
+      },
+      "reward": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      }
+    },
+    "install-hang": {
+      "artifact_root": ".nl2repo/authoring-work/pyrsistent/harbor/controls-final/install-hang/job/pyrsistent-control-install-hang/pyrsistent-install-hang__xdkcoc4",
+      "grading": {
+        "counts": {
+          "collected": 0,
+          "errors": 0,
+          "failed": 0,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0
+        },
+        "details": [],
+        "expected_total": 72,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "metric_contract": "fixed-test-pass-rate-v1",
+        "reward": 0.0,
+        "schema_version": "1.0",
+        "valid": true
+      },
+      "install": {
+        "entries": 12,
+        "outcome": "timeout",
+        "returncode": -9,
+        "total_bytes": 291
+      },
+      "network": {
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false
+      },
+      "reward": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      }
+    },
+    "stub": {
+      "artifact_root": ".nl2repo/authoring-work/pyrsistent/harbor/controls-final/stub/job/pyrsistent-control-stub/pyrsistent-stub__tAom2vX",
+      "grading": {
+        "collection": {
+          "collected": 72,
+          "collection_errors": [],
+          "nodeids": [
+            "tests/test_pyrsistent.py::test_distribution_metadata_and_version",
+            "tests/test_pyrsistent.py::test_package_surface_is_explicit",
+            "tests/test_pyrsistent.py::test_pep561_package_data",
+            "tests/test_pyrsistent.py::test_typing_module_surface",
+            "tests/test_pyrsistent.py::test_variadic_aliases[v-arguments0-PVector-expected0]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[m-arguments1-PMap-expected1]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[s-arguments2-PSet-expected2]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[b-arguments3-PBag-expected3]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[l-arguments4-PList-expected4]",
+            "tests/test_pyrsistent.py::test_variadic_aliases[dq-arguments5-PDeque-expected5]",
+            "tests/test_pyrsistent.py::test_pvector_constructor_sequence_hash_and_repr",
+            "tests/test_pyrsistent.py::test_pvector_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pvector_slicing_and_negative_index",
+            "tests/test_pyrsistent.py::test_pvector_set_append_index_rules",
+            "tests/test_pyrsistent.py::test_pvector_delete_single_and_slice",
+            "tests/test_pyrsistent.py::test_pvector_mset_count_index_remove",
+            "tests/test_pyrsistent.py::test_pvector_add_and_multiply",
+            "tests/test_pyrsistent.py::test_pvector_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pmap_constructor_mapping_protocol_and_hash",
+            "tests/test_pyrsistent.py::test_pmap_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pmap_remove_and_discard",
+            "tests/test_pyrsistent.py::test_pmap_update_precedence_and_add",
+            "tests/test_pyrsistent.py::test_pmap_update_with",
+            "tests/test_pyrsistent.py::test_pmap_views_and_attribute_access",
+            "tests/test_pyrsistent.py::test_pmap_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pset_constructor_protocol_and_hash",
+            "tests/test_pyrsistent.py::test_pset_updates_preserve_original",
+            "tests/test_pyrsistent.py::test_pset_standard_operations",
+            "tests/test_pyrsistent.py::test_pset_named_operations",
+            "tests/test_pyrsistent.py::test_pset_evolver_transaction",
+            "tests/test_pyrsistent.py::test_pbag_count_and_updates",
+            "tests/test_pyrsistent.py::test_pbag_remove_and_errors",
+            "tests/test_pyrsistent.py::test_pbag_multiset_arithmetic",
+            "tests/test_pyrsistent.py::test_pbag_value_equality_hash_and_comparison_rules",
+            "tests/test_pyrsistent.py::test_plist_construction_and_links",
+            "tests/test_pyrsistent.py::test_plist_cons_mcons_and_original",
+            "tests/test_pyrsistent.py::test_plist_index_slice_and_reverse",
+            "tests/test_pyrsistent.py::test_plist_split_remove_and_errors",
+            "tests/test_pyrsistent.py::test_empty_plist_contract",
+            "tests/test_pyrsistent.py::test_pdeque_construction_tips_and_hash",
+            "tests/test_pyrsistent.py::test_pdeque_appends_preserve_original",
+            "tests/test_pyrsistent.py::test_pdeque_pop_and_popleft_counts",
+            "tests/test_pyrsistent.py::test_pdeque_bounded_behavior",
+            "tests/test_pyrsistent.py::test_pdeque_sequence_remove_reverse_rotate",
+            "tests/test_pyrsistent.py::test_pdeque_empty_tips_and_remove_errors",
+            "tests/test_pyrsistent.py::test_freeze_and_thaw_nested_builtins",
+            "tests/test_pyrsistent.py::test_freeze_and_thaw_strict_flags",
+            "tests/test_pyrsistent.py::test_mutant_freezes_arguments_and_result",
+            "tests/test_pyrsistent.py::test_get_in_defaults_and_errors",
+            "tests/test_pyrsistent.py::test_immutable_set_and_frozen_members",
+            "tests/test_pyrsistent.py::test_transform_nested_path_and_identity",
+            "tests/test_pyrsistent.py::test_transform_matchers_and_discard",
+            "tests/test_pyrsistent.py::test_transform_multiple_commands",
+            "tests/test_pyrsistent.py::test_precord_fields_defaults_mapping_and_updates",
+            "tests/test_pyrsistent.py::test_precord_type_mandatory_and_unknown_errors",
+            "tests/test_pyrsistent.py::test_precord_invariant_details",
+            "tests/test_pyrsistent.py::test_precord_factories_create_and_ignore_extra",
+            "tests/test_pyrsistent.py::test_precord_collection_fields_and_serialization",
+            "tests/test_pyrsistent.py::test_pclass_fields_updates_and_immutability",
+            "tests/test_pyrsistent.py::test_pclass_create_serialize_and_evolver",
+            "tests/test_pyrsistent.py::test_checked_vector_create_updates_serialize_and_errors",
+            "tests/test_pyrsistent.py::test_checked_map_create_updates_serialize_and_errors",
+            "tests/test_pyrsistent.py::test_checked_set_create_invariant_and_errors",
+            "tests/test_pyrsistent.py::test_optional_type_helper",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value0]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value1]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value2]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value3]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value4]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value5]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value6]",
+            "tests/test_pyrsistent.py::test_pickle_round_trip[value7]"
+          ],
+          "schema_version": "1.0"
+        },
+        "counts": {
+          "collected": 72,
+          "errors": 0,
+          "failed": 72,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0
+        },
+        "details": [],
+        "expected_total": 72,
+        "metric_contract": "fixed-test-pass-rate-v1",
+        "pytest_exit_code": 1,
+        "reward": 0.0,
+        "schema_version": "1.0",
+        "valid": true
+      },
+      "install": {
+        "entries": 37,
+        "outcome": "success",
+        "returncode": 0,
+        "total_bytes": 2205
+      },
+      "network": {
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false
+      },
+      "reward": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      }
+    },
+    "workspace-invalid": {
+      "artifact_root": ".nl2repo/authoring-work/pyrsistent/harbor/controls-final/workspace-invalid/job/pyrsistent-control-workspace-invalid/pyrsistent-workspace-invalid__mSSWH77",
+      "grading": {
+        "counts": {
+          "collected": 0,
+          "errors": 0,
+          "failed": 0,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0
+        },
+        "details": [],
+        "expected_total": 72,
+        "failure_class": "model",
+        "failure_reason": "candidate-workspace-rejected",
+        "metric_contract": "fixed-test-pass-rate-v1",
+        "reward": 0.0,
+        "schema_version": "1.0",
+        "valid": true
+      },
+      "network": {
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false
+      },
+      "reward": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      }
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 707,
+      "uri": "artifact://private/sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36",
+      "visibility": "private"
+    },
+    "packages": [
+      "iniconfig==2.3.0",
+      "packaging==26.3",
+      "pluggy==1.6.0",
+      "pygments==2.21.0",
+      "pytest==9.1.1",
+      "setuptools==80.10.2",
+      "wheel==0.45.1"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "build_command": "Install the hash-locked pytest and setuptools closure during image build; candidate installation uses pip --no-deps --no-build-isolation.",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The hash-locked Python closure and Git client are installed during Docker build. Agent and separate-verifier phases require no egress. The trusted Oracle alone receives a run-scoped github.com host grant to fetch and digest-check the exact source revision.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-13-amd64",
+    "python_version": "3.12.14",
+    "status": "known",
+    "system_packages": [
+      "ca-certificates",
+      "git"
+    ]
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pyrsistent/compiled-final-2/pyrsistent -a oracle --allow-agent-host github.com --n-concurrent 1 --n-attempts 1 --max-retries 0 --yes",
+    "counts": {
+      "collected": 72,
+      "errors": 0,
+      "failed": 0,
+      "passed": 72,
+      "schema_version": "1.0",
+      "skipped": 0
+    },
+    "grading_path": ".nl2repo/authoring-work/pyrsistent/harbor/oracle-final-2/pyrsistent-oracle-final-2/pyrsistent__UuRfNaA/verifier/grading.json",
+    "job_exit_code": 0,
+    "network": {
+      "probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "public_network_available": false
+    },
+    "result_path": ".nl2repo/authoring-work/pyrsistent/harbor/oracle-final-2/pyrsistent-oracle-final-2/pyrsistent__UuRfNaA/result.json",
+    "reward": 1.0,
+    "test_pass_rate": 1.0,
+    "trial_name": "pyrsistent__UuRfNaA",
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:fc5d99af82e4296b57098a2606995853db6000a441e16a3e00ac1ead142377e7",
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:fc5d99af82e4296b57098a2606995853db6000a441e16a3e00ac1ead142377e7",
+      "visibility": "private"
+    },
+    "verifier": {
+      "bundle": {
+        "digest": "sha256:053072a4f128e1733641fffccc806c89d54bd592184c5d3d5c8fe917dc84f407",
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "size_bytes": 81920,
+        "uri": "artifact://private/sha256:053072a4f128e1733641fffccc806c89d54bd592184c5d3d5c8fe917dc84f407",
+        "visibility": "private"
+      },
+      "entrypoint": "run.py",
+      "protocol": "custom-json-v1"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/python-discovery-20260826-r1/pyrsistent/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane by contract.",
+    "Blind review and specification traceability review remain integrator-owned.",
+    "Pilot difficulty and model failure analysis remain pending.",
+    "Oracle solution materializes only verified in-workspace regular-file symlinks to satisfy the verifier copy boundary; source archive digest remains unchanged."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "0c0b7aec8cd25b1d2d8ba07b10acdefd0f38f2c7",
+    "source_digest": "sha256:349f0b11f5eea9c8fa69564a13757352d4136b3c635f4340c695f9da29834aa8",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/tobgu/pyrsistent"
+  },
+  "status": "controls-passed",
+  "task_id": "pyrsistent",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

@@ -1,0 +1,211 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "git -C <frozen-source> rev-parse HEAD; git archive --format=tar HEAD | sha256sum",
+      "exit_code": 0
+    },
+    {
+      "command": "three independent docker run --rm --network none <locked-node-image> node /src/test/test.js",
+      "exit_code": 0,
+      "result": "each 6831/6831"
+    },
+    {
+      "command": "node --check candidate runner and private node:test sources; bash -n Oracle/control scripts",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q --no-cov tests/test_node_foundation.py",
+      "exit_code": 0,
+      "result": "45 passed"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/lodash-es",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; 0 lodash-es findings; 139 unrelated repository warnings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/lodash-es --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/compiled-final-5",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-final-5>/lodash-es -a oracle",
+      "exit_code": 0,
+      "result": "reward 1.0, test_pass_rate 1.0"
+    },
+    {
+      "command": "direct no-network verifier controls: empty, stub, forgery, bounded blocking call",
+      "exit_code": 0,
+      "result": "all valid model-zero; all network receipts false"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:a9857f417bc0d969b2415ec88fc6004fdfcc7b60cae5fb611fdec556bfa066ae",
+    "mode": "production",
+    "path": "catalog/tasks/lodash-es"
+  },
+  "controls": {
+    "bounded_call_timeout": {
+      "collected": 0,
+      "duration_ms": 123779,
+      "evidence": ".nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/control-final5-hang-logs",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "evidence": ".nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/control-final5-empty-logs",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 30,
+      "evidence": ".nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/control-final5-forgery-logs",
+      "exit_code": 0,
+      "failed": 30,
+      "forged_reward_ignored": true,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 30,
+      "evidence": ".nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/control-final5-stub-logs",
+      "exit_code": 0,
+      "failed": 30,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:f01344b94a5615ed1db23ea6056bb1d7f0f7f71286b8cccf1db7a72b69611673",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:f01344b94a5615ed1db23ea6056bb1d7f0f7f71286b8cccf1db7a72b69611673",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The candidate package and separate verifier use a private empty npm cache closure and both run phases have no network access.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 30,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/compiled-final-5/lodash-es -a oracle",
+    "evidence": ".nl2repo/authoring-work/node-discovery-20260826-r1/lodash-es/evidence/harbor-oracle-final5",
+    "exit_code": 0,
+    "failed": 0,
+    "grading_sha256": "32a82cfe62830a11a2a502ce36c758a1130cca213f0684608fa923cb13c55837",
+    "network_receipt_sha256": "941cc0030bcc93e6d296ecbc37a56ebad1793ea1d7248320d5fffdf697631aeb",
+    "passed": 30,
+    "public_network_available": false,
+    "reward": 1.0,
+    "runner": "Harbor 0.21.0 oracle",
+    "test_pass_rate": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:d7b00b1e68ee5e4d19e3e333f9472460702c167667bdf7f3b802f2fb278b3e86",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 552960,
+      "uri": "artifact://private/sha256:d7b00b1e68ee5e4d19e3e333f9472460702c167667bdf7f3b802f2fb278b3e86",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/node-discovery-20260826-r1/lodash-es/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Integrator review is required for the generic Node candidate-runner change and refreshed runtime-helper digest.",
+    "The locked Node base image does not contain git. The Oracle therefore uses a private byte-identical lodash.js payload rather than runtime source acquisition; solve.sh verifies the payload SHA-256, and the model agent never receives the Oracle bundle.",
+    "Configured Python LSP diagnostics could not run because the configured ty executable is missing; Node syntax checks, shell syntax checks, the 45-test Node foundation suite, production compile, Harbor Oracle, and controls all passed.",
+    "Blind/spec review, pilot model runs, projection, publication, and dataset integration remain integrator work. No Harbor model Agent Run was started."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "a666ba591064c8011988275790ad7d625279f09c",
+    "source_digest": "sha256:4b815834ee052cbd62e39ae63019905344135368cd48f0dfcbbcaf7635e3ec9a",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/lodash/lodash"
+  },
+  "status": "controls-passed",
+  "task_id": "lodash-es",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {
+    "candidate_uid": 10001,
+    "commands_bundle": {
+      "digest": "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040",
+      "size_bytes": 10240
+    },
+    "framework": "node:test",
+    "frozen_total": 30,
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "oracle_bundle": {
+      "digest": "sha256:d7b00b1e68ee5e4d19e3e333f9472460702c167667bdf7f3b802f2fb278b3e86",
+      "payload_verification": "solve.sh verifies the frozen lodash.js byte digest before constructing the ESM package",
+      "size_bytes": 552960
+    },
+    "private_tests_are_absent_from_catalog_source": true,
+    "protocol": "node-test-subprocess-boundary-v1",
+    "report_format": "node-test-json-v1",
+    "test_bundle": {
+      "digest": "sha256:75dc3dbbcf630cfd96493e8e4a0cb2562e5fc653a25d3cda7a8b52ec1986a19b",
+      "size_bytes": 10240
+    }
+  }
+}

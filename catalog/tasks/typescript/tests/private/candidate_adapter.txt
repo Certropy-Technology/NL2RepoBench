@@ -1,0 +1,240 @@
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 512 * 1024;
+const PACKAGE = "@typescript/typescript";
+const input = readFileSync(0);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+if (input.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+let request;
+try {
+  request = JSON.parse(input.toString("utf8"));
+}
+catch {
+  emit({ ok: false, error: "malformed-json" }, 64);
+}
+if (!request || typeof request !== "object" || Array.isArray(request)) {
+  emit({ ok: false, error: "request-must-be-object" }, 64);
+}
+
+const requireFromCandidate = createRequire(pathToFileURL(join(process.cwd(), "package.json")));
+const resolveImport = async (specifier) => {
+  const resolved = requireFromCandidate.resolve(specifier);
+  return import(pathToFileURL(resolved).href);
+};
+const nameOf = (table, value) => typeof table[value] === "string" ? table[value] : `Unknown(${value})`;
+const syntaxKindName = (table, value) => {
+  for (const canonical of [
+    "SingleLineCommentTrivia",
+    "NumericLiteral",
+    "NoSubstitutionTemplateLiteral",
+    "EqualsToken",
+  ]) {
+    if (table[canonical] === value) return canonical;
+  }
+  return nameOf(table, value);
+};
+const boundedText = (value) => {
+  if (typeof value !== "string" || value.length > 16_384) throw new TypeError("invalid-text");
+  return value;
+};
+const boundedInteger = (value, fallback = undefined) => {
+  if (value === undefined && fallback !== undefined) return fallback;
+  if (!Number.isSafeInteger(value) || value < 0 || value > 1_000_000) throw new TypeError("invalid-integer");
+  return value;
+};
+
+async function metadata() {
+  const manifestPath = requireFromCandidate.resolve(`${PACKAGE}/package.json`);
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  const root = requireFromCandidate(PACKAGE);
+  return {
+    name: manifest.name,
+    version: manifest.version,
+    type: manifest.type,
+    scripts: manifest.scripts ?? null,
+    dependencies: manifest.dependencies ?? null,
+    devDependencies: manifest.devDependencies ?? null,
+    rootVersion: root.version,
+    versionMajorMinor: root.versionMajorMinor,
+    exports: Object.keys(manifest.exports ?? {}).sort(),
+  };
+}
+
+async function scan(payload) {
+  const scannerApi = await resolveImport(`${PACKAGE}/unstable/ast/scanner`);
+  const ast = await resolveImport(`${PACKAGE}/unstable/ast`);
+  const text = boundedText(payload.text);
+  if (typeof payload.skipTrivia !== "boolean") throw new TypeError("invalid-skip-trivia");
+  const variantName = payload.languageVariant ?? "Standard";
+  if (!Object.hasOwn(ast.LanguageVariant, variantName) || typeof ast.LanguageVariant[variantName] !== "number") {
+    throw new TypeError("invalid-language-variant");
+  }
+  const start = payload.start === undefined ? undefined : boundedInteger(payload.start);
+  const length = payload.length === undefined ? undefined : boundedInteger(payload.length);
+  const scanner = scannerApi.createScanner(payload.skipTrivia, ast.LanguageVariant[variantName], text, start, length);
+  const tokens = [];
+  for (let index = 0; index < 2_048; index += 1) {
+    const kind = scanner.scan();
+    const value = scanner.getTokenValue();
+    tokens.push({
+      kind: syntaxKindName(ast.SyntaxKind, kind),
+      text: scanner.getTokenText(),
+      value: typeof value === "string" ? value : null,
+      fullStart: scanner.getTokenFullStart(),
+      start: scanner.getTokenStart(),
+      end: scanner.getTokenEnd(),
+      precedingLineBreak: scanner.hasPrecedingLineBreak(),
+      unicodeEscape: scanner.hasUnicodeEscape(),
+      unterminated: scanner.isUnterminated(),
+    });
+    if (kind === ast.SyntaxKind.EndOfFile) return tokens;
+  }
+  throw new RangeError("token-limit-exceeded");
+}
+
+async function utility(payload) {
+  const scannerApi = await resolveImport(`${PACKAGE}/unstable/ast/scanner`);
+  const ast = await resolveImport(`${PACKAGE}/unstable/ast`);
+  switch (payload.name) {
+    case "tokenToString": {
+      const kind = ast.SyntaxKind[payload.kind];
+      if (typeof kind !== "number") throw new TypeError("invalid-token-kind");
+      return scannerApi.tokenToString(kind) ?? null;
+    }
+    case "stringToToken": {
+      const result = scannerApi.stringToToken(boundedText(payload.text));
+      return result === undefined ? null : syntaxKindName(ast.SyntaxKind, result);
+    }
+    case "computeLineStarts":
+      return scannerApi.computeLineStarts(boundedText(payload.text));
+    case "skipTrivia":
+      return scannerApi.skipTrivia(
+        boundedText(payload.text),
+        boundedInteger(payload.position, 0),
+        payload.stopAfterLineBreak === true,
+        payload.stopAtComments === true,
+        payload.inJSDoc === true,
+      );
+    case "getShebang":
+      return scannerApi.getShebang(boundedText(payload.text)) ?? null;
+    case "isIdentifierText": {
+      const target = payload.languageVersion ?? "Latest";
+      const variant = payload.languageVariant ?? "Standard";
+      if (typeof ast.ScriptTarget[target] !== "number" || typeof ast.LanguageVariant[variant] !== "number") {
+        throw new TypeError("invalid-language-option");
+      }
+      return scannerApi.isIdentifierText(boundedText(payload.text), ast.ScriptTarget[target], ast.LanguageVariant[variant]);
+    }
+    case "commentRanges": {
+      const text = boundedText(payload.text);
+      const position = boundedInteger(payload.position, 0);
+      const ranges = payload.side === "leading"
+        ? scannerApi.getLeadingCommentRanges(text, position)
+        : payload.side === "trailing"
+          ? scannerApi.getTrailingCommentRanges(text, position)
+          : (() => { throw new TypeError("invalid-comment-side"); })();
+      return (ranges ?? []).map((range) => ({
+        kind: syntaxKindName(ast.SyntaxKind, range.kind),
+        pos: range.pos,
+        end: range.end,
+        hasTrailingNewLine: range.hasTrailingNewLine === true,
+      }));
+    }
+    default:
+      throw new TypeError("unknown-utility");
+  }
+}
+
+function enumValue(table, name, label) {
+  const value = table[name];
+  if (typeof value !== "number") throw new TypeError(`invalid-${label}`);
+  return value;
+}
+
+async function spanMap(payload) {
+  const ast = await resolveImport(`${PACKAGE}/unstable/ast`);
+  if (!Array.isArray(payload.segments) || payload.segments.length > 128) throw new TypeError("invalid-segments");
+  const segments = payload.segments.map((segment) => ({
+    virtualStart: boundedInteger(segment.virtualStart),
+    virtualEnd: boundedInteger(segment.virtualEnd),
+    originalStart: boundedInteger(segment.originalStart),
+    originalEnd: boundedInteger(segment.originalEnd),
+    kind: enumValue(ast.SpanMapKind, segment.kind, "span-kind"),
+    ...(segment.features === undefined ? {} : { features: enumValue(ast.SpanMapFeature, segment.features, "span-feature") }),
+  }));
+  const map = new ast.SpanMap(segments);
+  const feature = payload.feature === undefined ? undefined : enumValue(ast.SpanMapFeature, payload.feature, "span-feature");
+  let result;
+  switch (payload.action) {
+    case "virtualToOriginalPosition":
+      result = map.virtualToOriginalPosition(boundedInteger(payload.position));
+      break;
+    case "virtualToOriginalSpan":
+      result = map.virtualToOriginalSpan({ pos: boundedInteger(payload.range?.pos), end: boundedInteger(payload.range?.end) });
+      break;
+    case "virtualToOriginalPositionForFeature":
+      result = map.virtualToOriginalPositionForFeature(boundedInteger(payload.position), feature);
+      break;
+    case "virtualToOriginalSpanForFeature":
+      result = map.virtualToOriginalSpanForFeature({ pos: boundedInteger(payload.range?.pos), end: boundedInteger(payload.range?.end) }, feature);
+      break;
+    case "originalToVirtualPositions":
+      result = map.originalToVirtualPositions(boundedInteger(payload.position), feature);
+      break;
+    case "originalToVirtualSpans":
+      result = map.originalToVirtualSpans({ pos: boundedInteger(payload.range?.pos), end: boundedInteger(payload.range?.end) }, feature);
+      break;
+    case "predicates": {
+      const fidelity = enumValue(ast.SpanMapFidelity, payload.fidelity, "span-fidelity");
+      return {
+        exact: ast.SpanMap.isExact(fidelity),
+        singleSegment: ast.SpanMap.isSingleSegment(fidelity),
+        none: ast.SpanMap.isNone(fidelity),
+      };
+    }
+    default:
+      throw new TypeError("unknown-span-action");
+  }
+  const normalize = (value) => {
+    if (Array.isArray(value)) return value.map(normalize);
+    if (value && typeof value === "object") {
+      const output = {};
+      for (const [key, nested] of Object.entries(value)) output[key] = key === "fidelity" ? nameOf(ast.SpanMapFidelity, nested) : normalize(nested);
+      return output;
+    }
+    return value;
+  };
+  return normalize(result);
+}
+
+try {
+  let value;
+  if (request.op === "metadata") value = await metadata();
+  else if (request.op === "scan") value = await scan(request);
+  else if (request.op === "utility") value = await utility(request);
+  else if (request.op === "spanMap") value = await spanMap(request);
+  else throw new TypeError("unknown-operation");
+  emit({ ok: true, value });
+}
+catch (error) {
+  emit({
+    ok: false,
+    error: "candidate-call-failed",
+    exceptionType: error?.constructor?.name ?? "Error",
+    message: String(error?.message ?? error).slice(0, 1_024),
+  }, 1);
+}

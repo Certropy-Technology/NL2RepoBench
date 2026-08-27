@@ -1,0 +1,199 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/nock",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "note": "0 errors; 139 warnings belong to other tasks; no nock finding"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/nock --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled/nock-production-final",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/nock-production-final/nock -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/evidence/nock-production-final/oracle --n-concurrent 1",
+      "exit_code": 0
+    },
+    {
+      "command": "Harbor Oracle runs for empty, stub, forgery, install-script, loader-hook, hang, and oversized-output task-local control bundles",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest tests/test_node_foundation.py tests/test_harbor_registry.py -q --no-cov",
+      "exit_code": 0,
+      "result": "52 passed"
+    },
+    {
+      "command": "uv run ruff check src/nl2repobench/harbor src/nl2repobench/verification tests/test_node_foundation.py tests/test_harbor_registry.py",
+      "exit_code": 0
+    },
+    {
+      "command": "bash -n controls/solution/test scripts and node --check private verifier modules",
+      "exit_code": 0
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:1f95819eef30a316f6dde39fb4e9eccb7b9b16f320f3ac4419b0c06c121400a3",
+    "mode": "production",
+    "path": "catalog/tasks/nock"
+  },
+  "controls": {
+    "bundle_equivalence": "The final compile differs from controlled production-r4 only in generated task.toml lifecycle metadata; environment, solution, tests, runtime, controls, and verifier payloads are byte-identical.",
+    "matrix": ".nl2repo/evidence/nock-production-r4/control-matrix.json",
+    "outcomes": {
+      "empty": {
+        "failure_reason": "candidate-installation-failed",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "forgery": {
+        "failed": 37,
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "hang": {
+        "failure_reason": "candidate-call-failed",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "install-script": {
+        "failure_reason": "candidate-installation-failed",
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "loader-hook": {
+        "failed": 37,
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "offline": {
+        "passed": 37,
+        "public_network_available": false,
+        "reward": 1.0,
+        "valid": true
+      },
+      "oversized-output": {
+        "failed": 37,
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "stub": {
+        "failed": 37,
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      }
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:ba76c029f45f2c6077bd6f9e5693b16fafacc7c8852ffac41c2f228d0f8b9bae",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 1863680,
+      "uri": "artifact://private/sha256:ba76c029f45f2c6077bd6f9e5693b16fafacc7c8852ffac41c2f228d0f8b9bae",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [
+      "@mswjs/interceptors",
+      "json-stringify-safe",
+      "propagate"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The frozen npm closure is installed from a private cache before verification; candidate and verifier execution require no egress, while only the trusted Oracle receives a run-scoped source-host override.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 37,
+    "expected_total": 37,
+    "grading": ".nl2repo/evidence/nock-production-final/oracle/2026-08-27__13-57-13/nock__y5Cg7iR/verifier/grading.json",
+    "harbor_exceptions": 0,
+    "network": ".nl2repo/evidence/nock-production-final/oracle/2026-08-27__13-57-13/nock__y5Cg7iR/verifier/network.json",
+    "passed": 37,
+    "result": ".nl2repo/evidence/nock-production-final/oracle/2026-08-27__13-57-13/nock__y5Cg7iR/result.json",
+    "reward": 1.0,
+    "runner_exit_code": 0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:06bfc02406c08733c17c9e10dbfc7c158e11098bfa619135b72b890b9e3baca3",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:06bfc02406c08733c17c9e10dbfc7c158e11098bfa619135b72b890b9e3baca3",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/node-discovery-20260826-r1/nock/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Independent blind review and independent specification traceability review are pending; this top-level authoring agent cannot self-approve them.",
+    "No Harbor model Agent Run or multi-model pilot was started in this lane, by explicit boundary; downstream Agent Run must assess difficulty and model failure modes.",
+    "The deterministic 37-leaf adaptation excludes live pass-through, recorder/back filesystem modes, streams/files, delay timing, TLS/proxy/Unix socket, and IPv6 behavior as publicly documented.",
+    "Oracle source acquisition requires the trusted run-scoped github.com host override; model-agent task metadata remains no-network with an empty allowed-host list."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "1ee467c68d601ddc22629d7a657061e6c27097c2",
+    "source_digest": "sha256:8c54a05e667935a42b69be72e1a95d0fb027805068dcc11b0d42b654525e0918",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/nock/nock"
+  },
+  "status": "controls-passed",
+  "task_id": "nock",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {
+    "candidate_uid": 10001,
+    "expected_total": 37,
+    "framework": "node:test",
+    "frozen_collection": 37,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "protocol": "node-test-subprocess-boundary-v1",
+    "report_format": "node-test-json-v1",
+    "traceability": ".nl2repo/evidence/nock-production-final/traceability.json"
+  }
+}

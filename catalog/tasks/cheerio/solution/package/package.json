@@ -1,0 +1,65 @@
+{
+  "name": "cheerio",
+  "version": "1.2.0",
+  "description": "The fast, flexible & elegant library for parsing and manipulating HTML and XML.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    },
+    "./slim": {
+      "import": {
+        "types": "./dist/esm/slim.d.ts",
+        "default": "./dist/esm/slim.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/slim.d.ts",
+        "default": "./dist/commonjs/slim.js"
+      }
+    },
+    "./utils": {
+      "import": {
+        "types": "./dist/esm/utils.d.ts",
+        "default": "./dist/esm/utils.js"
+      },
+      "require": {
+        "types": "./dist/commonjs/utils.d.ts",
+        "default": "./dist/commonjs/utils.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/commonjs/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "Readme.md"
+  ],
+  "dependencies": {
+    "cheerio-select": "2.1.0",
+    "dom-serializer": "2.0.0",
+    "domhandler": "5.0.3",
+    "domutils": "4.0.2",
+    "encoding-sniffer": "0.2.1",
+    "htmlparser2": "10.1.0",
+    "parse5": "7.3.0",
+    "parse5-htmlparser2-tree-adapter": "7.1.0",
+    "parse5-parser-stream": "7.1.2",
+    "undici": "8.10.0",
+    "whatwg-mimetype": "5.0.0"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  }
+}

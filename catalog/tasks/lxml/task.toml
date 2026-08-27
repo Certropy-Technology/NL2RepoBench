@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/lxml"
+version = "0.1.0"
+description = "Build the deterministic XML, HTML, XPath, and serialization core of lxml from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "xml",
+    "html",
+    "xpath",
+    "native-extension",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "xml-library"
+tags = [
+    "python",
+    "xml",
+    "html",
+    "xpath",
+    "native-extension",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 8
+canonical_manifest_digest = "sha256:88c3a2565cd5032339bc75dd84a9e363c942a138167b3c47f8191ef862c2c31a"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 8192
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 16384
+storage_mb = 8192

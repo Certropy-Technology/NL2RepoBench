@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/eslint"
+version = "2.0.0"
+description = "Production Node task for rebuilding a deterministic ESLint 10.9.0 linting, autofix, source-code, and flat-config API slice."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "eslint",
+    "linter",
+    "static-analysis",
+    "autofix",
+    "source-code",
+    "config",
+]
+
+[metadata]
+difficulty = "hard"
+category = "javascript-linter"
+tags = [
+    "node",
+    "npm",
+    "eslint",
+    "linter",
+    "static-analysis",
+    "autofix",
+    "source-code",
+    "config",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:2c27c11ae2a12c1e631901e2ce5180525be59371cfcefd475bf5a49666215c02"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1500.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192

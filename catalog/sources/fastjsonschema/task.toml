@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "fastjsonschema"
-version = "0.1.0"
+version = "0.3.1"
 instruction = "instruction.md"
 
 [metadata]
@@ -40,13 +40,13 @@ packages = ["pytest==8.3.5", "iniconfig==2.3.0", "packaging==26.3", "pluggy==1.6
 
 [tests]
 framework = "pytest"
-expected_total = 2898
+expected_total = 2899
 expected_total_source = "frozen-collection"
-commands = ["python -I -m pytest /tests/private/test_contract.py --junitxml=/logs/verifier/junit.xml"]
+commands = ["custom-json-v1 verifier entrypoint"]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:ac6bc3c0970faea9e3a19bb5b6401d76d591756f05af1b67d20770b60b797586", size_bytes = 880640, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ac6bc3c0970faea9e3a19bb5b6401d76d591756f05af1b67d20770b60b797586", visibility = "private" }
+bundle = { digest = "sha256:03355c1dca9c063d8e5b55be9dbeeb0dfdbac6d1f734f71dc91235c64fa70608", size_bytes = 860160, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:03355c1dca9c063d8e5b55be9dbeeb0dfdbac6d1f734f71dc91235c64fa70608", visibility = "private" }
 entrypoint = "run.py"
 
 [metric]
@@ -71,13 +71,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Remediated source/submodule, dependency closure, JSON boundary, and fixed test slice; Harbor Oracle and controls remain pending."
+status = "controls-passed"
+owner = "python-author-gpt56-wide-20260826-r2"
+reason = "Release 0.3.1 has a frozen 2,899-leaf contract, digest-verified Oracle bundle, separate verifier bundle, and passing task-local controls. The independent Agent Run loop owns all model execution."
 
 [oracle_bundle]
-digest = "sha256:52f1ab26707fd6ffcdd04e1be430215f6a4750a95e8123cbb46416ef2a348d3e"
+digest = "sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:52f1ab26707fd6ffcdd04e1be430215f6a4750a95e8123cbb46416ef2a348d3e"
+uri = "artifact://private/sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd"
 visibility = "private"

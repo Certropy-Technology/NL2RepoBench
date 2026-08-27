@@ -1,11 +1,10 @@
 command: uv run nl2repo task validate-source catalog/sources/cheerio
 {
-  "instruction": "catalog/sources/cheerio/blocked.md",
-  "source_digest": "sha256:668cce169062a83887ab45d3da53b6c13f25e839535f15fb1b92ac7c2bbaa277",
-  "status": "blocked",
+  "instruction": "catalog/sources/cheerio/instruction.md",
+  "source_digest": "sha256:3c3e27b4dc971fb1d2a9d909c85407adc8179dbd22bc4d307b96ef5f423610ca",
+  "status": "controls-passed",
   "task_id": "cheerio",
-  "version": "0.1.0"
+  "version": "1.0.0"
 }
-command: git status --short -- catalog/sources/cheerio catalog/tasks/cheerio
-?? catalog/sources/cheerio/production-evidence.json
-?? catalog/sources/cheerio/task.toml
+exit_code: 0
+note: Final lifecycle validation after Oracle and controls; production-evidence.json contains the immutable runtime receipts.

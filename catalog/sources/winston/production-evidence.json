@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "winston",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/winstonjs/winston",
+    "revision": "ff0b79de8562bb322c390fbc82fe71c11f373428",
+    "archive_sha256": "sha256:fea87801fd76da125ac8cdb0c29a1026fa8870c0f13552648bea1a4b54a3d282",
+    "license": "MIT"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "frozen_collection": { "expected_total": 24, "source": "frozen-collection" },
+  "gates": {
+    "validate_source": { "exit_code": 0, "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/winston/evidence/validate-source.log" },
+    "lint_network": { "exit_code": 0, "task_error_count": 0, "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/winston/evidence/lint-network.log" },
+    "production_compile": { "exit_code": 0, "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/winston/evidence/harbor-compile.log" },
+    "verifier_docker_build": { "exit_code": 0, "image": "nl2repo-winston-verifier:local", "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/winston/evidence/verifier-docker-build.log" }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "result": "jobs/2026-08-27__19-10-35/winston__LZZW7aZ/result.json",
+    "network_receipt": "jobs/2026-08-27__19-10-35/winston__LZZW7aZ/verifier/network.json"
+  },
+  "controls": {
+    "empty": { "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "network_receipt": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/winston/empty-logs/verifier/network.json" },
+    "stub": { "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "result": "jobs/2026-08-27__19-22-02/winston-stub__nAujfXC/result.json" },
+    "forgery": { "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "result": "jobs/2026-08-27__19-22-53/winston-forgery__DsYACuy/result.json" },
+    "offline": { "oracle_network_available": false, "empty_network_available": false, "stub_network_available": false, "forgery_network_available": false }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "Upstream file and HTTP transports are documented but not part of the deterministic scored slice.",
+    "Review and pilot are integrator-stage gates."
+  ]
+}

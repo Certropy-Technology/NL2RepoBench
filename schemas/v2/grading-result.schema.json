@@ -214,7 +214,7 @@
       "x-nl2repobench-runtime-validation": true
     },
     "NodeVerificationReason": {
-      "description": "Failure reasons kept separate from the v1 pytest/JUnit enum.",
+      "description": "Legacy Node reason enum retained for v2 report compatibility.",
       "enum": [
         "node-report-missing",
         "node-report-malformed",

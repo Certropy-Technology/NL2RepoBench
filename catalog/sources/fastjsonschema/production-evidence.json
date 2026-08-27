@@ -1,0 +1,143 @@
+{
+  "blocker": null,
+  "commands": [],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:223bd31c71ae397629c146df1b1eca2e318b3b96952def543d67201a1b74af9a",
+    "mode": "production",
+    "path": "catalog/tasks/fastjsonschema"
+  },
+  "controls": {
+    "call_hang": {
+      "collected": 2899,
+      "grading": ".nl2repo/authoring-work/r3-jobs/call-hang/fastjsonschema-r3-call-hang/fastjsonschema-call-hang__6a8i5CZ/verifier/grading.json",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/r3-jobs/empty/fastjsonschema-r3-empty/fastjsonschema-empty__tEysLqB/verifier/grading.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 2899,
+      "grading": ".nl2repo/authoring-work/r3-jobs/forgery/fastjsonschema-r3-forgery/fastjsonschema-forgery__EMjfxiH/verifier/grading.json",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install_hang": {
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/r3-jobs/install-hang/fastjsonschema-r3-install-hang/fastjsonschema-install-hang__weSYPs8/verifier/grading.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 2899,
+      "grading": ".nl2repo/authoring-work/r3-jobs/stub/fastjsonschema-r3-stub/fastjsonschema-stub__EUktgeg/verifier/grading.json",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "workspace_invalid": {
+      "failure_reason": "candidate-workspace-rejected",
+      "grading": ".nl2repo/authoring-work/r3-jobs/workspace-invalid/fastjsonschema-r3-workspace-invalid/fastjsonschema-workspace-invalid__tESP74X/verifier/grading.json",
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 377,
+      "uri": "artifact://private/sha256:7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01",
+      "visibility": "private"
+    },
+    "packages": [
+      "pytest==8.3.5",
+      "iniconfig==2.3.0",
+      "packaging==26.3",
+      "pluggy==1.6.0"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12",
+    "python_version": "3.12.4",
+    "status": "known",
+    "system_packages": [
+      "git",
+      "ca-certificates"
+    ]
+  },
+  "oracle": {
+    "collected": 2899,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-r3-20260826/fastjsonschema -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/authoring-work/r3-jobs/oracle --job-name fastjsonschema-r3-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "expected_total": 2899,
+    "grading": ".nl2repo/authoring-work/r3-jobs/oracle/fastjsonschema-r3-oracle/fastjsonschema__Cp6gLHJ/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/r3-jobs/oracle/fastjsonschema-r3-oracle/fastjsonschema__Cp6gLHJ/verifier/network.json",
+    "passed": 2899,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd",
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd",
+      "visibility": "private"
+    },
+    "verifier": {
+      "bundle": {
+        "digest": "sha256:03355c1dca9c063d8e5b55be9dbeeb0dfdbac6d1f734f71dc91235c64fa70608",
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "size_bytes": 860160,
+        "uri": "artifact://private/sha256:03355c1dca9c063d8e5b55be9dbeeb0dfdbac6d1f734f71dc91235c64fa70608",
+        "visibility": "private"
+      },
+      "entrypoint": "run.py",
+      "protocol": "custom-json-v1"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/python-author-wide-20260826-r2/fastjsonschema/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Independent blind and traceability review records are still required before publication.",
+    "No model Agent Run was started, as required; the independent Agent Run loop remains pending.",
+    "The full catalog network lint has 140 unrelated warnings; the task-local warning documents the deliberate Oracle-only github.com authorization and is not a model-agent egress exception."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "BSD-3-Clause",
+    "revision": "b88fa37cd46bb81e8d9dce91a7e1bc4debedd3a2",
+    "source_digest": "sha256:c6d2c4ec7d81009b52c35430082ab13a29a32a92e323e64ffff1d6f304ca717d",
+    "status": "known",
+    "submodules": [
+      "JSON-Schema-Test-Suite"
+    ],
+    "upstream_url": "https://github.com/horejsek/python-fastjsonschema"
+  },
+  "status": "controls-passed",
+  "task_id": "fastjsonschema",
+  "task_version": "0.3.1",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

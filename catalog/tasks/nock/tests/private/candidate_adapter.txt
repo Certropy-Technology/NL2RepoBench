@@ -1,0 +1,360 @@
+import { readFileSync } from 'node:fs';
+import http from 'node:http';
+import { createRequire } from 'node:module';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const data = readFileSync(0);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write('candidate response exceeds bound\n');
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+if (data.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: 'request-too-large' }, 64);
+
+let request;
+try {
+  request = JSON.parse(data.toString('utf8'));
+} catch {
+  emit({ ok: false, error: 'malformed-json' }, 64);
+}
+
+if (
+  !request ||
+  typeof request !== 'object' ||
+  Array.isArray(request) ||
+  typeof request.id !== 'string' ||
+  typeof request.operation !== 'string' ||
+  !request.payload ||
+  typeof request.payload !== 'object' ||
+  Array.isArray(request.payload)
+) {
+  emit({ ok: false, error: 'invalid-request' }, 64);
+}
+
+const require = createRequire(`${process.cwd()}/package.json`);
+let nock;
+try {
+  nock = require('nock');
+} catch (error) {
+  emit({
+    id: request.id,
+    ok: false,
+    error: 'candidate-load-failed',
+    errorType: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+  }, 1);
+}
+
+const BASE = 'http://api.example.test';
+
+function collectResponse(response) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    response.on('data', chunk => chunks.push(Buffer.from(chunk)));
+    response.on('end', () => resolve({
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body: Buffer.concat(chunks).toString('utf8'),
+    }));
+    response.on('error', reject);
+  });
+}
+
+function httpRequest({ method = 'GET', path = '/', headers = {}, body }) {
+  return new Promise((resolve, reject) => {
+    const req = http.request(`${BASE}${path}`, { method, headers }, response => {
+      collectResponse(response).then(resolve, reject);
+    });
+    req.on('error', reject);
+    if (body !== undefined) req.write(body);
+    req.end();
+  });
+}
+
+async function errorResult(callback) {
+  try {
+    await callback();
+    return { threw: false };
+  } catch (error) {
+    return {
+      threw: true,
+      name: error?.name ?? error?.constructor?.name ?? 'Error',
+      code: error?.code ?? null,
+      message: String(error?.message ?? error),
+    };
+  }
+}
+
+async function staticReply(payload) {
+  const scope = nock(BASE);
+  scope.intercept(payload.path, payload.method, payload.expectedBody).reply(
+    payload.statusCode,
+    payload.replyBody,
+    payload.replyHeaders,
+  );
+  const response = await httpRequest({
+    method: payload.method,
+    path: payload.requestPath ?? payload.path,
+    headers: payload.requestHeaders,
+    body: payload.requestBody,
+  });
+  return { response, done: scope.isDone(), globalDone: nock.isDone() };
+}
+
+const operations = {
+  inventory() {
+    const manifest = require('nock/package.json');
+    const names = [
+      'activate', 'isActive', 'isDone', 'pendingMocks', 'activeMocks',
+      'removeInterceptor', 'disableNetConnect', 'enableNetConnect', 'cleanAll',
+      'abortPendingRequests', 'load', 'loadDefs', 'define', 'emitter',
+      'recorder', 'restore', 'back',
+    ];
+    return {
+      packageName: manifest.name,
+      packageVersion: manifest.version,
+      main: manifest.main,
+      callable: typeof nock === 'function',
+      exports: names.filter(name => nock[name] !== undefined),
+    };
+  },
+
+  staticReply,
+
+  shorthandReply(payload) {
+    const scope = nock(BASE);
+    scope[payload.method.toLowerCase()](payload.path, payload.expectedBody).reply(
+      payload.statusCode,
+      payload.replyBody,
+      payload.replyHeaders,
+    );
+    return httpRequest({
+      method: payload.method,
+      path: payload.requestPath ?? payload.path,
+      headers: payload.requestHeaders,
+      body: payload.requestBody,
+    });
+  },
+
+  async queryMatch(payload) {
+    const scope = nock(BASE).get(payload.path).query(payload.query).reply(200, 'matched');
+    const response = await httpRequest({ path: payload.requestPath });
+    return { response, done: scope.isDone() };
+  },
+
+  async headerMatch(payload) {
+    const scope = nock(BASE)
+      .matchHeader(payload.name, payload.expected)
+      .get(payload.path)
+      .reply(200, 'matched');
+    const response = await httpRequest({ path: payload.path, headers: payload.headers });
+    return { response, done: scope.isDone() };
+  },
+
+  async basicAuth(payload) {
+    const scope = nock(BASE)
+      .get(payload.path)
+      .basicAuth({ user: payload.user, pass: payload.pass })
+      .reply(200, 'authorized');
+    const token = Buffer.from(`${payload.user}:${payload.pass}`).toString('base64');
+    const response = await httpRequest({
+      path: payload.path,
+      headers: { authorization: `Basic ${token}` },
+    });
+    return { response, done: scope.isDone() };
+  },
+
+  async regexMatch() {
+    const scope = nock(/api\.example\.test/).get(/\/items\/\d+$/).reply(200, 'regex');
+    const response = await httpRequest({ path: '/items/42' });
+    return { response, done: scope.isDone() };
+  },
+
+  async dynamicReply(payload) {
+    const interceptor = nock(BASE).post(payload.path, payload.expectedBody);
+    if (payload.mode === 'async') {
+      interceptor.reply(201, async (_uri, body) => ({ echoed: body, async: true }));
+    } else if (payload.mode === 'full') {
+      interceptor.reply((_uri, body) => [202, { echoed: body }, { 'x-mode': 'full' }]);
+    } else {
+      interceptor.reply(200, (_uri, body) => ({ echoed: body, async: false }));
+    }
+    return httpRequest({
+      method: 'POST',
+      path: payload.path,
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload.requestBody),
+    });
+  },
+
+  async defaultHeaders() {
+    const scope = nock(BASE)
+      .defaultReplyHeaders({ 'x-default': 'yes', 'content-type': 'text/plain' })
+      .get('/headers')
+      .reply(200, 'ok', { 'x-specific': 'present' });
+    const response = await httpRequest({ path: '/headers' });
+    return { response, done: scope.isDone() };
+  },
+
+  async contentMetadata() {
+    const date = new Date('2020-01-02T03:04:05.000Z');
+    const scope = nock(BASE)
+      .replyContentLength()
+      .replyDate(date)
+      .get('/metadata')
+      .reply(200, 'hello');
+    const response = await httpRequest({ path: '/metadata' });
+    return { response, done: scope.isDone() };
+  },
+
+  async counters(payload) {
+    const interceptor = nock(BASE).get('/counter');
+    if (payload.mode === 'persist') interceptor.reply(200, 'ok').persist();
+    else if (payload.mode === 'optional') interceptor.optionally().reply(200, 'ok');
+    else interceptor[payload.mode](payload.count).reply(200, 'ok');
+    const scope = interceptor.scope;
+    const responses = [];
+    for (let index = 0; index < payload.requests; index += 1) {
+      responses.push(await httpRequest({ path: '/counter' }));
+    }
+    return {
+      statuses: responses.map(item => item.statusCode),
+      done: scope.isDone(),
+      pending: scope.pendingMocks(),
+      active: scope.activeMocks(),
+    };
+  },
+
+  optionalWithoutRequest() {
+    const scope = nock(BASE).get('/optional').optionally().reply(200, 'ok');
+    return { done: scope.isDone(), pending: scope.pendingMocks(), active: scope.activeMocks() };
+  },
+
+  removeInterceptor() {
+    const scope = nock(BASE);
+    const interceptor = scope.get('/remove');
+    interceptor.reply(200, 'never');
+    const removed = nock.removeInterceptor(interceptor);
+    return {
+      removed,
+      scopeDone: scope.isDone(),
+      pending: nock.pendingMocks(),
+      active: nock.activeMocks(),
+    };
+  },
+
+  cleanAll() {
+    nock(BASE).get('/one').reply(200, 'one');
+    nock(BASE).get('/two').reply(200, 'two');
+    const before = { pending: nock.pendingMocks(), active: nock.activeMocks() };
+    nock.cleanAll();
+    return { before, after: { pending: nock.pendingMocks(), active: nock.activeMocks() }, done: nock.isDone() };
+  },
+
+  scopeDoneError() {
+    const scope = nock(BASE).get('/pending').reply(200, 'pending');
+    const result = { isDone: scope.isDone(), pending: scope.pendingMocks() };
+    try {
+      scope.done();
+      result.error = null;
+    } catch (error) {
+      result.error = { name: error.name, message: error.message };
+    }
+    return result;
+  },
+
+  activationLifecycle() {
+    const initial = nock.isActive();
+    nock.restore();
+    const restored = nock.isActive();
+    nock.activate();
+    const activated = nock.isActive();
+    return { initial, restored, activated };
+  },
+
+  async netConnectBlocked() {
+    nock.disableNetConnect();
+    return errorResult(() => httpRequest({ path: '/unmatched' }));
+  },
+
+  async replyWithError() {
+    const error = Object.assign(new Error('socket failed'), { code: 'EDEMO' });
+    nock(BASE).post('/error').replyWithError(error);
+    return errorResult(() => httpRequest({ method: 'POST', path: '/error' }));
+  },
+
+  async define() {
+    const scopes = nock.define([
+      { scope: BASE, method: 'GET', path: '/defined', status: 203, response: { source: 'definition' }, rawHeaders: { 'x-defined': 'yes' } },
+    ]);
+    const response = await httpRequest({ path: '/defined' });
+    return { response, scopeCount: scopes.length, done: scopes[0].isDone() };
+  },
+
+  async filteringPath() {
+    const scope = nock(BASE)
+      .filteringPath(/\/items\/\d+/, '/items/:id')
+      .get('/items/:id')
+      .reply(200, 'filtered');
+    const response = await httpRequest({ path: '/items/123' });
+    return { response, done: scope.isDone() };
+  },
+
+  async filteringRequestBody() {
+    const scope = nock(BASE)
+      .filteringRequestBody(/token=[^&]+/, 'token=redacted')
+      .post('/form', 'token=redacted&name=pi')
+      .reply(200, 'filtered');
+    const response = await httpRequest({
+      method: 'POST',
+      path: '/form',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: 'token=secret&name=pi',
+    });
+    return { response, done: scope.isDone() };
+  },
+
+  async fetchReply() {
+    const scope = nock(BASE).get('/fetch').reply(200, { transport: 'fetch' }, { 'x-fetch': 'yes' });
+    const response = await fetch(`${BASE}/fetch`);
+    return {
+      statusCode: response.status,
+      header: response.headers.get('x-fetch'),
+      body: await response.json(),
+      done: scope.isDone(),
+    };
+  },
+};
+
+async function main() {
+  const operation = operations[request.operation];
+  if (!operation) emit({ id: request.id, ok: false, error: 'operation-not-allowlisted' }, 64);
+  try {
+    const value = await operation(request.payload);
+    emit({ id: request.id, ok: true, value });
+  } catch (error) {
+    emit({
+      id: request.id,
+      ok: false,
+      error: 'candidate-call-failed',
+      errorType: error?.constructor?.name ?? 'Error',
+      code: error?.code ?? null,
+      message: String(error?.message ?? error),
+    }, 1);
+  } finally {
+    try {
+      nock.cleanAll();
+    } catch {
+      // The process exits immediately; cleanup is best effort after reporting.
+    }
+  }
+}
+
+await main();

@@ -1,0 +1,154 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 512 * 1024;
+const require = createRequire(import.meta.url);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds the bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function request() {
+  const bytes = readFileSync(0);
+  if (bytes.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+  try {
+    const value = JSON.parse(bytes.toString("utf8"));
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("object required");
+    return value;
+  } catch {
+    emit({ ok: false, error: "malformed-json" }, 64);
+  }
+}
+
+function boundedInteger(value, name, min, max) {
+  if (!Number.isInteger(value) || value < min || value > max) {
+    throw new TypeError(`${name} must be an integer from ${min} to ${max}`);
+  }
+  return value;
+}
+
+function sharpInput(spec) {
+  if (!spec || typeof spec !== "object" || Array.isArray(spec)) throw new TypeError("input must be an object");
+  if (spec.kind === "create") {
+    const width = boundedInteger(spec.width, "width", 1, 64);
+    const height = boundedInteger(spec.height, "height", 1, 64);
+    const channels = boundedInteger(spec.channels, "channels", 3, 4);
+    return [{ create: { width, height, channels, background: spec.background } }];
+  }
+  if (spec.kind === "raw") {
+    const width = boundedInteger(spec.width, "width", 1, 64);
+    const height = boundedInteger(spec.height, "height", 1, 64);
+    const channels = boundedInteger(spec.channels, "channels", 1, 4);
+    if (typeof spec.data_hex !== "string" || !/^(?:[0-9a-fA-F]{2})+$/.test(spec.data_hex)) {
+      throw new TypeError("data_hex must contain bytes");
+    }
+    const data = Buffer.from(spec.data_hex, "hex");
+    if (data.length !== width * height * channels) throw new RangeError("raw input byte length mismatch");
+    return [data, { raw: { width, height, channels } }];
+  }
+  throw new TypeError("unsupported input kind");
+}
+
+function applyStep(image, step) {
+  if (!step || typeof step !== "object" || Array.isArray(step) || typeof step.name !== "string") {
+    throw new TypeError("pipeline step must be an object");
+  }
+  switch (step.name) {
+    case "resize": return image.resize(step.options);
+    case "rotate": return image.rotate(step.angle, step.options);
+    case "flip": return image.flip();
+    case "flop": return image.flop();
+    case "extract": return image.extract(step.options);
+    case "ensureAlpha": return image.ensureAlpha(step.alpha);
+    case "removeAlpha": return image.removeAlpha();
+    case "greyscale": return image.greyscale();
+    case "negate": return image.negate(step.options);
+    case "threshold": return image.threshold(step.value, step.options);
+    case "linear": return image.linear(step.a, step.b);
+    case "blur": return image.blur(step.options);
+    case "sharpen": return image.sharpen(step.options);
+    case "flatten": return image.flatten(step.options);
+    case "tint": return image.tint(step.colour);
+    case "modulate": return image.modulate(step.options);
+    default: throw new TypeError(`unsupported pipeline step: ${step.name}`);
+  }
+}
+
+function metadataResult(metadata) {
+  const keys = [
+    "format", "width", "height", "space", "channels", "depth", "density",
+    "isProgressive", "hasProfile", "hasAlpha", "orientation", "pages", "pageHeight",
+  ];
+  return Object.fromEntries(keys.filter((key) => metadata[key] !== undefined).map((key) => [key, metadata[key]]));
+}
+
+async function main() {
+  const payload = request();
+  const sharp = require("sharp");
+  if (payload.operation === "static") {
+    const formats = Object.fromEntries(["jpeg", "png", "webp", "gif"].map((name) => [
+      name,
+      {
+        inputBuffer: Boolean(sharp.format[name]?.input?.buffer),
+        outputBuffer: Boolean(sharp.format[name]?.output?.buffer),
+      },
+    ]));
+    return {
+      versions: { sharp: sharp.versions.sharp, vips: sharp.versions.vips },
+      formats,
+      fit: sharp.fit,
+      kernel: sharp.kernel,
+      gravity: sharp.gravity,
+      cache: sharp.cache(),
+      concurrency: sharp.concurrency(),
+      simd: sharp.simd(),
+    };
+  }
+  const args = sharpInput(payload.input);
+  const image = sharp(...args);
+  if (payload.operation === "metadata") return metadataResult(await image.metadata());
+  if (payload.operation !== "pipeline") throw new TypeError("unsupported operation");
+  for (const step of payload.steps ?? []) applyStep(image, step);
+  const output = payload.output ?? { format: "raw" };
+  switch (output.format) {
+    case "raw": image.raw(); break;
+    case "png": image.png(output.options); break;
+    case "jpeg": image.jpeg(output.options); break;
+    case "webp": image.webp(output.options); break;
+    default: throw new TypeError("unsupported output format");
+  }
+  const { data, info } = await image.toBuffer({ resolveWithObject: true });
+  return {
+    info: {
+      format: info.format,
+      width: info.width,
+      height: info.height,
+      channels: info.channels,
+      size: info.size,
+      premultiplied: info.premultiplied,
+    },
+    data_hex: output.format === "raw" ? data.toString("hex") : undefined,
+    prefix_hex: output.format === "raw" ? undefined : data.subarray(0, 16).toString("hex"),
+    sha256: createHash("sha256").update(data).digest("hex"),
+  };
+}
+
+try {
+  emit({ ok: true, value: await main() });
+} catch (error) {
+  emit({
+    ok: false,
+    error: "candidate-call-failed",
+    exception_type: error?.constructor?.name ?? "Error",
+    message: String(error?.message ?? error),
+    stack: String(error?.stack ?? "").slice(0, 4096),
+  }, 1);
+}

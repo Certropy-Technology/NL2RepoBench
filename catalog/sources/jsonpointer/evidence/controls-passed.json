@@ -1,0 +1,19 @@
+{
+  "bundle_manifest": {
+    "canonical_manifest_digest": "sha256:82b9a0c9d76ae515e093192b1d20c42829b08e8841ab107e298ab42c9bc16dd2",
+    "path": ".nl2repo/final-compile/jsonpointer/bundle.manifest.json",
+    "sha256": "sha256:77e35093f658762701dfc822a469ffff003ae2a0af7c4c103c783e2b65347f9c"
+  },
+  "controls": {
+    "empty": {"collected": 0, "network": false, "reward": 0.0, "valid": true},
+    "forgery": {"collected": 28, "network": false, "passed": 1, "reward": 0.03571428571428571, "valid": true, "verifier_owned_reward": true},
+    "install_hang": {"collected": 0, "install_outcome": "timeout", "install_returncode": -9, "network": false, "reward": 0.0, "valid": true},
+    "stub": {"collected": 28, "network": false, "passed": 1, "reward": 0.03571428571428571, "valid": true}
+  },
+  "expected_total": 28,
+  "oracle": {"collected": 28, "network": false, "passed": 28, "reward": 1.0, "valid": true},
+  "schema_version": "1.0",
+  "status": "controls-passed",
+  "task_id": "jsonpointer",
+  "toolchain": "Harbor 0.21.0 / task schema 1.4 / Python 3.12.14 / debian-13-amd64"
+}

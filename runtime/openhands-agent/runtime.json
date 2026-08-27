@@ -2,8 +2,10 @@
   "agent": "openhands-sdk",
   "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
   "fork_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
-  "image": "nl2repobench/openhands-sdk-fork:930e9b1da",
-  "image_digest": "sha256:d3f9cc49395b0d43886a3b3c4eadbf050b99b92970b5c2a6dc166eb9ec1d9455",
+  "image": "nl2repobench/openhands-sdk-fork@sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+  "image_tag": "nl2repobench/openhands-sdk-fork:930e9b1da",
+  "image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+  "image_digest": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
   "litellm_version": "1.93.0",
   "openhands_sdk_version": "1.43.1",
   "openhands_tools_version": "1.43.1",
@@ -11,5 +13,6 @@
     "protocol": "OpenAI-compatible streaming chat completions",
     "stream_required": true
   },
-  "schema_version": 1
+  "schema_version": 2,
+  "variant": "trixie"
 }

@@ -44,7 +44,7 @@ def main():
         try:
             completed = subprocess.run(
                 [args.python, str(args.client)], input=json.dumps({'scenario': name}), text=True,
-                capture_output=True, timeout=15, env={'PYTHONNOUSERSITE': '1'},
+                capture_output=True, timeout=1, env={'PYTHONNOUSERSITE': '1'},
             )
             response = json.loads(completed.stdout)
             actual = response.get('result') if response.get('ok') else response

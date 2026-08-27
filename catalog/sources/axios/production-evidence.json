@@ -1,77 +1,94 @@
 {
   "schema_version": "1.0",
   "task_id": "axios",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "spec",
-    "next_step": "Obtain approval for a bounded Axios behavior subset expressible through the JSON-only no-network boundary; then author a private node:test bundle, freeze its collection, and supply the dependency, Harbor, verifier, and Oracle artifacts before generating a runtime.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/axios/axios",
-      "revision": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
-      "source_digest": "sha256:e81bdadfeb7d7a3bcd31aaf85f6cf269d03e55176f73daf604330697b0fb83d1",
-      "license_spdx": "MIT"
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/axios/axios",
+    "revision": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
+    "source_digest": "sha256:c5d3d80a6b3f09d0e35e5a4b1bc78cb47216190b4b46f745f96c63fe16f1a0eb",
+    "license_spdx": "MIT",
+    "archive_materialization": "private Oracle bundle source.tar; sha256 verified before extraction"
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_status": "locked",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_network": "none"
+  },
+  "private_artifacts": {
+    "dependency_bundle": {
+      "digest": "sha256:0e35bc17ec8b681baa3f7b3627ee24bee36d9fb647ae1bb1ba9ce399b8fd7df6",
+      "size_bytes": 2109440
     },
-    "audited_inputs": {
-      "task_descriptor": {
-        "path": "catalog/sources/axios/task.toml",
-        "sha256": "sha256:b56f65929eaf32cd468f0cde8223e4303e0c52b6fa3f839a6d714c4f7731666e"
-      },
-      "instruction": {
-        "path": "catalog/sources/axios/instruction.md",
-        "sha256": "sha256:2764c2faf07ae22de78e10e5d5822582e3be1eebf04f666f287781bf0b63937c"
-      },
-      "provenance": {
-        "path": "catalog/sources/axios/provenance.md",
-        "sha256": "sha256:d450a90360f63487fc0fb703bf0129d3eac1826db4cfe7d9ff3899a45a54f1d5"
-      },
-      "deterministic_test_inventory": {
-        "path": "catalog/sources/axios/deterministic-test-inventory.json",
-        "sha256": "sha256:b651dc3f73d1f9095ab54a0d4d2bde7b87e7e7b69b13dc3b5de7eb64e1b2ea29"
-      },
-      "api_inventory": {
-        "path": "catalog/sources/axios/api-inventory.json",
-        "sha256": "sha256:fd9a2e7ff03d4e3133cbf72562d0ccc820c09f1bb01aa517faa3d5cfdcb78223"
-      }
+    "test_bundle": {
+      "digest": "sha256:5671d8ba2273380868314df434c0cafb1e4e9c244b67f9741f600a48c13f1186",
+      "size_bytes": 20480,
+      "expected_total": 16
     },
-    "observed_state": {
-      "lifecycle_status": "blocked",
-      "static_test_count": 1548,
-      "node_test_registrations": 0,
-      "vitest_or_other_registrations": 1548,
-      "collection_status": "not-run",
-      "private_node_test_bundle": false,
-      "runtime_path": "catalog/tasks/axios",
-      "runtime_path_exists": false
+    "commands_bundle": {
+      "digest": "sha256:907c74f99d8321118b161724922c3538b3b62548149a5f880e8024898f8e5eeb",
+      "size_bytes": 10240
     },
-    "commands": [
-      {
-        "command": "uv run nl2repo task validate-source catalog/sources/axios",
-        "tool_version": "uv 0.12.3; nl2repo task CLI",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/axios/evidence/descriptor-validation.txt",
-          "sha256": "sha256:41370e2cd130496805972850e575f73813346587f9a7d410b72ac33f3cc5b56e"
-        }
-      },
-      {
-        "command": "uv run nl2repo harbor compile catalog/sources/axios --output /tmp/nl2repo-axios-harbor-recompile --toolchain toolchain.node.lock.toml --artifact-root /tmp/nl2repo-axios-harbor-artifacts",
-        "tool_version": "uv 0.12.3; nl2repo Harbor CLI",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/axios/evidence/harbor-compile.txt",
-          "sha256": "sha256:4389c12a044a707ef61ca533971b91fcda41928129fba0b4fa6de3c612719682"
-        }
-      },
-      {
-        "command": "if [ -e catalog/tasks/axios ] || [ -L catalog/tasks/axios ]; then printf '%s\\n' 'runtime_path=present'; exit 1; fi; printf '%s\\n' 'runtime_path=absent'",
-        "tool_version": "POSIX shell filesystem inspection",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/axios/evidence/runtime-absence.txt",
-          "sha256": "sha256:b1e6b0720d409ace1ed98ff3854c0f7978ae97e08ccf213813bac2bef17c794c"
-        }
-      }
-    ]
-  }
+    "oracle_bundle": {
+      "digest": "sha256:efc01647e414352871bf2a73ca4adb15ac43e9e0c515c74829fbea27a3613ad7",
+      "size_bytes": 4044800
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/axios",
+      "exit_code": 0,
+      "evidence": "catalog/sources/axios/evidence/descriptor-validation.txt"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "evidence": ".nl2repo/evidence/final-network-lint.json",
+      "finding": "error_count=0; repository warnings are pre-existing and axios has no error"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/axios --output .nl2repo/compiled-axios-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "evidence": "catalog/sources/axios/evidence/harbor-compile.txt"
+    },
+    {
+      "command": "node --test private Axios contract bundle",
+      "exit_code": 0,
+      "evidence": ".nl2repo/evidence/private-node-test.txt"
+    },
+    {
+      "command": "uv run python scripts/validate_node_production.py --task catalog/sources/axios --bundle .nl2repo/compiled-axios/axios --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/harbor-runs/axios-oracle-v6 --controls .nl2repo/evidence/axios-control-matrix.json",
+      "exit_code": 0,
+      "evidence": ".nl2repo/evidence/axios-production-gate.json"
+    }
+  ],
+  "oracle": {
+    "status": "passed",
+    "valid": true,
+    "reward": 1.0,
+    "passed": 16,
+    "total": 16,
+    "evidence": ".nl2repo/harbor-runs/axios-oracle-v6/2026-08-26__15-37-29"
+  },
+  "controls": {
+    "status": "passed",
+    "matrix": ".nl2repo/evidence/axios-control-matrix.json",
+    "empty": 0.0,
+    "stub": 0.0,
+    "forgery": 0.0,
+    "install-script": 0.0,
+    "loader-hook": 0.0,
+    "hang": 0.0,
+    "offline": 0.0
+  },
+  "residual_risks": [
+    "The complete upstream Vitest/browser/module/smoke suite is inventoried but is not the fixed denominator; the approved slice is explicitly narrower and no-network.",
+    "One earlier Harbor Oracle attempt failed with a transient Node worker-thread/resource error; the retry v6 passed 16/16. The failed attempt is retained as infrastructure evidence.",
+    "Review, pilot, publication, and generated catalog/tasks projection remain integrator-owned and are not complete in this lane."
+  ],
+  "status": "controls-passed",
+  "next_unblock_action": "Integrator performs blind/spec review, accepts the bounded slice, and publishes the generated projection; do not start an Agent Run from this lane."
 }

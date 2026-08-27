@@ -1,0 +1,191 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "git -C .nl2repo/authoring-work/node-discovery-20260826-r1/nanoid/source rev-parse HEAD",
+      "exit_code": 0
+    },
+    {
+      "command": "git -C .nl2repo/authoring-work/node-discovery-20260826-r1/nanoid/source archive --format=tar HEAD",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/nanoid",
+      "exit_code": 0,
+      "result": "controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "errors": 0,
+      "exit_code": 0,
+      "nanoid_findings": 0,
+      "unrelated_warnings": 140
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/nanoid --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/revalidation-compile",
+      "exit_code": 1,
+      "failure_class": "environment",
+      "reason": "Legacy Python v1 lock was not the requested language toolchain."
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/nanoid --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/final-compile",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q --no-cov tests/test_node_foundation.py tests/test_node_production_gate.py tests/test_node_controls.py tests/test_node_control_summary.py tests/test_harbor_production_validation.py tests/test_network_policy.py",
+      "exit_code": 0,
+      "passed": 107
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-nanoid-agent-final .nl2repo/final-compile/nanoid/environment",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-nanoid-verifier-final .nl2repo/final-compile/nanoid/tests",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/nanoid -a oracle -n 1 -o .nl2repo/final-matched-runs/oracle --yes --quiet",
+      "exit_code": 0
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:fe8624e0a373f6f71c3a6e400e4ffa422cd2249ec66a437beda1d32031eda7a6",
+    "mode": "production",
+    "path": "catalog/tasks/nanoid"
+  },
+  "controls": {
+    "empty": {
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/final-matched-runs/empty/2026-08-27__13-59-09/nanoid__kK6gxSh/verifier/grading.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "grading": ".nl2repo/final-matched-runs/forgery/2026-08-27__14-00-54/nanoid-forgery__fxfqAZH/verifier/grading.json",
+      "passed": 1,
+      "reward": 0.03571428571428571,
+      "total": 28,
+      "valid": true
+    },
+    "hang": {
+      "failure_reason": "candidate-call-failed",
+      "grading": ".nl2repo/final-matched-runs/hang/2026-08-27__14-01-59/nanoid-hang__GrmycR6/verifier/grading.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "install_script": {
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/final-matched-runs/install-script/2026-08-27__14-05-43/nanoid-install-script__73ByE4e/verifier/grading.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "loader_hook": {
+      "grading": ".nl2repo/final-matched-runs/loader-hook/2026-08-27__14-06-30/nanoid-loader-hook__BpGT5Sb/verifier/grading.json",
+      "passed": 1,
+      "reward": 0.03571428571428571,
+      "total": 28,
+      "valid": true
+    },
+    "offline": {
+      "grading": ".nl2repo/final-matched-runs/offline/2026-08-27__14-04-52/nanoid-offline__XdEzcah/verifier/grading.json",
+      "passed": 1,
+      "public_network_available": false,
+      "reward": 0.03571428571428571,
+      "total": 28,
+      "valid": true
+    },
+    "stub": {
+      "grading": ".nl2repo/final-matched-runs/stub/2026-08-27__13-59-56/nanoid-stub__SW6ofob/verifier/grading.json",
+      "passed": 1,
+      "reward": 0.03571428571428571,
+      "total": 28,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:5de98e7606665d294eb423e22f373144b750cd1216ccf8492c8a5dfb5108b830",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:5de98e7606665d294eb423e22f373144b750cd1216ccf8492c8a5dfb5108b830",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "nanoid has no runtime dependencies; candidate installation uses an integrity-checked root-only npm v3 lock and an empty offline cache. The frozen source is private to Oracle only.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "grading": ".nl2repo/final-matched-runs/oracle/2026-08-27__13-58-08/nanoid__njs3jJb/verifier/grading.json",
+    "network_receipt": ".nl2repo/final-matched-runs/oracle/2026-08-27__13-58-08/nanoid__njs3jJb/verifier/network.json",
+    "passed": 28,
+    "public_network_available": false,
+    "reward": 1.0,
+    "reward_file": ".nl2repo/final-matched-runs/oracle/2026-08-27__13-58-08/nanoid__njs3jJb/verifier/reward.json",
+    "total": 28,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:d644f1540cc8b3323d28441829617fefb40b0863eecbcc3fb70451b391bcb7f6",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 30720,
+      "uri": "artifact://private/sha256:d644f1540cc8b3323d28441829617fefb40b0863eecbcc3fb70451b391bcb7f6",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/node-discovery-20260826-r1/nanoid/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane.",
+    "Independent blind/spec review and later pilot execution remain publication-stage work.",
+    "Stub, forgery, offline, and loader-hook controls each pass one benign leaf (1/28) but remain safely near zero."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "07a39d62d84c21af5046fe6b2ef7b3e36ee557db",
+    "source_digest": "sha256:09f73bda251aec624b9873de1c37fa15acbd18c4d56e261b83bf19874e514ec0",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/ai/nanoid"
+  },
+  "status": "controls-passed",
+  "task_id": "nanoid",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

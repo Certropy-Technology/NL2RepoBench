@@ -12,7 +12,11 @@ import tomli_w
 
 from nl2repobench.domain.models import Visibility
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
-from nl2repobench.harbor.models import load_command_plan, load_toolchain_lock
+from nl2repobench.harbor.models import (
+    AgentRuntimeImageLock,
+    load_command_plan,
+    load_toolchain_lock,
+)
 from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.verification.command_plan import validate_command_plan
@@ -49,7 +53,39 @@ def test_toolchain_images_are_digest_pinned() -> None:
     assert lock.harbor.lock_sha256.startswith("sha256:")
     assert "@sha256:" in lock.images.agent_base
     assert "@sha256:" in lock.images.verifier_base
+    assert lock.agent_runtime.image == (
+        "nl2repobench/openhands-sdk-fork@sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+    )
+    assert lock.agent_runtime.image_id.startswith("sha256:")
+    assert lock.agent_runtime.fork_commit == "930e9b1daee0f5d2c7f3b261f045527a0ddae87d"
     assert lock.verifier.requirements_sha256.startswith("sha256:")
+
+
+def test_agent_runtime_digest_is_bound_to_locked_image_id() -> None:
+    lock = load_toolchain_lock(TOOLCHAIN).agent_runtime
+    assert lock.image.rsplit("@", 1)[1] == lock.image_id
+    with pytest.raises(ValueError, match="image digest must match image_id"):
+        AgentRuntimeImageLock.model_validate(
+            lock.model_dump(mode="python")
+            | {"image_id": "sha256:" + "0" * 64}
+        )
+
+
+def test_runtime_metadata_records_both_locked_variants() -> None:
+    for metadata_name, toolchain_name, variant in (
+        ("runtime.json", "toolchain.lock.toml", "trixie"),
+        ("runtime.bookworm.json", "toolchain.node.lock.toml", "bookworm"),
+    ):
+        metadata = json.loads(
+            (ROOT / "runtime/openhands-agent" / metadata_name).read_text(encoding="utf-8")
+        )
+        toolchain = tomllib.loads((ROOT / toolchain_name).read_text(encoding="utf-8"))
+        runtime = toolchain["agent_runtime"]
+        assert metadata["variant"] == variant
+        assert metadata["image"] == runtime["image"]
+        assert metadata["image_id"] == runtime["image_id"]
+        assert metadata["image"].rsplit("@", 1)[1] == metadata["image_id"]
+        assert metadata["image_digest"] == runtime["image_id"]
 
 
 def test_arbitrary_legacy_command_lists_are_not_execution_plans() -> None:
@@ -75,11 +111,20 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert task["verifier"]["network_mode"] == "no-network"
     assert task["verifier"]["environment"]["network_mode"] == "no-network"
     assert task["metadata"]["expected_test_count"] == 18
-    assert "@sha256:" in (task_root / "environment/Dockerfile").read_text()
+    agent_dockerfile = (task_root / "environment/Dockerfile").read_text()
+    assert (
+        "nl2repobench/openhands-sdk-fork@sha256:"
+        "70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+        in agent_dockerfile
+    )
+    assert "agent-runtime-image-id" in agent_dockerfile
+    assert "pip-index-hash-locked-v1" in agent_dockerfile
+    assert "/opt/openhands-sdk-venv/bin/python" in agent_dockerfile
     assert not (task_root / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (task_root / "tests/docker-compose.yaml").read_text()
     verifier_dockerfile = (task_root / "tests/Dockerfile").read_text()
     assert "--require-hashes" in verifier_dockerfile
+    assert "--index-url https://pypi.org/simple" in verifier_dockerfile
     assert "COPY candidate-requirements.lock.txt" in verifier_dockerfile
     assert "COPY dependencies" not in verifier_dockerfile
     assert "--no-index" not in verifier_dockerfile

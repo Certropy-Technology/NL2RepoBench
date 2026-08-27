@@ -16,7 +16,7 @@ from pydantic import Field, model_validator
 
 from nl2repobench.domain.models_v2 import SEMVER_PATTERN, V2RecordModel
 
-from .models import PINNED_IMAGE, HarborVersionLock
+from .models import PINNED_IMAGE, AgentRuntimeImageLock, HarborVersionLock
 
 
 class NodeImageLockV2(V2RecordModel):
@@ -56,6 +56,7 @@ class NodeHarborToolchainLockV2(V2RecordModel):
     status: Literal["locked", "development-only"] = "development-only"
     harbor: HarborVersionLock
     images: NodeImageLockV2
+    agent_runtime: AgentRuntimeImageLock
     runtime: NodeRuntimeLockV2
     node_grader: Literal["absent", "locked"] = "absent"
     node_runtime_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")

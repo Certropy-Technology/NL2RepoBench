@@ -12,9 +12,18 @@ agent_base = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa703
 verifier_base = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 platform = "linux/amd64"
 
+[agent_runtime]
+image = "nl2repobench/openhands-sdk-fork@sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+image_id = "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+fork_commit = "930e9b1daee0f5d2c7f3b261f045527a0ddae87d"
+python_executable = "/opt/openhands-sdk-venv/bin/python"
+sdk_version = "1.43.1"
+tools_version = "1.43.1"
+litellm_version = "1.93.0"
+
 [verifier]
 requirements_lock = "verifier/requirements.lock.txt"
-requirements_sha256 = "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
+requirements_sha256 = "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
 pytest_version = "9.1.1"
 pydantic_version = "2.13.4"
 defusedxml_version = "0.7.1"

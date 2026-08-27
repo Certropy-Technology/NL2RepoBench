@@ -1,5 +1,61 @@
 {
   "$defs": {
+    "AgentRuntimeImageLock": {
+      "additionalProperties": false,
+      "description": "Prebuilt OpenHands runtime shared by every Agent environment.",
+      "properties": {
+        "fork_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Fork Commit",
+          "type": "string"
+        },
+        "image": {
+          "title": "Image",
+          "type": "string"
+        },
+        "image_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Image Id",
+          "type": "string"
+        },
+        "litellm_version": {
+          "title": "Litellm Version",
+          "type": "string"
+        },
+        "python_executable": {
+          "const": "/opt/openhands-sdk-venv/bin/python",
+          "default": "/opt/openhands-sdk-venv/bin/python",
+          "title": "Python Executable",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sdk_version": {
+          "title": "Sdk Version",
+          "type": "string"
+        },
+        "tools_version": {
+          "title": "Tools Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "image",
+        "image_id",
+        "fork_commit",
+        "sdk_version",
+        "tools_version",
+        "litellm_version"
+      ],
+      "title": "AgentRuntimeImageLock",
+      "type": "object",
+      "x-nl2repobench-model": "AgentRuntimeImageLock",
+      "x-nl2repobench-runtime-validation": true
+    },
     "AuthoringRuntimeLock": {
       "additionalProperties": false,
       "properties": {
@@ -149,6 +205,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "agent_runtime": {
+      "$ref": "#/$defs/AgentRuntimeImageLock"
+    },
     "authoring": {
       "$ref": "#/$defs/AuthoringRuntimeLock"
     },
@@ -171,6 +230,7 @@
   "required": [
     "harbor",
     "images",
+    "agent_runtime",
     "verifier",
     "authoring"
   ],

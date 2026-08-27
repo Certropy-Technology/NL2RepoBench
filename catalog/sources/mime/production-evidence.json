@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mime",
+  "terminal_kind": "controls-passed",
+  "bundle": {
+    "path": ".nl2repo/authoring-work/repairs/mime/runs/production-compile-current/compiled/mime/bundle.manifest.json",
+    "sha256": "sha256:f42b37d75d0798fd6e06ad73f35dfed7ec1f071cb544fdbfafaba5edfe52bcc4",
+    "mode": "production",
+    "file_count": 85
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/repairs/mime/runs/production-compile-current/compiled/mime -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/authoring-work/repairs/mime/runs/oracle-current/jobs --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/repairs/mime/runs/oracle-current/jobs/2026-08-27__13-26-28/mime__qKhFcRv/verifier/grading.json",
+      "sha256": "sha256:bbb21e42b5fb6808674630f9516f61ded266813a01dd4134c231aa1e1dd98258",
+      "valid": true,
+      "reward": 1.0,
+      "passed": 32,
+      "collected": 32,
+      "expected_total": 32
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/repairs/mime/runs/oracle-current/jobs/2026-08-27__13-26-28/mime__qKhFcRv/verifier/network.json",
+      "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+    }
+  },
+  "controls": {
+    "evidence_path": "catalog/sources/mime/evidence/controls-passed.json",
+    "control_count": 7,
+    "all_passed": true
+  },
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "runtime": "Node 24.19.0",
+    "npm": "11.17.0",
+    "toolchain_lock_digest": "sha256:a33b4a62b03e9f88698666dec20841624f65ba280f3cbebfa48135dea4e93b18",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "status_boundary": "awaiting-agent-run",
+  "residual_risks": [
+    "No independent model Agent Run was started in this authoring lane by contract.",
+    "Blind review, traceability review approval, and pilot results remain pending.",
+    "The Oracle solution retains a bounded GitHub reachability probe; the source archive used for grading is local and SHA-256 verified, and the model Agent receives no source host allowlist."
+  ]
+}

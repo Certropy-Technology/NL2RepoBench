@@ -101,6 +101,12 @@ class HarborCompiler:
         gaps = manifest.publication_gaps()
         if gaps and not allow_incomplete:
             raise HarborCompileError(f"task is not publishable: {', '.join(gaps)}")
+        if not allow_incomplete:
+            profile = self._effective_profile(manifest)
+            if profile.agent_network_mode != "no-network" or profile.agent_allowed_hosts:
+                raise HarborCompileError(
+                    "production Agent runtime must be no-network with no static allowed hosts"
+                )
 
         final_root = output_root / manifest.task_id
         if final_root.exists() or final_root.is_symlink():
@@ -110,7 +116,9 @@ class HarborCompiler:
         try:
             dependency_lock = self._resolve_dependency_lock(manifest, allow_incomplete)
             self._write_instruction(source_dir, source.instruction, temporary_root)
-            self._write_environment(manifest, temporary_root, dependency_lock)
+            self._write_environment(
+                manifest, temporary_root, dependency_lock, allow_incomplete
+            )
             self._write_verifier(
                 source_dir,
                 manifest,
@@ -182,8 +190,9 @@ class HarborCompiler:
         manifest: TaskManifest,
         task_root: Path,
         dependency_lock: bytes,
+        allow_incomplete: bool,
     ) -> None:
-        image = self.toolchain.images.agent_base
+        image = self.toolchain.agent_runtime.image
         install = self._system_packages_install(manifest)
         # The Docker build phase still has network, so the third-party build and
         # test dependency closure is baked into the image here. That is what lets
@@ -196,11 +205,33 @@ class HarborCompiler:
         )
         install += """COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes \\
+  --index-url https://pypi.org/simple \\
   -r /tmp/candidate-requirements.lock.txt
 
 """
-        dockerfile = f"FROM --platform=linux/amd64 {image}\n\n" + install + "WORKDIR /workspace\n"
+        dockerfile = (
+            f"FROM --platform=linux/amd64 {image}\n\n"
+            f"LABEL org.nl2repobench.agent-runtime-image=\"{image}\" "
+            f"org.nl2repobench.agent-runtime-image-id=\"{self.toolchain.agent_runtime.image_id}\" "
+            "org.nl2repobench.agent-dependency-build=\"pip-index-hash-locked-v1\"\n\n"
+            + install
+            + "RUN test -x /opt/openhands-sdk-venv/bin/python "
+            "&& test -x /usr/bin/curl\n\n"
+            + "WORKDIR /workspace\n"
+        )
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
+
+    @staticmethod
+    def _site_packages_minor(manifest: TaskManifest, allow_incomplete: bool) -> str:
+        """Return the CPython minor version used by the verifier image."""
+
+        if allow_incomplete:
+            return "3.12"
+        version = manifest.environment_lock.python_version
+        match = re.fullmatch(r"(\d+\.\d+)(?:\.\d+)?", version or "")
+        if match is None:
+            raise HarborCompileError("production environment has an invalid python_version")
+        return match.group(1)
 
     @staticmethod
     def _system_packages_install(manifest: TaskManifest) -> str:
@@ -273,20 +304,24 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
             raise HarborCompileError("production task requires tests.test_bundle")
 
         image = self._verifier_image(manifest, allow_incomplete)
+        python_minor = self._site_packages_minor(manifest, allow_incomplete)
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
 {self._system_packages_install(manifest)}\
 COPY requirements.lock.txt /tmp/requirements.lock.txt
-RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
+RUN python -m pip install --no-cache-dir --require-hashes \\
+  --index-url https://pypi.org/simple \\
+  -r /tmp/requirements.lock.txt
 
 COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install \
   --no-cache-dir \
+  --index-url https://pypi.org/simple \
   --target /opt/candidate-dependencies/site \
   --require-hashes \
   -r /tmp/candidate-requirements.lock.txt
 
-COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
+COPY runtime/nl2repobench /usr/local/lib/python{python_minor}/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0555 test.sh /tests/test.sh
 """
@@ -294,12 +329,12 @@ COPY --chmod=0555 test.sh /tests/test.sh
             dockerfile += "COPY --chmod=0500 verifier /tests/verifier\n"
         else:
             dockerfile += "COPY --chmod=0500 private /tests/private\n"
-        dockerfile += """
+        dockerfile += f"""
 
 RUN useradd --uid 10001 --create-home candidate \
   && mkdir -p /tests/private \
   && chmod -R 0500 /tests/private \
-  && chmod -R 0555 /usr/local/lib/python3.12/site-packages/nl2repobench
+  && chmod -R 0555 /usr/local/lib/python{python_minor}/site-packages/nl2repobench
 WORKDIR /tests
 """
         atomic_write(tests_root / "Dockerfile", dockerfile.encode())
@@ -308,7 +343,10 @@ WORKDIR /tests
     network_mode: none
 """
         atomic_write(tests_root / "docker-compose.yaml", verifier_compose.encode())
-        atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
+        atomic_write(
+            tests_root / "test.sh",
+            self._test_script(manifest, allow_incomplete).encode(),
+        )
         os.chmod(tests_root / "test.sh", 0o755)
 
     def _verifier_image(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
@@ -463,12 +501,14 @@ WORKDIR /tests
             data["environment"]["allowed_hosts"] = list(profile.agent_allowed_hosts)
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
-    def _test_script(self, manifest: TaskManifest) -> str:
+    def _test_script(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
         if manifest.verifier is not None:
-            return self._custom_test_script(manifest)
+            return self._custom_test_script(manifest, allow_incomplete)
         expected = manifest.tests.expected_total
         metric = shlex.quote(manifest.metric.contract_id)
         profile = self._effective_profile(manifest)
+        python_minor = self._site_packages_minor(manifest, allow_incomplete)
+        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
         return f"""#!/usr/bin/env bash
@@ -526,6 +566,8 @@ python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate \
   --target /tmp/candidate-site \
   --timeout-sec {install_timeout} \
+  --address-space-bytes {verifier_memory_bytes} \
+  --cflags '-O0 -g0' \
   --status /logs/verifier/candidate-install.json \
   > /logs/verifier/install-stdout.txt \
   2> /logs/verifier/install-stderr.txt
@@ -548,7 +590,7 @@ python -I -m nl2repobench.verification.integrity snapshot \
   --record /logs/verifier/trusted-files.json \
   /tests/private \
   /tests/command-plan.json \
-  /usr/local/lib/python3.12/site-packages/nl2repobench
+  /usr/local/lib/python{python_minor}/site-packages/nl2repobench
 
 env HOME=/root \
 NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC={candidate_total_timeout} \
@@ -574,7 +616,7 @@ if ! python -I -m nl2repobench.verification.integrity verify \
   --record /logs/verifier/trusted-files.json \
   /tests/private \
   /tests/command-plan.json \
-  /usr/local/lib/python3.12/site-packages/nl2repobench; then
+  /usr/local/lib/python{python_minor}/site-packages/nl2repobench; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} \
     --runtime python \
@@ -600,7 +642,9 @@ python -I -m nl2repobench.verification.cli \
 exit 0
         """
 
-    def _custom_test_script(self, manifest: TaskManifest) -> str:
+    def _custom_test_script(
+        self, manifest: TaskManifest, allow_incomplete: bool
+    ) -> str:
         profile = self._effective_profile(manifest)
         assert manifest.verifier is not None
         expected = manifest.tests.expected_total
@@ -610,11 +654,16 @@ exit 0
             f"export {name}={shlex.quote(value)}"
             for name, value in sorted(manifest.verifier.environment.items())
         )
+        build_environment_args = " ".join(
+            f"--build-env {shlex.quote(f'{name}={value}')}"
+            for name, value in sorted(manifest.verifier.environment.items())
+        )
+        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         return f"""#!/usr/bin/env bash
 set -uo pipefail
+rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
-rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 {environment}
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 python -I -m nl2repobench.verification.network_check \
@@ -637,6 +686,9 @@ chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
 python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate --target /tmp/candidate-site \
   --timeout-sec {profile.candidate_install_timeout_sec} \
+  --address-space-bytes {verifier_memory_bytes} \
+  --cflags '-O0 -g0' \
+  {build_environment_args} \
   --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli \

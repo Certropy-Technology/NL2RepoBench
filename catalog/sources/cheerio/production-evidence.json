@@ -1,37 +1,224 @@
 {
   "schema_version": "1.0",
   "task_id": "cheerio",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "spec",
-    "next_step": "Approve a materially narrowed JSON-safe Cheerio contract, then freeze generated dist/build artifacts, a no-network dependency closure, a private node:test adapter, and fresh Oracle/controls evidence.",
-    "source_freeze": {
-      "status": "known",
-      "revision": "808f8456b38a730497c675f1478d659cc4adfefe",
-      "source_digest": "sha256:bc9a92fdbe3d61dfc45561a119d1a3264ba9241ca3ead179d40b5c75e676cbdf",
-      "license_spdx": "MIT",
-      "license_path": "LICENSE",
-      "license_digest": "sha256:61c1e21d3a8ff20f9b69abe15104a75584688080febc22f60a4cbf3854becf4e"
-    },
-    "commands": [
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 51,
+  "source_freeze": {
+    "upstream_url": "https://github.com/cheeriojs/cheerio",
+    "revision": "808f8456b38a730497c675f1478d659cc4adfefe",
+    "source_digest": "sha256:bc9a92fdbe3d61dfc45561a119d1a3264ba9241ca3ead179d40b5c75e676cbdf",
+    "license_spdx": "MIT",
+    "license_path": "LICENSE",
+    "license_digest": "sha256:61c1e21d3a8ff20f9b69abe15104a75584688080febc22f60a4cbf3854becf4e",
+    "submodules": [],
+    "source_worktree_clean": true
+  },
+  "baseline": {
+    "command": "npm run test:vi under Node 24.19.0/npm 11.17.0 with the frozen package-lock.json",
+    "runs": 3,
+    "test_files": 15,
+    "collected": 799,
+    "passed": [799, 799, 799],
+    "type_errors": [0, 0, 0],
+    "logs": [
       {
-        "command": "bounded Node production authoring audit and contract review",
-        "tool_version": "Node 26.7.0/npm 12.0.2 diagnostics; locked target Node 24.19.0/npm 11.17.0",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/cheerio/blocked.md",
-          "sha256": "sha256:46fb7fd89affc7ae842938f8788da3f9993afad9a5d00b6507ba0338bd18cf18"
-        }
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826/cheerio/evidence/upstream-baseline-1.log",
+        "sha256": "sha256:cf01938fbe53c9ecb751970060ad2814fcdd85f48f4a26368a5e7a18941b2b76"
       },
       {
-        "command": "uv run nl2repo task validate-source catalog/sources/cheerio",
-        "tool_version": "repository toolchain",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/cheerio/evidence/descriptor-validation.log",
-          "sha256": "sha256:5a8a2bcbaf4ed0955cba817ce1db4bc6fe70e5266094d3c361edec38cac4218d"
-        }
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826/cheerio/evidence/upstream-baseline-2.log",
+        "sha256": "sha256:140a463236bc8a33ba999d35103f983bc5dd30b8863c2046d0cceb5ed59b145e"
+      },
+      {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826/cheerio/evidence/upstream-baseline-3.log",
+        "sha256": "sha256:ea94825316f8ea048983e3c1f1ad72adebf17ebdc12b0931a7bc8e3534b4f1c4"
       }
     ]
-  }
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:ee07b2dc5dee488fd9e30888687efd7c26661188a21ed5810ceca41fd47adb4a",
+    "dependency_artifact": "sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb",
+    "commands_artifact": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+    "test_bundle": "sha256:9dd3d86620b8e6ffd7930870ff44261f31d8d46831c6ac9b7ed5df9fcd091368",
+    "oracle_bundle": "sha256:21bc4efbc7b2bb24b34b74019b7699a4a4b3a68bb7f9bf57bc3b115a73d081f4",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:cc10b6a04be8c3f6461a116276a3f2f7d4425b27750f01a652591363f8fcc122",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/cheerio --output .nl2repo/final-compile-post-evidence --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/final-compile-post-evidence/cheerio",
+    "bundle_manifest_sha256": "sha256:5c1a1aeb731a926688b7259408a84996995edda57b33843c0e12157a64d9843f",
+    "canonical_manifest_digest": "sha256:66c503ba1a6000b8b4ca0e25f1379effb605da168128efe61bda2180c2faf327",
+    "file_count": 375,
+    "manifest_mismatches": 0,
+    "runtime_projection_check": "All files except lifecycle-derived task.toml and bundle.manifest.json are byte-identical to the pristine pre-transition production compile."
+  },
+  "static_gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/cheerio",
+      "exit_code": 0,
+      "status": "controls-passed",
+      "source_content_digest": "sha256:3c3e27b4dc971fb1d2a9d909c85407adc8179dbd22bc4d307b96ef5f423610ca"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "repository_error_count": 0,
+      "cheerio_findings": 0
+    },
+    "syntax": {
+      "commands": ["node --check", "python -m py_compile", "bash -n", "python -m json.tool"],
+      "exit_code": 0
+    },
+    "focused_tests": {
+      "command": "uv run pytest -q --no-cov tests/test_node_controls.py tests/test_node_control_summary.py tests/test_node_foundation.py tests/test_node_production_gate.py tests/test_harbor_production_validation.py",
+      "exit_code": 0,
+      "passed": 56
+    },
+    "ruff": {
+      "command": "uv run ruff check scripts/summarize_node_controls.py tests/test_node_control_summary.py .nl2repo/authoring-work/node-author-wide-20260826/cheerio/prepare-controls.py",
+      "exit_code": 0
+    },
+    "deterministic_compile": {
+      "repeat_output": ".nl2repo/final-compile-repeat/cheerio",
+      "repeat_bundle_manifest_sha256": "sha256:5c1a1aeb731a926688b7259408a84996995edda57b33843c0e12157a64d9843f",
+      "byte_identical": true
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-post-evidence/cheerio -a oracle --jobs-dir .nl2repo/final-validation/cheerio/final-oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 51,
+    "collected": 51,
+    "passed": 51,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/final-validation/cheerio/final-oracle/2026-08-27__13-29-23/cheerio__5nFh9G4/verifier/grading.json",
+      "sha256": "sha256:c1e732a8324741db8c63706c08777663070350295f7ab8415fe5c797c92c1a60"
+    },
+    "network": {
+      "path": ".nl2repo/final-validation/cheerio/final-oracle/2026-08-27__13-29-23/cheerio__5nFh9G4/verifier/network.json",
+      "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/empty/2026-08-27__13-34-50/empty__oATbRYt/verifier/grading.json",
+      "grading_sha256": "sha256:d3d4a213e421ed6502f028dc0155b63630c44a9b224e481d5e040fbaf78bb7a5",
+      "network_sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 51,
+      "passed": 4,
+      "reward": 0.0784313725490196,
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/stub/2026-08-27__13-35-48/stub__DadUk6q/verifier/grading.json",
+      "grading_sha256": "sha256:4cc51dbd9ac9f5b90d8c8eb5602747943b9e87c141419227ebea10bcf0e22c90",
+      "network_sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 51,
+      "passed": 1,
+      "reward": 0.0196078431372549,
+      "verifier_owned_reward": true,
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/forgery/2026-08-27__13-36-48/forgery__jhsYp5A/verifier/grading.json",
+      "grading_sha256": "sha256:ea83e33facca926cf805fffed80e56ed6593c2a82fa45979d702b87c78d1e993",
+      "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"
+    },
+    "install_script": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/install-script/2026-08-27__13-38-30/install-script__hBrgXKJ/verifier/grading.json",
+      "grading_sha256": "sha256:d3d4a213e421ed6502f028dc0155b63630c44a9b224e481d5e040fbaf78bb7a5",
+      "network_sha256": "sha256:4ff764ce6b70c41454c11c506334df7cb964fbe39f0fbf13d841d783a4eb0639"
+    },
+    "loader_hook": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 51,
+      "passed": 1,
+      "reward": 0.0196078431372549,
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/loader-hook-retry/2026-08-27__13-44-57/loader-hook__m2GUixc/verifier/grading.json",
+      "grading_sha256": "sha256:ea83e33facca926cf805fffed80e56ed6593c2a82fa45979d702b87c78d1e993",
+      "network_sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043"
+    },
+    "hang": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/hang/2026-08-27__13-41-22/hang__xoLc4Un/verifier/grading.json",
+      "grading_sha256": "sha256:b9840f02a67ff5c28ecb50368c7b14c7aa167b5780b668034d488840fb41b9be",
+      "network_sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 51,
+      "passed": 0,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/final-validation/cheerio/final-controls/offline-retry/2026-08-27__13-46-05/offline__YykQafW/verifier/grading.json",
+      "grading_sha256": "sha256:9a758c6e84fd0b39e62e39a5e3d402816489088de18f2ec84890f03b73283cb3",
+      "network_sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+    }
+  },
+  "transient_infrastructure": {
+    "observed": true,
+    "description": "The first fresh Oracle attempt and the first final loader-hook/offline attempts aborted inside the trusted npm executable while creating a libuv worker thread; immediate identical retries passed 51/51 or reached the intended control behavior. These attempts are retained as infrastructure evidence and are not counted as model failures.",
+    "first_attempt_grading": {
+      "path": ".nl2repo/final-validation/cheerio/oracle/2026-08-27__13-02-09/cheerio__7LF4zYP/verifier/grading.json",
+      "sha256": "sha256:d3d4a213e421ed6502f028dc0155b63630c44a9b224e481d5e040fbaf78bb7a5"
+    },
+    "first_attempt_stdout": {
+      "path": ".nl2repo/final-validation/cheerio/oracle/2026-08-27__13-02-09/cheerio__7LF4zYP/verifier/test-stdout.txt",
+      "sha256": "sha256:e15fe7f07d54eebf411b4afedc0e897a0698d5abd2f2c9afcaf0e70b6d56484d"
+    },
+    "additional_attempts": [
+      {
+        "control": "loader-hook",
+        "grading_path": ".nl2repo/final-validation/cheerio/final-controls/loader-hook/2026-08-27__13-39-25/loader-hook__5aTGmsd/verifier/grading.json",
+        "grading_sha256": "sha256:d3d4a213e421ed6502f028dc0155b63630c44a9b224e481d5e040fbaf78bb7a5",
+        "stdout_path": ".nl2repo/final-validation/cheerio/final-controls/loader-hook/2026-08-27__13-39-25/loader-hook__5aTGmsd/verifier/test-stdout.txt",
+        "stdout_sha256": "sha256:34512709d3fd87b0391d3951ebd5f03bd8b7117b0d03bdea94c06e9a95c0a943",
+        "retry_reached_intended_behavior": true
+      },
+      {
+        "control": "offline",
+        "grading_path": ".nl2repo/final-validation/cheerio/final-controls/offline/2026-08-27__13-40-30/offline__oSikvnR/verifier/grading.json",
+        "grading_sha256": "sha256:d3d4a213e421ed6502f028dc0155b63630c44a9b224e481d5e040fbaf78bb7a5",
+        "stdout_path": ".nl2repo/final-validation/cheerio/final-controls/offline/2026-08-27__13-40-30/offline__oSikvnR/verifier/test-stdout.txt",
+        "stdout_sha256": "sha256:19c102697949d59728edc033bb006f361feb3ef37a05cd23508df4407ea9711b",
+        "retry_reached_intended_behavior": true
+      }
+    ],
+    "current_grader_label": "candidate-installation-failed/model",
+    "correct_failure_class": "infrastructure"
+  },
+  "notes": "The contract is ready for an independent Agent Run. Blind review, traceability approval, pilot, generated catalog/tasks integration, and publication are intentionally outside this lane."
 }

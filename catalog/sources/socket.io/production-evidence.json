@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "task_id": "socket.io",
+  "bundle": {
+    "output": ".nl2repo/final-compile/socket.io/socket.io",
+    "manifest_sha256": "sha256:035b96137eedf491feb7d2b0a104284b58917e6220435cb046927aad79a38f57",
+    "canonical_manifest_digest": "sha256:bb5fc3708685b1caef20acfe0f9bacc9703c9f6a4ead9544ac001b8741e44b2b",
+    "file_count": 214,
+    "recompile_manifest_sha256": "sha256:035b96137eedf491feb7d2b0a104284b58917e6220435cb046927aad79a38f57",
+    "recompile_byte_identical": true
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/socket.io",
+      "exit_code": 0,
+      "result": "controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 139,
+      "socket_io_findings": []
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/socket.io --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/final-compile/socket.io",
+      "exit_code": 0
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run --path .nl2repo/final-compile/socket.io/socket.io --agent oracle --jobs-dir .nl2repo/runs/socket.io-oracle-final --job-name socket-io-oracle-final --allow-agent-host github.com --no-delete",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 12,
+    "failed": 0,
+    "errors": 0,
+    "collected": 12,
+    "network": false,
+    "grading": ".nl2repo/runs/socket.io-oracle-final/socket-io-oracle-final/socket.io__iKyv9Rn/verifier/grading.json",
+    "report": ".nl2repo/runs/socket.io-oracle-final/socket-io-oracle-final/socket.io__iKyv9Rn/verifier/report.json",
+    "network_receipt": ".nl2repo/runs/socket.io-oracle-final/socket-io-oracle-final/socket.io__iKyv9Rn/verifier/network.json"
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "network": false,
+      "grading": ".nl2repo/runs/socket.io-control-empty/socket-io-control-empty/socket.io-empty__9tfZjdc/verifier/grading.json"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 1,
+      "failed": 11,
+      "collected": 12,
+      "network": false,
+      "grading": ".nl2repo/runs/socket.io-control-stub/socket-io-control-stub/socket.io-stub__zQ6sV66/verifier/grading.json"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 1,
+      "failed": 11,
+      "collected": 12,
+      "network": false,
+      "grading": ".nl2repo/runs/socket.io-control-forgery/socket-io-control-forgery/socket.io-forgery__MYwKSYF/verifier/grading.json",
+      "forged_report_ignored": true
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 1,
+      "failed": 11,
+      "collected": 12,
+      "network": false,
+      "grading": ".nl2repo/runs/socket.io-control-offline/socket-io-control-offline/socket.io-offline__78rVv9M/verifier/grading.json"
+    },
+    "call-hang": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "failed": 0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded_timeout": true,
+      "network": false,
+      "grading": ".nl2repo/runs/socket.io-control-call-hang/socket-io-control-call-hang/socket.io-call-hang__mNQJWZ2/verifier/grading.json"
+    },
+    "install-script": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "network": false,
+      "lifecycle_marker_executed": false,
+      "grading": ".nl2repo/runs/socket.io-control-install-script/socket-io-control-install-script/socket.io-install-script__nGmmfhH/verifier/grading.json"
+    },
+    "loader-hook": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "failed": 12,
+      "collected": 12,
+      "network": false,
+      "loader_injection_not_effective": true,
+      "grading": ".nl2repo/runs/socket.io-control-loader-hook/socket-io-control-loader-hook/socket.io-loader-hook__ZMQYRHn/verifier/grading.json"
+    }
+  },
+  "residual_risks": [
+    "The upstream uWebSockets.js test module remains excluded because its native binary requires glibc 2.38 while the pinned image provides glibc 2.36.",
+    "The three baseline runs cover the 12 platform-neutral upstream modules (194 leaves), while the scored verifier is a 12-scenario deterministic adaptation.",
+    "Full human blind review, traceability review, and model Agent Run are outside this lane."
+  ]
+}

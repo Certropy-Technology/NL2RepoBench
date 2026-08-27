@@ -1,11 +1,69 @@
 {
   "schema_version": "1.0",
   "task_id": "pymongo",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "verifier",
-    "next_step": "Restore the private hash-locked dependency artifact, recompile, and run official Harbor 0.21.0 Oracle, controls, and network receipts before recreating the runtime.",
-    "source_freeze": {"status":"known","upstream_url":"https://github.com/mongodb/mongo-python-driver","revision":"ebc4bffcc842464e48a3edbd04802d1a42bc818a","source_digest":"sha256:d2882d62405f4f6a5746bb5b91756246b5279715850d1fd9cef98c268038af6d","license_spdx":"Apache-2.0"},
-    "commands": [{"command":"uv run nl2repo task validate-source catalog/sources/pymongo","tool_version":"repository toolchain","exit_code":0,"log":{"path":"catalog/sources/pymongo/evidence/remediation-validation.txt","sha256":"sha256:25756e8d941b42dde39036418c4d93cf32875d05bc247c415ab21b07bf2f1308"}}]
-  }
+  "status": "awaiting-agent-run",
+  "agent_run_started": false,
+  "source": {
+    "upstream_url": "https://github.com/mongodb/mongo-python-driver",
+    "revision": "ebc4bffcc842464e48a3edbd04802d1a42bc818a",
+    "git_archive_digest": "sha256:933f254602e0ec43f463d7a9648f46623c86ba4fd81d9c8703bbe444d13aa068",
+    "inventory_digest": "sha256:d2882d62405f4f6a5746bb5b91756246b5279715850d1fd9cef98c268038af6d",
+    "license_spdx": "Apache-2.0",
+    "license_digest": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "artifacts": {
+    "dependency_lock": "sha256:d5bada113ff462970d1fb42e3d6ad3fa6628fcddeed7afae554871a9c271aa45",
+    "oracle_bundle": "sha256:48d2487254b66694094bb15ad511f7cd891881fd9ea7463d2fd372accc2e2257",
+    "verifier_bundle": "sha256:b8ddcdc6fd2749808e0cb26bbb4ec523844c2b9d938ed60ccf1a739555c269cc",
+    "case_document": "sha256:06d0893e97770822bb737270133414ac9016b6bab7780fe814e9e527202ccf1b"
+  },
+  "compile": {
+    "output": ".nl2repo/final-compile-rerun/pymongo/pymongo",
+    "file_count": 62,
+    "bundle_manifest_digest": "sha256:ef8a210409711da1b7017d43acd0da97845b1fecf492e1a2dd78503bc5b2fa9f",
+    "canonical_manifest_digest": "sha256:cfcfb0469851aa52d66d11d9af4c9ee8cd115cda61c6c9c9d1b043a2fb5b2362",
+    "toolchain_lock_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "expected_total": 51,
+    "case_timeout_sec": 2.0,
+    "candidate_install_timeout_sec": 60.0,
+    "separate_environment": true
+  },
+  "gates": {
+    "validate_source": {"exit_code": 0, "status": "controls-passed"},
+    "network_lint": {"exit_code": 0, "error_count": 0, "task_findings": 0},
+    "production_compile": {"exit_code": 0},
+    "python_syntax": {"exit_code": 0},
+    "shell_syntax": {"exit_code": 0},
+    "ruff": {"exit_code": 0}
+  },
+  "harbor": {
+    "version": "0.21.0",
+    "oracle": {
+      "valid": true,
+      "passed": 51,
+      "failed": 0,
+      "collected": 51,
+      "reward": 1.0,
+      "grading_digest": "sha256:df223d3ee1325409c17518c2f30685cb86e0f82a2a77c9a055f820594f7a360a"
+    },
+    "controls": {
+      "empty": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+      "stub": {"valid": true, "passed": 1, "collected": 51, "reward": 0.0196078431372549},
+      "forgery": {"valid": true, "passed": 1, "collected": 51, "reward": 0.0196078431372549},
+      "install_hang": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+      "call_hang": {"valid": true, "passed": 0, "collected": 51, "reward": 0.0}
+    },
+    "offline": {
+      "all_receipts_public_network_available": false,
+      "probes": {"1.1.1.1:443": false, "pypi.org:443": false}
+    }
+  },
+  "residual_risks": [
+    "The task intentionally measures a documented 51-leaf server-independent subset rather than live MongoDB client behavior.",
+    "Blind/spec review and model pilot remain integrator/downstream gates."
+  ],
+  "blockers": []
 }

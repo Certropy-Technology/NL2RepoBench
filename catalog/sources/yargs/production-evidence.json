@@ -1,0 +1,245 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/yargs",
+      "exit_code": 0,
+      "result": "controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; 0 yargs findings; 139 unrelated warnings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/yargs --output .nl2repo/authoring-work/yargs/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "post-provenance deterministic production recompile",
+      "exit_code": 0,
+      "result": "bundle manifest SHA-256 unchanged: e4e1da89addde68e558c3676d2664cbddf4808439d61fb6e95db8e7abb26b605"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/yargs/final-compile/yargs -a oracle --allow-agent-host codeload.github.com --jobs-dir .nl2repo/authoring-work/yargs/final-runs/oracle",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/yargs/final-compile/yargs -a nop --jobs-dir .nl2repo/authoring-work/yargs/final-runs/empty",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/prepare_node_controls.py .nl2repo/authoring-work/yargs/final-compile/yargs --output .nl2repo/authoring-work/yargs/final-controls --kind stub --kind forgery --kind install-script --kind loader-hook --kind hang --kind offline",
+      "exit_code": 0
+    },
+    {
+      "command": "Harbor trusted Oracle runs for final-controls/{stub,forgery,install-script,loader-hook,hang,offline}",
+      "exit_code": 0,
+      "result": "all six completed; no model Agent Run"
+    },
+    {
+      "command": "python3 scripts/summarize_node_controls.py .nl2repo/authoring-work/yargs/final-runs --output .nl2repo/authoring-work/yargs/final-evidence/control-summary.json",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/validate_node_production.py --task catalog/sources/yargs --bundle .nl2repo/authoring-work/yargs/final-compile/yargs --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/authoring-work/yargs/final-runs/oracle --controls .nl2repo/authoring-work/yargs/final-evidence/control-summary.json --output .nl2repo/authoring-work/yargs/final-evidence/production-gate.json",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-yargs-agent:final .nl2repo/authoring-work/yargs/final-compile/yargs/environment",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-yargs-verifier:final .nl2repo/authoring-work/yargs/final-compile/yargs/tests",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q tests/test_node_controls.py tests/test_node_control_summary.py tests/test_node_production_gate.py tests/test_node_foundation.py --no-cov",
+      "exit_code": 0,
+      "result": "47 passed"
+    },
+    {
+      "command": "uv run ruff check scripts/summarize_node_controls.py tests/test_node_control_summary.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m py_compile scripts/summarize_node_controls.py tests/test_node_control_summary.py",
+      "exit_code": 0
+    },
+    {
+      "command": "bash -n task solution/test/control scripts and node --check Oracle/private-test modules",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run ... --allow-agent-hosts codeload.github.com",
+      "exit_code": 2,
+      "result": "CLI rejected obsolete plural option; corrected to --allow-agent-host and reran successfully"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:c515c1c7c166d75fae3370f6c2538cbf7831e1e8d338af5be7bf09dda57978df",
+    "mode": "production",
+    "path": "catalog/tasks/yargs"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 42,
+      "exit_code": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "bounded": true,
+      "collected": 42,
+      "exit_code": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-script": {
+      "collected": 0,
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "loader-hook": {
+      "collected": 42,
+      "exit_code": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "collected": 42,
+      "exit_code": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 42,
+      "exit_code": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:de7bee323ff2986972f9981474e4f3e2eb99b28b8fe082eed3ed0097491ec776",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 1187840,
+      "uri": "artifact://private/sha256:de7bee323ff2986972f9981474e4f3e2eb99b28b8fe082eed3ed0097491ec776",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [
+      "ansi-regex",
+      "ansi-styles",
+      "cliui",
+      "emoji-regex",
+      "escalade",
+      "get-caller-file",
+      "get-east-asian-width",
+      "string-width",
+      "strip-ansi",
+      "wrap-ansi",
+      "y18n",
+      "yargs-parser"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "Candidate and verifier phases are network-isolated. The exact npm runtime closure is supplied through a private cache artifact; only the trusted Oracle receives a run-scoped codeload.github.com source-host authorization.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 42,
+    "command_exit_code": 0,
+    "grading": ".nl2repo/authoring-work/yargs/final-runs/oracle/2026-08-27__20-40-35/yargs__A8TmgcJ/verifier/grading.json",
+    "harbor_exceptions": 0,
+    "passed": 42,
+    "public_network_available": false,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:0569279fcd0e247fb4a56082847fb7bf1ed3e7d0ec9101215093e6a0654de53a",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 430080,
+      "uri": "artifact://private/sha256:0569279fcd0e247fb4a56082847fb7bf1ed3e7d0ec9101215093e6a0654de53a",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/node-author-wide-20260826-remediation/yargs/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Human blind review and independent spec-traceability approval remain integrator/reviewer work; the authored traceability is present but was not self-approved as a human gate.",
+    "No model Agent Run was started, as required by the lane boundary.",
+    "The configured ty LSP executable is missing. Python syntax, Ruff, and focused tests passed, so this is a tooling diagnostic gap rather than a task blocker.",
+    "The local final image IDs prove the exact build on this host; publication still requires the integrator to retain or publish immutable production image references."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "2a4378bdc2eac9cf7d0cdfe0a52b1b25f779806a",
+    "source_digest": "sha256:3f687bc9c8904b92fecad8d73b002e879fa1d7b10543666b4daddfcdfaf4c565",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/yargs/yargs"
+  },
+  "status": "controls-passed",
+  "task_id": "yargs",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

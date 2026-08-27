@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pyrsistent"
+version = "1.0.0"
+description = "Build pyrsistent 0.21.0 from an empty workspace with immutable vectors, maps, sets, bags, lists, deques, records, checked collections, conversions, transformations, and PEP 561 packaging."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "immutable-collections",
+    "persistent-data-structures",
+    "pytest",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "immutable-collections"
+tags = [
+    "python",
+    "persistent-data-structures",
+    "immutable-collections",
+    "records",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 72
+canonical_manifest_digest = "sha256:bacaa9b0ad5c470df9fddbe30c787eb4dd543840c68635a448d086955660ae90"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 300.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

@@ -1,0 +1,35 @@
+{
+  "api_inventory": {
+    "method": "golang.org/x/tools/go/packages v0.36.0 plus go/types",
+    "package": "github.com/google/uuid",
+    "public_symbols": 52,
+    "sha256": "sha256:f9e6cd35f2f0c653a9bd139dbc1fce3b6df022af5cf1eceea9e9c710d96529bb",
+    "stored_at": ".nl2repo/work/go-google-uuid/api-inventory.json"
+  },
+  "contract_leaf": {
+    "frozen_total": 1,
+    "id": "contract::public-api",
+    "private_assertion_classes": [
+      "canonical input",
+      "compact input",
+      "case-insensitive URN input",
+      "brace-delimited input",
+      "zero UUID formatting",
+      "invalid length",
+      "invalid hexadecimal digit",
+      "misplaced hyphen",
+      "invalid URN prefix"
+    ],
+    "public_contract": "instruction.md#api-usage-guide"
+  },
+  "schema_version": "1.0",
+  "source_baseline": {
+    "collected_leaf_tests_each_run": 202,
+    "failed_leaf_tests_each_run": 0,
+    "goarch": "amd64",
+    "goos": "linux",
+    "runs": 3,
+    "source_revision": "0f11ee6918f41a04c201eceeadf612a377bc7fbc"
+  },
+  "task_id": "go-google-uuid"
+}

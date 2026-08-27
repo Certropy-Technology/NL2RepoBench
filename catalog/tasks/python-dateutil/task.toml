@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/python-dateutil"
+version = "1.0.0"
+description = "Build python-dateutil from an empty workspace and reproduce deterministic parsing, calendar arithmetic, recurrence, Easter, and time-zone behavior through a separate child-side JSON adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "datetime",
+    "parsing",
+    "recurrence",
+    "timezones",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "date-time-library"
+tags = [
+    "python",
+    "datetime",
+    "parsing",
+    "recurrence",
+    "timezones",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 23
+canonical_manifest_digest = "sha256:ae7ae927166128426be500efbbc40d11847baf720db568886b195248ff7d0db1"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 660.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

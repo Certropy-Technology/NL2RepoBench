@@ -1,9 +1,38 @@
-date-fns production evidence audit (2026-08-25)
+date-fns remediation record (2026-08-27)
 
-Source provenance records exact revision a0a39220522ed1228445792c768ed887709aea5f and archive digest sha256:bfae8a8d4c91f0d01026245898ff9b3a49ad4a1ce10df4c711a97cae302b4bf9.
+The prior blocked record was stale: it referenced an obsolete source digest and
+did not account for the current Node/npm compiler contract. The frozen source is
+revision a0a39220522ed1228445792c768ed887709aea5f with raw git-archive digest
+sha256:636db05bafd090414a7d3f6d72aa8f50a4e9afdd0624f86c92f46a3084be170d.
+`git rev-parse`, `git archive`, and the saved raw archive agree on that digest.
 
-The checked-in runtime claims Oracle 21/21 and controls-passed, but no Harbor 0.21.0 grading.json, network.json, result.json, or control receipts are present in the checkout or recognized .nl2repo evidence roots. The checked-in bundle contains tests/dependencies/package-lock.json and bundle.manifest.json, which is not a permitted Node v2 private cache layout for the current production contract.
+The full upstream pnpm monorepo remains intentionally out of scope: its
+development closure requires unavailable `@typescript/native-preview`, and its
+workspace metadata prevents a direct core `npm ci`. The published core package
+has zero runtime dependencies. Its valid production closure is therefore a
+lockfile-v3 package lock with an empty, separately hashed npm cache bundle:
+sha256:bc8d726cdecb4dce06810a51b20e015f84a217cc5505f2fb30a1c7b2e8ce3b0a.
+The verifier installs candidates with `npm ci --offline --ignore-scripts`, then
+packs and installs the generated tarball in a candidate-owned site.
 
-Provenance dependency probes: pnpm install --offline --frozen-lockfile exited 1 because @typescript/native-preview@7.0.0-dev.20260421.2 was absent; direct core npm ci --offline exited 1 because workspace:* development dependencies are present.
+Fresh gate results use `toolchain.node.lock.toml`, Node 24.19.0, npm 11.17.0,
+Harbor 0.21.0/schema 1.4, and the compiled bundle under
+`.nl2repo/authoring-gate/date-fns-20260827/date-fns`:
 
-Decision: blocked. Remove the invalid runtime; reopen only after materializing a complete approved npm v3 cache/lock closure, separate verifier network evidence, official Harbor 0.21.0 Oracle grading and empty/stub/forgery/offline controls.
+- source validation: exit 0;
+- network lint: exit 0 with no date-fns finding;
+- production compilation: exit 0 and byte-identical to the saved bundle;
+- separate-verifier Oracle workspace rebuilt from frozen `pkgs/core`: 39/39,
+  reward 1.0, valid true, no public network;
+- empty: 0/39; stub: 5/39; forged candidate grading files: 0/39;
+- offline Oracle verifier: 39/39 and both public-network probes false;
+- timeout candidate: 1/39, with 38 failed bounded calls and verifier exit 0.
+
+Receipts are task-local at
+`.nl2repo/authoring-work/date-fns/controls-20260827/` and the official Harbor
+Oracle receipt remains at
+`.nl2repo/authoring-work/date-fns/runs/oracle-final/`.
+
+Decision: awaiting-agent-run. The remaining gates are independent blind and
+traceability review plus a future model Agent Run; neither is performed by this
+authoring lane.

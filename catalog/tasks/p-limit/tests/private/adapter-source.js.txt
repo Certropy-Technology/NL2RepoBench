@@ -1,0 +1,290 @@
+import {readFileSync} from 'node:fs';
+import {AsyncLocalStorage} from 'node:async_hooks';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_TASKS = 16;
+const MAX_CONCURRENCY = 8;
+const OPERATIONS = new Set([
+	'batch',
+	'clear',
+	'context',
+	'error',
+	'infinity',
+	'inventory',
+	'limit-function',
+	'map',
+	'runs-async',
+	'set-concurrency',
+]);
+
+function fail(message) {
+	process.stdout.write(`${JSON.stringify({ok: false, message: String(message).slice(0, 2048)})}\n`);
+	process.exit(1);
+}
+
+function safeRelative(value, label) {
+	if (typeof value !== 'string' || !value.startsWith('./') || value.includes('..')) {
+		throw new Error(`${label} is not a safe package-relative path`);
+	}
+
+	return value;
+}
+
+async function loadPackage() {
+	const root = join(process.cwd(), 'node_modules', 'p-limit');
+	const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+	const rootExport = packageJson.exports?.['.'] ?? packageJson.exports;
+	const entry = typeof rootExport === 'string'
+		? rootExport
+		: rootExport?.import ?? rootExport?.default ?? packageJson.module ?? packageJson.main;
+	const types = typeof rootExport === 'object' && rootExport !== null
+		? rootExport.types ?? packageJson.types
+		: packageJson.types;
+	const api = await import(pathToFileURL(join(root, safeRelative(entry, 'runtime entry'))).href);
+	return {api, packageJson, root, types};
+}
+
+const tick = () => new Promise(resolve => setImmediate(resolve));
+
+function concurrencyValue(value) {
+	if (value === 'infinity') return Number.POSITIVE_INFINITY;
+	if (!Number.isSafeInteger(value) || value < 1 || value > MAX_CONCURRENCY) {
+		throw new Error('concurrency is outside the adapter bound');
+	}
+
+	return value;
+}
+
+function serializeReason(reason) {
+	return {
+		type: reason?.constructor?.name ?? 'Error',
+		name: reason?.name ?? 'Error',
+		message: String(reason?.message ?? reason).slice(0, 1024),
+	};
+}
+
+async function settleGated(limit, tasks, {afterInitial, reverse = false} = {}) {
+	if (!Array.isArray(tasks) || tasks.length === 0 || tasks.length > MAX_TASKS) {
+		throw new Error('tasks are outside the adapter bound');
+	}
+
+	let running = 0;
+	let maxActive = 0;
+	let settledCount = 0;
+	const starts = [];
+	const completions = [];
+	const releases = new Map();
+	const released = new Set();
+	const promises = tasks.map((task, id) => limit(async (...arguments_) => {
+		running++;
+		maxActive = Math.max(maxActive, running);
+		starts.push(id);
+		if (task.kind === 'sync-value') {
+			running--;
+			completions.push(id);
+			return task.value;
+		}
+
+		if (task.kind === 'sync-throw') {
+			running--;
+			completions.push(id);
+			throw new Error(task.message ?? 'sync failure');
+		}
+
+		await new Promise(resolve => releases.set(id, resolve));
+		running--;
+		completions.push(id);
+		if (task.kind === 'reject') throw new Error(task.message ?? 'async failure');
+		return task.echoArguments ? arguments_ : task.value;
+	}, ...(Array.isArray(task.args) ? task.args : [])));
+	const observed = promises.map(promise => promise.then(
+		value => {
+			settledCount++;
+			return {status: 'fulfilled', value};
+		},
+		reason => {
+			settledCount++;
+			return {status: 'rejected', reason: serializeReason(reason)};
+		},
+	));
+
+	await tick();
+	const initial = {activeCount: limit.activeCount, pendingCount: limit.pendingCount};
+	if (afterInitial) await afterInitial(initial);
+	const waves = [];
+	while (settledCount < tasks.length) {
+		await tick();
+		let wave = [...releases.keys()].filter(id => !released.has(id));
+		if (reverse) wave = wave.reverse();
+		if (wave.length === 0) {
+			await tick();
+			continue;
+		}
+
+		waves.push(wave);
+		for (const id of wave) {
+			released.add(id);
+			releases.get(id)();
+		}
+ 		await tick();
+	}
+
+	const results = await Promise.all(observed);
+	return {
+		initial,
+		starts,
+		completions,
+		waves,
+		maxActive,
+		results,
+		final: {activeCount: limit.activeCount, pendingCount: limit.pendingCount},
+	};
+}
+
+async function inventory(api, packageJson, root, types) {
+	const limit = api.default(2);
+	let typesPresent = false;
+	try {
+		readFileSync(join(root, safeRelative(types, 'types entry')));
+		typesPresent = true;
+	} catch {}
+	const lock = JSON.parse(readFileSync(join(process.cwd(), 'node_modules', 'p-limit', 'package.json'), 'utf8'));
+	return {
+		name: packageJson.name,
+		version: packageJson.version,
+		type: packageJson.type,
+		typesPresent,
+		defaultCallable: typeof api.default === 'function',
+		limitFunctionCallable: typeof api.limitFunction === 'function',
+		runtimeDependencies: Object.keys(packageJson.dependencies ?? {}).sort(),
+		scriptNames: Object.keys(packageJson.scripts ?? {}).sort(),
+		properties: {
+			activeCount: typeof limit.activeCount,
+			pendingCount: typeof limit.pendingCount,
+			clearQueue: typeof limit.clearQueue,
+			concurrency: typeof limit.concurrency,
+			map: typeof limit.map,
+		},
+		installedName: lock.name,
+	};
+}
+
+async function clearScenario(api, request) {
+	const limit = api.default({concurrency: 1, rejectOnClear: request.rejectOnClear});
+	let releaseActive;
+	let activeFinished = false;
+	const active = limit(() => new Promise(resolve => {
+		releaseActive = () => {
+			activeFinished = true;
+			resolve('active');
+		};
+	}));
+	const pending = [0, 1, 2].map(id => limit(() => id));
+	const observed = pending.map(promise => promise.then(
+		value => ({status: 'fulfilled', value}),
+		reason => ({status: 'rejected', reason: serializeReason(reason)}),
+	));
+	await tick();
+	const before = {activeCount: limit.activeCount, pendingCount: limit.pendingCount};
+	limit.clearQueue();
+	const afterClear = {activeCount: limit.activeCount, pendingCount: limit.pendingCount};
+	releaseActive();
+	const activeValue = await active;
+	const pendingResults = request.rejectOnClear ? await Promise.all(observed) : [];
+	return {before, afterClear, activeFinished, activeValue, pendingResults};
+}
+
+async function mapScenario(api, request) {
+	const limit = api.default(concurrencyValue(request.concurrency));
+	let running = 0;
+	let maxActive = 0;
+	const input = request.iterable === 'set'
+		? new Set(request.values)
+		: request.iterable === 'iterator'
+			? request.values.values()
+			: request.values;
+	const map = request.detached ? limit.map : limit.map.bind(limit);
+	const result = await map(input, async (value, index) => {
+		running++;
+		maxActive = Math.max(maxActive, running);
+		await tick();
+		running--;
+		return request.formula === 'double' ? value * 2 : value + index;
+	});
+	return {result, maxActive, final: {activeCount: limit.activeCount, pendingCount: limit.pendingCount}};
+}
+
+async function main() {
+	const input = readFileSync(0);
+	if (input.byteLength > MAX_REQUEST_BYTES) throw new Error('request is too large');
+	const request = JSON.parse(input.toString('utf8'));
+	if (!request || typeof request !== 'object' || Array.isArray(request) || !OPERATIONS.has(request.operation)) {
+		throw new Error('operation is not allowlisted');
+	}
+
+	const {api, packageJson, root, types} = await loadPackage();
+	let value;
+	if (request.operation === 'inventory') {
+		value = await inventory(api, packageJson, root, types);
+	} else if (request.operation === 'error') {
+		try {
+			api.default(request.value);
+			value = {threw: false};
+		} catch (error) {
+			value = {threw: true, ...serializeReason(error)};
+		}
+	} else if (request.operation === 'batch') {
+		value = await settleGated(api.default(request.options ?? concurrencyValue(request.concurrency)), request.tasks, {reverse: request.reverse});
+	} else if (request.operation === 'infinity') {
+		value = await settleGated(api.default(Number.POSITIVE_INFINITY), request.tasks);
+	} else if (request.operation === 'clear') {
+		value = await clearScenario(api, request);
+	} else if (request.operation === 'map') {
+		value = await mapScenario(api, request);
+	} else if (request.operation === 'runs-async') {
+		const limit = api.default(2);
+		let current = 1;
+		const first = limit(() => 1);
+		const second = limit(() => current);
+		current = 2;
+		value = await Promise.all([first, second]);
+	} else if (request.operation === 'context') {
+		const limit = api.default(2);
+		const storage = new AsyncLocalStorage();
+		value = await Promise.all(Array.from({length: 8}, (_, id) => storage.run({id}, () => limit(async expected => {
+			await Promise.resolve();
+			return [expected, storage.getStore()?.id];
+		}, id))));
+	} else if (request.operation === 'set-concurrency') {
+		const limit = api.default(concurrencyValue(request.start));
+		let before;
+		let after;
+		const run = await settleGated(limit, request.tasks, {
+			async afterInitial(initial) {
+				before = initial;
+				limit.concurrency = concurrencyValue(request.next);
+				await tick();
+				after = {activeCount: limit.activeCount, pendingCount: limit.pendingCount};
+			},
+		});
+		value = {before, after, run};
+	} else if (request.operation === 'limit-function') {
+		let running = 0;
+		let maxActive = 0;
+		const limited = api.limitFunction(async (value_, extra) => {
+			running++;
+			maxActive = Math.max(maxActive, running);
+			await tick();
+			running--;
+			return [value_, extra];
+		}, {concurrency: concurrencyValue(request.concurrency)});
+		const results = await Promise.all(request.values.map((item, index) => limited(item, index)));
+		value = {results, maxActive};
+	}
+
+	process.stdout.write(`${JSON.stringify({ok: true, value})}\n`);
+}
+
+main().catch(error => fail(error?.message ?? error));

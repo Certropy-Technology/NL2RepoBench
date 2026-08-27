@@ -1,0 +1,30 @@
+{
+  "task_id": "requests",
+  "upstream_test_module_count": 9,
+  "upstream_test_function_count": 347,
+  "upstream_test_modules": [
+    "test_adapters.py",
+    "test_help.py",
+    "test_hooks.py",
+    "test_lowlevel.py",
+    "test_packages.py",
+    "test_requests.py",
+    "test_structures.py",
+    "test_testserver.py",
+    "test_utils.py"
+  ],
+  "frozen_private_collection": 21,
+  "frozen_collection_source": "deterministic custom-json-v1 adapter scenarios",
+  "behavior_groups": [
+    "packaging and version",
+    "headers and request preparation",
+    "JSON and form bodies",
+    "response decoding and iteration",
+    "status and exceptions",
+    "cookies and sessions",
+    "basic authentication",
+    "hooks and local adapters",
+    "redirect chains and method rules",
+    "utility helpers and status aliases"
+  ]
+}

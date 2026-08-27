@@ -189,6 +189,7 @@ def test_pytest_plugin_writes_structured_collection_report(tmp_path) -> None:
     junit = tmp_path / "junit.xml"
     environment = os.environ.copy()
     environment["NL2REPO_COLLECTION_REPORT"] = str(collection)
+    environment["PYTEST_ADDOPTS"] = "--no-cov"
     completed = subprocess.run(
         [
             sys.executable,

@@ -1,0 +1,191 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/p-limit",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/validate-source-final2.log",
+      "stage": "source-validation"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/network-policy-final.log",
+      "outcome": "0 errors; 0 p-limit findings; 139 unrelated warnings",
+      "stage": "network-lint"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/p-limit --toolchain /data/NL2RepoBench-authoring-main-20260826/toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/runs/p-limit-production/compiled-final",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/production-compile-final2.log",
+      "stage": "production-compile"
+    },
+    {
+      "command": "node --check private adapter/client; bash -n solution/test/control scripts; verify every compiled manifest hash",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/final-integrity.json",
+      "outcome": "79/79 manifest entries verified",
+      "stage": "syntax-and-integrity"
+    },
+    {
+      "command": "Oracle archive extraction followed by npm ci --offline --ignore-scripts --no-audit --no-fund",
+      "exit_code": 0,
+      "logs": [
+        ".nl2repo/evidence/oracle-local-solve.log",
+        ".nl2repo/evidence/oracle-local-npm-ci.log"
+      ],
+      "outcome": "solve archive digest and offline npm install passed",
+      "stage": "offline-package-probe"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repobench/p-limit-verifier:p-limit-final2 compiled/tests; docker run --rm --network none ... /tests/test.sh",
+      "exit_codes": {
+        "build": 0,
+        "run": 0
+      },
+      "logs": [
+        ".nl2repo/evidence/docker-build-final2.log",
+        ".nl2repo/evidence/docker-final2-oracle-run.log"
+      ],
+      "stage": "final-verifier-docker"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:d818a3ad963a11d9b315f78a57db90e795941534285b12bdfac240ab93892704",
+    "mode": "production",
+    "path": "catalog/tasks/p-limit"
+  },
+  "controls": {
+    "empty": {
+      "command_exit_code": 0,
+      "reward": 0.0,
+      "test_pass_rate": 0.0
+    },
+    "evidence": ".nl2repo/evidence/control-results-final2.tsv",
+    "forgery": {
+      "command_exit_code": 0,
+      "failed": 23,
+      "passed": 1,
+      "reward": 0.041666666666666664,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "command_exit_code": 0,
+      "reward": 0.0,
+      "test_pass_rate": 0.0
+    },
+    "install-script": {
+      "command_exit_code": 0,
+      "reward": 0.0,
+      "test_pass_rate": 0.0
+    },
+    "loader-hook": {
+      "command_exit_code": 0,
+      "failed": 23,
+      "passed": 1,
+      "reward": 0.041666666666666664
+    },
+    "offline": {
+      "command_exit_code": 0,
+      "failed": 23,
+      "passed": 1,
+      "public_network_available": false,
+      "reward": 0.041666666666666664
+    },
+    "stub": {
+      "command_exit_code": 0,
+      "failed": 23,
+      "passed": 1,
+      "reward": 0.041666666666666664
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:1abf19c072002a7b4fb54887abb19c8986ef0351b4a2ad1764f6bbc343a87d95",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 51200,
+      "uri": "artifact://private/sha256:1abf19c072002a7b4fb54887abb19c8986ef0351b4a2ad1764f6bbc343a87d95",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [
+      "yocto-queue==1.2.1"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The sole runtime dependency is supplied by a verifier-owned npm v3 lock/cache closure. Agent and verifier phases require no egress, and the trusted Oracle uses a private source archive whose digest equals the frozen git archive.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 24,
+    "command_exit_code": 0,
+    "expected_total": 24,
+    "failed": 0,
+    "grading_path": ".nl2repo/evidence/docker-final2-oracle-logs/verifier/reward.json",
+    "network_path": ".nl2repo/evidence/docker-final2-oracle-logs/verifier/network.json",
+    "passed": 24,
+    "public_network_available": false,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:05992b8b72165a5f83f27b38a1da8c9b7405d48ac8a4df197c6f7811f2d3c4bb",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 81920,
+      "uri": "artifact://private/sha256:05992b8b72165a5f83f27b38a1da8c9b7405d48ac8a4df197c6f7811f2d3c4bb",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/node-discovery-20260826-r1/p-limit/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "Two independent human reviews and a downstream model pilot remain required before publication.",
+    "The focused Python foundation suite reported 37 passed and 11 failed (exit 1) because pre-existing harbor-runner/pyproject.toml and harbor-runner/uv.lock deletions in this detached worktree prevent tests that require the shared runner fixture; the task-local production compile and Docker verifier pass independently.",
+    "The final direct controls are bounded deterministic controls, not a model Agent Run; this lane intentionally did not start one."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "df476048d023ff868cd45b35ee47f5fb0ca2b25a",
+    "source_digest": "sha256:87c578912149794beb4bd95f69199067eccab4a2b8867c95993b03187256f797",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/sindresorhus/p-limit"
+  },
+  "status": "controls-passed",
+  "task_id": "p-limit",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

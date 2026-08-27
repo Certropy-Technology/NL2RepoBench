@@ -19,6 +19,7 @@ from nl2repobench.verification import (
 )
 from nl2repobench.verification.candidate_client import (
     call,
+    call_method,
     get,
     metadata_requires,
     run_console,
@@ -43,6 +44,16 @@ def add(left, right):
 
 def fail():
     raise ValueError("expected failure")
+
+class Value:
+    def __init__(self, value):
+        self.value = value
+
+    def add(self, amount):
+        return self.value + amount
+
+    def same(self, other):
+        return self.value == other.value
 
 def main():
     import sys
@@ -96,6 +107,32 @@ def test_candidate_call_get_exception_and_metadata(candidate_site: Path) -> None
     requirements = metadata_requires("demo-pkg")
     assert requirements.ok is True
     assert requirements.value is None
+
+
+def test_candidate_call_method_and_property(candidate_site: Path) -> None:
+    del candidate_site
+    method = call_method("demo", "Value", [3], "add", 4)
+    prop = call_method("demo", "Value", [3], "value", invoke=False)
+    nested = call_method(
+        "demo",
+        "Value",
+        [3],
+        "same",
+        {
+            "__nl2repo_construct__": {
+                "args": [3],
+                "attribute": "Value",
+                "kwargs": {},
+                "module": "demo",
+            }
+        },
+    )
+    assert method.ok is True
+    assert method.value == 7
+    assert prop.ok is True
+    assert prop.value == 3
+    assert nested.ok is True
+    assert nested.value is True
 
 
 def test_candidate_module_and_console(candidate_site: Path) -> None:
@@ -199,9 +236,71 @@ def test_candidate_runner_metadata_protocol(
     assert emitted == {"ok": True, "value": None}
 
 
+def test_candidate_runner_method_protocol(
+    candidate_site: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate_runner._candidate_site(str(candidate_site))  # noqa: SLF001
+    request = {
+        "args": [2],
+        "attribute": "Value",
+        "constructor_args": [3],
+        "constructor_kwargs": {},
+        "invoke": True,
+        "kwargs": {},
+        "member": "add",
+        "module": "demo",
+        "operation": "call_method",
+    }
+    monkeypatch.setattr(sys, "stdin", io.TextIOWrapper(io.BytesIO(json.dumps(request).encode())))
+    emitted: dict[str, object] = {}
+
+    def capture(payload: dict[str, object], exit_code: int = 0) -> None:
+        del exit_code
+        emitted.update(payload)
+        raise SystemExit
+
+    monkeypatch.setattr(candidate_runner, "_emit", capture)
+    with pytest.raises(SystemExit):
+        candidate_runner._call()  # noqa: SLF001
+    assert emitted == {"ok": True, "value": 5}
+
+
+def test_candidate_runner_script_protocol(monkeypatch: pytest.MonkeyPatch) -> None:
+    stream = io.TextIOWrapper(
+        io.BytesIO(json.dumps({"source": 'result = {"answer": 42}'}).encode())
+    )
+    monkeypatch.setattr(sys, "stdin", stream)
+    emitted: dict[str, object] = {}
+
+    def capture(payload: dict[str, object], exit_code: int = 0) -> None:
+        del exit_code
+        emitted.update(payload)
+        raise SystemExit
+
+    monkeypatch.setattr(candidate_runner, "_emit", capture)
+    with pytest.raises(SystemExit):
+        candidate_runner._script()  # noqa: SLF001
+    assert emitted == {"ok": True, "value": {"answer": 42}}
+
+
 def test_candidate_runner_rejects_wrong_site(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="candidate site is unavailable"):
         candidate_runner._candidate_site(str(tmp_path))  # noqa: SLF001
+
+
+def test_candidate_runner_json_default_materializes_iterators() -> None:
+    assert candidate_runner._json_default(iter([(1, 2), (2, 3)])) == [  # noqa: SLF001
+        (1, 2),
+        (2, 3),
+    ]
+
+
+def test_candidate_runner_json_default_uses_repr_for_objects() -> None:
+    class Result:
+        def __repr__(self) -> str:
+            return "Result(observed)"
+
+    assert candidate_runner._json_default(Result()) == "Result(observed)"  # noqa: SLF001
 
 
 def test_candidate_runner_cli_dispatches_metadata(
@@ -313,6 +412,16 @@ def test_candidate_tree_usage_is_bounded_summary(tmp_path: Path) -> None:
 
     assert entries == 3
     assert total_bytes == 6
+
+
+def test_candidate_build_environment_allows_only_safe_shell_names() -> None:
+    assert candidate_install._parse_build_environment(("BUILD_VERSION=0.0.0",)) == (  # noqa: SLF001
+        "BUILD_VERSION=0.0.0",
+    )
+    with pytest.raises(ValueError, match="cannot override PATH"):
+        candidate_install._parse_build_environment(("PATH=/unsafe",))  # noqa: SLF001
+    with pytest.raises(ValueError, match="invalid candidate build environment"):
+        candidate_install._parse_build_environment(("lowercase=value",))  # noqa: SLF001
 
 
 @pytest.mark.parametrize(

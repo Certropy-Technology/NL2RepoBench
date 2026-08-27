@@ -1,0 +1,178 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "git fetch --depth 1 origin dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541; git archive --format=tar dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+      "exit_code": 0,
+      "result": "Resolved revision and verified source archive digest."
+    },
+    {
+      "command": "docker build -t nl2rb-dataclasses-json-baseline:lane -f .nl2repo/authoring-work/Dockerfile.baseline .nl2repo/authoring-work && docker run --network none ... python -m pytest -q tests",
+      "exit_code": 0,
+      "result": "Frozen upstream baseline: 323 passed, 5 skipped on Python 3.12; dev-only hash-locked closure."
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/dataclasses-json",
+      "exit_code": 0,
+      "result": "status=controls-passed; source digest sha256:ffdfada24b0013c56bd5480f558758b35aeeba5927cd2cf0e4c5e7041f9ea5c5."
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; no dataclasses-json findings."
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/dataclasses-json --output .nl2repo/task-artifacts/dataclasses-json-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "result": "Production bundle compiled at .nl2repo/task-artifacts/dataclasses-json-final/dataclasses-json."
+    },
+    {
+      "command": "docker build candidate and separate verifier images from the compiled production bundle",
+      "exit_code": 0,
+      "result": "Both digest-pinned images built successfully; candidate requirements installed with --require-hashes during Docker build."
+    },
+    {
+      "command": "docker run --network none <verifier-image> /tests/test.sh with verified frozen source workspace",
+      "exit_code": 0,
+      "result": "Oracle-equivalent direct verifier: valid=true, collected=24, passed=24, reward=1.0."
+    },
+    {
+      "command": "uv run pytest --no-cov -q targeted candidate-install/compiler/custom-verifier tests; uv run ruff check ...; uv run mypy ...",
+      "exit_code": 0,
+      "result": "Targeted regression passed; Ruff and mypy passed."
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:239cbf1b5f988c97f6bbaa12b3441a3a3703036cc08fa7ce292f362fda6528ca",
+    "mode": "production",
+    "path": "catalog/tasks/dataclasses-json"
+  },
+  "controls": {
+    "call_timeout": {
+      "compiled": true,
+      "executed": false,
+      "reason": "The 300-second call budget was not consumed after the 90-second installation timeout control exercised the trusted timeout supervisor.",
+      "syntax_checked": true
+    },
+    "empty": {
+      "evidence": ".nl2repo/evidence/controls-direct/empty-logs/grading.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "evidence": ".nl2repo/evidence/controls-direct/forgery-logs/grading.json",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install_timeout": {
+      "candidate_install_outcome": "timeout",
+      "candidate_install_returncode": -9,
+      "evidence": ".nl2repo/evidence/controls-direct/install-hang-logs/candidate-install.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline_verifier": {
+      "evidence": ".nl2repo/evidence/oracle-final-direct/logs/network.json",
+      "passed": true
+    },
+    "stub": {
+      "evidence": ".nl2repo/evidence/controls-direct/stub-logs/grading.json",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 1374,
+      "uri": "artifact://private/sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd",
+      "visibility": "private"
+    },
+    "packages": [
+      "dataclasses-json",
+      "pytest"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12",
+    "python_version": "3.12.14",
+    "status": "known",
+    "system_packages": [
+      "git",
+      "ca-certificates"
+    ]
+  },
+  "oracle": {
+    "collected": 24,
+    "evidence": ".nl2repo/evidence/oracle-final-direct/logs/grading.json",
+    "expected_total": 24,
+    "network": "none",
+    "outcome": "passed",
+    "passed": 24,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78",
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78",
+      "visibility": "private"
+    },
+    "verifier": {
+      "bundle": {
+        "digest": "sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153",
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "size_bytes": 10240,
+        "uri": "artifact://private/sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153",
+        "visibility": "private"
+      },
+      "entrypoint": "run.py",
+      "environment": {
+        "POETRY_DYNAMIC_VERSIONING_BYPASS": "0.0.0"
+      },
+      "protocol": "custom-json-v1"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/python-author-wide-20260826-r2/dataclasses-json/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started, by lane boundary. The direct Docker verifier runs are not a Harbor trial record.",
+    "Blind/traceability review, agent pilot, and integrator publication remain pending.",
+    "A full repository pytest run had 366 passed and 7 failures caused by the missing detached-worktree harbor-runner/.venv/bin/python. Those model-runner and Go-adapter failures are outside this task and its changed paths.",
+    "The call-timeout control is compiled and syntax-checked but not executed; installation timeout was executed under the trusted supervisor."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+    "source_digest": "sha256:113c90da5957f13cc49f80d535cde965e66850f72559498a9ebfd934c4db449f",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/lidatong/dataclasses-json"
+  },
+  "status": "controls-passed",
+  "task_id": "dataclasses-json",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

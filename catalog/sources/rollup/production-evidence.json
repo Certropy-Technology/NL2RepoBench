@@ -1,1 +1,63 @@
-{"schema_version":"1.0","task_id":"rollup","terminal_kind":"blocked","blocked":{"failure_class":"environment","next_step":"Restore the exact private npm dependency artifact sha256:8c92e7fbbdcc8184d403279fc29d65d355ff0aa4669edbb684eb1390d65c2219, compile with toolchain.node.lock.toml without --allow-incomplete, and run Oracle plus empty, stub, forgery, and offline controls.","source_freeze":{"status":"known","upstream_url":"https://github.com/rollup/rollup","revision":"89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb","source_digest":"sha256:1be81f7d2cd36f7539701f6f93f107bf28eccb31a8ade43de5fd8c55137983d6","license_spdx":"MIT"},"commands":[{"command":"uv run nl2repo harbor compile catalog/sources/rollup --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private","tool_version":"Node 24.19.0 / npm 11.17.0 / repository Harbor compiler","exit_code":1,"log":{"path":"catalog/sources/rollup/blocked.md","sha256":"sha256:784a209e0e940231f430ad3c52821eaf71d1cff821cb3a6a723cb067372641a4"}}]}}
+{
+  "schema_version": "1.0",
+  "task_id": "rollup",
+  "terminal_kind": "valid",
+  "lifecycle_status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/rollup/rollup",
+    "revision": "89bda2cd8e9def2ea037e7dbffaf392ce9f1ddcb",
+    "source_digest": "sha256:1be81f7d2cd36f7539701f6f93f107bf28eccb31a8ade43de5fd8c55137983d6",
+    "license_spdx": "MIT",
+    "package_version": "4.62.5"
+  },
+  "toolchain": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor": "0.21.0",
+    "task_schema": "1.4",
+    "docker": "29.7.2",
+    "toolchain_digest": "sha256:cc10b6a04be8c3f6461a116276a3f2f7d4425b27750f01a652591363f8fcc122",
+    "harbor_lock_digest": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42"
+  },
+  "production_compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/rollup --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/final-compile-rollup-v2",
+    "exit_code": 0,
+    "output": ".nl2repo/final-compile-rollup-v2/rollup",
+    "bundle_manifest_digest": "sha256:6b96466d88c2b563a01c7dbbe67ef6a9aec50987addaefbb1ebe5968e0ebfc25",
+    "canonical_manifest_digest": "sha256:1ccdc60b2c0196243c58c58ad82b021a473d564999262a420095a49b9da4d323",
+    "declared_file_count": 71,
+    "inventory_valid": true
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-rollup-v2/rollup -a oracle --jobs-dir .nl2repo/final-runs-rollup-v2/oracle --job-name rollup-oracle-matched --n-concurrent 1 -q",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 11,
+    "collected": 11,
+    "expected_total": 11,
+    "public_network_available": false,
+    "grading": ".nl2repo/final-runs-rollup-v2/oracle/rollup-oracle-matched/rollup__FmNWMNv/verifier/grading.json",
+    "network": ".nl2repo/final-runs-rollup-v2/oracle/rollup-oracle-matched/rollup__FmNWMNv/verifier/network.json"
+  },
+  "controls": {
+    "empty": {"valid": true, "reward": 0.0, "passed": 0, "collected": 0, "failure_reason": "candidate-installation-failed", "public_network_available": false},
+    "stub": {"valid": true, "reward": 0.09090909090909091, "passed": 1, "collected": 11, "public_network_available": false},
+    "forgery": {"valid": true, "reward": 0.09090909090909091, "passed": 1, "collected": 11, "public_network_available": false},
+    "install-script": {"valid": true, "reward": 0.0, "passed": 0, "collected": 0, "failure_reason": "candidate-installation-failed", "marker_executed": false, "public_network_available": false},
+    "loader-hook": {"valid": true, "reward": 0.09090909090909091, "passed": 1, "collected": 11, "public_network_available": false},
+    "hang": {"valid": true, "reward": 0.0, "passed": 0, "collected": 0, "failure_reason": "candidate-call-failed", "public_network_available": false},
+    "offline": {"valid": true, "reward": 0.09090909090909091, "passed": 1, "collected": 11, "public_network_available": false}
+  },
+  "gate_commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/rollup", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/rollup/final-gates/validate-source-handoff.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "log": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/rollup/final-gates/lint-network-handoff.log"},
+    {"command": "uv run pytest -q tests/test_node_foundation.py tests/test_node_production_gate.py tests/test_harbor_production_validation.py --no-cov", "exit_code": 0, "passed": 54}
+  ],
+  "residual_risks": [
+    "The production verifier is an 11-leaf public-contract sample rather than the complete 5,444-leaf upstream suite.",
+    "No model Agent Run or human blind/spec review was performed in this authoring lane."
+  ],
+  "blockers": []
+}

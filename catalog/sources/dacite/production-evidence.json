@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dacite",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/konradhalas/dacite",
+    "revision": "9898ccbb783e7e6a35ae165e7deb9fa84edfe21c",
+    "archive_sha256": "sha256:bd30874ca55029421d5279be2d1b327dda2b86ab1865e3bdc3cfb91e48f7e834",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:e1741cee11fc82b815210f5368d301c940e7e3def89af718da81550150ba3277"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "toolchain_sha256": "sha256:ca5ea4c3af1d7941b42d90db80ee63d76bb5acba4876a96158bac6c284a40676",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_requirements_sha256": "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+      "size_bytes": 373
+    },
+    "verifier_bundle": {
+      "digest": "sha256:041d1d84b83b61449093de2b9222cbb945db6bb001cb8ffe8809eef7e33d89cc",
+      "size_bytes": 40960
+    },
+    "oracle_bundle": {
+      "digest": "sha256:53c0cc852f9becb74f54476c30d73e0b139e2998459da61daed59c732393cbe9",
+      "size_bytes": 174080
+    }
+  },
+  "baseline": {
+    "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD unset; python -m pytest -q --benchmark-disable --junitxml=<run>.xml tests",
+    "runs": [
+      {"exit_code": 0, "passed": 203, "junit": ".nl2repo/authoring-work/python-discovery-wave2-20260827-r1/dacite/baseline-1.xml", "sha256": "sha256:ba4f980076be01f2cea4b978379829790ac159b373505330057addc52b74c9dd"},
+      {"exit_code": 0, "passed": 203, "junit": ".nl2repo/authoring-work/python-discovery-wave2-20260827-r1/dacite/baseline-2.xml", "sha256": "sha256:f797efad4c474734b4089c2c913e35c52adb5934c3c85ec94cb503585030bdcb"},
+      {"exit_code": 0, "passed": 203, "junit": ".nl2repo/authoring-work/python-discovery-wave2-20260827-r1/dacite/baseline-3.xml", "sha256": "sha256:879f36f38fc3caf4a8bd2fc9ce43fdddd87e5db6436d3c9572ee23fccdf93419"}
+    ]
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/dacite --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled/dacite-production-v2",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/compiled/dacite-production-v2/dacite/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:48a269bba031869c114f6bf3d54713d9175ccb072e7ee4a16a66e79c410c61bb"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/dacite-production-v2/dacite -a oracle --jobs-dir .nl2repo/runs/dacite/final --job-name dacite-oracle-45 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 45,
+    "collected": 45,
+    "passed": 45,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/dacite/final/dacite-oracle-45/dacite__H3kFE8T/verifier/grading.json",
+    "grading_sha256": "sha256:3427988fadd9069dc5db8ecca8843b33a3cb55225200f9c39ac0e15b6c051e6a",
+    "network": ".nl2repo/runs/dacite/final/dacite-oracle-45/dacite__H3kFE8T/verifier/network.json",
+    "network_sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/dacite/final/dacite-empty-45/dacite__fYV4Ht7/verifier/grading.json",
+      "grading_sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 45,
+      "passed": 3,
+      "reward": 0.06666666666666667,
+      "grading": ".nl2repo/runs/dacite/final/dacite-stub-45/dacite-stub__MNbQurJ/verifier/grading.json",
+      "grading_sha256": "sha256:69b4340f397a71854136bf3356a34a3fe8224d8ee649a80a62c7b831d5414d48"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 45,
+      "passed": 2,
+      "reward": 0.044444444444444446,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward_absent": true,
+      "grading": ".nl2repo/runs/dacite/final/dacite-forgery-45/dacite-forgery__ccvt4nn/verifier/grading.json",
+      "grading_sha256": "sha256:25a38352b46ea5c61caead3867445d613d89f96e5eddb47394f5467a9e36da6b"
+    },
+    "install_hang": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "candidate_install_outcome": "timeout",
+      "grading": ".nl2repo/runs/dacite/final/dacite-install-hang-45/dacite-install-hang__mHZuzpJ/verifier/grading.json",
+      "grading_sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+    },
+    "call_hang": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 45,
+      "passed": 1,
+      "reward": 0.022222222222222223,
+      "grading": ".nl2repo/runs/dacite/final/dacite-call-hang-45/dacite-call-hang__5vstD6J/verifier/grading.json",
+      "grading_sha256": "sha256:a8b729e3ee7d874bb50e25ec06aa84a22a8d9e62724ec32adf14328d3ad07839"
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "source": "oracle.network"
+    }
+  },
+  "gates": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_error_count": 0,
+    "dacite_network_findings": 0,
+    "python_compile_exit_code": 0,
+    "shell_syntax_exit_code": 0
+  },
+  "residual_risks": [
+    "The production denominator is a bounded 45-scenario behavioral subset rather than all 203 upstream tests.",
+    "The task has not received independent blind/spec review or a model-agent pilot in this lane."
+  ]
+}

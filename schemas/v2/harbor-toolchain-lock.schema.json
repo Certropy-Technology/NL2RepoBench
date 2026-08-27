@@ -1,5 +1,62 @@
 {
   "$defs": {
+    "AgentRuntimeImageLock": {
+      "additionalProperties": false,
+      "description": "Prebuilt OpenHands runtime shared by every Agent environment.",
+      "properties": {
+        "fork_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Fork Commit",
+          "type": "string"
+        },
+        "image": {
+          "pattern": "^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9._-]+$",
+          "title": "Image",
+          "type": "string"
+        },
+        "image_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Image Id",
+          "type": "string"
+        },
+        "litellm_version": {
+          "title": "Litellm Version",
+          "type": "string"
+        },
+        "python_executable": {
+          "const": "/opt/openhands-sdk-venv/bin/python",
+          "default": "/opt/openhands-sdk-venv/bin/python",
+          "title": "Python Executable",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sdk_version": {
+          "title": "Sdk Version",
+          "type": "string"
+        },
+        "tools_version": {
+          "title": "Tools Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "image",
+        "image_id",
+        "fork_commit",
+        "sdk_version",
+        "tools_version",
+        "litellm_version"
+      ],
+      "title": "AgentRuntimeImageLock",
+      "type": "object",
+      "x-nl2repobench-model": "AgentRuntimeImageLock",
+      "x-nl2repobench-runtime-validation": true
+    },
     "HarborVersionLock": {
       "additionalProperties": false,
       "properties": {
@@ -74,6 +131,11 @@
         "verifier_base": {
           "title": "Verifier Base",
           "type": "string"
+        },
+        "verifier_python_base": {
+          "default": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+          "title": "Verifier Python Base",
+          "type": "string"
         }
       },
       "required": [
@@ -111,6 +173,19 @@
           "title": "Npm Version",
           "type": "string"
         },
+        "pnpm_version": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pnpm Version"
+        },
         "runtime_version": {
           "pattern": "^(?:22|24)\\.[0-9]+\\.[0-9]+$",
           "title": "Runtime Version",
@@ -136,6 +211,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "agent_runtime": {
+      "$ref": "#/$defs/AgentRuntimeImageLock"
+    },
     "harbor": {
       "$ref": "#/$defs/HarborVersionLock"
     },
@@ -187,11 +265,30 @@
       ],
       "title": "Status",
       "type": "string"
+    },
+    "verifier_requirements_lock": {
+      "default": "verifier/requirements.lock.txt",
+      "title": "Verifier Requirements Lock",
+      "type": "string"
+    },
+    "verifier_requirements_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Verifier Requirements Sha256"
     }
   },
   "required": [
     "harbor",
     "images",
+    "agent_runtime",
     "runtime"
   ],
   "title": "NodeHarborToolchainLockV2",

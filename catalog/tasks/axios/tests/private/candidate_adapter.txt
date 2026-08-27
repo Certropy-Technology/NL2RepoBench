@@ -1,0 +1,102 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_BYTES = 64 * 1024;
+const MAX_DEPTH = 16;
+
+function fail(id, errorType, message, code = 64) {
+  process.stdout.write(JSON.stringify({id, ok: false, error_type: errorType, message: String(message).slice(0, 512)}) + '\n');
+  process.exit(code);
+}
+
+function isJsonValue(value, depth = 0) {
+  if (depth > MAX_DEPTH) return false;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.length <= 64 && value.every((item) => isJsonValue(item, depth + 1));
+  if (typeof value === 'object') {
+    return Object.keys(value).length <= 64 && Object.entries(value).every(([key, item]) => key.length <= 128 && isJsonValue(item, depth + 1));
+  }
+  return false;
+}
+
+function plain(value) {
+  return JSON.parse(JSON.stringify(value, (_key, item) => item === undefined ? null : item));
+}
+
+async function load() {
+  const site = process.env.NODE_CANDIDATE_SITE;
+  if (!site) throw new Error('candidate site is not configured');
+  return import(pathToFileURL(join(site, 'node_modules', 'axios', 'index.js')).href);
+}
+
+async function main() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_BYTES) fail('', 'request-too-large', 'request is too large');
+  let request;
+  try { request = JSON.parse(data.toString('utf8')); } catch { fail('', 'malformed-json', 'request is malformed'); }
+  const {id, operation, payload} = request ?? {};
+  if (typeof id !== 'string' || typeof operation !== 'string' || !payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    fail(id ?? '', 'malformed-request', 'request shape is invalid');
+  }
+  if (!isJsonValue(payload)) fail(id, 'invalid-json-value', 'payload is not bounded JSON');
+  const api = await load();
+  let value;
+  if (operation === 'inventory') {
+    value = {exportNames: Object.keys(api).sort(), version: api.VERSION};
+  } else if (operation === 'headers') {
+    const headers = new api.AxiosHeaders(payload.input ?? {});
+    for (const action of payload.actions ?? []) {
+      if (action.op === 'set') headers.set(action.name, action.value, action.rewrite);
+      else if (action.op === 'delete') headers.delete(action.name);
+      else if (action.op === 'normalize') headers.normalize(Boolean(action.format));
+    }
+    const reads = {};
+    for (const action of payload.reads ?? []) {
+      if (action.op === 'get') reads[action.name] = headers.get(action.name);
+      else if (action.op === 'has') reads[action.name] = headers.has(action.name);
+    }
+    value = {reads, json: plain(headers.toJSON())};
+  } else if (operation === 'mergeConfig') {
+    value = plain(api.mergeConfig(payload.left ?? {}, payload.right ?? {}));
+  } else if (operation === 'getUri') {
+    value = api.default.getUri(payload.config ?? {});
+  } else if (operation === 'request') {
+    const config = {...(payload.config ?? {})};
+    config.adapter = async (resolved) => ({
+      data: {method: resolved.method, url: resolved.url, data: resolved.data ?? null, header: resolved.headers.get('X-Test') ?? null},
+      status: 207,
+      statusText: 'Multi-Status',
+      headers: {'X-Reply': 'ok'},
+      config: resolved,
+      request: null,
+    });
+    const response = await api.default.request(config);
+    value = {status: response.status, statusText: response.statusText, data: plain(response.data), reply: response.headers.get('X-Reply')};
+  } else if (operation === 'form') {
+    const calls = [];
+    const form = {append(key, item) { calls.push([key, item]); }, get [Symbol.toStringTag]() { return 'FormData'; }, *[Symbol.iterator]() {}};
+    api.toFormData(payload.input ?? {}, form, payload.options ?? {});
+    value = {calls: plain(calls)};
+  } else if (operation === 'error') {
+    const error = new api.AxiosError(payload.message ?? 'error', payload.code, payload.config, null, payload.status == null ? undefined : {status: payload.status});
+    value = {isAxiosError: api.isAxiosError(error), json: plain({message: error.message, name: error.name, code: error.code, status: error.status, config: error.config})};
+  } else if (operation === 'cancel') {
+    const error = new api.CanceledError(payload.message ?? 'canceled');
+    value = {isCancel: api.isCancel(error), isAxiosError: api.isAxiosError(error), message: error.message, code: error.code};
+  } else if (operation === 'status') {
+    value = {names: (payload.codes ?? []).map((code) => typeof code === 'number' ? api.HttpStatusCode[code] : api.HttpStatusCode[code]), values: (payload.names ?? []).map((name) => api.HttpStatusCode[name])};
+  } else if (operation === 'spread') {
+    value = api.spread((left, right) => left + right)(payload.args ?? []);
+  } else if (operation === 'all') {
+    value = await api.all((payload.values ?? []).map((item) => Promise.resolve(item)));
+  } else {
+    fail(id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  }
+  const encoded = JSON.stringify({id, ok: true, value: plain(value)});
+  if (Buffer.byteLength(encoded) > 256 * 1024) fail(id, 'response-too-large', 'response is too large');
+  process.stdout.write(encoded + '\n');
+}
+
+main().catch((error) => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));

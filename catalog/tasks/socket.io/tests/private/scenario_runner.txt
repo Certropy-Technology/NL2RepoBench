@@ -1,0 +1,466 @@
+import { createServer } from "node:http";
+import { createRequire } from "node:module";
+import { join as joinPath } from "node:path";
+
+const site = process.env.NODE_CANDIDATE_SITE;
+if (!site) throw new Error("candidate site is not configured");
+const require = createRequire(joinPath(site, "package.json"));
+
+const request = JSON.parse(await new Promise((resolve, reject) => {
+  let body = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", (chunk) => {
+    body += chunk;
+    if (body.length > 64 * 1024) reject(new Error("request is too large"));
+  });
+  process.stdin.on("end", () => resolve(body));
+  process.stdin.on("error", reject);
+}));
+
+function parseSocketPacket(packet) {
+  const type = Number(packet[0]);
+  let index = 1;
+  let namespace = "/";
+  if (packet[index] === "/") {
+    const comma = packet.indexOf(",", index);
+    if (comma < 0) return { type, namespace: packet.slice(index), id: null, data: null };
+    namespace = packet.slice(index, comma);
+    index = comma + 1;
+  }
+  const idStart = index;
+  while (/\d/.test(packet[index] ?? "")) index += 1;
+  const id = index > idStart ? Number(packet.slice(idStart, index)) : null;
+  const data = index < packet.length ? JSON.parse(packet.slice(index)) : null;
+  return { type, namespace, id, data };
+}
+
+class PollingClient {
+  constructor(port, namespace = "/", path = "/socket.io") {
+    this.base = `http://127.0.0.1:${port}${path.endsWith("/") ? path : `${path}/`}`;
+    this.namespace = namespace;
+    this.sid = null;
+    this.queue = [];
+    this.counter = 0;
+  }
+
+  url(withSid = true) {
+    const sid = withSid && this.sid ? `&sid=${encodeURIComponent(this.sid)}` : "";
+    return `${this.base}?EIO=4&transport=polling&t=${this.counter++}${sid}`;
+  }
+
+  async fetchText(url, init = {}, timeout = 1500) {
+    const response = await fetch(url, { ...init, signal: AbortSignal.timeout(timeout) });
+    return { status: response.status, text: await response.text() };
+  }
+
+  async open(auth = undefined) {
+    const opened = await this.fetchText(this.url(false));
+    if (opened.status !== 200 || !opened.text.startsWith("0")) {
+      throw new Error(`invalid engine handshake: ${opened.status} ${opened.text}`);
+    }
+    this.sid = JSON.parse(opened.text.slice(1)).sid;
+    const namespace = this.namespace === "/" ? "" : `${this.namespace},`;
+    const data = auth === undefined ? "" : JSON.stringify(auth);
+    await this.postSocket(`0${namespace}${data}`);
+    const packet = await this.next(
+      (value) => value.namespace === this.namespace && (value.type === 0 || value.type === 4),
+    );
+    return packet;
+  }
+
+  async postSocket(packet) {
+    const response = await this.fetchText(this.url(), {
+      method: "POST",
+      headers: { "content-type": "text/plain;charset=UTF-8" },
+      body: `4${packet}`,
+    });
+    if (response.status !== 200) throw new Error(`polling POST failed: ${response.status}`);
+  }
+
+  async poll(timeout = 1500) {
+    const response = await this.fetchText(this.url(), {}, timeout);
+    if (response.status !== 200) throw new Error(`polling GET failed: ${response.status}`);
+    for (const packet of response.text.split("\x1e")) {
+      if (packet === "2") {
+        await this.fetchText(this.url(), {
+          method: "POST",
+          headers: { "content-type": "text/plain;charset=UTF-8" },
+          body: "3",
+        });
+      } else if (packet.startsWith("4")) {
+        this.queue.push(parseSocketPacket(packet.slice(1)));
+      }
+    }
+  }
+
+  async next(predicate, timeout = 2000) {
+    const deadline = Date.now() + timeout;
+    while (Date.now() < deadline) {
+      const index = this.queue.findIndex(predicate);
+      if (index >= 0) return this.queue.splice(index, 1)[0];
+      await this.poll(Math.max(50, Math.min(500, deadline - Date.now())));
+    }
+    throw new Error("timed out waiting for Socket.IO packet");
+  }
+
+  async event(name, timeout = 2000) {
+    return this.next((packet) => packet.type === 2 && packet.data?.[0] === name, timeout);
+  }
+
+  async emit(name, args = [], id = null) {
+    const namespace = this.namespace === "/" ? "" : `${this.namespace},`;
+    const ack = id === null ? "" : String(id);
+    await this.postSocket(`2${namespace}${ack}${JSON.stringify([name, ...args])}`);
+  }
+
+  async ack(id, args = []) {
+    const namespace = this.namespace === "/" ? "" : `${this.namespace},`;
+    await this.postSocket(`3${namespace}${id}${JSON.stringify(args)}`);
+  }
+}
+
+async function startSocketServer(configure, options = {}) {
+  const candidate = require("socket.io");
+  const httpServer = createServer((_, response) => {
+    response.statusCode = 404;
+    response.end("not found");
+  });
+  const io = new candidate.Server(httpServer, {
+    transports: ["polling"],
+    allowUpgrades: false,
+    pingInterval: 200,
+    pingTimeout: 1000,
+    serveClient: false,
+    ...options,
+  });
+  await configure(io, httpServer, candidate);
+  await new Promise((resolve, reject) => {
+    httpServer.once("error", reject);
+    httpServer.listen(0, "127.0.0.1", resolve);
+  });
+  const port = httpServer.address().port;
+  return { candidate, httpServer, io, port };
+}
+
+async function stopSocketServer(io, httpServer) {
+  await new Promise((resolve) => {
+    let settled = false;
+    const done = () => {
+      if (!settled) {
+        settled = true;
+        resolve();
+      }
+    };
+    try {
+      io.close(done);
+      setTimeout(done, 500).unref();
+    } catch {
+      done();
+    }
+  });
+  if (httpServer.listening) await new Promise((resolve) => httpServer.close(resolve));
+}
+
+async function withServer(configure, run, options = {}) {
+  const state = await startSocketServer(configure, options);
+  try {
+    return await run(state);
+  } finally {
+    await stopSocketServer(state.io, state.httpServer);
+  }
+}
+
+async function join(client, room, id) {
+  await client.emit("join", [room], id);
+  return client.next((packet) => packet.type === 3 && packet.id === id);
+}
+
+const scenarios = {
+  async exports() {
+    const candidate = require("socket.io");
+    return {
+      keys: Object.keys(candidate).sort(),
+      types: Object.fromEntries(
+        ["Server", "Namespace", "Socket"].map((name) => [name, typeof candidate[name]]),
+      ),
+    };
+  },
+
+  async basic() {
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.emit("welcome", { connected: socket.connected });
+          socket.on("echo", (value, callback) => callback({ value, id: socket.id }));
+        });
+      },
+      async ({ port }) => {
+        const client = new PollingClient(port);
+        const connected = await client.open();
+        const welcome = await client.event("welcome");
+        await client.emit("echo", ["hello"], 7);
+        const ack = await client.next((packet) => packet.type === 3 && packet.id === 7);
+        return {
+          connectedType: connected.type,
+          connectedNamespace: connected.namespace,
+          welcome: welcome.data,
+          ackHasId: typeof ack.data?.[0]?.id === "string" && ack.data[0].id.length > 0,
+          ackValue: ack.data?.[0]?.value,
+        };
+      },
+    );
+  },
+
+  async namespaceMiddleware() {
+    return withServer(
+      async (io) => {
+        const admin = io.of("/admin");
+        admin.use((socket, next) => {
+          if (socket.handshake.auth?.token === "secret") next();
+          else next(new Error("forbidden"));
+        });
+        admin.on("connection", (socket) => socket.emit("ready", socket.nsp.name));
+      },
+      async ({ port }) => {
+        const accepted = new PollingClient(port, "/admin");
+        const acceptedConnect = await accepted.open({ token: "secret" });
+        const ready = await accepted.event("ready");
+        const rejected = new PollingClient(port, "/admin");
+        const rejectedConnect = await rejected.open({ token: "wrong" });
+        return {
+          accepted: acceptedConnect.type === 0,
+          ready: ready.data,
+          rejectedType: rejectedConnect.type,
+          rejectedMessage: rejectedConnect.data?.message,
+        };
+      },
+    );
+  },
+
+  async rooms() {
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.on("join", async (room, callback) => {
+            await socket.join(room);
+            callback([...socket.rooms].sort());
+          });
+        });
+      },
+      async ({ io, port }) => {
+        const blue = new PollingClient(port);
+        const red = new PollingClient(port);
+        await blue.open();
+        await red.open();
+        const blueAck = await join(blue, "blue", 1);
+        await join(red, "red", 2);
+        io.to("blue").emit("room-event", 42);
+        const event = await blue.event("room-event");
+        let redReceived = false;
+        try {
+          await red.event("room-event", 450);
+          redReceived = true;
+        } catch {}
+        return { rooms: blueAck.data?.[0], value: event.data?.[1], redReceived };
+      },
+    );
+  },
+
+  async broadcast() {
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.on("broadcast", (value) => socket.broadcast.emit("notice", value));
+        });
+      },
+      async ({ port }) => {
+        const sender = new PollingClient(port);
+        const peer = new PollingClient(port);
+        await sender.open();
+        await peer.open();
+        await sender.emit("broadcast", ["peer-only"]);
+        const received = await peer.event("notice");
+        let senderReceived = false;
+        try {
+          await sender.event("notice", 450);
+          senderReceived = true;
+        } catch {}
+        return { value: received.data?.[1], senderReceived };
+      },
+    );
+  },
+
+  async socketInventory() {
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.on("join", async (room, callback) => {
+            await socket.join(room);
+            callback(true);
+          });
+        });
+      },
+      async ({ io, port }) => {
+        const first = new PollingClient(port);
+        const second = new PollingClient(port);
+        await first.open();
+        await second.open();
+        await join(first, "blue", 1);
+        await join(second, "blue", 2);
+        const fetched = await io.in("blue").fetchSockets();
+        const ids = await io.in("blue").allSockets();
+        io.in("blue").socketsJoin("green");
+        const joined = await io.in("green").fetchSockets();
+        io.in("blue").socketsLeave("green");
+        const left = await io.in("green").fetchSockets();
+        return {
+          fetched: fetched.length,
+          ids: ids.size,
+          joined: joined.length,
+          left: left.length,
+          roomsAreSets: fetched.every((socket) => socket.rooms instanceof Set),
+        };
+      },
+    );
+  },
+
+  async serverAck() {
+    let resultResolve;
+    const result = new Promise((resolve) => { resultResolve = resolve; });
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.timeout(700).emit("question", 21, (error, value) => {
+            resultResolve({ error: error?.message ?? null, value });
+          });
+        });
+      },
+      async ({ port }) => {
+        const client = new PollingClient(port);
+        await client.open();
+        const question = await client.event("question");
+        await client.ack(question.id, ["answer"]);
+        return { question: question.data, callback: await result };
+      },
+    );
+  },
+
+  async ackTimeout() {
+    let resultResolve;
+    const result = new Promise((resolve) => { resultResolve = resolve; });
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.timeout(120).emit("unanswered", (error) => {
+            resultResolve({ timedOut: error instanceof Error, message: error?.message ?? null });
+          });
+        });
+      },
+      async ({ port }) => {
+        const client = new PollingClient(port);
+        await client.open();
+        await client.event("unanswered");
+        return result;
+      },
+    );
+  },
+
+  async disconnectSockets() {
+    let reasonResolve;
+    const reason = new Promise((resolve) => { reasonResolve = resolve; });
+    return withServer(
+      async (io) => {
+        io.on("connection", (socket) => {
+          socket.on("join", async (room, callback) => {
+            await socket.join(room);
+            callback(true);
+          });
+          socket.on("disconnect", reasonResolve);
+        });
+      },
+      async ({ io, port }) => {
+        const client = new PollingClient(port);
+        await client.open();
+        await join(client, "blue", 1);
+        io.in("blue").disconnectSockets(true);
+        const disconnectedReason = await reason;
+        const remaining = await io.fetchSockets();
+        return { reason: disconnectedReason, remaining: remaining.length };
+      },
+    );
+  },
+
+  async dynamicNamespace() {
+    return withServer(
+      async (io) => {
+        io.of(/^\/tenant-\d+$/).on("connection", (socket) => {
+          socket.emit("tenant", socket.nsp.name);
+        });
+      },
+      async ({ port }) => {
+        const allowed = new PollingClient(port, "/tenant-42");
+        const allowedConnect = await allowed.open();
+        const event = await allowed.event("tenant");
+        const denied = new PollingClient(port, "/other");
+        const deniedConnect = await denied.open();
+        return {
+          allowed: allowedConnect.type,
+          tenant: event.data?.[1],
+          denied: deniedConnect.type,
+          deniedMessage: deniedConnect.data?.message,
+        };
+      },
+    );
+  },
+
+  async customPath() {
+    return withServer(
+      async () => {},
+      async ({ httpServer, io, port }) => {
+        const client = new PollingClient(port, "/", "/realtime");
+        const connected = await client.open();
+        const wrong = await fetch(`http://127.0.0.1:${port}/socket.io/?EIO=4&transport=polling`);
+        return {
+          connected: connected.type,
+          configuredPath: io.path(),
+          wrongPathStatus: wrong.status,
+          listening: httpServer.listening,
+        };
+      },
+      { path: "/realtime" },
+    );
+  },
+
+  async closeLifecycle() {
+    const state = await startSocketServer(async (io) => {
+      io.on("connection", () => {});
+    });
+    const client = new PollingClient(state.port);
+    await client.open();
+    let callbacks = 0;
+    await new Promise((resolve) => state.io.close(() => {
+      callbacks += 1;
+      resolve();
+    }));
+    const value = {
+      callbacks,
+      listening: state.httpServer.listening,
+      sockets: (await state.io.fetchSockets()).length,
+    };
+    if (state.httpServer.listening) await new Promise((resolve) => state.httpServer.close(resolve));
+    return value;
+  },
+};
+
+try {
+  if (!Object.hasOwn(scenarios, request.scenario)) throw new Error("unknown scenario");
+  const value = await scenarios[request.scenario](request.input ?? {});
+  console.log(JSON.stringify({ nl2repo_socketio_result: true, ok: true, value }));
+} catch (error) {
+  console.log(JSON.stringify({
+    nl2repo_socketio_result: true,
+    ok: false,
+    error: String(error?.message ?? error).slice(0, 4096),
+  }));
+  process.exitCode = 1;
+}

@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/requests"
+version = "1.0.0"
+description = "Build the pinned requests HTTP client from an empty workspace and reproduce deterministic request preparation, responses, sessions, cookies, authentication, redirects, and utility behavior through a separate offline JSON adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "http-client",
+    "sessions",
+    "cookies",
+    "redirects",
+    "offline",
+    "repository-generation",
+]
+
+[metadata]
+difficulty = "hard"
+category = "http-client"
+tags = [
+    "python",
+    "http",
+    "sessions",
+    "cookies",
+    "redirects",
+    "offline",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 21
+canonical_manifest_digest = "sha256:fe35424b97da68d4b6c682ac8756b8e408ae52e6d7736b4e793265243fef55d4"
+toolchain_lock_digest = "sha256:108a340a148d391577c9587e795de8108ded4464fc68546305809254b118c614"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

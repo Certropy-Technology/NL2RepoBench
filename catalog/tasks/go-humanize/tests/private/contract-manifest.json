@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "framework": "go",
+  "report_format": "go-test-json-v1",
+  "frozen_total": 1,
+  "leaf_ids": ["contract::public-api"],
+  "assertion_classes": [
+    "decimal and binary byte formatting",
+    "comma grouping and signed boundary",
+    "float formatting and decimal limits",
+    "ordinal suffixes",
+    "SI prefixes, signs, units, and zero",
+    "regular, irregular, and explicit plurals",
+    "invalid JSON bridge requests"
+  ]
+}

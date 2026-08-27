@@ -1,0 +1,139 @@
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const PACKAGE = "micromatch";
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds the bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function readRequest() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) {
+    emit({ ok: false, error: "request-too-large" }, 64);
+  }
+  let payload;
+  try {
+    payload = JSON.parse(data.toString("utf8"));
+  } catch {
+    emit({ ok: false, error: "malformed-json" }, 64);
+  }
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    emit({ ok: false, error: "request-must-be-object" }, 64);
+  }
+  if (process.env.NODE_ALLOWED_PACKAGE !== PACKAGE) {
+    emit({ ok: false, error: "package-name-not-allowlisted" }, 64);
+  }
+  return payload;
+}
+
+function callable(candidate, name) {
+  if (typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9]*$/.test(name)) {
+    throw new TypeError("export name is not allowlisted");
+  }
+  const value = candidate[name];
+  if (typeof value !== "function") {
+    throw new TypeError(`export is not callable: ${name}`);
+  }
+  return value;
+}
+
+function stateSummary(state) {
+  return {
+    input: state.input,
+    prefix: state.prefix,
+    base: state.base,
+    glob: state.glob,
+    isGlob: state.isGlob,
+    isGlobstar: state.isGlobstar,
+    isExtglob: state.isExtglob,
+    negated: state.negated,
+  };
+}
+
+async function execute(candidate, request) {
+  const args = request.args ?? [];
+  if (!Array.isArray(args) || args.length > 32) {
+    throw new TypeError("args are not allowlisted");
+  }
+
+  switch (request.operation) {
+    case "call":
+      return await callable(candidate, request.exportName)(...args);
+    case "surface": {
+      const names = [
+        "match", "matcher", "isMatch", "any", "not", "contains", "matchKeys",
+        "some", "every", "all", "capture", "makeRe", "scan", "parse", "braces",
+        "braceExpand", "hasBraces",
+      ];
+      return {
+        callableDefault: typeof candidate === "function",
+        types: Object.fromEntries(names.map(name => [name, typeof candidate[name]])),
+        aliases: {
+          match: candidate.match === candidate,
+          any: candidate.any === candidate.isMatch,
+        },
+      };
+    }
+    case "matcher": {
+      const [pattern, options, inputs] = args;
+      const matcher = candidate.matcher(pattern, options);
+      return inputs.map(input => matcher(input));
+    }
+    case "regex": {
+      const [pattern, options, inputs] = args;
+      const regex = candidate.makeRe(pattern, options);
+      return inputs.map(input => regex.test(input));
+    }
+    case "scan-summary":
+      return stateSummary(candidate.scan(...args));
+    case "parse-summary":
+      return candidate.parse(...args).map(state => ({
+        input: state.input,
+        output: state.output,
+        negated: state.negated,
+        prefix: state.prefix,
+      }));
+    case "callbacks": {
+      const [list, patterns, options = {}] = args;
+      const events = { result: [], match: [], ignore: [] };
+      const summarize = state => [state.glob, state.input, state.output, state.isMatch];
+      const value = candidate(list, patterns, {
+        ...options,
+        onResult: state => events.result.push(summarize(state)),
+        onMatch: state => events.match.push(summarize(state)),
+        onIgnore: state => events.ignore.push(summarize(state)),
+      });
+      return { value, events };
+    }
+    default:
+      throw new TypeError("operation is not allowlisted");
+  }
+}
+
+async function main() {
+  try {
+    const request = readRequest();
+    const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+    const candidate = require(PACKAGE);
+    emit({ ok: true, value: await execute(candidate, request) });
+  } catch (error) {
+    emit({
+      ok: false,
+      error: "candidate-call-failed",
+      exception_type: error?.constructor?.name ?? "Error",
+      message: String(error?.message ?? error).slice(0, 1024),
+    }, 1);
+  }
+}
+
+await main();

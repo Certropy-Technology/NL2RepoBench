@@ -1,0 +1,11 @@
+{
+  "name": "immer",
+  "version": "10.0.3-beta",
+  "description": "Immutable state using structural sharing",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {".": {"types": "./index.d.ts", "import": "./index.js", "default": "./index.js"}},
+  "sideEffects": false,
+  "files": ["index.js", "index.d.ts", "dist"]
+}

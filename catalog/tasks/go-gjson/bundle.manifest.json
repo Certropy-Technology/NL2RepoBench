@@ -1,0 +1,461 @@
+{
+  "canonical_manifest_digest": "sha256:09da0cd24ad3f2b5a0541f68c086006362fffa6a288cd313fb689316f1ba4816",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "47f03d87e85cddf74925d2451fab8aa7eee61e0b815730e7e4c2d41525d493ec",
+      "size_bytes": 153
+    },
+    {
+      "path": "controls/background-process.sh",
+      "sha256": "3f3df69359c2e646e5455e7b107c27287658111e8b91398a9f699457c7b9214b",
+      "size_bytes": 1179
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "79ad43eca7d014877f14ceaaddb57c53fc131683de4b70653d07658f91dc7b45",
+      "size_bytes": 1380
+    },
+    {
+      "path": "controls/hang.sh",
+      "sha256": "80ce019aba03e69c10a7d3268ae63cac4dd7ee50232365089a6a976af364f521",
+      "size_bytes": 1134
+    },
+    {
+      "path": "controls/install-failure.sh",
+      "sha256": "e5be20899584dce10acc43fb734653e3672f830fb371795ebeffd164b93cde62",
+      "size_bytes": 96
+    },
+    {
+      "path": "controls/oversized-output.sh",
+      "sha256": "b949a52fa713d4d19a079a2eef546b7521d442ecffd3583164c615628337418e",
+      "size_bytes": 1166
+    },
+    {
+      "path": "controls/panic.sh",
+      "sha256": "88fee7413cffeb5eddce4603176db0db3096b2a38485558dc2fc2bde59c45300",
+      "size_bytes": 1084
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "14adb4c32714f8d2e0cf5fce08cf1f5f5394d64f48a24d621ba034cb22ee49b3",
+      "size_bytes": 1067
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "69d434efc73368e0ed6d226de743f990dbc743fc6cfaf725a12f1eb8b8daa8b6",
+      "size_bytes": 963
+    },
+    {
+      "path": "environment/go-module-bundle/go.mod",
+      "sha256": "982dac1ceb4f4fa9f43ab383d1cd5e8066299a50045d1300c441dd80113bb50c",
+      "size_bytes": 123
+    },
+    {
+      "path": "environment/go-module-bundle/go.sum",
+      "sha256": "dfff87a7de3ea43eb32e4297a35cbd7eb4819d36b877fd6559d69f812f326379",
+      "size_bytes": 336
+    },
+    {
+      "path": "environment/go-module-bundle/module.manifest.json",
+      "sha256": "30dc7f3b5aa3a7060c76907c57f99cb94e5694e0dedc0f01cd3e3f3e6803e753",
+      "size_bytes": 1611
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/tidwall/match/LICENSE",
+      "sha256": "be83ad53208d03a9fe08c7fac231cabf79422989ef5706bff217bd35104ebf07",
+      "size_bytes": 1077
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/tidwall/match/README.md",
+      "sha256": "6d8d1922440b25eee229d4b7214be343502d0ca10030c8bba83883d53613976d",
+      "size_bytes": 557
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/tidwall/match/match.go",
+      "sha256": "3e3006ae4a50368befa0be55d6c738815c65de7bd96a480f10409e8575dec9e1",
+      "size_bytes": 5500
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/tidwall/pretty/LICENSE",
+      "sha256": "0ca70311227fe097c662dece3f359e3317fa7f9d41f8d29eb45fc5135e216139",
+      "size_bytes": 1077
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/tidwall/pretty/README.md",
+      "sha256": "e213c6e6d7b6735c4960c2ae0a695e24b567aba78e535896e67926fd3610955c",
+      "size_bytes": 2924
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/tidwall/pretty/pretty.go",
+      "sha256": "63a7d9e04f6cc2b5e220eaf280b5943ddddd331bb669c5aba130efca57a0a3fb",
+      "size_bytes": 15428
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/modules.txt",
+      "sha256": "ceb94638dcc9a516118d5e7a0161ea1bb95e8950bac67c2ddf1b102bd0a429fa",
+      "size_bytes": 162
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "f61361b0aae073269657da7b6fd1e2a28a7639e42cb4f8fd157309dac98204eb",
+      "size_bytes": 5044
+    },
+    {
+      "path": "solution/module-bundle/go.mod",
+      "sha256": "982dac1ceb4f4fa9f43ab383d1cd5e8066299a50045d1300c441dd80113bb50c",
+      "size_bytes": 123
+    },
+    {
+      "path": "solution/module-bundle/go.sum",
+      "sha256": "dfff87a7de3ea43eb32e4297a35cbd7eb4819d36b877fd6559d69f812f326379",
+      "size_bytes": 336
+    },
+    {
+      "path": "solution/module-bundle/module.manifest.json",
+      "sha256": "30dc7f3b5aa3a7060c76907c57f99cb94e5694e0dedc0f01cd3e3f3e6803e753",
+      "size_bytes": 1611
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/tidwall/match/LICENSE",
+      "sha256": "be83ad53208d03a9fe08c7fac231cabf79422989ef5706bff217bd35104ebf07",
+      "size_bytes": 1077
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/tidwall/match/README.md",
+      "sha256": "6d8d1922440b25eee229d4b7214be343502d0ca10030c8bba83883d53613976d",
+      "size_bytes": 557
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/tidwall/match/match.go",
+      "sha256": "3e3006ae4a50368befa0be55d6c738815c65de7bd96a480f10409e8575dec9e1",
+      "size_bytes": 5500
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/tidwall/pretty/LICENSE",
+      "sha256": "0ca70311227fe097c662dece3f359e3317fa7f9d41f8d29eb45fc5135e216139",
+      "size_bytes": 1077
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/tidwall/pretty/README.md",
+      "sha256": "e213c6e6d7b6735c4960c2ae0a695e24b567aba78e535896e67926fd3610955c",
+      "size_bytes": 2924
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/tidwall/pretty/pretty.go",
+      "sha256": "63a7d9e04f6cc2b5e220eaf280b5943ddddd331bb669c5aba130efca57a0a3fb",
+      "size_bytes": 15428
+    },
+    {
+      "path": "solution/module-bundle/vendor/modules.txt",
+      "sha256": "ceb94638dcc9a516118d5e7a0161ea1bb95e8950bac67c2ddf1b102bd0a429fa",
+      "size_bytes": 162
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "476f599fbf0da731b5dd6b132221ad2a110e6f17dc10b50c453261c4ec2c5576",
+      "size_bytes": 1135
+    },
+    {
+      "path": "task.toml",
+      "sha256": "be70b123e7d39cec5097a84b33d7b13dc971a84c27b737b059f9aa1adf05aa8b",
+      "size_bytes": 1080
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "0a2d22fd10bbf49321ef5ee4094e508e4b8333d5afd78d2747e994965f896b87",
+      "size_bytes": 719
+    },
+    {
+      "path": "tests/dependencies/go.mod",
+      "sha256": "982dac1ceb4f4fa9f43ab383d1cd5e8066299a50045d1300c441dd80113bb50c",
+      "size_bytes": 123
+    },
+    {
+      "path": "tests/dependencies/go.sum",
+      "sha256": "dfff87a7de3ea43eb32e4297a35cbd7eb4819d36b877fd6559d69f812f326379",
+      "size_bytes": 336
+    },
+    {
+      "path": "tests/dependencies/module.manifest.json",
+      "sha256": "30dc7f3b5aa3a7060c76907c57f99cb94e5694e0dedc0f01cd3e3f3e6803e753",
+      "size_bytes": 1611
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/tidwall/match/LICENSE",
+      "sha256": "be83ad53208d03a9fe08c7fac231cabf79422989ef5706bff217bd35104ebf07",
+      "size_bytes": 1077
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/tidwall/match/README.md",
+      "sha256": "6d8d1922440b25eee229d4b7214be343502d0ca10030c8bba83883d53613976d",
+      "size_bytes": 557
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/tidwall/match/match.go",
+      "sha256": "3e3006ae4a50368befa0be55d6c738815c65de7bd96a480f10409e8575dec9e1",
+      "size_bytes": 5500
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/tidwall/pretty/LICENSE",
+      "sha256": "0ca70311227fe097c662dece3f359e3317fa7f9d41f8d29eb45fc5135e216139",
+      "size_bytes": 1077
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/tidwall/pretty/README.md",
+      "sha256": "e213c6e6d7b6735c4960c2ae0a695e24b567aba78e535896e67926fd3610955c",
+      "size_bytes": 2924
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/tidwall/pretty/pretty.go",
+      "sha256": "63a7d9e04f6cc2b5e220eaf280b5943ddddd331bb669c5aba130efca57a0a3fb",
+      "size_bytes": 15428
+    },
+    {
+      "path": "tests/dependencies/vendor/modules.txt",
+      "sha256": "ceb94638dcc9a516118d5e7a0161ea1bb95e8950bac67c2ddf1b102bd0a429fa",
+      "size_bytes": 162
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/bridge.go",
+      "sha256": "1056f7b8b505a6cbfc24077af8b28e1248ae28d5f0071f7ed8a032d9b542b1f2",
+      "size_bytes": 4507
+    },
+    {
+      "path": "tests/private/contract.py",
+      "sha256": "936705d4221ce4d7e99cd7232369782cc5d9a091f088f76e2abf255057d598b0",
+      "size_bytes": 2813
+    },
+    {
+      "path": "tests/private/contract.sh",
+      "sha256": "f80f1b74d28d1990b14c0da69a35c56736b5db5ed53078a43b834484c0840b65",
+      "size_bytes": 132
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "2fdcf16080e77749d95d5abcd99fd7fe99c1f9f7c35d3af1bd2f2004372f1ee2",
+      "size_bytes": 30133
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models_v2.py",
+      "sha256": "24891e7fb2168e10cc07ba6d6f646ac20af22ae265452af60380568e00f3bc8d",
+      "size_bytes": 15136
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/runtime.py",
+      "sha256": "b72eb097de0e25a01c9117bcbd7cbc4e10bcf1e9e9fcdf550b6a609f4efd12c8",
+      "size_bytes": 5529
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/__init__.py",
+      "sha256": "3a2636d788e41dd7a31a20e422c3af2442c2ad6bee39e9cd6e4554666ac1a468",
+      "size_bytes": 1120
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/base.py",
+      "sha256": "77c4a81eb31541db2343e80872e9649f32dc5e3434a689bb25d2dca83d47ca29",
+      "size_bytes": 784
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/go_modules.py",
+      "sha256": "897c9a34b3b7300b0020c78ab124f12143fd25d13b0261674db25aad15bfe7fd",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "2f97d1d1f2eb417a01310aae6ea7d15000451c088efba5c575f5ff6615a933c9",
+      "size_bytes": 1159
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "5eca68115a8f21a1f8dfa9fecd34b20e7c911be6026c859fff8186a8317e510a",
+      "size_bytes": 10529
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "a49314a0ad250d9fd5efcda2d15f9d62d9b882c9b2d9bbf813315c14c73ce76a",
+      "size_bytes": 6556
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3b57b77d2097535362432f4b60353e2f58b181d5e34adde55ff0f3949492b55e",
+      "size_bytes": 9672
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "8427c0b606f76a1c73528dcb4588e7b18b5b35b7d3bf797a5a43758e1c745eb8",
+      "size_bytes": 3012
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/evaluator.py",
+      "sha256": "20f9ad77f637b5232acafc0af7d00b2eccd701e8a13b60d9858f838cff97d265",
+      "size_bytes": 9040
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_bridge_proxy.py",
+      "sha256": "b9aadf2e8d45be4f17d595b907ba45e2e75a81a28146f56e917e242f3443d7b6",
+      "size_bytes": 661
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_contract_runner.py",
+      "sha256": "e3df4ba4f47de59c77fdb0c9d3dad5471fb9ba1547fe2c2248ad3919310d08a6",
+      "size_bytes": 1478
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_grader.py",
+      "sha256": "767bbd785eb07633f25a2c6c28d4e4109524978967412c1b3413ebc9c566aaf1",
+      "size_bytes": 2573
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_supervisor.py",
+      "sha256": "03b98283b778f30949c20052aa7ce1397f2f3e37cada77148ac119111b9c51b2",
+      "size_bytes": 5358
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5ef7fd8572e80b88a9ba5057ee72a9fdd12e449fd81365c3c09a0bda51e8477b",
+      "size_bytes": 5497
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/leaf_report.py",
+      "sha256": "dda410859278a8d6ce0ac01d833fa2789ed5a0199ddaef12ae6630a54954b69e",
+      "size_bytes": 2203
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/metric_contract.py",
+      "sha256": "0615e0bdf0d573aa89618752f5569059b4b3a93454678d58d0542f2b32bb6a85",
+      "size_bytes": 1658
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/node_grader.py",
+      "sha256": "520f5703893bf11db0dd709eedac5d0446b0a422b82640b54266457c812e1472",
+      "size_bytes": 5527
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/node_models.py",
+      "sha256": "d08b3c42350e11f55969b7f52b923a454949969b01b79e47c04556823aeb64aa",
+      "size_bytes": 4199
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/__init__.py",
+      "sha256": "658c03542888fad58f9a83de7c8c8d5d4d981050094c7b9733a2422f314b1a67",
+      "size_bytes": 190
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/go_json.py",
+      "sha256": "e0f457a1e68717c29b05b861598b2c46292e6d4305bc756718d6222d63821112",
+      "size_bytes": 3707
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/node_test_json.py",
+      "sha256": "2b4029de215f52a038689c2fbcb6d9b1af2ea94acc413430b7c122f6adae58da",
+      "size_bytes": 4031
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/pytest_junit.py",
+      "sha256": "e53ef39639676ee596f977f338ef2ac576922a727867be903b37f7e7d9f32350",
+      "size_bytes": 5100
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/registry.py",
+      "sha256": "3a75909aa2c8238825f90475b40257096f527b4e4acdf6002e406d3ae42b897f",
+      "size_bytes": 4145
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/taxonomy.py",
+      "sha256": "ae1dec2ec2c8123a01a5f8ac733fd82de56c998a11ebacc4cd01947e7bd19b47",
+      "size_bytes": 4885
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "099ad36b9f1edf694e91d1526763097f2c78158daead4bf89de49034a46e0159",
+      "size_bytes": 2590
+    },
+    {
+      "path": "tests/verifier-requirements.lock.txt",
+      "sha256": "0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853",
+      "size_bytes": 4279
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "go-gjson",
+  "task_version": "0.1.0",
+  "toolchain_lock_digest": "sha256:a82e6f82b50777b1919152b896ed2c11d4a4c404f424f7f98005ad52107b3b0a",
+  "toolchain_version": "1.26.5"
+}

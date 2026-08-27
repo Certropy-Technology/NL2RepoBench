@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mime",
+  "instruction": "catalog/sources/mime/instruction.md",
+  "private_test_bundle": {
+    "path": ".nl2repo/artifacts/private/sha256/a8/a8d3d6d3ae9e5c3a2a3448255f1224fe0da6c0cce7260a11aafb163021823de0",
+    "sha256": "sha256:a8d3d6d3ae9e5c3a2a3448255f1224fe0da6c0cce7260a11aafb163021823de0",
+    "expected_total": 32
+  },
+  "tests": [
+    {"id":"package-shape","assertion":"package metadata, exports, named Mime class, and CLI are present","instruction":"Supports; CLI"},
+    {"id":"immutable-default","assertion":"built-in default instance rejects define","instruction":"Mime class; define"},
+    {"id":"get-type-bare","assertion":"bare txt maps to text/plain","instruction":"getType"},
+    {"id":"get-type-slash","assertion":"slash-separated path uses final extension","instruction":"getType"},
+    {"id":"get-type-backslash","assertion":"backslash-separated path uses final extension","instruction":"getType"},
+    {"id":"get-type-case","assertion":"extension matching is case insensitive","instruction":"getType"},
+    {"id":"get-type-dotted","assertion":"dotted filename maps by final extension","instruction":"getType"},
+    {"id":"get-type-unknown","assertion":"unknown extension returns null","instruction":"getType"},
+    {"id":"get-type-extensionless","assertion":"extensionless path returns null","instruction":"getType"},
+    {"id":"get-type-non-string","assertion":"non-string input returns null","instruction":"getType"},
+    {"id":"get-extension-default","assertion":"recognized type returns default extension","instruction":"getExtension"},
+    {"id":"get-extension-parameters","assertion":"type lookup trims and removes parameters","instruction":"getExtension"},
+    {"id":"get-extension-case","assertion":"type matching is case insensitive","instruction":"getExtension"},
+    {"id":"get-extension-unknown","assertion":"unknown type returns null","instruction":"getExtension"},
+    {"id":"get-extension-non-string","assertion":"non-string type returns null","instruction":"getExtension"},
+    {"id":"get-all-jpeg","assertion":"all JPEG extensions are returned in a Set","instruction":"getAllExtensions"},
+    {"id":"get-all-unknown","assertion":"unknown type returns null","instruction":"getAllExtensions"},
+    {"id":"builtin-wasm","assertion":"wasm mapping exists","instruction":"getType; built-in database"},
+    {"id":"builtin-json","assertion":"json mapping exists","instruction":"getType; built-in database"},
+    {"id":"constructor-order","assertion":"constructor defines supplied maps in order and define returns self","instruction":"Mime class; define"},
+    {"id":"custom-case","assertion":"custom type and extension matching is case insensitive","instruction":"Mime class"},
+    {"id":"define-conflict","assertion":"conflicting extension is rejected without force","instruction":"define"},
+    {"id":"define-conflict-message","assertion":"conflict error mentions force=true","instruction":"define"},
+    {"id":"define-force","assertion":"force replaces extension mapping and default reverse mapping","instruction":"define"},
+    {"id":"star-set","assertion":"starred extension is retained in the type Set without its marker","instruction":"define; getAllExtensions"},
+    {"id":"star-map","assertion":"starred extension does not claim extension-to-type mapping","instruction":"define; getType"},
+    {"id":"lite-standard","assertion":"lite exposes standard mapping","instruction":"Supports; mime/lite"},
+    {"id":"lite-no-vendor","assertion":"lite omits vendor-only mapping","instruction":"Supports; mime/lite"},
+    {"id":"cli-forward","assertion":"CLI maps extension to type","instruction":"CLI"},
+    {"id":"cli-reverse","assertion":"CLI reverse mode maps type to extension","instruction":"CLI"},
+    {"id":"cli-version","assertion":"CLI prints package version","instruction":"CLI"},
+    {"id":"cli-help","assertion":"CLI help prints usage and exits successfully","instruction":"CLI"}
+  ],
+  "coverage_summary": {
+    "public_promises_with_tests": ["packaging", "ESM", "subpath exports", "Mime", "define", "getType", "getExtension", "getAllExtensions", "lite", "CLI", "offline install"],
+    "collection": "32 unique node:test leaf IDs; collection mismatch fails closed"
+  }
+}

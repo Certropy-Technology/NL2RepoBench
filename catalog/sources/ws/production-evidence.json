@@ -1,0 +1,182 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/ws",
+      "exit_code": 0,
+      "result": "status=controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "201 tasks scanned; 0 errors; 139 unrelated warnings; ws findings=0"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/ws --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/compiled-handoff",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/compiled-handoff/ws -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/harbor-oracle-final --n-concurrent 1 --n-attempts 1 --max-retries 0 -y",
+      "exit_code": 0,
+      "result": "Harbor 0.21.0; reward=1.0; test_pass_rate=1.0; valid=true; 44/44"
+    },
+    {
+      "command": "bash -n compiled bundle scripts; node --check compiled JS/MJS; parse JSON/TOML",
+      "exit_code": 0
+    },
+    {
+      "command": "npm ci --offline --ignore-scripts --cache direct-oracle-workspace/.npm-cache",
+      "exit_code": 0
+    },
+    {
+      "command": "(cd direct-oracle-workspace && npm pack --ignore-scripts --pack-destination ../direct-oracle-pack)",
+      "exit_code": 0,
+      "result": "ws-8.21.3.tgz sha256=cd832c14585261ca8d33f22695b4ea6f43bd473eb1e37ec5cacb491ca6383e49"
+    },
+    {
+      "command": "initial npm pack invocation from worktree root",
+      "exit_code": 254,
+      "result": "remediated: npm looked for a package.json in the worktree root; corrected by running from direct-oracle-workspace"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:557a9cfde6097761df2d978907c531755f842ad03bdba7a15e16ea94e6c9284b",
+    "mode": "production",
+    "path": "catalog/tasks/ws"
+  },
+  "controls": {
+    "bundle_under_test": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/compiled-final/ws",
+    "call_hang": {
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/evidence/control-matrix.json",
+    "forgery": {
+      "collected": 44,
+      "failed": 44,
+      "forged_reward_ignored": true,
+      "passed": 0,
+      "reward": 0.0,
+      "runner_exit_code": 1,
+      "valid": true
+    },
+    "offline": {
+      "collected": 44,
+      "evidence": "Final separate verifier completed with no public network.",
+      "passed": 44,
+      "public_network_available": false,
+      "reward": 1.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 44,
+      "failed": 44,
+      "passed": 0,
+      "reward": 0.0,
+      "runner_exit_code": 1,
+      "valid": true
+    },
+    "verifier_network": "public_network_available=false for all controls"
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:359d8250c8e5f5ee21ca088d7041da898990e9145a957ba0adde94f5160db515",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:359d8250c8e5f5ee21ca088d7041da898990e9145a957ba0adde94f5160db515",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node",
+    "base_image_digest": "sha256:4196d66a565c6f195728d9952f161f4adfe2ad753052a08b7ec7f1c5a6bda42b",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The candidate has no mandatory third-party runtime dependencies, and the verifier installs from a private empty npm v3 closure. Model Agent Runs receive no source-host authorization; only the trusted Oracle fetches and digest-verifies the frozen revision through a run-scoped host override.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 44,
+    "collection_errors": [],
+    "failed": 0,
+    "grading": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/harbor-oracle-final/2026-08-27__19-19-27/ws__*/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/harbor-oracle-final/2026-08-27__19-19-27/ws__*/verifier/network.json",
+    "passed": 44,
+    "public_network_available": false,
+    "result": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/ws/harbor-oracle-final/2026-08-27__19-19-27/result.json",
+    "reward": 1.0,
+    "runner_exit_code": 0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:7ecfc80b5cb9027e8b8c0e38afc4558a38349cb9b28e33a838524c265295a6f3",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:7ecfc80b5cb9027e8b8c0e38afc4558a38349cb9b28e33a838524c265295a6f3",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/node-author-wide-20260826-remediation/ws/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "The denominator is a bounded 44-leaf deterministic loopback slice, not the full 437 passing upstream unit leaves or external integration service.",
+    "TLS, proxies, redirects, Autobahn campaigns, native accelerators, and public remote services are out of scope.",
+    "One final Oracle run and deterministic controls do not establish cross-run model stability; blind review and downstream model pilot remain required.",
+    "The worktree contains pre-existing unrelated __pycache__ deletions and an untracked .pi directory; they were not modified for this task."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "d9b89544e627f2a260fb85a6f42c8ecba98d7615",
+    "source_digest": "sha256:ef59e63af8772e6cc00100a743fa267f53fff2022ca32f4b1e303c5fc57140f3",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/websockets/ws"
+  },
+  "status": "controls-passed",
+  "task_id": "ws",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

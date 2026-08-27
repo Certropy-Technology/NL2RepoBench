@@ -1,0 +1,23 @@
+{
+  "name": "p-queue",
+  "version": "9.3.3",
+  "description": "Promise queue with concurrency control",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "eventemitter3": "5.0.4",
+    "p-timeout": "7.0.1"
+  }
+}

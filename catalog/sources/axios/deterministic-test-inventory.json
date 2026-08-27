@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "task_id": "axios",
   "source_revision": "84a9f3b9a4f3244b8c8e818f557d64c7b964fb25",
-  "source_digest": "sha256:e81bdadfeb7d7a3bcd31aaf85f6cf269d03e55176f73daf604330697b0fb83d1",
+  "source_digest": "sha256:c5d3d80a6b3f09d0e35e5a4b1bc78cb47216190b4b46f745f96c63fe16f1a0eb",
   "scanner_identity": "node-typescript-compiler-api",
   "scanner_digest": "sha256:8fd59259135f05911302fe7f2c3e1fd83b7c1cb148e2cb373786a604161b99e1",
   "implementation_loc": 8792,
@@ -13,11 +13,12 @@
   "import_count": 614,
   "static_test_count": 1548,
   "framework_observation": {
-    "node:test": 0,
+    "node:test": 16,
     "vitest_or_other": 1548
   },
   "leaf_id_algorithm": "sha256(file:line:column:name)[0:16]",
-  "collection_status": "not-run",
-  "private_node_test_bundle": false,
-  "reason": "The scanner observes Vitest registrations and browser/module/smoke suites, not a deterministic private node:test leaf bundle."
+  "collection_status": "frozen-private-slice",
+  "private_node_test_bundle": true,
+  "private_expected_total": 16,
+  "reason": "The upstream Vitest/browser/module/smoke suite remains inventoried separately; a bounded private node:test slice covers the approved public no-network contract."
 }

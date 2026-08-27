@@ -1,0 +1,80 @@
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const ALLOWED_METHODS = new Set([
+  "add", "assign", "at", "camelCase", "capitalize", "ceil", "chunk", "clamp",
+  "compact", "concat", "defaults", "difference", "drop", "dropRight", "escape",
+  "filter", "find", "flatten", "flattenDeep", "floor", "get", "groupBy", "has",
+  "head", "includes", "initial", "invert", "inRange", "isArray", "isEmpty",
+  "isEqual", "isNumber", "isPlainObject", "isString", "kebabCase", "keyBy", "keys",
+  "last", "lowerFirst", "map", "max", "maxBy", "mean", "meanBy", "merge", "min",
+  "minBy", "nth", "omit", "orderBy", "pad", "padEnd", "padStart", "pick", "repeat",
+  "round", "size", "snakeCase", "sortBy", "startCase", "sum", "sumBy", "take",
+  "takeRight", "toPairs", "truncate", "unescape", "uniq", "upperFirst", "values", "zip"
+]);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds the bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function readRequest() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+  try {
+    const payload = JSON.parse(data.toString("utf8"));
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error();
+    return payload;
+  } catch {
+    emit({ ok: false, error: "malformed-request" }, 64);
+  }
+}
+
+const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+const request = readRequest();
+
+try {
+  if (request.operation === "metadata") {
+    const manifest = require("lodash/package.json");
+    const lodash = require("lodash");
+    emit({
+      ok: true,
+      value: {
+        name: manifest.name,
+        version: manifest.version,
+        main: manifest.main ?? null,
+        type: manifest.type ?? null,
+        scripts: manifest.scripts ?? null,
+        dependencies: Object.keys(manifest.dependencies ?? {}).sort(),
+        devDependencies: Object.keys(manifest.devDependencies ?? {}).sort(),
+        versionConstant: lodash.VERSION,
+      },
+    });
+  }
+  if (request.operation !== "call") emit({ ok: false, error: "operation-not-allowlisted" }, 64);
+  if (typeof request.method !== "string" || !ALLOWED_METHODS.has(request.method)) {
+    emit({ ok: false, error: "method-not-allowlisted" }, 64);
+  }
+  if (!Array.isArray(request.args) || request.args.length > 16) {
+    emit({ ok: false, error: "args-not-allowlisted" }, 64);
+  }
+  const lodash = require("lodash");
+  const method = lodash[request.method];
+  if (typeof method !== "function") emit({ ok: false, error: "method-not-callable" }, 65);
+  emit({ ok: true, value: method(...request.args) });
+} catch (error) {
+  emit({
+    ok: false,
+    error: "candidate-call-failed",
+    exception_type: error?.constructor?.name ?? "Error",
+    message: String(error?.message ?? error),
+  }, 1);
+}

@@ -1,0 +1,110 @@
+{
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:b9bf47e58cb4c81a841b26fb23ad73768d9e6624b1f3bdb93eac1dd1bdb583a0",
+      "size_bytes": 425
+    },
+    "oracle_bundle": {
+      "digest": "sha256:a4a2abf6822ef3199138ea0350982fb1312d00f6db5666dfd7c3e9e68d0acd46",
+      "size_bytes": 734
+    },
+    "verifier_bundle": {
+      "digest": "sha256:0e76e0c9566953dbd22af1360cb26e40c01c98317e15fceb77e64a5cda605d97",
+      "size_bytes": 1763
+    }
+  },
+  "commands": [
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "result": "92 passed dynamic leaves, zero failures, and zero skips in every run"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-semver --output .nl2repo/compiled/go-semver-handoff --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "result": ".nl2repo/compiled/go-semver-handoff/go-semver/bundle.manifest.json"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p <runtime-equivalent-compiled-task> -a oracle --allow-agent-host github.com",
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "result": "three runs valid=true, passed=1/1, reward=1.0, public_network_available=false"
+    },
+    {
+      "command": "Harbor nop plus production control bundles for stub, forgery, install-failure, panic, hang, oversized-output, and background-process",
+      "exit_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "result": "all valid=true, reward=0.0, and public_network_available=false"
+    },
+    {
+      "command": "docker run --network none <verifier-image> /tests/test.sh against a rematerialized Oracle workspace",
+      "exit_code": 0,
+      "result": "valid=true, passed=1/1, reward=1.0, public_network_available=false"
+    }
+  ],
+  "control_summary": {
+    "path": ".nl2repo/evidence/go-semver/control-summary.json",
+    "sha256": "sha256:35224c0f29da5e7250252ea140fe88b7288a3ac63971890ab2144b5ddf3261c7"
+  },
+  "final_bundle": {
+    "path": ".nl2repo/compiled/go-semver-handoff/go-semver/bundle.manifest.json",
+    "runtime_equivalent_to_tested_bundle": true,
+    "sha256": "sha256:3805afc849fe25ff80471d2e9e88d20327e3aa6504b580f949e5140852f5c62f"
+  },
+  "images": {
+    "agent": "sha256:7245eb3052474968dfffeb48c87f5a692c4d4bed2d63cf1501a491ecc8dba4ed",
+    "verifier": "sha256:64d97680da16117eaa3d8c21d13326359aa622daacc70598dfa553d730647fb4"
+  },
+  "oracle": {
+    "frozen_total": 1,
+    "passed_each_run": 1,
+    "public_network_available_each_run": false,
+    "reward_each_run": 1.0,
+    "runs": 3,
+    "summary_path": ".nl2repo/evidence/go-semver/oracle-summary.json",
+    "summary_sha256": "sha256:03aedfbd379c528e0e8b1c643352ebab458d1c2ddb41aca73654daa54fb06a4f",
+    "valid_each_run": true
+  },
+  "recovered_infrastructure_failure": {
+    "content_changed": false,
+    "failure_class": "infrastructure",
+    "reason": "The first background Harbor attempt inherited an ephemeral context-mode TMPDIR that disappeared during Docker BuildKit output processing.",
+    "remediation": "Reran with a persistent task-local TMPDIR; all three counted Oracle trials passed."
+  },
+  "runtime_equivalence": {
+    "controls_sha256": "sha256:fecc54c775071b2e259c7d2921ab89dde3b016f19f78d682e315280f79053c09",
+    "environment_sha256": "sha256:3823394eb803a377f753a0dde1fec32e98ec2607afbd73edc4d15d87effe8333",
+    "solution_sha256": "sha256:36b69bc9116f5be3e990f9924c9dbc00828480e02b62fda3406dff7d084fc471",
+    "tests_sha256": "sha256:74c4271783dbb4e1fdf4e1e507aa3df6969ea809559267c45a42cfe477de6eb4"
+  },
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "dd2b995c61c39ddd668b23ac919b04d607be35ab",
+    "source_digest": "sha256:883b1aa28b1a3920344950359343bdc2e43b5a70d854fb0850913b2c548325e2",
+    "upstream_url": "https://github.com/Masterminds/semver"
+  },
+  "status": "controls-passed",
+  "task_id": "go-semver",
+  "terminal_kind": "valid",
+  "uid_supervisor": {
+    "candidate_uid": 10001,
+    "lingering_background_processes": 0,
+    "proof_path": ".nl2repo/work/go-semver/evidence/uid-supervisor-proof.txt"
+  }
+}

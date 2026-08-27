@@ -8,12 +8,12 @@ TASKS = ROOT / "catalog/tasks"
 FORBIDDEN_DOCKER_SNIPPETS = ("COPY dependencies", "--no-index", "--find-links")
 
 
-def _is_node_task(task: Path) -> bool:
+def _runtime_language(task: Path) -> str:
     task_toml = task / "task.toml"
     if not task_toml.is_file():
-        return False
+        return "unknown"
     data = tomllib.loads(task_toml.read_text(encoding="utf-8"))
-    return (data.get("metadata") or {}).get("language") == "node"
+    return str((data.get("metadata") or {}).get("language") or "python")
 
 
 def test_python_harbor_tasks_do_not_vendor_dependencies() -> None:
@@ -23,7 +23,7 @@ def test_python_harbor_tasks_do_not_vendor_dependencies() -> None:
         if not (task / "task.toml").is_file():
             violations.append(f"{task.name}: task.toml missing")
             continue
-        if _is_node_task(task):
+        if _runtime_language(task) != "python":
             continue
 
         if (task / "tests/dependencies").exists():

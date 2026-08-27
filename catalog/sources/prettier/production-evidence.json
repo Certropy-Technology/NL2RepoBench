@@ -1,0 +1,172 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/prettier",
+      "exit_code": 0,
+      "result": "validated task source with lifecycle controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; no prettier finding; 139 unrelated repository warnings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/prettier --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-work/node-author-wide-20260826-remediation/prettier/top-level-compile",
+      "exit_code": 1,
+      "failure_class": "environment",
+      "result": "root schema-1.0 toolchain is not a Node toolchain lock; remediated by the next command"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/prettier --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-work/node-author-wide-20260826-remediation/prettier/top-level-compile",
+      "exit_code": 0,
+      "result": "compiled production bundle"
+    },
+    {
+      "command": "diff -qr top-level-compile/prettier production-final-r2/prettier",
+      "exit_code": 0,
+      "result": "current bundle is byte-identical to the final evidence bundle"
+    },
+    {
+      "command": "sha256sum private artifacts; node --check compiled verifier modules; bash -n compiled shell scripts; JSON parse command plan and bundle manifest",
+      "exit_code": 0,
+      "result": "all content-addressed private artifacts verified and static checks passed"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:35e361c726dad786bde8c398db9add4207765dab5b9b4d68e6f6a6dc152cc3b9",
+    "mode": "production",
+    "path": "catalog/tasks/prettier"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install_script": {
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "loader_hook": {
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "collected": 20,
+      "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/prettier/runs/offline/2026-08-26__14-19-33/prettier-offline__9279WZk/verifier/grading.json",
+      "network_evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/prettier/runs/offline/2026-08-26__14-19-33/prettier-offline__9279WZk/verifier/network.json",
+      "passed": 2,
+      "public_network_available": false,
+      "reward": 0.1,
+      "valid": true
+    },
+    "stub": {
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "timeout": {
+      "collected": 20,
+      "passed": 2,
+      "reward": 0.1,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:5a8aa0bf14255b209f02b32406efb53b91ddc5375b083e7227bb4256c9b4993e",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 441,
+      "uri": "artifact://private/sha256:5a8aa0bf14255b209f02b32406efb53b91ddc5375b083e7227bb4256c9b4993e",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "Candidate and verifier phases run without egress. The candidate contract has no third-party runtime dependencies; private tests and the frozen Oracle source/build artifacts are available only to the separate verifier and trusted Oracle lane.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 20,
+    "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/prettier/final-runs/oracle-r3/2026-08-26__19-22-34/prettier__qFbTJyr/verifier/grading.json",
+    "passed": 20,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:5b013b000ababaf1f51cd5cc8faad6127e15e51dfe3f7ce16c0391d433b384bf",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 3109794,
+      "uri": "artifact://private/sha256:5b013b000ababaf1f51cd5cc8faad6127e15e51dfe3f7ce16c0391d433b384bf",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/node-author-wide-20260826-remediation/prettier/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "The final offline-specific Harbor run was not repeated after the final bundle update. Its preceding receipt proves the no-network verifier behavior (no route and failed public probes), while the current compile is byte-identical to the final Oracle/control bundle and the final offline control differs from it only by its control solution and bundle manifest.",
+    "The local authoring host reports Node 22.23.1/npm 10.9.8; the compiled Docker environments are pinned to Node 24.19.0/npm 11.17.0 and historical Oracle/control evidence used that frozen environment."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "d9969c57343d48a4d1fac12f3f5c4b2fd82d8da5",
+    "source_digest": "sha256:5fced228479ca4235fcb722849f8e1f000640109596f9f1fcea69349c9e49523",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/prettier/prettier"
+  },
+  "status": "controls-passed",
+  "task_id": "prettier",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

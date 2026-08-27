@@ -81,6 +81,47 @@ def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
     assert bundle.artifact is None
 
 
+def test_known_go_dependencies_require_a_private_module_bundle() -> None:
+    private = ArtifactRef(
+        digest="sha256:" + "f" * 64,
+        size_bytes=1,
+        uri="artifact://private/sha256:" + "f" * 64,
+        visibility=Visibility.PRIVATE,
+    )
+    public = private.model_copy(
+        update={
+            "uri": "artifact://public/sha256:" + "f" * 64,
+            "visibility": Visibility.PUBLIC,
+        }
+    )
+
+    bundle = DependencyBundle(
+        status=ProvenanceStatus.KNOWN,
+        module_bundle=private,
+        installer="system",
+    )
+    assert bundle.module_bundle == private
+    with pytest.raises(ValidationError, match="module_bundle must be private"):
+        DependencyBundle(
+            status=ProvenanceStatus.KNOWN,
+            module_bundle=public,
+            installer="system",
+        )
+
+
+def test_known_go_environment_accepts_runtime_version() -> None:
+    environment = EnvironmentLock(
+        status=ProvenanceStatus.KNOWN,
+        runtime_version="1.26.5",
+        os_name="debian-bookworm",
+        base_image="docker.io/library/golang@sha256:" + "a" * 64,
+        base_image_digest="sha256:" + "a" * 64,
+    )
+
+    assert environment.python_version is None
+    assert environment.runtime_version == "1.26.5"
+
+
 def test_blocked_task_requires_reason() -> None:
     with pytest.raises(ValidationError, match="require a reason"):
         TaskLifecycleRecord(status=TaskStatus.BLOCKED)

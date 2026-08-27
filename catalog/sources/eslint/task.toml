@@ -49,16 +49,16 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:ea496d2ef2c5057f58bea513aac5698232aea8daa5c3a2e8de113a937cb2a23d", size_bytes = 2111824, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:ea496d2ef2c5057f58bea513aac5698232aea8daa5c3a2e8de113a937cb2a23d", visibility = "private" }
+artifact = { digest = "sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", size_bytes = 11806720, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", visibility = "private" }
 packages = ["@eslint-community/eslint-utils", "@eslint-community/regexpp", "@eslint/config-array", "@eslint/config-helpers", "@eslint/core", "@eslint/plugin-kit", "@humanfs/node", "@humanwhocodes/module-importer", "@humanwhocodes/retry", "@types/estree", "ajv", "cross-spawn", "debug", "escape-string-regexp", "eslint-scope", "eslint-visitor-keys", "espree", "esquery", "esutils", "fast-deep-equal", "file-entry-cache", "find-up", "glob-parent", "ignore", "imurmurhash", "is-glob", "json-stable-stringify-without-jsonify", "minimatch", "natural-compare", "optionator"]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 19
+expected_total = 20
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
-test_bundle = { digest = "sha256:dd9154426aa1e27f0487e43ab6739aa5c26262f7deb907070c62a982a54cb45e", size_bytes = 4455, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:dd9154426aa1e27f0487e43ab6739aa5c26262f7deb907070c62a982a54cb45e", visibility = "private" }
+commands_artifact = { digest = "sha256:5dfd03f3f2b3b9277e32bdbb3b3f39f0d228aca278d0686ae823352640634c1e", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:5dfd03f3f2b3b9277e32bdbb3b3f39f0d228aca278d0686ae823352640634c1e", visibility = "private" }
+test_bundle = { digest = "sha256:924a6b6366e3a63f56c4d3e2fa5e3cc209bcd2098492072221974e87765bd073", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:924a6b6366e3a63f56c4d3e2fa5e3cc209bcd2098492072221974e87765bd073", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -79,13 +79,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/eslint"
-reason = "The previous controls-passed claim has no discoverable ESLint-specific Harbor Oracle, control, or network receipts in the checkout. The invalid runtime was removed; no production status is retained without hash-bound evidence."
+reason = "Production compile, frozen 20-leaf Oracle, stub/forgery controls, and separate-verifier offline network proof completed; integrator review and model pilot remain pending."
 
 [oracle_bundle]
-digest = "sha256:7e27a9e9fc82b066484e59b8b7909f57e6b01de917476b9d999b9485df2aa6ba"
-size_bytes = 622465
+digest = "sha256:8737925e27ba190fa20dc3cfa4ec19bc014e638ee65a7197cdeac03c0bfdfc87"
+size_bytes = 40960
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:7e27a9e9fc82b066484e59b8b7909f57e6b01de917476b9d999b9485df2aa6ba"
+uri = "artifact://private/sha256:8737925e27ba190fa20dc3cfa4ec19bc014e638ee65a7197cdeac03c0bfdfc87"
 visibility = "private"

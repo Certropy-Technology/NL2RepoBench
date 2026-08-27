@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "upstream_slice": {
+    "files": ["packages/typescript/test/spanMap.test.ts", "packages/typescript/test/wtf8.test.ts"],
+    "collected": 17,
+    "passed": 17,
+    "independent_runs": 3
+  },
+  "private_contract": {
+    "files": ["contract.test.mjs"],
+    "expected_total": 30,
+    "categories": {"metadata": 3, "scanner": 10, "utilities": 7, "span_map": 10}
+  }
+}

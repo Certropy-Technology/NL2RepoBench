@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:bc0a6d789df4f47cdb4050c81c19bb27d03bf83825fc5b01fe959435ec43e13f", "size_bytes": 373, "vendor_wheels": false},
+    "oracle_bundle": {"digest": "sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d", "size_bytes": 10240},
+    "verifier_bundle": {"digest": "sha256:24789e45f01b2f3185d84a20f01620d99285263889e967bd5c14d193073843c5", "size_bytes": 10240}
+  },
+  "compile": {
+    "bundle_manifest_sha256": "sha256:77e35093f658762701dfc822a469ffff003ae2a0af7c4c103c783e2b65347f9c",
+    "canonical_manifest_digest": "sha256:82b9a0c9d76ae515e093192b1d20c42829b08e8841ab107e298ab42c9bc16dd2",
+    "command": "uv run nl2repo harbor compile catalog/sources/jsonpointer --output .nl2repo/final-compile --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "file_count": 57,
+    "mode": "production",
+    "used_allow_incomplete": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/jsonpointer -a nop",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/final-runs/empty/empty/jsonpointer__zNBqcPo/verifier/grading.json", "sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4"},
+      "network": {"path": ".nl2repo/final-runs/empty/empty/jsonpointer__zNBqcPo/verifier/network.json", "public_network_available": false, "sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"},
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/jsonpointer-forgery -a oracle",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/final-runs/forgery/forgery/jsonpointer-forgery__bj42adW/verifier/grading.json", "sha256": "sha256:21ec5592f339f4eff9b019fff0d23b8b576b563832cb746d8e4d746bd284446a"},
+      "network": {"path": ".nl2repo/final-runs/forgery/forgery/jsonpointer-forgery__bj42adW/verifier/network.json", "public_network_available": false, "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"},
+      "reward": 0.03571428571428571,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/jsonpointer-install-hang -a oracle",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/final-runs/install-hang/install-hang/jsonpointer-install-hang__eiW9gCz/verifier/grading.json", "sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4"},
+      "install_status": {"outcome": "timeout", "path": ".nl2repo/final-runs/install-hang/install-hang/jsonpointer-install-hang__eiW9gCz/verifier/candidate-install.json", "returncode": -9, "sha256": "sha256:4239879c63912f57bb7d7cf3c4a3de937959c3ce762d2bc5521a010c3dd9f173"},
+      "network": {"path": ".nl2repo/final-runs/install-hang/install-hang/jsonpointer-install-hang__eiW9gCz/verifier/network.json", "public_network_available": false, "sha256": "sha256:e8de4b28910504802fd7764067ed4c80eb39b7f352d6c189fe5483c0ec54fb99"},
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/jsonpointer-stub -a oracle",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/final-runs/stub/stub/jsonpointer-stub__dyKWWYN/verifier/grading.json", "sha256": "sha256:21ec5592f339f4eff9b019fff0d23b8b576b563832cb746d8e4d746bd284446a"},
+      "network": {"path": ".nl2repo/final-runs/stub/stub/jsonpointer-stub__dyKWWYN/verifier/network.json", "public_network_available": false, "sha256": "sha256:4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb"},
+      "reward": 0.03571428571428571,
+      "valid": true
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/jsonpointer -a oracle --allow-agent-host github.com",
+    "exit_code": 0,
+    "grading": {"path": ".nl2repo/final-runs/oracle/oracle/jsonpointer__8oQHxAs/verifier/grading.json", "sha256": "sha256:b7b2fc30a2215c89a64f9b97c067eaa8d9116eae94428020e20c9cc6267ff5d6"},
+    "harbor_version": "0.21.0",
+    "junit": {"path": ".nl2repo/final-runs/oracle/oracle/jsonpointer__8oQHxAs/verifier/junit.xml", "sha256": "sha256:b4a7d09a212eb6bba3a4ab908edd7b81403c7fe2078aed29cce55355dd5bdd2a"},
+    "network": {"path": ".nl2repo/final-runs/oracle/oracle/jsonpointer__8oQHxAs/verifier/network.json", "public_network_available": false, "sha256": "sha256:e3fee389a2b33000d52264269ad71dfe44867bff47ad120a38ad43de505bde1a"},
+    "passed": 28,
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "source": {
+    "archive_digest": "sha256:f8379acb630446222410697e7e7f33830294f07681de2ae941db723dd4ae989c",
+    "license": "BSD-3-Clause",
+    "license_digest": "sha256:d8b24f15d472885f788a2d6e985850f264627b86012a17bb242c83f310d907e5",
+    "revision": "5998f951dcc5ace60f67f35afe6778c445401a07"
+  },
+  "task_id": "jsonpointer",
+  "terminal_kind": "valid"
+}

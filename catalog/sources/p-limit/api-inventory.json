@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-limit",
+  "source_revision": "df476048d023ff868cd45b35ee47f5fb0ca2b25a",
+  "package": {
+    "name": "p-limit",
+    "version": "7.3.1",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=20",
+    "runtime_dependencies": {
+      "yocto-queue": "1.2.1"
+    }
+  },
+  "public_exports": [
+    {
+      "export": "default",
+      "name": "pLimit",
+      "signature": "pLimit(concurrency: number | Options): LimitFunction"
+    },
+    {
+      "export": "limitFunction",
+      "name": "limitFunction",
+      "signature": "limitFunction(function_, options: Options): (...arguments_) => Promise<ReturnType>"
+    }
+  ],
+  "limit_members": [
+    "activeCount",
+    "pendingCount",
+    "concurrency",
+    "clearQueue",
+    "map",
+    "call(function_, ...arguments_)"
+  ],
+  "options": [
+    "concurrency",
+    "rejectOnClear"
+  ],
+  "source_metrics": {
+    "tracked_files": 16,
+    "runtime_loc": 127,
+    "declaration_loc": 136,
+    "upstream_test_loc": 377,
+    "upstream_ava_tests": 22
+  },
+  "inventory_notes": [
+    "The static Node inventory completed without syntax diagnostics but does not recognize AVA leaves, so the 22-test count was manually verified from test.js and three AVA runs.",
+    "Benchmark helpers and unexported implementation functions are not public package API.",
+    "Function-valued APIs require a declarative subprocess adapter; raw callbacks never cross the verifier boundary."
+  ]
+}

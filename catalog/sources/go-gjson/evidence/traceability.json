@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gjson",
+  "api_inventory": {
+    "method": "golang.org/x/tools/go/packages v0.36.0 plus go/types",
+    "package": "github.com/tidwall/gjson",
+    "public_symbol_count": 45,
+    "stored_at": ".nl2repo/authoring-work/go-gjson/evidence/api-inventory.json"
+  },
+  "source_baseline": {
+    "revision": "7d8b3821e9d2acf35e8a226b63fcf801078e9b96",
+    "archive_digest": "sha256:91ec8257d29e04f0b67cac8641197ddb86d975138a8588d128bf4f27b447692a",
+    "license": "MIT",
+    "static_test_functions": 98,
+    "dynamic_leaf_tests_each_run": 100,
+    "failed_leaf_tests_each_run": 0,
+    "offline_runs": 3,
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false
+  },
+  "risk_adaptation": {
+    "unsafe_scope": "Upstream unsafe use is confined to byte-slice/string zero-copy helpers; the public bridge accepts strings only.",
+    "path_scope": "Bridge rejects paths over 256 bytes, paths over 16 components, and get_many requests over 32 paths.",
+    "dependency_scope": "Private vendor closure freezes tidwall/match v1.1.1 and tidwall/pretty v1.2.0."
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "scalar result fields and conversions",
+      "JSON parse and raw result",
+      "bounded array query and count",
+      "escaped object key",
+      "GetMany ordering and absent/null distinction",
+      "JSON validation",
+      "path-component escaping"
+    ]
+  }
+}

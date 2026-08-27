@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parse5",
+  "package_version": "8.0.1",
+  "module_kind": "esm",
+  "root_runtime_exports": {
+    "ErrorCodes": "object",
+    "Parser": "function",
+    "Token": "object",
+    "Tokenizer": "function",
+    "TokenizerMode": "object",
+    "defaultTreeAdapter": "object",
+    "foreignContent": "object",
+    "html": "object",
+    "parse": "function",
+    "parseFragment": "function",
+    "serialize": "function",
+    "serializeOuter": "function"
+  },
+  "supported_behavioral_api": [
+    "parse(html, options?)",
+    "parseFragment(html, options?)",
+    "parseFragment(context, html, options?)",
+    "serialize(node, options?)",
+    "serializeOuter(node, options?)",
+    "default-tree representation returned by the root parse APIs",
+    "html.NS",
+    "ErrorCodes"
+  ],
+  "compatibility_shapes": {
+    "Parser.static_functions": [
+      "parse",
+      "getFragmentParser"
+    ],
+    "defaultTreeAdapter.function_properties": [
+      "appendChild",
+      "createDocument",
+      "createDocumentFragment",
+      "createElement",
+      "detachNode",
+      "getAttrList",
+      "getChildNodes",
+      "getDocumentMode",
+      "getFirstChild",
+      "getNamespaceURI",
+      "getNodeSourceCodeLocation",
+      "getParentNode",
+      "getTagName",
+      "insertBefore",
+      "isElementNode",
+      "setDocumentMode",
+      "setNodeSourceCodeLocation",
+      "setTemplateContent",
+      "updateNodeSourceCodeLocation"
+    ],
+    "selected_error_codes": {
+      "missingDoctype": "missing-doctype",
+      "duplicateAttribute": "duplicate-attribute",
+      "unexpectedNullCharacter": "unexpected-null-character"
+    }
+  },
+  "compatibility_only_exports": [
+    "Parser",
+    "Tokenizer",
+    "TokenizerMode",
+    "Token",
+    "foreignContent",
+    "non-namespace html members"
+  ],
+  "root_type_exports": [
+    "DefaultTreeAdapterMap",
+    "DefaultTreeAdapterTypes",
+    "TreeAdapter",
+    "TreeAdapterTypeMap",
+    "ParserOptions",
+    "SerializerOptions",
+    "ParserError",
+    "ParserErrorHandler",
+    "TokenizerOptions",
+    "TokenHandler"
+  ]
+}

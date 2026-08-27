@@ -64,7 +64,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:c71b812322e3a1730f4c9fe21aeba0e067e19b4e0bd7ada50b4c263b4cdbf5cf", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c71b812322e3a1730f4c9fe21aeba0e067e19b4e0bd7ada50b4c263b4cdbf5cf", visibility = "private" }
+bundle = { digest = "sha256:b809ff4081afa8ad1c7161ad7e7e4953a7d43cf1c35b9e382265e438f802eb2d", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b809ff4081afa8ad1c7161ad7e7e4953a7d43cf1c35b9e382265e438f802eb2d", visibility = "private" }
 entrypoint = "run.py"
 
 [harbor]
@@ -82,12 +82,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout, and production recompile currently fails because the referenced private dependency lock artifact is missing. The invalid runtime is removed; no production status is retained without hash-bound evidence."
+status = "controls-passed"
+reason = "Frozen source and license are bound to immutable digests; production Harbor 0.21.0 compile succeeded with private hash-locked artifacts, Oracle passed 32/32, and nop/stub/forgery/workspace-invalid/install-hang/call-hang controls all completed valid at 0/32 under no-network verification."
 
 [oracle_bundle]
-digest = "sha256:a3cad5e6ecdb8a3cfa8da71d075db0c201a95220b2f8541eed8a068f13a1e1a2"
+digest = "sha256:24795a7aedebd541803cf4243a7d52af575c325d7d8f2eeb79b92f0a04a13dd0"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:a3cad5e6ecdb8a3cfa8da71d075db0c201a95220b2f8541eed8a068f13a1e1a2"
+uri = "artifact://private/sha256:24795a7aedebd541803cf4243a7d52af575c325d7d8f2eeb79b92f0a04a13dd0"
 visibility = "private"

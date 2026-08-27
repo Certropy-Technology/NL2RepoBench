@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parse5",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/inikulin/parse5",
+    "revision": "e05c47c8caf2eda4c5136310e6f94e7f00c83380",
+    "archive_sha256": "sha256:27a205e827436e03acc87f91d6b1d57e209bf14267c48ed443813ff734113437",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:8c535800331e1e4439835555b3f9edc7fe9dee2fab0d8bbbd5a982e8b8343d4d",
+    "submodules": [
+      {
+        "path": "test/data/html5lib-tests",
+        "revision": "a9f44960a9fedf265093d22b2aa3c7ca123727b9",
+        "archive_sha256": "sha256:58c8063ff052b8443e501d42530c23ec4321a9fac44843bf3d6c38dbdae4229d"
+      },
+      {
+        "path": "test/data/html5lib-tests-fork",
+        "revision": "11c3216c8ec790dbda1494a84f580e0ea41d55a1",
+        "archive_sha256": "sha256:e2d2c0a0c64d73b13a179dc448bf15443730d051b7f487a2fb954d588a9f1a63"
+      }
+    ]
+  },
+  "versions": {
+    "authoring_node": "22.23.1",
+    "authoring_npm": "10.9.8",
+    "production_node": "24.19.0",
+    "production_npm": "11.17.0",
+    "harbor": "0.21.0",
+    "docker_compose": "5.4.0",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+  },
+  "baseline": {
+    "command": "npm ci --offline --ignore-scripts --no-audit --no-fund && npm run build && npm run unit-tests",
+    "runs": 3,
+    "collected_each": 19325,
+    "passed_each": 19325,
+    "logs": [
+      ".nl2repo/authoring-work/node-discovery-20260826-r1/parse5/baseline-offline-1.log",
+      ".nl2repo/authoring-work/node-discovery-20260826-r1/parse5/baseline-offline-2.log",
+      ".nl2repo/authoring-work/node-discovery-20260826-r1/parse5/baseline-offline-3.log"
+    ]
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/parse5",
+      "exit_code": 0,
+      "result": "status=controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; 139 unrelated catalog warnings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/parse5 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled/parse5-final-20260826",
+      "exit_code": 1,
+      "classification": "environment",
+      "result": "Pre-existing deleted harbor-runner/uv.lock prevented the nominal path; the tracked deletion was not modified."
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/parse5 --toolchain .nl2repo/authoring-work/node-discovery-20260826-r1/parse5/toolchain-mirror/toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled/parse5-final-handoff",
+      "exit_code": 0,
+      "result": "Task-local mirror used byte-identical tracked toolchain, verifier lock, Harbor pyproject, and Harbor uv.lock bytes."
+    },
+    {
+      "command": "uv run --frozen --project .nl2repo/authoring-work/node-discovery-20260826-r1/parse5/toolchain-mirror/harbor-runner harbor run -p .nl2repo/compiled/parse5-final-20260826-mirror/parse5 -a oracle --jobs-dir .nl2repo/evidence/parse5/final-oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project .nl2repo/authoring-work/node-discovery-20260826-r1/parse5/toolchain-mirror/harbor-runner harbor run -p .nl2repo/compiled/parse5-final-20260826-mirror/parse5 -a nop --jobs-dir .nl2repo/evidence/parse5/final-empty --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0
+    },
+    {
+      "command": "TOML/JSON parse, bash -n controls and Oracle, node --check private verifier files, and public/private path scan",
+      "exit_code": 0
+    }
+  ],
+  "artifacts": {
+    "artifact_root": ".nl2repo/artifacts",
+    "dependency_bundle": {
+      "digest": "sha256:c7f8cec816b6dfc4eb30b391d8cde524c90c2284e83ed3cefe16f0d220914254",
+      "size_bytes": 266240
+    },
+    "commands_bundle": {
+      "digest": "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf",
+      "size_bytes": 10240
+    },
+    "test_bundle": {
+      "digest": "sha256:139c4f72fea52dc4823c0be2c99db5bca6df3001772b0c0d69ed27ec2eb79eed",
+      "size_bytes": 30720
+    },
+    "oracle_bundle": {
+      "digest": "sha256:2430c9964c8ce92efe00b0235d6b19c197de002d7a5103355b47766d52a97a69",
+      "size_bytes": 8878080
+    },
+    "final_compiled_bundle": ".nl2repo/compiled/parse5-final-handoff/parse5"
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 54
+  },
+  "oracle": {
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 54,
+    "total": 54,
+    "grading": ".nl2repo/evidence/parse5/final-oracle/2026-08-26__23-46-47/parse5__oXsrHBe/verifier/grading.json",
+    "report": ".nl2repo/evidence/parse5/final-oracle/2026-08-26__23-46-47/parse5__oXsrHBe/verifier/report.json",
+    "network": ".nl2repo/evidence/parse5/final-oracle/2026-08-26__23-46-47/parse5__oXsrHBe/verifier/network.json"
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/evidence/parse5/final-empty/2026-08-26__23-48-23/parse5__K6Qq6Dt/verifier/grading.json",
+      "network": ".nl2repo/evidence/parse5/final-empty/2026-08-26__23-48-23/parse5__K6Qq6Dt/verifier/network.json"
+    },
+    "stub": {
+      "exit_code": 0,
+      "reward": 0.05555555555555555,
+      "passed": 3,
+      "total": 54,
+      "grading": ".nl2repo/evidence/parse5/stub/2026-08-26__16-36-38/parse5-stub__iVxzrhF/verifier/grading.json"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "reward": 0.05555555555555555,
+      "passed": 3,
+      "total": 54,
+      "forged_reward_ignored": true,
+      "grading": ".nl2repo/evidence/parse5/forgery/2026-08-26__16-37-32/parse5-forgery__chTu8xG/verifier/grading.json"
+    },
+    "install_script": {
+      "exit_code": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/evidence/parse5/install-script/2026-08-26__16-42-37/parse5-install-script__MaovwWG/verifier/grading.json"
+    },
+    "timeout": {
+      "exit_code": 0,
+      "reward": 0.0,
+      "collection_error": "spawnSync /usr/local/bin/node ETIMEDOUT",
+      "report": ".nl2repo/evidence/parse5/timeout/2026-08-26__16-44-36/parse5-timeout__uehRYhw/verifier/report.json"
+    },
+    "offline": {
+      "exit_code": 0,
+      "public_network_available": false,
+      "collected": 54,
+      "network": ".nl2repo/evidence/parse5/offline/2026-08-26__16-43-36/parse5-offline__cWeywVo/verifier/network.json"
+    },
+    "control_bundle_equivalence": "The earlier stub/forgery/install-script/timeout/offline bundles and the final production bundle have byte-identical environment, verifier, dependency, runtime, and test files; only instruction/task canonical metadata and the deliberate control solve.sh differ."
+  },
+  "residual_risks": [
+    "The production verifier is a 54-leaf package-root contract adaptation, not the complete 19,325-leaf upstream suite.",
+    "One fresh final-bundle Oracle run is recorded; blind review, cross-run stability research, multi-model pilot, and publication remain integrator gates.",
+    "The nominal repository Harbor lock path is pre-deleted in this worktree; final compilation and Oracle used a task-local byte-identical tracked mirror without modifying that unrelated deletion.",
+    "No Harbor model Agent Run was started from this lane."
+  ],
+  "blocker": null
+}

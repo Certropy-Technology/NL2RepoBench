@@ -1,9 +1,11 @@
+$ uv --version
+uv 0.12.3
 $ uv run nl2repo task validate-source catalog/sources/axios
 {
   "instruction": "catalog/sources/axios/instruction.md",
-  "source_digest": "sha256:c2a8a1f5ca52757a2d7dd75b3d15ea4c837f40d858dd8ee9800ea1ff446712c0",
-  "status": "blocked",
+  "source_digest": "sha256:2004e73ae1aa6e3678cefcb49afcd7905d8d5b01bbc7f80cb0c404219e952ded",
+  "status": "controls-passed",
   "task_id": "axios",
-  "version": "0.1.0"
+  "version": "1.0.0"
 }
 exit_code=0

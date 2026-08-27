@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/lodash-es"
+version = "1.0.0"
+description = "Build a zero-runtime-dependency ESM lodash-es package with deterministic collection, object, string, and comparison utilities."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "collections",
+    "objects",
+    "strings",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "collections",
+    "objects",
+    "strings",
+    "separate-verifier",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 30
+canonical_manifest_digest = "sha256:37583fb0a9985ec079f9cbc312a3e9b2308f0e46e29a9e27ff8a6cfb6f50de28"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

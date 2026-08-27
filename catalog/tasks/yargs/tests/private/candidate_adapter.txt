@@ -1,0 +1,210 @@
+if (process.env.NODE_TEST_CONTEXT) process.exit(0);
+
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const PACKAGE = 'yargs';
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const MAX_DEPTH = 16;
+const ALLOWED_METHODS = new Set([
+  'alias',
+  'array',
+  'boolean',
+  'choices',
+  'count',
+  'default',
+  'demandCommand',
+  'demandOption',
+  'describe',
+  'implies',
+  'nargs',
+  'number',
+  'option',
+  'options',
+  'parserConfiguration',
+  'requiresArg',
+  'string',
+  'strict',
+  'strictCommands',
+  'strictOptions',
+  'wrap',
+]);
+
+function emit(id, payload, code = 0) {
+  const encoded = JSON.stringify({id, ...payload});
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stdout.write(JSON.stringify({id, ok: false, error_type: 'response-too-large', message: 'response is too large'}) + '\n');
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function fail(id, errorType, message, code = 64) {
+  emit(id, {ok: false, error_type: errorType, message: String(message).slice(0, 1024)}, code);
+}
+
+function isJsonValue(value, depth = 0) {
+  if (depth > MAX_DEPTH) return false;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.length <= 128 && value.every(item => isJsonValue(item, depth + 1));
+  if (typeof value === 'object') {
+    return Object.keys(value).length <= 128 && Object.entries(value).every(([key, item]) => key.length <= 128 && isJsonValue(item, depth + 1));
+  }
+  return false;
+}
+
+function request() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) fail('', 'request-too-large', 'request is too large');
+  let value;
+  try {
+    value = JSON.parse(data.toString('utf8'));
+  } catch {
+    fail('', 'malformed-json', 'request is malformed');
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) fail('', 'malformed-request', 'request must be an object');
+  if (typeof value.id !== 'string' || value.id.length < 1 || value.id.length > 128) fail('', 'invalid-id', 'id is not bounded');
+  if (typeof value.operation !== 'string' || !['inventory', 'parse', 'parseAsync', 'command', 'coerce', 'check', 'middleware', 'help', 'helper'].includes(value.operation)) {
+    fail(value.id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  }
+  if (!value.payload || typeof value.payload !== 'object' || Array.isArray(value.payload) || !isJsonValue(value.payload)) {
+    fail(value.id, 'malformed-payload', 'payload must be a bounded JSON object');
+  }
+  return value;
+}
+
+async function load() {
+  const root = join(process.cwd(), 'node_modules', PACKAGE);
+  const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  if (packageJson.name !== PACKAGE || packageJson.version !== '18.1.0' || packageJson.type !== 'module') {
+    throw new Error('package identity is invalid');
+  }
+  const rootEntry = packageJson.exports?.['.'];
+  const helperEntry = packageJson.exports?.['./helpers'];
+  if (rootEntry !== './index.mjs' || helperEntry !== './helpers/helpers.mjs') throw new Error('package exports are invalid');
+  for (const entry of [rootEntry, helperEntry]) {
+    if (!entry.startsWith('./') || entry.includes('..') || entry.includes('\\')) throw new Error('package entry is unsafe');
+    readFileSync(join(root, entry));
+  }
+  const api = await import(pathToFileURL(join(root, rootEntry)).href);
+  const helpers = await import(pathToFileURL(join(root, helperEntry)).href);
+  return {root, packageJson, api, helpers};
+}
+
+function parserFor(api, argv) {
+  if (!(typeof argv === 'string' || (Array.isArray(argv) && argv.every(item => typeof item === 'string')))) {
+    throw new TypeError('argv must be a string or an array of strings');
+  }
+  return api.default(argv).exitProcess(false).help(false).version(false).locale('en').showHelpOnFail(false);
+}
+
+function applyMethods(parser, methods = []) {
+  if (!Array.isArray(methods) || methods.length > 32) throw new TypeError('methods must be a bounded array');
+  for (const step of methods) {
+    if (!step || typeof step !== 'object' || Array.isArray(step) || !ALLOWED_METHODS.has(step.method) || !Array.isArray(step.args) || step.args.length > 4) {
+      throw new TypeError('method step is not allowlisted');
+    }
+    parser[step.method](...step.args);
+  }
+  return parser;
+}
+
+function cleanArgv(argv) {
+  const result = {};
+  for (const [key, value] of Object.entries(argv)) {
+    if (key === '$0') continue;
+    if (isJsonValue(value)) result[key] = value;
+  }
+  return result;
+}
+
+async function main() {
+  const {id, operation, payload} = request();
+  const {packageJson, api, helpers} = await load();
+  if (operation === 'inventory') {
+    if (Object.keys(payload).length !== 0) fail(id, 'malformed-payload', 'inventory payload must be empty');
+    emit(id, {
+      ok: true,
+      value: {
+        uid: process.getuid?.() ?? null,
+        packageName: packageJson.name,
+        packageVersion: packageJson.version,
+        type: packageJson.type,
+        rootExport: packageJson.exports['.'],
+        helperExport: packageJson.exports['./helpers'],
+        rootDefaultCallable: typeof api.default === 'function',
+        commonJsNamedCallable: typeof api['module.exports'] === 'function',
+        helperNames: Object.keys(helpers).sort(),
+      },
+    });
+  }
+
+  try {
+    if (operation === 'helper') {
+      if (payload.name === 'hideBin') {
+        emit(id, {ok: true, value: helpers.hideBin(payload.argv)});
+      }
+      if (payload.name === 'Parser') {
+        emit(id, {ok: true, value: helpers.Parser(payload.argv, payload.options ?? {})});
+      }
+      fail(id, 'helper-not-allowlisted', 'helper is not allowlisted');
+    }
+
+    const parser = applyMethods(parserFor(api, payload.argv ?? []), payload.methods ?? []);
+    if (operation === 'parse') {
+      emit(id, {ok: true, value: cleanArgv(parser.parseSync())});
+    }
+    if (operation === 'parseAsync') {
+      emit(id, {ok: true, value: cleanArgv(await parser.parseAsync())});
+    }
+    if (operation === 'coerce') {
+      const modes = {
+        upper: value => String(value).toUpperCase(),
+        increment: value => Number(value) + 1,
+        csv: value => String(value).split(','),
+      };
+      if (typeof payload.key !== 'string' || typeof modes[payload.mode] !== 'function') throw new TypeError('coerce mode is not allowlisted');
+      parser.coerce(payload.key, modes[payload.mode]);
+      emit(id, {ok: true, value: cleanArgv(parser.parseSync())});
+    }
+    if (operation === 'check') {
+      if (payload.mode !== 'positive-count') throw new TypeError('check mode is not allowlisted');
+      parser.check(argv => {
+        if (typeof argv.count === 'number' && argv.count > 0) return true;
+        throw new Error('count must be positive');
+      });
+      emit(id, {ok: true, value: cleanArgv(parser.parseSync())});
+    }
+    if (operation === 'middleware') {
+      if (payload.mode !== 'tag') throw new TypeError('middleware mode is not allowlisted');
+      parser.middleware(argv => {
+        argv.middlewareTag = 'applied';
+      }, true);
+      emit(id, {ok: true, value: cleanArgv(parser.parseSync())});
+    }
+    if (operation === 'command') {
+      if (typeof payload.command !== 'string' || payload.command.length > 128 || !payload.builder || typeof payload.builder !== 'object' || Array.isArray(payload.builder)) {
+        throw new TypeError('command contract is malformed');
+      }
+      let handled = null;
+      parser.command(payload.command, payload.description ?? '', builder => builder.options(payload.builder), argv => {
+        handled = cleanArgv(argv);
+      });
+      const parsed = cleanArgv(parser.parseSync());
+      emit(id, {ok: true, value: {parsed, handled}});
+    }
+    if (operation === 'help') {
+      parser.usage(payload.usage ?? '$0 [options]');
+      emit(id, {ok: true, value: await parser.getHelp()});
+    }
+    fail(id, 'operation-not-implemented', 'operation is not implemented');
+  } catch (error) {
+    fail(id, error?.constructor?.name ?? 'Error', error?.message ?? error, 1);
+  }
+}
+
+main().catch(error => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));

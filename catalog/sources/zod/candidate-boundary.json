@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "status": "production-json-boundary",
+  "protocol": "zod-json-validation-v1",
+  "purpose": "Verifier-owned adapter for a bounded Zod v4 classic schema and safeParse contract; it is not a candidate CLI or package export.",
+  "transport": {
+    "encoding": "utf-8",
+    "request": "one JSON object supplied to one isolated child invocation",
+    "response": "one JSON object on stdout",
+    "stderr": "bounded diagnostics only"
+  },
+  "request": {
+    "required": ["id", "schema", "value"],
+    "id": "nonempty string of at most 128 characters",
+    "schema": "allowlisted recursive descriptor from instruction.md",
+    "value": "JSON null, boolean, finite number, string, array, or plain object recursively"
+  },
+  "response": {
+    "success": {"id": "string", "success": true, "data": "parsed JSON value"},
+    "failure": {"id": "string", "success": false, "issues": [{"code": "string", "path": "string/integer array", "message": "string"}]}
+  },
+  "limits": {
+    "request_bytes": 65536,
+    "response_bytes": 262144,
+    "schema_depth": 8,
+    "object_keys": 32,
+    "array_items": 128,
+    "enum_values": 32,
+    "union_options": 16,
+    "child_timeout_seconds": 30
+  },
+  "security": [
+    "candidate package runs only as uid 10001 in an isolated child",
+    "NODE_OPTIONS, NODE_PATH, registry, proxy, and host environment variables are absent",
+    "candidate code is never imported by the trusted node:test process",
+    "candidate cannot write trusted reports or reward files",
+    "the adapter accepts no callbacks, functions, source text, executable strings, or non-JSON values"
+  ]
+}

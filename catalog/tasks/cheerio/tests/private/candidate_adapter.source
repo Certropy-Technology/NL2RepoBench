@@ -1,0 +1,156 @@
+import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+const PACKAGE = "cheerio";
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const CHAIN_METHODS = new Set([
+  "find", "parent", "parents", "parentsUntil", "closest", "next", "nextAll",
+  "nextUntil", "prev", "prevAll", "prevUntil", "siblings", "children",
+  "contents", "filter", "not", "has", "first", "last", "eq", "slice",
+  "end", "addBack", "attr", "removeAttr", "addClass", "removeClass",
+  "toggleClass", "css", "val", "append", "prepend", "before", "after",
+  "remove", "empty", "html", "text", "wrap", "wrapInner", "unwrap", "clone"
+]);
+const RESULT_KINDS = new Set([
+  "length", "text", "html", "outerHTML", "outerHTMLs", "attrs", "attr",
+  "prop", "css", "val", "serialize", "serializeArray", "hasClass", "is",
+  "index", "documentHtml", "documentXml", "documentText", "extract"
+]);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write("candidate response exceeds the bound\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function request() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+  let payload;
+  try {
+    payload = JSON.parse(data.toString("utf8"));
+  } catch {
+    emit({ ok: false, error: "malformed-json" }, 64);
+  }
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    emit({ ok: false, error: "request-must-be-object" }, 64);
+  }
+  return payload;
+}
+
+async function loadModule(specifier = PACKAGE) {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  try {
+    return require(specifier);
+  } catch (error) {
+    if (error?.code !== "ERR_REQUIRE_ESM" && error?.code !== "ERR_PACKAGE_PATH_NOT_EXPORTED") throw error;
+    const packageRoot = join(process.cwd(), "node_modules", PACKAGE);
+    const manifest = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+    const key = specifier === PACKAGE ? "." : `./${specifier.slice(PACKAGE.length + 1)}`;
+    const descriptor = key === "." ? manifest.exports?.["."] : manifest.exports?.[key];
+    const entry = typeof descriptor === "string"
+      ? descriptor
+      : descriptor?.import?.default ?? descriptor?.import ?? manifest.module ?? manifest.main;
+    if (typeof entry !== "string" || !entry.startsWith("./") || entry.includes("..")) {
+      throw new Error("allowlisted package has no safe ESM entry");
+    }
+    return import(pathToFileURL(join(packageRoot, entry)).href);
+  }
+}
+
+function assertObject(value, name) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new TypeError(`${name} must be an object`);
+  }
+}
+
+function queryResult($, selection, descriptor) {
+  assertObject(descriptor, "result");
+  if (!RESULT_KINDS.has(descriptor.kind)) throw new TypeError("result kind is not allowlisted");
+  switch (descriptor.kind) {
+    case "length": return selection.length;
+    case "text": return selection.text();
+    case "html": return selection.html();
+    case "outerHTML": return selection.prop("outerHTML");
+    case "outerHTMLs": return selection.toArray().map((node) => $(node).prop("outerHTML"));
+    case "attrs": return selection.attr();
+    case "attr": return selection.attr(String(descriptor.name));
+    case "prop": return selection.prop(String(descriptor.name));
+    case "css": return selection.css(String(descriptor.name));
+    case "val": return selection.val();
+    case "serialize": return selection.serialize();
+    case "serializeArray": return selection.serializeArray();
+    case "hasClass": return selection.hasClass(String(descriptor.name));
+    case "is": return selection.is(String(descriptor.selector));
+    case "index": return selection.index();
+    case "documentHtml": return $.html();
+    case "documentXml": return $.xml();
+    case "documentText": return $.text();
+    case "extract": return $.extract(descriptor.map);
+    default: throw new TypeError("unreachable result kind");
+  }
+}
+
+async function metadata() {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  const manifest = JSON.parse(readFileSync(require.resolve(`${PACKAGE}/package.json`), "utf8"));
+  const root = await loadModule();
+  const slim = await loadModule(`${PACKAGE}/slim`);
+  const utils = await loadModule(`${PACKAGE}/utils`);
+  return {
+    name: manifest.name,
+    version: manifest.version,
+    type: manifest.type,
+    scripts: manifest.scripts ?? null,
+    dependencyNames: Object.keys(manifest.dependencies ?? {}).sort(),
+    devDependencies: Object.keys(manifest.devDependencies ?? {}).sort(),
+    rootLoad: typeof root.load === "function",
+    slimLoad: typeof slim.load === "function",
+    utilityNames: ["camelCase", "cssCase", "isHtml"].filter((name) => typeof utils[name] === "function")
+  };
+}
+
+async function main() {
+  const payload = request();
+  try {
+    if (payload.operation === "metadata") emit({ ok: true, value: await metadata() });
+    if (payload.operation === "utils") {
+      const utils = await loadModule(`${PACKAGE}/utils`);
+      const method = String(payload.method);
+      if (!["camelCase", "cssCase", "isHtml"].includes(method)) throw new TypeError("utility is not allowlisted");
+      emit({ ok: true, value: utils[method](String(payload.value)) });
+    }
+    if (payload.operation !== "query") throw new TypeError("operation is not allowlisted");
+    if (typeof payload.html !== "string") throw new TypeError("html must be a string");
+    const root = await loadModule(payload.slim === true ? `${PACKAGE}/slim` : PACKAGE);
+    if (typeof root.load !== "function") throw new TypeError("load export is not callable");
+    const $ = root.load(payload.html, payload.options ?? null, payload.isDocument !== false);
+    let selection = $(payload.selector ?? undefined);
+    const steps = payload.steps ?? [];
+    if (!Array.isArray(steps) || steps.length > 16) throw new TypeError("steps exceed the bound");
+    for (const step of steps) {
+      assertObject(step, "step");
+      if (!CHAIN_METHODS.has(step.method)) throw new TypeError("chain method is not allowlisted");
+      const args = step.args ?? [];
+      if (!Array.isArray(args) || args.length > 4) throw new TypeError("step args exceed the bound");
+      selection = selection[step.method](...args);
+    }
+    emit({ ok: true, value: queryResult($, selection, payload.result) });
+  } catch (error) {
+    emit({
+      ok: false,
+      error: "candidate-call-failed",
+      exception_type: error?.constructor?.name ?? "Error",
+      message: String(error?.message ?? error)
+    }, 1);
+  }
+}
+
+await main();

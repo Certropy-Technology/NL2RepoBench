@@ -23,7 +23,7 @@ CASES = [
     ("limit_sinc", "limit_expression", ["sin(x)/x", "x", "0"], "1"),
     ("limit_polynomial_at_two", "limit_expression", ["x**2 + x", "x", "2"], "6"),
     ("matrix_two_by_two", "matrix_determinant", [[[1, 2], [3, 4]]], "-2"),
-    ("matrix_symbolic_numeric_strings", "matrix_determinant", [[["2", "0"], ["0", "3"]]], "6"),
+    ("matrix_symbolic_numeric_strings", "matrix_determinant", [[['2', '0'], ['0', '3']]], "6"),
     ("repeatability", "factor_expression", ["x**4 - 1"], "(x - 1)*(x + 1)*(x**2 + 1)"),
 ]
 
@@ -34,16 +34,19 @@ def main() -> None:
         result = call("sympy_slice", function, *args, timeout_sec=10)
         passed = result.ok and result.value == expected
         leaves.append({"id": name, "status": "passed" if passed else "failed", "message": str(result)})
+
     negative = [
         ("parse_rejects_malformed_expression", "parse_expression", ["x + ("], "ValueError"),
         ("expression_rejects_non_string", "expand_expression", [4], "TypeError"),
         ("symbol_rejects_unknown_name", "solve_expression", ["x**2", "y"], "ValueError"),
         ("matrix_rejects_non_square", "matrix_determinant", [[[1, 2, 3], [4, 5, 6]]], "ValueError"),
+        ("expression_rejects_python_code", "parse_expression", ["__import__('os')"], "ValueError"),
     ]
     for name, function, args, exception_type in negative:
         result = call("sympy_slice", function, *args, timeout_sec=10)
         passed = not result.ok and (result.exception_type or "").endswith(exception_type)
         leaves.append({"id": name, "status": "passed" if passed else "failed", "message": str(result)})
+
     result = call("sympy_slice", "solve_expression", "x**2 - 1", "x", timeout_sec=10)
     try:
         json.dumps({"ok": result.ok, "value": result.value}, allow_nan=False)

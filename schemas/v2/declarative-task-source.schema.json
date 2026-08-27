@@ -90,7 +90,8 @@
         "lockfile_name": {
           "enum": [
             "requirements.lock.txt",
-            "package-lock.json"
+            "package-lock.json",
+            "pnpm-lock.yaml"
           ],
           "title": "Lockfile Name",
           "type": "string"
@@ -103,7 +104,8 @@
           "enum": [
             "uv",
             "pip",
-            "npm"
+            "npm",
+            "pnpm"
           ],
           "title": "Package Manager",
           "type": "string"
@@ -243,6 +245,14 @@
           ],
           "title": "Status",
           "type": "string"
+        },
+        "system_packages": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "System Packages",
+          "type": "array"
         }
       },
       "title": "EnvironmentLockV2",
@@ -504,8 +514,11 @@
           "type": "string"
         },
         "contract_id": {
-          "const": "node-test-leaf-pass-rate-v1",
-          "default": "node-test-leaf-pass-rate-v1",
+          "default": "fixed-test-pass-rate-v1",
+          "enum": [
+            "fixed-test-pass-rate-v1",
+            "node-test-leaf-pass-rate-v1"
+          ],
           "title": "Contract Id",
           "type": "string"
         },
@@ -597,6 +610,7 @@
             "uv",
             "pip",
             "npm",
+            "pnpm",
             "none"
           ],
           "title": "Package Manager",

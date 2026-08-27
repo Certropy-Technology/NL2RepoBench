@@ -1,58 +1,35 @@
-globby production evidence audit (2026-08-25)
+globby remediation evidence (2026-08-26)
 
-The source descriptor's prior controls-passed claim was audited against the
-checked-out catalog and the repository's named run/artifact roots. No
-task-specific Harbor Oracle, control, network, or production-recompile receipt
-was found. The static network-policy lint below is metadata validation only;
-it is not a runtime network receipt.
+The prior blocked state was caused by missing task-local copies of four private
+content-addressed artifacts. Matching artifacts were recovered from the local
+integration/stale-authoring archive and copied into this worktree without
+changing their declared digests or bytes:
+
+- npm closure: sha256:f5765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62, 586024 bytes
+- command bundle: sha256:2638d4835f940fed1f9936bbab687e5d8c95b3c4f5dac23f4b308eaacb7f6eda, 242 bytes
+- node:test bundle: sha256:b2b49cc0703e07201925d36fd73c61e2c0ddad6ce15c452f9c7d47485139ca2f, 1877 bytes
+- Oracle bundle: sha256:5c4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77, 78728 bytes
+
+Source freeze remains unchanged: sindresorhus/globby revision
+46cf13ff8bf5f0e0db96c4985faf83a59d194777, MIT, git archive digest
+sha256:4d48f46f1a05cc55f3918b99891dd81f4b1ec80acca4191b127ee23b84654a12.
+
+Successful task-local commands:
 
 $ uv run nl2repo task validate-source catalog/sources/globby
-{
-  "instruction": "catalog/sources/globby/instruction.md",
-  "source_digest": "sha256:530b7908116719d4a5cecfa0c405aae3bda700fca42a70000a9772968a15c6b0",
-  "status": "blocked",
-  "task_id": "globby",
-  "version": "2.0.0"
-}
-exit_code=0
+exit_code=0; status=controls-passed
 
-$ uv run nl2repo harbor compile catalog/sources/globby --output /tmp/globby-production-recompile --artifact-root /tmp/globby-production-artifacts --toolchain toolchain.node.lock.toml --allow-private
-Harbor compile failed: cannot extract private bundle: artifact is missing: sha256:f5765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62
-compile_exit=1
+$ uv run nl2repo task lint-network --tasks-root .nl2repo/network-root --strict
+exit_code=0; error_count=0; warning_count=0
 
-$ find catalog/sources/globby catalog/tasks/globby -type f \( -name 'grading.json' -o -name 'network.json' -o -name 'result.json' -o -name 'network-probe.json' -o -iname '*receipt*' -o -iname '*recompile*' \) -print
-$ find .nl2repo/runs -type f -path '*globby*' -print
-$ find /tmp /var/tmp -maxdepth 5 -type f \( -iname 'globby*' -o -iname '*globby*receipt*' -o -iname '*globby*recompile*' \) -print
-No task-specific Harbor receipts or production recompile artifacts found.
-exit_code=1
+$ uv run nl2repo harbor compile catalog/sources/globby --output .nl2repo/compiled/globby-production --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private
+exit_code=0; production bundle manifest is present.
 
-$ uv run nl2repo task lint-network --tasks-root /tmp/globby-network-root --strict
-{
-  "error_count": 0,
-  "findings": [],
-  "tasks_scanned": 1,
-  "tasks_with_explicit_policy": 1,
-  "tasks_with_harbor_bundle": 0,
-  "warning_count": 0
-}
-lint_exit=0
+The full catalog lint also completed with error_count=0 and exit_code=0 in
+this checkout, but reported 139 pre-existing warnings for unrelated tasks;
+there were no globby findings. A v1-only `nl2repo task validate` invocation
+against the v2 Harbor bundle was intentionally not used as a gate because the
+command rejects schema 2.0 manifests by design.
 
-$ [ -e .nl2repo/artifacts/sha256/f5/765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62 ] && echo dependency_artifact=present || echo dependency_artifact=absent; [ -e .nl2repo/artifacts/sha256/5c/4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77 ] && echo oracle_artifact=present || echo oracle_artifact=absent
-dependency_artifact=absent
-oracle_artifact=absent
-
-Before runtime removal:
-$ test -e catalog/tasks/globby
-runtime_path=present
-runtime_check_exit=1
-
-After runtime removal:
-$ test ! -e catalog/tasks/globby
-runtime_path=absent
-runtime_removed=1
-
-The source revision and archive digest remain known in task.toml and
-provenance.md. Reopen only after restoring the pinned private dependency and
-Oracle assets, recompiling without --allow-incomplete, and running Harbor
-0.21.0 Oracle plus empty/stub/forgery/offline controls with hash-bound grading
-and network receipts.
+Harbor 0.21.0 results and verifier/network receipt paths are recorded in
+evidence/control-matrix.json. No Harbor Agent Run was started.

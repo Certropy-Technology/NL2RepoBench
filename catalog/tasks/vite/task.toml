@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/vite"
+version = "2.0.0"
+description = "Build the scoped Vite 8.2.2 configuration and environment utility API from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "vite",
+    "configuration",
+    "environment",
+    "filesystem",
+    "json",
+]
+
+[metadata]
+difficulty = "hard"
+category = "node-build-tool"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "vite",
+    "configuration",
+    "environment",
+    "filesystem",
+    "json",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:50b067059ff4706e5fd6227abc171160bb1f51b3ec71ac0d6a5a214b739ef33a"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192

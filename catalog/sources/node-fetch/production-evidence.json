@@ -1,0 +1,173 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "git fetch --depth 1 origin 8b3320d2a7c07bce4afc6b2bf6c3bbddda85b01f; git archive --format=tar HEAD | sha256sum",
+      "exit_code": 0,
+      "result": "resolved claimed revision; archive digest c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c"
+    },
+    {
+      "command": "npm test -- test/headers.js; npm test -- test/response.js; npm test -- test/request.js",
+      "exit_code": 0,
+      "result": "15, 28, and 20 upstream deterministic source leaves passed"
+    },
+    {
+      "command": "Node 24/npm 11 full upstream suite probe",
+      "exit_code": 151,
+      "result": "151 live localhost fixture failures with ECONNREFUSED; retained as bounded no-network adaptation evidence, not hidden or normalized away"
+    },
+    {
+      "command": "validate_npm_dependency_bundle(task-local runtime closure, npm 11.17.0)",
+      "exit_code": 0,
+      "result": "complete v3 lock/cache/metadata closure accepted"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/node-fetch",
+      "exit_code": 0,
+      "result": "status controls-passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count 0; node-fetch has no findings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/node-fetch --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled-node-fetch-final",
+      "exit_code": 0,
+      "result": "production Node bundle compiled with complete manifest"
+    },
+    {
+      "command": "docker build generated agent and separate verifier images",
+      "exit_code": 0,
+      "result": "both digest-pinned images built; verifier installed hash-locked Python dependencies at build time"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:5854495668ee3aa0b32cb8bc7667b76294ed4a32255f76fa09ab986672896fa6",
+    "mode": "production",
+    "path": "catalog/tasks/node-fetch"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 23,
+      "passed": 4,
+      "public_network_available": false,
+      "reward": 0.17391304347826086,
+      "valid": true
+    },
+    "offline": {
+      "oracle_reward": 1.0,
+      "public_network_available": false,
+      "valid": true
+    },
+    "stub": {
+      "collected": 23,
+      "passed": 4,
+      "public_network_available": false,
+      "reward": 0.17391304347826086,
+      "valid": true
+    },
+    "timeout": {
+      "collected": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:f1c2e6234da6efecf93be9009e1e7edc43ba7f4fc0512fcf6a19b2ad318cabfc",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 2058240,
+      "uri": "artifact://private/sha256:f1c2e6234da6efecf93be9009e1e7edc43ba7f4fc0512fcf6a19b2ad318cabfc",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [
+      "data-uri-to-buffer",
+      "fetch-blob",
+      "formdata-polyfill"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The model agent and separate verifier use a private npm v3 cache closure and have no package registry or source-host egress. The trusted Oracle receives an isolated source archive whose SHA-256 is bound to the frozen revision. A model provider host, when required, is injected only as a run-scoped Harbor agent override.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 23,
+    "evidence": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/node-fetch/local-controls/oracle/logs/verifier/",
+    "executed_as": "direct no-network generated-bundle Docker probe; not a Harbor Agent Run",
+    "passed": 23,
+    "public_network_available": false,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:f3c3906f8159a3ec78e61ea9e96ff4836334295c9fac38a18d476f1371581f85",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 2416640,
+      "uri": "artifact://private/sha256:f3c3906f8159a3ec78e61ea9e96ff4836334295c9fac38a18d476f1371581f85",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/node-author-wide-20260826-remediation/node-fetch/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "The public task is an explicitly documented JSON-safe, data-URL-only subset; it does not claim full node-fetch HTTP/socket, stream, compression, form-data, abort, proxy, or browser parity.",
+    "The frozen upstream full suite is incompatible with the required Node 24 image for its localhost fixture path (exit 151); source evidence preserves this result.",
+    "Independent blind/spec traceability review and model-pilot runs remain pending and must be performed by their owning loops."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "8b3320d2a7c07bce4afc6b2bf6c3bbddda85b01f",
+    "source_digest": "sha256:c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/node-fetch/node-fetch"
+  },
+  "status": "controls-passed",
+  "task_id": "node-fetch",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

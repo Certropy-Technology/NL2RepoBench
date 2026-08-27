@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "package": "winston",
+  "runtime_entry": "lib/winston.js",
+  "public_exports": [
+    "version", "transports", "config", "addColors", "format",
+    "createLogger", "Logger", "ExceptionHandler", "RejectionHandler",
+    "Container", "Transport", "loggers", "error", "warn", "info",
+    "http", "verbose", "debug", "silly", "log", "query", "stream",
+    "add", "remove", "clear", "profile", "startTimer", "handleExceptions",
+    "unhandleExceptions", "handleRejections", "unhandleRejections",
+    "configure", "child", "level", "exceptions", "rejections", "default"
+  ],
+  "covered_modules": [
+    "lib/winston.js", "lib/winston/logger.js", "lib/winston/create-logger.js",
+    "lib/winston/config/index.js", "lib/winston/container.js",
+    "lib/winston/profiler.js", "lib/winston/transports/stream.js",
+    "lib/winston/transports/console.js", "lib/winston/transports/file.js",
+    "lib/winston/transports/http.js", "lib/winston/transports/index.js",
+    "lib/winston/exception-handler.js", "lib/winston/rejection-handler.js"
+  ],
+  "excluded_risk_surfaces": [
+    "file transport filesystem rotation", "HTTP transport network delivery",
+    "process exit and uncaught exception termination", "stress-scale open handles"
+  ]
+}

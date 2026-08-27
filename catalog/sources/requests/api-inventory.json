@@ -1,0 +1,21 @@
+{
+  "task_id": "requests",
+  "source_revision": "8f8b212de8c2129d7954c6cd373762880375620a",
+  "source_digest": "sha256:be1c2c2e74293ab92b50f6044c345e20ccf2e1b28c1e5bdc73dd17d605cd253d",
+  "python_module_count": 19,
+  "python_loc_under_src_requests": 6394,
+  "top_level_class_count": 46,
+  "top_level_function_count": 80,
+  "public_surfaces": [
+    "requests.api",
+    "requests.auth",
+    "requests.cookies",
+    "requests.exceptions",
+    "requests.models",
+    "requests.sessions",
+    "requests.status_codes",
+    "requests.structures",
+    "requests.utils"
+  ],
+  "deterministic_adaptation": "local BaseAdapter transport; no live HTTP service, DNS, proxy, or wall-clock dependency"
+}

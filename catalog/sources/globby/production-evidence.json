@@ -1,106 +1,25 @@
 {
   "schema_version": "1.0",
   "task_id": "globby",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "environment",
-    "next_step": "Restore the declared private npm dependency and Oracle bundles, recompile without --allow-incomplete, then run the official Harbor 0.21.0 Oracle and empty/stub/forgery/offline controls with hash-bound grading and network receipts before reopening.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/sindresorhus/globby",
-      "revision": "46cf13ff8bf5f0e0db96c4985faf83a59d194777",
-      "source_digest": "sha256:4d48f46f1a05cc55f3918b99891dd81f4b1ec80acca4191b127ee23b84654a12",
-      "license_spdx": "MIT",
-      "audit": {
-        "path": "catalog/sources/globby/provenance.md",
-        "sha256": "sha256:ca6147dd36bcd81690b2e423a4e18bb05760a24ebefb12342aa8e528f274a62c"
-      }
-    },
-    "audited_inputs": {
-      "task_descriptor": {
-        "path": "catalog/sources/globby/task.toml",
-        "sha256": "sha256:b3d79cf09dd737b0c87b00d4b84f2b2269fe1c0d467eeb10468853c6428efdb6"
-      },
-      "instruction": {
-        "path": "catalog/sources/globby/instruction.md",
-        "sha256": "sha256:bddc4f50bdd3cc47b069ccc174d08a003c2cde451afe10a26757bdcbdff57013"
-      },
-      "provenance": {
-        "path": "catalog/sources/globby/provenance.md",
-        "sha256": "sha256:ca6147dd36bcd81690b2e423a4e18bb05760a24ebefb12342aa8e528f274a62c"
-      },
-      "audit_log": {
-        "path": "catalog/sources/globby/evidence/remediation.txt",
-        "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-      }
-    },
-    "observed_state": {
-      "previous_lifecycle_status": "controls-passed",
-      "lifecycle_status": "blocked",
-      "expected_test_total": 10,
-      "receipt_status": "not-found",
-      "production_recompile_status": "failed-missing-private-dependency-artifact",
-      "runtime_path": "catalog/tasks/globby",
-      "runtime_path_exists": false,
-      "private_dependency_artifact_exists": false,
-      "private_oracle_artifact_exists": false,
-      "network_policy_lint": "passed-static-only"
-    },
-    "commands": [
-      {
-        "command": "uv run nl2repo task validate-source catalog/sources/globby",
-        "tool_version": "uv 0.12.3; nl2repobench 0.1.0",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/globby/evidence/remediation.txt",
-          "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-        }
-      },
-      {
-        "command": "uv run nl2repo harbor compile catalog/sources/globby --output /tmp/globby-production-recompile --artifact-root /tmp/globby-production-artifacts --toolchain toolchain.node.lock.toml --allow-private",
-        "tool_version": "uv 0.12.3; nl2repobench 0.1.0",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/globby/evidence/remediation.txt",
-          "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-        }
-      },
-      {
-        "command": "find task-local, .nl2repo/runs, /tmp, and /var/tmp roots for globby grading/network/result/receipt/recompile files",
-        "tool_version": "repository filesystem audit",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/globby/evidence/remediation.txt",
-          "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-        }
-      },
-      {
-        "command": "uv run nl2repo task lint-network --tasks-root /tmp/globby-network-root --strict",
-        "tool_version": "uv 0.12.3; nl2repobench 0.1.0",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/globby/evidence/remediation.txt",
-          "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-        }
-      },
-      {
-        "command": "[ -e .nl2repo/artifacts/sha256/f5/765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62 ] \u0026\u0026 echo dependency_artifact=present || echo dependency_artifact=absent; [ -e .nl2repo/artifacts/sha256/5c/4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77 ] \u0026\u0026 echo oracle_artifact=present || echo oracle_artifact=absent",
-        "tool_version": "POSIX shell filesystem inspection",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/globby/evidence/remediation.txt",
-          "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-        }
-      },
-      {
-        "command": "test ! -e catalog/tasks/globby",
-        "tool_version": "POSIX shell filesystem inspection",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/globby/evidence/remediation.txt",
-          "sha256": "sha256:1dce00e470140fdbe2e90f29a86f1c5a2ef57bb40adde5657be910b8452c0e60"
-        }
-      }
-    ]
-  }
+  "terminal_kind": "controls-passed",
+  "source_revision": "46cf13ff8bf5f0e0db96c4985faf83a59d194777",
+  "source_digest": "sha256:4d48f46f1a05cc55f3918b99891dd81f4b1ec80acca4191b127ee23b84654a12",
+  "production_bundle": {
+    "path": ".nl2repo/compiled/globby-production/globby",
+    "manifest": ".nl2repo/compiled/globby-production/globby/bundle.manifest.json",
+    "mode": "production",
+    "canonical_manifest_digest": "sha256:1e2af90c62f67c063ced01a2b3f58e8265e10694dcbf5ad231edfb02ba6c3bde"
+  },
+  "oracle": {
+    "valid": true,
+    "reward": 1.0,
+    "expected_total": 10,
+    "collected": 10,
+    "passed": 10,
+    "grading": ".nl2repo/runs/globby-oracle-final/globby-oracle-final/globby__hqv8oLt/verifier/grading.json",
+    "network": ".nl2repo/runs/globby-oracle-final/globby-oracle-final/globby__hqv8oLt/verifier/network.json"
+  },
+  "controls": "catalog/sources/globby/evidence/control-matrix.json",
+  "status": "awaiting-agent-run",
+  "blockers": []
 }

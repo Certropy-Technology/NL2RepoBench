@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "dacite"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "dataclass-construction"
+tags = ["python", "dataclasses", "type-hints", "conversion", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/konradhalas/dacite"
+revision = "9898ccbb783e7e6a35ae165e7deb9fa84edfe21c"
+license_spdx = "MIT"
+source_digest = "sha256:bd30874ca55029421d5279be2d1b327dda2b86ab1865e3bdc3cfb91e48f7e834"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build closure is installed while images are built. Agent and separate verifier phases run without egress; the trusted Oracle receives a private digest-verified archive of the frozen revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", size_bytes = 373, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 45
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:041d1d84b83b61449093de2b9222cbb945db6bb001cb8ffe8809eef7e33d89cc", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:041d1d84b83b61449093de2b9222cbb945db6bb001cb8ffe8809eef7e33d89cc", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build a pure-Python dictionary-to-dataclass construction library from an empty workspace."
+keywords = ["python", "dataclasses", "type-hints", "conversion", "json-protocol", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 360.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:53c0cc852f9becb74f54476c30d73e0b139e2998459da61daed59c732393cbe9"
+size_bytes = 174080
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:53c0cc852f9becb74f54476c30d73e0b139e2998459da61daed59c732393cbe9"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-pilot-20260827-r1"
+reason = "The production bundle passed the 45/45 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls; review and model pilot remain separate stages."

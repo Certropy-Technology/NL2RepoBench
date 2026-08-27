@@ -1,0 +1,187 @@
+import {spawnSync} from 'node:child_process';
+import {existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync, writeFileSync} from 'node:fs';
+import {join, relative, resolve, sep} from 'node:path';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+
+const MAX_BYTES = 128 * 1024;
+const MAX_DEPTH = 16;
+
+function fail(id, errorType, message, code = 64) {
+  process.stdout.write(JSON.stringify({id, ok: false, error_type: errorType, message: String(message).slice(0, 512)}) + '\n');
+  process.exit(code);
+}
+
+function isJsonValue(value, depth = 0) {
+  if (depth > MAX_DEPTH) return false;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.length <= 128 && value.every(item => isJsonValue(item, depth + 1));
+  if (typeof value === 'object') {
+    return Object.keys(value).length <= 128 && Object.entries(value).every(([key, item]) => key.length <= 256 && isJsonValue(item, depth + 1));
+  }
+  return false;
+}
+
+function plain(value) {
+  return JSON.parse(JSON.stringify(value, (_key, item) => item === undefined ? null : item));
+}
+
+function packageRoot() {
+  const site = process.env.NODE_CANDIDATE_SITE;
+  if (!site) throw new Error('candidate site is not configured');
+  return join(site, 'node_modules', 'rollup');
+}
+
+function safeWrite(root, name, content) {
+  if (typeof name !== 'string' || typeof content !== 'string' || name.length > 256) throw new Error('invalid source file');
+  const destination = resolve(root, name);
+  if (destination !== root && !destination.startsWith(root + sep)) throw new Error('source path escapes root');
+  mkdirSync(resolve(destination, '..'), {recursive: true});
+  writeFileSync(destination, content);
+}
+
+function workspace(files = {}) {
+  const site = process.env.NODE_CANDIDATE_SITE;
+  const root = mkdtempSync(join(site, 'tmp', 'rollup-contract-'));
+  for (const [name, content] of Object.entries(files)) safeWrite(root, name, content);
+  return root;
+}
+
+function outputSummary(output) {
+  return output.map(item => item.type === 'chunk' ? {
+    type: item.type,
+    fileName: item.fileName,
+    code: item.code,
+    exports: item.exports,
+    imports: item.imports,
+    dynamicImports: item.dynamicImports,
+    isEntry: item.isEntry,
+  } : {type: item.type, fileName: item.fileName, source: String(item.source)});
+}
+
+function pluginFrom(spec = {}) {
+  const virtual = spec.virtual ?? {};
+  return {
+    name: 'contract-plugin',
+    resolveId(source) {
+      return Object.hasOwn(virtual, source) ? `\0contract:${source}` : null;
+    },
+    load(id) {
+      return id.startsWith('\0contract:') ? virtual[id.slice(10)] : null;
+    },
+    transform(code, id) {
+      if (!spec.replace || !id.endsWith(spec.replace.file ?? '')) return null;
+      return code.replaceAll(spec.replace.from ?? '', spec.replace.to ?? '');
+    },
+  };
+}
+
+async function loadApi() {
+  const root = packageRoot();
+  const require = createRequire(import.meta.url);
+  return require(root);
+}
+
+async function bundleOperation(payload, write = false) {
+  const root = workspace(payload.files ?? {});
+  const api = await loadApi();
+  const input = Array.isArray(payload.input)
+    ? payload.input.map(value => join(root, value))
+    : typeof payload.input === 'object' && payload.input !== null
+      ? Object.fromEntries(Object.entries(payload.input).map(([key, value]) => [key, join(root, value)]))
+      : join(root, payload.input ?? 'main.js');
+  const options = {input};
+  if (payload.external) options.external = payload.external;
+  if (payload.plugin) options.plugins = [pluginFrom(payload.plugin)];
+  const bundle = await api.rollup(options);
+  try {
+    const outputOptions = {...(payload.output ?? {format: 'es'})};
+    if (write) {
+      outputOptions.file = join(root, payload.file ?? 'bundle.js');
+      await bundle.write(outputOptions);
+      return {file: relative(root, outputOptions.file), code: readFileSync(outputOptions.file, 'utf8')};
+    }
+    const generated = await bundle.generate(outputOptions);
+    return {output: outputSummary(generated.output)};
+  } finally {
+    await bundle.close();
+  }
+}
+
+async function main() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_BYTES) fail('', 'request-too-large', 'request is too large');
+  let request;
+  try { request = JSON.parse(data.toString('utf8')); } catch { fail('', 'malformed-json', 'request is malformed'); }
+  const {id, operation, payload} = request ?? {};
+  if (typeof id !== 'string' || typeof operation !== 'string' || !payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    fail(id ?? '', 'malformed-request', 'request shape is invalid');
+  }
+  if (!isJsonValue(payload)) fail(id, 'invalid-json-value', 'payload is not bounded JSON');
+
+  let value;
+  if (operation === 'inventory') {
+    const root = packageRoot();
+    const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+    const api = await loadApi();
+    const wasm = join(root, 'dist', 'wasm-node', 'bindings_wasm_bg.wasm');
+    const files = [];
+    const walk = directory => {
+      for (const entry of readdirSync(directory, {withFileTypes: true})) {
+        const path = join(directory, entry.name);
+        if (entry.isDirectory()) walk(path);
+        else files.push(relative(root, path));
+      }
+    };
+    walk(root);
+    value = {
+      version: api.VERSION,
+      functions: ['rollup', 'watch', 'defineConfig'].map(name => [name, typeof api[name]]),
+      main: pkg.main,
+      types: pkg.types,
+      bin: pkg.bin?.rollup,
+      wasmBytes: existsSync(wasm) ? statSync(wasm).size : 0,
+      nativeAddons: files.filter(name => name.endsWith('.node')),
+      lifecycleScripts: Object.keys(pkg.scripts ?? {}).filter(name => /^(pre|post)?install$|^prepare$|^prepublish|^publish$|^postpublish$/.test(name)),
+    };
+  } else if (operation === 'defineConfig') {
+    const api = await loadApi();
+    value = plain(api.defineConfig(payload.config));
+  } else if (operation === 'bundle') {
+    value = await bundleOperation(payload, false);
+  } else if (operation === 'write') {
+    value = await bundleOperation(payload, true);
+  } else if (operation === 'error') {
+    try {
+      await bundleOperation(payload, false);
+      value = {threw: false};
+    } catch (error) {
+      value = {threw: true, name: error?.name, code: error?.code, message: String(error?.message ?? error).slice(0, 512)};
+    }
+  } else if (operation === 'cli') {
+    const root = workspace(payload.files ?? {});
+    const bin = join(packageRoot(), 'dist', 'bin', 'rollup');
+    const args = (payload.args ?? []).map(arg => arg === '$ROOT' ? root : arg.replaceAll('$ROOT/', root + sep));
+    const result = spawnSync(process.execPath, [bin, ...args], {
+      cwd: root,
+      input: payload.stdin ?? undefined,
+      encoding: 'utf8',
+      maxBuffer: 256 * 1024,
+      timeout: 30_000,
+    });
+    value = {
+      status: result.status,
+      stdout: result.stdout,
+      stderr: result.stderr,
+      output: payload.read && existsSync(join(root, payload.read)) ? readFileSync(join(root, payload.read), 'utf8') : null,
+    };
+  } else {
+    fail(id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  }
+  const encoded = JSON.stringify({id, ok: true, value: plain(value)});
+  if (Buffer.byteLength(encoded) > 512 * 1024) fail(id, 'response-too-large', 'response is too large');
+  process.stdout.write(encoded + '\n');
+}
+
+main().catch(error => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));

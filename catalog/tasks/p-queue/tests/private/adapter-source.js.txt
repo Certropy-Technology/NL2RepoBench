@@ -1,0 +1,497 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_TASKS = 16;
+const MAX_DELAY_MS = 500;
+const EVENT_NAMES = [
+	'active', 'idle', 'empty', 'add', 'next', 'completed', 'error',
+	'pendingZero', 'rateLimit', 'rateLimitCleared',
+];
+
+function fail(message, exceptionType = 'Error') {
+	process.stdout.write(`${JSON.stringify({
+		ok: false,
+		exceptionType,
+		message: String(message).slice(0, 2048),
+	})}\n`);
+	process.exit(1);
+}
+
+function delay(milliseconds) {
+	return new Promise(resolve => {
+		setTimeout(resolve, milliseconds);
+	});
+}
+
+function deferred() {
+	let resolve;
+	const promise = new Promise(resolve_ => {
+		resolve = resolve_;
+	});
+	return {promise, resolve};
+}
+
+function boundedInteger(value, name, minimum = 0, maximum = MAX_DELAY_MS) {
+	if (!Number.isSafeInteger(value) || value < minimum || value > maximum) {
+		throw new TypeError(`${name} is outside the bounded contract`);
+	}
+	return value;
+}
+
+function queueOptions(value = {}) {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) {
+		throw new TypeError('options must be an object');
+	}
+	const result = {};
+	for (const name of [
+		'concurrency', 'timeout', 'intervalCap', 'interval', 'autoStart',
+		'carryoverIntervalCount', 'strict',
+	]) {
+		if (Object.hasOwn(value, name)) result[name] = value[name];
+	}
+	return result;
+}
+
+function taskList(value) {
+	if (!Array.isArray(value) || value.length > MAX_TASKS) {
+		throw new TypeError('tasks are outside the bounded contract');
+	}
+	return value.map((task, index) => {
+		if (!task || typeof task !== 'object' || Array.isArray(task)) {
+			throw new TypeError('task must be an object');
+		}
+		const id = task.id ?? `task-${index + 1}`;
+		if (typeof id !== 'string' || id.length === 0 || id.length > 64) {
+			throw new TypeError('task id is outside the bounded contract');
+		}
+		const milliseconds = boundedInteger(task.delayMs ?? 0, 'delayMs');
+		const options = {id};
+		if (Object.hasOwn(task, 'priority')) options.priority = task.priority;
+		if (Object.hasOwn(task, 'timeout')) options.timeout = task.timeout;
+		return {
+			id,
+			milliseconds,
+			value: task.value ?? id,
+			reject: task.reject === true,
+			sync: task.sync === true,
+			options,
+		};
+	});
+}
+
+function attachEvents(queue) {
+	const events = [];
+	for (const name of EVENT_NAMES) {
+		queue.on(name, () => {
+			events.push(name);
+		});
+	}
+	return events;
+}
+
+function settledValue(result) {
+	if (result.status === 'fulfilled') return {status: 'fulfilled', value: result.value};
+	return {
+		status: 'rejected',
+		exceptionType: result.reason?.constructor?.name ?? 'Error',
+		message: String(result.reason?.message ?? result.reason).slice(0, 1024),
+	};
+}
+
+async function loadCandidate() {
+	const root = join(process.cwd(), 'node_modules', 'p-queue');
+	const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+	const exportsValue = packageJson.exports;
+	const entry = typeof exportsValue === 'string'
+		? exportsValue
+		: exportsValue?.['.']?.import
+			?? exportsValue?.['.']?.default
+			?? exportsValue?.import
+			?? exportsValue?.default
+			?? packageJson.module
+			?? packageJson.main;
+	if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+		throw new Error('p-queue package has no safe ESM root entry');
+	}
+	const api = await import(pathToFileURL(join(root, entry)).href);
+	return {api, packageJson, root};
+}
+
+function packageShape(api, packageJson, root) {
+	const exportValue = packageJson.exports;
+	const runtimeEntry = typeof exportValue === 'string'
+		? exportValue
+		: exportValue?.['.']?.default ?? exportValue?.default;
+	const declarationEntry = typeof exportValue === 'object'
+		? exportValue?.['.']?.types ?? exportValue?.types
+		: packageJson.types;
+	let runtimeFile = false;
+	let declarationFile = false;
+	try {
+		readFileSync(join(root, runtimeEntry));
+		runtimeFile = true;
+	} catch {}
+	try {
+		readFileSync(join(root, declarationEntry ?? packageJson.types));
+		declarationFile = true;
+	} catch {}
+	return {
+		name: packageJson.name,
+		version: packageJson.version,
+		type: packageJson.type,
+		dependencies: packageJson.dependencies ?? {},
+		scriptNames: Object.keys(packageJson.scripts ?? {}).sort(),
+		runtimeFile,
+		declarationFile,
+		defaultClass: typeof api.default === 'function',
+		priorityQueueClass: typeof api.PriorityQueue === 'function',
+		timeoutErrorClass: typeof api.TimeoutError === 'function',
+	};
+}
+
+async function schedule(PQueue, payload) {
+	const queue = new PQueue(queueOptions(payload.options));
+	const events = attachEvents(queue);
+	const tasks = taskList(payload.tasks);
+	const started = [];
+	const completed = [];
+	let active = 0;
+	let maxActive = 0;
+	const promises = tasks.map(task => queue.add(() => {
+		started.push(task.id);
+		active++;
+		maxActive = Math.max(maxActive, active);
+		const finish = () => {
+			active--;
+			completed.push(task.id);
+			if (task.reject) throw new Error(`rejected:${task.id}`);
+			return task.value;
+		};
+		if (task.sync) return finish();
+		return delay(task.milliseconds).then(finish);
+	}, task.options));
+	const afterAdd = {
+		size: queue.size,
+		pending: queue.pending,
+		isPaused: queue.isPaused,
+		isSaturated: queue.isSaturated,
+		runningTasks: queue.runningTasks,
+		sizeByPriority: Object.hasOwn(payload, 'sizeByPriority')
+			? queue.sizeBy({priority: payload.sizeByPriority})
+			: null,
+	};
+	for (const update of payload.priorityUpdates ?? []) {
+		queue.setPriority(update.id, update.priority);
+	}
+	if (Object.hasOwn(payload, 'concurrency')) queue.concurrency = payload.concurrency;
+	if (payload.start === true) queue.start();
+	const settled = (await Promise.allSettled(promises)).map(settledValue);
+	await queue.onIdle();
+	return {
+		started,
+		completed,
+		settled,
+		maxActive,
+		afterAdd,
+		final: {
+			size: queue.size,
+			pending: queue.pending,
+			isPaused: queue.isPaused,
+			isSaturated: queue.isSaturated,
+			isRateLimited: queue.isRateLimited,
+			concurrency: queue.concurrency,
+		},
+		events,
+	};
+}
+
+async function addAll(PQueue, payload) {
+	const queue = new PQueue(queueOptions(payload.options));
+	const tasks = taskList(payload.tasks);
+	const started = [];
+	const values = await queue.addAll(tasks.map(task => () => {
+		started.push(task.id);
+		return task.value;
+	}), payload.addOptions ?? {});
+	return {started, values, size: queue.size, pending: queue.pending};
+}
+
+async function clearPaused(PQueue) {
+	const queue = new PQueue({autoStart: false, concurrency: 1});
+	const events = attachEvents(queue);
+	const ran = [];
+	for (const id of ['a', 'b', 'c']) queue.add(() => ran.push(id)).catch(() => {});
+	const before = {size: queue.size, pending: queue.pending, isPaused: queue.isPaused};
+	queue.clear();
+	return {
+		before,
+		after: {size: queue.size, pending: queue.pending, isPaused: queue.isPaused},
+		ran,
+		events,
+	};
+}
+
+async function clearRunning(PQueue) {
+	const queue = new PQueue({concurrency: 1});
+	const gate = deferred();
+	const started = deferred();
+	const ran = [];
+	const first = queue.add(async () => {
+		ran.push('running');
+		started.resolve();
+		await gate.promise;
+		return 'done';
+	});
+	queue.add(() => {
+		ran.push('queued');
+		return 'queued';
+	}).catch(() => {});
+	await started.promise;
+	const before = {size: queue.size, pending: queue.pending};
+	queue.clear();
+	const afterClear = {size: queue.size, pending: queue.pending};
+	gate.resolve();
+	const value = await first;
+	await queue.onIdle();
+	return {before, afterClear, final: {size: queue.size, pending: queue.pending}, ran, value};
+}
+
+async function waiters(PQueue, payload) {
+	const queue = new PQueue({concurrency: 1, autoStart: payload.paused === true ? false : undefined});
+	const gate = deferred();
+	const started = deferred();
+	const resolutions = [];
+	const first = queue.add(async () => {
+		started.resolve();
+		await gate.promise;
+		return 'first';
+	});
+	const second = queue.add(() => 'second');
+	if (payload.paused !== true) await started.promise;
+	const waits = [
+		queue.onEmpty().then(() => resolutions.push('empty')),
+		queue.onIdle().then(() => resolutions.push('idle')),
+		queue.onPendingZero().then(() => resolutions.push('pendingZero')),
+		queue.onSizeLessThan(payload.limit ?? 2).then(() => resolutions.push('sizeLessThan')),
+	];
+	const before = {size: queue.size, pending: queue.pending, isPaused: queue.isPaused};
+	if (payload.paused === true) {
+		queue.start();
+		await started.promise;
+	}
+	gate.resolve();
+	const values = await Promise.all([first, second]);
+	await Promise.all(waits);
+	return {before, resolutions, values, final: {size: queue.size, pending: queue.pending}};
+}
+
+async function abortQueued(PQueue) {
+	const queue = new PQueue({concurrency: 1});
+	const gate = deferred();
+	const started = deferred();
+	const controller = new AbortController();
+	const first = queue.add(async () => {
+		started.resolve();
+		await gate.promise;
+		return 'first';
+	});
+	const second = queue.add(() => 'second', {id: 'queued', signal: controller.signal});
+	await started.promise;
+	controller.abort(new Error('queued-abort'));
+	const secondResult = settledValue((await Promise.allSettled([second]))[0]);
+	const afterAbort = {size: queue.size, pending: queue.pending};
+	gate.resolve();
+	const firstValue = await first;
+	await queue.onIdle();
+	return {secondResult, afterAbort, firstValue, final: {size: queue.size, pending: queue.pending}};
+}
+
+async function abortRunning(PQueue) {
+	const queue = new PQueue({concurrency: 1});
+	const controller = new AbortController();
+	const started = deferred();
+	let receivedSignal = false;
+	const task = queue.add(({signal}) => new Promise((_resolve, reject) => {
+		receivedSignal = signal === controller.signal;
+		started.resolve();
+		signal.addEventListener('abort', () => reject(signal.reason), {once: true});
+	}), {signal: controller.signal});
+	await started.promise;
+	controller.abort(new Error('running-abort'));
+	const result = settledValue((await Promise.allSettled([task]))[0]);
+	await queue.onIdle();
+	return {receivedSignal, result, final: {size: queue.size, pending: queue.pending}};
+}
+
+async function rateLimit(PQueue, payload) {
+	const interval = boundedInteger(payload.interval, 'interval', 20, 300);
+	const intervalCap = boundedInteger(payload.intervalCap, 'intervalCap', 1, 8);
+	const count = boundedInteger(payload.count, 'count', 1, MAX_TASKS);
+	const queue = new PQueue({interval, intervalCap, strict: payload.strict === true});
+	const events = attachEvents(queue);
+	const start = Date.now();
+	const offsets = [];
+	const promises = [];
+	for (let index = 0; index < count; index++) {
+		promises.push(queue.add(() => {
+			offsets.push(Date.now() - start);
+			return index;
+		}));
+	}
+	const values = await Promise.all(promises);
+	await queue.onIdle();
+	return {offsets, values, events, isRateLimited: queue.isRateLimited};
+}
+
+function priorityQueueScenario(PriorityQueue, payload) {
+	const queue = new PriorityQueue();
+	const functions = new Map();
+	const labels = new Map();
+	const output = [];
+	const getRun = label => {
+		if (!functions.has(label)) {
+			const run = () => label;
+			functions.set(label, run);
+			labels.set(run, label);
+		}
+		return functions.get(label);
+	};
+	for (const action of payload.actions ?? []) {
+		if (action.op === 'enqueue') {
+			queue.enqueue(getRun(action.label), {priority: action.priority, id: action.id ?? action.label});
+			output.push({op: 'enqueue', size: queue.size});
+		} else if (action.op === 'dequeue') {
+			const run = queue.dequeue();
+			output.push({op: 'dequeue', value: run ? labels.get(run) : null, size: queue.size});
+		} else if (action.op === 'filter') {
+			output.push({op: 'filter', values: queue.filter({priority: action.priority}).map(run => labels.get(run))});
+		} else if (action.op === 'setPriority') {
+			queue.setPriority(action.id, action.priority);
+			output.push({op: 'setPriority', size: queue.size});
+		} else if (action.op === 'remove') {
+			queue.remove(action.byRun ? getRun(action.value) : action.value);
+			output.push({op: 'remove', size: queue.size});
+		} else {
+			throw new Error('priority queue action is not allowlisted');
+		}
+	}
+	return {output, size: queue.size};
+}
+
+function specialNumber(value) {
+	if (value === '$Infinity') return Number.POSITIVE_INFINITY;
+	if (value === '$NegativeInfinity') return Number.NEGATIVE_INFINITY;
+	if (value === '$NaN') return Number.NaN;
+	return value;
+}
+
+async function validation(PQueue, payload) {
+	try {
+		if (payload.target === 'constructor') {
+			new PQueue({[payload.field]: specialNumber(payload.value)});
+		} else if (payload.target === 'strict-zero') {
+			new PQueue({strict: true, interval: 0, intervalCap: 1});
+		} else if (payload.target === 'strict-infinite-cap') {
+			new PQueue({strict: true, interval: 10, intervalCap: Number.POSITIVE_INFINITY});
+		} else if (payload.target === 'concurrency-setter') {
+			const queue = new PQueue();
+			queue.concurrency = specialNumber(payload.value);
+		} else if (payload.target === 'set-priority') {
+			const queue = new PQueue({autoStart: false});
+			queue.add(() => 'value', {id: 'task'}).catch(() => {});
+			queue.setPriority('task', specialNumber(payload.value));
+		} else if (payload.target === 'missing-priority-id') {
+			const queue = new PQueue({autoStart: false});
+			queue.setPriority('missing', 1);
+		} else if (payload.target === 'add-timeout') {
+			const queue = new PQueue();
+			await queue.add(() => 'value', {timeout: specialNumber(payload.value)});
+		} else {
+			throw new Error('validation target is not allowlisted');
+		}
+		return {threw: false};
+	} catch (error) {
+		return {
+			threw: true,
+			exceptionType: error?.constructor?.name ?? 'Error',
+			message: String(error?.message ?? error).slice(0, 2048),
+		};
+	}
+}
+
+async function timeoutError(PQueue, TimeoutError) {
+	const queue = new PQueue({timeout: 20});
+	try {
+		await queue.add(async () => {
+			await delay(100);
+			return 'late';
+		});
+		return {threw: false};
+	} catch (error) {
+		return {
+			threw: true,
+			isTimeoutError: error instanceof TimeoutError,
+			exceptionType: error?.constructor?.name ?? 'Error',
+			message: String(error?.message ?? error),
+		};
+	}
+}
+
+async function main() {
+	const input = readFileSync(0);
+	if (input.byteLength > MAX_REQUEST_BYTES) throw new Error('request is too large');
+	const request = JSON.parse(input.toString('utf8'));
+	if (!request || typeof request !== 'object' || Array.isArray(request) || typeof request.operation !== 'string') {
+		throw new Error('request is malformed');
+	}
+	const payload = request.payload ?? {};
+	if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+		throw new Error('payload must be an object');
+	}
+	const {api, packageJson, root} = await loadCandidate();
+	let value;
+	if (request.operation === 'inventory') {
+		value = packageShape(api, packageJson, root);
+	} else if (request.operation === 'construct') {
+		const queue = new api.default(queueOptions(payload.options));
+		value = {
+			concurrency: queue.concurrency,
+			timeout: queue.timeout ?? null,
+			size: queue.size,
+			pending: queue.pending,
+			isPaused: queue.isPaused,
+			isRateLimited: queue.isRateLimited,
+			isSaturated: queue.isSaturated,
+			runningTasks: queue.runningTasks,
+		};
+	} else if (request.operation === 'schedule') {
+		value = await schedule(api.default, payload);
+	} else if (request.operation === 'add-all') {
+		value = await addAll(api.default, payload);
+	} else if (request.operation === 'clear-paused') {
+		value = await clearPaused(api.default);
+	} else if (request.operation === 'clear-running') {
+		value = await clearRunning(api.default);
+	} else if (request.operation === 'waiters') {
+		value = await waiters(api.default, payload);
+	} else if (request.operation === 'abort-queued') {
+		value = await abortQueued(api.default);
+	} else if (request.operation === 'abort-running') {
+		value = await abortRunning(api.default);
+	} else if (request.operation === 'rate-limit') {
+		value = await rateLimit(api.default, payload);
+	} else if (request.operation === 'priority-queue') {
+		value = priorityQueueScenario(api.PriorityQueue, payload);
+	} else if (request.operation === 'validation') {
+		value = await validation(api.default, payload);
+	} else if (request.operation === 'timeout-error') {
+		value = await timeoutError(api.default, api.TimeoutError);
+	} else {
+		throw new Error('operation is not allowlisted');
+	}
+	process.stdout.write(`${JSON.stringify({ok: true, value})}\n`);
+}
+
+main().catch(error => fail(error?.message ?? error, error?.constructor?.name ?? 'Error'));

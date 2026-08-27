@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "socket.io",
+  "source_revision": "ae7fb46e08c5ed964b4a1ea8b1703e816511598e",
+  "upstream": {
+    "framework": "mocha",
+    "static_test_declarations": 238,
+    "platform_neutral_modules": 12,
+    "adapted_dynamic_total": 194,
+    "baseline_environment": {
+      "image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+      "node": "24.19.0",
+      "npm": "11.17.0",
+      "network": "none"
+    },
+    "baseline_command": "node --import=tsx ../../node_modules/mocha/bin/mocha.js --reporter json --slow 200 --bail --timeout 10000 test/server-attachment.ts test/handshake.ts test/close.ts test/namespaces.ts test/socket.ts test/messaging-many.ts test/middleware.ts test/socket-middleware.ts test/v2-compatibility.ts test/socket-timeout.ts test/utility-methods.ts test/connection-state-recovery.ts",
+    "baseline_runs": [
+      { "run": 1, "collected": 194, "passed": 194, "failed": 0, "duration_ms": 14339 },
+      { "run": 2, "collected": 194, "passed": 194, "failed": 0, "duration_ms": 15400 },
+      { "run": 3, "collected": 194, "passed": 194, "failed": 0, "duration_ms": 13663 }
+    ],
+    "excluded_module": {
+      "path": "packages/socket.io/test/uws.ts",
+      "failure_class": "environment",
+      "reason": "The frozen uWebSockets.js binary requires glibc 2.38, while the locked Debian bookworm image provides glibc 2.36. Core polling behavior remains covered without changing source code."
+    }
+  },
+  "private_contract": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 12,
+    "boundary": "Each scenario executes candidate code as UID 10001 in a bounded subprocess; the trusted test process does not import the candidate package.",
+    "behavior_groups": [
+      "package exports",
+      "default namespace events and client acknowledgements",
+      "namespace authentication middleware and connect errors",
+      "rooms and targeted broadcasting",
+      "sender-excluding socket broadcasts",
+      "socket inventory and bulk room operations",
+      "server-to-client acknowledgements",
+      "acknowledgement timeout",
+      "forced disconnect and inventory cleanup",
+      "dynamic namespaces",
+      "custom Engine.IO path",
+      "server close lifecycle"
+    ]
+  }
+}

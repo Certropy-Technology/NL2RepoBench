@@ -1,0 +1,22 @@
+const { createRequire } = require("node:module");
+
+const site = process.cwd();
+const request = JSON.parse(require("node:fs").readFileSync(0, "utf8"));
+const api = createRequire(`${site}/package.json`)("ramda");
+
+try {
+  if (!request || typeof request.operation !== "string" || !Array.isArray(request.args)) {
+    throw new TypeError("request requires an operation and an args array");
+  }
+  const operation = api[request.operation];
+  if (typeof operation !== "function") {
+    throw new TypeError(`ramda.${request.operation} is not a function`);
+  }
+  process.stdout.write(`${JSON.stringify({ ok: true, result: operation(...request.args) })}\n`);
+} catch (error) {
+  process.stdout.write(`${JSON.stringify({
+    ok: false,
+    exception_type: error && error.name ? error.name : "Error",
+    message: error && error.message ? error.message : String(error),
+  })}\n`);
+}

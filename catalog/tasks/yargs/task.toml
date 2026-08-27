@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/yargs"
+version = "1.0.0"
+description = "Build the yargs ESM command-line argument parser from an empty workspace with deterministic parsing, commands, validation, help, and helper exports."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "cli",
+    "argument-parser",
+    "commands",
+    "validation",
+    "subprocess",
+]
+
+[metadata]
+difficulty = "hard"
+category = "cli-parser"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "cli",
+    "argument-parser",
+    "commands",
+    "validation",
+    "subprocess",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 42
+canonical_manifest_digest = "sha256:79c11d1808c4ce872fbb942194d435ad5f468245dbe377620eec8b565e2f0f64"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096

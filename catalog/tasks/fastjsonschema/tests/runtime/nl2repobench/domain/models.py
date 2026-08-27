@@ -274,7 +274,7 @@ class NetworkPolicy(RecordModel):
 
 
 class EnvironmentLock(RecordModel):
-    """Reproducible execution environment metadata."""
+    """Reproducible execution environment metadata across supported runtimes."""
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -285,14 +285,14 @@ class EnvironmentLock(RecordModel):
                         "properties": {"status": {"const": "known"}},
                     },
                     "then": {
-                        "required": [
-                            "python_version",
-                            "os_name",
-                            "base_image",
-                            "base_image_digest",
+                        "required": ["os_name", "base_image", "base_image_digest"],
+                        "oneOf": [
+                            {"required": ["python_version"]},
+                            {"required": ["runtime_version"]},
                         ],
                         "properties": {
                             "python_version": {"type": "string", "minLength": 1},
+                            "runtime_version": {"type": "string", "minLength": 1},
                             "os_name": {"type": "string", "minLength": 1},
                             "base_image": {"type": "string", "minLength": 1},
                             "base_image_digest": {
@@ -308,6 +308,7 @@ class EnvironmentLock(RecordModel):
 
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
     python_version: str | None = None
+    runtime_version: str | None = None
     os_name: str | None = None
     base_image: str | None = None
     base_image_digest: str | None = Field(default=None, pattern=SHA256_PATTERN)
@@ -334,13 +335,14 @@ class EnvironmentLock(RecordModel):
             missing = [
                 name
                 for name, value in {
-                    "python_version": self.python_version,
                     "os_name": self.os_name,
                     "base_image": self.base_image,
                     "base_image_digest": self.base_image_digest,
                 }.items()
                 if not value
             ]
+            if not self.python_version and not self.runtime_version:
+                missing.append("python_version or runtime_version")
             if missing:
                 raise ValueError(f"known environment is missing: {', '.join(missing)}")
         return self
@@ -365,8 +367,16 @@ class DependencyBundle(RecordModel):
                         "properties": {"status": {"const": "known"}},
                     },
                     "then": {
-                        "required": ["lock_artifact"],
-                        "properties": {"lock_artifact": {"not": {"type": "null"}}},
+                        "oneOf": [
+                            {
+                                "required": ["lock_artifact"],
+                                "properties": {"lock_artifact": {"not": {"type": "null"}}},
+                            },
+                            {
+                                "required": ["module_bundle"],
+                                "properties": {"module_bundle": {"not": {"type": "null"}}},
+                            },
+                        ]
                     },
                 }
             ]
@@ -376,6 +386,9 @@ class DependencyBundle(RecordModel):
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
     lock_artifact: ArtifactRef | None = None
     """Private raw ``requirements.lock.txt`` used for network installation."""
+
+    module_bundle: ArtifactRef | None = None
+    """Private hash-inventoried Go module closure used by the Go compiler."""
 
     # Legacy field.  It points to a wheelhouse and is intentionally not used
     # by the Python Harbor compiler anymore.  Keeping it in the model lets us
@@ -387,8 +400,16 @@ class DependencyBundle(RecordModel):
 
     @model_validator(mode="after")
     def validate_known_bundle(self) -> DependencyBundle:
-        if self.status is ProvenanceStatus.KNOWN and self.lock_artifact is None:
-            raise ValueError("known dependency bundle requires lock_artifact")
+        references = (self.lock_artifact, self.module_bundle)
+        if self.status is ProvenanceStatus.KNOWN and all(item is None for item in references):
+            raise ValueError("known dependency bundle requires lock_artifact or module_bundle")
+        if self.lock_artifact is not None and self.module_bundle is not None:
+            raise ValueError("dependency bundle cannot mix Python and Go locks")
+        if (
+            self.module_bundle is not None
+            and self.module_bundle.visibility is not Visibility.PRIVATE
+        ):
+            raise ValueError("module_bundle must be private")
         return self
 
 
@@ -443,7 +464,9 @@ class TestManifest(RecordModel):
     )
 
     framework: Literal["pytest"] = "pytest"
-    expected_total: Annotated[int, Field(gt=0)]
+    # Blocked/excluded descriptors may have no frozen collection yet. Runtime
+    # publication validation still requires a positive frozen denominator.
+    expected_total: Annotated[int, Field(ge=0)] = 0
     expected_total_source: Literal["frozen-collection", "legacy-file", "unknown"] = "unknown"
     commands: tuple[str, ...] = ()
     commands_artifact: ArtifactRef | None = None
@@ -453,7 +476,11 @@ class TestManifest(RecordModel):
 
     @model_validator(mode="after")
     def validate_command_source(self) -> TestManifest:
-        if not self.commands and self.commands_artifact is None:
+        if (
+            not self.commands
+            and self.commands_artifact is None
+            and not (self.expected_total == 0 and self.expected_total_source == "unknown")
+        ):
             raise ValueError("test commands must be embedded or referenced by an artifact")
         if self.commands and self.commands_artifact is not None:
             raise ValueError("test commands must not be embedded and referenced simultaneously")
@@ -467,6 +494,9 @@ class MetricContract(RecordModel):
 
     contract_id: str = "fixed-test-pass-rate-v1"
     passed_statuses: tuple[Literal["passed"], ...] = ("passed",)
+    # Legacy v1 schema field. The current runtime contract is defined by
+    # verification.metric_contract and rejects this historical exclusion field
+    # at the evaluator boundary rather than silently applying it.
     excluded_statuses: tuple[Literal["skipped", "xfail"], ...] = ("skipped",)
     collection_mismatch: Literal["fail", "record-only"] = "fail"
     formula: str = "clamp(passed / frozen_total, 0, 1)"
@@ -515,6 +545,23 @@ class HarborExecutionProfile(RecordModel):
     memory_mb: Annotated[int, Field(ge=512)] = 2048
     storage_mb: Annotated[int, Field(ge=1024)] = 4096
     workspace_artifact: str = "/workspace"
+
+    def apply_network_policy(self, policy: NetworkPolicy | None) -> HarborExecutionProfile:
+        """Return the Harbor profile resolved from the catalog policy.
+
+        ``network_policy`` is the human-facing authority. The legacy Harbor
+        fields remain accepted for compatibility, but a declared policy always
+        wins when the compiler projects a runtime bundle.
+        """
+
+        if policy is None:
+            return self
+        return self.model_copy(
+            update={
+                "agent_network_mode": policy.mode,
+                "agent_allowed_hosts": policy.allowed_hosts,
+            }
+        )
 
     @model_validator(mode="after")
     def validate_candidate_time_budget(self) -> HarborExecutionProfile:
@@ -632,12 +679,19 @@ class TaskManifest(RecordModel):
             gaps.append("environment_lock.status=known")
         if self.dependency_bundle.status is not ProvenanceStatus.KNOWN:
             gaps.append("dependency_bundle.status=known")
-        if self.dependency_bundle.lock_artifact is None:
+        if self.metadata.language == "go":
+            if self.dependency_bundle.module_bundle is None:
+                gaps.append("dependency_bundle.module_bundle")
+            elif self.dependency_bundle.module_bundle.visibility is not Visibility.PRIVATE:
+                gaps.append("dependency_bundle.module_bundle.visibility=private")
+        elif self.dependency_bundle.lock_artifact is None:
             gaps.append("dependency_bundle.lock_artifact")
         if self.dependency_bundle.artifact is not None:
             gaps.append("dependency_bundle.artifact=forbidden")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
+        if self.tests.expected_total <= 0:
+            gaps.append("tests.expected_total>0")
         if self.verifier is None:
             if self.tests.test_bundle is None:
                 gaps.append("tests.test_bundle")

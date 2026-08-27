@@ -1,0 +1,190 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "command": "node --version && npm --version && python3 --version",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/sharp",
+      "evidence": ".nl2repo/authoring-work/sharp/evidence/validate-source-final.log",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "evidence": ".nl2repo/authoring-work/sharp/evidence/network-lint-final.log",
+      "exit_code": 0,
+      "global_warning_count": 139,
+      "sharp_errors": 0,
+      "tasks_scanned": 201
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/sharp --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-work/sharp/compiled-final",
+      "evidence": ".nl2repo/authoring-work/sharp/evidence/compile-final.log",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-sharp-verifier:local .nl2repo/authoring-work/sharp/compiled-final/sharp/tests",
+      "evidence": ".nl2repo/authoring-work/sharp/evidence/verifier-build.log",
+      "exit_code": 0
+    },
+    {
+      "command": "node --check; bash -n; JSON/TOML parser checks",
+      "exit_code": 0
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:0160a12b2bb24b2da446e2694a6e36689c3acbb1e3a03610de37272dda08605b",
+    "mode": "production",
+    "path": "catalog/tasks/sharp"
+  },
+  "controls": {
+    "empty": {
+      "reward": 0.0,
+      "run": ".nl2repo/authoring-work/sharp/runs/control-empty/2026-08-27__17-40-38",
+      "test_pass_rate": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 31,
+      "failed": 29,
+      "forged_reward_ignored": true,
+      "grading": ".nl2repo/authoring-work/sharp/runs/control-forgery-grading.json",
+      "passed": 2,
+      "reward": 0.06451612903225806,
+      "test_pass_rate": 0.06451612903225806
+    },
+    "offline": {
+      "forgery_network_receipt": ".nl2repo/authoring-work/sharp/controls-final/forgery/logs/verifier/network.json",
+      "public_network_available": false,
+      "stub_network_receipt": ".nl2repo/authoring-work/sharp/controls-final/stub/logs/verifier/network.json",
+      "verifier_completed": true
+    },
+    "stub": {
+      "collected": 31,
+      "failed": 29,
+      "grading": ".nl2repo/authoring-work/sharp/runs/control-stub-grading.json",
+      "passed": 2,
+      "reward": 0.06451612903225806,
+      "test_pass_rate": 0.06451612903225806
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:e75a9da90ef9110bfb734a7e81cb20fe5f2a27beee4d4eab132fafb04b645e71",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 9185280,
+      "uri": "artifact://private/sha256:e75a9da90ef9110bfb734a7e81cb20fe5f2a27beee4d4eab132fafb04b645e71",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [
+      "@img/colour",
+      "@img/sharp-libvips-linux-x64",
+      "@img/sharp-linux-x64",
+      "detect-libc",
+      "semver"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The model and verifier have no egress. Five exact npm dependencies, including the only two allowed Linux x64 glibc native packages, are installed from the private integrity-checked npm cache. Only the trusted Oracle receives a run-scoped github.com source-host authorization.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known",
+    "system_packages": [
+      "ca-certificates=20250419~deb12u1",
+      "git=1:2.39.5-0+deb12u3",
+      "git-man=1:2.39.5-0+deb12u3"
+    ]
+  },
+  "oracle": {
+    "collected": 31,
+    "failed": 0,
+    "network_authorization": [
+      "github.com"
+    ],
+    "passed": 31,
+    "reward": 1.0,
+    "run": ".nl2repo/authoring-work/sharp/runs/oracle-production/2026-08-27__17-48-20/sharp__VKTvg6C",
+    "runner_exit_code": 0,
+    "test_pass_rate": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/authoring-next-20260826/worktrees/node-author-wide-20260826-remediation/sharp/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this lane by instruction.",
+    "Docker emits constant-platform warnings because the task is intentionally locked to linux/amd64.",
+    "The generic Node helper and toolchain lock update are shared-file remediation changes for integrator review.",
+    "The complete upstream suite is authoring evidence; the production contract freezes 31 deterministic leaves.",
+    "Configured vtsls LSP is unavailable at /home/ayi/.local/share/nvim/mason/bin/vtsls; node --check and container tests provide syntax coverage."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "Apache-2.0",
+    "revision": "ea5bef24c187b2c7ee3fe3cad3b45c8cb67a46fd",
+    "source_digest": "sha256:d5b8bf9290848a376a7ceeacd2c32bdd3f289d77e464d69de570919a74fae54d",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/lovell/sharp"
+  },
+  "status": "controls-passed",
+  "task_id": "sharp",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {
+    "candidate_install": "npm ci --offline --ignore-scripts --no-audit --no-fund",
+    "candidate_uid": 10001,
+    "canonical_manifest_digest": "sha256:75d4b07168b582fc9360d478096710efd1fd1ce8dab6b9191d8ff5c5a4f25d25",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "network_mode": "no-network",
+    "oracle_artifact": {
+      "digest": "sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7"
+    },
+    "production_bundle": ".nl2repo/authoring-work/sharp/compiled-final/sharp",
+    "protocol": "node-test-subprocess-boundary-v1",
+    "verifier_image": {
+      "config_digest": "sha256:c57b4a1162665f4a979adf8464b8715fe9a4bce1371b7e6c3001a86a996733bc",
+      "tag": "nl2repo-sharp-verifier:local"
+    }
+  }
+}

@@ -1,45 +1,63 @@
 {
   "schema_version": "1.0",
   "task_id": "date-fns",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "environment",
-    "next_step": "Materialize and hash a compliant npm v3 private cache/lock closure, rerun production compile, and persist official Harbor 0.21.0 Oracle, empty, stub, forgery, and offline network receipts before reopening the task.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/date-fns/date-fns",
-      "revision": "a0a39220522ed1228445792c768ed887709aea5f",
-      "source_digest": "sha256:bfae8a8d4c91f0d01026245898ff9b3a49ad4a1ce10df4c711a97cae302b4bf9",
-      "license_spdx": "MIT"
+  "terminal_kind": "awaiting-agent-run",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/date-fns/date-fns",
+    "revision": "a0a39220522ed1228445792c768ed887709aea5f",
+    "source_digest": "sha256:636db05bafd090414a7d3f6d72aa8f50a4e9afdd0624f86c92f46a3084be170d",
+    "license_spdx": "MIT"
+  },
+  "toolchain": {
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_digest": "sha256:a33b4a62b03e9f88698666dec20841624f65ba280f3cbebfa48135dea4e93b18"
+  },
+  "artifacts": {
+    "dependency_closure": "sha256:bc8d726cdecb4dce06810a51b20e015f84a217cc5505f2fb30a1c7b2e8ce3b0a",
+    "command_plan": "sha256:0df9143bc8e836628f15571002ebfddd1e55d0a77231b386c72f1811a885bd4b",
+    "test_bundle": "sha256:bd93ea0d4c5f93acc0ebe48bbf27f7f21399ef99bb5e3a1dee35605bb517036d",
+    "oracle_bundle": "sha256:addcaac3664c5db6ea8d205b2feb5d30e4dff6808dd404025c369a971d9c956e"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/date-fns",
+      "exit_code": 0
     },
-    "commands": [
-      {
-        "command": "pnpm install --offline --frozen-lockfile",
-        "tool_version": "Node 22.23.1, npm 10.9.8, pnpm 10.33.0",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/date-fns/evidence/remediation.txt",
-          "sha256": "sha256:06b18f7f2bc49eb9a5a7c1c798344b2d8cd37455c30abff87afd8bc265520299"
-        }
-      },
-      {
-        "command": "direct core npm ci --offline",
-        "tool_version": "Node/npm offline probe",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/date-fns/evidence/remediation.txt",
-          "sha256": "sha256:06b18f7f2bc49eb9a5a7c1c798344b2d8cd37455c30abff87afd8bc265520299"
-        }
-      },
-      {
-        "command": "production evidence filesystem audit for Harbor 0.21.0 grading/network receipts",
-        "tool_version": "repository filesystem audit",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/date-fns/provenance.md",
-          "sha256": "sha256:3f479b628bbc5fe736b0ab1e7d1af4aac67dae066963a6aa0030d94948cff9e5"
-        }
-      }
-    ]
-  }
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_local_error_count": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/date-fns --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/authoring-gate/date-fns-final-20260827",
+      "exit_code": 0,
+      "bundle_manifest": ".nl2repo/authoring-gate/date-fns-final-20260827/date-fns/bundle.manifest.json"
+    }
+  ],
+  "oracle": {
+    "official_harbor_receipt": ".nl2repo/authoring-work/date-fns/runs/oracle-final/date-fns-oracle-final/date-fns__KMj4cYu/result.json",
+    "receipt": ".nl2repo/authoring-work/date-fns/controls-20260827/oracle-rebuilt/logs/grading.json",
+    "valid": true,
+    "passed": 39,
+    "total": 39,
+    "reward": 1.0,
+    "network_receipt": ".nl2repo/authoring-work/date-fns/controls-20260827/oracle-rebuilt/logs/network.json",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": { "passed": 0, "total": 39, "reward": 0.0 },
+    "stub": { "passed": 5, "total": 39, "reward": 0.1282051282051282 },
+    "forgery": { "passed": 0, "total": 39, "reward": 0.0 },
+    "offline": { "passed": 39, "total": 39, "reward": 1.0, "public_network_available": false },
+    "timeout": { "passed": 1, "total": 39, "reward": 0.02564102564102564 }
+  },
+  "residual_risks": [
+    "Full upstream pnpm-monorepo development tests require a native TypeScript preview dependency not present in the frozen store; the task intentionally grades the documented zero-runtime-dependency core package through a bounded JSON subprocess contract.",
+    "Independent blind and traceability review remain required before publication."
+  ]
 }

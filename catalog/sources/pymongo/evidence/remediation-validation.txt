@@ -1,12 +1,17 @@
 command: uv run nl2repo task validate-source catalog/sources/pymongo
-{
-  "instruction": "catalog/sources/pymongo/instruction.md",
-  "source_digest": "sha256:3f5a1f780dc5a8cc5e1cc76d97e6bfaca1accc961ed0ab7a3c5ed0a0b64e72ab",
-  "status": "blocked",
-  "task_id": "pymongo",
-  "version": "1.0.0"
-}
-command: git status --short -- catalog/sources/pymongo catalog/tasks/pymongo
- M catalog/sources/pymongo/task.toml
-?? catalog/sources/pymongo/evidence/
-?? catalog/sources/pymongo/task.toml.orig
+exit_code: 0
+status: controls-passed
+task_id: pymongo
+version: 1.1.0
+
+command: uv run nl2repo task lint-network --tasks-root catalog/sources
+exit_code: 0
+error_count: 0
+pymongo_findings: 0
+
+command: uv run nl2repo harbor compile catalog/sources/pymongo --output .nl2repo/final-compile-rerun/pymongo --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private
+exit_code: 0
+output: .nl2repo/final-compile-rerun/pymongo/pymongo
+bundle_manifest_sha256: sha256:ef8a210409711da1b7017d43acd0da97845b1fecf492e1a2dd78503bc5b2fa9f
+canonical_manifest_digest: sha256:cfcfb0469851aa52d66d11d9af4c9ee8cd115cda61c6c9c9d1b043a2fb5b2362
+toolchain_lock_digest: sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff

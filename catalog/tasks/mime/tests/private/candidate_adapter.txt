@@ -1,0 +1,98 @@
+import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const PACKAGE = 'mime';
+const MAX_BYTES = 64 * 1024;
+const request = JSON.parse(readFileSync(0, 'utf8'));
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > 256 * 1024) process.exit(70);
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function packageRoot() {
+  return join(process.cwd(), 'node_modules', PACKAGE);
+}
+
+async function load() {
+  const root = packageRoot();
+  const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const api = await import(pathToFileURL(join(root, manifest.exports['.'])).href);
+  const lite = await import(pathToFileURL(join(root, manifest.exports['./lite'])).href);
+  return {root, manifest, api, lite};
+}
+
+async function main() {
+  const {operation, args = []} = request;
+  const {root, manifest, api, lite} = await load();
+  if (operation === 'inventory') {
+    emit({ok: true, value: {
+      name: manifest.name,
+      version: manifest.version,
+      type: manifest.type,
+      exports: Object.keys(manifest.exports).sort(),
+      named: Object.keys(api).sort(),
+      liteNamed: Object.keys(lite).sort(),
+      classCallable: typeof api.Mime === 'function',
+      cli: Boolean(manifest.bin?.mime),
+      packageJsonReadable: Boolean(readFileSync(join(root, 'package.json'))),
+    }});
+  }
+  if (operation === 'call' || operation === 'liteCall') {
+    const target = operation === 'call' ? api.default : lite.default;
+    const [method, ...values] = args;
+    const value = target[method](...values);
+    emit({ok: true, value: value instanceof Set ? [...value].sort() : value});
+  }
+  if (operation === 'custom') {
+    const instance = new api.Mime({'text/a': ['a', 'a1']}, {'text/b': ['b', 'b1']});
+    emit({ok: true, value: {
+      typeA: instance.getType('a1'),
+      extB: instance.getExtension('text/b'),
+      same: instance.define({'text/c': ['c']}) === instance,
+      typeC: instance.getType('c'),
+    }});
+  }
+  if (operation === 'customCase') {
+    const instance = new api.Mime({'TEXT/UPPER': ['UP']});
+    emit({ok: true, value: [instance.getType('up'), instance.getExtension('text/upper')]});
+  }
+  if (operation === 'customConflict') {
+    const instance = new api.Mime({'text/a': ['a']}, {'text/b': ['b']});
+    let threw = false;
+    let message = '';
+    try { instance.define({'text/c': ['b']}); } catch (error) { threw = true; message = String(error.message); }
+    emit({ok: true, value: {threw, message}});
+  }
+  if (operation === 'customForce') {
+    const instance = new api.Mime({'text/a': ['a']}, {'text/b': ['b']});
+    instance.define({'text/c': ['b', 'c']}, true);
+    emit({ok: true, value: [instance.getType('b'), instance.getType('c'), instance.getExtension('text/c')]});
+  }
+  if (operation === 'customStar') {
+    const instance = new api.Mime({'text/a': ['*a', 'b']}, {'text/b': ['a']});
+    emit({ok: true, value: {all: [...instance.getAllExtensions('text/a')].sort(), mapped: instance.getType('a')}});
+  }
+  if (operation === 'immutable') {
+    let threw = false;
+    try { api.default.define({'text/x-authoring': ['authoring']}); } catch { threw = true; }
+    emit({ok: true, value: threw});
+  }
+  if (operation === 'cli') {
+    const result = spawnSync(process.execPath, [join(root, manifest.bin.mime), ...args], {
+      cwd: root,
+      encoding: 'utf8',
+      timeout: 10_000,
+      maxBuffer: MAX_BYTES,
+      env: {PATH: '/usr/local/bin:/usr/bin:/bin', HOME: '/tmp/mime-cli-home'},
+    });
+    emit({ok: true, value: {status: result.status, stdout: result.stdout, stderr: result.stderr}});
+  }
+  emit({ok: false, error: 'unknown-operation'}, 64);
+}
+
+await main();

@@ -1,0 +1,21 @@
+{
+  "name": "nock",
+  "version": "0.0.0-development",
+  "description": "HTTP server mocking and expectations library for Node.js",
+  "main": "./index.js",
+  "types": "types/index.d.ts",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.20.0 <20 || >=20.12.1"
+  },
+  "dependencies": {
+    "@mswjs/interceptors": "^0.41.0",
+    "json-stringify-safe": "^5.0.1",
+    "propagate": "^2.0.0"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "types/index.d.ts"
+  ]
+}

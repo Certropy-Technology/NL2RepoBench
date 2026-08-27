@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "task_id": "iso8601",
+  "task_version": "0.1.1",
+  "instruction_sha256": "sha256:f1857b47a0162c67869cef5d77d52ad4ee9adc8d2a48b239cad79e0559bad99c",
+  "terminal_kind": "controls-passed",
+  "source": {
+    "revision": "00c9262b9ad141f287b3263be7f2244fa01988c2",
+    "archive_sha256": "sha256:6253d109a195cd118c204e64b513b14d8d07e0293c6089bf1dd1167cc2e2a97f",
+    "license_spdx": "MIT",
+    "upstream_collection": {
+      "collected": 47,
+      "passed": 47
+    }
+  },
+  "artifacts": {
+    "dependency_lock": "sha256:7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d",
+    "verifier_bundle": "sha256:d71cc028e6560e4344b093c30e5dfc5a5654152a224cce9f5f80cc48df00c5af",
+    "oracle_bundle": "sha256:44fdda4299350e28f2aa2d45347bcf405437c197fe197b978d3481d37760e157",
+    "compiled_bundle_manifest": {
+      "path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/final-compiled-v2/iso8601/bundle.manifest.json",
+      "sha256": "sha256:bbeaa1663b352681d8472f0cd6c2386f6de49fcbfd0b0d5ce7041b674b0258f1",
+      "canonical_manifest_digest": "sha256:58c462b9d00b279ea6152ecac8e8cd062ddb36f44250b154dd40591fcd3f0cd0",
+      "toolchain_lock_digest": "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff",
+      "mode": "production",
+      "deterministic_replay": {
+        "path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/replay-v2/iso8601/bundle.manifest.json",
+        "sha256": "sha256:bbeaa1663b352681d8472f0cd6c2386f6de49fcbfd0b0d5ce7041b674b0258f1",
+        "matches": true
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/final-compiled-v2/iso8601 -a oracle --allow-agent-host github.com -o .nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/v2-oracle -n 1",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "reward": 1.0,
+    "passed": 31,
+    "expected_total": 31,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/v2-oracle/2026-08-26__15-51-56/iso8601__DSYyhrV/verifier/grading.json",
+      "sha256": "sha256:c8ff53b714f451d67ad2d1657a3cce2dcb611460b554f19729512c689d1b1af2"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/v2-oracle/2026-08-26__15-51-56/iso8601__DSYyhrV/verifier/network.json",
+      "sha256": "sha256:59b5283e031380f589be790dd5d6af5a8ac237f35b663d948c811baf5d0e75e8",
+      "public_network_available": false
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/v2-oracle/2026-08-26__15-51-56/iso8601__DSYyhrV/verifier/candidate-install.json",
+      "sha256": "sha256:8418b1644619276c665ee11a6e1b4f7aafae4c524cb3742c6149625733040cd7",
+      "outcome": "success"
+    }
+  },
+  "controls": {
+    "empty": {
+      "agent": "nop",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "grading_path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/final-empty/2026-08-26__13-31-32/iso8601__ASoETgP/verifier/grading.json",
+      "grading_sha256": "sha256:0d923a820f4588759b1c653c77c9401408a8ef1c11040a1015966ec6c8b0253d"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1935483870967742,
+      "passed": 6,
+      "expected_total": 31,
+      "candidate_install": "success",
+      "grading_path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/final-stub/2026-08-26__13-33-17/iso8601-stub__9hTQo9t/verifier/grading.json",
+      "grading_sha256": "sha256:16a8f6286ee0400f5dd641bfa588ae977573bbfd5d664ea45091dde85ee9c628"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1935483870967742,
+      "passed": 6,
+      "expected_total": 31,
+      "candidate_install": "success",
+      "verifier_owned_reward": true,
+      "grading_path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/final-forgery/2026-08-26__13-34-31/iso8601-forgery__9gHTHaZ/verifier/grading.json",
+      "grading_sha256": "sha256:16a8f6286ee0400f5dd641bfa588ae977573bbfd5d664ea45091dde85ee9c628"
+    },
+    "install_hang": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "candidate_install": "timeout",
+      "candidate_returncode": -9,
+      "grading_path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/final-install-hang/2026-08-26__13-35-49/iso8601-install-hang__8FLcbuW/verifier/grading.json",
+      "grading_sha256": "sha256:0d923a820f4588759b1c653c77c9401408a8ef1c11040a1015966ec6c8b0253d"
+    },
+    "call_hang": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "expected_total": 31,
+      "candidate_install": "success",
+      "grading_path": ".nl2repo/authoring-work/python-discovery-20260826-r1/iso8601/jobs/final-call-hang/2026-08-26__13-38-27/iso8601-call-hang__prdY54u/verifier/grading.json",
+      "grading_sha256": "sha256:3a6637e1d8b92aa39111d8be60b4da04a5035d73f0ec1f84bfcfdf06020fb019"
+    },
+    "offline": {
+      "all_verifier_network_probes_offline": true
+    }
+  }
+}

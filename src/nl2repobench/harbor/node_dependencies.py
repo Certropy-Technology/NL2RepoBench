@@ -19,6 +19,10 @@ MAX_NPM_LOCK_BYTES = 16 * 1024 * 1024
 MAX_NPM_MANIFEST_BYTES = 4 * 1024 * 1024
 FORBIDDEN_SPEC_MARKERS = ("git+", "git://", "github:", "file:", "workspace:", "link:")
 FORBIDDEN_FILES = {".npmrc", "package-lock.json.tmp"}
+NPM_PACKAGE_PATTERN = re.compile(
+    r"^(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$",
+    re.IGNORECASE,
+)
 
 
 class NodeDependencyError(ValueError):
@@ -87,7 +91,47 @@ def _scan_lock_value(value: object, path: str = "lockfile") -> None:
             _scan_lock_value(nested, f"{path}[{index}]")
 
 
-def _validate_lockfile(path: Path, expected_npm_version: str | None) -> dict[str, Any]:
+def _validate_native_packages(value: object) -> dict[str, dict[str, str]]:
+    if value is None:
+        return {}
+    if not isinstance(value, list):
+        raise NodeDependencyError("npm bundle native_packages must be an array")
+    native_packages: dict[str, dict[str, str]] = {}
+    expected_keys = {"package", "version", "integrity", "os", "cpu", "libc"}
+    for item in value:
+        if not isinstance(item, dict) or set(item) != expected_keys:
+            raise NodeDependencyError("npm bundle native package declaration is malformed")
+        package = item.get("package")
+        version = item.get("version")
+        integrity = item.get("integrity")
+        if not isinstance(package, str) or not NPM_PACKAGE_PATTERN.fullmatch(package):
+            raise NodeDependencyError("npm bundle native package name is invalid")
+        if not isinstance(version, str) or not re.fullmatch(SEMVER_PATTERN, version):
+            raise NodeDependencyError("npm bundle native package version must be exact")
+        if not isinstance(integrity, str) or not integrity.startswith("sha512-"):
+            raise NodeDependencyError("npm bundle native package integrity is invalid")
+        if item.get("os") != "linux" or item.get("cpu") != "x64" or item.get("libc") != "glibc":
+            raise NodeDependencyError(
+                "npm bundle native packages are restricted to linux/x64/glibc"
+            )
+        package_path = f"node_modules/{package}"
+        if package_path in native_packages:
+            raise NodeDependencyError(f"duplicate npm native package declaration: {package}")
+        native_packages[package_path] = {
+            "version": version,
+            "integrity": integrity,
+            "os": "linux",
+            "cpu": "x64",
+            "libc": "glibc",
+        }
+    return native_packages
+
+
+def _validate_lockfile(
+    path: Path,
+    expected_npm_version: str | None,
+    native_packages: dict[str, dict[str, str]],
+) -> dict[str, Any]:
     payload = _validate_json_file(path, max_bytes=MAX_NPM_LOCK_BYTES)
     if payload.get("lockfileVersion") != 3:
         raise NodeDependencyError("npm dependency lockfile must use lockfileVersion 3")
@@ -95,6 +139,7 @@ def _validate_lockfile(path: Path, expected_npm_version: str | None) -> dict[str
     if not isinstance(packages, dict) or "" not in packages:
         raise NodeDependencyError("npm dependency lockfile must contain a packages root")
     _scan_lock_value(payload)
+    matched_native_packages: set[str] = set()
     for package_path, package in packages.items():
         if not isinstance(package_path, str) or not (
             package_path == "" or package_path.startswith("node_modules/")
@@ -108,15 +153,28 @@ def _validate_lockfile(path: Path, expected_npm_version: str | None) -> dict[str
             raise NodeDependencyError(f"linked package is forbidden: {package_path}")
         native_markers = {"node-gyp", "node-pre-gyp", "nan", "node-addon-api"}
         package_name = package_path.removeprefix("node_modules/").casefold()
-        if (
-            package.get("hasInstallScript")
-            or package.get("gypfile")
-            or package.get("binary")
-            or package.get("os")
-            or package.get("cpu")
-            or package_name in native_markers
-        ):
+        if package.get("hasInstallScript") or package.get("gypfile") or package.get("binary"):
             raise NodeDependencyError(f"native or platform package is forbidden: {package_path}")
+        platform_marked = any(package.get(field) for field in ("os", "cpu", "libc"))
+        declaration = native_packages.get(package_path)
+        if platform_marked or declaration is not None:
+            if declaration is None:
+                raise NodeDependencyError(
+                    f"undeclared native or platform package is forbidden: {package_path}"
+                )
+            if (
+                package.get("version") != declaration["version"]
+                or package.get("integrity") != declaration["integrity"]
+                or package.get("os") != [declaration["os"]]
+                or package.get("cpu") != [declaration["cpu"]]
+                or package.get("libc") not in (None, [declaration["libc"]])
+            ):
+                raise NodeDependencyError(
+                    f"native package lock metadata mismatch: {package_path}"
+                )
+            matched_native_packages.add(package_path)
+        if package_name in native_markers:
+            raise NodeDependencyError(f"native build dependency is forbidden: {package_path}")
         if not isinstance(package.get("integrity"), str) or not package["integrity"].startswith(
             "sha512-"
         ):
@@ -127,6 +185,12 @@ def _validate_lockfile(path: Path, expected_npm_version: str | None) -> dict[str
             raise NodeDependencyError(f"package resolution is missing: {package_path}")
     if expected_npm_version is not None and not re.fullmatch(SEMVER_PATTERN, expected_npm_version):
         raise NodeDependencyError("expected npm version is not an exact semantic version")
+    missing_native_packages = set(native_packages) - matched_native_packages
+    if missing_native_packages:
+        raise NodeDependencyError(
+            "declared npm native packages are missing from the lockfile: "
+            + ", ".join(sorted(missing_native_packages))
+        )
     return payload
 
 
@@ -134,7 +198,7 @@ def _validate_manifest(
     path: Path,
     root: Path,
     expected_npm_version: str | None,
-) -> None:
+) -> dict[str, dict[str, str]]:
     payload = _validate_json_file(path, max_bytes=MAX_NPM_MANIFEST_BYTES)
     if payload.get("schema_version") != "1.0":
         raise NodeDependencyError("npm bundle manifest must use schema version 1.0")
@@ -190,6 +254,7 @@ def _validate_manifest(
                 or digest != hashlib.sha256(target.read_bytes()).hexdigest()
             ):
                 raise NodeDependencyError(f"npm bundle file digest mismatch: {entry['path']}")
+    return _validate_native_packages(payload.get("native_packages"))
 
 
 def validate_npm_dependency_bundle(
@@ -209,8 +274,10 @@ def validate_npm_dependency_bundle(
     unexpected = actual_root - required - {"npm-cache"}
     if unexpected:
         raise NodeDependencyError(f"unexpected npm dependency bundle entries: {sorted(unexpected)}")
-    _validate_lockfile(root / "package-lock.json", expected_npm_version)
-    _validate_manifest(root / "bundle.manifest.json", root, expected_npm_version)
+    native_packages = _validate_manifest(
+        root / "bundle.manifest.json", root, expected_npm_version
+    )
+    _validate_lockfile(root / "package-lock.json", expected_npm_version, native_packages)
     total = sum(path.stat().st_size for path in paths)
     if total > MAX_NPM_TOTAL_BYTES:
         raise NodeDependencyError("npm dependency bundle exceeds expanded size limit")

@@ -40,6 +40,29 @@ def run(request, candidate):
         raise ModuleNotFoundError("fastjsonschema is not present in the candidate workspace")
     import fastjsonschema
     operation, schema = request.get("operation"), request.get("schema")
+    if operation == "metadata":
+        exception_names = (
+            "JsonSchemaException",
+            "JsonSchemaValueException",
+            "JsonSchemaValuesException",
+            "JsonSchemaDefinitionException",
+        )
+        exceptions = [getattr(fastjsonschema, name, None) for name in exception_names]
+        base = exceptions[0]
+        hierarchy = (
+            isinstance(base, type)
+            and issubclass(base, ValueError)
+            and all(isinstance(item, type) and issubclass(item, base) for item in exceptions[1:])
+        )
+        return {
+            "ok": True,
+            "version_is_string": isinstance(getattr(fastjsonschema, "VERSION", None), str),
+            "callables_present": all(
+                callable(getattr(fastjsonschema, name, None))
+                for name in ("validate", "compile", "compile_to_code")
+            ),
+            "exception_hierarchy": hierarchy,
+        }
     if operation not in {"validate", "generated"}: raise ValueError("unsupported operation")
     if not isinstance(schema, (dict, bool)): raise TypeError("schema must be an object or boolean")
     schema = json.loads(json.dumps(schema)); draft = request.get("draft")

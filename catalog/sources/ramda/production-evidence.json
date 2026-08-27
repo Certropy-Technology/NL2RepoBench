@@ -1,0 +1,197 @@
+{
+  "blocker": null,
+  "commands": [
+    {
+      "exit_code": 0,
+      "name": "source baseline build/test",
+      "result": "1215/1215 passed in three runs"
+    },
+    {
+      "exit_code": 0,
+      "name": "task validate-source",
+      "result": "controls-passed source valid"
+    },
+    {
+      "exit_code": 0,
+      "name": "task lint-network",
+      "result": "error_count=0; ramda_findings=[]"
+    },
+    {
+      "exit_code": 0,
+      "name": "production harbor compile",
+      "result": ".nl2repo/compiled/ramda-handoff/ramda"
+    },
+    {
+      "exit_code": 0,
+      "name": "focused Node compiler tests with --no-cov",
+      "result": "44 passed"
+    },
+    {
+      "exit_code": 1,
+      "name": "focused Node compiler tests with repository coverage gate",
+      "result": "44 passed; aggregate suite coverage 39% below global 80% threshold"
+    },
+    {
+      "exit_code": 0,
+      "name": "ruff check src/nl2repobench/harbor/node_compiler.py",
+      "result": "all checks passed"
+    },
+    {
+      "exit_code": 0,
+      "name": "mypy src/nl2repobench/harbor/node_compiler.py",
+      "result": "no issues found"
+    },
+    {
+      "exit_code": 0,
+      "name": "final Oracle",
+      "result": "valid=true reward=1.0 71/71"
+    },
+    {
+      "exit_code": 0,
+      "name": "empty control",
+      "result": "valid model-zero, candidate-installation-failed"
+    },
+    {
+      "exit_code": 0,
+      "name": "stub control",
+      "result": "valid reward=0.0 0/71"
+    },
+    {
+      "exit_code": 0,
+      "name": "forgery control",
+      "result": "valid verifier-owned reward=0.0 despite forged 70/70 workspace claim"
+    },
+    {
+      "exit_code": 0,
+      "name": "timeout control",
+      "result": "valid reward=0.0 candidate-call-failed; bounded completion"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:36b00fc90b185a881e2be8da2d21d63d1599477465408e7a16b0c16c34a570ce",
+    "mode": "production",
+    "path": "catalog/tasks/ramda"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 71,
+      "failed": 71,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false
+    },
+    "stub": {
+      "collected": 71,
+      "failed": 71,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "timeout": {
+      "collected": 0,
+      "failure_reason": "candidate-call-failed",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "artifact": {
+      "digest": "sha256:58e7a9993f3faa5b6bcf01106d1584af6f923df476c7f822c647df3870bef3a9",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:58e7a9993f3faa5b6bcf01106d1584af6f923df476c7f822c647df3870bef3a9",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The candidate and separate verifier have no egress. The dependency-free npm v3 closure is private and preinstalled by the verifier. Only the trusted Oracle receives a private, hash-verified reference archive. A model-provider hostname is injected by Harbor per run and is not task metadata.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "oracle": {
+    "collected": 71,
+    "expected_total": 71,
+    "grading_path": ".nl2repo/runs/ramda-20260826/oracle-final-bundle/2026-08-26__18-14-10/ramda__zRhvRgM/verifier/grading.json",
+    "grading_sha256": "sha256:e8248b92dcbc99c573b292065b78c3189ceece08bad54ed0cbe1a5a737be1667",
+    "network_path": ".nl2repo/runs/ramda-20260826/oracle-final-bundle/2026-08-26__18-14-10/ramda__zRhvRgM/verifier/network.json",
+    "network_sha256": "sha256:a2af5216b5dd4ca64164ba0bc26e2f66454b1cbe98f5740d5e8e5377d1ae4bca",
+    "passed": 71,
+    "public_network_available": false,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:88545aab0ea72973fd7ed60702588ccd77dee553c84bd9f110961121949b68aa",
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "size_bytes": 3235840,
+      "uri": "artifact://private/sha256:88545aab0ea72973fd7ed60702588ccd77dee553c84bd9f110961121949b68aa",
+      "visibility": "private"
+    }
+  },
+  "recovery": {
+    "archive_manifest": "reports/authoring-recovery-manifest-20260828.json",
+    "evidence_is_recovered": true,
+    "handoff_source": "/data/NL2RepoBench-authoring-main-20260826/.nl2repo/discovery-20260826/worktrees/node-discovery-20260826-r1/ramda/.nl2repo/authoring-handoff.json",
+    "kind": "task-local-authoring-handoff"
+  },
+  "residual_risks": [
+    "The task is a JSON-safe 71-leaf Ramda slice rather than complete upstream API parity.",
+    "Blind review, traceability approval, model pilot, dataset integration, and publication remain out of scope.",
+    "The final handoff compile differs from the Oracle-run bundle only in lifecycle/provenance metadata; executable task assets and private artifact digests are unchanged."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "803cab30f2e63cd102c6721c1da6c61e57e12429",
+    "source_digest": "sha256:822decf848e9ef50edeca8b0f5f2e595abc18e643634d316a1f8addb5499b672",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/ramda/ramda"
+  },
+  "status": "controls-passed",
+  "task_id": "ramda",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "verifier": {}
+}

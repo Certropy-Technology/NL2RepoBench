@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parse5",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript out of the trusted node:test process while observing package-root HTML behavior through a bounded JSON projection.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 131072,
+    "response_limit_bytes": 2097152,
+    "candidate_uid": 10001,
+    "timeout_seconds": 20,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Return package metadata and runtime export kinds without exposing implementation bytes.",
+    "constants": "Return the public namespace constants, selected error-code values, default-adapter method names, and compatibility export kinds.",
+    "parse": "Parse one bounded HTML document and return a cycle-free projection, canonical serialization, and ordered parse errors.",
+    "fragment": "Parse one bounded fragment with an optional HTML or SVG context and return a cycle-free projection plus serialization.",
+    "outer": "Parse a fragment and serialize one selected child with serializeOuter."
+  },
+  "projection": {
+    "max_nodes": 4096,
+    "max_depth": 96,
+    "omits": ["parentNode"],
+    "preserves": ["nodeName", "tagName", "namespaceURI", "attrs", "value", "data", "name", "publicId", "systemId", "mode", "sourceCodeLocation", "childNodes", "template.content"]
+  },
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "lifecycle scripts",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

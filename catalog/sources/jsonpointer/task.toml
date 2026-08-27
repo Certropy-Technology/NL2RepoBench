@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "jsonpointer"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "data-serialization"
+tags = ["python", "json-pointer", "rfc-6901", "mapping", "sequence", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/stefankoegl/python-json-pointer"
+revision = "5998f951dcc5ace60f67f35afe6778c445401a07"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:f8379acb630446222410697e7e7f33830294f07681de2ae941db723dd4ae989c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git=1:2.47.3-0+deb13u1"]
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked setuptools and wheel build closure is installed during Docker image build. Agent and separate verifier runs have no egress; only the trusted Oracle receives the exact source-host override and verifies both the frozen Git revision and archive digest."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==75.8.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:bc0a6d789df4f47cdb4050c81c19bb27d03bf83825fc5b01fe959435ec43e13f", size_bytes = 373, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bc0a6d789df4f47cdb4050c81c19bb27d03bf83825fc5b01fe959435ec43e13f", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 28
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:24789e45f01b2f3185d84a20f01620d99285263889e967bd5c14d193073843c5", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:24789e45f01b2f3185d84a20f01620d99285263889e967bd5c14d193073843c5", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build jsonpointer 3.1.1 from an empty workspace and satisfy a bounded RFC 6901 JSON Pointer, mutation, error, sequence, and representation contract through a separate subprocess verifier."
+keywords = ["python", "json-pointer", "rfc-6901", "mapping", "sequence", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 480.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "worker/jsonpointer"
+reason = "Harbor 0.21.0 production gates passed with an exact 28-leaf separate-process contract: Oracle 28/28 reward 1.0, empty 0, stub and forgery 1/28, and install-timeout 0; verifier-owned network receipts show no public egress. Reviews and pilot remain pending."

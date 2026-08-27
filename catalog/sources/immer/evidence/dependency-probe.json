@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "authoring_runtime": {"node": "v22.23.1", "npm": "10.9.8", "os": "Linux x86_64", "libc": "glibc 2.43"},
+  "source_revision": "061c2425e1c9dff89e4e4189d42af1b7839dfe0a",
+  "commands": [
+    {"command": "npm install --ignore-scripts --no-audit --no-fund", "exit_code": 1, "failure_class": "environment", "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/npm-install.log", "summary": "ERESOLVE: @vitest/coverage-v8@2.1.9 peers with Vitest 2.1.9 while package.json requests Vitest ^3.2.6"},
+    {"command": "npm install --legacy-peer-deps --ignore-scripts --no-audit --no-fund", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/npm-install-legacy.log"},
+    {"command": "npm test", "exit_code": 127, "failure_class": "environment", "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/upstream-npm-test.log", "summary": "Vitest portion passed 3764 with 8 skips; chained yarn test:build failed because yarn is unavailable"},
+    {"command": "npm run build", "exit_code": 0, "log": ".nl2repo/authoring-work/node-discovery-20260826-r1/immer/upstream-build.log"}
+  ],
+  "upstream_collection": {"runner": "vitest 3.2.6", "test_files": 23, "collected": 3772, "passed": 3764, "skipped": 8},
+  "production_adaptation": "zero-runtime-dependency ESM package plus private node:test JSON action boundary"
+}

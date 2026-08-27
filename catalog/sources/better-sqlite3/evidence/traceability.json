@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "better-sqlite3",
+  "frozen_upstream_test_count": 332,
+  "adapted_leaf_count": 12,
+  "leaves": [
+    {"id":"basic","behavior":"Database construction, exec, rows, open","source_tests":["10.database.open.js","14.database.exec.js","21.statement.get.js","22.statement.all.js"]},
+    {"id":"bindings","behavior":"Positional and named parameter binding","source_tests":["20.statement.run.js","24.statement.bind.js"]},
+    {"id":"iteration","behavior":"Ordered iterator and pluck","source_tests":["23.statement.iterate.js"]},
+    {"id":"transactions","behavior":"Commit, rollback, and nested savepoint isolation","source_tests":["30.database.transaction.js"]},
+    {"id":"functions","behavior":"Scalar and aggregate SQL functions","source_tests":["32.database.function.js","33.database.aggregate.js"]},
+    {"id":"pragma","behavior":"PRAGMA query and simple result mode","source_tests":["12.database.pragma.js"]},
+    {"id":"serialization","behavior":"Serialize and deserialize in-memory database","source_tests":["37.database.serialize.js"]},
+    {"id":"errors","behavior":"SQLite constraint and closed-handle errors","source_tests":["01.sqlite-error.js","11.database.close.js","20.statement.run.js"]},
+    {"id":"statementModes","behavior":"pluck, raw, and safe integer result modes","source_tests":["21.statement.get.js","22.statement.all.js","40.bigints.js"]},
+    {"id":"columns","behavior":"Statement column metadata","source_tests":["25.statement.columns.js"]},
+    {"id":"readonly","behavior":"Readonly file connection and write rejection","source_tests":["10.database.open.js","14.database.exec.js","20.statement.run.js"]},
+    {"id":"apiShape","behavior":"CommonJS root exports and method surface","source_tests":["01.sqlite-error.js","02.entrypoints.js","10.database.open.js"]}
+  ],
+  "excluded_upstream_behaviors": ["native addon loading", "node-gyp build", "virtual tables", "loadExtension", "backup", "worker thread native handles"],
+  "adaptation_reason": "The task contract explicitly forbids candidate native binaries and network downloads; node:sqlite is available in the locked Node 24 image and gives a deterministic bounded implementation surface."
+}

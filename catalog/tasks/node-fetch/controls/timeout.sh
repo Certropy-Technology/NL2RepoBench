@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+rm -rf /workspace/* /workspace/.[!.]* /workspace/..?* 2>/dev/null || true
+cat > /workspace/package.json <<'JSON'
+{"name":"node-fetch","version":"3.1.1","type":"module","exports":"./index.js","dependencies":{"data-uri-to-buffer":"4.0.1","fetch-blob":"3.2.0","formdata-polyfill":"4.0.10"}}
+JSON
+cat > /workspace/package-lock.json <<'JSON'
+{"name":"node-fetch","version":"3.1.1","lockfileVersion":3,"requires":true,"packages":{"":{"name":"node-fetch","version":"3.1.1","type":"module","exports":"./index.js","dependencies":{"data-uri-to-buffer":"4.0.1","fetch-blob":"3.2.0","formdata-polyfill":"4.0.10"}},"node_modules/data-uri-to-buffer":{"version":"4.0.1","resolved":"https://registry.npmjs.org/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz","integrity":"sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A=="},"node_modules/fetch-blob":{"version":"3.2.0","resolved":"https://registry.npmjs.org/fetch-blob/-/fetch-blob-3.2.0.tgz","integrity":"sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==","dependencies":{"node-domexception":"^1.0.0","web-streams-polyfill":"^3.0.3"}},"node_modules/formdata-polyfill":{"version":"4.0.10","resolved":"https://registry.npmjs.org/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz","integrity":"sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==","dependencies":{"fetch-blob":"^3.1.2"}},"node_modules/node-domexception":{"version":"1.0.0","resolved":"https://registry.npmjs.org/node-domexception/-/node-domexception-1.0.0.tgz","integrity":"sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="},"node_modules/web-streams-polyfill":{"version":"3.3.3","resolved":"https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.3.3.tgz","integrity":"sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="}}}
+JSON
+cat > /workspace/index.js <<'JS'
+export default async () => new Promise(() => {});
+export class Headers { constructor() { while (true) {} } }
+export class Request {}
+export class Response {}
+export const isRedirect = () => false;
+JS

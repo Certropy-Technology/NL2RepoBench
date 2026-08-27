@@ -34,13 +34,14 @@ def cases():
 def all_cases():
     yield from cases()
     special = [
-        ({"operation": "validate", "schema": {"type": "object", "properties": {"x": {"type": "integer", "default": 3}}}, "data": {}}, True, "default"),
+        ({"operation": "validate", "schema": {"type": "object", "properties": {"x": {"type": "integer", "default": 3}}}, "data": {}}, {"ok": True, "value": {"x": 3}}, "default"),
         ({"operation": "validate", "schema": {"type": "object", "properties": {"x": {"type": "integer"}}, "required": ["x"]}, "data": {}}, False, "required"),
         ({"operation": "validate", "schema": {"$ref": "http://example.test/number"}, "remote_schemas": {"http://example.test/number": {"type": "number"}}, "data": 4}, True, "remote-valid"),
         ({"operation": "validate", "schema": {"$ref": "http://example.test/number"}, "remote_schemas": {"http://example.test/number": {"type": "number"}}, "data": "4"}, False, "remote-invalid"),
         ({"operation": "generated", "schema": {"type": "object", "properties": {"x": {"type": "integer"}}}, "data": {"x": 4}}, True, "generated-valid"),
         ({"operation": "generated", "schema": {"type": "object", "properties": {"x": {"type": "integer"}}}, "data": {"x": "4"}}, False, "generated-invalid"),
         ({"operation": "validate", "schema": {"type": "string", "format": "identifier"}, "formats": {"identifier": "is_identifier"}, "data": "valid_name"}, True, "callback-recipe"),
+        ({"operation": "metadata"}, {"ok": True, "version_is_string": True, "callables_present": True, "exception_hierarchy": True}, "public-api-surface"),
     ]
     yield from special
 
@@ -74,25 +75,46 @@ def main() -> None:
     )
     leaves = []
     seen = {}
+    candidate_unavailable = False
     try:
         assert process.stdin and process.stdout
         for request, expected, name in all_cases():
+            count = seen.get(name, 0)
+            seen[name] = count + 1
+            leaf_id = name if count == 0 else f"{name}#{count}"
+            if candidate_unavailable:
+                leaves.append(
+                    {
+                        "id": leaf_id,
+                        "status": "failed",
+                        "message": "candidate unavailable after timeout or exit",
+                    }
+                )
+                continue
             process.stdin.write(json.dumps(request, ensure_ascii=False, allow_nan=False) + "\n")
             process.stdin.flush()
             ready, _, _ = select.select([process.stdout], [], [], 15.0)
             if not ready:
-                count = seen.get(name, 0)
-                seen[name] = count + 1
-                leaf_id = name if count == 0 else f"{name}#{count}"
                 leaves.append(
                     {"id": leaf_id, "status": "failed", "message": "candidate timeout"}
                 )
+                candidate_unavailable = True
+                os.killpg(process.pid, signal.SIGTERM)
                 continue
-            response = json.loads(process.stdout.readline())
-            passed = "error" not in response and response.get("ok") is expected
-            count = seen.get(name, 0)
-            seen[name] = count + 1
-            leaf_id = name if count == 0 else f"{name}#{count}"
+            response_line = process.stdout.readline()
+            if not response_line:
+                leaves.append(
+                    {"id": leaf_id, "status": "failed", "message": "candidate exited"}
+                )
+                candidate_unavailable = True
+                continue
+            response = json.loads(response_line)
+            if isinstance(expected, dict):
+                passed = "error" not in response and all(
+                    response.get(key) == value for key, value in expected.items()
+                )
+            else:
+                passed = "error" not in response and response.get("ok") is expected
             leaves.append(
                 {
                     "id": leaf_id,

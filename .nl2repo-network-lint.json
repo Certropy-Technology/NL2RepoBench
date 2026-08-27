@@ -1,0 +1,961 @@
+{
+  "error_count": 0,
+  "findings": [
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/aiofiles/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "aiofiles"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/ajv/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "ajv"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/arxiv-mcp-server/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "arxiv-mcp-server"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/asteval/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "asteval"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/autopep8/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "autopep8"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/binaryalert/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "binaryalert"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/bleach/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "bleach"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/boltons/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "boltons"
+    },
+    {
+      "detail": "https://github.com/mahmoud/boltons/issues/ in instruction.md references this task's own upstream repository",
+      "location": "instruction.md",
+      "rule": "upstream-repo-reference",
+      "severity": "warning",
+      "task_id": "boltons"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/boto/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "boto"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/box/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "box"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/cachier/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "cachier"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/cattrs/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "cattrs"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/cerberus/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "cerberus"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/cherry/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "cherry"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/click/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "click"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/commander/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "commander"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/cookiecutter/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "cookiecutter"
+    },
+    {
+      "detail": "https://github.com/{0}.git in instruction.md is a raw/archive source endpoint",
+      "location": "instruction.md",
+      "rule": "source-serving-endpoint",
+      "severity": "warning",
+      "task_id": "cookiecutter"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/coxeter/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "coxeter"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/csv-parse/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "csv-parse"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/databases/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "databases"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/dateparser/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "dateparser"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/dbutils/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "dbutils"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/decouple/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "decouple"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/deepdiff/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "deepdiff"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/deslib/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "deslib"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/dictdatabase/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "dictdatabase"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/docopt-ng/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "docopt-ng"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/doit/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "doit"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/dotenv/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "dotenv"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/fast-json-stringify/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "fast-json-stringify"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/fast-xml-parser/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "fast-xml-parser"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/fastapi-users/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "fastapi-users"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/feedparser/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "feedparser"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/flask-restful/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "flask-restful"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/frontmatter/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "frontmatter"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/fuzzywuzzy/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "fuzzywuzzy"
+    },
+    {
+      "detail": "https://github.com/seatgeek/fuzzywuzzy in instruction.md references this task's own upstream repository",
+      "location": "instruction.md",
+      "rule": "upstream-repo-reference",
+      "severity": "warning",
+      "task_id": "fuzzywuzzy"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/gitingest/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "gitingest"
+    },
+    {
+      "detail": "https://github.com/coderamp-labs/gitingest in instruction.md references this task's own upstream repository",
+      "location": "instruction.md",
+      "rule": "upstream-repo-reference",
+      "severity": "warning",
+      "task_id": "gitingest"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/google-images-download/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "google-images-download"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/hpack/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "hpack"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/humanize/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "humanize"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/ini/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "ini"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/ipytest/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "ipytest"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/jinja/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "jinja"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/jmespath/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "jmespath"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/json5/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "json5"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/jsonrepair/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "jsonrepair"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/jsonschema/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "jsonschema"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/justext/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "justext"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/lark/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "lark"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/loguru/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "loguru"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/lossless-json/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "lossless-json"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/markdown-it/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "markdown-it"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/markdownify/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "markdownify"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/markupsafe/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "markupsafe"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/mashumaro/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "mashumaro"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/math-verify/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "math-verify"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/mechanicalsoup/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "mechanicalsoup"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/ministats/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "ministats"
+    },
+    {
+      "detail": "agent runtime network_mode='public' leaves the agent unrestricted",
+      "location": "catalog/sources/ministats/task.toml",
+      "rule": "agent-network-public",
+      "severity": "warning",
+      "task_id": "ministats"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/mistune/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "mistune"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/mootdx/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "mootdx"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/more-Itertools/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "more-Itertools"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/natsort/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "natsort"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/node-synthetic/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "node-synthetic"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/packaging/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "packaging"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/paillier/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "paillier"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pathlib2/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pathlib2"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pdfplumber-stable/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pdfplumber-stable"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/petl/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "petl"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/plac/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "plac"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pluggy/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pluggy"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pre-commit/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pre-commit"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/prettytable/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "prettytable"
+    },
+    {
+      "detail": "harbor/solution/solve.sh fetches digest-verified reference source, so an Oracle run needs the source host authorized explicitly, e.g. 'harbor run -a oracle --allow-agent-hosts codeload.github.com'; model-agent runs stay denied",
+      "location": "harbor/solution/solve.sh",
+      "rule": "oracle-requires-host-authorization",
+      "severity": "warning",
+      "task_id": "pss"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pyautogui/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pyautogui"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pydantic/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pydantic"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pyfakefs/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pyfakefs"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pyjwt/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pyjwt"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pylama/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pylama"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pyparsing/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pyparsing"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pypinyin/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pypinyin"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pyquery/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pyquery"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pytest-cov/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pytest-cov"
+    },
+    {
+      "detail": "https://github.com/pytest-dev/pytest-cov/issues/604 in instruction.md references this task's own upstream repository",
+      "location": "instruction.md",
+      "rule": "upstream-repo-reference",
+      "severity": "warning",
+      "task_id": "pytest-cov"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pytestify/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pytestify"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/python-fsutil/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "python-fsutil"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/python-jose/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "python-jose"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/python-pathspec/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "python-pathspec"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/python-patterns/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "python-patterns"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/python-pytest-cases/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "python-pytest-cases"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/python-slugify/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "python-slugify"
+    },
+    {
+      "detail": "https://github.com/un33k/python-slugify in instruction.md references this task's own upstream repository",
+      "location": "instruction.md",
+      "rule": "upstream-repo-reference",
+      "severity": "warning",
+      "task_id": "python-slugify"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/pytorch-grad-cam/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "pytorch-grad-cam"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/query-string/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "query-string"
+    },
+    {
+      "detail": "harbor/solution/solve.sh fetches digest-verified reference source, so an Oracle run needs the source host authorized explicitly, e.g. 'harbor run -a oracle --allow-agent-hosts codeload.github.com'; model-agent runs stay denied",
+      "location": "harbor/solution/solve.sh",
+      "rule": "oracle-requires-host-authorization",
+      "severity": "warning",
+      "task_id": "records"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/remarshal/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "remarshal"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/requests-html/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "requests-html"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/responses/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "responses"
+    },
+    {
+      "detail": "harbor/solution/solve.sh fetches digest-verified reference source, so an Oracle run needs the source host authorized explicitly, e.g. 'harbor run -a oracle --allow-agent-hosts codeload.github.com'; model-agent runs stay denied",
+      "location": "harbor/solution/solve.sh",
+      "rule": "oracle-requires-host-authorization",
+      "severity": "warning",
+      "task_id": "retrying"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/rich/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "rich"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/rich-click/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "rich-click"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/salib/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "salib"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/semver/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "semver"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/simple-parsing/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "simple-parsing"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/sklearn/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "sklearn"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/smol-toml/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "smol-toml"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/soupsieve/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "soupsieve"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/sqlite-utils/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "sqlite-utils"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/stable-baselines3/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "stable-baselines3"
+    },
+    {
+      "detail": "https://github.com/DLR-RM/stable-baselines3/issues/37#issuecomment-637501195 in instruction.md references this task's own upstream repository",
+      "location": "instruction.md",
+      "rule": "upstream-repo-reference",
+      "severity": "warning",
+      "task_id": "stable-baselines3"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/stamina/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "stamina"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/stringify-object/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "stringify-object"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/structlog/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "structlog"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/synthetic/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "synthetic"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/tablib/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "tablib"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/tabulate/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "tabulate"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/tenacity/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "tenacity"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/tomlkit/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "tomlkit"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/toolz/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "toolz"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/trimming/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "trimming"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/tsfresh/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "tsfresh"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/uiautomator/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "uiautomator"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/unittest-parametrize/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "unittest-parametrize"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/validator/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "validator"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/validators/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "validators"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/verifiers/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "verifiers"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/wifiphisher/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "wifiphisher"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/wsgidav/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "wsgidav"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/xlrd/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "xlrd"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/yaml/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "yaml"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/yargs-parser/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "yargs-parser"
+    },
+    {
+      "detail": "dependency closure is not baked into the image yet; task cannot run offline until it is frozen or a private artifact is attached",
+      "location": "catalog/sources/ydata-profiling/task.toml",
+      "rule": "offline-dependencies-missing",
+      "severity": "warning",
+      "task_id": "ydata-profiling"
+    }
+  ],
+  "tasks_scanned": 235,
+  "tasks_with_explicit_policy": 235,
+  "tasks_with_harbor_bundle": 6,
+  "warning_count": 136
+}

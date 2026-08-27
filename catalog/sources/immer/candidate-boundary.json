@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "status": "proposed-audit-contract",
+  "purpose": "Deterministic child-side JSON boundary for Immer; not a candidate CLI requirement.",
+  "transport": {"mode": "jsonl", "encoding": "utf-8", "request": "one JSON object per line on stdin", "response": "one JSON object per line on stdout", "stderr": "diagnostics only"},
+  "operations": ["inventory", "produce", "patches", "apply-patches", "draft-lifecycle", "observe", "utilities"],
+  "state": "bounded recursive JSON values: null, boolean, finite number, string, array, plain object",
+  "actions": ["set", "delete", "push", "unshift", "pop", "shift", "splice", "assign"],
+  "response": {"success": "{id,ok:true,value}", "failure": "{id,ok:false,error_type,message}"},
+  "limits": {"request_bytes": 65536, "response_bytes": 262144, "depth": 16, "array_items": 128, "object_keys": 128},
+  "network": "candidate and verifier no-network; source host is Oracle-only",
+  "publication_state": "specified"
+}

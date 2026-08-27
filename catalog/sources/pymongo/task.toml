@@ -1,14 +1,14 @@
 schema_version = "1.0"
 task_id = "pymongo"
-version = "1.0.0"
+version = "1.1.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:363306fd24b586f0b5cab845f3306bfd09dafc0db7b29106643c6e032bc0f98a", size_bytes = 2711986, media_type = "application/gzip", uri = "artifact://private/sha256:363306fd24b586f0b5cab845f3306bfd09dafc0db7b29106643c6e032bc0f98a", visibility = "private" }
+oracle_bundle = { digest = "sha256:48d2487254b66694094bb15ad511f7cd891881fd9ea7463d2fd372accc2e2257", size_bytes = 2754560, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:48d2487254b66694094bb15ad511f7cd891881fd9ea7463d2fd372accc2e2257", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
 category = "database-driver-library"
-tags = ["python", "bson", "uri-parser", "packaging", "separate-verifier"]
+tags = ["python", "bson", "uri-parser", "packaging", "repository-generation", "separate-verifier"]
 language = "python"
 
 [source]
@@ -16,63 +16,78 @@ status = "known"
 upstream_url = "https://github.com/mongodb/mongo-python-driver"
 revision = "ebc4bffcc842464e48a3edbd04802d1a42bc818a"
 license_spdx = "Apache-2.0"
-source_digest = "sha256:d2882d62405f4f6a5746bb5b91756246b5279715850d1fd9cef98c268038af6d"
+source_digest = "sha256:933f254602e0ec43f463d7a9648f46623c86ba4fd81d9c8703bbe444d13aa068"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12"
-os_name = "linux-amd64-glibc"
+python_version = "3.12.14"
+os_name = "debian-glibc2.41-amd64"
 base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["ca-certificates", "git"]
-build_command = "python -m pip install ."
+system_packages = []
+build_command = "NO_EXT=1 python -m pip install --no-deps --no-build-isolation ."
 network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Hash-locked Python dependencies are installed during Docker build; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+reason = "The hash-locked build/runtime closure is installed at image-build time. Agent and verifier phases have no egress, and the trusted Oracle consumes a private digest-verified archive that is never present in the agent image."
 
 [dependencies]
 status = "known"
 installer = "pip"
-packages = ["dnspython==2.8.0", "flit-core==3.12.0", "hatch-requirements-txt==0.4.1", "hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "setuptools==80.9.0", "trove-classifiers==2026.6.1.19", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:fe25140b1d0d36961466ec15f5199e1eae22a03b19b5c5a605f3a8889fe4d4f5", size_bytes = 2472, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fe25140b1d0d36961466ec15f5199e1eae22a03b19b5c5a605f3a8889fe4d4f5", visibility = "private" }
+packages = [
+  "dnspython==2.8.0",
+  "flit-core==3.12.0",
+  "hatch-requirements-txt==0.4.1",
+  "hatchling==1.27.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "setuptools==80.9.0",
+  "trove-classifiers==2026.6.1.19",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:d5bada113ff462970d1fb42e3d6ad3fa6628fcddeed7afae554871a9c271aa45", size_bytes = 1893, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d5bada113ff462970d1fb42e3d6ad3fa6628fcddeed7afae554871a9c271aa45", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 51
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier"]
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/cases.json"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-description = "Build the deterministic BSON, URI parsing, and scalar validation subset of the PyMongo Python driver."
-keywords = ["python", "pymongo", "bson", "uri-parser", "repository-generation", "separate-verifier"]
-agent_timeout_sec = 1800.0
+description = "Build the deterministic BSON, ObjectId, MongoDB URI parsing, and scalar validation subset of PyMongo."
+keywords = ["python", "pymongo", "bson", "uri-parser", "no-network", "separate-verifier"]
+agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
-candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 240.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 180.0
 agent_network_mode = "no-network"
+agent_allowed_hosts = []
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 3072
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "blocked"
-owner = "repair/pymongo"
-reason = "The prior controls-passed claim has no discoverable Harbor 0.21.0 Oracle, control, network, or production-recompile receipts in this checkout; the declared private dependency lock is also absent, so no production runtime is authorized until evidence is hash-bound."
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:c1583216db03f2a85ac3255683705be31ffdffdce526b6d9b81fa1add7f9c389", size_bytes = 2126, media_type = "application/gzip", uri = "artifact://private/sha256:c1583216db03f2a85ac3255683705be31ffdffdce526b6d9b81fa1add7f9c389", visibility = "private" }
+bundle = { digest = "sha256:b8ddcdc6fd2749808e0cb26bbb4ec523844c2b9d938ed60ccf1a739555c269cc", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b8ddcdc6fd2749808e0cb26bbb4ec523844c2b9d938ed60ccf1a739555c269cc", visibility = "private" }
 entrypoint = "run.py"
+environment = { NO_EXT = "1" }
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wide-20260826-r2/pymongo"
+reason = "The exact source, hash-locked offline dependency closure, private separate verifier, Oracle archive, frozen 51-leaf denominator, and Oracle/negative controls are bound to task-local evidence; integrator blind/spec review and model pilot remain downstream."

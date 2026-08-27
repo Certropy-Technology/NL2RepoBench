@@ -1,18 +1,23 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
+import re
 import shutil
 import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 import pytest
 
+from nl2repobench.domain.models import Visibility
 from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.runtimes.go import GoRuntimeAdapter
+from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.verification.go_bridge import (
     GoBridgeOperation,
     GoBridgeSpec,
@@ -41,6 +46,25 @@ def _go_bundle(root) -> None:
     (root / "module.manifest.json").write_text(
         json.dumps({"schema_version": "1.0", **summary, "offline": True, "files": files}),
         encoding="utf-8",
+    )
+
+
+def _private_archive(store: FileArtifactStore, files: dict[str, bytes]):
+    payload = io.BytesIO()
+    with tarfile.open(fileobj=payload, mode="w:gz") as archive:
+        for name, data in sorted(files.items()):
+            info = tarfile.TarInfo(name)
+            info.size = len(data)
+            info.mode = 0o755 if name.endswith(".sh") else 0o644
+            info.mtime = 0
+            archive.addfile(info, io.BytesIO(data))
+    return store.put_bytes(payload.getvalue(), visibility=Visibility.PRIVATE)
+
+
+def _artifact_toml(reference) -> str:
+    return (
+        f'{{ digest = "{reference.digest}", size_bytes = {reference.size_bytes}, '
+        f'uri = "{reference.uri}", visibility = "private" }}'
     )
 
 
@@ -87,10 +111,10 @@ def test_typed_go_bridge_compiles_and_calls_public_string_api(tmp_path) -> None:
     package.mkdir()
     (package / "stringsx.go").write_text(
         "package stringsx\n\n"
-        "import \"fmt\"\n\n"
+        'import "fmt"\n\n'
         "func Normalize(value string) (string, error) {\n"
-        "    if value == \"\" { return \"\", fmt.Errorf(\"empty\") }\n"
-        "    return value + \"!\", nil\n"
+        '    if value == "" { return "", fmt.Errorf("empty") }\n'
+        '    return value + "!", nil\n'
         "}\n",
         encoding="utf-8",
     )
@@ -119,6 +143,10 @@ def test_typed_go_bridge_compiles_and_calls_public_string_api(tmp_path) -> None:
         check=False,
     )
     assert built.returncode == 0, built.stdout + built.stderr
+    for directory in (tmp_path, *tmp_path.parents):
+        if directory == Path("/tmp"):
+            break
+        directory.chmod(0o755)
     result = run_go_bridge((str(binary),), b'{"operation":"normalize","args":["hi"]}\n')
     assert result.returncode == 0
     assert json.loads(result.stdout) == {"value": "hi!"}
@@ -168,8 +196,89 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert 'expected_version="1.26.5"' in (output / "tests/test.sh").read_text()
 
 
-def test_go_compiler_rejects_unimplemented_control_bundles(tmp_path: Path) -> None:
+def test_go_compiler_rejects_missing_control_script(tmp_path: Path) -> None:
     compiler = GoHarborCompiler(Path(__file__).parents[1] / "toolchain.go.dev.lock.toml")
 
-    with pytest.raises(GoHarborCompileError, match="unsupported Go control kind: stub"):
+    with pytest.raises(GoHarborCompileError, match="Go control script is missing"):
         compiler.prepare_control_bundle(tmp_path / "task", "stub", tmp_path / "controls")
+
+
+def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path) -> None:
+    root = Path(__file__).parents[1]
+    development = GoHarborCompiler(root / "toolchain.go.dev.lock.toml")
+    locked = GoHarborCompiler(root / "toolchain.go.lock.toml")
+
+    with pytest.raises(GoHarborCompileError, match="toolchain.go.lock.toml"):
+        development.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
+    with pytest.raises(GoHarborCompileError, match="private artifact resolver is required"):
+        locked.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
+
+    source = tmp_path / "source"
+    shutil.copytree(root / "catalog/sources/go-google-uuid", source)
+    store = FileArtifactStore(tmp_path / "artifacts")
+    module = tmp_path / "module"
+    module.mkdir()
+    _go_bundle(module)
+    module_bundle = _private_archive(
+        store,
+        {
+            path.relative_to(module).as_posix(): path.read_bytes()
+            for path in module.rglob("*")
+            if path.is_file()
+        },
+    )
+    verifier_bundle = _private_archive(
+        store,
+        {"contract.sh": b"#!/bin/sh\nexit 0\n"},
+    )
+    oracle_bundle = _private_archive(
+        store,
+        {"solve.sh": b"#!/bin/sh\nexit 0\n"},
+    )
+    descriptor = source / "task.toml"
+    data = descriptor.read_text(encoding="utf-8")
+    data = re.sub(
+        r"module_bundle = \{[^\n]+\}",
+        "module_bundle = " + _artifact_toml(module_bundle),
+        data,
+    )
+    data = re.sub(
+        r"^bundle = \{[^\n]+\}",
+        "bundle = " + _artifact_toml(verifier_bundle),
+        data,
+        count=1,
+        flags=re.MULTILINE,
+    )
+    data = re.sub(
+        r"oracle_bundle = \{[^\n]+\}",
+        "oracle_bundle = " + _artifact_toml(oracle_bundle),
+        data,
+        count=1,
+    )
+    descriptor.write_text(data, encoding="utf-8")
+
+    production = GoHarborCompiler(
+        root / "toolchain.go.lock.toml",
+        artifact_resolver=LocalArtifactResolver(
+            store,
+            allow_private=True,
+        ),
+    )
+    output = production.compile_task(
+        source, tmp_path / "production"
+    )
+    manifest = json.loads((output / "bundle.manifest.json").read_text())
+    assert manifest["mode"] == "production"
+    assert (output / "tests/private/contract.sh").is_file()
+    assert (output / "tests/private/bridge.go").is_file()
+    assert (output / "solution/solve.sh").is_file()
+
+    multi_leaf = tmp_path / "multi-leaf"
+    shutil.copytree(root / "catalog/sources/go-google-uuid", multi_leaf)
+    descriptor = multi_leaf / "task.toml"
+    descriptor.write_text(
+        descriptor.read_text().replace("expected_total = 1", "expected_total = 2"),
+        encoding="utf-8",
+    )
+    with pytest.raises(GoHarborCompileError, match="exactly one verifier-owned leaf"):
+        development.compile_task(multi_leaf, tmp_path / "multi-output", allow_incomplete=True)

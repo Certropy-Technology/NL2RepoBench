@@ -11,7 +11,13 @@ Build `fastjsonschema`, a Python library that validates JSON-compatible data aga
 
 ## API Usage Guide
 
-`validate(schema, data, handlers={}, formats={}, use_default=True, use_formats=True, detailed_exceptions=True, fast_fail=True)` validates one JSON value and returns the value or raises a public schema exception. `compile` returns a callable validator with the same options. `compile_to_code` returns executable Python source defining `validate`; generated source validates the same JSON values and does not execute schema text as Python.
+`validate(definition: dict | bool, data, handlers: dict = {}, formats: dict = {}, use_default: bool = True, use_formats: bool = True, detailed_exceptions: bool = True, fast_fail: bool = True)` validates one JSON value. It returns the validated value, including applied defaults when enabled. An invalid value raises `JsonSchemaValueException` or `JsonSchemaValuesException`; an invalid schema raises `JsonSchemaDefinitionException`.
+
+`compile(definition: dict | bool, handlers: dict = {}, formats: dict = {}, use_default: bool = True, use_formats: bool = True, detailed_exceptions: bool = True, fast_fail: bool = True)` returns a callable validator. Calling that validator with one JSON value has the same return, default, and exception behavior as `validate`.
+
+`compile_to_code(definition: dict | bool, handlers: dict = {}, formats: dict = {}, use_default: bool = True, use_formats: bool = True, detailed_exceptions: bool = True, fast_fail: bool = True)` returns executable Python source as `str`. Executing the source defines a `validate` callable with equivalent JSON validation behavior; schema strings are treated as data and are not executed as Python.
+
+The package root re-exports `JsonSchemaException`, `JsonSchemaValueException`, `JsonSchemaValuesException`, and `JsonSchemaDefinitionException`. `JsonSchemaException` derives from `ValueError`; the other three derive from it. `VERSION` is a public version string.
 
 Handlers map URI schemes to child-local callables. The verifier supplies an allowlisted static `http`/`https` handler. Never fetch an unallowlisted URI. The JSON boundary cannot transport arbitrary Python callables; the complete callback contract is the two named recipes `is_identifier` and `is_ascii`, reconstructed inside the candidate child.
 

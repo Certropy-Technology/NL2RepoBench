@@ -1,0 +1,66 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/nock"
+version = "1.0.0"
+description = "Build a Nock-compatible CommonJS HTTP mocking and interception package from an empty Node workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "http",
+    "mocking",
+    "interception",
+    "fetch",
+    "node-test",
+]
+
+[metadata]
+difficulty = "hard"
+category = "http-mocking"
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "http",
+    "mocking",
+    "interception",
+    "fetch",
+    "node-test",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 37
+canonical_manifest_digest = "sha256:d07de0033c1912b9bf9c9eb76bf529ba20442485b90eed884e9e9ffd2b6cd6fb"
+toolchain_lock_digest = "sha256:5799c222da1a98b6b36cbec410c0057b3e3e8ded37b6198023a3188ce2c14c8e"
+
+[agent]
+timeout_sec = 1500.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192

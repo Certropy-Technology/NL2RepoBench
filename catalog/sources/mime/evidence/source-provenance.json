@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mime",
+  "source": {
+    "upstream_url": "https://github.com/broofa/mime",
+    "revision": "f2d1243892616c0ec1031eb5132d56e43159ecc0",
+    "archive": {
+      "path": ".nl2repo/authoring-work/repairs/mime/oracle/oracle-source.tar",
+      "sha256": "sha256:8f8e826ccafe064ca20139c47422291210c5bf8998fbe32f9ef3d9706d589199",
+      "size_bytes": 266240
+    },
+    "license": {
+      "spdx": "MIT",
+      "path": ".nl2repo/authoring-work/repairs/mime/work/source/LICENSE",
+      "sha256": "sha256:68e28d2ab9d180b8fc3d93fac0cc3e5275e4d19a23ab3dcf5458cf4e31e2233b"
+    },
+    "git_checkout": {
+      "path": ".nl2repo/authoring-work/repairs/mime/work/source",
+      "head": "f2d1243892616c0ec1031eb5132d56e43159ecc0",
+      "status": "clean"
+    }
+  },
+  "package_contract": {
+    "manifest": {
+      "path": ".nl2repo/authoring-work/repairs/mime/work/source/package.json",
+      "sha256": "sha256:3969fdaea675dcbce4e25b1c2b76255e774afd915e97e0b9b6fef1eda390417a"
+    },
+    "lockfile": {
+      "path": ".nl2repo/authoring-work/repairs/mime/work/source/package-lock.json",
+      "sha256": "sha256:c491d20c978b6516bb434736e02ebc622a454fbfeffd4da538b3aaf3213fd2a7",
+      "lockfile_version": 3,
+      "runtime_dependency_roots": 0
+    },
+    "build_and_test": {
+      "node": "24.19.0",
+      "npm": "11.17.0",
+      "build_exit_code": 0,
+      "upstream_test_exit_code": 0,
+      "upstream_test_count": 15,
+      "logs": [
+        ".nl2repo/authoring-work/repairs/mime/evidence/npm-build.log",
+        ".nl2repo/authoring-work/repairs/mime/evidence/npm-ci.log",
+        ".nl2repo/authoring-work/repairs/mime/evidence/npm-test.log"
+      ]
+    }
+  },
+  "inventory": {
+    "path": ".nl2repo/authoring-work/repairs/mime/evidence/api-inventory.json",
+    "scanner": "node-typescript-compiler-api",
+    "source_snapshot_digest": "sha256:e72ded38d0a1a85a0093508aa2ded3d9e2339dd41cc7e4d8120343e586b1f20e",
+    "public_contract_surface": [
+      "Mime",
+      "Mime.define",
+      "Mime.getType",
+      "Mime.getExtension",
+      "Mime.getAllExtensions",
+      "default exports from root and lite",
+      "standard and other type data subpaths",
+      "bin/cli.js"
+    ]
+  },
+  "runtime_policy": {
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network",
+    "reference_source_fetch": "forbidden for model Agent; Oracle source is local and digest-verified"
+  }
+}
