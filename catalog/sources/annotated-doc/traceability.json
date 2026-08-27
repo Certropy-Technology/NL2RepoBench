@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "task_id": "annotated-doc",
+  "source_revision": "826e18a4ba8409d543306bbcf81384407d888068",
+  "contract": "Doc metadata object and package exports",
+  "scored_leaf_count": 18,
+  "public_behaviors": [
+    {
+      "id": "exports-and-version",
+      "instruction_sections": ["Supports", "API Usage Guide: Package metadata"],
+      "verifier_leaf_ids": ["annotated-doc/exports", "annotated-doc/version"]
+    },
+    {
+      "id": "value-and-repr",
+      "instruction_sections": ["API Usage Guide: annotated_doc.Doc"],
+      "verifier_leaf_ids": [
+        "annotated-doc/documentation",
+        "annotated-doc/repr",
+        "annotated-doc/repr_unicode",
+        "annotated-doc/special_text"
+      ]
+    },
+    {
+      "id": "equality-and-hash",
+      "instruction_sections": ["API Usage Guide: annotated_doc.Doc"],
+      "verifier_leaf_ids": [
+        "annotated-doc/equality",
+        "annotated-doc/self_equality",
+        "annotated-doc/hash",
+        "annotated-doc/hash_difference"
+      ]
+    },
+    {
+      "id": "constructor-boundary",
+      "instruction_sections": ["Implementation Notes"],
+      "verifier_leaf_ids": ["annotated-doc/positional_only"]
+    },
+    {
+      "id": "annotated-introspection",
+      "instruction_sections": ["API Usage Guide: annotated_doc.Doc"],
+      "verifier_leaf_ids": [
+        "annotated-doc/annotated_parameter",
+        "annotated-doc/annotated_return",
+        "annotated-doc/annotated_attribute"
+      ]
+    },
+    {
+      "id": "pickle-compatibility",
+      "instruction_sections": ["API Usage Guide: annotated_doc.Doc"],
+      "verifier_leaf_ids": ["annotated-doc/pickle_protocols", "annotated-doc/pickle_state"]
+    },
+    {
+      "id": "class-contract",
+      "instruction_sections": ["API Usage Guide: annotated_doc.Doc"],
+      "verifier_leaf_ids": ["annotated-doc/class_name", "annotated-doc/all_cases_are_isolated"]
+    }
+  ],
+  "excluded_upstream_tests": {
+    "module": "tests/test_prepare_release.py",
+    "reason": "Release automation depends on Typer and mutable release-note files; it is not the runtime package contract.",
+    "replacement": "The package-core tests and the 18 deterministic verifier leaves cover the public runtime behavior."
+  }
+}

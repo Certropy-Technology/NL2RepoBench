@@ -1,0 +1,90 @@
+schema_version = "1.0"
+task_id = "annotated-doc"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "typing", "annotated", "metadata", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/fastapi/annotated-doc"
+revision = "826e18a4ba8409d543306bbcf81384407d888068"
+license_spdx = "MIT"
+# Frozen PyPI 0.0.5 source distribution used for the public package snapshot.
+source_digest = "sha256:c7e58ce09192557605d8bbd92836d7e1d520ac9580096042c0bfd197efacf1bb"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier run without egress. The hash-locked build closure is installed during image build, and only the trusted Oracle receives a run-scoped authorization for the frozen Git source host."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "pdm-backend==2.4.9",
+  "setuptools==80.10.2",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:8def077e38fc27788aebae15d6a25834717fbc34521ac3ce27872e3565a528e6", size_bytes = 302, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8def077e38fc27788aebae15d6a25834717fbc34521ac3ce27872e3565a528e6", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 18
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:98b581f64508c967c14592b4c729fff7fda7ad84170fed8b17c6550ccc6d2818", size_bytes = 1568, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:98b581f64508c967c14592b4c729fff7fda7ad84170fed8b17c6550ccc6d2818", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build annotated-doc from an empty workspace and satisfy deterministic contracts for its typed documentation metadata object."
+keywords = ["python", "typing", "annotated", "metadata", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-wave2-20260828-c3"
+reason = "The source, private verifier bundle, Oracle bundle, dependency lock, and deterministic compile are prepared. Oracle and negative controls remain for the separate Harbor gate; no Agent Run was started in this authoring lane."
+
+[oracle_bundle]
+digest = "sha256:56364ebe9c520f03c53ed1c699d0f29dd4d901677a5702f84dce1d08a3f3d092"
+size_bytes = 427
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:56364ebe9c520f03c53ed1c699d0f29dd4d901677a5702f84dce1d08a3f3d092"
+visibility = "private"
