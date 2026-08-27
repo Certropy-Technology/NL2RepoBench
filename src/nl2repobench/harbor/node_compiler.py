@@ -202,6 +202,10 @@ class NodeHarborCompiler:
         image = self.toolchain.images.agent_base
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates git \
+  && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /workspace
 """
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())

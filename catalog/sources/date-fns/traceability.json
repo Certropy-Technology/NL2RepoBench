@@ -2,8 +2,14 @@
   "schema_version": "1.0",
   "source_revision": "a0a39220522ed1228445792c768ed887709aea5f",
   "private_test_files": {
+    "packaging.test.mjs": {
+      "count": 1,
+      "contract_sections": [
+        "package name, version, ESM root export"
+      ]
+    },
     "arithmetic.test.mjs": {
-      "count": 11,
+      "count": 19,
       "contract_sections": [
         "addDays",
         "addMonths",
@@ -17,7 +23,7 @@
       ]
     },
     "parsing-and-predicates.test.mjs": {
-      "count": 10,
+      "count": 19,
       "contract_sections": [
         "parseISO",
         "formatISO",

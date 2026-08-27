@@ -1,6 +1,6 @@
 schema_version = "2.0"
 task_id = "date-fns"
-version = "0.2.0"
+version = "2.0.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/date-fns/date-fns"
 revision = "a0a39220522ed1228445792c768ed887709aea5f"
 license_spdx = "MIT"
-source_digest = "sha256:bfae8a8d4c91f0d01026245898ff9b3a49ad4a1ce10df4c711a97cae302b4bf9"
+source_digest = "sha256:636db05bafd090414a7d3f6d72aa8f50a4e9afdd0624f86c92f46a3084be170d"
 submodules = []
 
 [environment]
@@ -28,7 +28,7 @@ network_mode = "no-network"
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+reason = "The candidate has no runtime dependencies and installs from a frozen empty npm cache; candidate and verifier phases require no egress, while the trusted Oracle alone receives a run-scoped exact source-host authorization."
 
 [environment.runtime]
 language = "node"
@@ -40,7 +40,7 @@ architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-status = "unknown"
+status = "known"
 ecosystem = "npm"
 consumer = "candidate-runtime"
 lockfile_name = "package-lock.json"
@@ -50,21 +50,22 @@ package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
 packages = []
+artifact = { digest = "sha256:bc8d726cdecb4dce06810a51b20e015f84a217cc5505f2fb30a1c7b2e8ce3b0a", size_bytes = 404, media_type = "application/gzip", uri = "artifact://private/sha256:bc8d726cdecb4dce06810a51b20e015f84a217cc5505f2fb30a1c7b2e8ce3b0a", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 21
+expected_total = 39
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", size_bytes = 261, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", visibility = "private" }
-test_bundle = { digest = "sha256:6389dc3733bce14885cc722040ee5da9b2884b27824445f6136e556a13f6ec4b", size_bytes = 1932, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6389dc3733bce14885cc722040ee5da9b2884b27824445f6136e556a13f6ec4b", visibility = "private" }
+commands_artifact = { digest = "sha256:0df9143bc8e836628f15571002ebfddd1e55d0a77231b386c72f1811a885bd4b", size_bytes = 269, media_type = "application/gzip", uri = "artifact://private/sha256:0df9143bc8e836628f15571002ebfddd1e55d0a77231b386c72f1811a885bd4b", visibility = "private" }
+test_bundle = { digest = "sha256:bd93ea0d4c5f93acc0ebe48bbf27f7f21399ef99bb5e3a1dee35605bb517036d", size_bytes = 2902, media_type = "application/gzip", uri = "artifact://private/sha256:bd93ea0d4c5f93acc0ebe48bbf27f7f21399ef99bb5e3a1dee35605bb517036d", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
-description = "Blocked candidate: production Harbor evidence and an approved npm cache closure are unavailable."
+description = "Pinned date-fns ESM date and calendar utility contract with 39 deterministic UTC JSON-boundary leaves."
 keywords = ["node", "npm", "esm", "date", "calendar", "interval", "json"]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 720.0
@@ -78,6 +79,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "repair/date-fns"
-reason = "No independently persisted Harbor 0.21.0 Oracle, control, or network receipts exist for the prior controls-passed claim; provenance records failed offline dependency probes, and the checked-in runtime has been removed. No production runtime is currently authorized."
+reason = "The exact source, zero-runtime-dependency npm closure, private subprocess tests, and digest-checking Oracle are frozen; production Oracle and controls are pending."
+
+[oracle_bundle]
+digest = "sha256:addcaac3664c5db6ea8d205b2feb5d30e4dff6808dd404025c369a971d9c956e"
+size_bytes = 1564
+media_type = "application/gzip"
+uri = "artifact://private/sha256:addcaac3664c5db6ea8d205b2feb5d30e4dff6808dd404025c369a971d9c956e"
+visibility = "private"
