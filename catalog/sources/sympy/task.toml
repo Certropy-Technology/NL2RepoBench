@@ -34,18 +34,18 @@ reason = "Third-party build and test dependencies are installed during the Docke
 [dependencies]
 status = "known"
 installer = "pip"
-lock_artifact = { digest = "sha256:1433a4f353e86e1857d9a0a4ef22209b0e76e980e00fbdc4389cdca773d6d34e", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1433a4f353e86e1857d9a0a4ef22209b0e76e980e00fbdc4389cdca773d6d34e", visibility = "private" }
+lock_artifact = { digest = "sha256:102dbd42277fb5a2f2ac55548a3e7ea0ddb21b2f2dd4edae6e36f5c9b2f65ae6", size_bytes = 93, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:102dbd42277fb5a2f2ac55548a3e7ea0ddb21b2f2dd4edae6e36f5c9b2f65ae6", visibility = "private" }
 packages = ["mpmath==1.3.0"]
 
 [tests]
 framework = "pytest"
-expected_total = 24
+expected_total = 25
 expected_total_source = "frozen-collection"
 commands = ["pip install .", "pytest /tests/hidden --junitxml=/tmp/junit.xml"]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:1b1fec4dc900be1a3cdbb9015258897228a241995331ba9a89a5f751a2a88dfc", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:1b1fec4dc900be1a3cdbb9015258897228a241995331ba9a89a5f751a2a88dfc", visibility = "private" }
+bundle = { digest = "sha256:ce94ac4f17c23871b0cc77f0517bddfb1f4aa5b58eeb34e4a65ce7a5724069cd", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ce94ac4f17c23871b0cc77f0517bddfb1f4aa5b58eeb34e4a65ce7a5724069cd", visibility = "private" }
 entrypoint = "run.py"
 
 [metric]
@@ -70,12 +70,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-reason = "Exact upstream revision frozen; production denominator is the 24-test task-local public slice, not upstream collection."
+status = "controls-passed"
+owner = "python-author-gpt56-wide-restart-20260826-r3"
+reason = "Frozen 25-leaf custom-json-v1 slice passed the current Oracle gate and task-local empty, stub, forgery, install-timeout, workspace-rejection, and call-timeout controls. The independent Agent Run loop owns model execution and publication review."
 
 [oracle_bundle]
-digest = "sha256:cb6c8ddb37595f4aa122a885bb25f366fe9d7c53860abc35f75383df495a9650"
+digest = "sha256:d581c9b30dbe8f64dcec57c39ec5ca561b27e9b8674f225c3ff561733c490171"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:cb6c8ddb37595f4aa122a885bb25f366fe9d7c53860abc35f75383df495a9650"
+uri = "artifact://private/sha256:d581c9b30dbe8f64dcec57c39ec5ca561b27e9b8674f225c3ff561733c490171"
 visibility = "private"
