@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lodash",
+  "status": "controls-passed",
+  "oracle": {
+    "valid": true,
+    "expected_total": 63,
+    "collected": 63,
+    "passed": 63,
+    "reward": 1.0,
+    "public_network_available": false
+  },
+  "empty": {
+    "valid": true,
+    "failure_class": "model",
+    "failure_reason": "candidate-installation-failed",
+    "collected": 0,
+    "reward": 0.0,
+    "public_network_available": false
+  },
+  "stub": {
+    "valid": true,
+    "collected": 63,
+    "passed": 1,
+    "failed": 62,
+    "reward": 0.015873015873015872,
+    "public_network_available": false,
+    "note": "The first attempt hit shared-host UID 10001 thread exhaustion; the fresh retry completed normally."
+  },
+  "forgery": {
+    "valid": true,
+    "collected": 63,
+    "passed": 1,
+    "failed": 62,
+    "reward": 0.015873015873015872,
+    "verifier_owned_reward": true,
+    "public_network_available": false
+  },
+  "timeout": {
+    "direct_unique_uid": {
+      "completed": true,
+      "collected": 63,
+      "passed": 1,
+      "failed": 62,
+      "candidate_call_timeout_sec": 5,
+      "wall_duration_ms": 13729.546704
+    },
+    "official_harbor_attempts": 2,
+    "official_harbor_outcome": "infrastructure-before-candidate-installation",
+    "failure_log_signature": "pthread_create: Resource temporarily unavailable",
+    "cause": "Concurrent authoring containers share host UID 10001 while install_candidate.mjs sets RLIMIT_NPROC=32; 48 UID-10001 threads were observed on the host."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "source_revision": "a666ba591064c8011988275790ad7d625279f09c",
+  "upstream_static_qunit_declaration_sites": 1754,
+  "upstream_locked_baseline": {
+    "runtime": "Node 24.19.0 / npm 11.17.0",
+    "main_passed": 6831,
+    "fp_passed": 327,
+    "failed": 0,
+    "total_assertions": 7158,
+    "command": "npm test",
+    "log": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/evidence/logs/npm-test.log"
+  },
+  "private_bundle_files": [
+    "candidate_adapter.source",
+    "contract.test.mjs",
+    "test_client.mjs"
+  ],
+  "frozen_total": 63,
+  "collection_source": "node --test --test-reporter=tap contract.test.mjs",
+  "groups": {
+    "package": 1,
+    "array": 14,
+    "object-and-path": 13,
+    "collection": 10,
+    "string": 11,
+    "number-and-aggregate": 10,
+    "predicates": 4
+  },
+  "boundary_policy": "Bounded JSON requests, allowlisted root methods, one unprivileged subprocess per call, no callbacks or executable values"
+}

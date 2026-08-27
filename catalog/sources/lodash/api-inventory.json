@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "package": "lodash",
+  "source_revision": "a666ba591064c8011988275790ad7d625279f09c",
+  "package_version": "4.18.1",
+  "source_archive_sha256": "sha256:4b815834ee052cbd62e39ae63019905344135368cd48f0dfcbbcaf7635e3ec9a",
+  "static_scanner": {
+    "identity": "node-typescript-compiler-api",
+    "digest": "sha256:8fd59259135f05911302fe7f2c3e1fd83b7c1cb148e2cb373786a604161b99e1",
+    "inventory_sha256": "sha256:e968f6db2fd553dd3e5a44c2afaecf7ccc376eaf2767fa379c6539baf6dfd4c1",
+    "implementation_loc": 34076,
+    "test_loc": 30173,
+    "public_symbol_count": 841,
+    "syntax_diagnostics": 0
+  },
+  "root_runtime_property_count": 308,
+  "selected_json_boundary_exports": [
+    "add", "assign", "at", "camelCase", "capitalize", "ceil", "chunk", "clamp",
+    "compact", "concat", "defaults", "difference", "drop", "dropRight", "escape",
+    "filter", "find", "flatten", "flattenDeep", "floor", "get", "groupBy", "has",
+    "head", "includes", "initial", "invert", "inRange", "isArray", "isEmpty",
+    "isEqual", "isNumber", "isPlainObject", "isString", "kebabCase", "keyBy", "keys",
+    "last", "lowerFirst", "map", "max", "maxBy", "mean", "meanBy", "merge", "min",
+    "minBy", "nth", "omit", "orderBy", "pad", "padEnd", "padStart", "pick", "repeat",
+    "round", "size", "snakeCase", "sortBy", "startCase", "sum", "sumBy", "take",
+    "takeRight", "toPairs", "truncate", "unescape", "uniq", "upperFirst", "values", "zip"
+  ],
+  "selected_export_count": 71,
+  "excluded_surface": [
+    "callbacks and executable iteratees",
+    "non-JSON values and object identity",
+    "wrapper chains and lazy evaluation",
+    "templates and mixins",
+    "FP and per-method entry points",
+    "browser and CLI behavior"
+  ]
+}

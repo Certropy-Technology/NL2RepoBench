@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "source_revision": "a666ba591064c8011988275790ad7d625279f09c",
+  "frozen_total": 63,
+  "bidirectional": true,
+  "public_to_test_groups": {
+    "package identity and offline packaging": ["package"],
+    "chunk compact concat difference drop dropRight flatten flattenDeep head initial last nth take takeRight uniq zip": ["array"],
+    "get has at assign defaults merge pick omit keys values toPairs invert": ["object-and-path"],
+    "map filter find groupBy keyBy orderBy sortBy includes size": ["collection"],
+    "camelCase kebabCase snakeCase startCase capitalize upperFirst lowerFirst pad padStart padEnd repeat escape unescape truncate": ["string"],
+    "clamp inRange add ceil floor round max min sum mean maxBy minBy sumBy meanBy": ["number-and-aggregate"],
+    "isEqual isEmpty isPlainObject isArray isNumber isString": ["predicates"]
+  },
+  "tests_to_public_contract": {
+    "package": "Supports and CommonJS package root",
+    "array": "API Usage Guide / Array utilities",
+    "object-and-path": "API Usage Guide / Object and path utilities",
+    "collection": "API Usage Guide / Collection utilities",
+    "string": "API Usage Guide / String utilities",
+    "number-and-aggregate": "API Usage Guide / Number and aggregate utilities",
+    "predicates": "API Usage Guide / JSON predicates"
+  },
+  "coverage_statement": "Every private leaf maps to a documented package or API behavior; every selected callable is exercised by at least one private leaf."
+}

@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lodash",
+  "terminal_kind": "valid",
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "sha256": "sha256:cc10b6a04be8c3f6461a116276a3f2f7d4425b27750f01a652591363f8fcc122",
+    "content_digest": "sha256:a33b4a62b03e9f88698666dec20841624f65ba280f3cbebfa48135dea4e93b18",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "tested_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/compiled/lodash/bundle.manifest.json",
+    "sha256": "sha256:102e900a570b3741b777049b99e36a93b98cd93889d3c00b895655f07fa2894e",
+    "canonical_manifest_digest": "sha256:c6c925312fa87312e05732e2ec5c6fc1f69873d9518bd28de4e790d086f88db5",
+    "mode": "production",
+    "note": "The tested canonical manifest used lifecycle=packaged. The final handoff compile differs only in lifecycle status/reason; instruction, source, environment, artifacts, tests, metric, and Harbor execution settings are unchanged."
+  },
+  "handoff_compile": {
+    "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/handoff/compiled/lodash/bundle.manifest.json",
+    "sha256": "sha256:99716f4aa5bde892b1be6de78ae3d796d07582f9541bc61374bd54bb10347b32",
+    "canonical_manifest_digest": "sha256:2e819ac738d02731fdc826291a1432c6970c04325456c01f92077e8e7e606c6b",
+    "mode": "production",
+    "behavioral_diff_from_tested_bundle": "none; only task.toml and bundle.manifest.json metadata differ"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-lodash> -a oracle -y -n 1 --jobs-dir <task-local-oracle-jobs>",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 63,
+    "collected": 63,
+    "passed": 63,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/oracle/2026-08-26__13-13-48/lodash__HMosQd4/verifier/grading.json",
+      "sha256": "sha256:97966ab8f2821ba1fd8b6a14b8a583a013bcd03f2c20e966c5d748cff6da9d94"
+    },
+    "report": {
+      "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/oracle/2026-08-26__13-13-48/lodash__HMosQd4/verifier/report.json",
+      "sha256": "sha256:0ebfe5651cb7e4e8dcd07cc027eca619e6c82955493195b6648810c4aa633b4c"
+    },
+    "reward_file": {
+      "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/oracle/2026-08-26__13-13-48/lodash__HMosQd4/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/oracle/2026-08-26__13-13-48/lodash__HMosQd4/verifier/network.json",
+      "sha256": "sha256:10b85fcfb156cdc218ad1772da132d4e75b50984121de07ab38d39928bcc321b",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "collected": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/empty/2026-08-26__13-15-59/lodash-empty__2hWGprY/verifier/grading.json",
+        "sha256": "sha256:3c1f70c17b007028153fd043383304991bd435e25f886089c43b17a28e9d1e20"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/empty/2026-08-26__13-15-59/lodash-empty__2hWGprY/verifier/network.json",
+        "sha256": "sha256:28e58efb47ae0a0e22bed49f1e76377bdfece7ad7bfb1479644e025f3acfbc18",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 63,
+      "passed": 1,
+      "failed": 62,
+      "reward": 0.015873015873015872,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/stub-retry/2026-08-26__13-21-18/lodash-stub__5XCnver/verifier/grading.json",
+        "sha256": "sha256:d813238042e299565a6af6707c936a4d0e034d2b9f32e17b193ad217f7c82e6b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/stub-retry/2026-08-26__13-21-18/lodash-stub__5XCnver/verifier/network.json",
+        "sha256": "sha256:0401a964ef6ef08234cb7c2fc0449116a1fc4ab9a271531c84fe2890a719cb33",
+        "public_network_available": false
+      },
+      "first_attempt": "infrastructure-pthread-create-exhaustion-before-candidate-installation"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 63,
+      "passed": 1,
+      "failed": 62,
+      "reward": 0.015873015873015872,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/forgery/2026-08-26__13-17-42/lodash-forgery__TRrFcoP/verifier/grading.json",
+        "sha256": "sha256:d813238042e299565a6af6707c936a4d0e034d2b9f32e17b193ad217f7c82e6b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/forgery/2026-08-26__13-17-42/lodash-forgery__TRrFcoP/verifier/network.json",
+        "sha256": "sha256:e899b225e42801c0c537dd001f73cb6020cc6fa182b6d2e030b0774771afec41",
+        "public_network_available": false
+      }
+    },
+    "timeout": {
+      "direct_unique_uid": {
+        "command": "locked Node image; materialize timeout control; offline npm ci/pack/install; node --test with UID 11063",
+        "exit_code": 0,
+        "collected": 63,
+        "passed": 1,
+        "failed": 62,
+        "log": {
+          "path": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/evidence/logs/timeout-direct-unique-uid.log",
+          "sha256": "sha256:59846cf19d9101c40efe674aa4caae7a9e5404de7ed2f0b1f9739c51af4033ef"
+        }
+      },
+      "official_attempts": [
+        {
+          "exit_code": 0,
+          "grading_valid": true,
+          "grading_classification": "model",
+          "actual_failure_class": "infrastructure",
+          "failure": "npm process could not create a thread under the shared host UID 10001 RLIMIT_NPROC=32",
+          "log": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/timeout/2026-08-26__13-18-40/lodash-timeout__8Sr7xPc/verifier/test-stdout.txt",
+          "sha256": "sha256:5a5b341d512ec2e07ae63240bf5cd82e6c4959915ed1afe6211295ecd73d7fcc"
+        },
+        {
+          "exit_code": 0,
+          "grading_valid": true,
+          "grading_classification": "model",
+          "actual_failure_class": "infrastructure",
+          "failure": "npm process could not create a thread under the shared host UID 10001 RLIMIT_NPROC=32",
+          "log": ".nl2repo/authoring-work/node-author-wide-20260826-remediation/lodash/runs/final/jobs/timeout-retry/2026-08-26__13-22-27/lodash-timeout__oxbXd3K/verifier/test-stdout.txt",
+          "sha256": "sha256:66e8287c12a91a3a4a0c8a634f4f53d86375ae73d912811a973255ab868dfd49"
+        }
+      ]
+    },
+    "offline": {
+      "completed": true,
+      "source": "verifier-integrated network checks in Oracle, empty, stub, and forgery runs",
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "The official timeout control must be rerun on an isolated host or with a verifier UID/process-limit design that does not share RLIMIT_NPROC accounting across concurrent containers.",
+    "Review, model pilot, dataset integration, and publication remain integrator/downstream responsibilities."
+  ]
+}
