@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "pino"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "structured-logging"
+tags = ["node", "npm", "commonjs", "logging", "json", "streams", "serialization"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pinojs/pino"
+revision = "b394c2c16ac6a8919cd33d7f5684a01baca1096f"
+license_spdx = "MIT"
+source_digest = "sha256:9a3735474e6051b8c44b18e5f669dcd9d70bd7c826ccf016294d8b2ac9f05503"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases use a private npm cache closure and no egress. Only the trusted Oracle receives the frozen reference bundle and source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@pinojs/redact", "atomic-sleep", "on-exit-leak-free", "pino-abstract-transport", "pino-std-serializers", "process-warning", "quick-format-unescaped", "real-require", "safe-stable-stringify", "sonic-boom", "thread-stream"]
+artifact = { digest = "sha256:9d4d0f7e8ad76479a501404d6965a5a20a1af9fd556aca3487e18da29077cc94", size_bytes = 119847, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:9d4d0f7e8ad76479a501404d6965a5a20a1af9fd556aca3487e18da29077cc94", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 25
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:1edb8c01e78f6c825c450e7be5a3b371a314a990c6ab64ba27d57d7bc225b051", size_bytes = 278, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:1edb8c01e78f6c825c450e7be5a3b371a314a990c6ab64ba27d57d7bc225b051", visibility = "private" }
+test_bundle = { digest = "sha256:d386e5c71a2a657b6295f7659fb153b96c54c519aefc8587cc6b10b715b8486f", size_bytes = 3772, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d386e5c71a2a657b6295f7659fb153b96c54c519aefc8587cc6b10b715b8486f", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the pino CommonJS structured JSON logger from an empty workspace."
+keywords = ["node", "npm", "commonjs", "logging", "json", "streams", "serialization"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wide-20260826-remediation/pino"
+reason = "Production source validation and compile pass, but task-local Oracle contract probe is not yet valid. The private bundle and verifier need one more bounded packaging/probe repair before controls can be run."
+
+[oracle_bundle]
+digest = "sha256:a4e9164e843da3f3ce3b06477fc329e5173c568061ae1677747ccb0ff08b6de1"
+size_bytes = 35381
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:a4e9164e843da3f3ce3b06477fc329e5173c568061ae1677747ccb0ff08b6de1"
+visibility = "private"
