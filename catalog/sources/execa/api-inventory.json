@@ -1,7 +1,22 @@
 {
+  "schema_version": "1.0",
+  "task_id": "execa",
   "source_revision": "8017b279e19347efaf2587711c2d57dbd4330740",
   "package_version": "10.0.1",
-  "public_runtime_exports": [
+  "runtime_exports": {
+    "$": "function",
+    "ExecaError": "function",
+    "ExecaSyncError": "function",
+    "execa": "function",
+    "execaNode": "function",
+    "execaSync": "function",
+    "getCancelSignal": "function",
+    "getEachMessage": "function",
+    "getOneMessage": "function",
+    "parseCommandString": "function",
+    "sendMessage": "function"
+  },
+  "scored_exports": [
     "execa",
     "execaSync",
     "execaNode",
@@ -9,12 +24,31 @@
     "ExecaError",
     "ExecaSyncError"
   ],
-  "scored_subset": {
-    "async_execution": ["file", "arguments", "cwd", "env", "extendEnv", "input", "reject", "stripFinalNewline", "timeout"],
-    "sync_execution": ["file", "arguments", "cwd", "env", "extendEnv", "input", "reject", "stripFinalNewline"],
-    "node_execution": ["scriptPath", "arguments", "options"],
-    "pure_helpers": ["parseCommandString"]
+  "explicitly_out_of_scope_exports": [
+    "$",
+    "sendMessage",
+    "getOneMessage",
+    "getEachMessage",
+    "getCancelSignal"
+  ],
+  "scored_options": {
+    "async": [
+      "cwd",
+      "env",
+      "extendEnv",
+      "input",
+      "reject",
+      "stripFinalNewline",
+      "timeout"
+    ],
+    "sync": [
+      "cwd",
+      "env",
+      "extendEnv",
+      "input",
+      "reject",
+      "stripFinalNewline"
+    ]
   },
-  "out_of_scope": ["IPC", "streams", "piping", "browser", "Windows-only behavior", "native addons", "network services", "interactive TTY behavior"],
-  "inventory_evidence": "provenance/source-inventory.json"
+  "inventory_method": "dynamic ESM import in the pinned Node image plus index.d.ts re-export review"
 }

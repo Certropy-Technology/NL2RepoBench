@@ -1,6 +1,6 @@
 schema_version = "2.0"
 task_id = "execa"
-version = "1.0.0"
+version = "1.1.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/sindresorhus/execa"
 revision = "8017b279e19347efaf2587711c2d57dbd4330740"
 license_spdx = "MIT"
-source_digest = "sha256:8ee157bba161a30aea54af36a1c85b95c02737d379a5b6ae482e099905f49115"
+source_digest = "sha256:186d006054087f9a5b24cfc73b583e6a7be36920d210a8b87ac12ba15bfad2e3"
 submodules = []
 
 [environment]
@@ -26,9 +26,9 @@ network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "preinstalled-image"
+offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
-reason = "The frozen npm closure is installed from a private cache before the run; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
+reason = "The zero-dependency npm v3 closure is supplied as a private build artifact; candidate and verifier phases require no egress."
 
 [environment.runtime]
 language = "node"
@@ -49,16 +49,16 @@ package_manager = "npm"
 package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:bbbc601a828344afcee2ef02b102c499119b50e651632436babf6c2112a9e827", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:bbbc601a828344afcee2ef02b102c499119b50e651632436babf6c2112a9e827", visibility = "private" }
+artifact = { digest = "sha256:1aedbed27defe188f08008f6164c41f5b430a19bd6074de3657828ac9c662712", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1aedbed27defe188f08008f6164c41f5b430a19bd6074de3657828ac9c662712", visibility = "private" }
 packages = []
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
-expected_total = 11
+expected_total = 30
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:0479e4c2b2bf86642c6fe36b0a86ca6cb5d26cc06e9e26818f71c7ccbf903d0a", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:0479e4c2b2bf86642c6fe36b0a86ca6cb5d26cc06e9e26818f71c7ccbf903d0a", visibility = "private" }
-test_bundle = { digest = "sha256:a8fbcf849703077772683bf66bfab21eec023148d3ca959fa31b4765b0c7affc", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a8fbcf849703077772683bf66bfab21eec023148d3ca959fa31b4765b0c7affc", visibility = "private" }
+commands_artifact = { digest = "sha256:4b49a84dde430c8a5988cc9de93258aeadffea62d82d120f24fd0a4cb1e82bb8", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:4b49a84dde430c8a5988cc9de93258aeadffea62d82d120f24fd0a4cb1e82bb8", visibility = "private" }
+test_bundle = { digest = "sha256:7de308551563e361e7f633ca8295aff9a53c02a559fb71ffa1e4216fb53911e0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:7de308551563e361e7f633ca8295aff9a53c02a559fb71ffa1e4216fb53911e0", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -80,12 +80,13 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "The production bundle compiled and emitted valid Oracle/control/network receipts, but the Oracle Harbor process remained active beyond the supervisor's 601-second orchestration bound after grading. The campaign was declared non-promotable, no retry was authorized, and no generated runtime is retained."
+status = "packaged"
+owner = "node-author-wide-20260826-remediation/execa"
+reason = "The corrected source digest, 30-leaf bounded subprocess contract, zero-dependency npm closure, and standalone Oracle artifact are packaged; production Harbor gates are pending."
 
 [oracle_bundle]
-digest = "sha256:b55ef9fb5bc477e120ac1353bf4c7a093bed59e58f54b063714269ed9af81fba"
+digest = "sha256:e10899d815598165aeefa7acaaf5de57176bad491a75d677ee2708e9cd78b2cf"
 size_bytes = 20480
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:b55ef9fb5bc477e120ac1353bf4c7a093bed59e58f54b063714269ed9af81fba"
+uri = "artifact://private/sha256:e10899d815598165aeefa7acaaf5de57176bad491a75d677ee2708e9cd78b2cf"
 visibility = "private"

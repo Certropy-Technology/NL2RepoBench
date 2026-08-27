@@ -1,1 +1,27 @@
-{"schema_version":"1.0","task_id":"execa","terminal_kind":"blocked","blocked":{"failure_class":"infrastructure","next_step":"A future explicitly authorized campaign must rerun the full Oracle, empty, stub, and forgery matrix and complete within its orchestration bound before recreating catalog/tasks/execa.","source_freeze":{"status":"known","upstream_url":"https://github.com/sindresorhus/execa","revision":"8017b279e19347efaf2587711c2d57dbd4330740","source_digest":"sha256:8ee157bba161a30aea54af36a1c85b95c02737d379a5b6ae482e099905f49115","license_spdx":"MIT"},"commands":[{"command":"Compile the production Node bundle and run the bounded Harbor Oracle/control matrix; the Oracle lifecycle exceeded the 601-second orchestration bound after grading","tool_version":"Harbor 0.21.0 / Node 24.19.0 / npm 11.17.0","exit_code":1,"log":{"path":"catalog/sources/execa/blocked.md","sha256":"sha256:eaa91a79dcc99aa68ed836e5e050c98c89672576d2ada501482f65ed72136888"}}]}}
+{
+  "schema_version": "1.0",
+  "task_id": "execa",
+  "task_version": "1.1.0",
+  "terminal_kind": "packaged-awaiting-production-gates",
+  "source": {
+    "revision": "8017b279e19347efaf2587711c2d57dbd4330740",
+    "tree": "f8ab67228ee0a417058f9bc2282945f915f64f39",
+    "archive_sha256": "sha256:186d006054087f9a5b24cfc73b583e6a7be36920d210a8b87ac12ba15bfad2e3",
+    "license": "MIT"
+  },
+  "precompile_validation": {
+    "upstream_private_contract": {
+      "collected": 30,
+      "passed": 30,
+      "exit_code": 0
+    },
+    "standalone_oracle_contract_runs": [
+      {"collected": 30, "passed": 30, "exit_code": 0},
+      {"collected": 30, "passed": 30, "exit_code": 0},
+      {"collected": 30, "passed": 30, "exit_code": 0}
+    ]
+  },
+  "production_compile": null,
+  "oracle": null,
+  "controls": null
+}

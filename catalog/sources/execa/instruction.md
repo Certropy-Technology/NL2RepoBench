@@ -11,7 +11,9 @@ its tests.
 The scored contract is a deterministic, local subset of the public API of the
 frozen Execa revision. It must work on Linux with Node `>=22`, must not contact a
 network service, and must not depend on ambient terminal state, a clock, or
-randomness for any assertion below.
+randomness for any behavior below. The `$` template API and the IPC helpers
+`sendMessage`, `getOneMessage`, `getEachMessage`, and `getCancelSignal` are
+outside this task's scored surface and do not need to be exported.
 
 ## Supports
 
@@ -60,7 +62,7 @@ object. The scored options are:
 - `cwd`: working directory for the child;
 - `env`: environment entries, converted to strings by Node;
 - `extendEnv`: defaults to `true`; when `false`, use only the supplied `env`;
-- `input`: a string or Uint8Array written to stdin and then closed;
+- `input`: a string or `Uint8Array` written to stdin and then closed;
 - `reject`: defaults to `true`; when `false`, resolve with a failed result;
 - `stripFinalNewline`: defaults to `true`; when `false`, preserve one final
   LF/CRLF in `stdout` and `stderr`;
@@ -87,7 +89,9 @@ must remain a single argument and must not be interpreted by a shell. Supporting
 For a non-zero exit, the rejected `ExecaError` must have `name: "ExecaError"`,
 `failed: true`, `exitCode` equal to the child exit code, captured `stdout` and
 `stderr`, and a useful `shortMessage` containing the command and exit code.
-For a timeout, set `timedOut: true` and reject unless `reject: false`.
+For a timeout, set `timedOut: true` and `isTerminated: true`, and reject unless
+`reject: false`. A command-resolution failure also produces a failed result when
+`reject: false`; its diagnostic must identify the requested file.
 
 ### `execaSync(file, arguments?, options?)`
 
@@ -100,7 +104,8 @@ meaning. The synchronous call must not leave child processes running.
 
 Run a JavaScript module using the current Node executable, equivalent to
 `execa(process.execPath, [scriptPath, ...arguments], options)`. The script path
-may be a string or a file URL. Its arguments must arrive unchanged.
+may be a string or a `URL` with the `file:` scheme. Its arguments must arrive
+unchanged.
 
 ### `parseCommandString(command)`
 
