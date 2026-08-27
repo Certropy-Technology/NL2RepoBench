@@ -24,7 +24,7 @@ def _grading(root: Path, kind: str) -> dict[str, Any]:
     paths = sorted(
         path
         for path in (root / kind).rglob("grading.json")
-        if path.parent.name == "verifier"
+        if path.parent.name == "verifier" and "artifacts" not in path.parts
     )
     if len(paths) != 1:
         raise ValueError(f"{kind}: expected exactly one grading.json, found {len(paths)}")
@@ -62,9 +62,20 @@ def _passed(kind: str, grading: dict[str, Any]) -> tuple[bool, str]:
             "loader injection cannot produce full score",
         )
     if kind == "hang":
+        legacy_timeout = (
+            valid is False
+            and reason == "node-collection-error"
+            and failure_class == "verifier"
+        )
+        bounded_candidate_timeout = (
+            valid is True
+            and reward == 0
+            and reason == "candidate-call-failed"
+            and failure_class == "model"
+        )
         return (
-            valid is False and reason == "node-collection-error" and failure_class == "verifier",
-            "hang terminated as verifier collection error",
+            legacy_timeout or bounded_candidate_timeout,
+            "hang terminated by a bounded verifier or candidate-call timeout",
         )
     if kind == "offline":
         return (
