@@ -1,0 +1,214 @@
+{
+  "base_commit": "c7fd964b379f4d1f74eb129d01cc9aa94c10acee",
+  "campaign_id": "selected-harbor-production-20260828",
+  "content_sha256": "sha256:1b5fbcbe304d82589cba9392538b37e5e9c0a2809739e23bb310449cf9a5f33c",
+  "schema_version": "1.0",
+  "source_count": 51,
+  "source_root": "catalog/sources",
+  "sources": [
+    {
+      "source_tree_sha1": "f51b7864e2b21dfa838a9f62de4908b5120fad12",
+      "task_id": "axios"
+    },
+    {
+      "source_tree_sha1": "a36c9fa52425636b770c3271ff987ff34021ca89",
+      "task_id": "better-sqlite3"
+    },
+    {
+      "source_tree_sha1": "76f9da53dff1580856e5572e8f3580228e2b3af6",
+      "task_id": "boto3"
+    },
+    {
+      "source_tree_sha1": "13ef53af267786bed249f8ea1a8486debefe70b8",
+      "task_id": "botocore"
+    },
+    {
+      "source_tree_sha1": "1cded221e1f025655ed2925af48f6da7e79d1b6b",
+      "task_id": "cheerio"
+    },
+    {
+      "source_tree_sha1": "6348bd881cdd138d0796da74ec56f8f0e169a0a8",
+      "task_id": "dacite"
+    },
+    {
+      "source_tree_sha1": "18a1ec4b4aa83e3a6764978b01c58491cbc7d2b9",
+      "task_id": "dataclasses-json"
+    },
+    {
+      "source_tree_sha1": "dfae0db5cf4f7d82a5896ae9a6ef9e5320238d99",
+      "task_id": "date-fns"
+    },
+    {
+      "source_tree_sha1": "10ca49090e176546e2ddff6191b202302023cffc",
+      "task_id": "eslint"
+    },
+    {
+      "source_tree_sha1": "c4b6979d9850a0e4c6bf819954bfbb3250059763",
+      "task_id": "fastjsonschema"
+    },
+    {
+      "source_tree_sha1": "9920532411de16c6ca81c1de64debe47c141bf5d",
+      "task_id": "globby"
+    },
+    {
+      "source_tree_sha1": "f7039503474acb68200f72ec7b941e8ee7259458",
+      "task_id": "go-gjson"
+    },
+    {
+      "source_tree_sha1": "fa3e901f7ffd4452f7bce799413ebef99a73e430",
+      "task_id": "go-google-uuid"
+    },
+    {
+      "source_tree_sha1": "53987af5848a904f30960e47e8c38c2a74c26fd2",
+      "task_id": "go-humanize"
+    },
+    {
+      "source_tree_sha1": "eea3e0cd49dbc2adabb82ed78f2da18ced3a4dc1",
+      "task_id": "go-semver"
+    },
+    {
+      "source_tree_sha1": "0ee59f1dd2e03af0823f3f7fcc234dfca726250e",
+      "task_id": "google-auth"
+    },
+    {
+      "source_tree_sha1": "4a4163079cb08e9995cea287d3dc1f9c1c797458",
+      "task_id": "immer"
+    },
+    {
+      "source_tree_sha1": "0a50d8ff0eca68aef4dec0e59b7cd2e3c89d0b00",
+      "task_id": "iso8601"
+    },
+    {
+      "source_tree_sha1": "7aa2dfff776b5de7770e040ad17c06e882cece8f",
+      "task_id": "jsonpointer"
+    },
+    {
+      "source_tree_sha1": "e602307ebc2a300f340ae52f9dc88ae01fda9b05",
+      "task_id": "koa"
+    },
+    {
+      "source_tree_sha1": "13364255159e813643ac195728c05698da1d4384",
+      "task_id": "lodash"
+    },
+    {
+      "source_tree_sha1": "e3af3a15d86b275d322170aadd99d86b68c687a3",
+      "task_id": "lodash-es"
+    },
+    {
+      "source_tree_sha1": "49ec592d231f03b53f1df4a2b90e995f2289dafc",
+      "task_id": "lxml"
+    },
+    {
+      "source_tree_sha1": "a03c51a5429b860f46305f4e710d833de90b3e31",
+      "task_id": "micromatch"
+    },
+    {
+      "source_tree_sha1": "74a88ce7433745a018791635b9362e0ff6d1fe6a",
+      "task_id": "mime"
+    },
+    {
+      "source_tree_sha1": "3b8c76af7a229dce58d8be31f335a815878e1820",
+      "task_id": "nanoid"
+    },
+    {
+      "source_tree_sha1": "218de25938b195ce721790507a0c5c469a441266",
+      "task_id": "nock"
+    },
+    {
+      "source_tree_sha1": "bf3ce7953190929fc521a04c4f2b4c488161b040",
+      "task_id": "node-fetch"
+    },
+    {
+      "source_tree_sha1": "d49365a798524d7931e1cadb90bbe891edf51a8f",
+      "task_id": "p-limit"
+    },
+    {
+      "source_tree_sha1": "f9b87c60a1993bb9a2be976383fa3d90fa52e6a7",
+      "task_id": "p-queue"
+    },
+    {
+      "source_tree_sha1": "456e18ec321507c57f2895dee98776dec42dd19d",
+      "task_id": "parse5"
+    },
+    {
+      "source_tree_sha1": "1cc2b456de01cfb125c6a4466525670571dd56cb",
+      "task_id": "prettier"
+    },
+    {
+      "source_tree_sha1": "1be8d763315c0d1a97b7510066510a12366e7315",
+      "task_id": "pydantic-settings"
+    },
+    {
+      "source_tree_sha1": "9a3aee542b1863018cc18211952c2f0d20a795ce",
+      "task_id": "pymongo"
+    },
+    {
+      "source_tree_sha1": "4501d65375a42d9f791f04db4241a5c51d882559",
+      "task_id": "pyrsistent"
+    },
+    {
+      "source_tree_sha1": "f93b1ed516cf57547e570ceaa1f635c445d7d5bc",
+      "task_id": "python-dateutil"
+    },
+    {
+      "source_tree_sha1": "a85437867342f7829a516c691c1b4c829ceb1054",
+      "task_id": "ramda"
+    },
+    {
+      "source_tree_sha1": "2a2a38907fc1166148765923e08aae0af2f27daa",
+      "task_id": "referencing"
+    },
+    {
+      "source_tree_sha1": "bc961670059c1d19c45d38ec0bead1c19c9c99c0",
+      "task_id": "requests"
+    },
+    {
+      "source_tree_sha1": "9834a627226c2c59cf72064b2f73aac76f67a6ce",
+      "task_id": "rollup"
+    },
+    {
+      "source_tree_sha1": "324a8ad95daf1e80cc8771e03b594457756c43ba",
+      "task_id": "sharp"
+    },
+    {
+      "source_tree_sha1": "36edcb123d6cf1dcfd5999260b101a7e1218022d",
+      "task_id": "socket.io"
+    },
+    {
+      "source_tree_sha1": "76fb9357f6ed5118597599618e5e28a7f588e9b8",
+      "task_id": "strip-ansi"
+    },
+    {
+      "source_tree_sha1": "6e7acdf6e56c723e717b012d3916868b73c2753e",
+      "task_id": "sympy"
+    },
+    {
+      "source_tree_sha1": "37229f14f791accda114138c6aa69810cf2e793e",
+      "task_id": "textual"
+    },
+    {
+      "source_tree_sha1": "763620e3ec6b4fc8d77a259ad3dfcc930db1f39c",
+      "task_id": "typescript"
+    },
+    {
+      "source_tree_sha1": "d2dba4f5b99ec6a7c8a09b261e451a3c0c0bfaf1",
+      "task_id": "vite"
+    },
+    {
+      "source_tree_sha1": "002511d6ccd2fe95dbcb7d25f6816c9f53dec4c1",
+      "task_id": "winston"
+    },
+    {
+      "source_tree_sha1": "8ab252eb6e1ba18247bf416eb947c5d539f7f70f",
+      "task_id": "ws"
+    },
+    {
+      "source_tree_sha1": "af82a4d5833adf7c6eb2c46c06b2cb35c2450dac",
+      "task_id": "yargs"
+    },
+    {
+      "source_tree_sha1": "3dc9124d995173fd3e970bf27308bf69659a320d",
+      "task_id": "zod"
+    }
+  ]
+}
