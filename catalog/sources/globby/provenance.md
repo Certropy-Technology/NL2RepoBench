@@ -67,6 +67,14 @@ upstream AVA/XO development toolchain.
   offline npm install, package-tar validation, fixed leaf collection, and
   verifier-owned `node-test-json-v1` grading.
 
+The remediation recompiled the production bundle after restoring all four
+declared private artifacts and adding task-local control scripts. Harbor
+`0.21.0` then produced a valid Oracle result with reward `1.0` and `10/10`
+leaves. Independent no-network controls produced empty `0.0`, stub `0.1`,
+forgery `0.1`, call-hang `0.0`, and offline Oracle `1.0`; the verifier-owned
+grading and network receipt paths are recorded in
+`evidence/control-matrix.json`.
+
 ## Evidence commands
 
 ```text

@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "task_id": "globby",
+  "harbor_version": "0.21.0",
+  "metric_contract": "fixed-test-pass-rate-v1",
+  "expected_total": 10,
+  "controls": {
+    "oracle": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/globby-production/globby -a oracle -o .nl2repo/runs/globby-oracle --job-name globby-oracle-production -n 1 -k 1 -r 0 --no-force-build --no-delete --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 1.0,
+      "collected": 10,
+      "passed": 10,
+      "grading": ".nl2repo/runs/globby-oracle-final/globby-oracle-final/globby__hqv8oLt/verifier/grading.json",
+      "network": ".nl2repo/runs/globby-oracle-final/globby-oracle-final/globby__hqv8oLt/verifier/network.json"
+    },
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/globby-production/globby -a nop -o .nl2repo/runs/globby-controls-empty --job-name empty -n 1 -k 1 -r 0 --no-force-build --no-delete --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/globby-controls-empty/empty/globby__DxAdxiv/verifier/grading.json",
+      "network": ".nl2repo/runs/globby-controls-empty/empty/globby__DxAdxiv/verifier/network.json"
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/globby-stub -a oracle -o .nl2repo/runs/globby-controls-stub --job-name stub -n 1 -k 1 -r 0 --no-force-build --no-delete --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1,
+      "collected": 10,
+      "passed": 1,
+      "grading": ".nl2repo/runs/globby-controls-stub/stub/globby-stub__QVosVKE/verifier/grading.json",
+      "network": ".nl2repo/runs/globby-controls-stub/stub/globby-stub__QVosVKE/verifier/network.json"
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/globby-forgery -a oracle -o .nl2repo/runs/globby-controls-forgery --job-name forgery -n 1 -k 1 -r 0 --no-force-build --no-delete --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1,
+      "collected": 10,
+      "passed": 1,
+      "verifier_owned_reward": true,
+      "forged_workspace_grading_ignored": true,
+      "grading": ".nl2repo/runs/globby-controls-forgery/forgery/globby-forgery__bpYmbnw/verifier/grading.json",
+      "network": ".nl2repo/runs/globby-controls-forgery/forgery/globby-forgery__bpYmbnw/verifier/network.json"
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/globby-call-hang -a oracle -o .nl2repo/runs/globby-controls-call-hang --job-name call-hang -n 1 -k 1 -r 0 --no-force-build --no-delete --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading": ".nl2repo/runs/globby-controls-call-hang/call-hang/globby-call-hang__g4qHyyy/verifier/grading.json",
+      "network": ".nl2repo/runs/globby-controls-call-hang/call-hang/globby-call-hang__g4qHyyy/verifier/network.json"
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/globby-production/globby -a oracle -o .nl2repo/runs/globby-controls-offline --job-name offline -n 1 -k 1 -r 0 --no-force-build --no-delete --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 1.0,
+      "collected": 10,
+      "passed": 10,
+      "public_network_available": false,
+      "grading": ".nl2repo/runs/globby-controls-offline/offline/globby__WoRUkiZ/verifier/grading.json",
+      "network": ".nl2repo/runs/globby-controls-offline/offline/globby__WoRUkiZ/verifier/network.json"
+    }
+  },
+  "production_compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/globby --output .nl2repo/compiled/globby-production --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
+    "exit_code": 0,
+    "bundle": ".nl2repo/compiled/globby-production/globby/bundle.manifest.json"
+  },
+  "network_lint": {
+    "command": "uv run nl2repo task lint-network --tasks-root .nl2repo/network-root --strict",
+    "exit_code": 0,
+    "scope": "isolated globby source copy"
+  },
+  "notes": [
+    "All verifier network.json receipts report public_network_available=false.",
+    "The full catalog strict lint exits 1 because unrelated pre-existing tasks emit warnings; globby has no finding in the isolated strict lint.",
+    "No Harbor Agent Run was started."
+  ]
+}
