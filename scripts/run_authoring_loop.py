@@ -30,6 +30,9 @@ from pathlib import Path
 from typing import Any, cast
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+SAFE_PACKAGE = re.compile(
+    r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
+)
 ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 MAX_CONCURRENCY = 8
 DEFAULT_EXCLUDED_TOOLS = "subagent,subagent_supervisor,subagent_wait"
@@ -415,7 +418,8 @@ def _launch_agent(
 ) -> dict[str, Any]:
     session_dir.mkdir(parents=True, exist_ok=True)
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    session_id = f"{plan['batch_id']}-{task['package']}-attempt-{attempt}"
+    session_package = re.sub(r"[^A-Za-z0-9._-]+", "_", task["package"])
+    session_id = f"{plan['batch_id']}-{session_package}-attempt-{attempt}"
     if not SAFE_NAME.fullmatch(session_id):
         raise ValueError(f"unsafe Pi session id: {session_id}")
     prompt = _agent_prompt(
@@ -619,7 +623,7 @@ def _prepare_task(
     package = task.get("package")
     candidate_id = task.get("candidate_id")
     language = plan["language"]
-    if not isinstance(package, str) or not SAFE_NAME.fullmatch(package):
+    if not isinstance(package, str) or not SAFE_PACKAGE.fullmatch(package):
         raise ValueError(f"unsafe package name: {package!r}")
     if not isinstance(candidate_id, str):
         raise ValueError(f"missing candidate id for {package}")
@@ -662,7 +666,8 @@ def _prepare_task(
             "publish without integrator",
         ],
     }
-    brief_path = claims_root / f"{package}.json"
+    package_filename = re.sub(r"[^A-Za-z0-9._-]+", "_", package)
+    brief_path = claims_root / f"{package_filename}.json"
     brief_path.write_text(
         json.dumps(brief, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
         encoding="utf-8",
@@ -676,7 +681,7 @@ def _prepare_task(
     attempt = int(claimed.get("attempts", 1))
     session_root = _ensure_disk_root(args.session_root) / batch_id / package
     log_path = _ensure_disk_root(args.state_root / batch_id / "agent-logs") / (
-        f"{package}.attempt-{attempt}.log"
+        f"{package_filename}.attempt-{attempt}.log"
     )
     handoff_path = worktree / ".nl2repo" / "authoring-handoff.json"
     return {
