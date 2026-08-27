@@ -1,0 +1,89 @@
+schema_version = "2.0"
+task_id = "socket.io"
+version = "2.0.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:e7730d4389c6c8bf36694b77fa098b9d6fe8add88414240a15bc2668fdbbaa70", size_bytes = 21227520, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:e7730d4389c6c8bf36694b77fa098b9d6fe8add88414240a15bc2668fdbbaa70", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "realtime-server"
+tags = ["node", "npm", "commonjs", "websocket", "polling", "events", "rooms", "http"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/socketio/socket.io"
+revision = "ae7fb46e08c5ed964b4a1ea8b1703e816511598e"
+license_spdx = "MIT"
+source_digest = "sha256:c3d386e859d6d51c8eb2672f1cec9db6bba05eba3cfc9bc35e5aef649f0b85eb"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The private npm closure is installed only inside the verifier image, while the trusted Oracle receives a task-private git runtime and a run-scoped github.com source-host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+artifact = { digest = "sha256:d4484a8872505fb83a798a7d58383a1ae0054b675f923a874ac81a34bb1b2da0", size_bytes = 14827520, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:d4484a8872505fb83a798a7d58383a1ae0054b675f923a874ac81a34bb1b2da0", visibility = "private" }
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["accepts", "cors", "debug", "engine.io", "socket.io-adapter", "socket.io-parser"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 12
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:f57115c0b2a503d8ec98e12ee771415fd489fede9f464a213f5bf2ca63a506b9", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:f57115c0b2a503d8ec98e12ee771415fd489fede9f464a213f5bf2ca63a506b9", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+passed_statuses = ["passed"]
+denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wide-20260826-remediation/socket.io"
+reason = "Frozen source, three stable upstream baselines, deterministic private artifacts, production Oracle, empty/stub/forgery/call-hang/offline controls, and network isolation gates passed. Human review and model Agent Run remain outside this lane."
+
+[harbor]
+description = "Build the Socket.IO realtime Node.js server package from an empty workspace with HTTP polling, namespaces, middleware, rooms, broadcasts, acknowledgements, and lifecycle behavior."
+keywords = ["node", "npm", "socket.io", "realtime", "polling", "rooms", "events", "http"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
