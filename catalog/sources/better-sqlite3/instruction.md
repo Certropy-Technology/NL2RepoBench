@@ -25,10 +25,11 @@ Use a committed npm v3 `package-lock.json`. `npm ci --offline --ignore-scripts`
 must succeed with the package manager preloaded by the task environment. The
 package must not require runtime dependencies.
 
-`new Database(path = "")` opens a database. `":memory:"`, an empty string, and a
-filesystem path are supported. The instance exposes `name`, `memory`, `readonly`,
-`open`, and `inTransaction`; `close()` closes the connection and is idempotent.
-Invalid path or option types must throw `TypeError`. `exec(sql)` executes SQL and
+`new Database(path = "", options = {})` opens a database. `":memory:"`, an empty
+string, a filesystem path, and a serialized `Buffer` are supported. `options.readonly`
+is a boolean. The instance exposes `name`, `memory`, `readonly`, `open`, and
+`inTransaction`; `close()` closes the connection and is idempotent. Invalid path,
+options, or `readonly` types must throw `TypeError`. `exec(sql)` executes SQL and
 returns the database. `prepare(sql)` returns a statement.
 
 A statement supports `run(...params)`, `get(...params)`, `all(...params)`, and
@@ -52,27 +53,36 @@ SQLite errors must expose a useful `code` such as `SQLITE_CONSTRAINT_UNIQUE`.
 
 ## Required JSON scenarios
 
-`runScenario` must support exactly these names and return the described shape:
+`runScenario` must support exactly these names and return the described value:
 
-- `basic`: create a table, insert two rows, and return `{ rows, count, open }`.
-- `bindings`: exercise positional and named parameters and return `{ positional,
-  named, changes }`.
-- `iteration`: return `{ values }` from an ordered iterator.
-- `transactions`: return `{ committed, rolledBack, nested }` after commit,
-  rollback, and a caught nested transaction failure.
-- `functions`: return `{ scalar, aggregate }` from registered SQL functions.
-- `pragma`: return `{ foreignKeys, cacheSizeType }`.
-- `serialization`: return `{ before, after }` after serializing and reopening.
-- `errors`: return `{ constraintCode, closedError }` for a unique constraint and
-  an operation after close.
-- `statementModes`: return `{ pluck, raw, safeIntegerType }`.
-- `columns`: return `{ names, count }` for statement column metadata.
-- `readonly`: return `{ readonly, writeCode }` for a readonly file connection.
-- `apiShape`: return `{ hasDatabase, hasSqliteError, methods }`.
+- `basic`: `{ rows: [{ id: 1, name: "Ada" }, { id: 2, name: "Linus" }],
+  count: 2, open: true }`.
+- `bindings`: `{ positional: 1, named: 1, changes: 2 }` after one positional and
+  one named insert.
+- `iteration`: `{ values: [1, 2, 3] }` from an ordered iterator.
+- `transactions`: `{ committed: "committed", rolledBack: 0, nested:
+  ["committed", "outer"] }` after a commit, an outer rollback, and a caught
+  nested transaction failure.
+- `functions`: `{ scalar: 8, aggregate: 5 }` from registered scalar and aggregate
+  functions.
+- `pragma`: `{ foreignKeys: 1, cacheSizeType: "number" }`.
+- `serialization`: `{ before: "saved", after: "saved" }` after serializing and
+  reopening an in-memory database.
+- `errors`: `{ constraintCode: "SQLITE_CONSTRAINT_UNIQUE", closedError:
+  "SQLITE_MISUSE" }` for a unique constraint and an operation after close.
+- `statementModes`: `{ pluck: "x", raw: [42, "x"], safeIntegerType: "bigint" }`.
+- `columns`: `{ names: ["first", "second"], count: 2 }` for statement column
+  metadata.
+- `readonly`: `{ readonly: true, writeCode: "SQLITE_READONLY" }` for a readonly
+  temporary file connection.
+- `apiShape`: `{ hasDatabase: true, hasSqliteError: true, methods: ["prepare",
+  "exec", "pragma", "transaction", "function", "aggregate", "serialize",
+  "close"] }`.
 
-Keep results deterministic: do not use current time, random values, external
-files, network access, or process-global mutable state. The hidden verifier uses
-one leaf test per scenario and derives the fixed denominator from this list.
+Keep results deterministic: do not use current time, random values, network
+access, or process-global mutable state. The readonly scenario may create and
+clean up its own temporary SQLite file. The hidden verifier uses one leaf test per
+scenario and derives the fixed denominator from this list.
 
 ## Implementation notes
 

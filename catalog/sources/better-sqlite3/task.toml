@@ -2,7 +2,7 @@ schema_version = "2.0"
 task_id = "better-sqlite3"
 version = "2.0.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:26229c564b3e1ab54a2c7a941b7c21be8e7d5866d8e698447cbaa859f4984d89", size_bytes = 30720, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:26229c564b3e1ab54a2c7a941b7c21be8e7d5866d8e698447cbaa859f4984d89", visibility = "private" }
+oracle_bundle = { digest = "sha256:b478d5c6fec446475a957dc2a58fb5f962ea657eb9e074bbb45d87dd2ad460b7", size_bytes = 20480, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:b478d5c6fec446475a957dc2a58fb5f962ea657eb9e074bbb45d87dd2ad460b7", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
@@ -20,7 +20,7 @@ source_digest = "sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-base_image = "docker.io/library/node"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 network_mode = "no-network"
 
@@ -50,24 +50,24 @@ package_manager_version = "11.17.0"
 install_mode = "offline"
 lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:3dc2c68167d64d2c05bc38c0ef0e67b7cdf47b1fdd2f654d9ce4e45ba07d4ff7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3dc2c68167d64d2c05bc38c0ef0e67b7cdf47b1fdd2f654d9ce4e45ba07d4ff7", visibility = "private" }
+artifact = { digest = "sha256:c9e6a1fcff247942a05b6ebb235e66a0bd51ccec050197a39f8beeaa07e6dfee", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:c9e6a1fcff247942a05b6ebb235e66a0bd51ccec050197a39f8beeaa07e6dfee", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 12
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-command-plan+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
-test_bundle = { digest = "sha256:221e4d9ba58f61d4f29b78465b67ca795fd38ab2a58e4479035831f36fc30171", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:221e4d9ba58f61d4f29b78465b67ca795fd38ab2a58e4479035831f36fc30171", visibility = "private" }
+commands_artifact = { digest = "sha256:39e325879fc638f4512d0ecc64c43b0638f1e4080911ee26545e3c2730424529", size_bytes = 102, media_type = "application/vnd.nl2repobench.node-command-plan+json", uri = "artifact://private/sha256:39e325879fc638f4512d0ecc64c43b0638f1e4080911ee26545e3c2730424529", visibility = "private" }
+test_bundle = { digest = "sha256:076d4db8cfa968ee76eaf2a31c517c838f9e838ac9920f4c2b465e0610eb34f9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:076d4db8cfa968ee76eaf2a31c517c838f9e838ac9920f4c2b465e0610eb34f9", visibility = "private" }
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/better-sqlite3"
-reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts, and production recompile fails because the referenced private npm bundle is missing. The invalid runtime is removed; no production status is retained without evidence."
+reason = "Fresh Harbor 0.21 Node 24 remediation gates passed: source freeze and native upstream baseline are recorded; production compile resolves all private artifacts; Oracle collected 12/12 with reward 1.0; empty/stub/forgery controls each collected 12 leaves with reward 0; verifier network receipts prove public_network_available=false."
 
 [harbor]
 description = "Recreate a deterministic better-sqlite3 API subset with a bounded Node 24 SQLite adaptation."

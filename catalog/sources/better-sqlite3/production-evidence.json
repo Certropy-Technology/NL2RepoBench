@@ -1,36 +1,16 @@
 {
   "schema_version": "1.0",
   "task_id": "better-sqlite3",
-  "terminal_kind": "blocked",
-  "blocked": {
-    "failure_class": "environment",
-    "next_step": "Materialize the referenced private npm/cache bundle, recompile the source without --allow-incomplete, then run official Harbor 0.21.0 Oracle and all controls with hash-bound network receipts before reopening.",
-    "source_freeze": {
-      "status": "known",
-      "upstream_url": "https://github.com/WiseLibs/better-sqlite3",
-      "revision": "f8e2d541208281368129929a96f70f937c0735ef",
-      "source_digest": "sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab",
-      "license_spdx": "MIT"
-    },
-    "commands": [
-      {
-        "command": "uv run nl2repo task validate-source catalog/sources/better-sqlite3",
-        "tool_version": "repository toolchain",
-        "exit_code": 0,
-        "log": {
-          "path": "catalog/sources/better-sqlite3/evidence/remediation.txt",
-          "sha256": "sha256:0ddb3980d60cb4a334785a1f04fb101e64f2239320a7eb0a66aeb5bf3ba83f84"
-        }
-      },
-      {
-        "command": "uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output /tmp/better-sqlite3-recompile --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private",
-        "tool_version": "repository toolchain",
-        "exit_code": 1,
-        "log": {
-          "path": "catalog/sources/better-sqlite3/evidence/remediation.txt",
-          "sha256": "sha256:0ddb3980d60cb4a334785a1f04fb101e64f2239320a7eb0a66aeb5bf3ba83f84"
-        }
-      }
-    ]
-  }
+  "status": "controls-passed",
+  "source": {"revision":"f8e2d541208281368129929a96f70f937c0735ef","digest":"sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab","license":"MIT"},
+  "toolchain": {"harbor":"0.21.0","task_schema":"1.4","node":"24.19.0","npm":"11.17.0","base_image":"docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"},
+  "compile": {"exit_code":0,"command":"uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output .nl2repo/compiled/better-sqlite3 --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private","bundle":".nl2repo/compiled/better-sqlite3/better-sqlite3"},
+  "oracle": {"valid":true,"collected":12,"passed":12,"failed":0,"reward":1.0,"network":false,"receipt":".nl2repo/runs/better-sqlite3/oracle/2026-08-26__23-04-25/better-sqlite3__LHKXPaX/verifier/grading.json"},
+  "controls": {
+    "empty": {"valid":true,"collected":0,"reward":0.0,"network":false,"receipt":".nl2repo/runs/better-sqlite3/empty/2026-08-26__23-10-37/better-sqlite3__V89hHJX/verifier/grading.json"},
+    "stub": {"valid":true,"collected":12,"passed":0,"reward":0.0,"network":false,"receipt":".nl2repo/runs/better-sqlite3/stub/2026-08-26__23-08-00/better-sqlite3-stub__zdYo55R/verifier/grading.json"},
+    "forgery": {"valid":true,"collected":12,"passed":0,"reward":0.0,"network":false,"trusted_reward_unaffected":true,"receipt":".nl2repo/runs/better-sqlite3/forgery/2026-08-26__23-09-05/better-sqlite3-forgery__uU8MzHk/verifier/grading.json"}
+  },
+  "residual_risks": ["The task evaluates a documented Node 24 node:sqlite adaptation rather than the upstream native addon; native-only upstream behaviors are explicitly excluded from the public contract.", "No model Agent Run was started in this lane."],
+  "blocker": null
 }
