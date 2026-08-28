@@ -1,0 +1,61 @@
+{
+  "authoring": {
+    "batch_id": "python-author-wave2-20260828",
+    "mode": "author-one",
+    "task_id": "frozenlist"
+  },
+  "dependency_lock": {
+    "digest": "sha256:0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc",
+    "packages": 10,
+    "path": "catalog/sources/frozenlist/provenance/requirements.lock.txt",
+    "size_bytes": 15460
+  },
+  "environment": {
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "docker_version": "29.7.2",
+    "harbor_version": "0.21.0",
+    "python_version": "3.12.14",
+    "uv_version": "0.11.32"
+  },
+  "license": {
+    "file": "LICENSE",
+    "sha256": "sha256:6fd5243e92dd7f98ec69c7ac377728e74905709ff527a5bf98d6d0263c04f5b6",
+    "spdx": "Apache-2.0"
+  },
+  "private_artifacts": {
+    "oracle": {
+      "digest": "sha256:f71c7c8c2da60e56dc3619c696421690a7458f675f9e814d04ba7decc12b03e7",
+      "size_bytes": 10240
+    },
+    "verifier": {
+      "digest": "sha256:8b00cb2ab3fab7ed88ecc2c642c635f3ba395541010b206e7d62bb13c08b6d27",
+      "size_bytes": 20480
+    }
+  },
+  "schema_version": "1.0",
+  "source": {
+    "archive_sha256": "sha256:0fa249ef870bbbd9267b5427dbcbe7d5a3dc92d439ab677c1f9f6f84717f9b5b",
+    "archive_size_bytes": 286720,
+    "revision": "381c91e4663b067d5debab4cc19b400d3c459b44",
+    "upstream_url": "https://github.com/aio-libs/frozenlist"
+  },
+  "tests": {
+    "baseline_native": {
+      "collected": 112,
+      "failed": 2,
+      "passed": 110
+    },
+    "baseline_pure_python": {
+      "collected": 112,
+      "failed": 2,
+      "passed": 110
+    },
+    "excluded_upstream_reason": "Two stale re-import assertions require a removed NO_EXTENSIONS module constant.",
+    "frozen_verifier_total": 21,
+    "local_adapter_smoke": {
+      "failed": 0,
+      "passed": 21
+    }
+  }
+}
