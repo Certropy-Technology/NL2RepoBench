@@ -2,6 +2,9 @@
 # Run one catalog-backed Harbor task with OpenHands SDK.
 set -euo pipefail
 
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_ROOT/.." && pwd)"
+
 TASK_ID="${TASK_ID:?set TASK_ID}"
 MODEL="${MODEL:?set MODEL, e.g. openai/gpt-5.6-sol}"
 LLM_BASE_URL="${LLM_BASE_URL:?set LLM_BASE_URL}"
@@ -18,6 +21,13 @@ LLM_RETRY_MAX_WAIT="${LLM_RETRY_MAX_WAIT:-120}"
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)-${TASK_ID}}"
 RUN_ROOT="${RUN_ROOT:-.nl2repo/runs/model}"
 HARBOR_AGENT="${HARBOR_AGENT:-nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction}"
+
+case "$RUN_ID" in
+  ""|/*|*..*|*$'\n'*|*$'\r'*)
+    echo "invalid RUN_ID: $RUN_ID" >&2
+    exit 2
+    ;;
+esac
 
 case "$HARBOR_AGENT" in
   nl2repobench.harbor_openhands:OpenHandsSDKFileInstruction)
@@ -76,18 +86,24 @@ elif [[ -n "${HARBOR_TASK_ROOT:-}" ]]; then
 else
   task_path="catalog/tasks/${TASK_ID}/harbor"
 fi
-job_dir="${RUN_ROOT}/${RUN_ID}"
+if [[ "$RUN_ROOT" == /* ]]; then
+  run_root_abs="$RUN_ROOT"
+else
+  run_root_abs="$PWD/$RUN_ROOT"
+fi
+mkdir -p "$run_root_abs"
+run_root_abs="$(cd "$run_root_abs" && pwd)"
+job_dir="$run_root_abs/$RUN_ID"
 task_config="${task_path}/task.toml"
 
-if [[ "$job_dir" != /* ]]; then
-  job_dir="$PWD/$job_dir"
-fi
 harbor_jobs_dir="$job_dir"
 
 [[ "$task_path" != *$'\n'* ]] || { echo "invalid Harbor task path" >&2; exit 1; }
 [[ -d "$task_path" ]] || { echo "missing Harbor task: $task_path" >&2; exit 1; }
 [[ -f "$task_config" ]] || { echo "missing Harbor config: $task_config" >&2; exit 1; }
 mkdir -p "$job_dir"
+archive_task_id="${TASK_ID//\//__}"
+archive_script="$SCRIPT_ROOT/archive_harbor_job.py"
 
 agent_timeout_multiplier="$(
   python3 - "$task_config" "$AGENT_TIMEOUT_SECONDS" <<'PY'
@@ -143,15 +159,67 @@ cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup
   # only the exact trials created below; never run a global Docker prune.
   set +e
-  PYTHONPATH=../src python3 ../scripts/cleanup_harbor_trials.py \
+  PYTHONPATH="$REPO_ROOT/src" python3 "$REPO_ROOT/scripts/cleanup_harbor_trials.py" \
     --jobs-dir "$harbor_jobs_dir" \
     >>"$job_dir/cleanup.log" 2>&1
   cleanup_rc=$?
   if [[ "$cleanup_rc" -ne 0 ]]; then
     printf 'harbor_cleanup_rc=%s\n' "$cleanup_rc" >>"$job_dir/cleanup.log"
   fi
+  return "$cleanup_rc"
 }
-trap cleanup_harbor_trials EXIT
+
+archive_harbor_job() {
+  # Upload and verify the complete job, including artifacts/workspace, before
+  # removing the local job directory. Failure deliberately keeps local data.
+  set +e
+  PYTHONPATH="$REPO_ROOT/src" python3 "$archive_script" \
+    --job-dir "$harbor_jobs_dir" \
+    --model "$MODEL" \
+    --task-id "$TASK_ID" \
+    --run-id "$RUN_ID" \
+    --workers "${OSS_HARBOR_ARCHIVE_WORKERS:-8}" \
+    --receipt-path "$run_root_abs/oss-archive-receipts/${archive_task_id}.json" \
+    >"$run_root_abs/${RUN_ID}.oss-archive.log" 2>&1
+  archive_rc=$?
+  if [[ "$archive_rc" -ne 0 ]]; then
+    printf 'harbor_oss_archive_rc=%s\n' "$archive_rc" \
+      >>"$run_root_abs/${RUN_ID}.oss-archive.log"
+  fi
+  return "$archive_rc"
+}
+
+remove_archived_job() {
+  [[ "$1" -eq 0 ]] || return 0
+  [[ "$harbor_jobs_dir" == "$run_root_abs/$RUN_ID" ]] || {
+    printf 'refusing to remove unexpected Harbor job path: %s\n' "$harbor_jobs_dir" \
+      >>"$run_root_abs/${RUN_ID}.oss-archive.log"
+    return 1
+  }
+  [[ -n "$harbor_jobs_dir" && "$harbor_jobs_dir" != "/" ]] || return 1
+  rm -rf -- "$harbor_jobs_dir"
+}
+
+on_exit() {
+  set +e
+  final_rc=$?
+  cleanup_harbor_trials
+  cleanup_rc=$?
+  archive_harbor_job
+  archive_rc=$?
+  if [[ "$archive_rc" -eq 0 && "$cleanup_rc" -eq 0 ]]; then
+    remove_archived_job "$archive_rc"
+    remove_rc=$?
+  else
+    remove_rc=0
+  fi
+  if [[ "$archive_rc" -ne 0 || "$cleanup_rc" -ne 0 || "$remove_rc" -ne 0 ]]; then
+    final_rc=1
+  fi
+  trap - EXIT
+  exit "$final_rc"
+}
+trap on_exit EXIT
 
 retry_args=()
 if [[ "$RETRY_INFRA" == "1" ]]; then

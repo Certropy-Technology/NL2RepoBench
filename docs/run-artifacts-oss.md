@@ -38,6 +38,20 @@ nl2repobench/
 The trial segment is `<run-root>--<job-dir>`, which keeps repeated runs of the
 same task distinguishable while staying stable across re-uploads.
 
+The Harbor model runner uses a separate `harbor-runs/<model>/<task>/<run>/`
+prefix. Unlike the legacy bulk uploader, this path includes the complete
+`artifacts/workspace/` tree and is verified before local cleanup.
+
+The authoring watcher uses the same workspace policy for direct Harbor
+certification runs under a task's `.nl2repo/authoring-work/**/runs` or
+`jobs` directories. It uploads the run files, including workspace, before
+removing local run/build caches; source, evidence, and private CAS remain
+local until the integrator archives them.
+
+The Harbor model runner uses a separate `harbor-runs/<model>/<task>/<run>/`
+prefix. Unlike the legacy bulk uploader, this path includes the complete
+`artifacts/workspace/` tree and is verified before local cleanup.
+
 Model scores and Oracle evidence are deliberately separated: an Oracle result
 validates the environment and is never a model score. `unknown/` is preserved
 rather than guessed so nothing is misattributed to a model.
