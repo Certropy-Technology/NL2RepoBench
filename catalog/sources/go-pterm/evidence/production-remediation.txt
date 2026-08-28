@@ -1,0 +1,35 @@
+go-pterm production remediation summary
+
+Frozen source:
+- upstream: https://github.com/pterm/pterm
+- revision: bacb2fc434b361b8951d1c7649c2029b1d7b6a83
+- git archive sha256: 18b19c2db580502951d0082e0215a2f6008488e6f5ed441024fa4ac4f6d0aa2b
+- license: MIT
+- upstream baseline: GOFLAGS=-mod=mod go test ./... (exit 0)
+- offline vendor baseline: go test -mod=vendor ./... (exit 0)
+
+Environment and closure:
+- Go 1.26.5, linux/amd64, CGO disabled for candidate bridge
+- base image: docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd
+- private module bundle: sha256:f2c548708a2e8fce5d83dca4048d4c7ffcdf02426137c0a6f833d841a8c69f48
+- module bundle: 564 regular files, 1,835,857 compressed bytes
+
+Remediation history:
+- The initial official Oracle completed with reward 0 because upstream CLAUDE.md
+  is a tracked symlink. The verifier correctly rejected the non-regular tree.
+- solve.sh now verifies the exact revision and archive digest first, then removes
+  only .git and the redundant CLAUDE.md symlink before workspace ingestion.
+- The second Oracle passed 1/1.
+- Stub and forgery initially produced valid 0 rewards but 0/0 counts. A minimal
+  generic Go compiler fix now emits a verifier-owned failed contract leaf when
+  candidate installation succeeds but contract execution fails.
+- The final rebuilt bundle passed Oracle 1/1. Stub, forgery, panic, hang,
+  oversized-output, and background-process controls each produced valid 0/1.
+  Empty and install-failure produced the permitted candidate-installation 0/0.
+- Direct docker --network none replay passed 1/1 and reported both public probes
+  false. No UID 10001 process remained after the controls.
+
+Final bundle manifest:
+- path: .nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-compiled/go-pterm/bundle.manifest.json
+- sha256: 2547cbe07a614bc79a13904ff04414aa7e0513a740d095cdc492853d2ce0b624
+- entries: 1190, integrity mismatches: 0

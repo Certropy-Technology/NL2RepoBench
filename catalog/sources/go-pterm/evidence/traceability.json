@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-pterm",
+  "source_baseline": {
+    "upstream_url": "https://github.com/pterm/pterm",
+    "revision": "bacb2fc434b361b8951d1c7649c2029b1d7b6a83",
+    "source_digest": "sha256:18b19c2db580502951d0082e0215a2f6008488e6f5ed441024fa4ac4f6d0aa2b",
+    "license_spdx": "MIT",
+    "go_version_declared": "1.26.0",
+    "go_version_tested": "1.26.5",
+    "packages": 5,
+    "go_files": 242,
+    "test_files": 67,
+    "top_level_test_functions": 419,
+    "go_test_json_pass_events": 1538,
+    "failed_test_events": 0,
+    "baseline_command": "GOFLAGS=-mod=mod go test ./..."
+  },
+  "api_inventory": {
+    "method": "go doc -all over root pterm and putils packages plus manual signature review",
+    "public_declaration_lines": 591,
+    "selected_contract_symbols": [
+      "Sprint", "Sprintf", "Sprintfln", "Sprintln", "Sprinto",
+      "RemoveColorFromString", "EnableColor", "DisableColor", "Color",
+      "Style", "NewStyle", "BasicTextPrinter", "DefaultBasicText", "Bar",
+      "Bars", "RGB", "Letter", "Letters", "putils.CenterText",
+      "putils.RGBFromHEX", "putils.LettersFromString",
+      "putils.LettersFromStringWithStyle", "putils.LettersFromStringWithRGB"
+    ]
+  },
+  "risk_adaptation": {
+    "excluded": [
+      "interactive and TTY input", "live printers and terminal cursor state",
+      "terminal size detection", "filesystem and network helpers",
+      "timing, process exit, and concurrent global printer registries"
+    ],
+    "determinism": "The public bridge explicitly enables or disables color before every color-sensitive call.",
+    "boundary": "Only JSON-safe strings, numbers, booleans, style codes, and value snapshots cross the subprocess bridge.",
+    "limits": "The bridge accepts at most 128 KiB per newline-delimited request."
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "plain fmt-compatible formatting and control prefixes",
+      "ANSI color constants, rendering, line splitting, and disable behavior",
+      "style composition, removal, ordering, and nested reset behavior",
+      "basic text zero value and configured style",
+      "Bar value-receiver builder immutability",
+      "ANSI and OSC hyperlink removal",
+      "visible-width multiline centering",
+      "short and long hexadecimal RGB parsing and invalid input",
+      "Unicode code-point letter splitting and supplied style/RGB propagation",
+      "malformed and unknown bridge operations"
+    ]
+  }
+}

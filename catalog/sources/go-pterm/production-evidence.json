@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-pterm",
+  "status": "controls-passed",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/pterm/pterm",
+    "revision": "bacb2fc434b361b8951d1c7649c2029b1d7b6a83",
+    "source_digest": "sha256:18b19c2db580502951d0082e0215a2f6008488e6f5ed441024fa4ac4f6d0aa2b",
+    "license_spdx": "MIT"
+  },
+  "runtime": {
+    "language": "go",
+    "package_manager": "go-modules",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "oracle_allowed_hosts": ["github.com"]
+  },
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:f2c548708a2e8fce5d83dca4048d4c7ffcdf02426137c0a6f833d841a8c69f48",
+      "size_bytes": 1835857
+    },
+    "verifier_bundle": {
+      "digest": "sha256:19613ffeac932cb4e608661b9be87021482abd6ef5b80b821c877f9aeb2cad0f",
+      "size_bytes": 1507
+    },
+    "oracle_bundle": {
+      "digest": "sha256:16a496828951925f7c4e422b013ba250101b7713e3371f06c6dacd2d42169d01",
+      "size_bytes": 2106
+    }
+  },
+  "images": {
+    "go_base": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_runtime": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "built_agent": "sha256:d1f07cdfc172fd17a6a9f3ef4d39ec3fd390a63c166e073af46f6b2ed4841b7e",
+    "built_verifier": "sha256:5f7af1db4068b08c3717d8ca5664598cb74e44c07a4d5c00beb39da121188c09"
+  },
+  "final_bundle": {
+    "path": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-compiled/go-pterm/bundle.manifest.json",
+    "sha256": "sha256:2547cbe07a614bc79a13904ff04414aa7e0513a740d095cdc492853d2ce0b624",
+    "harbor_task_digest": "sha256:f90fb693ccac0f1190c32c951131cfb530ea69389cf2da015d39bf1368e9097d",
+    "entries": 1190,
+    "integrity_mismatches": 0
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-compiled/go-pterm -a oracle --job-name go-pterm-final-oracle-20260828 -o .nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/oracle --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/oracle/go-pterm-final-oracle-20260828/go-pterm__tsvbMu6/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/oracle/go-pterm-final-oracle-20260828/go-pterm__tsvbMu6/verifier/network.json",
+    "summary": {
+      "valid": true,
+      "collected": 1,
+      "passed": 1,
+      "frozen_total": 1,
+      "reward": 1.0,
+      "public_network_available": false,
+      "exceptions": 0
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/empty/go-pterm-final-empty-20260828/go-pterm__TUHqvyZ/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/empty/go-pterm-final-empty-20260828/go-pterm__TUHqvyZ/verifier/network.json",
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed"
+    },
+    "stub": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/stub/go-pterm-final-stub-20260828/go-pterm-stub__heEnozX/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/stub/go-pterm-final-stub-20260828/go-pterm-stub__heEnozX/verifier/network.json",
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "reward": 0.0
+    },
+    "forgery": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/forgery/go-pterm-final-forgery-20260828/go-pterm-forgery__RcUoXRZ/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/forgery/go-pterm-final-forgery-20260828/go-pterm-forgery__RcUoXRZ/verifier/network.json",
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "reward": 0.0,
+      "trusted_reward_preserved": true
+    },
+    "install_failure": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/install-failure/go-pterm-final-install-failure-20260828/go-pterm-install-failure__hsYPXKh/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/install-failure/go-pterm-final-install-failure-20260828/go-pterm-install-failure__hsYPXKh/verifier/network.json",
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed"
+    },
+    "panic": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/panic/go-pterm-final-panic-20260828/go-pterm-panic__LFnYY6w/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/panic/go-pterm-final-panic-20260828/go-pterm-panic__LFnYY6w/verifier/network.json",
+      "valid": true,
+      "collected": 1,
+      "reward": 0.0
+    },
+    "hang": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/hang/go-pterm-final-hang-20260828/go-pterm-hang__73wtwLF/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/hang/go-pterm-final-hang-20260828/go-pterm-hang__73wtwLF/verifier/network.json",
+      "valid": true,
+      "collected": 1,
+      "reward": 0.0
+    },
+    "oversized_output": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/oversized-output/go-pterm-final-oversized-output-20260828/go-pterm-oversized-output__zuoiYtR/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/oversized-output/go-pterm-final-oversized-output-20260828/go-pterm-oversized-output__zuoiYtR/verifier/network.json",
+      "valid": true,
+      "collected": 1,
+      "reward": 0.0
+    },
+    "background_process": {
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/background-process/go-pterm-final-background-process-20260828/go-pterm-background-process__nPSUryb/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-jobs/background-process/go-pterm-final-background-process-20260828/go-pterm-background-process__nPSUryb/verifier/network.json",
+      "valid": true,
+      "collected": 1,
+      "reward": 0.0,
+      "candidate_uid_processes_after_run": 0
+    },
+    "offline": {
+      "command": "docker run --rm --network none -v <task-local-workspace>:/workspace -v <task-local-logs>:/logs/verifier nl2repobench/go-pterm-verifier:authoring /tests/test.sh",
+      "exit_code": 0,
+      "grading": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-offline-replay/grading.json",
+      "network": ".nl2repo/authoring-work/go-author-wave2-20260828/go-pterm/final-offline-replay/network.json",
+      "valid": true,
+      "collected": 1,
+      "passed": 1,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "The current Go compiler metric exposes one verifier-owned aggregate contract leaf, so individual private assertions do not receive partial credit.",
+    "Blind review and model Agent Run are intentionally deferred to the integrator and model-run loop."
+  ]
+}
