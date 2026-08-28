@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "exceptiongroup"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "exceptions", "exception-groups", "traceback", "context-manager", "typing", "repository-generation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/agronholm/exceptiongroup"
+revision = "0c6cfbf677f6b50df17311cfdad01e9ff17310aa"
+license_spdx = "MIT"
+source_digest = "sha256:70913d01619162478935e3cf3a56721e85375e4f535928aa59f1273e7572e3bd"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier images install the private hash-locked build and test closure during Docker build. Candidate and verifier runs have no egress; only the trusted Oracle receives an exact run-scoped github.com authorization to fetch the frozen revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit-core==3.12.0", "flit-scm==1.7.0", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "typing-extensions==4.15.0", "vcs-versioning==2.3.1"]
+lock_artifact = { digest = "sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33", size_bytes = 1330, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 34
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/child.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:2753e3495ef38c4bc928596760201ca170a2d9bae1acfd5982ebe7a15a60e0b2", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2753e3495ef38c4bc928596760201ca170a2d9bae1acfd5982ebe7a15a60e0b2", visibility = "private" }
+environment = { SETUPTOOLS_SCM_PRETEND_VERSION_FOR_EXCEPTIONGROUP = "1.3.1.post6" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the exceptiongroup PEP 654 backport and its synchronous catch, suppress, and traceback compatibility helpers from an empty workspace."
+keywords = ["python", "exceptions", "exception-groups", "traceback", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "The production Harbor bundle passed the 34/34 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls. Review, model Agent Run, and publication remain separate stages."

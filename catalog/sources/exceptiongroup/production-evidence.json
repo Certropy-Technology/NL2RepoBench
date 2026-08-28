@@ -1,0 +1,227 @@
+{
+  "schema_version": "1.0",
+  "task_id": "exceptiongroup",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/agronholm/exceptiongroup",
+    "revision": "0c6cfbf677f6b50df17311cfdad01e9ff17310aa",
+    "source_archive_sha256": "sha256:70913d01619162478935e3cf3a56721e85375e4f535928aa59f1273e7572e3bd",
+    "license_spdx": "MIT",
+    "git_describe": "1.3.1-6-g0c6cfbf",
+    "distribution_version": "1.3.1.post6"
+  },
+  "environment": {
+    "python": "3.12.11 authoring / python:3.12-slim runtime",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "verifier_image_id": "sha256:59151dbccb3344322a1f4613d62c18f79cca581fba8f9c1b5b67e889e821b0b5",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": [
+      "flit-core==3.12.0",
+      "flit-scm==1.7.0",
+      "packaging==26.3",
+      "setuptools==84.0.0",
+      "setuptools-scm==10.2.1",
+      "typing-extensions==4.15.0",
+      "vcs-versioning==2.3.1"
+    ],
+    "lock_artifact": {
+      "digest": "sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33",
+      "size_bytes": 1330,
+      "uri": "artifact://private/sha256:2c72a304c9e815bf0f280369ec62cc810c999fc606aba1fa8f33",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "api_path": "catalog/sources/exceptiongroup/provenance/inventory.md",
+    "traceability_path": "catalog/sources/exceptiongroup/provenance/traceability.md",
+    "upstream_collected": 103,
+    "upstream_passed": 91,
+    "upstream_skipped": 12,
+    "frozen_total": 34
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/compiled-final/exceptiongroup/bundle.manifest.json",
+    "manifest_sha256": "sha256:3e0c682fa8f2dd0450befe11534848c07890db5c1bbd8fa92c92cd9d16fae716",
+    "verifier_bundle": "artifact://private/sha256:2753e3495ef38c4bc928596760201ca170a2d9bae1acfd5982ebe7a15a60e0b2",
+    "oracle_bundle": "artifact://private/sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779",
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "frozen_total": 34
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/compiled-final/exceptiongroup -a oracle --allow-agent-host github.com --job-name exceptiongroup-oracle-final-20260828 --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-oracle --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 34,
+    "total": 34,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-oracle/exceptiongroup-oracle-final-20260828/exceptiongroup__MaGUBsM/verifier/grading.json",
+      "sha256": "sha256:69fd5c57f8498a79d2d87cc28edc599dadc7c777113377c65d18746220bbb2ad"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-oracle/exceptiongroup-oracle-final-20260828/exceptiongroup__MaGUBsM/verifier/network.json",
+      "sha256": "sha256:0631a63794ee5c3cff6ee2d450a318be5d9cc44b1388bf24ee8d54cb2718b536"
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-oracle/exceptiongroup-oracle-final-20260828/exceptiongroup__MaGUBsM/verifier/candidate-install.json",
+      "outcome": "success",
+      "returncode": 0
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none -v direct/final-empty/workspace:/workspace -v direct/final-empty/logs:/logs nl2repo-exceptiongroup-verifier:r4 /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/direct/final-empty/logs/verifier/grading.json",
+        "sha256": "sha256:29007a496958c223dc9b372d4af94e87cec10eb3c49c352f103862f9c37efa81"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/direct/final-empty/logs/verifier/network.json",
+        "sha256": "sha256:aafae34ec9778b0a13cf91d10cdc1409c211dd2cb068d3eac108cb89e41404be"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p final-controls/exceptiongroup-stub -a oracle --job-name exceptiongroup-final-stub-20260828 --jobs-dir runs/final-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 14,
+      "total": 34,
+      "reward": 0.4117647058823529,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-stub/exceptiongroup-final-stub-20260828/exceptiongroup-stub__Cs9qnUB/verifier/grading.json",
+        "sha256": "sha256:9a4071a92dcdf98ad72b32f562a5dd1f3141b20740ef2544185bdb766d9e5d14"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-stub/exceptiongroup-final-stub-20260828/exceptiongroup-stub__Cs9qnUB/verifier/network.json",
+        "sha256": "sha256:117c0576bb7221014f57f503ceee0dd74f04c4173b51981c34cf324f324f8629"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p final-controls/exceptiongroup-forgery -a oracle --job-name exceptiongroup-final-forgery-20260828 --jobs-dir runs/final-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 15,
+      "total": 34,
+      "reward": 0.4411764705882353,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-forgery/exceptiongroup-final-forgery-20260828/exceptiongroup-forgery__vdA3o8m/verifier/grading.json",
+        "sha256": "sha256:02e0dd6c10541301003a7e43bd0390f5ffb6a93bf55a583354711bda951fbebc"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-forgery/exceptiongroup-final-forgery-20260828/exceptiongroup-forgery__vdA3o8m/verifier/network.json",
+        "sha256": "sha256:81a08f713adbb1587b1c10371be7f8c66438a39983d19d7389e1afb7892f1244"
+      }
+    },
+    "install_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p final-controls/exceptiongroup-install-hang -a oracle --job-name exceptiongroup-final-install-hang-20260828 --jobs-dir runs/final-install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-install-hang/exceptiongroup-final-install-hang-20260828/exceptiongroup-install-hang__uRBEd9z/verifier/grading.json",
+        "sha256": "sha256:29007a496958c223dc9b372d4af94e87cec10eb3c49c352f103862f9c37efa81"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-install-hang/exceptiongroup-final-install-hang-20260828/exceptiongroup-install-hang__uRBEd9z/verifier/network.json",
+        "sha256": "sha256:1e48c5ffbda5dbe6cb04f64b6de4a31a2b3e717d48da09bb6c3cc05410ff2906"
+      }
+    },
+    "call_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p final-controls/exceptiongroup-call-hang -a oracle --job-name exceptiongroup-final-call-hang-20260828 --jobs-dir runs/final-call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 34,
+      "reward": 0.0,
+      "failure_class": "model",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-call-hang/exceptiongroup-final-call-hang-20260828/exceptiongroup-call-hang__MgMkiHp/verifier/grading.json",
+        "sha256": "sha256:2736c4f43c503db29aee9bdfb8a95eb066d158213cbb0f6b021a8050e490509e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/runs/final-call-hang/exceptiongroup-final-call-hang-20260828/exceptiongroup-call-hang__MgMkiHp/verifier/network.json",
+        "sha256": "sha256:942c750c9fce0d8d469d8a03685a891eac344340da55106249b358d7467cab35"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none -v direct/final-offline/workspace:/workspace -v direct/final-offline/logs:/logs nl2repo-exceptiongroup-verifier:r4 /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 34,
+      "total": 34,
+      "reward": 1.0,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/direct/final-offline/logs/verifier/network.json",
+        "sha256": "sha256:81b6e5801978f0293095ac4f98a73a403d61d831626e121678610efd4e6a0a64",
+        "public_network_available": false
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/direct/final-offline/logs/verifier/grading.json",
+        "sha256": "sha256:69fd5c57f8498a79d2d87cc28edc599dadc7c777113377c65d18746220bbb2ad"
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/exceptiongroup",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 137,
+      "warning_scope": "other catalog sources; no exceptiongroup finding"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/exceptiongroup --output .nl2repo/authoring-work/python-author-wave2-20260828/exceptiongroup/compiled-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest_sha256": "sha256:3e0c682fa8f2dd0450befe11534848c07890db5c1bbd8fa92c92cd9d16fae716"
+    },
+    "syntax": {
+      "command": "python -m py_compile verifier/run.py verifier/child.py && bash -n oracle/solve.sh harbor/controls/*.sh",
+      "exit_code": 0
+    },
+    "upstream_tests": {
+      "command": "python 3.12.11 -m pytest -o addopts='' tests",
+      "exit_code": 0,
+      "collected": 103,
+      "passed": 91,
+      "skipped": 12
+    },
+    "image_build": {
+      "command": "docker build -t nl2repo-exceptiongroup-verifier:r4 compiled-final/exceptiongroup/tests",
+      "exit_code": 0,
+      "verifier_image_id": "sha256:59151dbccb3344322a1f4613d62c18f79cca581fba8f9c1b5b67e889e821b0b5"
+    }
+  },
+  "remediation": [
+    "The upstream archive has no Git metadata; Oracle verifies the exact archive digest, then uses static Flit Core metadata and the frozen 1.3.1.post6 version so candidate installation is reproducible.",
+    "The verifier child adapter is passed as a root-read source string to a UID-10001 python -c child because compiler-generated verifier files are root-only; candidate code remains outside the trusted process.",
+    "One direct offline replay hit EAGAIN from concurrent unrelated UID-10001 Go builds; after those processes exited, a bounded retry passed. No unrelated process was terminated."
+  ],
+  "residual_risks": [
+    "No Harbor model Agent Run was started from this authoring lane; the independent Agent Run loop owns that stage.",
+    "Review, blind traceability review, pilot, and publication remain separate integrator stages."
+  ]
+}
