@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cross-fetch",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/lquixada/cross-fetch",
+    "revision": "9e6898ee848ba6dc942f787f2c35ca6fa30eb014",
+    "source_digest": "sha256:2924f22280494620dfee8fd974a0a85f6668334b16eed7b540b7fe4d24706491",
+    "license_spdx": "MIT",
+    "license_sha256": "821a6be45c3fd08815688b30b6210fc97848cf88c7a6ed8afb22ae75b83571b4",
+    "submodules": []
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "artifact": "sha256:3c8a0a42e0c0f0cbaa4f0ee1146bd6f211682c488e12a0fee9f718d44838a087",
+    "lockfile_version": "3",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts"
+  },
+  "frozen_collection": {"expected_total": 22, "source": "frozen-collection"},
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/cross-fetch/compiled-final/cross-fetch",
+    "bundle_manifest_sha256": "sha256:caaf99517fa1dc12ea01c2130bb06f055f21138bf0a11f6abbbc88d1049fcd85",
+    "mode": "production"
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": ".nl2repo/authoring-work/cross-fetch/oracle-probe/solve.sh", "exit_code": 0, "log": ".nl2repo/evidence/cross-fetch/source-freeze.log"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/cross-fetch", "exit_code": 0, "log": ".nl2repo/evidence/cross-fetch/validate-source.log"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": ".nl2repo/evidence/cross-fetch/lint-network.log", "task_error_count": 0},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/cross-fetch --output .nl2repo/authoring-work/cross-fetch/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/evidence/cross-fetch/production-compile-final.log"}
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/cross-fetch/compiled/cross-fetch -a oracle --allow-agent-host github.com --job-name cross-fetch-oracle --n-concurrent 1 -o .nl2repo/runs/cross-fetch-oracle --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 22,
+    "passed": 22,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/cross-fetch-oracle/cross-fetch-oracle/result.json"
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "valid": true, "reward": 0.0, "result": ".nl2repo/runs/cross-fetch-empty/cross-fetch-empty/result.json"},
+    "stub": {"exit_code": 0, "valid": true, "collected": 22, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/cross-fetch-stub/cross-fetch-stub/result.json"},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 22, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "result": ".nl2repo/runs/cross-fetch-forgery/cross-fetch-forgery/result.json"},
+    "offline": {"exit_code": 0, "valid": true, "collected": 22, "passed": 1, "reward": 0.045454545454545456, "public_network_available": false, "result": ".nl2repo/runs/cross-fetch-offline/cross-fetch-offline/result.json"}
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The scored slice intentionally excludes browser, React Native, service-worker, redirects, TLS, streaming, and public-network behavior.",
+    "Hang, timeout, install-script, and loader-hook control bundles were prepared but not executed before the lane deadline."
+  ]
+}

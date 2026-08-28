@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cross-fetch",
+  "framework": "node:test",
+  "expected_total": 22,
+  "adapter": "fixed Node child-process bridge invokes only public package exports under UID 10001",
+  "upstream_inventory": {
+    "test_files": ["test/fetch-api/api.spec.js", "test/module-system/module.spec.js"],
+    "environments": ["Node", "browser", "React Native", "service worker"],
+    "bounded_slice": "Node ponyfill package identity, constructors, body behavior, and local HTTP request/response round trip"
+  },
+  "coverage": [
+    {"area": "CommonJS package identity and exports", "leaves": 1},
+    {"area": "Headers normalization and iteration", "leaves": 3},
+    {"area": "Request URL, method, headers, and body", "leaves": 4},
+    {"area": "Response metadata, body, and clone", "leaves": 6},
+    {"area": "local fetch round trip", "leaves": 6},
+    {"area": "invalid URL rejection", "leaves": 1}
+  ],
+  "determinism": "The only I/O endpoint is an ephemeral verifier-owned loopback server; no timing assertions or public network dependencies are used."
+}

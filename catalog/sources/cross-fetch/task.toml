@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "cross-fetch"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "http-client"
+tags = ["node", "npm", "commonjs", "fetch", "whatwg", "headers", "request", "response"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/lquixada/cross-fetch"
+revision = "9e6898ee848ba6dc942f787f2c35ca6fa30eb014"
+license_spdx = "MIT"
+source_digest = "sha256:2924f22280494620dfee8fd974a0a85f6668334b16eed7b540b7fe4d24706491"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier use a verifier-owned npm v3 lock/cache closure with lifecycle scripts disabled. They have no egress; only the trusted Oracle solution receives the frozen source-host authorization required to fetch and verify the reference revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["node-fetch==2.7.0", "encoding==0.1.13", "whatwg-url==5.0.0", "tr46==0.0.3", "webidl-conversions==3.0.1"]
+artifact = { digest = "sha256:3c8a0a42e0c0f0cbaa4f0ee1146bd6f211682c488e12a0fee9f718d44838a087", size_bytes = 338439, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3c8a0a42e0c0f0cbaa4f0ee1146bd6f211682c488e12a0fee9f718d44838a087", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 22
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:551f5567cb1596b32239491e0f1cf9266ffc012730b50e096a9e632b23f9b57d", size_bytes = 256, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:551f5567cb1596b32239491e0f1cf9266ffc012730b50e096a9e632b23f9b57d", visibility = "private" }
+test_bundle = { digest = "sha256:6b5338759538dab13741e061900c81f89a2929d37599497aa5616e9e2ce9b285", size_bytes = 2709, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6b5338759538dab13741e061900c81f89a2929d37599497aa5616e9e2ce9b285", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build cross-fetch 4.1.0 as an installable CommonJS WHATWG fetch ponyfill with deterministic Request, Response, Headers, and verifier-local HTTP behavior."
+keywords = ["node", "npm", "commonjs", "fetch", "whatwg", "headers", "response", "cross-fetch"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828/cross-fetch"
+reason = "Source validation, network lint, production compile, trusted Oracle, and empty/stub/forgery/offline controls passed. No Harbor Agent Run was started by this lane; review, pilot, and publication remain integrator gates."
+
+[oracle_bundle]
+digest = "sha256:fcd0d99646f0e2f19395ab23673035d37c9e8b87913b3df37fa64c61eb4e18e9"
+size_bytes = 1487
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:fcd0d99646f0e2f19395ab23673035d37c9e8b87913b3df37fa64c61eb4e18e9"
+visibility = "private"

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cross-fetch",
+  "source_revision": "9e6898ee848ba6dc942f787f2c35ca6fa30eb014",
+  "package": {
+    "name": "cross-fetch",
+    "version": "4.1.0",
+    "module_system": "commonjs",
+    "runtime_entry": "dist/node-ponyfill.js",
+    "types_entry": "index.d.ts",
+    "node_engine": "unspecified",
+    "runtime_dependencies": {"node-fetch": "2.7.0"}
+  },
+  "public_exports": [
+    {"export": "default", "signature": "fetch(url: string | Request, init?: RequestInit): Promise<Response>"},
+    {"export": "fetch", "signature": "same callable value as the package root"},
+    {"export": "Headers", "signature": "new Headers(init?: HeadersInit)"},
+    {"export": "Request", "signature": "new Request(input: string | Request, init?: RequestInit)"},
+    {"export": "Response", "signature": "new Response(body?: BodyInit, init?: ResponseInit)"}
+  ],
+  "source_files": ["src/node-ponyfill.js", "src/node-polyfill.js", "index.d.ts"],
+  "excluded_risk_surfaces": ["public network", "browser and React Native globals", "service workers", "redirects", "TLS", "proxy agents", "streaming bodies"]
+}
