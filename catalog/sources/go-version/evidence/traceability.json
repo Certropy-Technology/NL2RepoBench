@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-version",
+  "public_contract": "instruction.md#api-usage-guide",
+  "bridge": {
+    "path": "harbor/tests/bridge.go",
+    "operations": ["parse", "compare", "core", "constraint_check", "constraint_string", "sort"],
+    "serialization": "newline-delimited JSON; scalar, object, and array values",
+    "boundary": "candidate is compiled and called as UID-isolated subprocess; bridge contains only public API mapping"
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "private_assertion_classes": [
+      "loose and strict parsing",
+      "prefix stripping and original/prefix preservation",
+      "canonical formatting and normalized segments",
+      "SemVer and prerelease comparison",
+      "metadata exclusion and core extraction",
+      "copy-safe segment accessors",
+      "constraint operators and prerelease behavior",
+      "collection sorting",
+      "invalid JSON and package error handling"
+    ],
+    "private_checks": 48
+  },
+  "source_baseline": {
+    "revision": "e2b1b0b0c4b32767e1570ddce50dff79fdddf092",
+    "passed_test_functions": 35,
+    "failed_test_functions": 0,
+    "exit_code": 0
+  }
+}

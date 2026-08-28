@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-version",
+  "method": "go doc plus go/types review at frozen revision",
+  "packages": ["github.com/hashicorp/go-version"],
+  "public_symbol_count": 58,
+  "selected_contract_symbols": [
+    "NewVersion", "NewSemver", "WithPrefix", "Version.Compare",
+    "Version.Equal", "Version.Core", "Version.Metadata", "Version.Prerelease",
+    "Version.Original", "Version.Prefix", "Version.Segments", "Version.Segments64",
+    "Version.String", "NewConstraint", "Constraint.Check", "Constraint.String",
+    "Constraints.Check", "Constraints.String", "Collection.Len", "Collection.Less",
+    "Collection.Swap"
+  ],
+  "risk_scan": {
+    "cgo": false,
+    "unsafe_import": false,
+    "plugin": false,
+    "go_generate": false,
+    "go_workspace": false,
+    "external_replace": false,
+    "submodules": false,
+    "network_runtime": false
+  },
+  "module_path": "github.com/hashicorp/go-version",
+  "revision": "e2b1b0b0c4b32767e1570ddce50dff79fdddf092",
+  "source_digest": "sha256:e79a0e175c9821ee538e9ca25a504bb15b4f445f8781a3208c4f7704c5448c12"
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-version",
+  "collection_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+  "packages": ["github.com/hashicorp/go-version"],
+  "upstream_test_functions": 35,
+  "baseline_runs": 1,
+  "baseline_exit_code": 0,
+  "baseline_passed_test_functions": 35,
+  "baseline_failed_test_functions": 0,
+  "frozen_total": 1,
+  "frozen_leaf_id": "contract::public-api",
+  "adaptation": "one separate custom-json-v1 leaf containing bounded public API assertions"
+}

@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-version",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/hashicorp/go-version",
+    "revision": "e2b1b0b0c4b32767e1570ddce50dff79fdddf092",
+    "license_spdx": "MPL-2.0",
+    "source_digest": "sha256:e79a0e175c9821ee538e9ca25a504bb15b4f445f8781a3208c4f7704c5448c12"
+  },
+  "environment": {
+    "runtime": "go",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependency_closure": {
+    "kind": "go-module-bundle",
+    "digest": "sha256:ac9751fca88240393a398179a0874c4aa669aa79b63a79e76ee8ea0d61b98315",
+    "size_bytes": 483,
+    "direct_dependencies": [],
+    "offline": true
+  },
+  "frozen_collection": {
+    "framework": "go",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "upstream_baseline": {"test_functions": 35, "passed": 35, "failed": 0, "exit_code": 0}
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled/go-version-handoff/go-version/bundle.manifest.json",
+    "manifest_sha256": "sha256:6feea0fb832d02e7dbea83fd872fcb2c9bfd0c5ef0c6e66f170a32efb0ce1f4d",
+    "canonical_manifest_digest": "sha256:7ff7d28e9d55046dc08014a94a6ff9a0f62d276da64bd2fc66e72077a287681e"
+  },
+  "artifacts": {
+    "oracle_bundle": {"digest": "sha256:e220521ab7040823576b6c16743ed31b652c39cf8d8a17c84c19fd4ccd5de562", "size_bytes": 706},
+    "verifier_bundle": {"digest": "sha256:604232821a49e36935897ed525251a7b0109d2a28e9627e7d54473c9a79b9829", "size_bytes": 1876},
+    "module_bundle": {"digest": "sha256:ac9751fca88240393a398179a0874c4aa669aa79b63a79e76ee8ea0d61b98315", "size_bytes": 483}
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-version", "exit_code": 0, "log": ".nl2repo/evidence/go-version/validate-source-final.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "0 errors; unrelated source warnings only", "log": ".nl2repo/evidence/go-version/lint-network-final.log"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-version --output .nl2repo/compiled/go-version-handoff --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/evidence/go-version/compile-final.log"},
+    {"command": "bash -n Oracle, verifier, and all task control scripts; python3 -m py_compile verifier contract", "exit_code": 0, "log": ".nl2repo/evidence/go-version/control-probe-summary.json"},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 ./...", "exit_code": 0, "summary": "35 upstream test functions passed"},
+    {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-version-final/go-version -a oracle --allow-agent-host github.com --job-name go-version-oracle-final -o .nl2repo/runs/go-version-oracle-final --n-concurrent 1 --yes", "exit_code": 0, "summary": "valid=true, collected=1, passed=1, reward=1.0, public_network_available=false", "grading": ".nl2repo/runs/go-version-oracle-final/go-version-oracle-final/go-version__vRCfyor/verifier/grading.json", "network": ".nl2repo/runs/go-version-oracle-final/go-version-oracle-final/go-version__vRCfyor/verifier/network.json", "harbor_version": "0.21.0"},
+    {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-version-handoff/go-version -a nop --job-name go-version-empty-final -o .nl2repo/runs/go-version-empty-final --n-concurrent 1 --yes", "exit_code": 0, "summary": "valid=true, reward=0.0, candidate-installation-failed exception; public_network_available=false", "grading": ".nl2repo/runs/go-version-empty-final/go-version-empty-final/go-version__FfuJ7XV/verifier/grading.json", "network": ".nl2repo/runs/go-version-empty-final/go-version-empty-final/go-version__FfuJ7XV/verifier/network.json", "harbor_version": "0.21.0"},
+    {"command": "production stub control bundle", "exit_code": 0, "summary": "valid=true, collected=1, failed=1, reward=0.0", "grading": ".nl2repo/runs/go-version-stub-final/go-version-stub-final/go-version-stub__FpeSsob/verifier/grading.json", "network": ".nl2repo/runs/go-version-stub-final/go-version-stub-final/go-version-stub__FpeSsob/verifier/network.json", "harbor_version": "0.21.0"},
+    {"command": "production forgery control bundle", "exit_code": 0, "summary": "valid=true, collected=1, failed=1, reward=0.0; trusted reward was not accepted", "grading": ".nl2repo/runs/go-version-forgery-final/go-version-forgery-final/go-version-forgery__Kp5iwPH/verifier/grading.json", "network": ".nl2repo/runs/go-version-forgery-final/go-version-forgery-final/go-version-forgery__Kp5iwPH/verifier/network.json", "harbor_version": "0.21.0"}
+  ],
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "public_network_available": false,
+    "source_host_authorization": "github.com only for Oracle"
+  },
+  "controls": {
+    "empty": {"valid": true, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "reward": 0.0, "collected": 1, "failed": 1},
+    "forgery": {"valid": true, "reward": 0.0, "collected": 1, "failed": 1, "trusted_reward_forgery_rejected": true},
+    "offline": {"public_network_available": false, "verified_by": "all final verifier network.json receipts"}
+  },
+  "residual_risks": [
+    "The public contract freezes one verifier-owned leaf; the 35-function upstream suite is baseline evidence rather than the published denominator.",
+    "gopls was unavailable in the authoring image; compiler, bridge build, syntax, and Go test checks were used instead.",
+    "Independent blind review and model pilot remain pending; no Harbor Agent Run was started in this lane."
+  ]
+}
