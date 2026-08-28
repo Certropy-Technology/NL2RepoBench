@@ -47,6 +47,26 @@ def _args(tmp_path: Path, plan: Path, queue: Path, state: Path):
     )()
 
 
+def test_worktree_enables_sparse_authoring_profile(tmp_path: Path, monkeypatch) -> None:
+    target = tmp_path / "task"
+    calls: list[list[str]] = []
+
+    def fake_run(command, **_kwargs):
+        calls.append(command)
+        if command[:3] == ["git", "worktree", "add"]:
+            (target / ".git").mkdir(parents=True)
+        return type("Result", (), {"returncode": 0, "stderr": ""})()
+
+    monkeypatch.setattr(driver.subprocess, "run", fake_run)
+
+    assert driver._worktree(target) == "created"
+    sparse = next(command for command in calls if "sparse-checkout" in command)
+    assert "catalog/sources" in sparse
+    assert "catalog/tasks" not in sparse
+    assert "src" in sparse
+    assert "tests" in sparse
+
+
 def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(driver, "TMPFS_ROOTS", ())
     queue = tmp_path / "queue.json"

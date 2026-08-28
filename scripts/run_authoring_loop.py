@@ -37,6 +37,21 @@ ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 MAX_CONCURRENCY = 8
 DEFAULT_EXCLUDED_TOOLS = "subagent,subagent_supervisor,subagent_wait"
 TMPFS_ROOTS = (Path("/tmp"), Path("/dev/shm"))
+SPARSE_WORKTREE_PATHS = (
+    "catalog/sources",
+    "catalog/datasets",
+    "docs",
+    "examples",
+    "harbor-runner",
+    "runtime",
+    "schemas",
+    "scripts",
+    "src",
+    "tests",
+    "tools",
+    "vendor",
+    "verifier",
+)
 SCRIPT_ROOT = Path(__file__).resolve().parent
 PI_AGENT_DIR = Path.home() / ".pi/agent"
 PI_SETTINGS_PATH = PI_AGENT_DIR / "settings.json"
@@ -169,6 +184,25 @@ def _worktree(path: Path) -> str:
     )
     if completed.returncode != 0:
         raise RuntimeError(f"git worktree add failed: {completed.stderr[-1000:]}")
+    sparse = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(path),
+            "sparse-checkout",
+            "set",
+            "--cone",
+            *SPARSE_WORKTREE_PATHS,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if sparse.returncode != 0:
+        subprocess.run(
+            ["git", "worktree", "remove", "--force", str(path)], check=False
+        )
+        raise RuntimeError(f"git sparse-checkout failed: {sparse.stderr[-1000:]}")
     return "created"
 
 
