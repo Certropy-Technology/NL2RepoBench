@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ghapi",
+  "revision": "7acab1fa0571968aff2bf6508a6f51c5334d7584",
+  "public_modules": ["ghapi.core", "ghapi.page", "ghapi.auth", "ghapi.all"],
+  "scored_symbols": {
+    "ghapi.core": ["date2gh", "gh2date", "dep_key", "local_dep_graph", "dep_closure", "dep_order", "dep_dependents", "issue_body", "GhRows"],
+    "ghapi.page": ["parse_link_hdr", "paged", "pages", "sync_paged"],
+    "ghapi.auth": ["Scope", "scope_str"]
+  },
+  "excluded_risk_surface": ["GitHub HTTP requests", "OAuth device flow", "filesystem upload helpers", "subprocess-based git helpers", "TTY/browser behavior", "generated OpenAPI endpoint groups"],
+  "notes": "The scored surface is a deterministic local adaptation of the frozen package's public helper APIs; no external service is needed."
+}

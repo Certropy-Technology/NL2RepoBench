@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ghapi",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/fastai/ghapi",
+    "revision": "7acab1fa0571968aff2bf6508a6f51c5334d7584",
+    "archive_sha256": "sha256:9f823d7704bf929b3afb8f772399dce2b240521bb7570b34c6c8bb893d0b2bf2",
+    "license": "Apache-2.0",
+    "license_file_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "host_probe_python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "artifact://private/sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68",
+    "lock_sha256": "sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68",
+    "lock_size_bytes": 3326,
+    "packages": ["fastcore==2.2.16", "fastspec==0.2.3", "fasttransport==0.0.1", "pytest==9.1.1", "resolved transitive closure: 15 packages"]
+  },
+  "frozen_collection": {
+    "expected_total": 18,
+    "source": "private custom-json-v1 deterministic local helper contract",
+    "upstream_test_collection": 0
+  },
+  "bundle": {
+    "manifest": ".nl2repo/final-compile-a/ghapi/bundle.manifest.json",
+    "manifest_sha256": "sha256:40e79aacbbb523c9785c444336686e45e595aefc9955477dc8acd28f335a95b7",
+    "canonical_manifest_digest": "sha256:3e3ba4f3d34da97213f4f107ab7f5e1fd00ad7708f65241af54d45f0b3e40f56",
+    "entries": 57,
+    "integrity_mismatches": 0,
+    "deterministic_repeat": true,
+    "toolchain_lock": "toolchain.lock.toml",
+    "toolchain_lock_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+    "compiled_toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+  },
+  "gates": {
+    "validate_source": {"command": "uv run --frozen nl2repo task validate-source catalog/sources/ghapi", "exit_code": 0, "status": "packaged"},
+    "lint_network": {"command": "uv run --frozen nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "task_errors": 0, "repository_warnings": 139},
+    "production_compile": {"command": "uv run --frozen nl2repo harbor compile catalog/sources/ghapi --output .nl2repo/final-compile-a --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    "compiled_verifier_smoke": {"command": "GHAPI_VERIFIER_PYTHON=/data/NL2RepoBench-integration-20260827/.venv/bin/python3 uv run --frozen python .nl2repo/final-compile-a/ghapi/tests/verifier/run.py", "exit_code": 0, "collected": 18, "passed": 18}
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-a/ghapi -a oracle --allow-agent-host github.com --job-name ghapi-oracle-handoff-20260828 -o .nl2repo/runs/ghapi-oracle-handoff-20260828 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 18,
+    "passed": 18,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/ghapi-oracle-handoff-20260828/ghapi-oracle-handoff-20260828/ghapi__vE2uHhE/result.json",
+    "grading": ".nl2repo/runs/ghapi-oracle-handoff-20260828/ghapi-oracle-handoff-20260828/ghapi__vE2uHhE/verifier/grading.json",
+    "network_receipt": ".nl2repo/runs/ghapi-oracle-handoff-20260828/ghapi-oracle-handoff-20260828/ghapi__vE2uHhE/verifier/network.json",
+    "public_network_available": false
+  },
+  "controls": {
+    "stub": {
+      "command": "uv run --frozen nl2repo harbor prepare-control .nl2repo/final-compile-a/ghapi stub --output .nl2repo/controls/ghapi/stub --toolchain toolchain.lock.toml && uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ghapi/stub/ghapi-stub -a oracle --job-name ghapi-stub-handoff-20260828 -o .nl2repo/runs/ghapi-stub-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 18,
+      "passed": 1,
+      "reward": 0.05555555555555555,
+      "grading": ".nl2repo/runs/ghapi-stub-handoff-20260828/ghapi-stub-handoff-20260828/ghapi-stub__fZpsW3v/verifier/grading.json",
+      "network_receipt": ".nl2repo/runs/ghapi-stub-handoff-20260828/ghapi-stub-handoff-20260828/ghapi-stub__fZpsW3v/verifier/network.json",
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen nl2repo harbor prepare-control .nl2repo/final-compile-a/ghapi forgery --output .nl2repo/controls/ghapi/forgery --toolchain toolchain.lock.toml && uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ghapi/forgery/ghapi-forgery -a oracle --job-name ghapi-forgery-handoff-20260828 -o .nl2repo/runs/ghapi-forgery-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 18,
+      "passed": 1,
+      "reward": 0.05555555555555555,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/runs/ghapi-forgery-handoff-20260828/ghapi-forgery-handoff-20260828/ghapi-forgery__QhZCoT3/verifier/grading.json",
+      "network_receipt": ".nl2repo/runs/ghapi-forgery-handoff-20260828/ghapi-forgery-handoff-20260828/ghapi-forgery__QhZCoT3/verifier/network.json",
+      "public_network_available": false
+    },
+    "offline": {
+      "status": "observed-in-all-three-Harbor-runs",
+      "public_network_available": false,
+      "note": "The available Harbor control CLI supports only stub and forgery; both controls and the Oracle verifier emitted no-network receipts. No unrun empty-control result is claimed."
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The full generated REST/OpenAPI and OAuth/network surface is intentionally outside the scored deterministic contract.",
+    "The source contains no upstream pytest suite; the fixed denominator is the independent 18-leaf private contract.",
+    "Review, pilot, dataset integration, and publication remain integrator-stage gates."
+  ]
+}
