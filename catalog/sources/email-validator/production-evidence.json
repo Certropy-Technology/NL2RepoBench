@@ -1,0 +1,501 @@
+{
+  "baseline": {
+    "command": "PYTHONPATH=<frozen-source> PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q --continue-on-collection-errors tests --junitxml=<run>.xml",
+    "exit_code": 0,
+    "junit": ".nl2repo/authoring-work/python-author-wave2-20260828/email-validator/baseline.xml",
+    "junit_sha256": "sha256:97f85951fa9ba23c643de75b7fc00f3cbf0378f3e556dc6806ee3b54c49d7dab",
+    "passed": 317
+  },
+  "commands": [
+    {
+      "command": "git checkout --detach b73d010bb3db70547199f39fd85d2286a7f6f476; git archive --format=tar HEAD | sha256sum",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/email-validator",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "logs": [
+        {
+          "path": ".nl2repo/evidence/email-validator-network-lint-final.json",
+          "sha256": "sha256:4b09735c4f2689d14420a985b84bb20bed21a01bf3525b498a7d26d1c1f0c757"
+        }
+      ]
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/email-validator --output .nl2repo/compiled/email-validator-production-current --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2rb-email-validator-verifier:final compiled/email-validator/tests",
+      "exit_code": 0
+    },
+    {
+      "command": "docker run <final solution/solve.sh> with source access; then docker run --network none <verifier> /tests/test.sh",
+      "exit_code": 0,
+      "logs": [
+        {
+          "path": ".nl2repo/evidence/email-validator-final3-oracle/grading.json",
+          "sha256": "sha256:738e6b5c631ab34742cac494e436962da24c2dd6816e89bc02ddc66d9a9f946a"
+        },
+        {
+          "path": ".nl2repo/evidence/email-validator-final3-oracle/network.json",
+          "sha256": "sha256:941cc0030bcc93e6d296ecbc37a56ebad1793ea1d7248320d5fffdf697631aeb"
+        }
+      ]
+    }
+  ],
+  "compiled_bundle": {
+    "canonical_manifest_digest": "sha256:154fcd18ba7b8867127f5940c0a0d37ab67782cafd8b988c079bfbacb1df8ce6",
+    "file_count": 57,
+    "manifest_sha256": "sha256:1f2a7c8af902e249598fbe4c7fd24ff26e9a0d3d7da8b6b973a97fbc596d7d2f",
+    "mode": "production",
+    "path": ".nl2repo/compiled/email-validator-production-final3/email-validator/bundle.manifest.json"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "exit_code": 0,
+      "expected": 30,
+      "grading": {
+        "path": ".nl2repo/evidence/email-validator-final3-empty-ok/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e",
+        "summary": {
+          "counts": {
+            "collected": 0,
+            "errors": 0,
+            "failed": 0,
+            "passed": 0,
+            "schema_version": "1.0",
+            "skipped": 0
+          },
+          "details": [],
+          "expected_total": 30,
+          "failure_class": "model",
+          "failure_reason": "candidate-installation-failed",
+          "metric_contract": "fixed-test-pass-rate-v1",
+          "reward": 0.0,
+          "schema_version": "1.0",
+          "valid": true
+        }
+      },
+      "mode": "direct-separate-verifier",
+      "network": {
+        "path": ".nl2repo/evidence/email-validator-final3-empty-ok/network.json",
+        "sha256": "sha256:5f2e55de8aa6b6ffe1dfb0d9a346cbf60da90e9653b98d46de9efb130529305c",
+        "summary": {
+          "network_namespace": "net:[4026532963]",
+          "probes": {
+            "1.1.1.1:443": false,
+            "pypi.org:443": false
+          },
+          "public_network_available": false,
+          "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+          "schema_version": "1.0"
+        }
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 30,
+      "exit_code": 0,
+      "expected": 30,
+      "grading": {
+        "path": ".nl2repo/evidence/email-validator-final3-forgery-ok/grading.json",
+        "sha256": "sha256:26af117be5a61f76b77b94ec624f5cdc1c083562ac635817bc9912a158f44c2c",
+        "summary": {
+          "collection": {
+            "collected": 30,
+            "collection_errors": [],
+            "nodeids": [
+              "root-exports",
+              "version",
+              "basic-validation",
+              "bytes-input",
+              "invalid-type",
+              "missing-at-sign",
+              "invalid-local",
+              "special-domain",
+              "dotless-option",
+              "fullwidth-domain",
+              "idna-domain",
+              "international-local",
+              "smtputf8-gate",
+              "display-name-allowed",
+              "display-name-rejected",
+              "quoted-local-allowed",
+              "quoted-local-rejected",
+              "ipv4-domain-literal",
+              "ipv6-domain-literal",
+              "empty-local",
+              "strict-length",
+              "result-compatibility",
+              "result-equality",
+              "caching-resolver",
+              "mx-deliverability",
+              "a-fallback",
+              "aaaa-fallback",
+              "nxdomain",
+              "dns-timeout",
+              "cli"
+            ],
+            "schema_version": "1.0"
+          },
+          "counts": {
+            "collected": 30,
+            "errors": 0,
+            "failed": 29,
+            "passed": 1,
+            "schema_version": "1.0",
+            "skipped": 0
+          },
+          "details": [],
+          "expected_total": 30,
+          "metric_contract": "fixed-test-pass-rate-v1",
+          "pytest_exit_code": 1,
+          "reward": 0.03333333333333333,
+          "schema_version": "1.0",
+          "valid": true
+        }
+      },
+      "mode": "prepare-control + direct-separate-verifier",
+      "network": {
+        "path": ".nl2repo/evidence/email-validator-final3-forgery-ok/network.json",
+        "sha256": "sha256:5ba95a653bdd58409f720a83c106e5337257b9997337ad6f7d1261fdd0a44bf3",
+        "summary": {
+          "network_namespace": "net:[4026533032]",
+          "probes": {
+            "1.1.1.1:443": false,
+            "pypi.org:443": false
+          },
+          "public_network_available": false,
+          "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+          "schema_version": "1.0"
+        }
+      },
+      "passed": 1,
+      "reward": 0.03333333333333333,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward_present": true
+    },
+    "install_hang": {
+      "candidate_install": {
+        "path": ".nl2repo/evidence/email-validator-final3-install-hang-ok/candidate-install.json",
+        "sha256": "sha256:8f8822c470357094d6dcd23ffc08195a33ee93472e82ba9bb58d6a5362ce6684",
+        "summary": {
+          "entries": 9,
+          "outcome": "candidate-failure",
+          "returncode": 137,
+          "total_bytes": 49
+        }
+      },
+      "candidate_install_outcome": "timeout",
+      "collected": 0,
+      "exit_code": 0,
+      "expected": 30,
+      "grading": {
+        "path": ".nl2repo/evidence/email-validator-final3-install-hang-ok/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e",
+        "summary": {
+          "counts": {
+            "collected": 0,
+            "errors": 0,
+            "failed": 0,
+            "passed": 0,
+            "schema_version": "1.0",
+            "skipped": 0
+          },
+          "details": [],
+          "expected_total": 30,
+          "failure_class": "model",
+          "failure_reason": "candidate-installation-failed",
+          "metric_contract": "fixed-test-pass-rate-v1",
+          "reward": 0.0,
+          "schema_version": "1.0",
+          "valid": true
+        }
+      },
+      "mode": "prepare-control + direct-separate-verifier",
+      "network": {
+        "path": ".nl2repo/evidence/email-validator-final3-install-hang-ok/network.json",
+        "sha256": "sha256:1e10a134b825cd228357cd0a883a2b59d364989b8e6b8897328447f436705a91",
+        "summary": {
+          "network_namespace": "net:[4026533164]",
+          "probes": {
+            "1.1.1.1:443": false,
+            "pypi.org:443": false
+          },
+          "public_network_available": false,
+          "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+          "schema_version": "1.0"
+        }
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/evidence/email-validator-final3-oracle/network.json",
+        "sha256": "sha256:941cc0030bcc93e6d296ecbc37a56ebad1793ea1d7248320d5fffdf697631aeb",
+        "summary": {
+          "network_namespace": "net:[4026532966]",
+          "probes": {
+            "1.1.1.1:443": false,
+            "pypi.org:443": false
+          },
+          "public_network_available": false,
+          "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+          "schema_version": "1.0"
+        }
+      },
+      "public_network_available": false,
+      "source": "oracle.network"
+    },
+    "stub": {
+      "collected": 30,
+      "exit_code": 0,
+      "expected": 30,
+      "grading": {
+        "path": ".nl2repo/evidence/email-validator-final3-stub-ok/grading.json",
+        "sha256": "sha256:26af117be5a61f76b77b94ec624f5cdc1c083562ac635817bc9912a158f44c2c",
+        "summary": {
+          "collection": {
+            "collected": 30,
+            "collection_errors": [],
+            "nodeids": [
+              "root-exports",
+              "version",
+              "basic-validation",
+              "bytes-input",
+              "invalid-type",
+              "missing-at-sign",
+              "invalid-local",
+              "special-domain",
+              "dotless-option",
+              "fullwidth-domain",
+              "idna-domain",
+              "international-local",
+              "smtputf8-gate",
+              "display-name-allowed",
+              "display-name-rejected",
+              "quoted-local-allowed",
+              "quoted-local-rejected",
+              "ipv4-domain-literal",
+              "ipv6-domain-literal",
+              "empty-local",
+              "strict-length",
+              "result-compatibility",
+              "result-equality",
+              "caching-resolver",
+              "mx-deliverability",
+              "a-fallback",
+              "aaaa-fallback",
+              "nxdomain",
+              "dns-timeout",
+              "cli"
+            ],
+            "schema_version": "1.0"
+          },
+          "counts": {
+            "collected": 30,
+            "errors": 0,
+            "failed": 29,
+            "passed": 1,
+            "schema_version": "1.0",
+            "skipped": 0
+          },
+          "details": [],
+          "expected_total": 30,
+          "metric_contract": "fixed-test-pass-rate-v1",
+          "pytest_exit_code": 1,
+          "reward": 0.03333333333333333,
+          "schema_version": "1.0",
+          "valid": true
+        }
+      },
+      "mode": "prepare-control + direct-separate-verifier",
+      "network": {
+        "path": ".nl2repo/evidence/email-validator-final3-stub-ok/network.json",
+        "sha256": "sha256:e72da442c5f0e2274e0652e3a96704fd6e58261123b208c5dbe38f0950eec5e8",
+        "summary": {
+          "network_namespace": "net:[4026532819]",
+          "probes": {
+            "1.1.1.1:443": false,
+            "pypi.org:443": false
+          },
+          "public_network_available": false,
+          "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+          "schema_version": "1.0"
+        }
+      },
+      "passed": 1,
+      "reward": 0.03333333333333333,
+      "valid": true
+    }
+  },
+  "environment": {
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "observed_authoring_python": "3.12.11",
+    "os": "debian-12-amd64",
+    "python": "3.12.14",
+    "task_schema": "1.4",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "verifier_image_id": "sha256:781afccabdf73bb4840b3d1240075f6cfa40486eaf07853067004f5c84d010a6",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
+  },
+  "gates": {
+    "controls_bash_syntax_exit_code": 0,
+    "email_validator_network_findings": 0,
+    "git_diff_check_exit_code": 0,
+    "network_lint_error_count": 0,
+    "network_lint_exit_code": 0,
+    "production_compile_exit_code": 0,
+    "source_validation_exit_code": 0,
+    "verifier_build_exit_code": 0,
+    "verifier_py_compile_exit_code": 0
+  },
+  "network_policy": {
+    "mode": "no-network",
+    "offline_dependencies": "preinstalled-image",
+    "reason": "The hash-locked dnspython and idna closure is installed during image build. Agent and separate verifier phases have no egress; the trusted Oracle receives a digest-verified archive of the frozen revision.",
+    "reference_source_fetch": "forbidden"
+  },
+  "oracle": {
+    "collected": 30,
+    "command": "docker run solution/solve.sh with source host access; docker run --network none verifier /tests/test.sh",
+    "exit_code": 0,
+    "expected": 30,
+    "grading": {
+      "path": ".nl2repo/evidence/email-validator-final3-oracle/grading.json",
+      "sha256": "sha256:738e6b5c631ab34742cac494e436962da24c2dd6816e89bc02ddc66d9a9f946a",
+      "summary": {
+        "collection": {
+          "collected": 30,
+          "collection_errors": [],
+          "nodeids": [
+            "root-exports",
+            "version",
+            "basic-validation",
+            "bytes-input",
+            "invalid-type",
+            "missing-at-sign",
+            "invalid-local",
+            "special-domain",
+            "dotless-option",
+            "fullwidth-domain",
+            "idna-domain",
+            "international-local",
+            "smtputf8-gate",
+            "display-name-allowed",
+            "display-name-rejected",
+            "quoted-local-allowed",
+            "quoted-local-rejected",
+            "ipv4-domain-literal",
+            "ipv6-domain-literal",
+            "empty-local",
+            "strict-length",
+            "result-compatibility",
+            "result-equality",
+            "caching-resolver",
+            "mx-deliverability",
+            "a-fallback",
+            "aaaa-fallback",
+            "nxdomain",
+            "dns-timeout",
+            "cli"
+          ],
+          "schema_version": "1.0"
+        },
+        "counts": {
+          "collected": 30,
+          "errors": 0,
+          "failed": 0,
+          "passed": 30,
+          "schema_version": "1.0",
+          "skipped": 0
+        },
+        "details": [],
+        "expected_total": 30,
+        "metric_contract": "fixed-test-pass-rate-v1",
+        "pytest_exit_code": 0,
+        "reward": 1.0,
+        "schema_version": "1.0",
+        "valid": true
+      }
+    },
+    "mode": "direct-separate-verifier",
+    "network": {
+      "path": ".nl2repo/evidence/email-validator-final3-oracle/network.json",
+      "sha256": "sha256:941cc0030bcc93e6d296ecbc37a56ebad1793ea1d7248320d5fffdf697631aeb",
+      "summary": {
+        "network_namespace": "net:[4026532966]",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "route_table": "Iface\tDestination\tGateway \tFlags\tRefCnt\tUse\tMetric\tMask\t\tMTU\tWindow\tIRTT                                                       \n",
+        "schema_version": "1.0"
+      }
+    },
+    "passed": 30,
+    "public_network_available": false,
+    "reward": 1.0,
+    "reward_receipt": {
+      "path": ".nl2repo/evidence/email-validator-final3-oracle/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+      "summary": {
+        "reward": 1.0,
+        "test_pass_rate": 1.0
+      }
+    },
+    "source_fetch_verified": true,
+    "source_revision_verified": true,
+    "valid": true
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:0a5d43ff7f54ed8301e6a986794e53b1632f48db0d05975173298f0bf9b3e361",
+      "size_bytes": 877
+    },
+    "oracle_bundle": {
+      "digest": "sha256:f5576dbabd237dd03b4ae43c888b7514f6efcc1b512e9ce41f80028fc9f3b764",
+      "size_bytes": 10240
+    },
+    "verifier_bundle": {
+      "digest": "sha256:bc630e7ae0c9272d9293c6f36227385c90e1060535b177e410ec29b915a9a290",
+      "size_bytes": 20480
+    }
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started by lane contract; direct Docker verifier receipts are authoring evidence, not a Harbor trial record.",
+    "Independent blind/spec review, model-agent pilot, and publication remain pending.",
+    "One transient direct verifier attempt failed with infrastructure Resource temporarily unavailable; a bounded retry succeeded with 30/30.",
+    "The requested worktree-local .nl2repo/authoring-claim.json was absent; the authoritative shared claim file was present and read.",
+    "Production denominator is a bounded 30-scenario behavioral subset rather than all 317 diagnostic upstream tests."
+  ],
+  "schema_version": "1.0",
+  "source": {
+    "archive_sha256": "sha256:6645b1719e7183f35d0ec20900e67391d0a3c2d570f442957203d64758609801",
+    "license_sha256": "sha256:672179752e109134a3fb2bdd0780b29fdb7a03974f0f586a13aead5129562d4c",
+    "license_spdx": "Unlicense",
+    "revision": "b73d010bb3db70547199f39fd85d2286a7f6f476",
+    "upstream_url": "https://github.com/JoshData/python-email-validator"
+  },
+  "status": "controls-passed",
+  "task_id": "email-validator",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid"
+}
