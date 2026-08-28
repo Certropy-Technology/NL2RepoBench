@@ -13,7 +13,7 @@ sys.modules[SPEC.name] = archive
 SPEC.loader.exec_module(archive)
 
 
-def test_complete_worktrees_supports_scoped_packages(tmp_path: Path) -> None:
+def test_worktrees_with_runs_supports_scoped_packages(tmp_path: Path) -> None:
     state = tmp_path / "state.json"
     state.write_text(
         json.dumps(
@@ -29,9 +29,13 @@ def test_complete_worktrees_supports_scoped_packages(tmp_path: Path) -> None:
     root = tmp_path / "worktrees"
     task = root / "node-batch/@scope/package"
     (task / ".git").mkdir(parents=True)
+    (task / ".nl2repo/runs/trial").mkdir(parents=True)
+    (task / ".nl2repo/runs/trial/result.json").write_text("{}", encoding="utf-8")
     lane = archive.Lane("node", "node-batch", state)
 
-    assert archive.complete_worktrees(lane, root) == [("@scope/package", task)]
+    assert archive.worktrees_with_runs(lane, root) == [
+        ("@scope/package", task, "complete", None, 0)
+    ]
 
 
 def test_archive_files_excludes_candidate_workspace(tmp_path: Path) -> None:

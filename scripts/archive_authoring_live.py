@@ -131,21 +131,36 @@ def archive_files(worktree: Path) -> list[ArchiveFile]:
     return files
 
 
-def complete_worktrees(lane: Lane, worktree_root: Path) -> list[tuple[str, Path]]:
+def worktrees_with_runs(
+    lane: Lane, worktree_root: Path
+) -> list[tuple[str, Path, str, str | None, int]]:
     payload = json.loads(lane.queue_state.read_text(encoding="utf-8"))
     items = payload.get("items")
     if not isinstance(items, dict):
         raise ValueError(f"queue state has no items: {lane.queue_state}")
-    rows: list[tuple[str, Path]] = []
+    rows: list[tuple[str, Path, str, str | None, int]] = []
     for record in items.values():
-        if not isinstance(record, dict) or record.get("status") != "complete":
+        if not isinstance(record, dict) or record.get("status") not in {"pending", "complete"}:
             continue
         package = record.get("package")
         if not isinstance(package, str):
             continue
         worktree = worktree_root / lane.batch_id / package
-        if worktree.is_dir() and (worktree / ".git").exists():
-            rows.append((package, worktree))
+        has_runs = any(
+            (worktree / relative).is_dir()
+            and any((worktree / relative).rglob("*"))
+            for relative in (".nl2repo/runs", "jobs")
+        )
+        if worktree.is_dir() and (worktree / ".git").exists() and has_runs:
+            rows.append(
+                (
+                    package,
+                    worktree,
+                    str(record.get("status")),
+                    record.get("owner") if isinstance(record.get("owner"), str) else None,
+                    int(record.get("attempts", 0)),
+                )
+            )
     return sorted(rows)
 
 
@@ -314,20 +329,30 @@ def archive_task(
     receipt_root: Path,
     workers: int,
     cleanup: bool,
+    queue_status: str,
+    owner: str | None,
+    attempts: int,
 ) -> dict[str, Any]:
     handoff = worktree / ".nl2repo/authoring-handoff.json"
-    if not handoff.is_file():
-        raise ValueError(f"completed task has no handoff: {package}")
     if not task_is_idle(worktree):
         return {"package": package, "status": "active"}
-    handoff_digest = _sha256(handoff)
-    receipt = receipt_root / lane.language / f"{_package_slug(package)}-{handoff_digest[:16]}.json"
+    identity = {
+        "package": package,
+        "queue_status": queue_status,
+        "owner": owner,
+        "attempts": attempts,
+        "handoff_sha256": _sha256(handoff) if handoff.is_file() else None,
+    }
+    identity_digest = hashlib.sha256(
+        json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    receipt = receipt_root / lane.language / f"{_package_slug(package)}-{identity_digest[:16]}.json"
     if receipt.is_file():
         return {"package": package, "status": "already-archived", "receipt": str(receipt)}
     files = archive_files(worktree)
     prefix = (
         f"nl2repobench/authoring-live/archive/{lane.language}/"
-        f"{_package_slug(package)}/{handoff_digest}"
+        f"{_package_slug(package)}/{identity_digest}"
     )
     with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = {
@@ -340,7 +365,9 @@ def archive_task(
         "schema_version": "1.0",
         "language": lane.language,
         "package": package,
-        "handoff_sha256": handoff_digest,
+        "handoff_sha256": identity["handoff_sha256"],
+        "queue_status": queue_status,
+        "attempts": attempts,
         "object_count": len(files),
         "bytes_verified": sum(file.size for file in files),
         "workspace_policy": "artifacts/workspace excluded; canonical source and CAS retained",
@@ -384,7 +411,9 @@ def run_once(args: argparse.Namespace, bucket: Any) -> list[dict[str, Any]]:
             }
         )
     for lane in args.lane:
-        for package, worktree in complete_worktrees(lane, args.worktree_root):
+        for package, worktree, queue_status, owner, attempts in worktrees_with_runs(
+            lane, args.worktree_root
+        ):
             try:
                 result = archive_task(
                     bucket,
@@ -394,6 +423,9 @@ def run_once(args: argparse.Namespace, bucket: Any) -> list[dict[str, Any]]:
                     receipt_root=args.receipt_root,
                     workers=args.workers,
                     cleanup=args.cleanup,
+                    queue_status=queue_status,
+                    owner=owner,
+                    attempts=attempts,
                 )
             except Exception as exc:  # noqa: BLE001 - one task must not stop the watcher
                 result = {"package": package, "status": "error", "error": str(exc)}
