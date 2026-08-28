@@ -1,8 +1,8 @@
 # Run Artifact Storage (Alibaba Cloud OSS)
 
 Task definitions and run artifacts are archived in the shared OSS bucket. The
-repository keeps task sources under `catalog/sources/`; `.nl2repo/runs/` is
-gitignored and lives only in OSS.
+repository keeps task sources under `catalog/sources/`; generated Harbor job
+directories are gitignored and are retained in OSS after a verified upload.
 
 ## Bucket
 
@@ -16,6 +16,24 @@ gitignored and lives only in OSS.
 
 Credentials come from `OSS_ACCESS_KEY_ID` and `OSS_ACCESS_KEY_SECRET`. They are
 never committed and never written into uploaded files.
+
+## Harbor Agent jobs
+
+`scripts/run_harbor_model.sh` archives every finished Harbor job before local
+cleanup. The archive includes the complete `artifacts/workspace/` tree, Agent
+trajectory and logs, verifier outputs, result/config/lock files, and a
+SHA-256 manifest under:
+
+```text
+oss://dingshang-sg/nl2repobench/harbor-runs/<model>/<task>/<run>/
+```
+
+Each object is read back from OSS and verified by size and SHA-256 before the
+local job directory is removed. Missing credentials, an upload error, a
+remote checksum mismatch, a symlink, or a secret-shaped value leaves the
+local job untouched and makes the run fail. The workspace is intentionally
+included for model-run reproducibility; high-confidence credential-shaped
+content is rejected rather than uploaded.
 
 ## Layout
 
@@ -36,6 +54,20 @@ nl2repobench/
 
 The trial segment is `<run-root>--<job-dir>`, which keeps repeated runs of the
 same task distinguishable while staying stable across re-uploads.
+
+The Harbor model runner uses a separate `harbor-runs/<model>/<task>/<run>/`
+prefix. Unlike the legacy bulk uploader, this path includes the complete
+`artifacts/workspace/` tree and is verified before local cleanup.
+
+The authoring watcher uses the same workspace policy for direct Harbor
+certification runs under a task's `.nl2repo/authoring-work/**/runs` or
+`jobs` directories. It uploads the run files, including workspace, before
+removing local run/build caches; source, evidence, and private CAS remain
+local until the integrator archives them.
+
+The Harbor model runner uses a separate `harbor-runs/<model>/<task>/<run>/`
+prefix. Unlike the legacy bulk uploader, this path includes the complete
+`artifacts/workspace/` tree and is verified before local cleanup.
 
 Model scores and Oracle evidence are deliberately separated: an Oracle result
 validates the environment and is never a model score. `unknown/` is preserved

@@ -10,6 +10,17 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 
 
+def _archive_python_wrapper(fake_bin: Path, return_code: int) -> None:
+    path = fake_bin / "python3"
+    path.write_text(
+        "#!/usr/bin/env bash\n"
+        f'if [[ "${{1:-}}" == *archive_harbor_job.py ]]; then exit {return_code}; fi\n'
+        'exec /usr/bin/python3 "$@"\n',
+        encoding="utf-8",
+    )
+    path.chmod(0o755)
+
+
 def _load_pi_launcher():
     spec = importlib.util.spec_from_file_location(
         "run_model_from_pi", ROOT / "scripts/run_model_from_pi.py"
@@ -71,6 +82,7 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
     capture = tmp_path / "uv-arguments.txt"
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
+    _archive_python_wrapper(fake_bin, 0)
     fake_uv = fake_bin / "uv"
     fake_uv.write_text(
         '#!/usr/bin/env bash\nprintf "%s\\n" "$@" > "$CAPTURE"\n',
@@ -146,6 +158,7 @@ def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
     capture = tmp_path / "uv-arguments.txt"
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
+    _archive_python_wrapper(fake_bin, 0)
     fake_uv = fake_bin / "uv"
     fake_uv.write_text(
         '#!/usr/bin/env bash\nprintf "%s\\n" "$@" > "$CAPTURE"\n',
@@ -179,6 +192,47 @@ def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
     arguments = capture.read_text(encoding="utf-8").splitlines()
     jobs_index = arguments.index("--jobs-dir")
     assert arguments[jobs_index + 1] == str(absolute_root / "gpt56-demo")
+    assert not (absolute_root / "gpt56-demo").exists()
+
+
+def test_model_runner_keeps_job_when_oss_archive_fails(tmp_path: Path) -> None:
+    task_root = tmp_path / "catalog/tasks/demo"
+    task_root.mkdir(parents=True)
+    (task_root / "task.toml").write_text(
+        'schema_version = "1.4"\n[agent]\ntimeout_sec = 3600.0\n', encoding="utf-8"
+    )
+    (tmp_path / "harbor-runner").mkdir()
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_uv = fake_bin / "uv"
+    fake_uv.write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
+    fake_uv.chmod(0o755)
+    _archive_python_wrapper(fake_bin, 7)
+    run_root = tmp_path / "runs"
+    env = os.environ.copy()
+    env.update(
+        {
+            "LLM_API_KEY": "test-secret",
+            "LLM_BASE_URL": "https://example.invalid/v1",
+            "MODEL": "openai/test-model",
+            "PATH": f"{fake_bin}:{env['PATH']}",
+            "TASK_ID": "demo",
+            "RUN_ID": "failed-archive",
+            "RUN_ROOT": str(run_root),
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", str(ROOT / "scripts/run_harbor_model.sh")],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == 1
+    assert (run_root / "failed-archive").is_dir()
 
 
 def test_model_runner_accepts_compiled_harbor_task_path(tmp_path: Path) -> None:
@@ -191,6 +245,7 @@ def test_model_runner_accepts_compiled_harbor_task_path(tmp_path: Path) -> None:
     capture = tmp_path / "uv-arguments.txt"
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
+    _archive_python_wrapper(fake_bin, 0)
     fake_uv = fake_bin / "uv"
     fake_uv.write_text(
         '#!/usr/bin/env bash\nprintf "%s\\n" "$@" > "$CAPTURE"\n', encoding="utf-8"

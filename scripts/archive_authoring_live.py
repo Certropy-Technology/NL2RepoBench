@@ -84,16 +84,8 @@ def _secret_shaped(path: Path) -> bool:
     return False
 
 
-def _is_workspace_artifact(relative: Path) -> bool:
-    parts = relative.parts
-    return any(
-        parts[index : index + 2] == ("artifacts", "workspace")
-        for index in range(max(0, len(parts) - 1))
-    )
-
-
 def archive_files(worktree: Path) -> list[ArchiveFile]:
-    """Return bounded trusted receipts, excluding restored candidate workspaces."""
+    """Return bounded trusted receipts, including Agent workspaces."""
 
     candidates: list[tuple[Path, str]] = []
     for relative in (".nl2repo/authoring-handoff.json", ".nl2repo/authoring-claim.json"):
@@ -104,6 +96,7 @@ def archive_files(worktree: Path) -> list[ArchiveFile]:
         ".nl2repo/evidence",
         ".nl2repo/authoring-evidence",
         ".nl2repo/runs",
+        ".nl2repo/authoring-work",
         "jobs",
     ):
         base = worktree / relative
@@ -113,8 +106,10 @@ def archive_files(worktree: Path) -> list[ArchiveFile]:
             if not path.is_file() or path.is_symlink():
                 continue
             archive_relative = path.relative_to(worktree)
-            if _is_workspace_artifact(archive_relative):
-                continue
+            if relative == ".nl2repo/authoring-work":
+                parts = archive_relative.parts
+                if "runs" not in parts and "jobs" not in parts:
+                    continue
             candidates.append((path, archive_relative.as_posix()))
     files: list[ArchiveFile] = []
     for path, relative in candidates:
@@ -149,7 +144,7 @@ def worktrees_with_runs(
         has_runs = any(
             (worktree / relative).is_dir()
             and any((worktree / relative).rglob("*"))
-            for relative in (".nl2repo/runs", "jobs")
+            for relative in (".nl2repo/runs", ".nl2repo/authoring-work", "jobs")
         )
         if worktree.is_dir() and (worktree / ".git").exists() and has_runs:
             rows.append(
@@ -289,7 +284,9 @@ def cleanup_verified_task(worktree: Path) -> int:
     """Delete only run payloads and reproducible caches after OSS verification."""
 
     targets = [worktree / relative for relative in REBUILDABLE_PATHS]
-    targets.extend((worktree / ".nl2repo" / name) for name in ("runs",))
+    targets.extend(
+        (worktree / ".nl2repo" / name) for name in ("runs", "authoring-work")
+    )
     targets.append(worktree / "jobs")
     nl2repo = worktree / ".nl2repo"
     if nl2repo.is_dir():
@@ -370,7 +367,7 @@ def archive_task(
         "attempts": attempts,
         "object_count": len(files),
         "bytes_verified": sum(file.size for file in files),
-        "workspace_policy": "artifacts/workspace excluded; canonical source and CAS retained",
+        "workspace_policy": "artifacts/workspace included; secret-shaped files block archive",
         "objects": [
             {
                 "key": f"{prefix}/{file.relative}",
