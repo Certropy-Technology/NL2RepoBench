@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "async"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "async-control-flow"
+tags = ["node", "npm", "commonjs", "callbacks", "async", "control-flow", "subprocess"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/caolan/async"
+revision = "13dfaf13f3fc809ba1c9c39d5e267ac6959cbf4a"
+license_spdx = "MIT"
+source_digest = "sha256:3b12f9d44bca809390a09ada83b828c1c66af08d3f6438a7b93880713940e2a6"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier are offline. The zero-dependency npm v3 closure is supplied as a private integrity-checked bundle; only the trusted Oracle contains the source archive."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:daa69fdf09b87353bd7dd99ddc1e7f90933e6de39e7dfa3f5629bbf06e7c58f3", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:daa69fdf09b87353bd7dd99ddc1e7f90933e6de39e7dfa3f5629bbf06e7c58f3", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 27
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:0f36d4bbe5dfa61bb349e88eaf1ea45df4bd9b14d6f287e9d66e1bd7b7f01dad", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:0f36d4bbe5dfa61bb349e88eaf1ea45df4bd9b14d6f287e9d66e1bd7b7f01dad", visibility = "private" }
+test_bundle = { digest = "sha256:71086710ac080f382b13df2241acf8d1e7e0e53569c9e1aa690047c2b7a6e335", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:71086710ac080f382b13df2241acf8d1e7e0e53569c9e1aa690047c2b7a6e335", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the async CommonJS control-flow package with a deterministic JSON adapter for its callback APIs."
+keywords = ["node", "npm", "commonjs", "callbacks", "async", "control-flow", "subprocess"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828/async"
+reason = "Production Node bundle compiled with locked artifacts; the trusted Oracle passed 27/27 and the complete negative-control matrix passed with offline verifier receipts. Model Agent Run, review, and publication remain outside this lane."
+
+[oracle_bundle]
+digest = "sha256:3073578f0de8a2633cc224d6de267082776ccd7368317f870a23a4c5bf5a0929"
+size_bytes = 24104960
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:3073578f0de8a2633cc224d6de267082776ccd7368317f870a23a4c5bf5a0929"
+visibility = "private"

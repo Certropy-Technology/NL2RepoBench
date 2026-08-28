@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "task_id": "async",
+  "upstream": {"command": "npm ci --ignore-scripts --no-audit --no-fund && npm run mocha-node-test", "node": "22.23.1", "npm": "10.9.8", "exit_code": 0, "passing": 690},
+  "frozen_private_collection": {"framework": "node:test", "expected_total": 27, "report_format": "node-test-json-v1", "boundary": "non-root JSON-only subprocess calling async/adapter.run"},
+  "selection": "The fixed task denominator exercises callback collection, ordering, limit, retry, and timeout semantics through a deterministic adapter. It excludes upstream browser, native, process, network, and non-JSON callback behavior."
+}

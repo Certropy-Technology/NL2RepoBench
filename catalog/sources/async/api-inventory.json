@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "async",
+  "source_revision": "13dfaf13f3fc809ba1c9c39d5e267ac6959cbf4a",
+  "package": {"name": "async", "version": "3.2.6", "module_format": "commonjs", "main": "dist/async.js"},
+  "public_surface": {
+    "collection": ["map", "mapLimit", "mapSeries", "filter", "reject", "detect", "some", "every", "reduce", "groupBy", "sortBy"],
+    "control_flow": ["parallel", "parallelLimit", "series", "waterfall", "times", "timesLimit", "retry", "timeout"],
+    "adapter": {"subpath": "async/adapter", "export": "run", "purpose": "A task-specific JSON bridge for callback APIs that cannot be transferred across the untrusted subprocess boundary."}
+  },
+  "excluded_surface": ["auto", "autoInject", "queue", "cargo", "priorityQueue", "async iterables", "browser builds", "filesystem and network helpers", "cancellation"],
+  "source_files": ["dist/async.js", "lib/map.js", "lib/mapLimit.js", "lib/reduce.js", "lib/parallel.js", "lib/series.js", "lib/waterfall.js", "lib/retry.js", "lib/timeout.js"]
+}
