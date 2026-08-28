@@ -184,6 +184,53 @@ def task_is_idle(worktree: Path) -> bool:
     return not _process_uses(worktree) and not _docker_uses(worktree)
 
 
+def cleanup_orphan_containers(lanes: list[Lane], worktree_root: Path) -> list[str]:
+    """Remove containers for non-running queue items with no live worktree process."""
+
+    tasks: list[tuple[str, Path, str]] = []
+    for lane in lanes:
+        payload = json.loads(lane.queue_state.read_text(encoding="utf-8"))
+        items = payload.get("items")
+        if not isinstance(items, dict):
+            continue
+        for record in items.values():
+            if not isinstance(record, dict):
+                continue
+            package = record.get("package")
+            status = record.get("status")
+            if not isinstance(package, str) or status == "running":
+                continue
+            worktree = (worktree_root / lane.batch_id / package).resolve()
+            if worktree.is_dir() and not _process_uses(worktree):
+                tasks.append((str(worktree), worktree, str(status)))
+    completed = subprocess.run(
+        ["docker", "ps", "-q"], capture_output=True, text=True, check=False
+    )
+    if completed.returncode != 0 or not completed.stdout.split():
+        return []
+    ids = completed.stdout.split()
+    inspected = subprocess.run(
+        ["docker", "inspect", *ids], capture_output=True, text=True, check=False
+    )
+    if inspected.returncode != 0:
+        return []
+    records = json.loads(inspected.stdout)
+    remove: list[str] = []
+    for record in records:
+        serialized = json.dumps(record, sort_keys=True)
+        if any(prefix in serialized for prefix, _worktree, _status in tasks):
+            container_id = record.get("Id")
+            if isinstance(container_id, str):
+                remove.append(container_id)
+    if remove:
+        removed = subprocess.run(
+            ["docker", "rm", "-f", *remove], capture_output=True, text=True, check=False
+        )
+        if removed.returncode != 0:
+            raise RuntimeError(f"orphan container cleanup failed: {removed.stderr[-1000:]}")
+    return remove
+
+
 def _remote_bytes(bucket: Any, key: str) -> tuple[int, str]:
     response = bucket.get_object(key)
     digest = hashlib.sha256()
@@ -326,6 +373,16 @@ def archive_task(
 
 def run_once(args: argparse.Namespace, bucket: Any) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
+    if args.cleanup_orphan_containers:
+        removed = cleanup_orphan_containers(args.lane, args.worktree_root)
+        results.append(
+            {
+                "language": "all",
+                "package": "<orphan-containers>",
+                "status": "cleaned",
+                "containers_removed": len(removed),
+            }
+        )
     for lane in args.lane:
         for package, worktree in complete_worktrees(lane, args.worktree_root):
             try:
@@ -353,6 +410,7 @@ def main() -> int:
     parser.add_argument("--interval-sec", type=int, default=60)
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--cleanup", action="store_true")
+    parser.add_argument("--cleanup-orphan-containers", action="store_true")
     parser.add_argument("--lock-file", type=Path, required=True)
     args = parser.parse_args()
     args.worktree_root = args.worktree_root.resolve()

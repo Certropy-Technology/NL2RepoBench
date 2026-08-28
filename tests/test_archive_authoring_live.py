@@ -76,3 +76,56 @@ def test_cleanup_verified_task_preserves_source_evidence_and_cas(tmp_path: Path)
     assert removed == sum(len("payload") for _ in removable)
     assert all(not path.exists() for path in removable)
     assert all(path.is_file() for path in retained)
+
+
+def test_cleanup_orphan_containers_removes_only_non_running_tasks(
+    tmp_path: Path, monkeypatch
+) -> None:
+    state = tmp_path / "state.json"
+    state.write_text(
+        json.dumps(
+            {
+                "items": {
+                    "one": {"status": "pending", "package": "idle"},
+                    "two": {"status": "running", "package": "active"},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    root = tmp_path / "worktrees"
+    idle = (root / "python-batch/idle").resolve()
+    active = (root / "python-batch/active").resolve()
+    idle.mkdir(parents=True)
+    active.mkdir(parents=True)
+    calls: list[list[str]] = []
+
+    def fake_run(command, **_kwargs):
+        calls.append(command)
+        if command[:3] == ["docker", "ps", "-q"]:
+            return type("Result", (), {"returncode": 0, "stdout": "idle-id\nactive-id\n"})()
+        if command[:2] == ["docker", "inspect"]:
+            return type(
+                "Result",
+                (),
+                {
+                    "returncode": 0,
+                    "stdout": json.dumps(
+                        [
+                            {"Id": "idle-id", "Config": {"Labels": {"cwd": str(idle)}}},
+                            {"Id": "active-id", "Config": {"Labels": {"cwd": str(active)}}},
+                        ]
+                    ),
+                },
+            )()
+        return type("Result", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(archive.subprocess, "run", fake_run)
+    monkeypatch.setattr(archive, "_process_uses", lambda _path: False)
+
+    removed = archive.cleanup_orphan_containers(
+        [archive.Lane("python", "python-batch", state)], root
+    )
+
+    assert removed == ["idle-id"]
+    assert ["docker", "rm", "-f", "idle-id"] in calls
