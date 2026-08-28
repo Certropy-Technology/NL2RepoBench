@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0",
+  "task_id": "camelcase",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 32,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/camelcase",
+    "revision": "3146708d5ffcd91a8cbc483e4a2585a39545da48",
+    "source_digest": "sha256:823ac92218bd6beac9fcac4acbaf1e0677fa06a6e6f046cee61638bbc831e9ab",
+    "source_archive_path": ".nl2repo/authoring-work/node-author-wave2-20260828/camelcase/source.tar",
+    "source_archive_size_bytes": 61440,
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/camelcase/upstream/license",
+    "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "discovery_package": "camelcase",
+    "frozen_package": "camelcase@9.0.0"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:a2ae263cce30d90f08d34897c9fcbe4d26ac98e608b715d59f793b33b5cce9e5",
+    "dependency_artifact": "sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8",
+    "commands_artifact": "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41",
+    "test_bundle": "sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027",
+    "oracle_bundle": "sha256:b11f5998257d95deefab6330c19b0a6b313e58f8cf8f8bb07f1d218e37ccf906",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled-final/camelcase/bundle.manifest.json",
+    "sha256": "sha256:d2258aaf6214c0b1f55b8bc74d9fbe0106b0a5a4b397bde57f9f7a68e50ee3a5",
+    "canonical_manifest_digest": "sha256:88ec2e3fc602168770f8698b068395741571e530e16df43c5faaa96845873e93",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "mode": "production",
+    "file_count": 75,
+    "repeat_compile_byte_identical": true
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "consumer": "candidate-runtime",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8",
+      "size_bytes": 396,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 32,
+    "collection": "32 node:test leaves; no collection errors",
+    "test_bundle": {
+      "digest": "sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027",
+      "size_bytes": 3224,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar",
+      "uri": "artifact://private/sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027",
+      "visibility": "private"
+    },
+    "commands_artifact": {
+      "digest": "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41",
+      "size_bytes": 270,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar",
+      "uri": "artifact://private/sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41",
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/camelcase -a oracle --allow-agent-host github.com --job-name camelcase-final-oracle-20260828-0015 -o .nl2repo/runs/camelcase-final-oracle-20260828-0015 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "camelcase__eyvgtTg",
+    "harbor_exceptions": 0,
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/camelcase-final-oracle-20260828-0015/camelcase-final-oracle-20260828-0015/camelcase__eyvgtTg/verifier/grading.json",
+      "sha256": "sha256:189d789f11dea8f3798214ee5c3dca822f4a0288f2dbb832f414db2d5f2acbdd"
+    },
+    "network": {
+      "path": ".nl2repo/runs/camelcase-final-oracle-20260828-0015/camelcase-final-oracle-20260828-0015/camelcase__eyvgtTg/verifier/network.json",
+      "sha256": "sha256:dafbf245cb6bdf115779d638cc814f15d36001b32b50c305c513d00d91fd938a"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/camelcase-final/camelcase-empty -a oracle --job-name camelcase-final-empty-20260828-0018 -o .nl2repo/runs/camelcase-final-controls-20260828-0018/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/empty/camelcase-final-empty-20260828-0018/camelcase-empty__223cBj5/verifier/grading.json", "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"},
+      "network": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/empty/camelcase-final-empty-20260828-0018/camelcase-empty__223cBj5/verifier/network.json", "sha256": "sha256:9c44dff4e5fec0eacd976eab729ad74c3af7ed998f9b4edd9258de36be28406d"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/camelcase-final/camelcase-stub -a oracle --job-name camelcase-final-stub-20260828-0018 -o .nl2repo/runs/camelcase-final-controls-20260828-0018/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 5,
+      "reward": 0.15625,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/stub/camelcase-final-stub-20260828-0018/camelcase-stub__8EsQkr5/verifier/grading.json", "sha256": "sha256:ce94c2c913f6596d75df778893bf99f9afa2be28e6136df7947818e47614684"},
+      "network": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/stub/camelcase-final-stub-20260828-0018/camelcase-stub__8EsQkr5/verifier/network.json", "sha256": "sha256:cb118407491789be0e8ec6b3730f2ccd9597dc75aea6c5028c15649c19ab025b"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/camelcase-final/camelcase-forgery -a oracle --job-name camelcase-final-forgery-20260828-0018 -o .nl2repo/runs/camelcase-final-controls-20260828-0018/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward": 1.0,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/forgery/camelcase-final-forgery-20260828-0018/camelcase-forgery__jza2rjj/verifier/grading.json", "sha256": "sha256:47c24c8558394bb52fc45ffb158db22323571f4355def572f09c3dbc1fe9119b"},
+      "network": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/forgery/camelcase-final-forgery-20260828-0018/camelcase-forgery__jza2rjj/verifier/network.json", "sha256": "sha256:b02493b80ae3044ffcfba5b4e56d514d25a06a1bc0d8ba10f18317e811f0b6cf"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/camelcase-final/camelcase-offline -a oracle --job-name camelcase-final-offline-20260828-0018 -o .nl2repo/runs/camelcase-final-controls-20260828-0018/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/offline/camelcase-final-offline-20260828-0018/camelcase-offline__nZMHbnE/verifier/grading.json", "sha256": "sha256:47c24c8558394bb52fc45ffb158db22323571f4355def572f09c3dbc1fe9119b"},
+      "network": {"path": ".nl2repo/runs/camelcase-final-controls-20260828-0018/offline/camelcase-final-offline-20260828-0018/camelcase-offline__nZMHbnE/verifier/network.json", "sha256": "sha256:cf8248f9b7ab08fbb62bb4a01e969f2c61ea77ba74af1ddc342fb2bca32751d8"}
+    }
+  },
+  "additional_controls": {
+    "hang": {"collected": 0, "passed": 0, "reward": 0.0, "bounded": true, "public_network_available": false, "grading_sha256": "sha256:47f90bc79aea76213c04d06ec6d29824220f58db2b8119ce656421c7b1d6176a", "network_sha256": "sha256:b39691f5f499ca4fbe6bfb39d405542c04323b3e4736db4f219e5e23e8e9576e"},
+    "install-script": {"collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading_sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961", "network_sha256": "sha256:9c44dff4e5fec0eacd976eab729ad74c3af7ed998f9b4edd9258de36be28406d"},
+    "loader-hook": {"collected": 32, "passed": 3, "failed": 29, "reward": 0.09375, "public_network_available": false, "grading_sha256": "sha256:3bf7e6c61cbab92c65ae789b7b0661d01185500c44be49a49d9acf2f7c3a5218", "network_sha256": "sha256:81b6e5801978f0293095ac4f98a73a403d61d831626e121678610efd4e6a0a64"}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone https://github.com/sindresorhus/camelcase; git checkout --detach 3146708d5ffcd91a8cbc483e4a2585a39545da48; git archive --format=tar HEAD | sha256sum", "tool_version": "git 2.x; coreutils sha256sum", "exit_code": 0, "result": "revision and raw archive digest match the frozen source contract"},
+    {"stage": "upstream-dependency-probe", "command": "npm ci --ignore-scripts --offline --no-audit --no-fund", "tool_version": "npm 10.9.8 host probe", "exit_code": 1, "result": "ENOTCACHED for development-only xo; runtime dependency closure is empty and was remediated with an immutable root-only npm v3 bundle"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/camelcase", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "controls-passed"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "0 errors; 138 unrelated existing warnings; no camelcase finding"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/camelcase --output .nl2repo/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "nl2repobench current checkout; Node toolchain lock", "exit_code": 0, "result": "75 entries; manifest sha256:d2258aaf6214c0b1f55b8bc74d9fbe0106b0a5a4b397bde57f9f7a68e50ee3a5"},
+    {"stage": "deterministic-compile", "command": "repeat production compile and diff -qr compiled-final compiled-repeat", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "byte-identical"},
+    {"stage": "oracle", "command": "Harbor 0.21.0 oracle with run-scoped --allow-agent-host github.com", "tool_version": "Harbor 0.21.0; Docker 29.7.2", "exit_code": 0, "result": "valid=true; 32/32; reward=1.0; no exception"},
+    {"stage": "controls", "command": "prepare-control plus Harbor oracle runs for empty, stub, forgery, hang, install-script, loader-hook, and offline", "tool_version": "Harbor 0.21.0; Docker 29.7.2", "exit_code": 0, "result": "all bounded controls completed; trusted verifier network false"},
+    {"stage": "syntax-and-serialization", "command": "node --check private modules; bash -n Oracle/control scripts; parse source JSON/TOML", "tool_version": "Node 22.23.1 host; bash 5.x", "exit_code": 0, "result": "all checks passed"}
+  ],
+  "residual_risks": [
+    "Independent blind review and spec-traceability approval remain integrator/reviewer work.",
+    "No model Agent Run was started, as required by this lane boundary.",
+    "Host npm is 10.9.8, but all production Harbor receipts used the locked Node 24.19.0/npm 11.17.0 image.",
+    "The source archive and full run trees remain task-local under .nl2repo and are not public catalog bytes."
+  ]
+}

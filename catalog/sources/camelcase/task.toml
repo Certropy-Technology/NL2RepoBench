@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "camelcase"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "string-normalization"
+tags = ["node", "npm", "esm", "unicode", "string"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/camelcase"
+revision = "3146708d5ffcd91a8cbc483e4a2585a39545da48"
+license_spdx = "MIT"
+source_digest = "sha256:823ac92218bd6beac9fcac4acbaf1e0677fa06a6e6f046cee61638bbc831e9ab"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run with no network. The zero-runtime-dependency npm closure is installed from a private immutable cache; only the trusted Oracle receives a run-scoped authorization for the pinned upstream source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8", size_bytes = 396, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41", size_bytes = 270, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41", visibility = "private" }
+test_bundle = { digest = "sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027", size_bytes = 3224, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Pinned camelcase ESM string normalization contract with Unicode, locale, numeric-boundary, prefix, and array behavior."
+keywords = ["node", "npm", "esm", "unicode", "string"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c2"
+reason = "The exact source, public contract, private 32-leaf node:test collection, npm v3 offline closure, digest-checking Oracle, production compile, and bounded controls have passed. Independent review and any future model Agent Run remain outside this lane."
+
+[oracle_bundle]
+digest = "sha256:b11f5998257d95deefab6330c19b0a6b313e58f8cf8f8bb07f1d218e37ccf906"
+size_bytes = 794
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:b11f5998257d95deefab6330c19b0a6b313e58f8cf8f8bb07f1d218e37ccf906"
+visibility = "private"
