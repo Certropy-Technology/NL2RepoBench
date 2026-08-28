@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0",
+  "task_id": "editables",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/pfmoore/editables",
+    "revision": "e54908a593a1062be201d1acdb80e379e0776d4b",
+    "source_digest": "sha256:d82a26dd246c6b5f37bc9881975d3fe2af535b390f90dc452575c0ebfea5f2aa",
+    "source_size_bytes": 81920,
+    "license_spdx": "MIT",
+    "license_file": "LICENSE.txt",
+    "license_file_sha256": "sha256:65f80d840245883efab92f8c70b60cb483d3b734fc95f208364ff69811d602c4"
+  },
+  "bundle": {
+    "path": ".nl2repo/task-artifacts/editables-production/compiled/editables/bundle.manifest.json",
+    "sha256": "sha256:cf7c31426b606df93a7d6ba90e25d621a7bfb4acdf9425da2d00df4d95320993",
+    "schema_version": "1.0",
+    "mode": "production",
+    "file_count": 57
+  },
+  "dependency_lock": {
+    "packages": ["flit_core==3.12.0"],
+    "vendor_wheels": false,
+    "artifact": {
+      "digest": "sha256:83207037414d79c1c388e54da3ad2a5dba03e5b20ab08a4b2be1a29f5d39cae8",
+      "size_bytes": 603,
+      "path": ".nl2repo/artifacts/private/sha256/83/83207037414d79c1c388e54da3ad2a5dba03e5b20ab08a4b2be1a29f5d39cae8"
+    }
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/editables-production/compiled/editables -a oracle --allow-agent-host github.com --allow-agent-host codeload.github.com --job-name editables-oracle-gate-20260828 --jobs-dir .nl2repo/runs/editables-production --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/editables-production/editables-oracle-gate-20260828/editables__2eXkd6L/verifier/grading.json",
+      "sha256": "sha256:8fbec3375a9b1fc0e94f56c027f81c08644887d80ca7c5876d84dc3569d2dd8"
+    },
+    "network": {
+      "path": ".nl2repo/runs/editables-production/editables-oracle-gate-20260828/editables__2eXkd6L/verifier/network.json",
+      "sha256": "sha256:cb118407491789be0e8ec6b3730f2ccd9597dc75aea6c5028c15649c19ab025b",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/editables-production/compiled/editables -a nop --job-name editables-empty-gate-20260828 --jobs-dir .nl2repo/runs/editables-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/editables-production/editables-empty-gate-20260828/editables__AbGgrSK/verifier/grading.json",
+        "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/editables-production/editables-empty-gate-20260828/editables__AbGgrSK/verifier/network.json",
+        "sha256": "sha256:4d6b3a5fb93a8ee1eed9ce32671d5cabe220ccf2c0e01368a9402022339e1cdf",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/editables-production/controls/editables-stub -a oracle --job-name editables-stub-gate-20260828 --jobs-dir .nl2repo/runs/editables-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 1,
+      "reward": 0.041666666666666664,
+      "grading": {
+        "path": ".nl2repo/runs/editables-production/editables-stub-gate-20260828/editables-stub__D9cuqPJ/verifier/grading.json",
+        "sha256": "sha256:e2cb0ac728dae9bd9d4b9556883db06494c4addf6bac2414c2b1bb2940e44060"
+      },
+      "network": {
+        "path": ".nl2repo/runs/editables-production/editables-stub-gate-20260828/editables-stub__D9cuqPJ/verifier/network.json",
+        "sha256": "sha256:35eda0ce7d51a9341079d58c187c4c598b6297bf07d10c7c9c6936529d31a7a5",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/task-artifacts/editables-production/controls/editables-forgery -a oracle --job-name editables-forgery-gate-20260828 --jobs-dir .nl2repo/runs/editables-production --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 1,
+      "reward": 0.041666666666666664,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/editables-production/editables-forgery-gate-20260828/editables-forgery__Wj2fd4P/verifier/grading.json",
+        "sha256": "sha256:e2cb0ac728dae9bd9d4b9556883db06494c4addf6bac2414c2b1bb2940e44060"
+      },
+      "network": {
+        "path": ".nl2repo/runs/editables-production/editables-forgery-gate-20260828/editables-forgery__Wj2fd4P/verifier/network.json",
+        "sha256": "sha256:78e402389d270636666919631f31a6cf7a75470f37530fbc930d4cadecf63a74",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network-none probe from editables Oracle final run",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/editables-production/editables-oracle-gate-20260828/editables__2eXkd6L/verifier/network.json",
+        "sha256": "sha256:cb118407491789be0e8ec6b3730f2ccd9597dc75aea6c5028c15649c19ab025b"
+      }
+    }
+  },
+  "residual_risks": [
+    "The Oracle solve script requires explicit github.com/codeload.github.com authorization in the trusted Oracle run; model agent and verifier metadata remain no-network.",
+    "The upstream suite is 27 collected tests in the authoring CPython 3.12 probe; the production contract intentionally freezes 24 separately authored JSON leaves.",
+    "Review, pilot, publication, and model Agent Run are outside this lane and remain pending integrator stages."
+  ]
+}

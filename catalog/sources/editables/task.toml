@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "editables"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "packaging-runtime"
+tags = ["python", "packaging", "editable-install", "import-hooks", "pth-files", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pfmoore/editables"
+revision = "e54908a593a1062be201d1acdb80e379e0776d4b"
+license_spdx = "MIT"
+source_digest = "sha256:d82a26dd246c6b5f37bc9881975d3fe2af535b390f90dc452575c0ebfea5f2aa"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The only build dependency is installed during the image build from a private hash-locked requirement. Agent and separate verifier runs have no egress; only the trusted Oracle solve script may fetch the pinned source host."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit_core==3.12.0"]
+lock_artifact = { digest = "sha256:83207037414d79c1c388e54da3ad2a5dba03e5b20ab08a4b2be1a29f5d39cae8", size_bytes = 603, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:83207037414d79c1c388e54da3ad2a5dba03e5b20ab08a4b2be1a29f5d39cae8", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build editables 0.6 from an empty workspace and reproduce deterministic editable-install file generation and import-hook behavior through a separate child-side JSON verifier."
+keywords = ["python", "packaging", "editable-install", "import-hooks", "pth-files", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 480.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 3072
+storage_mb = 6144
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:798b5a042589df48257aeb0bbbfdc5ab8d6a576710974337d97125777bf7e8a3", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:798b5a042589df48257aeb0bbbfdc5ab8d6a576710974337d97125777bf7e8a3", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:0449e5d45bbc63fe5e0feafeafe4fe83ba490362ff25263419d53c670f3418bf"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0449e5d45bbc63fe5e0feafeafe4fe83ba490362ff25263419d53c670f3418bf"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c3"
+reason = "Production Harbor 0.21.0 bundle passed the final Oracle at 24/24 and reward 1.0; empty, stub, forgery, and offline verifier controls completed with valid low scores and no public egress. Review and model Agent Run remain separate integrator stages."
