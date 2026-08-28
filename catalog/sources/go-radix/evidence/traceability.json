@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-radix",
+  "source_freeze": {
+    "revision": "54df44f2176c4a553657a4f0dbe6fdb108288be3",
+    "source_digest": "sha256:71091da25cb789fffd397ff8b4e1b460e88dda2ef31ae981d520426f26b8ff47"
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "construction and exact get including empty key",
+      "insert replacement return and length stability",
+      "lexicographic walk and minimum/maximum",
+      "longest-prefix lookup",
+      "walk-prefix and walk-path selection",
+      "delete and delete-prefix counts",
+      "to-map snapshot and independent tree state",
+      "bounded bridge errors and no stdout diagnostics"
+    ]
+  },
+  "bidirectional_traceability": [
+    {"assertion_class": "construction and exact get including empty key", "instruction": "instruction.md#api-usage-guide", "api": "New, NewFromMap, Get, Len", "private_case_group": "snapshot"},
+    {"assertion_class": "insert replacement return and length stability", "instruction": "instruction.md#api-usage-guide", "api": "Insert", "private_case_group": "mutation"},
+    {"assertion_class": "lexicographic walk and minimum/maximum", "instruction": "instruction.md#api-usage-guide", "api": "Walk, Minimum, Maximum", "private_case_group": "snapshot"},
+    {"assertion_class": "longest-prefix lookup", "instruction": "instruction.md#api-usage-guide", "api": "LongestPrefix", "private_case_group": "snapshot"},
+    {"assertion_class": "walk-prefix and walk-path selection", "instruction": "instruction.md#api-usage-guide", "api": "WalkPrefix, WalkPath", "private_case_group": "snapshot"},
+    {"assertion_class": "delete and delete-prefix counts", "instruction": "instruction.md#api-usage-guide", "api": "Delete, DeletePrefix", "private_case_group": "mutation"},
+    {"assertion_class": "to-map snapshot and independent tree state", "instruction": "instruction.md#api-usage-guide", "api": "ToMap, New", "private_case_group": "mutation"},
+    {"assertion_class": "bounded bridge errors and no stdout diagnostics", "instruction": "instruction.md#implementation-notes", "api": "typed JSON bridge", "private_case_group": "bridge-boundaries"}
+  ]
+}

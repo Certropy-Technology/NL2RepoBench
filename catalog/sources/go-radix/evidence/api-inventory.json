@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-radix",
+  "method": "go doc -all plus AST/public symbol review",
+  "package": "github.com/armon/go-radix",
+  "public_symbols": {
+    "types": ["Tree", "WalkFn"],
+    "constructors": ["New", "NewFromMap"],
+    "methods": ["Len", "Insert", "Get", "Delete", "DeletePrefix", "LongestPrefix", "Minimum", "Maximum", "Walk", "WalkPrefix", "WalkPath", "ToMap"]
+  },
+  "implementation_files": ["radix.go"],
+  "source_packages": 1,
+  "dependency_closure": "single module with no external dependencies",
+  "source_revision": "54df44f2176c4a553657a4f0dbe6fdb108288be3",
+  "source_digest": "sha256:71091da25cb789fffd397ff8b4e1b460e88dda2ef31ae981d520426f26b8ff47",
+  "adaptation": "JSON bridge uses bounded string keys and JSON-compatible interface values; callback behavior is covered by bridge-local callbacks."
+}

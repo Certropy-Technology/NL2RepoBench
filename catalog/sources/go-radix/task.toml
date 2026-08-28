@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-radix"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:892a9726938a9bec8afad2a7b94ac86d7ddf653a8dcdf52dcd0e1a04e6c39f4b", size_bytes = 803, uri = "artifact://private/sha256:892a9726938a9bec8afad2a7b94ac86d7ddf653a8dcdf52dcd0e1a04e6c39f4b", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-data-structures"
+tags = ["go", "go-modules", "radix-tree", "prefix-search", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/armon/go-radix"
+revision = "54df44f2176c4a553657a4f0dbe6fdb108288be3"
+license_spdx = "MIT"
+source_digest = "sha256:71091da25cb789fffd397ff8b4e1b460e88dda2ef31ae981d520426f26b8ff47"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private hash-addressed Go module closure and no network; only the trusted Oracle may fetch the frozen source revision."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:40824bd4d569133cff05aae5166aef989d0f1b233732ae46541428c4ec5d85b4", size_bytes = 412, uri = "artifact://private/sha256:40824bd4d569133cff05aae5166aef989d0f1b233732ae46541428c4ec5d85b4", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic public radix-tree APIs of armon/go-radix through a bounded typed JSON subprocess bridge."
+keywords = ["go", "go-modules", "radix-tree", "prefix-search", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "go-author-wave2-20260828"
+reason = "Frozen MIT Go module with a deterministic typed bridge, private offline closure, verifier, Oracle, and controls; final Oracle/control receipts remain subject to integrator review."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:09cc2d3d6ef859c043c89a09c254f7af65d7147778082ef26660a925812bd014", size_bytes = 1382, uri = "artifact://private/sha256:09cc2d3d6ef859c043c89a09c254f7af65d7147778082ef26660a925812bd014", visibility = "private" }
+entrypoint = "contract.sh"
+

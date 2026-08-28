@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-radix",
+  "method": "go test -json ./...",
+  "source_test_files": ["radix_test.go"],
+  "source_test_names": ["TestRadix", "TestRoot", "TestDelete", "TestDeletePrefix", "TestLongestPrefix", "TestWalkPrefix", "TestWalkPath", "TestWalkDelete"],
+  "frozen_runs": 1,
+  "goos": "linux",
+  "goarch": "amd64",
+  "cgo_enabled": false,
+  "passed_leaf_tests": 8,
+  "failed_leaf_tests": 0,
+  "skipped_leaf_tests": 0,
+  "collection_errors": [],
+  "frozen_total": 1,
+  "verifier_leaf": "contract::public-api",
+  "note": "The upstream random-key test uses crypto/rand only as test data generation; the Harbor contract itself is deterministic and does not require randomness."
+}

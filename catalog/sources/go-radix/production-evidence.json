@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-radix",
+  "terminal_kind": "valid",
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/go-radix-production/go-radix/bundle.manifest.json",
+    "sha256": "sha256:e580a0a8f7288bfa956122e05a7c8e26c48fba98cbcaf480738eb55a540d2433",
+    "mode": "production",
+    "file_count": 68
+  },
+  "source_freeze": {
+    "upstream_url": "https://github.com/armon/go-radix",
+    "revision": "54df44f2176c4a553657a4f0dbe6fdb108288be3",
+    "source_digest": "sha256:71091da25cb789fffd397ff8b4e1b460e88dda2ef31ae981d520426f26b8ff47",
+    "license_spdx": "MIT"
+  },
+  "environment": {
+    "harbor_version": "0.21.0",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "network_policy": "no-network"
+  },
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:40824bd4d569133cff05aae5166aef989d0f1b233732ae46541428c4ec5d85b4",
+      "size_bytes": 412,
+      "visibility": "private"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:09cc2d3d6ef859c043c89a09c254f7af65d7147778082ef26660a925812bd014",
+      "size_bytes": 1382,
+      "visibility": "private"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:892a9726938a9bec8afad2a7b94ac86d7ddf653a8dcdf52dcd0e1a04e6c39f4b",
+      "size_bytes": 803,
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production/go-radix -a oracle --job-name go-radix-oracle-20260828-r1 -o .nl2repo/runs/go-radix-oracle-20260828-r1 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 1,
+    "total": 1,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/go-radix-oracle-20260828-r1/go-radix-oracle-20260828-r1/go-radix__P8aFU3q/verifier/grading.json",
+    "network": ".nl2repo/runs/go-radix-oracle-20260828-r1/go-radix-oracle-20260828-r1/go-radix__P8aFU3q/verifier/network.json",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production/go-radix -a nop --job-name go-radix-empty-20260828-r1 -o .nl2repo/runs/go-radix-empty-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/go-radix-empty-20260828-r1/go-radix-empty-20260828-r1/go-radix__UXzb3Xk/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-empty-20260828-r1/go-radix-empty-20260828-r1/go-radix__UXzb3Xk/verifier/network.json",
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-stub -a oracle --job-name go-radix-stub-20260828-r1 -o .nl2repo/runs/go-radix-stub-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 1,
+      "failed": 1,
+      "grading": ".nl2repo/runs/go-radix-stub-20260828-r1/go-radix-stub-20260828-r1/go-radix-stub__iYAZ87N/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-stub-20260828-r1/go-radix-stub-20260828-r1/go-radix-stub__iYAZ87N/verifier/network.json",
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-forgery -a oracle --job-name go-radix-forgery-20260828-r1 -o .nl2repo/runs/go-radix-forgery-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 1,
+      "failed": 1,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/runs/go-radix-forgery-20260828-r1/go-radix-forgery-20260828-r1/go-radix-forgery__RDSwppU/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-forgery-20260828-r1/go-radix-forgery-20260828-r1/go-radix-forgery__RDSwppU/verifier/network.json",
+      "public_network_available": false
+    },
+    "install_failure": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-install-failure -a oracle --job-name go-radix-install-failure-20260828-r1 -o .nl2repo/runs/go-radix-install-failure-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/go-radix-install-failure-20260828-r1/go-radix-install-failure-20260828-r1/go-radix-install-failure__HrZfYxh/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-install-failure-20260828-r1/go-radix-install-failure-20260828-r1/go-radix-install-failure__HrZfYxh/verifier/network.json",
+      "public_network_available": false
+    },
+    "panic": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-panic -a oracle --job-name go-radix-panic-20260828-r1 -o .nl2repo/runs/go-radix-panic-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 1,
+      "failed": 1,
+      "grading": ".nl2repo/runs/go-radix-panic-20260828-r1/go-radix-panic-20260828-r1/go-radix-panic__b9qp7GF/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-panic-20260828-r1/go-radix-panic-20260828-r1/go-radix-panic__b9qp7GF/verifier/network.json",
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-hang -a oracle --job-name go-radix-hang-20260828-r1 -o .nl2repo/runs/go-radix-hang-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 1,
+      "failed": 1,
+      "grading": ".nl2repo/runs/go-radix-hang-20260828-r1/go-radix-hang-20260828-r1/go-radix-hang__EFQ3aEL/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-hang-20260828-r1/go-radix-hang-20260828-r1/go-radix-hang__EFQ3aEL/verifier/network.json",
+      "public_network_available": false
+    },
+    "oversized_output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-oversized-output -a oracle --job-name go-radix-oversized-output-20260828-r1 -o .nl2repo/runs/go-radix-oversized-output-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 1,
+      "failed": 1,
+      "grading": ".nl2repo/runs/go-radix-oversized-output-20260828-r1/go-radix-oversized-output-20260828-r1/go-radix-oversized-output__SNTMyZD/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-oversized-output-20260828-r1/go-radix-oversized-output-20260828-r1/go-radix-oversized-output__SNTMyZD/verifier/network.json",
+      "public_network_available": false
+    },
+    "background_process": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-background-process -a oracle --job-name go-radix-background-process-20260828-r1 -o .nl2repo/runs/go-radix-background-process-20260828-r1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 1,
+      "failed": 1,
+      "grading": ".nl2repo/runs/go-radix-background-process-20260828-r1/go-radix-background-process-20260828-r1/go-radix-background-process__EHCKUrL/verifier/grading.json",
+      "network": ".nl2repo/runs/go-radix-background-process-20260828-r1/go-radix-background-process-20260828-r1/go-radix-background-process__EHCKUrL/verifier/network.json",
+      "public_network_available": false
+    },
+    "offline": {
+      "completed": true,
+      "source": "Oracle verifier network probe and all control verifier probes",
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "Independent blind/spec review, model Agent Run, dataset integration, and publication remain integrator responsibilities.",
+    "The Oracle solution fetches only the exact pinned Git revision and verifies the source archive digest; the model Agent has no source-host authorization.",
+    "The upstream source archive has no go directive; the Oracle workspace and private module closure normalize only module metadata to locked Go 1.26.5."
+  ]
+}

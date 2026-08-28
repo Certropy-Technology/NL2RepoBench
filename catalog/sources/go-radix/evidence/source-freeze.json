@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-radix",
+  "upstream_url": "https://github.com/armon/go-radix",
+  "revision": "54df44f2176c4a553657a4f0dbe6fdb108288be3",
+  "source_archive": {
+    "command": "git archive --format=tar --prefix=go-radix/ HEAD",
+    "sha256": "sha256:71091da25cb789fffd397ff8b4e1b460e88dda2ef31ae981d520426f26b8ff47",
+    "bytes": 30720
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "LICENSE",
+    "sha256": "sha256:831892cd31b9eef0311bb1de9014527ef5d3592eed7add1f9f829510d2065e62",
+    "bytes": 1079
+  },
+  "inventory": {
+    "tracked_files": 7,
+    "go_files": 2,
+    "test_files": 1,
+    "go_packages": 1,
+    "public_types": ["Tree", "WalkFn"],
+    "public_methods": 14,
+    "source_test_leaf_passed": 8,
+    "source_test_leaf_failed": 0,
+    "source_test_leaf_skipped": 0
+  },
+  "risk_flags": {
+    "cgo_import": false,
+    "unsafe_import": false,
+    "go_generate": false,
+    "replace_directive": false,
+    "non_git_symlink": false,
+    "external_runtime_dependency": false,
+    "callback_boundary": "callbacks are exercised inside the reviewed bridge; JSON transport is value-only"
+  },
+  "toolchain": {
+    "go": "1.26.5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "network": "no-network"
+  },
+  "source_authority": "known"
+}

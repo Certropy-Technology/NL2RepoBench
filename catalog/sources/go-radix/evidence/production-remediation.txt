@@ -1,0 +1,21 @@
+go-radix authoring remediation record
+
+1. Source freeze
+   - git clone https://github.com/armon/go-radix -> task-local authoring worktree (exit 0)
+   - git checkout --detach 54df44f2176c4a553657a4f0dbe6fdb108288be3 (exit 0)
+   - git archive --format=tar --prefix=go-radix/ HEAD -> sha256:71091da25cb789fffd397ff8b4e1b460e88dda2ef31ae981d520426f26b8ff47, 30720 bytes (exit 0)
+   - LICENSE -> MIT, 1079 bytes, sha256:831892cd31b9eef0311bb1de9014527ef5d3592eed7add1f9f829510d2065e62 (exit 0)
+
+2. Dependency and environment remediation
+   - Upstream go.mod had no go directive and no go.sum; task-local Oracle normalization adds go 1.26.5 and an empty go.sum without changing source archive bytes.
+   - The module has no external imports. A private module bundle still contains go.mod, go.sum, vendor/modules.txt, and a matching schema-1.0 module manifest for the locked offline contract.
+   - Runtime is locked Go 1.26.5 on linux/amd64 with the digest-pinned golang base image; candidate and verifier use no network.
+
+3. Test and boundary probes
+   - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./... -> 8 leaf tests passed, 0 failed, 0 skipped (exit 0).
+   - Public bridge builds and its deterministic private contract passes against the frozen Oracle workspace.
+   - Callback behavior is adapted inside the bridge because WalkFn is not JSON-serializable; the public callback signature remains required.
+
+4. Pending integrator gates
+   - This lane does not start a Harbor Agent Run. The handoff records whether the trusted one-run Oracle and separate verifier controls were available; no model capability claim is made.
+   - Final command logs are stored under .nl2repo/evidence/go-radix/; the compiled production manifest is byte-identical across the first and final compile.
