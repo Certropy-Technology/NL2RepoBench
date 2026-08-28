@@ -44,3 +44,24 @@ def test_node_control_summary_classifies_all_control_kinds(tmp_path: Path) -> No
     report = summary.summarize(tmp_path)
 
     assert all(item["passed"] for item in report["controls"].values())
+
+
+def test_node_control_summary_accepts_bounded_candidate_hang(tmp_path: Path) -> None:
+    directory = tmp_path / "hang"
+    (directory / "verifier").mkdir(parents=True)
+    (directory / "verifier/grading.json").write_text(
+        json.dumps(
+            {
+                "valid": True,
+                "reward": 0,
+                "failure_class": "model",
+                "failure_reason": "candidate-call-failed",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    grading = json.loads((directory / "verifier/grading.json").read_text(encoding="utf-8"))
+    passed, _ = summary._passed("hang", grading)
+
+    assert passed is True

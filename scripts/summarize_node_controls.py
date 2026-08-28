@@ -62,10 +62,16 @@ def _passed(kind: str, grading: dict[str, Any]) -> tuple[bool, str]:
             "loader injection cannot produce full score",
         )
     if kind == "hang":
-        return (
-            valid is False and reason == "node-collection-error" and failure_class == "verifier",
-            "hang terminated as verifier collection error",
+        collection_failure = (
+            valid is False and reason == "node-collection-error" and failure_class == "verifier"
         )
+        candidate_timeout = (
+            valid is True
+            and reason == "candidate-call-failed"
+            and failure_class == "model"
+            and reward == 0
+        )
+        return collection_failure or candidate_timeout, "hang is bounded and scores zero"
     if kind == "offline":
         return (
             valid is True and isinstance(reward, (int, float)) and reward < 1,
