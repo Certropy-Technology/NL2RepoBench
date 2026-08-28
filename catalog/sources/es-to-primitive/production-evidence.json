@@ -1,0 +1,269 @@
+{
+  "schema_version": "1.0",
+  "task_id": "es-to-primitive",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/ljharb/es-to-primitive",
+    "revision": "f33dccb3a8950f4abc67f43bec81f776da9cdf13",
+    "tag": "v1.3.4",
+    "archive_sha256": "sha256:ed5eecf6d29ef3e59e0ef91694d2e4a5814af572b238e1c1df278189560d44bf",
+    "archive_size_bytes": 81920,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:c61652db3d2808f667b48af0a358f0d85fd07ad4a0d0b1a50882dec3b764c522",
+    "submodules": []
+  },
+  "environment": {
+    "runtime": "Node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "os": "Debian 12 (bookworm)",
+    "architecture": "linux/amd64",
+    "libc": "glibc 2.36",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependency_closure": {
+    "lockfile_version": 3,
+    "direct_packages": 6,
+    "installed_packages": 21,
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:7992ea519f7fce4d9d71c308c7c5b6e245c6f753a85c2cff9d839462418ee454",
+      "size_bytes": 962560,
+      "visibility": "private"
+    },
+    "offline_install": {
+      "command": "docker run --rm --network none <locked-node-image> npm ci --offline --ignore-scripts --no-audit --no-fund --cache /npm-cache",
+      "exit_code": 0,
+      "installed_packages": 21,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/offline-install.log",
+        "sha256": "sha256:7dc7c37a5884b59f939f0a5dcb7c7dc5d8f1835f6abfcc00616650cbd0980e30"
+      }
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 33,
+    "source": "frozen-collection",
+    "upstream_baseline": {
+      "command": "npm run tests-only",
+      "passed": 400,
+      "failed": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/upstream-baseline.log",
+        "sha256": "sha256:d7616a84bba588abcedb53b591ec7659669e5c84e6d224b60adb87e4b0a1abd8"
+      }
+    }
+  },
+  "private_artifacts": {
+    "tests": {
+      "digest": "sha256:ebdf99ae719ca7b12506da173db24d7415a419afbdc0de44fa3542f4c2dd8654",
+      "size_bytes": 20480
+    },
+    "commands": {
+      "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240
+    },
+    "oracle": {
+      "digest": "sha256:2baa630953d8f9411021a7c5ef57a2f93c3e16586a076f00d3ac4ce9eaa79783",
+      "size_bytes": 20480
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled/es-to-primitive-handoff/es-to-primitive/bundle.manifest.json",
+    "sha256": "sha256:7af89569b849d63fc8870e42caee393ac6cddc1cc76c5a3e7d2934189306dc48",
+    "schema_version": "2.0",
+    "mode": "production",
+    "file_count": 244,
+    "canonical_manifest_digest": "sha256:a9d112577eda5b93a14d428bcfc9f6691f94bc37823546110190ddf2a004a306",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "integrity_mismatches": 0,
+    "deterministic_receipt": ".nl2repo/compiled/es-to-primitive-final/es-to-primitive/bundle.manifest.json"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/es-to-primitive",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/validate-source.log",
+        "sha256": "sha256:6b25710926182416af998a2d3aaa7d7fe5357b7b599277f2158ab648b21d2fe2"
+      }
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "global_error_count": 0,
+      "task_finding_count": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/network-lint.log",
+        "sha256": "sha256:345768b9e6568263f8dee4996e26b80b31baca5394b7edbc09518a9aac6979ff"
+      },
+      "task_log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/network-lint-task.log",
+        "sha256": "sha256:f6858a3d3ea0e417942b9db225735126c91fcdcead2071fbeb57d9cc64afe853"
+      }
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/es-to-primitive --output .nl2repo/compiled/es-to-primitive-handoff --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "allow_incomplete": false,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/compile.log",
+        "sha256": "sha256:30a6a23db0ff9a7a954bd931071ca6b71c45c84c6c56d5d780c7bc3f4c335d4a"
+      }
+    },
+    "bundle_integrity": {
+      "exit_code": 0,
+      "files": 244,
+      "mismatches": 0,
+      "extras": 0,
+      "absent": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/bundle-integrity.log",
+        "sha256": "sha256:2ef79ef55b7ab90deb4b47bcf696466ced9d2ff03c515dc338da8c03400ab051"
+      }
+    },
+    "static_and_source_freeze": {
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/static-gates.log",
+        "sha256": "sha256:795e064ecf8b61ddb4439350a31f07b1c0e0f6507f8494d8bed1800306b6e26a"
+      }
+    },
+    "npm_bundle_validation": {
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/es-to-primitive/final-gates/npm-bundle-validation.log",
+        "sha256": "sha256:2301bb45f79de5d98736eeb50e56996b6bbf6e570cb8bd3409cc1629131b01fa"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/es-to-primitive-final/es-to-primitive -a oracle --allow-agent-host github.com --job-name es-to-primitive-final-oracle -o .nl2repo/runs/es-to-primitive-final/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "bundle_manifest_sha256": "sha256:7af89569b849d63fc8870e42caee393ac6cddc1cc76c5a3e7d2934189306dc48",
+    "valid": true,
+    "collected": 33,
+    "passed": 33,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/es-to-primitive-final/oracle/es-to-primitive-final-oracle/es-to-primitive__UZKugCN/verifier/grading.json",
+      "sha256": "sha256:30064371bf78fed4c5421161c0f64ee6bf5094536b8cf7ee12c4c8658685bf97"
+    },
+    "network": {
+      "path": ".nl2repo/runs/es-to-primitive-final/oracle/es-to-primitive-final-oracle/es-to-primitive__UZKugCN/verifier/network.json",
+      "sha256": "sha256:8ab2038f493ad43eb1560777b26613396a3a93afff4cddad9cd78cd48df6dc52",
+      "public_network_available": false
+    },
+    "result": {
+      "path": ".nl2repo/runs/es-to-primitive-final/oracle/es-to-primitive-final-oracle/es-to-primitive__UZKugCN/result.json",
+      "sha256": "sha256:95a07119332912e96f2b09a5d5fc84e0b1f85f1196d9495fc5fd0fa0fd89358c"
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "expected_total": 33,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/empty/es-to-primitive-final-empty/es-to-primitive-empty__n6645ee/verifier/grading.json",
+      "grading_sha256": "sha256:17941ee2a96977ac93548e4fc0892eb4bee196d5d3d68f43bb54c86811fa4e6c"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 1,
+      "expected_total": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/stub/es-to-primitive-final-stub/es-to-primitive-stub__FfYpCEM/verifier/grading.json",
+      "grading_sha256": "sha256:c4dc8b8130b7423acc021c5997ad3be53aeae2d0a15e180bd8052df28f9e0a78"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 1,
+      "expected_total": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "verifier_owned_reports": true,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/forgery/es-to-primitive-final-forgery/es-to-primitive-forgery__FPpD6AT/verifier/grading.json",
+      "grading_sha256": "sha256:c4dc8b8130b7423acc021c5997ad3be53aeae2d0a15e180bd8052df28f9e0a78",
+      "forged_grading_sha256": "sha256:82bb49267734ade245fdac12d8666ee994a44610e28546ed0ec3f1eaece8dca6"
+    },
+    "install_script": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "expected_total": 33,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/install-script/es-to-primitive-final-install-script/es-to-primitive-install-script__v7hobhx/verifier/grading.json",
+      "grading_sha256": "sha256:17941ee2a96977ac93548e4fc0892eb4bee196d5d3d68f43bb54c86811fa4e6c"
+    },
+    "loader_hook": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 1,
+      "expected_total": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/loader-hook/es-to-primitive-final-loader-hook/es-to-primitive-loader-hook__yXfHL2C/verifier/grading.json",
+      "grading_sha256": "sha256:c4dc8b8130b7423acc021c5997ad3be53aeae2d0a15e180bd8052df28f9e0a78"
+    },
+    "hang": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 0,
+      "expected_total": 33,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/hang/es-to-primitive-final-hang/es-to-primitive-hang__HT8aF4E/verifier/grading.json",
+      "grading_sha256": "sha256:db37ecf2d9d2f422be1f95e1b3eab1014858ed2a6c8d78819d8a6ed3ab956aeb"
+    },
+    "oversized_output": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 0,
+      "expected_total": 33,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/oversized-output/es-to-primitive-final-oversized-output/es-to-primitive-oversized-output__cNF9seX/verifier/grading.json",
+      "grading_sha256": "sha256:db37ecf2d9d2f422be1f95e1b3eab1014858ed2a6c8d78819d8a6ed3ab956aeb"
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 1,
+      "expected_total": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/runs/es-to-primitive-final/offline/es-to-primitive-final-offline/es-to-primitive-offline__jEnZRVR/verifier/grading.json",
+      "grading_sha256": "sha256:c4dc8b8130b7423acc021c5997ad3be53aeae2d0a15e180bd8052df28f9e0a78"
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "Independent blind/spec review, dataset projection, publication, and model pilot remain integrator work.",
+    "The trusted Oracle requires only a run-scoped github.com authorization; the future model Agent receives no source or registry host authorization.",
+    "The shared /data filesystem reached capacity during final verification. Task-local duplicate outputs were removed, all required final gates then passed, and the remaining low free-space condition should be monitored by the integrator."
+  ]
+}

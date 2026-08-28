@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "es-to-primitive",
+  "source_revision": "f33dccb3a8950f4abc67f43bec81f776da9cdf13",
+  "package": {
+    "name": "es-to-primitive",
+    "version": "1.3.4",
+    "module_system": "commonjs",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">= 0.4"
+  },
+  "public_modules": [
+    {"path": ".", "export": "ToPrimitive", "signature": "ToPrimitive(input: unknown, preferredType?: StringConstructor | NumberConstructor): primitive"},
+    {"path": "./es5", "export": "ToPrimitive", "signature": "ToPrimitive(input: unknownES5, preferredType?: StringConstructor | NumberConstructor): primitiveES5"},
+    {"path": "./es6", "export": "ToPrimitive", "signature": "deprecated alias of ES2015"},
+    {"path": "./es2015", "export": "ToPrimitive", "signature": "ToPrimitive(input: unknown, preferredType?: StringConstructor | NumberConstructor): primitiveES6"}
+  ],
+  "root_properties": ["ES5", "ES6", "ES2015"],
+  "source_metrics": {
+    "tracked_files": 29,
+    "runtime_javascript_lines": 170,
+    "declaration_files": 4,
+    "upstream_test_files": 4,
+    "upstream_tape_assertions": 400
+  },
+  "behavioral_risks": [
+    "function-valued methods and Symbol.toPrimitive cannot cross raw JSON",
+    "Symbol, BigInt, NaN, and negative zero require tagged serialization",
+    "method order, this binding, identity, and thrown exception type must be observed in the candidate child"
+  ]
+}

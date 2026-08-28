@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "es-to-primitive"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "javascript-language-semantics"
+tags = ["node", "npm", "commonjs", "ecmascript", "coercion", "symbols", "typescript"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/ljharb/es-to-primitive"
+revision = "f33dccb3a8950f4abc67f43bec81f776da9cdf13"
+license_spdx = "MIT"
+source_digest = "sha256:ed5eecf6d29ef3e59e0ef91694d2e4a5814af572b238e1c1df278189560d44bf"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The exact npm runtime closure is supplied through a private integrity-checked npm v3 cache. Only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen source revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["es-abstract-get==1.0.0", "es-define-property==1.0.1", "es-errors==1.3.0", "is-callable==1.2.7", "is-date-object==1.1.0", "is-symbol==1.1.1"]
+artifact = { digest = "sha256:7992ea519f7fce4d9d71c308c7c5b6e245c6f753a85c2cff9d839462418ee454", size_bytes = 962560, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:7992ea519f7fce4d9d71c308c7c5b6e245c6f753a85c2cff9d839462418ee454", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 33
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:ebdf99ae719ca7b12506da173db24d7415a419afbdc0de44fa3542f4c2dd8654", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:ebdf99ae719ca7b12506da173db24d7415a419afbdc0de44fa3542f4c2dd8654", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build es-to-primitive 1.3.4 with deterministic ES5 and ES2015 object-to-primitive conversion semantics."
+keywords = ["node", "npm", "commonjs", "ecmascript", "coercion", "symbols", "typescript"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c2"
+reason = "The final production Node 24/npm 11.17 bundle passes a 33/33 Harbor Oracle. Empty, stub, forgery, install-script, loader-hook, bounded hang, oversized-output, and offline controls produce valid low scores with verifier-owned reports and public_network_available=false. Independent review, projection, and model Agent Run remain integrator work."
+
+[oracle_bundle]
+digest = "sha256:2baa630953d8f9411021a7c5ef57a2f93c3e16586a076f00d3ac4ce9eaa79783"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:2baa630953d8f9411021a7c5ef57a2f93c3e16586a076f00d3ac4ce9eaa79783"
+visibility = "private"

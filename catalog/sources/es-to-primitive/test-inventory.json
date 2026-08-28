@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "es-to-primitive",
+  "upstream": {
+    "framework": "tape with nyc",
+    "command": "npm run tests-only",
+    "files": ["test/index.js", "test/es5.js", "test/es6.js", "test/es2015.js"],
+    "assertions": 400,
+    "locked_node_24_result": "400 passed, 0 failed"
+  },
+  "production": {
+    "framework": "node:test",
+    "expected_total": 33,
+    "adapter": "bounded one-shot child-side coercion scenarios",
+    "areas": [
+      {"area": "package shape, aliases, declarations, function metadata", "leaves": 2},
+      {"area": "primitive identity and numeric edge cases", "leaves": 9},
+      {"area": "arrays and dates under three hints", "leaves": 6},
+      {"area": "ordinary conversion order, fallback, non-callables, failure", "leaves": 7},
+      {"area": "Symbol.toPrimitive hints, null/non-callable behavior, result and exception contracts", "leaves": 7},
+      {"area": "boxed Symbols and ES5/ES6/ES2015 variants", "leaves": 2}
+    ]
+  },
+  "excluded_upstream_checks": [
+    "lint and TypeScript compiler configuration",
+    "package publication metadata and npm audit",
+    "repeated fixture permutations that do not add a public behavior",
+    "wall-clock or host-locale-dependent Date values"
+  ]
+}

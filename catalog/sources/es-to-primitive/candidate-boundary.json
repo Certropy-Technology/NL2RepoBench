@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "es-to-primitive",
+  "status": "implemented",
+  "purpose": "Exercise callbacks, Symbols, boxed values, method order, identity, and exceptions inside an unprivileged candidate child while keeping candidate code out of the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json-scenario",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "call_timeout_seconds": 5,
+    "network": "none"
+  },
+  "scenario_families": ["inspect", "primitive", "array", "date", "symbol-object", "ordinary", "exotic"],
+  "tagged_values": ["undefined", "null", "boolean", "number", "NaN", "negative-zero", "string", "bigint", "symbol", "object"],
+  "observations": ["normalized result", "Symbol identity", "method call order", "exception constructor", "exception message"],
+  "forbidden_candidate_capabilities": ["network", "native addons", "custom Node loaders", "unbounded output", "trusted-process import"]
+}
