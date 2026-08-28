@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "task_id": "argparse",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/nodeca/argparse",
+    "revision": "e9eb9de652dc3f101b7320ceb682c60f407e2af6",
+    "archive_sha256": "sha256:de70bd9568e9eda8f5c8fd92684852cfa90ef490f52a451393c3675c586055c9",
+    "codeload_archive_sha256": "sha256:67b1e74b3890d3781ce4bec8649243514d052125763cec16fa865ac6324786c8",
+    "license": "PSF-2.0",
+    "license_file_sha256": "sha256:ab745c5061d1dea43a3885e5b4b6befc7e983954954775c5736debeefcdfd89b"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image_digest": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "network_mode": "no-network"
+  },
+  "frozen_collection": {
+    "expected_total": 31,
+    "source": "independent node:test contract over bounded JSON child adapter"
+  },
+  "bundle": {
+    "manifest": ".nl2repo/compiled-final/argparse/bundle.manifest.json",
+    "manifest_sha256": "sha256:7586cdb76978b5e7508f0ef7915baaef267531d123f9f5aaeae4032f7195f8d0",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/argparse",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/validate-source-current.log"
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/network-lint-current.log"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/argparse --output .nl2repo/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/harbor-compile-current.log"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/argparse -a oracle --allow-agent-host codeload.github.com --job-name argparse-oracle-final-20260828 -o .nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 31,
+    "passed": 31,
+    "reward": 1.0,
+    "result": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/oracle-final/argparse-oracle-final-20260828/result.json",
+    "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/oracle-final/argparse-oracle-final-20260828/argparse__VpxnNHe/verifier/grading.json",
+    "network_receipt": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/oracle-final/argparse-oracle-final-20260828/argparse__VpxnNHe/verifier/network.json"
+  },
+  "controls": {
+    "empty": { "command": "Harbor control empty on compiled argparse bundle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/empty/argparse-empty-20260828/argparse-empty__GJKd9Uk/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/empty/argparse-empty-20260828/argparse-empty__GJKd9Uk/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-empty.log" },
+    "stub": { "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled-final/argparse stub --output .nl2repo/controls-final/argparse-stub --toolchain toolchain.node.lock.toml && harbor run -p .nl2repo/controls-final/argparse-stub/argparse-stub -a oracle", "exit_code": 0, "valid": true, "collected": 31, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls-final/stub/argparse-stub-final-20260828/argparse-stub__2veXn3a/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls-final/stub/argparse-stub-final-20260828/argparse-stub__2veXn3a/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-stub-final.log" },
+    "forgery": { "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled-final/argparse forgery --output .nl2repo/controls-final/argparse-forgery --toolchain toolchain.node.lock.toml && harbor run -p .nl2repo/controls-final/argparse-forgery/argparse-forgery -a oracle", "exit_code": 0, "valid": true, "collected": 31, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls-final/forgery/argparse-forgery-final-20260828/argparse-forgery__YQHTjNT/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls-final/forgery/argparse-forgery-final-20260828/argparse-forgery__YQHTjNT/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-forgery-final.log" },
+    "install_script": { "command": "Harbor control install-script on compiled argparse bundle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/install-script/argparse-install-script-20260828/argparse-install-script__QpiYUs7/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/install-script/argparse-install-script-20260828/argparse-install-script__QpiYUs7/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-install-script.log" },
+    "loader_hook": { "command": "Harbor control loader-hook on compiled argparse bundle", "exit_code": 0, "valid": true, "collected": 31, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/loader-hook/argparse-loader-hook-20260828/argparse-loader-hook__DS9MNuM/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/loader-hook/argparse-loader-hook-20260828/argparse-loader-hook__DS9MNuM/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-loader-hook.log" },
+    "hang": { "command": "Harbor control hang on compiled argparse bundle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/hang/argparse-hang-20260828/argparse-hang__XCGy6vL/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/hang/argparse-hang-20260828/argparse-hang__XCGy6vL/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-hang.log" },
+    "offline": { "command": "Harbor control offline on compiled argparse bundle", "exit_code": 0, "valid": true, "public_network_available": false, "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/offline/argparse-offline-20260828/argparse-offline__nCKrQLZ/verifier/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/runs/controls/offline/argparse-offline-20260828/argparse-offline__nCKrQLZ/verifier/network.json", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/argparse/logs/control-offline.log" }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The six upstream FileType expected-throw failures remain provenance evidence; the scored contract excludes filesystem descriptor behavior.",
+    "Review, pilot, and publication remain integrator-stage gates."
+  ]
+}

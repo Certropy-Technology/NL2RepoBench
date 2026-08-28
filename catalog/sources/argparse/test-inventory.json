@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_path": "test/test_argparse.js",
+  "upstream_framework": "node:test",
+  "upstream_collected": 1830,
+  "upstream_passed": 1824,
+  "upstream_failed": 6,
+  "upstream_failure_names": [
+    "test_failures_no_groups_listargs",
+    "test_failures_no_groups_sysargs",
+    "test_failures_one_group_listargs",
+    "test_failures_one_group_sysargs",
+    "test_failures_many_groups_listargs",
+    "test_failures_many_groups_sysargs"
+  ],
+  "frozen_private_collection": 32,
+  "collection_method": "independent node:test contract over bounded JSON child adapter",
+  "notes": "The six upstream failures are retained as provenance evidence. The production denominator is an independently authored behavior contract, not a silent deletion from the upstream suite."
+}

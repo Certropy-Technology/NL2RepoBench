@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "package": "argparse",
+  "runtime_entry": "lib/argparse.js",
+  "declaration_entry": "lib/argparse.d.ts",
+  "public_exports": [
+    "ArgumentParser", "ArgumentError", "ArgumentTypeError",
+    "BooleanOptionalAction", "FileType", "HelpFormatter",
+    "ArgumentDefaultsHelpFormatter", "RawDescriptionHelpFormatter",
+    "RawTextHelpFormatter", "MetavarTypeHelpFormatter", "Namespace", "Action",
+    "ONE_OR_MORE", "OPTIONAL", "PARSER", "REMAINDER", "SUPPRESS", "ZERO_OR_MORE"
+  ],
+  "covered_modules": [
+    "lib/argparse.js", "lib/argparse.d.ts", "lib/_colorize.js",
+    "lib/difflib.js", "lib/sub.js", "lib/textwrap.js"
+  ],
+  "runtime_dependencies": [],
+  "excluded_risk_surfaces": [
+    "FileType filesystem descriptors", "process exit and stderr termination",
+    "external argument-file expansion", "custom callbacks and non-JSON values",
+    "locale, TTY, and stress-scale parsing"
+  ]
+}

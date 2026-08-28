@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "argparse"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "cli-parser"
+tags = ["node", "npm", "commonjs", "cli", "argument-parser", "python-port", "subprocess"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/nodeca/argparse"
+revision = "e9eb9de652dc3f101b7320ceb682c60f407e2af6"
+license_spdx = "PSF-2.0"
+source_digest = "sha256:de70bd9568e9eda8f5c8fd92684852cfa90ef490f52a451393c3675c586055c9"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases are network-isolated. The candidate has no runtime dependencies; only the trusted Oracle receives a run-scoped codeload.github.com authorization for the frozen revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:4434d109c04b59e6ad4510059d6ef306d7d1e0bd4d55bdba404e4c7b2f9af925", size_bytes = 388, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:4434d109c04b59e6ad4510059d6ef306d7d1e0bd4d55bdba404e4c7b2f9af925", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 31
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:150b54a87f2a14f15029ae0dad06e3783dd32434c62f7faf389c872026ad06b5", size_bytes = 4069, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:150b54a87f2a14f15029ae0dad06e3783dd32434c62f7faf389c872026ad06b5", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the argparse CommonJS Python-compatible CLI argument parser from an empty workspace."
+keywords = ["node", "npm", "commonjs", "cli", "argument-parser", "python-port", "subprocess"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c3"
+reason = "Frozen source, zero-dependency npm closure, separate verifier bundle, Oracle, and empty/stub/forgery/loader/install-script/hang/offline controls have passed. No model Agent Run was started in this authoring lane."
+
+[oracle_bundle]
+digest = "sha256:f1b6ef33cee9e1dd01dbebfabc7c4218688f3872e9ab1d8a2c3ec2d7f94918a3"
+size_bytes = 2632
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f1b6ef33cee9e1dd01dbebfabc7c4218688f3872e9ab1d8a2c3ec2d7f94918a3"
+visibility = "private"
