@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-discovery",
+  "source_revision": "0ef757b00a6f859529193eec31667f0ccc8b833b",
+  "upstream_test_files": 14,
+  "upstream_named_test_functions": 305,
+  "upstream_collected": 577,
+  "upstream_passed": 562,
+  "upstream_skipped": 15,
+  "frozen_total": 32,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_ids": ["exports", "isa-normalization", "version-value-semantics", "version-invalid", "version-equality-hash", "specifier-operators", "specifier-set", "specifier-malformed-items", "spec-parsing", "spec-versionifier", "spec-regex", "spec-satisfies", "python-info-properties", "python-info-roundtrip", "python-info-from-exe", "python-info-satisfies", "python-info-paths", "disk-cache", "disk-cache-corrupt", "disk-cache-key-lock", "noop-cache", "path-discovery", "path-executable-finder", "explicit-discovery", "specifier-discovery", "discovery-not-found", "discovery-fallback", "interpreter-iteration", "interpreter-predicate", "try-first-dedup", "relative-version-spec", "public-submodules"],
+  "coverage": {"version_and_specifier": 10, "metadata": 5, "cache": 4, "path_and_discovery": 11, "exports": 2},
+  "excluded_upstream_categories": ["Windows registry", "Windows-only filesystem behavior", "mock-only internal branches", "uv store layouts requiring mutable external installs"]
+}

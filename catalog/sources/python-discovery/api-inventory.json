@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-discovery",
+  "source_revision": "0ef757b00a6f859529193eec31667f0ccc8b833b",
+  "modules": ["_cache", "_cached_py_info", "_compat", "_discovery", "_py_info", "_py_info_collect", "_py_spec", "_specifier"],
+  "root_exports": ["KNOWN_ARCHITECTURES", "KNOWN_IMPLEMENTATIONS", "ContentStore", "DiskCache", "PyInfoCache", "PythonInfo", "PythonSpec", "SimpleSpecifier", "SimpleSpecifierSet", "SimpleVersion", "__version__", "get_interpreter", "iter_interpreters", "normalize_isa"],
+  "public_contract_groups": [
+    {"name": "version-models", "symbols": ["SimpleVersion", "SimpleSpecifier", "SimpleSpecifierSet"]},
+    {"name": "specification", "symbols": ["PythonSpec"]},
+    {"name": "interpreter-metadata", "symbols": ["PythonInfo", "VersionInfo", "normalize_isa"]},
+    {"name": "cache", "symbols": ["ContentStore", "DiskCache", "DiskContentStore", "NoOpCache", "NoOpContentStore", "PyInfoCache"]},
+    {"name": "discovery", "symbols": ["get_interpreter", "iter_interpreters", "propose_interpreters", "get_paths", "path_exe_finder"]}
+  ],
+  "excluded": ["Windows registry integration", "Windows-only proposal paths", "release tooling", "live package-manager or remote discovery"]
+}

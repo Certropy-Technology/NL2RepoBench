@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-discovery",
+  "source_revision": "0ef757b00a6f859529193eec31667f0ccc8b833b",
+  "frozen_total": 32,
+  "contract_groups": [
+    {
+      "public_contract": "Root exports and importable public submodules",
+      "leaf_ids": ["exports", "public-submodules"]
+    },
+    {
+      "public_contract": "Version parsing, ordering, specifiers, and PythonSpec matching",
+      "leaf_ids": ["isa-normalization", "version-value-semantics", "version-invalid", "version-equality-hash", "specifier-operators", "specifier-set", "specifier-malformed-items", "spec-parsing", "spec-versionifier", "spec-regex", "spec-satisfies", "relative-version-spec"]
+    },
+    {
+      "public_contract": "PythonInfo collection, serialization, properties, and matching",
+      "leaf_ids": ["python-info-properties", "python-info-roundtrip", "python-info-from-exe", "python-info-satisfies", "python-info-paths"]
+    },
+    {
+      "public_contract": "Disk and no-op cache behavior",
+      "leaf_ids": ["disk-cache", "disk-cache-corrupt", "disk-cache-key-lock", "noop-cache"]
+    },
+    {
+      "public_contract": "PATH, explicit executable, ordered fallback, predicate, and deduplicated discovery",
+      "leaf_ids": ["path-discovery", "path-executable-finder", "explicit-discovery", "specifier-discovery", "discovery-not-found", "discovery-fallback", "interpreter-iteration", "interpreter-predicate", "try-first-dedup"]
+    }
+  ],
+  "boundary": "The separate custom-json-v1 verifier invokes candidate code only through its child-side JSON adapter under the unprivileged candidate UID. The verifier owns collection, JUnit, grading, reward, and network reports.",
+  "excluded": [
+    "Windows registry and Windows-only discovery branches",
+    "Mutable uv installation layouts and remote package-manager discovery",
+    "Release tooling unrelated to runtime library behavior"
+  ]
+}

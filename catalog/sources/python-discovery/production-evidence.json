@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-discovery",
+  "terminal_kind": "valid",
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/python-discovery/compiled/python-discovery/bundle.manifest.json",
+    "sha256": "sha256:deb4b6828df85ad591ea5d2ff70f0e533574d262e2e55a5377d1933078ce4cc6"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-discovery/compiled/python-discovery -a oracle --job-name python-discovery-author-oracle-current -o .nl2repo/authoring-work/python-discovery/final-runs/oracle --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 32,
+    "passed": 32,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-discovery/final-runs/oracle/python-discovery-author-oracle-current/python-discovery__mCkiRd3/verifier/grading.json",
+      "sha256": "sha256:a4c29affb315e3106b8c6944808018e2dfb10abc7c4d1fccc1a0167deda57ebc"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-discovery/final-runs/oracle/python-discovery-author-oracle-current/python-discovery__mCkiRd3/verifier/network.json",
+      "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "Harbor nop run against the compiled task",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/empty/python-discovery-current-empty/python-discovery__PmQTC4p/verifier/grading.json", "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"},
+      "network": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/empty/python-discovery-current-empty/python-discovery__PmQTC4p/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false}
+    },
+    "stub": {
+      "command": "Harbor Oracle run of prepare-control stub bundle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/stub/python-discovery-current-stub/python-discovery-stub__d6GU5rn/verifier/grading.json", "sha256": "sha256:d7226599628908d391480c5c828984691b0e4847a02722a9938f19f7414f31e5"},
+      "network": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/stub/python-discovery-current-stub/python-discovery-stub__d6GU5rn/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "Harbor Oracle run of prepare-control forgery bundle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/forgery/python-discovery-current-forgery/python-discovery-forgery__HLyXer6/verifier/grading.json", "sha256": "sha256:a053300415321e8c507849c640502ff83bfa9a7721d3a6d03a48a18dd542efad"},
+      "network": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/forgery/python-discovery-current-forgery/python-discovery-forgery__HLyXer6/verifier/network.json", "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98", "public_network_available": false}
+    },
+    "offline": {
+      "command": "Official Oracle verifier network probe",
+      "exit_code": 0,
+      "completed": true,
+      "network": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/oracle/python-discovery-author-oracle-current/python-discovery__mCkiRd3/verifier/network.json", "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597", "public_network_available": false}
+    },
+    "install_hang": {
+      "command": "Harbor Oracle run of prepare-control install-hang bundle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/install-hang/python-discovery-current-install-hang/python-discovery-install-hang__PC6nih5/verifier/grading.json", "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"}
+    },
+    "call_hang": {
+      "command": "Harbor Oracle run of prepare-control call-hang bundle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/python-discovery/final-runs/controls/call-hang/python-discovery-current-call-hang/python-discovery-call-hang__tqo66VR/verifier/grading.json", "sha256": "sha256:d7226599628908d391480c5c828984691b0e4847a02722a9938f19f7414f31e5"}
+    }
+  }
+}
