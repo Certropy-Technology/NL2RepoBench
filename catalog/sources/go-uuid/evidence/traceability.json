@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-uuid",
+  "source_revision": "2d3c2a9cc518326daf99a383f07c4d3c44317e4d",
+  "package": "github.com/google/uuid",
+  "api_inventory": {
+    "artifact": ".nl2repo/authoring-work/go-uuid/api-inventory.json",
+    "method": "go doc -all plus manual review of uuid.go",
+    "public_surface_count": 52,
+    "selected_symbols": ["UUID", "Parse", "UUID.String"]
+  },
+  "upstream_test_inventory": {
+    "artifact": ".nl2repo/authoring-work/go-uuid/test-inventory.json",
+    "top_level_test_count": 46,
+    "full_source_run_collected": 202,
+    "full_source_run_failures": 0,
+    "excluded_behavior": [
+      "random generation",
+      "clock and node discovery",
+      "time-based generation",
+      "SQL integration",
+      "unsafe byte parsing",
+      "mutable global configuration",
+      "benchmarks and fuzz targets"
+    ]
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "instruction_section": "API Usage Guide",
+    "bridge_operations": ["parse"],
+    "assertion_classes": [
+      "canonical input",
+      "compact input",
+      "case-insensitive URN input",
+      "brace-delimited input",
+      "zero UUID formatting",
+      "invalid length",
+      "invalid hexadecimal digit",
+      "misplaced hyphen",
+      "invalid URN prefix",
+      "unmatched brace"
+    ]
+  },
+  "environment_adaptation": {
+    "upstream_go_mod_has_no_go_directive": true,
+    "required_packaging_change": "Add exact go 1.26.5 directive and empty go.sum in Oracle and candidate workspace.",
+    "module_closure": "Empty, private, hash-inventoried vendor bundle; no third-party modules."
+  }
+}

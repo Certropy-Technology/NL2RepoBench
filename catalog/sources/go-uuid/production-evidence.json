@@ -1,0 +1,139 @@
+{
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:13eef327dbfbe50b6bf6c3e111a9d16e77385846458fbbc5997025a153994e3d",
+      "size_bytes": 476
+    },
+    "oracle_bundle": {
+      "digest": "sha256:a3900cb4f9517d3d126230edf28d8a8dc27be2acfb782aaa242a4fc1560951fc",
+      "size_bytes": 739
+    },
+    "verifier_bundle": {
+      "digest": "sha256:e31d432c18d39b7c1b2f3d433b2204ab75bf1af8896bfe84639834cf417dcc0d",
+      "size_bytes": 595
+    }
+  },
+  "bundle": {
+    "files": 67,
+    "path": ".nl2repo/final-compile/go-uuid/go-uuid/bundle.manifest.json",
+    "sha256": "sha256:4db11126d5ca13c53f76d994abf8fb00b6b4c7df8754337c9dc94b1a799660a9"
+  },
+  "controls": {
+    "empty": {
+      "command": "harbor run -p .nl2repo/final-compile/go-uuid/go-uuid -a nop",
+      "counts_collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/go-uuid-gates/empty/go-uuid-empty/go-uuid__sti3mLs/verifier/grading.json",
+        "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-uuid-gates/empty/go-uuid-empty/go-uuid__sti3mLs/verifier/network.json",
+        "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "harbor run -p .nl2repo/controls/go-uuid/go-uuid-forgery -a oracle",
+      "counts_collected": 1,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/go-uuid-gates/forgery/go-uuid-forgery/go-uuid-forgery__soV2bMR/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-uuid-gates/forgery/go-uuid-forgery/go-uuid-forgery__soV2bMR/verifier/network.json",
+        "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597"
+      },
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "bounded": true,
+      "command": "harbor run -p .nl2repo/controls/go-uuid/go-uuid-hang -a oracle",
+      "counts_collected": 1,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/go-uuid-gates/hang/go-uuid-hang/go-uuid-hang__GvtFw8K/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-uuid-gates/hang/go-uuid-hang/go-uuid-hang__GvtFw8K/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "command": "harbor run -p .nl2repo/controls/go-uuid/go-uuid-stub -a oracle",
+      "counts_collected": 1,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/go-uuid-gates/stub/go-uuid-stub/go-uuid-stub__swBrrQC/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-uuid-gates/stub/go-uuid-stub/go-uuid-stub__swBrrQC/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      },
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "evidence_summary": {
+    "path": ".nl2repo/authoring-work/go-uuid/evidence/control-summary.json",
+    "sha256": "sha256:dc5ddd47cff7c6506ad0f0fad3a41113b094a936874aebe212c2cec6e20ebe44"
+  },
+  "offline_network": {
+    "note": "All executed verifier containers reported false for both probes.",
+    "probe": "1.1.1.1:443 and pypi.org:443",
+    "public_network_available": false,
+    "verified_in": [
+      "empty",
+      "stub",
+      "forgery",
+      "hang"
+    ]
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/go-uuid/go-uuid -a oracle --job-name go-uuid-oracle -o .nl2repo/runs/go-uuid-gates/oracle --n-concurrent 1 --yes",
+    "exit_code": 3,
+    "failure_class": "infrastructure",
+    "failure_reason": "trusted Oracle source fetch TLS handshake failed",
+    "frozen_total": 1,
+    "harbor_version": "0.21.0",
+    "log": {
+      "path": ".nl2repo/runs/go-uuid-gates/oracle/go-uuid-oracle/go-uuid__2gAcHmm/agent/oracle.txt",
+      "sha256": "sha256:04ed9fa16b932e34c592e0f87ed3bf86e8800fb68c44ad06238f4951aeb4f9b8"
+    },
+    "receipt": {
+      "path": ".nl2repo/runs/go-uuid-gates/oracle/go-uuid-oracle/result.json",
+      "sha256": "sha256:6786035f4f69e71aef30202a003b70fa166ac60dea58d47fb473a7b0c17eccd0"
+    },
+    "valid": null
+  },
+  "remediation": {
+    "class": "infrastructure",
+    "next_unblock_action": "Re-run Oracle in a network environment that can reach github.com with the run-scoped source-host authorization.",
+    "reason": "Trusted Oracle could not complete the exact-source fetch due TLS handshake termination; source freeze, compile, and local/verifier controls completed."
+  },
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "BSD-3-Clause",
+    "revision": "2d3c2a9cc518326daf99a383f07c4d3c44317e4d",
+    "source_digest": "sha256:e08c0dc34cb6ca21d5ebff08053403b8bf4e91efb97aa2eccf25f17d879bb217",
+    "upstream_url": "https://github.com/google/uuid"
+  },
+  "status": "packaged",
+  "task_id": "go-uuid",
+  "terminal_kind": "intermediate",
+  "test_inventory": {
+    "frozen_total": 1,
+    "path": ".nl2repo/authoring-work/go-uuid/test-inventory.json",
+    "sha256": "sha256:823e1720ced2e5ee577445b1a3d13f0ba552718cf2882000ca6f8f6c9c39caf7",
+    "source_full_suite_exit_code": 0
+  }
+}
