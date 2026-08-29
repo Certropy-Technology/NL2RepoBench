@@ -297,6 +297,34 @@ def test_controller_slots_count_unique_owner_not_uv_child_processes() -> None:
     assert supervisor._controller_slots(lane, procs) == {"slot-1", "slot-2"}
 
 
+def test_controller_counts_and_owners_do_not_collide_between_lanes() -> None:
+    base = supervisor.Lane(
+        "go", "go-author-wave2", Path("/queue-a"), Path("/plan-a"), Path("/state-a")
+    )
+    generated = supervisor.Lane(
+        "go", "go-author-discover-20260829", Path("/queue-b"), Path("/plan-b"), Path("/state-b")
+    )
+    procs = [
+        supervisor.Proc(
+            10,
+            "S",
+            "/repo",
+            "run_authoring_loop.py --queue-state /state-a --owner old-go-owner",
+        ),
+        supervisor.Proc(
+            11,
+            "S",
+            "/repo",
+            "run_authoring_loop.py --queue-state /state-b --owner new-go-owner",
+        ),
+    ]
+
+    assert supervisor._controller_counts([base, generated], procs) == {"go": 2}
+    assert supervisor._controller_owner(base, 0) != supervisor._controller_owner(
+        generated, 0
+    )
+
+
 def test_integrate_task_does_not_mutate_without_oss(tmp_path: Path) -> None:
     root = tmp_path / "repo"
     worktree = root / ".nl2repo/authoring-live/worktrees/batch/demo"

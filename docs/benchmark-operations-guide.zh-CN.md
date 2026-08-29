@@ -333,6 +333,8 @@ systemctl start nl2repobench-authoring-supervisor.service
 
 补充操作不会重置 exhausted record；新候选会进入独立 generated lane。Go package 名称必须
 在受控 pool 的 owner/repository 映射中登记，防止 discovery 接受浮动或模型生成的来源。
+Scheduler 按语言轮转，并以 `batch_id` 区分 base 与 generated lane；因此 Go 的新 lane
+不会被同语言耗尽的旧 lane 掩盖。
 
 `max-total-controllers` 的硬上限是 6，`controller-concurrency` 的硬上限是 4；默认值
 分别为 3 和 1。增加 controller 会在下一轮逐步启动新的 Loop；降低配置不会杀掉当前

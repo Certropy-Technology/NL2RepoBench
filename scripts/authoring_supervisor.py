@@ -85,6 +85,24 @@ class Lane:
     queue_state: Path
 
 
+def _lane_key(lane: Lane) -> str:
+    return lane.batch_id
+
+
+def _controller_counts(lanes: list[Lane], procs: list[Proc]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for lane in lanes:
+        counts[lane.language] = counts.get(lane.language, 0) + len(
+            _controller_slots(lane, procs)
+        )
+    return counts
+
+
+def _controller_owner(lane: Lane, slot: int) -> str:
+    batch = re.sub(r"[^A-Za-z0-9._-]+", "-", lane.batch_id).strip("-")
+    return f"supervisor-{lane.language}-{batch}-{slot + 1}"
+
+
 @dataclass(frozen=True)
 class Proc:
     pid: int
@@ -1441,10 +1459,7 @@ def supervise(args: argparse.Namespace) -> int:
                 "observed_at": datetime.now(UTC).isoformat(),
                 "free_bytes": free,
                 "lanes": [_queue_summary(lane) for lane in lanes],
-                "controllers": {
-                    lane.language: len(_controller_slots(lane, procs))
-                    for lane in lanes
-                },
+                "controllers": _controller_counts(lanes, procs),
                 "watcher_count": len(_watcher_processes(procs)),
                 "actions": [],
                 "errors": [],
@@ -1580,7 +1595,7 @@ def supervise(args: argparse.Namespace) -> int:
                 if archive_lock:
                     bucket = _oss_bucket()
                     candidates = {
-                        lane.language: [
+                        _lane_key(lane): [
                             record
                             for record in _lane_records(lane)
                             if record.get("status") == "complete"
@@ -1603,18 +1618,18 @@ def supervise(args: argparse.Namespace) -> int:
                         for lane in lanes
                         if selected_language in {"all", lane.language}
                     }
-                    offsets = {lane.language: 0 for lane in lanes}
+                    offsets = {_lane_key(lane): 0 for lane in lanes}
                     integration_attempts = 0
                     while integration_attempts < integration_limit:
                         progress = False
                         for lane in lanes:
                             if integration_attempts >= integration_limit:
                                 break
-                            records = candidates.get(lane.language, [])
-                            offset = offsets[lane.language]
+                            records = candidates.get(_lane_key(lane), [])
+                            offset = offsets[_lane_key(lane)]
                             if offset >= len(records):
                                 continue
-                            offsets[lane.language] += 1
+                            offsets[_lane_key(lane)] += 1
                             record = records[offset]
                             package = record["package"]
                             try:
@@ -1706,32 +1721,47 @@ def supervise(args: argparse.Namespace) -> int:
                 active_total = sum(
                     len(_controller_slots(lane, current)) for lane in lanes
                 )
-                lane_records = {
-                    lane.language: _lane_records(lane) for lane in lanes
-                }
+                lane_records = {_lane_key(lane): _lane_records(lane) for lane in lanes}
+                language_lanes: dict[str, list[Lane]] = {}
+                for lane in lanes:
+                    language_lanes.setdefault(lane.language, []).append(lane)
+                language_counts = _controller_counts(lanes, current)
                 for slot in range(min(args.workers, worker_limit)):
-                    for lane in lanes:
+                    for language in ("python", "node", "go"):
                         if active_total >= runtime["max_total_controllers"]:
                             break
-                        records = lane_records[lane.language]
-                        if not _lane_has_claimable_work(records, max_attempts=3):
+                        if language_counts.get(language, 0) > slot:
                             continue
-                        if len(_controller_slots(lane, current)) > slot:
+                        selected_lane: Lane | None = next(
+                            (
+                                candidate
+                                for candidate in language_lanes.get(language, [])
+                                if _lane_has_claimable_work(
+                                    lane_records[_lane_key(candidate)], max_attempts=3
+                                )
+                                and len(_controller_slots(candidate, current)) <= slot
+                            ),
+                            None,
+                        )
+                        if selected_lane is None:
                             continue
-                        owner = f"supervisor-{lane.language}-{slot + 1}"
+                        owner = _controller_owner(selected_lane, slot)
                         try:
                             pid = _start_controller(
                                 root,
-                                lane,
+                                selected_lane,
                                 live,
                                 owner,
                                 runtime_config_path,
                             )
                             active_total += 1
+                            language_counts[language] = (
+                                language_counts.get(language, 0) + 1
+                            )
                             report["actions"].append(
                                 {
                                     "status": "controller-started",
-                                    "language": lane.language,
+                                    "language": selected_lane.language,
                                     "pid": pid,
                                 }
                             )
@@ -1739,7 +1769,7 @@ def supervise(args: argparse.Namespace) -> int:
                             report["errors"].append(
                                 {
                                     "status": "controller-start-error",
-                                    "language": lane.language,
+                                    "language": selected_lane.language,
                                     "error": _redact(str(exc)),
                                 }
                             )
