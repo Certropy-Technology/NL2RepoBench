@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "requirements": [
+    {"id": "package", "instruction": "installable package, version, and public re-exports", "leaves": ["package.version"]},
+    {"id": "date", "instruction": "parse_date", "leaves": ["date.complete", "date.reduced", "date.week", "date.ordinal", "date.invalid"]},
+    {"id": "time", "instruction": "parse_time", "leaves": ["time.extended", "time.basic", "time.fraction", "time.comma", "time.offset", "time.reduced", "time.invalid"]},
+    {"id": "datetime", "instruction": "parse_datetime", "leaves": ["datetime.aware", "datetime.reduced", "datetime.invalid"]},
+    {"id": "duration", "instruction": "parse_duration, Duration, arithmetic, and endpoint conversion", "leaves": ["duration.timedelta", "duration.calendar", "duration.negative", "duration.arithmetic", "duration.totimedelta", "duration.date-add", "duration.multiply"]},
+    {"id": "formatting", "instruction": "ISO formatters and strftime", "leaves": ["format.date", "format.time", "format.datetime", "format.duration", "format.tz", "format.strftime"]},
+    {"id": "timezone", "instruction": "UTC, FixedOffset, parse_tzinfo, tzinfo protocol, pickle", "leaves": ["tz.utc", "tz.fixed", "tz.parse", "tz.protocol", "pickle.duration"]}
+  ],
+  "boundary": "Candidate code is installed in a candidate-owned site and each scenario runs as an unprivileged subprocess; verifier owns collection, JUnit, reward, and network receipt."
+}

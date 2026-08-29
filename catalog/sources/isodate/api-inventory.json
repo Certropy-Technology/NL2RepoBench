@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "frozen_revision": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+  "source_archive_sha256": "sha256:50b897e1c615278d8f9add946f74635564c500d01503793a0663f615eedf8622",
+  "public_modules": [
+    "isodate",
+    "isodate.duration",
+    "isodate.isodates",
+    "isodate.isodatetime",
+    "isodate.isoduration",
+    "isodate.isoerror",
+    "isodate.isostrf",
+    "isodate.isotime",
+    "isodate.isotzinfo",
+    "isodate.tzinfo"
+  ],
+  "package_exports": [
+    "parse_date", "date_isoformat", "parse_time", "time_isoformat",
+    "parse_datetime", "datetime_isoformat", "parse_duration",
+    "duration_isoformat", "ISO8601Error", "parse_tzinfo", "tz_isoformat",
+    "UTC", "FixedOffset", "LOCAL", "Duration", "strftime", "__version__",
+    "DATE_BAS_COMPLETE", "DATE_BAS_ORD_COMPLETE", "DATE_BAS_WEEK",
+    "DATE_BAS_WEEK_COMPLETE", "DATE_CENTURY", "DATE_EXT_COMPLETE",
+    "DATE_EXT_ORD_COMPLETE", "DATE_EXT_WEEK", "DATE_EXT_WEEK_COMPLETE",
+    "DATE_YEAR", "DATE_BAS_MONTH", "DATE_EXT_MONTH", "TIME_BAS_COMPLETE",
+    "TIME_BAS_MINUTE", "TIME_EXT_COMPLETE", "TIME_EXT_MINUTE", "TIME_HOUR",
+    "TZ_BAS", "TZ_EXT", "TZ_HOUR", "DT_BAS_COMPLETE", "DT_EXT_COMPLETE",
+    "DT_BAS_ORD_COMPLETE", "DT_EXT_ORD_COMPLETE", "DT_BAS_WEEK_COMPLETE",
+    "DT_EXT_WEEK_COMPLETE", "D_DEFAULT", "D_WEEK", "D_ALT_EXT",
+    "D_ALT_BAS", "D_ALT_BAS_ORD", "D_ALT_EXT_ORD"
+  ],
+  "signatures": {
+    "parse_date": "(datestring: str, yeardigits: int = 4, expanded: bool = False, defaultmonth: int = 1, defaultday: int = 1) -> datetime.date",
+    "date_isoformat": "(tdate, format: str = DATE_EXT_COMPLETE, yeardigits: int = 4) -> str",
+    "parse_time": "(timestring: str) -> datetime.time",
+    "time_isoformat": "(ttime, format: str = TIME_EXT_COMPLETE + TZ_EXT) -> str",
+    "parse_datetime": "(datetimestring: str) -> datetime.datetime",
+    "datetime_isoformat": "(tdt, format: str = DT_EXT_COMPLETE) -> str",
+    "parse_duration": "(datestring: str, as_timedelta_if_possible: bool = True) -> datetime.timedelta | Duration",
+    "duration_isoformat": "(tduration, format: str = D_DEFAULT) -> str",
+    "parse_tzinfo": "(tzstring: str) -> datetime.tzinfo | None",
+    "tz_isoformat": "(dt: datetime.datetime, format: str = TZ_EXT) -> str",
+    "strftime": "(tdt, format: str, yeardigits: int = 4) -> str",
+    "Duration": "(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0, months=0, years=0)",
+    "Duration.totimedelta": "(start: date | datetime | None = None, end: date | datetime | None = None) -> timedelta",
+    "FixedOffset": "(offset_hours: float = 0, offset_minutes: float = 0, name: str = 'UTC')"
+  },
+  "risk_adaptations": [
+    "calendar years and months remain Duration values until resolved against a date endpoint",
+    "timezone and duration objects are exercised entirely inside unprivileged child scenarios",
+    "setuptools-scm version.py is recreated only after the Oracle verifies the immutable archive"
+  ]
+}

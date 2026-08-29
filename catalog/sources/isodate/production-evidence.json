@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/gweis/isodate",
+    "revision": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:ce5fe4893fb6ab843de77b367bfa9db974d7b00ab9033fcca8d7760a97fe1b43",
+    "source_archive_sha256": "sha256:50b897e1c615278d8f9add946f74635564c500d01503793a0663f615eedf8622",
+    "archive_verification": "The trusted Oracle created git archive bytes for the exact revision and verified this digest before installation; the ephemeral archive is not retained outside the Oracle container."
+  },
+  "environment": {
+    "python_version": "3.12.14",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "agent_image_id": "sha256:4fa04b48a399a96258e1017fddf1b5e64317e1ff95054dfd6fd1859d4239e7e3",
+    "verifier_image_id": "sha256:8ad61a0b7401a0386b487ca734f1284f77ab64bb3f110cd2c2fc3331dad638be",
+    "network_policy": "no-network"
+  },
+  "dependency_lock": {
+    "installer": "pip",
+    "packages": ["packaging==26.3", "setuptools==80.9.0", "setuptools-scm==9.2.0"],
+    "vendor_wheels": false,
+    "artifact": {
+      "digest": "sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08",
+      "size_bytes": 1124,
+      "uri": "artifact://private/sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08"
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/compiled-current/isodate/bundle.manifest.json",
+    "sha256": "sha256:00cfa4544ec05b8f88dd702e3dd60a07d6217693b01310da60af0a091454d5e0",
+    "canonical_manifest_digest": "sha256:8f8110eafe6bd3113306b3dcb89bd1610bede288db325f4e76f01232150960a",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "mode": "production",
+    "file_count": 59,
+    "integrity_errors": 0
+  },
+  "upstream_baseline": {
+    "python_version": "3.12.11",
+    "pytest_version": "8.4.2",
+    "collected": 280,
+    "passed": 280,
+    "exit_code": 0,
+    "collection_log": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/upstream-collect.log",
+    "test_log": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/upstream-test.log"
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "expected_total": 34,
+    "bundle": {
+      "digest": "sha256:5e2dae6d7e23548fd7e4b64edab32add934b49a1b8b6c919b5872cc6d857b506",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:5e2dae6d7e23548fd7e4b64edab32add934b49a1b8b6c919b5872cc6d857b506"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/isodate/compiled-current/isodate -a oracle --allow-agent-host github.com --job-name isodate-oracle-20260829-current -o .nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 34,
+    "collected": 34,
+    "expected_total": 34,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/oracle/isodate-oracle-20260829-current/isodate__DXdgEqh/verifier/grading.json",
+      "sha256": "sha256:733a16dbb632748e38c4d2a6630ccb62a2b88b41f9887c23ba0f121f264f1ed6"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/oracle/isodate-oracle-20260829-current/isodate__DXdgEqh/verifier/network.json",
+      "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98",
+      "public_network_available": false
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/oracle/isodate-oracle-20260829-current/isodate__DXdgEqh/verifier/candidate-install.json",
+      "sha256": "sha256:c0a82861adc27c5a83a462db6665b54ba013bb8bb7655164849f6ee3ad9ecf15",
+      "outcome": "success"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/isodate/compiled-current/isodate -a nop --job-name isodate-empty-20260829-current -o .nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/empty/isodate-empty-20260829-current/isodate__EeQqiSE/verifier/grading.json", "sha256": "sha256:29007a496958c223dc9b372d4af94e87cec10eb3c49c352f103862f9c37efa81"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/empty/isodate-empty-20260829-current/isodate__EeQqiSE/verifier/network.json", "sha256": "sha256:4b9b7ac9a67ca68e1e20ef22dddf837e30a7afad62a4aa7baf8486046ef88b71", "public_network_available": false},
+      "candidate_install": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/empty/isodate-empty-20260829-current/isodate__EeQqiSE/verifier/candidate-install.json", "sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7", "outcome": "candidate-failure"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/isodate/controls-current/isodate-stub -a oracle --job-name isodate-stub-20260829-current -o .nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "collected": 34,
+      "expected_total": 34,
+      "reward": 0.029411764705882353,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/stub/isodate-stub-20260829-current/isodate-stub__8xF6FME/verifier/grading.json", "sha256": "sha256:07c8083759859756c14a22d602c365a226598b7db3b773b2a6c06f8f91972bdb"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/stub/isodate-stub-20260829-current/isodate-stub__8xF6FME/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809", "public_network_available": false},
+      "candidate_install": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/stub/isodate-stub-20260829-current/isodate-stub__8xF6FME/verifier/candidate-install.json", "sha256": "sha256:89e06430afa2d93d37be0b28e904aee25daafb1d758112ca9cae4e5cb161b058", "outcome": "success"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/isodate/controls-current/isodate-forgery -a oracle --job-name isodate-forgery-20260829-current -o .nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "collected": 34,
+      "expected_total": 34,
+      "reward": 0.029411764705882353,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/forgery/isodate-forgery-20260829-current/isodate-forgery__AZHqQeV/verifier/grading.json", "sha256": "sha256:07c8083759859756c14a22d602c365a226598b7db3b773b2a6c06f8f91972bdb"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/forgery/isodate-forgery-20260829-current/isodate-forgery__AZHqQeV/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809", "public_network_available": false},
+      "candidate_install": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/forgery/isodate-forgery-20260829-current/isodate-forgery__AZHqQeV/verifier/candidate-install.json", "sha256": "sha256:6f423ae0eeea0a7d5a16d1d29055de72d128bac5abcb341055106519b395a07e", "outcome": "success"}
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/isodate/compiled-current/isodate -a oracle --job-name isodate-install-hang-20260829-current -o .nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/install-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/install-hang/isodate-install-hang-20260829-current/isodate__8pDcjC6/verifier/grading.json", "sha256": "sha256:29007a496958c223dc9b372d4af94e87cec10eb3c49c352f103862f9c37efa81"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/install-hang/isodate-install-hang-20260829-current/isodate__8pDcjC6/verifier/network.json", "sha256": "sha256:b70032f031117c8f296d1338d3be5b735e52f73b6d1d7751cea7601609119f2b", "public_network_available": false},
+      "candidate_install": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/install-hang/isodate-install-hang-20260829-current/isodate__8pDcjC6/verifier/candidate-install.json", "sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7", "outcome": "candidate-failure"}
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/isodate/compiled-current/isodate -a oracle --job-name isodate-call-hang-20260829-current -o .nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/call-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/call-hang/isodate-call-hang-20260829-current/isodate__kuozJ2D/verifier/grading.json", "sha256": "sha256:29007a496958c223dc9b372d4af94e87cec10eb3c49c352f103862f9c37efa81"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/call-hang/isodate-call-hang-20260829-current/isodate__kuozJ2D/verifier/network.json", "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597", "public_network_available": false},
+      "candidate_install": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/call-hang/isodate-call-hang-20260829-current/isodate__kuozJ2D/verifier/candidate-install.json", "sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7", "outcome": "candidate-failure"}
+    },
+    "offline": {
+      "command": "All current Harbor verifier runs execute with the no-network verifier baseline.",
+      "exit_code": 0,
+      "valid": true,
+      "public_network_available": false,
+      "network_receipts": [
+        ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/oracle/isodate-oracle-20260829-current/isodate__DXdgEqh/verifier/network.json",
+        ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/empty/isodate-empty-20260829-current/isodate__EeQqiSE/verifier/network.json",
+        ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/stub/isodate-stub-20260829-current/isodate-stub__8xF6FME/verifier/network.json",
+        ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/forgery/isodate-forgery-20260829-current/isodate-forgery__AZHqQeV/verifier/network.json",
+        ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/install-hang/isodate-install-hang-20260829-current/isodate__8pDcjC6/verifier/network.json",
+        ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/runs-current/call-hang/isodate-call-hang-20260829-current/isodate__kuozJ2D/verifier/network.json"
+      ]
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started by this authoring lane.",
+    "The 34-leaf custom-json-v1 facade is a deterministic child-side slice of the 280-case upstream pytest suite; it does not claim full upstream test parity.",
+    "Integrator review, pilot, dataset inclusion, and publication remain pending."
+  ]
+}

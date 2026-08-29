@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "upstream_revision": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+  "upstream_tests": [
+    "tests/test_date.py",
+    "tests/test_datetime.py",
+    "tests/test_duration.py",
+    "tests/test_pickle.py",
+    "tests/test_strf.py",
+    "tests/test_time.py"
+  ],
+  "upstream_test_functions": 28,
+  "upstream_collection": {
+    "python": "3.12.11",
+    "pytest": "8.4.2",
+    "collected": 280,
+    "passed": 280,
+    "exit_code": 0,
+    "collection_log": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/upstream-collect.log",
+    "test_log": ".nl2repo/authoring-work/python-author-wave2-20260828/isodate/upstream-test.log"
+  },
+  "frozen_harbor_collection": {
+    "framework": "custom-json-v1",
+    "total": 34,
+    "source": "task-local deterministic child-side scenarios adapted from the frozen public behavior"
+  }
+}
