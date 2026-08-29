@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pycparser",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/eliben/pycparser",
+    "revision": "10d17757e282d8af5426d6df4d55eb394042b550",
+    "license_spdx": "BSD-3-Clause",
+    "archive_sha256": "sha256:ed31469eea243e25ce86310039c174a61890d2acc7586cd06f8be38cf1baf5a1",
+    "archive_size_bytes": 1331200,
+    "source_authority": "known"
+  },
+  "environment": {
+    "python_version": "3.12.14",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "agent_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "harbor_version": "0.21.0",
+    "network_policy": "no-network",
+    "public_network_available": false
+  },
+  "dependency_lock": {
+    "path": ".nl2repo/artifacts/private/sha256/53/53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+    "sha256": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+    "size_bytes": 373,
+    "packages": ["setuptools==80.9.0", "wheel==0.45.1"]
+  },
+  "bundle": {
+    "path": ".nl2repo/final-compile/pycparser-v2/pycparser/bundle.manifest.json",
+    "sha256": "sha256:087c9c59006142f3a3967ba11e650ac21d0658d950284936e6066932cc6ded3e",
+    "size_bytes": 11145,
+    "canonical_manifest_digest": "sha256:b25f9afde530ef37ffb1f8f3994173df86e527db20a51fb7e8e177f8c643cd66",
+    "file_count": 59,
+    "mode": "production",
+    "repeat_compile": {
+      "path": ".nl2repo/final-compile/pycparser-v2-repeat/pycparser/bundle.manifest.json",
+      "sha256": "sha256:087c9c59006142f3a3967ba11e650ac21d0658d950284936e6066932cc6ded3e",
+      "result": "byte-identical"
+    }
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "frozen_total": 38,
+    "collected": 38,
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "source_collection": {
+      "upstream_command": "python -m unittest discover -v",
+      "collected": 136,
+      "passed": 136,
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/pycparser/upstream-unittest.log"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pycparser-v2/pycparser -a oracle --job-name pycparser-oracle-v2-authoring-20260830 -o .nl2repo/runs/pycparser-oracle-v2-authoring-20260830 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 38,
+    "passed": 38,
+    "failed": 0,
+    "errors": 0,
+    "reward": 1.0,
+    "trial": ".nl2repo/runs/pycparser-oracle-v2-authoring-20260830/pycparser-oracle-v2-authoring-20260830/pycparser__zgEEDZb",
+    "grading": {
+      "path": ".nl2repo/runs/pycparser-oracle-v2-authoring-20260830/pycparser-oracle-v2-authoring-20260830/pycparser__zgEEDZb/verifier/grading.json",
+      "sha256": "sha256:660b56c94b1a7b2b0a308767d17aa19c94b8cffb82b14383707a436ffbbfc86d",
+      "size_bytes": 1011
+    },
+    "network": {
+      "path": ".nl2repo/runs/pycparser-oracle-v2-authoring-20260830/pycparser-oracle-v2-authoring-20260830/pycparser__zgEEDZb/verifier/network.json",
+      "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e",
+      "size_bytes": 342,
+      "public_network_available": false,
+      "probes": {"pypi.org:443": false, "1.1.1.1:443": false}
+    },
+    "collection": {
+      "path": ".nl2repo/runs/pycparser-oracle-v2-authoring-20260830/pycparser-oracle-v2-authoring-20260830/pycparser__zgEEDZb/verifier/collection.json",
+      "sha256": "sha256:fc3bdae80c192e6a5082b8a2e5ff00b9f61911f623fa4a73a9120689fdff26bf",
+      "size_bytes": 798
+    },
+    "junit": {
+      "path": ".nl2repo/runs/pycparser-oracle-v2-authoring-20260830/pycparser-oracle-v2-authoring-20260830/pycparser__zgEEDZb/verifier/junit.xml",
+      "sha256": "sha256:41a01ca2d6c3cf2240f5fd554d03cc4a08438d9f5c6ab7f43ec4ad8cf8922b3b",
+      "size_bytes": 2189
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pycparser-v2/empty/pycparser-empty -a oracle --job-name pycparser-empty-v2-authoring-20260830 -o .nl2repo/runs/pycparser-empty-v2-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "collected": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pycparser-empty-v2-authoring-20260830/pycparser-empty-v2-authoring-20260830/pycparser-empty__hMwyUJe/verifier/grading.json",
+        "sha256": "sha256:3ce8dbb7ff32816348442ba1064dad194a23486bc051145c92927c37c25fa86b",
+        "size_bytes": 294
+      },
+      "network": {
+        "path": ".nl2repo/runs/pycparser-empty-v2-authoring-20260830/pycparser-empty-v2-authoring-20260830/pycparser-empty__hMwyUJe/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+        "size_bytes": 342,
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pycparser-v2/stub/pycparser-stub -a oracle --job-name pycparser-stub-v2-authoring-20260830 -o .nl2repo/runs/pycparser-stub-v2-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.02631578947368421,
+      "collected": 38,
+      "passed": 1,
+      "grading": {
+        "path": ".nl2repo/runs/pycparser-stub-v2-authoring-20260830/pycparser-stub-v2-authoring-20260830/pycparser-stub__fZLAhSh/verifier/grading.json",
+        "sha256": "sha256:f99008df123a9d01df861216ac36a122bc2cd621e83b1cc1ee46ad3b472c3087",
+        "size_bytes": 1027
+      },
+      "network": {
+        "path": ".nl2repo/runs/pycparser-stub-v2-authoring-20260830/pycparser-stub-v2-authoring-20260830/pycparser-stub__fZLAhSh/verifier/network.json",
+        "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e",
+        "size_bytes": 342,
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pycparser-v2/forgery/pycparser-forgery -a oracle --job-name pycparser-forgery-v2-authoring-20260830 -o .nl2repo/runs/pycparser-forgery-v2-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.05263157894736842,
+      "collected": 38,
+      "passed": 2,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/pycparser-forgery-v2-authoring-20260830/pycparser-forgery-v2-authoring-20260830/pycparser-forgery__CS7eBQb/verifier/grading.json",
+        "sha256": "sha256:b33177a36dab04fbc3ea5f62c130810b8070b459e7366f13fc5fea24c8463dde",
+        "size_bytes": 1027
+      },
+      "network": {
+        "path": ".nl2repo/runs/pycparser-forgery-v2-authoring-20260830/pycparser-forgery-v2-authoring-20260830/pycparser-forgery__CS7eBQb/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+        "size_bytes": 342,
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pycparser-v2/pycparser -a oracle --job-name pycparser-offline-v2-authoring-20260830 -o .nl2repo/runs/pycparser-offline-v2-authoring-20260830 --n-concurrent 1 --allow-agent-host github.com --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "reward": 1.0,
+      "collected": 38,
+      "passed": 38,
+      "grading": {
+        "path": ".nl2repo/runs/pycparser-offline-v2-authoring-20260830/pycparser-offline-v2-authoring-20260830/pycparser__zqSbkSt/verifier/grading.json",
+        "sha256": "sha256:660b56c94b1a7b2b0a308767d17aa19c94b8cffb82b14383707a436ffbbfc86d",
+        "size_bytes": 1011
+      },
+      "network": {
+        "path": ".nl2repo/runs/pycparser-offline-v2-authoring-20260830/pycparser-offline-v2-authoring-20260830/pycparser__zqSbkSt/verifier/network.json",
+        "sha256": "sha256:f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8",
+        "size_bytes": 342,
+        "public_network_available": false,
+        "probes": {"pypi.org:443": false, "1.1.1.1:443": false}
+      }
+    }
+  },
+  "additional_controls": {
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pycparser-v2/install-hang/pycparser-install-hang -a oracle --job-name pycparser-install-hang-v2-authoring-20260830 -o .nl2repo/runs/pycparser-install-hang-v2-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/pycparser-install-hang-v2-authoring-20260830/pycparser-install-hang-v2-authoring-20260830/pycparser-install-hang__MTEk3X9/verifier/grading.json",
+        "sha256": "sha256:3ce8dbb7ff32816348442ba1064dad194a23486bc051145c92927c37c25fa86b",
+        "size_bytes": 294
+      },
+      "network": {
+        "path": ".nl2repo/runs/pycparser-install-hang-v2-authoring-20260830/pycparser-install-hang-v2-authoring-20260830/pycparser-install-hang__MTEk3X9/verifier/network.json",
+        "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9",
+        "size_bytes": 342,
+        "public_network_available": false
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pycparser-v2/call-hang/pycparser-call-hang -a oracle --job-name pycparser-call-hang-v2-authoring-20260830 -o .nl2repo/runs/pycparser-call-hang-v2-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.02631578947368421,
+      "collected": 38,
+      "passed": 1,
+      "grading": {
+        "path": ".nl2repo/runs/pycparser-call-hang-v2-authoring-20260830/pycparser-call-hang-v2-authoring-20260830/pycparser-call-hang__S5VwPsp/verifier/grading.json",
+        "sha256": "sha256:f99008df123a9d01df861216ac36a122bc2cd621e83b1cc1ee46ad3b472c3087",
+        "size_bytes": 1027
+      },
+      "network": {
+        "path": ".nl2repo/runs/pycparser-call-hang-v2-authoring-20260830/pycparser-call-hang-v2-authoring-20260830/pycparser-call-hang__S5VwPsp/verifier/network.json",
+        "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3",
+        "size_bytes": 342,
+        "public_network_available": false
+      }
+    }
+  },
+  "risks": [
+    "No Harbor model Agent Run was started in this authoring lane; downstream model run remains pending.",
+    "The Python compiler and CLI contain a minimal generic empty-control addition in this worktree for integrator review.",
+    "The upstream source archive and Oracle fetch are protected by the fixed revision and digest; the model Agent policy remains no-network with no static allowed hosts."
+  ],
+  "blocker": null
+}

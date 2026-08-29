@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pycparser",
+  "contract_to_leaves": {
+    "package-and-files": ["package_metadata", "root_exports", "version_alias"],
+    "ast-node-model": ["node_repr", "node_children", "node_show", "visitor_preorder", "coord_format", "weakref_support"],
+    "lexer": ["lexer_tokens", "lexer_typedef", "lexer_coordinates", "lexer_callbacks", "lexer_errors"],
+    "parser": ["parse_decl", "parse_function", "parse_typedef_scope", "parse_struct_enum", "parse_error", "parse_coordinates", "parse_c11", "parse_literals", "parser_reset", "parser_constructor_options"],
+    "generator": ["generate_decl", "generate_function", "generate_expression", "generate_control", "generate_aggregate", "generate_parentheses", "generator_visitor"],
+    "transforms": ["switch_transform", "atomic_transform"],
+    "file-api": ["parse_file", "parse_file_custom_parser", "preprocess_file", "parse_file_cpp"],
+    "metadata-and-boundary": ["submodule_exports", "local_no_network_contract", "source_only_build"]
+  },
+  "private_tests_are_behavior_projections": true,
+  "upstream_to_public": "test_c_ast/test_c_generator/test_c_lexer/test_c_parser/test_general behavior is represented by explicit JSON scenarios; no upstream test source or assertion text is included"
+}

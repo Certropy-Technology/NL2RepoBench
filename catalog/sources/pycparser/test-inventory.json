@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pycparser",
+  "upstream_framework": "unittest",
+  "upstream_collection": 136,
+  "upstream_test_files": ["test_c_ast.py", "test_c_generator.py", "test_c_lexer.py", "test_c_parser.py", "test_examples.py", "test_general.py", "test_util.py"],
+  "scored_collection": 38,
+  "scored_collection_source": "task-local custom-json-v1 deterministic scenario collection",
+  "layers": ["packaging", "exports", "ast", "visitor", "lexer", "parser", "generator", "transforms", "file-api", "error-contract"],
+  "excluded_upstream_behavior": ["development-only test2ref helper", "external compiler semantics beyond the local cpp probe", "benchmark timing"],
+  "baseline": {"command": "python -m unittest discover -v", "collected": 136, "passed": 136, "failed": 0, "exit_code": 0, "log": ".nl2repo/authoring-work/pycparser/upstream-unittest.log"}
+}

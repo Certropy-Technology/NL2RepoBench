@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pycparser",
+  "source_revision": "10d17757e282d8af5426d6df4d55eb394042b550",
+  "modules": {
+    "pycparser": ["CParser", "preprocess_file", "parse_file", "__version__"],
+    "pycparser.c_ast": ["Node", "NodeVisitor", "Coord", "ArrayDecl", "ArrayRef", "Assignment", "BinaryOp", "Constant", "Decl", "FileAST", "FuncCall", "FuncDecl", "FuncDef", "ID", "IdentifierType", "Return", "Compound", "Struct", "Typedef", "TypeDecl", "UnaryOp", "If", "For", "While", "DoWhile", "Switch", "Case", "Default", "Enum", "Enumerator", "EnumeratorList", "Union", "PtrDecl", "Typename", "Cast", "ExprList", "InitList", "Label", "Goto", "Break", "Continue", "EmptyStatement", "EllipsisParam", "Pragma", "NamedInitializer", "CompoundLiteral", "DeclList", "ParamList", "StaticAssert", "Alignas", "StructRef"],
+    "pycparser.c_lexer": ["Token", "CLexer"],
+    "pycparser.c_parser": ["Coord", "ParseError", "CParser"],
+    "pycparser.c_generator": ["CGenerator"],
+    "pycparser.ast_transforms": ["fix_switch_cases", "fix_atomic_specifiers"]
+  },
+  "boundary": "candidate code is imported only in UID-separated subprocesses; verifier compares JSON projections, text, exception identities, and explicit AST fields"
+}
