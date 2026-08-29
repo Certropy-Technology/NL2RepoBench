@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-retry",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/sindresorhus/p-retry",
+    "revision": "35681f6c70f8ca2bdcb9542281147679184269fa",
+    "tree": "9a124371b1b66a47c79badb8e65d67416271173a",
+    "archive_sha256": "sha256:3eabac5b48586a9a65714ad4cc4685a03705e3adcf3ee57d7ce9dabf5beb8278",
+    "archive_size_bytes": 81920,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "status": "known"
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "libc": "glibc 2.36",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_expected_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "agent_runtime_local_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "verifier_image_id": "sha256:19d4c2f73099bbf9918f31b35332ae57502ad70872cd2a1ac54a4f6794b9ce9c",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden for agent and verifier; github.com is authorized only for the trusted Oracle run",
+      "verifier_network": "none"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["is-network-error==1.3.2"],
+    "lock_sha256": "sha256:e20de62fe1faadd85bd26d0ca715c0defe8ad3cb737d606ae7e4c48729ba9343",
+    "artifact": {
+      "uri": "artifact://private/sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38",
+      "digest": "sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38",
+      "size_bytes": 40960
+    },
+    "offline_probe": {
+      "command": "npm ci --offline --ignore-scripts --no-audit --no-fund; import is-network-error",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/runtime-offline-probe-final.log"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "frozen_total": 46,
+    "collection_source": "private command-plan.json and contract.test.mjs",
+    "upstream_baseline": [
+      {"run": 1, "command": "npm test", "passed": 70, "failed": 0, "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/baseline-test-rw-1.log"},
+      {"run": 2, "command": "npm test", "passed": 70, "failed": 0, "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/baseline-test-rw-2.log"},
+      {"run": 3, "command": "npm test", "passed": 70, "failed": 0, "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/baseline-test-rw-3.log"}
+    ]
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-compile/p-retry/p-retry",
+    "mode": "production",
+    "schema_version": "2.0",
+    "file_count": 84,
+    "bundle_manifest_sha256": "sha256:d1813474f50fcc5f724a9776909255c09e4c32f6e2b59df4720dcd1e88ecad19",
+    "canonical_manifest_digest": "sha256:0dbc04d841b485b7ccd889ee33f38d4b3ed6a89765ffa77c93c01974a13395f9",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/p-retry/compiled/p-retry -a oracle --allow-agent-host github.com --job-name p-retry-oracle-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/oracle/p-retry-oracle-20260829/p-retry__XxAsjma/verifier/grading.json", "sha256": "sha256:fa51208196cb7f336044c0cd587ca892b96cea36d9a752e19598b5c4ed59931f"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/oracle/p-retry-oracle-20260829/p-retry__XxAsjma/verifier/network.json", "sha256": "sha256:d81cc0b10cce4c38e3393dd72828362f743100f481588feacb3457e63f978b40"},
+    "result": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/oracle/p-retry-oracle-20260829/result.json", "sha256": "sha256:5c65d02fa605567550627f30eb9b702a710dfcc51bef6742ab330844b07f287c"},
+    "valid": true,
+    "expected_total": 46,
+    "collected": 46,
+    "passed": 46,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {"command": "Harbor empty control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/empty/grading.json", "sha256": "sha256:e25da393391d1c12fd124df3db615924485ff3a6958daa19600c903720fa566b"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/empty/network.json", "sha256": "sha256:eac57a17046453a2076b2cfcdeb95e2c916d97634afd4160ba74df2130421f12"}, "valid": true, "reward": 0.0, "collected": 0, "passed": 0, "failure_reason": "candidate-installation-failed", "failure_class": "model"},
+    "stub": {"command": "Harbor stub control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/stub/p-retry-stub-20260829/p-retry-stub__cuL53yg/verifier/grading.json", "sha256": "sha256:ff42807f9335a66ff2c2bff28d5eed993a83fe2c2278b75f4295cc6a85c7645a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/stub/p-retry-stub-20260829/p-retry-stub__cuL53yg/verifier/network.json", "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"}, "valid": true, "reward": 0.10869565217391304, "collected": 46, "passed": 5, "failed": 41},
+    "forgery": {"command": "Harbor forgery control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/forgery-final/p-retry-forgery-final-20260829/p-retry-forgery__XCbogqs/verifier/grading.json", "sha256": "sha256:ff42807f9335a66ff2c2bff28d5eed993a83fe2c2278b75f4295cc6a85c7645a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/harbor/forgery-final/p-retry-forgery-final-20260829/p-retry-forgery__XCbogqs/verifier/network.json", "sha256": "sha256:a9854dd260e8a68a80dec5429a9d98fd647d5a6e16eeeb2d74d3e47ded54f84b"}, "valid": true, "reward": 0.10869565217391304, "collected": 46, "passed": 5, "failed": 41, "verifier_owned_reward": true},
+    "install-script": {"command": "Harbor install-script control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/install-script/grading.json", "sha256": "sha256:e25da393391d1c12fd124df3db615924485ff3a6958daa19600c903720fa566b"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/install-script/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"}, "valid": true, "reward": 0.0, "collected": 0, "passed": 0, "failure_reason": "candidate-installation-failed", "failure_class": "model"},
+    "loader-hook": {"command": "Harbor loader-hook control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/loader-hook/grading.json", "sha256": "sha256:ff42807f9335a66ff2c2bff28d5eed993a83fe2c2278b75f4295cc6a85c7645a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/loader-hook/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}, "valid": true, "reward": 0.10869565217391304, "collected": 46, "passed": 5, "failed": 41},
+    "timeout": {"command": "Harbor timeout control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/timeout/grading.json", "sha256": "sha256:f54f8ab9bdecd642a3dc47de53f7cd8fc7c9b4a63a1851e70fb7cf853e1d2b54"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/timeout/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"}, "valid": true, "reward": 0.06521739130434782, "collected": 46, "passed": 3, "failed": 43},
+    "offline": {"command": "Harbor offline control on the compiled p-retry bundle", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/offline/grading.json", "sha256": "sha256:1c5ba15b3b9c38a2683270bb25438b122a5af385064752f9be19a4798f32b8a1"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/control-logs/offline/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"}, "valid": true, "reward": 0.13043478260869565, "collected": 46, "passed": 6, "failed": 40, "completed": true}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git fetch --no-tags --depth 1 origin 35681f6c70f8ca2bdcb9542281147679184269fa; git archive --format=tar", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/runtime-closure-install.log"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/p-retry", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/validate-source-initial.log"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "outcome": "0 errors; 0 p-retry findings; 141 unrelated warnings", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/network-lint-initial.log"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/p-retry --output compiled/p-retry --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/production-compile-initial.log"},
+    {"stage": "production-compile-rerun", "command": "uv run nl2repo harbor compile catalog/sources/p-retry --output .nl2repo/authoring-compile-rerun/p-retry --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "result": ".nl2repo/authoring-compile-rerun/p-retry/p-retry/bundle.manifest.json"},
+    {"stage": "verifier-offline-smoke-rerun", "command": "docker run --rm --network none -v local-oracle-workspace:/workspace:ro -v local-oracle-rerun-logs:/logs/verifier nl2repobench/p-retry-verifier:authoring-rerun /tests/test.sh", "exit_code": 0, "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/local-oracle-rerun-logs/grading.json", "network": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/local-oracle-rerun-logs/network.json"},
+    {"stage": "verifier-image", "command": "docker build --platform linux/amd64 -t nl2repobench/p-retry-verifier:authoring compiled/p-retry/tests", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/verifier-image-build.log"},
+    {"stage": "agent-image", "command": "docker build --platform linux/amd64 -t nl2repobench/p-retry-agent:authoring compiled/p-retry/environment", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/p-retry/logs/agent-image-build.log"}
+  ],
+  "private_artifacts": {
+    "npm_bundle": {"digest": "sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38", "size_bytes": 40960},
+    "commands": {"digest": "sha256:b7f8d878325175682d4a97815c9367729cdb81810a43f09b37a8fa5e51b53a52", "size_bytes": 10240},
+    "tests": {"digest": "sha256:522f519655473a3befee3d928b5af42597e716436427f15f8f9fcfea0a12f25b", "size_bytes": 30720},
+    "oracle": {"digest": "sha256:32ae88d9e49922c22544bd9c046d31bf4705afe2f4efbb85fb94536b041579a0", "size_bytes": 10240}
+  },
+  "residual_risks": [
+    "The local OpenHands agent image ID bb48824b...81c3 differs from the toolchain expected immutable ID c50b3e3c...c85f; integrator must restore or verify the official image before any model Agent Run.",
+    "No model Agent Run, review, pilot, or publication was performed in this authoring lane.",
+    "Docker emitted only constant-platform FROM warnings during local image builds; no build or verifier error occurred."
+  ],
+  "blocker": null
+}

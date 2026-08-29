@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "p-retry"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "async-control"
+tags = ["node", "npm", "esm", "promise", "retry", "backoff", "abort-signal", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/p-retry"
+revision = "35681f6c70f8ca2bdcb9542281147679184269fa"
+license_spdx = "MIT"
+source_digest = "sha256:3eabac5b48586a9a65714ad4cc4685a03705e3adcf3ee57d7ce9dabf5beb8278"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The verifier owns an integrity-checked npm v3 lock/cache for is-network-error 1.3.2. The model agent and verifier receive no source or registry egress. Only the trusted Oracle solution may fetch the exact frozen revision from github.com through a run-scoped host override, then it verifies the git archive digest before use."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["is-network-error==1.3.2"]
+artifact = { digest = "sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38", size_bytes = 40960, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 46
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:b7f8d878325175682d4a97815c9367729cdb81810a43f09b37a8fa5e51b53a52", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:b7f8d878325175682d4a97815c9367729cdb81810a43f09b37a8fa5e51b53a52", visibility = "private" }
+test_bundle = { digest = "sha256:522f519655473a3befee3d928b5af42597e716436427f15f8f9fcfea0a12f25b", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:522f519655473a3befee3d928b5af42597e716436427f15f8f9fcfea0a12f25b", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build p-retry 8.0.0 with bounded promise retries, callback policies, exponential backoff, AbortSignal support, and makeRetriable."
+keywords = ["node", "npm", "esm", "promise", "retry", "backoff", "abort-signal", "node-test"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-p-retry"
+reason = "The exact source, license, Node/npm environment, runtime-only npm closure, public contract, 46-leaf separate verifier, production compile, official Harbor Oracle, and empty/stub/forgery/install-script/loader-hook/timeout/offline controls are bound by task-local evidence. No model Agent Run was started in this authoring lane."
+
+[oracle_bundle]
+digest = "sha256:32ae88d9e49922c22544bd9c046d31bf4705afe2f4efbb85fb94536b041579a0"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:32ae88d9e49922c22544bd9c046d31bf4705afe2f4efbb85fb94536b041579a0"
+visibility = "private"

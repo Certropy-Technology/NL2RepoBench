@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-retry",
+  "source_revision": "35681f6c70f8ca2bdcb9542281147679184269fa",
+  "package": {
+    "name": "p-retry",
+    "version": "8.0.0",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=22",
+    "runtime_dependencies": {
+      "is-network-error": "1.3.2"
+    }
+  },
+  "public_exports": [
+    {
+      "export": "default",
+      "name": "pRetry",
+      "signature": "pRetry<T>(input: (attemptNumber: number) => PromiseLike<T> | T, options?: Options): Promise<T>"
+    },
+    {
+      "export": "named",
+      "name": "AbortError",
+      "signature": "new AbortError(message: string | Error): AbortError"
+    },
+    {
+      "export": "named",
+      "name": "makeRetriable",
+      "signature": "makeRetriable<Arguments, Result>(function_, options?: Options): (...arguments_: Arguments) => Promise<Result>"
+    }
+  ],
+  "public_types": [
+    "Options",
+    "RetryContext"
+  ],
+  "options": [
+    "onFailedAttempt",
+    "shouldRetry",
+    "shouldConsumeRetry",
+    "retries",
+    "factor",
+    "minTimeout",
+    "maxTimeout",
+    "randomize",
+    "maxRetryTime",
+    "signal",
+    "unref"
+  ],
+  "source_metrics": {
+    "tracked_files": 13,
+    "runtime_loc": 268,
+    "declaration_loc": 268,
+    "upstream_test_loc": 1448,
+    "upstream_ava_tests": 70,
+    "upstream_tsd_file_loc": 33
+  },
+  "inventory_notes": [
+    "The exact Node 24/npm 11 baseline passed XO, 70 AVA leaves, and tsd in three no-network runs after dependencies were installed from the frozen development lock.",
+    "Two commented AVA examples are not collected and are excluded from the 70-leaf denominator.",
+    "Function-valued APIs require a declarative subprocess adapter; raw callbacks never cross the verifier boundary.",
+    "The benchmark pins the upstream runtime range is-network-error ^1.3.0 to the observed exact 1.3.2 package in its offline closure."
+  ]
+}

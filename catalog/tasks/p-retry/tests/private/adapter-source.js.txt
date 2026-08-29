@@ -1,0 +1,350 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 32 * 1024;
+const MAX_FAILURES = 12;
+const OPERATIONS = new Set([
+	'abort-class',
+	'inventory',
+	'make-retriable',
+	'run',
+	'signal',
+	'validate',
+]);
+
+function fail(message) {
+	process.stdout.write(`${JSON.stringify({ok: false, message: String(message).slice(0, 2048)})}\n`);
+	process.exit(1);
+}
+
+function safeRelative(value, label) {
+	if (typeof value !== 'string' || !value.startsWith('./') || value.includes('..')) {
+		throw new Error(`${label} is not a safe package-relative path`);
+	}
+
+	return value;
+}
+
+async function loadPackage() {
+	const root = join(process.cwd(), 'node_modules', 'p-retry');
+	const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+	const rootExport = packageJson.exports?.['.'] ?? packageJson.exports;
+	const entry = typeof rootExport === 'string'
+		? rootExport
+		: rootExport?.import ?? rootExport?.default ?? packageJson.module ?? packageJson.main;
+	const types = typeof rootExport === 'object' && rootExport !== null
+		? rootExport.types ?? packageJson.types
+		: packageJson.types;
+	const api = await import(pathToFileURL(join(root, safeRelative(entry, 'runtime entry'))).href);
+	return {api, packageJson, root, types};
+}
+
+function serializeNumber(value) {
+	if (value === Number.POSITIVE_INFINITY) {
+		return 'Infinity';
+	}
+
+	if (value === Number.NEGATIVE_INFINITY) {
+		return '-Infinity';
+	}
+
+	if (Number.isNaN(value)) {
+		return 'NaN';
+	}
+
+	return value;
+}
+
+function serializeError(error) {
+	return {
+		type: error?.constructor?.name ?? typeof error,
+		name: error?.name ?? 'Error',
+		message: String(error?.message ?? error).slice(0, 1024),
+	};
+}
+
+function snapshotContext(context) {
+	return {
+		error: serializeError(context.error),
+		attemptNumber: context.attemptNumber,
+		retriesLeft: serializeNumber(context.retriesLeft),
+		retriesConsumed: context.retriesConsumed,
+		retryDelay: context.retryDelay,
+		frozen: Object.isFrozen(context),
+	};
+}
+
+function boundedInteger(value, label, {min = 0, max = MAX_FAILURES} = {}) {
+	if (!Number.isSafeInteger(value) || value < min || value > max) {
+		throw new Error(`${label} is outside the adapter bound`);
+	}
+
+	return value;
+}
+
+function optionNumber(value, label, {max = 10_000, infinity = false} = {}) {
+	if (value === undefined) {
+		return undefined;
+	}
+
+	if (value === 'Infinity' && infinity) {
+		return Number.POSITIVE_INFINITY;
+	}
+
+	if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > max) {
+		throw new Error(`${label} is outside the adapter bound`);
+	}
+
+	return value;
+}
+
+function failureFor(api, request) {
+	const message = request.message ?? 'fixture failure';
+	if (request.failureKind === 'type-error') {
+		return new TypeError(message);
+	}
+
+	if (request.failureKind === 'non-error') {
+		return request.nonErrorValue ?? 'fixture non-error';
+	}
+
+	if (request.failureKind === 'abort-string') {
+		return new api.AbortError(message);
+	}
+
+	if (request.failureKind === 'abort-error') {
+		return new api.AbortError(new Error(message));
+	}
+
+	return new Error(message);
+}
+
+async function inventory(api, packageJson, root, types) {
+	let typesPresent = false;
+	try {
+		readFileSync(join(root, safeRelative(types, 'types entry')));
+		typesPresent = true;
+	} catch {}
+
+	const abort = new api.AbortError('inventory');
+	return {
+		name: packageJson.name,
+		version: packageJson.version,
+		type: packageJson.type,
+		engines: packageJson.engines,
+		sideEffects: packageJson.sideEffects,
+		typesPresent,
+		exports: Object.keys(api).sort(),
+		defaultCallable: typeof api.default === 'function',
+		abortErrorCallable: typeof api.AbortError === 'function',
+		makeRetriableCallable: typeof api.makeRetriable === 'function',
+		abortErrorIsError: abort instanceof Error,
+		dependencies: packageJson.dependencies ?? {},
+		scriptNames: Object.keys(packageJson.scripts ?? {}).sort(),
+	};
+}
+
+function buildOptions(request, state) {
+	const options = {};
+	const retries = request.retries === 'Infinity'
+		? Number.POSITIVE_INFINITY
+		: optionNumber(request.retries, 'retries', {max: 10});
+	if (retries !== undefined) options.retries = retries;
+
+	for (const [name, settings] of [
+		['factor', {max: 10}],
+		['minTimeout', {max: 10_000}],
+		['maxTimeout', {max: 10_000, infinity: true}],
+		['maxRetryTime', {max: 10_000, infinity: true}],
+	]) {
+		const value = optionNumber(request[name], name, settings);
+		if (value !== undefined) options[name] = value;
+	}
+
+	if (request.randomize !== undefined) options.randomize = Boolean(request.randomize);
+	if (request.unref !== undefined) options.unref = Boolean(request.unref);
+
+	if (request.consumePolicy) {
+		options.shouldConsumeRetry = async context => {
+			state.events.push(`consume:${context.attemptNumber}`);
+			state.consumeContexts.push(snapshotContext(context));
+			if (request.consumePolicy === 'false-first') return context.attemptNumber !== 1;
+			if (request.consumePolicy === 'async-true') await Promise.resolve();
+			return true;
+		};
+	}
+
+	if (request.hookPolicy) {
+		options.onFailedAttempt = async context => {
+			state.events.push(`failed:${context.attemptNumber}`);
+			state.failedContexts.push(snapshotContext(context));
+			if (request.hookPolicy === 'throw') throw new Error('hook stopped');
+			if (request.hookPolicy === 'async-record') await Promise.resolve();
+		};
+	}
+
+	if (request.retryPolicy) {
+		options.shouldRetry = async context => {
+			state.events.push(`retry:${context.attemptNumber}`);
+			state.retryContexts.push(snapshotContext(context));
+			if (request.retryPolicy === 'throw') throw new Error('retry policy stopped');
+			if (request.retryPolicy === 'async-true') await Promise.resolve();
+			return request.retryPolicy !== 'false';
+		};
+	}
+
+	return options;
+}
+
+async function runScenario(api, request) {
+	const failCount = boundedInteger(request.failCount ?? 0, 'failCount');
+	const state = {
+		attempts: [],
+		events: [],
+		consumeContexts: [],
+		failedContexts: [],
+		retryContexts: [],
+		delays: [],
+		unrefCalls: 0,
+	};
+	const originalSetTimeout = globalThis.setTimeout;
+	const originalRandom = Math.random;
+	if (request.captureTimers) {
+		const sequence = Array.isArray(request.randomSequence) ? request.randomSequence : [0];
+		let randomIndex = 0;
+		Math.random = () => sequence[randomIndex++] ?? 0;
+		globalThis.setTimeout = (callback, milliseconds) => {
+			state.delays.push(milliseconds);
+			queueMicrotask(callback);
+			return {unref() { state.unrefCalls++; }};
+		};
+	}
+
+	let value;
+	let error;
+	try {
+		const options = buildOptions(request, state);
+		value = await api.default(async attemptNumber => {
+			state.attempts.push(attemptNumber);
+			state.events.push(`input:${attemptNumber}`);
+			if (attemptNumber <= failCount) throw failureFor(api, request);
+			if (request.asyncSuccess) await Promise.resolve();
+			return request.successValue;
+		}, options);
+	} catch (caught) {
+		error = serializeError(caught);
+	} finally {
+		globalThis.setTimeout = originalSetTimeout;
+		Math.random = originalRandom;
+	}
+
+	return {...state, value, error};
+}
+
+function decodeValidationValue(value) {
+	if (value === 'NaN') return Number.NaN;
+	if (value === 'Infinity') return Number.POSITIVE_INFINITY;
+	if (value === '-Infinity') return Number.NEGATIVE_INFINITY;
+	return value;
+}
+
+async function validationScenario(api, request) {
+	const options = {};
+	if (request.field === 'forever') {
+		options.forever = true;
+	} else if (['onFailedAttempt', 'shouldRetry', 'shouldConsumeRetry'].includes(request.field)) {
+		options[request.field] = request.value;
+	} else {
+		options[request.field] = decodeValidationValue(request.value);
+	}
+
+	try {
+		await api.default(() => 'ok', options);
+		return {threw: false};
+	} catch (error) {
+		return {threw: true, error: serializeError(error)};
+	}
+}
+
+function abortClassScenario(api, request) {
+	const original = request.mode === 'error' ? new Error('abort fixture') : 'abort fixture';
+	const error = new api.AbortError(original);
+	return {
+		isError: error instanceof Error,
+		name: error.name,
+		message: error.message,
+		original: serializeError(error.originalError),
+		sameOriginal: request.mode === 'error' ? error.originalError === original : false,
+	};
+}
+
+async function signalScenario(api, request) {
+	const controller = new AbortController();
+	let attempts = 0;
+	if (request.mode === 'pre-error') controller.abort(new Error('signal reason'));
+	if (request.mode === 'pre-default') controller.abort();
+	if (request.mode === 'during-delay') {
+		setTimeout(() => controller.abort(new Error('signal reason')), 20);
+	}
+
+	try {
+		await api.default(() => {
+			attempts++;
+			throw new Error('retry me');
+		}, {
+			retries: 3,
+			minTimeout: request.mode === 'during-delay' ? 1000 : 0,
+			signal: controller.signal,
+		});
+		return {attempts, threw: false};
+	} catch (error) {
+		return {attempts, threw: true, error: serializeError(error)};
+	}
+}
+
+async function makeRetriableScenario(api, request) {
+	let attempts = 0;
+	const target = {
+		prefix: request.prefix,
+		operation: api.makeRetriable(function (...arguments_) {
+			attempts++;
+			if (attempts <= request.failCount) throw new Error('retry me');
+			return {prefix: this.prefix, arguments: arguments_};
+		}, {retries: request.retries, minTimeout: 0}),
+	};
+	try {
+		return {attemptsBefore: attempts, value: await target.operation(...request.arguments), attempts};
+	} catch (error) {
+		return {attemptsBefore: 0, attempts, error: serializeError(error)};
+	}
+}
+
+async function main() {
+	const input = readFileSync(0);
+	if (input.byteLength > MAX_REQUEST_BYTES) throw new Error('request is too large');
+	const request = JSON.parse(input.toString('utf8'));
+	if (!request || typeof request !== 'object' || Array.isArray(request) || !OPERATIONS.has(request.operation)) {
+		throw new Error('operation is not allowlisted');
+	}
+
+	const {api, packageJson, root, types} = await loadPackage();
+	let value;
+	if (request.operation === 'inventory') {
+		value = await inventory(api, packageJson, root, types);
+	} else if (request.operation === 'run') {
+		value = await runScenario(api, request);
+	} else if (request.operation === 'validate') {
+		value = await validationScenario(api, request);
+	} else if (request.operation === 'abort-class') {
+		value = abortClassScenario(api, request);
+	} else if (request.operation === 'signal') {
+		value = await signalScenario(api, request);
+	} else if (request.operation === 'make-retriable') {
+		value = await makeRetriableScenario(api, request);
+	}
+
+	process.stdout.write(`${JSON.stringify({ok: true, value})}\n`);
+}
+
+main().catch(error => fail(error?.message ?? error));

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-retry",
+  "framework": "node:test",
+  "expected_total": 46,
+  "adapter": "declarative bounded retry scenarios in an unprivileged candidate child",
+  "coverage": [
+    {"area": "package identity, exports, dependency, and scripts", "leaves": 1},
+    {"area": "success values, attempt numbering, and retry budgets", "leaves": 8},
+    {"area": "validation and error classification", "leaves": 7},
+    {"area": "AbortError construction and short-circuiting", "leaves": 3},
+    {"area": "callback order, policy, context, and callback failures", "leaves": 10},
+    {"area": "backoff, delay caps, randomization, and elapsed-time limits", "leaves": 7},
+    {"area": "AbortSignal and timer unref behavior", "leaves": 4},
+    {"area": "makeRetriable argument and this forwarding", "leaves": 2},
+    {"area": "falsy results, callback defaults, and infinite option values", "leaves": 4}
+  ],
+  "excluded_upstream_checks": [
+    "XO configuration and warning formatting",
+    "TypeScript inference assertions beyond declaration entry and public signatures",
+    "multi-second wall-clock tolerances and exact stack formatting",
+    "commented AVA examples that are not collected upstream",
+    "live network requests and benchmark tooling"
+  ],
+  "determinism": "Named callback policies, controlled timer tokens, fixed random sequences, and broad bounded signal cancellation replace executable callback payloads and long elapsed-time assertions."
+}
