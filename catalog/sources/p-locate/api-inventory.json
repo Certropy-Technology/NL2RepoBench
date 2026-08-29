@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-locate",
+  "source_revision": "b9ccdaaa83f8d2f53f8acf8ff3c97b7aa21f655b",
+  "package": {
+    "name": "p-locate",
+    "version": "7.0.0",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=20",
+    "runtime_dependencies": {
+      "p-limit": "7.3.1",
+      "yocto-queue": "1.2.2"
+    }
+  },
+  "public_exports": [
+    {
+      "export": "default",
+      "name": "pLocate",
+      "signature": "pLocate<ValueType>(input: Iterable<PromiseLike<ValueType> | ValueType>, tester: (element: ValueType) => PromiseLike<boolean> | boolean, options?: Options): Promise<ValueType | undefined>"
+    },
+    {
+      "export": "default",
+      "name": "pLocate",
+      "signature": "pLocate<ValueType>(input: AsyncIterable<PromiseLike<ValueType> | ValueType>, tester: (element: ValueType) => PromiseLike<boolean> | boolean): Promise<ValueType | undefined>"
+    }
+  ],
+  "options": [
+    {
+      "name": "concurrency",
+      "type": "number",
+      "default": "Number.POSITIVE_INFINITY",
+      "domain": "positive integer or positive infinity for synchronous iterables"
+    },
+    {
+      "name": "preserveOrder",
+      "type": "boolean",
+      "default": true,
+      "domain": "synchronous iterables only"
+    }
+  ],
+  "source_metrics": {
+    "tracked_files": 13,
+    "runtime_loc": 59,
+    "declaration_loc": 79,
+    "upstream_test_loc": 166,
+    "upstream_ava_tests": 13,
+    "upstream_type_test_file_count": 1
+  },
+  "inventory_notes": [
+    "The package exports only the default pLocate function; EndError, finder, and testElement are private implementation details.",
+    "The upstream repository intentionally disables package-lock generation, so the production task freezes a reviewed runtime-only npm v3 lock and cache closure.",
+    "Function, Promise, iterator, and error values require a task-specific child adapter; no callback crosses the trusted JSON boundary."
+  ]
+}

@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "p-locate"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "async-iterable-utility"
+tags = ["node", "npm", "esm", "promise", "iterable", "async-iterable", "concurrency", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/p-locate"
+revision = "b9ccdaaa83f8d2f53f8acf8ff3c97b7aa21f655b"
+license_spdx = "MIT"
+source_digest = "sha256:7c1a4f05591c63b2ef538dfb24df894a3ff3d2de56622a85b7787d54e3e0299b"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact npm runtime closure is supplied by a verifier-owned cache. Model and verifier phases have no egress or static hosts; only the trusted Oracle may receive a run-scoped github.com authorization to fetch and verify the frozen revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["p-limit==7.3.1", "yocto-queue==1.2.2"]
+artifact = { digest = "sha256:6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f", size_bytes = 133120, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 38
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:6a2b2aedd4529bd2e6dd0f4d1a4cb641b617ee118306fe88e67ce80e851fb424", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6a2b2aedd4529bd2e6dd0f4d1a4cb641b617ee118306fe88e67ce80e851fb424", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build p-locate 7.0.0 with deterministic promise matching across synchronous and asynchronous iterables."
+keywords = ["node", "npm", "esm", "promise", "iterable", "async-iterable", "concurrency", "p-locate"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-archive-r2-c2"
+reason = "The frozen source, public contract, exact npm closure, private 38-leaf UID-separated verifier, production compile, Harbor Oracle, and empty/stub/forgery/offline/install-script/call-hang controls are complete. No Harbor model Agent Run was started in this authoring lane."
+
+[oracle_bundle]
+digest = "sha256:4af6763bc0c4901a9f0a4b3d7b5f9f6d0cfe555d4f5e24a9de1e74d67acd9cf9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:4af6763bc0c4901a9f0a4b3d7b5f9f6d0cfe555d4f5e24a9de1e74d67acd9cf9"
+visibility = "private"

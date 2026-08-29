@@ -1,0 +1,322 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-29T04:01:55Z",
+  "task_id": "p-locate",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "handoff_status": "awaiting-agent-run",
+  "agent_run_started": false,
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/p-locate",
+    "revision": "b9ccdaaa83f8d2f53f8acf8ff3c97b7aa21f655b",
+    "tag": "v7.0.0",
+    "tree": "ad1106da95f1c67ade72268fc029be499e3f08ba",
+    "archive_sha256": "sha256:7c1a4f05591c63b2ef538dfb24df894a3ff3d2de56622a85b7787d54e3e0299b",
+    "archive_size_bytes": 30720,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "checkout_clean": true
+  },
+  "environment": {
+    "platform": "linux/amd64",
+    "os": "debian-bookworm",
+    "libc": "glibc-2.36",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "verifier_image_id": "sha256:b9df9ffa8ef454a774b7ea7e3130c91896c721513a7593596aa6196c18ae7a85",
+    "agent_runtime_expected_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "agent_runtime_local_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "compiled_agent_image_id": "sha256:767e27c1bc943e31095f1ba9ac49e644f41fac69ee481cb1c6d70698e632ce9e",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden-for-model",
+      "oracle_run_scoped_host": "github.com",
+      "agent_compose_network_override_present": false,
+      "verifier_compose_network_mode": "none"
+    }
+  },
+  "dependency_closure": {
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": {
+      "p-limit": "7.3.1",
+      "yocto-queue": "1.2.2"
+    },
+    "cache_file_count": 8,
+    "artifact": {
+      "digest": "sha256:6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f",
+      "size_bytes": 133120,
+      "uri": "artifact://private/sha256:6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f"
+    },
+    "validator_exit_code": 0,
+    "offline_replay_exit_code": 0
+  },
+  "inventory": {
+    "tracked_files": 13,
+    "runtime_loc": 59,
+    "declaration_loc": 79,
+    "upstream_ava_collected": 13,
+    "upstream_ava_passed": 13,
+    "upstream_full_test_command_exit_code": 0,
+    "frozen_contract_total": 38,
+    "verifier_protocol": "node-test-json-v1 over a task-specific unprivileged subprocess JSON boundary",
+    "metric_contract": "node-test-leaf-pass-rate-v1"
+  },
+  "private_artifacts": {
+    "dependencies": {
+      "digest": "sha256:6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f",
+      "size_bytes": 133120
+    },
+    "commands": {
+      "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240
+    },
+    "tests": {
+      "digest": "sha256:6a2b2aedd4529bd2e6dd0f4d1a4cb641b617ee118306fe88e67ce80e851fb424",
+      "size_bytes": 30720
+    },
+    "oracle": {
+      "digest": "sha256:4af6763bc0c4901a9f0a4b3d7b5f9f6d0cfe555d4f5e24a9de1e74d67acd9cf9",
+      "size_bytes": 10240
+    }
+  },
+  "toolchain": {
+    "harbor": "0.21.0",
+    "task_schema": "1.4",
+    "lock": "toolchain.node.lock.toml",
+    "lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "semantic_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "harbor_uv_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
+  },
+  "production_bundle": {
+    "path": ".nl2repo/runs/p-locate-authoring/compiled-v3/p-locate",
+    "manifest_path": ".nl2repo/runs/p-locate-authoring/compiled-v3/p-locate/bundle.manifest.json",
+    "manifest_sha256": "sha256:85f21d9608ef89d72c2c61d21840c28e7344ab805569268d8549f065969f0fd6",
+    "canonical_manifest_digest": "sha256:2571d7f879601a5375e86a2494f5f7f919e0a90e824fa18a93844e32d9bb951b",
+    "file_count": 91,
+    "manifest_integrity_errors": [],
+    "repeat_compile_byte_identical": true,
+    "agent_private_material_findings": [],
+    "agent_compose_network_overrides": []
+  },
+  "validation": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_errors": 0,
+    "network_lint_warnings": 141,
+    "p_locate_network_findings": [],
+    "production_compile_exit_code": 0,
+    "repeat_compile_exit_code": 0,
+    "bash_syntax_exit_code": 0,
+    "node_syntax_exit_code": 0,
+    "json_toml_parse_exit_code": 0,
+    "bundle_integrity_exit_code": 0,
+    "focused_tests": {
+      "passed": 113,
+      "exit_code": 0,
+      "files": [
+        "tests/test_node_foundation.py",
+        "tests/test_node_production_gate.py",
+        "tests/test_node_controls.py",
+        "tests/test_node_control_summary.py",
+        "tests/test_network_policy.py",
+        "tests/test_harbor_production_validation.py"
+      ]
+    },
+    "git_diff_check_exit_code": 0
+  },
+  "remediation": {
+    "first_oracle_attempt": {
+      "command_exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 38,
+      "reward": 0.0,
+      "failure_class": "verifier",
+      "root_cause": "A task-local 512 MiB RLIMIT_AS prevented Node 24 V8 initialization before candidate import.",
+      "observed_error": "Fatal process out of memory: SegmentedTable::InitializeTable",
+      "log": ".nl2repo/evidence/p-locate-oracle-harbor.log",
+      "log_sha256": "sha256:776a2fc12c51e873d3c2d03cc9116ff49517ebf842c9a826aab4a8d6f8abefd6",
+      "grading": ".nl2repo/runs/p-locate-authoring/jobs/p-locate-oracle-20260829/p-locate__f4xiQVj/verifier/grading.json",
+      "grading_sha256": "sha256:1eb56053f467145417185303f3921f7513e8bf08cd006dcf35e40b3d32cecfd9"
+    },
+    "action": "Removed only the incompatible per-child RLIMIT_AS; retained the 1 GiB container memory bound and child CPU, process, FD, wall-time, and output bounds; resealed the private test artifact and recompiled.",
+    "direct_retest": {
+      "valid": true,
+      "passed": 38,
+      "collected": 38,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/p-locate-authoring/compiled-v3/p-locate -a oracle --allow-agent-host github.com --job-name p-locate-final-oracle-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "command_exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "reward": 1.0,
+    "passed": 38,
+    "failed": 0,
+    "collected": 38,
+    "expected_total": 38,
+    "grading": {
+      "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-oracle-20260829/p-locate__cL2VaTn/verifier/grading.json",
+      "sha256": "sha256:12e074f4caa0fcf6987f57d586ce53ba8d54e5b25908266085ad39134b0dba27"
+    },
+    "reward_file": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-oracle-20260829/p-locate__cL2VaTn/verifier/reward.json",
+    "reward_sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0",
+    "network": {
+      "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-oracle-20260829/p-locate__cL2VaTn/verifier/network.json",
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+    },
+    "public_network_available": false,
+    "command_log": ".nl2repo/evidence/p-locate-final-oracle-20260829.log",
+    "command_log_sha256": "sha256:f2360b947c2936cbb4f9f174bea364ebc1abb8119032efbdeade164a5eebe3ca"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/p-locate-v3/p-locate-empty -a oracle --job-name p-locate-final-empty-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "command_exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "collected": 0,
+      "expected_total": 38,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-empty-20260829/p-locate-empty__2W3vLBR/verifier/grading.json",
+        "sha256": "sha256:22c96b0a27b9b7d3bc785c0c732647b35749d885ba4c4221c7789be6c58fc828"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-empty-20260829/p-locate-empty__2W3vLBR/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/p-locate-v3/p-locate-stub -a oracle --job-name p-locate-final-stub-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "command_exit_code": 0,
+      "valid": true,
+      "passed": 7,
+      "failed": 31,
+      "collected": 38,
+      "expected_total": 38,
+      "reward": 0.18421052631578946,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-stub-20260829/p-locate-stub__vYDbFJQ/verifier/grading.json",
+        "sha256": "sha256:23ab1ccb38f851c2f20767dc29750a1fc697261c5cef8b2819e79fb436b10510"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-stub-20260829/p-locate-stub__vYDbFJQ/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/p-locate-v3/p-locate-forgery -a oracle --job-name p-locate-final-forgery-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "command_exit_code": 0,
+      "valid": true,
+      "passed": 7,
+      "failed": 31,
+      "collected": 38,
+      "expected_total": 38,
+      "reward": 0.18421052631578946,
+      "forged_workspace_reward": 1.0,
+      "forged_workspace_reports_ignored": true,
+      "verifier_owned_reward": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-forgery-20260829/p-locate-forgery__uXAPjyh/verifier/grading.json",
+        "sha256": "sha256:23ab1ccb38f851c2f20767dc29750a1fc697261c5cef8b2819e79fb436b10510"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-forgery-20260829/p-locate-forgery__uXAPjyh/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/p-locate-v3/p-locate-offline -a oracle --job-name p-locate-final-offline-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "command_exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "passed": 3,
+      "failed": 35,
+      "collected": 38,
+      "expected_total": 38,
+      "reward": 0.07894736842105263,
+      "candidate_attempted_public_fetch": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-offline-20260829/p-locate-offline__eTTDSoP/verifier/grading.json",
+        "sha256": "sha256:cd1f4880c60da0349edd2c2ce72af319a0c79b4cd7d8ccf933f584df24b3f303"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-offline-20260829/p-locate-offline__eTTDSoP/verifier/network.json",
+        "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a"
+      }
+    },
+    "install_script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/p-locate-v3/p-locate-install-script -a oracle --job-name p-locate-final-install-script-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "command_exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "passed": 0,
+      "collected": 0,
+      "expected_total": 38,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-install-script-20260829/p-locate-install-script__zK4bU6i/verifier/grading.json",
+        "sha256": "sha256:22c96b0a27b9b7d3bc785c0c732647b35749d885ba4c4221c7789be6c58fc828"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-install-script-20260829/p-locate-install-script__zK4bU6i/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/p-locate-v3/p-locate-call-hang -a oracle --job-name p-locate-final-call-hang-20260829 -o .nl2repo/runs/p-locate-authoring/final-jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "command_exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "failed": 37,
+      "collected": 38,
+      "expected_total": 38,
+      "reward": 0.02631578947368421,
+      "bounded_completion": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-call-hang-20260829/p-locate-call-hang__ZHC7ycD/verifier/grading.json",
+        "sha256": "sha256:037756a0bc7ef61f84c3e2ea1288e67e7f2a66797ffdd02a1e5a37a4d2bed9eb"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-locate-authoring/final-jobs/p-locate-final-call-hang-20260829/p-locate-call-hang__ZHC7ycD/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    }
+  },
+  "residual_risks": [
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da-bookworm tag resolves to sha256:bb4882... rather than the toolchain-locked sha256:c50b3e...; the integrator must restore or verify the official immutable runtime before a model Agent Run.",
+    "The 38-leaf deterministic adapter expands the 13 upstream AVA leaves and covers the complete runtime export, but it is not byte-for-byte AVA/tsd runner parity.",
+    "Independent blind/spec review, traceability review, downstream model pilot, dataset integration, and publication remain outside this authoring lane."
+  ],
+  "blocker": null,
+  "next_unblock_action": null
+}

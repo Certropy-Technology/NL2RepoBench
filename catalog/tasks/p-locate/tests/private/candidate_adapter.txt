@@ -1,0 +1,382 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const PACKAGE = 'p-locate';
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write('candidate response exceeds the bound\n');
+    process.exit(70);
+  }
+
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function readRequest() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) {
+    emit({ok: false, error: 'request-too-large'}, 64);
+  }
+
+  let request;
+  try {
+    request = JSON.parse(data.toString('utf8'));
+  } catch {
+    emit({ok: false, error: 'malformed-json'}, 64);
+  }
+
+  if (!request || typeof request !== 'object' || Array.isArray(request)) {
+    emit({ok: false, error: 'request-must-be-object'}, 64);
+  }
+
+  if (typeof request.id !== 'string' || !/^request-[1-9][0-9]*$/.test(request.id)) {
+    emit({ok: false, error: 'invalid-request-id'}, 64);
+  }
+
+  if (typeof request.scenario !== 'string' || !/^[a-z0-9-]{1,64}$/.test(request.scenario)) {
+    emit({ok: false, error: 'scenario-not-allowlisted'}, 64);
+  }
+
+  return request;
+}
+
+function packageContext() {
+  const packageRoot = join(process.cwd(), 'node_modules', PACKAGE);
+  const packageManifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
+  const exports = packageManifest.exports;
+  const entry = typeof exports === 'string'
+    ? exports
+    : exports?.['.']?.import
+      ?? exports?.['.']?.default
+      ?? exports?.import
+      ?? exports?.default
+      ?? packageManifest.module
+      ?? packageManifest.main;
+  if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+    throw new Error('allowlisted package has no safe ESM entry');
+  }
+
+  return {packageRoot, packageManifest, entry};
+}
+
+async function loadCandidate() {
+  const {packageRoot, packageManifest, entry} = packageContext();
+  const namespace = await import(pathToFileURL(join(packageRoot, entry)).href);
+  if (typeof namespace.default !== 'function') {
+    throw new TypeError('default export is not callable');
+  }
+
+  return {pLocate: namespace.default, namespace, packageRoot, packageManifest, entry};
+}
+
+function turns(count) {
+  return new Promise(resolve => {
+    const next = remaining => {
+      if (remaining <= 0) {
+        resolve();
+        return;
+      }
+
+      setImmediate(() => next(remaining - 1));
+    };
+    next(count);
+  });
+}
+
+function normalized(value) {
+  return value === undefined ? {kind: 'undefined'} : {kind: 'value', value};
+}
+
+async function locateResult(pLocate, input, tester, options) {
+  const value = options === undefined
+    ? await pLocate(input, tester)
+    : await pLocate(input, tester, options);
+  return normalized(value);
+}
+
+async function concurrencyScenario(pLocate, concurrency, count, asyncInput = false) {
+  let active = 0;
+  let maxActive = 0;
+  const started = [];
+  const tester = async value => {
+    active++;
+    maxActive = Math.max(maxActive, active);
+    started.push(value);
+    await turns(2);
+    active--;
+    return false;
+  };
+  const values = Array.from({length: count}, (_, index) => index + 1);
+  let input = values;
+  if (asyncInput) {
+    input = {
+      async *[Symbol.asyncIterator]() {
+        yield* values;
+      },
+    };
+  }
+
+  const options = asyncInput
+    ? {concurrency: 0, preserveOrder: false}
+    : concurrency === null
+      ? undefined
+      : {concurrency};
+  const result = options === undefined
+    ? await pLocate(input, tester)
+    : await pLocate(input, tester, options);
+  return {result: normalized(result), maxActive, started};
+}
+
+async function orderedRace(pLocate, preserveOrder) {
+  const input = [
+    {id: 'first', delay: 4, match: true},
+    {id: 'second', delay: 1, match: true},
+    {id: 'third', delay: 2, match: false},
+  ];
+  const tester = async item => {
+    await turns(item.delay);
+    return item.match;
+  };
+  const result = await pLocate(input, tester, {preserveOrder});
+  return {id: result.id};
+}
+
+async function raceError(pLocate, errorFirst) {
+  const input = errorFirst
+    ? [{kind: 'error', delay: 1}, {kind: 'match', delay: 4}]
+    : [{kind: 'match', delay: 1}, {kind: 'error', delay: 4}];
+  return pLocate(input, async item => {
+    await turns(item.delay);
+    if (item.kind === 'error') {
+      throw new RangeError('race failure');
+    }
+
+    return true;
+  }, {preserveOrder: false});
+}
+
+async function runScenario(pLocate, scenario) {
+  switch (scenario) {
+    case 'basic':
+      return locateResult(pLocate, [1, 2, 3], value => value === 2);
+    case 'promised-input':
+      return locateResult(pLocate, [Promise.resolve({id: 1}), Promise.resolve({id: 2})], value => value.id === 2);
+    case 'no-match':
+      return locateResult(pLocate, [1, 2, 3], () => false);
+    case 'empty':
+      return locateResult(pLocate, [], () => true);
+    case 'set-input':
+      return locateResult(pLocate, new Set(['a', 'b', 'c']), value => value === 'b');
+    case 'generator-input': {
+      function * generate() {
+        yield 1;
+        yield 2;
+        yield 3;
+      }
+
+      return locateResult(pLocate, generate(), value => value === 3);
+    }
+    case 'sync-tester':
+      return locateResult(pLocate, [1, 2], value => value === 1);
+    case 'async-tester':
+      return locateResult(pLocate, [1, 2, 3], async value => {
+        await turns(1);
+        return value === 3;
+      });
+    case 'thenable-tester':
+      return locateResult(pLocate, [1, 2, 3], value => ({then(resolve) { resolve(value === 2); }}));
+    case 'strict-true':
+      return locateResult(pLocate, [1, 2], value => value === 1 ? 1 : 'yes');
+    case 'tester-arguments': {
+      let argumentCount = -1;
+      let received;
+      const result = await pLocate([Promise.resolve({id: 7})], (...arguments_) => {
+        argumentCount = arguments_.length;
+        [received] = arguments_;
+        return true;
+      });
+      return {result, argumentCount, received};
+    }
+    case 'object-result': {
+      const value = {id: 2, nested: ['x', true]};
+      return locateResult(pLocate, [{id: 1}, value], item => item.id === 2);
+    }
+    case 'preserve-order':
+      return orderedRace(pLocate, true);
+    case 'completion-order':
+      return orderedRace(pLocate, false);
+    case 'concurrency-one':
+      return concurrencyScenario(pLocate, 1, 6);
+    case 'concurrency-two':
+      return concurrencyScenario(pLocate, 2, 6);
+    case 'concurrency-default':
+      return concurrencyScenario(pLocate, null, 6);
+    case 'concurrency-infinity':
+      return concurrencyScenario(pLocate, Number.POSITIVE_INFINITY, 4);
+    case 'invalid-zero':
+      return pLocate([1], () => false, {concurrency: 0});
+    case 'invalid-fraction':
+      return pLocate([1], () => false, {concurrency: 1.5});
+    case 'tester-throw':
+      return pLocate([1], () => { throw new SyntaxError('tester threw'); });
+    case 'tester-reject':
+      return pLocate([1], async () => { throw new URIError('tester rejected'); });
+    case 'input-reject':
+      return pLocate([Promise.reject(new EvalError('input rejected'))], () => true);
+    case 'iterator-throw': {
+      function * generate() {
+        yield 1;
+        throw new ReferenceError('iterator failed');
+      }
+
+      return pLocate(generate(), () => false);
+    }
+    case 'race-match-first':
+      return normalized(await raceError(pLocate, false));
+    case 'race-error-first':
+      return raceError(pLocate, true);
+    case 'async-basic': {
+      async function * generate() {
+        yield 1;
+        yield 2;
+        yield 3;
+      }
+
+      return locateResult(pLocate, generate(), value => value === 2);
+    }
+    case 'async-promised-input': {
+      const input = {
+        [Symbol.asyncIterator]() {
+          const values = [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)];
+          let index = 0;
+          return {
+            next() {
+              if (index >= values.length) return Promise.resolve({done: true});
+              return Promise.resolve({value: values[index++], done: false});
+            },
+          };
+        },
+      };
+      return locateResult(pLocate, input, value => value === 2);
+    }
+    case 'async-no-match': {
+      async function * generate() {
+        yield 1;
+        yield 2;
+      }
+
+      return locateResult(pLocate, generate(), () => false);
+    }
+    case 'async-empty': {
+      async function * generate() {}
+      return locateResult(pLocate, generate(), () => true);
+    }
+    case 'async-tester': {
+      async function * generate() {
+        yield 1;
+        yield 2;
+        yield 3;
+      }
+
+      return locateResult(pLocate, generate(), async value => {
+        await turns(1);
+        return value === 3;
+      });
+    }
+    case 'async-strict-true': {
+      async function * generate() {
+        yield 1;
+        yield 2;
+      }
+
+      return locateResult(pLocate, generate(), value => value === 2 ? 1 : false);
+    }
+    case 'async-stops': {
+      let advances = 0;
+      async function * generate() {
+        yield 1;
+        advances++;
+        yield 2;
+        advances++;
+        yield 3;
+        advances++;
+      }
+
+      const result = await pLocate(generate(), value => value === 2);
+      return {result, advances};
+    }
+    case 'async-tester-reject': {
+      async function * generate() {
+        yield 1;
+      }
+
+      return pLocate(generate(), async () => { throw new AggregateError([], 'async tester failed'); });
+    }
+    case 'async-iterator-reject': {
+      const input = {
+        [Symbol.asyncIterator]() {
+          return {next() { return Promise.reject(new Error('async iterator failed')); }};
+        },
+      };
+      return pLocate(input, () => false);
+    }
+    case 'async-serial-options-ignored':
+      return concurrencyScenario(pLocate, 0, 5, true);
+    case 'dual-iterable': {
+      const input = {
+        *[Symbol.iterator]() {
+          yield 'sync';
+        },
+        async *[Symbol.asyncIterator]() {
+          yield 'async-1';
+          yield 'async-2';
+        },
+      };
+      return locateResult(pLocate, input, value => value === 'async-2', {concurrency: 0});
+    }
+    default:
+      throw new Error('scenario-not-allowlisted');
+  }
+}
+
+const request = readRequest();
+try {
+  const candidate = await loadCandidate();
+  if (request.scenario === 'inventory') {
+    const {packageManifest, packageRoot, entry, namespace} = candidate;
+    const types = packageManifest.exports?.types ?? packageManifest.exports?.['.']?.types;
+    emit({
+      id: request.id,
+      ok: true,
+      value: {
+        packageName: packageManifest.name,
+        packageVersion: packageManifest.version,
+        moduleType: packageManifest.type,
+        runtimeEntry: entry,
+        runtimeEntryPresent: Boolean(readFileSync(join(packageRoot, entry), 'utf8')),
+        declarationEntry: types,
+        declarationEntryPresent: typeof types === 'string' && Boolean(readFileSync(join(packageRoot, types), 'utf8')),
+        exportNames: Object.keys(namespace).sort(),
+        pLimitDependency: packageManifest.dependencies?.['p-limit'],
+        scriptNames: Object.keys(packageManifest.scripts ?? {}).sort(),
+        devDependencyNames: Object.keys(packageManifest.devDependencies ?? {}).sort(),
+      },
+    });
+  }
+
+  const value = await runScenario(candidate.pLocate, request.scenario);
+  emit({id: request.id, ok: true, value});
+} catch (error) {
+  emit({
+    id: request.id,
+    ok: false,
+    error_type: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+  });
+}

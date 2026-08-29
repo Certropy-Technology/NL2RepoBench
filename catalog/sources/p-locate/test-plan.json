@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-locate",
+  "framework": "node:test",
+  "expected_total": 38,
+  "adapter": "declarative bounded iterable/tester scenarios in an unprivileged candidate child",
+  "coverage": [
+    {"area": "package identity, exports, declarations, and dependency policy", "leaves": 1},
+    {"area": "ordinary iterable, value, PromiseLike, and tester semantics", "leaves": 12},
+    {"area": "ordering, concurrency, and option validation", "leaves": 8},
+    {"area": "input, tester, iterator, and completion-race failures", "leaves": 6},
+    {"area": "async iterable values, seriality, stopping, options, and failures", "leaves": 11}
+  ],
+  "upstream_baseline": {
+    "command": "npm test",
+    "runner": "xo && ava && tsd",
+    "ava_collected": 13,
+    "exit_code": 0
+  },
+  "determinism": "Finite setImmediate turns and active-call counters replace elapsed-time windows while preserving the upstream ordering and concurrency assertions."
+}
