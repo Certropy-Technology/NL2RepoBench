@@ -1,0 +1,93 @@
+schema_version = "2.0"
+task_id = "mdast-util-to-hast"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "markdown-ast-transformer"
+tags = ["node", "npm", "esm", "markdown", "mdast", "hast", "ast", "html"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/mdast-util-to-hast"
+revision = "174795b21f7757fffb54dd8d5fb4012f4751f791"
+license_spdx = "MIT"
+source_digest = "sha256:587e4050147dc8730b15a6ceedd07866301c4309bcdf8856697bbb3ba96f7094"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier runs have no egress. This task has no runtime dependency; only the trusted Oracle receives the frozen upstream source through its private bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@ungap/structured-clone@1.4.0", "devlop@1.1.0", "micromark-util-sanitize-uri@2.0.1", "trim-lines@3.0.1", "unist-util-position@5.0.0", "unist-util-visit@5.1.0", "vfile@6.0.3", "nested runtime entries are frozen by the lock artifact"]
+artifact = { digest = "sha256:50debbea9203e137f5d184705ac1986408d3771776f1d0d628f7dd52a2ca0c2d", size_bytes = 1802240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:50debbea9203e137f5d184705ac1986408d3771776f1d0d628f7dd52a2ca0c2d", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 35
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:40d6501f42aecc2e0fe88eca316f2b61f1bed73bb939e067e7cffa0a9ab582d4", size_bytes = 152, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:40d6501f42aecc2e0fe88eca316f2b61f1bed73bb939e067e7cffa0a9ab582d4", visibility = "private" }
+test_bundle = { digest = "sha256:83a196e48af99adeebfb1aa525abbae1a2ba423ef640890d87fe1f56362908fb", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:83a196e48af99adeebfb1aa525abbae1a2ba423ef640890d87fe1f56362908fb", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the mdast-util-to-hast ESM package from an empty workspace and transform JSON Markdown ASTs into deterministic HTML ASTs."
+keywords = ["node", "npm", "esm", "markdown", "mdast", "hast", "ast", "html"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+agent_allowed_hosts = []
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source, public contract, private JSON child verifier, hash-bound npm closure, production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/hang/timeout/offline controls passed; awaiting integrator review and model Agent Run."
+
+[oracle_bundle]
+digest = "sha256:7e8b6372ce2341d6f55a2b9644623b7d0643c0964063683f6a74fb9219fe4c91"
+size_bytes = 245760
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:7e8b6372ce2341d6f55a2b9644623b7d0643c0964063683f6a74fb9219fe4c91"
+visibility = "private"

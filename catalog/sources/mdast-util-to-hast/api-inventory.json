@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "package": "mdast-util-to-hast",
+  "package_version": "13.2.1",
+  "runtime_entry": "index.js",
+  "declaration_entry": "index.d.ts",
+  "public_exports": [
+    "toHast",
+    "defaultFootnoteBackContent",
+    "defaultFootnoteBackLabel",
+    "defaultHandlers"
+  ],
+  "covered_modules": [
+    "lib/index.js",
+    "lib/state.js",
+    "lib/footer.js",
+    "lib/handlers/*.js",
+    "index.js",
+    "index.d.ts"
+  ],
+  "runtime_dependencies": [],
+  "excluded_risk_surfaces": [
+    "VFile and source-position objects",
+    "custom handler callbacks",
+    "unknownHandler callbacks",
+    "function-valued hChildren",
+    "non-JSON prototypes and shared identity"
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-to-hast",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/mdast-util-to-hast",
+    "revision": "174795b21f7757fffb54dd8d5fb4012f4751f791",
+    "source_digest": "sha256:587e4050147dc8730b15a6ceedd07866301c4309bcdf8856697bbb3ba96f7094",
+    "source_archive_sha256": "sha256:587e4050147dc8730b15a6ceedd07866301c4309bcdf8856697bbb3ba96f7094",
+    "source_archive_size_bytes": 225280,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d",
+    "submodules": []
+  },
+  "environment": {
+    "os_name": "debian-bookworm-amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": "Node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network",
+    "oracle_source_host": "github.com"
+  },
+  "dependencies": {
+    "ecosystem": "npm",
+    "consumer": "candidate-runtime",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "package_manager": "npm 11.17.0",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "direct_packages": 7,
+    "runtime_packages": [
+      "@ungap/structured-clone@1.4.0",
+      "devlop@1.1.0",
+      "micromark-util-sanitize-uri@2.0.1",
+      "trim-lines@3.0.1",
+      "unist-util-position@5.0.0",
+      "unist-util-visit@5.1.0",
+      "vfile@6.0.3"
+    ],
+    "artifact": {
+      "digest": "sha256:50debbea9203e137f5d184705ac1986408d3771776f1d0d628f7dd52a2ca0c2d",
+      "size_bytes": 1802240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:50debbea9203e137f5d184705ac1986408d3771776f1d0d628f7dd52a2ca0c2d",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 35,
+    "upstream_baseline": {"collected": 142, "passed": 142},
+    "private_contract_artifact": {
+      "digest": "sha256:83a196e48af99adeebfb1aa525abbae1a2ba423ef640890d87fe1f56362908fb",
+      "size_bytes": 30720,
+      "visibility": "private"
+    },
+    "commands_artifact": {
+      "digest": "sha256:40d6501f42aecc2e0fe88eca316f2b61f1bed73bb939e067e7cffa0a9ab582d4",
+      "size_bytes": 152,
+      "visibility": "private"
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled/mdast-util-to-hast-current/mdast-util-to-hast/bundle.manifest.json",
+    "sha256": "sha256:0b1d618a18e482cc335c167a4b514f36d8e6fd4f66860a583395b88e5694b4c7",
+    "canonical_manifest_digest": "sha256:2f69f9d576f4ad3d0d639359e7139ac8ed64cb45f92e8de8d6cc5a59ff65585e",
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "schema_version": "1.4",
+    "mode": "production",
+    "file_count": 306,
+    "repeat_compile_byte_identical": true
+  },
+  "private_artifacts": {
+    "oracle": {"digest": "sha256:7e8b6372ce2341d6f55a2b9644623b7d0643c0964063683f6a74fb9219fe4c91", "size_bytes": 245760, "visibility": "private"},
+    "tests": {"digest": "sha256:83a196e48af99adeebfb1aa525abbae1a2ba423ef640890d87fe1f56362908fb", "size_bytes": 30720, "visibility": "private"},
+    "dependencies": {"digest": "sha256:50debbea9203e137f5d184705ac1986408d3771776f1d0d628f7dd52a2ca0c2d", "size_bytes": 1802240, "visibility": "private"}
+  },
+  "gates": [
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/mdast-util-to-hast", "tool_version": "nl2repobench current checkout", "exit_code": 0},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repobench current checkout", "exit_code": 0, "task_findings": 0, "global_errors": 0},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/mdast-util-to-hast --output .nl2repo/compiled/mdast-util-to-hast-current --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "Harbor compiler 0.21.0", "exit_code": 0, "allow_incomplete": false},
+    {"stage": "syntax", "command": "bash -n catalog/sources/mdast-util-to-hast/harbor/solution/solve.sh catalog/sources/mdast-util-to-hast/harbor/controls/*.sh && node --check catalog/sources/mdast-util-to-hast/harbor/tests/private/*.mjs", "tool_version": "Node 22.23.1 host; bash 5.x", "exit_code": 0},
+    {"stage": "docker", "command": "docker version and pinned Node base image inspect", "tool_version": "Docker 29.7.2", "exit_code": 0}
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/mdast-util-to-hast-current/mdast-util-to-hast -a oracle --job-name mdast-util-to-hast-current-oracle --jobs-dir .nl2repo/authoring-work/mdast-util-to-hast/runs/current/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 35,
+    "collected": 35,
+    "passed": 35,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/oracle/mdast-util-to-hast-current-oracle/mdast-util-to-hast__oRXYNLH/verifier/grading.json", "sha256": "sha256:e157b090828f5a2d4b23bf0639ae7736622ec4d98678f07bf53efc525f44c710"},
+    "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/oracle/mdast-util-to-hast-current-oracle/mdast-util-to-hast__oRXYNLH/verifier/network.json", "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {"command": "uv run nl2repo harbor prepare-control <compiled-task> empty --output <controls> && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/empty/mdast-util-to-hast-current-empty/mdast-util-to-hast-empty__iNuny3c/verifier/grading.json", "sha256": "sha256:6478906ab251487a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/empty/mdast-util-to-hast-current-empty/mdast-util-to-hast-empty__iNuny3c/verifier/network.json", "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c", "public_network_available": false}},
+    "stub": {"command": "uv run nl2repo harbor prepare-control <compiled-task> stub --output .nl2repo/controls-current/stub --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 35, "passed": 2, "reward": 0.05714285714285714, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/stub/mdast-util-to-hast-current-stub/mdast-util-to-hast-stub__PgCXsif/verifier/grading.json", "sha256": "sha256:89c101d90c8ef8f8cf1f11b38ca0458930b2890b11b67e2b368d2502010735fd"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/stub/mdast-util-to-hast-current-stub/mdast-util-to-hast-stub__PgCXsif/verifier/network.json", "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c", "public_network_available": false}},
+    "forgery": {"command": "uv run nl2repo harbor prepare-control <compiled-task> forgery --output .nl2repo/controls-current/forgery --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 35, "passed": 5, "reward": 0.14285714285714285, "verifier_owned_reward": true, "forged_workspace_reward_ignored": true, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/forgery/mdast-util-to-hast-current-forgery/mdast-util-to-hast-forgery__c5SLqTw/verifier/grading.json", "sha256": "sha256:6f607e7ad5665875ee7fac743da0bbe1e6a5d0ba950476da33e77cf45d77b9d4"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/forgery/mdast-util-to-hast-current-forgery/mdast-util-to-hast-forgery__c5SLqTw/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false}},
+    "install-script": {"command": "uv run nl2repo harbor prepare-control <compiled-task> install-script --output .nl2repo/controls-current/install-script --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/install-script/mdast-util-to-hast-current-install-script/mdast-util-to-hast-install-scrip__XpMdSah/verifier/grading.json", "sha256": "sha256:6478906ab251487a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/install-script/mdast-util-to-hast-current-install-script/mdast-util-to-hast-install-scrip__XpMdSah/verifier/network.json", "sha256": "sha256:9f78d1d62fbf589a5e9dd9a4151c6f5957f91ad0103247e417d7cf2dc413903e", "public_network_available": false}},
+    "loader-hook": {"command": "uv run nl2repo harbor prepare-control <compiled-task> loader-hook --output .nl2repo/controls-current/loader-hook --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 35, "passed": 2, "reward": 0.05714285714285714, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/loader-hook/mdast-util-to-hast-current-loader-hook/mdast-util-to-hast-loader-hook__mkH2fYw/verifier/grading.json", "sha256": "sha256:89c101d90c8ef8f8cf1f11b38ca0458930b2890b11b67e2b368d2502010735fd"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/loader-hook/mdast-util-to-hast-current-loader-hook/mdast-util-to-hast-loader-hook__mkH2fYw/verifier/network.json", "sha256": "sha256:f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8", "public_network_available": false}},
+    "hang": {"command": "uv run nl2repo harbor prepare-control <compiled-task> hang --output .nl2repo/controls-current/hang --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "bounded": true, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/hang/mdast-util-to-hast-current-hang/mdast-util-to-hast-hang__863niVX/verifier/grading.json", "sha256": "sha256:e696fbd980f1efcdeee39501b74e860186722e1ac516585e9070ae354ab563e9"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/hang/mdast-util-to-hast-current-hang/mdast-util-to-hast-hang__863niVX/verifier/network.json", "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c", "public_network_available": false}},
+    "call-hang": {"command": "uv run nl2repo harbor prepare-control <compiled-task> call-hang --output .nl2repo/controls-current/call-hang --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "bounded": true, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/call-hang/mdast-util-to-hast-current-call-hang/mdast-util-to-hast-call-hang__6DAgYqg/verifier/grading.json", "sha256": "sha256:e696fbd980f1efcdeee39501b74e860186722e1ac516585e9070ae354ab563e9"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/call-hang/mdast-util-to-hast-current-call-hang/mdast-util-to-hast-call-hang__6DAgYqg/verifier/network.json", "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3", "public_network_available": false}},
+    "timeout": {"command": "uv run nl2repo harbor prepare-control <compiled-task> timeout --output .nl2repo/controls-current/timeout --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "bounded": true, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/timeout/mdast-util-to-hast-current-timeout/mdast-util-to-hast-timeout__CEp6oeq/verifier/grading.json", "sha256": "sha256:e696fbd980f1efcdeee39501b74e860186722e1ac516585e9070ae354ab563e9"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/timeout/mdast-util-to-hast-current-timeout/mdast-util-to-hast-timeout__CEp6oeq/verifier/network.json", "sha256": "sha256:e899b225e42801c0c537dd001f73cb6020cc6fa182b6d2e030b0774771afec41", "public_network_available": false}},
+    "offline": {"command": "uv run nl2repo harbor prepare-control <compiled-task> offline --output .nl2repo/controls-current/offline --toolchain toolchain.node.lock.toml && Harbor oracle run", "exit_code": 0, "valid": true, "expected_total": 35, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "completed": true, "grading": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/offline/mdast-util-to-hast-current-offline/mdast-util-to-hast-offline__FccrVpd/verifier/grading.json", "sha256": "sha256:6478906ab251487a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"}, "network": {"path": ".nl2repo/authoring-work/mdast-util-to-hast/runs/current/offline/mdast-util-to-hast-current-offline/mdast-util-to-hast-offline__FccrVpd/verifier/network.json", "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98", "public_network_available": false}}
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane by contract.",
+    "Integrator review, dataset integration, publication, and model pilot remain out of scope.",
+    "The source archive is fetched only by the trusted Oracle solve and is digest-checked; model-agent runs have no source-host authorization."
+  ]
+}

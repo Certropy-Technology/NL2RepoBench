@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "contract_to_tests": {
+    "package-shape": ["package-shape"],
+    "root-and-text": ["root-text", "root-empty", "block-newline"],
+    "inline-markup": ["emphasis-strong-delete", "inline-code", "break"],
+    "block-mapping": ["heading", "blockquote", "thematic-break", "code"],
+    "links-images": ["link", "image", "reference-resolution"],
+    "lists-tables": ["unordered-list", "ordered-list", "table"],
+    "html-and-data": ["raw-html", "dangerous-html", "data-overrides", "unknown-node"],
+    "footnotes": ["footnote", "footnote-rereference", "footnote-options", "footnote-helpers"],
+    "determinism-and-boundary": ["position-copy", "input-unchanged", "unsupported-node", "error-boundary"]
+  },
+  "reverse_review": "Every public promise in instruction.md is represented by at least one private leaf or is explicitly excluded as a non-JSON/callback surface. No private leaf requires a filesystem, network, clock, randomness, or candidate-controlled report."
+}

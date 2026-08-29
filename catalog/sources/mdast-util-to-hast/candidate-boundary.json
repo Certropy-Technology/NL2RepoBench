@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "status": "production-json-boundary",
+  "purpose": "Verifier-owned bounded child protocol for mdast-util-to-hast named exports.",
+  "transport": {
+    "mode": "jsonl",
+    "encoding": "utf-8",
+    "request": "one JSON object per line on stdin",
+    "response": "one JSON object per line on stdout",
+    "stderr": "diagnostics only; never parsed as a result",
+    "canonical_json": {
+      "ensure_ascii": false,
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "allow_nan": false
+    }
+  },
+  "request": {
+    "required": ["id", "operation", "payload"],
+    "id_type": "string",
+    "operations": ["call", "inventory"],
+    "call": {
+      "payload": {"args": "JSON array with one or two bounded values"},
+      "package": "mdast-util-to-hast",
+      "exports": ["toHast", "defaultFootnoteBackContent", "defaultFootnoteBackLabel"]
+    },
+    "inventory": {
+      "payload": "empty object",
+      "result": "package-shape booleans and export-name strings only"
+    },
+    "json_value": "null, boolean, finite number, string, array, or plain object recursively",
+    "bounds": {
+      "request_bytes": 262144,
+      "response_bytes": 524288,
+      "argument_count": 2,
+      "json_depth": 24
+    }
+  },
+  "response": {
+    "success": {"id": "string", "ok": true, "value": "bounded JSON value"},
+    "failure": {"id": "string", "ok": false, "error_type": "bounded exception class or adapter code", "message": "bounded message without paths, stacks, timestamps, or environment dumps"}
+  },
+  "isolation": {
+    "candidate_network": "none",
+    "candidate_source": "empty workspace only",
+    "forbidden_boundary_values": ["function", "symbol", "BigInt", "Date", "cycle", "VFile", "source code"],
+    "stdout": "JSON responses only",
+    "stderr": "diagnostics only"
+  }
+}

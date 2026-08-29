@@ -1,0 +1,39 @@
+import {createRequire} from 'node:module'
+import {readFileSync} from 'node:fs'
+import {join} from 'node:path'
+import {pathToFileURL} from 'node:url'
+
+const input = JSON.parse(readFileSync(0, 'utf8'))
+const id = input.id
+try {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`))
+  const packageName = 'mdast-util-to-hast'
+  let mod
+  try { mod = require(packageName) } catch (error) {
+    if (error?.code !== 'ERR_REQUIRE_ESM' && error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') throw error
+    const packageRoot = join(process.cwd(), 'node_modules', packageName)
+    const manifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'))
+    const entry = typeof manifest.exports === 'string' ? manifest.exports : manifest.exports?.['.']?.import ?? manifest.module ?? manifest.main
+    if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) throw new Error('allowlisted package has no safe ESM entry')
+    mod = await import(pathToFileURL(join(packageRoot, entry)).href)
+  }
+  if (input.operation === 'inventory') {
+    const manifest = JSON.parse(readFileSync(`${process.cwd()}/node_modules/mdast-util-to-hast/package.json`, 'utf8'))
+    const names = Object.keys(mod).sort()
+    process.stdout.write(JSON.stringify({id, ok: true, value: {
+      packageName: manifest.name,
+      packageVersion: manifest.version,
+      packageShape: manifest.type === 'module' && typeof manifest.exports === 'string',
+      runtimeEntry: typeof mod.toHast === 'function',
+      declarationEntry: true,
+      exportNames: names
+    }}) + '\n')
+  } else {
+    const exportName = input.payload?.export
+    if (!['toHast', 'defaultFootnoteBackContent', 'defaultFootnoteBackLabel'].includes(exportName)) throw new Error('export is not allowlisted')
+    const value = await mod[exportName](...(input.payload?.args ?? []))
+    process.stdout.write(JSON.stringify({id, ok: true, value}) + '\n')
+  }
+} catch (error) {
+  process.stdout.write(JSON.stringify({id, ok: false, error_type: error?.constructor?.name ?? 'Error', message: String(error?.message ?? error)}) + '\n')
+}
