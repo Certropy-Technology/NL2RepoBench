@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pygments",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/pygments/pygments",
+    "revision": "38f426a6b1cd4ffc6429f5808031b7c62ea57b1f",
+    "archive_sha256": "sha256:3020b621c9c647c499fe804a4606c9818a3d318af42ee867d653ae7d145bb53c",
+    "license_spdx": "BSD-2-Clause",
+    "license_sha256": "sha256:a9d66f1d526df02e29dce73436d34e56e8632f46c275bbdffc70569e882f9f17"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_runtime_expected_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest": "sha256:bd66c9a73352c89928a286f06d124cc815fc6ea504ebb5eba59e96e66aa87a78", "size_bytes": 1404},
+    "verifier_bundle": {"digest": "sha256:b3f45578c1d1fe9166fb49cdafbb6123fb980cf1c9efdab8a579cc48ed2b29fb", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:b9bbce099bb81c8a94abf39f41a04cf6ae6bc22345aa707513a6de9e3b04ce60", "size_bytes": 47759360}
+  },
+  "baseline": {
+    "command": "python -m pytest --rootdir=<upstream> -o addopts='' -p no:cacheprovider --junitxml=<baseline.xml> <upstream>/tests",
+    "exit_code": 0,
+    "collected": 5346,
+    "passed": 5330,
+    "skipped": 16,
+    "junit": ".nl2repo/authoring-work/python-author-wave2-20260828/pygments/baseline.xml",
+    "junit_sha256": "sha256:83538c81879c208fda792ecd7aefb61ed8ae4c0f750886c98cb508702c632212"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/pygments --output .nl2repo/compiled/pygments-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/compiled/pygments-release/pygments/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:03f9c1ec308c51e26f36b50d10ee6354c2a8e609bceec16b3f01ac863b119262"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/pygments-final/pygments -a oracle --job-name pygments-final-oracle -o .nl2repo/runs/pygments/final-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 32,
+    "collected": 32,
+    "passed": 32,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/pygments/release-oracle/pygments-release-oracle/pygments__YYCdhFT/verifier/grading.json",
+    "grading_sha256": "sha256:8469efda07fce76b659d9bc0839bcc0b7d74ed6d6461aa13861ec12ef2e09fd7",
+    "network": ".nl2repo/runs/pygments/release-oracle/pygments-release-oracle/pygments__YYCdhFT/verifier/network.json",
+    "network_sha256": "sha256:1c047977edf3289d30ee1677cde97cb9925a0350fefbb8314000770c652f0d2c",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/runs/pygments/release-empty/pygments-release-empty/pygments__JWCxZhU/verifier/grading.json", "grading_sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4", "network": ".nl2repo/runs/pygments/release-empty/pygments-release-empty/pygments__JWCxZhU/verifier/network.json", "network_sha256": "sha256:4ff764ce6b70c41454c11c506334df7cb964fbe39f0fbf13d841d783a4eb0639", "public_network_available": false},
+    "stub": {"exit_code": 0, "valid": true, "collected": 32, "passed": 0, "reward": 0.0, "grading": ".nl2repo/runs/pygments/release-stub/pygments-release-stub/pygments-stub__GinDS9r/verifier/grading.json", "grading_sha256": "sha256:ca19de4a0085a7fd99d21627895df0656a317844a6fb1a871ba8d5fd44f2a0b4", "network": ".nl2repo/runs/pygments/release-stub/pygments-release-stub/pygments-stub__GinDS9r/verifier/network.json", "network_sha256": "sha256:4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb", "public_network_available": false},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 32, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": ".nl2repo/runs/pygments/release-forgery/pygments-release-forgery/pygments-forgery__EVbF7yy/verifier/grading.json", "grading_sha256": "sha256:ca19de4a0085a7fd99d21627895df0656a317844a6fb1a871ba8d5fd44f2a0b4", "network": ".nl2repo/runs/pygments/release-forgery/pygments-release-forgery/pygments-forgery__EVbF7yy/verifier/network.json", "network_sha256": "sha256:9a49c62a75c9000da444b78e2ba5d6d44ff25a5c977d4fd20bfaa648f1394190", "public_network_available": false},
+    "install_hang": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "candidate_install_outcome": "timeout", "candidate_install_returncode": -9, "grading": ".nl2repo/runs/pygments/release-install-hang/pygments-release-install-hang/pygments-install-hang__n3H4Eau/verifier/grading.json", "grading_sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4", "network": ".nl2repo/runs/pygments/release-install-hang/pygments-release-install-hang/pygments-install-hang__n3H4Eau/verifier/network.json", "network_sha256": "sha256:93cbaecd5e7032ecc4dd933e74f5d55444f88273d42590134755dfaad89db26c", "public_network_available": false},
+    "call_hang": {"exit_code": 0, "valid": true, "collected": 32, "passed": 0, "reward": 0.0, "grading": ".nl2repo/runs/pygments/release-call-hang/pygments-release-call-hang/pygments-call-hang__BagiBQo/verifier/grading.json", "grading_sha256": "sha256:ca19de4a0085a7fd99d21627895df0656a317844a6fb1a871ba8d5fd44f2a0b4", "network": ".nl2repo/runs/pygments/release-call-hang/pygments-release-call-hang/pygments-call-hang__BagiBQo/verifier/network.json", "network_sha256": "sha256:87d07d4be1c1013b5e183dba5f19a19d2725da9d7b55e0587e02ea8139e1e149", "public_network_available": false},
+    "offline": {"completed": true, "public_network_available": false, "source": "oracle.network"}
+  },
+  "gates": {"validate_source_exit_code": 0, "network_lint_exit_code": 0, "network_lint_error_count": 0, "pygments_network_findings": 0, "python_compile_exit_code": 0, "shell_syntax_exit_code": 0},
+  "residual_risks": [
+    "The production denominator is a bounded 32-scenario behavioral subset rather than all 5346 upstream tests.",
+    "The local agent runtime image ID differs from the immutable toolchain lock and must be restored or relocked by the integrator before a model Agent Run.",
+    "This lane did not perform independent blind/spec review or a model Agent Run."
+  ]
+}

@@ -1,0 +1,83 @@
+schema_version = "1.0"
+task_id = "pygments"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "syntax-highlighting"
+tags = ["python", "syntax-highlighting", "lexers", "formatters", "cli", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pygments/pygments"
+revision = "38f426a6b1cd4ffc6429f5808031b7c62ea57b1f"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:3020b621c9c647c499fe804a4606c9818a3d318af42ee867d653ae7d145bb53c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Build and test dependencies are installed during image construction from the private hash lock; agent and verifier execution have no egress, and only the trusted Oracle receives the private digest-verified source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"]
+lock_artifact = { digest = "sha256:bd66c9a73352c89928a286f06d124cc815fc6ea504ebb5eba59e96e66aa87a78", size_bytes = 1404, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bd66c9a73352c89928a286f06d124cc815fc6ea504ebb5eba59e96e66aa87a78", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the Pygments syntax-highlighting library from an empty workspace, including representative lexers, token types, formatters, lookup helpers, and the pygmentize CLI."
+keywords = ["python", "syntax-highlighting", "lexers", "formatters", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:b3f45578c1d1fe9166fb49cdafbb6123fb980cf1c9efdab8a579cc48ed2b29fb", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b3f45578c1d1fe9166fb49cdafbb6123fb980cf1c9efdab8a579cc48ed2b29fb", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:b9bbce099bb81c8a94abf39f41a04cf6ae6bc22345aa707513a6de9e3b04ce60"
+size_bytes = 47759360
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b9bbce099bb81c8a94abf39f41a04cf6ae6bc22345aa707513a6de9e3b04ce60"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "The production bundle passed the 32/32 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls; independent review and model pilot remain separate stages."

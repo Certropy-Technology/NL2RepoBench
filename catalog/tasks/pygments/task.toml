@@ -1,0 +1,57 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pygments"
+version = "0.1.0"
+description = "Build the Pygments syntax-highlighting library from an empty workspace, including representative lexers, token types, formatters, lookup helpers, and the pygmentize CLI."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "syntax-highlighting",
+    "lexers",
+    "formatters",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "syntax-highlighting"
+tags = [
+    "python",
+    "syntax-highlighting",
+    "lexers",
+    "formatters",
+    "cli",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 32
+canonical_manifest_digest = "sha256:b93d24a882cb987952315d20f7fff025a55c02478f674da2995a730f08e77e56"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
