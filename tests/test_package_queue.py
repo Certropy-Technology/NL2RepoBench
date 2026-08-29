@@ -146,3 +146,37 @@ def test_queue_is_order_independent_and_preserves_github_language(tmp_path: Path
     assert left["queue"][0]["language"] == "node"
     assert left["queue"][0]["status"] == "needs-evidence"
     assert left["queue"][0]["conflicts"] == ["revision"]
+
+
+def test_queue_accepts_frozen_go_candidate(tmp_path: Path) -> None:
+    catalog = tmp_path / "catalog"
+    catalog.mkdir()
+    report = tmp_path / "go.json"
+    report.write_text(
+        json.dumps(
+            {
+                "language": "go",
+                "source_kind": "go-modules",
+                "candidates": [
+                    {
+                        "package": "go-demo",
+                        "repository": "owner/go-demo",
+                        "language": "go",
+                        "source_kind": "go-modules",
+                        "revision": "a" * 40,
+                        "license_spdx": "MIT",
+                        "stars": 150,
+                        "last_activity": "2026-08-20",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = queue_builder.build_queue(
+        [report], catalog_root=catalog, observed_at="2026-08-23T00:00:00Z"
+    )
+
+    assert result["counts"] == {"candidate": 1}
+    assert result["queue"][0]["language"] == "go"

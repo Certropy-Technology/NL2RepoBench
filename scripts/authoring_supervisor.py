@@ -54,6 +54,16 @@ DEFAULT_PLAN_FILES = {
     "node": "node-author-wave2-20260828.json",
     "go": "go-author-wave2-20260828.json",
 }
+GO_DISCOVERY_REPOSITORIES = {
+    "go-cast": "spf13/cast",
+    "go-gjson": "tidwall/gjson",
+    "go-humanize": "dustin/go-humanize",
+    "go-redis": "redis/go-redis",
+    "go-semver": "Masterminds/semver",
+    "go-structs": "fatih/structs",
+    "go-uuid": "google/uuid",
+    "go-zap": "uber-go/zap",
+}
 DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3
 MAX_RUNTIME_CONTROLLERS = 6
@@ -458,8 +468,20 @@ def _run_discovery(
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     output = live / "supervisor/discovery" / f"{language}-{stamp}.json"
     command = [sys.executable, str(script)]
-    for package in packages:
-        command.extend(("--package", package))
+    if language == "go":
+        missing = [package for package in packages if package not in GO_DISCOVERY_REPOSITORIES]
+        if missing:
+            return {
+                "status": "discovery-rejected",
+                "reason": f"Go discovery pool lacks repository mapping: {missing[0]}",
+            }
+        for package in packages:
+            command.extend(
+                ("--repository", f"{package}={GO_DISCOVERY_REPOSITORIES[package]}")
+            )
+    else:
+        for package in packages:
+            command.extend(("--package", package))
     command.extend(("--output", str(output), "--workers", "4"))
     result = _run(command, cwd=root, timeout=args.command_timeout)
     if result["exit_code"] != 0:
@@ -1455,39 +1477,54 @@ def supervise(args: argparse.Namespace) -> int:
                 "discovery_pool": discovery_pool,
                 "runtime_config": runtime,
             }
-            try:
-                director = _director_decision(args, root, live, snapshot)
-            except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
+            if args.replenish_language:
                 director = {
                     "action": "pause",
                     "language": "none",
                     "discover_packages": [],
                     "integrate_limit": 0,
                     "worker_limit": 0,
-                    "reason": f"Director unavailable: {_redact(str(exc))}",
+                    "reason": "operator-requested controlled queue replenishment",
                 }
-                report["errors"].append(
-                    {"status": "director-error", "error": director["reason"]}
-                )
+            else:
+                try:
+                    director = _director_decision(args, root, live, snapshot)
+                except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
+                    director = {
+                        "action": "pause",
+                        "language": "none",
+                        "discover_packages": [],
+                        "integrate_limit": 0,
+                        "worker_limit": 0,
+                        "reason": f"Director unavailable: {_redact(str(exc))}",
+                    }
+                    report["errors"].append(
+                        {"status": "director-error", "error": director["reason"]}
+                    )
             report["director"] = director
             selected_language = director.get("language")
             if selected_language not in {"python", "node", "go", "all"}:
                 selected_language = "none"
+            runtime_max_integrations = cast(int, runtime["max_integrations"])
+            runtime_max_controllers = cast(int, runtime["max_total_controllers"])
+            runtime_agent_limit = cast(int | None, runtime["agent_limit"])
+            director_integrate_limit = cast(int, director.get("integrate_limit", 0))
+            director_worker_limit = cast(int, director.get("worker_limit", 0))
             integration_limit = (
-                min(int(director.get("integrate_limit", 0)), runtime["max_integrations"])
+                min(director_integrate_limit, runtime_max_integrations)
                 if director.get("action") in {"continue", "integrate"}
                 else 0
             )
             worker_limit = (
                 min(
-                    int(director.get("worker_limit", 0)),
-                    runtime["max_total_controllers"],
+                    director_worker_limit,
+                    runtime_max_controllers,
                 )
                 if director.get("action") in {"continue", "discover", "integrate"}
                 else 0
             )
-            if runtime["agent_limit"] is not None and director.get("action") != "pause":
-                worker_limit = min(runtime["agent_limit"], runtime["max_total_controllers"])
+            if runtime_agent_limit is not None and director.get("action") != "pause":
+                worker_limit = min(runtime_agent_limit, runtime_max_controllers)
             if not runtime["enabled"]:
                 worker_limit = 0
             if (
@@ -1498,6 +1535,37 @@ def supervise(args: argparse.Namespace) -> int:
                 report["actions"].append(
                     _run_discovery(args, root, live, director, lanes)
                 )
+            if args.replenish_language:
+                selected = (
+                    ["python", "node", "go"]
+                    if "all" in args.replenish_language
+                    else list(args.replenish_language)
+                )
+                if not integration_clean or free < args.min_free_bytes:
+                    report["errors"].append(
+                        {
+                            "status": "replenishment-blocked",
+                            "error": (
+                                "integration checkout is dirty or disk is below "
+                                "the worker threshold"
+                            ),
+                        }
+                    )
+                else:
+                    for language in selected:
+                        report["actions"].append(
+                            _run_discovery(
+                                args,
+                                root,
+                                live,
+                                {
+                                    "action": "discover",
+                                    "language": language,
+                                    "discover_packages": [],
+                                },
+                                lanes,
+                            )
+                        )
             failure_state = _load_failure_state(failure_state_path)
             report["actions"].extend(
                 _release_stale_claims(root, lanes[0], procs, max_attempts=3)
@@ -1746,9 +1814,17 @@ def main() -> int:
         default=DEFAULT_WATCHER_MIN_FREE_BYTES,
     )
     parser.add_argument("--once", action="store_true")
+    parser.add_argument(
+        "--replenish-language",
+        choices=("python", "node", "go", "all"),
+        action="append",
+        help="One-shot operator-approved discovery from the registered pool.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--resume-stopped-controllers", action="store_true")
     args = parser.parse_args()
+    if args.replenish_language and not args.once:
+        parser.error("--replenish-language requires --once")
     if (
         args.workers < 1
         or args.max_total_controllers < 1

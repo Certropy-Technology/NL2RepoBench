@@ -320,6 +320,20 @@ scripts/authoring_runtime_config.py set --agent-limit 4
 scripts/authoring_runtime_config.py set --enabled false
 ```
 
+当某种语言已经耗尽 queue 而受控 discovery pool 还有未尝试候选时，先停止 service，
+再使用 one-shot 补充；该命令只调用固定 adapter，不能执行任意模型或 shell 指令：
+
+```bash
+systemctl stop nl2repobench-authoring-supervisor.service
+scripts/run_authoring_supervisor.sh --once --replenish-language go
+scripts/run_authoring_supervisor.sh --once --replenish-language python \
+  --replenish-language node
+systemctl start nl2repobench-authoring-supervisor.service
+```
+
+补充操作不会重置 exhausted record；新候选会进入独立 generated lane。Go package 名称必须
+在受控 pool 的 owner/repository 映射中登记，防止 discovery 接受浮动或模型生成的来源。
+
 `max-total-controllers` 的硬上限是 6，`controller-concurrency` 的硬上限是 4；默认值
 分别为 3 和 1。增加 controller 会在下一轮逐步启动新的 Loop；降低配置不会杀掉当前
 正在执行的 task，当前 task 收尾后才停止继续 claim。`enabled=false` 停止新 claim，

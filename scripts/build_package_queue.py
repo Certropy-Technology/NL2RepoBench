@@ -59,6 +59,8 @@ def _source_kind(report: Path, raw: dict[str, Any]) -> str:
             return "npm"
         if folded in {"pypi", "python"}:
             return "pypi"
+        if folded in {"go", "go-modules", "golang"}:
+            return "go-modules"
         if folded == "github":
             return "github"
     name = report.name.casefold()
@@ -72,7 +74,7 @@ def _source_kind(report: Path, raw: dict[str, Any]) -> str:
 def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]]:
     source_kind = _source_kind(report, payload)
     report_language = payload.get("language")
-    if report_language not in {"python", "node"}:
+    if report_language not in {"python", "node", "go"}:
         report_language = (
             "python"
             if "python" in str(payload.get("dataset_target", "")).casefold()
@@ -98,7 +100,7 @@ def _merge_records(report: Path, payload: dict[str, Any]) -> list[dict[str, Any]
                 "package": package,
                 "language": (
                     str(raw.get("language"))
-                    if raw.get("language") in {"python", "node"}
+                    if raw.get("language") in {"python", "node", "go"}
                     else (
                         "node"
                         if source_kind == "npm"
@@ -183,7 +185,7 @@ def _status(record: dict[str, Any], existing_ids: set[str], observed_at: str) ->
     normalized = {_slug(package), _slug(str(repository or ""))}
     if package in existing_ids or normalized.intersection({_slug(item) for item in existing_ids}):
         return "existing"
-    if record.get("language") not in {"python", "node"}:
+    if record.get("language") not in {"python", "node", "go"}:
         return "needs-evidence"
     revision = record.get("revision")
     license_spdx = record.get("license_spdx")
