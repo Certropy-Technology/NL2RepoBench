@@ -29,7 +29,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import Any, cast
 
 SAFE_PACKAGE = re.compile(
     r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
@@ -442,12 +442,116 @@ def _run_discovery(
         command.extend(("--package", package))
     command.extend(("--output", str(output), "--workers", "4"))
     result = _run(command, cwd=root, timeout=args.command_timeout)
+    if result["exit_code"] != 0:
+        return {
+            "status": "discovery-failed",
+            "language": language,
+            "packages": packages,
+            "output": str(output),
+            "exit_code": result["exit_code"],
+            "output_tail": result["output"],
+        }
+    queue_root = live / "supervisor/queues"
+    queue_path = queue_root / f"{language}-author-discover-{stamp}.json"
+    built = _run(
+        [
+            sys.executable,
+            str(root / "scripts/build_package_queue.py"),
+            "--input",
+            str(output),
+            "--catalog-root",
+            str(root / "catalog/sources"),
+            "--output",
+            str(queue_path),
+        ],
+        cwd=root,
+        timeout=args.command_timeout,
+    )
+    if built["exit_code"] != 0:
+        return {
+            "status": "discovery-queue-failed",
+            "language": language,
+            "packages": packages,
+            "output": str(output),
+            "exit_code": built["exit_code"],
+            "output_tail": built["output"],
+        }
+    queue = _json(queue_path)
+    queue["queue"] = [
+        record
+        for record in queue.get("queue", [])
+        if isinstance(record, dict)
+        and record.get("package") in packages
+        and record.get("status") in {"candidate", "needs-evidence"}
+    ]
+    queue["counts"] = {
+        "candidate": sum(
+            r.get("status") == "candidate" for r in queue["queue"]
+        ),
+        "needs-evidence": sum(
+            r.get("status") == "needs-evidence" for r in queue["queue"]
+        ),
+    }
+    _atomic_write(queue_path, queue)
+    if not queue["queue"]:
+        return {
+            "status": "discovery-empty",
+            "language": language,
+            "packages": packages,
+            "output": str(output),
+            "queue": str(queue_path),
+        }
+    batch_id = f"{language}-author-discover-{stamp}"
+    state_path = live / "queues" / f"{batch_id}.json"
+    plan_path = live / "plans" / f"{batch_id}.json"
+    base_plan = _json(live / "plans" / DEFAULT_PLAN_FILES[language])
+    base_plan.update({"batch_id": batch_id, "tasks": [], "status": "planned"})
+    _atomic_write(plan_path, base_plan)
+    state_result = _run(
+        [
+            sys.executable,
+            str(root / "scripts/package_queue_loop.py"),
+            "init",
+            "--queue",
+            str(queue_path),
+            "--state",
+            str(state_path),
+        ],
+        cwd=root,
+        timeout=120,
+    )
+    if state_result["exit_code"] != 0:
+        return {
+            "status": "discovery-state-failed",
+            "language": language,
+            "packages": packages,
+            "output": str(output),
+            "queue": str(queue_path),
+            "output_tail": state_result["output"],
+        }
+    registry = live / "supervisor/generated-lanes.json"
+    existing = json.loads(registry.read_text(encoding="utf-8")) if registry.is_file() else []
+    existing.append(
+        {
+            "language": language,
+            "batch_id": batch_id,
+            "queue": str(queue_path),
+            "plan": str(plan_path),
+            "queue_state": str(state_path),
+        }
+    )
+    registry.parent.mkdir(parents=True, exist_ok=True)
+    registry.write_text(
+        json.dumps(existing, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
     return {
-        "status": "discovered" if result["exit_code"] == 0 else "discovery-failed",
+        "status": "discovered",
         "language": language,
         "packages": packages,
         "output": str(output),
-        "exit_code": result["exit_code"],
+        "queue": str(queue_path),
+        "batch_id": batch_id,
         "output_tail": result["output"],
     }
 
@@ -1151,7 +1255,7 @@ def _atomic_write(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _lanes(root: Path, live: Path, queue_root: Path) -> list[Lane]:
-    return [
+    lanes = [
         Lane(
             language,
             DEFAULT_BATCHES[language],
@@ -1161,14 +1265,45 @@ def _lanes(root: Path, live: Path, queue_root: Path) -> list[Lane]:
         )
         for language in ("python", "node", "go")
     ]
+    generated = live / "supervisor/generated-lanes.json"
+    if generated.is_file():
+        try:
+            records = json.loads(generated.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ValueError(f"invalid generated lane registry: {generated}") from exc
+        if not isinstance(records, list):
+            raise ValueError("generated lane registry must be a list")
+        for record in records:
+            if not isinstance(record, dict):
+                raise ValueError("generated lane must be an object")
+            keys = ("language", "batch_id", "queue", "plan", "queue_state")
+            if not all(isinstance(record.get(key), str) for key in keys):
+                raise ValueError("generated lane is missing a string field")
+            language = cast(str, record["language"])
+            batch_id = cast(str, record["batch_id"])
+            queue = cast(str, record["queue"])
+            plan = cast(str, record["plan"])
+            queue_state = cast(str, record["queue_state"])
+            lanes.append(
+                Lane(
+                    language,
+                    batch_id,
+                    Path(queue).resolve(),
+                    Path(plan).resolve(),
+                    Path(queue_state).resolve(),
+                )
+            )
+    return lanes
 
 
 def supervise(args: argparse.Namespace) -> int:
     root = Path(args.repository_root).resolve()
     live = (root / args.live_root).resolve()
     queue_root = Path(args.queue_root).resolve()
-    lanes = _lanes(root, live, queue_root)
-    for lane in lanes:
+    if not args.discovery_pool.is_absolute():
+        args.discovery_pool = root / args.discovery_pool
+    initial_lanes = _lanes(root, live, queue_root)
+    for lane in initial_lanes:
         if not lane.queue.is_file() or not lane.plan.is_file() or not lane.queue_state.is_file():
             raise ValueError(f"lane input is missing: {lane}")
     lock_path = live / "supervisor.lock"
@@ -1179,6 +1314,7 @@ def supervise(args: argparse.Namespace) -> int:
             print("another authoring supervisor owns the lock", file=sys.stderr)
             return 2
         while True:
+            lanes = _lanes(root, live, queue_root)
             free = _free_bytes(root)
             procs = _proc_table()
             report: dict[str, Any] = {
