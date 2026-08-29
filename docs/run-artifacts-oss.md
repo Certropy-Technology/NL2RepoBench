@@ -65,10 +65,6 @@ certification runs under a task's `.nl2repo/authoring-work/**/runs` or
 removing local run/build caches; source, evidence, and private CAS remain
 local until the integrator archives them.
 
-The Harbor model runner uses a separate `harbor-runs/<model>/<task>/<run>/`
-prefix. Unlike the legacy bulk uploader, this path includes the complete
-`artifacts/workspace/` tree and is verified before local cleanup.
-
 Model scores and Oracle evidence are deliberately separated: an Oracle result
 validates the environment and is never a model score. `unknown/` is preserved
 rather than guessed so nothing is misattributed to a model.

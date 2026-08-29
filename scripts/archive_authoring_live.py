@@ -84,8 +84,8 @@ def _secret_shaped(path: Path) -> bool:
     return False
 
 
-def archive_files(worktree: Path) -> list[ArchiveFile]:
-    """Return bounded trusted receipts, including Agent workspaces."""
+def archive_files(worktree: Path, package: str | None = None) -> list[ArchiveFile]:
+    """Return trusted receipts, Agent workspaces, and one source snapshot."""
 
     candidates: list[tuple[Path, str]] = []
     for relative in (".nl2repo/authoring-handoff.json", ".nl2repo/authoring-claim.json"):
@@ -110,6 +110,17 @@ def archive_files(worktree: Path) -> list[ArchiveFile]:
                 parts = archive_relative.parts
                 if "runs" not in parts and "jobs" not in parts:
                     continue
+            candidates.append((path, archive_relative.as_posix()))
+    if package is not None:
+        source_root = worktree / "catalog" / "sources" / package
+        if source_root.is_symlink():
+            raise ValueError(f"source snapshot is a symlink: catalog/sources/{package}")
+        if not source_root.is_dir():
+            raise ValueError(f"source snapshot is missing: catalog/sources/{package}")
+        for path in sorted(source_root.rglob("*")):
+            if not path.is_file() or path.is_symlink():
+                continue
+            archive_relative = path.relative_to(worktree)
             candidates.append((path, archive_relative.as_posix()))
     files: list[ArchiveFile] = []
     for path, relative in candidates:
@@ -334,6 +345,7 @@ def archive_task(
     if not task_is_idle(worktree):
         return {"package": package, "status": "active"}
     identity = {
+        "archive_policy": "source-snapshot-v1",
         "package": package,
         "queue_status": queue_status,
         "owner": owner,
@@ -345,8 +357,14 @@ def archive_task(
     ).hexdigest()
     receipt = receipt_root / lane.language / f"{_package_slug(package)}-{identity_digest[:16]}.json"
     if receipt.is_file():
-        return {"package": package, "status": "already-archived", "receipt": str(receipt)}
-    files = archive_files(worktree)
+        try:
+            previous = json.loads(receipt.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            previous = None
+        if isinstance(previous, dict) and previous.get("source_snapshot_included") is True:
+            return {"package": package, "status": "already-archived", "receipt": str(receipt)}
+        receipt.unlink(missing_ok=True)
+    files = archive_files(worktree, package)
     prefix = (
         f"nl2repobench/authoring-live/archive/{lane.language}/"
         f"{_package_slug(package)}/{identity_digest}"
@@ -367,6 +385,19 @@ def archive_task(
         "attempts": attempts,
         "object_count": len(files),
         "bytes_verified": sum(file.size for file in files),
+        "source_snapshot_included": True,
+        "source_file_count": sum(
+            1 for file in files if file.relative.startswith("catalog/sources/")
+        ),
+        "source_bytes": sum(
+            file.size for file in files if file.relative.startswith("catalog/sources/")
+        ),
+        "workspace_file_count": sum(
+            1 for file in files if "artifacts/workspace/" in file.relative
+        ),
+        "workspace_bytes": sum(
+            file.size for file in files if "artifacts/workspace/" in file.relative
+        ),
         "workspace_policy": "artifacts/workspace included; secret-shaped files block archive",
         "objects": [
             {
@@ -378,12 +409,21 @@ def archive_task(
         ],
     }
     receipt.parent.mkdir(parents=True, exist_ok=True)
-    receipt.write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
-    manifest_key = f"{prefix}/manifest.json"
-    manifest_file = ArchiveFile(
-        receipt, "manifest.json", receipt.stat().st_size, _sha256(receipt)
+    manifest_temp = receipt.with_suffix(".manifest.json.tmp")
+    manifest_temp.write_text(
+        json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8"
     )
-    _upload_and_verify(bucket, manifest_key, manifest_file)
+    try:
+        manifest_key = f"{prefix}/manifest.json"
+        manifest_file = ArchiveFile(
+            manifest_temp, "manifest.json", manifest_temp.stat().st_size, _sha256(manifest_temp)
+        )
+        _upload_and_verify(bucket, manifest_key, manifest_file)
+        receipt.write_text(
+            json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+        )
+    finally:
+        manifest_temp.unlink(missing_ok=True)
     removed = cleanup_verified_task(worktree) if cleanup else 0
     return {
         "package": package,
@@ -457,16 +497,22 @@ def main() -> int:
         return 2
     bucket = oss2.Bucket(oss2.Auth(key_id, key_secret), ENDPOINT, BUCKET)
     with args.lock_file.open("a+", encoding="utf-8") as lock:
-        try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            print("another authoring archive watcher owns the lock", file=sys.stderr)
-            return 2
         while True:
-            results = run_once(args, bucket)
-            print(json.dumps({"results": results}, sort_keys=True), flush=True)
-            if args.once:
-                return 1 if any(result.get("status") == "error" for result in results) else 0
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                if args.once:
+                    print("another authoring archive watcher owns the lock", file=sys.stderr)
+                    return 2
+                time.sleep(args.interval_sec)
+                continue
+            try:
+                results = run_once(args, bucket)
+                print(json.dumps({"results": results}, sort_keys=True), flush=True)
+                if args.once:
+                    return 1 if any(result.get("status") == "error" for result in results) else 0
+            finally:
+                fcntl.flock(lock, fcntl.LOCK_UN)
             time.sleep(args.interval_sec)
 
 

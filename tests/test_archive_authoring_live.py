@@ -59,6 +59,29 @@ def test_archive_files_includes_candidate_workspace_and_scans_secrets(tmp_path: 
     assert ".nl2repo/runs/trial/artifacts/workspace/source.js" in paths
 
 
+def test_archive_files_includes_only_selected_source_snapshot(tmp_path: Path) -> None:
+    worktree = tmp_path / "task"
+    selected = worktree / "catalog/sources/demo"
+    unrelated = worktree / "catalog/sources/other"
+    selected.mkdir(parents=True)
+    unrelated.mkdir(parents=True)
+    (selected / "task.toml").write_text("task_id = 'demo'", encoding="utf-8")
+    (unrelated / "task.toml").write_text("task_id = 'other'", encoding="utf-8")
+
+    paths = {file.relative for file in archive.archive_files(worktree, "demo")}
+
+    assert "catalog/sources/demo/task.toml" in paths
+    assert "catalog/sources/other/task.toml" not in paths
+
+
+def test_archive_files_requires_selected_source_snapshot(tmp_path: Path) -> None:
+    worktree = tmp_path / "task"
+    worktree.mkdir()
+
+    with pytest.raises(ValueError, match="source snapshot is missing"):
+        archive.archive_files(worktree, "demo")
+
+
 def test_secret_shaped_workspace_blocks_authoring_archive(tmp_path: Path) -> None:
     worktree = tmp_path / "task"
     workspace = worktree / ".nl2repo/runs/trial/artifacts/workspace"

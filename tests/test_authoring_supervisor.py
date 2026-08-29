@@ -1,0 +1,224 @@
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+
+def _load():
+    path = Path(__file__).parents[1] / "scripts/authoring_supervisor.py"
+    spec = importlib.util.spec_from_file_location("authoring_supervisor", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+supervisor = _load()
+
+
+def test_source_path_accepts_scoped_package_and_rejects_escape(tmp_path: Path) -> None:
+    root = tmp_path / "worktree"
+    (root / "catalog/sources/@scope/package").mkdir(parents=True)
+
+    assert supervisor._source_path(root, "@scope/package").is_dir()
+    with pytest.raises(ValueError, match="unsafe package"):
+        supervisor._source_path(root, "../outside")
+
+
+def test_copy_if_new_scans_secrets_and_refuses_collisions(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.mkdir()
+    (source / "task.toml").write_text("task_id = 'demo'", encoding="utf-8")
+
+    assert supervisor._copy_if_new(source, target) is True
+    assert (target / "task.toml").read_text(encoding="utf-8") == "task_id = 'demo'"
+    assert supervisor._copy_if_new(source, target) is False
+
+    (source / "secret.txt").write_text("sk-" + "a" * 48, encoding="utf-8")
+    with pytest.raises(ValueError, match="secret-shaped"):
+        supervisor._copy_if_new(source, tmp_path / "secret-target")
+
+
+def test_integrate_task_pushes_before_archive_and_removes_worktree(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "repo"
+    worktree = root / ".nl2repo/authoring-live/worktrees/batch/demo"
+    source = worktree / "catalog/sources/demo"
+    source.mkdir(parents=True)
+    (source / "task.toml").write_text("task_id = 'demo'", encoding="utf-8")
+    (source / "instruction.md").write_text("# Demo\n", encoding="utf-8")
+    (source / "production-evidence.json").write_text("{}", encoding="utf-8")
+    (worktree / ".nl2repo").mkdir(parents=True)
+    (worktree / ".nl2repo/authoring-handoff.json").write_text("{}", encoding="utf-8")
+    compiled = tmp_path / "compiled/demo"
+    compiled.mkdir(parents=True)
+    (compiled / "task.toml").write_text("task_id = 'demo'", encoding="utf-8")
+
+    lane = supervisor.Lane(
+        "python",
+        "batch",
+        tmp_path / "queue.json",
+        tmp_path / "plan.json",
+        tmp_path / "state.json",
+    )
+    events: list[str] = []
+
+    def fake_run(command, *, cwd, timeout):
+        del cwd, timeout
+        if command[:3] == ["git", "status", "--porcelain=v1"]:
+            return {"command": command, "exit_code": 0, "output": "", "timeout": False}
+        if command[:2] == ["git", "add"]:
+            events.append("add")
+            return {"command": command, "exit_code": 0, "output": "", "timeout": False}
+        if command[:3] == ["git", "diff", "--cached"]:
+            return {
+                "command": command,
+                "exit_code": 0,
+                "output": "catalog/sources/demo/task.toml\ncatalog/tasks/demo/task.toml\n",
+                "timeout": False,
+            }
+        if command[:2] == ["git", "commit"]:
+            events.append("commit")
+            return {"command": command, "exit_code": 0, "output": "committed", "timeout": False}
+        if command[:3] == ["git", "rev-parse", "HEAD"]:
+            return {"command": command, "exit_code": 0, "output": "abc123", "timeout": False}
+        if command[:2] == ["git", "push"]:
+            events.append("push")
+            return {"command": command, "exit_code": 0, "output": "pushed", "timeout": False}
+        if command[:3] == ["git", "worktree", "remove"]:
+            events.append("remove")
+            return {"command": command, "exit_code": 0, "output": "", "timeout": False}
+        raise AssertionError(command)
+
+    class FakeArchive:
+        class Lane:
+            def __init__(self, language, batch_id, queue_state):
+                self.language = language
+                self.batch_id = batch_id
+                self.queue_state = queue_state
+
+        @staticmethod
+        def archive_task(*args, **kwargs):
+            del args, kwargs
+            events.append("archive")
+            return {"status": "archived", "bytes_removed": 1}
+
+    monkeypatch.setattr(supervisor, "_run", fake_run)
+    monkeypatch.setattr(supervisor, "_worktree_processes", lambda worktree, procs: [])
+    monkeypatch.setattr(supervisor, "_docker_uses", lambda worktree: False)
+    monkeypatch.setattr(
+        supervisor,
+        "_validate_and_compile",
+        lambda root, source, language: ({"status": "passed"}, compiled),
+    )
+
+    result = supervisor._integrate_task(
+        root,
+        lane,
+        "demo",
+        {"status": "complete", "attempts": 1},
+        [],
+        remote="origin",
+        branch="main",
+        archive_bucket=object(),
+        archive_module=FakeArchive,
+        receipt_root=tmp_path / "receipts",
+        dry_run=False,
+        timeout=60,
+    )
+
+    assert result["status"] == "integrated"
+    assert events == ["add", "commit", "push", "archive", "remove"]
+
+
+def test_queue_summary_counts_states(tmp_path: Path) -> None:
+    queue_state = tmp_path / "state.json"
+    queue_state.write_text(
+        json.dumps(
+            {
+                "items": {
+                    "one": {"status": "complete"},
+                    "two": {"status": "pending"},
+                    "three": {"status": "pending"},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    lane = supervisor.Lane("go", "batch", tmp_path / "queue", tmp_path / "plan", queue_state)
+
+    assert supervisor._queue_summary(lane) == {
+        "language": "go",
+        "counts": {"complete": 1, "pending": 2},
+    }
+
+
+def test_redact_removes_secret_values() -> None:
+    text = "provider returned sk-" + "a" * 48
+
+    redacted = supervisor._redact(text)
+
+    assert "sk-" + "a" * 48 not in redacted
+    assert "[REDACTED]" in redacted
+
+
+def test_controller_slots_count_unique_owner_not_uv_child_processes() -> None:
+    lane = supervisor.Lane(
+        "go", "batch", Path("/queue"), Path("/plan"), Path("/state")
+    )
+    procs = [
+        supervisor.Proc(
+            10,
+            "S",
+            "/repo",
+            "uv run python run_authoring_loop.py --queue-state /state --owner slot-1",
+        ),
+        supervisor.Proc(
+            11,
+            "S",
+            "/repo",
+            "/repo/.venv/bin/python run_authoring_loop.py --queue-state /state --owner slot-1",
+        ),
+        supervisor.Proc(
+            12,
+            "S",
+            "/repo",
+            "uv run python run_authoring_loop.py --queue-state /state --owner slot-2",
+        ),
+    ]
+
+    assert supervisor._controller_slots(lane, procs) == {"slot-1", "slot-2"}
+
+
+def test_integrate_task_does_not_mutate_without_oss(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    worktree = root / ".nl2repo/authoring-live/worktrees/batch/demo"
+    source = worktree / "catalog/sources/demo"
+    source.mkdir(parents=True)
+    lane = supervisor.Lane(
+        "python", "batch", tmp_path / "queue", tmp_path / "plan", tmp_path / "state"
+    )
+
+    result = supervisor._integrate_task(
+        root,
+        lane,
+        "demo",
+        {"status": "complete"},
+        [],
+        remote="origin",
+        branch="main",
+        archive_bucket=None,
+        archive_module=object(),
+        receipt_root=tmp_path / "receipts",
+        dry_run=False,
+        timeout=60,
+    )
+
+    assert result == {"package": "demo", "status": "oss-unavailable"}

@@ -258,6 +258,32 @@ project cleanup。2026-08-22 曾因 Harbor 0.21.0/Python 3.14 的跨 asyncio con
 | verifier build 的 fixture checksum mismatch | 派生 Dockerfile 的硬编码 manifest 与 pinned base image 漂移 | 在 pinned image 内重算 manifest，更新 task-local Dockerfile，再跑 Oracle；不要删掉 integrity check |
 | candidate install 因 `--require-hashes` 拒绝 source directory | pip hash 校验适用于 wheel/requirements，不适用于本地 source path | build 阶段从网络按 `lock_artifact` 安装 hash-locked requirements，candidate 仍用受限 `--target --no-deps` 安装 |
 | pytest 把 `request` 报为 reserved parametrize name | fixture contract 参数名与 pytest 保留名冲突 | 改为 `payload` 等非保留名并重跑 collection |
+
+## 9. 顶层出题 Supervisor
+
+出题 Loop 由顶层 supervisor 统一管理。Loop controller 只负责 claim 和在独立
+worktree 中运行 Pi authoring；supervisor 负责定时检查进程、队列和磁盘，串行集成
+完成题目，生成 Harbor projection，commit/push，并在 OSS 完整归档和回读校验后删除
+worktree。watcher 与 supervisor 共用 `archive.lock`，不会同时归档或删除同一个任务。
+
+启动一次检查并按安全门禁自动启动缺失 controller：
+
+```bash
+scripts/run_authoring_supervisor.sh
+```
+
+排障或 cron 首次部署使用一次性 dry-run：
+
+```bash
+scripts/run_authoring_supervisor.sh --once --dry-run
+```
+
+默认每种语言最多 3 个 `max-concurrency=1` controller，但受全局最多 3 个 controller
+的磁盘保护上限约束，确保 Python、Node、Go 不会在 100 GiB 工作盘上同时无限扩张。
+`/data` 剩余空间低于 12 GiB 时 supervisor 停止启动新 Loop，但仍允许归档和清理已验证
+的完成题；剩余空间低于 2 GiB 时不启动 watcher。状态、动作、错误和队列快照写入
+`.nl2repo/authoring-live/supervisor/status.json`。source、generated projection、
+OSS manifest 或 worktree 发生冲突时 fail closed 并保留现场。
 | Python verifier 用 `networkx`/SymPy 旧 API 失败 | pinned image 中实际版本与冻结上游 API 有 drift，或 runtime wheel 未进入 verifier context | 先记录实际版本，补兼容 shim/锁依赖并重新 Oracle；不能直接降低断言 |
 | source solution 生成空 workspace | placeholder `solve.sh` 或 agent image 缺 Git/构建工具 | 先补 exact-revision materializer、工具链和 build context，再判断题目是否可行 |
 | 没有 history/event | Harbor ATIF 转换是预期产物 | 验证 `trajectory.json`；需要 raw events 时扩展 adapter |
