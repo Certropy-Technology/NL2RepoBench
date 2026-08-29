@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/TheAlgorithms/Go",
+    "revision": "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19",
+    "source_digest": "sha256:b3c92e9e75f682b5543bf069e4c2fc8fce0eda7067639185bd92e686cc648507",
+    "license_spdx": "MIT"
+  },
+  "runtime": {
+    "language": "go",
+    "package_manager": "go-modules",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_sha256": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+    "agent_image": "sha256:98ff12d322db5e14d90820fe692dcb66a9694f1b647584bf4d542b578a5def3c",
+    "verifier_image": "sha256:0f96621e8dcd6ef7e6747a898ee51cbc1a828e1fa33a5517e19d94fb9b62ca77"
+  },
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885",
+      "size_bytes": 10240
+    },
+    "oracle_bundle": {
+      "digest": "sha256:1a98f1381296346c3cd662ebfb85caa827964388fb07c9490c4ddb17ff66ae01",
+      "size_bytes": 10240
+    },
+    "verifier_bundle": {
+      "digest": "sha256:aaf6dc6ed64ba5703cd8ead1d06fc030f55acdfb25f926f204f1b4ee09ddeed1",
+      "size_bytes": 10240
+    }
+  },
+  "final_bundle": {
+    "path": ".nl2repo/compiled/go-go-final/go-go/bundle.manifest.json",
+    "sha256": "sha256:8ab7bd2f81c1130005f0077c69d5f0ae0938c91f1a1e904b92d9a6b81815860e",
+    "size_bytes": 12723,
+    "file_count": 68,
+    "repeat_compile_sha256": "sha256:8ab7bd2f81c1130005f0077c69d5f0ae0938c91f1a1e904b92d9a6b81815860e"
+  },
+  "tests": {
+    "framework": "go bridge contract",
+    "protocol": "custom-json-v1",
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "upstream_collection": "43 passed leaf events in each of 3 runs for ./conversion"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-go-final/go-go -a oracle --allow-agent-host github.com --job-name go-go-final-oracle -o .nl2repo/runs/go-go-final-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "trial": "go-go__SXqomBY",
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/go-go-final/oracle/grading.json",
+      "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/go-go-final/oracle/network.json",
+      "sha256": "sha256:4e8a97066170ea777d2b1692098a7164dcce518946e3db6238cccbe4bd90c9a9",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-go-final/go-go -a nop --job-name go-go-final-empty -o .nl2repo/runs/go-go-final-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "exception": "candidate-installation-failed is the permitted empty-workspace 0/0 exception",
+      "grading": {"path": ".nl2repo/evidence/go-go-final/empty/grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"},
+      "network": {"path": ".nl2repo/evidence/go-go-final/empty/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-go-final/go-go-stub -a oracle --job-name go-go-final-stub -o .nl2repo/runs/go-go-final-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "trial": "go-go-stub__ds64Ww3",
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/evidence/go-go-final/stub/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/evidence/go-go-final/stub/network.json", "sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-go-final/go-go-forgery -a oracle --job-name go-go-final-forgery -o .nl2repo/runs/go-go-final-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "trial": "go-go-forgery__rNhAVY8",
+      "valid": true,
+      "verifier_owned_reward": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/evidence/go-go-final/forgery/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/evidence/go-go-final/forgery/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "public_network_available": false}
+    },
+    "offline": {
+      "command": "docker run --rm --network none -v <writable Oracle workspace>:/workspace -v <logs>:/logs/verifier nl2repobench/go-go-verifier:final-authoring /tests/test.sh",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "passed": 1,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 1.0,
+      "grading": {"path": ".nl2repo/evidence/go-go-final/offline/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+      "network": {"path": ".nl2repo/evidence/go-go-final/offline/network.json", "sha256": "sha256:107dbc34c05f14d35892d702be204cd1f330afd524de60346745e38333459ba8", "public_network_available": false}
+    }
+  },
+  "additional_controls": {
+    "install-failure": "valid true, reward 0.0, candidate-installation-failed, 0/0 allowed installation exception",
+    "panic": "valid true, reward 0.0, 0/1",
+    "hang": "valid true, reward 0.0, 0/1",
+    "oversized-output": "valid true, reward 0.0, 0/1",
+    "background-process": "valid true, reward 0.0, 0/1"
+  },
+  "control_summary": {
+    "path": ".nl2repo/authoring-work/go-author-wave2-20260828/go-go/evidence/final-control-summary.json",
+    "sha256": "sha256:a944b4ae94b1ca15ca9a22ac5b87b1efae0e502bedeb8943885d37dfa56cf849"
+  },
+  "residual_risks": [
+    "The full upstream repository has an unrelated randomized Diffie-Hellman failure outside the selected conversion package; package scope is explicitly conversion.",
+    "No model Agent Run, blind review, pilot, or publication was performed in this authoring lane."
+  ]
+}

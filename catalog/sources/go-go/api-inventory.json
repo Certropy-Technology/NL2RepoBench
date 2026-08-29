@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "module_path": "github.com/TheAlgorithms/Go",
+  "package_path": "github.com/TheAlgorithms/Go/conversion",
+  "method": "go doc -all ./conversion at frozen revision",
+  "inventory_sha256": "sha256:4d04cd1eb6967463a8a46cd80020a88d6c9ea7ad6763505b2cf53df6507e98e6",
+  "public_symbols": [
+    {"kind": "const", "name": "Alphabet", "signature": "const Alphabet = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\""},
+    {"kind": "func", "name": "Base64Decode", "signature": "func Base64Decode(input string) []byte"},
+    {"kind": "func", "name": "Base64Encode", "signature": "func Base64Encode(input []byte) string"},
+    {"kind": "func", "name": "BinaryToDecimal", "signature": "func BinaryToDecimal(binary string) (int, error)"},
+    {"kind": "func", "name": "DecimalToBinary", "signature": "func DecimalToBinary(num int) (string, error)"},
+    {"kind": "func", "name": "HEXToRGB", "signature": "func HEXToRGB(hex uint) (red, green, blue byte)"},
+    {"kind": "func", "name": "IntToRoman", "signature": "func IntToRoman(n int) (string, error)"},
+    {"kind": "func", "name": "RGBToHEX", "signature": "func RGBToHEX(red, green, blue byte) (hex uint)"},
+    {"kind": "func", "name": "Reverse", "signature": "func Reverse(str string) string"},
+    {"kind": "func", "name": "RomanToInt", "signature": "func RomanToInt(input string) (int, error)"}
+  ]
+}

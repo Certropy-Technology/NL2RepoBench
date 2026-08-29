@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "frozen_total": 1,
+  "leaf_id": "contract::public-api",
+  "bridge_operations": [
+    "base64_encode",
+    "base64_decode",
+    "binary_to_decimal",
+    "reverse",
+    "decimal_to_binary",
+    "int_to_roman",
+    "roman_to_int",
+    "hex_to_rgb",
+    "rgb_to_hex"
+  ],
+  "assertion_classes": [
+    "Base64 padding, empty input, UTF-8, and round trips",
+    "binary validation, boundaries, and conversion",
+    "decimal zero, positive values, and negative rejection",
+    "Unicode code-point reversal",
+    "Roman canonical values, boundaries, empty input, and errors",
+    "RGB component packing, unpacking, and high-bit masking",
+    "bridge argument validation"
+  ],
+  "metric_contract": "fixed-test-pass-rate-v1",
+  "collection_mismatch": "fail"
+}

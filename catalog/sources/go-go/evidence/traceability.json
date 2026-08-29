@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "source_revision": "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19",
+  "public_contract": "instruction.md#api-usage-guide",
+  "api_inventory": "api-inventory.json",
+  "test_plan": "test-plan.json",
+  "candidate_boundary": "candidate-boundary.json",
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "private_assertion_classes": [
+      "Base64 encode/decode",
+      "binary and decimal conversion",
+      "Unicode reversal",
+      "Roman numeral conversion",
+      "RGB packing and unpacking",
+      "error and boundary behavior"
+    ]
+  },
+  "upstream_package_baseline": {
+    "package": "github.com/TheAlgorithms/Go/conversion",
+    "runs": 3,
+    "collected_leaf_events_each_run": 43,
+    "failed_leaf_events_each_run": 0
+  }
+}

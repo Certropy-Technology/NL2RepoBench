@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-go"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:1a98f1381296346c3cd662ebfb85caa827964388fb07c9490c4ddb17ff66ae01", size_bytes = 10240, media_type = "application/vnd.nl2repobench.oracle-bundle+tar", uri = "artifact://private/sha256:1a98f1381296346c3cd662ebfb85caa827964388fb07c9490c4ddb17ff66ae01", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "algorithms", "conversion", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/TheAlgorithms/Go"
+revision = "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19"
+license_spdx = "MIT"
+source_digest = "sha256:b3c92e9e75f682b5543bf069e4c2fc8fce0eda7067639185bd92e686cc648507"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution uses a private zero-dependency Go module closure and remains offline; only the trusted Oracle receives a run-scoped github.com authorization for the pinned source revision."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", size_bytes = 10240, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate deterministic Base64, numeric, Roman numeral, Unicode reversal, and RGB conversion APIs through a bounded Go bridge."
+keywords = ["go", "algorithms", "conversion", "go-modules", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-wave2-20260828"
+reason = "Frozen source, typed bridge, private zero-dependency closure, production compile, Oracle, denominator-preserving controls, and positive offline verifier replay passed; awaiting integrator review and model Agent Run."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:aaf6dc6ed64ba5703cd8ead1d06fc030f55acdfb25f926f204f1b4ee09ddeed1", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:aaf6dc6ed64ba5703cd8ead1d06fc030f55acdfb25f926f204f1b4ee09ddeed1", visibility = "private" }
+entrypoint = "contract.sh"

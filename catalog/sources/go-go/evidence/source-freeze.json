@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "upstream_url": "https://github.com/TheAlgorithms/Go",
+  "revision": "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19",
+  "tree": "1a7ced1fa12ae31e2771a8f870395d818b70e815",
+  "commit_date": "2025-01-23T21:21:13+05:30",
+  "source_archive": {
+    "format": "git-archive-tar",
+    "sha256": "b3c92e9e75f682b5543bf069e4c2fc8fce0eda7067639185bd92e686cc648507",
+    "size_bytes": 1628160
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "LICENSE",
+    "sha256": "77d6707839a16c78953ce11b9ce9be3ca8ffe4bb43fbef2cc47cbe713fee3bfe"
+  },
+  "module": {
+    "path": "github.com/TheAlgorithms/Go",
+    "upstream_go_directive": "1.19",
+    "external_modules": 0,
+    "go_sum_entries": 0
+  },
+  "selected_package": "github.com/TheAlgorithms/Go/conversion",
+  "first_lane_scan": {
+    "cgo": false,
+    "unsafe": false,
+    "plugin": false,
+    "go_generate": false,
+    "go_linkname": false,
+    "go_workspace": false,
+    "external_replace": false,
+    "network": false,
+    "filesystem": false,
+    "random": false
+  },
+  "upstream_baseline": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./conversion",
+    "runs": 3,
+    "passed_leaf_events_each_run": 43,
+    "failed_leaf_events_each_run": 0,
+    "skipped_leaf_events_each_run": 0
+  }
+}
