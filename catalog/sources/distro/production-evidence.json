@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "task_id": "distro",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/python-distro/distro",
+    "revision": "3fba7d3e19c84e5bb1f15c22b1a5a6db6e8f07c7",
+    "archive_sha256": "sha256:b4241c8e34dd1432b9870b56f9f1056eede939b3486d9f0434c7fc6a08c5c01f",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:cb5e8e7e5f4a3988e1063c142c60dc2df75605f4c46515e776e3aca6df976e14"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "toolchain_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+      "size_bytes": 373
+    },
+    "verifier_bundle": {
+      "digest": "sha256:349ba12e2b736930ab6fc8cdb06d5510051858be90a848459ce2e69057d9db07",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "digest": "sha256:2fbf98c7839f582a7d75f51599823eee3f01724ff133787e7af7cf2dcb8ec1d6",
+      "size_bytes": 563200
+    }
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/distro --output .nl2repo/authoring-work/compiled-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/authoring-work/compiled-final/distro/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:61ecaf50dd267cc8e62b4ef6a8855dc9ab59a183cb59352300290b77af3a724b",
+    "bundle_file_count": 60
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-final/distro -a oracle --job-name distro-oracle-final -o .nl2repo/runs/distro-oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 15,
+    "collected": 15,
+    "passed": 15,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/distro-oracle-final/distro-oracle-final/distro__ntMG6k4/verifier/grading.json",
+    "grading_sha256": "sha256:22a61ac82d64a2116467b5b4c6e2070446d6cee2fd5da93f91b4ea742ce0c813",
+    "network": ".nl2repo/runs/distro-oracle-final/distro-oracle-final/distro__ntMG6k4/verifier/network.json",
+    "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-final/distro -a nop --job-name distro-empty-final -o .nl2repo/runs/distro-empty-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/distro-empty-final/distro-empty-final/distro__MgBozmh/verifier/grading.json",
+      "grading_sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef",
+      "network": ".nl2repo/runs/distro-empty-final/distro-empty-final/distro__MgBozmh/verifier/network.json",
+      "network_sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-final-controls/distro-stub -a oracle --job-name distro-stub-final -o .nl2repo/runs/distro-stub-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 15,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/distro-stub-final/distro-stub-final/distro-stub__bWQ3nmM/verifier/grading.json",
+      "grading_sha256": "sha256:b3132a519342edd8f9f62c390fbc3d1ff20efeca9210bf173c8b7892d86619b5",
+      "network": ".nl2repo/runs/distro-stub-final/distro-stub-final/distro-stub__bWQ3nmM/verifier/network.json",
+      "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-final-controls/distro-forgery -a oracle --job-name distro-forgery-final -o .nl2repo/runs/distro-forgery-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 15,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/runs/distro-forgery-final/distro-forgery-final/distro-forgery__dMrDpLS/verifier/grading.json",
+      "grading_sha256": "sha256:b3132a519342edd8f9f62c390fbc3d1ff20efeca9210bf173c8b7892d86619b5",
+      "network": ".nl2repo/runs/distro-forgery-final/distro-forgery-final/distro-forgery__dMrDpLS/verifier/network.json",
+      "network_sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399"
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-final-controls/distro-call-hang -a oracle --job-name distro-call-hang-final -o .nl2repo/runs/distro-call-hang-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 15,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded_child_timeout_sec": 2,
+      "grading": ".nl2repo/runs/distro-call-hang-final/distro-call-hang-final/distro-call-hang__umrXMxL/verifier/grading.json",
+      "grading_sha256": "sha256:b3132a519342edd8f9f62c390fbc3d1ff20efeca9210bf173c8b7892d86619b5",
+      "network": ".nl2repo/runs/distro-call-hang-final/distro-call-hang-final/distro-call-hang__umrXMxL/verifier/network.json",
+      "network_sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80"
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled-final-controls/distro-install-hang -a oracle --job-name distro-install-hang-final -o .nl2repo/runs/distro-install-hang-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "candidate_install_outcome": "timeout",
+      "grading": ".nl2repo/runs/distro-install-hang-final/distro-install-hang-final/distro-install-hang__pZuDUZ3/verifier/grading.json",
+      "grading_sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef",
+      "network": ".nl2repo/runs/distro-install-hang-final/distro-install-hang-final/distro-install-hang__pZuDUZ3/verifier/network.json",
+      "network_sha256": "sha256:908d04ffbb200721d60da68b44be487179a5b20ea9d13ce7a014c29d097196fe"
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "source": "Oracle verifier network probe"
+    }
+  },
+  "gates": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_error_count": 0,
+    "python_compile_exit_code": 0,
+    "shell_syntax_exit_code": 0
+  },
+  "residual_risks": [
+    "The production denominator is a bounded 15-scenario behavioral subset rather than all 281 upstream tests.",
+    "Live host-specific lsb_release, uname, and /etc behavior is outside the deterministic fixture boundary.",
+    "Independent spec review and downstream model-agent pilot remain pending."
+  ]
+}

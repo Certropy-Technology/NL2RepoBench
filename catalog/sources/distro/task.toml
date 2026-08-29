@@ -1,0 +1,84 @@
+schema_version = "1.0"
+task_id = "distro"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "system-information"
+tags = ["python", "linux", "os-release", "cli", "parsing", "scenario-adapter", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-distro/distro"
+revision = "3fba7d3e19c84e5bb1f15c22b1a5a6db6e8f07c7"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:b4241c8e34dd1432b9870b56f9f1056eede939b3486d9f0434c7fc6a08c5c01f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build backend is installed during image construction from a private hash lock. Agent and separate verifier runs are network-isolated; only the trusted Oracle receives the digest-verified source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", size_bytes = 373, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 15
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:349ba12e2b736930ab6fc8cdb06d5510051858be90a848459ce2e69057d9db07", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:349ba12e2b736930ab6fc8cdb06d5510051858be90a848459ce2e69057d9db07", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the pinned distro Linux distribution information library from an empty workspace and satisfy deterministic os-release, release-file, accessor, and CLI scenarios."
+keywords = ["python", "linux", "os-release", "cli", "scenario-adapter", "parsing"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:2fbf98c7839f582a7d75f51599823eee3f01724ff133787e7af7cf2dcb8ec1d6"
+size_bytes = 563200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2fbf98c7839f582a7d75f51599823eee3f01724ff133787e7af7cf2dcb8ec1d6"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Production compile, Oracle, empty/stub/forgery, timeout, and offline controls passed in this lane. Downstream Agent Run, review, pilot, and publication remain separate."
