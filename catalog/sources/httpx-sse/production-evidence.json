@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpx-sse",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/florimondmanca/httpx-sse",
+    "revision": "ccba32e3f9b03d1c1c42b788fdae7ea59ebcb9b8",
+    "archive_sha256": "sha256:b8c8d892b6c6557f7ffebf2dd28a14b2d4b12b30ff2c6f110736e7f5ff852220",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:beec67e4ee83a7af26f242bed9987aa863d6d2dfb776106aa2360c4187f31901",
+    "refetch_verified": true
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "toolchain_manifest_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "toolchain_file_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853",
+    "network_policy": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:c040982d796cdcbcccba3aca9e8abc7f0353f4220a9d9b98fda1650b37a74adf",
+      "size_bytes": 2336
+    },
+    "verifier_bundle": {
+      "digest": "sha256:489634abf1fb9a28b13f2331cad9684e6463ea2d04ef2ee5596266c2c17d4237",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "digest": "sha256:c52c9b1ff5d137611d0b4cdc84cae61f4e466120b7619e22a602f43f5b09e045",
+      "size_bytes": 81920
+    }
+  },
+  "upstream_baseline": {
+    "command": ".nl2repo/authoring-work/httpx-sse/upstream-venv/bin/python -m pytest -q --no-cov --junitxml=../upstream-baseline.xml tests",
+    "exit_code": 0,
+    "passed": 59,
+    "collected": 59,
+    "junit": ".nl2repo/authoring-work/httpx-sse/source-inspect/upstream-baseline.xml",
+    "junit_sha256": "sha256:745fe116153ee050dcfa5672faafedf2f9a84992d937350e07c293b18cd8035b",
+    "log": ".nl2repo/authoring-work/httpx-sse/source-inspect/upstream-baseline.log",
+    "log_sha256": "sha256:26cb855e73c48ed57ce567495417448d5f54e13c5567d548bd3a2598c8437568"
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 26,
+    "oracle_collection": 26
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/httpx-sse --output .nl2repo/authoring-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/authoring-final/httpx-sse/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:66938bbe2a0b7ff2fe06adf7aadbce9e9db046ce4fec3503061c590e5d882d4d",
+    "canonical_manifest_digest": "sha256:72ca340fd3055d9f6d838d986978e4d89831a54c17e5847e4971231e60d4dfb1",
+    "file_count": 60
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final/httpx-sse -a oracle --job-name httpx-sse-final-oracle -o .nl2repo/runs/httpx-sse-final-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 26,
+    "collected": 26,
+    "passed": 26,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/httpx-sse-final-oracle/httpx-sse-final-oracle/result.json",
+    "result_sha256": "sha256:d3658a2ac50f61779270724faa45ec428460f35a1f56d36679501e69eacce2cf",
+    "grading": ".nl2repo/runs/httpx-sse-final-oracle/httpx-sse-final-oracle/httpx-sse__7RuoMR2/verifier/grading.json",
+    "grading_sha256": "sha256:5710f0d3e7f7cd3cc550637c979400ed12b05ddf24f4d0f23a545ad9d4ee571c",
+    "network": ".nl2repo/runs/httpx-sse-final-oracle/httpx-sse-final-oracle/httpx-sse__7RuoMR2/verifier/network.json",
+    "network_sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final/httpx-sse -a nop --job-name httpx-sse-final-empty -o .nl2repo/runs/httpx-sse-final-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/httpx-sse-final-empty/httpx-sse-final-empty/httpx-sse__k7xxxYd/verifier/grading.json",
+      "grading_sha256": "sha256:8af036397ef9698f948d05e6846dec66d0844b584723e97ab41655d4c28f6ebe",
+      "network": ".nl2repo/runs/httpx-sse-final-empty/httpx-sse-final-empty/httpx-sse__k7xxxYd/verifier/network.json",
+      "network_sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc",
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-controls/httpx-sse-stub -a oracle --job-name httpx-sse-final-stub -o .nl2repo/runs/httpx-sse-final-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 26,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/httpx-sse-final-stub/httpx-sse-final-stub/httpx-sse-stub__Lcj2U82/verifier/grading.json",
+      "grading_sha256": "sha256:b4b2ee5e78a80e060d6ed8d9477f7f6b5f732ff85d7a2585d9b636f423a43e80",
+      "network": ".nl2repo/runs/httpx-sse-final-stub/httpx-sse-final-stub/httpx-sse-stub__Lcj2U82/verifier/network.json",
+      "network_sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-controls/httpx-sse-forgery -a oracle --job-name httpx-sse-final-forgery -o .nl2repo/runs/httpx-sse-final-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 26,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/runs/httpx-sse-final-forgery/httpx-sse-final-forgery/httpx-sse-forgery__JtQonhy/verifier/grading.json",
+      "grading_sha256": "sha256:b4b2ee5e78a80e060d6ed8d9477f7f6b5f732ff85d7a2585d9b636f423a43e80",
+      "network": ".nl2repo/runs/httpx-sse-final-forgery/httpx-sse-final-forgery/httpx-sse-forgery__JtQonhy/verifier/network.json",
+      "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567",
+      "public_network_available": false
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-controls/httpx-sse-install-hang -a oracle --job-name httpx-sse-final-install-hang -o .nl2repo/runs/httpx-sse-final-install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "candidate_install_outcome": "timeout",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/httpx-sse-final-install-hang/httpx-sse-final-install-hang/httpx-sse-install-hang__BhwChYP/verifier/grading.json",
+      "grading_sha256": "sha256:8af036397ef9698f948d05e6846dec66d0844b584723e97ab41655d4c28f6ebe",
+      "network": ".nl2repo/runs/httpx-sse-final-install-hang/httpx-sse-final-install-hang/httpx-sse-install-hang__BhwChYP/verifier/network.json",
+      "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567",
+      "public_network_available": false
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-controls/httpx-sse-call-hang -a oracle --job-name httpx-sse-final-call-hang -o .nl2repo/runs/httpx-sse-final-call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 26,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/httpx-sse-final-call-hang/httpx-sse-final-call-hang/httpx-sse-call-hang__nomDnKn/verifier/grading.json",
+      "grading_sha256": "sha256:b4b2ee5e78a80e060d6ed8d9477f7f6b5f732ff85d7a2585d9b636f423a43e80",
+      "network": ".nl2repo/runs/httpx-sse-final-call-hang/httpx-sse-final-call-hang/httpx-sse-call-hang__nomDnKn/verifier/network.json",
+      "network_sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final/httpx-sse -a oracle --job-name httpx-sse-final-offline -o .nl2repo/runs/httpx-sse-final-offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 26,
+      "passed": 26,
+      "reward": 1.0,
+      "grading": ".nl2repo/runs/httpx-sse-final-offline/httpx-sse-final-offline/httpx-sse__N668yMG/verifier/grading.json",
+      "grading_sha256": "sha256:5710f0d3e7f7cd3cc550637c979400ed12b05ddf24f4d0f23a545ad9d4ee571c",
+      "network": ".nl2repo/runs/httpx-sse-final-offline/httpx-sse-final-offline/httpx-sse__N668yMG/verifier/network.json",
+      "network_sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+      "public_network_available": false
+    }
+  },
+  "gates": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_error_count": 0,
+    "httpx_sse_network_findings": 0,
+    "shell_syntax_exit_code": 0,
+    "production_compile_exit_code": 0
+  },
+  "residual_risks": [
+    "The production denominator is an independently authored 26-scenario deterministic subset rather than all 59 upstream tests.",
+    "The declared shared agent runtime image ID sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5 is absent locally; the integrator must restore and verify it before a model Agent Run.",
+    "Independent blind/spec review, model Agent Run, dataset integration, and publication approval remain outside this lane."
+  ]
+}

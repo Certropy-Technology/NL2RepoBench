@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "package": "httpx-sse",
+  "version": "0.4.3",
+  "runtime_entry": "src/httpx_sse/__init__.py",
+  "public_exports": [
+    "__version__",
+    "EventSource",
+    "connect_sse",
+    "aconnect_sse",
+    "ServerSentEvent",
+    "SSEError"
+  ],
+  "public_modules": [
+    "httpx_sse._api",
+    "httpx_sse._decoders",
+    "httpx_sse._exceptions",
+    "httpx_sse._models"
+  ],
+  "runtime_dependencies": ["httpx"],
+  "build_dependencies": ["setuptools", "wheel"],
+  "excluded_risk_surfaces": [
+    "live network services",
+    "ASGI integration servers",
+    "reconnection backoff",
+    "filesystem and TTY behavior"
+  ]
+}

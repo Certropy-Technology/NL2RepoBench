@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_paths": [
+    "tests/test_api.py",
+    "tests/test_asgi.py",
+    "tests/test_decoders.py",
+    "tests/test_event_source.py",
+    "tests/test_exceptions.py",
+    "tests/test_models.py"
+  ],
+  "upstream_framework": "pytest",
+  "upstream_collected": 59,
+  "upstream_passed": 59,
+  "upstream_skipped": 0,
+  "frozen_private_collection": 26,
+  "collection_method": "independent custom-json-v1 contract over bounded HTTPX child adapter",
+  "baseline_python": "3.12.11",
+  "baseline_junit": ".nl2repo/authoring-work/httpx-sse/source-inspect/upstream-baseline.xml",
+  "baseline_junit_sha256": "745fe116153ee050dcfa5672faafedf2f9a84992d937350e07c293b18cd8035b",
+  "notes": "The upstream suite includes one in-process ASGI integration test requiring starlette and sse-starlette. All 59 upstream tests passed in the authoring baseline. The production contract excludes the ASGI dependency surface and retains deterministic HTTPX MockTransport and custom stream behavior."
+}

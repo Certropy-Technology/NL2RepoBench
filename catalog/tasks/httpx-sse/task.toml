@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/httpx-sse"
+version = "1.0.0"
+description = "Build httpx-sse 0.4.3 from an empty workspace and reproduce deterministic synchronous and asynchronous Server-Sent Event parsing over bounded HTTPX streams."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "httpx",
+    "sse",
+    "async",
+    "streaming",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "medium"
+category = "sse-client-library"
+tags = [
+    "python",
+    "httpx",
+    "sse",
+    "async",
+    "streaming",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 26
+canonical_manifest_digest = "sha256:72ca340fd3055d9f6d838d986978e4d89831a54c17e5847e4971231e60d4dfb1"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 360.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
