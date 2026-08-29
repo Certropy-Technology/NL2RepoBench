@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/fonttools"
+version = "0.1.0"
+description = "Build a pure-Python fontTools subset from an empty workspace and satisfy deterministic geometry, fixed-point, text, affine-transform, and minimal OpenType round-trip scenarios."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "fonts",
+    "opentype",
+    "geometry",
+    "serialization",
+    "pytest",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "font-engineering-library"
+tags = [
+    "python",
+    "fonts",
+    "opentype",
+    "geometry",
+    "serialization",
+    "pytest",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 60
+canonical_manifest_digest = "sha256:23a8a3e0a92e3717307fdd3891253e00259b4cdde67fe39039d56703f8077ce5"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

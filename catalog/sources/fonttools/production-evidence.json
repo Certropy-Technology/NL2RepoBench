@@ -1,0 +1,262 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fonttools",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run",
+  "source_revision": "e7e00f1b16aef6ede850206df3c100ccde27b2d3",
+  "source_archive_sha256": "sha256:2c7719e06724e5f34b4677eb4e7a5cb17a9cdee1225f829b2881b097d61d666c",
+  "license": "MIT",
+  "environment": {
+    "python": "3.12.14 task image; 3.12.11 authoring interpreter",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_runtime_image_digest": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "verifier_image_digest": "sha256:19537aba17716455de7223e63f668239d2f0949d5882e78dfa1bec5a9da25d0b",
+    "network_policy": "no-network",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": [
+      "annotated-doc==0.0.5",
+      "jaraco-context==6.1.2",
+      "jaraco-functools==4.6.0",
+      "jaraco-text==4.3.0",
+      "markdown-it-py==4.2.0",
+      "mdurl==0.1.2",
+      "more-itertools==11.1.0",
+      "packaging==26.3",
+      "platformdirs==4.11.5",
+      "pygments==2.21.0",
+      "rich==15.0.0",
+      "setuptools==80.9.0",
+      "shellingham==1.5.4",
+      "typer==0.27.1",
+      "typer-slim==0.24.0",
+      "wheel==0.45.1"
+    ],
+    "lock_artifact": {
+      "digest": "sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861",
+      "size_bytes": 3654,
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/fonttools/build-requirements.lock.txt",
+      "uri": "artifact://private/sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "api_path": ".nl2repo/authoring-work/python-author-wave2-20260828/fonttools/api-inventory.json",
+    "api_sha256": "sha256:ed8fdacf9c5dcb07b20256704f4b137002927278c4d065ccd489fd4a8ead1a76",
+    "test_path": ".nl2repo/authoring-work/python-author-wave2-20260828/fonttools/test-inventory.json",
+    "test_sha256": "sha256:ed8fdacf9c5dcb07b20256704f4b137002927278c4d065ccd489fd4a8ead1a76",
+    "implementation_python_files": 377,
+    "upstream_test_files": 172,
+    "upstream_test_definitions": 2456,
+    "deterministic_verifier_leaves": 60
+  },
+  "bundles": {
+    "manifest_path": ".nl2repo/compiled-fonttools/fonttools/bundle.manifest.json",
+    "manifest_sha256": "sha256:adc6bea96ba102121627bd2c24a98dd6410c8225543a03a55e60c4195c26fee2",
+    "canonical_manifest_digest": "sha256:23a8a3e0a92e3717307fdd3891253e00259b4cdde67fe39039d56703f8077ce5",
+    "verifier_bundle": "artifact://private/sha256:ead33af9b7228551170d691933f39a9aa146afa1e07be5137deec106c927bdc1",
+    "oracle_bundle": "artifact://private/sha256:9662cc24bf31908462722c478afac87da804f2c0456b55eb7de126bb198893c3",
+    "compiled_file_count": 58
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 60,
+    "collection": 60,
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "protocol": "UID-isolated candidate subprocess with trusted custom verifier"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-fonttools/fonttools -a oracle --job-name fonttools-oracle-20260828-r3 -o .nl2repo/runs/fonttools-oracle-20260828-r3 --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 60,
+    "total": 60,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/fonttools-oracle-20260828-r3/fonttools-oracle-20260828-r3/fonttools__hfgNKxc/verifier/grading.json",
+      "sha256": "sha256:4e02ccabb87a1c17388a56275261dac61cb1ec33ee70fb2c3be30c7577aa92ae"
+    },
+    "network": {
+      "path": ".nl2repo/runs/fonttools-oracle-20260828-r3/fonttools-oracle-20260828-r3/fonttools__hfgNKxc/verifier/network.json",
+      "sha256": "sha256:b17957e4490bdce5968e61df6e6a582fe7f1b31b85fc1efc8c6aee9684babf72"
+    },
+    "candidate_install": {
+      "path": ".nl2repo/runs/fonttools-oracle-20260828-r2/fonttools-oracle-20260828-r2/fonttools__yfvw93c/verifier/candidate-install.json",
+      "outcome": "success",
+      "entries": 3976,
+      "total_bytes": 35821726
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none nl2repo/fonttools-verifier:authoring-final /tests/test.sh with an empty workspace",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/fonttools/empty-logs/verifier/grading.json",
+        "sha256": "sha256:bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/fonttools/empty-logs/verifier/network.json",
+        "sha256": "sha256:acc9f5ab8849a90c104ece64b8f8c8ada79f7d019218ddb73771b229d61e4008"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fonttools/fonttools-stub -a oracle --job-name fonttools-stub-20260828-r5 -o .nl2repo/runs/fonttools-stub-20260828-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 2,
+      "total": 60,
+      "reward": 0.03333333333333333,
+      "grading": {
+        "path": ".nl2repo/runs/fonttools-stub-20260828-r5/fonttools-stub-20260828-r5/fonttools-stub__8VS6qyL/verifier/grading.json",
+        "sha256": "sha256:c7a090f272992033035639525bba2de9d1ee0fac39152d8e470337d23b79815b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/fonttools-stub-20260828-r5/fonttools-stub-20260828-r5/fonttools-stub__8VS6qyL/verifier/network.json",
+        "sha256": "sha256:33b8e715a559574178c85c04b15bddd8f562b3632d707222cde7072bd8f6e5ea"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fonttools/fonttools-forgery -a oracle --job-name fonttools-forgery-20260828-r3 -o .nl2repo/runs/fonttools-forgery-20260828-r3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 60,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "forged_workspace_report_ignored": true,
+      "grading": {
+        "path": ".nl2repo/runs/fonttools-forgery-20260828-r3/fonttools-forgery-20260828-r3/fonttools-forgery__2bjyaXF/verifier/grading.json",
+        "sha256": "sha256:bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7"
+      },
+      "network": {
+        "path": ".nl2repo/runs/fonttools-forgery-20260828-r3/fonttools-forgery-20260828-r3/fonttools-forgery__2bjyaXF/verifier/network.json",
+        "sha256": "sha256:1145650fa9a752740847a1965256028bc5a5d56b28f560dcf701e09e6d753753"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none nl2repo/fonttools-verifier:authoring-final /tests/test.sh with the Oracle workspace copy",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "passed": 60,
+      "total": 60,
+      "reward": 1.0,
+      "grading": {
+        "path": ".nl2repo/evidence/fonttools/offline-rw-logs-2/verifier/grading.json",
+        "sha256": "sha256:4e02ccabb87a1c17388a56275261dac61cb1ec33ee70fb2c3be30c7577aa92ae"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/fonttools/offline-rw-logs-2/verifier/network.json",
+        "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"
+      }
+    },
+    "install_timeout": {
+      "command": "docker run --rm --network none nl2repo/fonttools-verifier:authoring-final /tests/test.sh with harbor/controls/install-hang.sh workspace",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {
+        "path": ".nl2repo/evidence/fonttools/install-hang-logs/verifier/candidate-install.json",
+        "sha256": "sha256:76c35987c44348c957cdc0470f121c6078ccafe643c25eb79e2988b489a2ec19",
+        "outcome": "timeout",
+        "returncode": -9
+      },
+      "grading": {
+        "path": ".nl2repo/evidence/fonttools/install-hang-logs/verifier/grading.json",
+        "sha256": "sha256:bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/fonttools/install-hang-logs/verifier/network.json",
+        "sha256": "sha256:10f428adfb4b9dd9df42d1b943c811ffc69f06a7ce850aace4470926cabf1af2"
+      }
+    },
+    "call_timeout": {
+      "command": "docker run --rm --network none nl2repo/fonttools-verifier:authoring-final /tests/test.sh with harbor/controls/call-hang.sh workspace",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 60,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "bounded-candidate-call-timeout",
+      "candidate_install": {
+        "path": ".nl2repo/evidence/fonttools/call-hang-logs/verifier/candidate-install.json",
+        "sha256": "sha256:a8862840791857ec6ba9d47fde1fc0d64d2e757488b8ecb99bb6bd5da32c9d6d",
+        "outcome": "success"
+      },
+      "grading": {
+        "path": ".nl2repo/evidence/fonttools/call-hang-logs/verifier/grading.json",
+        "sha256": "sha256:2f06bf5198eb1d1c95ae7dad033d298a5ec8feb51c8eefac0e7a1594cd43dd5d"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/fonttools/call-hang-logs/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/fonttools",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_findings": 0,
+      "repository_warning_count": 138
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/fonttools --output .nl2repo/compiled-fonttools --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "manifest_sha256": "sha256:e9aa9c9a7fdb11825b3c0fb2b8e059d74f2b0da4e4ffcded9298996502852a71"
+    },
+    "syntax": {
+      "command": "python3 -m py_compile .nl2repo/authoring-work/python-author-wave2-20260828/fonttools/verifier-src/run.py && bash -n catalog/sources/fonttools/harbor/controls/*.sh .nl2repo/authoring-work/python-author-wave2-20260828/fonttools/oracle-src/solve.sh",
+      "exit_code": 0
+    },
+    "focused_tests": {
+      "command": "uv run pytest -q -o addopts='' tests/test_custom_verifier.py",
+      "exit_code": 0,
+      "passed": 4
+    },
+    "verifier_image_build": {
+      "command": "docker build --platform linux/amd64 -f .nl2repo/compiled-fonttools/fonttools/tests/Dockerfile -t nl2repo/fonttools-verifier:authoring-final .nl2repo/compiled-fonttools/fonttools/tests",
+      "exit_code": 0,
+      "image_digest": "sha256:19537aba17716455de7223e63f668239d2f0949d5882e78dfa1bec5a9da25d0b"
+    }
+  },
+  "shared_changes": [
+    {
+      "path": "src/nl2repobench/verification/custom_verifier.py",
+      "change": "Accept pytest-style exit code 1 when the emitted custom-json-v1 report is schema-valid; retain exit 70 for runner failures."
+    },
+    {
+      "path": "tests/test_custom_verifier.py",
+      "change": "Cover a valid report emitted with exit code 1."
+    }
+  ],
+  "residual_risks": [
+    "The bounded contract covers 60 deterministic leaves from the frozen upstream API and packaging surface, not the full 2456-definition upstream suite; optional native, compression, GUI, plotting, and external integrations are explicitly out of scope.",
+    "The Oracle solve script fetches only the exact frozen revision from github.com and verifies the archive digest; the host override is present only on the trusted Oracle command.",
+    "One read-only offline replay and one transient Errno 11 install attempt were discarded from passing evidence; a writable offline retry passed 60/60 with network probes false.",
+    "Review, model Agent Run, pilot, publication, dataset integration, and release approval remain integrator stages and are not claimed here."
+  ]
+}

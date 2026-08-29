@@ -1,0 +1,102 @@
+schema_version = "1.0"
+task_id = "fonttools"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "font-engineering-library"
+tags = ["python", "fonts", "opentype", "geometry", "serialization", "pytest", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/fonttools/fonttools"
+revision = "e7e00f1b16aef6ede850206df3c100ccde27b2d3"
+license_spdx = "MIT"
+source_digest = "sha256:2c7719e06724e5f34b4677eb4e7a5cb17a9cdee1225f829b2881b097d61d666c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier dependencies are installed during image construction from the private hash lock; agent and verifier execution are network-isolated. The Oracle alone receives a run-scoped authorization for the exact upstream host and verifies the pinned archive digest."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "annotated-doc==0.0.5",
+  "jaraco-context==6.1.2",
+  "jaraco-functools==4.6.0",
+  "jaraco-text==4.3.0",
+  "markdown-it-py==4.2.0",
+  "mdurl==0.1.2",
+  "more-itertools==11.1.0",
+  "packaging==26.3",
+  "platformdirs==4.11.5",
+  "pygments==2.21.0",
+  "rich==15.0.0",
+  "setuptools==80.9.0",
+  "shellingham==1.5.4",
+  "typer==0.27.1",
+  "typer-slim==0.24.0",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861", size_bytes = 3654, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 60
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+environment = { FONTTOOLS_WITH_CYTHON = "0" }
+bundle = { digest = "sha256:ead33af9b7228551170d691933f39a9aa146afa1e07be5137deec106c927bdc1", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ead33af9b7228551170d691933f39a9aa146afa1e07be5137deec106c927bdc1", visibility = "private" }
+
+[harbor]
+description = "Build a pure-Python fontTools subset from an empty workspace and satisfy deterministic geometry, fixed-point, text, affine-transform, and minimal OpenType round-trip scenarios."
+keywords = ["python", "fonts", "opentype", "geometry", "serialization", "pytest", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:9662cc24bf31908462722c478afac87da804f2c0456b55eb7de126bb198893c3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9662cc24bf31908462722c478afac87da804f2c0456b55eb7de126bb198893c3"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c3"
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, bounded timeout, and offline controls passed. Review, pilot, and publication remain separate integrator stages."
