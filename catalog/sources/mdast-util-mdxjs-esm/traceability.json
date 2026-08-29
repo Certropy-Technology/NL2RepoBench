@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-mdxjs-esm",
+  "source_revision": "8d05c28d15ec5b690e7fbb08d703b0752d431109",
+  "public_to_private": {
+    "root_exports": ["api reports package metadata and root exports"],
+    "from_markdown_factory": ["factories return independent extension objects", "from enter exposes the mdxjsEsm enter handler", "from enter forwards the token", "from enter buffers source text", "factories are repeatable after handler use", "from enter accepts an empty token"],
+    "from_markdown_exit": ["from exit resumes before exiting", "from exit assigns the resumed value", "from exit forwards the exit token", "from exit copies a truthy ESTree result", "from exit omits data without an ESTree result", "from exit preserves an empty source value", "from exit preserves structured ESTree fields"],
+    "from_markdown_data": ["from data delegates enter data first", "from data forwards the token to enter", "from data forwards the token to exit", "from data accepts an empty token"],
+    "to_markdown_factory": ["to markdown exposes the mdxjsEsm handler", "factories return independent extension objects"],
+    "to_markdown_handler": ["to markdown returns a source value", "to markdown returns empty text for a missing value", "to markdown returns empty text for null", "to markdown returns empty text for false", "to markdown preserves a truthy non-string value", "to markdown preserves whitespace exactly", "to markdown accepts an empty node"],
+    "adapter_boundary": ["adapter rejects an unknown operation", "adapter rejects a missing operation", "adapter rejects an array request", "adapter rejects a null request"]
+  },
+  "private_to_public": {
+    "contract.test.mjs": "Every leaf uses only root exports or the documented mdast-util-mdxjs-esm/adapter JSON bridge; no reference source or private implementation detail is imported."
+  }
+}

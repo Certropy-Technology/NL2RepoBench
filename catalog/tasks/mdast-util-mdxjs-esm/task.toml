@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/mdast-util-mdxjs-esm"
+version = "1.0.0"
+description = "Build the mdast-util-mdxjs-esm ESM extension with deterministic MDX ESM parse and serialize handlers across a separate verifier boundary."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "mdast",
+    "mdx",
+    "markdown",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "medium"
+category = "markdown-ast-extension"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "mdast",
+    "mdx",
+    "markdown",
+    "separate-verifier",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 30
+canonical_manifest_digest = "sha256:4fc06cb58f7027a4e205a0b38f6e942a659e85cd56bcc6df61095aa53c51a9ca"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096

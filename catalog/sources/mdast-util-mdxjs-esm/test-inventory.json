@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-mdxjs-esm",
+  "upstream": {
+    "command": "npm install --ignore-scripts --no-audit --no-fund && npm run test-api",
+    "node": "22.23.1",
+    "npm": "10.9.8",
+    "exit_code": 0,
+    "passing": 8,
+    "conditions": ["development", "production"]
+  },
+  "frozen_private_collection": {
+    "framework": "node:test",
+    "expected_total": 30,
+    "report_format": "node-test-json-v1",
+    "boundary": "non-root JSON-only subprocess calling mdast-util-mdxjs-esm/adapter.run"
+  },
+  "selection": "The fixed denominator covers root export shape, factory freshness, parser extension shape, enter/exit context behavior, ESTree propagation, data-handler delegation, serializer behavior, falsey and missing values, adapter validation, package metadata, and repeated isolated calls."
+}

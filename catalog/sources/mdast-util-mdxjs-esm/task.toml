@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "mdast-util-mdxjs-esm"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "markdown-ast-extension"
+tags = ["node", "npm", "esm", "mdast", "mdx", "markdown", "separate-verifier"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/mdast-util-mdxjs-esm"
+revision = "8d05c28d15ec5b690e7fbb08d703b0752d431109"
+license_spdx = "MIT"
+source_digest = "sha256:a05b484b17c05730094d3b2f2458562a48d6b76fac39dcc2b7bfc5d9a33c4f87"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier run without network access. The exact npm v3 runtime closure is supplied as a private integrity-checked bundle; only the trusted Oracle may fetch the frozen upstream revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/estree-jsx", "@types/hast", "@types/mdast", "devlop", "mdast-util-from-markdown", "mdast-util-to-markdown"]
+artifact = { digest = "sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1", size_bytes = 1008913, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ffb2587665a51c27adb62ee636ca85ddecfa7567081bffe3d40500fbc115e47a", size_bytes = 228, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ffb2587665a51c27adb62ee636ca85ddecfa7567081bffe3d40500fbc115e47a", visibility = "private" }
+test_bundle = { digest = "sha256:a85689f5dd2874978d8e5f3824d9e12788142529dfb54ce94e8a17c7f65debbe", size_bytes = 2046, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a85689f5dd2874978d8e5f3824d9e12788142529dfb54ce94e8a17c7f65debbe", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the mdast-util-mdxjs-esm ESM extension with deterministic MDX ESM parse and serialize handlers across a separate verifier boundary."
+keywords = ["node", "npm", "esm", "mdast", "mdx", "markdown", "separate-verifier"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828/mdast-util-mdxjs-esm"
+reason = "Frozen source, npm closure, separate UID-boundary verifier, production compile, Harbor 0.21 Oracle 30/30 reward 1.0, and empty/stub/forgery/offline/timeout controls passed. Model Agent Run, review, pilot, and publication remain outside this lane."
+
+[oracle_bundle]
+digest = "sha256:f5cd41aff011adbe30d11090d6073300ebe6b1be3385845234e35abd14a7bc15"
+size_bytes = 6745
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f5cd41aff011adbe30d11090d6073300ebe6b1be3385845234e35abd14a7bc15"
+visibility = "private"

@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-mdxjs-esm",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 30,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/mdast-util-mdxjs-esm",
+    "revision": "8d05c28d15ec5b690e7fbb08d703b0752d431109",
+    "source_digest": "sha256:a05b484b17c05730094d3b2f2458562a48d6b76fac39dcc2b7bfc5d9a33c4f87",
+    "source_archive_path": ".nl2repo/authoring-work/mdast-util-mdxjs-esm/source.tar",
+    "source_archive_size_bytes": 51200,
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/mdast-util-mdxjs-esm/license",
+    "license_digest": "sha256:536804b3adbff17dbbb9ed0d2bf9655b78f07640278581e37e3d7475282d5e61",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "frozen_package": "mdast-util-mdxjs-esm@2.0.1"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:2925e33a04f328f69e598b8791bca51392b57ce713acbb5ca9d17278a85c976a",
+    "dependency_artifact": "sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1",
+    "dependency_artifact_size_bytes": 1008913,
+    "commands_artifact": "sha256:ffb2587665a51c27adb62ee636ca85ddecfa7567081bffe3d40500fbc115e47a",
+    "test_bundle": "sha256:a85689f5dd2874978d8e5f3824d9e12788142529dfb54ce94e8a17c7f65debbe",
+    "oracle_bundle": "sha256:f5cd41aff011adbe30d11090d6073300ebe6b1be3385845234e35abd14a7bc15",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled-final/mdast-util-mdxjs-esm/bundle.manifest.json",
+    "sha256": "sha256:951dabe92442cf4f7f09872291acfa68ca5049bba2422a131a819ba99ca2e4e5",
+    "canonical_manifest_digest": "sha256:4fc06cb58f7027a4e205a0b38f6e942a659e85cd56bcc6df61095aa53c51a9ca",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "mode": "production",
+    "file_count": 429,
+    "repeat_compile_byte_identical": true
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f05c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_locked_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "agent_runtime_local_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "consumer": "candidate-runtime",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["@types/estree-jsx", "@types/hast", "@types/mdast", "devlop", "mdast-util-from-markdown", "mdast-util-to-markdown"],
+    "artifact": {
+      "digest": "sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1",
+      "size_bytes": 1008913,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 30,
+    "collection": "30 node:test leaves; no collection errors",
+    "test_bundle": {
+      "digest": "sha256:a85689f5dd2874978d8e5f3824d9e12788142529dfb54ce94e8a17c7f65debbe",
+      "size_bytes": 2046,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar",
+      "uri": "artifact://private/sha256:a85689f5dd2874978d8e5f3824d9e12788142529dfb54ce94e8a17c7f65debbe",
+      "visibility": "private"
+    },
+    "commands_artifact": {
+      "digest": "sha256:ffb2587665a51c27adb62ee636ca85ddecfa7567081bffe3d40500fbc115e47a",
+      "size_bytes": 228,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar",
+      "uri": "artifact://private/sha256:ffb2587665a51c27adb62ee636ca85ddecfa7567081bffe3d40500fbc115e47a",
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/mdast-util-mdxjs-esm -a oracle --allow-agent-host github.com --job-name mdast-util-mdxjs-esm-oracle-final-20260829 -o .nl2repo/runs-final/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "mdast-util-mdxjs-esm__V5BQQ6Y",
+    "harbor_exceptions": 0,
+    "valid": true,
+    "expected_total": 30,
+    "collected": 30,
+    "passed": 30,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs-final/oracle/mdast-util-mdxjs-esm-oracle-final-20260829/mdast-util-mdxjs-esm__V5BQQ6Y/verifier/grading.json",
+      "sha256": "sha256:863981ef48a4e90b47ae95116ebc03ea5494487cd36b7649144945c5ee546189"
+    },
+    "network": {
+      "path": ".nl2repo/runs-final/oracle/mdast-util-mdxjs-esm-oracle-final-20260829/mdast-util-mdxjs-esm__V5BQQ6Y/verifier/network.json",
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/mdast-util-mdxjs-esm-empty -a oracle --job-name mdast-util-mdxjs-esm-empty-final-20260829 -o .nl2repo/runs-final/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 30,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs-final/empty/mdast-util-mdxjs-esm-empty-final-20260829/mdast-util-mdxjs-esm-empty__bUYb7NC/verifier/grading.json", "sha256": "sha256:5c69bd6cf119e1c31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98"},
+      "network": {"path": ".nl2repo/runs-final/empty/mdast-util-mdxjs-esm-empty-final-20260829/mdast-util-mdxjs-esm-empty__bUYb7NC/verifier/network.json", "sha256": "sha256:eeb36dd0b8a7ba8d95612fd8bc495f0289d1dcbd57c081acb1830a23f3db7c7f"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/mdast-util-mdxjs-esm-stub -a oracle --job-name mdast-util-mdxjs-esm-stub-final-20260829 -o .nl2repo/runs-final/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 30,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs-final/stub/mdast-util-mdxjs-esm-stub-final-20260829/mdast-util-mdxjs-esm-stub__d3VSKXW/verifier/grading.json", "sha256": "sha256:14e2fbea5906151197da5547d0c88d7cce6a9bd1de531038a021033b976be8cd"},
+      "network": {"path": ".nl2repo/runs-final/stub/mdast-util-mdxjs-esm-stub-final-20260829/mdast-util-mdxjs-esm-stub__d3VSKXW/verifier/network.json", "sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/mdast-util-mdxjs-esm-forgery -a oracle --job-name mdast-util-mdxjs-esm-forgery-final-20260829 -o .nl2repo/runs-final/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 30,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs-final/forgery/mdast-util-mdxjs-esm-forgery-final-20260829/mdast-util-mdxjs-esm-forgery__pvxvQKe/verifier/grading.json", "sha256": "sha256:14e2fbea5906151197da5547d0c88d7cce6a9bd1de531038a021033b976be8cd"},
+      "network": {"path": ".nl2repo/runs-final/forgery/mdast-util-mdxjs-esm-forgery-final-20260829/mdast-util-mdxjs-esm-forgery__pvxvQKe/verifier/network.json", "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"}
+    },
+    "timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/mdast-util-mdxjs-esm-timeout -a oracle --job-name mdast-util-mdxjs-esm-timeout-final-20260829 -o .nl2repo/runs-final/timeout --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 30,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs-final/timeout/mdast-util-mdxjs-esm-timeout-final-20260829/mdast-util-mdxjs-esm-timeout__JtapNQb/verifier/grading.json", "sha256": "sha256:c994f8d4ef5f4b677648285976b11f5b89c3f5ead61222642e7094bd77772fbf"},
+      "network": {"path": ".nl2repo/runs-final/timeout/mdast-util-mdxjs-esm-timeout-final-20260829/mdast-util-mdxjs-esm-timeout__JtapNQb/verifier/network.json", "sha256": "sha256:a3c0b8df3dfeb0358daad6acdaaa5dbc2025f70d1fbb51d26765906577e513a8"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/mdast-util-mdxjs-esm-offline -a oracle --job-name mdast-util-mdxjs-esm-offline-final-20260829 -o .nl2repo/runs-final/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "expected_total": 30,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs-final/offline/mdast-util-mdxjs-esm-offline-final-20260829/mdast-util-mdxjs-esm-offline__Xm97dT5/verifier/grading.json", "sha256": "sha256:14e2fbea5906151197da5547d0c88d7cce6a9bd1de531038a021033b976be8cd"},
+      "network": {"path": ".nl2repo/runs-final/offline/mdast-util-mdxjs-esm-offline-final-20260829/mdast-util-mdxjs-esm-offline__Xm97dT5/verifier/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7"}
+    }
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone --filter=blob:none --no-checkout https://github.com/syntax-tree/mdast-util-mdxjs-esm; git fetch --depth=1 origin 8d05c28d15ec5b690e7fbb08d703b0752d431109; git checkout --detach 8d05c28d15ec5b690e7fbb08d703b0752d431109; git archive --format=tar --output source.tar 8d05c28d15ec5b690e7fbb08d703b0752d431109", "tool_version": "git 2.x; coreutils sha256sum", "exit_code": 0, "result": "revision, clean checkout, source archive and MIT license digests match task.toml"},
+    {"stage": "upstream-baseline", "command": "npm install --ignore-scripts --no-audit --no-fund && npm run test-api", "tool_version": "Node 22.23.1; npm 10.9.8", "exit_code": 0, "result": "development and production conditions each passed 8/8"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/mdast-util-mdxjs-esm", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "controls-passed"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "0 errors; one expected Oracle host warning for this task and unrelated existing warnings"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/mdast-util-mdxjs-esm --output .nl2repo/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "nl2repobench current checkout; Node toolchain lock", "exit_code": 0, "result": "429 files; manifest sha256:951dabe92442cf4f7f09872291acfa68ca5049bba2422a131a819ba99ca2e4e5"},
+    {"stage": "deterministic-compile", "command": "repeat production compile to .nl2repo/compiled-repeat and compare bundle manifests", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "byte-identical"},
+    {"stage": "oracle", "command": "Harbor 0.21.0 Oracle with run-scoped --allow-agent-host github.com", "tool_version": "Harbor 0.21.0; Docker daemon", "exit_code": 0, "result": "valid=true; 30/30; reward=1.0; no exception"},
+    {"stage": "controls", "command": "prepare-control plus Harbor Oracle runs for empty, stub, forgery, timeout and offline", "tool_version": "Harbor 0.21.0; Docker daemon", "exit_code": 0, "result": "all bounded controls completed; fixed collection and verifier-owned reports"},
+    {"stage": "syntax-and-serialization", "command": "node --check private modules; bash -n Oracle/control scripts; parse source JSON/TOML", "tool_version": "Node 22.23.1 host; bash 5.x", "exit_code": 0, "result": "all checks passed"}
+  ],
+  "residual_risks": [
+    "Independent blind review, spec traceability approval, pilot and publication remain integrator/reviewer work.",
+    "No Harbor Agent Run was started in this lane, as required.",
+    "The local Docker tag nl2repobench/openhands-sdk-fork:930e9b1da-bookworm resolves to sha256:bb48824b..., while toolchain.node.lock.toml records sha256:c50b3e3c...; the integrator must restore or verify the immutable agent runtime before a model run.",
+    "The host probe used Node 22.23.1/npm 10.9.8, while production Harbor receipts used the locked Node 24.19.0/npm 11.17.0 image.",
+    "Full source archive, private artifacts and Harbor run trees remain task-local under .nl2repo and are not public catalog bytes."
+  ],
+  "blockers": []
+}
