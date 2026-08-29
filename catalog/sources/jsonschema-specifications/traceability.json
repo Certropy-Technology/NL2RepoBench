@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema-specifications",
+  "instruction_sections": {
+    "REGISTRY": ["resource_identity", "registry_behavior"],
+    "Package data and dotfiles": ["resource_loading"],
+    "Supports": ["package_contract"],
+    "Implementation Notes": ["package_contract", "resource_loading"]
+  },
+  "private_groups": {
+    "resource_identity": {
+      "leaf_ids": ["resource/legacy-draft-03", "resource/legacy-draft-04", "resource/legacy-draft-06", "resource/legacy-draft-07", "resource/2019-09-schema", "resource/2019-09-meta-applicator", "resource/2019-09-meta-content", "resource/2019-09-meta-core", "resource/2019-09-meta-format", "resource/2019-09-meta-meta-data", "resource/2019-09-meta-validation", "resource/2020-12-schema", "resource/2020-12-meta-applicator", "resource/2020-12-meta-content", "resource/2020-12-meta-core", "resource/2020-12-meta-format-annotation", "resource/2020-12-meta-format-assertion", "resource/2020-12-meta-meta-data", "resource/2020-12-meta-unevaluated", "resource/2020-12-meta-validation"],
+      "public_contract": "Every canonical registry key resolves to a mapping whose identifier matches the key, with legacy trailing-hash semantics preserved."
+    },
+    "package_contract": {
+      "leaf_ids": ["package/all", "package/size", "package/metadata", "package/data", "package/no-network"],
+      "public_contract": "The distribution installs the documented package, exports only REGISTRY, preserves package data, and has the declared runtime dependency."
+    },
+    "registry_behavior": {
+      "leaf_ids": ["registry/crawl", "registry/draft7", "registry/2020-schema", "registry/legacy-alias", "registry/unique-keys", "registry/mapping-isolation"],
+      "public_contract": "The exported registry is crawled, deterministic, addressable through referencing, and does not mutate on lookup."
+    },
+    "resource_loading": {
+      "leaf_ids": ["loading/root-dotfile", "loading/vocabulary-dotfile", "loading/resource-types", "loading/schema-key"],
+      "public_contract": "Resource loading uses package resources, ignores dotfiles, and produces JSON mappings with schema identifiers."
+    }
+  }
+}

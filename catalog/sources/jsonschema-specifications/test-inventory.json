@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema-specifications",
+  "source_tests": {
+    "upstream_files": [
+      "jsonschema_specifications/tests/test_jsonschema_specifications.py"
+    ],
+    "upstream_leaf_count": 4,
+    "upstream_behaviors": [
+      "draft-07 contents is a mapping with the expected id and title",
+      "registry crawl is idempotent",
+      "dotfiles in schemas root are ignored",
+      "dotfiles in a vocabulary directory are ignored"
+    ]
+  },
+  "private_contract": {
+    "frozen_total": 35,
+    "groups": {
+      "resource_identity": 20,
+      "package_contract": 5,
+      "registry_behavior": 6,
+      "resource_loading": 4
+    }
+  },
+  "collection": {
+    "framework": "custom-json-v1",
+    "method": "fixed verifier scenario list",
+    "expected_total": 35
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema-specifications",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python-jsonschema/jsonschema-specifications",
+    "revision": "7aee138ac610b09b81aae1d338b8ed4601a01764",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:07328bc116206bfa14d749cb01ee5039f20e0ed28bdf017bc010101f23a11053",
+    "license_file": "COPYING"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/jsonschema-specifications/bundle.manifest.json",
+    "sha256": "sha256:5e9a85bc8dce5fcb79e83b2c55b1e3a202189b4e5b531a1e2e14a25e8d1b4d4a"
+  },
+  "dependencies": {
+    "lock_artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/1b/1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092",
+      "sha256": "sha256:1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092",
+      "size_bytes": 12859
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/jsonschema-specifications -a oracle --job-name jsonschema-specifications-oracle-final2-c2 -o .nl2repo/runs/jsonschema-specifications-oracle-final2 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/jsonschema-specifications-oracle-final2/jsonschema-specifications-oracle-final2-c2/jsonschema-specifications__bfVnChx/verifier/grading.json",
+      "sha256": "sha256:1cb46b8eb36d27e48f2b934f0416cc1413d5e2d0e89942b269002938b6fcd8aa"
+    },
+    "network": {
+      "path": ".nl2repo/runs/jsonschema-specifications-oracle-final2/jsonschema-specifications-oracle-final2-c2/jsonschema-specifications__bfVnChx/verifier/network.json",
+      "sha256": "sha256:29e3e7d2553ece8f5a6197093a812aa6583bdc6aef4dcb067a14401ceace13f2"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 35,
+      "passed": 35,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/jsonschema-specifications -a nop --job-name jsonschema-specifications-empty-final2-c2 -o .nl2repo/runs/jsonschema-specifications-empty-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/jsonschema-specifications-empty-final2/jsonschema-specifications-empty-final2-c2/jsonschema-specifications__5HVCPPm/verifier/grading.json",
+        "sha256": "sha256:bc1198649b53b0f9769f1cdd94c89b02b4d0d12b144bd39903c99a8e3d051869"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jsonschema-specifications-empty-final2/jsonschema-specifications-empty-final2-c2/jsonschema-specifications__5HVCPPm/verifier/network.json",
+        "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+      },
+      "summary": {
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "collected": 0,
+        "reward": 0.0,
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/jsonschema-specifications/jsonschema-specifications-stub -a oracle --job-name jsonschema-specifications-stub-final2-c2 -o .nl2repo/runs/jsonschema-specifications-stub-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/jsonschema-specifications-stub-final2/jsonschema-specifications-stub-final2-c2/jsonschema-specifications-stub__HQFi5TQ/verifier/grading.json",
+        "sha256": "sha256:386d0dc800e686c0fcd59f16e3b1856b03d7f09faecd280c3bf37263c6f2fc4d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jsonschema-specifications-stub-final2/jsonschema-specifications-stub-final2-c2/jsonschema-specifications-stub__HQFi5TQ/verifier/network.json",
+        "sha256": "sha256:61e53571b70e3e444ecec3bf9ae7e5a5f311196ca55a45e0c6af123d77842adf"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 35,
+        "passed": 1,
+        "reward": 0.02857142857142857,
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/jsonschema-specifications/jsonschema-specifications-forgery -a oracle --job-name jsonschema-specifications-forgery-final2-c2 -o .nl2repo/runs/jsonschema-specifications-forgery-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/jsonschema-specifications-forgery-final2/jsonschema-specifications-forgery-final2-c2/jsonschema-specifications-forger__h4GCrG3/verifier/grading.json",
+        "sha256": "sha256:386d0dc800e686c0fcd59f16e3b1856b03d7f09faecd280c3bf37263c6f2fc4d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jsonschema-specifications-forgery-final2/jsonschema-specifications-forgery-final2-c2/jsonschema-specifications-forger__h4GCrG3/verifier/network.json",
+        "sha256": "sha256:218320115490129eea846775b9e02f95aaacfd0fda376c419dbb3bf5af42868d"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 35,
+        "passed": 1,
+        "reward": 0.02857142857142857,
+        "forged_reward_ignored": true,
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from jsonschema-specifications Oracle run",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/jsonschema-specifications-oracle-final2/jsonschema-specifications-oracle-final2-c2/jsonschema-specifications__bfVnChx/verifier/network.json",
+        "sha256": "sha256:29e3e7d2553ece8f5a6197093a812aa6583bdc6aef4dcb067a14401ceace13f2"
+      }
+    },
+    "install_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/jsonschema-specifications/jsonschema-specifications-install-hang -a oracle --job-name jsonschema-specifications-install-hang-final2-c2 -o .nl2repo/runs/jsonschema-specifications-install-hang-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/jsonschema-specifications-install-hang-final2/jsonschema-specifications-install-hang-final2-c2/jsonschema-specifications-instal__YEcoSiL/verifier/grading.json",
+        "sha256": "sha256:bc1198649b53b0f9769f1cdd94c89b02b4d0d12b144bd39903c99a8e3d051869"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jsonschema-specifications-install-hang-final2/jsonschema-specifications-install-hang-final2-c2/jsonschema-specifications-instal__YEcoSiL/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "summary": {
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "collected": 0,
+        "reward": 0.0,
+        "public_network_available": false
+      }
+    }
+  },
+  "residual_risks": [
+    "Review, blind traceability review, model Agent Run, and publication are owned by the integrator and were not performed in this authoring lane.",
+    "The compiler emits a fixed platform FROM warning; the base image is nevertheless digest pinned and the toolchain requires linux/amd64.",
+    "The source package uses hatch-vcs; the trusted Oracle applies the documented static-version archive adaptation after digest verification."
+  ]
+}

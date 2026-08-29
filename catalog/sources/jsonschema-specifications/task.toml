@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "jsonschema-specifications"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = ["python", "json-schema", "package-data", "referencing", "registry", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-jsonschema/jsonschema-specifications"
+revision = "7aee138ac610b09b81aae1d338b8ed4601a01764"
+license_spdx = "MIT"
+source_digest = "sha256:07328bc116206bfa14d749cb01ee5039f20e0ed28bdf017bc010101f23a11053"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "install hash-locked candidate and verifier dependencies during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier dependencies are installed during Docker build from a private hash-locked requirements artifact; Agent and verifier runs have no egress. Only the trusted Oracle receives the exact upstream source-host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["attrs==26.1.0", "hatch-vcs==0.5.0", "hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "referencing==0.37.0", "rpds-py==2026.6.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19", "typing-extensions==4.16.0", "vcs-versioning==2.3.1"]
+lock_artifact = { digest = "sha256:1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092", size_bytes = 12859, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 35
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build jsonschema-specifications from an empty workspace with a deterministic package-data registry for JSON Schema metaschemas and vocabularies."
+keywords = ["python", "json-schema", "package-data", "referencing", "registry", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:0ff2af5df32bc91142a2c6cd2e5c317f6c118a6bcac070479696f70708a8446a", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0ff2af5df32bc91142a2c6cd2e5c317f6c118a6bcac070479696f70708a8446a", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:9bbf2aba056aff673128b50a053cd84e4dfad642eb2ac68000a0c4b43b1c0041"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9bbf2aba056aff673128b50a053cd84e4dfad642eb2ac68000a0c4b43b1c0041"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Production Harbor bundle passed the Oracle gate at 35/35 and the empty, stub, forgery, install-timeout, and offline controls; model Agent Run, review, and publication remain separate stages."
