@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "terminal_kind": "valid",
+  "status": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/fabiospampinato/fast-string-truncated-width",
+    "revision": "1d50ce0c1497c1399eed50f87926817587049358",
+    "archive_sha256": "sha256:910a980a127ca70626d2bc0dbe673601e7c65c8778548cd1c3f94472c59c2f79",
+    "license": "MIT"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/fast-string-truncated-width-production-final/fast-string-truncated-width/bundle.manifest.json",
+    "sha256": "sha256:f6cf85d3af1221a040ceeb2609d59867d5555a78536daa420a3bd84372d5750f",
+    "canonical_manifest_digest": "sha256:06999a1f4c62d761401874f10d134d509a8b95ea776b469832960658f1db9c55",
+    "file_count": 86,
+    "mode": "production"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "tests": {
+    "framework": "node:test",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 39,
+    "collection": "frozen-collection",
+    "protocol": "custom-json-v1"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/fast-string-truncated-width",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/fast-string-truncated-width/final/validate-source.log"
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_error_count": 0,
+      "log": ".nl2repo/evidence/fast-string-truncated-width/final/lint-network.log",
+      "note": "The command reports 139 warnings for unrelated existing sources; this task has no finding."
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/fast-string-truncated-width --output .nl2repo/compiled/fast-string-truncated-width-production-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/fast-string-truncated-width/final/harbor-compile.log"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/fast-string-truncated-width-production-final/fast-string-truncated-width -a oracle --job-name fast-string-truncated-width-oracle-final2 -o .nl2repo/evidence/fast-string-truncated-width/oracle-final --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 39,
+    "collected": 39,
+    "expected_total": 39,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/fast-string-truncated-width/oracle-final/fast-string-truncated-width-oracle-final2/fast-string-truncated-width__LVbAJwx/verifier/grading.json",
+      "sha256": "sha256:578e752a36f5489ef2aae96db6b2e25a624cc056a993065b45ab8272d823afe0"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/fast-string-truncated-width/oracle-final/fast-string-truncated-width-oracle-final2/fast-string-truncated-width__LVbAJwx/verifier/network.json",
+      "sha256": "sha256:7a44c248d44c292e26bbeabba7252f1f97610211d72a46159532dc7d0ea26390",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/empty/fast-string-truncated-width-empty -a oracle --job-name fast-string-truncated-width-empty-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/empty/fast-string-truncated-width-empty-final/fast-string-truncated-width-empt__eJbQUoY/verifier/grading.json", "sha256": "sha256:dc747edb440b5add908c4e8a2f2d0124b034dacfa9841f5b0009b99b5a59ddfe"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/empty/fast-string-truncated-width-empty-final/fast-string-truncated-width-empt__eJbQUoY/verifier/network.json", "sha256": "sha256:b23691baf1e08195b9bfad28e63946fd299f9037c43090fe5bc12baea4ead69a", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/stub/fast-string-truncated-width-stub -a oracle --job-name fast-string-truncated-width-stub-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 39,
+      "passed": 2,
+      "reward": 0.05128205128205128,
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/stub/fast-string-truncated-width-stub-final/fast-string-truncated-width-stub__q94s8Qb/verifier/grading.json", "sha256": "sha256:3126de997ec656fb607e74c1918883d74973f8e65236947cd12c3109abfa60a4"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/stub/fast-string-truncated-width-stub-final/fast-string-truncated-width-stub__q94s8Qb/verifier/network.json", "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/forgery/fast-string-truncated-width-forgery -a oracle --job-name fast-string-truncated-width-forgery-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 39,
+      "passed": 1,
+      "reward": 0.02564102564102564,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/forgery/fast-string-truncated-width-forgery-final/fast-string-truncated-width-forg__rv9Qzja/verifier/grading.json", "sha256": "sha256:707f9d81d3a3a9af3b97a1e112ebc69d3f7ce8fb03f84caeb8a8e8acb44eea83"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/forgery/fast-string-truncated-width-forgery-final/fast-string-truncated-width-forg__rv9Qzja/verifier/network.json", "sha256": "sha256:7a44c248d44c292e26bbeabba7252f1f97610211d72a46159532dc7d0ea26390", "public_network_available": false}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/hang/fast-string-truncated-width-hang -a oracle --job-name fast-string-truncated-width-hang-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "reason": "candidate-call-failed",
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/hang/fast-string-truncated-width-hang-final/fast-string-truncated-width-hang__qDFbdQ2/verifier/grading.json", "sha256": "sha256:d4ab47ec1d3a50ddf85ef01f10d3b76e7fd57766b81a35dc7cae6ea18f48d71a"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/hang/fast-string-truncated-width-hang-final/fast-string-truncated-width-hang__qDFbdQ2/verifier/network.json", "sha256": "sha256:569e5ac10fcdc11e6f57edc2ec2478ad6112c255970fb9fd243bb0c9bfa342d2", "public_network_available": false}
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/install-script/fast-string-truncated-width-install-script -a oracle --job-name fast-string-truncated-width-install-script-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/install-script/fast-string-truncated-width-install-script-final/fast-string-truncated-width-inst__gNPsXuW/verifier/grading.json", "sha256": "sha256:dc747edb440b5add908c4e8a2f2d0124b034dacfa9841f5b0009b99b5a59ddfe"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/install-script/fast-string-truncated-width-install-script-final/fast-string-truncated-width-inst__gNPsXuW/verifier/network.json", "sha256": "sha256:1c48d84865bbea19a3438463f30342a75c8616a58ba6b750b35f261819ba442a", "public_network_available": false}
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/loader-hook/fast-string-truncated-width-loader-hook -a oracle --job-name fast-string-truncated-width-loader-hook-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 39,
+      "passed": 2,
+      "reward": 0.05128205128205128,
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/loader-hook/fast-string-truncated-width-loader-hook-final/fast-string-truncated-width-load__PwpwvU7/verifier/grading.json", "sha256": "sha256:3126de997ec656fb607e74c1918883d74973f8e65236947cd12c3109abfa60a4"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/loader-hook/fast-string-truncated-width-loader-hook-final/fast-string-truncated-width-load__PwpwvU7/verifier/network.json", "sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9", "public_network_available": false}
+    },
+    "oversized-output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/oversized-output/fast-string-truncated-width-oversized-output -a oracle --job-name fast-string-truncated-width-oversized-output-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/oversized-output --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/oversized-output/fast-string-truncated-width-oversized-output-final/fast-string-truncated-width-over__VaXhT4b/verifier/grading.json", "sha256": "sha256:ac5cf7c37c8b3b89a7143435e0dd4a638f3b4de44df10e7fba576d9da5f631b8"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/oversized-output/fast-string-truncated-width-oversized-output-final/fast-string-truncated-width-over__VaXhT4b/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-truncated-width-final/offline/fast-string-truncated-width-offline -a oracle --job-name fast-string-truncated-width-offline-final -o .nl2repo/evidence/fast-string-truncated-width/final/controls/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 39,
+      "passed": 1,
+      "reward": 0.02564102564102564,
+      "grading": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/offline/fast-string-truncated-width-offline-final/fast-string-truncated-width-offl__5pDiYFp/verifier/grading.json", "sha256": "sha256:ad42d01f1466d1c2504df912bd370dbd81282c5b17766920fd917fd00f1e6ef8"},
+      "network": {"path": ".nl2repo/evidence/fast-string-truncated-width/final/controls/offline/fast-string-truncated-width-offline-final/fast-string-truncated-width-offl__5pDiYFp/verifier/network.json", "sha256": "sha256:e89617c134ec9f86f425045b376c9d620b0266781286ae65ffef6e03b9d1d17a", "public_network_available": false}
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane by contract.",
+    "Independent blind/spec review, dataset projection, and publication remain integrator-stage work.",
+    "The source host github.com is authorized only for this trusted Oracle invocation; model Agent runs remain no-network with an empty allowlist."
+  ]
+}

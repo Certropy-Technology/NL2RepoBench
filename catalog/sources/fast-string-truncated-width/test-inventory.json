@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "upstream": {
+    "framework": "fava via tsex",
+    "declared_groups": 19,
+    "executable_groups": 18,
+    "skipped_groups": 1,
+    "skip_reason": "The skipped all-basic-emojis group fetches mutable data from raw.githubusercontent.com and is intentionally excluded from the offline denominator.",
+    "baseline": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 1,
+      "offline_repetitions": 2
+    }
+  },
+  "production": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 39,
+    "candidate_boundary": "one-shot-json child under uid 10001",
+    "reference_probe": {
+      "collected": 39,
+      "passed": 39,
+      "failed": 0
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "status": "implemented",
+  "purpose": "Exercise the installed ESM package through a bounded child process so candidate JavaScript is never imported by the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 262144,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Return bounded package-shape and declaration metadata for the safe ESM root export.",
+    "measure": "Call the default export once with a JSON string and option objects and return its JSON result.",
+    "repeat": "Call the default export up to ten times in one child and return the bounded result array."
+  },
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

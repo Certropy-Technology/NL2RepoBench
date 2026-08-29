@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "upstream_url": "https://github.com/fabiospampinato/fast-string-truncated-width",
+  "revision": "1d50ce0c1497c1399eed50f87926817587049358",
+  "tree": "1b2b80d0f4ed708130028adf3093e0ea8313882a",
+  "commit_time": "2026-07-16T14:48:39+01:00",
+  "source_archive": {
+    "format": "raw-git-archive-tar",
+    "sha256": "910a980a127ca70626d2bc0dbe673601e7c65c8778548cd1c3f94472c59c2f79",
+    "size_bytes": 51200,
+    "entries": 16
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "license",
+    "sha256": "2547dead17a32b1e49a588e943d52420b4d75f1349d9afd9ecb567b2dc8911c0"
+  },
+  "package": {
+    "name": "fast-string-truncated-width",
+    "version": "3.0.3",
+    "type": "module",
+    "runtime_dependencies": [],
+    "tracked_files": 13,
+    "submodules": []
+  },
+  "public_api": {
+    "default_export": "fastStringTruncatedWidth(input: string, truncationOptions?: TruncationOptions, widthOptions?: WidthOptions): Result",
+    "type_exports": ["TruncationOptions", "WidthOptions", "Result"],
+    "cli": false
+  }
+}
