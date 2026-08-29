@@ -1,0 +1,64 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/js-yaml"
+version = "2.0.0"
+description = "Build the js-yaml ESM YAML 1.2 parser and serializer from an empty Node workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "yaml",
+    "parser",
+    "serializer",
+]
+
+[metadata]
+difficulty = "hard"
+category = "yaml-parser-serializer"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "yaml",
+    "parser",
+    "serializer",
+    "deterministic",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 36
+canonical_manifest_digest = "sha256:4955677b9bd856097eb1d93396c7ac738bee1abf85680c19c12ff6a08c09e151"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1500.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192

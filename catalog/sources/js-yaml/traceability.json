@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "js-yaml",
+  "requirements": {
+    "package_metadata_and_esm_entry": ["package-name-version", "esm-root-entry", "lockfile-contract"],
+    "load_scalars": ["load-basic-scalars", "load-quoted-scalars", "load-flow-collections"],
+    "load_nested_and_comments": ["load-nested-blocks", "load-comments-and-multiline", "load-block-scalars"],
+    "load_aliases_and_tags": ["load-alias", "load-explicit-core-tags"],
+    "load_all": ["loadall-empty", "loadall-multiple", "loadall-markers", "loadall-options"],
+    "load_errors": ["load-empty-error", "load-multi-error", "load-malformed-error", "load-duplicate-error", "load-unknown-tag-error"],
+    "dump_default": ["dump-scalars", "dump-nested", "dump-array", "dump-strings", "dump-key-order", "dump-repeatable"],
+    "dump_options": ["dump-sort", "dump-flow", "dump-indent", "dump-no-array-indent", "dump-compat", "dump-quote-options", "dump-line-width"],
+    "safety_and_determinism": ["load-prototype-key", "dump-deterministic"]
+  },
+  "review": "Every scored leaf exercises only the documented JSON boundary; no private assertion is required for excluded callbacks, custom schemas, source files, or external services."
+}

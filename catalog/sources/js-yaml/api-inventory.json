@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "package": "js-yaml",
+  "version": "5.4.0",
+  "runtime_entry": "dist/js-yaml.mjs",
+  "public_exports": [
+    "load",
+    "loadAll",
+    "dump",
+    "Schema",
+    "FAILSAFE_SCHEMA",
+    "JSON_SCHEMA",
+    "CORE_SCHEMA",
+    "YAML11_SCHEMA",
+    "DUMP_SCHEMA",
+    "YAMLException",
+    "parseEvents",
+    "constructFromEvents",
+    "eventsToAst",
+    "jsToAst",
+    "present",
+    "visit"
+  ],
+  "scored_exports": ["load", "loadAll", "dump"],
+  "covered_modules": [
+    "src/load.ts",
+    "src/dump.ts",
+    "src/parser/parser.ts",
+    "src/parser/constructor.ts",
+    "src/ast/from_js.ts",
+    "src/ast/presenter.ts",
+    "src/common/exception.ts"
+  ],
+  "runtime_dependencies": [],
+  "excluded_risk_surfaces": [
+    "custom callback and schema objects",
+    "native Map/Set and non-JSON scalar values",
+    "CLI and browser bundle",
+    "cyclic aliases and custom transforms",
+    "network-fetched YAML Test Suite"
+  ]
+}

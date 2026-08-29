@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "task_id": "js-yaml",
+  "terminal_kind": "controls-passed",
+  "bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/compiled-final/js-yaml/bundle.manifest.json",
+    "sha256": "sha256:1cf1bd7e5b2cd268df0f34c74ef070a30cc58c12ed74c52d1a4ab96276ccd38d",
+    "mode": "production",
+    "file_count": 75
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/compiled-final/js-yaml -a oracle --allow-agent-host github.com --job-name js-yaml-oracle-final --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/oracle/js-yaml-oracle-final/js-yaml__9PHShzX/verifier/grading.json",
+      "sha256": "sha256:cc06e83865cb4ff0e4241f6b4d5824ca76d6e0fe1d5054f78e0dec0e77279a68",
+      "valid": true,
+      "reward": 1.0,
+      "passed": 36,
+      "collected": 36,
+      "expected_total": 36
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/oracle/js-yaml-oracle-final/js-yaml__9PHShzX/verifier/network.json",
+      "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-empty -a oracle --job-name js-yaml-empty-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/empty-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.0,
+      "valid": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/empty-r2/js-yaml-empty-final-r2/js-yaml-empty__djo63vx/verifier/grading.json",
+        "sha256": "sha256:0970d8c2c227e913caa713cb63694298ee002087ff52e34318dd5e6e47218f43",
+        "expected_total": 36,
+        "collected": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/empty-r2/js-yaml-empty-final-r2/js-yaml-empty__djo63vx/verifier/network.json",
+        "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-stub -a oracle --job-name js-yaml-stub-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/stub-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.1111111111111111,
+      "valid": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/stub-r2/js-yaml-stub-final-r2/js-yaml-stub__V26WfBQ/verifier/grading.json",
+        "sha256": "sha256:1673c9fdf756fd543fc6398e74643d5994b76d719ccea1a3adb9f7cc7ee81336",
+        "expected_total": 36,
+        "collected": 36,
+        "passed": 4
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/stub-r2/js-yaml-stub-final-r2/js-yaml-stub__V26WfBQ/verifier/network.json",
+        "sha256": "sha256:831df49691bacfd1a6fa772a3aa3de8fd1c7e0a74aeef5ba7546e16eaee8eeaa",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-forgery -a oracle --job-name js-yaml-forgery-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/forgery-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.16666666666666666,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/forgery-r2/js-yaml-forgery-final-r2/js-yaml-forgery__u2qpCKH/verifier/grading.json",
+        "sha256": "sha256:83baea74165cbd9e30d89e8d02bf48eccf38a579e5f75b225e38d71bf02d72c6",
+        "expected_total": 36,
+        "collected": 36,
+        "passed": 6
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/forgery-r2/js-yaml-forgery-final-r2/js-yaml-forgery__u2qpCKH/verifier/network.json",
+        "sha256": "sha256:ece67ba24189d4c53ab4c913669ecfc4a557474723dc71240e64765cfd4549c5",
+        "public_network_available": false
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-hang -a oracle --job-name js-yaml-hang-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/hang-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.0,
+      "valid": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/hang-r2/js-yaml-hang-final-r2/js-yaml-hang__JVrFyTu/verifier/grading.json",
+        "sha256": "sha256:30e120aacdc8f78b35332e66ec17ab58cf23e2d2fb446abe3dcf66d899ad5bbb",
+        "expected_total": 36,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/hang-r2/js-yaml-hang-final-r2/js-yaml-hang__JVrFyTu/verifier/network.json",
+        "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11",
+        "public_network_available": false
+      }
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-install-script -a oracle --job-name js-yaml-install-script-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/install-script-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.0,
+      "valid": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/install-script-r2/js-yaml-install-script-final-r2/js-yaml-install-script__mzWQPqC/verifier/grading.json",
+        "sha256": "sha256:0970d8c2c227e913caa713cb63694298ee002087ff52e34318dd5e6e47218f43",
+        "expected_total": 36,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/install-script-r2/js-yaml-install-script-final-r2/js-yaml-install-script__mzWQPqC/verifier/network.json",
+        "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11",
+        "public_network_available": false
+      }
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-loader-hook -a oracle --job-name js-yaml-loader-hook-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/loader-hook-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.16666666666666666,
+      "valid": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/loader-hook-r2/js-yaml-loader-hook-final-r2/js-yaml-loader-hook__46sv5SW/verifier/grading.json",
+        "sha256": "sha256:83baea74165cbd9e30d89e8d02bf48eccf38a579e5f75b225e38d71bf02d72c6",
+        "expected_total": 36,
+        "collected": 36,
+        "passed": 6
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/loader-hook-r2/js-yaml-loader-hook-final-r2/js-yaml-loader-hook__46sv5SW/verifier/network.json",
+        "sha256": "sha256:968e7d526444ef755114f324b29c19909d4856eec99bf80bd8f6c6d5b370f33f",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/controls-final/js-yaml-offline -a oracle --job-name js-yaml-offline-final-r2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/offline-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.16666666666666666,
+      "valid": true,
+      "completed": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/offline-r2/js-yaml-offline-final-r2/js-yaml-offline__5yJWYRG/verifier/grading.json",
+        "sha256": "sha256:83baea74165cbd9e30d89e8d02bf48eccf38a579e5f75b225e38d71bf02d72c6",
+        "expected_total": 36,
+        "collected": 36,
+        "passed": 6
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/js-yaml/harbor-runs-final/controls/offline-r2/js-yaml-offline-final-r2/js-yaml-offline__5yJWYRG/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0",
+        "public_network_available": false
+      }
+    }
+  },
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_version": "0.21.0",
+    "runtime": "Node 24.19.0",
+    "npm": "11.17.0",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "status_boundary": "awaiting-agent-run",
+  "residual_risks": [
+    "No independent model Agent Run was started in this authoring lane by contract.",
+    "Blind review, traceability review approval, and publication remain integrator-stage gates.",
+    "The source environment pins the currently available immutable Node 24.19.0 image digest; the historical image digest in the shared lock is unavailable in the local registry.",
+    "Oracle validates the frozen source revision and archive digest, then uses a source-derived private dist artifact because the Oracle environment is offline for npm registry access."
+  ]
+}

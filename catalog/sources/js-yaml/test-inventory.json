@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 36,
+  "private_entry": "js-yaml.test.mjs",
+  "groups": {
+    "load_scalars_and_collections": 9,
+    "load_yaml_features": 8,
+    "load_all_and_errors": 6,
+    "dump_default_and_order": 6,
+    "dump_options": 7
+  },
+  "collection": "One private .mjs file with 36 node:test leaves, collected by the task-local Node runner and required to match the frozen denominator exactly.",
+  "traceability": "traceability.json maps each public requirement to one or more private leaf IDs."
+}
