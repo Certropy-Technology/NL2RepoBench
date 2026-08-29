@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.0",
+  "task_id": "espree",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 24,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/eslint/js",
+    "revision": "8173ecfeb7473bff90d1da11b1347082f47e262e",
+    "source_digest": "sha256:bc2f79fda450ef344b0696f374d492f95fee28b74254abbc1584440fd9739ac4",
+    "license_spdx": "BSD-2-Clause",
+    "license_path": "LICENSE",
+    "license_digest": "sha256:26c95937762a3dc17a3934a0a2773c70259ba4bf28dab713c225e4af8eb9d349",
+    "submodules": [],
+    "source_worktree_clean": true
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:b699757c143d2cc5e82b944941cdaccc0ee52e2653ab498f572c570da9c58803",
+    "dependency_artifact": "sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808",
+    "commands_artifact": "sha256:19ea8e39b98d06e97fe75abd413c576218cb3ef452e47c5378b5f3b426f2f389",
+    "test_bundle": "sha256:2d797f79cfb983d20fe93d8d2fce484466a40f0e7dec7111ab505e56b950ec81",
+    "oracle_bundle": "sha256:96668915feb309c788da5933f368c7d619db7ef0d3a5e4e41012e08b19b2bdc4",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/compiled-final/espree/bundle.manifest.json",
+    "sha256": "sha256:43a94eb93974582b915a8111bdc7ace2f88a3852521465caf2c89a766e7ca537",
+    "canonical_manifest_digest": "sha256:2d10a8c6d6f9606298c5551c39af7d350ee33788843d9713bef809c08445f942",
+    "mode": "production",
+    "file_count": 102,
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "environment": {
+    "os_name": "debian-bookworm-amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "lockfile": "package-lock.json v3",
+    "package_manager": "npm 11.17.0",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["acorn@8.16.0", "acorn-jsx@5.3.2", "eslint-visitor-keys@5.0.1"],
+    "artifact": {
+      "digest": "sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808",
+      "size_bytes": 757760,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "frozen_total": 24,
+    "collection": 24,
+    "commands_artifact": "sha256:19ea8e39b98d06e97fe75abd413c576218cb3ef452e47c5378b5f3b426f2f389",
+    "test_bundle": "sha256:2d797f79cfb983d20fe93d8d2fce484466a40f0e7dec7111ab505e56b950ec81"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/espree --output .nl2repo/authoring-work/node-author-wave2-20260828/espree/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/compiled-final/espree",
+    "bundle_manifest_sha256": "sha256:43a94eb93974582b915a8111bdc7ace2f88a3852521465caf2c89a766e7ca537",
+    "canonical_manifest_digest": "sha256:2d10a8c6d6f9606298c5551c39af7d350ee33788843d9713bef809c08445f942",
+    "file_count": 102,
+    "manifest_mismatches": 0
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/compiled-final/espree -a oracle --job-name espree-authoring-oracle-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/oracle-final --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "espree__S5vbMaw",
+    "harbor_exceptions": 0,
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/oracle-final/espree-authoring-oracle-final/espree__S5vbMaw/verifier/grading.json",
+      "sha256": "sha256:c0c5da21e140b92295ced2502a7be327ac140ddf761e016617503fe850b1ac18"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/oracle-final/espree-authoring-oracle-final/espree__S5vbMaw/verifier/network.json",
+      "sha256": "sha256:8fed9b4db343ccc53a1652e6ede428df1940e4d1ea3b0500547edb287f619ac6"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/empty/espree-empty -a oracle --job-name espree-authoring-empty-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/empty-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/empty-final/espree-authoring-empty-final/espree-empty__DthwWMi/verifier/grading.json",
+        "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/empty-final/espree-authoring-empty-final/espree-empty__DthwWMi/verifier/network.json",
+        "sha256": "sha256:5f72b782bd283db8f1b1e354bc76073f0fbfab22755cd6399abef90850a20d06"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/stub/espree-stub -a oracle --job-name espree-authoring-stub-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/stub-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "failed": 24,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/stub-final/espree-authoring-stub-final/espree-stub__ofCEdNN/verifier/grading.json",
+        "sha256": "sha256:8bb897ddc2fd6838008c185f054eec076d1547335189a03a07e3b9f3f55b43d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/stub-final/espree-authoring-stub-final/espree-stub__ofCEdNN/verifier/network.json",
+        "sha256": "sha256:81996431b574ae358cbd92ca7ee9eefebc57307bef7b3e535d39516277e22a0f"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/forgery/espree-forgery -a oracle --job-name espree-authoring-forgery-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/forgery-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "failed": 24,
+      "reward": 0.0,
+      "public_network_available": false,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/forgery-final/espree-authoring-forgery-final/espree-forgery__QPXQEaA/verifier/grading.json",
+        "sha256": "sha256:8bb897ddc2fd6838008c185f054eec076d1547335189a03a07e3b9f3f55b43d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/forgery-final/espree-authoring-forgery-final/espree-forgery__QPXQEaA/verifier/network.json",
+        "sha256": "sha256:3eed4f163423d04a7edf9564931c3b2617013b562e4cfb4d97e54bfec4066519"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/extra/espree-offline -a oracle --job-name espree-authoring-offline-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/offline-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 24,
+      "passed": 0,
+      "failed": 24,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/offline-final/espree-authoring-offline-final/espree-offline__YCmmNhU/verifier/grading.json",
+        "sha256": "sha256:8bb897ddc2fd6838008c185f054eec076d1547335189a03a07e3b9f3f55b43d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/offline-final/espree-authoring-offline-final/espree-offline__YCmmNhU/verifier/network.json",
+        "sha256": "sha256:deb81869cabf19c69af0a4a7e085b4e921e6c93243c3b2431ccd0b5c5ae39346"
+      }
+    },
+    "install_script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/extra/espree-install-script -a oracle --job-name espree-authoring-install-script-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/install-script-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/install-script-final/espree-authoring-install-script-final/espree-install-script__Y7GLFsm/verifier/grading.json",
+        "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/install-script-final/espree-authoring-install-script-final/espree-install-script__Y7GLFsm/verifier/network.json",
+        "sha256": "sha256:b9fa9b34bac8ab63ce3a66dcffc24b263792838100ed41411c4eacdd6abe3bae"
+      }
+    },
+    "loader_hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/extra/espree-loader-hook -a oracle --job-name espree-authoring-loader-hook-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/loader-hook-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 24,
+      "passed": 0,
+      "failed": 24,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/loader-hook-final/espree-authoring-loader-hook-final/espree-loader-hook__jmjtaNf/verifier/grading.json",
+        "sha256": "sha256:8bb897ddc2fd6838008c185f054eec076d1547335189a03a07e3b9f3f55b43d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/loader-hook-final/espree-authoring-loader-hook-final/espree-loader-hook__jmjtaNf/verifier/network.json",
+        "sha256": "sha256:6765fcc474a48b86a99d9eecb8ddeee09ff51cb00d9fe29a17e3946bc0aa7296"
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/espree/controls/extra/espree-hang -a oracle --job-name espree-authoring-hang-final -o .nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/hang-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 24,
+      "passed": 0,
+      "failed": 24,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/hang-final/espree-authoring-hang-final/espree-hang__BuBRmb6/verifier/grading.json",
+        "sha256": "sha256:8bb897ddc2fd6838008c185f054eec076d1547335189a03a07e3b9f3f55b43d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/runs/hang-final/espree-authoring-hang-final/espree-hang__BuBRmb6/verifier/network.json",
+        "sha256": "sha256:32522899cef5e519f377d728b02f1f75f417e88f687f277d1efad27d45177600"
+      }
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/espree",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/evidence-validate-source-final.log"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/evidence-network-lint-final.log",
+      "result": "0 errors; unrelated catalog warnings only"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/espree --output .nl2repo/authoring-work/node-author-wave2-20260828/espree/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/espree/evidence-compile-production-final.log",
+      "result": "102 manifest entries; 0 integrity mismatches"
+    },
+    {
+      "stage": "harbor-version",
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "log": ".nl2repo/espree-harbor-version-final.log",
+      "result": "Harbor 0.21.0"
+    }
+  ],
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane; model evaluation remains an integrator stage.",
+    "Independent blind review, dataset integration, publication approval, and retention of task-local run artifacts remain integrator work.",
+    "The extra negative controls were generated as task-local copies; the canonical production bundle remains the compile output recorded above."
+  ],
+  "notes": "The source is ready for integrator review and a separate Agent Run. Candidate and verifier runs use no-network; only the trusted Oracle received the run-scoped github.com authorization."
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "protocol": "custom-json-v1",
+  "entrypoint": "private/candidate_adapter.txt",
+  "transport": "newline-delimited JSON over a UID-isolated child process",
+  "operations": [
+    {"name": "inventory", "input": {}, "output": "JSON package/export inventory"},
+    {"name": "parse", "input": {"code": "string", "options": "object|null"}, "output": "JSON AST or serialized error"},
+    {"name": "tokenize", "input": {"code": "string", "options": "object|null"}, "output": "JSON token array or serialized error"}
+  ],
+  "limits": {"request_bytes": 65536, "response_bytes": 262144, "child_cpu_seconds": 30, "child_processes": 32},
+  "excluded": ["custom parser callbacks", "CLI binaries", "non-JSON AST extensions", "filesystem access"]
+}

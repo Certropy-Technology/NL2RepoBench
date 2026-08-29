@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "espree",
+  "framework": "node:test",
+  "frozen_total": 24,
+  "collection_source": "private deterministic contract.test.mjs",
+  "groups": ["exports", "parse", "tokenize", "options", "errors", "jsx"],
+  "traceability": {
+    "exports": ["root exports and version"],
+    "parse": ["Program shape", "module/commonjs", "ranges/locations", "comments", "modern syntax"],
+    "tokenize": ["token kinds", "regex metadata", "comment attachment"],
+    "options": ["edition aliases", "latest", "invalid options"],
+    "errors": ["syntax position", "source type validation"],
+    "jsx": ["JSX AST", "JSX tokenization"]
+  }
+}

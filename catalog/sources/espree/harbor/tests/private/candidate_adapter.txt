@@ -1,0 +1,64 @@
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const site = process.env.NODE_CANDIDATE_SITE;
+if (!site) throw new Error('candidate site is not configured');
+const espree = await import(pathToFileURL(join(site, 'node_modules', 'espree', 'espree.js')).href);
+
+function serialiseError(error) {
+  return {
+    ok: false,
+    error_type: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+    index: Number.isInteger(error?.index) ? error.index : undefined,
+    lineNumber: Number.isInteger(error?.lineNumber) ? error.lineNumber : undefined,
+    column: Number.isInteger(error?.column) ? error.column : undefined,
+  };
+}
+
+function clean(value) {
+  if (Array.isArray(value)) {
+    const result = value.map(clean);
+    if (value.comments) result.comments = clean(value.comments);
+    return result;
+  }
+  if (value && typeof value === 'object') {
+    const result = {};
+    for (const [key, item] of Object.entries(value)) {
+      if (typeof item !== 'function' && typeof item !== 'symbol' && item !== undefined) result[key] = clean(item);
+    }
+    return result;
+  }
+  return value;
+}
+
+async function main(request) {
+  if (request.operation === 'inventory') {
+    return {
+      ok: true,
+      value: {
+        packageName: espree.name,
+        packageVersion: espree.version,
+        exportNames: Object.keys(espree).sort(),
+        latestEcmaVersion: espree.latestEcmaVersion,
+        supportedEcmaVersions: espree.supportedEcmaVersions,
+      },
+    };
+  }
+  if (!['parse', 'tokenize'].includes(request.operation)) throw new Error('unsupported operation');
+  const code = request.payload?.code;
+  const options = request.payload?.options ?? undefined;
+  try {
+    const value = request.operation === 'parse'
+      ? espree.parse(code, options)
+      : espree.tokenize(code, options);
+    return {ok: true, value: clean(value)};
+  } catch (error) {
+    return serialiseError(error);
+  }
+}
+
+let input = '';
+for await (const chunk of process.stdin) input += chunk;
+const request = JSON.parse(input);
+const response = await main(request);
+process.stdout.write(JSON.stringify({id: request.id, ...response}) + '\n');

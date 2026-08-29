@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "espree",
+  "source_revision": "8173ecfeb7473bff90d1da11b1347082f47e262e",
+  "package_version": "11.2.0",
+  "package_path": "packages/espree",
+  "module_system": "esm",
+  "runtime_entry": "espree.js",
+  "source_files": ["espree.js", "lib/espree.js", "lib/options.js", "lib/token-translator.js", "lib/types.js"],
+  "public_exports": ["parse", "tokenize", "version", "name", "Syntax", "VisitorKeys", "latestEcmaVersion", "supportedEcmaVersions"],
+  "parse_options": ["allowReserved", "ecmaVersion", "sourceType", "ecmaFeatures.jsx", "ecmaFeatures.globalReturn", "ecmaFeatures.impliedStrict", "range", "loc", "tokens", "comment"],
+  "runtime_dependencies": ["acorn@8.16.0", "acorn-jsx@5.3.2", "eslint-visitor-keys@5.0.1"],
+  "upstream_test_files": 12,
+  "upstream_it_cases": 135,
+  "scored_json_boundary": ["basic AST", "tokens", "comments", "locations", "ranges", "ECMAScript versions", "JSX", "commonjs", "syntax errors", "option validation"]
+}
