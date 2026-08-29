@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "task_id": "alembic",
+  "terminal_kind": "valid",
+  "handoff_status": "awaiting-agent-run",
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/final/compiled/alembic/bundle.manifest.json",
+    "sha256": "sha256:b2efb0cc0ecc8abe39ecb6a59fc374b7445f8a57da7247564dd65eb35c707394"
+  },
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sqlalchemy/alembic",
+    "revision": "c116cbc0f39d9df2b4ce5f1871043a622ca8774f",
+    "source_digest": "sha256:d152069190bef5403affcb73bd9b25cdeb34b4662a9bc8b70f9fe65968b72e72",
+    "license_spdx": "MIT"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/final/compiled/alembic -a oracle --allow-agent-host github.com --job-name alembic-final-oracle --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/final/runs/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 20,
+    "passed": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/oracle/alembic-final-oracle/alembic__XqfbtXY/verifier/grading.json",
+      "sha256": "sha256:3413f09a230b2c71cc30c0b42b0c97fd1663fdd3fe1558e3fcadb3caca4403c1"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/oracle/alembic-final-oracle/alembic__XqfbtXY/verifier/network.json",
+      "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "agent": "nop",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/empty/alembic-final-empty/alembic__ZjwNQmy/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/empty/alembic-final-empty/alembic__ZjwNQmy/verifier/network.json"
+    },
+    "stub": {
+      "prepared_by": "HarborCompilerRegistry.prepare_control_bundle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/stub/alembic-final-stub/alembic-stub__8CBMxn8/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/stub/alembic-final-stub/alembic-stub__8CBMxn8/verifier/network.json"
+    },
+    "forgery": {
+      "prepared_by": "HarborCompilerRegistry.prepare_control_bundle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/forgery/alembic-final-forgery/alembic-forgery__hGEutXU/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/forgery/alembic-final-forgery/alembic-forgery__hGEutXU/verifier/network.json"
+    },
+    "call_hang": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/call-hang/alembic-final-call-hang/alembic-call-hang__zVSzUwP/verifier/grading.json"
+    },
+    "install_hang": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/install-hang/alembic-final-install-hang/alembic-install-hang__RnSNktn/verifier/grading.json"
+    },
+    "workspace_invalid": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-workspace-rejected",
+      "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/workspace-invalid/alembic-final-workspace-invalid/alembic-workspace-invalid__mUeeFwk/verifier/grading.json"
+    },
+    "offline": {
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": ".nl2repo/authoring-work/python-author-wave2-20260828/final/runs/oracle/alembic-final-oracle/alembic__XqfbtXY/verifier/network.json"
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started; awaiting-agent-run is a handoff label rather than a lifecycle enum value.",
+    "The public contract intentionally excludes live database, autogeneration-against-engine, plugin, and interactive editor behavior."
+  ]
+}

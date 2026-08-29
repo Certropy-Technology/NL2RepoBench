@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/alembic"
+version = "1.19.2-r1"
+description = "Build Alembic from an empty workspace with public configuration, migration-operation, offline SQL, and script-generation behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "sqlalchemy",
+    "database-migrations",
+    "offline-sql",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = [
+    "python",
+    "sqlalchemy",
+    "database-migrations",
+    "offline-sql",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:c4864a6ae943612ca22f5563639942005a7d268b04062741b754214fa71f7996"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

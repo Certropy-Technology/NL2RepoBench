@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "alembic"
+version = "1.19.2-r1"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = ["python", "sqlalchemy", "database-migrations", "offline-sql", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sqlalchemy/alembic"
+revision = "c116cbc0f39d9df2b4ce5f1871043a622ca8774f"
+license_spdx = "MIT"
+source_digest = "sha256:d152069190bef5403affcb73bd9b25cdeb34b4662a9bc8b70f9fe65968b72e72"
+
+[environment]
+status = "known"
+python_version = "3.12.4"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked SQLAlchemy and Mako closure is installed during image build. Candidate and verifier execution have no public network access; Oracle-only source acquisition receives a run-scoped exact host authorization."
+
+[dependencies]
+status = "known"
+installer = "pip"
+lock_artifact = { digest = "sha256:2977f99ef38095162afc88a4cfc62a4e54ade5c9db4d12c8266a366b5c808114", size_bytes = 20371, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2977f99ef38095162afc88a4cfc62a4e54ade5c9db4d12c8266a366b5c808114", visibility = "private" }
+packages = ["SQLAlchemy==2.0.36", "Mako==1.4.1", "greenlet==3.5.5", "MarkupSafe==3.0.3", "typing_extensions==4.16.0", "setuptools==84.0.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:c3b575168c1d10a5e0ef60fb96bbba203e8d0a7a1e1538ca38c96ba1dca20ab5", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c3b575168c1d10a5e0ef60fb96bbba203e8d0a7a1e1538ca38c96ba1dca20ab5", visibility = "private" }
+entrypoint = "run.py"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build Alembic from an empty workspace with public configuration, migration-operation, offline SQL, and script-generation behavior."
+keywords = ["python", "sqlalchemy", "database-migrations", "offline-sql", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Frozen source, private hash-locked closure, custom verifier, and Oracle bundle passed a 20/20 Oracle run plus empty, stub, forgery, call-timeout, installation-timeout, workspace-rejection, and offline verifier controls. The handoff status is awaiting-agent-run; this lane has not started a model Agent Run."
+
+[oracle_bundle]
+digest = "sha256:4b64c90e1a6b9daaaa5abc0726de8fb5c497aee7820bb6ec56271188491afa80"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4b64c90e1a6b9daaaa5abc0726de8fb5c497aee7820bb6ec56271188491afa80"
+visibility = "private"
