@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dot-prop",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 36,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/dot-prop",
+    "revision": "d5d11c71a70bfb643a45d22821ed6d284240fce5",
+    "source_digest": "sha256:8260136eb763c56d5b073b0365ed875ccf9ce6aaad81c8647af2f51b0f53019c",
+    "license_spdx": "MIT",
+    "license_path": "license",
+    "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "package": "dot-prop@10.2.0"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:5ba60c27fd96a7c1c60702ed36b8328237a0ca7fb50a26f9b9a4875878429d4f",
+    "dependency_artifact": "sha256:5755837872e1b876ff62ab45a1e0f3c32aaa109172fd7ea707af942d773b042e",
+    "commands_artifact": "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7",
+    "test_bundle": "sha256:1a8e9e3d92119442374c30d4fb2935e7f3109670417b94e1f5486765a509a72b",
+    "oracle_bundle": "sha256:020d3838568380c53e8e4c071289b05a3bdc13bd588733733068c506afcbfa00",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/dot-prop --output .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final/dot-prop",
+    "bundle_manifest_sha256": "sha256:1a4385e1c5279c27d5ec315c7e37a7be29f89cd8bda6456cd8ad18060819c5a9",
+    "canonical_manifest_digest": "sha256:7556a1cb22dfe32992aed06296dfa5d8c2fcd9c66440fc05b7ba3e4bcc20ffd8",
+    "file_count": 78,
+    "manifest_mismatches": 0
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "toolchain_agent_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "authoring_host_agent_image_id": "sha256:55f9ac341e8782cbd31e57abe8e6ee2941dab68526894c2386a70f5f96c3fce7",
+    "runtime": {"language": "node", "version": "24.19.0", "package_manager": "npm", "package_manager_version": "11.17.0", "architecture": "linux/amd64", "libc": "glibc"},
+    "network_policy": {"mode": "no-network", "agent_allowed_hosts": [], "offline_dependencies": "private-artifact", "reference_source_fetch": "forbidden", "oracle_run_scoped_host": "github.com"}
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {"digest": "sha256:5755837872e1b876ff62ab45a1e0f3c32aaa109172fd7ea707af942d773b042e", "size_bytes": 10240, "media_type": "application/vnd.nl2repobench.npm-bundle+tar", "uri": "artifact://private/sha256:5755837872e1b876ff62ab45a1e0f3c32aaa109172fd7ea707af942d773b042e", "visibility": "private"}
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final/dot-prop -a oracle --allow-agent-host github.com --job-name dot-prop-oracle-production-final -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/oracle-production-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 36,
+    "collected": 36,
+    "passed": 36,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/oracle-production-final/dot-prop-oracle-production-final/dot-prop__MrayPNt/verifier/grading.json", "sha256": "sha256:1548f674536dcb27f8385f4f0e90b2c782fe306b26c46e32518e8da67cedbeab"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/oracle-production-final/dot-prop-oracle-production-final/dot-prop__MrayPNt/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80"}
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls/dot-prop-empty -a oracle --job-name dot-prop-control-empty-production --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-empty --yes", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-empty/dot-prop-control-empty-production/dot-prop-empty__ZjuKCAN/verifier/grading.json", "grading_sha256": "sha256:0970d8c2c227e913caa713cb63694298ee002087ff52e34318dd5e6e47218f43", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-empty/dot-prop-control-empty-production/dot-prop-empty__ZjuKCAN/verifier/network.json", "network_sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517"},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls-production-stub/dot-prop-stub -a oracle --job-name dot-prop-control-stub-production --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-stub --yes", "exit_code": 0, "valid": true, "collected": 36, "passed": 5, "failed": 31, "reward": 0.1388888888888889, "public_network_available": false, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-stub/dot-prop-control-stub-production/dot-prop-stub__snV7XxU/verifier/grading.json", "grading_sha256": "sha256:0988b99c4891813f57b21c1154989f66a0565a6deffb49732a734edb4434ee1b", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-stub/dot-prop-control-stub-production/dot-prop-stub__snV7XxU/verifier/network.json", "network_sha256": "sha256:bf97fdf040569c59c31c2e95149980dc169165bc2e3164066bd9c4b7cc1a25cb"},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls-production-forgery/dot-prop-forgery -a oracle --job-name dot-prop-control-forgery-production --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-forgery --yes", "exit_code": 0, "valid": true, "collected": 36, "passed": 3, "failed": 33, "reward": 0.08333333333333333, "verifier_owned_reward": true, "public_network_available": false, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-forgery/dot-prop-control-forgery-production/dot-prop-forgery__NRottwW/verifier/grading.json", "grading_sha256": "sha256:01cb839b28e0f0f6785ab73e463f5bbf7544ff56ba12d2ad072ff815f61d0ff6", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-forgery/dot-prop-control-forgery-production/dot-prop-forgery__NRottwW/verifier/network.json", "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"},
+    "hang": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls/dot-prop-hang -a oracle --job-name dot-prop-control-hang-production --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-hang --yes", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "bounded": true, "failure_reason": "candidate-call-failed", "public_network_available": false, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-hang/dot-prop-control-hang-production/dot-prop-hang__JYoWjfy/verifier/grading.json", "grading_sha256": "sha256:30e120aacdc8f78b35332e66ec17ab58cf23e2d2fb446abe3dcf66d899ad5bbb", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-hang/dot-prop-control-hang-production/dot-prop-hang__JYoWjfy/verifier/network.json", "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"},
+    "offline": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls/dot-prop-offline -a oracle --job-name dot-prop-control-offline-production --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-offline --yes", "exit_code": 0, "valid": true, "collected": 36, "passed": 5, "failed": 31, "reward": 0.1388888888888889, "public_network_available": false, "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-offline/dot-prop-control-offline-production/dot-prop-offline__NZ4iT5K/verifier/grading.json", "grading_sha256": "sha256:0988b99c4891813f57b21c1154989f66a0565a6deffb49732a734edb4434ee1b", "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/control-results-production-offline/dot-prop-control-offline-production/dot-prop-offline__NZ4iT5K/verifier/network.json", "network_sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "offline": true}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone --filter=blob:none --no-checkout https://github.com/sindresorhus/dot-prop.git; git checkout d5d11c71a70bfb643a45d22821ed6d284240fce5; git archive --format=tar d5d11c71a70bfb643a45d22821ed6d284240fce5", "exit_code": 0, "result": "revision and archive digest frozen"},
+    {"stage": "baseline", "command": "Node 22.23.1/npm 10.9.8 local package smoke; upstream inventory of 77 AVA blocks and 16 type assertions", "exit_code": 0, "result": "runtime exports and package metadata inspected"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/dot-prop", "exit_code": 0, "result": "controls-passed"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "no dot-prop findings"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/dot-prop --output .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "result": "78 manifest entries; 0 mismatches; bundle_manifest_sha256=sha256:1a4385e1c5279c27d5ec315c7e37a7be29f89cd8bda6456cd8ad18060819c5a9"},
+    {"stage": "oracle", "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final/dot-prop -a oracle --allow-agent-host github.com --job-name dot-prop-oracle-production-final -o .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/oracle-production-final --n-concurrent 1 --yes", "exit_code": 0, "result": "valid=true; 36/36; reward=1.0; network=false"},
+    {"stage": "controls", "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final/dot-prop stub --output .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls-production-stub --toolchain toolchain.node.lock.toml; uv run nl2repo harbor prepare-control .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/compiled-production-final/dot-prop forgery --output .nl2repo/authoring-work/node-author-wave2-20260828/dot-prop/controls-production-forgery --toolchain toolchain.node.lock.toml; Harbor Oracle runs for empty, stub, forgery, hang, and offline", "exit_code": 0, "result": "all controls bounded; no-network receipts recorded; fresh production receipts bound below"},
+    {"stage": "syntax-and-local-contract", "command": "npm ci --offline --ignore-scripts --no-audit --no-fund; npm pack; child-side 36-leaf node:test suite", "exit_code": 0, "result": "36/36 local reference leaves passed"},
+    {"stage": "deterministic-compile", "command": "repeat production compile and compare final bundle manifest", "exit_code": 0, "result": "fresh output matches prior compiled bundle; manifest digest sha256:1a4385e1c5279c27d5ec315c7e37a7be29f89cd8bda6456cd8ad18060819c5a9"}
+  ],
+  "residual_risks": [
+    "The authoring host reconstructed the configured agent image tag locally after Docker image pruning; the recorded host image ID differs from the toolchain image ID. Integrator must restore/verify the official immutable agent image before publication.",
+    "Independent blind/spec review, dataset projection, model Agent Run, pilot, and publication are intentionally not performed in this lane.",
+    "The hang control is an installation/import timeout with zero collected leaves; it is a bounded infrastructure-safety control, not a model score."
+  ]
+}

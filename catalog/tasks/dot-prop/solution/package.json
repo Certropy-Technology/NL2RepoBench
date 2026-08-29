@@ -1,0 +1,10 @@
+{
+  "name": "dot-prop",
+  "version": "10.2.0",
+  "description": "Get, set, or delete a property from a nested object using a dot path",
+  "license": "MIT",
+  "type": "module",
+  "exports": {"types": "./index.d.ts", "default": "./index.js"},
+  "files": ["index.js", "index.d.ts"],
+  "engines": {"node": ">=20"}
+}

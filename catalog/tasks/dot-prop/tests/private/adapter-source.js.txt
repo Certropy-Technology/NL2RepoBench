@@ -1,0 +1,64 @@
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createInterface} from 'node:readline';
+
+const site = process.env.NODE_CANDIDATE_SITE;
+if (!site) throw new Error('NODE_CANDIDATE_SITE is required');
+const candidate = await import(pathToFileURL(join(site, 'node_modules', 'dot-prop', 'index.js')).href);
+
+function encode(value) {
+	return value === undefined ? {__undefined: true} : value;
+}
+
+function scenario(name) {
+	switch (name) {
+		case 'cyclic': {
+			const object = {foo: {}};
+			object.foo.bar = object;
+			return candidate.deepKeys(object);
+		}
+		case 'function': {
+			const functionValue = () => {};
+			functionValue.prop = 'value';
+			return candidate.deepKeys({a: functionValue});
+		}
+		case 'sparse':
+			return candidate.deepKeys({sparse: [1, , 3]});
+		case 'undefined': {
+			const object = {value: undefined};
+			return {has: candidate.hasProperty(object, 'value'), get: encode(candidate.getProperty(object, 'value'))};
+		}
+		case 'inherited': {
+			const parent = {answer: 42};
+			const child = Object.create(parent);
+			return {get: candidate.getProperty(child, 'answer'), has: candidate.hasProperty(child, 'answer'), deleted: candidate.deleteProperty(child, 'answer')};
+		}
+		default:
+			throw new Error(`unknown scenario: ${name}`);
+	}
+}
+
+const input = createInterface({input: process.stdin});
+for await (const line of input) {
+	if (!line.trim()) continue;
+	let request;
+	try {
+		request = JSON.parse(line);
+		let result;
+		if (request.operation === 'inventory') {
+			result = Object.keys(candidate).sort();
+		} else if (request.operation === 'scenario') {
+			result = scenario(request.payload.name);
+		} else if (request.operation === 'invoke') {
+			const {name, args = []} = request.payload;
+			if (typeof candidate[name] !== 'function') throw new Error(`unknown export: ${name}`);
+			const returned = candidate[name](...args);
+			result = {returned: encode(returned), args};
+		} else {
+			throw new Error('unknown operation');
+		}
+		process.stdout.write(`${JSON.stringify({id: request.id, ok: true, result})}\n`);
+	} catch (error) {
+		process.stdout.write(`${JSON.stringify({id: request?.id, ok: false, error: {name: error?.name, message: error?.message}})}\n`);
+	}
+}

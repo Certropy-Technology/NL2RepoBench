@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dot-prop",
+  "source_revision": "d5d11c71a70bfb643a45d22821ed6d284240fce5",
+  "package": {"name": "dot-prop", "version": "10.2.0", "module_system": "esm", "runtime_entry": "index.js", "types_entry": "index.d.ts", "runtime_dependencies": {}},
+  "public_exports": [
+    {"export": "getProperty", "kind": "named-function", "signature": "getProperty(object, path, defaultValue?)"},
+    {"export": "setProperty", "kind": "named-function", "signature": "setProperty(object, path, value)"},
+    {"export": "hasProperty", "kind": "named-function", "signature": "hasProperty(object, path)"},
+    {"export": "deleteProperty", "kind": "named-function", "signature": "deleteProperty(object, path)"},
+    {"export": "escapePath", "kind": "named-function", "signature": "escapePath(path)"},
+    {"export": "parsePath", "kind": "named-function", "signature": "parsePath(path)"},
+    {"export": "stringifyPath", "kind": "named-function", "signature": "stringifyPath(pathSegments, options?)"},
+    {"export": "deepKeys", "kind": "named-function", "signature": "deepKeys(object)"},
+    {"export": "unflatten", "kind": "named-function", "signature": "unflatten(object)"}
+  ],
+  "source_metrics": {"tracked_files": 15, "runtime_source_loc": 447, "upstream_test_blocks": 77, "upstream_type_test_assertions": 16},
+  "inventory_notes": [
+    "The only package dependency is type-fest in the upstream type declaration and is not needed by the runtime artifact.",
+    "The public contract includes security-sensitive path filtering and bounded handling of deep/cyclic inputs.",
+    "The private verifier uses a child-side JSON adapter so candidate code never enters the trusted verifier process."
+  ]
+}

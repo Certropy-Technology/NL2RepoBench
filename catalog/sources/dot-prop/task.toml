@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "dot-prop"
+version = "10.2.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "nested-object-utilities"
+tags = ["node", "npm", "esm", "objects", "paths", "arrays", "security"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/dot-prop"
+revision = "d5d11c71a70bfb643a45d22821ed6d284240fce5"
+license_spdx = "MIT"
+source_digest = "sha256:8260136eb763c56d5b073b0365ed875ccf9ce6aaad81c8647af2f51b0f53019c"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. This package has no runtime dependencies; the private npm closure is still supplied to enforce the npm v3 offline install contract. Only the trusted Oracle receives a run-scoped source-host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:5755837872e1b876ff62ab45a1e0f3c32aaa109172fd7ea707af942d773b042e", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:5755837872e1b876ff62ab45a1e0f3c32aaa109172fd7ea707af942d773b042e", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 36
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
+test_bundle = { digest = "sha256:1a8e9e3d92119442374c30d4fb2935e7f3109670417b94e1f5486765a509a72b", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1a8e9e3d92119442374c30d4fb2935e7f3109670417b94e1f5486765a509a72b", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build an offline ESM dot-prop package for safe nested object path access, mutation, flattening, and path conversion."
+keywords = ["node", "npm", "esm", "objects", "paths", "arrays", "security"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828/dot-prop"
+reason = "Frozen source, private npm v3 closure, 36-leaf separate node:test verifier, production compile, trusted Oracle, empty/stub/forgery/hang/offline controls, and no-network receipts passed. Review, pilot, and publication remain integrator-stage gates."
+
+[oracle_bundle]
+digest = "sha256:020d3838568380c53e8e4c071289b05a3bdc13bd588733733068c506afcbfa00"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:020d3838568380c53e8e4c071289b05a3bdc13bd588733733068c506afcbfa00"
+visibility = "private"

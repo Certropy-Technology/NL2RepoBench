@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dot-prop",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 36,
+  "frozen_collection_source": "task-local deterministic adapter scenarios",
+  "files": [
+    {"path": "api.test.mjs", "leaves": 36, "areas": ["exports", "get/set/has/delete", "escaping", "parse/stringify", "deepKeys", "unflatten", "security", "sparse arrays"]}
+  ],
+  "coverage_notes": [
+    "Every public runtime export is invoked through the candidate child boundary.",
+    "Tests include invalid input, escaped keys, numeric normalization, prototype-key rejection, conflicts, cycles, sparse arrays, and deterministic ordering.",
+    "Upstream 77 AVA blocks were used as inventory only; private tests are independently authored and do not copy upstream assertions."
+  ]
+}
