@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "jaraco-classes"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-class-utilities"
+tags = ["python", "descriptors", "metaclasses", "class-introspection", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jaraco/jaraco.classes"
+revision = "eeccd0b835bccf18353c44f4b35a1a27c9284fce"
+license_spdx = "MIT"
+source_digest = "sha256:4c3f9931ea112ae1f06448efe329ab40a700ed8f484cf32431e2cb66b7ddd28f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install candidate and verifier dependencies during image build from the private hash lock"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier dependencies are installed during Docker build from a private hash lock; agent and verifier runs are network-isolated, and only the trusted Oracle receives a run-scoped exact source-host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["more-itertools==10.8.0", "setuptools==84.0.0"]
+lock_artifact = { digest = "sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e", size_bytes = 619, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 23
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build jaraco.classes from an empty workspace and satisfy a separate deterministic verifier for its ancestry, descriptor, and metaclass APIs."
+keywords = ["python", "descriptors", "metaclasses", "class-introspection", "json-scenarios"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:45ba99ad81180cf9e985ed592740b08dc2b9c6492f11d5713295d82e322a51a3", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:45ba99ad81180cf9e985ed592740b08dc2b9c6492f11d5713295d82e322a51a3", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:38a7e07a2908cc3f9e23bd983b4c6bfee29ea7d7197f8bdfd303bf67a04bf601"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:38a7e07a2908cc3f9e23bd983b4c6bfee29ea7d7197f8bdfd303bf67a04bf601"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Current production compile, one official Harbor Oracle run, empty/stub/forgery controls, timeout control, workspace-ingestion control, and offline network probes completed successfully; awaiting an independent model Agent Run."

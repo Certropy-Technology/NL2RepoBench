@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/jaraco-classes"
+version = "0.1.0"
+description = "Build jaraco.classes from an empty workspace and satisfy a separate deterministic verifier for its ancestry, descriptor, and metaclass APIs."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "descriptors",
+    "metaclasses",
+    "class-introspection",
+    "json-scenarios",
+]
+
+[metadata]
+difficulty = "medium"
+category = "python-class-utilities"
+tags = [
+    "python",
+    "descriptors",
+    "metaclasses",
+    "class-introspection",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 23
+canonical_manifest_digest = "sha256:bb395819371803b4fe76dcf5ab7a249f1635b0493f0ed1c2549b5971aa7d0837"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 2400.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

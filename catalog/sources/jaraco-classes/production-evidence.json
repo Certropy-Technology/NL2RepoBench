@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-classes",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/jaraco/jaraco.classes",
+    "revision": "eeccd0b835bccf18353c44f4b35a1a27c9284fce",
+    "archive_sha256": "sha256:4c3f9931ea112ae1f06448efe329ab40a700ed8f484cf32431e2cb66b7ddd28f",
+    "authoring_git_archive_sha256": "sha256:3a5b0c0b0ff76f73bd4285f15286b1b87f37b0b217f17b6c8bdcfe6f6ea463ad",
+    "license": "MIT",
+    "license_file_sha256": null,
+    "license_note": "The frozen Git tree has no tracked license file; the upstream pyproject declares MIT and the build backend materializes standard license metadata."
+  },
+  "environment": {
+    "python": "3.12.14",
+    "host_probe_python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["more-itertools==10.8.0", "setuptools==84.0.0"],
+    "lock_artifact": "artifact://private/sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e",
+    "lock_sha256": "sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e",
+    "lock_size_bytes": 619,
+    "remediation": "Added setuptools to the hash-locked candidate closure after the first Oracle probe found the slim image lacked setuptools.build_meta."
+  },
+  "frozen_collection": {
+    "expected_total": 23,
+    "source": "private custom-json-v1 deterministic local API contract",
+    "upstream_test_collection": 0,
+    "upstream_doctest_probe": "7 passed"
+  },
+  "bundle": {
+    "manifest": ".nl2repo/compile-final/jaraco-classes/bundle.manifest.json",
+    "manifest_sha256": "sha256:f0901c9f43b8f38924de37d003916e57b5653a3495c04f218e3c077e888f8326",
+    "canonical_manifest_digest": "sha256:bb395819371803b4fe76dcf5ab7a249f1635b0493f0ed1c2549b5971aa7d0837",
+    "entries": 58,
+    "integrity_mismatches": 0,
+    "toolchain_lock": "toolchain.lock.toml",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931ee7918543075ab366"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run --frozen nl2repo task validate-source catalog/sources/jaraco-classes",
+      "exit_code": 0,
+      "status": "packaged"
+    },
+    "lint_network": {
+      "command": "uv run --frozen nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "task_warning": "Oracle solve requires explicit codeload.github.com authorization; model Agent metadata remains no-network."
+    },
+    "production_compile": {
+      "command": "uv run --frozen nl2repo harbor compile catalog/sources/jaraco-classes --output .nl2repo/compile-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": ".nl2repo/compile-final/jaraco-classes/bundle.manifest.json"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compile-final/jaraco-classes -a oracle --allow-agent-host codeload.github.com --job-name jaraco-classes-oracle-final-20260829 -o .nl2repo/runs/jaraco-classes-oracle-final-20260829 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 23,
+    "passed": 23,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/jaraco-classes-oracle-final-20260829/jaraco-classes-oracle-final-20260829/jaraco-classes__RqZUUd4/result.json",
+    "grading": {
+      "path": ".nl2repo/runs/jaraco-classes-oracle-final-20260829/jaraco-classes-oracle-final-20260829/jaraco-classes__RqZUUd4/verifier/grading.json",
+      "sha256": "sha256:670ceadc4d39fad5f6cded91ffcf93ff030f114ed1dadacc6fce0bb8e00b9a9e"
+    },
+    "network": {
+      "path": ".nl2repo/runs/jaraco-classes-oracle-final-20260829/jaraco-classes-oracle-final-20260829/jaraco-classes__RqZUUd4/verifier/network.json",
+      "sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compile-final/jaraco-classes -a nop --job-name jaraco-classes-empty-final-20260829 -o .nl2repo/runs/jaraco-classes-empty-final-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/jaraco-classes-empty-final-20260829/jaraco-classes-empty-final-20260829/jaraco-classes__CN99cxn/result.json",
+      "grading": {
+        "path": ".nl2repo/runs/jaraco-classes-empty-final-20260829/jaraco-classes-empty-final-20260829/jaraco-classes__CN99cxn/verifier/grading.json",
+        "sha256": "sha256:95c200064b771921dfec7ec41bf4a2b59e2e875488c25b1373e52648821184b8"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jaraco-classes-empty-final-20260829/jaraco-classes-empty-final-20260829/jaraco-classes__CN99cxn/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/runs/jaraco-classes-empty-final-20260829/jaraco-classes-empty-final-20260829/jaraco-classes__CN99cxn/verifier/candidate-install.json",
+        "sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/jaraco-classes-stub -a oracle --job-name jaraco-classes-stub-final-20260829 -o .nl2repo/runs/jaraco-classes-stub-final-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 23,
+      "passed": 3,
+      "reward": 0.13043478260869565,
+      "result": ".nl2repo/runs/jaraco-classes-stub-final-20260829/jaraco-classes-stub-final-20260829/jaraco-classes-stub__jCk8VgX/result.json",
+      "grading": {
+        "path": ".nl2repo/runs/jaraco-classes-stub-final-20260829/jaraco-classes-stub-final-20260829/jaraco-classes-stub__jCk8VgX/verifier/grading.json",
+        "sha256": "sha256:57fd1df98f07a8389e71499b3ea0500d7cfb2d285274cef885dd92e55e78feb3"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jaraco-classes-stub-final-20260829/jaraco-classes-stub-final-20260829/jaraco-classes-stub__jCk8VgX/verifier/network.json",
+        "sha256": "sha256:968e7d526444ef755114f324b29c19909d4856eec99bf80bd8f6c6d5b370f33f"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/jaraco-classes-forgery -a oracle --job-name jaraco-classes-forgery-final-20260829 -o .nl2repo/runs/jaraco-classes-forgery-final-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 23,
+      "passed": 6,
+      "reward": 0.2608695652173913,
+      "verifier_owned_reward": true,
+      "result": ".nl2repo/runs/jaraco-classes-forgery-final-20260829/jaraco-classes-forgery-final-20260829/jaraco-classes-forgery__cGm2wKc/result.json",
+      "grading": {
+        "path": ".nl2repo/runs/jaraco-classes-forgery-final-20260829/jaraco-classes-forgery-final-20260829/jaraco-classes-forgery__cGm2wKc/verifier/grading.json",
+        "sha256": "sha256:81fce7d63e6d51caac125883c3839f8e67ec1d3fe64954cb52f83d3b0e3aca65"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jaraco-classes-forgery-final-20260829/jaraco-classes-forgery-final-20260829/jaraco-classes-forgery__cGm2wKc/verifier/network.json",
+        "sha256": "sha256:8171b9012a9bf1ed3e0f328c9491075639f34bea09ca7bc80b6cf3adf4eb88bf"
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from jaraco-classes Oracle authoring run",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/jaraco-classes-oracle-final-20260829/jaraco-classes-oracle-final-20260829/jaraco-classes__RqZUUd4/verifier/network.json",
+        "sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/jaraco-classes/jaraco-classes-call-hang -a oracle --job-name jaraco-classes-call-hang-authoring-20260829 -o .nl2repo/runs/jaraco-classes-call-hang-authoring-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.17391304347826086,
+      "timeout_guarded": true,
+      "network_public": false,
+      "grading": {
+        "path": ".nl2repo/runs/jaraco-classes-call-hang-authoring-20260829/jaraco-classes-call-hang-authoring-20260829/jaraco-classes-call-hang__TaHrgRr/verifier/grading.json",
+        "sha256": "sha256:02186369e7566a660557e9b45406f814cf250c5526916511b14f2884de0d4a42"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jaraco-classes-call-hang-authoring-20260829/jaraco-classes-call-hang-authoring-20260829/jaraco-classes-call-hang__TaHrgRr/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      }
+    },
+    "workspace_invalid": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/jaraco-classes/jaraco-classes-workspace-invalid -a oracle --job-name jaraco-classes-workspace-invalid-authoring-20260829 -o .nl2repo/runs/jaraco-classes-workspace-invalid-authoring-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-workspace-rejected",
+      "network_public": false,
+      "grading": {
+        "path": ".nl2repo/runs/jaraco-classes-workspace-invalid-authoring-20260829/jaraco-classes-workspace-invalid-authoring-20260829/jaraco-classes-workspace-invalid__SwEQNHK/verifier/grading.json",
+        "sha256": "sha256:a070aec04e2780b8468cf4b7ddbfff65fec420d500ef3664099606cf0c7251a7"
+      },
+      "network": {
+        "path": ".nl2repo/runs/jaraco-classes-workspace-invalid-authoring-20260829/jaraco-classes-workspace-invalid-authoring-20260829/jaraco-classes-workspace-invalid__SwEQNHK/verifier/network.json",
+        "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+      }
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The package has no tracked upstream pytest suite; the fixed denominator is the independent 23-leaf contract.",
+    "Review, pilot, dataset integration, and publication remain integrator-stage gates."
+  ]
+}
