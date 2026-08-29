@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyopenssl",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/pyca/pyopenssl",
+    "revision": "06dd9cba948b694e8de1e79ce3a458a7775e8af5",
+    "archive_sha256": "sha256:2ca6a8d913c3c717f4a4a644f7d6d12feba86906fa687c8dcfa7a069c1870385",
+    "license_spdx": "Apache-2.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/final-compile/pyopenssl",
+    "manifest_sha256": "sha256:3ed8ec4599563ecfffa496cdae034d18e6b0c27da4c3373ec2548a849ea4fb5c",
+    "mode": "production",
+    "schema_version": "1.0"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "frozen_total": 25,
+    "collected": 25,
+    "collection_errors": 0,
+    "verifier_bundle": "sha256:51d8c8b721a4f4d660d882bd18c0a119e9aaf18819ca590eb2974e8bc28167d0"
+  },
+  "oracle": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pyopenssl -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/final-runs-v2 --job-name oracle --n-concurrent 1 --max-retries 0 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 25,
+    "passed": 25,
+    "total": 25,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/final-runs-v2/oracle/pyopenssl__NXaGmsM/verifier/grading.json",
+      "sha256": "sha256:43456c556447f10af0a8453991e5966558990d5f0af2e54e556a4d3105db479a"
+    },
+    "network": {
+      "path": ".nl2repo/final-runs-v2/oracle/pyopenssl__NXaGmsM/verifier/network.json",
+      "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597"
+    },
+    "public_network_available": false,
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pyopenssl -a nop --jobs-dir .nl2repo/final-runs-v2 --job-name empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "total": 25,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+      "path": ".nl2repo/final-runs-v2/empty/pyopenssl__9tzfWB9/verifier/grading.json",
+        "sha256": "sha256:f000584376e7ee5ebc3e4a9542ff7f8973fc6dac8a9f0ed6bf4d98f671fd9b8e"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-v2/empty/pyopenssl__9tzfWB9/verifier/network.json",
+        "sha256": "sha256:831df49691bacfd1a6fa772a3aa3de8fd1c7e0a74aeef5ba7546e16eaee8eeaa"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-v2/pyopenssl-stub -a oracle --jobs-dir .nl2repo/final-runs-v2 --job-name stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 25,
+      "passed": 1,
+      "total": 25,
+      "reward": 0.04,
+      "grading": {
+        "path": ".nl2repo/final-runs-v2/stub/pyopenssl-stub__rcFyESC/verifier/grading.json",
+        "sha256": "sha256:8e732b65d2da8584751fe487656863f80b8d620a4894902cc974b2e17dc25bfe"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-v2/stub/pyopenssl-stub__rcFyESC/verifier/network.json",
+        "sha256": "sha256:ab8c4e1d0ed778e0b3a8a0f2288edf06e3e1b7fa8cfcc6011a680dab19e3d3d1"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-v2/pyopenssl-forgery -a oracle --jobs-dir .nl2repo/final-runs-v2 --job-name forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 25,
+      "passed": 1,
+      "total": 25,
+      "reward": 0.04,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/final-runs-v2/forgery/pyopenssl-forgery__miNcWhQ/verifier/grading.json",
+        "sha256": "sha256:8e732b65d2da8584751fe487656863f80b8d620a4894902cc974b2e17dc25bfe"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-v2/forgery/pyopenssl-forgery__miNcWhQ/verifier/network.json",
+        "sha256": "sha256:93cbaecd5e7032ecc4dd933e74f5d55444f88273d42590134755dfaad89db26c"
+      }
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-v2/pyopenssl-install-hang -a oracle --jobs-dir .nl2repo/final-runs-v2 --job-name install-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "total": 25,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/final-runs-v2/install-hang/pyopenssl-install-hang__rsKojqz/verifier/grading.json",
+        "sha256": "sha256:f000584376e7ee5ebc3e4a9542ff7f8973fc6dac8a9f0ed6bf4d98f671fd9b8e"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-v2/install-hang/pyopenssl-install-hang__rsKojqz/verifier/network.json",
+        "sha256": "sha256:1771089d7940f57d109ab5d6146dc8f77d473a93984accafa04097c11110a5b0"
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-v2/pyopenssl-call-hang -a oracle --jobs-dir .nl2repo/final-runs-v2 --job-name call-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 25,
+      "passed": 0,
+      "total": 25,
+      "reward": 0.0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/final-runs-v2/call-hang/pyopenssl-call-hang__WgmG8zE/verifier/grading.json",
+        "sha256": "sha256:3ce3ad03f3139bb0121cfeb8d0d3bce5366f9cf07403e59765db2e0d19093b4e"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-v2/call-hang/pyopenssl-call-hang__WgmG8zE/verifier/network.json",
+        "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e"
+      }
+    },
+    "offline": {
+      "command": "Harbor verifier network isolation observed in Oracle and every control run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+      "path": ".nl2repo/final-runs-v2/empty/pyopenssl__9tzfWB9/verifier/network.json",
+      "sha256": "sha256:831df49691bacfd1a6fa772a3aa3de8fd1c7e0a74aeef5ba7546e16eaee8eeaa"
+      },
+      "public_network_available": false,
+      "probes": {
+        "pypi.org:443": false,
+        "1.1.1.1:443": false
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/pyopenssl",
+      "exit_code": 0
+    },
+    "network_lint_task": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources/pyopenssl",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "network_lint_catalog": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_local_error_count": 0,
+      "catalog_warning_count": 141,
+      "catalog_warning_note": "Warnings belong to unrelated source tasks; pyopenssl has no finding."
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/pyopenssl --output .nl2repo/final-compile --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": ".nl2repo/final-compile/pyopenssl/bundle.manifest.json",
+      "manifest_sha256": "sha256:3ed8ec4599563ecfffa496cdae034d18e6b0c27da4c3373ec2548a849ea4fb5c"
+    },
+    "syntax": {
+      "command": "python3 -m py_compile .nl2repo/authoring-work/inspect/verifier/run.py && bash -n .nl2repo/authoring-work/inspect/oracle/solve.sh catalog/sources/pyopenssl/harbor/controls/*.sh",
+      "exit_code": 0
+    },
+    "artifact_hash_audit": {
+      "command": "sha256sum and size audit for private verifier, Oracle, candidate lock, and generated manifest",
+      "exit_code": 0
+    }
+  },
+  "residual_risks": [
+    "The 432-item upstream suite is reduced to 25 deterministic child-side JSON scenarios; live sockets, DTLS, callbacks, host CA paths, current-time validity, random output, and private CFFI pointers are explicitly outside the contract.",
+    "The Oracle solve script fetches only the exact frozen GitHub revision and validates the archive digest; the model Agent remains no-network with an empty static allowlist.",
+    "The call-hang control is bounded by the configured candidate total timeout and returned 25 collected failures after about 352 seconds.",
+    "No Harbor model Agent Run, review, pilot, or publication was performed in this lane."
+  ],
+  "handoff_status": "awaiting-agent-run"
+}

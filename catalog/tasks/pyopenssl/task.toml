@@ -1,0 +1,59 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pyopenssl"
+version = "1.0.0"
+description = "Build pyOpenSSL from an empty workspace and implement a deterministic local crypto and TLS-memory compatibility contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "cryptography",
+    "openssl",
+    "x509",
+    "tls",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "cryptography-wrapper"
+tags = [
+    "python",
+    "cryptography",
+    "openssl",
+    "x509",
+    "tls",
+    "native-adaptation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 25
+canonical_manifest_digest = "sha256:e992e463c0ca2daf321c69529500dd9ed2dfb47dc7a560242253876e3b183b91"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

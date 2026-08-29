@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyopenssl",
+  "source_revision": "06dd9cba948b694e8de1e79ce3a458a7775e8af5",
+  "upstream_collection": 432,
+  "source_baseline": {"core_crypto_rand_util_collected": 176, "core_crypto_rand_util_passed": 176},
+  "frozen_total": 25,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_ids": [
+    "root-exports", "crypto-exports", "metadata-requires", "pkey-empty", "pkey-rsa",
+    "pkey-invalid", "pkey-cryptography-roundtrip", "x509-name", "x509-name-copy",
+    "x509-fields", "x509-sign-serialize", "key-serialize", "invalid-loads",
+    "x509-cryptography-bridge", "store-context", "elliptic-curves", "ssl-exports",
+    "ssl-context", "ssl-context-validation", "ssl-cipher-connection", "ssl-memory-handshake",
+    "ssl-context-options", "ssl-connection-options", "rand-surface", "debug-module"
+  ],
+  "excluded_upstream_categories": [
+    "live socket/TLS loopback", "DTLS", "OCSP and callback lifetimes", "host CA paths and environment variables", "random output bytes", "private CFFI pointers"
+  ]
+}

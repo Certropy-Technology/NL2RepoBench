@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyopenssl",
+  "source_revision": "06dd9cba948b694e8de1e79ce3a458a7775e8af5",
+  "source_archive_sha256": "sha256:2ca6a8d913c3c717f4a4a644f7d6d12feba86906fa687c8dcfa7a069c1870385",
+  "source_files": 7,
+  "source_noncomment_loc": 4421,
+  "upstream_test_files": 7,
+  "upstream_named_tests": 383,
+  "public_contract": [
+    "OpenSSL metadata exports",
+    "OpenSSL.crypto PKey and cryptography bridge",
+    "OpenSSL.crypto X509Name and X509",
+    "OpenSSL.crypto encoding and store context",
+    "OpenSSL.crypto elliptic curve lookup",
+    "OpenSSL.SSL Context and Connection memory behavior",
+    "OpenSSL.rand status/add type surface"
+  ],
+  "adaptation_boundaries": [
+    "No live network sockets or external TLS peers",
+    "No DTLS, OCSP, callback, subprocess, or host certificate-store behavior",
+    "Native objects are observed only through child-side JSON-safe projections",
+    "OpenSSL version and platform paths are checked by type/shape"
+  ],
+  "risk_flags": ["native-extension", "filesystem", "network", "randomness", "callback", "socket"]
+}

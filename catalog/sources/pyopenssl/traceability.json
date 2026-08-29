@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyopenssl",
+  "source_revision": "06dd9cba948b694e8de1e79ce3a458a7775e8af5",
+  "frozen_denominator": 25,
+  "contract_to_hidden_leaf": {
+    "package exports and version": ["root-exports", "crypto-exports", "ssl-exports"],
+    "distribution dependency metadata": ["metadata-requires"],
+    "PKey lifecycle and cryptography bridge": ["pkey-empty", "pkey-rsa", "pkey-invalid", "pkey-cryptography-roundtrip"],
+    "X509Name attributes/components/DER": ["x509-name", "x509-name-copy"],
+    "X509 fields/signing/encoding": ["x509-fields", "x509-sign-serialize", "invalid-loads", "x509-cryptography-bridge"],
+    "X509 store verification": ["store-context"],
+    "elliptic curve lookup": ["elliptic-curves"],
+    "SSL context configuration": ["ssl-context", "ssl-context-validation", "ssl-context-options"],
+    "SSL memory connection": ["ssl-cipher-connection", "ssl-memory-handshake", "ssl-connection-options"],
+    "rand/debug module surface": ["rand-surface", "debug-module"]
+  },
+  "review_notes": "All 25 leaves exercise behavior explicitly documented in instruction.md. Native, network, callback, DTLS, and current-time behavior is excluded with a public boundary."
+}
