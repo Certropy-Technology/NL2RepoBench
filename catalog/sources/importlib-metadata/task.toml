@@ -1,0 +1,93 @@
+schema_version = "1.0"
+task_id = "importlib-metadata"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "packaging-runtime"
+tags = ["python", "package-metadata", "entry-points", "distribution-discovery", "zip-import", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python/importlib_metadata"
+revision = "9757b400ee412ddb1d685f139ed3300f607c059a"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:921c3509959fd9a207da52966da0d4fb2da167e51a9b7a4abb8eff4f46abbf39"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_IMPORTLIB_METADATA=8.9.1.dev28+g9757b400e python -m pip install --no-deps --no-build-isolation ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build and zipp runtime closure is installed during Docker build. Agent and separate verifier execution have no egress; only the trusted Oracle receives the exact source-host authorization for its pinned revision fetch."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "coherent-licensed==0.5.2",
+  "packaging==26.3",
+  "setuptools==84.0.0",
+  "setuptools-scm==10.2.1",
+  "vcs-versioning==2.3.1",
+  "zipp==4.1.0",
+]
+lock_artifact = { digest = "sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf", size_bytes = 1628, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build importlib-metadata from an empty workspace and reproduce deterministic directory, egg-info, zip, metadata, file-record, requirement, and entry-point behavior through a separate child-side JSON verifier."
+keywords = ["python", "package-metadata", "entry-points", "distribution-discovery", "zip-import", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 3072
+storage_mb = 6144
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b40878535a70abfcdd9019fabecffcdf60a6bd5e7e8f498d956062b155a7b264", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b40878535a70abfcdd9019fabecffcdf60a6bd5e7e8f498d956062b155a7b264", visibility = "private" }
+entrypoint = "run.py"
+environment = { SETUPTOOLS_SCM_PRETEND_VERSION_FOR_IMPORTLIB_METADATA = "8.9.1.dev28+g9757b400e" }
+
+[oracle_bundle]
+digest = "sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950cd4809bc9a0484dab9"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950cd4809bc9a0484dab9"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Final production Harbor 0.21.0 bundle passed the Oracle at 30/30 with reward 1.0; empty, stub, forgery, timeout, workspace, call-timeout, and explicit offline controls completed with verifier-owned reports and no public egress. Review, pilot, publication, and model Agent Run remain separate integrator stages."

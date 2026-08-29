@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "public_contract_to_private_leaves": {
+    "top-level lookup functions": ["package.version-exports-requires", "errors.package-not-found", "entry-points.global-filter"],
+    "EntryPoint": ["entry-point.parse", "entry-point.invalid-reference", "entry-point.value-semantics", "entry-point.load", "entry-point.disallow-dist-match"],
+    "EntryPoints": ["entry-points.select-index"],
+    "Distribution properties": ["distribution.metadata", "distribution.metadata-json", "distribution.requires-dist-info", "distribution.entry-points", "distribution.direct-url-origin", "distribution.missing-metadata", "distribution.abc-enforced", "distribution.at-string-path"],
+    "Recorded files": ["distribution.files-record", "distribution.files-skip-missing", "distribution.files-none"],
+    "Distribution providers": ["discovery.normalized-name", "discovery.prefix-not-matched", "discovery.context-contract", "egg-info.versionless", "discovery.invalidate-caches"],
+    "legacy requires.txt": ["egg-info.requires-sections"],
+    "packages_distributions": ["packages-distributions.declared", "packages-distributions.inferred"],
+    "zip discovery": ["zip.distribution", "zip.case-insensitive-name"]
+  },
+  "coverage_rule": "Every listed public contract section has at least one deterministic private leaf; every private leaf is described by a public instruction section.",
+  "reference_probe": {"scenarios": 30, "passed": 30, "exit_code": 0}
+}

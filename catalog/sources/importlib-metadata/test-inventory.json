@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "source_revision": "9757b400ee412ddb1d685f139ed3300f607c059a",
+  "upstream_collection": {
+    "python": "3.12.11",
+    "support_revision": "55fee9cf216abe4ec0d1139f94b1930fbd0c7644",
+    "collected": 126,
+    "passed": 126,
+    "subtests_passed": 41,
+    "exit_code": 0,
+    "node_list_sha256": "sha256:aad7756ed89b2f349e212c8f5ffa23ee3e27473c02f59992b0ffeb6360226d73"
+  },
+  "production_contract": {
+    "framework": "custom-json-v1",
+    "frozen_total": 30,
+    "leaf_ids_source": "private verifier bundle",
+    "collection_errors": 0,
+    "scenarios_reference_matched": 30
+  },
+  "excluded_upstream_paths": [
+    "tests/compat/*.py test.support imports are authoring-only support material",
+    "tests/data binary fixtures are replaced by child-created deterministic fixtures",
+    "tests using process-global sys.path are represented by scoped provider scenarios"
+  ]
+}

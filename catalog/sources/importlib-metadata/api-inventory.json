@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "source_revision": "9757b400ee412ddb1d685f139ed3300f607c059a",
+  "runtime_modules": 12,
+  "public_root_exports": [
+    "Distribution",
+    "DistributionFinder",
+    "PackageMetadata",
+    "PackageNotFoundError",
+    "PackagePath",
+    "MetadataNotFound",
+    "SimplePath",
+    "distribution",
+    "distributions",
+    "entry_points",
+    "files",
+    "metadata",
+    "packages_distributions",
+    "requires",
+    "version"
+  ],
+  "behavior_groups": [
+    {"id": "top-level-lookups", "instruction_sections": ["Top-level lookup functions"], "leaf_prefixes": ["package.", "errors.", "entry-points.global-filter"]},
+    {"id": "entry-points", "instruction_sections": ["EntryPoint", "EntryPoints"], "leaf_prefixes": ["entry-point.", "entry-points."]},
+    {"id": "distribution-metadata", "instruction_sections": ["Distribution properties", "Recorded files"], "leaf_prefixes": ["distribution.", "egg-info."]},
+    {"id": "directory-discovery", "instruction_sections": ["Distribution providers", "Top-level lookup functions"], "leaf_prefixes": ["discovery.", "packages-distributions."]},
+    {"id": "zip-discovery", "instruction_sections": ["Distribution providers", "Recorded files"], "leaf_prefixes": ["zip."]}
+  ],
+  "boundary": {
+    "protocol": "custom-json-v1",
+    "candidate_import_process": "uid-10001 child",
+    "trusted_process_imports_candidate": false,
+    "candidate_can_write_trusted_reports": false
+  }
+}

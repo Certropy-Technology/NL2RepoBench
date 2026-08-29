@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python/importlib_metadata",
+    "revision": "9757b400ee412ddb1d685f139ed3300f607c059a",
+    "commit_tree": "f8ae23f8f977a1cac10eb0c421ec1c2057fcb91f",
+    "source_digest": "sha256:921c3509959fd9a207da52966da0d4fb2da167e51a9b7a4abb8eff4f46abbf39",
+    "source_size_bytes": 225280,
+    "license_spdx": "Apache-2.0",
+    "authoring_support_revision": "55fee9cf216abe4ec0d1139f94b1930fbd0c7644"
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/importlib-metadata/compiled-production-final2/importlib-metadata/bundle.manifest.json",
+    "sha256": "sha256:99f9cc1ee1056b7db861ce112f39ee4aa4d406e727989b46c6715bb3baeca2ac",
+    "canonical_manifest_digest": "sha256:7bd7d7f45dc946cfabf8b7df8f45a91a61f08595c6e21c2922ab3c774b025761",
+    "schema_version": "1.0",
+    "mode": "production",
+    "file_count": 61,
+    "integrity_errors": 0
+  },
+  "dependency_lock": {
+    "packages": ["coherent-licensed==0.5.2", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "vcs-versioning==2.3.1", "zipp==4.1.0"],
+    "vendor_wheels": false,
+    "artifact": {
+      "digest": "sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf",
+      "size_bytes": 1628,
+      "path": ".nl2repo/artifacts/private/sha256/4b/4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf"
+    }
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/importlib-metadata/compiled-production-final2/importlib-metadata -a oracle --allow-agent-host github.com --job-name importlib-metadata-oracle-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 30,
+    "passed": 30,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-oracle-final2/importlib-metadata__Gms387L/verifier/grading.json", "sha256": "sha256:20f0b1042d2e856a754c01cf5be41cb46088df4d99be958733f1c21fe5fc9862"},
+    "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-oracle-final2/importlib-metadata__Gms387L/verifier/network.json", "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/importlib-metadata/final2/empty/importlib-metadata-empty -a oracle --job-name importlib-metadata-empty-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-empty-final2/importlib-metadata-empty__tzXjjFy/verifier/grading.json", "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"}, "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-empty-final2/importlib-metadata-empty__tzXjjFy/verifier/network.json", "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517", "public_network_available": false}},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/importlib-metadata/final2/stub/importlib-metadata-stub -a oracle --job-name importlib-metadata-stub-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 30, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-stub-final2/importlib-metadata-stub__cjJoY9v/verifier/grading.json", "sha256": "sha256:0460528de0c099d4380b23395a49d373d07f6350ef8695ce106d4c3c4585094f"}, "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-stub-final2/importlib-metadata-stub__cjJoY9v/verifier/network.json", "sha256": "sha256:9161a66d725d2850505c74dc6f832977a0c1ae3f359ff99a9d1bf941b451e1d5", "public_network_available": false}},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/importlib-metadata/final2/forgery/importlib-metadata-forgery -a oracle --job-name importlib-metadata-forgery-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 30, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-forgery-final2/importlib-metadata-forgery__DGPcRdi/verifier/grading.json", "sha256": "sha256:0460528de0c099d4380b23395a49d373d07f6350ef8695ce106d4c3c4585094f"}, "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-forgery-final2/importlib-metadata-forgery__DGPcRdi/verifier/network.json", "sha256": "sha256:ab6e00fd9d734da65d42689d7e4420175410f9f95f79ea3247c761007e4aa728", "public_network_available": false}},
+    "offline": {"command": "docker build with declared online build contract, then docker run --network none -v logs:/logs -v workspace:/workspace verifier:test /tests/test.sh", "exit_code": 0, "completed": true, "valid": true, "collected": 0, "reward": 0.0, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/importlib-metadata/logs/offline-replay/logs/verifier/network.json", "sha256": "sha256:6f168cb734fee2971856bc203ad185b903a709c96642144543c997152bf31383", "public_network_available": false}},
+    "timeout": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/importlib-metadata/final2/install-hang/importlib-metadata-install-hang -a oracle --job-name importlib-metadata-install-hang-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-install-hang-final2/importlib-metadata-install-hang__FfHkC74/verifier/grading.json", "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"}, "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-install-hang-final2/importlib-metadata-install-hang__FfHkC74/verifier/network.json", "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517", "public_network_available": false}},
+    "workspace-invalid": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/importlib-metadata/final2/workspace-invalid/importlib-metadata-workspace-invalid -a oracle --job-name importlib-metadata-workspace-invalid-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-workspace-rejected", "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-workspace-invalid-final2/importlib-metadata-workspace-inv__jRcANTj/verifier/grading.json", "sha256": "sha256:74e36a11429b6e14f2ab1457e9afb092bac042a94498358b4e7bdc3bece30265"}, "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-workspace-invalid-final2/importlib-metadata-workspace-inv__jRcANTj/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}},
+    "call-timeout": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/importlib-metadata/final2/call-hang/importlib-metadata-call-hang -a oracle --job-name importlib-metadata-call-hang-final2 -o .nl2repo/runs/importlib-metadata-final2-20260828 --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 30, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-call-hang-final2/importlib-metadata-call-hang__gs9aNc4/verifier/grading.json", "sha256": "sha256:0460528de0c099d4380b23395a49d373d07f6350ef8695ce106d4c3c4585094f"}, "network": {"path": ".nl2repo/runs/importlib-metadata-final2-20260828/importlib-metadata-call-hang-final2/importlib-metadata-call-hang__gs9aNc4/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}}
+  },
+  "residual_risks": [
+    "The Oracle solve bundle requires explicit github.com authorization and installs a verified canonical Apache-2.0 license text because coherent-licensed otherwise fetches license text during build metadata generation.",
+    "The production denominator is an independently authored 30-leaf contract rather than the 126-node upstream collection; all public behavior groups are traced in traceability.json.",
+    "The task is controls-passed, not reviewed, piloted, published, or run with a model Agent."
+  ]
+}
