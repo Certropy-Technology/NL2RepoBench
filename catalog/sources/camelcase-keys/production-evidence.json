@@ -1,0 +1,207 @@
+{
+  "schema_version": "1.0",
+  "task_id": "camelcase-keys",
+  "terminal_kind": "valid",
+  "status_boundary": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/camelcase-keys",
+    "revision": "3f304acdc5177aa119f383b3b09557bd70d7916c",
+    "archive_sha256": "sha256:4611a77b477cc333b75cf4f934ba6b9dae2f603a3ceabe6b89749f5c3d36c81c",
+    "archive_path": ".nl2repo/authoring-work/node/camelcase-keys/source.tar",
+    "license": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "package_json_sha256": "sha256:ebc172e9554788f9699c6e3228e56fedbba014f248362e2a063026203e3dfcc2",
+    "upstream_test_declarations": 22
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/node/camelcase-keys/compiled-final/camelcase-keys/bundle.manifest.json",
+    "sha256": "sha256:dfb00e6195d8bf699ad50c1129cbcd027b91a2ae85144358edd78cf1dc939139",
+    "size_bytes": 78876,
+    "mode": "production"
+  },
+  "toolchain": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor_version": "0.21.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "platform": "linux/amd64",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_note": "The local OpenHands image tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c, differing from the locked sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; integrator must restore or verify the official image before a model run."
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "expected_total": 24,
+    "observed_total": 24,
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/camelcase-keys",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/validate-source-final.log"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/lint-network-final.log",
+      "note": "Repository-wide lint reported zero errors; existing unrelated sources account for warnings."
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/camelcase-keys --output .nl2repo/authoring-work/node/camelcase-keys/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/compile-final.log"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/camelcase-keys --output .nl2repo/authoring-work/node/camelcase-keys/compiled-repeat --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/compile-repeat.log",
+      "note": "The repeat bundle manifest was byte-identical to the final compile."
+    },
+    {
+      "command": "node --check src/nl2repobench/verification/node/candidate_runner.mjs; bash -n catalog/sources/camelcase-keys/harbor/controls/*.sh",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/candidate-runner-syntax.log"
+    }
+  ],
+  "artifacts": {
+    "dependency_bundle": {
+      "digest": "sha256:dbe44c6f13572571eba83c663e4bf7182502a0caeba479cbaa40b63470f98c15",
+      "size_bytes": 1280000,
+      "path": ".nl2repo/artifacts/private/sha256/db/dbe44c6f13572571eba83c663e4bf7182502a0caeba479cbaa40b63470f98c15"
+    },
+    "commands": {
+      "digest": "sha256:19873ef3395f5fecc6741f891add617a8b456a10e364919d0590e5020a2f9d98",
+      "size_bytes": 10240,
+      "path": ".nl2repo/artifacts/private/sha256/19/19873ef3395f5fecc6741f891add617a8b456a10e364919d0590e5020a2f9d98"
+    },
+    "tests": {
+      "digest": "sha256:8385a44331f4f33980076463a20b4978df5bd31ce1c120651a3721417e505c91",
+      "size_bytes": 2543,
+      "path": ".nl2repo/artifacts/private/sha256/83/8385a44331f4f33980076463a20b4978df5bd31ce1c120651a3721417e505c91"
+    },
+    "oracle": {
+      "digest": "sha256:b402beb2e3734ae399b2805897bbc8f6cc9d7117d8cf29136dc190ce8e4d3a93",
+      "size_bytes": 921600,
+      "path": ".nl2repo/artifacts/private/sha256/b4/b402beb2e3734ae399b2805897bbc8f6cc9d7117d8cf29136dc190ce8e4d3a93"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node/camelcase-keys/compiled-final/camelcase-keys -a oracle --job-name camelcase-keys-oracle-final -o .nl2repo/authoring-work/node/camelcase-keys/runs/final/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/oracle/camelcase-keys-oracle-final/camelcase-keys__QeVt8ED/verifier/grading.json",
+      "sha256": "sha256:964df66aaa47ba98d3afd3fac8d13e21b9776b0df5af04c05a6bc513845faaca",
+      "valid": true,
+      "reward": 1.0,
+      "passed": 24,
+      "collected": 24,
+      "expected_total": 24
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/oracle/camelcase-keys-oracle-final/camelcase-keys__QeVt8ED/verifier/network.json",
+      "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/empty/camelcase-keys-empty-final/camelcase-keys-empty__RKHEEZN/verifier/grading.json",
+      "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/empty/camelcase-keys-empty-final/camelcase-keys-empty__RKHEEZN/verifier/network.json",
+      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "public_network_available": false
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 2,
+      "collected": 24,
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/stub/camelcase-keys-stub-final/camelcase-keys-stub__PntSiLm/verifier/grading.json",
+      "grading_sha256": "sha256:e53eadafba9925f966c2364e536ffe61e9245f46139f7e5c66e971260c28c475",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/stub/camelcase-keys-stub-final/camelcase-keys-stub__PntSiLm/verifier/network.json",
+      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "public_network_available": false
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.041666666666666664,
+      "passed": 1,
+      "collected": 24,
+      "verifier_owned_reward": true,
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/forgery/camelcase-keys-forgery-final/camelcase-keys-forgery__Y73cBVh/verifier/grading.json",
+      "grading_sha256": "sha256:404db689ae58781657c8ced032fa9d555df094f3908c7de4bfa76c4b01f20969",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/forgery/camelcase-keys-forgery-final/camelcase-keys-forgery__Y73cBVh/verifier/network.json",
+      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "public_network_available": false
+    },
+    "install-script": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/install-script/camelcase-keys-install-script-final/camelcase-keys-install-script__XSJTiFh/verifier/grading.json",
+      "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/install-script/camelcase-keys-install-script-final/camelcase-keys-install-script__XSJTiFh/verifier/network.json",
+      "network_sha256": "sha256:5a11402ab736c09005e19aac9808128d80310f0bcd5368624f4537a44ed98d47",
+      "public_network_available": false
+    },
+    "loader-hook": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.20833333333333334,
+      "passed": 5,
+      "collected": 24,
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/loader-hook/camelcase-keys-loader-hook-final/camelcase-keys-loader-hook__exCprGL/verifier/grading.json",
+      "grading_sha256": "sha256:29021472e103299cf57c09569489dc71b51f2bc0641c5295e61f1fed5a4e3195",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/loader-hook/camelcase-keys-loader-hook-final/camelcase-keys-loader-hook__exCprGL/verifier/network.json",
+      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "public_network_available": false
+    },
+    "hang": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/hang/camelcase-keys-hang-final/camelcase-keys-hang__UsKYuPN/verifier/grading.json",
+      "grading_sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/hang/camelcase-keys-hang-final/camelcase-keys-hang__UsKYuPN/verifier/network.json",
+      "network_sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+      "public_network_available": false
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.041666666666666664,
+      "passed": 1,
+      "collected": 24,
+      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/offline/camelcase-keys-offline-final/camelcase-keys-offline__H2R2ryk/verifier/grading.json",
+      "grading_sha256": "sha256:404db689ae58781657c8ced032fa9d555df094f3908c7de4bfa76c4b01f20969",
+      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/offline/camelcase-keys-offline-final/camelcase-keys-offline__H2R2ryk/verifier/network.json",
+      "network_sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane by contract.",
+    "Blind review, traceability review approval, pilot, dataset integration, and publication remain integrator stages.",
+    "The local OpenHands runtime image digest differs from the locked toolchain image digest and must be restored or explicitly verified before a model run.",
+    "The production contract is a bounded JSON adaptation of the frozen package API, not full parity with all non-JSON upstream AVA surfaces."
+  ],
+  "blocker": null
+}

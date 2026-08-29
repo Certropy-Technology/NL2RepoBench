@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "package": "camelcase-keys",
+  "version": "10.0.2",
+  "runtime_entry": "index.js",
+  "declaration_entry": "index.d.ts",
+  "module_type": "module",
+  "public_exports": ["default"],
+  "runtime_signature": "camelcaseKeys(input: unknown, options?: Options): unknown",
+  "options": {
+    "deep": "boolean, default false",
+    "pascalCase": "boolean, default false",
+    "preserveConsecutiveUppercase": "boolean, default false",
+    "exclude": "array of strings or RegExp values",
+    "stopPaths": "array of original-key dot paths without array indexes"
+  },
+  "runtime_dependencies": ["camelcase@9.0.0", "map-obj@6.0.0", "quick-lru@7.3.0", "type-fest@5.8.0"],
+  "covered_behavior": ["package shape", "shallow keys", "deep objects and arrays", "JSON-representable options", "primitive identity", "determinism"],
+  "state_and_side_effects": "synchronous, stateless, input-preserving for the public API",
+  "supported_exception_contract": "no intentional exception for bounded JSON inputs and well-formed options",
+  "scored_boundary": "bounded JSON request/response in a UID-separated candidate subprocess",
+  "excluded_risk_surfaces": ["callbacks", "filesystem descriptors", "symbols and custom prototypes", "built-in instances", "cyclic graphs", "locale and TTY"]
+}
