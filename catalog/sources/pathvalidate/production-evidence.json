@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pathvalidate",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/thombashi/pathvalidate",
+    "revision": "1ca0a50fce51d5b5bd633457a72abf74dbe3112d",
+    "source_digest": "sha256:4c83bac3feec196a0a9925d5be61bbe9581310cff4f09b6372e203ba13b81918",
+    "license_spdx": "MIT"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/final-compile/pathvalidate/pathvalidate/bundle.manifest.json",
+    "sha256": "sha256:f78b57121c7cac43490f710afbf75bc0de4fc46056de31e1a6ffb062e847a194",
+    "canonical_manifest_digest": "sha256:317acc64d058e9efb6da410967b98abe6f26ee3463cbc440b78b09e79385513a"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pathvalidate/pathvalidate -a oracle --job-name pathvalidate-oracle-20260830 -o .nl2repo/runs/pathvalidate-oracle-20260830 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/pathvalidate-oracle-20260830/pathvalidate-oracle-20260830/pathvalidate__6FRbWFt/verifier/grading.json",
+      "sha256": "sha256:0e8db5f658bf65b442af7ff543597b8faf86f2ce2b5bafd65fdb5f6cb26720e5"
+    },
+    "network": {
+      "path": ".nl2repo/runs/pathvalidate-oracle-20260830/pathvalidate-oracle-20260830/pathvalidate__6FRbWFt/verifier/network.json",
+      "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 54,
+      "passed": 54,
+      "failed": 0,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pathvalidate/pathvalidate -a nop --job-name pathvalidate-empty-20260830 -o .nl2repo/runs/pathvalidate-empty-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pathvalidate-empty-20260830/pathvalidate-empty-20260830/pathvalidate__W637Uq2/verifier/grading.json",
+        "sha256": "sha256:3580882c79eda44a0b995c9144f710346325dd553858846882647310e8b07011"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-empty-20260830/pathvalidate-empty-20260830/pathvalidate__W637Uq2/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": {
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "collected": 0,
+        "reward": 0.0
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathvalidate-stub/pathvalidate-stub -a oracle --job-name pathvalidate-stub-20260830 -o .nl2repo/runs/pathvalidate-stub-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pathvalidate-stub-20260830/pathvalidate-stub-20260830/pathvalidate-stub__5z32Rhp/verifier/grading.json",
+        "sha256": "sha256:966f1d4628199550de6c4bd68f78dd8ff4327d725cbda04cfd667f3aa3183f8d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-stub-20260830/pathvalidate-stub-20260830/pathvalidate-stub__5z32Rhp/verifier/network.json",
+        "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 54,
+        "passed": 5,
+        "failed": 49,
+        "reward": 0.09259259259259259,
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathvalidate-forgery/pathvalidate-forgery -a oracle --job-name pathvalidate-forgery-20260830 -o .nl2repo/runs/pathvalidate-forgery-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/pathvalidate-forgery-20260830/pathvalidate-forgery-20260830/pathvalidate-forgery__VnQ5pDJ/verifier/grading.json",
+        "sha256": "sha256:966f1d4628199550de6c4bd68f78dd8ff4327d725cbda04cfd667f3aa3183f8d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-forgery-20260830/pathvalidate-forgery-20260830/pathvalidate-forgery__VnQ5pDJ/verifier/network.json",
+        "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 54,
+        "passed": 5,
+        "failed": 49,
+        "reward": 0.09259259259259259,
+        "public_network_available": false,
+        "candidate_fake_report_ignored": true
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from pathvalidate empty control run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-empty-20260830/pathvalidate-empty-20260830/pathvalidate__W637Uq2/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    }
+  },
+  "additional_controls": {
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathvalidate-call-hang/pathvalidate -a oracle --job-name pathvalidate-call-hang-20260830 -o .nl2repo/runs/pathvalidate-call-hang-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pathvalidate-call-hang-20260830/pathvalidate-call-hang-20260830/pathvalidate__EYESzPE/verifier/grading.json",
+        "sha256": "sha256:b2593a991ad8a73b8154b9069d2731506b0bf32c31a38b0a5c98834894c76323"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-call-hang-20260830/pathvalidate-call-hang-20260830/pathvalidate__EYESzPE/verifier/network.json",
+        "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 54,
+        "passed": 0,
+        "failed": 54,
+        "reward": 0.0,
+        "bounded_candidate_call_failures": true,
+        "public_network_available": false
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathvalidate-install-hang/pathvalidate -a oracle --job-name pathvalidate-install-hang-20260830 -o .nl2repo/runs/pathvalidate-install-hang-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pathvalidate-install-hang-20260830/pathvalidate-install-hang-20260830/pathvalidate__CgQgs4n/verifier/grading.json",
+        "sha256": "sha256:3580882c79eda44a0b995c9144f710346325dd553858846882647310e8b07011"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-install-hang-20260830/pathvalidate-install-hang-20260830/pathvalidate__CgQgs4n/verifier/network.json",
+        "sha256": "sha256:b5bae354fc2401fc988463c537d741eefccbe4947c56bb59c9dc3a4cca891331"
+      },
+      "summary": {
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "install_outcome": "timeout",
+        "collected": 0,
+        "reward": 0.0,
+        "public_network_available": false
+      }
+    },
+    "workspace_invalid": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathvalidate-workspace-invalid/pathvalidate -a oracle --job-name pathvalidate-workspace-invalid-20260830 -o .nl2repo/runs/pathvalidate-workspace-invalid-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pathvalidate-workspace-invalid-20260830/pathvalidate-workspace-invalid-20260830/pathvalidate__SddQYsc/verifier/grading.json",
+        "sha256": "sha256:711e0156ee46e0648132375aa5b9160dce02fc69b78591bea8019cc0d584ccc1"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathvalidate-workspace-invalid-20260830/pathvalidate-workspace-invalid-20260830/pathvalidate__SddQYsc/verifier/network.json",
+        "sha256": "sha256:be5c9b151442773f1b569b5b63d0d645d14785669e1d17848e1965258cb4e541"
+      },
+      "summary": {
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-workspace-rejected",
+        "collected": 0,
+        "reward": 0.0,
+        "public_network_available": false
+      }
+    }
+  }
+}
