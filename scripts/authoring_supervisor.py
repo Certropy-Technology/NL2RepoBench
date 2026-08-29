@@ -1120,6 +1120,7 @@ def _runtime_config(path: Path, args: argparse.Namespace) -> dict[str, Any]:
         "max_total_controllers": min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS),
         "controller_concurrency": 1,
         "max_integrations": args.max_integrations,
+        "agent_limit": None,
     }
     if not path.is_file():
         return defaults
@@ -1134,6 +1135,7 @@ def _runtime_config(path: Path, args: argparse.Namespace) -> dict[str, Any]:
         "controller_concurrency", defaults["controller_concurrency"]
     )
     max_integrations = value.get("max_integrations", defaults["max_integrations"])
+    agent_limit = value.get("agent_limit", defaults["agent_limit"])
     if not isinstance(enabled, bool):
         raise ValueError("runtime config enabled must be boolean")
     if (
@@ -1145,12 +1147,18 @@ def _runtime_config(path: Path, args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("runtime config controller_concurrency is out of bounds")
     if not isinstance(max_integrations, int) or not 0 <= max_integrations <= args.max_integrations:
         raise ValueError("runtime config max_integrations is out of bounds")
+    if agent_limit is not None and (
+        not isinstance(agent_limit, int)
+        or not 0 <= agent_limit <= min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS)
+    ):
+        raise ValueError("runtime config agent_limit is out of bounds")
     return {
         "schema_version": "1.0",
         "enabled": enabled,
         "max_total_controllers": max_controllers,
         "controller_concurrency": concurrency,
         "max_integrations": max_integrations,
+        "agent_limit": agent_limit,
     }
 
 
@@ -1395,6 +1403,7 @@ def supervise(args: argparse.Namespace) -> int:
         ),
         "controller_concurrency": 1,
         "max_integrations": args.max_integrations,
+        "agent_limit": None,
     }
     with _exclusive_lock(lock_path, blocking=False) as acquired:
         if not acquired:
@@ -1474,9 +1483,11 @@ def supervise(args: argparse.Namespace) -> int:
                     int(director.get("worker_limit", 0)),
                     runtime["max_total_controllers"],
                 )
-                if director.get("action") in {"continue", "discover"}
+                if director.get("action") in {"continue", "discover", "integrate"}
                 else 0
             )
+            if runtime["agent_limit"] is not None and director.get("action") != "pause":
+                worker_limit = min(runtime["agent_limit"], runtime["max_total_controllers"])
             if not runtime["enabled"]:
                 worker_limit = 0
             if (

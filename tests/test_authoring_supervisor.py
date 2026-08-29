@@ -254,6 +254,7 @@ def test_runtime_config_is_bounded_and_operator_owned(tmp_path: Path) -> None:
         "max_total_controllers": 4,
         "controller_concurrency": 2,
         "max_integrations": 2,
+        "agent_limit": None,
     }
 
     config.write_text(

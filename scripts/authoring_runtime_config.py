@@ -19,6 +19,7 @@ DEFAULTS: dict[str, Any] = {
     "max_total_controllers": 3,
     "controller_concurrency": 1,
     "max_integrations": 1,
+    "agent_limit": None,
 }
 
 
@@ -38,8 +39,11 @@ def _load(path: Path) -> dict[str, Any]:
         ("max_total_controllers", MAX_CONTROLLERS),
         ("controller_concurrency", MAX_CONCURRENCY),
         ("max_integrations", MAX_INTEGRATIONS),
+        ("agent_limit", MAX_CONTROLLERS),
     ):
         value = result.get(key)
+        if value is None and key == "agent_limit":
+            continue
         if not isinstance(value, int) or not 0 <= value <= upper:
             raise ValueError(f"{key} must be an integer between 0 and {upper}")
     return {
@@ -48,6 +52,7 @@ def _load(path: Path) -> dict[str, Any]:
         "max_total_controllers": result["max_total_controllers"],
         "controller_concurrency": result["controller_concurrency"],
         "max_integrations": result["max_integrations"],
+        "agent_limit": result["agent_limit"],
     }
 
 
@@ -80,6 +85,7 @@ def main() -> int:
     update.add_argument("--max-total-controllers", type=int)
     update.add_argument("--controller-concurrency", type=int)
     update.add_argument("--max-integrations", type=int)
+    update.add_argument("--agent-limit", type=int)
     args = parser.parse_args()
     try:
         value = _load(args.path)
@@ -89,6 +95,7 @@ def main() -> int:
                 ("max_total_controllers", "max_total_controllers"),
                 ("controller_concurrency", "controller_concurrency"),
                 ("max_integrations", "max_integrations"),
+                ("agent_limit", "agent_limit"),
             ):
                 selected = getattr(args, option)
                 if selected is not None:
@@ -115,8 +122,11 @@ def _load_value(value: dict[str, Any]) -> dict[str, Any]:
         ("max_total_controllers", MAX_CONTROLLERS),
         ("controller_concurrency", MAX_CONCURRENCY),
         ("max_integrations", MAX_INTEGRATIONS),
+        ("agent_limit", MAX_CONTROLLERS),
     ):
         selected = result.get(key)
+        if selected is None and key == "agent_limit":
+            continue
         if not isinstance(selected, int) or not 0 <= selected <= upper:
             raise ValueError(f"{key} must be an integer between 0 and {upper}")
     return {
@@ -125,6 +135,7 @@ def _load_value(value: dict[str, Any]) -> dict[str, Any]:
         "max_total_controllers": result["max_total_controllers"],
         "controller_concurrency": result["controller_concurrency"],
         "max_integrations": result["max_integrations"],
+        "agent_limit": result["agent_limit"],
     }
 
 

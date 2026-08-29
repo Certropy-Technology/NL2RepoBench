@@ -316,13 +316,15 @@ supervisor 和现有 Loop 会在下一轮读取：
 scripts/authoring_runtime_config.py show
 scripts/authoring_runtime_config.py set --max-total-controllers 4
 scripts/authoring_runtime_config.py set --controller-concurrency 2
+scripts/authoring_runtime_config.py set --agent-limit 4
 scripts/authoring_runtime_config.py set --enabled false
 ```
 
 `max-total-controllers` 的硬上限是 6，`controller-concurrency` 的硬上限是 4；默认值
 分别为 3 和 1。增加 controller 会在下一轮逐步启动新的 Loop；降低配置不会杀掉当前
 正在执行的 task，当前 task 收尾后才停止继续 claim。`enabled=false` 停止新 claim，
-但不终止已经运行的 task。配置非法时保留上一份有效配置并记录错误。
+但不终止已经运行的 task。`agent-limit` 是管理员对同时运行 Agent 的上限；省略时由
+Director 决定，Director 的 `pause` 始终优先。配置非法时保留上一份有效配置并记录错误。
 
 变更运行时配置会使 Director cache 失效，促使顶层 Agent 重新评估；LLM 仍不能绕过
 Git、OSS、secret、网络、artifact 或 dirty-tree 门禁。systemd service 使用只读的 OSS
