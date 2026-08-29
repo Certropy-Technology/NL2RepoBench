@@ -1,0 +1,90 @@
+schema_version = "1.0"
+task_id = "gitpython"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "git-repository-library"
+tags = ["python", "git", "repository", "objects", "index", "diff", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/gitpython-developers/GitPython"
+revision = "3481da9618e69063464c94447167d83bd45505a9"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:8d6e3300bf477e7276e3a7280abf0bcb84c0f6b63ce05caa1ca70bfa4e50e8d8"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "install the hash-locked gitdb/smmap/setuptools closure during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate dependencies are installed during image build from a private hash lock; candidate and verifier execution are network-isolated. Only the trusted Oracle receives the exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "gitdb==4.0.12",
+  "setuptools==84.0.0",
+  "smmap==5.0.2",
+]
+lock_artifact = { digest = "sha256:d55a081480947517cb2d5e2699af5450462c3607e8d05fa04e6d4d3d6524940d", size_bytes = 796, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d55a081480947517cb2d5e2699af5450462c3607e8d05fa04e6d4d3d6524940d", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/child.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:18d22a99ca201dab306bcdda9b8e440adfe352c000b5ce67fe6dffa10a737aae", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:18d22a99ca201dab306bcdda9b8e440adfe352c000b5ce67fe6dffa10a737aae", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build GitPython from an empty workspace and implement a bounded local Git repository contract through a separate child-side JSON verifier."
+keywords = ["python", "git", "repository", "objects", "index", "diff", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:6a90a2b12a0a98503ccc8dcea2ee07f81962230b536fd7fb8a5c5711147943ec"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:6a90a2b12a0a98503ccc8dcea2ee07f81962230b536fd7fb8a5c5711147943ec"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Production compile, separate-verifier Oracle, empty, stub, forgery, bounded install/call timeout, and offline network controls passed on Harbor 0.21.0; no model Agent Run was started in this authoring lane."

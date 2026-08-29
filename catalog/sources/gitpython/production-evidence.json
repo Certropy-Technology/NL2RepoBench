@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitpython",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/gitpython-developers/GitPython",
+    "revision": "3481da9618e69063464c94447167d83bd45505a9",
+    "source_archive_sha256": "sha256:8d6e3300bf477e7276e3a7280abf0bcb84c0f6b63ce05caa1ca70bfa4e50e8d8",
+    "license_spdx": "BSD-3-Clause",
+    "source_tar_path": ".nl2repo/authoring-work/python-author-wave2-20260828/gitpython/source.tar"
+  },
+  "environment": {
+    "harbor_version": "0.21.0",
+    "python_version": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "agent_image_digest": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "oracle_source_host_override": "github.com"
+  },
+  "dependencies": {
+    "packages": ["gitdb==4.0.12", "setuptools==84.0.0", "smmap==5.0.2"],
+    "lock_artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/d5/d55a081480947517cb2d5e2699af5450462c3607e8d05fa04e6d4d3d6524940d",
+      "sha256": "sha256:d55a081480947517cb2d5e2699af5450462c3607e8d05fa04e6d4d3d6524940d",
+      "size_bytes": 796,
+      "visibility": "private"
+    }
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-work/python-author-wave2-20260828/gitpython/compiled-production-final/gitpython/bundle.manifest.json",
+    "manifest_sha256": "sha256:e14232a58733cd2c7ff5c4e4dba80f58aa24fbb4ec9cb827bb8b2e9cecb8d17b",
+    "file_count": 59,
+    "verifier_bundle": {
+      "uri": "artifact://private/sha256:18d22a99ca201dab306bcdda9b8e440adfe352c000b5ce67fe6dffa10a737aae",
+      "sha256": "sha256:18d22a99ca201dab306bcdda9b8e440adfe352c000b5ce67fe6dffa10a737aae",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "uri": "artifact://private/sha256:6a90a2b12a0a98503ccc8dcea2ee07f81962230b536fd7fb8a5c5711147943ec",
+      "sha256": "sha256:6a90a2b12a0a98503ccc8dcea2ee07f81962230b536fd7fb8a5c5711147943ec",
+      "size_bytes": 10240
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "expected_total": 20,
+    "collection": 20,
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "verifier_entrypoint": "tests/verifier/run.py",
+    "candidate_boundary": "trusted run.py launches child.py in a separate interpreter"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/compiled-production-final/gitpython -a oracle --job-name gitpython-oracle-20260828-final --jobs-dir .nl2repo/runs/gitpython-oracle-20260828-final --n-concurrent 1 --yes --allow-agent-host github.com --allow-environment-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 20,
+    "passed": 20,
+    "total": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/gitpython-oracle-20260828-final/gitpython-oracle-20260828-final/gitpython__KFC46PF/verifier/grading.json",
+      "sha256": "sha256:95eb81e9f3390d9643c1e0b5f3a9e312eae33b6af9623464a0e00d014bf43f5a"
+    },
+    "network": {
+      "path": ".nl2repo/runs/gitpython-oracle-20260828-final/gitpython-oracle-20260828-final/gitpython__KFC46PF/verifier/network.json",
+      "sha256": "sha256:273c245a23bc3a17830cbf0805b6f3f1696b20704cae2b08d3d4e22636b56d2a",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/compiled-production-final/gitpython -a nop --job-name gitpython-empty-20260828-r2 --jobs-dir .nl2repo/runs/gitpython-empty-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "total": 20,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/gitpython-empty-20260828-r2/gitpython-empty-20260828-r2/gitpython__vnN6dYg/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/gitpython-empty-20260828-r2/gitpython-empty-20260828-r2/gitpython__vnN6dYg/verifier/network.json",
+        "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/controls-final/gitpython-stub -a oracle --job-name gitpython-stub-20260828-r2 --jobs-dir .nl2repo/runs/gitpython-stub-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "total": 20,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/gitpython-stub-20260828-r2/gitpython-stub-20260828-r2/gitpython-stub__VR4Gv8t/verifier/grading.json",
+        "sha256": "sha256:b28b1eadeb7f12f835b164f7c35eddee8ed8fd507f32dbec223c80be14a19a0d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/gitpython-stub-20260828-r2/gitpython-stub-20260828-r2/gitpython-stub__VR4Gv8t/verifier/network.json",
+        "sha256": "sha256:9aa458c33569e0ccc70a4d0c5b8677d1338d291db21ee8073da2a5bd6340b9b8",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/controls-final/gitpython-forgery -a oracle --job-name gitpython-forgery-20260828-r2 --jobs-dir .nl2repo/runs/gitpython-forgery-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "total": 20,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/gitpython-forgery-20260828-r2/gitpython-forgery-20260828-r2/gitpython-forgery__qg4Xxdu/verifier/grading.json",
+        "sha256": "sha256:b28b1eadeb7f12f835b164f7c35eddee8ed8fd507f32dbec223c80be14a19a0d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/gitpython-forgery-20260828-r2/gitpython-forgery-20260828-r2/gitpython-forgery__qg4Xxdu/verifier/network.json",
+        "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11",
+        "public_network_available": false
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/controls/gitpython-install-hang -a oracle --job-name gitpython-install-hang-20260828-r2 --jobs-dir .nl2repo/runs/gitpython-install-hang-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "total": 20,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/gitpython-install-hang-20260828-r2/gitpython-install-hang-20260828-r2/gitpython-install-hang__WYoBGxB/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/gitpython-install-hang-20260828-r2/gitpython-install-hang-20260828-r2/gitpython-install-hang__WYoBGxB/verifier/network.json",
+        "sha256": "sha256:1c48d84865bbea19a3438463f30342a75c8616a58ba6b750b35f261819ba442a",
+        "public_network_available": false
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/controls/gitpython-call-hang -a oracle --job-name gitpython-call-hang-20260828-r2 --jobs-dir .nl2repo/runs/gitpython-call-hang-20260828-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "total": 20,
+      "reward": 0.0,
+      "failure_class": "model",
+      "grading": {
+        "path": ".nl2repo/runs/gitpython-call-hang-20260828-r2/gitpython-call-hang-20260828-r2/gitpython-call-hang__DJrb6xA/verifier/grading.json",
+        "sha256": "sha256:b28b1eadeb7f12f835b164f7c35eddee8ed8fd507f32dbec223c80be14a19a0d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/gitpython-call-hang-20260828-r2/gitpython-call-hang-20260828-r2/gitpython-call-hang__DJrb6xA/verifier/network.json",
+        "sha256": "sha256:aef19b35d658c06890a58686f0782aee7aefce39dba4d06e301376076af76e08",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "Absolute-path verifier smoke with candidate and dependency closure copied locally; no package installation or network access",
+      "completed": true,
+      "exit_code": 0,
+      "collected": 20,
+      "passed": 20,
+      "total": 20,
+      "reward": 1.0,
+      "public_network_available": false,
+      "output": ".nl2repo/authoring-work/python-author-wave2-20260828/gitpython/offline-verifier-smoke-r2/verifier-output.json"
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/gitpython",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "task_finding_count": 0,
+      "warning_scope": "139 unrelated warnings in other catalog sources"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/gitpython --output .nl2repo/authoring-work/python-author-wave2-20260828/gitpython/compiled-production-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "allow_incomplete": false,
+      "manifest_sha256": "sha256:e14232a58733cd2c7ff5c4e4dba80f58aa24fbb4ec9cb827bb8b2e9cecb8d17b"
+    },
+    "syntax_and_integrity": {
+      "command": "python3 -m py_compile verifier/run.py verifier/child.py; bash -n oracle/solve.sh catalog/sources/gitpython/harbor/controls/*.sh; git diff --check",
+      "exit_code": 0
+    }
+  },
+  "residual_risks": [
+    "The lane did not start a Harbor model Agent Run; model behavior, cost, trajectory, and final benchmark score remain unmeasured.",
+    "The upstream suite is intentionally not copied into the public bundle; the scored denominator is the documented 20-leaf deterministic local contract.",
+    "Oracle source fetching requires the exact github.com host override and is not available to model Agent runs.",
+    "Harbor build emits the existing constant-platform warning for linux/amd64; the image and base digest are pinned in the toolchain/source contract.",
+    "Review, pilot, publication, dataset integration, and generated catalog task commit remain integrator responsibilities."
+  ],
+  "blockers": []
+}
