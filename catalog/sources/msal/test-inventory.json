@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msal",
+  "upstream_revision": "1416438a14118949d05be634124ab5d1c94c1f99",
+  "upstream_test_files": 27,
+  "upstream_test_functions": 469,
+  "selected_behavior_groups": {
+    "exports_and_packaging": 3,
+    "authority_and_oidc": 8,
+    "oauth_request_construction": 5,
+    "token_cache_and_claims": 10,
+    "response_throttling": 5,
+    "auth_scheme_and_xml": 5
+  },
+  "frozen_private_leaf_count": 36,
+  "collection_policy": "custom-json-v1 adapter emits exactly one leaf per named case"
+}

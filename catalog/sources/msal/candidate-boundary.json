@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "protocol": "custom-json-v1",
+  "candidate_import_boundary": "candidate subprocess only",
+  "trusted_process_imports_candidate": false,
+  "operations": ["adapter_case_jsonl"],
+  "input_format": {"id": "string", "operation": "string"},
+  "output_format": {"id": "string", "ok": "boolean", "result": "json-safe"},
+  "limits": {
+    "case_timeout_seconds": 20,
+    "candidate_total_timeout_seconds": 300,
+    "stdout_bytes": 1048576,
+    "request_bytes": 1048576
+  },
+  "network": "no-network"
+}

@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msal",
+  "terminal_kind": "valid",
+  "handoff_status": "awaiting-agent-run",
+  "source_freeze": {
+    "upstream_url": "https://github.com/AzureAD/microsoft-authentication-library-for-python",
+    "revision": "1416438a14118949d05be634124ab5d1c94c1f99",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:8061a883f29af255e7b3ba4da8c8f2b61a16e767e2ab40557443ad24a295b71a",
+    "archive_format": "git archive --format=tar <revision>",
+    "status": "known"
+  },
+  "environment": {
+    "python_version": "3.12.11",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_policy": "no-network",
+    "harbor_version": "0.21.0",
+    "toolchain_lock": "toolchain.lock.toml"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["certifi==2026.7.22", "cffi==2.1.1", "charset-normalizer==3.5.1", "cryptography==50.0.0", "idna==3.19", "pycparser==3.0", "PyJWT==2.13.0", "requests==2.34.2", "urllib3==2.7.0"],
+    "lock_artifact": {
+      "digest": "sha256:1073c1bd5ad52fbdf3ced009f7ba7f564cccdf4cfb14775835c6a5e49c4cbe6d",
+      "size_bytes": 28469,
+      "uri": "artifact://private/sha256:1073c1bd5ad52fbdf3ced009f7ba7f564cccdf4cfb14775835c6a5e49c4cbe6d"
+    }
+  },
+  "private_artifacts": {
+    "verifier_bundle": {
+      "digest": "sha256:21d68e04aa85bbaf25fc426bd7ca842aeb7771b8310f0a6daffb6b7429c564fd",
+      "size_bytes": 20480,
+      "uri": "artifact://private/sha256:21d68e04aa85bbaf25fc426bd7ca842aeb7771b8310f0a6daffb6b7429c564fd"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:3896496daa2f706463aece4fcb65439ac50f53a2374fb34e7faaf26195371a52",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:3896496daa2f706463aece4fcb65439ac50f53a2374fb34e7faaf26195371a52"
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/msal/compiled-final4/msal/bundle.manifest.json",
+    "sha256": "sha256:ee3ab5b31e5cd97ba29bbab4c4bbf80987432c5be4865693830def6f6042ae8e",
+    "file_count": 60,
+    "mode": "production"
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 36,
+    "collection_source": "private verifier emits exactly 36 unique msal-contract leaves",
+    "selected_upstream_test_files": ["tests/test_authority.py", "tests/test_application.py", "tests/test_authcode.py", "tests/test_oidc.py", "tests/test_token_cache.py", "tests/test_throttled_http_client.py", "tests/test_wstrust.py"]
+  },
+  "commands": {
+    "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/msal", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/msal/source-validation-final4.log"},
+    "network_lint": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 1, "task_local_errors": 0, "task_local_warnings": 1, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/msal/network-lint-final2.log", "reason": "Full catalog has unrelated warnings; msal has only the expected Oracle host authorization warning and zero errors."},
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/msal --output .nl2repo/authoring-work/python-author-wave2-20260828/msal/compiled-final4 --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "output": ".nl2repo/authoring-work/python-author-wave2-20260828/msal/compiled-final4/msal", "log": ".nl2repo/authoring-work/python-author-wave2-20260828/msal/compile-final4.log"},
+    "syntax": {"command": "python -m py_compile <private verifier>; bash -n <solution and controls>; git diff --check", "exit_code": 0},
+    "oracle": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/msal/compiled-final4/msal -a oracle --allow-agent-host github.com --job-name msal-oracle-final -o .nl2repo/runs/msal-oracle-final --n-concurrent 1 --yes", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/msal/oracle-run-final.log"}
+  },
+  "oracle": {
+    "valid": true,
+    "passed": 36,
+    "total": 36,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/runs/msal-oracle-final/msal-oracle-final/msal__KUr9NKK/verifier/grading.json", "sha256": "sha256:cb09f7f8dc924aa53592e51582efd398745f69705d5a1c2f69676b2d08aade8f"},
+    "network": {"path": ".nl2repo/runs/msal-oracle-final/msal-oracle-final/msal__KUr9NKK/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"}
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/msal/compiled-final4/msal -a nop --job-name msal-control-empty -o .nl2repo/runs/msal-control-empty --n-concurrent 1 --yes", "exit_code": 0, "completed": true, "valid": true, "failure_class": "model", "failure_reason": "candidate-installation-failed", "reward": 0.0, "grading": {"path": ".nl2repo/runs/msal-control-empty/msal-control-empty/msal__ty44J9b/verifier/grading.json", "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2"}, "network": {"path": ".nl2repo/runs/msal-control-empty/msal-control-empty/msal__ty44J9b/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"}},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/msal-final/msal-stub -a oracle --job-name msal-control-stub -o .nl2repo/runs/msal-control-stub --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "passed": 1, "total": 36, "reward": 0.027777777777777776, "grading": {"path": ".nl2repo/runs/msal-control-stub/msal-control-stub/msal-stub__puh8XRv/verifier/grading.json", "sha256": "sha256:387b2f5092d2852e07451dffca595d433c3bc98ec0e875cbc802540564c07b94"}, "network": {"path": ".nl2repo/runs/msal-control-stub/msal-control-stub/msal-stub__puh8XRv/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"}},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/msal-final/msal-forgery -a oracle --job-name msal-control-forgery -o .nl2repo/runs/msal-control-forgery --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "passed": 0, "total": 36, "reward": 0.0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/runs/msal-control-forgery/msal-control-forgery/msal-forgery__oubPvRh/verifier/grading.json", "sha256": "sha256:80eb858692222020797a81ea15791fa0fc086d6adb8cf049e2ab32a939cba0f2"}, "network": {"path": ".nl2repo/runs/msal-control-forgery/msal-control-forgery/msal-forgery__oubPvRh/verifier/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}},
+    "install-timeout": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/msal-final/msal-install-hang -a oracle --job-name msal-control-install-hang -o .nl2repo/runs/msal-control-install-hang --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "failure_class": "model", "failure_reason": "candidate-installation-failed", "reward": 0.0, "grading": {"path": ".nl2repo/runs/msal-control-install-hang/msal-control-install-hang/msal-install-hang__WR9RvQF/verifier/grading.json", "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2"}, "network": {"path": ".nl2repo/runs/msal-control-install-hang/msal-control-install-hang/msal-install-hang__WR9RvQF/verifier/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}},
+    "workspace-invalid": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/msal-final/msal-workspace-invalid -a oracle --job-name msal-control-workspace-invalid -o .nl2repo/runs/msal-control-workspace-invalid --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "failure_class": "model", "failure_reason": "candidate-workspace-rejected", "reward": 0.0, "grading": {"path": ".nl2repo/runs/msal-control-workspace-invalid/msal-control-workspace-invalid/msal-workspace-invalid__UtRNzHw/verifier/grading.json", "sha256": "sha256:a4a39bd2292441b138129a888071c1c7e206de7b70c869ca411395c6c2b44833"}, "network": {"path": ".nl2repo/runs/msal-control-workspace-invalid/msal-control-workspace-invalid/msal-workspace-invalid__UtRNzHw/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"}},
+    "offline": {"completed": true, "public_network_available": false, "network": {"path": ".nl2repo/runs/msal-oracle-final/msal-oracle-final/msal__KUr9NKK/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"}}
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane; downstream Agent Run loop owns model execution and publication review.",
+    "The 36-leaf denominator is a documented deterministic facade slice, not the full 469-function upstream test inventory.",
+    "The exploratory call-hang control caused custom verifier timeout during candidate import and was not treated as a passing required control; install-timeout is the production timeout evidence.",
+    "Full catalog network lint retains unrelated warnings from other sources; msal itself has zero errors and one expected Oracle host authorization warning."
+  ]
+}
