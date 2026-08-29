@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "package": "pyasn1_modules",
+  "module_count": 132,
+  "rfc_module_count": 130,
+  "public_function_count": 4,
+  "public_class_count": 1550,
+  "public_assignment_count": 2001,
+  "runtime_dependency": "pyasn1>=0.6.1,<0.7.0",
+  "build_backend": "setuptools.build_meta",
+  "excluded_paths": ["tools/", ".github/"],
+  "risk_adaptation": "The upstream tools include network-capable command-line utilities; they are excluded from the runtime contract. The package modules and PEM helpers are pure import/schema behavior and are tested offline."
+}

@@ -1,0 +1,59 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pyasn1-modules"
+version = "1.0.0"
+description = "Build pyasn1-modules 0.4.2 from an empty workspace and reproduce its frozen ASN.1 protocol schemas, DER fixtures, open types, and PEM helpers under a separate no-network verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "asn1",
+    "der",
+    "x509",
+    "protocols",
+    "pytest",
+]
+
+[metadata]
+difficulty = "hard"
+category = "asn1-protocol-modules"
+tags = [
+    "python",
+    "asn1",
+    "der",
+    "x509",
+    "cryptography",
+    "protocols",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 282
+canonical_manifest_digest = "sha256:24a0b4d135a40df8039b4c03570be7082b100a059bc81088fc31d5802364531a"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

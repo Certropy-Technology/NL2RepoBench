@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "instruction_sections": {
+    "Project Description": ["package metadata", "pyasn1_modules/__init__.py", "RFC schema modules"],
+    "Supports": ["all RFC test modules", "tests/test_missing.py", "tests/test_pem.py"],
+    "API Usage Guide": ["tests/test_pem.py", "tests/test_rfc2314.py", "tests/test_rfc2315.py", "tests/test_rfc5280.py", "tests/test_rfc5652.py", "tests/test_rfc8769.py"],
+    "Implementation Notes": ["all 123 frozen test files", "offline installation probe"]
+  },
+  "test_layers": [
+    {"layer": "PEM helper behavior", "files": ["tests/test_pem.py"], "leaf_count": 1},
+    {"layer": "module import coverage", "files": ["tests/test_missing.py"], "leaf_count": 0},
+    {"layer": "DER codec and schema/open-type behavior", "files": ["tests/test_rfc*.py"], "leaf_count": 281}
+  ],
+  "private_test_source": "Frozen upstream tests copied into a private CAS verifier bundle; no hidden test bytes are present in this source directory."
+}

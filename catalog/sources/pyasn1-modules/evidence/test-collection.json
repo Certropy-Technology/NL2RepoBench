@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "framework": "pytest",
+  "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 uv run --with pyasn1==0.6.1 --with pytest==9.1.1 --no-project pytest -c /dev/null -q --collect-only",
+  "test_file_count": 123,
+  "zero_test_files": ["tests/test_missing.py"],
+  "collected": 282,
+  "frozen_total": 282,
+  "collection_error": null,
+  "expected_nodeids_sha256": "27e1553ceebcfa76b0a9cf206e571a3df6d033d3e3ff342e2aaff9208cfbab7b"
+}

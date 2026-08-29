@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "terminal_kind": "valid",
+  "bundle_manifest_sha256": "sha256:ab8cb55438015f9e1735303121df6946b2f4539426a28dfd96e1e83c9e1f2f66",
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/pyasn1-modules/compiled/pyasn1-modules -a oracle --job-name pyasn1-modules-oracle-recheck-20260830 --jobs-dir .nl2repo/runs/pyasn1-modules-recheck --n-concurrent 1 --yes --allow-agent-host github.com",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 282,
+    "total": 282,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-oracle-recheck-20260830/pyasn1-modules__TWAaJvi/verifier/grading.json",
+      "sha256": "sha256:42f46b08ee3142491fd6655f6a0f3a54cab7a8e81d46b3ebcb59fa270de7d75f"
+    },
+    "network": {
+      "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-oracle-recheck-20260830/pyasn1-modules__TWAaJvi/verifier/network.json",
+      "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/pyasn1-modules/compiled/pyasn1-modules -a nop --job-name pyasn1-modules-empty-recheck-20260830 --jobs-dir .nl2repo/runs/pyasn1-modules-recheck --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-empty-recheck-20260830/pyasn1-modules__s3D6K6k/verifier/grading.json",
+        "sha256": "sha256:9ebe2c50e05fe9a35dda00e67be9d7066bdcb938cf9160d7ec9657153a2b6a71"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-empty-recheck-20260830/pyasn1-modules__s3D6K6k/verifier/network.json",
+        "sha256": "sha256:34172996ec858c2a9c291ba252d776ea657d0189ee44950605d51beabcb528b4"
+      },
+      "summary": "valid candidate-installation-failed exception, collected 0, reward 0.0"
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/pyasn1-modules/controls/stub/pyasn1-modules-stub -a oracle --job-name pyasn1-modules-stub-recheck-20260830 --jobs-dir .nl2repo/runs/pyasn1-modules-recheck --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-stub-recheck-20260830/pyasn1-modules-stub__U6Y5gsi/verifier/grading.json",
+        "sha256": "sha256:5353fed567c4ba235b76e41f0dd8bb355031b5c4fdc34110026f6dd256b62bb5"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-stub-recheck-20260830/pyasn1-modules-stub__U6Y5gsi/verifier/network.json",
+        "sha256": "sha256:f3abd3d487744d94fb5a9c1ee95f1f63c9da42b4a49822bf653b1f50146b3b24"
+      },
+      "summary": "valid, collected 282, passed 0, reward 0.0"
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/pyasn1-modules/controls/forgery/pyasn1-modules-forgery -a oracle --job-name pyasn1-modules-forgery-recheck-20260830 --jobs-dir .nl2repo/runs/pyasn1-modules-recheck --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-forgery-recheck-20260830/pyasn1-modules-forgery__NLsa4oY/verifier/grading.json",
+        "sha256": "sha256:5353fed567c4ba235b76e41f0dd8bb355031b5c4fdc34110026f6dd256b62bb5"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-forgery-recheck-20260830/pyasn1-modules-forgery__NLsa4oY/verifier/network.json",
+        "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9"
+      },
+      "verifier_owned_reward": true,
+      "summary": "candidate writes to trusted paths did not alter verifier grading; collected 282, passed 0, reward 0.0"
+    },
+    "offline": {
+      "command": "Harbor verifier network probes from pyasn1-modules Oracle recheck",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-oracle-recheck-20260830/pyasn1-modules__TWAaJvi/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      }
+    },
+    "install-timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/pyasn1-modules/controls/install-hang/pyasn1-modules-install-hang -a oracle --job-name pyasn1-modules-install-hang-recheck-20260830 --jobs-dir .nl2repo/runs/pyasn1-modules-recheck --n-concurrent 1 --yes",
+      "exit_code": 1,
+      "failure_class": "infrastructure",
+      "failure_reason": "Harbor RewardFileNotFoundError after bounded build/install hang; no verifier grading receipt was produced.",
+      "log": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-install-hang-recheck-20260830/pyasn1-modules-install-hang__7Q3pS8h/exception.txt",
+        "sha256": "sha256:e881659a538e01611a54d48b38cb1ec6ba22063fafd5f837b653160f2236f3db"
+      }
+    },
+    "workspace-boundary": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/pyasn1-modules/controls/workspace-invalid/pyasn1-modules-workspace-invalid -a oracle --job-name pyasn1-modules-workspace-invalid-recheck-20260830 --jobs-dir .nl2repo/runs/pyasn1-modules-recheck --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-workspace-invalid-recheck-20260830/pyasn1-modules-workspace-invalid__UpMCAug/verifier/grading.json",
+        "sha256": "sha256:500a402d470058ee073eeac223f8865036043729d1c4e9afa223a20159fb5b59"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyasn1-modules-recheck/pyasn1-modules-workspace-invalid-recheck-20260830/pyasn1-modules-workspace-invalid__UpMCAug/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": "valid candidate-workspace-rejected exception, collected 0, reward 0.0"
+    }
+  }
+}

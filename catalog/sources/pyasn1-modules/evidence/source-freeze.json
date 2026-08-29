@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "upstream_url": "https://github.com/pyasn1/pyasn1-modules",
+  "revision": "02f9c577bcd0ad9fedfb0fd5dc598d323f7984bf",
+  "revision_verified": true,
+  "license": {
+    "spdx": "BSD-2-Clause",
+    "path": "LICENSE.txt",
+    "sha256": "2aad5fc00f705c4a1addb83eed10a6a75d286a3779f0cf8519d87e62bc4735fd"
+  },
+  "archive": {
+    "format": "git archive tar with prefix pyasn1-modules/",
+    "size_bytes": 1648640,
+    "sha256": "5f7359441c2f6c58f1ee04134963b6b4c333ed62e45fdd4cacbdad4f6225a967"
+  },
+  "commands": [
+    "git ls-remote https://github.com/pyasn1/pyasn1-modules.git 02f9c577bcd0ad9fedfb0fd5dc598d323f7984bf",
+    "git archive --format=tar --prefix=pyasn1-modules/ 02f9c577bcd0ad9fedfb0fd5dc598d323f7984bf"
+  ]
+}
