@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "sniffio"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "async-runtime-detection"
+tags = ["python", "asyncio", "contextvars", "thread-local", "runtime-detection", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-trio/sniffio"
+revision = "6996e05d9b9debe32f42f709c8041e744f850478"
+license_spdx = "MIT OR Apache-2.0"
+source_digest = "sha256:1bcb3387980cdb5adac666e1edacabc2976807b9c053d1c4a3781b9f648cda68"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The build backend closure is installed from a private hash-locked requirements file during image build. Candidate and verifier execution have no egress; only the trusted Oracle receives an exact run-scoped github.com authorization to fetch and verify the frozen source revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["packaging==26.3", "setuptools==80.9.0", "setuptools-scm==8.3.1"]
+lock_artifact = { digest = "sha256:3ae2d6703f61730a124efbb3d8f19d2483e8ab5a1aa37fbcef5a3edcd81551dd", size_bytes = 1164, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:3ae2d6703f61730a124efbb3d8f19d2483e8ab5a1aa37fbcef5a3edcd81551dd", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 21
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+environment = {}
+bundle = { digest = "sha256:e65a5aca639a1acbd2bcdde7e6d2c7af2ddb5fa5bd8c0d63c5f96253d2433115", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e65a5aca639a1acbd2bcdde7e6d2c7af2ddb5fa5bd8c0d63c5f96253d2433115", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build sniffio from an empty workspace and reproduce deterministic async-library detection, context-variable precedence, and thread-local behavior through a separate child-side verifier."
+keywords = ["python", "asyncio", "contextvars", "thread-local", "runtime-detection", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 420.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:d0fd65f71de1ff4ae2b30a8d264023a6f59e14b734271dac3a63a8128fe31f80"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d0fd65f71de1ff4ae2b30a8d264023a6f59e14b734271dac3a63a8128fe31f80"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828/sniffio"
+reason = "The final production Harbor bundle passed the 21/21 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls. Review, model Agent Run, and publication remain separate integrator stages."

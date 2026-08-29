@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sniffio",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python-trio/sniffio",
+    "revision": "6996e05d9b9debe32f42f709c8041e744f850478",
+    "source_archive_sha256": "sha256:1bcb3387980cdb5adac666e1edacabc2976807b9c053d1c4a3781b9f648cda68",
+    "license_spdx": "MIT OR Apache-2.0",
+    "distribution_version": "1.3.1+dev"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "verifier_image_id": "sha256:bb323cf6783ecbbf7b52d6015b522a1a461b01d84d7efcd10db8543c20caa359",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["packaging==26.3", "setuptools==80.9.0", "setuptools-scm==8.3.1"],
+    "lock_artifact": {
+      "digest": "sha256:3ae2d6703f61730a124efbb3d8f19d2483e8ab5a1aa37fbcef5a3edcd81551dd",
+      "size_bytes": 1164,
+      "uri": "artifact://private/sha256:3ae2d6703f61730a124efbb3d8f19d2483e8ab5a1aa37fbcef5a3edcd81551dd",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "api_path": "catalog/sources/sniffio/provenance/inventory.md",
+    "traceability_path": "catalog/sources/sniffio/provenance/traceability.md",
+    "upstream_collected": 4,
+    "upstream_passed": 3,
+    "upstream_skipped": 1,
+    "frozen_total": 21
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/compiled-final/sniffio/bundle.manifest.json",
+    "manifest_sha256": "sha256:837a6a041669a9d802d0ce51b8ead3b65170371f6f2febb2a80d09527722ccf5",
+    "verifier_bundle": "artifact://private/sha256:e65a5aca639a1acbd2bcdde7e6d2c7af2ddb5fa5bd8c0d63c5f96253d2433115",
+    "oracle_bundle": "artifact://private/sha256:d0fd65f71de1ff4ae2b30a8d264023a6f59e14b734271dac3a63a8128fe31f80",
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "frozen_total": 21
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/compiled-final/sniffio -a oracle --allow-agent-host github.com --job-name sniffio-oracle-final4-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/oracle-final4 --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 21,
+    "total": 21,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/oracle-final4/sniffio-oracle-final4-20260828/sniffio__Z8FhLKB/verifier/grading.json",
+      "sha256": "sha256:862a99465f6276104ed15fecf8a0a61a311529c9c7f69c7f4bbbd0b893ccabfb"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/oracle-final4/sniffio-oracle-final4-20260828/sniffio__Z8FhLKB/verifier/network.json",
+      "sha256": "sha256:ab134b085e6da9487cbe3999f4a447d0e9e33585342bd710cd4ce427484180ef"
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/oracle-final4/sniffio-oracle-final4-20260828/sniffio__Z8FhLKB/verifier/candidate-install.json",
+      "outcome": "success",
+      "returncode": 0
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none -v <empty-workspace>:/workspace -v <empty-logs>:/logs nl2repo-sniffio-verifier:r3 /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/direct/final-empty/logs/verifier/grading.json",
+        "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/direct/final-empty/logs/verifier/network.json",
+        "sha256": "sha256:9a49c62a75c9000da444b78e2ba5d6d44ff25a5c977d4fd20bfaa648f1394190"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/final-controls/sniffio-stub -a oracle --job-name sniffio-stub-final2-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/stub-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 4,
+      "total": 21,
+      "reward": 0.19047619047619047,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/stub-final2/sniffio-stub-final2-20260828/sniffio-stub__8c5Tx5n/verifier/grading.json",
+        "sha256": "sha256:c66e0738c4657ea8c1bd65d67ee9cc6250e3e9e9880ee93bb7d940604f4486d0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/stub-final2/sniffio-stub-final2-20260828/sniffio-stub__8c5Tx5n/verifier/network.json",
+        "sha256": "sha256:07994873a90370c71f2869a940310740f2b81cb5e26128b41ed66130c9f5fde1"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/final-controls/sniffio-forgery -a oracle --job-name sniffio-forgery-final2-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/forgery-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 4,
+      "total": 21,
+      "reward": 0.19047619047619047,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/forgery-final2/sniffio-forgery-final2-20260828/sniffio-forgery__H3SCPDV/verifier/grading.json",
+        "sha256": "sha256:c66e0738c4657ea8c1bd65d67ee9cc6250e3e9e9880ee93bb7d940604f4486d0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/forgery-final2/sniffio-forgery-final2-20260828/sniffio-forgery__H3SCPDV/verifier/network.json",
+        "sha256": "sha256:e901d754bcf3691de168e10c48adb2a9cfa6417a3b968af0901893a5dd3a5d0a"
+      }
+    },
+    "install_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/final-controls/sniffio-install-hang -a oracle --job-name sniffio-install-hang-final2-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/install-hang-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/install-hang-final2/sniffio-install-hang-final2-20260828/sniffio-install-hang__P7TzaPG/verifier/grading.json",
+        "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/install-hang-final2/sniffio-install-hang-final2-20260828/sniffio-install-hang__P7TzaPG/verifier/network.json",
+        "sha256": "sha256:e901d754bcf3691de168e10c48adb2a9cfa6417a3b968af0901893a5dd3a5d0a"
+      }
+    },
+    "call_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/final-controls/sniffio-call-hang -a oracle --job-name sniffio-call-hang-final2-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/call-hang-final2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 21,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/call-hang-final2/sniffio-call-hang-final2-20260828/sniffio-call-hang__SDQyYCj/verifier/grading.json",
+        "sha256": "sha256:2cc4d1ba5a5be047825a04acd20d33ffd77b257ec248a2dc47e0b4d281fa6d0c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/runs/call-hang-final2/sniffio-call-hang-final2-20260828/sniffio-call-hang__SDQyYCj/verifier/network.json",
+        "sha256": "sha256:e9c570704610628849166fa8d40b223014ec5c980ef3c6da89498e03148abaa7"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none -v <reference-workspace>:/workspace -v <offline-logs>:/logs nl2repo-sniffio-verifier:r3 /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 21,
+      "total": 21,
+      "reward": 1.0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/direct/final-offline/logs/verifier/network.json",
+        "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516",
+        "public_network_available": false
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/sniffio/direct/final-offline/logs/verifier/grading.json",
+        "sha256": "sha256:862a99465f6276104ed15fecf8a0a61a311529c9c7f69c7f4bbbd0b893ccabfb"
+      }
+    }
+  },
+  "remediation": [
+    "The first Oracle attempt exposed a sha256: prefix mismatch in the task-local archive check; the Oracle bundle was corrected and rebuilt before the passing run.",
+    "The second Oracle attempt exposed a verifier denominator mismatch (20 declared versus 21 private leaves); the source contract and compiled bundle were corrected to 21 before the passing run.",
+    "A direct offline replay initially used the stale r1 verifier image; image r3 was rebuilt from the final compiled bundle before the passing empty/offline receipts."
+  ],
+  "residual_risks": [
+    "No Harbor model Agent Run was started from this authoring lane; the independent Agent Run loop owns that stage.",
+    "Review, blind traceability review, pilot, and publication remain separate integrator stages."
+  ]
+}
