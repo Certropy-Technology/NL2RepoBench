@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "python_version": "3.12.11",
+  "os_name": "debian-12-amd64",
+  "base_image": "python:3.12-slim-bookworm",
+  "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "agent_runtime": {
+    "image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
+  },
+  "network_policy": {
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "reference_source_fetch": "forbidden"
+  },
+  "dependency_lock": {
+    "sha256": "sha256:92b30ae17afb26ddd7397ec510c14201dc1182cd39819b7fbf0fb3a30221d3dc",
+    "size_bytes": 1306,
+    "packages": ["more-itertools==11.1.0", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "vcs-versioning==2.3.1"]
+  },
+  "build_adaptation": "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_JARACO_FUNCTOOLS=4.6.0; Oracle removes the network-fetching coherent.licensed hook and fixes the project version to the frozen v4.6.0 tag."
+}

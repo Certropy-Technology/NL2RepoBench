@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "upstream_url": "https://github.com/jaraco/jaraco.functools",
+  "revision": "f7f4f3bcac8f70e01064dee9a8bde6cc8f997a17",
+  "revision_verified": true,
+  "tag": "v4.6.0",
+  "package_version": "4.6.0",
+  "commit_timestamp": "2026-07-13T21:22:27-04:00",
+  "source_archive": {
+    "format": "tar",
+    "prefix": "source/",
+    "sha256": "sha256:7ef01289b53574ed426a959b34621ae611bf415d17b03bb9b807f5c81e1e53ff",
+    "size_bytes": 81920
+  },
+  "license": {
+    "spdx": "MIT",
+    "evidence": "The frozen pyproject.toml declares license = MIT; no standalone LICENSE file is present at the frozen revision."
+  },
+  "submodules": [],
+  "upstream_tests": {
+    "python_version": "3.12.11",
+    "collected": 40,
+    "passed": 38,
+    "xfailed": 2,
+    "exit_code": 0
+  },
+  "commands": [
+    "git clone --no-checkout https://github.com/jaraco/jaraco.functools",
+    "git fetch --depth=1 origin f7f4f3bcac8f70e01064dee9a8bde6cc8f997a17",
+    "git archive --format=tar --prefix=source/ f7f4f3bcac8f70e01064dee9a8bde6cc8f997a17",
+    "python -m pytest --collect-only -q",
+    "python -m pytest -q"
+  ]
+}

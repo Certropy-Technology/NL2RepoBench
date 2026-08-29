@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "module": "jaraco.functools",
+  "implementation_file": "jaraco/functools/__init__.py",
+  "package_version": "4.6.0",
+  "public_surface": [
+    "compose", "once", "method_cache", "apply", "result_invoke", "invoke",
+    "passthrough", "Throttler", "first_invoke", "method_caller", "retry_call",
+    "retry", "print_yielded", "pass_none", "signed", "none_as",
+    "assign_params", "save_method_args", "except_", "identity", "bypass_when",
+    "bypass_unless", "splat", "chainable", "noop"
+  ],
+  "signatures": {
+    "compose": "compose(*funcs)",
+    "once": "once(func)",
+    "method_cache": "method_cache(method, cache_wrapper=functools.lru_cache())",
+    "apply": "apply(transform)",
+    "result_invoke": "result_invoke(action)",
+    "invoke": "invoke(f, /, *args, **kwargs)",
+    "passthrough": "passthrough(func)",
+    "Throttler": "Throttler(func, max_rate=float('Inf'))",
+    "first_invoke": "first_invoke(func1, func2)",
+    "method_caller": "method_caller(name, /, *args, **kwargs)",
+    "retry_call": "retry_call(func, cleanup=lambda: None, retries=0, trap=())",
+    "retry": "retry(*r_args, **r_kwargs)",
+    "print_yielded": "print_yielded(func)",
+    "pass_none": "pass_none(func)",
+    "signed": "signed(func)",
+    "none_as": "none_as(value, replacement=None)",
+    "assign_params": "assign_params(func, namespace)",
+    "save_method_args": "save_method_args(method)",
+    "except_": "except_(*exceptions, replace=None, use=None)",
+    "identity": "identity(x)",
+    "bypass_when": "bypass_when(check, *, _op=identity)",
+    "bypass_unless": "bypass_unless(check)",
+    "splat": "splat(func)",
+    "chainable": "chainable(method)",
+    "noop": "noop(*args, **kwargs)"
+  },
+  "private_surface_excluded": ["_special_method_cache", "_as_invocable", "_splat_inner"],
+  "risk_adaptations": [
+    "Throttler uses max_rate=inf in the verifier to avoid wall-clock tolerance tests.",
+    "setuptools-scm and coherent.licensed source metadata are adapted in the trusted Oracle solve to a fixed version and offline build backend.",
+    "The verifier invokes candidate imports in a candidate-UID child process and passes only JSON scenario results to the trusted grader."
+  ],
+  "ast_inventory": {
+    "python_files": 4,
+    "test_files": 1,
+    "upstream_test_methods": 19,
+    "upstream_doctest_leaves": 21,
+    "upstream_collected": 40,
+    "upstream_baseline": {"passed": 38, "xfailed": 2},
+    "runtime_dependency": "more_itertools"
+  }
+}

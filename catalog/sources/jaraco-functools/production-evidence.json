@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "terminal_kind": "valid",
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled-clean/jaraco-functools/bundle.manifest.json",
+    "sha256": "sha256:551718b15b403bf4ca7d9e0079f91ccdf7af21b3161899584676501fc818c39f",
+    "canonical_manifest_digest": "sha256:e8e5b11f05e1ca6ae4fb10e6134fc8b8901cdc8e6926ae456a34c418d38669ef",
+    "file_count": 59
+  },
+  "source": {
+    "revision": "f7f4f3bcac8f70e01064dee9a8bde6cc8f997a17",
+    "tag": "v4.6.0",
+    "archive_sha256": "sha256:7ef01289b53574ed426a959b34621ae611bf415d17b03bb9b807f5c81e1e53ff",
+    "license_spdx": "MIT"
+  },
+  "environment": {
+    "python_version": "3.12.11",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "toolchain_agent_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "toolchain_agent_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "observed_local_agent_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-clean/jaraco-functools -a oracle --job-name jaraco-functools-clean-oracle-20260829 -o .nl2repo/runs-clean/jaraco-functools-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "grading": {
+      "path": ".nl2repo/runs-clean/jaraco-functools-oracle/jaraco-functools-clean-oracle-20260829/jaraco-functools__3FdUjcL/verifier/grading.json",
+      "sha256": "sha256:30ac65c3f8caa67fa4ea0894b9d843c8d4b3cb5b9c15cb53bb3490a5700a08c9",
+      "passed": 35,
+      "collected": 35,
+      "reward": 1.0
+    },
+    "network": {
+      "path": ".nl2repo/runs-clean/jaraco-functools-oracle/jaraco-functools-clean-oracle-20260829/jaraco-functools__3FdUjcL/verifier/network.json",
+      "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-clean/jaraco-functools -a nop --job-name jaraco-functools-clean-empty-20260829 -o .nl2repo/runs-clean/jaraco-functools-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-empty/jaraco-functools-clean-empty-20260829/jaraco-functools__9BBmGTR/verifier/grading.json",
+        "sha256": "sha256:bc1198649b53b0f9769f1cdd94c89b02b4d0d12b144bd39903c99a8e3d051869",
+        "valid": true,
+        "failure_reason": "candidate-installation-failed",
+        "passed": 0,
+        "collected": 0,
+        "reward": 0.0
+      },
+      "candidate_install": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-empty/jaraco-functools-clean-empty-20260829/jaraco-functools__9BBmGTR/verifier/candidate-install.json",
+        "sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7",
+        "outcome": "candidate-failure",
+        "returncode": 1
+      },
+      "network": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-empty/jaraco-functools-clean-empty-20260829/jaraco-functools__9BBmGTR/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-clean/jaraco-functools/jaraco-functools-stub -a oracle --job-name jaraco-functools-clean-stub-20260829 -o .nl2repo/runs-clean/jaraco-functools-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-stub/jaraco-functools-clean-stub-20260829/jaraco-functools-stub__6PwA7Uk/verifier/grading.json",
+        "sha256": "sha256:c0bcc0a1899c74b972c14ee0e1dfbf3b9322af37acdce56f9164b4b5c3a6d237",
+        "valid": true,
+        "passed": 0,
+        "collected": 35,
+        "reward": 0.0
+      },
+      "network": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-stub/jaraco-functools-clean-stub-20260829/jaraco-functools-stub__6PwA7Uk/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-clean/jaraco-functools/jaraco-functools-forgery -a oracle --job-name jaraco-functools-clean-forgery-20260829 -o .nl2repo/runs-clean/jaraco-functools-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-forgery/jaraco-functools-clean-forgery-20260829/jaraco-functools-forgery__uAdcueC/verifier/grading.json",
+        "sha256": "sha256:c0bcc0a1899c74b972c14ee0e1dfbf3b9322af37acdce56f9164b4b5c3a6d237",
+        "valid": true,
+        "passed": 0,
+        "collected": 35,
+        "reward": 0.0,
+        "verifier_owned_reward": true,
+        "verifier_owned_reward": true
+      },
+      "candidate_forgery": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-forgery/jaraco-functools-clean-forgery-20260829/jaraco-functools-forgery__uAdcueC/artifacts/workspace/logs/verifier/grading.json",
+        "sha256": "sha256:f6c65ee6149b44de9f3114d32e59e752c04321d5c099ac1069e9a6799bb1fc8f",
+        "claimed_reward": 1.0
+      },
+      "network": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-forgery/jaraco-functools-clean-forgery-20260829/jaraco-functools-forgery__uAdcueC/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+        "public_network_available": false
+      }
+    },
+    "call_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-clean/jaraco-functools/jaraco-functools-call-hang -a oracle --job-name jaraco-functools-clean-call-hang-20260829 -o .nl2repo/runs-clean/jaraco-functools-call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-call-hang/jaraco-functools-clean-call-hang-20260829/jaraco-functools-call-hang__SxSSrBJ/verifier/grading.json",
+        "sha256": "sha256:c0bcc0a1899c74b972c14ee0e1dfbf3b9322af37acdce56f9164b4b5c3a6d237",
+        "valid": true,
+        "passed": 0,
+        "collected": 35,
+        "reward": 0.0,
+        "timeout_observed": true
+      },
+      "junit": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-call-hang/jaraco-functools-clean-call-hang-20260829/jaraco-functools-call-hang__SxSSrBJ/verifier/junit.xml",
+        "sha256": "sha256:36fbce44ce0ba575ab509d0092afda000278a9efee3fc26e6ff8ce435ac6351d",
+        "timeout_leaf_count": 2
+      },
+      "network": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-call-hang/jaraco-functools-clean-call-hang-20260829/jaraco-functools-call-hang__SxSSrBJ/verifier/network.json",
+        "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-clean/jaraco-functools -a oracle --job-name jaraco-functools-clean-oracle-20260829 -o .nl2repo/runs-clean/jaraco-functools-oracle --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs-clean/jaraco-functools-oracle/jaraco-functools-clean-oracle-20260829/jaraco-functools__3FdUjcL/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+        "public_network_available": false
+      }
+    }
+  },
+  "status": "awaiting-agent-run",
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane; model performance is unmeasured.",
+    "The toolchain pins agent image ID sha256:70525a5f..., but that local image is unavailable and the tag currently resolves to sha256:dbfa15a3...; the integrator must restore the pinned image or deliberately relock and rerun before any model Agent Run.",
+    "The integrator must review the generated runtime and compile it to catalog/tasks/jaraco-functools if approved."
+  ],
+  "blockers": []
+}
