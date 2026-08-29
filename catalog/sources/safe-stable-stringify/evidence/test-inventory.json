@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "safe-stable-stringify",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 52,
+  "collection_method": "private deterministic node:test suite with one leaf per case ID",
+  "groups": {
+    "package_shape": 2,
+    "native_json_and_ordering": 12,
+    "circular_and_bigint": 8,
+    "callbacks_and_replacers": 8,
+    "formatting_and_limits": 9,
+    "strict_and_safe": 7,
+    "exports_and_isolation": 6
+  },
+  "upstream_basis": "Frozen safe-stable-stringify 2.5.0 implementation, index.d.ts, README contract, and deterministic subsets of the upstream test families.",
+  "private_artifacts": {
+    "test_bundle": "artifact://private/sha256:4fa08b438dab90acbf18d91c84c92a3595a3811fd5404b6b1b24ecc4123b52b3",
+    "commands_bundle": "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+  }
+}

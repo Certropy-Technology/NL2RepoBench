@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "safe-stable-stringify",
+  "source_revision": "8a02137ac933eff57dd6e49beb9ee766fe8dd372",
+  "public_exports": [
+    {"import": "require('safe-stable-stringify')", "shape": "callable default serializer with .configure, .stringify, and .default"},
+    {"import": "import stringify from 'safe-stable-stringify'", "shape": "default callable serializer"},
+    {"import": "import {stringify, configure} from 'safe-stable-stringify'", "shape": "named serializer and factory"}
+  ],
+  "signatures": [
+    "stringify(value, replacer?, space?) -> string | undefined",
+    "stringify.configure(options) -> serializer",
+    "configure(options) -> serializer"
+  ],
+  "implementation_inventory": {
+    "source_files": 7,
+    "implementation_lines": 654,
+    "upstream_test_blocks": 63,
+    "runtime_dependencies": 0
+  },
+  "risk_adaptation": "Callback, getter, BigInt, typed-array, and circular cases are constructed in a UID-separated Node child. Trusted tests never import candidate code."
+}

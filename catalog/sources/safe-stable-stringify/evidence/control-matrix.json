@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "safe-stable-stringify",
+  "expected_total": 52,
+  "toolchain": "Harbor 0.21.0 / Node 24.19.0 / npm 11.17.0 / linux-amd64",
+  "controls": {
+    "empty": {"valid": true, "reward": 0.0, "collected": 0, "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "reward": 0.0, "passed": 0, "collected": 52},
+    "forgery": {"valid": true, "reward": 0.0, "passed": 0, "collected": 52, "verifier_owned_reward": true},
+    "install-script": {"valid": true, "reward": 0.0, "collected": 0, "failure_reason": "candidate-installation-failed"},
+    "loader-hook": {"valid": true, "reward": 0.0, "passed": 0, "collected": 52},
+    "hang": {"valid": true, "reward": 0.0, "collected": 0, "bounded_timeout": true},
+    "offline": {"valid": true, "reward": 0.0, "passed": 0, "collected": 52, "completed": true, "public_network_available": false}
+  },
+  "artifacts_root": ".nl2repo/authoring-work/control-runs-final-*"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "safe-stable-stringify",
+  "instruction_sections": {
+    "Project Description": ["basic deterministic serializer", "safe circular and BigInt handling"],
+    "Supports": ["package shape", "offline install", "runtime restrictions"],
+    "API Usage Guide": ["default stringify", "configure options", "callbacks", "formatting", "errors"],
+    "Implementation Notes": ["native JSON semantics", "typed arrays", "child boundary", "no reference dependency"]
+  },
+  "hidden_assertion_groups": [
+    {"group": "package_shape", "cases": ["package-shape", "esm-wrapper"]},
+    {"group": "ordering", "cases": ["basic-order", "nested-order", "array-order", "numeric-keys", "deterministic-false", "custom-comparator"]},
+    {"group": "native_json", "cases": ["primitive-string", "primitive-number", "primitive-boolean", "primitive-null", "undefined-root", "nonfinite", "escaping", "unicode"]},
+    {"group": "circular_bigint", "cases": ["circular-default", "circular-custom", "circular-undefined", "circular-error", "shared-reference", "bigint-default", "bigint-false", "bigint-string"]},
+    {"group": "callbacks", "cases": ["tojson", "replacer-parent", "replacer-omit", "replacer-replace", "replacer-root", "array-replacer", "array-replacer-unique", "typed-replacer"]},
+    {"group": "limits_formatting", "cases": ["space-string", "space-number", "space-cap", "space-zero", "empty-values", "typed-array", "typed-array-bigint", "maximum-depth", "maximum-breadth", "array-breadth"]},
+    {"group": "strict_safe", "cases": ["strict-invalid", "strict-nan", "strict-bigint", "strict-circular", "safe-tojson", "safe-replacer", "safe-getter", "invalid-options"]}
+  ]
+}

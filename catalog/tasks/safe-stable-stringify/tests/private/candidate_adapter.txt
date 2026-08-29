@@ -1,0 +1,100 @@
+import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const input = JSON.parse(readFileSync(0, 'utf8'));
+const site = process.env.NODE_CANDIDATE_SITE;
+const require = createRequire(pathToFileURL(join(site, 'package.json')));
+const stringify = require('safe-stable-stringify');
+const result = { id: input.id };
+
+function errorCase(fn) {
+  try { fn(); return { kind: 'value', value: 'no error' }; } catch (error) {
+    return { kind: 'error', name: error?.name ?? 'Error', message: String(error?.message ?? error) };
+  }
+}
+
+async function run(caseId) {
+  switch (caseId) {
+    case 'package-shape': return { kind: 'value', value: {
+      callable: typeof stringify === 'function',
+      configure: typeof stringify.configure === 'function',
+      namedStringify: stringify.stringify === stringify,
+      defaultAlias: stringify.default === stringify,
+    } };
+    case 'esm-wrapper': {
+      const esm = await import(pathToFileURL(join(site, 'node_modules/safe-stable-stringify/esm/wrapper.mjs')).href);
+      return { kind: 'value', value: {
+        defaultAlias: esm.default === esm.stringify,
+        configure: typeof esm.configure === 'function',
+        output: esm.default({ b: 2, a: 1 }),
+      } };
+    }
+    case 'basic-order': return { kind: 'value', value: stringify({ c: 8, b: [{ z: 6, y: 5, x: 4 }, 7], a: 3 }) };
+    case 'nested-order': return { kind: 'value', value: stringify({ z: { b: 2, a: 1 }, a: [{ d: 4, c: 3 }] }) };
+    case 'array-order': return { kind: 'value', value: stringify([{ b: 2, a: 1 }, 3, 2]) };
+    case 'numeric-keys': return { kind: 'value', value: stringify({ 2: 'two', 10: 'ten', a: 'letter' }) };
+    case 'deterministic-false': return { kind: 'value', value: stringify.configure({ deterministic: false })({ c: 3, b: 2, a: 1 }) };
+    case 'custom-comparator': return { kind: 'value', value: stringify.configure({ deterministic: (a, b) => b.localeCompare(a) })({ c: 3, b: 2, a: 1 }) };
+    case 'primitive-string': return { kind: 'value', value: stringify('hello') };
+    case 'primitive-number': return { kind: 'value', value: stringify(42.5) };
+    case 'primitive-boolean': return { kind: 'value', value: stringify(false) };
+    case 'primitive-null': return { kind: 'value', value: stringify(null) };
+    case 'undefined-root': { const value = stringify(undefined); return { kind: value === undefined ? 'undefined' : 'value', value }; }
+    case 'nonfinite': return { kind: 'value', value: stringify({ a: NaN, b: Infinity, c: -Infinity }) };
+    case 'escaping': return { kind: 'value', value: stringify({ quote: '"', slash: '\\', line: '\n', unicode: 'é' }) };
+    case 'unicode': return { kind: 'value', value: stringify({ z: '你好', a: 'é' }) };
+    case 'circular-default': { const x = {}; x.self = x; return { kind: 'value', value: stringify(x) }; }
+    case 'circular-custom': { const x = {}; x.self = x; return { kind: 'value', value: stringify.configure({ circularValue: '<cycle>' })(x) }; }
+    case 'circular-undefined': { const x = { keep: 1 }; x.self = x; const value = stringify.configure({ circularValue: undefined })(x); return { kind: value === undefined ? 'undefined' : 'value', value }; }
+    case 'circular-error': { const x = {}; x.self = x; return errorCase(() => stringify.configure({ circularValue: Error })(x)); }
+    case 'shared-reference': { const x = { q: 1 }; return { kind: 'value', value: stringify({ a: x, b: x }) }; }
+    case 'bigint-default': return { kind: 'value', value: stringify({ n: 9007199254740993n }) };
+    case 'bigint-false': return { kind: 'value', value: stringify.configure({ bigint: false })({ n: 1n, keep: 2 }) };
+    case 'bigint-string': return { kind: 'value', value: stringify.configure({ bigint: 'string' })({ n: 9007199254740993n }) };
+    case 'bigint-invalid': return errorCase(() => stringify.configure({ bigint: 'nope' }));
+    case 'tojson': return { kind: 'value', value: stringify({ x: { toJSON () { return { b: 2, a: 1 }; } } }) };
+    case 'replacer-parent': return { kind: 'value', value: stringify({ a: 1, b: 2 }, function (key, value) { return key === 'b' && this.a === 1 ? value + 10 : value; }) };
+    case 'replacer-omit': return { kind: 'value', value: stringify({ keep: 1, omit: 2 }, (key, value) => key === 'omit' ? undefined : value) };
+    case 'replacer-replace': return { kind: 'value', value: stringify({ n: 2 }, (key, value) => key === 'n' ? value * 3 : value) };
+    case 'replacer-root': return { kind: 'value', value: stringify({ a: 1 }, (key, value) => key === '' ? { z: value.a, a: 0 } : value) };
+    case 'array-replacer': return { kind: 'value', value: stringify({ a: 1, b: 2, c: 3 }, ['b', 'a']) };
+    case 'array-replacer-unique': return { kind: 'value', value: stringify({ 0: 0, b: 1 }, ['b', {}, [], 0, 'b', '0']) };
+    case 'typed-replacer': return { kind: 'value', value: stringify({ a: new Uint8Array([1, 2]), b: 3 }, ['a', '0', 'b']) };
+    case 'space-string': return { kind: 'value', value: stringify({ b: 1, a: { y: 2, x: 1 } }, null, '  ') };
+    case 'space-number': return { kind: 'value', value: stringify({ b: 1, a: { y: 2, x: 1 } }, null, 2) };
+    case 'space-cap': return { kind: 'value', value: stringify({ a: { b: 1 } }, null, 20) };
+    case 'space-zero': return { kind: 'value', value: stringify({ b: 1, a: 2 }, null, 0) };
+    case 'empty-values': return { kind: 'value', value: stringify({ a: {}, b: [], c: undefined }) };
+    case 'typed-array': return { kind: 'value', value: stringify(new Int8Array([0, -1, 2])) };
+    case 'typed-array-bigint': return { kind: 'value', value: stringify.configure({ bigint: 'string' })({ a: new BigInt64Array([1n, 2n]) }) };
+    case 'maximum-depth': return { kind: 'value', value: stringify.configure({ maximumDepth: 2 })({ a: { b: { c: 1 }, a: [1, 2] } }) };
+    case 'maximum-breadth': return { kind: 'value', value: stringify.configure({ maximumBreadth: 2 })({ a: 1, b: 2, c: 3 }) };
+    case 'array-breadth': return { kind: 'value', value: stringify.configure({ maximumBreadth: 3 })(['a', 'b', 'c', 'd']) };
+    case 'invalid-options': return errorCase(() => stringify.configure({ maximumBreadth: 0 }));
+    case 'strict-invalid': { const serializer = stringify.configure({ strict: true }); return errorCase(() => serializer({ fn () {} })); }
+    case 'strict-nan': return errorCase(() => stringify.configure({ strict: true })({ a: NaN }));
+    case 'strict-bigint': return errorCase(() => stringify.configure({ strict: true })({ a: 5n }));
+    case 'strict-circular': { const x = {}; x.self = x; return errorCase(() => stringify.configure({ strict: true })(x)); }
+    case 'hang': return { kind: 'value', value: stringify({}) };
+    case 'safe-tojson': return { kind: 'value', value: stringify.configure({ safe: true })({ a: { toJSON () { throw new Error('Oops'); } } }, null, 1) };
+    case 'safe-replacer': return { kind: 'value', value: stringify.configure({ safe: true })({ a: 1, b: 2 }, (key, value) => { if (key === 'b') throw new Error('Oops'); return value; }, 1) };
+    case 'safe-getter': { const value = { a: 1, get b () { throw new Error('Oops'); } }; return { kind: 'value', value: stringify.configure({ safe: true })(value, null, 1) }; }
+    case 'configure-independent': { const numbers = stringify.configure({ bigint: true }); const strings = stringify.configure({ bigint: 'string' }); return { kind: 'value', value: [numbers({ n: 2n }), strings({ n: 2n }), stringify({ b: 2, a: 1 })] }; }
+    case 'default-alias': return { kind: 'value', value: stringify.default({ b: 2, a: 1 }) };
+    case 'named-alias': return { kind: 'value', value: stringify.stringify({ b: 2, a: 1 }) };
+    case 'typed-extra': { const value = new Uint8Array([1, 2]); value.extra = 3; return { kind: 'value', value: stringify(value) }; }
+    case 'array-circular': { const value = []; value.push(value, value); return { kind: 'value', value: stringify(value) }; }
+    case 'replacer-array-indent': return { kind: 'value', value: stringify({ a: 1, b: 2 }, ['b', 'a'], 2) };
+    case 'non-deterministic-config': return { kind: 'value', value: stringify.configure({ deterministic: false })({ z: { b: 2, a: 1 }, a: 0 }) };
+    default: throw new Error(`unknown case ${caseId}`);
+  }
+}
+
+try {
+  Object.assign(result, await run(input.caseId));
+} catch (error) {
+  Object.assign(result, { kind: 'error', name: error?.name ?? 'Error', message: String(error?.message ?? error) });
+}
+process.stdout.write(`${JSON.stringify(result)}\n`);

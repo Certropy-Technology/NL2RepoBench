@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "safe-stable-stringify",
+  "upstream_url": "https://github.com/BridgeAR/safe-stable-stringify",
+  "revision": "8a02137ac933eff57dd6e49beb9ee766fe8dd372",
+  "revision_verified_by": "git checkout --detach and git archive in task-local authoring worktree",
+  "source_archive": {"path": ".nl2repo/authoring-work/source/safe-stable-stringify/source-archive.tar", "sha256": "sha256:a526d8d5397b73055d821b524f6ae6d2a356af1e9d04526a2b568c44ef883c35", "size_bytes": 112640},
+  "license": {"spdx": "MIT", "path_in_archive": "LICENSE", "sha256": "sha256:3a6d6de49d284a36c5d271ef0e62eca1838cc460dd7630e3f2c347c8f5b2232a"},
+  "package": {"name": "safe-stable-stringify", "version": "2.5.0", "entry_point": "index.js", "module_formats": ["commonjs", "esm-wrapper"]},
+  "submodules": []
+}

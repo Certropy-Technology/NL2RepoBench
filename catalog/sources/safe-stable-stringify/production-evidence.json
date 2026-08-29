@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "task_id": "safe-stable-stringify",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/BridgeAR/safe-stable-stringify",
+    "revision": "8a02137ac933eff57dd6e49beb9ee766fe8dd372",
+    "source_digest": "sha256:a526d8d5397b73055d821b524f6ae6d2a356af1e9d04526a2b568c44ef883c35",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:3a6d6de49d284a36c5d271ef0e62eca1838cc460dd7630e3f2c347c8f5b2232a"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:de020f2a1e441d4c592c85d7d77554bc702ea5537ef0d6d40ead888b0abbbf10", "size_bytes": 482},
+    "commands": {"digest": "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", "size_bytes": 261},
+    "tests": {"digest": "sha256:4fa08b438dab90acbf18d91c84c92a3595a3811fd5404b6b1b24ecc4123b52b3", "size_bytes": 3745},
+    "oracle": {"digest": "sha256:aa458aaac07fe9941ad46d656a68e3b194684f96d609ae99cf5137deaed5b520", "size_bytes": 979}
+  },
+  "production_bundle": {
+    "path": ".nl2repo/authoring-work/compiled/safe-stable-stringify/bundle.manifest.json",
+    "sha256": "sha256:3859301eef320f3b833061c9ec044a145bd76eb1f1241cbd9f2d0a68006bc6b0",
+    "canonical_manifest_digest": "sha256:a2a3cc6460e5e788f9be5916dd321d812036d3ed7d5c50d4b989a4213c54c0eb",
+    "mode": "production",
+    "file_count": 75,
+    "integrity_errors": 0
+  },
+  "oracle": {
+    "command": "docker run --rm --network none --user root -v .nl2repo/authoring-work/oracle-workspace:/workspace:ro -v .nl2repo/authoring-work/oracle-run-final:/logs nl2repobench/safe-stable-stringify-verifier:local /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {"path": ".nl2repo/authoring-work/oracle-run-final/verifier/grading.json", "sha256": "sha256:2915fedfd5551ba7dff6909f38c51fcb7a7be5ad144a35950ddb48dddced154b"},
+    "network": {"path": ".nl2repo/authoring-work/oracle-run-final/verifier/network.json", "sha256": "sha256:1f2112d8fa84a942960b85380204af35e0fc2ff080f79d563153756f52d6241e"},
+    "valid": true,
+    "expected_total": 52,
+    "collected": 52,
+    "passed": 52,
+    "reward": 1.0,
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {"command": "docker run verifier with empty workspace", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs-final-empty/verifier/grading.json", "sha256": "sha256:4b0f6a12a27a6e1a737e0d24ff66745ae24482fe5451e7c4df132666935a5b4a"}, "network": {"path": ".nl2repo/authoring-work/control-runs-final-empty/verifier/network.json", "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"}, "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+    "stub": {"command": "docker run verifier with stub workspace", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs-final-stub/verifier/grading.json", "sha256": "sha256:07597406bdb785cbbaf44967679c88dec2d3878833ca3d4d1569e2f46270a56a"}, "network": {"path": ".nl2repo/authoring-work/control-runs-final-stub/verifier/network.json", "sha256": "sha256:e81b64a757cc8ab9d8f2582432d794febdff9c0bddc2678df5021e4a4ff65af2"}, "valid": true, "reward": 0.0, "collected": 52, "passed": 0},
+    "forgery": {"command": "docker run verifier with forgery workspace", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs-final-forgery/verifier/grading.json", "sha256": "sha256:07597406bdb785cbbaf44967679c88dec2d3878833ca3d4d1569e2f46270a56a"}, "network": {"path": ".nl2repo/authoring-work/control-runs-final-forgery/verifier/network.json", "sha256": "sha256:839fd7b5ac47b332fd3a8c7384025de8994194f5e13eb4b6ce38de9070f082e6"}, "valid": true, "reward": 0.0, "collected": 52, "passed": 0, "verifier_owned_reward": true},
+    "install-script": {"command": "docker run verifier with install-script workspace", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs-final-install-script/verifier/grading.json", "sha256": "sha256:4b0f6a12a27a6e1a737e0d24ff66745ae24482fe5451e7c4df132666935a5b4a"}, "network": {"path": ".nl2repo/authoring-work/control-runs-final-install-script/verifier/network.json", "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"}, "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+    "loader-hook": {"command": "docker run verifier with loader-hook workspace", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs-final-loader-hook/verifier/grading.json", "sha256": "sha256:07597406bdb785cbbaf44967679c88dec2d3878833ca3d4d1569e2f46270a56a"}, "network": {"path": ".nl2repo/authoring-work/control-runs-final-loader-hook/verifier/network.json", "sha256": "sha256:43df1b00a997be3443498d32b28a5d3a16e0830826ef14ecd20559103eb6a31b"}, "valid": true, "reward": 0.0, "collected": 52, "passed": 0},
+    "hang": {"command": "bounded single candidate adapter call", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-call-failed", "bounded_timeout": true, "log": ".nl2repo/authoring-work/logs/control-final-hang.log"},
+    "offline": {"command": "docker run verifier with network-fetch workspace", "exit_code": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs-final-offline/verifier/grading.json", "sha256": "sha256:07597406bdb785cbbaf44967679c88dec2d3878833ca3d4d1569e2f46270a56a"}, "network": {"path": ".nl2repo/authoring-work/control-runs-final-offline/verifier/network.json", "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"}, "valid": true, "reward": 0.0, "collected": 52, "passed": 0, "completed": true, "public_network_available": false}
+  },
+  "commands": [
+    {"command": "git checkout --detach 8a02137ac933eff57dd6e49beb9ee766fe8dd372; git archive --format=tar HEAD; sha256sum archive", "tool_version": "git 2.x; coreutils sha256sum", "exit_code": 0, "result": "revision and source archive verified"},
+    {"command": "node --version && npm --version && uname -a && getconf GNU_LIBC_VERSION", "tool_version": "Node 22.23.1/npm 10.9.8 host probe; locked runtime metadata is Node 24.19.0/npm 11.17.0", "exit_code": 0, "result": "host probe completed; Docker runtime was used for production"},
+    {"command": "npm install --ignore-scripts --no-audit --no-fund", "tool_version": "npm 10.9.8", "exit_code": 0, "result": "frozen zero-dependency source probe completed"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/safe-stable-stringify", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "source status packaged"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "error_count 0; existing catalog warnings unrelated"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/safe-stable-stringify --output .nl2repo/authoring-work/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "Harbor 0.21.0; Node toolchain lock", "exit_code": 0, "result": "production bundle, 75 files"},
+    {"command": "docker build --platform linux/amd64 -t nl2repobench/safe-stable-stringify-verifier:local compiled/tests", "tool_version": "Docker 29.7.2", "exit_code": 0, "result": "separate verifier image built; only constant-platform warnings"},
+    {"command": "docker run ... /tests/test.sh", "tool_version": "Docker 29.7.2; Harbor verifier runtime", "exit_code": 0, "result": "Oracle replay 52/52, reward 1.0, network false"}
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this lane; the locked OpenHands image tag currently resolves locally to sha256:bb48824b... rather than toolchain image_id sha256:c50b3e3c... and must be restored or relocked by the integrator.",
+    "Blind review, model pilot, dataset integration, publication approval, and cross-run stability remain integrator stages.",
+    "The fixed 52-leaf contract is a deterministic public-behavior slice, not full tap/coverage or benchmark parity."
+  ],
+  "blockers": []
+}
