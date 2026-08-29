@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/mypy-extensions"
+version = "1.0.0"
+description = "Build mypy_extensions 1.2.0.dev0 from an empty workspace and reproduce callable markers, deprecated TypedDict/NoReturn compatibility, mypyc identity decorators, FlexibleAlias, and native integer runtime behavior through a UID-separated child adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "typing",
+    "mypy",
+    "mypyc",
+    "custom-json-v1",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "easy"
+category = "typing-utilities"
+tags = [
+    "python",
+    "typing",
+    "mypy",
+    "mypyc",
+    "decorators",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 69
+canonical_manifest_digest = "sha256:86d3aed30b03439d288bb63f5973d3f31fc1021e7decd224deca18ffe63b18af"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 300.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096

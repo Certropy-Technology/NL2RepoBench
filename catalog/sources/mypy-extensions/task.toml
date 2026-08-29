@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "mypy-extensions"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "typing-utilities"
+tags = ["python", "typing", "mypy", "mypyc", "decorators", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python/mypy_extensions"
+revision = "9fc7fe08c8e638cdd9bbf1aa9bf188aef4fd24ef"
+license_spdx = "MIT"
+source_digest = "sha256:173418926199a751045892c046f5dcd1280f7f360ce6799ad49a54f2679af03e"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --target <candidate-site> --no-deps --no-build-isolation <workspace>; flit_core 3.12.0 is preinstalled from the hash lock during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact hash-locked flit_core build dependency is installed during Docker image build. Agent and verifier phases need no registry or source-host access. The trusted Oracle alone receives a run-scoped github.com authorization and verifies the full commit plus Git archive digest."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit_core==3.12.0"]
+lock_artifact = { digest = "sha256:15474c26171aabab9fe8ef5770ec96e46a21a5a391b84729633c87ddb0b40867", size_bytes = 188, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:15474c26171aabab9fe8ef5770ec96e46a21a5a391b84729633c87ddb0b40867", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 69
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:6975a22a6a01264168932f02acbddaa019bd669a60993bfd8ad05fa9f12b400c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6975a22a6a01264168932f02acbddaa019bd669a60993bfd8ad05fa9f12b400c", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build mypy_extensions 1.2.0.dev0 from an empty workspace and reproduce callable markers, deprecated TypedDict/NoReturn compatibility, mypyc identity decorators, FlexibleAlias, and native integer runtime behavior through a UID-separated child adapter."
+keywords = ["python", "typing", "mypy", "mypyc", "custom-json-v1", "separate-verifier"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 300.0
+candidate_install_timeout_sec = 15.0
+candidate_total_timeout_sec = 120.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8f6153bb800558c90f1fb72edf5dcbfaeec3e23475e2cfcdaf2852118e8f7d58"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8f6153bb800558c90f1fb72edf5dcbfaeec3e23475e2cfcdaf2852118e8f7d58"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-worker"
+reason = "Official Harbor 0.21.0 Oracle passed 69/69 with reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed under the separate no-network verifier."

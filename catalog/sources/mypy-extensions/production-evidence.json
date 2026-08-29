@@ -1,0 +1,95 @@
+{
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/mypy-extensions/bundle.manifest.json",
+    "sha256": "sha256:cf7f036c4f3e01a16976d7e495b85d26621171b79b318fda415bfda6cf50e180"
+  },
+  "controls": {
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/mypy-extensions-final/mypy-extensions-call-hang -a oracle --job-name mypy-extensions-canonical-call-hang -o .nl2repo/runs/mypy-extensions/canonical-final/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/call-hang/mypy-extensions-canonical-call-hang/mypy-extensions-call-hang__yu57rny/verifier/grading.json",
+        "sha256": "sha256:6c0aa11ffef70ba5b8940eb3c2e1021cf530ceb9b563248345962cb2155d9fe1"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/call-hang/mypy-extensions-canonical-call-hang/mypy-extensions-call-hang__yu57rny/verifier/network.json",
+        "sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+      }
+    },
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/mypy-extensions -a nop --job-name mypy-extensions-canonical-empty -o .nl2repo/runs/mypy-extensions/canonical-final/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/empty/mypy-extensions-canonical-empty/mypy-extensions__JosLcMy/verifier/grading.json",
+        "sha256": "sha256:e30126775609f0733e7407fe02954cdda9e6b219ad5c68271d124df9a984c4f3"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/empty/mypy-extensions-canonical-empty/mypy-extensions__JosLcMy/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/mypy-extensions-final/mypy-extensions-forgery -a oracle --job-name mypy-extensions-canonical-forgery -o .nl2repo/runs/mypy-extensions/canonical-final/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/forgery/mypy-extensions-canonical-forgery/mypy-extensions-forgery__FCPsaFv/verifier/grading.json",
+        "sha256": "sha256:ddc032e0fd84b2bc7b438ee93a58d3f6e705b0fcdd2f0b169ee9646f2548ea77"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/forgery/mypy-extensions-canonical-forgery/mypy-extensions-forgery__FCPsaFv/verifier/network.json",
+        "sha256": "sha256:463dc3baac264a58f980c26d7020ef7b3253635cd2989086cdb5fcaa845b25d6"
+      },
+      "verifier_owned_reward": true
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/mypy-extensions-final/mypy-extensions-install-hang -a oracle --job-name mypy-extensions-canonical-install-hang -o .nl2repo/runs/mypy-extensions/canonical-final/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/install-hang/mypy-extensions-canonical-install-hang/mypy-extensions-install-hang__WfRpc9t/verifier/grading.json",
+        "sha256": "sha256:e30126775609f0733e7407fe02954cdda9e6b219ad5c68271d124df9a984c4f3"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/install-hang/mypy-extensions-canonical-install-hang/mypy-extensions-install-hang__WfRpc9t/verifier/network.json",
+        "sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043"
+      },
+      "outcome": "candidate-installation-failed: timeout, returncode -9"
+    },
+    "offline": {
+      "command": "official Harbor separate-verifier network probe from the canonical final Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/oracle/mypy-extensions-canonical-oracle/mypy-extensions__E7Ty6jD/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/mypy-extensions-final/mypy-extensions-stub -a oracle --job-name mypy-extensions-canonical-stub -o .nl2repo/runs/mypy-extensions/canonical-final/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/stub/mypy-extensions-canonical-stub/mypy-extensions-stub__DPfM6R7/verifier/grading.json",
+        "sha256": "sha256:ddc032e0fd84b2bc7b438ee93a58d3f6e705b0fcdd2f0b169ee9646f2548ea77"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mypy-extensions/canonical-final/stub/mypy-extensions-canonical-stub/mypy-extensions-stub__DPfM6R7/verifier/network.json",
+        "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/mypy-extensions -a oracle --job-name mypy-extensions-canonical-oracle -o .nl2repo/runs/mypy-extensions/canonical-final/oracle --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/mypy-extensions/canonical-final/oracle/mypy-extensions-canonical-oracle/mypy-extensions__E7Ty6jD/verifier/grading.json",
+      "sha256": "sha256:d16570ce34b4d0c5b49f37d7f2a2b2231cc04832308288522ef3a1482a527efc"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/mypy-extensions/canonical-final/oracle/mypy-extensions-canonical-oracle/mypy-extensions__E7Ty6jD/verifier/network.json",
+      "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "mypy-extensions",
+  "terminal_kind": "valid"
+}
