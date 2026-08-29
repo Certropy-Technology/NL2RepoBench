@@ -1489,7 +1489,12 @@ def supervise(args: argparse.Namespace) -> int:
                 and free >= args.min_free_bytes
                 and worker_limit > 0
             )
-            if can_start_workers and free >= args.watcher_min_free_bytes:
+            can_run_maintenance = (
+                not args.dry_run
+                and integration_clean
+                and free >= args.watcher_min_free_bytes
+            )
+            if can_run_maintenance:
                 current = _watcher_processes(_proc_table())
                 if not current and _oss_bucket() is not None:
                     try:
