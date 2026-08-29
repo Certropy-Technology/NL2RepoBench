@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "flatted",
+  "status": "implemented",
+  "purpose": "Exercise circular JavaScript values without importing candidate code into the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json-with-fixed-graph-fixtures",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Read bounded installed-package metadata and verify callable root exports.",
+    "stringify": "Construct one allowlisted graph fixture in the child and call stringify with an allowlisted replacer and space option.",
+    "parse": "Call parse with an allowlisted reviver and return a bounded canonical graph observation.",
+    "roundtrip": "Stringify and parse one allowlisted fixture and report identity and graph observations.",
+    "toJSON": "Call toJSON for one allowlisted fixture and return its acyclic JSON table.",
+    "fromJSON": "Call fromJSON for a bounded JSON table and return graph observations.",
+    "helpersRoundtrip": "Apply fromJSON(toJSON(fixture)) and return graph observations."
+  },
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "arbitrary executable request fields",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

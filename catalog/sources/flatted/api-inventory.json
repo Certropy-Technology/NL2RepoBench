@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "flatted",
+  "source_revision": "e6f5ca700c4ca8104a6a83472c8219e267bd5e84",
+  "package": {
+    "name": "flatted",
+    "version": "3.4.4",
+    "module_kind": "dual-esm-commonjs",
+    "runtime_dependencies": [],
+    "package_manager": "npm",
+    "lockfile_version": 3
+  },
+  "public_exports": [
+    {"name": "parse", "import_path": "flatted", "signature": "parse(text: string, reviver?: (this: any, key: string, value: any) => any): any"},
+    {"name": "stringify", "import_path": "flatted", "signature": "stringify(value: any, replacer?: ((this: any, key: string, value: any) => any) | (string | number)[] | null, space?: string | number): string"},
+    {"name": "toJSON", "import_path": "flatted", "signature": "toJSON(value: any): any"},
+    {"name": "fromJSON", "import_path": "flatted", "signature": "fromJSON(value: any): any"}
+  ],
+  "runtime_files": ["esm/index.js", "cjs/index.js"],
+  "declaration_files": ["types/index.d.ts"],
+  "risk_adaptations": [
+    "circular and repeated object identity is observed through a fixed child-side JSON adapter",
+    "replacer and reviver callbacks are verifier-owned allowlisted behaviors",
+    "native JSON-compatible values are covered; functions, symbols, sockets, and class state are outside the contract"
+  ]
+}

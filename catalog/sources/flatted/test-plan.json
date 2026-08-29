@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "flatted",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 35,
+  "metric": "passed / 35; skipped and todo are non-passing; collection mismatch is verifier-invalid",
+  "collection_source": "private/contract.test.mjs",
+  "adapter_boundary": "custom-json-v1; only allowlisted fixtures, operations, replacers, revivers, and bounded graph observations cross the subprocess boundary",
+  "leaf_groups": {
+    "packaging_and_surface": 1,
+    "stringify_primitives_and_graphs": 9,
+    "stringify_options_and_json_behavior": 5,
+    "parse_and_reviver": 9,
+    "helpers_and_roundtrip": 8,
+    "immutability_and_determinism": 3
+  },
+  "coverage": [
+    "package metadata, dual module exports, declaration entry, and zero runtime dependency closure",
+    "primitive roots, empty containers, cycles, aliases, nested graphs, and index-like strings",
+    "function and array replacers, indentation limits, Date toJSON, and deterministic property order",
+    "primitive and graph parsing, reviver transformation/deletion, special strings, and malformed JSON",
+    "toJSON/fromJSON tables, roundtrip identity, input immutability, and repeated-call determinism"
+  ]
+}

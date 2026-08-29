@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0",
+  "task_id": "flatted",
+  "task_version": "2.0.0",
+  "status": "controls-passed",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/WebReflection/flatted",
+    "revision": "e6f5ca700c4ca8104a6a83472c8219e267bd5e84",
+    "commit_tree": "42ddd776bb147fb487277b27bc190d5526c1c1bc",
+    "license_spdx": "ISC",
+    "source_archive_sha256": "sha256:e784adfcfef6c281d5700256dc1762b704eb11943cad7a46c18029c1a9e04c2a",
+    "license_file_sha256": "sha256:148718606d34f467fd08a2176bb4c1ab275f999576f779368503d8d3e3642861",
+    "submodules": []
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_status": "locked",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_allowed_hosts": []
+  },
+  "dependencies": {
+    "runtime_dependencies": [],
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:95710a38c8e8624646100e1db5e0eb0f87c26a7897dc28bb32aaeedecc8fc84c",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:95710a38c8e8624646100e1db5e0eb0f87c26a7897dc28bb32aaeedecc8fc84c"
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 35,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "collection_source": "private/contract.test.mjs",
+    "test_bundle": {
+      "digest": "sha256:b69d8fefe4dd6468f6401af09442cc932b8fc3bd0e8f79d2442e2882df272ec2",
+      "size_bytes": 20480,
+      "uri": "artifact://private/sha256:b69d8fefe4dd6468f6401af09442cc932b8fc3bd0e8f79d2442e2882df272ec2"
+    },
+    "commands_artifact": {
+      "digest": "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040"
+    }
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/compiled-production-final/flatted",
+    "manifest_sha256": "sha256:ef7cf42bbcdadb4d10c06312365c7ba6fa64dc64190cf4d97da640b12180aac6",
+    "canonical_manifest_digest": "sha256:3437a15b06e0f416f66812588e43cba440489f3edcffd8cba3c032d34796ccff",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 75
+  },
+  "commands": [
+    {
+      "command": "git clone --no-checkout https://github.com/WebReflection/flatted source && git -C source checkout --detach e6f5ca700c4ca8104a6a83472c8219e267bd5e84 && git archive --format=tar HEAD",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/source-freeze/clone.log",
+      "log_sha256": "sha256:16bbee00f43148da7ccb4011530879aa1c9efd8564359579d0b316a1c3b171a9"
+    },
+    {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund && npm test",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/source-freeze/npm-test.log",
+      "log_sha256": "sha256:5ec8d1ae549f497286c7c408afa1bed569bf81639df89c52f1376df004fce285"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/flatted",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/validate-source-final.log",
+      "log_sha256": "sha256:0abf03ffb9c61e5a9fe4ce7f766086a59a374f2c3accf7897627843808032cba"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/flatted --output .nl2repo/authoring-work/node-author-wave2-20260828/flatted/compiled-production-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/compile-production-final.log",
+      "log_sha256": "sha256:1dd02c0d3509ffdb10729c7945b6b011b0d67e052432b7ab16b978804e2d6d69"
+    }
+  ],
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/flatted/compiled-production-final/flatted -a oracle --job-name flatted-oracle-authoring-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/oracle --allow-agent-host github.com --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 35,
+    "passed": 35,
+    "reward": 1.0,
+    "result": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/oracle/flatted-oracle-authoring-20260829/flatted__uzPqjeV/result.json", "sha256": "sha256:63f71b179471be983240e41eb9573a50b131766557192b66587552743310d244"},
+    "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/oracle/flatted-oracle-authoring-20260829/flatted__uzPqjeV/verifier/grading.json", "sha256": "sha256:aa805dea714cc9128b9b26b2dd9ce60bff2b24c295d61c40467a76f0aec4741d"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/oracle/flatted-oracle-authoring-20260829/flatted__uzPqjeV/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"},
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {"command": "Harbor control empty from current compiled bundle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/empty/flatted-empty-authoring-20260829/flatted-empty__TM9YEfQ/verifier/grading.json", "sha256": "sha256:6478906ab2514877a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/empty/flatted-empty-authoring-20260829/flatted-empty__TM9YEfQ/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"}},
+    "stub": {"command": "Harbor control stub from current compiled bundle", "exit_code": 0, "valid": true, "collected": 35, "passed": 1, "reward": 0.02857142857142857, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/stub/flatted-stub-authoring-20260829/flatted-stub__pFkAe4H/verifier/grading.json", "sha256": "sha256:7d9de411bf071fe063d80a51a7c888edb5768b0b8b75c8d694a3b7a23ae9804a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/stub/flatted-stub-authoring-20260829/flatted-stub__pFkAe4H/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"}},
+    "forgery": {"command": "Harbor control forgery from current compiled bundle", "exit_code": 0, "valid": true, "collected": 35, "passed": 1, "reward": 0.02857142857142857, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/forgery/flatted-forgery-authoring-20260829/flatted-forgery__xAMo2ir/verifier/grading.json", "sha256": "sha256:7d9de411bf071fe063d80a51a7c888edb5768b0b8b75c8d694a3b7a23ae9804a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/forgery/flatted-forgery-authoring-20260829/flatted-forgery__xAMo2ir/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"}},
+    "install-script": {"command": "Harbor control install-script from current compiled bundle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/install-script/flatted-install-script-authoring-20260829/flatted-install-script__7zi54jm/verifier/grading.json", "sha256": "sha256:6478906ab2514877a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/install-script/flatted-install-script-authoring-20260829/flatted-install-script__7zi54jm/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"}},
+    "loader-hook": {"command": "Harbor control loader-hook from current compiled bundle", "exit_code": 0, "valid": true, "collected": 35, "passed": 1, "reward": 0.02857142857142857, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/loader-hook/flatted-loader-hook-authoring-20260829/flatted-loader-hook__gmZMaVL/verifier/grading.json", "sha256": "sha256:7d9de411bf071fe063d80a51a7c888edb5768b0b8b75c8d694a3b7a23ae9804a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/loader-hook/flatted-loader-hook-authoring-20260829/flatted-loader-hook__gmZMaVL/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"}},
+    "hang": {"command": "Harbor control hang from current compiled bundle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-call-failed", "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/hang/flatted-hang-authoring-20260829/flatted-hang__ZdkhiBt/verifier/grading.json", "sha256": "sha256:e696fbd980f1efcdeee39501b74e860186722e1ac516585e9070ae354ab563e9"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/hang/flatted-hang-authoring-20260829/flatted-hang__ZdkhiBt/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"}},
+    "offline": {"command": "Harbor control offline from current compiled bundle", "exit_code": 0, "valid": true, "collected": 35, "passed": 1, "reward": 0.02857142857142857, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/offline/flatted-offline-authoring-20260829/flatted-offline__nyCs3eX/verifier/grading.json", "sha256": "sha256:7d9de411bf071fe063d80a51a7c888edb5768b0b8b75c8d694a3b7a23ae9804a"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/flatted/harbor-runs/controls-current/offline/flatted-offline-authoring-20260829/flatted-offline__nyCs3eX/verifier/network.json", "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f"}}
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this lane by contract.",
+    "Blind review, independent traceability approval, dataset integration, pilot, and publication remain integrator-owned.",
+    "The local OpenHands runtime image tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, while toolchain.node.lock.toml records sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; restore or re-verify the immutable agent image before any model run.",
+    "The current bundle and controls were compiled and run with the locked Node base image; the agent image mismatch does not affect the separate verifier receipts."
+  ]
+}

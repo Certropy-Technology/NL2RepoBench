@@ -1,0 +1,156 @@
+if (process.env.NODE_TEST_CONTEXT) process.exit(0);
+
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const PACKAGE = 'flatted';
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const EXPORTS = ['fromJSON', 'parse', 'stringify', 'toJSON'];
+
+function fail(id, errorType, message, code = 64) {
+  const value = JSON.stringify({id, ok: false, error_type: errorType, message: String(message).slice(0, 512)});
+  process.stdout.write(`${value}\n`);
+  process.exit(code);
+}
+
+function emit(id, value) {
+  const encoded = JSON.stringify({id, ok: true, value});
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) fail(id, 'response-too-large', 'response is too large', 70);
+  process.stdout.write(`${encoded}\n`);
+}
+
+function fixture(name) {
+  if (name === 'null') return null;
+  if (name === 'string') return 'hello';
+  if (name === 'number') return 42;
+  if (name === 'empty-array') return [];
+  if (name === 'empty-object') return {};
+  if (name === 'cycle-object') {
+    const root = {name: 'root'};
+    root.self = root;
+    return root;
+  }
+  if (name === 'cycle-array') {
+    const root = [];
+    root.push(root, 'x', root);
+    return root;
+  }
+  if (name === 'shared-object') {
+    const child = {value: 42};
+    return {left: child, right: child};
+  }
+  if (name === 'nested-cycle') {
+    const root = {a: {value: 'nested'}, list: []};
+    root.a.parent = root;
+    root.list.push(root.a, root);
+    return root;
+  }
+  if (name === 'index-strings') return {zero: '0', one: '1', nested: {zero: '0'}};
+  if (name === 'date') return new Date('2020-01-02T03:04:05.000Z');
+  throw new Error(`unknown fixture: ${name}`);
+}
+
+function snapshot(value) {
+  const known = new Map();
+  const nodes = [];
+  function visit(item) {
+    if (item === null || typeof item !== 'object') return item;
+    if (known.has(item)) return {$ref: known.get(item)};
+    const id = nodes.length;
+    known.set(item, id);
+    const node = Array.isArray(item) ? {type: 'array', items: []} : {type: 'object', properties: {}};
+    nodes.push(node);
+    if (Array.isArray(item)) node.items = item.map(visit);
+    else for (const key of Object.keys(item)) node.properties[key] = visit(item[key]);
+    return {$ref: id};
+  }
+  return {root: visit(value), nodes};
+}
+
+async function load() {
+  const root = join(process.cwd(), 'node_modules', PACKAGE);
+  const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  let api;
+  try {
+    api = require(PACKAGE);
+  } catch (error) {
+    if (error?.code !== 'ERR_REQUIRE_ESM' && error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') throw error;
+    const entry = packageJson.exports?.['.']?.import ?? packageJson.module ?? packageJson.main;
+    api = await import(pathToFileURL(join(root, entry)).href);
+  }
+  return {api, packageJson, root};
+}
+
+function parseInput(name) {
+  const inputs = {
+    primitive: '[1]',
+    string: '["x"]',
+    cycleObject: '[{"name":"1","self":"0"},"root"]',
+    cycleArray: '[["0","1","0"],"x"]',
+    shared: '[{"left":"1","right":"1"},{"value":42}]',
+    reviver: '[{"count":1,"drop":2}]',
+    special: '[{"a":"1","b":"2","c":"3"},"~\\\\x7e","\\\\x7e","~"]',
+    bad: '{',
+  };
+  if (!(name in inputs)) throw new Error(`unknown parse input: ${name}`);
+  return inputs[name];
+}
+
+function replacer(mode) {
+  if (mode === 'drop') return function (key, value) { return key === 'drop' ? undefined : value; };
+  if (mode === 'array') return ['keep'];
+  return undefined;
+}
+
+async function main() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) fail('', 'request-too-large', 'request is too large');
+  let request;
+  try { request = JSON.parse(data.toString('utf8')); } catch { fail('', 'malformed-json', 'request is malformed'); }
+  const id = request?.id;
+  if (typeof id !== 'string' || id.length < 1 || id.length > 128) fail('', 'invalid-id', 'id is not bounded');
+  if (!request || !['inventory', 'call'].includes(request.operation)) fail(id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  try {
+    const {api, packageJson, root} = await load();
+    if (request.operation === 'inventory') {
+      if (Object.keys(request.payload ?? {}).length !== 0) fail(id, 'malformed-payload', 'inventory payload must be empty');
+      emit(id, {packageName: packageJson.name, packageVersion: packageJson.version, packageShape: true,
+        runtimeEntries: ['cjs/index.js', 'esm/index.js'], declarationEntry: true, exportNames: Object.keys(api).sort()});
+      return;
+    }
+    const payload = request.payload;
+    if (!payload || typeof payload !== 'object') fail(id, 'malformed-payload', 'payload must be an object');
+    const operation = payload.operation;
+    const fn = api[payload.exportName];
+    if (!EXPORTS.includes(payload.exportName) || typeof fn !== 'function') fail(id, 'export-shape-invalid', 'export is not callable');
+    let result;
+    if (operation === 'stringify') {
+      const value = fixture(payload.fixture);
+      result = fn(value, replacer(payload.replacer), payload.space);
+    } else if (operation === 'parse') {
+      const text = parseInput(payload.input);
+      const reviver = payload.reviver === 'increment' ? (key, value) => key === 'count' ? value + 1 : value
+        : payload.reviver === 'drop' ? (key, value) => key === 'drop' ? undefined : value : undefined;
+      result = snapshot(fn(text, reviver));
+    } else if (operation === 'toJSON') {
+      result = fn(fixture(payload.fixture));
+    } else if (operation === 'fromJSON') {
+      result = snapshot(fn(JSON.parse(payload.table)));
+    } else if (operation === 'roundtrip' || operation === 'helpersRoundtrip') {
+      const value = fixture(payload.fixture);
+      const table = operation === 'roundtrip' ? api.parse(api.stringify(value)) : api.fromJSON(api.toJSON(value));
+      result = snapshot(table);
+    } else {
+      fail(id, 'operation-not-allowlisted', 'operation is not allowlisted');
+    }
+    emit(id, result);
+  } catch (error) {
+    fail(id, error?.constructor?.name ?? 'Error', error?.message ?? error, 1);
+  }
+}
+
+main().catch(error => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));
