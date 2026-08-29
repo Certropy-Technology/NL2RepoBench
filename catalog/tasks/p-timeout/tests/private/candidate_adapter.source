@@ -1,0 +1,398 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const ALLOWED_SCENARIOS = new Set([
+  'abort_already',
+  'abort_later',
+  'cancel_behavior',
+  'clear',
+  'exports',
+  'fallback',
+  'infinity',
+  'input_reject',
+  'input_resolve',
+  'thenable',
+  'timeout',
+  'timeout_error',
+  'validation',
+]);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write('candidate response exceeds the bound\n');
+    process.exit(70);
+  }
+
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function request() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) {
+    emit({ok: false, error: 'request-too-large'}, 64);
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(data.toString('utf8'));
+  } catch {
+    emit({ok: false, error: 'malformed-json'}, 64);
+  }
+
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    emit({ok: false, error: 'request-must-be-object'}, 64);
+  }
+
+  if (typeof payload.scenario !== 'string' || !ALLOWED_SCENARIOS.has(payload.scenario)) {
+    emit({ok: false, error: 'scenario-not-allowlisted'}, 64);
+  }
+
+  const parameters = payload.parameters ?? {};
+  if (!parameters || typeof parameters !== 'object' || Array.isArray(parameters)) {
+    emit({ok: false, error: 'parameters-must-be-object'}, 64);
+  }
+
+  return {scenario: payload.scenario, parameters};
+}
+
+function errorRecord(error) {
+  return {
+    type: error?.constructor?.name ?? 'Error',
+    name: String(error?.name ?? ''),
+    message: String(error?.message ?? error),
+    cause: error?.cause instanceof Error ? error.cause.message : null,
+  };
+}
+
+function controlledInput({cancelable = false} = {}) {
+  let resolve;
+  let reject;
+  let cancelCount = 0;
+  const promise = new Promise((resolve_, reject_) => {
+    resolve = resolve_;
+    reject = reject_;
+  });
+  if (cancelable) {
+    promise.cancel = () => {
+      cancelCount += 1;
+    };
+  }
+
+  return {
+    promise,
+    resolve,
+    reject,
+    cancelCount: () => cancelCount,
+  };
+}
+
+function controlledTimers() {
+  const timerId = {id: 'timer'};
+  let callback;
+  let delay;
+  let setReceiverIsUndefined = false;
+  const clearCalls = [];
+  const timers = {
+    setTimeout(function_, milliseconds) {
+      setReceiverIsUndefined = this === undefined;
+      callback = function_;
+      delay = milliseconds;
+      return timerId;
+    },
+    clearTimeout(value) {
+      clearCalls.push(value === timerId ? 'timer' : value === undefined ? 'undefined' : 'other');
+    },
+  };
+
+  return {
+    timers,
+    fire: () => {
+      if (typeof callback !== 'function') {
+        throw new Error('timer was not scheduled');
+      }
+
+      callback();
+    },
+    record: () => ({
+      delay,
+      setReceiverIsUndefined,
+      clearCalls,
+      scheduled: typeof callback === 'function',
+    }),
+  };
+}
+
+async function settle(promise) {
+  try {
+    return {status: 'fulfilled', value: await promise};
+  } catch (error) {
+    return {status: 'rejected', error: errorRecord(error), rawError: error};
+  }
+}
+
+function validationValue(kind) {
+  switch (kind) {
+    case 'positive': return 1;
+    case 'fractional': return 0.25;
+    case 'infinity': return Number.POSITIVE_INFINITY;
+    case 'zero': return 0;
+    case 'negative': return -1;
+    case 'nan': return Number.NaN;
+    case 'negative-infinity': return Number.NEGATIVE_INFINITY;
+    case 'string': return '1';
+    case 'null': return null;
+    case 'missing': return undefined;
+    default: throw new Error('validation kind is not allowlisted');
+  }
+}
+
+async function runScenario(pTimeout, TimeoutError, scenario, parameters) {
+  if (scenario === 'exports') {
+    return {
+      defaultType: typeof pTimeout,
+      defaultName: pTimeout.name,
+      errorType: typeof TimeoutError,
+      errorName: TimeoutError.name,
+    };
+  }
+
+  if (scenario === 'timeout_error') {
+    const cause = new Error('root-cause');
+    const error = new TimeoutError('custom-message', {cause});
+    return {
+      isError: error instanceof Error,
+      isTimeoutError: error instanceof TimeoutError,
+      ...errorRecord(error),
+    };
+  }
+
+  if (scenario === 'validation') {
+    const clock = controlledTimers();
+    const value = validationValue(parameters.kind);
+    const input = Promise.resolve('accepted');
+    const result = await settle(pTimeout(input, {
+      milliseconds: value,
+      customTimers: clock.timers,
+    }));
+    return {result, timer: clock.record()};
+  }
+
+  if (scenario === 'input_resolve') {
+    const clock = controlledTimers();
+    const input = controlledInput();
+    const wrapped = pTimeout(input.promise, {
+      milliseconds: parameters.milliseconds ?? 25,
+      customTimers: clock.timers,
+    });
+    const clearType = typeof wrapped.clear;
+    const isPromise = wrapped instanceof Promise;
+    input.resolve(parameters.value ?? {ok: true});
+    const result = await settle(wrapped);
+    return {result, clearType, isPromise, timer: clock.record()};
+  }
+
+  if (scenario === 'input_reject') {
+    const clock = controlledTimers();
+    const input = controlledInput();
+    const wrapped = pTimeout(input.promise, {milliseconds: 25, customTimers: clock.timers});
+    input.reject(new RangeError('input-failed', {cause: new Error('input-cause')}));
+    const result = await settle(wrapped);
+    return {result, timer: clock.record()};
+  }
+
+  if (scenario === 'thenable') {
+    const clock = controlledTimers();
+    const thenable = {
+      then(resolve) {
+        resolve({from: 'thenable'});
+      },
+    };
+    const result = await settle(pTimeout(thenable, {milliseconds: 25, customTimers: clock.timers}));
+    return {result, timer: clock.record()};
+  }
+
+  if (scenario === 'timeout') {
+    const clock = controlledTimers();
+    const input = controlledInput({cancelable: true});
+    const options = {milliseconds: parameters.milliseconds ?? 25, customTimers: clock.timers};
+    let customError;
+    if (parameters.messageKind === 'false') options.message = false;
+    if (parameters.messageKind === 'string') options.message = parameters.message ?? 'too-slow';
+    if (parameters.messageKind === 'empty') options.message = '';
+    if (parameters.messageKind === 'error') {
+      customError = new RangeError(parameters.message ?? 'custom-error');
+      options.message = customError;
+    }
+    const wrapped = pTimeout(input.promise, options);
+    clock.fire();
+    const result = await settle(wrapped);
+    return {
+      result,
+      sameCustomError: customError ? result.rawError === customError : null,
+      cancelCount: input.cancelCount(),
+      timer: clock.record(),
+    };
+  }
+
+  if (scenario === 'fallback') {
+    const clock = controlledTimers();
+    const input = controlledInput({cancelable: true});
+    let calls = 0;
+    const fallback = () => {
+      calls += 1;
+      switch (parameters.kind) {
+        case 'value': return {fallback: 'value'};
+        case 'promise': return Promise.resolve({fallback: 'promise'});
+        case 'throw': throw new SyntaxError('fallback-threw');
+        case 'reject': return Promise.reject(new EvalError('fallback-rejected'));
+        default: throw new Error('fallback kind is not allowlisted');
+      }
+    };
+    const wrapped = pTimeout(input.promise, {
+      milliseconds: 25,
+      fallback,
+      customTimers: clock.timers,
+    });
+    clock.fire();
+    const result = await settle(wrapped);
+    return {result, calls, cancelCount: input.cancelCount(), timer: clock.record()};
+  }
+
+  if (scenario === 'cancel_behavior') {
+    const clock = controlledTimers();
+    const input = controlledInput({cancelable: true});
+    const wrapped = pTimeout(input.promise, {milliseconds: 25, customTimers: clock.timers});
+    if (parameters.kind === 'resolve') {
+      input.resolve('done');
+    } else if (parameters.kind === 'timeout') {
+      clock.fire();
+    } else {
+      throw new Error('cancel behavior kind is not allowlisted');
+    }
+    const result = await settle(wrapped);
+    return {result, cancelCount: input.cancelCount(), timer: clock.record()};
+  }
+
+  if (scenario === 'clear') {
+    const clock = controlledTimers();
+    const input = controlledInput();
+    const wrapped = pTimeout(input.promise, {milliseconds: 25, customTimers: clock.timers});
+    wrapped.clear();
+    wrapped.clear();
+    input.resolve('after-clear');
+    const result = await settle(wrapped);
+    return {result, timer: clock.record()};
+  }
+
+  if (scenario === 'infinity') {
+    const clock = controlledTimers();
+    const input = controlledInput();
+    const wrapped = pTimeout(input.promise, {
+      milliseconds: Number.POSITIVE_INFINITY,
+      customTimers: clock.timers,
+    });
+    input.resolve('infinite-result');
+    const result = await settle(wrapped);
+    return {result, timer: clock.record()};
+  }
+
+  if (scenario === 'abort_already') {
+    const clock = controlledTimers();
+    const controller = new AbortController();
+    const reason = parameters.customReason ? new RangeError('custom-abort') : undefined;
+    controller.abort(reason);
+    const result = await settle(pTimeout(Promise.resolve('late'), {
+      milliseconds: parameters.infinity ? Number.POSITIVE_INFINITY : 25,
+      signal: controller.signal,
+      customTimers: clock.timers,
+    }));
+    return {
+      result,
+      sameReason: reason ? result.rawError === reason : null,
+      timer: clock.record(),
+    };
+  }
+
+  if (scenario === 'abort_later') {
+    const clock = controlledTimers();
+    const input = controlledInput();
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let added = 0;
+    let removed = 0;
+    let once = null;
+    const add = signal.addEventListener.bind(signal);
+    const remove = signal.removeEventListener.bind(signal);
+    signal.addEventListener = (type, listener, options) => {
+      if (type === 'abort') {
+        added += 1;
+        once = options?.once ?? false;
+      }
+      return add(type, listener, options);
+    };
+    signal.removeEventListener = (type, listener, options) => {
+      if (type === 'abort') removed += 1;
+      return remove(type, listener, options);
+    };
+    const wrapped = pTimeout(input.promise, {
+      milliseconds: 25,
+      signal,
+      customTimers: clock.timers,
+    });
+    if (parameters.kind === 'resolve') input.resolve('resolved');
+    else if (parameters.kind === 'reject') input.reject(new Error('rejected'));
+    else if (parameters.kind === 'timeout') clock.fire();
+    else if (parameters.kind === 'abort') controller.abort();
+    else throw new Error('abort later kind is not allowlisted');
+    const result = await settle(wrapped);
+    return {result, added, removed, once, timer: clock.record()};
+  }
+
+  throw new Error('scenario dispatch failed');
+}
+
+async function main() {
+  const {scenario, parameters} = request();
+  if (process.env.NODE_ALLOWED_PACKAGE !== 'p-timeout') {
+    emit({ok: false, error: 'package-name-not-allowlisted'}, 64);
+  }
+
+  const packageRoot = join(process.cwd(), 'node_modules', 'p-timeout');
+  const packageManifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
+  const exports = packageManifest.exports;
+  const entry = typeof exports === 'string'
+    ? exports
+    : exports?.['.']?.import ?? exports?.['.']?.default ?? exports?.import ?? exports?.default;
+  if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+    emit({ok: false, error: 'allowlisted package has no safe ESM entry'}, 65);
+  }
+
+  const candidate = await import(pathToFileURL(join(packageRoot, entry)).href);
+  if (typeof candidate.default !== 'function' || typeof candidate.TimeoutError !== 'function') {
+    emit({ok: false, error: 'public exports are not callable'}, 65);
+  }
+
+  const value = await runScenario(
+    candidate.default,
+    candidate.TimeoutError,
+    scenario,
+    parameters,
+  );
+  emit({ok: true, value});
+}
+
+try {
+  await main();
+} catch (error) {
+  emit({
+    ok: false,
+    error: 'candidate-call-failed',
+    exception_type: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+  }, 1);
+}

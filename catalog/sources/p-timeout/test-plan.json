@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-timeout",
+  "framework": "node:test",
+  "expected_total": 35,
+  "adapter": "allowlisted deterministic promise/timer/abort scenarios in an unprivileged candidate child",
+  "coverage": [
+    {"area": "package identity, exports, and TimeoutError", "leaves": 3},
+    {"area": "milliseconds validation and accepted domains", "leaves": 10},
+    {"area": "input fulfillment, rejection, and PromiseLike adoption", "leaves": 3},
+    {"area": "timeout messages, custom errors, false message, and cancellation", "leaves": 5},
+    {"area": "fallback value, promise, throw, and rejection", "leaves": 4},
+    {"area": "cancellation winner semantics", "leaves": 1},
+    {"area": "idempotent clear", "leaves": 1},
+    {"area": "positive infinity", "leaves": 1},
+    {"area": "already-aborted signals and custom reasons", "leaves": 3},
+    {"area": "abort listener registration and cleanup", "leaves": 4}
+  ],
+  "excluded_upstream_checks": [
+    "elapsed wall-clock timing windows",
+    "third-party fake timer implementation details",
+    "lint configuration",
+    "development dependency installation",
+    "compile-time generic inference beyond declaration entry and documented overload shape"
+  ],
+  "determinism": "Controlled promises and explicit custom-timer callbacks replace delay, random scheduling, and elapsed-time assertions."
+}

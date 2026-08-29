@@ -1,0 +1,236 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-timeout",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/p-timeout",
+    "revision": "245066ef7daa5e74024d5b6a188ae599a1b7bfdf",
+    "tag": "v7.0.1",
+    "tree_sha1": "7a5a9d78f118e174e8ba4b5b21956be9003c9891",
+    "archive_sha256": "sha256:4f8e9a6fa4d0b1f3db355bfec23fe3fb646abdf062e112455a78bf756eeca151",
+    "archive_size_bytes": 40960,
+    "license": "MIT",
+    "license_file_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "declared_agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "observed_local_agent_runtime_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "ecosystem": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": "3",
+    "packages": [],
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:3625eb167b3d1cd4320c05e07fc855e6a807ab749346afaf87e51c21a20d4174",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:3625eb167b3d1cd4320c05e07fc855e6a807ab749346afaf87e51c21a20d4174",
+      "visibility": "private"
+    }
+  },
+  "private_artifacts": {
+    "commands": {
+      "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar"
+    },
+    "tests": {
+      "digest": "sha256:b34fb24beac30111081257fc3f29bbea22026963c3f7a5e75a4e0fe84c65801d",
+      "size_bytes": 30720,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar"
+    },
+    "oracle": {
+      "digest": "sha256:bb482d9ee73627eb8bd7c69237cf64a8f06dae934fa6087254a30169d0f20aa4",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.oracle+tar"
+    }
+  },
+  "upstream_baseline": {
+    "command": "docker run --rm -v <task-local-upstream>:/src -w /src docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 bash -lc 'node --version && npm --version && npm install --ignore-scripts --no-audit --no-fund && npm test'",
+    "exit_code": 0,
+    "ava_collected": 20,
+    "ava_passed": 20,
+    "xo_passed": true,
+    "tsd_passed": true
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "expected_total": 35,
+    "source": "task-specific deterministic contract over a bounded UID-separated child adapter"
+  },
+  "bundle": {
+    "path": ".nl2repo/runs/p-timeout-authoring/compiled-final/p-timeout/bundle.manifest.json",
+    "sha256": "sha256:37ec596dc90b8a77789bda0397d4e5f6b159256dfceb374a4f24c11e53892baf",
+    "schema_version": "2.0",
+    "mode": "production",
+    "file_count": 74,
+    "canonical_manifest_digest": "sha256:a5f209258551fe74060f791d7620b24bdd094efee9c2783fb6b99aa0308d0330",
+    "toolchain_content_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/p-timeout",
+      "exit_code": 0
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "task_findings": 0
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/p-timeout --output .nl2repo/runs/p-timeout-authoring/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    "node_foundation": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_node_foundation.py",
+      "exit_code": 0,
+      "passed": 49
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/p-timeout-authoring/compiled-final/p-timeout -a oracle --allow-agent-host github.com --job-name p-timeout-oracle-final -o .nl2repo/runs/p-timeout-authoring/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 35,
+    "collected": 35,
+    "passed": 35,
+    "reward_value": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/p-timeout-authoring/oracle-final/p-timeout-oracle-final/p-timeout__BV6VE74/verifier/grading.json",
+      "sha256": "sha256:b29a1cc1bae18942d66e2feb7278393e47627c5fd7b1d2b5bce40fe675bcc84b"
+    },
+    "network": {
+      "path": ".nl2repo/runs/p-timeout-authoring/oracle-final/p-timeout-oracle-final/p-timeout__BV6VE74/verifier/network.json",
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+    },
+    "reward": {
+      "path": ".nl2repo/runs/p-timeout-authoring/oracle-final/p-timeout-oracle-final/p-timeout__BV6VE74/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    },
+    "result": {
+      "path": ".nl2repo/runs/p-timeout-authoring/oracle-final/p-timeout-oracle-final/p-timeout__BV6VE74/result.json",
+      "sha256": "sha256:e622f3e905520356e227129b271d61502f64cd8dd0f22540fbf91e41a65c8826"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "Harbor Oracle agent on registry-generated final empty control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward_value": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-empty/p-timeout-empty-final/p-timeout-empty__6Ld2tUb/verifier/grading.json",
+        "sha256": "sha256:6478906ab2514877a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-empty/p-timeout-empty-final/p-timeout-empty__6Ld2tUb/verifier/network.json",
+        "sha256": "sha256:357414849aaa7e2c4996f0a0b334b87bd81314ab9e933a4ef48b460fd202cefa"
+      }
+    },
+    "stub": {
+      "command": "Harbor Oracle agent on registry-generated final stub control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 35,
+      "passed": 6,
+      "reward_value": 0.17142857142857143,
+      "grading": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-stub/p-timeout-stub-final/p-timeout-stub__2JExyhq/verifier/grading.json",
+        "sha256": "sha256:e2107332b970bcf6e7a6852c0d9ab2a0e0eba5f736b989a3a3e4508acebf232e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-stub/p-timeout-stub-final/p-timeout-stub__2JExyhq/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "forgery": {
+      "command": "Harbor Oracle agent on registry-generated final forgery control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 35,
+      "passed": 6,
+      "reward_value": 0.17142857142857143,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-forgery/p-timeout-forgery-final/p-timeout-forgery__7F9XkeA/verifier/grading.json",
+        "sha256": "sha256:e2107332b970bcf6e7a6852c0d9ab2a0e0eba5f736b989a3a3e4508acebf232e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-forgery/p-timeout-forgery-final/p-timeout-forgery__7F9XkeA/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "offline": {
+      "command": "Harbor Oracle agent on registry-generated final network-attempting control",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "collected": 35,
+      "passed": 3,
+      "reward_value": 0.08571428571428572,
+      "grading": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-offline/p-timeout-offline-final/p-timeout-offline__Xx9YHHR/verifier/grading.json",
+        "sha256": "sha256:7da142f63501d2f0eca3bb01f343f8963a2abd2897b98ff2ae9597774551c33e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-offline/p-timeout-offline-final/p-timeout-offline__Xx9YHHR/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "install_script": {
+      "command": "Harbor Oracle agent on registry-generated final install-script control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward_value": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-install-script/p-timeout-install-script-final/p-timeout-install-script__rGXAhjo/verifier/grading.json",
+        "sha256": "sha256:6478906ab2514877a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-install-script/p-timeout-install-script-final/p-timeout-install-script__rGXAhjo/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "call_hang": {
+      "command": "Harbor Oracle agent on registry-generated final call-hang control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 35,
+      "passed": 3,
+      "reward_value": 0.08571428571428572,
+      "grading": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-call-hang/p-timeout-call-hang-final/p-timeout-call-hang__NvqccFC/verifier/grading.json",
+        "sha256": "sha256:7da142f63501d2f0eca3bb01f343f8963a2abd2897b98ff2ae9597774551c33e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/p-timeout-authoring/control-final-call-hang/p-timeout-call-hang-final/p-timeout-call-hang__NvqccFC/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane; review, pilot, and publication remain integrator-stage gates.",
+    "The local mutable nl2repobench/openhands-sdk-fork:930e9b1da-bookworm tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, while toolchain.node.lock.toml declares sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f. Restore or verify the official immutable runtime image before a model Agent run.",
+    "Oracle and controls prove one deterministic verifier run each; they are not model capability or cross-version parity evidence."
+  ]
+}

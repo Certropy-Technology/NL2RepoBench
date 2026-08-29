@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-timeout",
+  "source_revision": "245066ef7daa5e74024d5b6a188ae599a1b7bfdf",
+  "package": {
+    "name": "p-timeout",
+    "version": "7.0.1",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=20",
+    "runtime_dependencies": {}
+  },
+  "public_exports": [
+    {
+      "export": "default",
+      "name": "pTimeout",
+      "signature": "pTimeout<ValueType, ReturnType = ValueType>(input: PromiseLike<ValueType>, options: Options<ReturnType>): ClearablePromise<ValueType | ReturnType>"
+    },
+    {
+      "export": "named",
+      "name": "TimeoutError",
+      "signature": "new TimeoutError(message?: string, options?: ErrorOptions): TimeoutError"
+    }
+  ],
+  "public_types": ["ClearablePromise<T>", "Options<ReturnType>"],
+  "option_fields": ["milliseconds", "fallback", "message", "customTimers", "signal"],
+  "source_metrics": {
+    "tracked_files": 7,
+    "runtime_loc": 95,
+    "declaration_loc": 149,
+    "upstream_test_loc": 241,
+    "upstream_ava_tests": 20
+  },
+  "inventory_notes": [
+    "The repository scanner currently supports Python only, so Node exports and tests were inventoried statically from package.json, index.js, index.d.ts, index.test-d.ts, and test.js without importing candidate code.",
+    "Callbacks, cancelable promises, custom timer handles, Error objects, and AbortSignal are constructed in an unprivileged task-specific child adapter; none cross the JSON boundary.",
+    "README examples, lint rules, development dependencies, and unexported helper functions are not package runtime API."
+  ]
+}
