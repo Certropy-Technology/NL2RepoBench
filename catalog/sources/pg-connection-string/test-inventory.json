@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "upstream_framework": "mocha with TypeScript tests and nyc",
+  "upstream_collection": 79,
+  "task_framework": "node:test",
+  "frozen_total": 36,
+  "collection_error": null,
+  "coverage": [
+    "root export and parse alias",
+    "TCP, relative, and socket URL parsing",
+    "URL decoding and query precedence",
+    "SSL and libpq compatibility modes",
+    "toClientConfig and parseIntoClientConfig",
+    "invalid URL, invalid port, and conflicting compatibility options"
+  ]
+}

@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pg-connection-string"
+version = "2.0.0"
+description = "Build the pg-connection-string CommonJS parser with deterministic JSON-adapted parsing, SSL-mode, and client-config behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "postgresql",
+    "url",
+    "ssl",
+    "parser",
+]
+
+[metadata]
+difficulty = "medium"
+category = "connection-string-parsing"
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "postgresql",
+    "url",
+    "ssl",
+    "parser",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 36
+canonical_manifest_digest = "sha256:c9d5ed6e6c5c03f2c9a1fb27f6493e87855cc3e4ae669fa5bf87f80d91c97c6d"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

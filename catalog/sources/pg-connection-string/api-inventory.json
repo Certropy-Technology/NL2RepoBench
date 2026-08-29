@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "package": "pg-connection-string",
+  "package_version": "2.14.0",
+  "module_system": "commonjs",
+  "exports": [
+    {
+      "name": "default/root",
+      "signature": "parse(connectionString: string, options?: { useLibpqCompat?: boolean }): ConnectionOptions",
+      "behavior": "Parse TCP, relative, and Unix socket connection strings without making a connection."
+    },
+    {
+      "name": "parse",
+      "signature": "parse(connectionString: string, options?: { useLibpqCompat?: boolean }): ConnectionOptions",
+      "behavior": "Alias of the root export."
+    },
+    {
+      "name": "toClientConfig",
+      "signature": "toClientConfig(config: ConnectionOptions): ClientConfig",
+      "behavior": "Clone serializable options, normalize port, and normalize SSL object entries."
+    },
+    {
+      "name": "parseIntoClientConfig",
+      "signature": "parseIntoClientConfig(connectionString: string): ClientConfig",
+      "behavior": "Parse then normalize to client configuration."
+    }
+  ],
+  "adaptation": {
+    "protocol": "custom-json-v1",
+    "boundary": "Each callable export runs in an unprivileged child process and only JSON-serializable inputs/results cross into the verifier.",
+    "excluded": [
+      "TLS file reads from sslcert, sslkey, and sslrootcert",
+      "function-valued checkServerIdentity inspection",
+      "PostgreSQL network connections"
+    ]
+  }
+}
