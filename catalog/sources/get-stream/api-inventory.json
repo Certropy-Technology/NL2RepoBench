@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-stream",
+  "revision": "cdbd77bebf332f28a2949613fc1534d8a7a04c95",
+  "module": "package root",
+  "exports": [
+    {"name": "default", "kind": "function", "signature": "(stream, options?) -> Promise<string>"},
+    {"name": "getStreamAsBuffer", "kind": "function", "signature": "(stream, options?) -> Promise<Buffer>"},
+    {"name": "getStreamAsArrayBuffer", "kind": "function", "signature": "(stream, options?) -> Promise<ArrayBuffer>"},
+    {"name": "getStreamAsArray", "kind": "function", "signature": "(stream, options?) -> Promise<unknown[]>"},
+    {"name": "MaxBufferError", "kind": "class", "signature": "new MaxBufferError()"}
+  ],
+  "source_modules": ["source/index.js", "source/exports.js", "source/stream.js", "source/contents.js", "source/string.js", "source/buffer.js", "source/array-buffer.js", "source/array.js", "source/utils.js"],
+  "upstream_test_files": ["test/array-buffer.js", "test/array.js", "test/browser.js", "test/buffer.js", "test/contents.js", "test/integration.js", "test/stream.js", "test/string.js", "test/web-stream.js", "test/web-stream-ponyfill.js"],
+  "upstream_test_run": {"command": "npm test", "exit_code": 0, "passed": 189, "runner": "ava + tsd + xo"},
+  "adaptation": "The private Harbor collection uses node:test and a JSON-safe package-root adapter. It preserves upstream output, error, cleanup, stream-kind, byte-offset, maxBuffer, and export semantics without importing candidate code into the trusted verifier process."
+}

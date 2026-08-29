@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-stream",
+  "frozen_collection": 30,
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "groups": {
+    "exports-and-packaging": 1,
+    "text-and-utf8": 7,
+    "buffer-and-arraybuffer": 8,
+    "array-and-object-mode": 4,
+    "streams-and-async-iterables": 5,
+    "errors-and-limits": 5
+  },
+  "upstream_coverage": {
+    "single_and_multiple_chunks": true,
+    "string_buffer_arraybuffer_typedarray_dataview": true,
+    "node_readable_and_web_readable_stream": true,
+    "async_iterable_and_object_mode": true,
+    "stream_errors_buffered_data": true,
+    "max_buffer_units_and_truncation": true,
+    "invalid_first_argument": true,
+    "concurrent_and_already_ended_streams": true
+  }
+}

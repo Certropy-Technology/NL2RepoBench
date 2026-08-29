@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-stream",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "bundle": {
+    "path": ".nl2repo/compiled-production/get-stream/bundle.manifest.json",
+    "sha256": "sha256:20a4bdd230152ae46dba285001511fe47b301ffce4ee82e0498c5027cdca179a",
+    "canonical_manifest_digest": "sha256:26256526edff6d3d8d61d924ffc216c0f1d3e8c50937ca6821159978196da1f1",
+    "mode": "production",
+    "file_count": 96
+  },
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/get-stream",
+    "revision": "cdbd77bebf332f28a2949613fc1534d8a7a04c95",
+    "license_spdx": "MIT",
+    "archive_sha256": "sha256:85c68c24e1216863eb41e79754b10b50dcdbf94137b2f0b7821f802fd7ec2a06"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-production/get-stream -a oracle --job-name get-stream-oracle-final-20260828 -o .nl2repo/runs-final/get-stream-oracle --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs-final/get-stream-oracle/get-stream-oracle-final-20260828/get-stream__Re8ezR3/verifier/grading.json",
+      "sha256": "sha256:709b61502a74394548f8e2fd905e7975d60fc7253506e7de86398bed70a0b8cc",
+      "valid": true,
+      "reward": 1.0,
+      "passed": 30,
+      "collected": 30,
+      "expected_total": 30
+    },
+    "network": {
+      "path": ".nl2repo/runs-final/get-stream-oracle/get-stream-oracle-final-20260828/get-stream__Re8ezR3/verifier/network.json",
+      "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/get-stream-empty -a oracle --job-name get-stream-control-empty-final --jobs-dir .nl2repo/runs-final/get-stream-control-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reason": "candidate-installation-failed",
+      "passed": 0,
+      "collected": 0,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs-final/get-stream-control-empty/get-stream-control-empty-final/get-stream-empty__qFTWXAD/verifier/grading.json",
+      "grading_sha256": "sha256:5c69bd6cf119e1c1f31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98",
+      "network": ".nl2repo/runs-final/get-stream-control-empty/get-stream-control-empty-final/get-stream-empty__qFTWXAD/verifier/network.json",
+      "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/get-stream-stub -a oracle --job-name get-stream-control-stub-final --jobs-dir .nl2repo/runs-final/get-stream-control-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 3,
+      "collected": 30,
+      "reward": 0.1,
+      "grading": ".nl2repo/runs-final/get-stream-control-stub/get-stream-control-stub-final/get-stream-stub__HFNeTbY/verifier/grading.json",
+      "grading_sha256": "sha256:32eeb7c09ccb078e589005d3c3da94c85d3bfebc1bf7a9b027da7bc2a9313d58",
+      "network": ".nl2repo/runs-final/get-stream-control-stub/get-stream-control-stub-final/get-stream-stub__HFNeTbY/verifier/network.json",
+      "network_sha256": "sha256:180c7e9eb9839ec36211d96d21ce49e1a88d893915d412474f1c375d22d5343a"
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/get-stream-forgery -a oracle --job-name get-stream-control-forgery-final --jobs-dir .nl2repo/runs-final/get-stream-control-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "passed": 3,
+      "collected": 30,
+      "reward": 0.1,
+      "grading": ".nl2repo/runs-final/get-stream-control-forgery/get-stream-control-forgery-final/get-stream-forgery__dxHkZhh/verifier/grading.json",
+      "grading_sha256": "sha256:32eeb7c09ccb078e589005d3c3da94c85d3bfebc1bf7a9b027da7bc2a9313d58",
+      "network": ".nl2repo/runs-final/get-stream-control-forgery/get-stream-control-forgery-final/get-stream-forgery__dxHkZhh/verifier/network.json",
+      "network_sha256": "sha256:9884299c4fc6df6954ce7fca0c17dfd59d394bfe6a3ec33dae07658eaeaa3c55"
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/get-stream-offline -a oracle --job-name get-stream-control-offline-final --jobs-dir .nl2repo/runs-final/get-stream-control-offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "passed": 3,
+      "collected": 30,
+      "reward": 0.1,
+      "grading": ".nl2repo/runs-final/get-stream-control-offline/get-stream-control-offline-final/get-stream-offline__4rCJvg3/verifier/grading.json",
+      "grading_sha256": "sha256:32eeb7c09ccb078e589005d3c3da94c85d3bfebc1bf7a9b027da7bc2a9313d58",
+      "network": ".nl2repo/runs-final/get-stream-control-offline/get-stream-control-offline-final/get-stream-offline__4rCJvg3/verifier/network.json",
+      "network_sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"
+    },
+    "supplemental": {
+      "hang": {
+        "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/get-stream-hang -a oracle --job-name get-stream-control-hang-final --jobs-dir .nl2repo/runs-final/get-stream-control-hang --n-concurrent 1 --yes",
+        "exit_code": 0,
+        "valid": true,
+        "passed": 0,
+        "collected": 30,
+        "reward": 0.0,
+        "grading": ".nl2repo/runs-final/get-stream-control-hang/get-stream-control-hang-final/get-stream-hang__ksEL2iY/verifier/grading.json",
+        "grading_sha256": "sha256:69918511c91aaabc439c2ee6dae50ff3914959c501aa1a5cb3ba0d66fb9d1050",
+        "network": ".nl2repo/runs-final/get-stream-control-hang/get-stream-control-hang-final/get-stream-hang__ksEL2iY/verifier/network.json",
+        "network_sha256": "sha256:6492c77b68ff55e3276bf4ba96b0ee588741073760b1ef16370c19dba3648e58"
+      },
+      "install-script": {
+        "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/get-stream-install-script -a oracle --job-name get-stream-control-install-script-final --jobs-dir .nl2repo/runs-final/get-stream-control-install-script --n-concurrent 1 --yes",
+        "exit_code": 0,
+        "valid": true,
+        "passed": 0,
+        "collected": 0,
+        "reward": 0.0,
+        "grading": ".nl2repo/runs-final/get-stream-control-install-script/get-stream-control-install-script-final/get-stream-install-script__UkiVksW/verifier/grading.json",
+        "grading_sha256": "sha256:5c69bd6cf119e1c1f31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98",
+        "network": ".nl2repo/runs-final/get-stream-control-install-script/get-stream-control-install-script-final/get-stream-install-script__UkiVksW/verifier/network.json",
+        "network_sha256": "sha256:8360fae2e587d357138b06cd005fe6b6519be33f92d22bf364abb15c1ad62418"
+      }
+    }
+  },
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "runtime": "Node 24.19.0",
+    "npm": "11.17.0",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "agent_image_digest": "sha256:e69682de56b0124f1904e1f715d8405d8f37b4a574b0188b9cde4df7f9f08d4d",
+    "verifier_image_digest": "sha256:f448a8718b8ca0e64fd02195ce2be544e03d46def3c18ae0cbe50da5fc9d39d4",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "status_boundary": "awaiting-agent-run",
+  "residual_risks": [
+    "No independent model Agent Run was started in this authoring lane by contract.",
+    "Blind review, traceability review approval, pilot results, and publication remain pending.",
+    "The Oracle solution fetches only the pinned GitHub revision and verifies its archive SHA-256; model-agent runs retain no source-host allowlist."
+  ]
+}
