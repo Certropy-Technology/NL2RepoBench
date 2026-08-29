@@ -1,0 +1,97 @@
+schema_version = "1.0"
+task_id = "huggingface-hub"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "model-hub-client"
+tags = ["python", "huggingface", "http-client", "dataclasses", "offline", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/huggingface/huggingface_hub"
+revision = "c6be77fb44d91f474da963e5ad6fce4801811027"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:64d379d7374b8afb92dbade7829d328982633d137941ea0aa088d17582e6294d"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier dependencies are installed during image build from a private hash lock; agent and verifier runs are network-isolated. Only the trusted Oracle receives the exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "click==8.4.2",
+  "filelock==3.32.3",
+  "fsspec==2026.7.0",
+  "httpx==0.28.1",
+  "packaging==26.3",
+  "pyyaml==6.0.3",
+  "tqdm==4.70.0",
+  "typing-extensions==4.16.0",
+  "setuptools==84.0.0",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", size_bytes = 9451, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 40
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:6ee734d4ca196749765e8313d6102bccd6fc2d56f9de6fb822cabc66aa148cde", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6ee734d4ca196749765e8313d6102bccd6fc2d56f9de6fb822cabc66aa148cde", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an offline-compatible huggingface_hub package from an empty workspace and satisfy a deterministic client-library contract for URL construction, headers, validation, data models, commit operations, local filtering, and filesystem helpers."
+keywords = ["python", "huggingface", "http-client", "dataclasses", "offline"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 360.0
+candidate_install_timeout_sec = 60.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+ digest = "sha256:1146b95791a395c4cdbd3af53f71837bb6b6289337ad527d34039038fae935ab"
+ size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+ uri = "artifact://private/sha256:1146b95791a395c4cdbd3af53f71837bb6b6289337ad527d34039038fae935ab"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Production compile passed; Harbor 0.21.0 Oracle is valid at 40/40 reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed. Awaiting the independent Agent Run; no model Agent Run was started from this lane."

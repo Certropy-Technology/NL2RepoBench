@@ -1,0 +1,182 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/huggingface/huggingface_hub",
+    "revision": "c6be77fb44d91f474da963e5ad6fce4801811027",
+    "archive_sha256": "sha256:64d379d7374b8afb92dbade7829d328982633d137941ea0aa088d17582e6294d",
+    "license_spdx": "Apache-2.0",
+    "license_file_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "harbor_version": "0.21.0",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_runtime_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "agent_runtime_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83",
+    "lock_size_bytes": 9451,
+    "lock_sha256": "sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83",
+    "packages": [
+      "click==8.4.2",
+      "filelock==3.32.3",
+      "fsspec==2026.7.0",
+      "httpx==0.28.1",
+      "packaging==26.3",
+      "pyyaml==6.0.3",
+      "tqdm==4.70.0",
+      "typing-extensions==4.16.0",
+      "setuptools==84.0.0",
+      "wheel==0.45.1"
+    ]
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 40,
+    "collection": 40,
+    "verifier_bundle": "sha256:6ee734d4ca196749765e8313d6102bccd6fc2d56f9de6fb822cabc66aa148cde"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-gate/huggingface-hub-final-top-level/huggingface-hub/bundle.manifest.json",
+    "sha256": "sha256:23c56d550dcd4ade520cb1b4f06acd01986ab027ba22ba78eeb2bc5369928a24",
+    "canonical_digest": "sha256:5ea8fe6395fb9c433ef28d965252ec464960f6e24727c4c2830f9d303ab332b1",
+    "file_count": 58
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/huggingface-hub",
+      "exit_code": 0
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "task_findings": []
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/huggingface-hub --output .nl2repo/authoring-gate/huggingface-hub-top-level --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": ".nl2repo/authoring-gate/huggingface-hub-final-top-level/huggingface-hub/bundle.manifest.json"
+    },
+    "syntax": {
+      "commands": [
+        "python3 -m py_compile .nl2repo private verifier probe",
+        "bash -n catalog/sources/huggingface-hub/harbor/controls/*.sh",
+        "git diff --check"
+      ],
+      "exit_code": 0
+    },
+    "focused_tests": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_harbor_compiler.py tests/test_harbor_bundle_io.py tests/test_candidate_boundary.py tests/test_verifier.py",
+      "exit_code": 0,
+      "passed": 74
+    }
+  },
+  "oracle": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/huggingface-hub-final-top-level/huggingface-hub -a oracle --allow-agent-host github.com --job-name huggingface-hub-top-level-oracle-20260829 -o .nl2repo/authoring-work/huggingface-hub/runs/oracle-top-level --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 40,
+    "passed": 40,
+    "reward": 1.0,
+    "result": {
+      "path": ".nl2repo/authoring-work/huggingface-hub/runs/oracle-top-level/huggingface-hub-top-level-oracle-20260829/huggingface-hub__iEefJUQ/result.json",
+      "sha256": "sha256:76518b4a356d60265d6a618b10a89840d32bf9ec5f98caa82d119df01e7df5fe"
+    },
+    "grading": {
+      "path": ".nl2repo/authoring-work/huggingface-hub/runs/oracle-top-level/huggingface-hub-top-level-oracle-20260829/huggingface-hub__iEefJUQ/verifier/grading.json",
+      "sha256": "sha256:b2b153b755d35d5cf2fa6b95e1949a0a1878f2772bafe2f213d7bb1b11a5be70"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/huggingface-hub/runs/oracle-top-level/huggingface-hub-top-level-oracle-20260829/huggingface-hub__iEefJUQ/verifier/network.json",
+      "sha256": "sha256:5a11402ab736c09005e19aac9808128d80310f0bcd5368624f4537a44ed98d47",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/huggingface-hub-final-top-level/huggingface-hub -a nop --job-name huggingface-hub-empty-top-level-20260829 -o .nl2repo/authoring-work/huggingface-hub/runs/empty-top-level --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/empty-top-level/huggingface-hub-empty-top-level-20260829/huggingface-hub__WJiXEnM/verifier/grading.json",
+        "sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/empty-top-level/huggingface-hub-empty-top-level-20260829/huggingface-hub__WJiXEnM/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-top-level/huggingface-hub-stub/huggingface-hub-stub -a oracle --job-name huggingface-hub-stub-top-level-20260829 -o .nl2repo/authoring-work/huggingface-hub/runs/stub-top-level --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 40,
+      "passed": 1,
+      "reward": 0.025,
+      "grading": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/stub-top-level/huggingface-hub-stub-top-level-20260829/huggingface-hub-stub__3Y7XZJD/verifier/grading.json",
+        "sha256": "sha256:a0d2c70457f1de31be1dd8ef43c59f33b2ba7ac607cfe20f75d1ea280ee2230c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/stub-top-level/huggingface-hub-stub-top-level-20260829/huggingface-hub-stub__3Y7XZJD/verifier/network.json",
+        "sha256": "sha256:4b9b7ac9a67ca68e1e20ef22dddf837e30a7afad62a4aa7baf8486046ef88b71",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-top-level/huggingface-hub-forgery/huggingface-hub-forgery -a oracle --job-name huggingface-hub-forgery-top-level-20260829 -o .nl2repo/authoring-work/huggingface-hub/runs/forgery-top-level --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 40,
+      "passed": 1,
+      "reward": 0.025,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/forgery-top-level/huggingface-hub-forgery-top-level-20260829/huggingface-hub-forgery__2z6dGCN/verifier/grading.json",
+        "sha256": "sha256:a0d2c70457f1de31be1dd8ef43c59f33b2ba7ac607cfe20f75d1ea280ee2230c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/forgery-top-level/huggingface-hub-forgery-top-level-20260829/huggingface-hub-forgery__2z6dGCN/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3/huggingface-hub-call-hang -a oracle --job-name huggingface-hub-call-hang-top-level-20260829 -o .nl2repo/authoring-work/huggingface-hub/runs/call-hang-top-level --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "collected": 40,
+      "passed": 3,
+      "reward": 0.075,
+      "network": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/call-hang-top-level/huggingface-hub-call-hang-top-level-20260829/huggingface-hub-call-hang__rEerxWe/verifier/network.json",
+        "sha256": "sha256:87d07d4be1c1013b5e183dba5f19a19d2725da9d7b55e0587e02ea8139e1e149",
+        "public_network_available": false
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/huggingface-hub/runs/call-hang-top-level/huggingface-hub-call-hang-top-level-20260829/huggingface-hub-call-hang__rEerxWe/verifier/grading.json",
+        "sha256": "sha256:5fdaaed87e82bd788b27d785f85352894e8f6e8c6924393b095fc1acf470d6eb"
+      }
+    }
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this authoring lane by policy.",
+    "The local python:3.12.14-slim-bookworm tag resolves to sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579, while the source contract pins sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e; the integrator must verify or restore the pinned base image before the model run.",
+    "The toolchain lock expects agent runtime image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5; the local tag resolves to sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123 and must be reconciled by the integrator before a model run.",
+    "Review, pilot, publication, and final generated catalog integration remain integrator-stage gates."
+  ]
+}
