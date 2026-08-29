@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "@discoveryjs/json-ext"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "streaming-json"
+tags = ["node", "npm", "esm", "json", "jsonl", "streaming", "web-streams"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/discoveryjs/json-ext"
+revision = "457d4d9d4e55bb1e14fde192715114b80e20c4c9"
+license_spdx = "MIT"
+source_digest = "sha256:dbc66fd6d20e59d441667a70b99d11d1f96a50d24ee2b43479db882070531894"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+system_packages = ["git=1:2.39.5-0+deb12u3", "ca-certificates=20250419~deb12u1"]
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate distribution has no runtime dependencies. Candidate installation uses an integrity-checked private npm v3 lock/cache artifact with an empty cache closure. The model Agent and separate verifier run without egress; only the trusted Oracle receives a run-scoped exact github.com source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:6acea79a33b13906b4804a2f4f701b3b3e969cafea1bcb247e0fe1b31e74fa75", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:6acea79a33b13906b4804a2f4f701b3b3e969cafea1bcb247e0fe1b31e74fa75", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 50
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:8403e76eb9a4efd4aedd2fce07b329935067b615738ec6c93f0a1a494a9b2e6e", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:8403e76eb9a4efd4aedd2fce07b329935067b615738ec6c93f0a1a494a9b2e6e", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the zero-dependency @discoveryjs/json-ext streaming JSON and JSONL ESM package from an empty workspace."
+keywords = ["node", "npm", "esm", "json", "jsonl", "streaming", "web-streams"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "The timeout-aware production runtime passed official Harbor Oracle 50/50 with reward 1.0. Empty scored 0 by the allowed installation-failure exception; installable stub and forgery collected 50 and scored 2/50; bounded call-hang collected 50 and scored 1/50; a clean Docker --network none verifier replay passed 50/50 with public_network_available=false. Review, model pilot, and publication remain out of scope."
+
+[oracle_bundle]
+digest = "sha256:a81c1f5209e45cc9272fb26701c6aeb660acbaa055a9aba8299cdbee0049615c"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:a81c1f5209e45cc9272fb26701c6aeb660acbaa055a9aba8299cdbee0049615c"
+visibility = "private"

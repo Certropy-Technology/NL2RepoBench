@@ -1,0 +1,336 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+
+if (process.env.JSON_EXT_ADAPTER_MODE !== "1") process.exit(0);
+
+const PACKAGE = "@discoveryjs/json-ext";
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const MAX_DEPTH = 16;
+const MAX_ITEMS = 256;
+const MAX_TEXT_BYTES = 32 * 1024;
+const EXPECTED_EXPORTS = [
+  "createStringifyWebStream",
+  "parseChunked",
+  "parseFromWebStream",
+  "stringifyChunked",
+  "stringifyInfo",
+];
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stdout.write(JSON.stringify({ ok: false, error: "response-too-large" }) + "\n");
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function plainObject(value, name) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new TypeError(`${name} must be an object`);
+  }
+  return value;
+}
+
+function exactKeys(value, keys, name) {
+  for (const key of Object.keys(value)) {
+    if (!keys.includes(key)) throw new TypeError(`${name}.${key} is not supported`);
+  }
+}
+
+function jsonValue(value, name = "value", depth = 0) {
+  if (depth > MAX_DEPTH) throw new RangeError(`${name} is too deeply nested`);
+  if (value === null || typeof value === "string" || typeof value === "boolean") return value;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (Array.isArray(value)) {
+    if (value.length > MAX_ITEMS) throw new RangeError(`${name} has too many items`);
+    return value.map((item, index) => jsonValue(item, `${name}[${index}]`, depth + 1));
+  }
+  if (typeof value === "object") {
+    const entries = Object.entries(value);
+    if (entries.length > MAX_ITEMS) throw new RangeError(`${name} has too many keys`);
+    const result = {};
+    for (const [key, item] of entries) {
+      if (key.length > 128) throw new RangeError(`${name} has an oversized key`);
+      result[key] = jsonValue(item, `${name}.${key}`, depth + 1);
+    }
+    return result;
+  }
+  throw new TypeError(`${name} must be JSON-compatible`);
+}
+
+function boundedText(value, name) {
+  if (typeof value !== "string") throw new TypeError(`${name} must be a string`);
+  if (Buffer.byteLength(value) > MAX_TEXT_BYTES) throw new RangeError(`${name} is too large`);
+  return value;
+}
+
+function chunks(value) {
+  if (!Array.isArray(value) || value.length > MAX_ITEMS) {
+    throw new TypeError("chunks must be a bounded array");
+  }
+  return value.map((item, index) => {
+    if (typeof item === "string") return boundedText(item, `chunks[${index}]`);
+    const record = plainObject(item, `chunks[${index}]`);
+    exactKeys(record, ["bytes"], `chunks[${index}]`);
+    if (!Array.isArray(record.bytes) || record.bytes.length > MAX_TEXT_BYTES) {
+      throw new TypeError(`chunks[${index}].bytes must be a bounded byte array`);
+    }
+    if (!record.bytes.every((byte) => Number.isSafeInteger(byte) && byte >= 0 && byte <= 255)) {
+      throw new TypeError(`chunks[${index}].bytes must contain octets`);
+    }
+    return Uint8Array.from(record.bytes);
+  });
+}
+
+function parseOptions(value = {}) {
+  const input = plainObject(value, "options");
+  exactKeys(input, ["mode", "captureRoots", "captureChunks"], "options");
+  if (input.mode !== undefined && !["json", "jsonl", "auto"].includes(input.mode)) {
+    return { ...input };
+  }
+  for (const key of ["captureRoots", "captureChunks"]) {
+    if (input[key] !== undefined && typeof input[key] !== "boolean") {
+      throw new TypeError(`options.${key} must be a boolean`);
+    }
+  }
+  return input;
+}
+
+function stringifyOptions(value = {}) {
+  const input = plainObject(value, "options");
+  exactKeys(input, ["replacer", "space", "mode", "highWaterMark", "continueOnCircular"], "options");
+  if (input.replacer !== undefined && input.replacer !== null) {
+    if (!Array.isArray(input.replacer) || input.replacer.length > 64 ||
+        !input.replacer.every((item) => typeof item === "string" || Number.isFinite(item))) {
+      throw new TypeError("options.replacer must be a bounded string/number array or null");
+    }
+  }
+  if (input.space !== undefined && input.space !== null &&
+      typeof input.space !== "string" && !Number.isFinite(input.space)) {
+    throw new TypeError("options.space must be a string, finite number, or null");
+  }
+  if (input.mode !== undefined && typeof input.mode !== "string") {
+    throw new TypeError("options.mode must be a string");
+  }
+  if (input.highWaterMark !== undefined &&
+      (!Number.isSafeInteger(input.highWaterMark) || input.highWaterMark < 1 || input.highWaterMark > 65536)) {
+    throw new RangeError("options.highWaterMark must be an integer from 1 to 65536");
+  }
+  if (input.continueOnCircular !== undefined && typeof input.continueOnCircular !== "boolean") {
+    throw new TypeError("options.continueOnCircular must be a boolean");
+  }
+  return input;
+}
+
+function stateRecord(state) {
+  return {
+    mode: state.mode,
+    returnValue: state.returnValue === undefined ? null : state.returnValue,
+    currentRootValue: state.currentRootValue === undefined ? null : state.currentRootValue,
+    rootValuesCount: state.rootValuesCount,
+    consumed: state.consumed,
+    parsed: state.parsed,
+  };
+}
+
+async function loadCandidate() {
+  const root = join(process.cwd(), "node_modules", PACKAGE);
+  const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+  const rootExport = manifest.exports?.["."];
+  const entry = typeof rootExport === "string"
+    ? rootExport
+    : rootExport?.import ?? manifest.module ?? manifest.main;
+  if (manifest.name !== PACKAGE || manifest.version !== "1.1.0" || manifest.type !== "module") {
+    throw new Error("package identity is invalid");
+  }
+  if (typeof entry !== "string" || !entry.startsWith("./") || entry.includes("..") || entry.includes("\\")) {
+    throw new Error("package has no safe ESM root entry");
+  }
+  const api = await import(pathToFileURL(join(root, entry)).href);
+  return { api, manifest, root, entry };
+}
+
+function parseEmitter(input, kind) {
+  if (kind === "array") return input;
+  if (kind === "sync-generator") return (function* () { yield* input; })();
+  if (kind === "async-generator") return (async function* () { for (const item of input) yield item; })();
+  if (kind === "factory") return () => input;
+  throw new TypeError("emitter must be array, sync-generator, async-generator, or factory");
+}
+
+function specialValue(kind) {
+  switch (kind) {
+    case "undefined": return undefined;
+    case "non-finite": return { nan: NaN, positive: Infinity, negative: -Infinity };
+    case "circular-one": {
+      const value = { name: "root" };
+      value.self = value;
+      return value;
+    }
+    case "circular-two": {
+      const first = { name: "first" };
+      const second = { name: "second" };
+      first.self = first;
+      second.self = second;
+      return [first, second];
+    }
+    default: throw new TypeError("special value is not allowlisted");
+  }
+}
+
+async function collectStream(stream) {
+  const reader = stream.getReader();
+  const output = [];
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) return output;
+    output.push(value);
+  }
+}
+
+async function main() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+  let request;
+  try {
+    request = JSON.parse(data.toString("utf8"));
+  } catch {
+    emit({ ok: false, error: "malformed-json" }, 64);
+  }
+  plainObject(request, "request");
+  if (typeof request.operation !== "string") throw new TypeError("operation must be a string");
+  const { api, manifest, root, entry } = await loadCandidate();
+
+  if (request.operation === "metadata") {
+    exactKeys(request, ["operation"], "request");
+    const declaration = manifest.exports?.["."]?.types;
+    if (typeof declaration !== "string" || !declaration.startsWith("./") || declaration.includes("..")) {
+      throw new Error("package has no safe declaration entry");
+    }
+    readFileSync(join(root, declaration));
+    emit({ ok: true, result: {
+      name: manifest.name,
+      version: manifest.version,
+      type: manifest.type,
+      importEntry: entry,
+      declarationEntry: declaration,
+      scripts: manifest.scripts ?? null,
+      dependencies: Object.keys(manifest.dependencies ?? {}).sort(),
+      devDependencies: Object.keys(manifest.devDependencies ?? {}).sort(),
+      exportNames: Object.keys(api).sort(),
+    } });
+  }
+
+  if (!EXPECTED_EXPORTS.every((name) => typeof api[name] === "function") ||
+      Object.keys(api).sort().join("\0") !== EXPECTED_EXPORTS.join("\0")) {
+    throw new Error("package root export shape is invalid");
+  }
+
+  switch (request.operation) {
+    case "parse": {
+      exactKeys(request, ["operation", "chunks", "emitter", "options"], "request");
+      const input = chunks(request.chunks);
+      const options = parseOptions(request.options ?? {});
+      const roots = [];
+      const progress = [];
+      const candidateOptions = {};
+      if (options.mode !== undefined) candidateOptions.mode = options.mode;
+      if (options.captureRoots) {
+        candidateOptions.onRootValue = (value, state) => roots.push({ value, state: stateRecord(state) });
+      }
+      if (options.captureChunks) {
+        candidateOptions.onChunk = (chunkParsed, chunk, pending, state) => progress.push({
+          chunkParsed,
+          chunk,
+          pending,
+          state: stateRecord(state),
+        });
+      }
+      const value = await api.parseChunked(parseEmitter(input, request.emitter ?? "array"), candidateOptions);
+      emit({ ok: true, result: {
+        hasValue: value !== undefined,
+        value: value === undefined ? null : value,
+        roots,
+        progress,
+      } });
+      break;
+    }
+    case "stringify": {
+      exactKeys(request, ["operation", "value", "options", "special"], "request");
+      const value = request.special === undefined
+        ? jsonValue(request.value)
+        : specialValue(request.special);
+      const options = stringifyOptions(request.options ?? {});
+      delete options.continueOnCircular;
+      const output = [...api.stringifyChunked(value, options)];
+      emit({ ok: true, result: { chunks: output, text: output.join("") } });
+      break;
+    }
+    case "info": {
+      exactKeys(request, ["operation", "value", "options", "special"], "request");
+      const value = request.special === undefined
+        ? jsonValue(request.value)
+        : specialValue(request.special);
+      const options = stringifyOptions(request.options ?? {});
+      delete options.highWaterMark;
+      const result = api.stringifyInfo(value, options);
+      emit({ ok: true, result: {
+        bytes: result.bytes,
+        spaceBytes: result.spaceBytes,
+        circularCount: Array.isArray(result.circular) ? result.circular.length : -1,
+      } });
+      break;
+    }
+    case "parseWeb": {
+      exactKeys(request, ["operation", "chunks", "nonIterable"], "request");
+      const input = chunks(request.chunks);
+      const stream = new ReadableStream({
+        start(controller) {
+          for (const item of input) controller.enqueue(item);
+          controller.close();
+        },
+      });
+      if (request.nonIterable === true) Object.defineProperty(stream, Symbol.asyncIterator, { value: null });
+      const result = await api.parseFromWebStream(stream);
+      emit({ ok: true, result });
+      break;
+    }
+    case "stringifyWeb": {
+      exactKeys(request, ["operation", "value", "options", "cancelAfterFirst"], "request");
+      const value = jsonValue(request.value);
+      const options = stringifyOptions(request.options ?? {});
+      delete options.continueOnCircular;
+      const stream = api.createStringifyWebStream(value, options);
+      if (request.cancelAfterFirst === true) {
+        const reader = stream.getReader();
+        const first = await reader.read();
+        await reader.cancel();
+        const afterCancel = await reader.read();
+        emit({ ok: true, result: {
+          first: { value: first.value ?? null, done: first.done },
+          afterCancel: { value: afterCancel.value ?? null, done: afterCancel.done },
+        } });
+      }
+      const output = await collectStream(stream);
+      emit({ ok: true, result: { chunks: output, text: output.join("") } });
+      break;
+    }
+    default:
+      throw new TypeError("operation is not allowlisted");
+  }
+}
+
+try {
+  await main();
+} catch (error) {
+  emit({
+    ok: false,
+    error: "candidate-call-failed",
+    exceptionType: error?.constructor?.name ?? "Error",
+    message: String(error?.message ?? error).slice(0, 1024),
+  }, 1);
+}

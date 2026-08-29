@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "task_id": "@discoveryjs/json-ext",
+  "terminal_kind": "valid",
+  "bundle": {
+    "path": "catalog/tasks/@discoveryjs/json-ext/bundle.manifest.json",
+    "sha256": "sha256:bbaa920d80764465f0afa0c2db6c3315519fcd761ec0f43a8504961dd90f8414"
+  },
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "sha256": "sha256:11d8641581a52ad702ea1d8f507a2c4d961b1da34f0b22e13c9c4afd1cdf0716",
+    "content_digest": "sha256:f5a525105f5b5d79c340af16fd027f150637511deab12d5cd03cd6ecf57b4810"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/@discoveryjs/json-ext -a oracle --job-name discoveryjs-json-ext-final-oracle-20260827 -o .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/oracle/jobs --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "expected_total": 50,
+    "collected": 50,
+    "passed": 50,
+    "reward_value": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/oracle/jobs/discoveryjs-json-ext-final-oracle-20260827/json-ext__3PziEZD/verifier/grading.json",
+      "sha256": "sha256:2a850bd8f8a654edf4aaa2358b47642d748bc61e423e866a675b48d3bdea947a"
+    },
+    "reward": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/oracle/jobs/discoveryjs-json-ext-final-oracle-20260827/json-ext__3PziEZD/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/oracle/jobs/discoveryjs-json-ext-final-oracle-20260827/json-ext__3PziEZD/verifier/network.json",
+      "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+    },
+    "result": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/oracle/jobs/discoveryjs-json-ext-final-oracle-20260827/json-ext__3PziEZD/result.json",
+      "sha256": "sha256:0f18098a19f50c7d2cbd28dbc11c4162eef40340179ef3f37314c216e64024b9"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/final-controls/json-ext-empty -a oracle --job-name discoveryjs-json-ext-final-empty-20260827 -o .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/empty/jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "expected_total": 50,
+      "collected": 0,
+      "passed": 0,
+      "reward_value": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/empty/jobs/discoveryjs-json-ext-final-empty-20260827/json-ext-empty__2oJHjCz/verifier/grading.json",
+        "sha256": "sha256:288056be97ba710749729c38d5dc4bf8c89b85e34177d0be51da10c7c9e82c20"
+      },
+      "reward": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/empty/jobs/discoveryjs-json-ext-final-empty-20260827/json-ext-empty__2oJHjCz/verifier/reward.json",
+        "sha256": "sha256:c7b0dd2d0a0f7fc45179c7cf935c71522fa32272b46d863c09f1d3598de5ec56"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/empty/jobs/discoveryjs-json-ext-final-empty-20260827/json-ext-empty__2oJHjCz/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "result": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/empty/jobs/discoveryjs-json-ext-final-empty-20260827/json-ext-empty__2oJHjCz/result.json",
+        "sha256": "sha256:99b23062cde87af3d42ca6fb9d5e24278f4ee06e1354bad6397f32f735411d6b"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/final-controls/json-ext-stub -a oracle --job-name discoveryjs-json-ext-final-stub-20260827 -o .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/stub/jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 2,
+      "reward_value": 0.04,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/stub/jobs/discoveryjs-json-ext-final-stub-20260827/json-ext-stub__Nqyzcwg/verifier/grading.json",
+        "sha256": "sha256:fd0250942f091750dd9c66e685f4734d56d8d8b4e8897a35ce2086c9b0b3625c"
+      },
+      "reward": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/stub/jobs/discoveryjs-json-ext-final-stub-20260827/json-ext-stub__Nqyzcwg/verifier/reward.json",
+        "sha256": "sha256:d36d40555e43d0a93f658b69a94bc1afd0b26dacda7f19c16217b5aa7e1e5761"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/stub/jobs/discoveryjs-json-ext-final-stub-20260827/json-ext-stub__Nqyzcwg/verifier/network.json",
+        "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+      },
+      "result": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/stub/jobs/discoveryjs-json-ext-final-stub-20260827/json-ext-stub__Nqyzcwg/result.json",
+        "sha256": "sha256:f9b200c8236198a425a5d8e01ae8c2107b01a4a8a4e4a456ddea2f4f8f340fbf"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/final-controls/json-ext-forgery -a oracle --job-name discoveryjs-json-ext-final-forgery-20260827 -o .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/forgery/jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 2,
+      "reward_value": 0.04,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/forgery/jobs/discoveryjs-json-ext-final-forgery-20260827/json-ext-forgery__ofVaauW/verifier/grading.json",
+        "sha256": "sha256:fd0250942f091750dd9c66e685f4734d56d8d8b4e8897a35ce2086c9b0b3625c"
+      },
+      "reward": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/forgery/jobs/discoveryjs-json-ext-final-forgery-20260827/json-ext-forgery__ofVaauW/verifier/reward.json",
+        "sha256": "sha256:d36d40555e43d0a93f658b69a94bc1afd0b26dacda7f19c16217b5aa7e1e5761"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/forgery/jobs/discoveryjs-json-ext-final-forgery-20260827/json-ext-forgery__ofVaauW/verifier/network.json",
+        "sha256": "sha256:ad969770ed502f5038753907b4b4558893341ccca30fffcdcff2fb2679079485"
+      },
+      "result": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/forgery/jobs/discoveryjs-json-ext-final-forgery-20260827/json-ext-forgery__ofVaauW/result.json",
+        "sha256": "sha256:e6903ec3e9853f2b5f92f6d612db7f5002df7dc0e7b307ac5372fc1156741feb"
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/final-controls/json-ext-call-hang -a oracle --job-name discoveryjs-json-ext-final-call-hang-20260827 -o .nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/call-hang/jobs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 2,
+      "reward_value": 0.04,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/call-hang/jobs/discoveryjs-json-ext-final-call-hang-20260827/json-ext-call-hang__XPeVR4H/verifier/grading.json",
+        "sha256": "sha256:fd0250942f091750dd9c66e685f4734d56d8d8b4e8897a35ce2086c9b0b3625c"
+      },
+      "reward": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/call-hang/jobs/discoveryjs-json-ext-final-call-hang-20260827/json-ext-call-hang__XPeVR4H/verifier/reward.json",
+        "sha256": "sha256:d36d40555e43d0a93f658b69a94bc1afd0b26dacda7f19c16217b5aa7e1e5761"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/call-hang/jobs/discoveryjs-json-ext-final-call-hang-20260827/json-ext-call-hang__XPeVR4H/verifier/network.json",
+        "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"
+      },
+      "result": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/final-certification/call-hang/jobs/discoveryjs-json-ext-final-call-hang-20260827/json-ext-call-hang__XPeVR4H/result.json",
+        "sha256": "sha256:866336fa5b3766f701cfc53508c96e8f31ed21bac13eacdd9277263d95907c8c"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --platform linux/amd64 --network none -v <oracle-workspace>:/workspace:ro -v <offline-verifier-output>:/logs/verifier nl2repobench/json-ext-verifier:authoring /tests/test.sh",
+      "exit_code": 0,
+      "completed": true,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 50,
+      "reward_value": 1.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/offline-final/verifier/grading.json",
+        "sha256": "sha256:2a850bd8f8a654edf4aaa2358b47642d748bc61e423e866a675b48d3bdea947a"
+      },
+      "reward": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/offline-final/verifier/reward.json",
+        "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/discoveryjs-json-ext/runs/offline-final/verifier/network.json",
+        "sha256": "sha256:eae2c2df827e519e8e556edac6659aaf980e49b4b3a732d77815d12e77478957"
+      }
+    }
+  }
+}
