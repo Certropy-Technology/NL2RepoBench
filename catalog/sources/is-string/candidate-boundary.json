@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "status": "production-json-boundary",
+  "purpose": "Verifier-owned bounded child protocol for the is-string CommonJS root.",
+  "transport": {"mode": "jsonl", "encoding": "utf-8", "request": "one JSON object on stdin", "response": "one JSON object on stdout", "stderr": "diagnostics only"},
+  "request": {"operations": ["call", "inventory"], "call": {"package": "is-string", "export": "default", "args": "one tagged JSON value"}, "bounds": {"request_bytes": 65536, "response_bytes": 262144, "argument_count": 1}},
+  "tagged_values": ["undefined", "nan", "infinity", "bigint", "symbol", "function", "string-object", "number-object", "boolean-object", "regexp", "date", "fake-tag", "throwing-tag-getter", "conversion-methods", "throwing-conversion-methods", "prototype-shaped-object", "cross-realm-string"],
+  "response": {"success": {"ok": true, "value": "boolean or inventory object"}, "failure": {"ok": false, "error_type": "bounded exception class or adapter code", "message": "bounded message"}},
+  "isolation": {"candidate_network": "none", "candidate_source": "empty workspace only", "forbidden_values": ["source code", "file handle", "TTY handle", "unbounded object graph"], "stdout": "JSON responses only"}
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-string",
+  "source_revision": "42a850857133d6525a02a623bf45c9e904a347d2",
+  "contract_to_tests": [
+    {"contract": "primitive string returns true", "tests": ["primitive-empty", "primitive-unicode", "primitive-long"]},
+    {"contract": "genuine boxed String returns true", "tests": ["boxed-empty", "boxed-unicode", "boxed-altered-tag", "boxed-cross-realm"]},
+    {"contract": "tag spoof is false", "tests": ["fake-tag", "throwing-tag-getter", "prototype-shaped-object"]},
+    {"contract": "non-string values are false", "tests": ["undefined", "null", "boolean", "number", "nan", "infinity", "bigint", "symbol", "function", "array", "regexp", "date", "boxed-number", "boxed-boolean", "ordinary-object"]},
+    {"contract": "conversion methods are not invoked", "tests": ["conversion-methods", "throwing-conversion-methods"]},
+    {"contract": "package shape is installable CommonJS", "tests": ["package-inventory"]}
+  ],
+  "excluded_upstream_behavior": [
+    "lint, coverage, audit, and TypeScript compiler workflow",
+    "core-js emulation runner; behavior is covered by native Node objects",
+    "npm publish hooks and changelog generation"
+  ]
+}

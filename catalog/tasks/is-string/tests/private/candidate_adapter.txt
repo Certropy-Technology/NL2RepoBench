@@ -1,0 +1,93 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import vm from 'node:vm';
+
+const request = JSON.parse(readFileSync(0, 'utf8'));
+const site = process.env.NODE_CANDIDATE_SITE;
+if (!site) throw new Error('candidate site is not configured');
+const requireCandidate = createRequire(pathToFileURL(`${site}/package.json`));
+const api = requireCandidate('is-string');
+
+function decode(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return input;
+  switch (input.kind) {
+    case 'null': return null;
+    case 'boolean': return false;
+    case 'number': return 42;
+    case 'string': return input.value;
+    case 'array': return input.value;
+    case 'object': return input.value;
+    case 'undefined': return undefined;
+    case 'nan': return NaN;
+    case 'infinity': return Infinity;
+    case 'bigint': return 10n;
+    case 'symbol': return Symbol('value');
+    case 'function': return function value() {};
+    case 'string-object': return new String(input.value);
+    case 'number-object': return new Number(3);
+    case 'boolean-object': return new Boolean(true);
+    case 'regexp': return /value/;
+    case 'date': return new Date(0);
+    case 'fake-tag': {
+      const value = {};
+      value[Symbol.toStringTag] = 'String';
+      return value;
+    }
+    case 'throwing-tag-getter': {
+      const value = {};
+      Object.defineProperty(value, Symbol.toStringTag, {
+        configurable: true,
+        get() { throw new Error('tag getter must not run'); },
+      });
+      return value;
+    }
+    case 'conversion-methods': {
+      const value = {};
+      let accessed = 0;
+      Object.defineProperties(value, {
+        toString: {get() { accessed += 1; return () => 'string'; }},
+        valueOf: {get() { accessed += 1; return () => 1; }},
+      });
+      return {value, inspect: () => accessed};
+    }
+    case 'throwing-conversion-methods': {
+      const value = {};
+      Object.defineProperties(value, {
+        toString: {get() { throw new Error('toString getter must not run'); }},
+        valueOf: {get() { throw new Error('valueOf getter must not run'); }},
+      });
+      return value;
+    }
+    case 'prototype-shaped-object': return Object.create(String.prototype);
+    case 'cross-realm-string': return vm.runInNewContext('new String("cross")');
+    case 'boxed-altered-tag': {
+      const value = new String('tagged');
+      Object.defineProperty(value, Symbol.toStringTag, {value: 'NotString'});
+      return value;
+    }
+    default: return input;
+  }
+}
+
+if (request.operation === 'inventory') {
+  const packageJson = requireCandidate('is-string/package.json');
+  process.stdout.write(JSON.stringify({
+    ok: true,
+    value: {
+      packageName: packageJson.name,
+      packageVersion: packageJson.version,
+      main: packageJson.main,
+      types: packageJson.types,
+      callable: typeof api === 'function',
+      functionName: api.name,
+    },
+  }) + '\n');
+} else {
+  const decoded = decode(request.value);
+  const result = api(decoded);
+  const value = decoded && decoded.inspect
+    ? {result, accessed: decoded.inspect()}
+    : result;
+  process.stdout.write(JSON.stringify({ok: true, value}) + '\n');
+}

@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "is-string"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "type-predicate"
+tags = ["node", "npm", "commonjs", "strings", "boxed-objects", "symbols"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/inspect-js/is-string"
+revision = "42a850857133d6525a02a623bf45c9e904a347d2"
+license_spdx = "MIT"
+source_digest = "sha256:ef0d9f5631282a1db137c201c231953a212baedbacddaf2636c97d3be0b8a8f5"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The zero-dependency npm v3 bundle is supplied as a private integrity-checked artifact; only the trusted Oracle may receive a run-scoped authorization for the frozen upstream source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:f98daabce76ffbea100de3b3ab99753fc898b7e2535e8d4ca79f8355223d81ac"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:f98daabce76ffbea100de3b3ab99753fc898b7e2535e8d4ca79f8355223d81ac"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 28
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:005ffae244839bfaceab5ce2c04af99127726c472e30db90c1af6243617c7f82"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:005ffae244839bfaceab5ce2c04af99127726c472e30db90c1af6243617c7f82"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:3e7f11c857759f574612823c8d97b899d03f14dd6c765047b934ce531b0776d6"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:3e7f11c857759f574612823c8d97b899d03f14dd6c765047b934ce531b0776d6"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the is-string CommonJS predicate with deterministic primitive and boxed-string behavior."
+keywords = ["node", "npm", "commonjs", "strings", "type-predicate"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen Node/npm source, private zero-dependency closure, separate verifier, Oracle 28/28 reward 1.0, and empty/stub/forgery/offline plus bounded timeout controls passed. Review, model Agent Run, pilot, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:08c573eca17367d905336593acfd7015427ccb5e7f1201b89d581f0a901616cd"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:08c573eca17367d905336593acfd7015427ccb5e7f1201b89d581f0a901616cd"
+visibility = "private"

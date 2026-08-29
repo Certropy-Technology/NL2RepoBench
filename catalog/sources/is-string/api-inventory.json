@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-string",
+  "source_revision": "42a850857133d6525a02a623bf45c9e904a347d2",
+  "package": {
+    "name": "is-string",
+    "version": "1.1.1",
+    "module_system": "commonjs",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">= 0.4"
+  },
+  "public_modules": [
+    {
+      "path": ".",
+      "export": "isString",
+      "signature": "isString(value: unknown): boolean"
+    }
+  ],
+  "source_metrics": {
+    "tracked_files": 20,
+    "runtime_javascript_lines": 31,
+    "declaration_files": 1,
+    "upstream_test_files": 1,
+    "upstream_tape_assertions": 17
+  },
+  "behavioral_risks": [
+    "boxed String objects require an internal-slot check",
+    "Symbol.toStringTag spoofing must not be accepted",
+    "user conversion methods must not be invoked"
+  ],
+  "adaptation": {
+    "runtime_dependencies": [],
+    "reason": "The two upstream helpers are replaced by equivalent built-in prototype checks so the candidate and verifier have a zero-dependency offline closure."
+  }
+}

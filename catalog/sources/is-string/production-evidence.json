@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "harbor-production-gate",
+  "ok": true,
+  "task_id": "is-string",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/inspect-js/is-string",
+    "revision": "42a850857133d6525a02a623bf45c9e904a347d2",
+    "source_digest": "sha256:ef0d9f5631282a1db137c201c231953a212baedbacddaf2636c97d3be0b8a8f5",
+    "license_spdx": "MIT"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/is-string/compiled/is-string",
+    "manifest_sha256": "sha256:96e770954d47bc3dd82a609b8d9f25d005fa8756304688f6147baf6150340e14",
+    "mode": "production"
+  },
+  "oracle": {
+    "command": "docker run --rm --network none -v <workspace>:/workspace:ro -v <logs>:/logs/verifier nl2repobench/is-string-verifier:authoring-20260828 /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {"path": "catalog/sources/is-string/evidence/oracle.grading.json", "sha256": "sha256:83e236908a571b937bba03cd7ea41561a79bbd074bfbdf0a71ef5f8aa47f8732", "valid": true, "expected_total": 28, "collected": 28, "passed": 28, "reward": 1.0},
+    "network": {"path": "catalog/sources/is-string/evidence/oracle.network.json", "sha256": "sha256:e89617c134ec9f86f425045b376c9d620b0266781286ae65ffef6e03b9d1d17a", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none ... /tests/test.sh with empty workspace",
+      "exit_code": 0,
+      "grading": {"path": "catalog/sources/is-string/evidence/empty.grading.json", "sha256": "sha256:9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97", "valid": true, "expected_total": 28, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+      "network": {"path": "catalog/sources/is-string/evidence/empty.network.json", "sha256": "sha256:3ab78bcfb931e34f2446f685fc46cbeec06e4bc65cba94416d5d44e17672c73e", "public_network_available": false}
+    },
+    "stub": {
+      "command": "docker run --rm --network none ... /tests/test.sh with prepared stub workspace",
+      "exit_code": 0,
+      "grading": {"path": "catalog/sources/is-string/evidence/stub.grading.json", "sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f", "valid": true, "expected_total": 28, "collected": 28, "passed": 0, "reward": 0.0},
+      "network": {"path": "catalog/sources/is-string/evidence/stub.network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "docker run --rm --network none ... /tests/test.sh with prepared forgery workspace",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {"path": "catalog/sources/is-string/evidence/forgery.grading.json", "sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f", "valid": true, "expected_total": 28, "collected": 28, "passed": 0, "reward": 0.0},
+      "network": {"path": "catalog/sources/is-string/evidence/forgery.network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+    },
+    "offline": {
+      "command": "docker run --rm --network none ... /tests/test.sh with offline control workspace",
+      "exit_code": 0,
+      "completed": true,
+      "network": {"path": "catalog/sources/is-string/evidence/offline.network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+    }
+  },
+  "extended_controls": {
+    "hang": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/is-string/runs/control-hang/logs/grading.json", "bounded": true, "reward": 0.0},
+    "install-script": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/is-string/runs/control-install-script/logs/grading.json", "reward": 0.0},
+    "loader-hook": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/is-string/runs/control-loader-hook/logs/grading.json", "reward": 0.0}
+  },
+  "commands": [
+    {"command": "git clone --no-tags https://github.com/inspect-js/is-string .nl2repo/authoring-work/node-author-wave2-20260828/is-string/upstream", "exit_code": 0, "tool_version": "git 2.x", "result": "HEAD matched frozen revision"},
+    {"command": "node --version && npm --version", "exit_code": 0, "tool_version": "node v22.23.1; npm 10.9.8"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/is-string", "exit_code": 0, "tool_version": "nl2repo current checkout"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "tool_version": "nl2repo current checkout", "result": "0 errors; 141 unrelated warnings"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/is-string --output .nl2repo/authoring-work/node-author-wave2-20260828/is-string/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "tool_version": "Harbor 0.21.0 toolchain lock"},
+    {"command": "docker build --platform linux/amd64 -f compiled/is-string/tests/Dockerfile -t nl2repobench/is-string-verifier:authoring-20260828 compiled/is-string/tests", "exit_code": 0, "tool_version": "Docker 29.7.2", "image": "sha256:efc3447b0d76f1b9731545e618632974bd936cf39d439529bba2a070fa1fc217"}
+  ],
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane.",
+    "Review, pilot, publication, dataset integration, and frozen-input regeneration remain integrator stages.",
+    "The task is a bounded JSON-adapted predicate contract; it does not claim complete upstream test-runner parity."
+  ],
+  "tasks": [
+    {
+      "task_id": "is-string",
+      "category": "valid",
+      "status": "controls-passed",
+      "expected_total": 28,
+      "evidence": {
+        "oracle": {
+          "command": "docker run --rm --network none -v <workspace>:/workspace:ro -v <logs>:/logs/verifier nl2repobench/is-string-verifier:authoring-20260828 /tests/test.sh",
+          "exit_code": 0,
+          "harbor_version": "0.21.0",
+          "grading": {"path": "is-string/evidence/oracle.grading.json", "sha256": "sha256:83e236908a571b937bba03cd7ea41561a79bbd074bfbdf0a71ef5f8aa47f8732"},
+          "network": {"path": "is-string/evidence/oracle.network.json", "sha256": "sha256:e89617c134ec9f86f425045b376c9d620b0266781286ae65ffef6e03b9d1d17a"}
+        },
+        "controls": {
+          "empty": {"command": "docker run --rm --network none ... /tests/test.sh with empty workspace", "exit_code": 0, "grading": {"path": "is-string/evidence/empty.grading.json", "sha256": "sha256:9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97"}, "network": {"path": "is-string/evidence/empty.network.json", "sha256": "sha256:3ab78bcfb931e34f2446f685fc46cbeec06e4bc65cba94416d5d44e17672c73e"}},
+          "stub": {"command": "docker run --rm --network none ... /tests/test.sh with prepared stub workspace", "exit_code": 0, "grading": {"path": "is-string/evidence/stub.grading.json", "sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f"}, "network": {"path": "is-string/evidence/stub.network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}},
+          "forgery": {"command": "docker run --rm --network none ... /tests/test.sh with prepared forgery workspace", "exit_code": 0, "verifier_owned_reward": true, "grading": {"path": "is-string/evidence/forgery.grading.json", "sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f"}, "network": {"path": "is-string/evidence/forgery.network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}},
+          "offline": {"command": "docker run --rm --network none ... /tests/test.sh with offline control workspace", "exit_code": 0, "completed": true, "network": {"path": "is-string/evidence/offline.network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}}
+        }
+      }
+    }
+  ],
+  "content_sha256": "sha256:8d4caff4c57cebadabffbb2115825fde1268fff2dea970ef36a9d47e98854476"
+}
