@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-to-markdown",
+  "upstream_url": "https://github.com/syntax-tree/mdast-util-to-markdown",
+  "revision": "ee3b3458a466c3224800ac7fa688b4a160a91ea2",
+  "commit_authored_at": "2025-02-10T14:57:45+01:00",
+  "tree": "ce716a71cd2262a1be328af797f17fb5fbea7d67",
+  "source_archive": {
+    "sha256": "de486cc3d34b204e8db55cd7e97074f60a8ede2e9b57bbe8cb8e2991ad1ddc5c",
+    "size_bytes": 296960,
+    "tracked_files": 62,
+    "tracked_bytes": 241504
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "license",
+    "sha256": "dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb",
+    "size_bytes": 1094
+  },
+  "submodules": [],
+  "runtime": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "platform": "linux/amd64",
+    "libc": "glibc"
+  },
+  "upstream_suite": {
+    "framework": "node:test",
+    "build_command": "npm run build",
+    "test_command": "npm run test-api",
+    "coverage_command": "npm run test-coverage",
+    "build_type_coverage": "7615/7615",
+    "runs": [
+      {"tests": 478, "passes": 478, "failures": 0, "exit_code": 0},
+      {"tests": 478, "passes": 478, "failures": 0, "exit_code": 0},
+      {"tests": 478, "passes": 478, "failures": 0, "exit_code": 0}
+    ],
+    "coverage_exit_code": 0
+  },
+  "runtime_dependency_packages": 17,
+  "frozen_private_denominator": 72
+}

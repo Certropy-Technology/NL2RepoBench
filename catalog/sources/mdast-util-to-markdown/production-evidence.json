@@ -1,0 +1,234 @@
+{
+  "authoring_remediation": [
+    {
+      "classification": "task-source",
+      "detail": "The first Oracle fetched and verified the exact source but removed its own current working directory before the Node manifest rewrite; the corrected Oracle changes to / before replacing /workspace and the fresh run passed.",
+      "path": ".nl2repo/runs/mdast-util-to-markdown-oracle/mdast-util-to-markdown-oracle/mdast-util-to-markdown__TjSqbAS/agent/oracle.txt"
+    }
+  ],
+  "bundle": {
+    "path": ".nl2repo/authoring-work/mdast-util-to-markdown/compiled-final/mdast-util-to-markdown/bundle.manifest.json",
+    "sha256": "sha256:9df6e4ec273a9cba78a98931ea77602df883a0debaed34302d92702a161375e0"
+  },
+  "controls": {
+    "call_hang": {
+      "bundle": {
+        "path": ".nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-call-hang/bundle.manifest.json",
+        "sha256": "sha256:f0e51a89a52c7b238c1916ee3a8b8aec4d8d71fc0b89e020932add31ce68f36e"
+      },
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-call-hang -a oracle --job-name mdast-util-to-markdown-final-control-call-hang -o .nl2repo/runs/mdast-util-to-markdown-final-control-call-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "collected": 0,
+        "expected_total": 72,
+        "failed": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-call-failed",
+        "passed": 0,
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-call-hang/mdast-util-to-markdown-final-control-call-hang/mdast-util-to-markdown-call-hang__tmzXNBV/verifier/grading.json",
+        "reward": 0.0,
+        "sha256": "sha256:aaa2c918d17258978c3cf05f246f711e8e8f10e9403f065327e9f4587c9daf1a",
+        "valid": true
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-call-hang/mdast-util-to-markdown-final-control-call-hang/mdast-util-to-markdown-call-hang__tmzXNBV/verifier/network.json",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "sha256": "sha256:dbd768e66c169d2cdbda39555544846987a4a45d8f811f2ff4815d32f98bbd43"
+      }
+    },
+    "empty": {
+      "bundle": {
+        "path": ".nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-empty/bundle.manifest.json",
+        "sha256": "sha256:5a4ea9a0cd364bc7c35047032131fd598c1c957f6e43d7dd650f4b04d618e210"
+      },
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-empty -a oracle --job-name mdast-util-to-markdown-final-control-empty -o .nl2repo/runs/mdast-util-to-markdown-final-control-empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "collected": 0,
+        "expected_total": 72,
+        "failed": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "passed": 0,
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-empty/mdast-util-to-markdown-final-control-empty/mdast-util-to-markdown-empty__UgZCJms/verifier/grading.json",
+        "reward": 0.0,
+        "sha256": "sha256:56d4bb596d2c2f0b5822354513c778330f0b001590a2d7f219f180331d7ec402",
+        "valid": true
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-empty/mdast-util-to-markdown-final-control-empty/mdast-util-to-markdown-empty__UgZCJms/verifier/network.json",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "forgery": {
+      "bundle": {
+        "path": ".nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-forgery/bundle.manifest.json",
+        "sha256": "sha256:2a533a7f94d715e5f4be62dcf32a534f23cdcff5a72e372dcc3be1dce910e3a5"
+      },
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-forgery -a oracle --job-name mdast-util-to-markdown-final-control-forgery -o .nl2repo/runs/mdast-util-to-markdown-final-control-forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "collected": 72,
+        "expected_total": 72,
+        "failed": 66,
+        "failure_class": null,
+        "failure_reason": null,
+        "passed": 6,
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-forgery/mdast-util-to-markdown-final-control-forgery/mdast-util-to-markdown-forgery__SoY78LT/verifier/grading.json",
+        "reward": 0.08333333333333333,
+        "sha256": "sha256:a6c88f0dfbd06cba94719ce336c1080aec151de412596f4a06e869883801deb1",
+        "valid": true
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-forgery/mdast-util-to-markdown-final-control-forgery/mdast-util-to-markdown-forgery__SoY78LT/verifier/network.json",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "sha256": "sha256:180c7e9eb9839ec36211d96d21ce49e1a88d893915d412474f1c375d22d5343a"
+      }
+    },
+    "install_script": {
+      "bundle": {
+        "path": ".nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-install-script/bundle.manifest.json",
+        "sha256": "sha256:076d5c46c478e7a77b440949fc43993ad5576fa072eb32d3f458b47352c8693b"
+      },
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-install-script -a oracle --job-name mdast-util-to-markdown-final-control-install-script -o .nl2repo/runs/mdast-util-to-markdown-final-control-install-script --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "collected": 0,
+        "expected_total": 72,
+        "failed": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "passed": 0,
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-install-script/mdast-util-to-markdown-final-control-install-script/mdast-util-to-markdown-install-s__WRYkDEv/verifier/grading.json",
+        "reward": 0.0,
+        "sha256": "sha256:56d4bb596d2c2f0b5822354513c778330f0b001590a2d7f219f180331d7ec402",
+        "valid": true
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-install-script/mdast-util-to-markdown-final-control-install-script/mdast-util-to-markdown-install-s__WRYkDEv/verifier/network.json",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "sha256": "sha256:471839ee5319d50a930070fa8f5cbe35d833712cb4e9d841c25bdf2342d80347"
+      }
+    },
+    "offline": {
+      "bundle": {
+        "path": ".nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-offline/bundle.manifest.json",
+        "sha256": "sha256:552cf5fbfddcc8b6fe9d24686c2ca851bb1e90c31cc5bf7175a01cbc29a47cd6"
+      },
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-offline -a oracle --job-name mdast-util-to-markdown-final-control-offline -o .nl2repo/runs/mdast-util-to-markdown-final-control-offline --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "collected": 72,
+        "expected_total": 72,
+        "failed": 68,
+        "failure_class": null,
+        "failure_reason": null,
+        "passed": 4,
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-offline/mdast-util-to-markdown-final-control-offline/mdast-util-to-markdown-offline__PhApDmC/verifier/grading.json",
+        "reward": 0.05555555555555555,
+        "sha256": "sha256:deba537e8ecba1df8478b390e5e3f4fd636b76d20bc5f88771e6906bf7de9b5d",
+        "valid": true
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-offline/mdast-util-to-markdown-final-control-offline/mdast-util-to-markdown-offline__PhApDmC/verifier/network.json",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "stub": {
+      "bundle": {
+        "path": ".nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-stub/bundle.manifest.json",
+        "sha256": "sha256:15a4114a61feb0d8d0fa23d1ce33aaf4c96a1addb8f2bd98d4984a14387375ae"
+      },
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/controls-final/mdast-util-to-markdown-stub -a oracle --job-name mdast-util-to-markdown-final-control-stub -o .nl2repo/runs/mdast-util-to-markdown-final-control-stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "collected": 72,
+        "expected_total": 72,
+        "failed": 66,
+        "failure_class": null,
+        "failure_reason": null,
+        "passed": 6,
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-stub/mdast-util-to-markdown-final-control-stub/mdast-util-to-markdown-stub__vQrBT5q/verifier/grading.json",
+        "reward": 0.08333333333333333,
+        "sha256": "sha256:a6c88f0dfbd06cba94719ce336c1080aec151de412596f4a06e869883801deb1",
+        "valid": true
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-to-markdown-final-control-stub/mdast-util-to-markdown-final-control-stub/mdast-util-to-markdown-stub__vQrBT5q/verifier/network.json",
+        "probes": {
+          "1.1.1.1:443": false,
+          "pypi.org:443": false
+        },
+        "public_network_available": false,
+        "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8"
+      }
+    },
+    "summary": {
+      "passed": true,
+      "path": "catalog/sources/mdast-util-to-markdown/evidence/control-summary.json",
+      "sha256": "sha256:2847216acccd0fdc5a963f2d14a8421b4d9201af7756de9da01b6e0e84448c4d"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/compiled-final/mdast-util-to-markdown -a oracle --allow-agent-host github.com --job-name mdast-util-to-markdown-final-oracle -o .nl2repo/runs/mdast-util-to-markdown-final-oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "grading": {
+      "collected": 72,
+      "expected_total": 72,
+      "failed": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "passed": 72,
+      "path": ".nl2repo/runs/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown__VwFPs4e/verifier/grading.json",
+      "reward": 1.0,
+      "sha256": "sha256:3695b6c7521615b4b6312c7072b5e9e48166a349b529a9804c2179899fb5e723",
+      "valid": true
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown__VwFPs4e/verifier/network.json",
+      "probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "public_network_available": false,
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+    }
+  },
+  "production_gate": {
+    "passed": true,
+    "path": "catalog/sources/mdast-util-to-markdown/evidence/production-gate.json",
+    "sha256": "sha256:f2900a32e1786ad7295b509ee75bfa2da01a31a5fc4644c546cfed63d3e90f2e"
+  },
+  "residual_risks": [
+    {
+      "classification": "infrastructure",
+      "detail": "The daemon tag nl2repobench/openhands-sdk-fork:930e9b1da-bookworm currently resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, while toolchain.node.lock.toml requires sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f. Restore or verify the immutable runtime before a model Agent run."
+    }
+  ],
+  "schema_version": "1.0",
+  "task_id": "mdast-util-to-markdown",
+  "terminal_kind": "valid"
+}

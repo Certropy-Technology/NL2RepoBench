@@ -1,0 +1,46 @@
+{
+  "bundle": {
+    "path": ".nl2repo/authoring-work/mdast-util-to-markdown/compiled-final/mdast-util-to-markdown/bundle.manifest.json",
+    "sha256": "sha256:9df6e4ec273a9cba78a98931ea77602df883a0debaed34302d92702a161375e0"
+  },
+  "checks": {
+    "bundle_manifest_present": true,
+    "controls_passed": true,
+    "oracle_denominator": true,
+    "oracle_network_offline": true,
+    "oracle_reward": true,
+    "oracle_valid": true
+  },
+  "control_summary": {
+    "path": "catalog/sources/mdast-util-to-markdown/evidence/control-summary.json",
+    "sha256": "sha256:2847216acccd0fdc5a963f2d14a8421b4d9201af7756de9da01b6e0e84448c4d"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-to-markdown/compiled-final/mdast-util-to-markdown -a oracle --allow-agent-host github.com --job-name mdast-util-to-markdown-final-oracle -o .nl2repo/runs/mdast-util-to-markdown-final-oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "grading": {
+      "collected": 72,
+      "expected_total": 72,
+      "failed": 0,
+      "failure_class": null,
+      "failure_reason": null,
+      "passed": 72,
+      "path": ".nl2repo/runs/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown__VwFPs4e/verifier/grading.json",
+      "reward": 1.0,
+      "sha256": "sha256:3695b6c7521615b4b6312c7072b5e9e48166a349b529a9804c2179899fb5e723",
+      "valid": true
+    },
+    "network": {
+      "path": ".nl2repo/runs/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown-final-oracle/mdast-util-to-markdown__VwFPs4e/verifier/network.json",
+      "probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "public_network_available": false,
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+    }
+  },
+  "passed": true,
+  "schema_version": "1.0",
+  "task_id": "mdast-util-to-markdown"
+}

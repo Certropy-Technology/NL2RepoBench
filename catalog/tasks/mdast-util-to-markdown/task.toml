@@ -1,0 +1,66 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/mdast-util-to-markdown"
+version = "1.0.0"
+description = "Build the deterministic ESM mdast-to-Markdown serializer from an empty workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "markdown",
+    "mdast",
+    "serializer",
+    "syntax-tree",
+]
+
+[metadata]
+difficulty = "hard"
+category = "markdown-serializer"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "markdown",
+    "mdast",
+    "serializer",
+    "syntax-tree",
+    "node-test",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 72
+canonical_manifest_digest = "sha256:810d68feea377182e0b3ddcefaa5ea54539272f0e5f792df79ed045e9e110511"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096

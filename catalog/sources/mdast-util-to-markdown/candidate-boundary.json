@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-to-markdown",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript out of the trusted node:test process while exercising the package root through bounded one-shot JSON child calls.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 131072,
+    "response_limit_bytes": 524288,
+    "candidate_uid": 10001,
+    "timeout_seconds": 2,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Read package metadata, resolve the safe ESM root export, import it in the candidate child, and return only public shape metadata.",
+    "serialize": "Call toMarkdown with one bounded JSON-compatible mdast tree and whitelisted options, returning the string, repeat-call results, and an input-mutation flag.",
+    "extension-adapter": "Construct fixed custom handler, extension-handler, and join callbacks inside the candidate child so callback behavior crosses no serialization boundary."
+  },
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "lifecycle scripts",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

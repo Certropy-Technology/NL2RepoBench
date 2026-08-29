@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "mdast-util-to-markdown"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "markdown-serializer"
+tags = ["node", "npm", "esm", "markdown", "mdast", "serializer", "syntax-tree", "node-test"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/mdast-util-to-markdown"
+revision = "ee3b3458a466c3224800ac7fa688b4a160a91ea2"
+license_spdx = "MIT"
+source_digest = "sha256:de486cc3d34b204e8db55cd7e97074f60a8ede2e9b57bbe8cb8e2991ad1ddc5c"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. Exact npm runtime dependencies are supplied by an integrity-checked private npm v3 cache. Only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen source revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/mdast@4.0.4", "@types/unist@3.0.3", "longest-streak@3.1.0", "mdast-util-phrasing@4.1.0", "mdast-util-to-string@4.0.0", "micromark-util-classify-character@2.0.1", "micromark-util-decode-string@2.0.1", "unist-util-visit@5.1.0", "zwitch@2.0.4"]
+artifact = { digest = "sha256:29a9d2641d88d8bf563b0869eeb3c13a2bc81f1d66a7ba1d27d4cb27c2c58184", size_bytes = 1105920, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:29a9d2641d88d8bf563b0869eeb3c13a2bc81f1d66a7ba1d27d4cb27c2c58184", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 72
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:40670b2d2de24a20505e059dfc05fc46d3b2f1291fe1276d2fa29646b0c167ed", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:40670b2d2de24a20505e059dfc05fc46d3b2f1291fe1276d2fa29646b0c167ed", visibility = "private" }
+test_bundle = { digest = "sha256:a1fe6049d2831352137541f734ae11d5fcb11d6079082df67329fda90c529264", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a1fe6049d2831352137541f734ae11d5fcb11d6079082df67329fda90c529264", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the deterministic ESM mdast-to-Markdown serializer from an empty workspace."
+keywords = ["node", "npm", "esm", "markdown", "mdast", "serializer", "syntax-tree"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-archive-r2-c2"
+reason = "The final 72-leaf separate verifier passed the frozen reference at 72/72 with reward 1.0. Empty, stub, forgery, install-script, bounded call-hang, and offline-network controls completed with verifier-owned low scores and public_network_available=false. Independent review, model pilot, projection, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:7c63571a5382d1000a5f9ff136d7d7e2f441e1520114197e83b921a5248ffde1"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:7c63571a5382d1000a5f9ff136d7d7e2f441e1520114197e83b921a5248ffde1"
+visibility = "private"
