@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "task_id": "meow",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "status": "controls-passed",
+  "blocker": null,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/meow",
+    "revision": "1f3ec6cfd29a2df43ad637023be57001db49c410",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:20135ee5f801dae4630dc1550e118a5bacd415768543e0073b01e60152895f69",
+    "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": []
+  },
+  "environment": {
+    "runtime": "node",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": "private-artifact"
+  },
+  "tests": {
+    "framework": "node:test",
+    "expected_total": 37,
+    "expected_total_source": "frozen-collection"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/compiled-final2/meow",
+    "mode": "production",
+    "bundle_manifest_sha256": "sha256:c8a0d344c930038b6e92f33ff09e16fec8d5f0e2fe8abaae7827d787cb843713"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/meow/compiled-final2/meow -a oracle --job-name meow-final2-oracle --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "expected_total": 37,
+    "collected": 37,
+    "passed": 37,
+    "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/oracle/meow-final2-oracle/meow__5eXMhak/verifier/grading.json",
+    "grading_sha256": "sha256:22957ec06a26da659f2f7e3e85f28b4472dae782c12197548fb6f8ace8ba2c75",
+    "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/oracle/meow-final2-oracle/meow__5eXMhak/verifier/network.json",
+    "network_sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/meow/compiled-final2/meow -a nop --job-name meow-final2-empty --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "expected_total": 37,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/empty/meow-final2-empty/meow__MTrZuAU/verifier/grading.json",
+      "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/empty/meow-final2-empty/meow__MTrZuAU/verifier/network.json",
+      "network_sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+    },
+    "stub": {
+      "valid": true,
+      "reward": 0.05405405405405406,
+      "expected_total": 37,
+      "collected": 37,
+      "passed": 2,
+      "failed": 35,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/stub/meow-final2-stub/meow-stub__Sx4qqRY/verifier/grading.json",
+      "grading_sha256": "sha256:cc62d93315e7e68fe152b8cb248b5bf8b0691661d52aa193aef69c61ec38567c",
+      "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/stub/meow-final2-stub/meow-stub__Sx4qqRY/verifier/network.json",
+      "network_sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7"
+    },
+    "forgery": {
+      "valid": true,
+      "reward": 0.05405405405405406,
+      "expected_total": 37,
+      "collected": 37,
+      "passed": 2,
+      "failed": 35,
+      "verifier_owned_reward": true,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/forgery/meow-final2-forgery/meow-forgery__8qGFG6M/verifier/grading.json",
+      "grading_sha256": "sha256:cc62d93315e7e68fe152b8cb248b5bf8b0691661d52aa193aef69c61ec38567c",
+      "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/forgery/meow-final2-forgery/meow-forgery__8qGFG6M/verifier/network.json",
+      "network_sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+    },
+    "call-hang": {
+      "valid": true,
+      "reward": 0.0,
+      "expected_total": 37,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/hang/meow-final2-hang/meow-hang__xTtKU2h/verifier/grading.json",
+      "grading_sha256": "sha256:4561b31885da75c3142c0bef2a3287f384fe87a3a75bb2202a39dc9fa37d4648",
+      "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/hang/meow-final2-hang/meow-hang__xTtKU2h/verifier/network.json",
+      "network_sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"
+    },
+    "offline": {
+      "valid": true,
+      "reward": 0.05405405405405406,
+      "expected_total": 37,
+      "collected": 37,
+      "passed": 2,
+      "failed": 35,
+      "public_network_available": false,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/offline/meow-final2-offline/meow-offline__6LABpmr/verifier/grading.json",
+      "grading_sha256": "sha256:cc62d93315e7e68fe152b8cb248b5bf8b0691661d52aa193aef69c61ec38567c",
+      "network_path": ".nl2repo/authoring-work/node-author-wave2-20260828/meow/final-runs2/offline/meow-final2-offline/meow-offline__6LABpmr/verifier/network.json",
+      "network_sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c"
+    }
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/meow", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "meow has no findings; repository-wide warnings are unrelated"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/meow --output .nl2repo/authoring-work/node-author-wave2-20260828/meow/compiled-final2 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"command": "local Node contract collection", "exit_code": 0, "result": "37/37 passed"},
+    {"command": "docker build agent and verifier images", "exit_code": 0}
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane by contract.",
+    "Human blind review, independent traceability sign-off, dataset integration, and publication remain integrator stages.",
+    "Docker builds emitted only constant --platform lint warnings.",
+    "The first empty control attempt used oracle and was discarded; the valid empty control uses nop and is recorded above.",
+    "The current CLI prepare-control path requires explicit --toolchain toolchain.node.lock.toml for Node bundles."
+  ]
+}

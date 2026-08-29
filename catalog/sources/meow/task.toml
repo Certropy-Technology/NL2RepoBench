@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "meow"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "cli-parser"
+tags = ["node", "npm", "esm", "cli", "argument-parser", "flags", "commands", "help"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/meow"
+revision = "1f3ec6cfd29a2df43ad637023be57001db49c410"
+license_spdx = "MIT"
+source_digest = "sha256:20135ee5f801dae4630dc1550e118a5bacd415768543e0073b01e60152895f69"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases are network-isolated. The exact npm runtime closure is supplied through a private cache artifact; only the trusted Oracle receives a run-scoped authorization for the frozen upstream source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/minimist", "camelcase-keys", "decamelize", "decamelize-keys", "minimist-options", "normalize-package-data", "read-package-up", "redent", "trim-newlines", "type-fest", "yargs-parser"]
+artifact = { digest = "sha256:c8b983dd3d5fa25f3648f164ebda2a8a9c95f4259b898fdda19c5f6a65acaa9c", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:c8b983dd3d5fa25f3648f164ebda2a8a9c95f4259b898fdda19c5f6a65acaa9c", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 37
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:db6efe1fdcc4b37b44236cbf9e2a8c55abd3e653490ab1c07c174fb24029ba75", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:db6efe1fdcc4b37b44236cbf9e2a8c55abd3e653490ab1c07c174fb24029ba75", visibility = "private" }
+test_bundle = { digest = "sha256:a58f29fc89c336545e8dbc04d151bce1b0bf2d0247cfe2c0bce773586cde4725", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a58f29fc89c336545e8dbc04d151bce1b0bf2d0247cfe2c0bce773586cde4725", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the meow ESM CLI helper from an empty workspace with deterministic argument parsing, typed flags, commands, validation, and help formatting."
+keywords = ["node", "npm", "esm", "cli", "argument-parser", "flags", "commands", "help"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:aa2751ef5a8a2246d2603be7626bb8b45ac750c610cadfee2b638c282e270bb0"
+size_bytes = 399360
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:aa2751ef5a8a2246d2603be7626bb8b45ac750c610cadfee2b638c282e270bb0"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Production compile passed; Harbor 0.21.0 Oracle passed 37/37 with reward 1.0; empty, stub, forgery, bounded call-hang, and offline controls completed with verifier-owned valid results. Awaiting independent Agent Run and integrator review."
