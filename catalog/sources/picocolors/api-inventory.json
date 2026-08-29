@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "picocolors",
+  "source_revision": "0e7c4af2de299dd7bc5916f2bddd151fa2f66740",
+  "package": {
+    "name": "picocolors",
+    "version": "1.1.1",
+    "module_system": "commonjs",
+    "runtime_entry": "picocolors.js",
+    "browser_entry": "picocolors.browser.js",
+    "types_entry": "picocolors.d.ts"
+  },
+  "public_api": {
+    "default_require": "require('picocolors')",
+    "factory": "createColors(enabled?: boolean): Colors",
+    "support_flag": "isColorSupported: boolean",
+    "modifiers": ["reset", "bold", "dim", "italic", "underline", "inverse", "hidden", "strikethrough"],
+    "foreground": ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white", "gray", "blackBright", "redBright", "greenBright", "yellowBright", "blueBright", "magentaBright", "cyanBright", "whiteBright"],
+    "background": ["bgBlack", "bgRed", "bgGreen", "bgYellow", "bgBlue", "bgMagenta", "bgCyan", "bgWhite", "bgBlackBright", "bgRedBright", "bgGreenBright", "bgYellowBright", "bgBlueBright", "bgMagentaBright", "bgCyanBright", "bgWhiteBright"]
+  },
+  "source_metrics": {
+    "tracked_files": 19,
+    "runtime_javascript_files": 2,
+    "declaration_files": 2,
+    "upstream_test_files": 2,
+    "upstream_assertion_groups": 16
+  },
+  "behavioral_risks": [
+    "ambient process and TTY state controls default support detection",
+    "nested close sequences must reopen the active formatter",
+    "browser fallback and CommonJS package metadata are separate publication paths"
+  ]
+}

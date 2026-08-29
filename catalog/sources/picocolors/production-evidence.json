@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "task_id": "picocolors",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/alexeyraspopov/picocolors",
+    "revision": "0e7c4af2de299dd7bc5916f2bddd151fa2f66740",
+    "archive_sha256": "sha256:9d10d821b37e7b160c5d6447d3683fded0893880a2c4b95213be94903c25bb91",
+    "archive_size_bytes": 61440,
+    "license_spdx": "ISC",
+    "license_sha256": "sha256:6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750",
+    "submodules": []
+  },
+  "environment": {
+    "runtime": "Node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "os": "Debian bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "dependency_closure": {
+    "runtime_dependencies": [],
+    "lockfile_version": 3,
+    "package_manager": "npm 11.17.0",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:eef6fa7b36e08f74f097d781012580d188aa5a30fb7d6ed125312b7034f62ed7",
+      "size_bytes": 440,
+      "visibility": "private"
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 24,
+    "source": "frozen-collection",
+    "private_artifacts": {
+      "commands": {
+        "digest": "sha256:736fdd52fed919ee18612d5ad6eb9d05d405ed9033bcbdac792763b35a6df740",
+        "size_bytes": 208
+      },
+      "tests": {
+        "digest": "sha256:61a62fd8c61be5be5fad3b764dbdd363cd1d692f1ed1ed971629c8e7bc28fad8",
+        "size_bytes": 3426
+      }
+    },
+    "upstream_baseline": {
+      "commands": ["FORCE_COLOR=1 node tests/test.js", "CI=1 node tests/environments.js"],
+      "test_exit_code": 0,
+      "environment_exit_code": 0,
+      "note": "A non-TTY baseline without FORCE_COLOR fails the upstream color-assuming test; this is an expected environment mismatch and is not used as the production denominator."
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled/picocolors-final/picocolors/bundle.manifest.json",
+    "sha256": "sha256:4e9c583589664f70494dd7b2241697cf37e428ca4483edf133ac2bcca5373a0a",
+    "schema_version": "2.0",
+    "mode": "production",
+    "file_count": 74,
+    "canonical_manifest_digest": "sha256:cb9edb7eccdba11b5c60a9e269409f814e05683360eed0267e7a1f9fdfb78c73",
+    "integrity_mismatches": 0,
+    "extras": 0,
+    "missing": 0
+  },
+  "oracle": {
+    "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/compiled/picocolors-final/picocolors -a oracle --allow-agent-host github.com --job-name picocolors-final2-oracle -o .nl2repo/runs/picocolors-final/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "result": {
+      "path": ".nl2repo/runs/picocolors-final/oracle/picocolors-final2-oracle/picocolors__paXuE5y/result.json",
+      "sha256": "sha256:1bd7b69fd92346625ab566e5c71a2df809a6218b75f91a0317aaf9cbb504618a"
+    },
+    "grading": {
+      "path": ".nl2repo/runs/picocolors-final/oracle/picocolors-final2-oracle/picocolors__paXuE5y/verifier/grading.json",
+      "sha256": "sha256:ec8d39dab9c5f96e70f82af9b8c40c76ba553e31068cd542e14b9c16f7d94d62"
+    },
+    "network": {
+      "path": ".nl2repo/runs/picocolors-final/oracle/picocolors-final2-oracle/picocolors__paXuE5y/verifier/network.json",
+      "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors-final/picocolors-empty -a oracle --job-name picocolors-final2-empty -o .nl2repo/runs/picocolors-final/empty --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/picocolors-final/empty/picocolors-final2-empty/picocolors-empty__mcmyX2n/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"},
+      "network": {"path": ".nl2repo/runs/picocolors-final/empty/picocolors-final2-empty/picocolors-empty__mcmyX2n/verifier/network.json", "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8", "public_network_available": false}
+    },
+    "stub": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors-final/picocolors-stub -a oracle --job-name picocolors-final2-stub -o .nl2repo/runs/picocolors-final/stub --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 3,
+      "reward": 0.125,
+      "grading": {"path": ".nl2repo/runs/picocolors-final/stub/picocolors-final2-stub/picocolors-stub__EFdGf2G/verifier/grading.json", "sha256": "sha256:671e617313c05598a03829a93f3864d3e2d1f2f68a7fb57bb081ffb9226dc1d6"},
+      "network": {"path": ".nl2repo/runs/picocolors-final/stub/picocolors-final2-stub/picocolors-stub__EFdGf2G/verifier/network.json", "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors-final/picocolors-forgery -a oracle --job-name picocolors-final2-forgery -o .nl2repo/runs/picocolors-final/forgery --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 5,
+      "reward": 0.20833333333333334,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/runs/picocolors-final/forgery/picocolors-final2-forgery/picocolors-forgery__efWnWRj/verifier/grading.json", "sha256": "sha256:4c7e9246dd4124773ec5a2b11242df5eb7e39b4c78655b671b4a437d0d3e3bdd"},
+      "network": {"path": ".nl2repo/runs/picocolors-final/forgery/picocolors-final2-forgery/picocolors-forgery__efWnWRj/verifier/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9", "public_network_available": false}
+    },
+    "timeout": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors-final/picocolors-timeout -a oracle --job-name picocolors-final2-timeout -o .nl2repo/runs/picocolors-final/timeout --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/picocolors-final/timeout/picocolors-final2-timeout/picocolors-timeout__4DanPPi/verifier/grading.json", "sha256": "sha256:f19e338d1c20f95cfbb9ba2c990ba2c585aed782aa30a8fa7e0bd412f8830608"},
+      "network": {"path": ".nl2repo/runs/picocolors-final/timeout/picocolors-final2-timeout/picocolors-timeout__4DanPPi/verifier/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9", "public_network_available": false}
+    },
+    "offline": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors-final/picocolors-offline -a oracle --job-name picocolors-final2-offline -o .nl2repo/runs/picocolors-final/offline --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/picocolors-final/offline/picocolors-final2-offline/picocolors-offline__VQKPNMM/verifier/grading.json", "sha256": "sha256:f19e338d1c20f95cfbb9ba2c990ba2c585aed782aa30a8fa7e0bd412f8830608"},
+      "network": {"path": ".nl2repo/runs/picocolors-final/offline/picocolors-final2-offline/picocolors-offline__VQKPNMM/verifier/network.json", "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8", "public_network_available": false}
+    },
+    "install-script": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors-final/picocolors-install-script -a oracle --job-name picocolors-final2-install-script -o .nl2repo/runs/picocolors-final/install-script --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/picocolors-final/install-script/picocolors-final2-install-script/picocolors-install-script__mCBpsdB/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"},
+      "network": {"path": ".nl2repo/runs/picocolors-final/install-script/picocolors-final2-install-script/picocolors-install-script__mCBpsdB/verifier/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9", "public_network_available": false}
+    },
+    "loader-hook": {
+      "command": "/data/NL2RepoBench-integration-20260827/harbor-runner/.venv/bin/harbor run -p .nl2repo/controls/picocolors/picocolors-loader-hook -a oracle --job-name picocolors-loader-hook -o .nl2repo/runs/picocolors/loader-hook --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/picocolors/loader-hook/picocolors-loader-hook/picocolors-loader-hook__3bdDhXs/verifier/grading.json", "sha256": "sha256:f19e338d1c20f95cfbb9ba2c990ba2c585aed782aa30a8fa7e0bd412f8830608"},
+      "network": {"path": ".nl2repo/runs/picocolors/loader-hook/picocolors-loader-hook/picocolors-loader-hook__3bdDhXs/verifier/network.json", "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8", "public_network_available": false}
+    }
+  },
+  "gates": {
+    "validate_source": {"command": "uv run nl2repo task validate-source catalog/sources/picocolors", "exit_code": 0, "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/picocolors/final-validate-source.log", "sha256": "sha256:2511aa645d77a9ddae8f635b56acb02cef42ea6a08ca8f4f407c49e888163614"}},
+    "lint_network": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "warning_count": 141, "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/picocolors/network-lint.log", "sha256": "sha256:ffc7269f618098f745dfe09c1d91f8c78737df5e80100deddc86b0f2138071ae"}},
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/picocolors --output .nl2repo/compiled/picocolors-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "allow_incomplete": false, "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/picocolors/final-compile.log", "sha256": "sha256:fc454e56f6ec30ef538c41fcbc468b71eccc8049fb617c181d9861ce26b39aed"}},
+    "bundle_integrity": {"exit_code": 0, "files": 74, "mismatches": 0, "extras": 0, "missing": 0}
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "Independent blind/spec review, dataset projection, publication, and model pilot remain integrator work.",
+    "The trusted Oracle received only run-scoped github.com authorization; the model Agent receives no source or registry authorization.",
+    "The local OpenHands image ID sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3 differs from the locked toolchain image ID sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; integrator must restore or verify the official image before a model Agent Run."
+  ]
+}

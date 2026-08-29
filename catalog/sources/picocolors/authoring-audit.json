@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "picocolors",
+  "source_freeze": {
+    "revision": "0e7c4af2de299dd7bc5916f2bddd151fa2f66740",
+    "archive_sha256": "sha256:9d10d821b37e7b160c5d6447d3683fded0893880a2c4b95213be94903c25bb91",
+    "license_spdx": "ISC",
+    "license_sha256": "sha256:6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750"
+  },
+  "probes": [
+    {"command": "git -C upstream rev-parse HEAD", "exit_code": 0, "result": "exact revision"},
+    {"command": "git -C upstream archive --format=tar HEAD | sha256sum", "exit_code": 0, "result": "archive digest matches source.tar"},
+    {"command": "FORCE_COLOR=1 node upstream/tests/test.js", "exit_code": 0, "result": "upstream formatter suite passed"},
+    {"command": "CI=1 node upstream/tests/environments.js", "exit_code": 0, "result": "upstream environment suite passed"},
+    {"command": "node upstream/tests/test.js", "exit_code": 1, "result": "expected non-TTY color baseline mismatch; rerun under FORCE_COLOR=1"}
+  ],
+  "adaptations": [
+    "Development comparison dependencies and benchmarks are excluded because the package has no runtime dependencies.",
+    "The private verifier launches candidate code in a UID-separated child and uses VM-isolated support-detection scenarios.",
+    "The frozen 24-leaf slice covers all documented formatter families and package paths without exposing upstream tests."
+  ]
+}

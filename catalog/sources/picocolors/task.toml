@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "picocolors"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "terminal-formatting"
+tags = ["node", "npm", "commonjs", "ansi", "terminal", "color", "javascript"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/alexeyraspopov/picocolors"
+revision = "0e7c4af2de299dd7bc5916f2bddd151fa2f66740"
+license_spdx = "ISC"
+source_digest = "sha256:9d10d821b37e7b160c5d6447d3683fded0893880a2c4b95213be94903c25bb91"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "picocolors has no runtime dependencies. The candidate and separate verifier run without egress; only the trusted Oracle solution may fetch and verify the pinned upstream revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:eef6fa7b36e08f74f097d781012580d188aa5a30fb7d6ed125312b7034f62ed7", size_bytes = 440, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:eef6fa7b36e08f74f097d781012580d188aa5a30fb7d6ed125312b7034f62ed7", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:736fdd52fed919ee18612d5ad6eb9d05d405ed9033bcbdac792763b35a6df740", size_bytes = 208, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:736fdd52fed919ee18612d5ad6eb9d05d405ed9033bcbdac792763b35a6df740", visibility = "private" }
+test_bundle = { digest = "sha256:61a62fd8c61be5be5fad3b764dbdd363cd1d692f1ed1ed971629c8e7bc28fad8", size_bytes = 3426, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:61a62fd8c61be5be5fad3b764dbdd363cd1d692f1ed1ed971629c8e7bc28fad8", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Production Node task for rebuilding the deterministic CommonJS picocolors ANSI formatting API."
+keywords = ["node", "npm", "commonjs", "ansi", "terminal", "color", "javascript"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "The final production Node 24/npm 11.17 bundle passes a 24/24 Harbor Oracle. Empty, stub, forgery, timeout, offline, install-script, and loader-hook controls are valid and low-scoring with verifier-owned reports and public_network_available=false. Independent review, projection, and model Agent Run remain integrator work."
+
+[oracle_bundle]
+digest = "sha256:a0c93934d6c3f4ae928d478ea79f8e57bf47a3ae09e6f6fc7f8a4f36d129d5d3"
+size_bytes = 881
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:a0c93934d6c3f4ae928d478ea79f8e57bf47a3ae09e6f6fc7f8a4f36d129d5d3"
+visibility = "private"

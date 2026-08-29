@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "picocolors",
+  "source_revision": "0e7c4af2de299dd7bc5916f2bddd151fa2f66740",
+  "public_contract_to_private_tests": {
+    "package-and-export-shape": ["TC-01", "TC-02"],
+    "factory-and-disabled-formatting": ["TC-03", "TC-04", "TC-05"],
+    "ansi-modifiers-and-colors": ["TC-06", "TC-07", "TC-08", "TC-09"],
+    "nesting-and-coercion": ["TC-10", "TC-11", "TC-12", "TC-13"],
+    "browser-entry": ["TC-14"],
+    "large-input-and-determinism": ["TC-15", "TC-16"],
+    "support-detection": ["TC-17", "TC-18", "TC-19", "TC-20", "TC-21", "TC-22", "TC-23", "TC-24"]
+  },
+  "upstream_behavior_sources": [
+    "picocolors.js",
+    "picocolors.browser.js",
+    "picocolors.d.ts",
+    "types.d.ts",
+    "tests/test.js",
+    "tests/environments.js"
+  ],
+  "scope_note": "The private node:test slice preserves all public formatter families, coercion, nesting, browser, and isolated detection behavior while excluding benchmarks and third-party comparison packages."
+}
