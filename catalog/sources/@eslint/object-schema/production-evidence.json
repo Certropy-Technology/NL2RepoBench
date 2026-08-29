@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0",
+  "task_id": "eslint-object-schema",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/eslint/rewrite",
+    "revision": "095661b9e87506b017e2d39fbc86e5d38d7eb91c",
+    "source_digest": "sha256:64c90db8352d57c56779c8c2bd9df83521d6903108760aedb25df5e4e13fc99b",
+    "license_spdx": "Apache-2.0",
+    "package_version": "3.0.5"
+  },
+  "environment": {
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "platform": "linux/amd64 glibc",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "toolchain_lock": "toolchain.node.lock.toml"
+  },
+  "dependencies": {
+    "status": "known",
+    "runtime_dependency_count": 0,
+    "lockfile": "package-lock.json",
+    "artifact": {
+      "digest": "sha256:08a16dcd72164db63e23962da56c959df3dcdd9fe7fe9653f67f47a484cc191a",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:08a16dcd72164db63e23962da56c959df3dcdd9fe7fe9653f67f47a484cc191a"
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/compiled-production-final/eslint-object-schema",
+    "bundle_manifest_sha256": "sha256:fa89873e28281f3eb3222007f0e6c6fd745d8281a3c90689b40692c6f06ec6af",
+    "canonical_manifest_digest": "sha256:6a7b94c0bf39dcff280e63eb14dc0f61fb695838d9078ed10db45ae54f8b543a",
+    "file_count": 75
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 20,
+    "private_test_bundle": "sha256:931cae5d34407021d120fc1926fecb7b0960a99eb96eec51a2f849b759bc0153",
+    "commands_artifact": "sha256:906886a82261d32c0f21c659533fce414f76b84f55a3476bd14a46b2fb04419c"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/object-schema/compiled-production-final/eslint-object-schema -a oracle --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 20,
+    "collected": 20,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/oracle/2026-08-28__15-05-50/eslint-object-schema__Wp3Dqqp/verifier/grading.json",
+      "sha256": "sha256:83756e123f9d87ebcdfc20b62615464183dcdca63a02d320197528fe55cfe5fd"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/oracle/2026-08-28__15-05-50/eslint-object-schema__Wp3Dqqp/verifier/network.json",
+      "sha256": "sha256:c85c9c3489d2cac7bc25c95bc67ef7759714ea9c5642cab7add5c188a017533c",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "harbor run -p controls-production-final/empty/eslint-object-schema-empty -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/empty/2026-08-28__15-06-57/eslint-object-schema-empty__mhLB28t/verifier/grading.json", "sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/empty/2026-08-28__15-06-57/eslint-object-schema-empty__mhLB28t/verifier/network.json", "sha256": "sha256:eeb36dd0b8a7ba8d95612fd8bc495f0289d1dcbd57c081acb1830a23f3db7c7f", "public_network_available": false}
+    },
+    "stub": {
+      "command": "harbor run -p controls-production-final/stub/eslint-object-schema-stub -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.05,
+      "passed": 1,
+      "collected": 20,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/stub/2026-08-28__15-07-51/eslint-object-schema-stub__pL8xCfQ/verifier/grading.json", "sha256": "sha256:688fc9d91b1c41e810092432cc045fe55aa09dc8815769c8580645ca0b75d6e1"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/stub/2026-08-28__15-07-51/eslint-object-schema-stub__pL8xCfQ/verifier/network.json", "sha256": "sha256:f19138c762f246f0d2d6e93be25c4d2e3952f3ce4f42ecaaca00a233fd1a538c", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "harbor run -p controls-production-final/forgery/eslint-object-schema-forgery -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/forgery/2026-08-28__15-08-43/eslint-object-schema-forgery__G2g4iBz/verifier/grading.json", "sha256": "sha256:f889baeb135e4ba47749fdda78bf64f42ce3c9c26a19243a5c43dcae8a08d1f9"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/forgery/2026-08-28__15-08-43/eslint-object-schema-forgery__G2g4iBz/verifier/network.json", "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a", "public_network_available": false}
+    },
+    "install-script": {
+      "command": "harbor run -p controls-production-final/install-script/eslint-object-schema-install-script -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/install-script/2026-08-28__15-09-37/eslint-object-schema-install-scr__iUv7LrD/verifier/grading.json", "sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/install-script/2026-08-28__15-09-37/eslint-object-schema-install-scr__iUv7LrD/verifier/network.json", "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a", "public_network_available": false}
+    },
+    "loader-hook": {
+      "command": "harbor run -p controls-production-final/loader-hook/eslint-object-schema-loader-hook -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1,
+      "passed": 2,
+      "collected": 20,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/loader-hook/2026-08-28__15-10-29/eslint-object-schema-loader-hook__BwbGkt7/verifier/grading.json", "sha256": "sha256:37a08f93bc1b376ae8b5cbf95525e6f734af52ed0a2670d82559264c4713df9f"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/loader-hook/2026-08-28__15-10-29/eslint-object-schema-loader-hook__BwbGkt7/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b", "public_network_available": false}
+    },
+    "hang": {
+      "command": "harbor run -p controls-production-final/hang/eslint-object-schema-hang -a oracle",
+      "exit_code": 0,
+      "valid": false,
+      "reward": 0.0,
+      "collected": 1,
+      "failure_class": "verifier",
+      "failure_reason": "node-collection-mismatch",
+      "bounded": true,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/hang/2026-08-28__15-11-25/eslint-object-schema-hang__5NyRN74/verifier/grading.json", "sha256": "sha256:c9f742139a22a244b9fbb41c591573fb8200e9f96477198cf118ef1e68f37624"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/hang/2026-08-28__15-11-25/eslint-object-schema-hang__5NyRN74/verifier/network.json", "sha256": "sha256:034fa6a8f52e8049ae32ec27f0028c5436831ee6428d039bc7a05c7fe807b3a5", "public_network_available": false}
+    },
+    "offline": {
+      "command": "harbor run -p controls-production-final/offline/eslint-object-schema-offline -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1,
+      "passed": 2,
+      "collected": 20,
+      "network_attempt": "fetch to https://example.invalid/offline-probe is caught and cannot elevate score",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/offline/2026-08-28__15-12-23/eslint-object-schema-offline__McwipG5/verifier/grading.json", "sha256": "sha256:37a08f93bc1b376ae8b5cbf95525e6f734af52ed0a2670d82559264c4713df9f"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/harbor-jobs-production-final/controls/offline/2026-08-28__15-12-23/eslint-object-schema-offline__McwipG5/verifier/network.json", "sha256": "sha256:5a11402ab736c09005e19aac9808128d80310f0bcd5368624f4537a44ed98d47", "public_network_available": false}
+    }
+  },
+  "validation": {
+    "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/@eslint/object-schema", "exit_code": 0},
+    "network_lint": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "task_findings": 0},
+    "node_production_gate": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/object-schema/evidence/node-production-gate.json", "sha256": "sha256:60abc62bbf4b5e77851629dfbbc7fdfa9ac35775c6870560fdfdf69906a086c4"},
+    "agent_docker_build": {"exit_code": 0},
+    "verifier_docker_build": {"exit_code": 0}
+  },
+  "private_artifacts": {
+    "oracle_bundle": {
+      "digest": "sha256:18af177dcfb4258d2c0dfa6ba98748797cff250dd21cd4ae05f987391cea5f7f",
+      "size_bytes": 1341440,
+      "uri": "artifact://private/sha256:18af177dcfb4258d2c0dfa6ba98748797cff250dd21cd4ae05f987391cea5f7f"
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane by contract.",
+    "The hang control is bounded and fails closed as a node collection mismatch; the generic control summarizer labels this verifier-owned termination differently than the task-local evidence.",
+    "Integrator review, dataset integration, pilot, and publication remain outstanding.",
+    "Docker build emitted only constant-platform lint warnings; the image references are digest-pinned."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema_shape": "api-inventory",
+  "language": "node",
+  "task_id": "eslint-object-schema",
+  "package": "@eslint/object-schema",
+  "source_revision": "095661b9e87506b017e2d39fbc86e5d38d7eb91c",
+  "source_digest": "sha256:64c90db8352d57c56779c8c2bd9df83521d6903108760aedb25df5e4e13fc99b",
+  "package_version": "3.0.5",
+  "source_files": 4,
+  "implementation_loc": 338,
+  "public_exports": ["ObjectSchema", "MergeStrategy", "ValidationStrategy"],
+  "merge_strategies": ["assign", "overwrite", "replace"],
+  "validation_strategies": ["array", "boolean", "number", "object", "object?", "string", "string!"],
+  "test_files": 3,
+  "upstream_mocha_leaf_count": 134,
+  "frozen_private_node_test_count": 20,
+  "dynamic_risks": ["commonjs-interop", "build-artifact-generation"],
+  "runtime_dependency_count": 0
+}

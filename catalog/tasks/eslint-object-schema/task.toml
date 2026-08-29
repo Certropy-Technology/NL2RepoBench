@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/eslint-object-schema"
+version = "2.0.0"
+description = "Build the @eslint/object-schema object schema merger and validator from an empty Node workspace."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "commonjs",
+    "object-schema",
+    "validation",
+    "merge",
+]
+
+[metadata]
+difficulty = "medium"
+category = "data-validation"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "commonjs",
+    "object-schema",
+    "validation",
+    "merge",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:6a7b94c0bf39dcff280e63eb14dc0f61fb695838d9078ed10db45ae54f8b543a"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096

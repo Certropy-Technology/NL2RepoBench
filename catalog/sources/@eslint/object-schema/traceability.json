@@ -1,0 +1,16 @@
+{
+  "schema_shape": "test-to-spec-traceability",
+  "task_id": "eslint-object-schema",
+  "source_revision": "095661b9e87506b017e2d39fbc86e5d38d7eb91c",
+  "frozen_total": 20,
+  "groups": [
+    {"id": "exports", "leaves": 2, "spec": "Package exports", "upstream": "package entry points and metadata"},
+    {"id": "merge", "leaves": 3, "spec": "MergeStrategy", "upstream": "merge-strategy.test.js"},
+    {"id": "validation", "leaves": 3, "spec": "ValidationStrategy", "upstream": "validation-strategy.test.js"},
+    {"id": "construction", "leaves": 3, "spec": "ObjectSchema construction", "upstream": "object-schema.test.js"},
+    {"id": "merge-api", "leaves": 3, "spec": "ObjectSchema merge", "upstream": "object-schema.test.js"},
+    {"id": "validate-api", "leaves": 3, "spec": "ObjectSchema validate", "upstream": "object-schema.test.js"},
+    {"id": "nested-errors", "leaves": 3, "spec": "nested schemas and errors", "upstream": "object-schema.test.js"}
+  ],
+  "coverage_statement": "Every frozen leaf asserts behavior described in instruction.md; no hidden leaf depends on a private helper name or unlisted dependency."
+}

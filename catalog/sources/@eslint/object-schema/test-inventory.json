@@ -1,0 +1,27 @@
+{
+  "schema_shape": "test-inventory",
+  "task_id": "eslint-object-schema",
+  "framework": "mocha-upstream-adapted-to-node:test",
+  "source_revision": "095661b9e87506b017e2d39fbc86e5d38d7eb91c",
+  "upstream_tests": [
+    {"file": "packages/object-schema/tests/merge-strategy.test.js", "leaf_count": 5, "behavior": "built-in merge strategies"},
+    {"file": "packages/object-schema/tests/validation-strategy.test.js", "leaf_count": 32, "behavior": "built-in validation strategies"},
+    {"file": "packages/object-schema/tests/object-schema.test.js", "leaf_count": 97, "behavior": "schema construction, validation, merging, nested schemas, and errors"}
+  ],
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 20,
+    "leaf_id_algorithm": "sha256(file:line:column:name)[0:16]",
+    "adaptation": "The private slice uses a child-process package boundary and retains public assertion semantics without shipping upstream test files."
+  },
+  "traceability": [
+    {"leaf_group": "exports-and-package", "instruction": "Package exports; Supports"},
+    {"leaf_group": "merge-strategies", "instruction": "MergeStrategy"},
+    {"leaf_group": "validation-strategies", "instruction": "ValidationStrategy"},
+    {"leaf_group": "schema-construction", "instruction": "ObjectSchema construction"},
+    {"leaf_group": "schema-merge", "instruction": "ObjectSchema merge"},
+    {"leaf_group": "schema-validation", "instruction": "ObjectSchema validate"},
+    {"leaf_group": "nested-and-errors", "instruction": "schema, requires, and error contracts"}
+  ]
+}
