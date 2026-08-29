@@ -1,0 +1,229 @@
+{
+  "schema_version": "1.0",
+  "task_id": "glom",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/mahmoud/glom",
+    "revision": "30b477ab65560914a38f331614947d0894701044",
+    "license_spdx": "MIT",
+    "source_archive_sha256": "sha256:2d63af893e86e1118fefb36f94323a1d09b3a4410132aca61f00d2f45d90e408"
+  },
+  "environment": {
+    "python_version": "3.12.14",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "agent_image_digest": "sha256:0e546c617bf6558ce7c5e1481e7c5460897ab5c5ec88bc463e8ff3a962816673",
+    "verifier_image_digest": "sha256:77902d0cc858dd9ae09bb4307a2dc27913f7a09620a644e02ee5116f47453727",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": [
+      "attrs==25.4.0",
+      "boltons==25.0.0",
+      "face==24.0.0",
+      "setuptools==80.9.0"
+    ],
+    "lock_artifact": {
+      "digest": "sha256:b3ab4f35abc257efe0ca5a002ef1e5164ea72147ea01a791f669ddf8fecb8a47",
+      "size_bytes": 1410,
+      "uri": "artifact://private/sha256:b3ab4f35abc257efe0ca5a002ef1e5164ea72147ea01a791f669ddf8fecb8a47",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "api_path": ".nl2repo/authoring-work/python-author-wave2-20260828/glom/api-inventory.json",
+    "api_sha256": "sha256:099770dc681ebf65142b63a51e4808636c408ccf89270505efadafad5d06cd53",
+    "test_path": ".nl2repo/authoring-work/python-author-wave2-20260828/glom/test-inventory.json",
+    "test_sha256": "sha256:099770dc681ebf65142b63a51e4808636c408ccf89270505efadafad5d06cd53",
+    "upstream_source_files": 71,
+    "upstream_test_files": 16,
+    "static_test_definition_count": 182,
+    "upstream_collected_tests": 202,
+    "deterministic_verifier_leaves": 28
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled/glom-final/glom/bundle.manifest.json",
+    "manifest_sha256": "sha256:416d0b32194d6dfcafefe6e2dce783ec7002fe5eac77bc104574a24c24fc84ea",
+    "canonical_manifest_digest": "sha256:e7cec78f175d7aa4795913dcbb215a7053e177f8572cb8e6ea06161eabcad2c2",
+    "verifier_bundle": "artifact://private/sha256:362b1b78dc3301ae88d530e55dc718cf7e4569ac2fc67bc640b1686bbd764481",
+    "oracle_bundle": "artifact://private/sha256:d662a26a184f876df3434a440c9b5f6c08258c2736e820987bc4cbd6adec2587"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 28,
+    "collection": 28,
+    "metric_contract": "fixed-test-pass-rate-v1"
+  },
+  "oracle": {
+    "command": "docker run --rm --network none --user 0:0 -v final-gate/oracle/workspace:/workspace -v final-gate/oracle/logs:/logs nl2repo-glom-verifier:authoring-final /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "execution_mode": "manual Docker verifier execution; no Harbor Agent Run started",
+    "valid": true,
+    "passed": 28,
+    "total": 28,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/oracle/logs/verifier/grading.json",
+      "sha256": "sha256:90763cceea1ac5f4b8f014df7fadaf89cde7b59acdec10ccd681472ddae7d1fd"
+    },
+    "collection": {
+      "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/oracle/logs/verifier/collection.json",
+      "sha256": "sha256:fed22e412a072ce56f0fb40abfdf09cc38122b95dd720d16db9791f1d51ca942"
+    },
+    "reward_report": {
+      "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/oracle/logs/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    },
+    "network": {
+      "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/oracle/logs/verifier/network.json",
+      "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399",
+      "public_network_available": false,
+      "probes": {
+        "pypi.org:443": false,
+        "1.1.1.1:443": false
+      }
+    },
+    "candidate_install": {
+      "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/oracle/logs/verifier/candidate-install.json",
+      "sha256": "sha256:713d174ea3083e9253b5e165af0cd52e689a2b751fd927ee9278700cc788034e"
+    },
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none verifier-image /tests/test.sh with an empty workspace",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/empty/logs/verifier/grading.json",
+        "sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/empty/logs/verifier/network.json",
+        "sha256": "sha256:4a1a958c9937fa26538588035041e80999be399bef734cee75a9404625c7d246"
+      }
+    },
+    "stub": {
+      "command": "docker run --rm --network none verifier-image with compiled stub control workspace",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 28,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/stub/logs/verifier/grading.json",
+        "sha256": "sha256:0dab5e6ceb880ee0ce009d1983bccfdc8da1f201ac0d1e249df2a45259f15eaa"
+      },
+      "network": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/stub/logs/verifier/network.json",
+        "sha256": "sha256:98ea9e3ccde4b269a722828a902cefeb5211d7c91a45b558837ef0b8fb93b65f"
+      }
+    },
+    "forgery": {
+      "command": "docker run --rm --network none verifier-image with compiled forgery control workspace",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 28,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/forgery/logs/verifier/grading.json",
+        "sha256": "sha256:0dab5e6ceb880ee0ce009d1983bccfdc8da1f201ac0d1e249df2a45259f15eaa"
+      },
+      "network": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/forgery/logs/verifier/network.json",
+        "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"
+      }
+    },
+    "install_timeout": {
+      "command": "docker run --rm --network none verifier-image /tests/test.sh with a setup.py sleep control workspace",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/install-timeout/logs/verifier/candidate-install.json",
+        "sha256": "sha256:c101fd8381d0b16d8511c6c9aa6af498cadef101f7c39df02db77d34776b6d1c",
+        "outcome": "timeout",
+        "returncode": -9
+      },
+      "grading": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/install-timeout/logs/verifier/grading.json",
+        "sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/install-timeout/logs/verifier/network.json",
+        "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"
+      }
+    },
+    "offline": {
+      "command": "final-gate Oracle and controls executed with docker --network none",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/glom-authoring-20260828/final-gate/oracle/logs/verifier/network.json",
+        "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399",
+        "public_network_available": false
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/glom",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/glom/final-source-validation.json"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 139,
+      "glom_findings": 0,
+      "log": ".nl2repo/evidence/glom/final-network-lint.json",
+      "warning_scope": "pre-existing findings in other catalog tasks"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/glom --output .nl2repo/compiled/glom-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/glom/final-production-compile.json"
+    },
+    "image_build": {
+      "agent_exit_code": 0,
+      "verifier_exit_code": 0,
+      "agent_log": ".nl2repo/evidence/glom/agent-image-build.log",
+      "verifier_log": ".nl2repo/evidence/glom/verifier-image-build.log"
+    },
+    "upstream_tests": {
+      "command": "PATH=probe-venv/bin:$PATH PYTHONPATH=upstream probe-venv/bin/python -m pytest upstream/glom/test -q",
+      "exit_code": 0,
+      "passed": 202,
+      "log": ".nl2repo/evidence/glom/upstream-tests.log"
+    },
+    "focused_repository_tests": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_harbor_compiler.py tests/test_custom_verifier.py tests/test_candidate_boundary.py tests/test_network_policy.py",
+      "exit_code": 0,
+      "passed": 103,
+      "log": ".nl2repo/evidence/glom/focused-tests.log"
+    },
+    "syntax": {
+      "command": "python3 -m py_compile private verifier sources; bash -n compiled solution and controls; git diff --check",
+      "exit_code": 0
+    }
+  },
+  "status": "controls-passed",
+  "residual_risks": [
+    "No Harbor Agent Run was started by this authoring lane.",
+    "The 28-leaf denominator is a documented deterministic facade slice, not the full 182-test upstream suite.",
+    "Review, model pilot, dataset integration, and publication are integrator-owned stages.",
+    "Docker emitted the existing constant-platform warning for FROM --platform=linux/amd64; the pinned linux/amd64 images built successfully."
+  ]
+}

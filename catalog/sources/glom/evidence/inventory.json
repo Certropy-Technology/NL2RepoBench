@@ -1,0 +1,13 @@
+{
+  "task_id": "glom",
+  "revision": "30b477ab65560914a38f331614947d0894701044",
+  "source_archive_sha256": "sha256:2d63af893e86e1118fefb36f94323a1d09b3a4410132aca61f00d2f45d90e408",
+  "source_files": 71,
+  "python_modules": 10,
+  "upstream_test_files": 16,
+  "upstream_collected_tests": 202,
+  "public_contract_cases": 28,
+  "runtime_dependencies": ["attrs==25.4.0", "boltons==25.0.0", "face==24.0.0"],
+  "build_dependency": "setuptools==80.9.0",
+  "notes": "The public contract uses a separate child-side JSON adapter for deterministic local behavior; upstream callback, debug, Graphviz, network, and arbitrary filesystem behavior are outside the scored boundary."
+}
