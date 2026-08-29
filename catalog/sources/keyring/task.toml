@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "keyring"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "credential-storage-library"
+tags = ["python", "credentials", "backends", "cli", "plugins", "offline", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jaraco/keyring"
+revision = "7603e7cadc254b4c6e3fc2b2f0916a005e78087d"
+license_spdx = "MIT"
+source_digest = "sha256:30dfe6cd4dcf67495e2ff1d8a3196593b5263f8d9180fe2cabc5cdc3582815a9"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "Install the hash-locked build/runtime closure during the image build; candidate installation uses pip --no-deps --no-build-isolation and the trusted Oracle fetches and verifies the exact Git revision under a run-scoped source-host authorization."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "All Python build and runtime dependencies are installed from a hash-locked closure during Docker build. Agent and verifier phases require no package registry or source access; only the trusted Oracle receives a run-scoped exact source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["cffi==2.1.1", "coherent-licensed==0.5.2", "cryptography==50.0.1", "jaraco-classes==3.4.0", "jaraco-context==6.1.2", "jaraco-functools==4.6.0", "jeepney==0.9.0", "more-itertools==11.1.0", "packaging==26.3", "pycparser==3.0", "secretstorage==3.5.0", "setuptools==80.10.2", "setuptools-scm==9.2.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:724d58a9ba8a0db35fe30b6482633dabc5f54807a1368e81b157df2847e054f6", size_bytes = 14722, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:724d58a9ba8a0db35fe30b6482633dabc5f54807a1368e81b157df2847e054f6", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 45
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:385ca65e01e0102cfc81b3239e51e5a6eb325b77fe9c3b0a46c99d91b2c2cf48", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:385ca65e01e0102cfc81b3239e51e5a6eb325b77fe9c3b0a46c99d91b2c2cf48", visibility = "private" }
+entrypoint = "run.py"
+environment = { SETUPTOOLS_SCM_PRETEND_VERSION_FOR_KEYRING = "25.7.1.dev8+g7603e7cad" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the frozen keyring credential-backend library from an empty workspace and reproduce its deterministic facade, backend, credential, configuration, plugin, CLI, and password-manager contracts through a separate offline verifier."
+keywords = ["python", "keyring", "credentials", "backends", "plugins", "cli", "offline", "repository-generation"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:26a926dade936b0de138795350ed69fdd21a60b0cef31fa5e852f36da216a629"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:26a926dade936b0de138795350ed69fdd21a60b0cef31fa5e852f36da216a629"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Production compilation is byte-reproducible; Harbor 0.21.0 Oracle is valid at 45/45 with reward 1.0. Empty and install-hang are bounded installation exceptions at reward 0; stub, forgery, and call-hang collect 45 leaves and score 4/45. All verifier network probes report public_network_available=false."

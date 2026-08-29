@@ -1,0 +1,176 @@
+{
+  "bundle": {
+    "canonical_manifest_digest": "sha256:6fea39d318e1afe6c4eac85becc429ba0bbdee0e8972ccc0c78caf77639720f4",
+    "file_count": 64,
+    "mode": "production",
+    "path": ".nl2repo/compiled/keyring-final/keyring/bundle.manifest.json",
+    "repeat_byte_identical": true,
+    "sha256": "sha256:c9214011f8a0bbbbec2aa80480495555feb19fb075a94829443fbbedb2802482"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/keyring --output .nl2repo/compiled/keyring-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "used_allow_incomplete": false
+  },
+  "controls": {
+    "call-hang": {
+      "collected": 45,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/keyring-final/keyring-call-hang -a oracle --job-name keyring-final-call-hang -o .nl2repo/runs/keyring/final/call-hang --n-concurrent 1 --yes",
+      "elapsed_seconds": 95.2,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/keyring/final/call-hang/keyring-final-call-hang/keyring-call-hang__a9AFXHX/verifier/grading.json",
+        "sha256": "sha256:74f1977664b2d0a74650fa63e3df681f5a1406f34ee7af0f5f918dec72d251bd"
+      },
+      "network": {
+        "path": ".nl2repo/runs/keyring/final/call-hang/keyring-final-call-hang/keyring-call-hang__a9AFXHX/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+      },
+      "passed": 4,
+      "reward": 0.08888888888888889,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/keyring-final/keyring-empty -a oracle --job-name keyring-final-empty -o .nl2repo/runs/keyring/final/empty --n-concurrent 1 --yes",
+      "elapsed_seconds": 58.3,
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/keyring/final/empty/keyring-final-empty/keyring-empty__JBNTqjq/verifier/grading.json",
+        "sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+      },
+      "network": {
+        "path": ".nl2repo/runs/keyring/final/empty/keyring-final-empty/keyring-empty__JBNTqjq/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "candidate_forged_reward": {
+        "path": ".nl2repo/runs/keyring/final/forgery/keyring-final-forgery/keyring-forgery__D2cuc7g/artifacts/workspace/reward.json",
+        "sha256": "sha256:0f8f35b770ff837e10df993d52fa18b6a75f1b90f75878f4c4daaefe3d618618"
+      },
+      "collected": 45,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/keyring-final/keyring-forgery -a oracle --job-name keyring-final-forgery -o .nl2repo/runs/keyring/final/forgery --n-concurrent 1 --yes",
+      "elapsed_seconds": 72.9,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/keyring/final/forgery/keyring-final-forgery/keyring-forgery__D2cuc7g/verifier/grading.json",
+        "sha256": "sha256:74f1977664b2d0a74650fa63e3df681f5a1406f34ee7af0f5f918dec72d251bd"
+      },
+      "network": {
+        "path": ".nl2repo/runs/keyring/final/forgery/keyring-final-forgery/keyring-forgery__D2cuc7g/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+      },
+      "passed": 4,
+      "reward": 0.08888888888888889,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "install-hang": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/keyring-final/keyring-install-hang -a oracle --job-name keyring-final-install-hang -o .nl2repo/runs/keyring/final/install-hang --n-concurrent 1 --yes",
+      "elapsed_seconds": 180.8,
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/keyring/final/install-hang/keyring-final-install-hang/keyring-install-hang__Q7EUKHQ/verifier/grading.json",
+        "sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+      },
+      "network": {
+        "path": ".nl2repo/runs/keyring/final/install-hang/keyring-final-install-hang/keyring-install-hang__Q7EUKHQ/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "command": "Official Harbor separate-verifier network-none probes from the final Oracle and control runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/keyring/final/oracle/keyring-final-oracle/keyring__yjbaz7f/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+      },
+      "network_receipts": [
+        ".nl2repo/runs/keyring/final/oracle/keyring-final-oracle/keyring__yjbaz7f/verifier/network.json",
+        ".nl2repo/runs/keyring/final/empty/keyring-final-empty/keyring-empty__JBNTqjq/verifier/network.json",
+        ".nl2repo/runs/keyring/final/stub/keyring-final-stub/keyring-stub__Yepxr52/verifier/network.json",
+        ".nl2repo/runs/keyring/final/forgery/keyring-final-forgery/keyring-forgery__D2cuc7g/verifier/network.json",
+        ".nl2repo/runs/keyring/final/install-hang/keyring-final-install-hang/keyring-install-hang__Q7EUKHQ/verifier/network.json",
+        ".nl2repo/runs/keyring/final/call-hang/keyring-final-call-hang/keyring-call-hang__a9AFXHX/verifier/network.json"
+      ],
+      "public_network_available": false
+    },
+    "stub": {
+      "collected": 45,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/keyring-final/keyring-stub -a oracle --job-name keyring-final-stub -o .nl2repo/runs/keyring/final/stub --n-concurrent 1 --yes",
+      "elapsed_seconds": 74.7,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/keyring/final/stub/keyring-final-stub/keyring-stub__Yepxr52/verifier/grading.json",
+        "sha256": "sha256:74f1977664b2d0a74650fa63e3df681f5a1406f34ee7af0f5f918dec72d251bd"
+      },
+      "network": {
+        "path": ".nl2repo/runs/keyring/final/stub/keyring-final-stub/keyring-stub__Yepxr52/verifier/network.json",
+        "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+      },
+      "passed": 4,
+      "reward": 0.08888888888888889,
+      "valid": true
+    }
+  },
+  "dependency_lock": {
+    "digest": "sha256:724d58a9ba8a0db35fe30b6482633dabc5f54807a1368e81b157df2847e054f6",
+    "hash_count": 170,
+    "package_count": 14,
+    "pip_require_hashes_replay_exit_code": 0,
+    "vendor_wheels": false
+  },
+  "oracle": {
+    "collected": 45,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/keyring-final/keyring -a oracle --job-name keyring-final-oracle -o .nl2repo/runs/keyring/final/oracle --n-concurrent 1 --yes --allow-agent-host github.com",
+    "elapsed_seconds": 81.4,
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/keyring/final/oracle/keyring-final-oracle/keyring__yjbaz7f/verifier/grading.json",
+      "sha256": "sha256:f9861592254448ab2b71284377f59e5ed2cf648b01cc4f5453b599535550112a"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/keyring/final/oracle/keyring-final-oracle/keyring__yjbaz7f/verifier/network.json",
+      "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+    },
+    "passed": 45,
+    "reward": 1.0,
+    "valid": true
+  },
+  "residual_risks": [
+    {
+      "expected_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+      "failure_class": "infrastructure",
+      "local_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+      "next_step": "Restore or import the immutable toolchain agent image before any model Agent Run; then compile the canonical catalog/tasks projection and rerun the production catalog gate.",
+      "reason": "The locked image digest is unavailable from the public registry. Rebuilding the exact fork revision with Docker 29 produced sha256:f2a041030a64d42b32f80b56a0906d3a0d05e8c6ee12f1fcee95f276dd69fb81; its offline protocol probe passed but its image ID does not equal the lock."
+    }
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "archive_size_bytes": 235520,
+    "license_digest": "sha256:9755a18519666e5f0f4cae3daad3d7012bcae48a600b31237d75e9fe134e6683",
+    "license_spdx": "MIT",
+    "revision": "7603e7cadc254b4c6e3fc2b2f0916a005e78087d",
+    "source_digest": "sha256:30dfe6cd4dcf67495e2ff1d8a3196593b5263f8d9180fe2cabc5cdc3582815a9",
+    "status": "known",
+    "tree": "f2d1f775e4da7f12e0dafceaea017d0d3702ce35",
+    "upstream_url": "https://github.com/jaraco/keyring"
+  },
+  "task_id": "keyring",
+  "terminal_kind": "valid"
+}

@@ -1,0 +1,20 @@
+{
+  "task_id": "keyring",
+  "upstream_collection": 130,
+  "upstream_baseline": {"passed": 34, "skipped": 94, "xpassed": 2, "exit_code": 0},
+  "upstream_test_modules": ["tests/test_cli.py", "tests/test_core.py", "tests/test_errors.py", "tests/test_integration.py", "tests/test_multiprocess.py", "tests/test_packaging.py", "tests/backends/test_SecretService.py", "tests/backends/test_Windows.py", "tests/backends/test_chainer.py", "tests/backends/test_kwallet.py", "tests/backends/test_libsecret.py", "tests/backends/test_macOS.py", "tests/util/test_platform.py"],
+  "frozen_private_collection": 45,
+  "frozen_collection_source": "deterministic custom-json-v1 adapter scenarios derived from frozen public APIs and upstream assertion semantics",
+  "behavior_groups": {
+    "packaging": ["packaging-surface"],
+    "credentials": ["simple-credential", "anonymous-credential", "environment-credential", "credential-abstract"],
+    "errors": ["exception-hierarchy", "exception-context"],
+    "base_backends": ["null-backend", "fail-backend", "null-crypter", "scheme-default", "scheme-keepass", "backend-identity", "backend-viability", "backend-registration", "backend-default-credential", "backend-default-delete", "backend-empty-username", "backend-env-properties", "backend-with-properties"],
+    "core": ["core-facade", "core-set-keyring-validation", "core-load-env", "core-load-config-missing", "core-load-config-backend", "core-disable", "core-detect-priority"],
+    "chainer": ["chainer-priority", "chainer-read", "chainer-write-delete", "chainer-credential"],
+    "descriptors": ["non-data-property", "classproperty-mutation", "classproperty-readonly"],
+    "cli": ["cli-strip", "cli-set-pipe", "cli-get-plain", "cli-get-json", "cli-missing-args", "cli-parser-contract", "completion-missing"],
+    "http_password_manager": ["http-existing", "http-prompt", "http-clear"],
+    "plugins": ["plugin-loading"]
+  }
+}

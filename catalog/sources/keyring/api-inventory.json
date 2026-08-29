@@ -1,0 +1,29 @@
+{
+  "task_id": "keyring",
+  "source_revision": "7603e7cadc254b4c6e3fc2b2f0916a005e78087d",
+  "source_digest": "sha256:30dfe6cd4dcf67495e2ff1d8a3196593b5263f8d9180fe2cabc5cdc3582815a9",
+  "upstream_version": "25.7.1.dev8+g7603e7cad",
+  "python_module_count": 28,
+  "nonblank_noncomment_python_loc": 1972,
+  "top_level_class_count": 40,
+  "top_level_function_count": 45,
+  "direct_method_count": 144,
+  "public_surfaces": {
+    "keyring": ["set_keyring", "get_keyring", "set_password", "get_password", "delete_password", "get_credential"],
+    "keyring.core": ["set_keyring", "get_keyring", "disable", "get_password", "set_password", "delete_password", "get_credential", "recommended", "init_backend", "load_keyring", "load_env", "load_config"],
+    "keyring.backend": ["KeyringBackend", "Crypter", "NullCrypter", "get_all_keyring", "SchemeSelectable"],
+    "keyring.credentials": ["Credential", "SimpleCredential", "AnonymousCredential", "EnvironCredential"],
+    "keyring.errors": ["KeyringError", "PasswordSetError", "PasswordDeleteError", "InitError", "KeyringLocked", "NoKeyringError", "ExceptionRaisedContext", "ExceptionInfo"],
+    "keyring.backends": ["null.Keyring", "fail.Keyring", "chainer.ChainerBackend", "SecretService.Keyring", "kwallet.DBusKeyring", "libsecret.Keyring", "Windows.WinVaultKeyring", "macOS.Keyring"],
+    "keyring.compat.properties": ["NonDataProperty", "classproperty"],
+    "keyring.cli": ["CommandLineTool", "main"],
+    "keyring.http": ["PasswordMgr"]
+  },
+  "entry_points": {
+    "console_scripts": ["keyring = keyring.cli:main"],
+    "keyring.backends": ["Windows", "macOS", "libsecret", "SecretService", "KWallet", "chainer"],
+    "devpi_client": ["keyring"]
+  },
+  "deterministic_adaptation": "Each verifier leaf invokes candidate code in a bounded UID-isolated child. In-memory backend fixtures replace live credential services while preserving public facade and backend contracts.",
+  "excluded_live_surfaces": ["D-Bus Secret Service", "KWallet", "libsecret native bindings", "Windows Credential Manager", "macOS Keychain", "interactive terminal prompting", "multiprocessing backend discovery"]
+}

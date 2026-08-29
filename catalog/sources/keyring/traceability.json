@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "keyring",
+  "instruction_to_tests": {
+    "Supports and packaging": ["packaging-surface"],
+    "Credential objects": ["simple-credential", "anonymous-credential", "environment-credential", "credential-abstract"],
+    "Error contracts": ["exception-hierarchy", "exception-context", "backend-default-delete"],
+    "Backend base contract": ["null-backend", "fail-backend", "null-crypter", "scheme-default", "scheme-keepass", "backend-identity", "backend-viability", "backend-registration", "backend-default-credential", "backend-empty-username", "backend-env-properties", "backend-with-properties"],
+    "Facade and selection": ["core-facade", "core-set-keyring-validation", "core-load-env", "core-load-config-missing", "core-load-config-backend", "core-disable", "core-detect-priority"],
+    "Chainer backend": ["chainer-priority", "chainer-read", "chainer-write-delete", "chainer-credential"],
+    "Compatibility descriptors": ["non-data-property", "classproperty-mutation", "classproperty-readonly"],
+    "Command-line interface": ["cli-strip", "cli-set-pipe", "cli-get-plain", "cli-get-json", "cli-missing-args", "cli-parser-contract", "completion-missing"],
+    "HTTP password manager": ["http-existing", "http-prompt", "http-clear"],
+    "Plugin loading": ["plugin-loading"]
+  },
+  "test_to_instruction": "Every frozen leaf ID appears exactly once in instruction_to_tests and maps to a named public section in instruction.md.",
+  "excluded_surfaces": "Live platform keychains, D-Bus, native libsecret, interactive TTY prompting, and multiprocessing are documented boundaries and have no private leaf in this offline task version."
+}
