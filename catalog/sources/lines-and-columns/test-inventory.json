@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lines-and-columns",
+  "framework": "node:test",
+  "expected_total": 34,
+  "expected_total_source": "frozen-collection",
+  "upstream_inventory": {
+    "test_files": ["test/test.ts"],
+    "runner": "Jest with TypeScript transformation",
+    "upstream_leaf_count": 14
+  },
+  "bounded_slice": "ESM/CommonJS package identity plus deterministic line/index mapping",
+  "coverage": [
+    {"area": "package metadata and root export", "leaves": 1},
+    {"area": "single-line and LF mapping", "leaves": 9},
+    {"area": "CR, LF, and CRLF boundaries", "leaves": 9},
+    {"area": "empty lines, trailing newline, and Unicode code units", "leaves": 6},
+    {"area": "location validation", "leaves": 7},
+    {"area": "deterministic round trips", "leaves": 2}
+  ],
+  "determinism": "No I/O, clocks, randomness, or external services are used."
+}

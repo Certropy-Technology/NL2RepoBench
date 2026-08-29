@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lines-and-columns",
+  "source_revision": "eea2581b131685f2c21de777fd037c8ddd343354",
+  "package": {
+    "name": "lines-and-columns",
+    "version": "0.0.0-dev",
+    "license": "MIT",
+    "module_system": "esm-with-cjs-compatibility",
+    "exports": ["LinesAndColumns"]
+  },
+  "public_exports": [
+    {
+      "export": "LinesAndColumns",
+      "constructor": "new LinesAndColumns(string: string)",
+      "methods": [
+        "locationForIndex(index: number): SourceLocation | null",
+        "indexForLocation(location: SourceLocation): number | null"
+      ]
+    }
+  ],
+  "source_files": ["src/index.ts"],
+  "excluded_risk_surfaces": [
+    "browser globals",
+    "asynchronous behavior",
+    "CLI entry points",
+    "locale and time",
+    "undocumented internals"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "protocol": "node-subprocess-json-v1",
+  "candidate_package": "lines-and-columns",
+  "candidate_user": "candidate",
+  "candidate_site": "verifier-owned temporary npm prefix",
+  "runtime_entry": "package.json exports import/require branches",
+  "request_limit_bytes": 65536,
+  "response_limit_bytes": 262144,
+  "per_call_timeout_seconds": 30,
+  "package_allowlist": ["lines-and-columns"],
+  "hidden_inputs": ["operation and JSON payload only"],
+  "trusted_outputs": ["node:test TAP report", "grading.json", "reward.json", "network.json"],
+  "uid_proof": "Two inventory leaves assert that the candidate-importing bridge runs with effective UID and GID 10001.",
+  "isolation": [
+    "candidate is imported only by a UID-10001 child process",
+    "private tests and verifier runtime are root-owned",
+    "candidate receives no static network access",
+    "candidate cannot write verifier logs or reports"
+  ]
+}

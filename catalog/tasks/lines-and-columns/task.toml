@@ -1,0 +1,63 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/lines-and-columns"
+version = "1.0.0"
+description = "Build the zero-runtime-dependency lines-and-columns npm package with deterministic UTF-16 line and column mapping in ESM and CommonJS forms."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "commonjs",
+    "unicode",
+    "source-location",
+]
+
+[metadata]
+difficulty = "easy"
+category = "source-location-mapping"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "commonjs",
+    "unicode",
+    "text-processing",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 34
+canonical_manifest_digest = "sha256:d086b8c9d4a3a8c0fe3992f2984593037cf80383805d017462372ed118c2d4e9"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

@@ -1,0 +1,226 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lines-and-columns",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/eventualbuddha/lines-and-columns",
+    "revision": "eea2581b131685f2c21de777fd037c8ddd343354",
+    "source_digest": "sha256:ecd2011652df85d6d95d08e80d8d1d2ce06ac5dfcc9aca7ef3f28eace03c01f9",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/upstream/LICENSE",
+    "license_sha256": "sha256:456fe85ad3e71db9523313cf7437b0f90c392d8a48c869908e46716b26d2cf53",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "command_log": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/logs/source-freeze.log",
+      "sha256": "sha256:f1c01428cd19a0ad7882ebb9b996bf3a816ebbb71d7e2c815cdc63dd1212afa1"
+    }
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:fbe77f931870e14784391c7625172a117d3906f63546621f567b3d503f45c2e9",
+    "dependency_artifact": "sha256:beddb6b453f8315cf2ea08b237ff6dd4bef26cc0c60e610acf1e17c9a807a887",
+    "commands_artifact": "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040",
+    "test_bundle": "sha256:aa28d8707fda2c6e9667acbd4529610dd78116234c062a91877b41bc3a3d0a71",
+    "oracle_bundle": "sha256:476c73cd585be59118622ae3b44707e58de11161c312d86158293c5f2e11e21e",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/compiled-current/lines-and-columns",
+    "bundle_manifest_sha256": "sha256:6106331c6c15afe531ed0537b573942ee786af43f918c28d6f6eecd783bd4a66",
+    "canonical_manifest_digest": "sha256:d086b8c9d4a3a8c0fe3992f2984593037cf80383805d017462372ed118c2d4e9",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 72,
+    "manifest_integrity": "passed",
+    "allow_incomplete": false
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:beddb6b453f8315cf2ea08b237ff6dd4bef26cc0c60e610acf1e17c9a807a887",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:beddb6b453f8315cf2ea08b237ff6dd4bef26cc0c60e610acf1e17c9a807a887"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 34,
+    "collection": "34 node:test leaves; no collection errors",
+    "commands_artifact": "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040",
+    "test_bundle": "sha256:aa28d8707fda2c6e9667acbd4529610dd78116234c062a91877b41bc3a3d0a71",
+    "candidate_effective_uid": 10001,
+    "candidate_effective_gid": 10001,
+    "uid_proof": "Two passing inventory leaves assert the effective UID and GID in the candidate-importing child."
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/compiled-current/lines-and-columns -a oracle --allow-agent-host github.com --job-name lines-and-columns-oracle-final-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 34,
+    "collected": 34,
+    "passed": 34,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/oracle-final/lines-and-columns-oracle-final-20260829/lines-and-columns__UkpQyze/verifier/grading.json",
+      "sha256": "sha256:fe3f66e771f931cea4caf09028893560ebd86d0f02be5ed341936bc75fb66d01"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/oracle-final/lines-and-columns-oracle-final-20260829/lines-and-columns__UkpQyze/verifier/network.json",
+      "sha256": "sha256:e89617c134ec9f86f425045b376c9d620b0266781286ae65ffef6e03b9d1d17a"
+    },
+    "reward_receipt": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/oracle-final/lines-and-columns-oracle-final-20260829/lines-and-columns__UkpQyze/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-empty/lines-and-columns-empty-verified-20260829/lines-and-columns-empty__h2vRhmg/verifier/grading.json",
+        "sha256": "sha256:1be238329e47310f5df0dfa0883559a5524afd31bf134f78c99a98eb75e8cc13"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-empty/lines-and-columns-empty-verified-20260829/lines-and-columns-empty__h2vRhmg/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      }
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-stub/lines-and-columns-stub-verified-20260829/lines-and-columns-stub__iTujXZA/verifier/grading.json",
+        "sha256": "sha256:d2acfbf930eed465995169bb8a5d9f01bc304afee089f51571db977c9c053ab9"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-stub/lines-and-columns-stub-verified-20260829/lines-and-columns-stub__iTujXZA/verifier/network.json",
+        "sha256": "sha256:cc2248b03acba164fb6504153b99c3e0ec70f61577d471dae5d315a3470dca53"
+      }
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "forged_reward_ignored": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-forgery/lines-and-columns-forgery-verified-20260829/lines-and-columns-forgery__CTndk6v/verifier/grading.json",
+        "sha256": "sha256:d2acfbf930eed465995169bb8a5d9f01bc304afee089f51571db977c9c053ab9"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-forgery/lines-and-columns-forgery-verified-20260829/lines-and-columns-forgery__CTndk6v/verifier/network.json",
+        "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f"
+      }
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-offline/lines-and-columns-offline-verified-20260829/lines-and-columns-offline__LSjWBna/verifier/grading.json",
+        "sha256": "sha256:d2acfbf930eed465995169bb8a5d9f01bc304afee089f51571db977c9c053ab9"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-offline/lines-and-columns-offline-verified-20260829/lines-and-columns-offline__LSjWBna/verifier/network.json",
+        "sha256": "sha256:6f2fd4f339b424d75232bf9b7f5208eaed658deeba2ae6b28ff91f19795fc673"
+      }
+    }
+  },
+  "additional_controls": {
+    "timeout": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-timeout/lines-and-columns-timeout-verified-20260829/lines-and-columns-timeout__UXtqnWD/verifier/grading.json",
+        "sha256": "sha256:d2acfbf930eed465995169bb8a5d9f01bc304afee089f51571db977c9c053ab9"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/runs/final-timeout/lines-and-columns-timeout-verified-20260829/lines-and-columns-timeout__UXtqnWD/verifier/network.json",
+        "sha256": "sha256:cc2248b03acba164fb6504153b99c3e0ec70f61577d471dae5d315a3470dca53"
+      }
+    }
+  },
+  "control_generation": {
+    "method": "uv run nl2repo harbor prepare-control",
+    "task_specific_scripts": true,
+    "status_log": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/lines-and-columns/logs/control-final-status.tsv",
+      "sha256": "sha256:fc91965a4313ce49b0748673b8a3da64adfe06ef9d20dd8716d757427d810b06"
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane.",
+    "Blind review, traceability approval, pilot, dataset integration, and publication remain integrator-stage gates.",
+    "The upstream pnpm lock is incompatible with host pnpm 10.33.0; the recorded development remediation used npm 10.9.8, while production runs used locked Node 24.19.0/npm 11.17.0.",
+    "scripts/prepare_node_controls.py currently hardcodes canonicalize and was not used for final controls; the compiler registry generated all accepted control bundles from task-specific scripts."
+  ],
+  "blocker": null
+}
