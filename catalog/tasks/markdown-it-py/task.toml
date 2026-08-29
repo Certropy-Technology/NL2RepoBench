@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/markdown-it-py"
+version = "0.1.0"
+description = "Build markdown-it-py 4.2.0 from an empty workspace and satisfy a deterministic Markdown parsing, rendering, token, tree, ruler, URL, and CLI argument contract through a separate child adapter."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "markdown",
+    "parser",
+    "renderer",
+    "tokens",
+    "tree",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "markdown-parser"
+tags = [
+    "python",
+    "markdown",
+    "parser",
+    "renderer",
+    "tokens",
+    "html",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:b41b57964b66147013428c7b2a2415217f7a6be8083445fe85d9532af1303cbf"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

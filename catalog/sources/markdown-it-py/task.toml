@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "markdown-it-py"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "markdown-parser"
+tags = ["python", "markdown", "parser", "renderer", "tokens", "html", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/executablebooks/markdown-it-py"
+revision = "bff75edcd7e6ce68f417803361d6e9f1223ad373"
+license_spdx = "MIT"
+source_digest = "sha256:16144aa1aa730efe92e175a3677d0546f571049f612a20452f47136dead1f88c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "Install the hash-locked flit-core and mdurl closure during image build; candidate installation uses pip --target --no-deps --no-build-isolation."
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build/runtime closure is installed during Docker build. Agent and separate verifier runs have no egress; the trusted Oracle receives only a private digest-verified archive of the frozen source revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit-core==3.12.0", "mdurl==0.1.2"]
+lock_artifact = { digest = "sha256:de84e4c33a89e47c7d11238590b7b3650fc1bc43cda4c76976bdbabca5b7fdb5", size_bytes = 371, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:de84e4c33a89e47c7d11238590b7b3650fc1bc43cda4c76976bdbabca5b7fdb5", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:a13b0c279fc40c0fa766968af6c6fd5fd06a1e0a51fcaddade1affd39d6a5324", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a13b0c279fc40c0fa766968af6c6fd5fd06a1e0a51fcaddade1affd39d6a5324", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build markdown-it-py 4.2.0 from an empty workspace and satisfy a deterministic Markdown parsing, rendering, token, tree, ruler, URL, and CLI argument contract through a separate child adapter."
+keywords = ["python", "markdown", "parser", "renderer", "tokens", "tree", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:df88ef6ebcffe7c8121fbbc2a23faf908f79481b30fdfda04eeb093988ce644f"
+size_bytes = 1484800
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:df88ef6ebcffe7c8121fbbc2a23faf908f79481b30fdfda04eeb093988ce644f"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Production Harbor 0.21.0 compile passed; final Oracle passed 24/24 with reward 1.0; empty, stub, forgery, install-timeout, and offline network controls are recorded in hash-bound evidence. Review, pilot, and publication remain integrator-owned."

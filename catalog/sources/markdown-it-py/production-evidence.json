@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "task_id": "markdown-it-py",
+  "terminal_kind": "valid",
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/markdown-it-py-production/markdown-it-py/bundle.manifest.json",
+    "sha256": "sha256:d4f5ef8a5da4a90e65db5b67467b88f16927f53e003db23101e53257056ad644",
+    "canonical_manifest_digest": "sha256:b41b57964b66147013428c7b2a2415217f7a6be8083445fe85d9532af1303cbf"
+  },
+  "source_freeze": {
+    "upstream_url": "https://github.com/executablebooks/markdown-it-py",
+    "revision": "bff75edcd7e6ce68f417803361d6e9f1223ad373",
+    "source_archive_sha256": "sha256:16144aa1aa730efe92e175a3677d0546f571049f612a20452f47136dead1f88c",
+    "source_archive_size_bytes": 1474560,
+    "license_spdx": "MIT",
+    "python_version": "3.12.11",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "dependency_lock_sha256": "sha256:de84e4c33a89e47c7d11238590b7b3650fc1bc43cda4c76976bdbabca5b7fdb5",
+    "verifier_bundle_sha256": "sha256:a13b0c279fc40c0fa766968af6c6fd5fd06a1e0a51fcaddade1affd39d6a5324",
+    "oracle_bundle_sha256": "sha256:df88ef6ebcffe7c8121fbbc2a23faf908f79481b30fdfda04eeb093988ce644f"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/markdown-it-py --output .nl2repo/compiled/markdown-it-py-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "output": ".nl2repo/compiled/markdown-it-py-production/markdown-it-py"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/markdown-it-py-production/markdown-it-py -a oracle --job-name markdown-it-py-oracle-24-final-gate --jobs-dir .nl2repo/runs/markdown-it-py/final-gate/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "expected_total": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "valid": true,
+    "grading": {
+      "path": ".nl2repo/runs/markdown-it-py/final-gate/oracle/markdown-it-py-oracle-24-final-gate/markdown-it-py__2KUzGrq/verifier/grading.json",
+      "sha256": "sha256:51db9f6d68f4356348ca5dde0703f989176dbd74cc4dfb35183000a725c1375b"
+    },
+    "network": {
+      "path": ".nl2repo/runs/markdown-it-py/final-gate/oracle/markdown-it-py-oracle-24-final-gate/markdown-it-py__2KUzGrq/verifier/network.json",
+      "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+    },
+    "candidate_install": {
+      "path": ".nl2repo/runs/markdown-it-py/final-gate/oracle/markdown-it-py-oracle-24-final-gate/markdown-it-py__2KUzGrq/verifier/candidate-install.json",
+      "sha256": "sha256:1da4a511f78011a9a5fdbfece9eb00c5ba959d8394359d8eb54f82de8765d0b8"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/markdown-it-py-production/markdown-it-py -a nop --job-name markdown-it-py-empty-24-final-gate --jobs-dir .nl2repo/runs/markdown-it-py/final-gate/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/empty/markdown-it-py-empty-24-final-gate/markdown-it-py__8Uiqqo8/verifier/grading.json",
+        "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/empty/markdown-it-py-empty-24-final-gate/markdown-it-py__8Uiqqo8/verifier/network.json",
+        "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"
+      },
+      "summary": "valid installation-failure exception, reward 0.0, collected 0"
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/markdown-it-py/markdown-it-py-stub -a oracle --job-name markdown-it-py-stub-24-final-gate --jobs-dir .nl2repo/runs/markdown-it-py/final-gate/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/stub/markdown-it-py-stub-24-final-gate/markdown-it-py-stub__SoyKrLN/verifier/grading.json",
+        "sha256": "sha256:3ac82eb2d38e7420fc7a3112343b05ee9601339bd5293dd6be93cdaf3d632ba5"
+      },
+      "network": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/stub/markdown-it-py-stub-24-final-gate/markdown-it-py-stub__SoyKrLN/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "summary": "valid fixed-denominator negative control, 0/24, reward 0.0"
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/markdown-it-py/markdown-it-py-forgery -a oracle --job-name markdown-it-py-forgery-24-final-gate --jobs-dir .nl2repo/runs/markdown-it-py/final-gate/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/forgery/markdown-it-py-forgery-24-final-gate/markdown-it-py-forgery__Vb8Tqpq/verifier/grading.json",
+        "sha256": "sha256:3ac82eb2d38e7420fc7a3112343b05ee9601339bd5293dd6be93cdaf3d632ba5"
+      },
+      "network": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/forgery/markdown-it-py-forgery-24-final-gate/markdown-it-py-forgery__Vb8Tqpq/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "summary": "candidate report/reward forgery did not alter trusted grading, 0/24"
+    },
+    "install_timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/markdown-it-py/markdown-it-py-install-hang -a oracle --job-name markdown-it-py-install-hang-24-final-gate --jobs-dir .nl2repo/runs/markdown-it-py/final-gate/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/install-hang/markdown-it-py-install-hang-24-final-gate/markdown-it-py-install-hang__82DFb97/verifier/grading.json",
+        "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/install-hang/markdown-it-py-install-hang-24-final-gate/markdown-it-py-install-hang__82DFb97/verifier/network.json",
+        "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/install-hang/markdown-it-py-install-hang-24-final-gate/markdown-it-py-install-hang__82DFb97/verifier/candidate-install.json",
+        "sha256": "sha256:1c2abf9bf040be363d1ca3dcbef5fcf826b062963f21e590c8da9c16977d553c"
+      },
+      "summary": "bounded install timeout, process killed with -9"
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from final markdown-it-py Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/markdown-it-py/final-gate/oracle/markdown-it-py-oracle-24-final-gate/markdown-it-py__2KUzGrq/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "summary": "pypi.org:443 and 1.1.1.1:443 probes false; public_network_available false"
+    }
+  },
+  "network_lint": {
+    "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+    "exit_code": 0,
+    "task_findings": [],
+    "repository_warning_count": 141
+  },
+  "residual_risks": [
+    "No model Harbor Agent Run was started in this authoring lane.",
+    "Integrator must review the source/instruction/verifier contract, generate the canonical catalog/tasks projection, freeze dataset input, and own review, pilot, and publication.",
+    "Full-catalog network lint has 141 warnings for unrelated existing sources; this task has zero findings and zero errors."
+  ],
+  "blocker": null
+}

@@ -1,0 +1,427 @@
+{
+  "cli_parser": [
+    true,
+    [],
+    false,
+    [
+      "README.md",
+      "README.footer.md"
+    ]
+  ],
+  "custom_config": [
+    "<p>*x* &lt;b&gt;y&lt;/b&gt;</p>\n",
+    {
+      "block": [
+        "table",
+        "code",
+        "fence",
+        "blockquote",
+        "hr",
+        "list",
+        "reference",
+        "html_block",
+        "heading",
+        "lheading",
+        "paragraph"
+      ],
+      "core": [
+        "normalize",
+        "block",
+        "inline",
+        "linkify",
+        "replacements",
+        "smartquotes",
+        "text_join"
+      ],
+      "inline": [
+        "text"
+      ],
+      "inline2": [
+        "balance_pairs",
+        "strikethrough",
+        "emphasis",
+        "fragments_join"
+      ]
+    }
+  ],
+  "helpers": [
+    "& © 💬 \\ * \\a",
+    "&#0; &#x110000;"
+  ],
+  "input_errors": [
+    "TypeError",
+    "TypeError",
+    "KeyError"
+  ],
+  "link_methods": [
+    false,
+    true,
+    "https://example.com/%CE%B1%20%CE%B2",
+    "https://example.com/α β"
+  ],
+  "metadata": [
+    "4.2.0",
+    [
+      "MarkdownIt"
+    ],
+    "markdown_it.main.MarkdownIt()",
+    {
+      "breaks": false,
+      "highlight": null,
+      "html": true,
+      "langPrefix": "language-",
+      "linkify": false,
+      "maxNesting": 20,
+      "quotes": "“”‘’",
+      "typographer": false,
+      "xhtmlOut": true
+    }
+  ],
+  "options_mapping": [
+    7,
+    false,
+    "{'maxNesting': 7, 'html': True, 'linkify': False, 'typographer': False, 'quotes': '“”‘’', 'xhtmlOut': False, 'breaks': False, 'langPrefix': 'language-', 'highlight': None}",
+    true
+  ],
+  "parse_inline": [
+    [
+      "text",
+      "",
+      0,
+      {},
+      0,
+      "a ",
+      ""
+    ],
+    [
+      "em_open",
+      "em",
+      1,
+      {},
+      0,
+      "",
+      "*"
+    ],
+    [
+      "text",
+      "",
+      0,
+      {},
+      1,
+      "b",
+      ""
+    ],
+    [
+      "em_close",
+      "em",
+      -1,
+      {},
+      0,
+      "",
+      "*"
+    ],
+    [
+      "text",
+      "",
+      0,
+      {},
+      0,
+      " ",
+      ""
+    ],
+    [
+      "link_open",
+      "a",
+      1,
+      {
+        "href": "d"
+      },
+      0,
+      "",
+      ""
+    ],
+    [
+      "text",
+      "",
+      0,
+      {},
+      1,
+      "c",
+      ""
+    ],
+    [
+      "link_close",
+      "a",
+      -1,
+      {},
+      0,
+      "",
+      ""
+    ]
+  ],
+  "parse_tokens": [
+    [
+      "heading_open",
+      "h2",
+      1,
+      {},
+      0,
+      "",
+      "##"
+    ],
+    [
+      "inline",
+      "",
+      0,
+      {},
+      1,
+      "Hi",
+      ""
+    ],
+    [
+      "heading_close",
+      "h2",
+      -1,
+      {},
+      0,
+      "",
+      "##"
+    ],
+    [
+      "paragraph_open",
+      "p",
+      1,
+      {},
+      0,
+      "",
+      ""
+    ],
+    [
+      "inline",
+      "",
+      0,
+      {},
+      1,
+      "text",
+      ""
+    ],
+    [
+      "paragraph_close",
+      "p",
+      -1,
+      {},
+      0,
+      "",
+      ""
+    ]
+  ],
+  "plugin": "<p>HELLO <em>WORLD</em></p>\n",
+  "presets": [
+    "<p># h</p>\n<p>*x*</p>\n",
+    "<h1>h</h1>\n<p><em>x</em></p>\n"
+  ],
+  "reference_links": [
+    "<p><a href=\"/url\" title=\"Title\">x</a></p>\n",
+    {
+      "references": {
+        "ID": {
+          "href": "/url",
+          "map": [
+            2,
+            3
+          ],
+          "title": "Title"
+        }
+      }
+    }
+  ],
+  "render_basic": "<h1>Hello</h1>\n<p>This is <strong>bold</strong> and <a href=\"https://example.com\">link</a>.</p>\n",
+  "render_blocks": "<blockquote>\n<p>quote</p>\n</blockquote>\n<ul>\n<li>one</li>\n<li>two</li>\n</ul>\n<pre><code class=\"language-python\">print(1)\n</code></pre>\n",
+  "render_inline": "a <em>b</em> <code>c</code> &amp; d",
+  "render_security": "<p>a<br />\nb</p>\n<p>&lt;span&gt;x&lt;/span&gt;</p>\n<p>&quot;Hi&quot; -- ok...</p>\n",
+  "render_table": "<p><s>x</s></p>\n<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>c</td>\n<td>d</td>\n</tr>\n</tbody>\n</table>\n",
+  "renderer_override": "<p>[hello]</p>\n",
+  "ruler": [
+    4,
+    10,
+    10,
+    "<p>*x*</p>\n",
+    "<p><em>x</em></p>\n",
+    true
+  ],
+  "state_access": [
+    "ParserInline",
+    "ParserBlock",
+    "ParserCore",
+    "RendererHTML",
+    [
+      "block",
+      "core",
+      "inline",
+      "inline2"
+    ]
+  ],
+  "token_api": {
+    "attrs": [
+      [
+        "class",
+        "a b"
+      ]
+    ],
+    "copy": [
+      "y",
+      "x"
+    ],
+    "dict": {
+      "attrs": null,
+      "block": false,
+      "children": null,
+      "content": "hi",
+      "hidden": false,
+      "info": "",
+      "level": 0,
+      "map": null,
+      "markup": "",
+      "meta": {},
+      "nesting": 0,
+      "tag": "",
+      "type": "text"
+    },
+    "index": 0,
+    "missing": null,
+    "restored": [
+      "text",
+      {},
+      "ok"
+    ]
+  },
+  "token_nested": [
+    {
+      "attrs": {},
+      "block": false,
+      "children": null,
+      "content": "",
+      "hidden": false,
+      "info": "",
+      "level": 0,
+      "map": null,
+      "markup": "",
+      "meta": {},
+      "nesting": 0,
+      "tag": "",
+      "type": "text"
+    },
+    {
+      "attrs": {},
+      "block": false,
+      "children": null,
+      "content": "",
+      "hidden": false,
+      "info": "",
+      "level": 0,
+      "map": null,
+      "markup": "**",
+      "meta": {},
+      "nesting": 1,
+      "tag": "strong",
+      "type": "strong_open"
+    },
+    {
+      "attrs": {},
+      "block": false,
+      "children": null,
+      "content": "bold",
+      "hidden": false,
+      "info": "",
+      "level": 1,
+      "map": null,
+      "markup": "",
+      "meta": {},
+      "nesting": 0,
+      "tag": "",
+      "type": "text"
+    },
+    {
+      "attrs": {},
+      "block": false,
+      "children": null,
+      "content": "",
+      "hidden": false,
+      "info": "",
+      "level": 0,
+      "map": null,
+      "markup": "**",
+      "meta": {},
+      "nesting": -1,
+      "tag": "strong",
+      "type": "strong_close"
+    },
+    {
+      "attrs": {},
+      "block": false,
+      "children": null,
+      "content": "",
+      "hidden": false,
+      "info": "",
+      "level": 0,
+      "map": null,
+      "markup": "",
+      "meta": {},
+      "nesting": 0,
+      "tag": "",
+      "type": "text"
+    }
+  ],
+  "tree_api": {
+    "children": [
+      [
+        "paragraph",
+        "",
+        1
+      ]
+    ],
+    "repr": "SyntaxTreeNode(root)",
+    "tokens": [
+      "paragraph_open",
+      "inline",
+      "paragraph_close"
+    ],
+    "type": "root",
+    "walk": [
+      [
+        "root",
+        null
+      ],
+      [
+        "paragraph",
+        0
+      ],
+      [
+        "inline",
+        1
+      ],
+      [
+        "text",
+        0
+      ],
+      [
+        "strong",
+        0
+      ],
+      [
+        "text",
+        1
+      ],
+      [
+        "text",
+        0
+      ]
+    ]
+  },
+  "tree_mutation": [
+    true,
+    true,
+    true,
+    "paragraph"
+  ]
+}
