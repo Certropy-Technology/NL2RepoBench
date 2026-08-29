@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/valyala/fastjson",
+    "revision": "d652a1b1909d3520389b2c287ca3cf3aa3791451",
+    "tag_at_revision": "v1.6.10",
+    "source_digest": "sha256:e7d863c47fbe692c97f5148a75dcda72695fca9dc672642dcdb4a22da28861a2",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:424ae79c5b44daa99a297005ec06496f7631fcf7a3134a1704d5a689b6a4734e"
+  },
+  "environment": {
+    "runtime": "go1.26.5-X:nodwarf5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "module_bundle": {
+      "digest": "sha256:d44cfc3cfb1099c571ac2ffb8bf83f792a85936152c64829939e3b1e7e3eaab1",
+      "size_bytes": 443
+    }
+  },
+  "artifacts": {
+    "final_bundle_manifest": {
+      "path": ".nl2repo/authoring-work/go-fastjson/r4-compiled/go-fastjson/bundle.manifest.json",
+      "sha256": "sha256:f3fbf24b8ea6f09dedd0078e8046a6174637e59d88578cb5a48f73df2e70d22a",
+      "canonical_manifest_digest": "sha256:3acc237a6db172a3b72a5a6c6fd3daad536a1c7be67cfc3f0cda6d85847e9877",
+      "file_count": 74,
+      "integrity_errors": 0
+    },
+    "gate_reports": {
+      "oracle": {
+        "path": ".nl2repo/authoring-work/go-fastjson/r4-gate/oracle-gate.json",
+        "sha256": "sha256:823eeb75c5ef413334d648e5215c48dade09de8cbefe02f64460e87eb6342758"
+      },
+      "controls": {
+        "path": ".nl2repo/authoring-work/go-fastjson/r4-gate/controls-gate.json",
+        "sha256": "sha256:3a2cfbe93ed05c2a4de1982a924bc6c928ffa43980bb8ed419891968840e4759"
+      }
+    },
+    "oracle_bundle": {
+      "digest": "sha256:7d8b1152cd3b2ccd1bd55131cac400fcbcacf690da54de90b6527b3c13c2998a",
+      "size_bytes": 2018
+    },
+    "verifier_bundle": {
+      "digest": "sha256:ef8f1a48de94f74a038885533bef1b2e7e1dc6a69c8794d504d1c82bf8324a95",
+      "size_bytes": 2192
+    }
+  },
+  "inventory": {
+    "public_types": 8,
+    "public_constants": 8,
+    "public_functions_and_methods": 68,
+    "default_build_public_symbols": 84,
+    "upstream_dynamic_leaf_tests": 95,
+    "upstream_runs": 3,
+    "upstream_failures_each_run": 0,
+    "task_frozen_total": 1,
+    "task_leaf_id": "contract::public-api",
+    "task_bridge_requests": 27
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-fastjson",
+      "exit_code": 0,
+      "summary": "source_digest sha256:229bc88eb28614fa8d3e1789df847fe2ac00e21b6201d89138793b1294117738"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "summary": "error_count=0; go-fastjson findings=0"
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py",
+      "exit_code": 0,
+      "summary": "10 passed"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-fastjson --output .nl2repo/authoring-work/go-fastjson/r4-compiled --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "summary": "production compile; manifest byte-identical with r4-compiled-repro; 74 files and 0 integrity errors"
+    },
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+      "exit_code": 0,
+      "summary": "fresh source probe 95/95 leaves passed; repeated historical probes 3/3 passed"
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/go-fastjson/r4-compiled/go-fastjson -a oracle --allow-agent-host github.com --job-name go-fastjson-oracle-r4-20260828 -o .nl2repo/authoring-work/go-fastjson/r4-runs/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/oracle/go-fastjson-oracle-r4-20260828/go-fastjson__MHBqgRs/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/oracle/go-fastjson-oracle-r4-20260828/go-fastjson__MHBqgRs/verifier/network.json"
+  },
+  "offline_replay": {
+    "command": "docker run --rm --network none -v <writable-candidate>:/workspace -v <logs>:/logs nl2repo/go-fastjson-verifier-r4:20260828 /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/offline-docker/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/offline-docker/verifier/network.json"
+  },
+  "controls": {
+    "stub": {"valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/stub/go-fastjson-stub-r4-20260828/go-fastjson-stub__EPuWP39/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/stub/go-fastjson-stub-r4-20260828/go-fastjson-stub__EPuWP39/verifier/network.json"},
+    "forgery": {"valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/forgery/go-fastjson-forgery-r4-20260828/go-fastjson-forgery__ncwNVQL/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/forgery/go-fastjson-forgery-r4-20260828/go-fastjson-forgery__ncwNVQL/verifier/network.json"},
+    "install-failure": {"valid": true, "passed": 0, "collected": 0, "frozen_total": 1, "reward": 0.0, "exception": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/install-failure/go-fastjson-install-failure-r4-20260828/go-fastjson-install-failure__8Y7PDtG/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/install-failure/go-fastjson-install-failure-r4-20260828/go-fastjson-install-failure__8Y7PDtG/verifier/network.json"},
+    "panic": {"valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/panic/go-fastjson-panic-r4-20260828/go-fastjson-panic__nYbVjuB/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/panic/go-fastjson-panic-r4-20260828/go-fastjson-panic__nYbVjuB/verifier/network.json"},
+    "hang": {"valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/hang/go-fastjson-hang-r4-20260828/go-fastjson-hang__wy8SnME/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/hang/go-fastjson-hang-r4-20260828/go-fastjson-hang__wy8SnME/verifier/network.json"},
+    "oversized-output": {"valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/oversized-output/go-fastjson-oversized-output-r4-20260828/go-fastjson-oversized-output__GSmZ8GD/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/oversized-output/go-fastjson-oversized-output-r4-20260828/go-fastjson-oversized-output__GSmZ8GD/verifier/network.json"},
+    "background-process": {"valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-fastjson/r4-runs/background-process/go-fastjson-background-process-r4-20260828/go-fastjson-background-process__gPqjtZW/verifier/grading.json", "network": ".nl2repo/authoring-work/go-fastjson/r4-runs/background-process/go-fastjson-background-process-r4-20260828/go-fastjson-background-process__gPqjtZW/verifier/network.json"}
+  },
+  "residual_risks": [
+    "Upstream uses unsafe internal byte/string conversion helpers; the typed bridge only accepts owned strings and snapshots outputs across the process boundary.",
+    "The task covers a bounded root-package contract; fastfloat, fuzz build tags, benchmarks, concurrent shared mutable objects, and zero-copy aliases remain out of scope.",
+    "Independent blind/spec review and a model Agent Run remain integrator responsibilities; no model Agent Run was started in this lane."
+  ]
+}

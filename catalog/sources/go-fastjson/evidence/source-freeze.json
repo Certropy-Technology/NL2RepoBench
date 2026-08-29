@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "upstream_url": "https://github.com/valyala/fastjson",
+  "revision": "d652a1b1909d3520389b2c287ca3cf3aa3791451",
+  "tag_at_revision": "v1.6.10",
+  "source_digest": "sha256:e7d863c47fbe692c97f5148a75dcda72695fca9dc672642dcdb4a22da28861a2",
+  "source_archive_size_bytes": 4823040,
+  "license_spdx": "MIT",
+  "license_file": "LICENSE",
+  "license_sha256": "sha256:424ae79c5b44daa99a297005ec06496f7631fcf7a3134a1704d5a689b6a4734e",
+  "module_path": "github.com/valyala/fastjson",
+  "upstream_go_version": "1.24",
+  "task_go_version": "1.26.5",
+  "dependencies": [],
+  "first_lane_scan": {
+    "cgo": false,
+    "external_replace": false,
+    "go_generate": false,
+    "go_linkname": false,
+    "go_workspace": false,
+    "plugin": false,
+    "submodules": false,
+    "symlinks": 0,
+    "toolchain_directive": false,
+    "unsafe_import": true
+  },
+  "unsafe_adaptation": "The upstream package uses internal byte/string conversion helpers. The evaluator bridge accepts owned strings and JSON values only and never exposes aliased byte slices across the process boundary.",
+  "upstream_tests": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "runs": 3,
+    "passed_leaf_tests_each_run": 95,
+    "failed_leaf_tests_each_run": 0,
+    "skipped_leaf_tests_each_run": 0,
+    "package_count": 2,
+    "logs": [
+      ".nl2repo/authoring-work/go-fastjson/logs/upstream-test-1.jsonl",
+      ".nl2repo/authoring-work/go-fastjson/logs/upstream-test-2.jsonl",
+      ".nl2repo/authoring-work/go-fastjson/logs/upstream-test-3.jsonl"
+    ]
+  }
+}

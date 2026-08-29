@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "source_revision": "d652a1b1909d3520389b2c287ca3cf3aa3791451",
+  "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+  "offline_runs": 3,
+  "dynamic_leaf_tests_each_run": 95,
+  "failed_leaf_tests_each_run": 0,
+  "skipped_leaf_tests_each_run": 0,
+  "packages": [
+    "github.com/valyala/fastjson",
+    "github.com/valyala/fastjson/fastfloat"
+  ],
+  "static_inventory": {
+    "test_functions": 41,
+    "examples": 15,
+    "executable_top_level_functions": 56,
+    "benchmarks_not_run": 13
+  },
+  "functional_groups": [
+    "arena allocation and reset",
+    "package-level parse and lookup helpers",
+    "parser reuse, typed conversion, raw strings, raw numbers, and parser pool",
+    "scanner streams and lifecycle",
+    "object and array mutation",
+    "strict validation and depth limits",
+    "fastfloat success, failure, best-effort, overflow, infinity, and NaN behavior",
+    "public examples for parsing, lookup, scanning, marshaling, visiting, and mutation"
+  ],
+  "task_verifier": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "request_count": 27,
+    "reason": "The trusted contract batches deterministic typed-bridge assertions into one verifier-owned leaf under the current Go compiler profile."
+  },
+  "logs": [
+    ".nl2repo/authoring-work/go-fastjson/logs/upstream-test-1.jsonl",
+    ".nl2repo/authoring-work/go-fastjson/logs/upstream-test-2.jsonl",
+    ".nl2repo/authoring-work/go-fastjson/logs/upstream-test-3.jsonl"
+  ]
+}

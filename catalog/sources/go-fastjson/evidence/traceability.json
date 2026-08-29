@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "api_inventory": {
+    "method": "go doc -all at the frozen revision",
+    "package": "github.com/valyala/fastjson",
+    "public_symbol_count": 84,
+    "public_types": 8,
+    "public_functions_and_methods": 68,
+    "public_constants": 8
+  },
+  "source_baseline": {
+    "revision": "d652a1b1909d3520389b2c287ca3cf3aa3791451",
+    "archive_digest": "sha256:e7d863c47fbe692c97f5148a75dcda72695fca9dc672642dcdb4a22da28861a2",
+    "license": "MIT",
+    "static_test_functions": 56,
+    "dynamic_leaf_tests_each_run": 95,
+    "failed_leaf_tests_each_run": 0,
+    "offline_runs": 3,
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false
+  },
+  "risk_adaptation": {
+    "unsafe_scope": "The bridge passes owned strings and serializes outputs, so upstream zero-copy byte aliases never cross the process boundary.",
+    "lifetime_scope": "Each response snapshots parser, scanner, pool, or arena values before the next reuse operation invalidates them.",
+    "resource_scope": "The bridge caps lines at 256 KiB, JSON text at 128 KiB, paths and batches, recursive depth at 32, and snapshots/builds at 2048 nodes.",
+    "concurrency_scope": "The contract uses each mutable parser, scanner, pool checkout, arena, object, and value sequentially as required by the public API."
+  },
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "parse and validate success and error behavior",
+      "permissive parser numbers versus strict validation",
+      "JSON type, scalar conversion, escape, numeric spelling, and compact marshal behavior",
+      "duplicate object key order and nested array snapshots",
+      "bounded object and array path lookup plus package-level helpers",
+      "whitespace-delimited scanner success and malformed-stream errors",
+      "object replacement, insertion, deletion, array extension, null gaps, and shifting",
+      "arena recursive construction and cache reset",
+      "parser-pool reuse across changing object and array shapes",
+      "structured bridge errors for malformed and unknown operations"
+    ]
+  }
+}

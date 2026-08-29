@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "go-fastjson"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:7d8b1152cd3b2ccd1bd55131cac400fcbcacf690da54de90b6527b3c13c2998a", size_bytes = 2018, uri = "artifact://private/sha256:7d8b1152cd3b2ccd1bd55131cac400fcbcacf690da54de90b6527b3c13c2998a", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "json-parser"
+tags = ["go", "go-modules", "json", "parser", "scanner", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/valyala/fastjson"
+revision = "d652a1b1909d3520389b2c287ca3cf3aa3791451"
+license_spdx = "MIT"
+source_digest = "sha256:e7d863c47fbe692c97f5148a75dcda72695fca9dc672642dcdb4a22da28861a2"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution is offline; only the trusted Oracle may receive a run-scoped github.com authorization for the frozen source."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:d44cfc3cfb1099c571ac2ffb8bf83f792a85936152c64829939e3b1e7e3eaab1", size_bytes = 443, uri = "artifact://private/sha256:d44cfc3cfb1099c571ac2ffb8bf83f792a85936152c64829939e3b1e7e3eaab1", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate bounded fastjson parse, lookup, scan, mutation, arena, and pool behavior through a typed Go bridge."
+keywords = ["go", "json", "parser", "scanner", "go-modules", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-wave2-20260828-c2"
+reason = "Frozen source, typed bridge, offline closure, trusted Oracle, fixed-denominator stub and forgery, failure, timeout, output, process, and offline controls passed; awaiting integrator review and model pilot."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:ef8f1a48de94f74a038885533bef1b2e7e1dc6a69c8794d504d1c82bf8324a95", size_bytes = 2192, uri = "artifact://private/sha256:ef8f1a48de94f74a038885533bef1b2e7e1dc6a69c8794d504d1c82bf8324a95", visibility = "private" }
+entrypoint = "contract.sh"
