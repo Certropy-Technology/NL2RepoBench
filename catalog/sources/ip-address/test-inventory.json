@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "framework": "mocha upstream; node:test adapted boundary",
+  "upstream_files": ["test/address-test.ts", "test/common-test.ts", "test/functionality-v4-test.ts", "test/functionality-v6-test.ts", "test/readme-test.ts"],
+  "upstream_leaf_count": 3594,
+  "frozen_collection_source": "private deterministic custom-json-v1 slice",
+  "scored_layers": ["package-shape", "IPv4 core", "IPv6 core", "CIDR and masks", "embedded-address conversions", "classification", "error contract"],
+  "expected_total": 34,
+  "excluded": ["coverage", "README generation", "TypeScript compiler diagnostics", "browser and HTML rendering helpers", "non-JSON callback inputs", "full generated Unicode/corpus expansion"]
+}

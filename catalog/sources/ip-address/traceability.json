@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ip-address",
+  "instruction_sections": ["Project Description", "Supports", "API Usage Guide", "Implementation Notes"],
+  "behaviors": {
+    "package-shape": {"instruction": ["Supports", "Implementation Notes"], "tests": ["shape-root-exports", "shape-commonjs", "shape-metadata"]},
+    "ipv4": {"instruction": ["API Usage Guide/Address4"], "tests": ["v4-validity", "v4-canonical", "v4-conversions", "v4-ranges", "v4-classifiers"]},
+    "ipv6": {"instruction": ["API Usage Guide/Address6"], "tests": ["v6-validity", "v6-canonical", "v6-conversions", "v6-ranges", "v6-classifiers"]},
+    "errors": {"instruction": ["API Usage Guide/Shared address behavior", "API Usage Guide/AddressError"], "tests": ["invalid-input", "invalid-prefix", "invalid-bytes", "invalid-mask"]},
+    "boundary": {"instruction": ["Implementation Notes"], "tests": ["bounded-json-adapter", "network-isolation", "verifier-owned-report"]}
+  },
+  "coverage_rule": "Every scored leaf maps to an explicitly documented behavior; every core public behavior in the task boundary has at least one scored leaf."
+}

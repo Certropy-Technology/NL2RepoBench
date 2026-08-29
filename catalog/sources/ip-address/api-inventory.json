@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "package": "ip-address",
+  "revision": "ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9",
+  "root_exports": ["Address4", "Address6", "AddressError", "v6"],
+  "classes": {
+    "Address4": {"constructors": 1, "static_methods": 12, "instance_methods": 35, "properties": ["address", "addressMinusSuffix", "groups", "parsedAddress", "parsedSubnet", "subnet", "subnetMask", "v4"]},
+    "Address6": {"constructors": 1, "static_methods": 12, "instance_methods": 57, "properties": ["address", "address4", "addressMinusSuffix", "elidedGroups", "groups", "parsedAddress", "parsedAddress4", "parsedSubnet", "subnet", "subnetMask", "v4", "zone"]},
+    "AddressError": {"constructors": 1, "instance_properties": ["name", "message", "parseMessage"]}
+  },
+  "helpers": ["prefixLengthFromMask", "assertByteArray", "numberToPaddedHex", "stringToPaddedHex", "testBit"],
+  "inventory_basis": "frozen package.json, TypeScript source AST, generated dist exports, and upstream test imports"
+}

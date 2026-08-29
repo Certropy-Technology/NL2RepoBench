@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "ip-address"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "ip-address-library"
+tags = ["node", "npm", "commonjs", "ipv4", "ipv6", "cidr", "subnet", "networking"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/beaugunderson/ip-address"
+revision = "ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9"
+license_spdx = "MIT"
+source_digest = "sha256:5003fe0f3466d3c7b6a494d5aae4df4ca87d165fbede1e50b87fceaaa7f4977d"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The candidate has no runtime dependency roots; the verifier-owned npm v3 lock/cache and private test bundles are installed during image build. Only the trusted Oracle receives a run-scoped authorization for the exact upstream source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828", size_bytes = 415, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 34
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41", size_bytes = 270, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41", visibility = "private" }
+test_bundle = { digest = "sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa", size_bytes = 4368, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the ip-address CommonJS IPv4 and IPv6 address library with CIDR, subnet, conversion, and classification behavior."
+keywords = ["node", "npm", "commonjs", "ipv4", "ipv6", "cidr", "subnet", "networking"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source, private npm closure, custom JSON boundary, production compile, Oracle 34/34, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Independent review, projection, publication, and model Agent Run remain integrator work."
+
+[oracle_bundle]
+digest = "sha256:62b2b8877d3623e6ea0667a54eb91a174d881d1edb94a840e3ba86e337a6219e"
+size_bytes = 56739
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:62b2b8877d3623e6ea0667a54eb91a174d881d1edb94a840e3ba86e337a6219e"
+visibility = "private"

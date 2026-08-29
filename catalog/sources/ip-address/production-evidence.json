@@ -1,0 +1,329 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ip-address",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 34,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/beaugunderson/ip-address",
+    "revision": "ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9",
+    "release_tag": "v10.5.0",
+    "source_archive_path": ".nl2repo/authoring-work/ip-address/source/source.tar",
+    "source_archive_size_bytes": 604160,
+    "source_digest": "sha256:5003fe0f3466d3c7b6a494d5aae4df4ca87d165fbede1e50b87fceaaa7f4977d",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/ip-address/upstream/LICENSE",
+    "license_digest": "sha256:f8d791359a50cbcac82c29cb7b0b1b889b28be76fdd35b8ee33f0f7c8704702a",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "archive_revision_asserted": true
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_network_mode": "no-network",
+      "agent_allowed_hosts": [],
+      "verifier_network_mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "consumer": "candidate-runtime",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828",
+      "size_bytes": 415,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828",
+      "visibility": "private"
+    }
+  },
+  "private_artifacts": {
+    "commands": {
+      "digest": "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41",
+      "size_bytes": 270
+    },
+    "tests": {
+      "digest": "sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa",
+      "size_bytes": 4368
+    },
+    "oracle": {
+      "digest": "sha256:62b2b8877d3623e6ea0667a54eb91a174d881d1edb94a840e3ba86e337a6219e",
+      "size_bytes": 56739
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 34,
+    "source": "private deterministic custom-json-v1 slice",
+    "upstream_test_inventory": {
+      "framework": "mocha upstream; node:test adapted boundary",
+      "files": [
+        "test/address-test.ts",
+        "test/common-test.ts",
+        "test/functionality-v4-test.ts",
+        "test/functionality-v6-test.ts",
+        "test/readme-test.ts"
+      ],
+      "reported_upstream_leaf_count": 3594
+    },
+    "collection_errors": 0
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/ip-address/final-compile/ip-address/bundle.manifest.json",
+    "sha256": "sha256:5153a82e3cca19c30044eff48723d583360aae561f8493e5cf0839ddd2c4dd93",
+    "canonical_manifest_digest": "sha256:d676d70c1ac446ab582c90e8d7d38c928b2a8fc6853b48f4eeb2cb0aeec63f27",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "mode": "production",
+    "file_count": 103,
+    "repeat_compile_byte_identical": true
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-compile/ip-address -a oracle --allow-agent-host github.com --job-name ip-address-final-oracle -o .nl2repo/authoring-work/ip-address/final-runs/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 34,
+    "collected": 34,
+    "passed": 34,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/authoring-work/ip-address/final-runs/oracle/ip-address-final-oracle/ip-address__E6r9Dug/verifier/grading.json",
+      "sha256": "sha256:c57f63444ce1f453aeb788c9f2bf86685958dd6edb84fcbca990f38198e643d5"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/ip-address/final-runs/oracle/ip-address-final-oracle/ip-address__E6r9Dug/verifier/network.json",
+      "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-compile/ip-address -a nop --job-name ip-address-final-empty -o .nl2repo/authoring-work/ip-address/final-runs/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 34,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/empty/ip-address-final-empty/ip-address__Wv5BTyR/verifier/grading.json",
+        "sha256": "sha256:1be238329e47310f5df0dfa0883559a5524afd31bf134f78c99a98eb75e8cc13"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/empty/ip-address-final-empty/ip-address__Wv5BTyR/verifier/network.json",
+        "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"
+      },
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-controls/ip-address-stub -a oracle --job-name ip-address-final-stub -o .nl2repo/authoring-work/ip-address/final-runs/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 34,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/stub/ip-address-final-stub/ip-address-stub__vVmDy5x/verifier/grading.json",
+        "sha256": "sha256:0ba813ae574142c3d39f14b57c19be48d0e8b2eeef27f727c526acc19addb56d"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/stub/ip-address-final-stub/ip-address-stub__vVmDy5x/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a"
+      },
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-controls/ip-address-forgery -a oracle --job-name ip-address-final-forgery -o .nl2repo/authoring-work/ip-address/final-runs/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 34,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/forgery/ip-address-final-forgery/ip-address-forgery__6DXyhUv/verifier/grading.json",
+        "sha256": "sha256:0ba813ae574142c3d39f14b57c19be48d0e8b2eeef27f727c526acc19addb56d"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/forgery/ip-address-final-forgery/ip-address-forgery__6DXyhUv/verifier/network.json",
+        "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"
+      },
+      "public_network_available": false
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-controls/ip-address-install-script -a oracle --job-name ip-address-final-install-script -o .nl2repo/authoring-work/ip-address/final-runs/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 34,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/install-script/ip-address-final-install-script/ip-address-install-script__qM7f2s7/verifier/grading.json",
+        "sha256": "sha256:1be238329e47310f5df0dfa0883559a5524afd31bf134f78c99a98eb75e8cc13"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/install-script/ip-address-final-install-script/ip-address-install-script__qM7f2s7/verifier/network.json",
+        "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"
+      },
+      "public_network_available": false
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-controls/ip-address-loader-hook -a oracle --job-name ip-address-final-loader-hook -o .nl2repo/authoring-work/ip-address/final-runs/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 34,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/loader-hook/ip-address-final-loader-hook/ip-address-loader-hook__8LHeP6y/verifier/grading.json",
+        "sha256": "sha256:0ba813ae574142c3d39f14b57c19be48d0e8b2eeef27f727c526acc19addb56d"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/loader-hook/ip-address-final-loader-hook/ip-address-loader-hook__8LHeP6y/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      },
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-controls/ip-address-hang -a oracle --job-name ip-address-final-hang -o .nl2repo/authoring-work/ip-address/final-runs/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 34,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/hang/ip-address-final-hang/ip-address-hang__usaiRVr/verifier/grading.json",
+        "sha256": "sha256:0ba813ae574142c3d39f14b57c19be48d0e8b2eeef27f727c526acc19addb56d"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/hang/ip-address-final-hang/ip-address-hang__usaiRVr/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      },
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ip-address/final-controls/ip-address-offline -a oracle --job-name ip-address-final-offline -o .nl2repo/authoring-work/ip-address/final-runs/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "expected_total": 34,
+      "collected": 34,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/offline/ip-address-final-offline/ip-address-offline__YeGWykB/verifier/grading.json",
+        "sha256": "sha256:0ba813ae574142c3d39f14b57c19be48d0e8b2eeef27f727c526acc19addb56d"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ip-address/final-runs/offline/ip-address-final-offline/ip-address-offline__YeGWykB/verifier/network.json",
+        "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"
+      },
+      "public_network_available": false
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-freeze",
+      "command": "git clone --no-checkout --filter=blob:none https://github.com/beaugunderson/ip-address.git; git checkout --detach ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9; git archive --format=tar HEAD | sha256sum",
+      "tool_version": "git 2.x; coreutils sha256sum",
+      "exit_code": 0,
+      "result": "revision ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9 and archive digest match"
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/ip-address",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "controls-passed"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "error_count=0; no ip-address finding; unrelated repository warnings retained"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run --frozen nl2repo harbor compile catalog/sources/ip-address --output .nl2repo/authoring-work/ip-address/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "nl2repobench current checkout; toolchain.node.lock.toml",
+      "exit_code": 0,
+      "result": "production bundle generated; manifest sha256:5153a82e3cca19c30044eff48723d583360aae561f8493e5cf0839ddd2c4dd93"
+    },
+    {
+      "stage": "deterministic-compile",
+      "command": "repeat production compile and diff -qr final-compile final-compile-repeat",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "byte-identical"
+    },
+    {
+      "stage": "oracle",
+      "command": "Harbor 0.21.0 Oracle with run-scoped --allow-agent-host github.com",
+      "tool_version": "Harbor 0.21.0; Docker 29.7.2",
+      "exit_code": 0,
+      "result": "valid=true; 34/34; reward=1.0; no exception; verifier network false"
+    },
+    {
+      "stage": "controls",
+      "command": "prepare-control plus Node controls for empty, stub, forgery, install-script, loader-hook, hang, and offline",
+      "tool_version": "Harbor 0.21.0; Docker 29.7.2",
+      "exit_code": 0,
+      "result": "all bounded controls completed; fixed denominator preserved; verifier network false"
+    },
+    {
+      "stage": "syntax-and-serialization",
+      "command": "bash -n compiled shell scripts; node --check runtime modules; parse source JSON/TOML",
+      "tool_version": "Node 22.23.1 host; bash 5.x",
+      "exit_code": 0,
+      "result": "all checks passed"
+    }
+  ],
+  "residual_risks": [
+    "Independent blind/spec review, generated catalog/tasks projection, publication, and model Agent Run remain integrator work.",
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "The host Node/npm are 22.23.1/10.9.8; all production compile and Harbor receipts use the locked Node 24.19.0/npm 11.17.0 image.",
+    "The task-local source archive and full Harbor run trees remain under .nl2repo and are not public catalog bytes."
+  ]
+}

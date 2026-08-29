@@ -1,0 +1,102 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST = 64 * 1024;
+const MAX_RESPONSE = 256 * 1024;
+
+function emit(payload, code = 0) {
+  const text = JSON.stringify(payload);
+  if (Buffer.byteLength(text) > MAX_RESPONSE) {
+    process.stderr.write('response exceeds bound\n');
+    process.exit(70);
+  }
+  process.stdout.write(`${text}\n`);
+  process.exit(code);
+}
+
+function addressProjection(value) {
+  if (!value || typeof value !== 'object') return value;
+  const result = {kind: value.constructor?.name ?? 'Object'};
+  for (const key of ['address', 'addressMinusSuffix', 'parsedAddress', 'parsedAddress4', 'parsedSubnet', 'subnet', 'subnetMask', 'groups', 'v4', 'zone', 'elidedGroups', 'elisionBegin', 'elisionEnd']) {
+    if (value[key] !== undefined) result[key] = normalize(value[key]);
+  }
+  return result;
+}
+
+function normalize(value) {
+  if (typeof value === 'bigint') return {kind: 'bigint', value: value.toString()};
+  if (value instanceof RegExp) return {kind: 'regexp', source: value.source, flags: value.flags};
+  if (value && typeof value === 'object' && (value.constructor?.name === 'Address4' || value.constructor?.name === 'Address6')) return addressProjection(value);
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === 'object') {
+    const output = {};
+    for (const key of Object.keys(value).sort()) output[key] = normalize(value[key]);
+    return output;
+  }
+  return value;
+}
+
+function errorProjection(error) {
+  return {
+    type: error?.constructor?.name ?? 'Error',
+    name: error?.name ?? error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error).slice(0, 4096),
+    ...(error?.parseMessage === undefined ? {} : {parseMessage: String(error.parseMessage)}),
+  };
+}
+
+function loadPackage() {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  return require('ip-address');
+}
+
+function invoke(pkg, spec) {
+  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw new TypeError('call specification must be an object');
+  const className = spec.class;
+  const ctor = pkg[className];
+  if (typeof ctor !== 'function' || !['Address4', 'Address6'].includes(className)) throw new TypeError('class is not allowlisted');
+  const rawArgs = Array.isArray(spec.args) ? spec.args : [];
+  const args = rawArgs.map((value) => {
+    if (value && typeof value === 'object' && value.kind === 'bigint') return BigInt(value.value);
+    if (value && typeof value === 'object' && value.kind === 'address') {
+      const addressCtor = pkg[value.class];
+      if (typeof addressCtor !== 'function') throw new TypeError('address argument class is invalid');
+      return new addressCtor(...value.args);
+    }
+    return value;
+  });
+  let target;
+  if (spec.kind === 'static') {
+    if (typeof ctor[spec.method] !== 'function') throw new TypeError('static method is not callable');
+    target = ctor[spec.method](...args);
+  } else if (spec.kind === 'instance') {
+    target = new ctor(...(Array.isArray(spec.construct) ? spec.construct : []));
+    if (typeof target[spec.method] !== 'function') throw new TypeError('instance method is not callable');
+    target = target[spec.method](...args);
+  } else if (spec.kind === 'property') {
+    target = new ctor(...(Array.isArray(spec.construct) ? spec.construct : []))[spec.method];
+  } else {
+    throw new TypeError('call kind is not allowlisted');
+  }
+  if (spec.result === 'address' && target && typeof target === 'object') return addressProjection(target);
+  if (spec.result === 'url' && target && typeof target === 'object') {
+    return {error: target.error, port: target.port, address: target.address ? addressProjection(target.address) : null};
+  }
+  return normalize(target);
+}
+
+try {
+  const raw = readFileSync(0);
+  if (raw.byteLength > MAX_REQUEST) throw new TypeError('request exceeds bound');
+  const request = JSON.parse(raw.toString('utf8'));
+  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new TypeError('request must be an object');
+  const pkg = loadPackage();
+  if (request.operation === 'inventory') {
+    emit({ok: true, value: {exports: Object.keys(pkg).sort(), address4Statics: ['isValid', 'fromAddressAndMask', 'fromAddressAndWildcardMask', 'fromWildcard', 'fromHex', 'fromInteger', 'fromArpa', 'fromBigInt', 'fromByteArray', 'fromUnsignedByteArray'].filter((name) => typeof pkg.Address4[name] === 'function'), address6Statics: ['isValid', 'fromBigInt', 'fromURL', 'fromAddressAndMask', 'fromAddressAndWildcardMask', 'fromWildcard', 'fromAddress4', 'fromArpa', 'fromAddress4Nat64', 'fromByteArray', 'fromUnsignedByteArray'].filter((name) => typeof pkg.Address6[name] === 'function')}});
+  }
+  if (request.operation !== 'call') throw new TypeError('operation is not allowlisted');
+  emit({ok: true, value: invoke(pkg, request.spec)});
+} catch (error) {
+  emit({ok: false, error: errorProjection(error)}, 1);
+}
