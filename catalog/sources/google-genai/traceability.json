@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-genai",
+  "requirements": [
+    {"section": "Supports", "leaf_ids": ["pkg.metadata", "pkg.root-exports", "pkg.type-exports"]},
+    {"section": "Typed parts and content", "leaf_ids": ["part.from-text", "part.from-bytes", "part.from-uri", "part.from-function-call", "part.from-function-response", "part.from-executable-code", "part.from-code-result", "part.positional-string", "part.positional-keyword-conflict", "types.case-insensitive-enum", "content.user-role", "content.model-role"]},
+    {"section": "Content coercion", "leaf_ids": ["transform.part", "transform.parts", "transform.content", "transform.contents-grouping", "transform.part-invalid", "transform.content-invalid"]},
+    {"section": "HTTP option and dictionary helpers", "leaf_ids": ["client.join-url", "client.timeout-rounding", "client.timeout-preserve", "client.patch-options", "common.recursive-update", "common.align-key-case"]},
+    {"section": "API errors", "leaf_ids": ["errors.payload-parsing", "errors.client-subclass", "errors.server-subclass", "errors.pickle-roundtrip"]},
+    {"section": "Generate-content response accessors", "leaf_ids": ["response.text-and-parts", "response.function-calls", "response.empty-accessors"]},
+    {"section": "Local chat history", "leaf_ids": ["chat.curated-history", "chat.record-history"]},
+    {"section": "Pagers", "leaf_ids": ["pager.properties-and-copy", "pager.sync-iteration", "pager.exhaustion", "pager.async-iteration"]}
+  ]
+}

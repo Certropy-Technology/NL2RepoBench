@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-genai",
+  "revision": "66518c9104b15a89225ee255fe03d906c7e4cb35",
+  "upstream_static_test_files": 164,
+  "upstream_static_test_functions": 1327,
+  "full_collection": {"collected": 1318, "collection_errors": 85, "reason": "service/replay modules require GOOGLE_GENAI_REPLAYS_PATH"},
+  "deterministic_baseline": {"files": 9, "passed": 218, "skipped": 6, "failed": 0, "duration_sec": 1.93},
+  "adaptation": {"protocol": "custom-json-v1", "frozen_total": 40, "groups": 8},
+  "leaf_ids": [
+    "pkg.metadata", "pkg.root-exports", "pkg.type-exports",
+    "part.from-text", "part.from-bytes", "part.from-uri", "part.from-function-call", "part.from-function-response", "part.from-executable-code", "part.from-code-result", "part.positional-string", "part.positional-keyword-conflict", "types.case-insensitive-enum",
+    "content.user-role", "content.model-role", "transform.part", "transform.parts", "transform.content", "transform.contents-grouping", "transform.part-invalid", "transform.content-invalid",
+    "client.join-url", "client.timeout-rounding", "client.timeout-preserve", "client.patch-options", "common.recursive-update", "common.align-key-case",
+    "errors.payload-parsing", "errors.client-subclass", "errors.server-subclass", "errors.pickle-roundtrip",
+    "response.text-and-parts", "response.function-calls", "response.empty-accessors",
+    "chat.curated-history", "chat.record-history",
+    "pager.properties-and-copy", "pager.sync-iteration", "pager.exhaustion", "pager.async-iteration"
+  ]
+}

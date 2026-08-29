@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-genai",
+  "revision": "66518c9104b15a89225ee255fe03d906c7e4cb35",
+  "distribution": "google-genai==2.20.0",
+  "scope": "offline deterministic typed-content and local-state API",
+  "modules": [
+    {"module": "google.genai.types", "symbols": ["Part", "Content", "UserContent", "ModelContent", "Blob", "FileData", "FunctionCall", "FunctionResponse", "ExecutableCode", "CodeExecutionResult", "GenerateContentResponse", "HttpOptions", "Language", "Outcome", "HarmCategory"]},
+    {"module": "google.genai._transformers", "symbols": ["t_part", "t_parts", "t_content", "t_contents"]},
+    {"module": "google.genai._api_client", "symbols": ["join_url_path", "patch_http_options", "populate_server_timeout_header"]},
+    {"module": "google.genai._common", "symbols": ["align_key_case", "recursive_dict_update"]},
+    {"module": "google.genai.errors", "symbols": ["APIError", "ClientError", "ServerError"]},
+    {"module": "google.genai.chats", "symbols": ["Chat"]},
+    {"module": "google.genai.pagers", "symbols": ["Pager", "AsyncPager"]}
+  ],
+  "excluded_surfaces": ["remote model/service calls", "credentials and cloud discovery", "uploads and downloads", "WebSocket live sessions", "MCP integration", "local tokenizer and ML dependencies", "replay/system tests"]
+}

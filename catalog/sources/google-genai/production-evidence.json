@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-genai",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/googleapis/python-genai",
+    "revision": "66518c9104b15a89225ee255fe03d906c7e4cb35",
+    "source_digest": "sha256:3e7ba8998c9bf652f892ee871a28277e3dfb5bfb6a9a7cf6a2e7c29483a08f12",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "submodules": []
+  },
+  "environment": {
+    "host_python": "3.12.11",
+    "task_python": "3.12.14",
+    "os": "debian-13",
+    "uv": "0.11.32",
+    "docker": "29.7.2",
+    "harbor": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "authoring_agent_image_id": "sha256:a4fa5dcaaa50aa647ac04d447ad2448aa777d5dfbe2bd9b0959868770c1c2ba5",
+    "authoring_verifier_image_id": "sha256:0ac830581cb16e7e9d5d91320e91694a8eefe60cc098623100ac6e7eb2b8e144",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:d2ef79f7a68c430c7193acf86f4044d3bad95d269206da01353071843036a7bf",
+      "size_bytes": 48729,
+      "path": ".nl2repo/artifacts/private/sha256/d2/d2ef79f7a68c430c7193acf86f4044d3bad95d269206da01353071843036a7bf"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:35ab4da3f82d8cc23b51af96551f25b9613082dabcbfa8ab61d9cd80ada1722c",
+      "size_bytes": 20480,
+      "path": ".nl2repo/artifacts/private/sha256/35/35ab4da3f82d8cc23b51af96551f25b9613082dabcbfa8ab61d9cd80ada1722c"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:f112beb65f0e9365fd117b0e72f2c357d1539148fdf2d9a79100ba41408007c4",
+      "size_bytes": 10240,
+      "path": ".nl2repo/artifacts/private/sha256/f1/f112beb65f0e9365fd117b0e72f2c357d1539148fdf2d9a79100ba41408007c4"
+    },
+    "compiled_bundle": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/build/recheck-final/google-genai",
+      "bundle_manifest_sha256": "sha256:01f0f4a6042b84277e3b22d0927e72e04859d15651bbc85c1fcf0e3021eadf78",
+      "canonical_manifest_digest": "sha256:98b249e525e76a91bf44c0608850fb2f89032046d605c0e3dc261e171287fabd",
+      "entries": 60,
+      "integrity_mismatches": 0
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 40,
+    "upstream_deterministic_baseline": {"passed": 218, "skipped": 6, "failed": 0},
+    "full_upstream_collection": {"collected": 1318, "collection_errors": 85, "reason": "service/replay environment unavailable"}
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/google-genai", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/logs/recheck-validate-source.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/logs/recheck-lint-network.log"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/google-genai --output .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/build/recheck-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/logs/recheck-compile.log"}
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/build/recheck-final/google-genai -a oracle --job-name google-genai-recheck-oracle-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-oracle --n-concurrent 1 --n-attempts 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 40,
+    "passed": 40,
+    "total": 40,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-oracle/google-genai-recheck-oracle-20260828/google-genai__mfydtAG/verifier/grading.json", "sha256": "sha256:7b89cf00870fc0835c0f1157402e9a77968bc6b2ace761333157356eb37864bc"},
+    "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-oracle/google-genai-recheck-oracle-20260828/google-genai__mfydtAG/verifier/network.json", "sha256": "sha256:8b4a33a34913ff0b64f0a811f62d57ff30efb1b537ce07c09a1a370c708f46ed", "public_network_available": false},
+    "source_fetch": "solve.sh asserted the exact revision and git archive digest before extraction"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/build/recheck-final/google-genai -a nop --job-name google-genai-recheck-empty-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-empty --n-concurrent 1 --n-attempts 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "total": 0, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-empty/google-genai-recheck-empty-20260828/google-genai__GZWajry/verifier/grading.json", "sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-empty/google-genai-recheck-empty-20260828/google-genai__GZWajry/verifier/network.json", "sha256": "sha256:b17957e4490bdce5968e61df6e6a582fe7f1b31b85fc1efc8c6aee9684babf72", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/recheck-prepared/google-genai-stub -a oracle --job-name google-genai-recheck-stub-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-stub --n-concurrent 1 --n-attempts 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 3, "total": 40, "reward": 0.075,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-stub/google-genai-recheck-stub-20260828/google-genai-stub__RYApTzu/verifier/grading.json", "sha256": "sha256:56f0408b79b6367550ac44f5444662f6f3fb8f5546f103b6f44ab341fe92291a"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-stub/google-genai-recheck-stub-20260828/google-genai-stub__RYApTzu/verifier/network.json", "sha256": "sha256:7cdcd1f7a9a54a42b05e5f8eb6db5aab377165b5429a2a63438638bb4e36f047", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/recheck-prepared/google-genai-forgery -a oracle --job-name google-genai-recheck-forgery-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-forgery --n-concurrent 1 --n-attempts 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "total": 40, "reward": 0.0, "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-forgery/google-genai-recheck-forgery-20260828/google-genai-forgery__SKYjVkJ/verifier/grading.json", "sha256": "sha256:13ff18cb9c416ef2746a8e87ad8e7b72f9568764c879f94b9edc57516ab25497"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/jobs/recheck-forgery/google-genai-recheck-forgery-20260828/google-genai-forgery__SKYjVkJ/verifier/network.json", "sha256": "sha256:e41d147c86aeb8af96ad9e9abe71e11e85de3316c6283a0510f6199ad40c86be", "public_network_available": false}
+    },
+    "workspace_invalid": {"exit_code": 0, "valid": true, "passed": 0, "total": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-workspace-rejected", "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/direct-corrected/workspace-invalid/logs/verifier/grading.json"},
+    "install_timeout": {"exit_code": 0, "duration_sec": 125, "valid": true, "passed": 0, "total": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "install_outcome": "timeout", "install_returncode": -9, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/direct-corrected/install-hang/logs/verifier/grading.json"},
+    "call_timeout": {"exit_code": 0, "duration_sec": 69, "valid": true, "passed": 0, "total": 40, "reward": 0.0, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/direct-corrected/call-hang/logs/verifier/grading.json"},
+    "offline": {"exit_code": 0, "valid": true, "passed": 40, "total": 40, "reward": 1.0, "public_network_available": false, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/offline-oracle/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/python-author-wave2-20260828/google-genai/controls/offline-oracle/logs/verifier/network.json"}
+  },
+  "residual_risks": [
+    "The 40-leaf adapter samples deterministic behavior rather than all 1,318 collectable upstream tests.",
+    "The service/replay, credential, upload, live WebSocket, MCP, and local-tokenizer surfaces are intentionally excluded.",
+    "One final Oracle run is the production gate; repeated stability was not measured.",
+    "No model Agent Run, blind review, dataset integration, or publication was performed in this lane."
+  ]
+}
