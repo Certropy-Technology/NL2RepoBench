@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "task_id": "quick-lru",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/quick-lru",
+    "revision": "f2fe88e2932603c038c61ca29de6ad5286148e1b",
+    "tree": "593eecb770374504e235d0b20a42ca6014dda77f",
+    "source_digest": "sha256:5264a90e047bccde14f6b5705630d7aaf5ade2fa2987f985d517aee1dd5cfc6a",
+    "license_spdx": "MIT",
+    "license_path": "license",
+    "archive_materialization": "Oracle solve fetched the exact revision from github.com and verified the git archive digest before extraction."
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_status": "locked",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "os": "debian-bookworm-amd64",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image_digest": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "network_mode": "no-network"
+  },
+  "runtime": {
+    "language": "node",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "runtime_dependencies": [],
+    "dependency_bundle": {
+      "digest": "sha256:c2278604e56221d3ca8749cbdd028cf75f92936cd7e63d009bb4c725e57afe4d",
+      "size_bytes": 453
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 34,
+    "source": "frozen-collection",
+    "groups": [
+      "package-contract",
+      "basic-operations",
+      "iteration",
+      "capacity",
+      "manual-eviction",
+      "ttl",
+      "identity-and-format"
+    ]
+  },
+  "private_artifacts": {
+    "commands_bundle": {
+      "digest": "sha256:40cf0d8e1794586a77786f724996b3364f675b5213594b09f3bbc9c1c70d1f68",
+      "size_bytes": 197
+    },
+    "test_bundle": {
+      "digest": "sha256:7269c94d5284664c33e8d7a76192cade5a6d1df22d0d2da0e3ecef816b048f29",
+      "size_bytes": 3697
+    },
+    "oracle_bundle": {
+      "digest": "sha256:a522e2d91991d7dbb4bae76ffe6309be2b10d5d6ac991c40d8af14dfdfc04c00",
+      "size_bytes": 679
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/final-compile/quick-lru",
+    "mode": "production",
+    "manifest_sha256": "sha256:a51808e3d350625cd690a6e6a4ed77da52107a305ae8ae5da8d806a887ded551",
+    "canonical_manifest_digest": "sha256:05d2b7f3bb277e52e8212f96022f1e56bae367662fd982ad16fe785b37bf119d",
+    "file_count": 68
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/quick-lru",
+      "tool_version": "repository uv toolchain / CPython 3.12.11",
+      "exit_code": 0,
+      "evidence": ".nl2repo/evidence/quick-lru-source-validation.json"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "repository uv toolchain",
+      "exit_code": 0,
+      "task_error_count": 0,
+      "task_warning_count": 159,
+      "evidence": ".nl2repo/evidence/quick-lru-network-lint.json"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/quick-lru --output .nl2repo/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "Harbor compiler 0.21.0",
+      "exit_code": 0,
+      "evidence": ".nl2repo/final-compile/quick-lru/bundle.manifest.json"
+    },
+    {
+      "command": "bash -n compiled solution/tests/controls and node --check compiled JavaScript",
+      "tool_version": "Node 24.19.0 / bash",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-quick-lru-verifier:authoring .nl2repo/final-compile/quick-lru/tests",
+      "tool_version": "Docker; digest-pinned Node and Python bases",
+      "exit_code": 0,
+      "image_manifest": "sha256:700e780574931d14d36e80c5fc5e57fd646284b4e4576b5fe95d8bf344025282"
+    },
+    {
+      "command": "python3 scripts/validate_node_production.py --task catalog/sources/quick-lru --bundle .nl2repo/final-compile/quick-lru --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/oracle-final2 --controls .nl2repo/evidence/control-summary.json --output .nl2repo/evidence/quick-lru-production-gate.json",
+      "tool_version": "Node production gate",
+      "exit_code": 0,
+      "evidence": ".nl2repo/evidence/quick-lru-production-gate.json"
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/quick-lru -a oracle --allow-agent-host github.com --job-name quick-lru-authoring-oracle-20260830-final2 --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/oracle-final2 --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 34,
+    "collected": 34,
+    "passed": 34,
+    "reward": 1.0,
+    "result": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/oracle-final2/quick-lru-authoring-oracle-20260830-final2/result.json",
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/oracle-final2/quick-lru-authoring-oracle-20260830-final2/quick-lru__GTdWeto/verifier/grading.json",
+      "sha256": "sha256:e1d65f3f69bcacf99617826d2132af43419bcebf3db00b60d152795bfbb0c967"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/oracle-final2/quick-lru-authoring-oracle-20260830-final2/quick-lru__GTdWeto/verifier/network.json",
+      "sha256": "sha256:e81b64a757cc8ab9d8f2582432d794febdff9c0bddc2678df5021e4a4ff65af2",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/empty/quick-lru-control-empty-20260830-final2/quick-lru-empty__GwpyPP7/verifier/grading.json", "sha256": "sha256:1be238329e47310f5df0dfa0883559a5524afd31bf134f78c99a98eb75e8cc13"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/empty/quick-lru-control-empty-20260830-final2/quick-lru-empty__GwpyPP7/verifier/network.json", "sha256": "sha256:e81b64a757cc8ab9d8f2582432d794febdff9c0bddc2678df5021e4a4ff65af2"}},
+    "stub": {"exit_code": 0, "valid": true, "collected": 34, "passed": 11, "reward": 0.3235294117647059, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/stub/quick-lru-control-stub-20260830-final2/quick-lru-stub__i8gtDYk/verifier/grading.json", "sha256": "sha256:c84486b97350e89af9cc315ed53dac6857251245ea027b6ac664e716bd009351"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/stub/quick-lru-control-stub-20260830-final2/quick-lru-stub__i8gtDYk/verifier/network.json", "sha256": "sha256:43df1b00a997be3443498d32b28a5d3a16e0830826ef14ecd20559103eb6a31b"}},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 34, "passed": 11, "reward": 0.3235294117647059, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/forgery/quick-lru-control-forgery-20260830-final2/quick-lru-forgery__mvVBVSS/verifier/grading.json", "sha256": "sha256:c84486b97350e89af9cc315ed53dac6857251245ea027b6ac664e716bd009351"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/forgery/quick-lru-control-forgery-20260830-final2/quick-lru-forgery__mvVBVSS/verifier/network.json", "sha256": "sha256:e81b64a757cc8ab9d8f2582432d794febdff9c0bddc2678df5021e4a4ff65af2"}},
+    "install-script": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/install-script/quick-lru-control-install-script-20260830-final2/quick-lru-install-script__Vchn3EF/verifier/grading.json", "sha256": "sha256:1be238329e47310f5df0dfa0883559a5524afd31bf134f78c99a98eb75e8cc13"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/install-script/quick-lru-control-install-script-20260830-final2/quick-lru-install-script__Vchn3EF/verifier/network.json", "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"}},
+    "loader-hook": {"exit_code": 0, "valid": true, "collected": 34, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/loader-hook/quick-lru-control-loader-hook-20260830-final2/quick-lru-loader-hook__SH4SFQE/verifier/grading.json", "sha256": "sha256:1868de9bc166362d56367d17bd62f0816a04bc61fa6aa30d30e768c95f15f099"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/loader-hook/quick-lru-control-loader-hook-20260830-final2/quick-lru-loader-hook__SH4SFQE/verifier/network.json", "sha256": "sha256:e81b64a757cc8ab9d8f2582432d794febdff9c0bddc2678df5021e4a4ff65af2"}},
+    "hang": {"exit_code": 0, "valid": true, "collected": 34, "passed": 0, "reward": 0.0, "bounded": true, "source_control": "call-hang.sh", "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/call-hang/quick-lru-control-call-hang-20260830-final2/quick-lru-call-hang__BosdNpC/verifier/grading.json", "sha256": "sha256:1868de9bc166362d56367d17bd62f0816a04bc61fa6aa30d30e768c95f15f099"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/call-hang/quick-lru-control-call-hang-20260830-final2/quick-lru-call-hang__BosdNpC/verifier/network.json", "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"}},
+    "offline": {"exit_code": 0, "valid": true, "collected": 34, "passed": 11, "reward": 0.3235294117647059, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/offline/quick-lru-control-offline-20260830-final2/quick-lru-offline__7WztYvR/verifier/grading.json", "sha256": "sha256:c84486b97350e89af9cc315ed53dac6857251245ea027b6ac664e716bd009351"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/quick-lru/runs/controls-final2/offline/quick-lru-control-offline-20260830-final2/quick-lru-offline__7WztYvR/verifier/network.json", "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"}}
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this authoring lane.",
+    "The local OpenHands tag is present but its image ID is sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, not the locked toolchain agent image ID sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; integrator must restore or relock before a model run.",
+    "The approved contract is a deterministic JSON child-adapter slice of the upstream API; review, dataset integration, pilot, publication, and generated catalog/tasks projection remain integrator-owned."
+  ]
+}

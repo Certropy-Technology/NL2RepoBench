@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "quick-lru",
+  "protocol": "node-subprocess-json-v1",
+  "candidate_package": "quick-lru",
+  "candidate_user": "candidate",
+  "candidate_site": "verifier-owned temporary npm prefix",
+  "runtime_entry": "package root default export loaded by a task adapter",
+  "request_limit_bytes": 65536,
+  "response_limit_bytes": 262144,
+  "per_call_timeout_seconds": 30,
+  "package_allowlist": ["quick-lru"],
+  "hidden_inputs": ["allowlisted scenario commands and JSON values only"],
+  "trusted_outputs": ["node:test TAP report", "grading.json", "reward.json", "network.json"],
+  "isolation": [
+    "candidate is loaded only by a UID-10001 child process",
+    "private tests and verifier runtime are root-owned",
+    "candidate receives no static network access",
+    "candidate cannot write verifier logs or reports",
+    "functions, symbols, cyclic objects, accessors, and executable strings never cross the JSON boundary"
+  ]
+}

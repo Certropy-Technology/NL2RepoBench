@@ -1,0 +1,16 @@
+{
+  "schema_shape": "api-inventory",
+  "task_id": "quick-lru",
+  "package": "quick-lru",
+  "source_revision": "f2fe88e2932603c038c61ca29de6ad5286148e1b",
+  "source_digest": "sha256:5264a90e047bccde14f6b5705630d7aaf5ade2fa2987f985d517aee1dd5cfc6a",
+  "package_version": "7.3.0",
+  "source_files": 2,
+  "public_exports": ["default: QuickLRU"],
+  "public_methods": ["constructor", "set", "get", "has", "peek", "delete", "clear", "expiresIn", "resize", "evict", "keys", "values", "entries", "entriesAscending", "entriesDescending", "forEach", "[Symbol.iterator]", "size", "maxSize", "maxAge", "toString", "[Symbol.toStringTag]"],
+  "runtime_dependency_count": 0,
+  "upstream_test_files": ["test.js", "index.test-d.ts"],
+  "upstream_ava_test_count": 83,
+  "frozen_private_node_test_count": 34,
+  "dynamic_risks": ["lazy-clock-expiration", "map-key-identity", "esm-package-boundary", "eviction-callback-order"]
+}

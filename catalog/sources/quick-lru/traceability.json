@@ -1,0 +1,16 @@
+{
+  "schema_shape": "test-to-spec-traceability",
+  "task_id": "quick-lru",
+  "source_revision": "f2fe88e2932603c038c61ca29de6ad5286148e1b",
+  "frozen_total": 34,
+  "groups": [
+    {"id": "package-contract", "leaves": 3, "spec": "Supports; QuickLRU and Options"},
+    {"id": "basic-operations", "leaves": 6, "spec": "Entry operations"},
+    {"id": "iteration", "leaves": 6, "spec": "Iteration and capacity"},
+    {"id": "capacity", "leaves": 5, "spec": "Iteration and capacity"},
+    {"id": "manual-eviction", "leaves": 5, "spec": "Iteration and capacity; evict"},
+    {"id": "ttl", "leaves": 7, "spec": "Entry operations; maxAge"},
+    {"id": "identity-and-format", "leaves": 2, "spec": "Implementation Notes; toString"}
+  ],
+  "coverage_statement": "Every frozen leaf maps to a public contract in instruction.md and to behavior present in the pinned upstream test.js; no private leaf depends on a private helper name or external dependency."
+}

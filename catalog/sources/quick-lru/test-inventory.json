@@ -1,0 +1,26 @@
+{
+  "schema_shape": "test-inventory",
+  "task_id": "quick-lru",
+  "source_revision": "f2fe88e2932603c038c61ca29de6ad5286148e1b",
+  "framework": "node:test adapted from upstream AVA",
+  "upstream_tests": [
+    {"file": "test.js", "behavior": "constructor, storage, iteration, TTL, resize, eviction, callbacks", "leaf_count": 83},
+    {"file": "index.test-d.ts", "behavior": "generic declaration and iterable types", "leaf_count": 12}
+  ],
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 34,
+    "leaf_id_algorithm": "sha256(file:line:column:name)[0:16]",
+    "adaptation": "Private tests use JSON-only scenario commands and an unprivileged child process; no upstream test files or callbacks cross the verifier boundary."
+  },
+  "groups": [
+    {"id": "package-contract", "leaves": 3, "behavior": "metadata, ESM import, constructor bounds"},
+    {"id": "basic-operations", "leaves": 6, "behavior": "set/get/has/peek/delete/clear and undefined values"},
+    {"id": "iteration", "leaves": 6, "behavior": "ascending/descending entries, keys, values, forEach and Map compatibility"},
+    {"id": "capacity", "leaves": 5, "behavior": "LRU promotion, size, resize and capacity getters"},
+    {"id": "manual-eviction", "leaves": 5, "behavior": "evict count coercion, minimum retention and callback"},
+    {"id": "ttl", "leaves": 7, "behavior": "virtual-clock expiry, expiresIn, lazy removal and callback"},
+    {"id": "identity-and-format", "leaves": 2, "behavior": "object keys, object values, toString and toStringTag"}
+  ]
+}
