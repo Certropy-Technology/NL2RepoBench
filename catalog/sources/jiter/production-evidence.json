@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jiter",
+  "task_version": "0.1.0",
+  "terminal_kind": "packaged",
+  "status": "packaged",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/pydantic/jiter",
+    "revision": "0fc3c06b4555bb814d3c44ba08d715d9d064da3d",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:7c7134b9f7b978c03fca875517cf398db91f19bbb8109b6685e742aa3f57468e",
+    "source_archive_sha256": "sha256:093d45e8a53c7d8be9472abbc0e6ff822b9d6987ce17a61bcb75092a11b01693"
+  },
+  "environment": {
+    "python_version": "3.12.11",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["setuptools==80.9.0"],
+    "lock_artifact": "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd",
+    "lock_size_bytes": 189
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 32,
+    "collection_source": "private verifier cases.py",
+    "candidate_local_smoke": {"status": "not-run", "reason": "The candidate implementation is only available in the trusted Oracle solution; this lane does not start a Harbor Agent Run."}
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/compiled/jiter",
+    "manifest_sha256": "sha256:0021642d3d9c4d5ab5d27a8ef72b5d4008df4dad9c8d041b80dc673cad0d8171",
+    "canonical_manifest_digest": "sha256:d11823d9af6aad1c3a4f36de75d3046cc83a658fbe988d0c5b83cdd912b352a8",
+    "file_count": 58
+  },
+  "private_artifacts": {
+    "verifier_bundle": {"digest": "sha256:73818aeb5481e0001983de93771711e142cf2c3007e0d44f4e64dbdd6321ae77", "size_bytes": 10240},
+    "oracle_bundle": {"digest": "sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828c2957c742d336a260", "size_bytes": 10240}
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/jiter", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "errors": 0, "task_local_findings": 0},
+    {"command": "uv run nl2repo harbor compile catalog/sources/jiter --output .nl2repo/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "manifest_sha256": "sha256:0021642d3d9c4d5ab5d27a8ef72b5d4008df4dad9c8d041b80dc673cad0d8171"},
+    {"command": "python3 -m py_compile private verifier and compiled verifier runtime; bash -n solution, test, and controls; git diff --check", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter/logs/runtime-syntax-probe.log"},
+    {"command": "docker build --pull=false --tag nl2repobench/jiter-authoring-tests:local .nl2repo/compiled/jiter/tests", "exit_code": 0, "log": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter/logs/docker-build.log"}
+  ],
+  "authoring_smoke": {
+    "network": "docker run --rm --network none",
+    "stub": {"exit_code": 0, "valid": true, "collected": 32, "passed": 1, "failed": 31, "reward": 0.03125, "network_available": false, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter/docker-stub-logs/verifier/grading.json"},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 32, "passed": 0, "failed": 32, "reward": 0.0, "network_available": false, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter/docker-forgery-logs/verifier/grading.json"},
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "network_available": false, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter/docker-empty-logs/verifier/grading.json"},
+    "install_hang": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "install_outcome": "timeout", "install_returncode": -9, "network_available": false, "grading": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter/docker-install-hang-logs/verifier/grading.json"}
+  },
+  "deferred_gates": {
+    "oracle": {"status": "not-run", "reason": "This authoring lane is prohibited from starting a Harbor Agent Run; no reward or valid result is claimed."},
+    "controls": {"status": "not-run", "reason": "Harbor Oracle/control runs belong to the independent Agent Run loop; no control result is claimed."}
+  },
+  "residual_risks": [
+    "The upstream package is a Rust/PyO3 extension; this task intentionally evaluates a documented pure-Python JSON-safe adaptation, not SIMD performance or native ABI.",
+    "The local Docker image build and bounded control smokes passed, but official Harbor Oracle/control receipts remain pending the independent Agent Run loop.",
+    "The authoring venv has no pip module; the compiled verifier image installs its hash-locked dependencies during image build."
+  ]
+}

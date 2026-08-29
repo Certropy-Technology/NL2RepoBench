@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "jiter"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = ["python", "json", "parser", "partial-json", "decimal", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pydantic/jiter"
+revision = "0fc3c06b4555bb814d3c44ba08d715d9d064da3d"
+license_spdx = "MIT"
+source_digest = "sha256:093d45e8a53c7d8be9472abbc0e6ff822b9d6987ce17a61bcb75092a11b01693"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked setuptools build dependency during image construction"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate uses a pure-Python JSON adaptation with a hash-locked build dependency installed during image construction. Agent and verifier execution have no egress; only the trusted Oracle receives the exact upstream source host."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0"]
+lock_artifact = { digest = "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/cases.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build a pure-Python JSON parser compatible with the JSON-safe jiter contract, including partial parsing, duplicate-key detection, float modes, lossless floats, and cache controls."
+keywords = ["python", "json", "parser", "partial-json", "decimal", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:73818aeb5481e0001983de93771711e142cf2c3007e0d44f4e64dbdd6321ae77", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:73818aeb5481e0001983de93771711e142cf2c3007e0d44f4e64dbdd6321ae77", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828c2957c742d336a260"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828c2957c742d336a260"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-wave2-20260828-jiter"
+reason = "Source freeze, private verifier, dependency closure, and Oracle bundle are prepared; production compile and Harbor gates remain task-local authoring work."

@@ -1,0 +1,19 @@
+{
+  "language": "python",
+  "package": "jiter",
+  "upstream_revision": "0fc3c06b4555bb814d3c44ba08d715d9d064da3d",
+  "public_api": [
+    {"name": "from_json", "signature": "(json_data: bytes, /, *, allow_inf_nan=True, cache_mode='all', partial_mode=False, catch_duplicate_keys=False, float_mode='float')"},
+    {"name": "cache_clear", "signature": "() -> None"},
+    {"name": "cache_usage", "signature": "() -> int"},
+    {"name": "LosslessFloat", "signature": "(json_float: bytes)"},
+    {"name": "LosslessFloat.as_decimal", "signature": "() -> decimal.Decimal"},
+    {"name": "LosslessFloat.__float__", "signature": "() -> float"},
+    {"name": "LosslessFloat.__bytes__", "signature": "() -> bytes"},
+    {"name": "LosslessFloat.__str__", "signature": "() -> str"},
+    {"name": "LosslessFloat.__repr__", "signature": "() -> str"}
+  ],
+  "adaptation": "pure-python JSON-safe contract; Rust SIMD implementation is intentionally outside the evaluation boundary",
+  "risk_flags": ["native-extension-upstream", "unicode", "partial-input", "global-cache"],
+  "source_of_truth": "crates/jiter-python/jiter.pyi and crates/jiter-python/tests/test_jiter.py at the frozen revision"
+}

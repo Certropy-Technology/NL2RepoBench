@@ -1,0 +1,15 @@
+{
+  "framework": "pytest upstream plus deterministic custom-json-v1 adaptation",
+  "frozen_total": 32,
+  "groups": [
+    {"id": "basic-values", "leaves": 5, "behaviors": ["objects", "arrays", "booleans", "null", "integers"]},
+    {"id": "numbers", "leaves": 5, "behaviors": ["float", "decimal", "lossless-float", "non-finite"]},
+    {"id": "partial", "leaves": 4, "behaviors": ["partial arrays", "partial objects", "trailing strings", "utf8 boundaries"]},
+    {"id": "errors", "leaves": 5, "behaviors": ["syntax", "invalid utf8", "duplicate keys", "invalid options"]},
+    {"id": "strings", "leaves": 4, "behaviors": ["unicode", "escapes", "surrogate pairs", "whitespace"]},
+    {"id": "cache", "leaves": 4, "behaviors": ["all", "keys", "none", "clear"]},
+    {"id": "lossless", "leaves": 4, "behaviors": ["bytes", "str", "repr", "decimal conversion"]}
+  ],
+  "collection_source": "private verifier run.py emits exactly one unique leaf per scenario",
+  "excluded_upstream_behavior": ["Rust SIMD performance", "thread scheduling", "benchmark files", "native ABI"]
+}
