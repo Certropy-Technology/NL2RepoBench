@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-width",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/fabiospampinato/fast-string-width",
+    "revision": "f49e7b7662906e0028a68a16b5358500b2f3152d",
+    "archive_sha256": "sha256:352c8745134753593e770f0ffd8cb6e6ff2ef7f516b11ae56059f43e27d30698",
+    "license": "MIT"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled/fast-string-width/bundle.manifest.json",
+    "sha256": "sha256:1d059cb5512d49d6febf8d5c0d815782937870d90d10235002f24eb909b058c2"
+  },
+  "frozen_collection": {
+    "expected_total": 24,
+    "source": "frozen-collection",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/fast-string-width --output .nl2repo/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "evidence": ".nl2repo/authoring-work/node-author-wave2-20260828/fast-string-width/compile-final.log"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/fast-string-width -a oracle --allow-agent-host github.com --job-name fast-string-width-oracle-final-20260828 -o .nl2repo/runs/fast-string-width-oracle-final-20260828/jobs --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/fast-string-width-oracle-final-20260828/jobs/fast-string-width-oracle-final-20260828/fast-string-width__A9Wtyr7/verifier/grading.json",
+      "sha256": "sha256:12531a228178d543fb8a09e8e807c5a3f7c32c54dc66b999d039283239663e85"
+    },
+    "network": {
+      "path": ".nl2repo/runs/fast-string-width-oracle-final-20260828/jobs/fast-string-width-oracle-final-20260828/fast-string-width__A9Wtyr7/verifier/network.json",
+      "sha256": "sha256:f19138c762f246f0d2d6e93be25c4d2e3952f3ce4f42ecaaca00a233fd1a538c"
+    }
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-empty -a oracle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/empty/fast-string-width-final-empty-20260828/fast-string-width-empty__8SbzmNW/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/empty/fast-string-width-final-empty-20260828/fast-string-width-empty__8SbzmNW/verifier/network.json", "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c"}},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-stub -a oracle", "exit_code": 0, "valid": true, "collected": 24, "passed": 4, "reward": 0.16666666666666666, "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/stub/fast-string-width-final-stub-20260828/fast-string-width-stub__XAnTpPz/verifier/grading.json", "sha256": "sha256:bbe3b51363be468b33885fc08517cbf02456c7772890217cfc80ae5a2048563d"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/stub/fast-string-width-final-stub-20260828/fast-string-width-stub__XAnTpPz/verifier/network.json", "sha256": "sha256:2d451cfe9d5c64dc60b9925b226b743c5f3951323551313d8098674a8fd74dbb"}},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-forgery -a oracle", "exit_code": 0, "valid": true, "collected": 24, "passed": 8, "reward": 0.3333333333333333, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/forgery/fast-string-width-final-forgery-20260828/fast-string-width-forgery__kqk5EN4/verifier/grading.json", "sha256": "sha256:c7a5fd069150deeb662e4cc78a1a895af004f7afa0d058e90d153eccc3da28c5"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/forgery/fast-string-width-final-forgery-20260828/fast-string-width-forgery__kqk5EN4/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}},
+    "install-script": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-install-script -a oracle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/install-script/fast-string-width-final-install-script-20260828/fast-string-width-install-script__YRX2pKt/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/install-script/fast-string-width-final-install-script-20260828/fast-string-width-install-script__YRX2pKt/verifier/network.json", "sha256": "sha256:c85c9c3489d2cac7bc25c95bc67ef7759714ea9c5642cab7add5c188a017533c"}},
+    "loader-hook": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-loader-hook -a oracle", "exit_code": 0, "valid": true, "collected": 24, "passed": 8, "reward": 0.3333333333333333, "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/loader-hook/fast-string-width-final-loader-hook-20260828/fast-string-width-loader-hook__FjYADaS/verifier/grading.json", "sha256": "sha256:c7a5fd069150deeb662e4cc78a1a895af004f7afa0d058e90d153eccc3da28c5"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/loader-hook/fast-string-width-final-loader-hook-20260828/fast-string-width-loader-hook__FjYADaS/verifier/network.json", "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b"}},
+    "hang": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-hang -a oracle", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "failure_class": "model", "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/hang/fast-string-width-final-hang-20260828/fast-string-width-hang__Cf3VrPd/verifier/grading.json", "sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/hang/fast-string-width-final-hang-20260828/fast-string-width-hang__Cf3VrPd/verifier/network.json", "sha256": "sha256:4e5cd4485423f2d9bf40b5f779cacc17c4bfdcd2969b6594d581c41859089861"}},
+    "offline": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/fast-string-width-final-20260828/fast-string-width-offline -a oracle", "exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/offline/fast-string-width-final-offline-20260828/fast-string-width-offline__aB5kBeY/verifier/grading.json", "sha256": "sha256:4e4c2af03faf1078937b13c869fb59de6747e2877f6cfc41f4f306d71867b9d1"}, "network": {"path": ".nl2repo/runs/fast-string-width-controls-final-20260828/offline/fast-string-width-final-offline-20260828/fast-string-width-offline__aB5kBeY/verifier/network.json", "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"}}
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The upstream package's TypeScript build tooling and source test runner are not runtime dependencies; the scored contract requires lifecycle-free packed ESM output.",
+    "Review, pilot, and publication remain integrator-stage gates."
+  ]
+}

@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/fast-string-width"
+version = "2.0.0"
+description = "Build the fast-string-width ESM package with deterministic terminal Unicode width behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "terminal",
+    "ansi",
+    "emoji",
+]
+
+[metadata]
+difficulty = "medium"
+category = "unicode-width-library"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "terminal",
+    "ansi",
+    "emoji",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:4cc7461aaf7fc625706195eae77c5e25e1177ef8dd51ef03fd97ccb293ec33af"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

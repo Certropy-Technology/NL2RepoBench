@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "package": "fast-string-width",
+  "revision": "f49e7b7662906e0028a68a16b5358500b2f3152d",
+  "runtime_entry": "dist/index.js",
+  "public_exports": ["default"],
+  "signature": "fastStringWidth(input: string, options?: WidthOptions): number",
+  "options": ["controlWidth", "tabWidth", "emojiWidth", "regularWidth", "wideWidth"],
+  "dependency": "fast-string-truncated-width",
+  "determinism": "pure for identical input and options",
+  "risk_surfaces": ["Unicode width tables", "ANSI escape parsing", "numeric option validation"]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 24,
+  "private_entry": "contract.test.mjs",
+  "groups": {
+    "basic_and_ansi": 5,
+    "controls_and_options": 7,
+    "unicode_width": 8,
+    "determinism_and_contract": 4
+  },
+  "traceability": "provenance.md maps each leaf to the pinned source behavior and public instruction."
+}
