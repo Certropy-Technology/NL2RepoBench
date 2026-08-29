@@ -1,0 +1,22 @@
+{
+  "schema_shape": "api-inventory",
+  "language": "node",
+  "package": "ajv-formats",
+  "package_version": "3.0.1",
+  "source_revision": "4ca86d21bd07571a30178cbb3714133db6eada9a",
+  "source_digest": "sha256:e801e2f5c06e5cf85258abfb0d260c2d7eb2a681b525a7a447b85ff00a19d3e4",
+  "implementation_files": 3,
+  "implementation_loc": 259,
+  "public_exports": [
+    "default plugin function",
+    "plugin.get(name, mode)",
+    "FormatMode",
+    "FormatName",
+    "FormatOptions",
+    "FormatsPluginOptions",
+    "FormatsPlugin",
+    "LimitFormatError"
+  ],
+  "format_names": ["date", "time", "date-time", "iso-time", "iso-date-time", "duration", "uri", "uri-reference", "uri-template", "url", "email", "hostname", "ipv4", "ipv6", "regex", "uuid", "json-pointer", "json-pointer-uri-fragment", "relative-json-pointer", "byte", "int32", "int64", "float", "double", "password", "binary"],
+  "risk_flags": ["ajv-peer-integration", "regex-validation", "date-time-comparison", "generated-dist-resolution"]
+}

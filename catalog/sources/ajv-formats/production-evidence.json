@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ajv-formats",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/ajv-validator/ajv-formats",
+    "revision": "4ca86d21bd07571a30178cbb3714133db6eada9a",
+    "source_digest": "sha256:e801e2f5c06e5cf85258abfb0d260c2d7eb2a681b525a7a447b85ff00a19d3e4",
+    "license_spdx": "MIT",
+    "submodules": [
+      {
+        "path": "tests/JSON-Schema-Test-Suite",
+        "revision": "e82bfdfa59c63cc74175d35fac81bb95e61db24b"
+      }
+    ]
+  },
+  "runtime": {
+    "language": "node",
+    "runtime": "node",
+    "version": "24.19.0",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/compiled-production-release-final-20260828/ajv-formats",
+    "manifest_sha256": "sha256:21c764851a10ea9cfc0a92d54fff577fb7e9bde70c72bb9ac77f58d4860ae673",
+    "canonical_manifest_digest": "sha256:ce5fc2e0edf2118b5b2f8984d51754dd20276df9f90293c583ea4173f40cac19",
+    "mode": "production",
+    "expected_test_count": 27
+  },
+  "dependencies": {
+    "ecosystem": "npm",
+    "lockfile": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:e1bf8d3a5f06dfccfd8e4fda599af4fe357bea85e5c5f5f49cab2c178c61b1b2",
+      "size_bytes": 2263040,
+      "uri": "artifact://private/sha256:e1bf8d3a5f06dfccfd8e4fda599af4fe357bea85e5c5f5f49cab2c178c61b1b2"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "frozen_total": 27,
+    "test_bundle": {
+      "digest": "sha256:df08045648c3594a7553377ad1577630559a7f8c07cf883581d96e0b5ed0ba26",
+      "size_bytes": 20480,
+      "uri": "artifact://private/sha256:df08045648c3594a7553377ad1577630559a7f8c07cf883581d96e0b5ed0ba26"
+    },
+    "commands_bundle": {
+      "digest": "sha256:2b08bdf3b5ae1e1c07f2a9816db4d9ce56f7f07bc33923ff98193b885081c45a",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:2b08bdf3b5ae1e1c07f2a9816db4d9ce56f7f07bc33923ff98193b885081c45a"
+    }
+  },
+    "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/compiled-production-release-20260828/ajv-formats -a oracle --job-name ajv-formats-oracle-release-20260828 -o .nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/oracle-release-20260828 --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 27,
+    "collected": 27,
+    "reward": 1.0,
+    "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/oracle-release-20260828/ajv-formats-oracle-release-20260828/ajv-formats__qbX2W3x/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/oracle-release-20260828/ajv-formats-oracle-release-20260828/ajv-formats__qbX2W3x/verifier/network.json",
+    "oracle_bundle": {
+      "digest": "sha256:1ee0873899cc31cbb21cedad79330bfadc5474c9f41f68627e81e3bf4a8e933e",
+      "size_bytes": 174080,
+      "uri": "artifact://private/sha256:1ee0873899cc31cbb21cedad79330bfadc5474c9f41f68627e81e3bf4a8e933e"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/compiled-production-handoff-20260828/ajv-formats -a nop --job-name ajv-formats-empty-handoff-20260828 -o .nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/empty-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "collected": 0,
+      "reward": 0.0,
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/empty-handoff-20260828/ajv-formats-empty-handoff-20260828/ajv-formats__BhYZW6T/verifier/network.json",
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/empty-handoff-20260828/ajv-formats-empty-handoff-20260828/ajv-formats__BhYZW6T/verifier/grading.json"
+    },
+    "stub": {
+      "valid": true,
+      "collected": 27,
+      "passed": 2,
+      "reward": 0.07407407407407407,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/stub-production-final-20260828/ajv-formats-stub-final-20260828/ajv-formats-stub__pdxPhPX/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/stub-production-final-20260828/ajv-formats-stub-final-20260828/ajv-formats-stub__pdxPhPX/verifier/network.json"
+    },
+    "forgery": {
+      "valid": true,
+      "collected": 27,
+      "passed": 3,
+      "reward": 0.1111111111111111,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/forgery-production-final-20260828/ajv-formats-forgery-final-20260828/ajv-formats-forgery__M7s3U6X/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/forgery-production-final-20260828/ajv-formats-forgery-final-20260828/ajv-formats-forgery__M7s3U6X/verifier/network.json"
+    },
+    "install-hang": {
+      "valid": true,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/install-hang-handoff-20260828/ajv-formats-install-hang-handoff-20260828/ajv-formats-install-hang__6TDjrrJ/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/install-hang-handoff-20260828/ajv-formats-install-hang-handoff-20260828/ajv-formats-install-hang__6TDjrrJ/verifier/network.json"
+    },
+    "call-hang": {
+      "valid": true,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "reward": 0.0,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/call-hang-production-final-20260828/ajv-formats-call-hang-production-final-20260828/ajv-formats-call-hang__KB79LYR/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/call-hang-production-final-20260828/ajv-formats-call-hang-production-final-20260828/ajv-formats-call-hang__KB79LYR/verifier/network.json"
+    },
+    "offline": {
+      "valid": true,
+      "collected": 27,
+      "passed": 2,
+      "reward": 0.07407407407407407,
+      "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/offline-handoff-20260828/ajv-formats-offline-handoff-20260828/ajv-formats-offline__JSjv5WT/verifier/grading.json",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/ajv-formats/runs/offline-handoff-20260828/ajv-formats-offline-handoff-20260828/ajv-formats-offline__JSjv5WT/verifier/network.json"
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started; this lane ends at awaiting-agent-run/controls-passed authoring handoff by contract.",
+    "Blind review, independent spec-traceability approval, dataset integration, publication, and release image retention remain integrator stages.",
+    "Full catalog lint has unrelated warnings; ajv-formats has zero task-local network lint errors.",
+    "The local Harbor run proves the exact host build and receipts; integrator must retain or publish immutable image references."
+  ],
+  "blocker": null
+}

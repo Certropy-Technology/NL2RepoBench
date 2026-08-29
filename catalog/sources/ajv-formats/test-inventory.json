@@ -1,0 +1,20 @@
+{
+  "schema_shape": "deterministic-test-inventory",
+  "source_revision": "4ca86d21bd07571a30178cbb3714133db6eada9a",
+  "upstream_framework": "jest",
+  "upstream_test_files": 4,
+  "upstream_tests_passed": 350,
+  "private_framework": "node:test",
+  "private_expected_total": 27,
+  "private_leaf_groups": {
+    "package-and-plugin-exports": 2,
+    "format-registration-and-selection": 4,
+    "full-and-fast-date-time": 5,
+    "string-and-network-formats": 8,
+    "openapi-and-pointer-formats": 4,
+    "format-comparison-keywords": 4
+  },
+  "collection_status": "frozen-private-slice",
+  "metric_contract": "node-test-leaf-pass-rate-v1",
+  "traceability": "catalog/sources/ajv-formats/traceability.md"
+}

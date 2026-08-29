@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "ajv-formats"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "json-schema-format-validation"
+tags = ["node", "npm", "ajv", "json-schema", "formats", "validation"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/ajv-validator/ajv-formats"
+revision = "4ca86d21bd07571a30178cbb3714133db6eada9a"
+license_spdx = "MIT"
+source_digest = "sha256:e801e2f5c06e5cf85258abfb0d260c2d7eb2a681b525a7a447b85ff00a19d3e4"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier runs use private hash-bound npm artifacts and remain network isolated; only the trusted Oracle receives the exact upstream source-host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["ajv"]
+artifact = { digest = "sha256:e1bf8d3a5f06dfccfd8e4fda599af4fe357bea85e5c5f5f49cab2c178c61b1b2", size_bytes = 2263040, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:e1bf8d3a5f06dfccfd8e4fda599af4fe357bea85e5c5f5f49cab2c178c61b1b2", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 27
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:2b08bdf3b5ae1e1c07f2a9816db4d9ce56f7f07bc33923ff98193b885081c45a", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:2b08bdf3b5ae1e1c07f2a9816db4d9ce56f7f07bc33923ff98193b885081c45a", visibility = "private" }
+test_bundle = { digest = "sha256:df08045648c3594a7553377ad1577630559a7f8c07cf883581d96e0b5ed0ba26", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:df08045648c3594a7553377ad1577630559a7f8c07cf883581d96e0b5ed0ba26", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build an offline Ajv format plugin with deterministic full/fast validators and format comparison keywords."
+keywords = ["node", "npm", "ajv", "json-schema", "formats", "validation"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Fresh production compile, Oracle, empty, stub, forgery, install-hang, call-hang, and offline controls completed against the frozen source and 27-leaf private contract."
+
+[oracle_bundle]
+digest = "sha256:1ee0873899cc31cbb21cedad79330bfadc5474c9f41f68627e81e3bf4a8e933e"
+size_bytes = 174080
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:1ee0873899cc31cbb21cedad79330bfadc5474c9f41f68627e81e3bf4a8e933e"
+visibility = "private"
