@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "postcss",
+  "status": "implemented",
+  "purpose": "Observe PostCSS package-root behavior through bounded JSON requests without importing candidate JavaScript in the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Return package metadata, root export kinds, and processor version.",
+    "parse": "Parse bounded CSS and return a cycle-free node projection, canonical CSS, and selected source positions.",
+    "mutate": "Apply an allowlisted JSON tree mutation then return CSS and projection.",
+    "process": "Run allowlisted JSON plugin descriptors and return final CSS, warnings, and async behavior."
+  },
+  "projection": {
+    "max_nodes": 512,
+    "max_depth": 32,
+    "omits": ["parent", "proxyCache", "source.input"],
+    "preserves": ["type", "selector", "prop", "value", "important", "name", "params", "text", "raws", "nodes", "source.start", "source.end"]
+  },
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "lifecycle scripts",
+    "trusted-process import",
+    "unbounded request or response"
+  ]
+}

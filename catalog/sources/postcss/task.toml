@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "postcss"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "css-processor"
+tags = ["node", "npm", "commonjs", "esm", "css", "parser", "ast", "plugin"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/postcss/postcss"
+revision = "6d23bc362203118478bc8051b81f2910907ebe6e"
+license_spdx = "MIT"
+source_digest = "sha256:58ec002726ff181bc854a0d8c91e4bd6b261ff2cfb1b60be8385f568aa938e55"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. Exact npm v3 cache entries provide only the declared runtime closure; the pinned upstream archive is private to the trusted Oracle bundle."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["nanoid@3.3.18", "picocolors@1.1.1", "source-map-js@1.2.1"]
+
+[dependencies.artifact]
+digest = "sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35"
+size_bytes = 542720
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 32
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:98d5fb2a995517606e3537badf8e157afb053151f99b2516cea47b11ecc4e800"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:98d5fb2a995517606e3537badf8e157afb053151f99b2516cea47b11ecc4e800"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:edb020f278c59bf35768d9490f8c9e4e13081152dfcb4d55e6f7158966dab8a5"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:edb020f278c59bf35768d9490f8c9e4e13081152dfcb4d55e6f7158966dab8a5"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an offline PostCSS-compatible CSS parser, mutable syntax tree, stringifier, and bounded plugin processor."
+keywords = ["node", "npm", "commonjs", "esm", "css", "parser", "ast", "plugin"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Production Node bundle compiled with the locked toolchain; the final Harbor Oracle passed 32/32 with reward 1.0, and empty, stub, forgery, offline, install-script, loader-hook, and hang controls completed. Independent Agent Run, review, pilot, and publication remain out of scope for this lane."
+
+[oracle_bundle]
+digest = "sha256:3b7a0559065f1d69eab0823ad16440659581b7d7371eb997a28d2e9a72c8eb1c"
+size_bytes = 849920
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:3b7a0559065f1d69eab0823ad16440659581b7d7371eb997a28d2e9a72c8eb1c"
+visibility = "private"

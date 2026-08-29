@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "task_id": "postcss",
+  "package_version": "8.5.26",
+  "module_kind": "commonjs-with-esm-wrapper",
+  "root_runtime_exports": {
+    "default": "function",
+    "parse": "function",
+    "stringify": "function",
+    "fromJSON": "function",
+    "root": "function",
+    "rule": "function",
+    "decl": "function",
+    "atRule": "function",
+    "comment": "function",
+    "document": "function",
+    "Root": "function",
+    "Rule": "function",
+    "Declaration": "function",
+    "AtRule": "function",
+    "Comment": "function",
+    "Container": "function",
+    "Node": "function",
+    "Processor": "function",
+    "Result": "function",
+    "Input": "function",
+    "Warning": "function",
+    "CssSyntaxError": "function"
+  },
+  "supported_behavioral_api": [
+    "postcss(plugins).process(css, options?)",
+    "parse(css, options?) and root.toString()",
+    "root/rule/declaration/at-rule/comment construction",
+    "ordered tree mutation and walking",
+    "root.toJSON() and fromJSON(value)",
+    "synchronous and awaited visitor processing",
+    "result warnings"
+  ],
+  "excluded_behavioral_api": [
+    "custom parsers and stringifiers",
+    "source-map generation",
+    "arbitrary executable plugin input",
+    "filesystem-backed Input behavior",
+    "Document traversal and custom syntaxes",
+    "deprecated postcss.plugin creator behavior"
+  ]
+}

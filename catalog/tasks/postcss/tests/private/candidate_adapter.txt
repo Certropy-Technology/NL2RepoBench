@@ -1,0 +1,141 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST = 64 * 1024;
+const MAX_RESPONSE = 256 * 1024;
+const MAX_CSS = 16 * 1024;
+const MAX_NODES = 512;
+
+function emit(value, code = 0) {
+  const text = JSON.stringify(value);
+  if (Buffer.byteLength(text) > MAX_RESPONSE) process.exit(70);
+  process.stdout.write(text + '\n');
+  process.exit(code);
+}
+function fail(message) { throw new Error(message); }
+function object(value, name) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) fail(`${name} must be an object`);
+  return value;
+}
+function string(value, name, max = MAX_CSS) {
+  if (typeof value !== 'string' || Buffer.byteLength(value) > max) fail(`${name} must be a bounded string`);
+  return value;
+}
+function readRequest() {
+  const input = readFileSync(0);
+  if (input.byteLength > MAX_REQUEST) fail('request too large');
+  const request = JSON.parse(input.toString('utf8'));
+  object(request, 'request');
+  if (typeof request.id !== 'string' || request.id.length < 1 || request.id.length > 128) fail('invalid id');
+  object(request.payload ?? {}, 'payload');
+  return request;
+}
+function project(node, depth = 0, state = {count: 0}) {
+  if (!node || typeof node !== 'object') return null;
+  if (depth > 32 || ++state.count > MAX_NODES) fail('tree exceeds bound');
+  const out = {type: node.type};
+  for (const key of ['selector', 'prop', 'value', 'important', 'name', 'params', 'text']) {
+    if (node[key] !== undefined) out[key] = node[key];
+  }
+  if (node.source?.start) out.start = {line: node.source.start.line, column: node.source.start.column, offset: node.source.start.offset};
+  if (node.source?.end) out.end = {line: node.source.end.line, column: node.source.end.column, offset: node.source.end.offset};
+  if (node.nodes) out.nodes = node.nodes.map(child => project(child, depth + 1, state));
+  return out;
+}
+function requirePostcss() {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  return {postcss: require('postcss'), manifest: require('postcss/package.json')};
+}
+function parse(postcss, css, from) {
+  return postcss.parse(string(css, 'css'), from ? {from: string(from, 'from', 256)} : undefined);
+}
+function inspection(postcss, manifest) {
+  const names = ['parse', 'stringify', 'fromJSON', 'root', 'rule', 'decl', 'atRule', 'comment', 'document', 'Root', 'Rule', 'Declaration', 'AtRule', 'Comment', 'Container', 'Node', 'Processor', 'Result', 'Input', 'Warning', 'CssSyntaxError'];
+  return {
+    name: manifest.name, version: manifest.version, main: manifest.main, types: manifest.types,
+    dependencyNames: Object.keys(manifest.dependencies ?? {}).sort(), processorVersion: postcss().version,
+    exportKinds: Object.fromEntries(names.map(name => [name, typeof postcss[name]])),
+  };
+}
+function nodeFrom(postcss, spec) {
+  object(spec, 'node');
+  const type = string(spec.type, 'node.type', 32);
+  if (type === 'decl') return postcss.decl({prop: string(spec.prop, 'node.prop', 128), value: spec.value});
+  if (type === 'rule') return postcss.rule({selector: string(spec.selector, 'node.selector', 512)});
+  if (type === 'comment') return postcss.comment({text: string(spec.text, 'node.text', 512)});
+  if (type === 'atrule') return postcss.atRule({name: string(spec.name, 'node.name', 128), params: spec.params === undefined ? '' : string(spec.params, 'node.params', 512)});
+  fail('unsupported node type');
+}
+function mutate(postcss, payload) {
+  const root = parse(postcss, payload.css, payload.from);
+  const action = string(payload.action, 'action', 64);
+  if (action === 'append') {
+    const rule = root.first;
+    if (!rule || rule.type !== 'rule') fail('first rule required');
+    rule.append(nodeFrom(postcss, payload.node));
+  } else if (action === 'prepend-comment') {
+    root.prepend(nodeFrom(postcss, {type: 'comment', text: payload.text}));
+  } else if (action === 'set-decl') {
+    let found = false;
+    root.walkDecls(string(payload.prop, 'prop', 128), decl => { decl.value = string(payload.value, 'value', 512); found = true; return false; });
+    if (!found) fail('declaration not found');
+  } else if (action === 'remove-decl') {
+    root.walkDecls(string(payload.prop, 'prop', 128), decl => decl.remove());
+  } else if (action === 'selectors') {
+    const rule = root.first;
+    if (!rule || rule.type !== 'rule' || !Array.isArray(payload.selectors)) fail('rule and selectors required');
+    rule.selectors = payload.selectors.map(value => string(value, 'selector', 256));
+  } else if (action === 'clone-before') {
+    const rule = root.first;
+    if (!rule || rule.type !== 'rule') fail('first rule required');
+    rule.cloneBefore({selector: string(payload.selector, 'selector', 256)});
+  } else if (action === 'from-json') {
+    return {css: postcss.fromJSON(root.toJSON()).toString(), tree: project(postcss.fromJSON(root.toJSON()))};
+  } else if (action === 'walk-order') {
+    const seen = [];
+    root.walk(node => seen.push(node.type + ':' + (node.prop ?? node.selector ?? node.name ?? node.text ?? '')));
+    return {css: root.toString(), seen};
+  } else fail('unsupported action');
+  return {css: root.toString(), tree: project(root)};
+}
+function processCss(postcss, payload) {
+  const descriptors = Array.isArray(payload.plugins) ? payload.plugins : fail('plugins must be an array');
+  if (descriptors.length > 8) fail('too many plugins');
+  const plugins = descriptors.map((descriptor, index) => {
+    object(descriptor, 'plugin');
+    const kind = string(descriptor.kind, 'plugin.kind', 64);
+    const plugin = {postcssPlugin: `adapter-${index}-${kind}`};
+    if (kind === 'replace-decl') plugin.Declaration = decl => { if (decl.prop === descriptor.prop && decl.value === descriptor.from) decl.value = string(descriptor.to, 'plugin.to', 512); };
+    else if (kind === 'append-decl') plugin.Rule = rule => rule.append({prop: string(descriptor.prop, 'plugin.prop', 128), value: string(descriptor.value, 'plugin.value', 512)});
+    else if (kind === 'prefix-selector') plugin.Once = root => { root.walkRules(rule => { rule.selector = string(descriptor.prefix, 'plugin.prefix', 256) + rule.selector; }); };
+    else if (kind === 'remove-decl') plugin.Declaration = decl => { if (decl.prop === descriptor.prop) decl.remove(); };
+    else if (kind === 'append-comment') plugin.Once = root => root.append({text: string(descriptor.text, 'plugin.text', 512)});
+    else if (kind === 'warn') plugin.Once = (_, {result}) => result.warn(string(descriptor.text, 'plugin.text', 512));
+    else if (kind === 'async-prefix') plugin.Once = async root => { root.walkRules(rule => { rule.selector = string(descriptor.prefix, 'plugin.prefix', 256) + rule.selector; }); };
+    else fail('unsupported plugin');
+    return plugin;
+  });
+  const result = postcss(plugins).process(string(payload.css, 'css'), {from: payload.from ? string(payload.from, 'from', 256) : undefined});
+  if (payload.sync === true) {
+    result.sync();
+    return {css: result.css, warnings: result.warnings().map(warning => warning.text)};
+  }
+  return Promise.resolve(result).then(final => ({css: final.css, warnings: final.warnings().map(warning => warning.text)}));
+}
+
+let request;
+try {
+  request = readRequest();
+  const {postcss, manifest} = requirePostcss();
+  if (request.operation === 'inspect') emit({id: request.id, ok: true, value: inspection(postcss, manifest)});
+  if (request.operation === 'parse') {
+    const root = parse(postcss, request.payload.css, request.payload.from);
+    emit({id: request.id, ok: true, value: {css: root.toString(), tree: project(root)}});
+  }
+  if (request.operation === 'mutate') emit({id: request.id, ok: true, value: mutate(postcss, request.payload)});
+  if (request.operation === 'process') Promise.resolve(processCss(postcss, request.payload)).then(value => emit({id: request.id, ok: true, value})).catch(error => emit({id: request.id, ok: false, errorType: error?.name ?? 'Error', message: String(error?.message ?? error).slice(0, 1024)}));
+  else if (!['inspect', 'parse', 'mutate'].includes(request.operation)) fail('unsupported operation');
+} catch (error) {
+  emit({id: request?.id, ok: false, errorType: error?.name ?? 'Error', message: String(error?.message ?? error).slice(0, 1024)}, 1);
+}

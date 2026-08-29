@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0",
+  "task_id": "postcss",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/postcss/postcss",
+    "revision": "6d23bc362203118478bc8051b81f2910907ebe6e",
+    "license_spdx": "MIT",
+    "source_archive_sha256": "sha256:58ec002726ff181bc854a0d8c91e4bd6b261ff2cfb1b60be8385f568aa938e55",
+    "license_sha256": "sha256:5be1f3465bba68a626777f984878814aaf35e7ef8e9fd314d469bcf887050fb8"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": "Node 24.19.0",
+    "npm": "11.17.0",
+    "platform": "linux/amd64",
+    "libc": "glibc",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependencies": {
+    "lockfile": "package-lock.json v3",
+    "packages": ["nanoid@3.3.18", "picocolors@1.1.1", "source-map-js@1.2.1"],
+    "artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/19/19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35",
+      "sha256": "sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35",
+      "size_bytes": 542720
+    },
+    "install_contract": "npm ci --offline --ignore-scripts --no-audit --no-fund"
+  },
+  "bundle": {
+    "path": ".nl2repo/final-compile/postcss/bundle.manifest.json",
+    "sha256": "sha256:63007d5d9462f636e95d9e26c96974b5e10fb06c331202a7a0b9856d2e6b9844",
+    "file_count": 113,
+    "canonical_manifest_digest": "sha256:354d783350a127f652717beb0c54af331de2b69affc9c01ba946ba537479992e",
+    "mode": "production"
+  },
+  "tests": {
+    "framework": "node:test",
+    "expected_total": 32,
+    "commands_artifact": "sha256:98d5fb2a995517606e3537badf8e157afb053151f99b2516cea47b11ecc4e800",
+    "test_bundle": "sha256:edb020f278c59bf35768d9490f8c9e4e13081152dfcb4d55e6f7158966dab8a5",
+    "verifier_protocol": "custom-json-v1",
+    "candidate_boundary": "candidate UID 10001; one-shot JSON subprocess; no trusted-process import"
+  },
+  "toolchain": {
+    "path": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "toolchain_lock_digest": "sha256:4c88be0719cc00e3ba35532b2e2d34a9e3816ef6ac391de14a5982564837dc27",
+    "node_runtime_helper_digest": "sha256:d4ab232088d68058ddebf916fbbdcea3aad2a07d49749a090a85a0f13c7d31b"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/postcss --output .nl2repo/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/postcss -a oracle --job-name postcss-oracle-retry-20260830 -o .nl2repo/runs/postcss-oracle-retry-20260830 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "reward": 1.0,
+    "passed": 32,
+    "collected": 32,
+    "expected_total": 32,
+    "grading": {
+      "path": ".nl2repo/runs/postcss-oracle-retry-20260830/postcss-oracle-retry-20260830/postcss__wVoY6D6/verifier/grading.json",
+      "sha256": "sha256:6ecdf71bb1d1a6b596a1a7c45d8eae9df2597b78def7c2e1801f856e7189c896"
+    },
+    "network": {
+      "path": ".nl2repo/runs/postcss-oracle-retry-20260830/postcss-oracle-retry-20260830/postcss__wVoY6D6/verifier/network.json",
+      "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-empty -a oracle --job-name postcss-empty-authoring-20260830 -o .nl2repo/runs/postcss-empty-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/runs/postcss-empty-authoring-20260830/postcss-empty-authoring-20260830/postcss-empty__iGthMDV/verifier/grading.json",
+      "grading_sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961",
+      "network_path": ".nl2repo/runs/postcss-empty-authoring-20260830/postcss-empty-authoring-20260830/postcss-empty__iGthMDV/verifier/network.json",
+      "network_sha256": "sha256:4e8a97066170ea777d2b1692098a7164dcce518946e3db6238cccbe4bd90c9a9",
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-stub -a oracle --job-name postcss-stub-authoring-20260830 -o .nl2repo/runs/postcss-stub-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 32,
+      "grading_path": ".nl2repo/runs/postcss-stub-authoring-20260830/postcss-stub-authoring-20260830/postcss-stub__ijdXp73/verifier/grading.json",
+      "grading_sha256": "sha256:88b9fac5379bd811b27700c749ba1e00aa5f7e72bb299a2382b4e97c6ef0d553",
+      "network_path": ".nl2repo/runs/postcss-stub-authoring-20260830/postcss-stub-authoring-20260830/postcss-stub__ijdXp73/verifier/network.json",
+      "network_sha256": "sha256:1771089d7940f57d109ab5d6146dc8f77d473a93984accafa04097c11110a5b0",
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-forgery -a oracle --job-name postcss-forgery-authoring-20260830 -o .nl2repo/runs/postcss-forgery-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 32,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward": {
+        "path": ".nl2repo/runs/postcss-forgery-authoring-20260830/postcss-forgery-authoring-20260830/postcss-forgery__JnUU8J2/artifacts/workspace/logs/verifier/reward.json",
+        "sha256": "sha256:b13160d0762a5612ee98d66ba60e7b86d7eebdfa7416738577057e2b03c66e35",
+        "content": "{\"reward\":1}"
+      },
+      "grading_path": ".nl2repo/runs/postcss-forgery-authoring-20260830/postcss-forgery-authoring-20260830/postcss-forgery__JnUU8J2/verifier/grading.json",
+      "grading_sha256": "sha256:88b9fac5379bd811b27700c749ba1e00aa5f7e72bb299a2382b4e97c6ef0d553",
+      "network_path": ".nl2repo/runs/postcss-forgery-authoring-20260830/postcss-forgery-authoring-20260830/postcss-forgery__JnUU8J2/verifier/network.json",
+      "network_sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597",
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-offline -a oracle --job-name postcss-offline-authoring-20260830 -o .nl2repo/runs/postcss-offline-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 32,
+      "completed": true,
+      "grading_path": ".nl2repo/runs/postcss-offline-authoring-20260830/postcss-offline-authoring-20260830/postcss-offline__kZCQNZx/verifier/grading.json",
+      "grading_sha256": "sha256:88b9fac5379bd811b27700c749ba1e00aa5f7e72bb299a2382b4e97c6ef0d553",
+      "network_path": ".nl2repo/runs/postcss-offline-authoring-20260830/postcss-offline-authoring-20260830/postcss-offline__kZCQNZx/verifier/network.json",
+      "network_sha256": "sha256:be5c9b151442773f1b569b5b63d0d645d14785669e1d17848e1965258cb4e541",
+      "public_network_available": false
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-install-script -a oracle --job-name postcss-install-script-authoring-20260830 -o .nl2repo/runs/postcss-install-script-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/runs/postcss-install-script-authoring-20260830/postcss-install-script-authoring-20260830/postcss-install-script__HAhBbC8/verifier/grading.json",
+      "grading_sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961",
+      "network_path": ".nl2repo/runs/postcss-install-script-authoring-20260830/postcss-install-script-authoring-20260830/postcss-install-script__HAhBbC8/verifier/network.json",
+      "network_sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30",
+      "public_network_available": false
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-loader-hook -a oracle --job-name postcss-loader-hook-authoring-20260830 -o .nl2repo/runs/postcss-loader-hook-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.03125,
+      "passed": 1,
+      "collected": 32,
+      "grading_path": ".nl2repo/runs/postcss-loader-hook-authoring-20260830/postcss-loader-hook-authoring-20260830/postcss-loader-hook__AbpriiT/verifier/grading.json",
+      "grading_sha256": "sha256:e251c2280f11abe75e9179ae2e9143bb5cf32cfc0d29d57bb1bad64637e719cd",
+      "network_path": ".nl2repo/runs/postcss-loader-hook-authoring-20260830/postcss-loader-hook-authoring-20260830/postcss-loader-hook__AbpriiT/verifier/network.json",
+      "network_sha256": "sha256:b5bae354fc2401fc988463c537d741eefccbe4947c56bb59c9dc3a4cca891331",
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/postcss/postcss-hang -a oracle --job-name postcss-hang-authoring-20260830 -o .nl2repo/runs/postcss-hang-authoring-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/runs/postcss-hang-authoring-20260830/postcss-hang-authoring-20260830/postcss-hang__fwyDqic/verifier/grading.json",
+      "grading_sha256": "sha256:47f90bc79aea76213c04d06ec6d29824220f58db2b8119ce656421c7b1d6176a",
+      "network_path": ".nl2repo/runs/postcss-hang-authoring-20260830/postcss-hang-authoring-20260830/postcss-hang__fwyDqic/verifier/network.json",
+      "network_sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "No independent model Agent Run was started in this authoring lane by contract.",
+    "Blind review, traceability review approval, pilot, and publication remain pending.",
+    "The Oracle bundle uses a local SHA-256-verified source archive; the model Agent receives no source-host authorization."
+  ],
+  "blocker": null
+}

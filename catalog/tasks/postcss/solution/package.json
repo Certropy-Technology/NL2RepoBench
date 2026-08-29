@@ -1,0 +1,20 @@
+{
+  "name": "postcss",
+  "version": "8.5.26",
+  "description": "A tool for transforming styles with JS plugins",
+  "main": "./lib/postcss.js",
+  "types": "./lib/postcss.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/postcss.mjs",
+      "require": "./lib/postcss.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "nanoid": "3.3.18",
+    "picocolors": "1.1.1",
+    "source-map-js": "1.2.1"
+  }
+}
