@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "terminal_kind": "controls-passed",
+  "runtime_identity": {
+    "locked_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "locked_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "observed_image_id": "sha256:f2a041030a64d42b32f80b56a0906d3a0d05e8c6ee12f1fcee95f276dd69fb81",
+    "identity_match": false,
+    "observed_fork_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
+    "observed_sdk_version": "1.43.1",
+    "observed_tools_version": "1.43.1",
+    "observed_litellm_version": "1.93.0",
+    "offline_smoke_passed": true
+  },
+  "bundle": {
+    "path": ".nl2repo/compile-handoff-final-h11/h11/bundle.manifest.json",
+    "sha256": "sha256:b666c65d67379b97bc955522f207a203d686ab3a57ae77222b17bbfb6eeb2273"
+  },
+  "oracle": {
+    "command": "docker run --rm --network none --user 0 -v .nl2repo/compile-handoff-final-h11/h11/solution:/solution:ro -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/oracle-workspace:/workspace:rw python@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e bash /solution/solve.sh; docker run --rm --network none -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/oracle-workspace:/workspace:rw -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/oracle-logs:/logs:rw nl2repo-h11-verifier:refresh bash /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/oracle-logs/verifier/grading.json",
+      "sha256": "sha256:9c645e50b63b586a1f083728f0fc47ad86dc23bb01cc2898a31810a3b17314ef"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/oracle-logs/verifier/network.json",
+      "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none --user 0 -v .nl2repo/compile-handoff-final-h11/h11/controls:/controls:ro -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/empty-workspace:/workspace:rw python@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e true; docker run --rm --network none -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/empty-workspace:/workspace:rw -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/empty-logs:/logs:rw nl2repo-h11-verifier:refresh bash /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/empty-logs/verifier/grading.json",
+        "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/empty-logs/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      }
+    },
+    "stub": {
+      "command": "docker run --rm --network none --user 0 -v .nl2repo/compile-handoff-final-h11/h11/controls:/controls:ro -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/stub-workspace:/workspace:rw python@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e bash /controls/stub.sh; docker run --rm --network none -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/stub-workspace:/workspace:rw -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/stub-logs:/logs:rw nl2repo-h11-verifier:refresh bash /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/stub-logs/verifier/grading.json",
+        "sha256": "sha256:3df3a8993921de85c503c40ccc41c4da4ec17d2930d87a7af91497f678b4477e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/stub-logs/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      }
+    },
+    "forgery": {
+      "command": "docker run --rm --network none --user 0 -v .nl2repo/compile-handoff-final-h11/h11/controls:/controls:ro -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/forgery-workspace:/workspace:rw python@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e bash /controls/forgery.sh; docker run --rm --network none -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/forgery-workspace:/workspace:rw -v .nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/forgery-logs:/logs:rw nl2repo-h11-verifier:refresh bash /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "expected_total": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/forgery-logs/verifier/grading.json",
+        "sha256": "sha256:3df3a8993921de85c503c40ccc41c4da4ec17d2930d87a7af91497f678b4477e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/forgery-logs/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      }
+    },
+    "offline": {
+      "command": "Official Harbor verifier network namespace and public probes from the Oracle receipt",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/h11/local-final/oracle-logs/verifier/network.json",
+        "sha256": "sha256:b0aa5f439247add604989b59a3ffd0e2ce3eca6e2380c87a546ddb38edd43597"
+      }
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started by this authoring lane.",
+    "Blind review, pilot, dataset integration, and publication remain integrator-owned stages.",
+    "The scored contract intentionally excludes socket transport, fuzzing, sendfile placeholders, and non-deterministic external I/O.",
+    "The official control matrix used a same-tag runtime with the correct fork and package versions but a different image identity from toolchain.lock.toml; the locked image must be restored and the matrix rerun before release."
+  ]
+}

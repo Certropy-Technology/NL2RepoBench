@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "revision": "62c5068c971579d61fa1b55373390e12f25fd856",
+  "public_modules": ["h11", "h11._events", "h11._headers", "h11._connection", "h11._state", "h11._util", "h11._readers", "h11._writers"],
+  "scored_symbols": {
+    "h11": ["Connection", "NEED_DATA", "PAUSED", "Request", "InformationalResponse", "Response", "Data", "EndOfMessage", "ConnectionClosed", "CLIENT", "SERVER", "IDLE", "SEND_RESPONSE", "SEND_BODY", "DONE", "MUST_CLOSE", "CLOSED", "MIGHT_SWITCH_PROTOCOL", "SWITCHED_PROTOCOL", "ERROR", "ProtocolError", "LocalProtocolError", "RemoteProtocolError"],
+    "h11._headers": ["Headers", "normalize_and_validate", "get_comma_header", "set_comma_header", "has_expect_100_continue"],
+    "h11._util": ["bytesify", "validate", "Sentinel"]
+  },
+  "excluded_risk_surface": ["socket and network I/O", "stdlib HTTP integration test transport", "sendfile placeholder objects", "fuzz harness", "docs and benchmark helpers"],
+  "notes": "The scored surface is a deterministic child-side adaptation of the pure-Python wire protocol and state machine. No external service is needed."
+}

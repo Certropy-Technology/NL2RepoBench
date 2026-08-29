@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "revision": "62c5068c971579d61fa1b55373390e12f25fd856",
+  "contract_to_public_behavior": {
+    "exports-and-version": ["h11.__init__.__version__", "h11.CLIENT", "h11.SERVER", "h11.NEED_DATA", "h11.PAUSED"],
+    "request-event": ["h11._events.Request", "h11._headers.Headers"],
+    "response-and-body-events": ["h11._events.Response", "h11._events.InformationalResponse", "h11._events.Data", "h11._events.EndOfMessage", "h11._events.ConnectionClosed"],
+    "header-normalization": ["h11._headers.normalize_and_validate", "h11._headers.get_comma_header", "h11._headers.set_comma_header"],
+    "header-validation": ["h11._headers.normalize_and_validate", "h11._util.LocalProtocolError"],
+    "request-wire": ["h11.Connection.send", "h11._writers.write_request"],
+    "response-wire": ["h11.Connection.send", "h11._writers.write_any_response"],
+    "receive-request": ["h11.Connection.receive_data", "h11.Connection.next_event", "h11._readers.maybe_read_from_IDLE_client"],
+    "receive-response": ["h11.Connection.receive_data", "h11.Connection.next_event", "h11._readers.maybe_read_from_SEND_RESPONSE_server"],
+    "chunked-wire": ["h11._writers.ChunkedWriter", "h11.Connection.send"],
+    "chunked-parse": ["h11._readers.ChunkedReader", "h11.Connection.next_event"],
+    "client-lifecycle": ["h11.Connection.send", "h11._state.ConnectionState"],
+    "server-lifecycle": ["h11.Connection.send", "h11._state.ConnectionState"],
+    "need-data": ["h11.Connection.next_event", "h11.NEED_DATA"],
+    "paused-flow-control": ["h11.Connection.next_event", "h11.PAUSED"],
+    "eof-close": ["h11.Connection.receive_data", "h11.Connection.next_event", "h11.ConnectionClosed"],
+    "protocol-error": ["h11._util.RemoteProtocolError", "h11.Connection.next_event"],
+    "automatic-chunked-response": ["h11.Connection._clean_up_response_headers_for_sending", "h11._headers.set_comma_header"],
+    "head-framing": ["h11.Connection._clean_up_response_headers_for_sending", "h11._connection._body_framing"],
+    "http10-close-delimited": ["h11.Connection._clean_up_response_headers_for_sending", "h11._state.MUST_CLOSE"],
+    "passthrough-writes": ["h11.Connection.send_with_data_passthrough"],
+    "bytesify-and-sentinels": ["h11._util.bytesify", "h11._util.Sentinel"],
+    "module-exports": ["h11.__init__.__all__"],
+    "repeat-determinism": ["h11.Connection.send", "h11._writers"]
+  },
+  "public_behavior_to_tests": {
+    "h11._events": ["request-event", "response-and-body-events", "receive-request", "receive-response"],
+    "h11._headers": ["request-event", "header-normalization", "header-validation", "chunked-wire", "chunked-parse"],
+    "h11._connection": ["request-wire", "response-wire", "receive-request", "receive-response", "client-lifecycle", "server-lifecycle", "need-data", "paused-flow-control", "eof-close", "protocol-error", "automatic-chunked-response", "head-framing", "http10-close-delimited", "passthrough-writes"],
+    "h11._state": ["client-lifecycle", "server-lifecycle", "http10-close-delimited"],
+    "h11._util": ["protocol-error", "bytesify-and-sentinels"],
+    "h11.__init__": ["exports-and-version", "module-exports", "repeat-determinism"]
+  },
+  "excluded_upstream_tests": {
+    "test_against_stdlib_http.py": "requires a real stdlib HTTP transport; no external I/O is in the scored contract",
+    "test_io.py::test_sendfile": "uses a file-like passthrough object not expressible through the JSON adapter",
+    "fuzz": "unbounded fuzz harness rather than a deterministic fixed leaf"
+  }
+}

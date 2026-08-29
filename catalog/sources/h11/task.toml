@@ -1,0 +1,89 @@
+schema_version = "1.0"
+task_id = "h11"
+version = "0.2.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "http-protocol-state-machine"
+tags = ["python", "http", "http11", "state-machine", "parsing", "serialization", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-hyper/h11"
+revision = "62c5068c971579d61fa1b55373390e12f25fd856"
+license_spdx = "MIT"
+source_digest = "sha256:503ed1fbb3efd07a9145b2f5ed05169728319e75d8117a4ef986e3aa91ea33f4"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked build closure during image build; candidate runs pip install . without network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "h11 is pure Python with no runtime dependencies. The candidate and separate verifier use a build-time hash-locked closure; only the trusted Oracle receives the private digest-verified source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "setuptools==80.9.0",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", size_bytes = 373, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:789bd21a098e1f9177e49d4c2da8942364b6a47c397475d3f782c3628b6a591f", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:789bd21a098e1f9177e49d4c2da8942364b6a47c397475d3f782c3628b6a591f", visibility = "private" }
+environment = {}
+
+[harbor]
+description = "Build the pure-Python h11 HTTP/1.1 protocol state machine from an empty workspace and satisfy a bounded JSON contract for events, headers, framing, parsing, and connection lifecycle."
+keywords = ["python", "http", "http11", "protocol", "state-machine", "separate-verifier", "no-network"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Current production bundle and task-local separate-verifier replay passed the frozen 24-leaf Oracle, empty, stub, forgery, and offline controls; Harbor Agent Run remains integrator-owned."
+
+[oracle_bundle]
+digest = "sha256:04c1283e5d38c3b6d4381dcc668054a045c27c417b1d61be7a2ac781d6eeb680"
+size_bytes = 440320
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:04c1283e5d38c3b6d4381dcc668054a045c27c417b1d61be7a2ac781d6eeb680"
+visibility = "private"
