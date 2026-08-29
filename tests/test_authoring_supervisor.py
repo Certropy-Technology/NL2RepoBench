@@ -228,6 +228,41 @@ def test_director_response_is_strict_json_and_bounded() -> None:
         supervisor._parse_director_response("```json\n" + response + "\n```")
 
 
+def test_runtime_config_is_bounded_and_operator_owned(tmp_path: Path) -> None:
+    args = type(
+        "Args",
+        (),
+        {"max_total_controllers": 6, "max_integrations": 3},
+    )()
+    config = tmp_path / "runtime-config.json"
+    config.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "enabled": True,
+                "max_total_controllers": 4,
+                "controller_concurrency": 2,
+                "max_integrations": 2,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert supervisor._runtime_config(config, args) == {
+        "schema_version": "1.0",
+        "enabled": True,
+        "max_total_controllers": 4,
+        "controller_concurrency": 2,
+        "max_integrations": 2,
+    }
+
+    config.write_text(
+        json.dumps({"max_total_controllers": 99}), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="max_total_controllers"):
+        supervisor._runtime_config(config, args)
+
+
 def test_controller_slots_count_unique_owner_not_uv_child_processes() -> None:
     lane = supervisor.Lane(
         "go", "batch", Path("/queue"), Path("/plan"), Path("/state")

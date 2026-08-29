@@ -19,10 +19,8 @@ def _runtime_language(task: Path) -> str:
 def test_python_harbor_tasks_do_not_vendor_dependencies() -> None:
     violations: list[str] = []
 
-    for task in sorted(path for path in TASKS.iterdir() if path.is_dir()):
-        if not (task / "task.toml").is_file():
-            violations.append(f"{task.name}: task.toml missing")
-            continue
+    task_roots = sorted({path.parent for path in TASKS.rglob("task.toml")})
+    for task in task_roots:
         if _runtime_language(task) != "python":
             continue
 

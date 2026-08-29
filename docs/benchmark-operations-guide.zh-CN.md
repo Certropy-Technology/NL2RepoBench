@@ -295,6 +295,38 @@ Supervisor 使用 `origin` 的 integration branch 作为唯一写入线。生产
 通过受控 fast-forward 或审核合并到 `main`；合并成功后只删除已确认 merged 的本地
 feature branch 和已归档 worktree，保留仍有 worktree、dirty 内容、未验证 evidence
 或未推送提交的 branch。
+
+### 动态运行控制与 systemd
+
+生产机可安装仓库内的 `ops/nl2repobench-authoring-supervisor.service`：
+
+```bash
+install -m 0644 ops/nl2repobench-authoring-supervisor.service \
+  /etc/systemd/system/nl2repobench-authoring-supervisor.service
+systemctl daemon-reload
+systemctl enable --now nl2repobench-authoring-supervisor.service
+systemctl status nl2repobench-authoring-supervisor.service
+```
+
+运行时配置位于：
+`.nl2repo/authoring-live/supervisor/runtime-config.json`。使用原子更新 CLI 调整并发，
+supervisor 和现有 Loop 会在下一轮读取：
+
+```bash
+scripts/authoring_runtime_config.py show
+scripts/authoring_runtime_config.py set --max-total-controllers 4
+scripts/authoring_runtime_config.py set --controller-concurrency 2
+scripts/authoring_runtime_config.py set --enabled false
+```
+
+`max-total-controllers` 的硬上限是 6，`controller-concurrency` 的硬上限是 4；默认值
+分别为 3 和 1。增加 controller 会在下一轮逐步启动新的 Loop；降低配置不会杀掉当前
+正在执行的 task，当前 task 收尾后才停止继续 claim。`enabled=false` 停止新 claim，
+但不终止已经运行的 task。配置非法时保留上一份有效配置并记录错误。
+
+变更运行时配置会使 Director cache 失效，促使顶层 Agent 重新评估；LLM 仍不能绕过
+Git、OSS、secret、网络、artifact 或 dirty-tree 门禁。systemd service 使用只读的 OSS
+环境文件，模型 provider 凭据仍由 `/root/.pi/agent/models.json` 管理，不写入运行配置。
 | Python verifier 用 `networkx`/SymPy 旧 API 失败 | pinned image 中实际版本与冻结上游 API 有 drift，或 runtime wheel 未进入 verifier context | 先记录实际版本，补兼容 shim/锁依赖并重新 Oracle；不能直接降低断言 |
 | source solution 生成空 workspace | placeholder `solve.sh` 或 agent image 缺 Git/构建工具 | 先补 exact-revision materializer、工具链和 build context，再判断题目是否可行 |
 | 没有 history/event | Harbor ATIF 转换是预期产物 | 验证 `trajectory.json`；需要 raw events 时扩展 adapter |

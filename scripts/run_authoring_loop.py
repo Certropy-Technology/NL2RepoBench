@@ -83,6 +83,25 @@ def _load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def _effective_concurrency(args: argparse.Namespace) -> tuple[bool, int]:
+    """Read the operator-owned concurrency file without trusting its contents."""
+
+    path = getattr(args, "concurrency_file", None)
+    if path is None:
+        return True, args.max_concurrency
+    try:
+        value = _load_json(Path(path))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+        return True, args.max_concurrency
+    enabled = value.get("enabled", True)
+    concurrency = value.get("controller_concurrency", args.max_concurrency)
+    if not isinstance(enabled, bool) or not isinstance(concurrency, int):
+        return True, args.max_concurrency
+    if not 0 <= concurrency <= MAX_CONCURRENCY:
+        return True, args.max_concurrency
+    return enabled, concurrency
+
+
 def _ensure_disk_root(path: Path) -> Path:
     resolved = path.expanduser().resolve()
     if any(resolved == root or root in resolved.parents for root in TMPFS_ROOTS):
@@ -911,10 +930,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
     )
     active: dict[Any, dict[str, Any]] = {}
-    with ThreadPoolExecutor(max_workers=args.max_concurrency) as executor:
+    with ThreadPoolExecutor(max_workers=MAX_CONCURRENCY) as executor:
         exhausted = False
         while active or not exhausted:
-            while not exhausted and len(active) < args.max_concurrency:
+            enabled, concurrency = _effective_concurrency(args)
+            if not enabled or concurrency == 0:
+                exhausted = True
+            while not exhausted and len(active) < concurrency:
                 try:
                     task = next(pending)
                 except StopIteration:
@@ -982,6 +1004,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "provider": args.provider,
         "model": args.model,
         "max_concurrency": args.max_concurrency,
+        "concurrency_file": (
+            str(args.concurrency_file)
+            if getattr(args, "concurrency_file", None) is not None
+            else None
+        ),
         "queue_refill": refill_queue,
         "results": results,
     }
@@ -1007,6 +1034,14 @@ def main() -> int:
     )
     parser.add_argument("--owner", required=True)
     parser.add_argument("--max-concurrency", type=int, default=3)
+    parser.add_argument(
+        "--concurrency-file",
+        type=Path,
+        help=(
+            "Operator-owned JSON file with enabled and controller_concurrency; "
+            "changes are hot-reloaded between claims."
+        ),
+    )
     parser.add_argument("--lease-seconds", type=int, default=7200)
     parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument(

@@ -47,6 +47,25 @@ def _args(tmp_path: Path, plan: Path, queue: Path, state: Path):
     )()
 
 
+def test_effective_concurrency_hot_reload_and_pause(tmp_path: Path) -> None:
+    args = type("Args", (), {"max_concurrency": 2, "concurrency_file": None})()
+    assert driver._effective_concurrency(args) == (True, 2)
+
+    config = tmp_path / "runtime-config.json"
+    config.write_text(
+        json.dumps({"enabled": True, "controller_concurrency": 4}),
+        encoding="utf-8",
+    )
+    args.concurrency_file = config
+    assert driver._effective_concurrency(args) == (True, 4)
+
+    config.write_text(
+        json.dumps({"enabled": False, "controller_concurrency": 1}),
+        encoding="utf-8",
+    )
+    assert driver._effective_concurrency(args) == (False, 1)
+
+
 def test_worktree_enables_sparse_authoring_profile(tmp_path: Path, monkeypatch) -> None:
     target = tmp_path / "task"
     calls: list[list[str]] = []

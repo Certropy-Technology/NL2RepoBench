@@ -56,6 +56,8 @@ DEFAULT_PLAN_FILES = {
 }
 DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3
+MAX_RUNTIME_CONTROLLERS = 6
+MAX_RUNTIME_CONCURRENCY = 4
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 DEFAULT_WATCHER_MIN_FREE_BYTES = 2 * 1024**3
 DEFAULT_FAILURE_BACKOFF_SECONDS = 1800
@@ -265,7 +267,7 @@ Return exactly one JSON object and no Markdown:
   "reason": "short reason"
 }}
 
-Rules: limits are integers 0..3; discover_packages has at most 8 names;
+Rules: limits are integers 0..6; discover_packages has at most 8 names;
 discover package names must come from discovery_pool; pause uses zero limits;
 do not invent commands, paths, credentials, or package names. Prefer safe
 integration/archive work. Pause when disk is low, checkout is dirty, or
@@ -301,7 +303,7 @@ def _parse_director_response(text: str) -> dict[str, Any]:
     ):
         raise ValueError("Director discover_packages is invalid")
     for field in ("integrate_limit", "worker_limit"):
-        if not isinstance(value[field], int) or not 0 <= value[field] <= 3:
+        if not isinstance(value[field], int) or not 0 <= value[field] <= 6:
             raise ValueError(f"Director {field} is invalid")
     if not isinstance(value["reason"], str) or not value["reason"].strip():
         raise ValueError("Director reason is required")
@@ -319,7 +321,12 @@ def _director_decision(
     snapshot: dict[str, Any],
 ) -> dict[str, Any]:
     cache_path = live / "supervisor/director-decision.json"
-    if not args.refresh_director and cache_path.is_file():
+    runtime_path = live / "supervisor/runtime-config.json"
+    runtime_changed = runtime_path.is_file() and (
+        not cache_path.is_file()
+        or runtime_path.stat().st_mtime > cache_path.stat().st_mtime
+    )
+    if not args.refresh_director and not runtime_changed and cache_path.is_file():
         try:
             cached = _json(cache_path)
             age = time.time() - cache_path.stat().st_mtime
@@ -334,8 +341,8 @@ def _director_decision(
             "action": "continue",
             "language": "all",
             "discover_packages": [],
-            "integrate_limit": min(args.max_integrations, 3),
-            "worker_limit": min(args.workers, 3),
+            "integrate_limit": min(args.max_integrations, 6),
+            "worker_limit": min(args.workers, 6),
             "reason": "explicit deterministic rules mode",
         }
         _atomic_write(
@@ -1091,6 +1098,49 @@ def _load_failure_state(path: Path) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _runtime_config(path: Path, args: argparse.Namespace) -> dict[str, Any]:
+    """Load bounded operator controls; invalid edits fail closed to CLI values."""
+
+    defaults = {
+        "schema_version": "1.0",
+        "enabled": True,
+        "max_total_controllers": min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS),
+        "controller_concurrency": 1,
+        "max_integrations": args.max_integrations,
+    }
+    if not path.is_file():
+        return defaults
+    value = _json(path)
+    if value.get("schema_version", "1.0") != "1.0":
+        raise ValueError("runtime config schema_version must be 1.0")
+    enabled = value.get("enabled", defaults["enabled"])
+    max_controllers = value.get(
+        "max_total_controllers", defaults["max_total_controllers"]
+    )
+    concurrency = value.get(
+        "controller_concurrency", defaults["controller_concurrency"]
+    )
+    max_integrations = value.get("max_integrations", defaults["max_integrations"])
+    if not isinstance(enabled, bool):
+        raise ValueError("runtime config enabled must be boolean")
+    if (
+        not isinstance(max_controllers, int)
+        or not 0 <= max_controllers <= min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS)
+    ):
+        raise ValueError("runtime config max_total_controllers is out of bounds")
+    if not isinstance(concurrency, int) or not 0 <= concurrency <= MAX_RUNTIME_CONCURRENCY:
+        raise ValueError("runtime config controller_concurrency is out of bounds")
+    if not isinstance(max_integrations, int) or not 0 <= max_integrations <= args.max_integrations:
+        raise ValueError("runtime config max_integrations is out of bounds")
+    return {
+        "schema_version": "1.0",
+        "enabled": enabled,
+        "max_total_controllers": max_controllers,
+        "controller_concurrency": concurrency,
+        "max_integrations": max_integrations,
+    }
+
+
 def _save_failure_state(path: Path, value: dict[str, Any]) -> None:
     _atomic_write(path, value)
 
@@ -1165,7 +1215,13 @@ def _start_watcher(root: Path, lanes: list[Lane], live: Path) -> int:
     return process.pid
 
 
-def _start_controller(root: Path, lane: Lane, live: Path, owner: str) -> int:
+def _start_controller(
+    root: Path,
+    lane: Lane,
+    live: Path,
+    owner: str,
+    concurrency_file: Path,
+) -> int:
     log = live / "logs" / f"{owner}.log"
     output = live / "results" / f"{owner}.json"
     pid_path = live / "pids" / f"{owner}.pid"
@@ -1189,6 +1245,8 @@ def _start_controller(root: Path, lane: Lane, live: Path, owner: str) -> int:
         owner,
         "--max-concurrency",
         "1",
+        "--concurrency-file",
+        str(concurrency_file),
         "--lease-seconds",
         "7200",
         "--max-attempts",
@@ -1309,6 +1367,20 @@ def supervise(args: argparse.Namespace) -> int:
     lock_path = live / "supervisor.lock"
     report_path = live / "supervisor/status.json"
     failure_state_path = live / "supervisor/integration-failures.json"
+    runtime_config_path = (
+        args.runtime_config
+        if args.runtime_config.is_absolute()
+        else root / args.runtime_config
+    ).resolve()
+    last_runtime_config = {
+        "schema_version": "1.0",
+        "enabled": True,
+        "max_total_controllers": min(
+            args.max_total_controllers, MAX_RUNTIME_CONTROLLERS
+        ),
+        "controller_concurrency": 1,
+        "max_integrations": args.max_integrations,
+    }
     with _exclusive_lock(lock_path, blocking=False) as acquired:
         if not acquired:
             print("another authoring supervisor owns the lock", file=sys.stderr)
@@ -1331,6 +1403,21 @@ def supervise(args: argparse.Namespace) -> int:
                 "actions": [],
                 "errors": [],
             }
+            try:
+                runtime = _runtime_config(runtime_config_path, args)
+                last_runtime_config = runtime
+            except (OSError, UnicodeDecodeError, ValueError, json.JSONDecodeError) as exc:
+                runtime = last_runtime_config
+                report["errors"].append(
+                    {
+                        "status": "runtime-config-error",
+                        "error": _redact(str(exc)),
+                    }
+                )
+            report["runtime_config"] = {
+                **runtime,
+                "path": str(runtime_config_path),
+            }
             archive_module = _archive_module(root)
             integration_clean = not _git_status(root)
             report["integration_clean"] = integration_clean
@@ -1342,6 +1429,7 @@ def supervise(args: argparse.Namespace) -> int:
                 "controllers": report["controllers"],
                 "watcher_count": report["watcher_count"],
                 "discovery_pool": discovery_pool,
+                "runtime_config": runtime,
             }
             try:
                 director = _director_decision(args, root, live, snapshot)
@@ -1362,15 +1450,20 @@ def supervise(args: argparse.Namespace) -> int:
             if selected_language not in {"python", "node", "go", "all"}:
                 selected_language = "none"
             integration_limit = (
-                min(int(director.get("integrate_limit", 0)), args.max_integrations)
+                min(int(director.get("integrate_limit", 0)), runtime["max_integrations"])
                 if director.get("action") in {"continue", "integrate"}
                 else 0
             )
             worker_limit = (
-                min(int(director.get("worker_limit", 0)), args.max_total_controllers)
+                min(
+                    int(director.get("worker_limit", 0)),
+                    runtime["max_total_controllers"],
+                )
                 if director.get("action") in {"continue", "discover"}
                 else 0
             )
+            if not runtime["enabled"]:
+                worker_limit = 0
             if (
                 director.get("action") == "discover"
                 and integration_clean
@@ -1524,7 +1617,7 @@ def supervise(args: argparse.Namespace) -> int:
                 }
                 for slot in range(min(args.workers, worker_limit)):
                     for lane in lanes:
-                        if active_total >= args.max_total_controllers:
+                        if active_total >= runtime["max_total_controllers"]:
                             break
                         records = lane_records[lane.language]
                         if not _lane_has_claimable_work(records, max_attempts=3):
@@ -1533,7 +1626,13 @@ def supervise(args: argparse.Namespace) -> int:
                             continue
                         owner = f"supervisor-{lane.language}-{slot + 1}"
                         try:
-                            pid = _start_controller(root, lane, live, owner)
+                            pid = _start_controller(
+                                root,
+                                lane,
+                                live,
+                                owner,
+                                runtime_config_path,
+                            )
                             active_total += 1
                             report["actions"].append(
                                 {
@@ -1569,6 +1668,12 @@ def main() -> int:
         "--max-total-controllers",
         type=int,
         default=DEFAULT_MAX_TOTAL_CONTROLLERS,
+    )
+    parser.add_argument(
+        "--runtime-config",
+        type=Path,
+        default=Path(".nl2repo/authoring-live/supervisor/runtime-config.json"),
+        help="Operator-owned JSON file hot-reloaded between supervisor cycles.",
     )
     parser.add_argument("--max-integrations", type=int, default=3)
     parser.add_argument("--interval-sec", type=int, default=60)
