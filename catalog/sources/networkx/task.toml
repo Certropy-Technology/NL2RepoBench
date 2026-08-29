@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "networkx"
+version = "3.7.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "graph-library"
+tags = ["python", "graphs", "algorithms", "serialization", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/networkx/networkx"
+revision = "ff25fa8296d16ad63d6a02b2d9f979dcafbb50ae"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:438319b0534eede5966d6aa88dd6bcea3e0fddb3164040fe982ef5d96580737c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "python -m pip install --target /tmp/candidate-site --no-deps --no-build-isolation"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "NetworkX has no runtime dependencies. The candidate image contains only the empty hash-locked third-party closure; the agent and verifier are network-isolated. The trusted Oracle alone fetches the exact upstream revision from GitHub."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2"]
+lock_artifact = { digest = "sha256:0cc1bc4fafe6087fb792bb1a60cf5df9f77808d872ea8b4c44b183b2d4fc6d63", size_bytes = 105, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0cc1bc4fafe6087fb792bb1a60cf5df9f77808d872ea8b4c44b183b2d4fc6d63", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 37
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:a8eeab7e95d71ff75d05b913898df70a886fe348ca663bb5a81ec16e123b8678", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a8eeab7e95d71ff75d05b913898df70a886fe348ca663bb5a81ec16e123b8678", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build NetworkX from an empty workspace and implement a deterministic offline contract for graph data structures, conversions, core algorithms, generators, serialization, and error behavior."
+keywords = ["python", "graphs", "algorithms", "serialization", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:55c84147730f4785a1f434a5a1297acaca28c76bfadd04c58f0c082e5546bcc8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:55c84147730f4785a1f434a5a1297acaca28c76bfadd04c58f0c082e5546bcc8"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c3"
+reason = "Harbor 0.21.0 Oracle passed the frozen 37-case contract; empty, stub, forgery, install-hang, call-hang, and offline controls were executed with verifier-owned grading and network evidence."

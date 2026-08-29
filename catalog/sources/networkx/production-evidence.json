@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0",
+  "task_id": "networkx",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/networkx/networkx",
+    "revision": "ff25fa8296d16ad63d6a02b2d9f979dcafbb50ae",
+    "source_digest": "sha256:438319b0534eede5966d6aa88dd6bcea3e0fddb3164040fe982ef5d96580737c",
+    "license_spdx": "BSD-3-Clause"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/networkx/compiled-final/networkx/bundle.manifest.json",
+    "sha256": "sha256:b8bb52152fe39835891c09d6d7e40480441b040f1df05558d05b4b18e7023a43",
+    "canonical_manifest_digest": "sha256:c8765a66c5eb97651de35edb41451c57ae39b10d6739bea27f614e8587596a15"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/networkx/compiled-v2/networkx -a oracle --jobs-dir .nl2repo/authoring-work/networkx/runs-v2 --job-name oracle --n-concurrent 1 --max-retries 0 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/networkx/runs-v2/oracle/networkx__c3bqJMn/verifier/grading.json",
+      "sha256": "sha256:7d99ef95863fc06e4a462f2baf75f60b0a11f27569358a8e039e59b080fa19b1"
+    },
+    "collection": {
+      "path": ".nl2repo/authoring-work/networkx/runs-v2/oracle/networkx__c3bqJMn/verifier/collection.json",
+      "sha256": "sha256:9efc9ec601fed0b9e429b431fcef49a73bb5bc48db163b269e94fd0c6a72ba23"
+    },
+    "junit": {
+      "path": ".nl2repo/authoring-work/networkx/runs-v2/oracle/networkx__c3bqJMn/verifier/junit.xml",
+      "sha256": "sha256:7f97fc823a3d31f4620a8a8dfa67216478e26a6acabd5692ebe58520cfa8bc31"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/networkx/runs-v2/oracle/networkx__c3bqJMn/verifier/network.json",
+      "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 37,
+      "passed": 37,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/networkx/compiled-v2/networkx -a nop --jobs-dir .nl2repo/authoring-work/networkx/runs-v2 --job-name empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/empty/networkx__KJ5NyF2/verifier/grading.json",
+        "sha256": "sha256:59e9d43a5289d91b3618299d1e8c0fe3f17b0686592ceaa37df85401a99154ce"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/empty/networkx__KJ5NyF2/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": {
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "collected": 0,
+        "reward": 0.0
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/networkx/controls-v2/networkx-stub -a oracle --jobs-dir .nl2repo/authoring-work/networkx/runs-v2 --job-name stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/stub/networkx-stub__mkyeBKg/verifier/grading.json",
+        "sha256": "sha256:d4850e80c711cf89cf0b88fd5b006ba223218266741c7effbc4b2f1c4b15f4e1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/stub/networkx-stub__mkyeBKg/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 37,
+        "passed": 0,
+        "reward": 0.0
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/networkx/controls-v2/networkx-forgery -a oracle --jobs-dir .nl2repo/authoring-work/networkx/runs-v2 --job-name forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/forgery/networkx-forgery__kixAXBp/verifier/grading.json",
+        "sha256": "sha256:d4850e80c711cf89cf0b88fd5b006ba223218266741c7effbc4b2f1c4b15f4e1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/forgery/networkx-forgery__kixAXBp/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 37,
+        "passed": 0,
+        "reward": 0.0,
+        "candidate_fake_report_ignored": true
+      }
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/networkx/controls-v2/networkx-install-hang -a oracle --jobs-dir .nl2repo/authoring-work/networkx/runs-v2 --job-name install-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/install-hang/networkx-install-hang__NkMLCxn/verifier/grading.json",
+        "sha256": "sha256:d4850e80c711cf89cf0b88fd5b006ba223218266741c7effbc4b2f1c4b15f4e1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/install-hang/networkx-install-hang__NkMLCxn/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 37,
+        "passed": 0,
+        "reward": 0.0,
+        "bounded_timeout_leaves": 37
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/networkx/controls-v2/networkx-call-hang -a oracle --jobs-dir .nl2repo/authoring-work/networkx/runs-v2 --job-name call-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/call-hang/networkx-call-hang__Y5Tswft/verifier/grading.json",
+        "sha256": "sha256:d4850e80c711cf89cf0b88fd5b006ba223218266741c7effbc4b2f1c4b15f4e1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/call-hang/networkx-call-hang__Y5Tswft/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 37,
+        "passed": 0,
+        "reward": 0.0,
+        "bounded_timeout_leaves": 37
+      }
+    },
+    "offline": {
+      "command": "Official Harbor 0.21.0 verifier network-none probe from the final Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/networkx/runs-v2/oracle/networkx__c3bqJMn/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    }
+  },
+  "remediation": {
+    "initial_call_hang_failure": {
+      "command": "Harbor call-hang control with the initial verifier bundle",
+      "result": "valid=false, verifier-internal-error because 37 x 12-second child limits exceeded the 240-second cumulative budget",
+      "fixed_by": "reduced per-child subprocess timeout from 12 seconds to 4 seconds and rebuilt the private verifier bundle"
+    }
+  }
+}
