@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/regex"
+version = "0.1.0"
+description = "Build the native-backed regex engine from an empty workspace and satisfy a deterministic suite for compilation, matching, Unicode, fuzzy and advanced regex behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "regex",
+    "unicode",
+    "native-extension",
+    "fuzzy",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "regular-expression-engine"
+tags = [
+    "python",
+    "regex",
+    "unicode",
+    "native-extension",
+    "parsing",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 37
+canonical_manifest_digest = "sha256:1c35703e25f258421b99430f54d95c37c245be7b1ba4a80159ad373ecec6f69a"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

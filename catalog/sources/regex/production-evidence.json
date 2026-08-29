@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "task_id": "regex",
+  "terminal_kind": "valid",
+  "status": "awaiting-agent-run",
+  "source_revision": "1760a20647f1c2ddcc025128407fe6f7edb905a1",
+  "source_archive_sha256": "sha256:380b288264f32f0ea2d5da32cf06277c5dca37681c308b97433ddf22cb882434",
+  "license_spdx": "Apache-2.0 AND CNRI-Python",
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "system_packages": ["build-essential"],
+    "network_policy": "no-network"
+  },
+  "dependency_lock": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/requirements.lock.txt",
+    "sha256": "sha256:9b1b9fe20ff22f922f7f06576d32a73d01598be210b03a360d8b4d2e335b27bf",
+    "size_bytes": 488,
+    "packages": ["setuptools==80.9.0"]
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "upstream_source_test_module": "regex/tests/test_regex.py",
+    "upstream_source_test_count": 101,
+    "frozen_total": 37,
+    "expected_total_source": "frozen-collection"
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled/regex-production-final-rerun3/regex",
+    "manifest_sha256": "sha256:b22ab1ceb9f751276a8c5bf30bc70da332abc65b76e354b8c64e31b6f0ace453",
+    "canonical_manifest_digest": "sha256:1c35703e25f258421b99430f54d95c37c245be7b1ba4a80159ad373ecec6f69a",
+    "file_count": 58
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/regex-production-final-rerun3/regex -a oracle --allow-agent-host github.com --job-name regex-authoring-oracle-final -o .nl2repo/runs/regex-authoring-oracle-final --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 37,
+    "collected": 37,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/regex-authoring-oracle-final/regex-authoring-oracle-final/regex__xaWf6wR/verifier/grading.json",
+      "sha256": "sha256:350d6a29c1c2bb3269e2cdef8e5f31c02d5ac7dc0cb42272c9a2cf3143937aa4"
+    },
+    "network": {
+      "path": ".nl2repo/runs/regex-authoring-oracle-final/regex-authoring-oracle-final/regex__xaWf6wR/verifier/network.json",
+      "sha256": "sha256:a9854dd260e8a68a80dec5429a9d98fd647d5a6e16eeeb2d74d3e47ded54f84b"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none nl2repo-regex-verifier:final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "collected": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-empty/evidence/grading.json",
+        "sha256": "sha256:59e9d43a5289d91b3618299d1e8c0fe3f17b0686592ceaa37df85401a99154ce"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-empty/evidence/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "stub": {
+      "command": "Harbor control bundle regex-stub with /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 37,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-stub/evidence/grading.json",
+        "sha256": "sha256:b768fc4f720e2ddf60048965c569e43d3f8b4dedbd95b8f4ec91821d651b8e84"
+      },
+      "network": {
+        "path": ".nl2repo/runs/regex-authoring-oracle-final/regex-authoring-oracle-final/regex__xaWf6wR/verifier/network.json",
+        "sha256": "sha256:a9854dd260e8a68a80dec5429a9d98fd647d5a6e16eeeb2d74d3e47ded54f84b"
+      }
+    },
+    "forgery": {
+      "command": "Harbor control bundle regex-forgery with /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 37,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-forgery/evidence/grading.json",
+        "sha256": "sha256:b768fc4f720e2ddf60048965c569e43d3f8b4dedbd95b8f4ec91821d651b8e84"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-forgery/evidence/network.json",
+        "sha256": "sha256:218320115490129eea846775b9e02f95aaacfd0fda376c419dbb3bf5af42868d"
+      }
+    },
+    "offline": {
+      "command": "Oracle verifier network isolation probe from the production run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/runs/regex-authoring-oracle-final/regex-authoring-oracle-final/regex__xaWf6wR/verifier/network.json",
+        "sha256": "sha256:a9854dd260e8a68a80dec5429a9d98fd647d5a6e16eeeb2d74d3e47ded54f84b"
+      }
+    },
+    "call_hang": {
+      "command": "Harbor control bundle regex-call-hang with /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 37,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-call-hang/evidence/grading.json",
+        "sha256": "sha256:b768fc4f720e2ddf60048965c569e43d3f8b4dedbd95b8f4ec91821d651b8e84"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/regex/controls/regex-call-hang/evidence/network.json",
+        "sha256": "sha256:5c85888ef1eadaca659384fac0679e8a2ee4c4059189b1f4b925414c2b68806b"
+      }
+    }
+  },
+  "gates": {
+    "source_validation_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_error_count": 0,
+    "production_compile_exit_code": 0,
+    "source_build_exit_code": 0,
+    "source_unittest_exit_code": 0
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "The frozen native build emits one upstream -Wmaybe-uninitialized warning; the build and 101-test source suite pass.",
+    "Generated catalog/tasks/regex integration and publication review remain with the parent integrator."
+  ]
+}

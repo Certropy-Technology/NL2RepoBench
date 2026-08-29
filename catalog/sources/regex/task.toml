@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "regex"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "regular-expression-engine"
+tags = ["python", "regex", "unicode", "native-extension", "parsing", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/mrabarnett/mrab-regex"
+revision = "1760a20647f1c2ddcc025128407fe6f7edb905a1"
+license_spdx = "Apache-2.0 AND CNRI-Python"
+source_digest = "sha256:380b288264f32f0ea2d5da32cf06277c5dca37681c308b97433ddf22cb882434"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["build-essential"]
+build_command = "python -m pip install --no-deps --no-build-isolation ."
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The setuptools build closure is installed from a private hash lock during image build. Candidate and verifier execution have no egress; only the trusted Oracle receives the digest-verified source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0"]
+lock_artifact = { digest = "sha256:9b1b9fe20ff22f922f7f06576d32a73d01598be210b03a360d8b4d2e335b27bf", size_bytes = 488, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9b1b9fe20ff22f922f7f06576d32a73d01598be210b03a360d8b4d2e335b27bf", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 37
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:415820c579eaedfbe65d166224a5dae1295a699c5d17dbf0d82ab1ebc3fb892f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:415820c579eaedfbe65d166224a5dae1295a699c5d17dbf0d82ab1ebc3fb892f", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the native-backed regex engine from an empty workspace and satisfy a deterministic suite for compilation, matching, Unicode, fuzzy and advanced regex behavior."
+keywords = ["python", "regex", "unicode", "native-extension", "fuzzy", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:603b1230164457b5ce500eaff2dce7bb558fa614da630ed83db4c35b5ab96180"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:603b1230164457b5ce500eaff2dce7bb558fa614da630ed83db4c35b5ab96180"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Frozen native source, hash-locked build closure, separate custom-json-v1 verifier, production compile, Oracle, and negative/offline controls are recorded in production-evidence.json. The task remains awaiting-agent-run; catalog/tasks/regex is intentionally generated later by the integrator."
