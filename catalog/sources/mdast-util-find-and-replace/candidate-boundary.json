@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript, RegExp objects, callbacks, and mutable mdast nodes out of the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 524288,
+    "candidate_uid": 10001,
+    "per_call_timeout_seconds": 6,
+    "cumulative_timeout_seconds": 45,
+    "max_nodes": 256,
+    "max_depth": 32,
+    "network": "none"
+  },
+  "operations": {
+    "inventory": "Return package metadata, export kinds, dependency pins, and declaration presence.",
+    "invalid": "Invoke the public API with a bounded invalid list and serialize the exception.",
+    "transform": "Construct allowlisted string/RegExp finds, replacement callbacks, ignore tests, and a plain JSON mdast tree inside the child, then return the mutated tree."
+  },
+  "forbidden_boundary_values": [
+    "source text",
+    "arbitrary executable callback bodies",
+    "regular expressions that match an empty string",
+    "functions, symbols, BigInts, accessors, custom prototypes, cycles, and native objects"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom loaders",
+    "lifecycle scripts",
+    "unbounded process or output",
+    "trusted-process import or report writes"
+  ]
+}

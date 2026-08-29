@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "expected_total": 48,
+  "expected_total_source": "frozen-collection",
+  "adapter": "bounded declarative RegExp/callback/mdast scenarios in a UID-10001 candidate child",
+  "upstream_baseline": {
+    "runtime": "Node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "build_exit_code": 0,
+    "test_exit_code": 0,
+    "tests": 25,
+    "passed": 25,
+    "behavioral_subtests": 24,
+    "network": "none during build/test replay after dependency installation"
+  },
+  "coverage": [
+    {"area": "package identity, exports, declarations, dependency and script policy", "leaves": 1},
+    {"area": "return value and invalid-list exception contract", "leaves": 3},
+    {"area": "string/RegExp matching and basic replacement normalization", "leaves": 10},
+    {"area": "callback captures, match object, stack, and node returns", "leaves": 4},
+    {"area": "false results, recursion boundary, pair sequencing, and empty lists", "leaves": 5},
+    {"area": "ancestor ignore strings, objects, arrays, and predicates", "leaves": 5},
+    {"area": "text-node domain, traversal, parent requirement, and sibling handling", "leaves": 5},
+    {"area": "splice boundaries, complete deletion, and empty-node avoidance", "leaves": 5},
+    {"area": "pair ordering and RegExp state across nodes", "leaves": 4},
+    {"area": "optional captures, UTF-16 indexes, field preservation, and tuple/callback forms", "leaves": 6}
+  ],
+  "excluded_upstream_checks": [
+    "formatting and lint configuration",
+    "coverage instrumentation",
+    "type-coverage tooling",
+    "documentation formatting",
+    "zero-length RegExp inputs that cannot satisfy the bounded callback contract"
+  ]
+}

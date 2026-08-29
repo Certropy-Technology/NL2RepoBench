@@ -1,0 +1,323 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/mdast-util-find-and-replace",
+    "revision": "fd73ef856ab4f7b6326e3255aea36f439b75e2d5",
+    "tree": "7972508b1cf0195e57799effef402311b1469811",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb",
+    "source_digest": "sha256:be821926713dee556bca6f0aa2cff873a8fef69d142f438327e84f08cf2d57d9",
+    "source_archive_size_bytes": 51200,
+    "submodules": []
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "runtime": "Node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "network_policy": {
+    "mode": "no-network",
+    "offline_dependencies": "preinstalled-image",
+    "reference_source_fetch": "forbidden",
+    "reason": "Candidate and verifier phases use the private npm cache closure offline. Only the trusted Oracle receives a run-scoped github.com authorization for the exact frozen revision."
+  },
+  "dependency_closure": {
+    "ecosystem": "npm",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "package_manager": "npm 11.17.0",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [
+      "@types/mdast@4.0.4",
+      "escape-string-regexp@5.0.0",
+      "unist-util-is@6.0.1",
+      "unist-util-visit-parents@6.0.2",
+      "@types/unist@3.0.3"
+    ],
+    "artifact": {
+      "digest": "sha256:cde2303142b36ec9b1f3f5a40973748bbca59c70e5c1808a6da19a8cf52f2767",
+      "size_bytes": 368640,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:cde2303142b36ec9b1f3f5a40973748bbca59c70e5c1808a6da19a8cf52f2767",
+      "visibility": "private"
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 48,
+    "source": "frozen-collection",
+    "private_leaf_count": 48,
+    "upstream_baseline": {
+      "command": "npm install --ignore-scripts --no-audit --no-fund && npm run build && npm run test-api",
+      "tool_version": "Node 24.19.0 / npm 11.17.0",
+      "exit_code": 0,
+      "top_level_tests": 25,
+      "behavioral_subtests": 24,
+      "passed": 25,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/upstream-probe.log",
+        "sha256": "sha256:5d2cfaf2299e63e37062e9c5407a891933cdb3d9cf1af83fcd1dbb8da21ec5d8"
+      }
+    }
+  },
+  "private_artifacts": {
+    "tests": {
+      "digest": "sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36",
+      "size_bytes": 40960,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar",
+      "uri": "artifact://private/sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36",
+      "visibility": "private"
+    },
+    "commands": {
+      "digest": "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "size_bytes": 176,
+      "media_type": "application/vnd.nl2repobench.node-commands+json",
+      "uri": "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "visibility": "private"
+    },
+    "oracle": {
+      "digest": "sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114fc554e42b812c44cb1",
+      "size_bytes": 20480,
+      "media_type": "application/vnd.nl2repobench.oracle+tar",
+      "uri": "artifact://private/sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114fc554e42b812c44cb1",
+      "visibility": "private"
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/final-compile/mdast-util-find-and-replace/mdast-util-find-and-replace",
+    "manifest_sha256": "sha256:3704fd1d6d6df54114e06f43dbf39353f04192a0b39b50146e2be5dd26bdac28",
+    "mode": "production",
+    "schema_version": "2.0",
+    "file_count": 121,
+    "canonical_manifest_digest": "sha256:1b180b95e5adc9710a6945b445dcb82c3735437d15e7126da75123a7e5a4f795",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "deterministic_repeat_manifest_sha256": "sha256:3704fd1d6d6df54114e06f43dbf39353f04192a0b39b50146e2be5dd26bdac28",
+    "integrity_mismatches": 0,
+    "extra_files": 0
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/mdast-util-find-and-replace",
+      "tool_version": "nl2repo current checkout",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/source-validation-final.log",
+        "sha256": "sha256:b88340beb5525c5e7965c763b3afecbff7775423fac53caa523351e914016d6e"
+      }
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "nl2repo current checkout",
+      "exit_code": 0,
+      "global_error_count": 0,
+      "task_finding_count": 0,
+      "unrelated_warning_count": 141,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/network-lint-final.log",
+        "sha256": "sha256:3b0a0093b02584c21836455f02d7789e481954df1d969fb1b16c89256de4c674"
+      }
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/mdast-util-find-and-replace --output .nl2repo/final-compile/mdast-util-find-and-replace --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "nl2repo current checkout",
+      "exit_code": 0,
+      "allow_incomplete": false,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/production-compile-node.log",
+        "sha256": "sha256:220d9a3cf27e4680e8665a500a0835d4ec33cd7e5de1330e5bb8ef5ee9315190"
+      }
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/git-diff-check.log",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/mdast-util-find-and-replace/mdast-util-find-and-replace -a oracle --job-name mdast-util-find-and-replace-oracle-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-oracle-20260829 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 48,
+    "collected": 48,
+    "passed": 48,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/runs/mdast-util-find-and-replace-oracle-20260829/mdast-util-find-and-replace-oracle-20260829/mdast-util-find-and-replace__DJnQ9V5/verifier/grading.json",
+      "sha256": "sha256:30e1e6cc08084d371654151bb2d05d461018212a58dedfe017e8d06819baaf78"
+    },
+    "network": {
+      "path": ".nl2repo/runs/mdast-util-find-and-replace-oracle-20260829/mdast-util-find-and-replace-oracle-20260829/mdast-util-find-and-replace__DJnQ9V5/verifier/network.json",
+      "sha256": "sha256:2d451cfe9d5c64dc60b9925b226b743c5f3951323551313d8098674a8fd74dbb"
+    },
+    "result": {
+      "path": ".nl2repo/runs/mdast-util-find-and-replace-oracle-20260829/mdast-util-find-and-replace-oracle-20260829/result.json",
+      "sha256": "sha256:446ed025b4c305aaa999b05b596666110f3f339d4041eeb53bf9370369ebbe9b"
+    },
+    "log": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/harbor-oracle.log",
+      "sha256": "sha256:5c388fae17aec16ff64ec9b938155350b887ee03064ee898e2256b062707afd5"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-empty -a oracle --job-name mdast-util-find-and-replace-empty-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/empty/mdast-util-find-and-replace-empty-20260829/mdast-util-find-and-replace-empt__BLtPEVz/verifier/grading.json",
+        "sha256": "sha256:afdd78b352773cb24872bc1a4603c40176534371beae59a0c3a7361adf7b0936"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/empty/mdast-util-find-and-replace-empty-20260829/mdast-util-find-and-replace-empt__BLtPEVz/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-stub -a oracle --job-name mdast-util-find-and-replace-stub-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 48,
+      "passed": 5,
+      "reward": 0.10416666666666667,
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/stub/mdast-util-find-and-replace-stub-20260829/mdast-util-find-and-replace-stub__CwtQqRH/verifier/grading.json",
+        "sha256": "sha256:fb6a83456fbb648129574d24ec0f907392d7dea7dea7120220d7b0a09019b6ee"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/stub/mdast-util-find-and-replace-stub-20260829/mdast-util-find-and-replace-stub__CwtQqRH/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-forgery -a oracle --job-name mdast-util-find-and-replace-forgery-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 48,
+      "passed": 5,
+      "reward": 0.10416666666666667,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/forgery/mdast-util-find-and-replace-forgery-20260829/mdast-util-find-and-replace-forg__RbNx4gm/verifier/grading.json",
+        "sha256": "sha256:fb6a83456fbb648129574d24ec0f907392d7dea7dea7120220d7b0a09019b6ee"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/forgery/mdast-util-find-and-replace-forgery-20260829/mdast-util-find-and-replace-forg__RbNx4gm/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-install-script -a oracle --job-name mdast-util-find-and-replace-install-script-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/install-script/mdast-util-find-and-replace-install-script-20260829/mdast-util-find-and-replace-inst__N5X77C5/verifier/grading.json",
+        "sha256": "sha256:afdd78b352773cb24872bc1a4603c40176534371beae59a0c3a7361adf7b0936"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/install-script/mdast-util-find-and-replace-install-script-20260829/mdast-util-find-and-replace-inst__N5X77C5/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-loader-hook -a oracle --job-name mdast-util-find-and-replace-loader-hook-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 48,
+      "passed": 5,
+      "reward": 0.10416666666666667,
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/loader-hook/mdast-util-find-and-replace-loader-hook-20260829/mdast-util-find-and-replace-load__LrmzMXU/verifier/grading.json",
+        "sha256": "sha256:fb6a83456fbb648129574d24ec0f907392d7dea7dea7120220d7b0a09019b6ee"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/loader-hook/mdast-util-find-and-replace-loader-hook-20260829/mdast-util-find-and-replace-load__LrmzMXU/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-hang -a oracle --job-name mdast-util-find-and-replace-hang-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 48,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/hang/mdast-util-find-and-replace-hang-20260829/mdast-util-find-and-replace-hang__Tx3SKCt/verifier/grading.json",
+        "sha256": "sha256:a37fc4a77014c70109e492d0e69dc043d76d531602dc37be650c4c7db4ff6ccc"
+      },
+      "network": {
+      "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/hang/mdast-util-find-and-replace-hang-20260829/mdast-util-find-and-replace-hang__Tx3SKCt/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/controls-all/mdast-util-find-and-replace-offline -a oracle --job-name mdast-util-find-and-replace-offline-20260829 -o .nl2repo/runs/mdast-util-find-and-replace-controls-20260829/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 48,
+      "passed": 0,
+      "reward": 0.0,
+      "completed": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/offline/mdast-util-find-and-replace-offline-20260829/mdast-util-find-and-replace-offl__9i7weVg/verifier/grading.json",
+        "sha256": "sha256:a37fc4a77014c70109e492d0e69dc043d76d531602dc37be650c4c7db4ff6ccc"
+      },
+      "network": {
+        "path": ".nl2repo/runs/mdast-util-find-and-replace-controls-20260829/offline/mdast-util-find-and-replace-offline-20260829/mdast-util-find-and-replace-offl__9i7weVg/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    }
+  },
+  "residual_risks": [
+    {
+      "class": "infrastructure",
+      "reason": "The locked OpenHands agent image c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f is not present locally; the local derived tag resolves to bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3.",
+      "evidence": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-find-and-replace/agent-image-remediation.log",
+        "sha256": "sha256:23867497ba8fb9db7cb10b07a8b36d47c3d003bddf7296a23303889d234b544d"
+      },
+      "next_step": "Restore or publish the exact c50b3e3 image before any model Agent Run or release claim."
+    },
+    "No model Agent Run was started in this authoring lane; integrator review, blind traceability review, pilot, dataset projection, and publication remain pending.",
+    "The verifier adapter is intentionally bounded and JSON-serializable; it does not claim transparent in-process coverage of arbitrary callbacks or native objects."
+  ],
+  "changed_files": [
+    "catalog/sources/mdast-util-find-and-replace/production-evidence.json",
+    "scripts/summarize_node_controls.py",
+    "tests/test_node_control_summary.py"
+  ]
+}

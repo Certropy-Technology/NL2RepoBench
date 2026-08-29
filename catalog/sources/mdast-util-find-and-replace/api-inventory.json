@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "source_revision": "fd73ef856ab4f7b6326e3255aea36f439b75e2d5",
+  "package": {
+    "name": "mdast-util-find-and-replace",
+    "version": "3.0.2",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "runtime_dependencies": {
+      "@types/mdast": "4.0.4",
+      "escape-string-regexp": "5.0.0",
+      "unist-util-is": "6.0.1",
+      "unist-util-visit-parents": "6.0.2"
+    },
+    "transitive_dependencies": {
+      "@types/unist": "3.0.3"
+    }
+  },
+  "public_exports": [
+    {
+      "export": "findAndReplace",
+      "kind": "function",
+      "signature": "findAndReplace(tree: Nodes, list: FindAndReplaceList | FindAndReplaceTuple, options?: Options | null | undefined): undefined"
+    }
+  ],
+  "public_types": [
+    "Find",
+    "FindAndReplaceList",
+    "FindAndReplaceTuple",
+    "Options",
+    "RegExpMatchObject",
+    "Replace",
+    "ReplaceFunction"
+  ],
+  "source_metrics": {
+    "tracked_files": 13,
+    "runtime_entry_lines": 11,
+    "runtime_implementation_lines": 261,
+    "upstream_test_lines": 529,
+    "upstream_test_entries": 25,
+    "upstream_behavioral_subtests": 24
+  },
+  "side_effects": "Mutates the supplied tree in place; returns undefined; performs no I/O.",
+  "exceptions": "A non-array list throws TypeError with the documented message. Errors thrown by user replacement predicates propagate.",
+  "inventory_notes": [
+    "The only runtime export is findAndReplace; helper normalization functions are private.",
+    "Function and RegExp inputs require a declarative child-side adapter because they are not JSON values.",
+    "The task excludes zero-length RegExp matches to keep the callback boundary bounded and deterministic."
+  ]
+}

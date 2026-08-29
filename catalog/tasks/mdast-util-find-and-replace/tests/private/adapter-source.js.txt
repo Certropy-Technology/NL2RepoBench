@@ -1,0 +1,264 @@
+import {readFileSync} from 'node:fs'
+import {join} from 'node:path'
+import {pathToFileURL} from 'node:url'
+
+const PACKAGE = 'mdast-util-find-and-replace'
+const MAX_REQUEST_BYTES = 64 * 1024
+const MAX_RESPONSE_BYTES = 512 * 1024
+const MAX_DEPTH = 32
+const MAX_ITEMS = 1024
+const MAX_NODES = 256
+const OPERATIONS = new Set(['inventory', 'invalid', 'transform'])
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload)
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write('candidate response exceeds the bound\n')
+    process.exit(70)
+  }
+  process.stdout.write(`${encoded}\n`)
+  process.exit(code)
+}
+
+function fail(error) {
+  emit({ok: false, message: String(error?.message ?? error).slice(0, 2048)}, 1)
+}
+
+function safeRelative(value, label) {
+  if (typeof value !== 'string' || !value.startsWith('./') || value.includes('..')) {
+    throw new Error(`${label} is not a safe package-relative path`)
+  }
+  return value
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value))
+}
+
+function validateJson(value, state, depth = 0) {
+  if (depth > MAX_DEPTH) throw new Error('request nesting exceeds the bound')
+  if (value === null || typeof value === 'boolean') return
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) throw new Error('numbers must be finite')
+    return
+  }
+  if (typeof value === 'string') {
+    if (value.length > 16_384) throw new Error('string exceeds the bound')
+    return
+  }
+  if (Array.isArray(value)) {
+    state.items += value.length
+    if (state.items > MAX_ITEMS) throw new Error('request has too many items')
+    for (const item of value) validateJson(item, state, depth + 1)
+    return
+  }
+  if (typeof value !== 'object' || Object.getPrototypeOf(value) !== Object.prototype) {
+    throw new Error('request values must be plain JSON')
+  }
+  const keys = Object.keys(value)
+  state.items += keys.length
+  if (state.items > MAX_ITEMS) throw new Error('request has too many fields')
+  if (typeof value.type === 'string') {
+    state.nodes++
+    if (state.nodes > MAX_NODES) throw new Error('tree has too many nodes')
+  }
+  for (const key of keys) {
+    if (FORBIDDEN_KEYS.has(key)) throw new Error('forbidden object key')
+    validateJson(value[key], state, depth + 1)
+  }
+}
+
+function validateTree(tree) {
+  const state = {items: 0, nodes: 0}
+  validateJson(tree, state)
+  if (!tree || typeof tree !== 'object' || Array.isArray(tree) || typeof tree.type !== 'string') {
+    throw new Error('tree must be a node object')
+  }
+}
+
+function textValues(node, result = []) {
+  if (node?.type === 'text' && typeof node.value === 'string') result.push(node.value)
+  if (Array.isArray(node?.children)) {
+    for (const child of node.children) textValues(child, result)
+  }
+  return result
+}
+
+function findValue(spec, tree) {
+  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) {
+    throw new Error('find specification must be an object')
+  }
+  if (spec.kind === 'string') {
+    if (typeof spec.value !== 'string') throw new Error('string find requires a value')
+    return spec.value
+  }
+  if (spec.kind !== 'regex' || typeof spec.source !== 'string' || spec.source.length > 512) {
+    throw new Error('regex find is malformed')
+  }
+  if (typeof spec.flags !== 'string' || !/^[dgimsuvy]*$/.test(spec.flags)) {
+    throw new Error('regex flags are malformed')
+  }
+  const expression = new RegExp(spec.source, spec.flags)
+  const scanFlags = [...new Set((spec.flags.replace('y', '') + 'g').split(''))].join('')
+  for (const value of ['', ...textValues(tree)]) {
+    const scan = new RegExp(spec.source, scanFlags)
+    let count = 0
+    let match
+    while ((match = scan.exec(value))) {
+      if (match[0] === '') throw new Error('regexes that match empty strings are unsupported')
+      if (++count > 256) throw new Error('regex produces too many matches')
+    }
+  }
+  return expression
+}
+
+function constantValue(spec) {
+  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) {
+    throw new Error('replacement specification must be an object')
+  }
+  if (spec.kind === 'undefined' || spec.kind === 'omit') return undefined
+  if (spec.kind === 'null') return null
+  if (spec.kind === 'empty') return ''
+  if (spec.kind === 'false') return false
+  if (spec.kind === 'string') {
+    if (typeof spec.value !== 'string') throw new Error('string replacement is malformed')
+    return spec.value
+  }
+  if (spec.kind === 'node') return clone(spec.value)
+  if (spec.kind === 'nodes') {
+    if (!Array.isArray(spec.value)) throw new Error('node-list replacement is malformed')
+    return clone(spec.value)
+  }
+  throw new Error('constant replacement kind is unsupported')
+}
+
+function callbackValue(spec, parameters) {
+  const whole = parameters[0]
+  const match = parameters[parameters.length - 1]
+  const captures = parameters.slice(1, -1)
+  if (spec.kind === 'callback-string') return spec.value
+  if (spec.kind === 'callback-node') return clone(spec.value)
+  if (spec.kind === 'callback-nodes') return clone(spec.value)
+  if (spec.kind === 'callback-false') return false
+  if (spec.kind === 'capture-template') {
+    if (typeof spec.template !== 'string') throw new Error('capture template is malformed')
+    const values = [whole, ...captures]
+    return spec.template.replace(/\$(\d+)/g, (_, index) => String(values[Number(index)] ?? ''))
+  }
+  if (spec.kind === 'match-node') {
+    return {
+      type: spec.nodeType ?? 'emphasis',
+      data: {
+        whole,
+        captures,
+        index: match.index,
+        input: match.input,
+        stackTypes: match.stack.map((node) => node.type)
+      },
+      children: [{type: 'text', value: whole}]
+    }
+  }
+  if (spec.kind === 'conditional') {
+    return whole === spec.when ? constantValue(spec.then) : false
+  }
+  throw new Error('callback replacement kind is unsupported')
+}
+
+function replacementValue(spec) {
+  if (spec?.kind?.startsWith('callback-') || ['capture-template', 'match-node', 'conditional'].includes(spec?.kind)) {
+    return (...parameters) => callbackValue(spec, parameters)
+  }
+  return constantValue(spec)
+}
+
+function pairValue(pair, tree) {
+  if (!pair || typeof pair !== 'object' || Array.isArray(pair)) {
+    throw new Error('pair specification must be an object')
+  }
+  const find = findValue(pair.find, tree)
+  return Object.hasOwn(pair, 'replace') ? [find, replacementValue(pair.replace)] : [find]
+}
+
+function ignoreValue(spec) {
+  if (spec === undefined || spec === null) return undefined
+  if (spec.kind === 'type') return spec.value
+  if (spec.kind === 'object') return clone(spec.value)
+  if (spec.kind === 'array') return clone(spec.value)
+  if (spec.kind === 'predicate-type') {
+    return (node) => node.type === spec.value
+  }
+  if (spec.kind === 'predicate-index-parent') {
+    return (node, index, parent) => index === spec.index && parent?.type === spec.parentType
+  }
+  throw new Error('ignore specification is unsupported')
+}
+
+async function loadPackage() {
+  const root = join(process.cwd(), 'node_modules', PACKAGE)
+  const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+  const rootExport = packageJson.exports?.['.'] ?? packageJson.exports
+  const entry = typeof rootExport === 'string'
+    ? rootExport
+    : rootExport?.import ?? rootExport?.default ?? packageJson.module ?? packageJson.main
+  const types = typeof rootExport === 'object' && rootExport !== null
+    ? rootExport.types ?? packageJson.types
+    : packageJson.types
+  const api = await import(pathToFileURL(join(root, safeRelative(entry, 'runtime entry'))).href)
+  return {api, packageJson, root, types}
+}
+
+async function main() {
+  const input = readFileSync(0)
+  if (input.byteLength > MAX_REQUEST_BYTES) throw new Error('request is too large')
+  const request = JSON.parse(input.toString('utf8'))
+  if (!request || typeof request !== 'object' || Array.isArray(request) || !OPERATIONS.has(request.operation)) {
+    throw new Error('operation is not allowlisted')
+  }
+  validateJson(request, {items: 0, nodes: 0})
+  const {api, packageJson, root, types} = await loadPackage()
+  if (request.operation === 'inventory') {
+    let typesPresent = false
+    try {
+      readFileSync(join(root, safeRelative(types, 'types entry')))
+      typesPresent = true
+    } catch {}
+    emit({ok: true, value: {
+      name: packageJson.name,
+      version: packageJson.version,
+      type: packageJson.type,
+      exports: Object.keys(api).sort(),
+      callable: typeof api.findAndReplace === 'function',
+      typesPresent,
+      dependencies: packageJson.dependencies ?? {},
+      scriptNames: Object.keys(packageJson.scripts ?? {}).sort(),
+      workspacesPresent: Object.hasOwn(packageJson, 'workspaces')
+    }})
+  }
+  if (request.operation === 'invalid') {
+    let value
+    try {
+      api.findAndReplace({type: 'root', children: []}, request.list)
+      value = {threw: false}
+    } catch (error) {
+      value = {
+        threw: true,
+        type: error?.constructor?.name ?? 'Error',
+        message: String(error?.message ?? error).slice(0, 1024)
+      }
+    }
+    emit({ok: true, value})
+  }
+  const tree = clone(request.tree)
+  validateTree(tree)
+  if (!Array.isArray(request.pairs) || request.pairs.length > 16) {
+    throw new Error('pairs are outside the bound')
+  }
+  const pairs = request.pairs.map((pair) => pairValue(pair, tree))
+  const list = request.form === 'tuple' ? pairs[0] : pairs
+  if (request.form === 'tuple' && pairs.length !== 1) throw new Error('tuple form requires one pair')
+  const result = api.findAndReplace(tree, list, {ignore: ignoreValue(request.ignore)})
+  emit({ok: true, value: {tree, resultIsUndefined: result === undefined}})
+}
+
+main().catch(fail)
