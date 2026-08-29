@@ -1,0 +1,111 @@
+schema_version = "2.0"
+task_id = "slice-ansi"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "terminal-text-processing"
+tags = ["node", "npm", "esm", "ansi", "unicode", "grapheme", "terminal", "repository-generation"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/chalk/slice-ansi"
+revision = "50fc7781f5dd4d1421dbe061822d815708831af4"
+license_spdx = "MIT"
+source_digest = "sha256:178ba29b83709711b44e533074d5b8c5c16ecb79b60956ae965b6b15d724b402"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate-verifier phases install the exact npm closure from a private integrity-checked cache and have no egress. Only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen source archive."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["ansi-styles", "is-fullwidth-code-point", "get-east-asian-width"]
+
+[dependencies.artifact]
+digest = "sha256:604c2196421103497bdd3d82e7f37e9b45473d9a1375ae707c790e76dbd776f2"
+size_bytes = 66354
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:604c2196421103497bdd3d82e7f37e9b45473d9a1375ae707c790e76dbd776f2"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:8d660a4ad92daca5c379ae89035636f8d7b0a63e57b572151a50a0dea30786f2"
+size_bytes = 228
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:8d660a4ad92daca5c379ae89035636f8d7b0a63e57b572151a50a0dea30786f2"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:0287ef29519ec5d76b1dee9d355f5738e49d64b70a85fc7a3fa840be89ce536d"
+size_bytes = 2515
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:0287ef29519ec5d76b1dee9d355f5738e49d64b70a85fc7a3fa840be89ce536d"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an offline ESM package that slices ANSI-styled strings by visible columns without breaking grapheme clusters, hyperlinks, or style state."
+keywords = ["node", "npm", "esm", "ansi", "unicode", "grapheme", "terminal", "slice"]
+agent_timeout_sec = 1500.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-slice-ansi"
+reason = "Current Node 24/npm 11.17 production compile, Harbor 0.21 Oracle, and required empty/stub/forgery/hang/offline controls passed in this lane. Independent review, model Agent Run, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:a9b2847fcf203cf034835758410f2f23a97759e26c105026e1f693a0b8fc0034"
+size_bytes = 1359
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:a9b2847fcf203cf034835758410f2f23a97759e26c105026e1f693a0b8fc0034"
+visibility = "private"

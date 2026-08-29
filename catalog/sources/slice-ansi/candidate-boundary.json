@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "slice-ansi",
+  "status": "implemented",
+  "purpose": "Exercise the installed ESM package through a bounded child process so candidate JavaScript is never imported by the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "call": "Import the package root default ESM export and call it once with one string, start index, and optional end index. Return the bounded string result or an exception record.",
+    "repeat": "The trusted node:test adapter may issue multiple independent one-shot calls to prove statelessness."
+  },
+  "json_values": ["finite number", "string", "null", "boolean", "array", "plain object"],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

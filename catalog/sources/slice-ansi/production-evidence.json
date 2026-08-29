@@ -1,0 +1,197 @@
+{
+  "schema_version": "1.0",
+  "task_id": "slice-ansi",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/chalk/slice-ansi",
+    "revision": "50fc7781f5dd4d1421dbe061822d815708831af4",
+    "archive_sha256": "sha256:178ba29b83709711b44e533074d5b8c5c16ecb79b60956ae965b6b15d724b402",
+    "license": "MIT",
+    "license_sha256": "sha256:c91d87c3bca16ab6d96d82da08edc54377d14b679547a331eecc4adef3c353c8"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "frozen_collection": {
+    "expected_total": 24,
+    "source": "frozen-collection",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1"
+  },
+  "bundle": {
+    "path": ".nl2repo/final-compile/slice-ansi/bundle.manifest.json",
+    "sha256": "sha256:5ef454b27547b4fd6d9547766a976e7857278360cabd5d73836daefa71fbd2ea"
+  },
+  "dependencies": {
+    "packages": [
+      "ansi-styles@6.2.3",
+      "is-fullwidth-code-point@5.1.0",
+      "get-east-asian-width@1.6.0"
+    ],
+    "artifact_digest": "sha256:604c2196421103497bdd3d82e7f37e9b45473d9a1375ae707c790e76dbd776f2"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/slice-ansi -a oracle --allow-agent-host github.com --job-name slice-ansi-oracle-final --jobs-dir .nl2repo/evidence/slice-ansi/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/slice-ansi/oracle-final/slice-ansi-oracle-final/slice-ansi__PQ3UbBo/verifier/grading.json",
+      "sha256": "sha256:7fab7d79bffc9883d187fb51485d05692d06e5960b4b345d4a0cb745202c335a"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/slice-ansi/oracle-final/slice-ansi-oracle-final/slice-ansi__PQ3UbBo/verifier/network.json",
+      "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-empty -a oracle --job-name slice-ansi-empty-current --jobs-dir .nl2repo/evidence/slice-ansi/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/empty/slice-ansi-empty-current/slice-ansi-empty__T9mX7rh/verifier/grading.json",
+        "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/empty/slice-ansi-empty-current/slice-ansi-empty__T9mX7rh/verifier/network.json",
+        "sha256": "sha256:2d3f8a3628f630c09b6b3564fc31841114c59606ce0767dcc2dc72b5b31f6430",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-stub -a oracle --job-name slice-ansi-stub-current --jobs-dir .nl2repo/evidence/slice-ansi/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 2,
+      "reward": 0.08333333333333333,
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/stub/slice-ansi-stub-current/slice-ansi-stub__jCDCvYy/verifier/grading.json",
+        "sha256": "sha256:1dbfe09e6a404c2df5556b7e8aa0b83e9ce99376e94b95d3976a71670fedbdb6"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/stub/slice-ansi-stub-current/slice-ansi-stub__jCDCvYy/verifier/network.json",
+        "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-forgery -a oracle --job-name slice-ansi-forgery-current --jobs-dir .nl2repo/evidence/slice-ansi/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 2,
+      "reward": 0.08333333333333333,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/forgery/slice-ansi-forgery-current/slice-ansi-forgery__9uC5Dvj/verifier/grading.json",
+        "sha256": "sha256:1dbfe09e6a404c2df5556b7e8aa0b83e9ce99376e94b95d3976a71670fedbdb6"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/forgery/slice-ansi-forgery-current/slice-ansi-forgery__9uC5Dvj/verifier/network.json",
+        "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6",
+        "public_network_available": false
+      }
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-install-script -a oracle --job-name slice-ansi-install-script-current --jobs-dir .nl2repo/evidence/slice-ansi/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/install-script/slice-ansi-install-script-current/slice-ansi-install-script__ciS6eBo/verifier/grading.json",
+        "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/install-script/slice-ansi-install-script-current/slice-ansi-install-script__ciS6eBo/verifier/network.json",
+        "sha256": "sha256:47aac80074aa65879e3e3a8413c58df1c5279114de6a1134be87c1e3feee6738",
+        "public_network_available": false
+      }
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-loader-hook -a oracle --job-name slice-ansi-loader-hook-current --jobs-dir .nl2repo/evidence/slice-ansi/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 1,
+      "reward": 0.041666666666666664,
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/loader-hook/slice-ansi-loader-hook-current/slice-ansi-loader-hook__tZjxkrE/verifier/grading.json",
+        "sha256": "sha256:7f76e27ff3fec8f561e2fe75153cb256d40b03672b6c42b9fe293d0d270f9211"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/loader-hook/slice-ansi-loader-hook-current/slice-ansi-loader-hook__tZjxkrE/verifier/network.json",
+        "sha256": "sha256:556c410f8135c030dd912ace88aacff6482761f3a41ce0cc6af54fb052d7e351",
+        "public_network_available": false
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-call-hang -a oracle --job-name slice-ansi-call-hang-current --jobs-dir .nl2repo/evidence/slice-ansi/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/call-hang/slice-ansi-call-hang-current/slice-ansi-call-hang__UxotEDq/verifier/grading.json",
+        "sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/call-hang/slice-ansi-call-hang-current/slice-ansi-call-hang__UxotEDq/verifier/network.json",
+        "sha256": "sha256:b3631ad7524306cf46d02d130d601b6a5f1ef22de29e0fa2d417e1465079de73",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/slice-ansi/slice-ansi-offline -a oracle --job-name slice-ansi-offline-current --jobs-dir .nl2repo/evidence/slice-ansi/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 2,
+      "reward": 0.08333333333333333,
+      "completed": true,
+      "grading": {
+        "path": ".nl2repo/evidence/slice-ansi/offline/slice-ansi-offline-current/slice-ansi-offline__gvHKYrf/verifier/grading.json",
+        "sha256": "sha256:1dbfe09e6a404c2df5556b7e8aa0b83e9ce99376e94b95d3976a71670fedbdb6"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/slice-ansi/offline/slice-ansi-offline-current/slice-ansi-offline__gvHKYrf/verifier/network.json",
+        "sha256": "sha256:be906cca722f947a87822a0b005c37aaa5debcd33560cd4be602d91c2754b4f2",
+        "public_network_available": false
+      }
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The upstream AVA/XO development toolchain is intentionally excluded from the production runtime closure; the scored contract is the deterministic 24-leaf node:test slice.",
+    "Independent review, dataset integration, publication approval, and generated catalog/tasks integration remain integrator-stage gates."
+  ]
+}
