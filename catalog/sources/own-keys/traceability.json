@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "own-keys",
+  "requirements": [
+    {"id": "R1", "instruction": "CommonJS package metadata, exact dependencies, and callable unary root", "verifier_groups": ["package and root export contract"]},
+    {"id": "R2", "instruction": "all own string names, including non-enumerables, with ECMAScript ordering", "verifier_groups": ["ordinary own-name inclusion and ordering", "arrays and object integrity states"]},
+    {"id": "R3", "instruction": "original symbols are returned after string names in creation order", "verifier_groups": ["symbol identity, grouping, and ordering"]},
+    {"id": "R4", "instruction": "getters are not invoked and the source is not mutated", "verifier_groups": ["accessor, mutation, and determinism boundaries"]},
+    {"id": "R5", "instruction": "proxy ownKeys order and invariant failures are preserved", "verifier_groups": ["proxy ownKeys behavior and invariants"]},
+    {"id": "R6", "instruction": "primitive values throw TypeError on Node 24.19.0", "verifier_groups": ["primitive input error contract"]}
+  ],
+  "reverse_check": "Every verifier group maps to at least one public requirement, and every public behavioral requirement maps to verifier coverage.",
+  "excluded": ["pre-ES2015 fallback engines", "browser bundles", "CLI behavior", "network access", "upstream development tooling"]
+}

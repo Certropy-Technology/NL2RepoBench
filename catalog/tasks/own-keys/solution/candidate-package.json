@@ -1,0 +1,21 @@
+{
+  "name": "own-keys",
+  "version": "1.0.2",
+  "description": "Robustly get an object's own property keys (strings and symbols), including non-enumerables when possible",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.4"
+  },
+  "dependencies": {
+    "call-bound": "1.0.4",
+    "get-intrinsic": "1.3.0",
+    "object-keys": "1.1.1",
+    "safe-push-apply": "1.0.0"
+  }
+}

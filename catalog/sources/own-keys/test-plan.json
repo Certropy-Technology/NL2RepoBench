@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "own-keys",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 36,
+  "groups": [
+    {"requirement": "package and root export contract", "leaves": 2},
+    {"requirement": "ordinary own-name inclusion and ordering", "leaves": 7},
+    {"requirement": "arrays and object integrity states", "leaves": 6},
+    {"requirement": "symbol identity, grouping, and ordering", "leaves": 6},
+    {"requirement": "accessor, mutation, and determinism boundaries", "leaves": 5},
+    {"requirement": "proxy ownKeys behavior and invariants", "leaves": 3},
+    {"requirement": "primitive input error contract", "leaves": 7}
+  ],
+  "collection": {
+    "source": "private test bundle",
+    "automatic": true,
+    "mismatch_policy": "fail",
+    "trusted_report_owner": "separate verifier"
+  }
+}

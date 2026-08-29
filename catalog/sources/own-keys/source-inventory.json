@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "own-keys",
+  "source": {
+    "upstream_url": "https://github.com/ljharb/own-keys.git",
+    "revision": "20620ebfd195d384d85fc134e29cc4916297a92f",
+    "tree": "41cda75f31f03048490f5d73e3366d7e33f7f2de",
+    "archive_sha256": "be351a99690d1692929f1e4c5c08aba84010cee56973f16156716eab5fa0e816",
+    "submodules": [],
+    "package_version": "1.0.2"
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "LICENSE",
+    "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+    "copyright": "Copyright (c) 2024 Jordan Harband"
+  },
+  "public_api": [
+    {
+      "import": "require(\"own-keys\")",
+      "signature": "ownKeys<T extends Record<PropertyKey, V>, V>(object: T): (keyof T)[]",
+      "runtime_arity": 1,
+      "module_kind": "commonjs-callable-root",
+      "side_effects": "none"
+    }
+  ],
+  "package_surface": ["index.js", "index.d.ts", "package.json", "README.md", "LICENSE"],
+  "upstream_tests": {
+    "framework": "tape via nyc",
+    "files": ["test/index.js"],
+    "node_24_19_0": {"collected": 5, "passed": 5, "failed": 0},
+    "typescript_check_exit_code": 0,
+    "combined_lint_exit_code": 3,
+    "combined_lint_note": "ESLint emitted six warnings and the postlint attw invocation failed inside npm pack; functional tests and standalone tsc passed."
+  },
+  "runtime_dependencies": {
+    "direct": {
+      "call-bound": "1.0.4",
+      "get-intrinsic": "1.3.0",
+      "object-keys": "1.1.1",
+      "safe-push-apply": "1.0.0"
+    },
+    "transitive_package_count": 12,
+    "total_package_count": 16,
+    "lockfile_version": 3,
+    "lockfile_sha256": "3eb711b236721f17437234187cbe9aeac9fca6d88b4b89e7d1139a97addf2cc5",
+    "npm_cache_files": 64,
+    "offline_install_exit_code": 0,
+    "native_packages": []
+  },
+  "adapter_boundary": {
+    "trusted_imports_candidate": false,
+    "candidate_uid": "candidate",
+    "transport": "bounded JSON request to child-side JavaScript adapter",
+    "non_json_values": "The child constructs symbols, descriptors, accessors, arrays, null-prototype objects, and proxies, then serializes returned property keys as typed descriptors.",
+    "timeouts": {"per_call_seconds": 30, "total_seconds": 300}
+  }
+}

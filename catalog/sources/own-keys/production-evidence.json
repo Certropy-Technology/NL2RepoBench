@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "task_id": "own-keys",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/ljharb/own-keys.git",
+    "revision": "20620ebfd195d384d85fc134e29cc4916297a92f",
+    "tree": "41cda75f31f03048490f5d73e3366d7e33f7f2de",
+    "source_digest": "sha256:be351a99690d1692929f1e4c5c08aba84010cee56973f16156716eab5fa0e816",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292"
+  },
+  "toolchain": {
+    "harbor": "0.21.0",
+    "task_schema": "1.4",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:a2e186ea0ffed689956a34e68a7ac1b08ca886578c24229bcd98334ce37833a9", "size_bytes": 624640},
+    "commands": {"digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", "size_bytes": 10240},
+    "tests": {"digest": "sha256:1f298fbd139aa248587902f41595b6c638f60b2ea2bf91977c18d7c7ca6c5ede", "size_bytes": 20480},
+    "oracle": {"digest": "sha256:801c15f25447029d048cd42057e0d4dd465288596759ae99c55f6adf1295e726", "size_bytes": 20480}
+  },
+  "generated_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/compile-final/own-keys",
+    "schema_version": "2.0",
+    "file_count": 202,
+    "manifest_sha256": "sha256:e6d0fa7fd9fa02bbd10b9699da55c1241f0812bc3920802eaee38893539f4f0b",
+    "canonical_manifest_digest": "sha256:aa5de0df77d4c20b2cecbde676b977e7e4a36201d6b902cdbabe78832f379549",
+    "repeat_compile_tree_sha256": "sha256:c52b2f818d6c3eb8e853a839549bc7e398c6e8c122a2e80c8d3e70578b2124bb",
+    "repeat_compile_byte_identical": true
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/compile-final/own-keys -a oracle --job-name own-keys-final-oracle-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/oracle --n-concurrent 1 --allow-agent-host github.com --yes",
+    "source_host_override": ["github.com"],
+    "model_agent_source_host_override": [],
+    "started_at": "2026-08-29T03:20:47.415745Z",
+    "finished_at": "2026-08-29T03:21:48.299490Z",
+    "retry_count": 0,
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 36,
+    "collected": 36,
+    "passed": 36,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/oracle/own-keys-final-oracle-20260829/own-keys__AXXyrep/verifier/grading.json", "sha256": "sha256:f679cbd1eedfa368d8fbd9a77c023531be1a2d0ba1f8ecab69f0f40d00ad3bd9"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/oracle/own-keys-final-oracle-20260829/own-keys__AXXyrep/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"},
+    "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/evidence/final-oracle.log", "sha256": "sha256:6eb1a5ff5bee47331f9a37a41e616bea0c35e4cdc3411654c95c5e1a39f9ed48"}
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/controls-final/own-keys-empty -a oracle --job-name own-keys-final-empty-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/empty --n-concurrent 1 --yes",
+      "started_at": "2026-08-29T03:21:57.508118Z", "finished_at": "2026-08-29T03:22:48.983148Z", "retry_count": 0, "exit_code": 0, "valid": true,
+      "expected_total": 36, "collected": 0, "passed": 0, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed", "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/empty/own-keys-final-empty-20260829/own-keys-empty__4r9Efpz/verifier/grading.json", "sha256": "sha256:0970d8c2c227e913caa713cb63694298ee002087ff52e34318dd5e6e47218f43"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/empty/own-keys-final-empty-20260829/own-keys-empty__4r9Efpz/verifier/network.json", "sha256": "sha256:a3c0b8df3dfeb0358daad6acdaaa5dbc2025f70d1fbb51d26765906577e513a8"},
+      "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/evidence/final-empty.log", "sha256": "sha256:673fb1c1c616de8db31c6119e2c366a5285b7f46f625aa4a4b0465d9cab34965"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/controls-final/own-keys-stub -a oracle --job-name own-keys-final-stub-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/stub --n-concurrent 1 --yes",
+      "started_at": "2026-08-29T03:22:58.456567Z", "finished_at": "2026-08-29T03:23:57.389463Z", "retry_count": 0, "exit_code": 0, "valid": true,
+      "expected_total": 36, "collected": 36, "passed": 3, "failed": 33, "reward": 0.08333333333333333, "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/stub/own-keys-final-stub-20260829/own-keys-stub__TiF6enG/verifier/grading.json", "sha256": "sha256:cc7fab1425f5d883adea6775c51e2a043ccdce9683eab55f2b4a7dc9876ad5aa"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/stub/own-keys-final-stub-20260829/own-keys-stub__TiF6enG/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"},
+      "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/evidence/final-stub.log", "sha256": "sha256:2141ec2656c7b1b2943463e44e124da025238c5177d2143deac20d6ac5204eae"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/controls-final/own-keys-forgery -a oracle --job-name own-keys-final-forgery-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/forgery --n-concurrent 1 --yes",
+      "started_at": "2026-08-29T03:24:06.690825Z", "finished_at": "2026-08-29T03:25:09.488616Z", "retry_count": 0, "exit_code": 0, "valid": true,
+      "expected_total": 36, "collected": 36, "passed": 3, "failed": 33, "reward": 0.08333333333333333,
+      "workspace_forged_reward": 1.0, "verifier_owned_reward": true, "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/forgery/own-keys-final-forgery-20260829/own-keys-forgery__ekzDzFu/verifier/grading.json", "sha256": "sha256:cc7fab1425f5d883adea6775c51e2a043ccdce9683eab55f2b4a7dc9876ad5aa"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/forgery/own-keys-final-forgery-20260829/own-keys-forgery__ekzDzFu/verifier/network.json", "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"},
+      "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/evidence/final-forgery.log", "sha256": "sha256:709d57552866637f93357819ff410b3c8a2b6f6f8d594efac13cba36c543f6e6"}
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/controls-final/own-keys-call-hang -a oracle --job-name own-keys-final-call-hang-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/call-hang --n-concurrent 1 --yes",
+      "started_at": "2026-08-29T03:25:17.973162Z", "finished_at": "2026-08-29T03:28:11.105746Z", "retry_count": 0, "exit_code": 0, "valid": true,
+      "expected_total": 36, "collected": 0, "passed": 0, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-call-failed", "bounded_wall_seconds": 182, "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/call-hang/own-keys-final-call-hang-20260829/own-keys-call-hang__UjY8yYu/verifier/grading.json", "sha256": "sha256:30e120aacdc8f78b35332e66ec17ab58cf23e2d2fb446abe3dcf66d899ad5bbb"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/call-hang/own-keys-final-call-hang-20260829/own-keys-call-hang__UjY8yYu/verifier/network.json", "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"},
+      "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/evidence/final-call-hang.log", "sha256": "sha256:e501848332bac8d32add52478cebc99e6234c66a8db0968975ece418913720ec"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/controls-final/own-keys-offline -a oracle --job-name own-keys-final-offline-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/offline --n-concurrent 1 --yes",
+      "started_at": "2026-08-29T03:28:19.595343Z", "finished_at": "2026-08-29T03:29:13.304840Z", "retry_count": 0, "exit_code": 0, "valid": true,
+      "expected_total": 36, "collected": 36, "passed": 3, "failed": 33, "reward": 0.08333333333333333,
+      "candidate_attempted_numeric_public_host": "1.1.1.1:443", "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/offline/own-keys-final-offline-20260829/own-keys-offline__w6XEqvE/verifier/grading.json", "sha256": "sha256:cc7fab1425f5d883adea6775c51e2a043ccdce9683eab55f2b4a7dc9876ad5aa"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/runs/final/offline/own-keys-final-offline-20260829/own-keys-offline__w6XEqvE/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"},
+      "log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/own-keys/evidence/final-offline.log", "sha256": "sha256:f9acff0ba629bb2cf698f8b0769118bc1f967957ad5db701a442903ddc848e99"}
+    }
+  },
+  "commands": [
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/own-keys", "exit_code": 0},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "repository error_count=0"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/own-keys --output .nl2repo/authoring-work/node-author-wave2-20260828/own-keys/compile-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"stage": "repeat-compile", "command": "same production compile to compile-repeat", "exit_code": 0, "result": "byte-identical tree and bundle manifest"}
+  ],
+  "residual_risks": [
+    "The locally present nl2repobench/openhands-sdk-fork:930e9b1da-bookworm image ID is sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, while toolchain.node.lock.toml expects sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f. The integrator must restore or verify the official immutable agent runtime before any model Agent Run."
+  ]
+}
