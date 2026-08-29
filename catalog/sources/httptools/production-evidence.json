@@ -1,0 +1,209 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httptools",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/MagicStack/httptools",
+    "revision": "cf10ce6f0dae56e61817e67b9bb073dd39d0191a",
+    "tag": "v0.8.0",
+    "license_spdx": "MIT",
+    "license_file_sha256": "sha256:f4573e7cb7676745fb5b8d36fa548aa93e391cfb6872ddacd65130c45ea6a92d",
+    "parent_archive_sha256": "sha256:88f141fd4aef5561143a7dd84828a639567e3bb67530ee5736b983fe20693cd1",
+    "recursive_snapshot_sha256": "sha256:cdeeab4b17c4352fc12ea4a907295688c2ce887f4a87c14ff1e4ec020df0f0c9",
+    "submodules": [
+      "vendor/http-parser@2343fd6b5214b2ded2cdcf76de2bf60903bb90cd",
+      "vendor/llhttp@751e5b44dc07a9932d244cb06210cfdcae951115"
+    ]
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "toolchain_lock_sha256": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "private_artifacts": {
+    "candidate_lock": {
+      "digest": "sha256:7a6600fb982baaf0ee99c485d498a01cdb77241057323d9c1aad00dbe62bea75",
+      "size_bytes": 7124
+    },
+    "verifier_bundle": {
+      "digest": "sha256:bebd790082eca108ca6d0bb44fafe14a735ceee8c1533b570503cd3d889c566b",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "digest": "sha256:a5b34fbcfa0489e5ff70c7d747aa2b99b847f25824b3f5c93745f3c520687414",
+      "size_bytes": 788480
+    }
+  },
+  "frozen_collection": {
+    "framework": "custom-json-v1",
+    "expected_total": 20,
+    "upstream_unittest_methods": 41,
+    "upstream_baseline_passed": 41,
+    "upstream_baseline_log": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/logs/upstream-tests-installed.log",
+    "upstream_baseline_log_sha256": "sha256:a4d3d439564c6e1899895650d18f0b5bf4a456f9152eb900c21ee51ec9109e54"
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/compile-final-a/httptools/bundle.manifest.json",
+    "manifest_sha256": "sha256:cdb60a94a996cbb80473ab691706f26aa3af78dd386c452c3ad1484549fb2280",
+    "canonical_manifest_digest": "sha256:0d01e664664138612175ebf4e2454838a4f9a2f1c98b3ec1c57e184af425fcc7",
+    "mode": "production",
+    "runtime_files": 60,
+    "repeat_compile_byte_identical": true
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httptools/compile-final-a/httptools -a oracle --job-name httptools-final-oracle -o .nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/oracle --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 20,
+    "passed": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/oracle/httptools-final-oracle/httptools__gMg6Pxd/verifier/grading.json",
+      "sha256": "sha256:1b9ebd126300e6793a4c07536237a5529c61668ebb37797e5328b4172465b8c3"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/oracle/httptools-final-oracle/httptools__gMg6Pxd/verifier/network.json",
+      "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httptools/compile-final-a/httptools -a nop --job-name httptools-final-empty -o .nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/empty/httptools-final-empty/httptools__JkrEqU8/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/empty/httptools-final-empty/httptools__JkrEqU8/verifier/network.json",
+        "sha256": "sha256:831df49691bacfd1a6fa772a3aa3de8fd1c7e0a74aeef5ba7546e16eaee8eeaa",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "prepare-control stub, then official Harbor Oracle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/stub/httptools-final-stub/httptools-stub__kDMVrwm/verifier/grading.json",
+        "sha256": "sha256:12939a2c6d6dbf842b81f030269a783db8b6088ffa10169747a7521d92ae60f6"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/stub/httptools-final-stub/httptools-stub__kDMVrwm/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "prepare-control forgery, then official Harbor Oracle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/forgery/httptools-final-forgery/httptools-forgery__HYDNPEW/verifier/grading.json",
+        "sha256": "sha256:12939a2c6d6dbf842b81f030269a783db8b6088ffa10169747a7521d92ae60f6"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/forgery/httptools-final-forgery/httptools-forgery__HYDNPEW/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+        "public_network_available": false
+      }
+    },
+    "call-hang": {
+      "command": "prepare-control call-hang, then official Harbor Oracle",
+      "exit_code": 0,
+      "elapsed_seconds": 245,
+      "bounded": true,
+      "valid": true,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/call-hang/httptools-final-call-hang/httptools-call-hang__DaFE434/verifier/grading.json",
+        "sha256": "sha256:12939a2c6d6dbf842b81f030269a783db8b6088ffa10169747a7521d92ae60f6"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/call-hang/httptools-final-call-hang/httptools-call-hang__DaFE434/verifier/network.json",
+        "sha256": "sha256:4b9b7ac9a67ca68e1e20ef22dddf837e30a7afad62a4aa7baf8486046ef88b71",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "official Harbor Oracle with no run-scoped host authorization",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 20,
+      "passed": 20,
+      "reward": 1.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/offline/httptools-final-offline/httptools__UsFbn5E/verifier/grading.json",
+        "sha256": "sha256:1b9ebd126300e6793a4c07536237a5529c61668ebb37797e5328b4172465b8c3"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/runs/final/offline/httptools-final-offline/httptools__UsFbn5E/verifier/network.json",
+        "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9",
+        "public_network_available": false
+      }
+    }
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/httptools",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/logs/final-validate-source.json",
+      "log_sha256": "sha256:b6a5e88f42b1490c12285ee1f9a5e0242b8f293a492df1233c1c5baebce4fe79"
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_findings": 0,
+      "catalog_errors": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/logs/final-network-lint.json",
+      "log_sha256": "sha256:3b0a0093b02584c21836455f02d7789e481954df1d969fb1b16c89256de4c674"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/httptools --output .nl2repo/authoring-work/python-author-wave2-20260828/httptools/compile-final-a --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "repeat_compile_byte_identical": true
+    },
+    "focused_tests": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_catalog.py tests/test_custom_verifier.py tests/test_harbor_compiler.py tests/test_harbor_registry.py",
+      "exit_code": 0,
+      "passed": 41,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/logs/focused-tests.log",
+      "log_sha256": "sha256:60096faacd94d477a825ebb14f0d1a1e7361111ed6e27f21e926096f4fa4ea78"
+    },
+    "no_vendor_install": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py",
+      "exit_code": 0,
+      "passed": 1,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/httptools/logs/no-vendor-test.log",
+      "log_sha256": "sha256:01311baa852db076753814271165a33a7a35b7e0b63de979423ac3269388316e"
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da image ID is sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123, while toolchain.lock.toml expects sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5; the integrator must restore or verify the official immutable runtime image before a model Agent Run.",
+    "The 20-leaf adapter is a bounded Linux/amd64 JSON-safe contract, not transparent parity with all 41 upstream in-process unittest methods.",
+    "Blind review, model pilot, dataset integration, and publication remain integrator-stage gates."
+  ]
+}

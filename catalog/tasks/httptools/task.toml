@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/httptools"
+version = "0.1.0"
+description = "Build httptools 0.8.0 from an empty workspace and implement a deterministic HTTP request, response, chunked-body, upgrade, callback-error, and URL parsing contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "http",
+    "parser",
+    "url",
+    "native-extension",
+    "separate-verifier",
+    "no-network",
+]
+
+[metadata]
+difficulty = "hard"
+category = "http-parsing"
+tags = [
+    "python",
+    "http",
+    "parser",
+    "url",
+    "native-extension",
+    "cython",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:0d01e664664138612175ebf4e2454838a4f9a2f1c98b3ec1c57e184af425fcc7"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 2400.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
