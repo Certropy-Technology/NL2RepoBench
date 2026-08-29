@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Registered package names that the top-level Director may submit to fixed discovery adapters.",
+  "python": [
+    "attrs",
+    "click",
+    "packaging",
+    "pydantic",
+    "rich",
+    "tomlkit",
+    "typer",
+    "orjson"
+  ],
+  "node": [
+    "chalk",
+    "chokidar",
+    "commander",
+    "jsonc-parser",
+    "kleur",
+    "minimist",
+    "semver",
+    "yargs"
+  ],
+  "go": [
+    "go-cast",
+    "go-gjson",
+    "go-humanize",
+    "go-redis",
+    "go-semver",
+    "go-structs",
+    "go-uuid",
+    "go-zap"
+  ]
+}
