@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "upstream": {
+    "framework": "ava 3.x",
+    "behavior_test_file": "test.js",
+    "behavior_test_count": 30,
+    "type_test_file": "index.test-d.ts",
+    "type_assertion_count": 4,
+    "fixture_count": 12,
+    "baseline": "30 passed; tsd exited 0"
+  },
+  "harbor": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 30,
+    "collection_source": "frozen private contract",
+    "test_bundle_digest": "sha256:39c5fe0b229d84d072c8f2d9fb64bebdec4ce551dc2f22676a88cac8fec2e26b",
+    "commands_digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9"
+  },
+  "coverage_groups": {
+    "packaging_and_errors": 3,
+    "empty_and_unindented": 4,
+    "spaces": 11,
+    "tabs_and_mixed": 6,
+    "comments_alignment_and_line_endings": 6
+  }
+}

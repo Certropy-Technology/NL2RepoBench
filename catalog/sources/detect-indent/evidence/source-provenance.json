@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/detect-indent",
+    "revision": "25d3cf12f54807147e56ac3d4f557c9cc7904c96",
+    "commit_date": "2026-02-03T02:16:38+07:00",
+    "archive_sha256": "sha256:5a7f9c31bf38023fcedd859af6ad7e212c4267b45dc7b72dd3de7c6d6070dc2e",
+    "archive_size_bytes": 51200,
+    "submodules": []
+  },
+  "license": {
+    "spdx": "MIT",
+    "path_at_revision": "license",
+    "sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "package": {
+    "name": "detect-indent",
+    "version": "7.0.2",
+    "package_json_sha256": "sha256:04e04d63c6dd4ddb798e88c26c1f21340490c82edbc90639cd72988c5067e108",
+    "module_type": "module",
+    "runtime_dependency_roots": 0,
+    "upstream_test_framework": "ava",
+    "upstream_behavior_tests": 30,
+    "upstream_type_assertions": 4
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_image_id": "sha256:168ec0e237908471c4af00e1879e81ad7be0265ca8b922f9736202c9f6dd0ead",
+    "verifier_image_id": "sha256:a95538297650b49e72bdaa7862bb95e8c2e360b451fc43d6c919ad0113136cba"
+  },
+  "baseline": {
+    "npm_test_exit_code": 0,
+    "npm_test_passed": 30,
+    "tsd_exit_code": 0,
+    "private_contract_exit_code": 0,
+    "private_contract_passed": 30,
+    "logs": [
+      ".nl2repo/authoring-work/detect-indent/evidence/npm-install.log",
+      ".nl2repo/authoring-work/detect-indent/evidence/npm-test.log",
+      ".nl2repo/authoring-work/detect-indent/evidence/tsd.log",
+      ".nl2repo/authoring-work/detect-indent/evidence/private-contract.tap",
+      ".nl2repo/authoring-work/detect-indent/evidence/docker-build-agent.log",
+      ".nl2repo/authoring-work/detect-indent/evidence/docker-build-verifier.log"
+    ]
+  }
+}

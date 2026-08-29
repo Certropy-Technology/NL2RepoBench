@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "detect-indent"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "text-processing"
+tags = ["node", "npm", "esm", "indentation", "parser", "utility"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/detect-indent"
+revision = "25d3cf12f54807147e56ac3d4f557c9cc7904c96"
+license_spdx = "MIT"
+source_digest = "sha256:5a7f9c31bf38023fcedd859af6ad7e212c4267b45dc7b72dd3de7c6d6070dc2e"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate has no runtime dependencies and uses a private integrity-checked npm v3 cache. The model Agent and verifier run phases have no network access; only the trusted Oracle receives the exact upstream host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:65a1a9e0e1bbb470c0efbbc622c7f73f7a212bd81860fcb9261288b464c1f283", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:65a1a9e0e1bbb470c0efbbc622c7f73f7a212bd81860fcb9261288b464c1f283", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:39c5fe0b229d84d072c8f2d9fb64bebdec4ce551dc2f22676a88cac8fec2e26b", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:39c5fe0b229d84d072c8f2d9fb64bebdec4ce551dc2f22676a88cac8fec2e26b", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the detect-indent ESM utility from an empty workspace."
+keywords = ["node", "npm", "esm", "indentation", "text-processing", "separate-verifier"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source and Node 24/npm 11 production bundle passed Harbor 0.21 Oracle 30/30 reward 1.0; empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned low scores and no public verifier network. Independent model Agent Run, review, pilot, dataset integration, and publication remain pending."
+
+[oracle_bundle]
+digest = "sha256:1697bce7063600a86f08b5b6b587311797ff748346d13d521925adb29d9ae6a8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:1697bce7063600a86f08b5b6b587311797ff748346d13d521925adb29d9ae6a8"
+visibility = "private"

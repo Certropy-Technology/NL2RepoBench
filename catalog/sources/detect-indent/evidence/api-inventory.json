@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "source_revision": "25d3cf12f54807147e56ac3d4f557c9cc7904c96",
+  "source_files": ["index.js", "index.d.ts"],
+  "public_exports": [
+    {
+      "import_path": "detect-indent",
+      "export": "default",
+      "signature": "detectIndent(string: string): Indent",
+      "runtime_kind": "function",
+      "side_effects": "none",
+      "errors": [{"condition": "input is not a string", "type": "TypeError", "message": "Expected a string"}]
+    },
+    {
+      "import_path": "detect-indent",
+      "export": "Indent",
+      "runtime_kind": "TypeScript interface",
+      "shape": {"amount": "number", "type": "'space' | 'tab' | undefined", "indent": "string"}
+    }
+  ],
+  "package_contract": {
+    "name": "detect-indent",
+    "version": "7.0.2",
+    "type": "module",
+    "root_export": "./index.js",
+    "types": "./index.d.ts",
+    "cli": null,
+    "runtime_dependencies": []
+  },
+  "adapter_boundary": "Private node:test files call a task-specific child adapter under UID 10001. The adapter imports only the installed candidate root, maps JavaScript undefined to protocol null, bounds input/output, and returns exception type/message. Trusted tests never add candidate code to their own import path."
+}

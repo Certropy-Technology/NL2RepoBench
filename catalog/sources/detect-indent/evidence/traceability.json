@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "instruction": "catalog/sources/detect-indent/instruction.md",
+  "expected_total": 30,
+  "mappings": [
+    {"instruction_section": "Supports", "behaviors": ["ESM root export", "package name/version", "zero dependencies", "offline npm v3 install"], "leaf_ids": ["package installation boundary", "all 30 behavior calls"]},
+    {"instruction_section": "API Usage Guide", "behaviors": ["default function", "result object shape", "space/tab/undefined type", "amount", "indent", "TypeError contract"], "leaf_ids": ["detects four-space indentation", "detects one-tab indentation", "returns the empty result when no indentation exists", "throws TypeError for a number", "throws TypeError for null", "returns a fresh object for each call"]},
+    {"instruction_section": "Implementation Notes", "behaviors": ["indent transitions", "frequency and repeated-line tie-break", "earliest exact tie", "single-space fallback", "comments/alignment", "LF/CRLF", "whitespace-only lines", "initially indented text"], "leaf_ids": ["tie uses the first strongest indentation evidence", "spaces win when they occur first in an even split", "tabs win when they occur first in an even split", "detects one-space indentation when it is the only signal", "ignores aligned multi-line comment prefixes", "supports CRLF line endings", "uses whitespace-only lines as evidence", "detects indentation when the document starts indented"]}
+  ],
+  "review": {
+    "hidden_assertions_without_public_contract": 0,
+    "core_public_promises_without_test_group": 0,
+    "source_body_copied_to_instruction": false,
+    "private_fixture_bytes_in_public_source": false
+  }
+}

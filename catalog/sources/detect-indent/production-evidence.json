@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 30,
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/detect-indent",
+    "revision": "25d3cf12f54807147e56ac3d4f557c9cc7904c96",
+    "archive_sha256": "sha256:5a7f9c31bf38023fcedd859af6ad7e212c4267b45dc7b72dd3de7c6d6070dc2e",
+    "archive_size_bytes": 51200,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "package_json_sha256": "sha256:04e04d63c6dd4ddb798e88c26c1f21340490c82edbc90639cd72988c5067e108",
+    "runtime_dependencies": []
+  },
+  "environment": {
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "network_mode": "no-network",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "artifacts": {
+    "npm_bundle": {
+      "digest": "sha256:65a1a9e0e1bbb470c0efbbc622c7f73f7a212bd81860fcb9261288b464c1f283",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:65a1a9e0e1bbb470c0efbbc622c7f73f7a212bd81860fcb9261288b464c1f283"
+    },
+    "test_bundle": {
+      "digest": "sha256:39c5fe0b229d84d072c8f2d9fb64bebdec4ce551dc2f22676a88cac8fec2e26b",
+      "size_bytes": 20480,
+      "uri": "artifact://private/sha256:39c5fe0b229d84d072c8f2d9fb64bebdec4ce551dc2f22676a88cac8fec2e26b"
+    },
+    "commands_bundle": {
+      "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:1697bce7063600a86f08b5b6b587311797ff748346d13d521925adb29d9ae6a8",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:1697bce7063600a86f08b5b6b587311797ff748346d13d521925adb29d9ae6a8"
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/detect-indent/compiled-handoff-final/detect-indent/bundle.manifest.json",
+    "sha256": "sha256:c11d618d7f0f4ebb5b793d5a475c92eaafad6f8a25286c7bdd57030fdaf8b30b",
+    "canonical_manifest_digest": "sha256:9e549070a738904f615abb849bf2252e27ddf83a97ec65d7a49bd8a91ec1bba8",
+    "mode": "production",
+    "file_count": 73,
+    "integrity_errors": 0,
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/detect-indent",
+      "exit_code": 0,
+      "reported_source_digest": "sha256:6d745e20c2aef62dae5f3ce74dfb27a65f50de6d7b50850245af88a2c34578a2"
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "task_findings": 0,
+      "catalog_warning_count": 139
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/detect-indent --output .nl2repo/authoring-work/detect-indent/compiled-handoff-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "allow_incomplete": false,
+      "bundle_manifest_sha256": "sha256:c11d618d7f0f4ebb5b793d5a475c92eaafad6f8a25286c7bdd57030fdaf8b30b"
+    },
+    "syntax": {
+      "scope": "catalog/sources/detect-indent and compiled-production-final",
+      "files_checked": 86,
+      "shell_files": 14,
+      "node_files": 12,
+      "json_files": 10,
+      "failures": 0
+    },
+    "upstream_baseline": {
+      "npm_test_command": "npm test --offline --ignore-scripts",
+      "npm_test_exit_code": 0,
+      "behavior_tests_passed": 30,
+      "tsd_exit_code": 0,
+      "type_assertions": 4
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent -a oracle --allow-agent-host github.com --job-name detect-indent-oracle-final-20260828 -o .nl2repo/authoring-work/detect-indent/runs-final-revalidation/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 30,
+    "passed": 30,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/detect-indent/runs-final-revalidation/oracle/detect-indent-oracle-final-20260828/detect-indent__SHWy2Ys/verifier/grading.json",
+      "sha256": "sha256:0833946e6d7424f7936bb0213909648d06f3853d10286e348ea473ac028d3c3b"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/detect-indent/runs-final-revalidation/oracle/detect-indent-oracle-final-20260828/detect-indent__SHWy2Ys/verifier/network.json",
+      "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent -a nop --job-name detect-indent-empty-final-20260828 -o .nl2repo/authoring-work/detect-indent/runs-final-revalidation/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/detect-indent/runs-final-revalidation/empty/detect-indent-empty-final-20260828/detect-indent__hb4d7te/verifier/grading.json",
+      "grading_sha256": "sha256:5c69bd6cf119e1c1f31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98",
+      "network_path": ".nl2repo/authoring-work/detect-indent/runs-final-revalidation/empty/detect-indent-empty-final-20260828/detect-indent__hb4d7te/verifier/network.json",
+      "network_sha256": "sha256:c85c9c3489d2cac7bc25c95bc67ef7759714ea9c5642cab7add5c188a017533c",
+      "public_network_available": false
+    },
+    "stub": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent stub --output .nl2repo/authoring-work/detect-indent/controls-final-revalidation/stub --toolchain toolchain.node.lock.toml",
+      "run_command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/controls-final-revalidation/stub/detect-indent-stub -a oracle --job-name detect-indent-stub-final-20260828 -o .nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 3,
+      "reward": 0.1,
+      "grading_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/stub/detect-indent-stub-final-20260828/detect-indent-stub__tvXatL9/verifier/grading.json",
+      "grading_sha256": "sha256:48c554e991d5679bf2b784ee866da91f24ccc97bc2ca1deacc5ebb44b6649c64",
+      "network_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/stub/detect-indent-stub-final-20260828/detect-indent-stub__tvXatL9/verifier/network.json",
+      "network_sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    },
+    "forgery": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent forgery --output .nl2repo/authoring-work/detect-indent/controls-final-revalidation/forgery --toolchain toolchain.node.lock.toml",
+      "run_command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/controls-final-revalidation/forgery/detect-indent-forgery -a oracle --job-name detect-indent-forgery-final-20260828 -o .nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 1,
+      "reward": 0.03333333333333333,
+      "verifier_owned_reward": true,
+      "forged_workspace_claim": 1.0,
+      "grading_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/forgery/detect-indent-forgery-final-20260828/detect-indent-forgery__rfZH9qF/verifier/grading.json",
+      "grading_sha256": "sha256:4fa258ab81833267affada356a6b92dfc5563add69ddb3331015c87f93fc8f35",
+      "network_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/forgery/detect-indent-forgery-final-20260828/detect-indent-forgery__rfZH9qF/verifier/network.json",
+      "network_sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    },
+    "install_script": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent install-script --output .nl2repo/authoring-work/detect-indent/controls-final-revalidation/install-script --toolchain toolchain.node.lock.toml",
+      "run_command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/controls-final-revalidation/install-script/detect-indent-install-script -a oracle --job-name detect-indent-install-script-final-20260828 -o .nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/install-script/detect-indent-install-script-final-20260828/detect-indent-install-script__eMUJzg6/verifier/grading.json",
+      "grading_sha256": "sha256:5c69bd6cf119e1c1f31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98",
+      "network_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/install-script/detect-indent-install-script-final-20260828/detect-indent-install-script__eMUJzg6/verifier/network.json",
+      "network_sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9",
+      "public_network_available": false
+    },
+    "loader_hook": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent loader-hook --output .nl2repo/authoring-work/detect-indent/controls-final-revalidation/loader-hook --toolchain toolchain.node.lock.toml",
+      "run_command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/controls-final-revalidation/loader-hook/detect-indent-loader-hook -a oracle --job-name detect-indent-loader-hook-final-20260828 -o .nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 1,
+      "reward": 0.03333333333333333,
+      "grading_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/loader-hook/detect-indent-loader-hook-final-20260828/detect-indent-loader-hook__jyth8ny/verifier/grading.json",
+      "grading_sha256": "sha256:4fa258ab81833267affada356a6b92dfc5563add69ddb3331015c87f93fc8f35",
+      "network_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/loader-hook/detect-indent-loader-hook-final-20260828/detect-indent-loader-hook__jyth8ny/verifier/network.json",
+      "network_sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    },
+    "hang": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent hang --output .nl2repo/authoring-work/detect-indent/controls-final-revalidation/hang --toolchain toolchain.node.lock.toml",
+      "run_command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/controls-final-revalidation/hang/detect-indent-hang -a oracle --job-name detect-indent-hang-final-20260828 -o .nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/hang/detect-indent-hang-final-20260828/detect-indent-hang__xtYZwjV/verifier/grading.json",
+      "grading_sha256": "sha256:c994f8d4ef5f4b677648285976b11f5b89c3f5ead61222642e7094bd77772fbf",
+      "network_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/hang/detect-indent-hang-final-20260828/detect-indent-hang__xtYZwjV/verifier/network.json",
+      "network_sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517",
+      "public_network_available": false
+    },
+    "offline": {
+      "prepare_command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/detect-indent/compiled-production-final/detect-indent offline --output .nl2repo/authoring-work/detect-indent/controls-final-revalidation/offline --toolchain toolchain.node.lock.toml",
+      "run_command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/detect-indent/controls-final-revalidation/offline/detect-indent-offline -a oracle --job-name detect-indent-offline-final-20260828 -o .nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 3,
+      "reward": 0.1,
+      "grading_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/offline/detect-indent-offline-final-20260828/detect-indent-offline__vzzVhuT/verifier/grading.json",
+      "grading_sha256": "sha256:48c554e991d5679bf2b784ee866da91f24ccc97bc2ca1deacc5ebb44b6649c64",
+      "network_path": ".nl2repo/authoring-work/detect-indent/controls-final-revalidation/runs/offline/detect-indent-offline-final-20260828/detect-indent-offline__vzzVhuT/verifier/network.json",
+      "network_sha256": "sha256:ab2e6731d1cafa2d73f56d3de8e047390dc49b571f2736a1bc10d4be89c2e18e",
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this authoring lane by instruction.",
+    "Review, pilot, dataset integration, and publication remain integrator-stage gates.",
+    "Empty, install-script, and hang controls use the current candidate-installation-failed 0/0 exception; stub, forgery, loader-hook, and offline controls collected the frozen denominator.",
+    "The upstream type baseline was run locally with the installed toolchain; the Harbor scored contract is the 30-leaf node:test JSON boundary."
+  ]
+}
