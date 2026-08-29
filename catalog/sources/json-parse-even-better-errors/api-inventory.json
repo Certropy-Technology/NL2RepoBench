@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-parse-even-better-errors",
+  "source_revision": "098b8d00e72e4807adba733c2cdde686b2b9bf82",
+  "source_digest": "sha256:6bcf80e775ad5481a30fc401ede155fc49ebc44ae03a2f76f323430ce28c5f9f",
+  "public_exports": [
+    {"name": "module.exports", "kind": "function", "signature": "(raw, reviver = undefined, context = 20) => any", "path": "lib/index.js"},
+    {"name": "module.exports.noExceptions", "kind": "function", "signature": "(raw, reviver = undefined) => any | undefined", "path": "lib/index.js"},
+    {"name": "module.exports.JSONParseError", "kind": "class", "signature": "(error, text, context = 20, caller = null)", "path": "lib/index.js"}
+  ],
+  "runtime_risks": ["Buffer input", "native SyntaxError wording", "symbol-keyed metadata", "reviver callback", "stack trimming"],
+  "adapter": "private JSONL child process with tagged Buffer/non-string inputs and bounded error summaries"
+}

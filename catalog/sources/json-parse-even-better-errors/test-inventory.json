@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-parse-even-better-errors",
+  "framework": "node:test",
+  "upstream_runner": "node --test './test/**/*.js'",
+  "upstream_top_level_tests": 18,
+  "frozen_leaf_total": 60,
+  "collection_command": "node --test --test-reporter=tap './test/**/*.js'",
+  "collection_observation": {"tests": 60, "pass": 60, "fail": 0, "skipped": 0, "todo": 0},
+  "layers": [
+    "ordinary JSON values",
+    "indent and newline metadata",
+    "empty object and array defaults",
+    "Buffer and BOM handling",
+    "contextual SyntaxError formatting",
+    "non-string TypeError contract",
+    "JSONParseError class metadata",
+    "noExceptions and reviver behavior"
+  ],
+  "adapter_boundary": "candidate is only loaded by /tests/private/test_client.mjs in a separate Node subprocess; tests exchange bounded JSONL"
+}

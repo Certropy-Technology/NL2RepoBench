@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "protocol": "node-jsonl-child-v1",
+  "candidate_source": "empty workspace only",
+  "request": {"max_bytes": 65536, "one_json_object_per_line": true, "operations": ["parse", "noExceptions", "class"]},
+  "tagged_inputs": ["string", "buffer", "undefined", "empty-array", "number", "object", "map", "boolean", "null"],
+  "response": {"max_bytes": 262144, "success": "JSON-serializable value summary", "failure": "bounded error type/name/code/position/message/systemError"},
+  "forbidden": ["source code", "test files", "reward paths", "network", "NODE_OPTIONS", "NODE_PATH"],
+  "limits": {"child_timeout_ms": 5000, "max_input_chars": 131072, "max_message_chars": 4096}
+}

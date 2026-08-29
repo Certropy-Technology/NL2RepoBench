@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-parse-even-better-errors",
+  "spec_to_tests": {
+    "parse_success": ["ordinary-json", "metadata", "buffer-bom", "reviver"],
+    "parse_errors": ["unexpected-token", "unexpected-end", "context-window", "empty-input"],
+    "non_string_type_errors": ["undefined", "number", "object", "empty-array"],
+    "noExceptions": ["valid", "invalid", "buffer", "bom-buffer"],
+    "JSONParseError": ["class-inheritance", "code", "position", "system-error", "name", "tag", "caller-stack"]
+  },
+  "tests_to_spec": {
+    "ordinary-json": "API Usage Guide / parseJson success",
+    "metadata": "API Usage Guide / indent and newline symbols",
+    "buffer-bom": "API Usage Guide / string or Buffer and BOM",
+    "unexpected-token": "API Usage Guide / contextual parse errors",
+    "non_string_type_errors": "Implementation Notes / TypeError for unsupported input",
+    "reviver": "API Usage Guide / native reviver traversal",
+    "JSONParseError": "API Usage Guide / exported class contract"
+  },
+  "uncovered_upstream_features": [],
+  "review_status": "authoring-self-review-complete; independent review remains integrator stage"
+}

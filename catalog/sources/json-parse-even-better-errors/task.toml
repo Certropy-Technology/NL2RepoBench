@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "json-parse-even-better-errors"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "json-parser"
+tags = ["node", "npm", "json", "parser", "syntax-error", "commonjs"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/npm/json-parse-even-better-errors"
+revision = "098b8d00e72e4807adba733c2cdde686b2b9bf82"
+license_spdx = "MIT"
+source_digest = "sha256:6bcf80e775ad5481a30fc401ede155fc49ebc44ae03a2f76f323430ce28c5f9f"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier runs are network-isolated. The zero-dependency npm closure is a private integrity-checked artifact; only the trusted Oracle receives a run-scoped authorization for github.com."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:f5e99d78f60de54f9740184515aa32094a267f457ff9bf5af9a2f8da54e61e07"
+size_bytes = 390
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:f5e99d78f60de54f9740184515aa32094a267f457ff9bf5af9a2f8da54e61e07"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 60
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+size_bytes = 261
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:fad36e3e1a8c3a75e4c92bf8fd02fec7962b64642af6b862877375437aa29ff5"
+size_bytes = 3328
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:fad36e3e1a8c3a75e4c92bf8fd02fec7962b64642af6b862877375437aa29ff5"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build a zero-dependency CommonJS JSON parser with contextual errors, BOM handling, and formatting metadata."
+keywords = ["node", "npm", "json", "parser", "commonjs", "node-test"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen Node/npm source, private zero-dependency closure, separate verifier, Oracle 60/60 reward 1.0, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model Agent Run, pilot, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:6bc2c1ad1727b16baabc2d7984ab5dbf28321d69dc506a45b6810bd664fb6e94"
+size_bytes = 737
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:6bc2c1ad1727b16baabc2d7984ab5dbf28321d69dc506a45b6810bd664fb6e94"
+visibility = "private"
