@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hatchling",
+  "upstream_test_files": [
+    "backend/tests/__init__.py",
+    "backend/tests/downstream/integrate.py"
+  ],
+  "upstream_collectable_tests": 0,
+  "upstream_note": "The frozen backend subtree contains downstream integration data but no collectable Hatchling unit suite.",
+  "verifier_protocol": "custom-json-v1",
+  "frozen_total": 21,
+  "scenario_ids": [
+    "api-surface",
+    "metadata-utils",
+    "requirement-normalization",
+    "version-file",
+    "version-file-errors",
+    "standard-version-scheme",
+    "plugin-builtins",
+    "project-metadata-basic",
+    "project-metadata-errors",
+    "build-requires",
+    "prepare-metadata",
+    "build-wheel-basic",
+    "build-wheel-entry-points",
+    "build-wheel-record",
+    "build-wheel-selection",
+    "build-wheel-reproducible",
+    "build-sdist-basic",
+    "build-sdist-reproducible",
+    "builder-utils",
+    "core-metadata-roundtrip",
+    "wheel-default-tag"
+  ]
+}

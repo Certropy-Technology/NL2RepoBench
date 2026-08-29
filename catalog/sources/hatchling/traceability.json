@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hatchling",
+  "instruction_sections": {
+    "PEP 517 and PEP 660 backend": ["api-surface", "build-requires", "prepare-metadata", "build-wheel-basic", "build-wheel-entry-points", "build-wheel-record", "build-wheel-selection", "build-wheel-reproducible", "build-sdist-basic", "build-sdist-reproducible", "wheel-default-tag"],
+    "Project metadata": ["metadata-utils", "requirement-normalization", "project-metadata-basic", "project-metadata-errors", "core-metadata-roundtrip"],
+    "Version files and schemes": ["version-file", "version-file-errors", "standard-version-scheme"],
+    "Plugins and builders": ["plugin-builtins", "builder-utils", "wheel-default-tag"]
+  },
+  "boundary": "Only an unprivileged child imports candidate code. Trusted expected observations and grading remain in the separate verifier image."
+}

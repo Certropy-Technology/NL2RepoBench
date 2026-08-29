@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hatchling",
+  "terminal_kind": "valid",
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/hatchling/compiled-production-pinned/hatchling/bundle.manifest.json",
+    "sha256": "sha256:51808287df2984be49e330f32ffb5493bd627263e1159335c9c2da5733aed348",
+    "canonical_manifest_digest": "sha256:5bd96ba59525d89e7836125190af8d51c497883dcc383ca0b334467b81e09c8f",
+    "file_count": 60,
+    "toolchain_lock_digest": "sha256:f3fc550fa70636c57aaa7ffc007f918977281a66242dc12ae75081af29f5209c"
+  },
+  "source_freeze": {
+    "upstream_url": "https://github.com/pypa/hatch",
+    "revision": "ed8e30bebf98f2fe4d70c18a32a50a8160c391cb",
+    "distribution_subtree": "backend/",
+    "source_digest": "sha256:b3acd9e2fcdc976fd53eaa6f496ea2e32ad380d5046ec1bd7514c82cca5692d7",
+    "license_spdx": "MIT",
+    "license_digest": "sha256:7f143a8127ad4873862d70854b5bd2abd0085aa73e64fd2b08704a3b9f5c07fc",
+    "submodules": []
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime": "nl2repobench/openhands-sdk-fork@sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "agent_runtime_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "network_policy": "no-network",
+    "verifier_mode": "separate",
+    "candidate_lock": {
+      "path": ".nl2repo/artifacts/private/sha256/1c/1c65ec786efe51baa5f9ff90c60c963719c41216451db6f18842eb89ba231a42",
+      "sha256": "sha256:1c65ec786efe51baa5f9ff90c60c963719c41216451db6f18842eb89ba231a42",
+      "size_bytes": 1317
+    },
+    "verifier_lock": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/hatchling/verifier/requirements.lock.txt",
+      "sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 21,
+    "collection": "21 unique scenario leaves; no collection errors",
+    "expected_sha256": "sha256:7005fa69e532e65751b8aad78aaacc34a0eaa60cc9b5474ac623d00c450376a4",
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/hatchling/compiled-production-pinned/hatchling -a oracle --job-name hatchling-authoring-pinned-oracle-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-oracle-20260828 --n-concurrent 1 --allow-environment-host github.com --yes",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 21,
+    "collected": 21,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/hatchling-authoring-pinned-oracle-20260828/hatchling-authoring-pinned-oracle-20260828/hatchling__9raUcrc/verifier/grading.json",
+      "sha256": "sha256:6f961086f12bd42e314f560020387b0acc7e42c2cbbc4c12948dd2b06b02268a"
+    },
+    "network": {
+      "path": ".nl2repo/runs/hatchling-authoring-pinned-oracle-20260828/hatchling-authoring-pinned-oracle-20260828/hatchling__9raUcrc/verifier/network.json",
+      "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/hatchling/compiled-production-pinned/hatchling -a nop --job-name hatchling-authoring-pinned-empty-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-empty-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/hatchling-authoring-pinned-empty-20260828/hatchling-authoring-pinned-empty-20260828/hatchling__zxEt4Pw/verifier/grading.json", "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"},
+      "network": {"path": ".nl2repo/runs/hatchling-authoring-pinned-empty-20260828/hatchling-authoring-pinned-empty-20260828/hatchling__zxEt4Pw/verifier/network.json", "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-pinned/hatchling-stub -a oracle --job-name hatchling-authoring-pinned-stub-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-stub-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 21,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/hatchling-authoring-pinned-stub-20260828/hatchling-authoring-pinned-stub-20260828/hatchling-stub__8JmWFAE/verifier/grading.json", "sha256": "sha256:db77443e5719742a9745cbc7f7887da1d11ae6ebb0896bc286a655c798e8d1fc"},
+      "network": {"path": ".nl2repo/runs/hatchling-authoring-pinned-stub-20260828/hatchling-authoring-pinned-stub-20260828/hatchling-stub__8JmWFAE/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-pinned/hatchling-forgery -a oracle --job-name hatchling-authoring-pinned-forgery-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-forgery-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 21,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/runs/hatchling-authoring-pinned-forgery-20260828/hatchling-authoring-pinned-forgery-20260828/hatchling-forgery__bHjjo8i/verifier/grading.json", "sha256": "sha256:db77443e5719742a9745cbc7f7887da1d11ae6ebb0896bc286a655c798e8d1fc"},
+      "network": {"path": ".nl2repo/runs/hatchling-authoring-pinned-forgery-20260828/hatchling-authoring-pinned-forgery-20260828/hatchling-forgery__bHjjo8i/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-pinned/hatchling-install-hang -a oracle --job-name hatchling-authoring-pinned-install-hang-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-install-hang-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/hatchling-authoring-pinned-install-hang-20260828/hatchling-authoring-pinned-install-hang-20260828/hatchling-install-hang__aZuuKWX/verifier/grading.json", "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"},
+      "network": {"path": ".nl2repo/runs/hatchling-authoring-pinned-install-hang-20260828/hatchling-authoring-pinned-install-hang-20260828/hatchling-install-hang__aZuuKWX/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-pinned/hatchling-call-hang -a oracle --job-name hatchling-authoring-pinned-call-hang-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-call-hang-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 21,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/hatchling-authoring-pinned-call-hang-20260828/hatchling-authoring-pinned-call-hang-20260828/hatchling-call-hang__5GgX2WH/verifier/grading.json", "sha256": "sha256:db77443e5719742a9745cbc7f7887da1d11ae6ebb0896bc286a655c798e8d1fc"},
+      "network": {"path": ".nl2repo/runs/hatchling-authoring-pinned-call-hang-20260828/hatchling-authoring-pinned-call-hang-20260828/hatchling-call-hang__5GgX2WH/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/hatchling/compiled-production-pinned/hatchling -a oracle --job-name hatchling-authoring-pinned-offline-20260828 -o .nl2repo/runs/hatchling-authoring-pinned-offline-20260828 --n-concurrent 1 --allow-environment-host github.com --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 21,
+      "passed": 21,
+      "reward": 1.0,
+      "network": {"path": ".nl2repo/runs/hatchling-authoring-pinned-offline-20260828/hatchling-authoring-pinned-offline-20260828/hatchling__66MM9Ww/verifier/network.json", "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e", "public_network_available": false}
+    }
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/hatchling", "exit_code": 0, "log": {"path": ".nl2repo/evidence/hatchling-validate-source.log", "sha256": "sha256:0b1f672981d070951507c962b57bc2bae92af4839431ab75623004182528a76e"}},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": {"path": ".nl2repo/evidence/hatchling-lint-network.log", "sha256": "sha256:345768b9e6568263f8dee4996e26b80b31baca5394b7edbc09518a9aac6979ff"}},
+    {"command": "uv run nl2repo harbor compile catalog/sources/hatchling --output .nl2repo/authoring-work/python-author-wave2-20260828/hatchling/compiled-production-pinned --toolchain .nl2repo/authoring-work/python-author-wave2-20260828/hatchling/toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": {"path": ".nl2repo/evidence/hatchling-compile-pinned.log", "sha256": "sha256:173b49cb696bf503e555d8cacd530661e55561fc068485aa7b3b89ea010da8fd"}}
+  ],
+  "residual_risks": [
+    "The source manifest records the frozen image-family Python version as 3.12.14; the authoring host is Python 3.12.11. Harbor execution used the digest-pinned container and passed all gates.",
+    "The task-local pinned toolchain and copied Harbor/verifier locks are authoring artifacts; integrator must preserve their content-addressed references when promoting the generated runtime.",
+    "No model Agent Run, blind review, dataset integration, or publication was performed in this lane."
+  ]
+}

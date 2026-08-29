@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hatchling",
+  "revision": "ed8e30bebf98f2fe4d70c18a32a50a8160c391cb",
+  "distribution_root": "backend",
+  "version": "1.32.0",
+  "public_modules": [
+    "hatchling.build",
+    "hatchling.builders.config",
+    "hatchling.builders.plugin.interface",
+    "hatchling.builders.sdist",
+    "hatchling.builders.utils",
+    "hatchling.builders.wheel",
+    "hatchling.metadata.core",
+    "hatchling.metadata.spec",
+    "hatchling.metadata.utils",
+    "hatchling.plugin.manager",
+    "hatchling.version.core",
+    "hatchling.version.scheme.standard"
+  ],
+  "runtime_dependencies": [
+    "packaging>=24.2",
+    "pathspec>=0.10.1",
+    "pluggy>=1.0.0",
+    "tomlkit>=0.11.1",
+    "trove-classifiers",
+    "tomli>=1.2.2; python_version < '3.11'"
+  ],
+  "entry_points": {"console_scripts": {"hatchling": "hatchling.cli:hatchling"}},
+  "excluded": [
+    "root hatch CLI package",
+    "binary/app network and Cargo execution",
+    "third-party plugins",
+    "live package indexes",
+    "platform-specific macOS rewriting"
+  ]
+}
