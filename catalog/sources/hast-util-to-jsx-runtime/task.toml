@@ -1,0 +1,109 @@
+schema_version = "2.0"
+task_id = "hast-util-to-jsx-runtime"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "ast-to-jsx-runtime"
+tags = ["node", "npm", "esm", "hast", "jsx", "react", "mdx", "ast"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/hast-util-to-jsx-runtime"
+revision = "b0920cd0837052144ebe94f53d8f792b05619444"
+license_spdx = "MIT"
+source_digest = "sha256:0b65e0053265f212057697912c49e5d929c91d254495433fbb2a416682b91306"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier phases use an immutable npm v3 cache and have no network. Only the trusted Oracle receives the exact source archive and a run-scoped upstream host authorization."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/estree", "@types/hast", "@types/unist", "comma-separated-tokens", "devlop", "estree-util-is-identifier-name", "hast-util-whitespace", "mdast-util-mdx-expression", "mdast-util-mdx-jsx", "mdast-util-mdxjs-esm", "property-information", "space-separated-tokens", "style-to-js", "unist-util-position", "vfile-message"]
+
+[dependencies.artifact]
+digest = "sha256:5c1b001b38f695c16aecd46b6a7f5678f0a72fba0afdc164aae6388c5912dec7"
+size_bytes = 4935680
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:5c1b001b38f695c16aecd46b6a7f5678f0a72fba0afdc164aae6388c5912dec7"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:c2863c9064f5ce63d42e41f9aa65c2dee8b52ea0b5aaa2c0ecb9f1bb771467cd"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:c2863c9064f5ce63d42e41f9aa65c2dee8b52ea0b5aaa2c0ecb9f1bb771467cd"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build an ESM hast tree to JSX runtime adapter with HTML/SVG properties, deterministic keys, components, styles, and MDX evaluation."
+keywords = ["node", "npm", "esm", "hast", "jsx", "react", "mdx", "ast"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source, public API contract, integrity-checked npm v3 closure, separate subprocess verifier, production compile, Oracle 24/24 reward 1.0, and bounded controls are complete. Independent review, model Agent Run, and publication remain outside this lane."
+
+[oracle_bundle]
+digest = "sha256:5b553eda78f197668dc3342e746d6a420ab3f25f53436189c310040e08032f56"
+size_bytes = 194560
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:5b553eda78f197668dc3342e746d6a420ab3f25f53436189c310040e08032f56"
+visibility = "private"

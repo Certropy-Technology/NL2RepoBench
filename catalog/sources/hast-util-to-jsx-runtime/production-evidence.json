@@ -1,0 +1,223 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/hast-util-to-jsx-runtime",
+    "revision": "b0920cd0837052144ebe94f53d8f792b05619444",
+    "source_digest": "sha256:0b65e0053265f212057697912c49e5d929c91d254495433fbb2a416682b91306",
+    "license_spdx": "MIT",
+    "license_digest": "sha256:dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb",
+    "source_worktree_clean_before_probes": true,
+    "frozen_package": "hast-util-to-jsx-runtime@2.3.6",
+    "upstream_runtime_tests": {
+      "command": "npm run test-api",
+      "collected": 74,
+      "passed": 74,
+      "failed": 0,
+      "exit_code": 0
+    }
+  },
+  "receipt_binding": {
+    "dependency_artifact": "sha256:5c1b001b38f695c16aecd46b6a7f5678f0a72fba0afdc164aae6388c5912dec7",
+    "commands_artifact": "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661",
+    "test_bundle": "sha256:c2863c9064f5ce63d42e41f9aa65c2dee8b52ea0b5aaa2c0ecb9f1bb771467cd",
+    "oracle_bundle": "sha256:5b553eda78f197668dc3342e746d6a420ab3f25f53436189c310040e08032f56",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled-final/hast-util-to-jsx-runtime/bundle.manifest.json",
+    "sha256": "sha256:d0aa9aa597976a7727047eaf52d39b5ec084d39bf85fc6a4dd2dfe1a48e8c3b3",
+    "canonical_manifest_digest": "sha256:0b92cce0de77a62a1b0a5afb0d5e7a6f595c5dabdb4da90e2141708f50af5800",
+    "validated_source_digest": "sha256:8796c7492dfa118feabd9006d12c27278941a4d74b3777510e2268bd0e773317",
+    "mode": "production",
+    "schema_version": "2.0",
+    "file_count": 619,
+    "integrity_errors": 0,
+    "repeat_compile_byte_identical": true
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "agent_runtime": {
+      "image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+      "fork_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
+      "toolchain_expected_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+      "observed_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+      "matches_toolchain": false
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden"
+    }
+  },
+  "dependency_closure": {
+    "bundle_manifest": "npm-v3-cache-v1",
+    "cache_content_entries_verified": 135,
+    "cache_content_bytes_verified": 4144086,
+    "offline_install_command": "npm ci --offline --omit=dev --ignore-scripts --no-audit --no-fund",
+    "offline_install_exit_code": 0,
+    "top_level_node_modules_entries": 62
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "verifier_protocol": "custom-json-v1",
+    "expected_total": 24,
+    "collection": "24 unique node:test leaves; no collection errors",
+    "traceability": "catalog/sources/hast-util-to-jsx-runtime/traceability.md"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/hast-util-to-jsx-runtime -a oracle --job-name hast-util-to-jsx-runtime-final-oracle-20260828 -o .nl2repo/runs-final/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/final-matrix/oracle/grading.json",
+      "sha256": "sha256:6c99b2c97900798f2a06f6b9d5f4bb2a645c2d436981f7bc3edb13eb47915273"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/final-matrix/oracle/network.json",
+      "sha256": "sha256:1517eabc67c8c23c917decb2e1054a6edbb9f7dfe2f3aa218a443f6bdaf6060c"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-empty -a oracle --job-name hast-util-to-jsx-runtime-final-empty-20260828 -o .nl2repo/runs-final/controls/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/evidence/final-matrix/empty/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/empty/network.json", "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e"},
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-stub -a oracle --job-name hast-util-to-jsx-runtime-final-stub-20260828 -o .nl2repo/runs-final/controls/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/evidence/final-matrix/stub/grading.json", "sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/stub/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"},
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-forgery -a oracle --job-name hast-util-to-jsx-runtime-final-forgery-20260828 -o .nl2repo/runs-final/controls/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/evidence/final-matrix/forgery/grading.json", "sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/forgery/network.json", "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"},
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-hang -a oracle --job-name hast-util-to-jsx-runtime-final-hang-20260828 -o .nl2repo/runs-final/controls/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading": {"path": ".nl2repo/evidence/final-matrix/hang/grading.json", "sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/hang/network.json", "sha256": "sha256:f68f0fda7fb7712ad269ef0b0c7a5ae7f0e327426ffb2680ad5d41f2db7539bc"},
+      "public_network_available": false
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-install-script -a oracle --job-name hast-util-to-jsx-runtime-final-install-script-20260828 -o .nl2repo/runs-final/controls/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/evidence/final-matrix/install-script/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/install-script/network.json", "sha256": "sha256:f68f0fda7fb7712ad269ef0b0c7a5ae7f0e327426ffb2680ad5d41f2db7539bc"},
+      "public_network_available": false
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-loader-hook -a oracle --job-name hast-util-to-jsx-runtime-final-loader-hook-20260828 -o .nl2repo/runs-final/controls/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/evidence/final-matrix/loader-hook/grading.json", "sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/loader-hook/network.json", "sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9"},
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/hast-util-to-jsx-runtime-offline -a oracle --job-name hast-util-to-jsx-runtime-final-offline-20260828 -o .nl2repo/runs-final/controls/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/evidence/final-matrix/offline/grading.json", "sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a"},
+      "network": {"path": ".nl2repo/evidence/final-matrix/offline/network.json", "sha256": "sha256:b17957e4490bdce5968e61df6e6a582fe7f1b31b85fc1efc8c6aee9684babf72"},
+      "public_network_available": false
+    }
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone --filter=blob:none --no-checkout https://github.com/syntax-tree/hast-util-to-jsx-runtime; git fetch --depth=1 origin b0920cd0837052144ebe94f53d8f792b05619444; git checkout --detach b0920cd0837052144ebe94f53d8f792b05619444; git archive --format=tar --prefix=source/ HEAD", "tool_version": "git 2.x", "exit_code": 0},
+    {"stage": "upstream-lock-probe", "command": "npm ci --ignore-scripts --no-audit --no-fund", "tool_version": "node 22.23.1; npm 10.9.8", "exit_code": 1, "result": "Expected failure: the upstream repository does not commit package-lock.json."},
+    {"stage": "upstream-runtime-baseline", "command": "npm install --ignore-scripts --no-audit --no-fund && npm run test-api", "tool_version": "node 22.23.1; npm 10.9.8", "exit_code": 0, "result": "74/74 runtime leaves passed."},
+    {"stage": "upstream-full-test-probe", "command": "npm test", "tool_version": "node 22.23.1; npm 10.9.8", "exit_code": 1, "result": "Four TypeScript declaration diagnostics from mutable caret-resolved dev dependencies; runtime test-api remained 74/74."},
+    {"stage": "dependency-closure", "command": "npm cache verify; npm ci --offline --omit=dev --ignore-scripts --no-audit --no-fund", "tool_version": "npm 10.9.8 host audit; production npm 11.17.0", "exit_code": 0, "result": "135 cache content entries verified; clean offline runtime install completed."},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/hast-util-to-jsx-runtime", "tool_version": "current nl2repobench checkout", "exit_code": 0},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "current nl2repobench checkout", "exit_code": 0, "result": "0 errors; 0 task-local findings; 141 unrelated existing warnings."},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/hast-util-to-jsx-runtime --output .nl2repo/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "current compiler; locked Node toolchain", "exit_code": 0},
+    {"stage": "repeat-compile", "command": "repeat production compile and diff -qr compiled-final compiled-final-repeat", "tool_version": "current compiler", "exit_code": 0, "result": "byte-identical; 619 files; 0 integrity errors."},
+    {"stage": "oracle", "command": "official Harbor Oracle command recorded in oracle.command", "tool_version": "Harbor 0.21.0", "exit_code": 0, "result": "valid=true; 24/24; reward=1.0; public network false."},
+    {"stage": "controls", "command": "seven official Harbor Oracle control runs recorded under controls", "tool_version": "Harbor 0.21.0", "exit_code": 0, "result": "empty/stub/forgery/hang/install-script/loader-hook/offline all passed control expectations."},
+    {"stage": "focused-regression", "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_artifacts_and_state.py tests/test_harbor_compiler.py tests/test_network_policy.py tests/test_node_controls.py tests/test_node_control_summary.py tests/test_node_foundation.py tests/test_node_production_gate.py", "tool_version": "current locked Python test environment", "exit_code": 0, "result": "134 passed."},
+    {"stage": "production-gate", "command": "uv run python scripts/validate_node_production.py --task catalog/sources/hast-util-to-jsx-runtime --bundle .nl2repo/compiled-final/hast-util-to-jsx-runtime --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/runs-final/oracle --controls .nl2repo/evidence/final-controls-summary.json --output .nl2repo/evidence/final-production-validation.json", "tool_version": "current checkout", "exit_code": 0}
+  ],
+  "residual_risks": [
+    "The shared Docker tag for the OpenHands runtime currently resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, while toolchain.node.lock.toml expects sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f. The integrator must restore or deliberately relock and revalidate the official immutable runtime before any model Agent Run.",
+    "Independent blind review, traceability approval, model Agent Run, and publication remain integrator work.",
+    "The upstream full test build has current TypeScript declaration drift; the frozen runtime behavior passed 74/74 upstream and 24/24 through the production verifier.",
+    "Full Harbor run trees and private artifacts remain task-local under .nl2repo."
+  ]
+}
