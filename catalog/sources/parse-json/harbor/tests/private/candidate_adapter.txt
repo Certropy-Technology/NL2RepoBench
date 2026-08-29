@@ -1,0 +1,38 @@
+import {readFileSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+import {join} from 'node:path';
+
+const root = join(process.cwd(), 'node_modules', 'parse-json');
+const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+const entry = manifest.exports?.default ?? manifest.main;
+if (manifest.name !== 'parse-json' || manifest.version !== '8.3.0' || manifest.type !== 'module' || !entry?.startsWith('./')) {
+  throw new Error('invalid candidate package shape');
+}
+const api = await import(pathToFileURL(join(root, entry)).href);
+const parseJson = api.default;
+const JSONError = api.JSONError;
+
+const data = JSON.parse(readFileSync(0, 'utf8'));
+if (!data || typeof data !== 'object' || !Array.isArray(data.args)) throw new Error('invalid request');
+const request = data.args[0];
+let result;
+if (data.operation === 'inventory') {
+  result = {packageName: manifest.name, packageVersion: manifest.version, packageShape: true, runtimeEntry: true, declarationEntry: true, exportNames: Object.keys(api).sort()};
+} else if (data.operation === 'parse') {
+  let reviver;
+  if (request.reviver === 'double') reviver = (key, value) => typeof value === 'number' ? value * 2 : value;
+  if (request.reviver === 'key') reviver = (key, value) => key === 'remove' ? undefined : value;
+  if (request.reviver === 'root') reviver = (key, value) => key === '' ? {wrapped: value} : value;
+  try {
+    result = {ok: true, value: request.filenameSecond ? parseJson(request.input, request.filenameSecond) : parseJson(request.input, reviver, request.filename)};
+  } catch (error) {
+    result = {ok: false, error: {name: error.name, message: error.message, fileName: error.fileName, codeFrame: error.codeFrame, rawCodeFrame: error.rawCodeFrame, causeName: error.cause?.name, causeMessage: error.cause?.message, instanceOf: error instanceof JSONError}};
+  }
+} else if (data.operation === 'legacy') {
+  const error = new JSONError(request.message);
+  if (request.filename) error.fileName = request.filename;
+  result = {name: error.name, message: error.message, ...(error.fileName ? {fileName: error.fileName} : {})};
+} else {
+  throw new Error('operation not allowlisted');
+}
+process.stdout.write(JSON.stringify({ok: true, value: result, undefinedValue: result === undefined}) + '\n');

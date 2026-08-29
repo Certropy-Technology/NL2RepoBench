@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parse-json",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "blocker": null,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/parse-json",
+    "revision": "6fee59751db59a539fdf53537101a1d7c6378a65",
+    "source_digest": "sha256:afd0b4abb4fe0d8f93ca78a7a79e338ad6be4fb428a889b5227656ce7c43e8ad",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": []
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": "node@24.19.0",
+    "package_manager": "npm@11.17.0",
+    "platform": "linux/amd64",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "dependencies": {
+    "lockfile_sha256": "sha256:e4d8b372661c034be2b58e9129b463477fa9d65a56709733ebc34bdc8d3489ee",
+    "artifact_digest": "sha256:b0e869dfb581fcaa68c4575229a675833dcfb0c21aa6ff5fce5d3e0d161f5f0d",
+    "artifact_size_bytes": 1689600,
+    "install": "npm ci --offline --ignore-scripts --no-audit --no-fund"
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 33,
+    "metric_contract": "node-test-leaf-pass-rate-v1"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/parse-json-current/parse-json",
+    "mode": "production",
+    "schema_version": "2.0",
+    "file_count": 151,
+    "bundle_manifest_sha256": "sha256:632045cfea64802c615fffd73fac42d88ae2809eb09bfc7547283aa598cb8b1a",
+    "canonical_manifest_digest": "sha256:674024f2697ffc5274038c6f90aa1d4515d3e938e37d93afcd48fbad5bf0b323"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/parse-json-current/parse-json -a oracle --job-name parse-json-current-oracle -o .nl2repo/runs --n-concurrent 1 --allow-agent-host github.com --allow-agent-host codeload.github.com --yes",
+    "harbor_version": "0.21.0",
+    "command_exit_code": 0,
+    "exit_code": 0,
+    "valid": true,
+    "passed": 33,
+    "collected": 33,
+    "expected_total": 33,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/runs/parse-json-current-oracle/parse-json__nCSGBdb/verifier/grading.json", "sha256": "sha256:83cf29d7669934107b94f8cdd4b704f3d41d8631942ccfe3c471d595e249aa4d"},
+    "network": {"path": ".nl2repo/runs/parse-json-current-oracle/parse-json__nCSGBdb/verifier/network.json", "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9"}
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/parse-json-empty -a oracle --job-name parse-json-current-empty -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-empty/parse-json-empty__nxeNUnF/verifier/grading.json", "sha256": "sha256:17941ee2a96977ac93548e4fc0892eb4bee196d5d3d68f43bb54c86811fa4e6c"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-empty/parse-json-empty__nxeNUnF/verifier/network.json", "sha256": "sha256:ebaf9a04ea12fc4599af1e3c4f5fd20d871f6415c0fb565098c7f12f00107230"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/stub/parse-json-stub -a oracle --job-name parse-json-current-stub -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "collected": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-stub/parse-json-stub__pDDtJ5G/verifier/grading.json", "sha256": "sha256:35a9ed2dbbc0a954591b43bbe6b8011f857065c4fbf5575ab4d87bdf81b42725"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-stub/parse-json-stub__pDDtJ5G/verifier/network.json", "sha256": "sha256:bbf92aa9d9a5a5dcc334ca0a12954829a0d4f744d7076de78726ccb09a47a0d2"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/parse-json-forgery -a oracle --job-name parse-json-current-forgery -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 33,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-forgery/parse-json-forgery__9DNBnsH/verifier/grading.json", "sha256": "sha256:6f8830d79039ad904bd49798bea6c06e2fc5d0a4734dcd49cd0feabb6ebcebdf"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-forgery/parse-json-forgery__9DNBnsH/verifier/network.json", "sha256": "sha256:44ead75e2e1339c0e347a5761170f9bf5620e4b9658d9ff0ca238c2372cc739b"}
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/parse-json-install-script -a oracle --job-name parse-json-current-install-script -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-install-script/parse-json-install-script__cFg4j3v/verifier/grading.json", "sha256": "sha256:17941ee2a96977ac93548e4fc0892eb4bee196d5d3d68f43bb54c86811fa4e6c"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-install-script/parse-json-install-script__cFg4j3v/verifier/network.json", "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"}
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/parse-json-loader-hook -a oracle --job-name parse-json-current-loader-hook -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "collected": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-loader-hook/parse-json-loader-hook__5uWVyLV/verifier/grading.json", "sha256": "sha256:35a9ed2dbbc0a954591b43bbe6b8011f857065c4fbf5575ab4d87bdf81b42725"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-loader-hook/parse-json-loader-hook__5uWVyLV/verifier/network.json", "sha256": "sha256:44ead75e2e1339c0e347a5761170f9bf5620e4b9658d9ff0ca238c2372cc739b"}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/parse-json-hang -a oracle --job-name parse-json-current-hang -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-hang/parse-json-hang__cMA5jLE/verifier/grading.json", "sha256": "sha256:5aab3ede7c5575833d03108e2e581969804d58a9ca81d9e807a722c848888836"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-hang/parse-json-hang__cMA5jLE/verifier/network.json", "sha256": "sha256:fdb06e61cbadf1082d41d9fb698f346fdb286285adfe353e7a588f43fb3bdff3"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/parse-json-current/parse-json-offline -a oracle --job-name parse-json-current-offline -o .nl2repo/runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "collected": 33,
+      "reward": 0.030303030303030304,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/runs/parse-json-current-offline/parse-json-offline__pR9cgYo/verifier/grading.json", "sha256": "sha256:35a9ed2dbbc0a954591b43bbe6b8011f857065c4fbf5575ab4d87bdf81b42725"},
+      "network": {"path": ".nl2repo/runs/parse-json-current-offline/parse-json-offline__pR9cgYo/verifier/network.json", "sha256": "sha256:178876e2bc3ab88c62536cac7fab68dd20d142e67bc446c50f8a930f1e39bb58"}
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/parse-json",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; one expected parse-json Oracle host-authorization warning"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/parse-json --output .nl2repo/authoring-work/node-author-wave2-20260828/parse-json-final4 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "Harbor 0.21.0 trusted Oracle and seven control runs",
+      "exit_code": 0,
+      "result": "No model Agent Run was started"
+    }
+  ],
+  "residual_risks": [
+    "No model Agent Run, blind review, independent traceability review, or publication was performed in this authoring lane.",
+    "The local OpenHands runtime tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, while toolchain.node.lock.toml records sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; the integrator must restore or verify the locked runtime image before a model Agent Run.",
+    "The 33-leaf verifier is a bounded public-contract adaptation, not the complete upstream AVA and tsd suite."
+  ]
+}
