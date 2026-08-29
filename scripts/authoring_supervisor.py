@@ -55,13 +55,21 @@ DEFAULT_PLAN_FILES = {
     "go": "go-author-wave2-20260828.json",
 }
 GO_DISCOVERY_REPOSITORIES = {
+    "go-btree": "google/btree",
     "go-cast": "spf13/cast",
+    "go-cmp": "google/go-cmp",
+    "go-decimal": "shopspring/decimal",
     "go-gjson": "tidwall/gjson",
     "go-humanize": "dustin/go-humanize",
+    "go-lo": "samber/lo",
     "go-redis": "redis/go-redis",
     "go-semver": "Masterminds/semver",
+    "go-snappy": "golang/snappy",
+    "go-spew": "davecgh/go-spew",
     "go-structs": "fatih/structs",
     "go-uuid": "google/uuid",
+    "go-xstrings": "huandu/xstrings",
+    "go-xxhash": "cespare/xxhash",
     "go-zap": "uber-go/zap",
 }
 DEFAULT_WORKERS = 3

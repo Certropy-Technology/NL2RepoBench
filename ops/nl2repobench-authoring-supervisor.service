@@ -14,7 +14,9 @@ ExecStart=/data/NL2RepoBench-integration-20260827/scripts/run_authoring_supervis
 Restart=always
 RestartSec=30
 TimeoutStopSec=45
-KillMode=control-group
+# Controllers and the archive watcher have their own durable lifecycle.  Do
+# not terminate in-flight authoring work when the supervisor itself restarts.
+KillMode=process
 LimitNOFILE=8192
 
 [Install]

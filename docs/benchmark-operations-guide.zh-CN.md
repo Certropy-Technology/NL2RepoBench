@@ -336,6 +336,10 @@ systemctl start nl2repobench-authoring-supervisor.service
 Scheduler 按语言轮转，并以 `batch_id` 区分 base 与 generated lane；因此 Go 的新 lane
 不会被同语言耗尽的旧 lane 掩盖。
 
+Supervisor service 使用 `KillMode=process`：重启或升级 supervisor 仅替换其主进程，
+不会终止已经 claim 的 controller、Pi session 或 archive watcher。它们由 lease、状态
+文件和 stale-claim reconciliation 收尾；不要用 systemd stop 作为取消在途 authoring 的方式。
+
 `max-total-controllers` 的硬上限是 6，`controller-concurrency` 的硬上限是 4；默认值
 分别为 3 和 1。增加 controller 会在下一轮逐步启动新的 Loop；降低配置不会杀掉当前
 正在执行的 task，当前 task 收尾后才停止继续 claim。`enabled=false` 停止新 claim，
