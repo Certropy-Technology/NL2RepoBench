@@ -1,0 +1,92 @@
+schema_version = "1.0"
+task_id = "jaraco-context"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "context-management-and-safe-archives"
+tags = ["python", "context-managers", "tarfile", "safety", "decorators", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jaraco/jaraco.context"
+revision = "bfcb95c784e110521fa907e890b2eea34b0ef349"
+license_spdx = "MIT"
+source_digest = "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+system_packages = []
+network_mode = "no-network"
+build_command = "Install the hash-locked setuptools/setuptools_scm/coherent.licensed build closure during image build; candidate installation uses pip --target --no-deps --no-build-isolation."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The build backend closure is installed from the private hash lock during image build. Agent and separate verifier execution are offline; only the trusted Oracle receives a run-scoped GitHub source-host exception and verifies the local archive digest before restoring it."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "coherent-licensed==0.5.2",
+  "packaging==26.3",
+  "setuptools==84.0.0",
+  "setuptools-scm==10.2.1",
+  "vcs-versioning==2.3.1",
+]
+lock_artifact = { digest = "sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551", size_bytes = 955, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 43
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:014273926f82071bd3901bfa930a831d12e21f5b599de8ed3c0de46554ba8a8d", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:014273926f82071bd3901bfa930a831d12e21f5b599de8ed3c0de46554ba8a8d", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build jaraco.context from an empty workspace and reproduce its deterministic context-manager, exception, decorator, repository, and safe tar extraction behavior through a separate subprocess verifier."
+keywords = ["python", "context-managers", "tarfile", "safety", "decorators", "separate-verifier"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 3072
+storage_mb = 6144
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dcab620df156937db1eb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dcab620df156937db1eb"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-wave2-20260828"
+reason = "The frozen source, hash-locked build closure, private custom verifier, digest-checked Oracle, and controls are authored; direct reference and image probes passed. Harbor Oracle and controls remain for the separate Agent Run loop."

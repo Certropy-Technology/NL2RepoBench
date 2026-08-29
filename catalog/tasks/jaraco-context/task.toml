@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/jaraco-context"
+version = "1.0.0"
+description = "Build jaraco.context from an empty workspace and reproduce its deterministic context-manager, exception, decorator, repository, and safe tar extraction behavior through a separate subprocess verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "context-managers",
+    "tarfile",
+    "safety",
+    "decorators",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "medium"
+category = "context-management-and-safe-archives"
+tags = [
+    "python",
+    "context-managers",
+    "tarfile",
+    "safety",
+    "decorators",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 43
+canonical_manifest_digest = "sha256:309a36c8947db8b59de732ace91aff8e8799bd49f9a1a7131746e4347a042ef0"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 2400.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 12288
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 3072
+storage_mb = 6144

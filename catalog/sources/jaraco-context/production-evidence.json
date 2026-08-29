@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "terminal_kind": "intermediate",
+  "status": "packaged",
+  "source_revision": "bfcb95c784e110521fa907e890b2eea34b0ef349",
+  "source_tree": "d47521686d049a7aa36dbcbd42b4d594bf81b47a",
+  "source_archive_sha256": "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328",
+  "license": "MIT",
+  "environment": {
+    "python": "3.12.14",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "toolchain_lock": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551",
+    "size_bytes": 955,
+    "packages": [
+      "coherent-licensed==0.5.2",
+      "packaging==26.3",
+      "setuptools==84.0.0",
+      "setuptools-scm==10.2.1",
+      "vcs-versioning==2.3.1"
+    ]
+  },
+  "bundles": {
+    "verifier": {"sha256": "sha256:014273926f82071bd3901bfa930a831d12e21f5b599de8ed3c0de46554ba8a8d", "size_bytes": 30720},
+    "oracle": {"sha256": "sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dcab620df156937db1eb", "size_bytes": 10240}
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 43,
+    "reference_probe": {"passed": 43, "collected": 43, "exit_code": 0},
+    "upstream_probe": {"passed": 4, "skipped": 1, "collected": 5, "exit_code": 0}
+  },
+  "commands": [
+    {"command": "git clone --no-checkout https://github.com/jaraco/jaraco.context; git checkout --detach bfcb95c784e110521fa907e890b2eea34b0ef349", "exit_code": 0},
+    {"command": "git archive --format=tar bfcb95c784e110521fa907e890b2eea34b0ef349 | sha256sum", "exit_code": 0, "sha256": "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328"},
+    {"command": "uv run --with pytest==9.0.2 --with portend==3.2.1 pytest -q tests/test_safety.py", "exit_code": 0},
+    {"command": "docker run python:3.12.14-slim-bookworm with hash-locked build closure and upstream tests", "exit_code": 0},
+    {"command": "direct custom-json-v1 verifier against exact source checkout", "exit_code": 0, "passed": 43, "collected": 43},
+    {"command": "docker run nl2repobench/openhands-sdk-fork:930e9b1da with Oracle bundle", "exit_code": 0, "source_archive_check": "passed"}
+  ],
+  "oracle": null,
+  "controls": null,
+  "residual_risks": [
+    "Harbor Oracle and empty/stub/forgery/offline controls are deferred to the separate Agent Run loop by lane policy.",
+    "The source's upstream test suite is intentionally small; the 43-leaf contract expands deterministic public behavior without importing candidate code into the trusted verifier.",
+    "The task uses the current commit-derived development version rather than the reachable v6.1.2 tag version."
+  ],
+  "handoff_status": "awaiting-agent-run"
+}
