@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_root": "fsspec/tests and fsspec/implementations/tests",
+  "upstream_test_modules": 64,
+  "upstream_test_physical_lines": 18174,
+  "source_collection_observation": "The full suite contains remote, optional-dependency, native, and service-backed tests and is not used as a transparent root pytest import.",
+  "frozen_private_collection": 18,
+  "collection_method": "18 deterministic custom-json-v1 leaves executed through candidate_client",
+  "leaf_groups": {
+    "memory_filesystem": 5,
+    "mapping_and_registry": 3,
+    "core_opening_and_urls": 4,
+    "utilities": 3,
+    "caches": 3
+  },
+  "determinism": "Each scenario uses fixed bytes, paths, arguments, and hash-seed-independent assertions; timestamps and object identities are excluded."
+}

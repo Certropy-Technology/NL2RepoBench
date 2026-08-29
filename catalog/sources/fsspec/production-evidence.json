@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fsspec",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/fsspec/filesystem_spec",
+    "revision": "9b7cd481e5d1c4395752e69653443e6b05ac9a3e",
+    "source_digest": "sha256:9a0fc72facc3b4b8adc7ae9d6719e7d06e7a9a677ddab826931d71079e688e0a",
+    "license_spdx": "BSD-3-Clause"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/compiled-current/fsspec/bundle.manifest.json",
+    "sha256": "sha256:20df7f985d7797c091711edb1345106744238ee47112eecd6a147653ad276a8b"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/compiled-current/fsspec -a oracle --job-name fsspec-authoring-oracle-current-retry-20260828 -o .nl2repo/runs/fsspec-authoring-oracle-current-retry-20260828 --allow-agent-host github.com --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/fsspec-authoring-oracle-current-retry-20260828/fsspec-authoring-oracle-current-retry-20260828/fsspec__kckuAhE/verifier/grading.json",
+      "sha256": "sha256:f9a9e40d41e78472e258612205656d6dc282ea5da132aa06ecefdd716146e014"
+    },
+    "network": {
+      "path": ".nl2repo/runs/fsspec-authoring-oracle-current-retry-20260828/fsspec-authoring-oracle-current-retry-20260828/fsspec__kckuAhE/verifier/network.json",
+      "sha256": "sha256:33b8e715a559574178c85c04b15bddd8f562b3632d707222cde7072bd8f6e5ea"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 18,
+      "passed": 18,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/compiled-current/fsspec -a nop --job-name fsspec-authoring-empty-current-20260828 -o .nl2repo/runs/fsspec-authoring-empty-current-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/fsspec-authoring-empty-current-20260828/fsspec-authoring-empty-current-20260828/fsspec__8jSzqbV/verifier/grading.json",
+        "sha256": "sha256:1452e1c4bb23a5cb6c378bd6778e32d4cc63bb5db7489e1f5f2b4a9b97694e57"
+      },
+      "network": {
+        "path": ".nl2repo/runs/fsspec-authoring-empty-current-20260828/fsspec-authoring-empty-current-20260828/fsspec__8jSzqbV/verifier/network.json",
+        "sha256": "sha256:f7a996799a0fc181b8df4d4500d5828da8ece749963cb4300767bc23f5135114"
+      },
+      "summary": {"valid": true, "failure_reason": "candidate-installation-failed", "collected": 0, "reward": 0.0}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/controls-current/fsspec-stub -a oracle --job-name fsspec-authoring-stub-current-20260828 -o .nl2repo/runs/fsspec-authoring-stub-current-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/fsspec-authoring-stub-current-20260828/fsspec-authoring-stub-current-20260828/fsspec-stub__dm4h4xb/verifier/grading.json",
+        "sha256": "sha256:d08caa46fee61b9eb36e8c0f6e7b4c48c8f317c0c014523640b983971f0dff5e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/fsspec-authoring-stub-current-20260828/fsspec-authoring-stub-current-20260828/fsspec-stub__dm4h4xb/verifier/network.json",
+        "sha256": "sha256:acc9f5ab8849a90c104ece64b8f8c8ada79f7d019218ddb73771b229d61e4008"
+      },
+      "summary": {"valid": true, "collected": 18, "passed": 0, "reward": 0.0}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/controls-current/fsspec-forgery -a oracle --job-name fsspec-authoring-forgery-current-20260828 -o .nl2repo/runs/fsspec-authoring-forgery-current-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/fsspec-authoring-forgery-current-20260828/fsspec-authoring-forgery-current-20260828/fsspec-forgery__2wHEfbV/verifier/grading.json",
+        "sha256": "sha256:d08caa46fee61b9eb36e8c0f6e7b4c48c8f317c0c014523640b983971f0dff5e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/fsspec-authoring-forgery-current-20260828/fsspec-authoring-forgery-current-20260828/fsspec-forgery__2wHEfbV/verifier/network.json",
+        "sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043"
+      },
+      "summary": {"valid": true, "collected": 18, "passed": 0, "reward": 0.0, "candidate_fake_report_ignored": true}
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from fsspec current Oracle retry",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/fsspec-authoring-oracle-current-retry-20260828/fsspec-authoring-oracle-current-retry-20260828/fsspec__kckuAhE/verifier/network.json",
+        "sha256": "sha256:33b8e715a559574178c85c04b15bddd8f562b3632d707222cde7072bd8f6e5ea"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/controls-final-hang/fsspec-call-hang -a oracle --job-name fsspec-authoring-call-hang-current-20260828 -o .nl2repo/runs/fsspec-authoring-call-hang-current-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/fsspec-authoring-call-hang-current-20260828/fsspec-authoring-call-hang-current-20260828/fsspec-call-hang__AUjJKv8/verifier/grading.json",
+        "sha256": "sha256:d08caa46fee61b9eb36e8c0f6e7b4c48c8f317c0c014523640b983971f0dff5e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/fsspec-authoring-call-hang-current-20260828/fsspec-authoring-call-hang-current-20260828/fsspec-call-hang__AUjJKv8/verifier/network.json",
+        "sha256": "sha256:bafb6ba322a52b4e37776eb1d21302447b7e8c4ad724a768ac88299ba046c843"
+      },
+      "summary": {"valid": true, "collected": 18, "passed": 0, "reward": 0.0}
+    }
+  }
+}

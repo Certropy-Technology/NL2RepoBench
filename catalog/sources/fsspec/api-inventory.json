@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "package": "fsspec",
+  "runtime_root": "fsspec/",
+  "source_python_files": 48,
+  "source_physical_lines": 19640,
+  "tracked_files": 156,
+  "public_modules": [
+    "fsspec.core", "fsspec.spec", "fsspec.registry", "fsspec.mapping",
+    "fsspec.implementations.memory", "fsspec.implementations.local",
+    "fsspec.caching", "fsspec.compression", "fsspec.utils", "fsspec.json"
+  ],
+  "primary_exports": [
+    "AbstractFileSystem", "MemoryFileSystem", "MemoryFile", "FSMap",
+    "OpenFile", "OpenFiles", "open", "open_files", "url_to_fs",
+    "filesystem", "get_filesystem_class", "register_implementation",
+    "available_protocols", "AllBytes", "ReadAheadCache", "BlockCache",
+    "infer_storage_options", "read_block", "tokenize", "glob_translate"
+  ],
+  "runtime_dependencies": [],
+  "excluded_risk_surfaces": [
+    "cloud credentials and remote services", "SSH/SFTP/SMB", "FUSE",
+    "GUI and optional native codecs", "Dask/PyArrow/Parquet integrations",
+    "subprocess-backed external tools", "TTY and live network behavior"
+  ],
+  "candidate_boundary": "custom-json-v1 child subprocess; only JSON-safe local scenarios import candidate"
+}

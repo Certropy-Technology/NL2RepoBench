@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "fsspec"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "filesystem-abstraction"
+tags = ["python", "filesystem", "memory-filesystem", "mapping", "caching", "subprocess-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/fsspec/filesystem_spec"
+revision = "9b7cd481e5d1c4395752e69653443e6b05ac9a3e"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:9a0fc72facc3b4b8adc7ae9d6719e7d06e7a9a677ddab826931d71079e688e0a"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked build dependencies during image construction"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution are network-isolated. Build dependencies are installed from a private hash-locked requirements artifact; only the trusted Oracle receives the exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["hatch-vcs==0.5.0", "hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "setuptools==84.0.0", "setuptools-scm==10.2.1", "trove-classifiers==2026.6.1.19", "vcs-versioning==2.3.1"]
+lock_artifact = { digest = "sha256:742f447ef50010fc01803a0891b0caa66f1c78cea241b9120505a9f3a4382267", size_bytes = 2151, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:742f447ef50010fc01803a0891b0caa66f1c78cea241b9120505a9f3a4382267", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 18
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pinned fsspec filesystem abstraction library from an empty workspace; grade deterministic local filesystem, mapping, URL, cache, compression, and utility behavior through an isolated JSON contract."
+keywords = ["python", "filesystem", "memory-filesystem", "mapping", "caching", "pytest", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b80c8a565ee994a8f47d0bd5f2c9b49e19bc5a1c8d794e620ef86ce08eb64be5", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b80c8a565ee994a8f47d0bd5f2c9b49e19bc5a1c8d794e620ef86ce08eb64be5", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:7fdfbd6de69936e1d56fa35f75f73f0b01c1a29de795a26125530a7cdabb35c4"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:7fdfbd6de69936e1d56fa35f75f73f0b01c1a29de795a26125530a7cdabb35c4"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Current production bundle passed the Harbor Oracle gate and empty, stub, forgery, call-hang, and offline verifier controls. Model Agent Run, review, pilot, and publication remain separate stages."

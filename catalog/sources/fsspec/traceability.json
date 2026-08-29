@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fsspec",
+  "contract_to_tests": {
+    "memory CRUD, paths, info, listing": ["memory-basic", "memory-tree", "memory-copy-move-rm"],
+    "MutableMapping byte semantics": ["fsmap-basic", "mapper-factory"],
+    "protocol registry and URL normalization": ["registry-and-url", "open-memory-text", "mapper-factory"],
+    "OpenFile text and compression lifecycle": ["open-memory-text", "open-gzip", "open-files"],
+    "storage/path utilities": ["storage-options", "path-utilities", "read-block"],
+    "byte-range caches": ["all-bytes-cache", "read-ahead-cache", "block-cache"],
+    "base filesystem helpers and serialization": ["filesystem-helpers", "filesystem-json"],
+    "documented error contracts": ["error-contracts"]
+  },
+  "excluded_from_contract": [
+    "remote service authentication", "HTTP/FTP/S3/GCS requests", "FUSE mounts",
+    "SSH/SMB", "optional PyArrow/Dask/Parquet integrations", "GUI and native codec bindings"
+  ]
+}
