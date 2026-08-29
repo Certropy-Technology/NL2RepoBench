@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "s3fs",
+  "source_revision": "d3dd9b75bdd699f230d3fd0faffd6ce7a31b1cf3",
+  "upstream_test_files": [
+    "s3fs/tests/test_custom_error_handler.py",
+    "s3fs/tests/test_mapping.py",
+    "s3fs/tests/test_s3fs.py",
+    "s3fs/tests/test_utils.py"
+  ],
+  "upstream_test_count": 214,
+  "upstream_test_mode": "service-backed; not used as a transparent verifier",
+  "adapted_leaf_count": 20,
+  "collection_source": "task-local custom-json-v1 verifier",
+  "excluded_reasons": [
+    "Tests requiring moto, flask, credentials, or an S3 endpoint are not deterministic in a no-network Agent run.",
+    "Private verifier replaces direct candidate imports with UID-separated child processes and a fake async call boundary."
+  ],
+  "scenarios": [
+    "exports-and-metadata", "constructor-options", "constructor-validation", "split-paths",
+    "chunking-and-version-helper", "utils-serialization", "error-translation",
+    "retry-configuration", "root-and-cache", "cached-listing", "fake-info",
+    "fake-exists", "pipe-file", "buffered-read", "buffered-write", "async-stream",
+    "open-validation", "mapping-factory", "requester-pays", "cache-invalidation"
+  ]
+}

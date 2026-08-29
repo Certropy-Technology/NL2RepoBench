@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "s3fs",
+  "upstream_url": "https://github.com/fsspec/s3fs",
+  "revision": "d3dd9b75bdd699f230d3fd0faffd6ce7a31b1cf3",
+  "revision_resolution": "git clone --filter=blob:none --no-checkout; git checkout --detach <full SHA>",
+  "archive": {
+    "command": "git archive --format=tar --prefix=s3fs/ d3dd9b75bdd699f230d3fd0faffd6ce7a31b1cf3",
+    "sha256": "sha256:0fe21881f4329f8981e139200722a7b6934065d40f976cd3d0afd9878f5a5bdf",
+    "tree_files": 43
+  },
+  "license": {
+    "spdx": "BSD-3-Clause",
+    "path": "LICENSE.txt",
+    "sha256": "sha256:dc3599fa66bc1bcffa236838be2fb4e15f84ce4801244eec93d90e515cfc58d1"
+  },
+  "package_version": "0+untagged.1107.gd3dd9b7",
+  "source_clone": ".nl2repo/authoring-work/python-author-wave2-20260828/s3fs/upstream",
+  "authority": "known"
+}

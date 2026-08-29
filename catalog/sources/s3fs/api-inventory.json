@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "s3fs",
+  "source_revision": "d3dd9b75bdd699f230d3fd0faffd6ce7a31b1cf3",
+  "scanner": "python-ast-stdlib",
+  "scope": "public contract plus deterministic fake-client adapter",
+  "modules": [
+    "s3fs.__init__",
+    "s3fs.core",
+    "s3fs.errors",
+    "s3fs.mapping",
+    "s3fs.utils"
+  ],
+  "symbols": [
+    {"module": "s3fs", "name": "S3FileSystem", "kind": "class", "signature": "S3FileSystem(anon=False, endpoint_url=None, key=None, secret=None, token=None, use_ssl=True, client_kwargs=None, requester_pays=False, default_block_size=None, default_fill_cache=True, default_cache_type=\"readahead\", version_aware=False, config_kwargs=None, s3_additional_kwargs=None, session=None, username=None, password=None, cache_regions=False, asynchronous=False, loop=None, max_concurrency=10, fixed_upload_size=False, local_expiry_check=False, **kwargs)"},
+    {"module": "s3fs", "name": "S3File", "kind": "class", "signature": "S3File(s3, path, mode=\"rb\", block_size=50 * 2**20, acl=False, version_id=None, fill_cache=True, s3_additional_kwargs=None, autocommit=True, cache_type=\"readahead\", requester_pays=False, cache_options=None, size=None)"},
+    {"module": "s3fs", "name": "S3Map", "kind": "function", "signature": "S3Map(root, s3, check=False, create=False)"},
+    {"module": "s3fs.core", "name": "calculate_chunksize", "kind": "function", "signature": "calculate_chunksize(filesize, chunksize=None, max_parts=10000)"},
+    {"module": "s3fs.core", "name": "version_id_kw", "kind": "function", "signature": "version_id_kw(version_id)"},
+    {"module": "s3fs.utils", "name": "title_case", "kind": "function", "signature": "title_case(string)"},
+    {"module": "s3fs.utils", "name": "SSEParams", "kind": "class", "signature": "SSEParams(server_side_encryption=None, sse_customer_algorithm=None, sse_customer_key=None, sse_kms_key_id=None)"},
+    {"module": "s3fs.errors", "name": "translate_boto_error", "kind": "function", "signature": "translate_boto_error(error, message=None, set_cause=True, *args, **kwargs)"},
+    {"module": "s3fs", "name": "add_retryable_error", "kind": "function", "signature": "add_retryable_error(exc)"},
+    {"module": "s3fs", "name": "set_custom_error_handler", "kind": "function", "signature": "set_custom_error_handler(func)"}
+  ],
+  "risk_flags": ["external-service-adapted", "asyncio", "filesystem-api", "native-dependency-closure"],
+  "excluded_upstream_areas": ["moto-backed S3 service integration", "AWS credentials and network", "multipart transfers requiring a remote object store"]
+}

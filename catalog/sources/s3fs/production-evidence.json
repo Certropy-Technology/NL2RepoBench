@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "task_id": "s3fs",
+  "terminal_kind": "valid",
+  "bundle_manifest": {
+    "path": ".nl2repo/final-compile-v4/s3fs/bundle.manifest.json",
+    "sha256": "sha256:3dee3332661a6f755deac15f53febaaa9f122545c0cf6d698ff8d7b74a4bbb79"
+  },
+  "oracle": {
+    "command": "docker run --rm --network none ... /tests/test.sh after trusted solve.sh revision verification",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 20,
+    "total": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/replay/final-oracle-logs/verifier/grading.json",
+      "sha256": "sha256:9c436d203c5caa17fe14ab8d96e4d767653948e0236d1aa52a0053ec18e5b676"
+    },
+    "network": {
+      "path": ".nl2repo/replay/final-oracle-logs/verifier/network.json",
+      "sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none ... empty workspace /tests/test.sh",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/replay/final-empty-logs/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/replay/final-empty-logs/verifier/network.json",
+        "sha256": "sha256:9044a8af69821defb1709ce688efff222daf3e3b2ed3e206745cda372afe5ae6"
+      }
+    },
+    "stub": {
+      "command": "harbor prepare-control s3fs stub; docker verifier replay",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/replay/final-stub-logs/verifier/grading.json",
+        "sha256": "sha256:486ba9f512472d37bbdf370af47c6f0d9edacd2ff0f3b33ed088c3c1a8e8300e"
+      },
+      "network": {
+        "path": ".nl2repo/replay/final-stub-logs/verifier/network.json",
+        "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"
+      }
+    },
+    "forgery": {
+      "command": "harbor prepare-control s3fs forgery; docker verifier replay",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/replay/final-forgery-logs/verifier/grading.json",
+        "sha256": "sha256:486ba9f512472d37bbdf370af47c6f0d9edacd2ff0f3b33ed088c3c1a8e8300e"
+      },
+      "network": {
+        "path": ".nl2repo/replay/final-forgery-logs/verifier/network.json",
+        "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none verifier network and empty-workspace replay",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/replay/final-empty-logs/verifier/network.json",
+        "sha256": "sha256:9044a8af69821defb1709ce688efff222daf3e3b2ed3e206745cda372afe5ae6"
+      }
+    },
+    "call-hang": {
+      "command": "harbor prepare-control s3fs call-hang; docker verifier replay with per-call timeout",
+      "exit_code": 0,
+      "passed": 0,
+      "total": 20,
+      "grading": {
+        "path": ".nl2repo/replay/final-call-hang-logs/verifier/grading.json",
+        "sha256": "sha256:486ba9f512472d37bbdf370af47c6f0d9edacd2ff0f3b33ed088c3c1a8e8300e"
+      },
+      "network": {
+        "path": ".nl2repo/replay/final-call-hang-logs/verifier/network.json",
+        "sha256": "sha256:ea99f3b590332e1f50c9095a9ab694fd9a151e5de00a708758f468f893112e64"
+      }
+    },
+    "install-hang": {
+      "command": "harbor prepare-control s3fs install-hang; docker verifier replay",
+      "exit_code": 0,
+      "passed": 0,
+      "total": 20,
+      "grading": {
+        "path": ".nl2repo/replay/final-install-hang-logs/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/replay/final-install-hang-logs/verifier/network.json",
+        "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"
+      }
+    },
+    "workspace-invalid": {
+      "command": "harbor prepare-control s3fs workspace-invalid; docker verifier replay",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/replay/final-workspace-invalid-logs/verifier/grading.json",
+        "sha256": "sha256:17b0c608453cc6c4a6d00e11e05896082cb5693c7cef18e59af161f124d11a0d"
+      },
+      "network": {
+        "path": ".nl2repo/replay/final-workspace-invalid-logs/verifier/network.json",
+        "sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e"
+      }
+    }
+  }
+}
