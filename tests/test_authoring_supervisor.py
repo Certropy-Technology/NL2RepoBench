@@ -211,6 +211,23 @@ def test_redact_removes_secret_values() -> None:
     assert "[REDACTED]" in redacted
 
 
+def test_director_response_is_strict_json_and_bounded() -> None:
+    response = json.dumps(
+        {
+            "action": "integrate",
+            "language": "go",
+            "discover_packages": [],
+            "integrate_limit": 2,
+            "worker_limit": 1,
+            "reason": "integrate ready Go task",
+        }
+    )
+
+    assert supervisor._parse_director_response(response)["action"] == "integrate"
+    with pytest.raises(ValueError, match="plain JSON"):
+        supervisor._parse_director_response("```json\n" + response + "\n```")
+
+
 def test_controller_slots_count_unique_owner_not_uv_child_processes() -> None:
     lane = supervisor.Lane(
         "go", "batch", Path("/queue"), Path("/plan"), Path("/state")

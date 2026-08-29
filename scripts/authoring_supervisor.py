@@ -16,6 +16,7 @@ import importlib.util
 import json
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
@@ -58,6 +59,9 @@ DEFAULT_MAX_TOTAL_CONTROLLERS = 3
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 DEFAULT_WATCHER_MIN_FREE_BYTES = 2 * 1024**3
 DEFAULT_FAILURE_BACKOFF_SECONDS = 1800
+DEFAULT_DIRECTOR_INTERVAL_SECONDS = 600
+DEFAULT_DIRECTOR_TIMEOUT_SECONDS = 300
+DIRECTOR_ACTIONS = frozenset({"continue", "discover", "integrate", "pause"})
 
 
 @dataclass(frozen=True)
@@ -247,6 +251,207 @@ def _redact(text: str) -> str:
     return result[-2000:]
 
 
+def _director_prompt(snapshot: dict[str, Any]) -> str:
+    return f"""You are the top-level NL2RepoBench Director.
+
+You only choose an operational action. A deterministic pipeline executes it.
+Return exactly one JSON object and no Markdown:
+{{
+  "action": "continue|discover|integrate|pause",
+  "language": "python|node|go|all|none",
+  "discover_packages": [],
+  "integrate_limit": 0,
+  "worker_limit": 0,
+  "reason": "short reason"
+}}
+
+Rules: limits are integers 0..3; discover_packages has at most 8 names;
+discover package names must come from discovery_pool; pause uses zero limits;
+do not invent commands, paths, credentials, or package names. Prefer safe
+integration/archive work. Pause when disk is low, checkout is dirty, or
+evidence is ambiguous.
+
+STATUS:
+{json.dumps(snapshot, ensure_ascii=False, sort_keys=True, indent=2)}
+"""
+
+
+def _parse_director_response(text: str) -> dict[str, Any]:
+    if not text.strip() or text.lstrip().startswith("```"):
+        raise ValueError("Director response must be plain JSON")
+    value = json.loads(text)
+    if not isinstance(value, dict):
+        raise ValueError("Director response must be an object")
+    required = {
+        "action",
+        "language",
+        "discover_packages",
+        "integrate_limit",
+        "worker_limit",
+        "reason",
+    }
+    if set(value) != required or value["action"] not in DIRECTOR_ACTIONS:
+        raise ValueError("Director response schema is invalid")
+    if value["language"] not in {"python", "node", "go", "all", "none"}:
+        raise ValueError("Director language is invalid")
+    packages = value["discover_packages"]
+    if not isinstance(packages, list) or len(packages) > 8 or not all(
+        isinstance(package, str) and SAFE_PACKAGE.fullmatch(package)
+        for package in packages
+    ):
+        raise ValueError("Director discover_packages is invalid")
+    for field in ("integrate_limit", "worker_limit"):
+        if not isinstance(value[field], int) or not 0 <= value[field] <= 3:
+            raise ValueError(f"Director {field} is invalid")
+    if not isinstance(value["reason"], str) or not value["reason"].strip():
+        raise ValueError("Director reason is required")
+    if value["action"] == "pause" and (
+        value["integrate_limit"] or value["worker_limit"]
+    ):
+        raise ValueError("pause must use zero limits")
+    return value
+
+
+def _director_decision(
+    args: argparse.Namespace,
+    root: Path,
+    live: Path,
+    snapshot: dict[str, Any],
+) -> dict[str, Any]:
+    cache_path = live / "supervisor/director-decision.json"
+    if not args.refresh_director and cache_path.is_file():
+        try:
+            cached = _json(cache_path)
+            age = time.time() - cache_path.stat().st_mtime
+            if age < args.director_interval_sec:
+                decision = _parse_director_response(str(cached["response"]))
+                decision["cached"] = True
+                return decision
+        except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+            pass
+    if args.director_mode == "rules":
+        decision = {
+            "action": "continue",
+            "language": "all",
+            "discover_packages": [],
+            "integrate_limit": min(args.max_integrations, 3),
+            "worker_limit": min(args.workers, 3),
+            "reason": "explicit deterministic rules mode",
+        }
+        _atomic_write(
+            cache_path,
+            {"response": json.dumps(decision, sort_keys=True), "decision": decision},
+        )
+        return decision
+    command = shlex.split(args.director_command)
+    if not command:
+        raise ValueError("director-command must not be empty")
+    command.extend(
+        [
+            "--print",
+            "--no-tools",
+            "--no-session",
+            "--no-extensions",
+            "--no-skills",
+            "--no-context-files",
+            "--provider",
+            args.director_provider,
+            "--model",
+            args.director_model,
+            "--thinking",
+            args.director_thinking,
+            "--",
+            _director_prompt(snapshot),
+        ]
+    )
+    completed = subprocess.run(
+        command,
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=args.director_timeout_sec,
+        env={**os.environ, "NL2REPO_DIRECTOR": "1"},
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(
+            f"Director exited with {completed.returncode}: {_redact(completed.stderr)}"
+        )
+    decision = _parse_director_response(completed.stdout)
+    _atomic_write(
+        cache_path,
+        {"response": completed.stdout, "decision": decision},
+    )
+    return decision
+
+
+def _discovery_pool(path: Path) -> dict[str, list[str]]:
+    if not path.is_file():
+        return {"python": [], "node": [], "go": []}
+    value = _json(path)
+    pool: dict[str, list[str]] = {"python": [], "node": [], "go": []}
+    for language in pool:
+        entries = value.get(language, [])
+        if isinstance(entries, list):
+            pool[language] = sorted(
+                {
+                    package
+                    for package in entries
+                    if isinstance(package, str) and SAFE_PACKAGE.fullmatch(package)
+                }
+            )
+    return pool
+
+
+def _run_discovery(
+    args: argparse.Namespace,
+    root: Path,
+    live: Path,
+    decision: dict[str, Any],
+    lanes: list[Lane],
+) -> dict[str, Any]:
+    language = decision.get("language")
+    if language not in {"python", "node", "go"}:
+        return {"status": "discovery-rejected", "reason": "Director chose no single language"}
+    pool = _discovery_pool(args.discovery_pool)
+    known = {
+        record.get("package")
+        for lane in lanes
+        for record in _lane_records(lane)
+        if isinstance(record.get("package"), str)
+    }
+    requested = decision.get("discover_packages") or pool[language]
+    packages = [
+        package
+        for package in requested
+        if package in pool[language] and package not in known
+    ][:8]
+    if not packages:
+        return {"status": "discovery-rejected", "reason": "discovery pool has no new packages"}
+    script = {
+        "python": root / "scripts/discover_python_candidates.py",
+        "node": root / "scripts/discover_npm_candidates.py",
+        "go": root / "scripts/discover_go_candidates.py",
+    }[language]
+    if not script.is_file():
+        return {"status": "discovery-rejected", "reason": f"missing {script.name}"}
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    output = live / "supervisor/discovery" / f"{language}-{stamp}.json"
+    command = [sys.executable, str(script)]
+    for package in packages:
+        command.extend(("--package", package))
+    command.extend(("--output", str(output), "--workers", "4"))
+    result = _run(command, cwd=root, timeout=args.command_timeout)
+    return {
+        "status": "discovered" if result["exit_code"] == 0 else "discovery-failed",
+        "language": language,
+        "packages": packages,
+        "output": str(output),
+        "exit_code": result["exit_code"],
+        "output_tail": result["output"],
+    }
+
+
 def _run(
     command: list[str],
     *,
@@ -267,14 +472,22 @@ def _run(
             "command": command,
             "exit_code": 124,
             "timeout": True,
+            "raw_output": str(exc),
             "output": _redact(str(exc)),
         }
+    raw_output = completed.stdout or completed.stderr
     return {
         "command": command,
         "exit_code": completed.returncode,
         "timeout": False,
-        "output": _redact(completed.stdout or completed.stderr),
+        "raw_output": raw_output,
+        "output": _redact(raw_output),
     }
+
+
+def _command_output(result: dict[str, Any]) -> str:
+    value = result.get("raw_output", result.get("output", ""))
+    return value if isinstance(value, str) else str(value)
 
 
 def _lane_records(lane: Lane) -> list[dict[str, Any]]:
@@ -554,7 +767,7 @@ def _git_status(root: Path) -> list[str]:
     )
     if result["exit_code"] != 0:
         raise RuntimeError(f"git status failed: {result['output']}")
-    return [line for line in result["output"].splitlines() if line]
+    return [line for line in _command_output(result).splitlines() if line]
 
 
 def _remote_sync(root: Path, remote: str, branch: str) -> None:
@@ -668,7 +881,7 @@ def _integrate_task(
         if source_changed:
             shutil.rmtree(source_target, ignore_errors=True)
         raise RuntimeError(f"staged diff failed: {staged_paths['output']}")
-    changed_paths = set(staged_paths["output"].splitlines())
+    changed_paths = set(_command_output(staged_paths).splitlines())
     allowed_changes = {
         path
         for path in changed_paths
@@ -703,7 +916,9 @@ def _integrate_task(
             if source_changed:
                 shutil.rmtree(source_target, ignore_errors=True)
             raise RuntimeError(f"git commit failed: {committed['output']}")
-        commit = _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)["output"]
+        commit = _command_output(
+            _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)
+        ).strip()
     _remote_sync(root, remote, branch)
     if archive_bucket is None:
         raise RuntimeError("OSS credentials are missing; worktree retained")
@@ -983,6 +1198,51 @@ def supervise(args: argparse.Namespace) -> int:
             archive_module = _archive_module(root)
             integration_clean = not _git_status(root)
             report["integration_clean"] = integration_clean
+            discovery_pool = _discovery_pool(args.discovery_pool)
+            snapshot = {
+                "free_bytes": free,
+                "integration_clean": integration_clean,
+                "lanes": report["lanes"],
+                "controllers": report["controllers"],
+                "watcher_count": report["watcher_count"],
+                "discovery_pool": discovery_pool,
+            }
+            try:
+                director = _director_decision(args, root, live, snapshot)
+            except (OSError, RuntimeError, ValueError, json.JSONDecodeError) as exc:
+                director = {
+                    "action": "pause",
+                    "language": "none",
+                    "discover_packages": [],
+                    "integrate_limit": 0,
+                    "worker_limit": 0,
+                    "reason": f"Director unavailable: {_redact(str(exc))}",
+                }
+                report["errors"].append(
+                    {"status": "director-error", "error": director["reason"]}
+                )
+            report["director"] = director
+            selected_language = director.get("language")
+            if selected_language not in {"python", "node", "go", "all"}:
+                selected_language = "none"
+            integration_limit = (
+                min(int(director.get("integrate_limit", 0)), args.max_integrations)
+                if director.get("action") in {"continue", "integrate"}
+                else 0
+            )
+            worker_limit = (
+                min(int(director.get("worker_limit", 0)), args.max_total_controllers)
+                if director.get("action") in {"continue", "discover"}
+                else 0
+            )
+            if (
+                director.get("action") == "discover"
+                and integration_clean
+                and free >= args.min_free_bytes
+            ):
+                report["actions"].append(
+                    _run_discovery(args, root, live, director, lanes)
+                )
             failure_state = _load_failure_state(failure_state_path)
             report["actions"].extend(
                 _release_stale_claims(root, lanes[0], procs, max_attempts=3)
@@ -1018,13 +1278,14 @@ def supervise(args: argparse.Namespace) -> int:
                             )
                         ]
                         for lane in lanes
+                        if selected_language in {"all", lane.language}
                     }
                     offsets = {lane.language: 0 for lane in lanes}
                     integration_attempts = 0
-                    while integration_attempts < args.max_integrations:
+                    while integration_attempts < integration_limit:
                         progress = False
                         for lane in lanes:
-                            if integration_attempts >= args.max_integrations:
+                            if integration_attempts >= integration_limit:
                                 break
                             records = candidates[lane.language]
                             offset = offsets[lane.language]
@@ -1090,6 +1351,7 @@ def supervise(args: argparse.Namespace) -> int:
                 not args.dry_run
                 and integration_clean
                 and free >= args.min_free_bytes
+                and worker_limit > 0
             )
             if can_start_workers and free >= args.watcher_min_free_bytes:
                 current = _watcher_processes(_proc_table())
@@ -1119,7 +1381,7 @@ def supervise(args: argparse.Namespace) -> int:
                 lane_records = {
                     lane.language: _lane_records(lane) for lane in lanes
                 }
-                for slot in range(args.workers):
+                for slot in range(min(args.workers, worker_limit)):
                     for lane in lanes:
                         if active_total >= args.max_total_controllers:
                             break
@@ -1170,6 +1432,36 @@ def main() -> int:
     parser.add_argument("--max-integrations", type=int, default=3)
     parser.add_argument("--interval-sec", type=int, default=60)
     parser.add_argument("--command-timeout", type=int, default=1800)
+    parser.add_argument("--director-mode", choices=("llm", "rules"), default="llm")
+    parser.add_argument("--director-command", default="pi")
+    parser.add_argument(
+        "--director-provider",
+        default=os.environ.get("PI_DIRECTOR_PROVIDER", "z-open-api-gpt-openai-responses"),
+    )
+    parser.add_argument(
+        "--director-model",
+        default=os.environ.get("PI_DIRECTOR_MODEL", "gpt-5.6-sol"),
+    )
+    parser.add_argument(
+        "--director-thinking",
+        default=os.environ.get("PI_DIRECTOR_THINKING", "medium"),
+    )
+    parser.add_argument(
+        "--director-interval-sec",
+        type=int,
+        default=DEFAULT_DIRECTOR_INTERVAL_SECONDS,
+    )
+    parser.add_argument(
+        "--director-timeout-sec",
+        type=int,
+        default=DEFAULT_DIRECTOR_TIMEOUT_SECONDS,
+    )
+    parser.add_argument("--refresh-director", action="store_true")
+    parser.add_argument(
+        "--discovery-pool",
+        type=Path,
+        default=Path("reports/authoring-discovery-pool.json"),
+    )
     parser.add_argument(
         "--failure-backoff-seconds",
         type=int,
@@ -1191,6 +1483,8 @@ def main() -> int:
         or args.max_integrations < 1
         or args.interval_sec < 1
         or args.failure_backoff_seconds < 1
+        or args.director_interval_sec < 1
+        or args.director_timeout_sec < 1
     ):
         parser.error(
             "workers, max-total-controllers, max-integrations, and interval-sec "

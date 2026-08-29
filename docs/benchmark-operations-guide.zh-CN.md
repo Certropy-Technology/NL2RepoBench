@@ -278,12 +278,23 @@ scripts/run_authoring_supervisor.sh
 scripts/run_authoring_supervisor.sh --once --dry-run
 ```
 
+默认的 Director 是无工具、无 session 的顶层 Pi Agent。它只返回固定 JSON 动作，
+由 supervisor 的白名单代码执行。`continue`、`integrate` 和 `pause` 控制现有队列；
+`discover` 只能从 `reports/authoring-discovery-pool.json` 读取已登记包名，再调用固定
+的 discovery 脚本，不会执行模型生成的任意 shell。没有 Director 或需要完全确定性
+运行时可显式使用 `--director-mode rules`。
+
 默认每种语言最多 3 个 `max-concurrency=1` controller，但受全局最多 3 个 controller
 的磁盘保护上限约束，确保 Python、Node、Go 不会在 100 GiB 工作盘上同时无限扩张。
 `/data` 剩余空间低于 12 GiB 时 supervisor 停止启动新 Loop，但仍允许归档和清理已验证
 的完成题；剩余空间低于 2 GiB 时不启动 watcher。状态、动作、错误和队列快照写入
 `.nl2repo/authoring-live/supervisor/status.json`。source、generated projection、
 OSS manifest 或 worktree 发生冲突时 fail closed 并保留现场。
+
+Supervisor 使用 `origin` 的 integration branch 作为唯一写入线。生产部署时应将该线
+通过受控 fast-forward 或审核合并到 `main`；合并成功后只删除已确认 merged 的本地
+feature branch 和已归档 worktree，保留仍有 worktree、dirty 内容、未验证 evidence
+或未推送提交的 branch。
 | Python verifier 用 `networkx`/SymPy 旧 API 失败 | pinned image 中实际版本与冻结上游 API 有 drift，或 runtime wheel 未进入 verifier context | 先记录实际版本，补兼容 shim/锁依赖并重新 Oracle；不能直接降低断言 |
 | source solution 生成空 workspace | placeholder `solve.sh` 或 agent image 缺 Git/构建工具 | 先补 exact-revision materializer、工具链和 build context，再判断题目是否可行 |
 | 没有 history/event | Harbor ATIF 转换是预期产物 | 验证 `trajectory.json`；需要 raw events 时扩展 adapter |
