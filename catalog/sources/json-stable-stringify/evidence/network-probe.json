@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "mode": "no-network",
+  "probes": {"registry.npmjs.org:443": false, "pypi.org:443": false, "1.1.1.1:443": false},
+  "public_network_available": false,
+  "source_host_authorized_only_for": "trusted Oracle source acquisition, outside the model Agent run",
+  "agent_allowed_hosts": [],
+  "agent_network_mode": "no-network"
+}

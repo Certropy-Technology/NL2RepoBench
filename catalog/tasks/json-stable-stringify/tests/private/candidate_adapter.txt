@@ -1,0 +1,81 @@
+import { createRequire } from 'node:module';
+
+const input = JSON.parse(await new Promise((resolve, reject) => {
+  let text = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', (chunk) => { text += chunk; });
+  process.stdin.on('end', () => resolve(text));
+  process.stdin.on('error', reject);
+}));
+const require = createRequire(`${process.env.NODE_CANDIDATE_SITE}/adapter.cjs`);
+const stringify = require('json-stable-stringify');
+const result = { id: input.id };
+
+function value(caseId) {
+  switch (caseId) {
+    case 'basic': return stringify({ c: 8, b: [{ z: 6, y: 5, x: 4 }, 7], a: 3 });
+    case 'nested': return stringify({ z: { b: 2, a: 1 }, a: [{ d: 4, c: 3 }] });
+    case 'array-order': return stringify([ { b: 2, a: 1 }, 3, 2 ]);
+    case 'string': return stringify('hello');
+    case 'number': return stringify(42.5);
+    case 'boolean': return stringify(false);
+    case 'null': return stringify(null);
+    case 'undefined-root': return stringify(undefined);
+    case 'nan': return stringify(NaN);
+    case 'infinity': return stringify(Infinity);
+    case 'undefined-property': return stringify({ keep: 1, omit: undefined });
+    case 'undefined-array': return stringify([1, undefined, 3]);
+    case 'to-json': return stringify({ value: 1, toJSON() { return { z: 2, a: 1 }; } });
+    case 'numeric-keys': return stringify({ 2: 'two', 10: 'ten', a: 'letter' });
+    case 'escaping': return stringify({ quote: '"', slash: '\\', line: '\n' });
+    case 'space-string': return stringify({ b: 1, a: { y: 2, x: 1 } }, { space: '  ' });
+    case 'space-number': return stringify({ b: 1, a: { y: 2, x: 1 } }, { space: 2 });
+    case 'space-zero': return stringify({ b: 1, a: 2 }, { space: 0 });
+    case 'empty-object': return stringify({});
+    case 'empty-array': return stringify([]);
+    case 'collapse-empty': return stringify({ b: [], a: {} }, { space: 2, collapseEmpty: true });
+    case 'pretty-empty': return stringify({ b: [], a: {} }, { space: 2 });
+    case 'reverse-cmp': return stringify({ c: 3, b: 2, a: 1 }, (a, b) => b.key.localeCompare(a.key));
+    case 'value-cmp': return stringify({ d: 6, c: 5, b: 3, a: 10 }, { cmp: (a, b) => a.value < b.value ? 1 : -1 });
+    case 'get-cmp': return stringify({ a: 2, b: 1, c: 3 }, { cmp: (a, b, getter) => getter.get(a.key) - getter.get(b.key) });
+    case 'direct-cmp': return stringify({ a: 1, b: 2, c: 3 }, (a, b) => a.key === 'c' ? 1 : b.key === 'c' ? -1 : a.key.localeCompare(b.key));
+    case 'tie-cmp': return stringify({ c: 3, b: 2, a: 1 }, { cmp: () => 0 });
+    case 'replacer-parent': return stringify({ a: 1, b: 2 }, { replacer: function (key, node) { return key === 'b' && this.a === 1 ? node + 10 : node; } });
+    case 'replacer-omit': return stringify({ keep: 1, omit: 2 }, { replacer: (key, node) => key === 'omit' ? undefined : node });
+    case 'replacer-replace': return stringify({ n: 2 }, { replacer: (key, node) => key === 'n' ? node * 3 : node });
+    case 'replacer-root': return stringify({ a: 1 }, { replacer: (key, node) => key === '' ? { z: node.a, a: 0 } : node });
+    case 'cycle-error': { const x = {}; x.self = x; return stringify(x); }
+    case 'cycle-value': { const x = {}; x.self = x; return stringify(x, { cycles: true }); }
+    case 'shared-reference': { const x = { q: 1 }; return stringify({ a: x, b: x }); }
+    case 'null-prototype': { const x = Object.create(null); x.b = 2; x.a = 1; return stringify(x); }
+    case 'inherited': { const proto = { inherited: 1 }; const x = Object.create(proto); x.own = 2; return stringify(x); }
+    case 'symbol': { const x = { b: 2, a: 1 }; x[Symbol('hidden')] = 3; return stringify(x); }
+    case 'non-enumerable': { const x = { a: 1 }; Object.defineProperty(x, 'hidden', { value: 2 }); return stringify(x); }
+    case 'date': return stringify(new Date('2020-01-02T03:04:05.000Z'));
+    case 'bigint': return stringify(1n);
+    case 'collapse-type-string': return stringify({}, { collapseEmpty: 'yes' });
+    case 'collapse-type-null': return stringify({}, { collapseEmpty: null });
+    case 'cmp-values': return stringify({ aa: 2, b: 1, ccc: 3 }, { cmp: (a, b) => a.value - b.value });
+    case 'no-options': return stringify({ b: 2, a: 1 });
+    case 'null-options': return stringify({ b: 2, a: 1 }, null);
+    case 'long-space': return stringify({ a: 1 }, { space: 12 });
+    case 'nested-empty': return stringify({ outer: { z: {}, a: [] } });
+    case 'property-to-json': return stringify({ x: { toJSON() { return 5; } }, a: 1 });
+    case 'replacer-array': return stringify([1, 2, 3], { replacer: (key, node) => key === 1 ? node * 10 : node });
+    case 'nested-cycle': { const x = { child: {} }; x.child.parent = x; return stringify(x, { cycles: true }); }
+    case 'unicode': return stringify({ z: '你好', a: 'é' });
+    case 'negative-zero': return stringify(-0);
+    default: throw new Error(`unknown case ${caseId}`);
+  }
+}
+
+try {
+  const output = value(input.caseId);
+  result.kind = output === undefined ? 'undefined' : 'value';
+  result.value = output;
+} catch (error) {
+  result.kind = 'error';
+  result.name = error?.name ?? 'Error';
+  result.message = String(error?.message ?? error);
+}
+process.stdout.write(`${JSON.stringify(result)}\n`);

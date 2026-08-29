@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "collection": {
+    "test_file": "tests/private/stable-stringify.test.mjs",
+    "leaf_ids": "stable-stringify.test.mjs::<case-id>",
+    "frozen_total": 52,
+    "collection_verified_by": "Oracle verifier report and fixed runner both collected 52 unique leaves"
+  },
+  "coverage_groups": [
+    "primitive and native JSON semantics",
+    "nested deterministic key ordering and array order",
+    "pretty printing and empty-container collapse",
+    "direct, value-based, getter-aware, and tie comparators",
+    "replacer callback, parent binding, omission, and root replacement",
+    "cycles, shared references, prototypes, enumerability, Date, BigInt, Unicode, and negative zero",
+    "package install and CommonJS entry-point boundary"
+  ],
+  "private_artifacts": {
+    "test_bundle": "artifact://private/sha256:223eb0d8efbc4567c4ece80dd00471528c91b1a9596220e03cca75205e55baa6",
+    "commands_bundle": "artifact://private/sha256:7c01784a886870bdd39d14eb870029fc492c9fcad9be6793e74a462702227ebb"
+  }
+}

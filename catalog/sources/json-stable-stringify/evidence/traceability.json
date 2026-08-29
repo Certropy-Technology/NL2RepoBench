@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "instruction_sections": {
+    "Project Description": ["basic", "nested", "array-order", "CommonJS entry point"],
+    "Supports": ["primitive and native JSON semantics", "toJSON", "cycles", "callbacks", "package install"],
+    "API Usage Guide": ["basic", "nested", "space-string", "space-number", "reverse-cmp", "value-cmp", "get-cmp", "replacer-parent", "replacer-omit", "cycle-error", "cycle-value"],
+    "Implementation Notes": ["all 52 private leaves", "no network", "no reference dependency", "TypeError contracts"]
+  },
+  "hidden_assertion_groups": [
+    {"group": "ordering", "leaf_cases": ["basic", "nested", "numeric-keys", "reverse-cmp", "value-cmp", "get-cmp", "tie-cmp"]},
+    {"group": "formatting", "leaf_cases": ["space-string", "space-number", "space-zero", "collapse-empty", "pretty-empty", "long-space"]},
+    {"group": "callbacks", "leaf_cases": ["to-json", "property-to-json", "replacer-parent", "replacer-omit", "replacer-replace", "replacer-root", "replacer-array"]},
+    {"group": "edge-contracts", "leaf_cases": ["undefined-root", "undefined-property", "undefined-array", "cycle-error", "cycle-value", "nested-cycle", "bigint", "collapse-type-string", "collapse-type-null", "null-options"]},
+    {"group": "boundary", "leaf_cases": ["package install", "CommonJS require", "candidate child timeout", "no-network verifier"]}
+  ],
+  "private_source_oracle": "solution/source-archive.tar is private and is not available to the model agent."
+}

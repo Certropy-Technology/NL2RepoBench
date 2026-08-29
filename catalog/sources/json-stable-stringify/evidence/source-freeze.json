@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "upstream_url": "https://github.com/ljharb/json-stable-stringify",
+  "revision": "4c3d8989da7dd5a341d8ab49b780fbe267411797",
+  "revision_verified_by": "Oracle solve.sh fetched the requested revision and verified the archive digest before extraction",
+  "source_archive": {
+    "path": ".nl2repo/authoring-work/compiled/json-stable-stringify/solution/source-archive.tar",
+    "sha256": "sha256:d59c0a2beaa4fdced120056f9e7dbbdc806f7285114168b586bf40ffac2119fb",
+    "size_bytes": 71680
+  },
+  "license": {
+    "spdx": "MIT",
+    "path_in_archive": "LICENSE",
+    "sha256": "sha256:6512c0ff86b1aabe1d7d61fb547507016a8a908819e388e6ffcbf7bea04a3f51"
+  },
+  "package": {
+    "name": "json-stable-stringify",
+    "version": "1.3.0",
+    "entry_point": "index.js",
+    "module_format": "commonjs"
+  },
+  "submodules": []
+}

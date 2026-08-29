@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "public_api": [
+    {
+      "import": "require('json-stable-stringify')",
+      "export": "function stringify(obj, opts?)",
+      "returns": "string | undefined",
+      "behavior": [
+        "Sort enumerable string object keys lexicographically by default and recursively.",
+        "Preserve array order and native JSON treatment of undefined, non-finite numbers, and escaping.",
+        "Accept a comparator function directly or opts.cmp with {key,value} records and a get(key) helper.",
+        "Accept opts.replacer, opts.space, opts.cycles, and opts.collapseEmpty with documented error behavior."
+      ],
+      "side_effects": "Calls user-provided toJSON, comparator, and replacer callbacks; no filesystem or network access.",
+      "errors": ["TypeError for circular input unless cycles is true", "TypeError for invalid collapseEmpty", "TypeError for null comparator/options"],
+      "source_basis": "Frozen upstream package metadata and implementation inventory; behavioral contract is specified in instruction.md."
+    }
+  ],
+  "risk_adaptation": "Callbacks and circular object graphs are exercised through a UID-separated JSON child adapter; the adapter constructs non-JSON values inside the candidate child."
+}

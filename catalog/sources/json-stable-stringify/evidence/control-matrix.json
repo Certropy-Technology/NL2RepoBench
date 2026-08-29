@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "expected_total": 52,
+  "toolchain": "Harbor 0.21.0 / Node 24.19.0 / npm 11.17.0 / linux-amd64",
+  "controls": {
+    "empty": {"valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/control-runs/empty/logs/grading.json", "network": ".nl2repo/authoring-work/control-runs/empty/logs/network.json"},
+    "stub": {"valid": true, "reward": 0.0, "collected": 52, "passed": 0, "grading": ".nl2repo/runs/json-stable-stringify-control-stub-20260829/json-stable-stringify-control-stub-20260829/json-stable-stringify-stub__eBeSkEL/verifier/grading.json", "network": ".nl2repo/runs/json-stable-stringify-control-stub-20260829/json-stable-stringify-control-stub-20260829/json-stable-stringify-stub__eBeSkEL/verifier/network.json"},
+    "forgery": {"valid": true, "reward": 0.0, "collected": 52, "passed": 0, "verifier_owned_reward": true, "grading": ".nl2repo/runs/json-stable-stringify-control-forgery-20260829/json-stable-stringify-control-forgery-20260829/json-stable-stringify-forgery__aaDanNj/verifier/grading.json", "network": ".nl2repo/runs/json-stable-stringify-control-forgery-20260829/json-stable-stringify-control-forgery-20260829/json-stable-stringify-forgery__aaDanNj/verifier/network.json"},
+    "install-script": {"valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/control-runs/install-script/logs/grading.json", "network": ".nl2repo/authoring-work/control-runs/install-script/logs/network.json"},
+    "loader-hook": {"valid": true, "reward": 0.0, "collected": 52, "passed": 0, "grading": ".nl2repo/authoring-work/control-runs/loader-hook/logs/grading.json", "network": ".nl2repo/authoring-work/control-runs/loader-hook/logs/network.json"},
+    "hang": {"valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-call-failed", "bounded_timeout": true, "grading": ".nl2repo/authoring-work/control-runs/hang/logs/grading.json", "network": ".nl2repo/authoring-work/control-runs/hang/logs/network.json"},
+    "offline": {"valid": true, "reward": 0.40384615384615385, "collected": 52, "passed": 21, "public_network_available": false, "grading": ".nl2repo/authoring-work/control-runs/offline/logs/grading.json", "network": ".nl2repo/authoring-work/control-runs/offline/logs/network.json"}
+  }
+}
