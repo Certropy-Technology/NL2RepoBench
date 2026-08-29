@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {callCandidate} from './test_client.mjs';
+
+test('empty input', () => assert.equal(callCandidate(['']), ''));
+test('single uppercase defaults to lowercase', () => assert.equal(callCandidate(['A']), 'a'));
+test('single uppercase can be preserved', () => assert.equal(callCandidate(['A', {preserveConsecutiveUppercase: true}]), 'A'));
+test('ordinary camel boundary', () => assert.equal(callCandidate(['unicornRainbow']), 'unicorn_rainbow'));
+test('multiple ordinary boundaries', () => assert.equal(callCandidate(['thisIsATest']), 'this_is_a_test'));
+test('acronym before word', () => assert.equal(callCandidate(['myURLString']), 'my_url_string'));
+test('leading acronym', () => assert.equal(callCandidate(['URLString']), 'url_string'));
+test('trailing acronym', () => assert.equal(callCandidate(['StringURL']), 'string_url'));
+test('existing separators remain stable', () => assert.equal(callCandidate(['my_URL_string']), 'my_url_string'));
+test('digits participate in a boundary', () => assert.equal(callCandidate(['A2B']), 'a2_b'));
+test('leading punctuation is preserved', () => assert.equal(callCandidate(['_A2B']), '_a2_b'));
+test('spaces and punctuation are preserved', () => assert.equal(callCandidate(['A B-C']), 'a b-c'));
+test('Unicode uppercase boundary', () => assert.equal(callCandidate(['thisIsČandŠ']), 'this_is_čand_š'));
+test('custom separator', () => assert.equal(callCandidate(['unicornRainbow', {separator: '-'}]), 'unicorn-rainbow'));
+test('multi-character separator', () => assert.equal(callCandidate(['unicornRainbow', {separator: '::'}]), 'unicorn::rainbow'));
+test('empty separator', () => assert.equal(callCandidate(['thisIsATest', {separator: ''}]), 'thisisatest'));
+test('preserve acronym run', () => assert.equal(callCandidate(['testGUILabel', {preserveConsecutiveUppercase: true}]), 'test_GUI_label'));
+test('preserve URL run', () => assert.equal(callCandidate(['URLString', {preserveConsecutiveUppercase: true}]), 'URL_string'));
+test('preserve digit acronym run', () => assert.equal(callCandidate(['oxygenO2Level', {preserveConsecutiveUppercase: true}]), 'oxygen_O2_level'));
+test('preserve all uppercase', () => assert.equal(callCandidate(['CAPLOCKED1', {preserveConsecutiveUppercase: true}]), 'CAPLOCKED1'));
+test('default all uppercase lowercases', () => assert.equal(callCandidate(['UNICORNS AND RAINBOWS']), 'unicorns and rainbows'));
+test('invalid text rejects', () => assert.throws(() => callCandidate([42]), /type `string`/));
+test('invalid separator rejects', () => assert.throws(() => callCandidate(['helloWorld', {separator: 1}]), /type `string`/));
+test('option false matches default', () => assert.equal(callCandidate(['testGUILabel', {preserveConsecutiveUppercase: false}]), 'test_gui_label'));

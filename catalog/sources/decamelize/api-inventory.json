@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "runtime_entry": "index.js",
+  "declaration_entry": "index.d.ts",
+  "package_name": "decamelize",
+  "package_version": "6.0.1",
+  "public_exports": ["default"],
+  "signature": "default(text: string, options?: {separator?: string, preserveConsecutiveUppercase?: boolean}): string",
+  "runtime_dependencies": [],
+  "side_effects": [],
+  "excluded_risk_surfaces": ["wall-clock performance thresholds", "TypeScript declaration compilation", "non-JSON values", "filesystem and network"]
+}

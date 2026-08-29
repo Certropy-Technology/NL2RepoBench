@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_path": "test.js",
+  "upstream_framework": "ava",
+  "upstream_executable_assertions": 32,
+  "upstream_skipped_assertions": 1,
+  "frozen_private_collection": 24,
+  "collection_method": "independent node:test contract over bounded JSON child adapter",
+  "excluded": ["three wall-clock performance leaves", "tsd declaration tests", "unbounded or non-JSON values"],
+  "notes": "The production denominator is an independently authored behavior contract derived from the public API and the frozen source baseline."
+}
