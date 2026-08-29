@@ -1,0 +1,68 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/fs-extra"
+version = "1.0.0"
+description = "Build fs-extra 11.4.0 from an empty Node workspace with deterministic filesystem helpers, JSON files, recursive copy/move, links, aliases, and CommonJS/ESM exports."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "filesystem",
+    "json",
+    "copy",
+    "move",
+]
+
+[metadata]
+difficulty = "hard"
+category = "filesystem-utility"
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "filesystem",
+    "json",
+    "copy",
+    "move",
+    "separate-verifier",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 50
+canonical_manifest_digest = "sha256:afe6f1a99c83e1a996c4101618f984c68a0d593e7524cbd78d7453b60e09a09c"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

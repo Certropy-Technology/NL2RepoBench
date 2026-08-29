@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fs-extra",
+  "upstream": {
+    "framework": "mocha",
+    "command": "npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "test_files": 78,
+    "static_it_calls": 463,
+    "static_describe_calls": 303,
+    "passed": 731,
+    "pending": 8,
+    "failed": 0,
+    "notes": [
+      "Cross-device move tests were skipped because CROSS_DEVICE_PATH was not configured.",
+      "The upstream command also ran StandardJS lint and its ESM smoke suite."
+    ]
+  },
+  "verifier": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 50,
+    "boundary": "verifier-owned UID-10001 child adapter with one bounded JSON request per leaf",
+    "groups": {
+      "package-and-export-shape": 7,
+      "ensure-and-link-families": 10,
+      "output-existence-empty-remove": 8,
+      "json": 10,
+      "copy": 8,
+      "move": 6,
+      "callback-compatibility": 1
+    }
+  }
+}

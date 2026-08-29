@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "fs-extra"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "filesystem-utility"
+tags = ["node", "npm", "commonjs", "esm", "filesystem", "json", "copy", "move", "separate-verifier"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jprichardson/node-fs-extra"
+revision = "53a8d1a63c8eb30573110ed0f6528975f98801f0"
+license_spdx = "MIT"
+source_digest = "sha256:3b7a476361ff49cdba8037c03fcc6bab044c85ff3c33e29ed8a1f489309a41f0"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases are network-isolated. The exact npm runtime closure is supplied through a private cache artifact; only the trusted Oracle receives a run-scoped GitHub source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["graceful-fs@4.2.11", "jsonfile@6.2.1", "universalify@2.0.1"]
+artifact = { digest = "sha256:bda5ce68643d2bc32988b956a2512aaae5e293c993fada81a7dd7d2efbf30883", size_bytes = 266240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:bda5ce68643d2bc32988b956a2512aaae5e293c993fada81a7dd7d2efbf30883", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 50
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d", visibility = "private" }
+test_bundle = { digest = "sha256:b026568d9e81557c7767c39e0757ed9376a57624a5fe89894bd4589c3b4e3887", size_bytes = 40960, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:b026568d9e81557c7767c39e0757ed9376a57624a5fe89894bd4589c3b4e3887", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build fs-extra 11.4.0 from an empty Node workspace with deterministic filesystem helpers, JSON files, recursive copy/move, links, aliases, and CommonJS/ESM exports."
+keywords = ["node", "npm", "commonjs", "esm", "filesystem", "json", "copy", "move"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-fs-extra"
+reason = "Source validation, full source-root network lint, production compile, verifier images, trusted Oracle, empty, stub, forgery, install-script, loader-hook, hang, and offline controls passed. Review, pilot, and publication remain integrator-stage gates."
+
+[oracle_bundle]
+digest = "sha256:76e8c0d7eb1a715c3ffb6b648e6fca1ff8d9edcd1542e42e64cfef6e87034fb4"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:76e8c0d7eb1a715c3ffb6b648e6fca1ff8d9edcd1542e42e64cfef6e87034fb4"
+visibility = "private"

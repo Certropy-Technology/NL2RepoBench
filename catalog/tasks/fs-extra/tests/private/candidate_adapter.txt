@@ -1,0 +1,417 @@
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  readlinkSync,
+  rmSync,
+  statSync,
+  utimesSync,
+  writeFileSync,
+} from 'node:fs';
+import {createRequire} from 'node:module';
+import {dirname, join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const MAX_REQUEST_BYTES = 16 * 1024;
+const MAX_RESPONSE_BYTES = 128 * 1024;
+const ALLOWED = new Set([
+  'metadata', 'cjs-extra-shape', 'cjs-fs-shape', 'cjs-read-promise',
+  'esm-shape', 'ensure-dir-async', 'ensure-dir-sync', 'ensure-file-async',
+  'ensure-file-sync', 'ensure-link-async', 'ensure-link-sync',
+  'ensure-symlink-async', 'ensure-symlink-sync', 'output-file-async',
+  'output-file-sync', 'path-exists-async', 'path-exists-sync',
+  'empty-dir-async', 'empty-dir-sync', 'remove-async', 'remove-sync',
+  'json-async', 'json-alias-async', 'json-invalid-async',
+  'output-json-async', 'json-sync', 'json-alias-sync', 'json-invalid-sync',
+  'output-json-sync', 'copy-async', 'copy-filter-async', 'copy-conflict-async',
+  'copy-symlink-async', 'copy-sync', 'copy-conflict-sync', 'copy-errors',
+  'move-async', 'move-overwrite-async', 'move-sync', 'move-conflict-sync',
+  'move-errors', 'callbacks',
+]);
+
+function emit(id, payload, code = 0) {
+  const encoded = JSON.stringify({id, ...payload});
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) process.exit(70);
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function readRequest() {
+  const input = readFileSync(0);
+  if (input.byteLength > MAX_REQUEST_BYTES) throw new Error('request-too-large');
+  const request = JSON.parse(input.toString('utf8'));
+  if (!request || typeof request.id !== 'string' || !ALLOWED.has(request.operation)) {
+    throw new Error('malformed-request');
+  }
+  return request;
+}
+
+function errorValue(error) {
+  return {
+    name: error?.constructor?.name ?? 'Error',
+    code: error?.code ?? null,
+    message: String(error?.message ?? error),
+  };
+}
+
+function isDirectory(path) {
+  return statSync(path).isDirectory();
+}
+
+function jsonValue(value) {
+  return value === undefined ? null : value;
+}
+
+async function execute(operation, api, require, root) {
+  switch (operation) {
+    case 'metadata': {
+      const entry = require.resolve('fs-extra');
+      const manifest = JSON.parse(readFileSync(join(dirname(entry), '..', 'package.json'), 'utf8'));
+      return {
+        name: manifest.name,
+        version: manifest.version,
+        main: manifest.main,
+        exports: manifest.exports,
+        engines: manifest.engines,
+        dependencies: manifest.dependencies ?? {},
+      };
+    }
+    case 'cjs-extra-shape': {
+      const names = [
+        'copy', 'copySync', 'emptyDir', 'emptyDirSync', 'emptydir', 'emptydirSync',
+        'ensureDir', 'ensureDirSync', 'mkdirs', 'mkdirsSync', 'mkdirp', 'mkdirpSync',
+        'ensureFile', 'ensureFileSync', 'createFile', 'createFileSync',
+        'ensureLink', 'ensureLinkSync', 'createLink', 'createLinkSync',
+        'ensureSymlink', 'ensureSymlinkSync', 'createSymlink', 'createSymlinkSync',
+        'move', 'moveSync', 'outputFile', 'outputFileSync', 'pathExists',
+        'pathExistsSync', 'readJson', 'readJsonSync', 'readJSON', 'readJSONSync',
+        'writeJson', 'writeJsonSync', 'writeJSON', 'writeJSONSync', 'outputJson',
+        'outputJsonSync', 'outputJSON', 'outputJSONSync', 'remove', 'removeSync',
+      ];
+      return Object.fromEntries(names.map(name => [name, typeof api[name]]));
+    }
+    case 'cjs-fs-shape': {
+      const names = [
+        'access', 'appendFile', 'chmod', 'close', 'copyFile', 'cp', 'lstat',
+        'mkdir', 'open', 'read', 'readFile', 'readdir', 'realpath', 'rename',
+        'rm', 'stat', 'unlink', 'write', 'writeFile', 'writev', 'createReadStream',
+        'createWriteStream', 'constants', 'promises',
+      ];
+      return Object.fromEntries(names.map(name => [name, typeof api[name]]));
+    }
+    case 'cjs-read-promise': {
+      const file = join(root, 'promise.txt');
+      writeFileSync(file, 'promise-value');
+      const pending = api.readFile(file, 'utf8');
+      return {then: typeof pending?.then, value: await pending};
+    }
+    case 'esm-shape': {
+      const entry = require.resolve('fs-extra/esm');
+      const esm = await import(pathToFileURL(entry).href);
+      return {
+        keys: Object.keys(esm).sort(),
+        defaultTypes: Object.fromEntries(Object.keys(esm.default).sort().map(name => [name, typeof esm.default[name]])),
+      };
+    }
+    case 'ensure-dir-async': {
+      const paths = [join(root, 'a/b'), join(root, 'c/d'), join(root, 'e/f')];
+      const values = [await api.ensureDir(paths[0]), await api.mkdirs(paths[1]), await api.mkdirp(paths[2])];
+      return {directories: paths.map(isDirectory), values};
+    }
+    case 'ensure-dir-sync': {
+      const paths = [join(root, 'a/b'), join(root, 'c/d'), join(root, 'e/f')];
+      const values = [api.ensureDirSync(paths[0]), api.mkdirsSync(paths[1]), api.mkdirpSync(paths[2])];
+      return {directories: paths.map(isDirectory), values};
+    }
+    case 'ensure-file-async': {
+      const existing = join(root, 'existing.txt');
+      const created = join(root, 'nested/new.txt');
+      writeFileSync(existing, 'keep-me');
+      const first = await api.ensureFile(existing);
+      const second = await api.createFile(created);
+      return {existing: readFileSync(existing, 'utf8'), created: readFileSync(created, 'utf8'), values: [first, second]};
+    }
+    case 'ensure-file-sync': {
+      const existing = join(root, 'existing.txt');
+      const created = join(root, 'nested/new.txt');
+      writeFileSync(existing, 'keep-me');
+      const first = api.ensureFileSync(existing);
+      const second = api.createFileSync(created);
+      return {existing: readFileSync(existing, 'utf8'), created: readFileSync(created, 'utf8'), values: [first, second]};
+    }
+    case 'ensure-link-async': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'nested/link.txt');
+      writeFileSync(source, 'linked');
+      await api.ensureLink(source, destination);
+      await api.createLink(source, destination);
+      return {content: readFileSync(destination, 'utf8'), sameInode: statSync(source).ino === statSync(destination).ino};
+    }
+    case 'ensure-link-sync': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'nested/link.txt');
+      writeFileSync(source, 'linked');
+      api.ensureLinkSync(source, destination);
+      api.createLinkSync(source, destination);
+      return {content: readFileSync(destination, 'utf8'), sameInode: statSync(source).ino === statSync(destination).ino};
+    }
+    case 'ensure-symlink-async': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'nested/link.txt');
+      writeFileSync(source, 'linked');
+      await api.ensureSymlink(source, destination);
+      await api.createSymlink(source, destination);
+      return {content: readFileSync(destination, 'utf8'), symbolic: lstatSync(destination).isSymbolicLink(), target: readlinkSync(destination)};
+    }
+    case 'ensure-symlink-sync': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'nested/link.txt');
+      writeFileSync(source, 'linked');
+      api.ensureSymlinkSync(source, destination);
+      api.createSymlinkSync(source, destination);
+      return {content: readFileSync(destination, 'utf8'), symbolic: lstatSync(destination).isSymbolicLink(), target: readlinkSync(destination)};
+    }
+    case 'output-file-async': {
+      const file = join(root, 'nested/output.txt');
+      const first = await api.outputFile(file, 'first', 'utf8');
+      await api.outputFile(file, Buffer.from('second'));
+      return {content: readFileSync(file, 'utf8'), value: jsonValue(first)};
+    }
+    case 'output-file-sync': {
+      const file = join(root, 'nested/output.txt');
+      const first = api.outputFileSync(file, 'first', 'utf8');
+      api.outputFileSync(file, Buffer.from('second'));
+      return {content: readFileSync(file, 'utf8'), value: jsonValue(first)};
+    }
+    case 'path-exists-async': {
+      const file = join(root, 'exists.txt');
+      writeFileSync(file, 'x');
+      return {present: await api.pathExists(file), absent: await api.pathExists(join(root, 'missing'))};
+    }
+    case 'path-exists-sync': {
+      const file = join(root, 'exists.txt');
+      writeFileSync(file, 'x');
+      return {present: api.pathExistsSync(file), absent: api.pathExistsSync(join(root, 'missing'))};
+    }
+    case 'empty-dir-async': {
+      const existing = join(root, 'existing');
+      const missing = join(root, 'missing');
+      mkdirSync(join(existing, 'nested'), {recursive: true});
+      writeFileSync(join(existing, 'nested/file.txt'), 'x');
+      await api.emptyDir(existing);
+      await api.emptydir(missing);
+      return {existing: isDirectory(existing), existingEntries: readdirSync(existing), missing: isDirectory(missing)};
+    }
+    case 'empty-dir-sync': {
+      const existing = join(root, 'existing');
+      const missing = join(root, 'missing');
+      mkdirSync(join(existing, 'nested'), {recursive: true});
+      writeFileSync(join(existing, 'nested/file.txt'), 'x');
+      api.emptyDirSync(existing);
+      api.emptydirSync(missing);
+      return {existing: isDirectory(existing), existingEntries: readdirSync(existing), missing: isDirectory(missing)};
+    }
+    case 'remove-async': {
+      const target = join(root, 'nested/tree');
+      mkdirSync(target, {recursive: true});
+      writeFileSync(join(target, 'file.txt'), 'x');
+      const first = await api.remove(join(root, 'nested'));
+      const second = await api.remove(join(root, 'nested'));
+      return {exists: existsSync(target), values: [first, second]};
+    }
+    case 'remove-sync': {
+      const target = join(root, 'nested/tree');
+      mkdirSync(target, {recursive: true});
+      writeFileSync(join(target, 'file.txt'), 'x');
+      const first = api.removeSync(join(root, 'nested'));
+      const second = api.removeSync(join(root, 'nested'));
+      return {exists: existsSync(target), values: [first, second]};
+    }
+    case 'json-async': {
+      const file = join(root, 'value.json');
+      await api.writeJson(file, {name: 'value', list: [1, 2]}, {spaces: 2, EOL: '\r\n'});
+      return {raw: readFileSync(file, 'utf8'), value: await api.readJson(file)};
+    }
+    case 'json-alias-async': {
+      const file = join(root, 'value.json');
+      await api.writeJSON(file, {alias: true});
+      return {value: await api.readJSON(file)};
+    }
+    case 'json-invalid-async': {
+      const file = join(root, 'invalid.json');
+      writeFileSync(file, '{bad');
+      const suppressed = await api.readJson(file, {throws: false});
+      let thrown;
+      try { await api.readJson(file); } catch (error) { thrown = errorValue(error); }
+      return {suppressed, thrown};
+    }
+    case 'output-json-async': {
+      const file = join(root, 'nested/value.json');
+      const first = await api.outputJson(file, {output: true}, {spaces: 2});
+      const second = await api.outputJSON(file, {alias: true});
+      return {value: await api.readJson(file), parent: isDirectory(join(root, 'nested')), values: [first, second]};
+    }
+    case 'json-sync': {
+      const file = join(root, 'value.json');
+      api.writeJsonSync(file, {name: 'value', list: [1, 2]}, {spaces: 2, EOL: '\r\n'});
+      return {raw: readFileSync(file, 'utf8'), value: api.readJsonSync(file)};
+    }
+    case 'json-alias-sync': {
+      const file = join(root, 'value.json');
+      api.writeJSONSync(file, {alias: true});
+      return {value: api.readJSONSync(file)};
+    }
+    case 'json-invalid-sync': {
+      const file = join(root, 'invalid.json');
+      writeFileSync(file, '{bad');
+      const suppressed = api.readJsonSync(file, {throws: false});
+      let thrown;
+      try { api.readJsonSync(file); } catch (error) { thrown = errorValue(error); }
+      return {suppressed, thrown};
+    }
+    case 'output-json-sync': {
+      const file = join(root, 'nested/value.json');
+      const first = api.outputJsonSync(file, {output: true}, {spaces: 2});
+      const second = api.outputJSONSync(file, {alias: true});
+      return {value: api.readJsonSync(file), parent: isDirectory(join(root, 'nested')), values: [first, second]};
+    }
+    case 'copy-async': {
+      const source = join(root, 'source');
+      const destination = join(root, 'deep/destination');
+      mkdirSync(join(source, 'nested'), {recursive: true});
+      writeFileSync(join(source, 'a.txt'), 'a');
+      writeFileSync(join(source, 'nested/b.txt'), 'b');
+      const value = await api.copy(source, destination);
+      return {a: readFileSync(join(destination, 'a.txt'), 'utf8'), b: readFileSync(join(destination, 'nested/b.txt'), 'utf8'), value: jsonValue(value)};
+    }
+    case 'copy-filter-async': {
+      const source = join(root, 'source');
+      const destination = join(root, 'destination');
+      mkdirSync(source);
+      writeFileSync(join(source, 'keep.txt'), 'keep');
+      writeFileSync(join(source, 'skip.tmp'), 'skip');
+      await api.copy(source, destination, {filter: src => !src.endsWith('.tmp')});
+      return {entries: readdirSync(destination).sort()};
+    }
+    case 'copy-conflict-async': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'destination.txt');
+      writeFileSync(source, 'source');
+      writeFileSync(destination, 'destination');
+      let error;
+      try { await api.copy(source, destination, {overwrite: false, errorOnExist: true}); } catch (caught) { error = errorValue(caught); }
+      return {content: readFileSync(destination, 'utf8'), error};
+    }
+    case 'copy-symlink-async': {
+      const target = join(root, 'target.txt');
+      const source = join(root, 'source-link');
+      const destination = join(root, 'nested/destination-link');
+      writeFileSync(target, 'target');
+      await api.ensureSymlink(target, source);
+      await api.copy(source, destination);
+      return {symbolic: lstatSync(destination).isSymbolicLink(), content: readFileSync(destination, 'utf8')};
+    }
+    case 'copy-sync': {
+      const source = join(root, 'source');
+      const destination = join(root, 'deep/destination');
+      mkdirSync(join(source, 'nested'), {recursive: true});
+      const file = join(source, 'nested/value.txt');
+      writeFileSync(file, 'value');
+      utimesSync(file, new Date(946684800000), new Date(946684800000));
+      const value = api.copySync(source, destination, {preserveTimestamps: true});
+      return {content: readFileSync(join(destination, 'nested/value.txt'), 'utf8'), mtime: Math.trunc(statSync(join(destination, 'nested/value.txt')).mtimeMs), value: jsonValue(value)};
+    }
+    case 'copy-conflict-sync': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'destination.txt');
+      writeFileSync(source, 'source');
+      writeFileSync(destination, 'destination');
+      let error;
+      try { api.copySync(source, destination, {overwrite: false, errorOnExist: true}); } catch (caught) { error = errorValue(caught); }
+      return {content: readFileSync(destination, 'utf8'), error};
+    }
+    case 'copy-errors': {
+      const source = join(root, 'source');
+      mkdirSync(join(source, 'nested'), {recursive: true});
+      let same;
+      let child;
+      try { await api.copy(source, source); } catch (error) { same = errorValue(error); }
+      try { await api.copy(source, join(source, 'nested/copy')); } catch (error) { child = errorValue(error); }
+      return {same, child};
+    }
+    case 'move-async': {
+      const source = join(root, 'source');
+      const destination = join(root, 'deep/destination');
+      mkdirSync(source);
+      writeFileSync(join(source, 'value.txt'), 'value');
+      const value = await api.move(source, destination);
+      return {source: existsSync(source), content: readFileSync(join(destination, 'value.txt'), 'utf8'), value: jsonValue(value)};
+    }
+    case 'move-overwrite-async': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'destination.txt');
+      writeFileSync(source, 'source');
+      writeFileSync(destination, 'old');
+      await api.move(source, destination, {overwrite: true});
+      return {source: existsSync(source), content: readFileSync(destination, 'utf8')};
+    }
+    case 'move-sync': {
+      const source = join(root, 'source');
+      const destination = join(root, 'deep/destination');
+      mkdirSync(source);
+      writeFileSync(join(source, 'value.txt'), 'value');
+      const value = api.moveSync(source, destination);
+      return {source: existsSync(source), content: readFileSync(join(destination, 'value.txt'), 'utf8'), value: jsonValue(value)};
+    }
+    case 'move-conflict-sync': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'destination.txt');
+      writeFileSync(source, 'source');
+      writeFileSync(destination, 'old');
+      let error;
+      try { api.moveSync(source, destination); } catch (caught) { error = errorValue(caught); }
+      return {source: existsSync(source), content: readFileSync(destination, 'utf8'), error};
+    }
+    case 'move-errors': {
+      const source = join(root, 'source');
+      mkdirSync(join(source, 'nested'), {recursive: true});
+      let same;
+      let child;
+      try { await api.move(source, source); } catch (error) { same = errorValue(error); }
+      try { await api.move(source, join(source, 'nested/moved')); } catch (error) { child = errorValue(error); }
+      return {same, child};
+    }
+    case 'callbacks': {
+      const source = join(root, 'source.txt');
+      const destination = join(root, 'deep/destination.txt');
+      const output = join(root, 'output/value.txt');
+      writeFileSync(source, 'copy-value');
+      const outputReturn = await new Promise((resolve, reject) => {
+        const returned = api.outputFile(output, 'callback-value', error => error ? reject(error) : resolve(returned));
+      });
+      const existsValue = await new Promise((resolve, reject) => api.pathExists(output, (error, value) => error ? reject(error) : resolve(value)));
+      const copyReturn = await new Promise((resolve, reject) => {
+        const returned = api.copy(source, destination, error => error ? reject(error) : resolve(returned));
+      });
+      return {outputReturn: jsonValue(outputReturn), copyReturn: jsonValue(copyReturn), existsValue, output: readFileSync(output, 'utf8'), copied: readFileSync(destination, 'utf8')};
+    }
+    default:
+      throw new Error('unsupported-operation');
+  }
+}
+
+const request = readRequest();
+const root = mkdtempSync(join(process.env.TMPDIR, 'fs-extra-case-'));
+try {
+  const require = createRequire(join(process.cwd(), 'package.json'));
+  const api = require('fs-extra');
+  const value = await execute(request.operation, api, require, root);
+  emit(request.id, {ok: true, value});
+} catch (error) {
+  emit(request.id, {ok: false, error: errorValue(error)}, 1);
+} finally {
+  rmSync(root, {recursive: true, force: true});
+}

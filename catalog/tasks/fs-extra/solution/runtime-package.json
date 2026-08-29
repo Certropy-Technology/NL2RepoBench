@@ -1,0 +1,22 @@
+{
+  "name": "fs-extra",
+  "version": "11.4.0",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./esm": "./lib/esm.mjs"
+  },
+  "files": [
+    "lib/",
+    "!lib/**/__tests__/"
+  ],
+  "engines": {
+    "node": ">=14.14"
+  },
+  "dependencies": {
+    "graceful-fs": "4.2.11",
+    "jsonfile": "6.2.1",
+    "universalify": "2.0.1"
+  }
+}

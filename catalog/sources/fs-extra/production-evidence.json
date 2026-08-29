@@ -1,0 +1,227 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fs-extra",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 50,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/jprichardson/node-fs-extra",
+    "revision": "53a8d1a63c8eb30573110ed0f6528975f98801f0",
+    "source_digest": "sha256:3b7a476361ff49cdba8037c03fcc6bab044c85ff3c33e29ed8a1f489309a41f0",
+    "license_spdx": "MIT",
+    "license_path": "LICENSE",
+    "license_digest": "sha256:c6a7de1428955aa5a692f4d3a3d3ede658d959616944713337cda296736442e1",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "verification": {
+      "command": "git fetch --depth 1 origin 53a8d1a63c8eb30573110ed0f6528975f98801f0; git archive --format=tar FETCH_HEAD",
+      "exit_code": 0,
+      "archive_size_bytes": 634880,
+      "oracle_log": ".nl2repo/runs-fs-extra-20260829/oracle/2026-08-29__23-01-11/fs-extra__8U64Aob/agent/oracle.txt"
+    }
+  },
+  "baseline": {
+    "command": "npm install --ignore-scripts --no-audit --no-fund followed by npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "test_files": 78,
+    "passed": 731,
+    "pending": 8,
+    "failed": 0,
+    "notes": [
+      "The eight pending upstream cases are cross-device move fixtures requiring CROSS_DEVICE_PATH.",
+      "The upstream command also runs StandardJS lint and the ESM smoke suite."
+    ]
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:65594371cf0bf9da83b4d9fc67bad10e60e3d861db27edfe1c682207886dafbf",
+    "dependency_artifact": "sha256:bda5ce68643d2bc32988b956a2512aaae5e293c993fada81a7dd7d2efbf30883",
+    "dependency_artifact_size_bytes": 266240,
+    "commands_artifact": "sha256:f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d",
+    "test_bundle": "sha256:b026568d9e81557c7767c39e0757ed9376a57624a5fe89894bd4589c3b4e3887",
+    "test_bundle_size_bytes": 40960,
+    "oracle_bundle": "sha256:76e8c0d7eb1a715c3ffb6b648e6fca1ff8d9edcd1542e42e64cfef6e87034fb4",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/final-compile-fs-extra-20260829/fs-extra",
+    "mode": "production",
+    "file_count": 99,
+    "manifest_sha256": "sha256:66d9c5c3964ec083cedd9e07e8ccd6abe7546218a4bf9e40cc4ea4b2c037222a",
+    "canonical_manifest_digest": "sha256:afe6f1a99c83e1a996c4101618f984c68a0d593e7524cbd78d7453b60e09a09c"
+  },
+  "environment_reconciliation": {
+    "status": "mismatch",
+    "locked_agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "actual_local_agent_runtime_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "fresh_agent_image_id": "sha256:5e5a89f8ad61cb75b2c69761248ccd9ef9918e03027343d340896d406362f16f",
+    "fresh_verifier_image_id": "sha256:fe5091c01f9ae8a9526e6426f0af4caadc9cc0b6efce62cede82df1fb7c6f7b2",
+    "runtime_smoke": "OPENHANDS_FORK_OFFLINE_RUNTIME_OK",
+    "pull_exit_code": 1,
+    "pull_log": ".nl2repo/authoring-work/node-author-wave2-20260828/fs-extra/logs/agent-runtime-pull.log",
+    "pull_log_sha256": "sha256:c846376c12abfc6bd1b4a0eb2ddda1424793ac62e600cda9c7105ab75735ddab",
+    "next_step": "Restore nl2repobench/openhands-sdk-fork:930e9b1da-bookworm with image ID sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f, then rebuild and rerun the affected integration gates before any model Agent Run."
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-fs-extra-20260829/fs-extra -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/runs-fs-extra-20260829/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 50,
+    "collected": 50,
+    "passed": 50,
+    "failed": 0,
+    "reward": 1.0,
+    "grading_path": ".nl2repo/runs-fs-extra-20260829/oracle/2026-08-29__23-01-11/fs-extra__8U64Aob/verifier/grading.json",
+    "grading_sha256": "sha256:10bcf624d6c0ac176b1dd78a79b35e42c8be50c584486dfae6f0f55b4c3f7443",
+    "network_path": ".nl2repo/runs-fs-extra-20260829/oracle/2026-08-29__23-01-11/fs-extra__8U64Aob/verifier/network.json",
+    "network_sha256": "sha256:4b9b7ac9a67ca68e1e20ef22dddf837e30a7afad62a4aa7baf8486046ef88b71",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/runs-fs-extra-20260829/controls/empty/2026-08-29__23-05-32/fs-extra-empty__iMwjwAS/verifier/grading.json",
+      "grading_sha256": "sha256:288056be97ba710749729c38d5dc4bf8c89b85e34177d0be51da10c7c9e82c20",
+      "network_path": ".nl2repo/runs-fs-extra-20260829/controls/empty/2026-08-29__23-05-32/fs-extra-empty__iMwjwAS/verifier/network.json",
+      "network_sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30"
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 7,
+      "reward": 0.14,
+      "grading_path": ".nl2repo/runs-fs-extra-20260829/controls/stub/2026-08-29__23-06-47/fs-extra-stub__t6EaQDw/verifier/grading.json",
+      "grading_sha256": "sha256:d27fa65f8a3a83f1c1ec381fbb94bc08bfd4118bb7664df5a248ca5c5da86989",
+      "network_path": ".nl2repo/runs-fs-extra-20260829/controls/stub/2026-08-29__23-06-47/fs-extra-stub__t6EaQDw/verifier/network.json",
+      "network_sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30"
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 5,
+      "reward": 0.1,
+      "candidate_written_reward": 1.0,
+      "verifier_owned_reward": true,
+      "grading_path": ".nl2repo/runs-fs-extra-20260829/controls/forgery/2026-08-29__23-08-05/fs-extra-forgery__yofrx9S/verifier/grading.json",
+      "grading_sha256": "sha256:071775daa52f3ff9e7c46d2e7d9fd7627478739a18664a7aad30eedcf9604c46",
+      "network_path": ".nl2repo/runs-fs-extra-20260829/controls/forgery/2026-08-29__23-08-05/fs-extra-forgery__yofrx9S/verifier/network.json",
+      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+    },
+    "install-script": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/runs-fs-extra-20260829/controls/install-script/2026-08-29__23-09-29/fs-extra-install-script__KMoFxcH/verifier/grading.json",
+      "grading_sha256": "sha256:288056be97ba710749729c38d5dc4bf8c89b85e34177d0be51da10c7c9e82c20",
+      "network_path": ".nl2repo/runs-fs-extra-20260829/controls/install-script/2026-08-29__23-09-29/fs-extra-install-script__KMoFxcH/verifier/network.json",
+      "network_sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+    },
+    "call-hang": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "wall_seconds": 160,
+      "grading_path": ".nl2repo/runs-fs-extra-20260829/controls/call-hang/2026-08-29__23-10-44/fs-extra-call-hang__DuUsbPr/verifier/grading.json",
+      "grading_sha256": "sha256:e7226b0057879100768edbf5bb448b18a545f92e5ce83bd2e202c6ef32c542f3",
+      "network_path": ".nl2repo/runs-fs-extra-20260829/controls/call-hang/2026-08-29__23-10-44/fs-extra-call-hang__DuUsbPr/verifier/network.json",
+      "network_sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 50,
+      "collected": 50,
+      "passed": 7,
+      "reward": 0.14,
+      "public_network_available": false,
+      "public_hostname_probe": false,
+      "numeric_ip_probe": false,
+      "grading_path": ".nl2repo/runs-fs-extra-20260829/controls/offline/2026-08-29__23-13-42/fs-extra-stub__x5X8Kmp/verifier/grading.json",
+      "grading_sha256": "sha256:d27fa65f8a3a83f1c1ec381fbb94bc08bfd4118bb7664df5a248ca5c5da86989",
+      "network_path": ".nl2repo/runs-fs-extra-20260829/controls/offline/2026-08-29__23-13-42/fs-extra-stub__x5X8Kmp/verifier/network.json",
+      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+    }
+  },
+  "static_gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/fs-extra",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "repository_error_count": 0,
+      "repository_warning_count": 141,
+      "fs_extra_findings": 0
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/fs-extra --output .nl2repo/final-compile-fs-extra-20260829 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    "repeat_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/fs-extra --output .nl2repo/repeat2-compile-fs-extra-20260829 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "byte_identical": true
+    },
+    "docker_builds": {
+      "agent_exit_code": 0,
+      "verifier_exit_code": 0
+    },
+    "focused_tests": {
+      "command": "uv run pytest -q --no-cov tests/test_node_controls.py tests/test_node_control_summary.py tests/test_node_foundation.py tests/test_node_production_gate.py",
+      "exit_code": 0,
+      "passed": 54
+    },
+    "full_tests": {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "passed": 395,
+      "coverage_percent": 80.06
+    },
+    "ruff": {
+      "command": "uv run ruff check src tests scripts",
+      "exit_code": 0
+    },
+    "mypy": {
+      "command": "uv run mypy src/nl2repobench",
+      "exit_code": 0
+    },
+    "no_vendor": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py",
+      "exit_code": 0,
+      "passed": 1
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this lane, as required.",
+    "The locked OpenHands image ID is unavailable locally; a registry pull failed. Restore the exact image and rerun affected integration gates before any model Agent Run.",
+    "Human blind review, independent traceability approval, pilot, generated catalog/tasks integration, and publication remain integrator-stage gates.",
+    "The full source-root lint has 141 warnings from unrelated existing sources; fs-extra has zero findings.",
+    "Docker builds emitted only constant --platform lint warnings in addition to the recorded agent-runtime image mismatch."
+  ]
+}
