@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "ruff"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-linting-and-formatting"
+tags = ["python", "cli", "linter", "formatter", "toml", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/astral-sh/ruff"
+revision = "7c4724f0515514d6669dae36d66472bfe72c355c"
+license_spdx = "MIT"
+source_digest = "sha256:16d616d1fd63e53f7f1d7df1453388df09d23148b987f87346561756a81ca3d2"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-13-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "pip installs the hash-locked setuptools build closure during Docker build; candidate installation is offline and non-editable."
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The setuptools build closure is hash-locked and installed during Docker build. Agent and verifier execution have no egress. The private Oracle bundle verifies the frozen source archive and contains a binary built from that revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0"]
+lock_artifact = { digest = "sha256:d1ff29fc884cbcbf907784faf5366752f6f4046acdc9196c40aa5b3a96f45e96", size_bytes = 104, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d1ff29fc884cbcbf907784faf5366752f6f4046acdc9196c40aa5b3a96f45e96", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:04c7bbabb0325707e33055642970aa35d4e9cd21486301eb02a0c89ca1387fc9", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:04c7bbabb0325707e33055642970aa35d4e9cd21486301eb02a0c89ca1387fc9", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build Ruff 0.16.4 from an empty workspace and satisfy a bounded deterministic Python console-package contract for linting, safe fixes, formatting, stdin, JSON diagnostics, and TOML configuration."
+keywords = ["python", "cli", "linter", "formatter", "toml", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:1d5e1827c160343ee41c2b7c502e95833e2cf233f743a0eff54a517dd8dbd409"
+size_bytes = 126525440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1d5e1827c160343ee41c2b7c502e95833e2cf233f743a0eff54a517dd8dbd409"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "The fixed separate verifier passed a fresh offline Oracle run and empty, stub, forgery, timeout, installation-failure, and offline controls. The task is awaiting the independent Agent Run loop."

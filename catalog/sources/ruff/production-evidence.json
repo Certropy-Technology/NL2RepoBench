@@ -1,0 +1,170 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ruff",
+  "task_version": "1.0.0",
+  "status": "controls-passed",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/astral-sh/ruff",
+    "revision": "7c4724f0515514d6669dae36d66472bfe72c355c",
+    "source_digest": "sha256:16d616d1fd63e53f7f1d7df1453388df09d23148b987f87346561756a81ca3d2",
+    "license_spdx": "MIT"
+  },
+  "environment": {
+    "status": "known",
+    "python_version": "3.12.11",
+    "os_name": "debian-13-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "status": "known",
+    "installer": "pip",
+    "packages": [
+      "setuptools==80.9.0"
+    ],
+    "lock_artifact": {
+      "digest": "sha256:d1ff29fc884cbcbf907784faf5366752f6f4046acdc9196c40aa5b3a96f45e96",
+      "size_bytes": 104,
+      "media_type": "text/plain; charset=utf-8",
+      "uri": "artifact://private/sha256:d1ff29fc884cbcbf907784faf5366752f6f4046acdc9196c40aa5b3a96f45e96",
+      "visibility": "private"
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-gate/ruff-final/ruff/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:3689699563ef87a1c77d949c6c2c72969f749bac40c6f5b3ebacf313aae0ccf6",
+    "canonical_manifest_digest": "sha256:620bf58ebb18343930c2c7e22bcf081797b2c8aa41c1187b6d2724391323286c",
+    "mode": "production"
+  },
+  "private_artifacts": {
+    "verifier": {
+      "protocol": "custom-json-v1",
+      "entrypoint": "run.py",
+      "bundle": {
+        "digest": "sha256:04c7bbabb0325707e33055642970aa35d4e9cd21486301eb02a0c89ca1387fc9",
+        "size_bytes": 20480,
+        "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+        "uri": "artifact://private/sha256:04c7bbabb0325707e33055642970aa35d4e9cd21486301eb02a0c89ca1387fc9",
+        "visibility": "private"
+      }
+    },
+    "oracle_bundle": {
+      "digest": "sha256:1d5e1827c160343ee41c2b7c502e95833e2cf233f743a0eff54a517dd8dbd409",
+      "size_bytes": 126525440,
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "uri": "artifact://private/sha256:1d5e1827c160343ee41c2b7c502e95833e2cf233f743a0eff54a517dd8dbd409",
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/ruff-final/ruff -a oracle --job-name ruff-author-final-oracle -o .nl2repo/runs/ruff-author-final/oracle --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 20,
+    "passed": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/ruff-author-final/oracle/ruff-author-final-oracle/ruff__n4HNVyp/verifier/grading.json",
+      "sha256": "sha256:1b452c1c6d9e32d4469479f9f793d7fdb1b7952394ed4bdf9a6dac7d8280f283"
+    },
+    "network": {
+      "path": ".nl2repo/runs/ruff-author-final/oracle/ruff-author-final-oracle/ruff__n4HNVyp/verifier/network.json",
+      "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/ruff-final/ruff -a nop --job-name ruff-author-final-empty -o .nl2repo/runs/ruff-author-final/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/ruff-author-final/empty/ruff-author-final-empty/ruff__S2Kt7hY/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/ruff-author-final/empty/ruff-author-final-empty/ruff__S2Kt7hY/verifier/network.json",
+        "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ruff-final/ruff-stub -a oracle --job-name ruff-author-final-stub -o .nl2repo/runs/ruff-author-final/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/ruff-author-final/stub/ruff-author-final-stub/ruff-stub__NJA47to/verifier/grading.json",
+        "sha256": "sha256:3b0d4881a55762e57727fab333f68696d7431c63bfc2e13191a823e0b5555f34"
+      },
+      "network": {
+        "path": ".nl2repo/runs/ruff-author-final/stub/ruff-author-final-stub/ruff-stub__NJA47to/verifier/network.json",
+        "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ruff-final/ruff-forgery -a oracle --job-name ruff-author-final-forgery -o .nl2repo/runs/ruff-author-final/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.1,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/ruff-author-final/forgery/ruff-author-final-forgery/ruff-forgery__yV3TLck/verifier/grading.json",
+        "sha256": "sha256:fbedfeaa992ea94ce4897122c3353ce1dd9a81712e2d2e0e4ccb81dbc917d539"
+      },
+      "network": {
+        "path": ".nl2repo/runs/ruff-author-final/forgery/ruff-author-final-forgery/ruff-forgery__yV3TLck/verifier/network.json",
+        "sha256": "sha256:9c44dff4e5fec0eacd976eab729ad74c3af7ed998f9b4edd9258de36be28406d"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/ruff-final/ruff -a oracle --job-name ruff-author-final-offline -o .nl2repo/runs/ruff-author-final/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "reward": 1.0,
+      "network": {
+        "path": ".nl2repo/runs/ruff-author-final/offline/ruff-author-final-offline/ruff__UJXAaiP/verifier/network.json",
+        "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ruff-final/ruff-call-hang -a oracle --job-name ruff-author-final-call-hang -o .nl2repo/runs/ruff-author-final/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.05,
+      "grading": {
+        "path": ".nl2repo/runs/ruff-author-final/call-hang/ruff-author-final-call-hang/ruff-call-hang__QempTXQ/verifier/grading.json",
+        "sha256": "sha256:cb98bb25211eb1093c740d9181b1800ed1322352d5ce19408d9b3ab1ca713150"
+      },
+      "network": {
+        "path": ".nl2repo/runs/ruff-author-final/call-hang/ruff-author-final-call-hang/ruff-call-hang__QempTXQ/verifier/network.json",
+        "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ruff-final/ruff-install-hang -a oracle --job-name ruff-author-final-install-hang -o .nl2repo/runs/ruff-author-final/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/ruff-author-final/install-hang/ruff-author-final-install-hang/ruff-install-hang__rNBigwm/verifier/grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/ruff-author-final/install-hang/ruff-author-final-install-hang/ruff-install-hang__rNBigwm/verifier/network.json",
+        "sha256": "sha256:077548a57e817cf9242a200096a0931ccd0fd48230cf86442c9ad0b8911c2351"
+      }
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started; the independent Agent Run loop remains pending.",
+    "The bounded task evaluates a documented deterministic Ruff CLI subset, not Rust implementation parity or every upstream rule.",
+    "The generated runtime remains task-local under .nl2repo; the integrator owns any catalog/tasks publication projection."
+  ]
+}

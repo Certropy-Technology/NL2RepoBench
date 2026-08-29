@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/ruff"
+version = "1.0.0"
+description = "Build Ruff 0.16.4 from an empty workspace and satisfy a bounded deterministic Python console-package contract for linting, safe fixes, formatting, stdin, JSON diagnostics, and TOML configuration."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "cli",
+    "linter",
+    "formatter",
+    "toml",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-linting-and-formatting"
+tags = [
+    "python",
+    "cli",
+    "linter",
+    "formatter",
+    "toml",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 20
+canonical_manifest_digest = "sha256:620bf58ebb18343930c2c7e22bcf081797b2c8aa41c1187b6d2724391323286c"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
