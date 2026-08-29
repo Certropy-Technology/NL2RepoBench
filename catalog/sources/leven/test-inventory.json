@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "leven",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 44,
+  "collection_source": "private/contract.test.mjs",
+  "groups": {
+    "packaging_and_exports": 4,
+    "distance_core": 12,
+    "distance_cutoff": 8,
+    "closest_match": 16,
+    "immutability_and_unicode": 4
+  },
+  "collection_command": "node --test --test-reporter=tap private/contract.test.mjs",
+  "traceability": "traceability.md"
+}

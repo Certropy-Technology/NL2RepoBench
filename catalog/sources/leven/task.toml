@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "leven"
+version = "4.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "string-algorithm"
+tags = ["node", "npm", "esm", "strings", "levenshtein", "unicode"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/leven"
+revision = "fbc77137f0361b26aaa8465854e0ae8e492db6ba"
+license_spdx = "MIT"
+source_digest = "sha256:14181e2e61abff5adcf7678a8a8e97cac49c90520d5f9d47e33a27687eeef055"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The zero-runtime-dependency npm closure is supplied through an integrity-checked private bundle at build time; only the trusted Oracle receives a run-scoped upstream host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:190da8b4f3833f97db51d8c672654ff3b88881ab6978e11c7295f1ef22c85ff0", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:190da8b4f3833f97db51d8c672654ff3b88881ab6978e11c7295f1ef22c85ff0", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 44
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fe0bcfd3dfb3dd6c1934d5eaf2340276ef301880a814cc01c4f58fbaa957eab9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fe0bcfd3dfb3dd6c1934d5eaf2340276ef301880a814cc01c4f58fbaa957eab9", visibility = "private" }
+test_bundle = { digest = "sha256:e75687acd4854ffa4c8aa2b28cf6b725f75657d619c499606bf343da23065fa8", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:e75687acd4854ffa4c8aa2b28cf6b725f75657d619c499606bf343da23065fa8", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the leven ESM package with deterministic Levenshtein distance and closest-match behavior."
+keywords = ["node", "npm", "esm", "strings", "levenshtein", "unicode"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828/leven"
+reason = "Source validation, network lint, production compile, official Harbor Oracle, empty, stub, forgery, and offline controls passed. Independent review, pilot, publication, and model Agent Run remain integrator-stage gates."
+
+[oracle_bundle]
+digest = "sha256:66a74ea0527fdc8e7cf96fb7854cbc45e0f8ad3e019061ed02fe7922abfd6833"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:66a74ea0527fdc8e7cf96fb7854cbc45e0f8ad3e019061ed02fe7922abfd6833"
+visibility = "private"

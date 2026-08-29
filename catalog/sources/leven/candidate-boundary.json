@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "protocol": "custom-json-v1",
+  "entrypoint": "private/test_client.mjs",
+  "transport": "one JSON request per isolated node child process",
+  "request_limit_bytes": 65536,
+  "response_limit_bytes": 262144,
+  "operations": ["metadata", "leven", "closestMatch"],
+  "candidate_uid": "candidate",
+  "candidate_network": "none",
+  "timeout_seconds": 30,
+  "notes": "The trusted verifier never imports candidate code in-process. The adapter loads only the installed package root in the candidate child and returns bounded JSON values."
+}

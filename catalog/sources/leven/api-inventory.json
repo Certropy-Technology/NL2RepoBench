@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "leven",
+  "source_revision": "fbc77137f0361b26aaa8465854e0ae8e492db6ba",
+  "exports": [
+    {
+      "import_path": ".",
+      "name": "default",
+      "kind": "function",
+      "signature": "leven(first: string, second: string, options?: {maxDistance?: number}): number",
+      "tested_behaviors": ["distance", "empty", "unicode", "maxDistance", "symmetry"]
+    },
+    {
+      "import_path": ".",
+      "name": "closestMatch",
+      "kind": "function",
+      "signature": "closestMatch(target: string, candidates: readonly string[], options?: {maxDistance?: number}): string | undefined",
+      "tested_behaviors": ["nearest", "order", "duplicates", "empty candidates", "maxDistance", "unicode"]
+    }
+  ],
+  "package_contract": {
+    "name": "leven",
+    "module_type": "module",
+    "root_export": ".",
+    "runtime_dependencies": []
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.0",
+  "task_id": "leven",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/leven",
+    "revision": "fbc77137f0361b26aaa8465854e0ae8e492db6ba",
+    "archive_sha256": "sha256:14181e2e61abff5adcf7678a8a8e97cac49c90520d5f9d47e33a27687eeef055",
+    "archive_size_bytes": 51200,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": []
+  },
+  "environment": {
+    "runtime": "Node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "os": "Debian 12 (bookworm)",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_image_id": "sha256:7e9b9226dbd653af7d6b20ef79985bb555df57523465f1d8a298fa9d603cf6f3",
+    "verifier_image_id": "sha256:859f58878efb2a202b2947f37f27174e0749ba0640e5497f4a9636dcac55a8dd",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependency_closure": {
+    "lockfile_version": 3,
+    "direct_packages": 0,
+    "installed_packages": 0,
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:190da8b4f3833f97db51d8c672654ff3b88881ab6978e11c7295f1ef22c85ff0",
+      "size_bytes": 10240,
+      "visibility": "private"
+    },
+    "offline_install": {
+      "command": "npm ci --offline --ignore-scripts --no-audit --no-fund",
+      "exit_code": 0,
+      "installed_packages": 0
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "expected_total": 44,
+    "source": "frozen-collection",
+    "upstream_baseline": {
+      "command": "npm test",
+      "passed_groups": 3,
+      "failed_groups": 0,
+      "exit_code": 0,
+      "notes": "Upstream AVA groups passed; XO emitted two complexity warnings and exited zero."
+    }
+  },
+  "private_artifacts": {
+    "tests": {
+      "digest": "sha256:e75687acd4854ffa4c8aa2b28cf6b725f75657d619c499606bf343da23065fa8",
+      "size_bytes": 20480
+    },
+    "commands": {
+      "digest": "sha256:fe0bcfd3dfb3dd6c1934d5eaf2340276ef301880a814cc01c4f58fbaa957eab9",
+      "size_bytes": 10240
+    },
+    "oracle": {
+      "digest": "sha256:66a74ea0527fdc8e7cf96fb7854cbc45f0e8ad3e019061ed02fe7922abfd6833",
+      "size_bytes": 10240
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled/leven/bundle.manifest.json",
+    "sha256": "sha256:ce55501fcdfdf0ff8b4d18389b02d9b699de9cca3bf44a2e75664101afbd1784",
+    "schema_version": "2.0",
+    "mode": "production",
+    "file_count": 76,
+    "canonical_manifest_digest": "sha256:516892ba8a2a0172b27b53d5e00f481f4f77f80cac2fbcc15fc4033f68e98cb9",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "integrity_mismatches": 0,
+    "deterministic_receipt": ".nl2repo/compiled/leven/bundle.manifest.json"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/leven",
+      "exit_code": 0
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "global_error_count": 0,
+      "task_finding_count": 0,
+      "warning_count": 141
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/leven --output .nl2repo/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "allow_incomplete": false
+    },
+    "verifier_build": {
+      "command": "docker build --file .nl2repo/compiled/leven/tests/Dockerfile --tag nl2repo-leven-verifier:local .nl2repo/compiled/leven/tests",
+      "exit_code": 0,
+      "image_id": "sha256:859f58878efb2a202b2947f37f27174e0749ba0640e5497f4a9636dcac55a8dd"
+    },
+    "agent_environment_build": {
+      "command": "docker build --file .nl2repo/compiled/leven/environment/Dockerfile --tag nl2repo-leven-agent-env:local .nl2repo/compiled/leven/environment",
+      "exit_code": 0,
+      "image_id": "sha256:7e9b9226dbd653af7d6b20ef79985bb555df57523465f1d8a298fa9d603cf6f3"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/leven -a oracle --allow-agent-host github.com --job-name leven-official-oracle-final -o .nl2repo/runs/leven-official-oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "bundle_manifest_sha256": "sha256:ce55501fcdfdf0ff8b4d18389b02d9b699de9cca3bf44a2e75664101afbd1784",
+    "valid": true,
+    "collected": 44,
+    "passed": 44,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/leven-official-oracle-final/leven-official-oracle-final/leven__tC3eoke/verifier/grading.json",
+      "sha256": "sha256:729e7ad8f2b7bcea8fd2eb2a75667eef66f7a4026a74de973991cf3470aa3061"
+    },
+    "network": {
+      "path": ".nl2repo/runs/leven-official-oracle-final/leven-official-oracle-final/leven__tC3eoke/verifier/network.json",
+      "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e",
+      "public_network_available": false
+    },
+    "result": {
+      "path": ".nl2repo/runs/leven-official-oracle-final/leven-official-oracle-final/leven__tC3eoke/result.json",
+      "sha256": "sha256:a8948e1bf31ce2c1e321829594477decb88f65197b84365fe7bc9613fef44cec"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none <leven-verifier> /tests/test.sh with empty workspace",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "expected_total": 44,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/verifier-empty/logs/verifier/grading.json", "sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca"},
+      "network": {"path": ".nl2repo/authoring-work/verifier-empty/logs/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+    },
+    "stub": {
+      "command": "docker run --rm --network none <leven-verifier> /tests/test.sh with generated stub control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 44,
+      "passed": 4,
+      "expected_total": 44,
+      "reward": 0.09090909090909091,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/verifier-stub/logs/verifier/grading.json", "sha256": "sha256:beaf82fae87d0dacb3df296e59bd9557f0ec57618716ea9e502a2a0d1366a7d3"},
+      "network": {"path": ".nl2repo/authoring-work/verifier-stub/logs/verifier/network.json", "sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522"}
+    },
+    "forgery": {
+      "command": "docker run --rm --network none <leven-verifier> /tests/test.sh with generated forgery control",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 44,
+      "passed": 4,
+      "expected_total": 44,
+      "reward": 0.09090909090909091,
+      "public_network_available": false,
+      "verifier_owned_reward": true,
+      "forged_reward_path": ".nl2repo/authoring-work/control-forgery-workspace/reward.json",
+      "grading": {"path": ".nl2repo/authoring-work/verifier-forgery/logs/verifier/grading.json", "sha256": "sha256:beaf82fae87d0dacb3df296e59bd9557f0ec57618716ea9e502a2a0d1366a7d3"},
+      "network": {"path": ".nl2repo/authoring-work/verifier-forgery/logs/verifier/network.json", "sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522"}
+    },
+    "offline": {
+      "command": "docker run --rm --network none <leven-verifier> /tests/test.sh with offline control",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 44,
+      "passed": 1,
+      "expected_total": 44,
+      "reward": 0.022727272727272728,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/verifier-offline/logs/verifier/grading.json", "sha256": "sha256:48018f4af516af886e5a66482ee772ec5a0d1f552c004f609b6c9be47699380c"},
+      "network": {"path": ".nl2repo/authoring-work/verifier-offline/logs/verifier/network.json", "sha256": "sha256:471839ee5319d50a930070fa8f5cbe35d833712cb4e9d841c25bdf2342d80347"}
+    },
+    "additional": {
+      "install-script": {"collected": 0, "passed": 0, "reward": 0.0, "valid": true},
+      "loader-hook": {"collected": 44, "passed": 23, "reward": 0.5227272727272727, "valid": true},
+      "oversized-output": {"collected": 44, "passed": 3, "reward": 0.06818181818181818, "valid": true}
+    }
+  },
+  "residual_risks": [
+    "No model Harbor Agent Run was started in this authoring lane.",
+    "Independent blind/spec review, dataset projection, publication, and model pilot remain integrator work.",
+    "The trusted Oracle requires only a run-scoped github.com authorization; model-agent runs receive no source or registry host authorization.",
+    "The upstream npm test is a three-group AVA suite; the production verifier uses a separate 44-leaf node:test behavioral contract covering the public API."
+  ]
+}
