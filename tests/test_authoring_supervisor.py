@@ -188,7 +188,18 @@ def test_queue_summary_counts_states(tmp_path: Path) -> None:
     assert supervisor._queue_summary(lane) == {
         "language": "go",
         "counts": {"complete": 1, "pending": 2},
+        "claimable": True,
+        "exhausted": 0,
     }
+
+
+def test_lane_with_exhausted_pending_claims_is_not_claimable() -> None:
+    records = [
+        {"status": "pending", "attempts": 3},
+        {"status": "complete", "attempts": 1},
+    ]
+
+    assert supervisor._lane_has_claimable_work(records, max_attempts=3) is False
 
 
 def test_redact_removes_secret_values() -> None:

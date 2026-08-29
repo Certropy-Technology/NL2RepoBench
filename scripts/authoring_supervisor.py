@@ -291,7 +291,27 @@ def _queue_summary(lane: Lane) -> dict[str, Any]:
     for record in records:
         status = str(record.get("status"))
         counts[status] = counts.get(status, 0) + 1
-    return {"language": lane.language, "counts": dict(sorted(counts.items()))}
+    return {
+        "language": lane.language,
+        "counts": dict(sorted(counts.items())),
+        "claimable": _lane_has_claimable_work(records, max_attempts=3),
+        "exhausted": sum(
+            1
+            for record in records
+            if record.get("status") == "pending"
+            and int(record.get("attempts", 0)) >= 3
+        ),
+    }
+
+
+def _lane_has_claimable_work(
+    records: list[dict[str, Any]], *, max_attempts: int
+) -> bool:
+    return any(
+        record.get("status") == "pending"
+        and int(record.get("attempts", 0)) < max_attempts
+        for record in records
+    )
 
 
 def _release_stale_claims(
@@ -1104,10 +1124,7 @@ def supervise(args: argparse.Namespace) -> int:
                         if active_total >= args.max_total_controllers:
                             break
                         records = lane_records[lane.language]
-                        if not any(
-                            record.get("status") in {"pending", "running"}
-                            for record in records
-                        ):
+                        if not _lane_has_claimable_work(records, max_attempts=3):
                             continue
                         if len(_controller_slots(lane, current)) > slot:
                             continue
