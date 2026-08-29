@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "task_id": "range-parser",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/jshttp/range-parser",
+    "revision": "f4bf1736f28a3e574430408c18779cf7fbaf3770",
+    "source_digest": "sha256:cd4b795f1dd8fb3e4fab51a1cdfa276cbc8787d6d1aac19f0949de66da67da88",
+    "codeload_archive_sha256": "sha256:cd4b795f1dd8fb3e4fab51a1cdfa276cbc8787d6d1aac19f0949de66da67da88",
+    "license_spdx": "MIT",
+    "license_file_sha256": "sha256:f655e6291356ec0de7a8f0e69f294961a2cea86678ec94588be1e6a492e278ab"
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm-amd64",
+    "architecture": "linux/amd64",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image_digest": "sha256:201ae4db4a1027b94b04161d2e6de07d5a6bfa055d49bc98c4c83efbb41ab430",
+    "agent_runtime_image_digest": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependency_lock": {
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile": "package-lock.json",
+    "lockfile_version": 3,
+    "runtime_dependencies": [],
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "bundle_digest": "sha256:086cf4f5910f13918ea2a7e277ae3551a8675f91bd20a303a14eeba70ddfc534",
+    "bundle_size_bytes": 10240
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 37,
+    "collection_source": "independent node:test contract over bounded JSON child adapter",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "commands_artifact": "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+    "test_bundle": "sha256:6b1b7fc33b0dbeaafe70fff7881490cd51b4bff3fd130c3c1ee49029772ae301"
+  },
+  "bundle": {
+    "manifest": ".nl2repo/final-compile/range-parser/bundle.manifest.json",
+    "manifest_sha256": "sha256:15337c0555334113df4d1a35a04ee45da0ee1b29939e65ab39caceb31aef0dff",
+    "canonical_manifest_digest": "sha256:8644300d801ec532deae205002ab928ccbb244a4606e32d5a108edcf65322d6e",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "file_count": 77,
+    "production_compile_used_allow_incomplete": false
+  },
+  "commands": [
+    {"command": "node --version && npm --version && uname -a", "exit_code": 0, "summary": "v22.23.1 / 10.9.8 host authoring tools; production Node image verified separately"},
+    {"command": "docker image inspect node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848", "exit_code": 0},
+    {"command": "node --check private test files && bash -n Oracle and control scripts", "exit_code": 0},
+    {"command": "uv run nl2repo task validate-source catalog/sources/range-parser", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "task_errors": 0, "note": "Repository-wide warnings belong to other sources; range-parser had no finding."},
+    {"command": "uv run nl2repo harbor compile catalog/sources/range-parser --output .nl2repo/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "mode": "production"},
+    {"command": "docker build --platform linux/amd64 -f .nl2repo/final-compile/range-parser/tests/Dockerfile -t nl2repo-range-parser-verifier:authoring .nl2repo/final-compile/range-parser/tests", "exit_code": 0, "image_digest": "sha256:201ae4db4a1027b94b04161d2e6de07d5a6bfa055d49bc98c4c83efbb41ab430", "note": "Docker emitted only constant-platform lint warnings."},
+    {"command": "uv run python scripts/summarize_node_controls.py .nl2repo/runs/range-parser-controls --output .nl2repo/runs/range-parser-controls/summary.json", "exit_code": 0, "summary": "all seven controls passed; bounded leaf-failure hang form accepted by minimal generic summarizer remediation"}
+  ],
+  "oracle": {
+    "status": "passed",
+    "command": "trusted solve.sh with fixed revision/archive digest, followed by separate verifier replay; no Harbor Agent Run",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 37,
+    "passed": 37,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/range-parser-verifier-oracle/logs/verifier/grading.json",
+    "grading_sha256": "sha256:30553e200b3abddb976f26281435c423dd73a7bc8bd5c22991a43fb41ac23811",
+    "network": ".nl2repo/runs/range-parser-verifier-oracle/logs/verifier/network.json",
+    "network_sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"
+  },
+  "controls": {
+    "status": "passed",
+    "empty": {"command": "direct separate verifier replay with empty workspace", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading": ".nl2repo/runs/range-parser-controls/empty/logs/verifier/grading.json", "grading_sha256": "sha256:b752cf7527d84c8b6b37f325a157dbce6a455ec08be133c54104c70406ca2e19", "network": ".nl2repo/runs/range-parser-controls/empty/logs/verifier/network.json", "network_sha256": "sha256:b8f044e53290cbc095de81f8829ac6547a7d7d1f0d864a15e2587af30820f8a3"},
+    "stub": {"command": "direct separate verifier replay with stub workspace", "exit_code": 0, "valid": true, "collected": 37, "passed": 6, "failed": 31, "reward": 0.16216216216216217, "verifier_owned_reward": true, "grading": ".nl2repo/runs/range-parser-controls/stub/logs/verifier/grading.json", "grading_sha256": "sha256:6c81fc7d6fbb54273e5bd31ee68e9fd5298ebd515cd99d34251778aed01177bf", "network": ".nl2repo/runs/range-parser-controls/stub/logs/verifier/network.json", "network_sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"},
+    "forgery": {"command": "direct separate verifier replay with forged trusted reports", "exit_code": 0, "valid": true, "collected": 37, "passed": 8, "failed": 29, "reward": 0.21621621621621623, "verifier_owned_reward": true, "grading": ".nl2repo/runs/range-parser-controls/forgery/logs/verifier/grading.json", "grading_sha256": "sha256:a8b6b38631f4e4794a4a2e7e111bda43032ab55889fb1e0cbf3d68a7ad6604c6", "network": ".nl2repo/runs/range-parser-controls/forgery/logs/verifier/network.json", "network_sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"},
+    "install_script": {"command": "direct separate verifier replay with lifecycle install script", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading": ".nl2repo/runs/range-parser-controls/install-script/logs/verifier/grading.json", "grading_sha256": "sha256:b752cf7527d84c8b6b37f325a157dbce6a455ec08be133c54104c70406ca2e19", "network": ".nl2repo/runs/range-parser-controls/install-script/logs/verifier/network.json", "network_sha256": "sha256:1f7590e891fc288edaa989ae091b61107926a2c970c4f8a31f534fdd05ab2a1d"},
+    "loader_hook": {"command": "direct separate verifier replay with loader-hook workspace", "exit_code": 0, "valid": true, "collected": 37, "passed": 8, "failed": 29, "reward": 0.21621621621621623, "grading": ".nl2repo/runs/range-parser-controls/loader-hook/logs/verifier/grading.json", "grading_sha256": "sha256:a8b6b38631f4e4794a4a2e7e111bda43032ab55889fb1e0cbf3d68a7ad6604c6", "network": ".nl2repo/runs/range-parser-controls/loader-hook/logs/verifier/network.json", "network_sha256": "sha256:1f7590e891fc288edaa989ae091b61107926a2c970c4f8a31f534fdd05ab2a1d"},
+    "hang": {"command": "direct separate verifier replay with bounded call hang", "exit_code": 0, "valid": true, "collected": 37, "passed": 0, "failed": 37, "reward": 0.0, "grading": ".nl2repo/runs/range-parser-controls/hang/logs/verifier/grading.json", "grading_sha256": "sha256:a65039f877747dd3f9b1fbd2ed2cd30e3d1f355e5a6a61c034032ea9ed9bdf09", "network": ".nl2repo/runs/range-parser-controls/hang/logs/verifier/network.json", "network_sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"},
+    "offline": {"command": "direct separate verifier replay with network none", "exit_code": 0, "valid": true, "collected": 37, "passed": 8, "failed": 29, "reward": 0.21621621621621623, "public_network_available": false, "grading": ".nl2repo/runs/range-parser-controls/offline/logs/verifier/grading.json", "grading_sha256": "sha256:a8b6b38631f4e4794a4a2e7e111bda43032ab55889fb1e0cbf3d68a7ad6604c6", "network": ".nl2repo/runs/range-parser-controls/offline/logs/verifier/network.json", "network_sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"}
+  },
+  "remediation": [
+    {"issue": "repository default toolchain lock was schema 1.0", "action": "selected existing locked Node schema-2 toolchain toolchain.node.lock.toml", "result": "production compile exit 0"},
+    {"issue": "Oracle source archive had no npm lock", "action": "after revision/archive verification, removed devDependencies/scripts and generated npm v3 lock-only metadata", "result": "verifier install succeeded"},
+    {"issue": "private test client was root-only but child needed adapter code", "action": "injected the adapter as a data URL and anchored createRequire to the controlled verifier file URL", "result": "Oracle 37/37 and local contract 37/37"},
+    {"issue": "control solve scripts used container default cwd", "action": "replayed with workdir /workspace", "result": "controls exercised real candidate workspaces"}
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The locked OpenHands agent image digest c50b3e3... is not the local tag ID bb48824...; this lane did not run the model agent, and integrator must resolve image availability before model evaluation.",
+    "The source archive digest is the deterministic git archive digest for the frozen revision; the trusted Oracle solve performs the same revision and archive assertion.",
+    "Review, pilot, publication, and generated catalog/tasks projection remain integrator-owned stages."
+  ],
+  "next_unblock_action": "Integrator performs review and consumes this handoff; do not start an Agent Run from this lane."
+}

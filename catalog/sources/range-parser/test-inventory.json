@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_path": "test/range-parser.js",
+  "upstream_framework": "mocha",
+  "upstream_executable_assertions": 63,
+  "upstream_skipped_assertions": 0,
+  "frozen_private_collection": 37,
+  "collection_method": "independent node:test contract over a bounded JSON child adapter",
+  "coverage": ["package shape", "type error", "malformed headers", "invalid members", "unsatisfiable ranges", "explicit and open ranges", "suffix ranges", "whitespace", "custom units", "multiple ranges", "combined overlap and adjacency", "order preservation", "zero-size representation"],
+  "excluded": ["Mocha runner and development lint configuration", "non-contract size coercion behavior"],
+  "notes": "The denominator is the number of node:test top-level leaves, frozen after running the private contract against the exact source revision. Hidden tests use only JSON-serializable inputs and a UID-separated candidate subprocess."
+}

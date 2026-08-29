@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "runtime_entry": "index.js",
+  "package_name": "range-parser",
+  "package_version": "1.2.1",
+  "module_format": "commonjs",
+  "public_exports": ["module.exports (callable function)"],
+  "signature": "parseRange(size: number, str: string, options?: {combine?: unknown}): Array<{start: number, end: number}> | -1 | -2",
+  "runtime_dependencies": [],
+  "side_effects": [],
+  "error_contract": "throws TypeError('argument str must be a string') for non-string str; returns -2 for malformed headers and -1 for headers with no satisfiable range",
+  "determinism": "same inputs produce the same array order, range values, type property, and sentinel result",
+  "excluded_risk_surfaces": ["non-numeric size coercion", "network and filesystem behavior", "CLI behavior", "development-only lint and coverage tooling"]
+}
