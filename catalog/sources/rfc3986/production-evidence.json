@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rfc3986",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python-hyper/rfc3986",
+    "revision": "7a64092490c1b3c4f354b9b14d060fa758d66848",
+    "source_digest": "sha256:2a7c7ef66d324b1ba3196e6fdb5be491f7842e6ae96d0f5c3273f5bfc1824346",
+    "license_spdx": "Apache-2.0",
+    "license_digest": "sha256:c0ddce33bfac480a66bde40c590ede2647a4c8a729dcb0d2ce46c014473d5dd8"
+  },
+  "dependency_lock": {
+    "digest": "sha256:521cf6e90575e2215ddef2ab86508b60643bcfa1185ae311235f97cea0d5524e",
+    "size_bytes": 368,
+    "packages": ["setuptools==84.0.0"],
+    "vendor_wheels": false
+  },
+  "inventory": {
+    "runtime_modules": ["api", "builder", "compat", "exceptions", "iri", "misc", "normalizers", "parseresult", "uri", "validators"],
+    "source_tests_collected": 2836,
+    "source_tests_passed": 2836,
+    "source_test_command": "PYTHONPATH=.nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/source/src uv run --frozen python -m pytest -q .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/source/tests",
+    "harbor_frozen_total": 38
+  },
+  "executed_bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-compile/rfc3986/bundle.manifest.json",
+    "sha256": "sha256:78aad55c39c0ac442e53de9193e91e27dd62f40864c5193e6452db0c09aec7ac",
+    "canonical_manifest_digest": "sha256:971761af2316c324a18573f0e00ae880b1119a2bca1c63cd9b45617fea34c033",
+    "file_count": 59
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/rfc3986 --output .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-compile --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "mode": "production",
+    "used_allow_incomplete": false,
+    "log": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-compile.log",
+      "sha256": "sha256:f802eafa4032298491f4024565534e7f830b5b0505f0a95d180fa0b885717704"
+    }
+  },
+  "oracle": {
+    "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-compile/rfc3986 -a oracle --job-name rfc3986-authoring-oracle-final2-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/oracle-final2 --n-attempts 1 --n-concurrent 1 --yes --allow-agent-host github.com --allow-agent-host codeload.github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/oracle-final2/rfc3986-authoring-oracle-final2-20260830/rfc3986__Ji3EBh3/verifier/grading.json",
+      "sha256": "sha256:49792be99d8c02d12a102ca85a3a4aa18c91f22d23040fffa829f9f1252eb3e6"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/oracle-final2/rfc3986-authoring-oracle-final2-20260830/rfc3986__Ji3EBh3/verifier/network.json",
+      "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a"
+    },
+    "summary": "38/38 passed; collection_errors=0; public_network_available=false"
+  },
+  "controls": {
+    "empty": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-compile/rfc3986 -a nop --job-name rfc3986-authoring-empty-final2-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/empty-final2 --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/empty-final2/rfc3986-authoring-empty-final2-20260830/rfc3986__9x3Tohj/verifier/grading.json",
+        "sha256": "sha256:3ce8dbb7ff32816348442ba1064dad194a23486bc051145c92927c37c25fa86b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/empty-final2/rfc3986-authoring-empty-final2-20260830/rfc3986__9x3Tohj/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a"
+      },
+      "summary": "candidate-installation-failed exception; 0/0; reward=0.0"
+    },
+    "stub": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-controls/stub/rfc3986-stub -a oracle --job-name rfc3986-authoring-stub-final2-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/stub-final2 --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/stub-final2/rfc3986-authoring-stub-final2-20260830/rfc3986-stub__YVwtqBL/verifier/grading.json",
+        "sha256": "sha256:08611ef34450dab6006c68a128fcbece02460e9f8445d91786c22b48d0c95ee2"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/stub-final2/rfc3986-authoring-stub-final2-20260830/rfc3986-stub__YVwtqBL/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a"
+      },
+      "summary": "38 collected; 38 failed; reward=0.0"
+    },
+    "forgery": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-controls/forgery/rfc3986-forgery -a oracle --job-name rfc3986-authoring-forgery-final2-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/forgery-final2 --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/forgery-final2/rfc3986-authoring-forgery-final2-20260830/rfc3986-forgery__ztWZs6Y/verifier/grading.json",
+        "sha256": "sha256:08611ef34450dab6006c68a128fcbece02460e9f8445d91786c22b48d0c95ee2"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/forgery-final2/rfc3986-authoring-forgery-final2-20260830/rfc3986-forgery__ztWZs6Y/verifier/network.json",
+        "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516"
+      },
+      "summary": "38 collected; 38 failed; reward=0.0 despite candidate reward write attempt"
+    },
+    "call-hang": {
+      "command": "PYTHONPATH=src uv run --frozen --project harbor-runner python scripts/harbor_safe_entry.py run -p .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/final-controls/call-hang/rfc3986-call-hang -a oracle --job-name rfc3986-authoring-call-hang-final2-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/call-hang-final2 --n-attempts 1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/call-hang-final2/rfc3986-authoring-call-hang-final2-20260830/rfc3986-call-hang__9jxTTKB/verifier/grading.json",
+        "sha256": "sha256:08611ef34450dab6006c68a128fcbece02460e9f8445d91786c22b48d0c95ee2"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/call-hang-final2/rfc3986-authoring-call-hang-final2-20260830/rfc3986-call-hang__9jxTTKB/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a"
+      },
+      "summary": "bounded call timeout; 38 collected; 38 failed; reward=0.0"
+    },
+    "offline": {
+      "command": "Verifier-integrated no-network probes in Oracle, empty, stub, forgery, and call-hang runs",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/rfc3986/runs/oracle-final2/rfc3986-authoring-oracle-final2-20260830/rfc3986__Ji3EBh3/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a"
+      },
+      "summary": "All five receipts report public_network_available=false"
+    }
+  }
+}

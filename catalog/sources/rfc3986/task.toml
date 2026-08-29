@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "rfc3986"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "uri-parsing"
+tags = ["python", "uri", "iri", "rfc3986", "normalization", "validation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-hyper/rfc3986"
+revision = "7a64092490c1b3c4f354b9b14d060fa758d66848"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:2a7c7ef66d324b1ba3196e6fdb5be491f7842e6ae96d0f5c3273f5bfc1824346"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build dependency is installed during image construction from a private hash-locked requirements artifact; Agent and separate verifier execution are network-isolated. Only the trusted Oracle receives run-scoped access to the exact frozen upstream host."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==84.0.0", "idna==3.10"]
+lock_artifact = { digest = "sha256:521cf6e90575e2215ddef2ab86508b60643bcfa1185ae311235f97cea0d5524e", size_bytes = 368, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:521cf6e90575e2215ddef2ab86508b60643bcfa1185ae311235f97cea0d5524e", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 38
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:6c62b4f67aad40a54e162421d1611e7a6af160aa8ed01c2184f21d1d09c82aba", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6c62b4f67aad40a54e162421d1611e7a6af160aa8ed01c2184f21d1d09c82aba", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build rfc3986 from an empty workspace and implement a deterministic URI/IRI parsing, normalization, builder, ParseResult, and validation contract over a separate child-side verifier."
+keywords = ["python", "uri", "iri", "rfc3986", "normalization", "validation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:e04815e2fdbdc57a94155588f6d53edeee479641e7e0dd4d0bbac687655c723f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e04815e2fdbdc57a94155588f6d53edeee479641e7e0dd4d0bbac687655c723f"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Current production bundle passed Oracle and task-local controls: Oracle 38/38, empty installation exception 0/0, stub 0/38, forgery 0/38, bounded call-hang 0/38, and offline network probes false. No model Agent Run is started here."
