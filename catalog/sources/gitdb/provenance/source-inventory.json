@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "source": {
+    "upstream_url": "https://github.com/gitpython-developers/gitdb",
+    "revision": "009e227ffa19a2b84704c14e3a99fb1fbd937d5b",
+    "archive_sha256": "a026ca9823f88bfb5344472d380d03946cd863265560d9545eb0a27695ea73fc",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "efd29f596a08e8857e68e7694a50bcda72839792da7c3f041bcbff5f18009239",
+    "submodules": ["gitdb/ext/smmap is uninitialized at the frozen tree; PyPI smmap 5.0.3 is the runtime closure"]
+  },
+  "package": {"version": "4.0.12", "python_requires": ">=3.7", "runtime_dependency": "smmap>=3.0.1,<6"},
+  "upstream_tests": {"command": "python -m pytest -c /dev/null -q", "collected": 25, "passed": 24, "skipped": 1},
+  "task_contract": {"frozen_total": 16, "protocol": "custom-json-v1", "excluded": ["pack parsing", "deltas", "alternates", "mmap accelerators", "performance behavior"]}
+}

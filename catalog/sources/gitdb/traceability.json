@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "frozen_total": 16,
+  "leaves": [
+    {"id": "api_surface", "public_contract": "root and submodule exports, metadata, type maps"},
+    {"id": "object_records", "public_contract": "OInfo, pack records, stream records"},
+    {"id": "istream_mutation", "public_contract": "mutable IStream properties and read"},
+    {"id": "sha_writers", "public_contract": "SHA writers, forwarding and zlib writer"},
+    {"id": "object_helpers", "public_contract": "loose headers, object writing, copy, SHA conversion"},
+    {"id": "memory_store_read", "public_contract": "MemoryDB store, metadata and fresh streams"},
+    {"id": "memory_idempotency", "public_contract": "MemoryDB duplicate content and SHA iteration"},
+    {"id": "memory_stream_copy", "public_contract": "MemoryDB copy to loose database"},
+    {"id": "memory_errors", "public_contract": "BadObject and UnsupportedOperation"},
+    {"id": "loose_store_layout", "public_contract": "compressed loose-object path and bytes"},
+    {"id": "loose_reopen_read", "public_contract": "fresh LooseObjectDB read semantics"},
+    {"id": "loose_partial_lookup", "public_contract": "unique byte/text partial SHA resolution"},
+    {"id": "loose_errors", "public_contract": "missing and ambiguous loose-object errors"},
+    {"id": "gitdb_composition", "public_contract": "GitDB root validation and loose delegation"},
+    {"id": "cross_database_projection", "public_contract": "MemoryDB to LooseObjectDB interoperability"},
+    {"id": "deterministic_projection", "public_contract": "stable SHA and content projections"}
+  ]
+}

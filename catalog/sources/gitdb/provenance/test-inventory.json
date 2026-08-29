@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "source_revision": "009e227ffa19a2b84704c14e3a99fb1fbd937d5b",
+  "upstream": {
+    "command": ".nl2repo/authoring-work/gitdb-probe-venv/bin/python -m pytest -c /dev/null -q",
+    "python": "3.12.11",
+    "collected": 25,
+    "passed": 24,
+    "skipped": 1,
+    "exit_code": 0,
+    "duration_seconds": 31.69,
+    "collection_log": ".nl2repo/authoring-work/gitdb-pytest-collection.log",
+    "run_log": ".nl2repo/authoring-work/gitdb-upstream-pytest.log"
+  },
+  "production": {
+    "framework": "custom-json-v1",
+    "frozen_total": 16,
+    "traceability": "catalog/sources/gitdb/traceability.json",
+    "leaf_ids": [
+      "api_surface",
+      "object_records",
+      "istream_mutation",
+      "sha_writers",
+      "object_helpers",
+      "memory_store_read",
+      "memory_idempotency",
+      "memory_stream_copy",
+      "memory_errors",
+      "loose_store_layout",
+      "loose_reopen_read",
+      "loose_partial_lookup",
+      "loose_errors",
+      "gitdb_composition",
+      "cross_database_projection",
+      "deterministic_projection"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "source_revision": "009e227ffa19a2b84704c14e3a99fb1fbd937d5b",
+  "package_version": "4.0.12",
+  "modules": [
+    "gitdb",
+    "gitdb.base",
+    "gitdb.db.base",
+    "gitdb.db.git",
+    "gitdb.db.loose",
+    "gitdb.db.mem",
+    "gitdb.exc",
+    "gitdb.fun",
+    "gitdb.stream",
+    "gitdb.util"
+  ],
+  "contract_groups": {
+    "records": [
+      "OInfo",
+      "OPackInfo",
+      "ODeltaPackInfo",
+      "OStream",
+      "OPackStream",
+      "ODeltaPackStream",
+      "IStream",
+      "InvalidOInfo",
+      "InvalidOStream"
+    ],
+    "database_interfaces": ["ObjectDBR", "ObjectDBW", "FileDBBase", "CompoundDB"],
+    "database_implementations": ["MemoryDB", "LooseObjectDB", "GitDB"],
+    "stream_helpers": ["Sha1Writer", "FlexibleSha1Writer", "ZippedStoreShaWriter", "NullStream"],
+    "object_helpers": [
+      "loose_object_header",
+      "loose_object_header_info",
+      "write_object",
+      "stream_copy",
+      "bin_to_hex",
+      "hex_to_bin"
+    ],
+    "exceptions": ["BadObject", "AmbiguousObjectName", "UnsupportedOperation", "InvalidDBRoot"]
+  },
+  "adapter_boundary": {
+    "protocol": "custom-json-v1",
+    "candidate_execution": "Each leaf runs in a UID-isolated child process against the candidate-owned installation site.",
+    "serialization": "Only leaf identifiers, statuses, and bounded failure messages cross into the trusted grader.",
+    "filesystem": "Loose-object scenarios use child-owned temporary directories; no candidate module is imported by the trusted runner."
+  },
+  "excluded": [
+    "pack parsing and writing",
+    "delta resolution",
+    "alternate and reference databases",
+    "memory-mapped accelerators",
+    "performance and long-lived file descriptor behavior"
+  ]
+}
