@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "shellingham",
+  "owner": "python-author-wave2-20260828",
+  "attempts": [
+    {
+      "stage": "source-freeze",
+      "command": "git fetch --depth=1 origin 926401c4543b84f9f579932d30fb52a104639398; git archive --format=tar 926401c4543b84f9f579932d30fb52a104639398 | sha256sum",
+      "tool_versions": {"git": "2.55.0", "python": "3.14.6", "uv": "0.11.32"},
+      "exit_code": 0,
+      "result": "revision 926401c4543b84f9f579932d30fb52a104639398; raw archive sha256:b936de13a28f170163f749e81556a65834f630af7e7f08914749c5c64fff728b"
+    },
+    {
+      "stage": "source-tests",
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src python3 -m pytest --collect-only -q -p no:cacheprovider tests",
+      "tool_versions": {"python": "3.14.6", "pytest": "preinstalled probe"},
+      "exit_code": 0,
+      "result": "1 upstream test collected; deterministic test body covers login-shell SHELL precedence"
+    },
+    {
+      "stage": "api-inventory",
+      "command": "AST inventory over src/shellingham and test inventory over tests/test_posix.py",
+      "tool_versions": {"python": "3.14.6"},
+      "exit_code": 0,
+      "result": "7 runtime modules, 24 custom verifier leaves"
+    }
+  ],
+  "cleanup": "The upstream clone and probe scratch remain under .nl2repo/authoring-work/shellingham for integrator inspection; no /tmp source clone is retained."
+}

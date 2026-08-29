@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "shellingham",
+  "source_revision": "926401c4543b84f9f579932d30fb52a104639398",
+  "contract_to_leaves": {
+    "metadata-and-exports": ["metadata", "exports", "exception-identity"],
+    "shell-classification": ["shell-names", "login-env", "login-fallback", "qemu-forwarding", "xonsh-script", "parent-order", "depth-bound", "no-shell", "dispatch-success"],
+    "proc-parser": ["proc-stat", "proc-status", "proc-invalid", "proc-parents", "proc-cmdline", "proc-string-pid"],
+    "ps-fallback-and-dispatch": ["ps-bytes", "ps-malformed", "ps-depth", "ps-empty", "ps-missing", "dispatch-unavailable"]
+  },
+  "bidirectional": true,
+  "reference_policy": "Assertions are projections of observed behavior; no upstream source or test body is copied into the public task."
+}

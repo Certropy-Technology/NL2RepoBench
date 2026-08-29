@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "task_id": "shellingham",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/sarugaku/shellingham",
+    "revision": "926401c4543b84f9f579932d30fb52a104639398",
+    "source_digest": "sha256:b936de13a28f170163f749e81556a65834f630af7e7f08914749c5c64fff728b",
+    "license_spdx": "ISC"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled/shellingham/bundle.manifest.json",
+    "sha256": "sha256:6daa67d0221507a9d069bac528a0ce8df3c97186032c34f41a1e249362194951"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/shellingham -a oracle --job-name shellingham-oracle-final-1 -o .nl2repo/runs/shellingham-oracle-final-1 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/shellingham-oracle-final-1/shellingham-oracle-final-1/shellingham__pHjAoZm/verifier/grading.json",
+      "sha256": "sha256:6ed0af29ec808dab56ad0b2ea831e45c79a697e766cf3018a82c99829e0e10ea"
+    },
+    "network": {
+      "path": ".nl2repo/runs/shellingham-oracle-final-1/shellingham-oracle-final-1/shellingham__pHjAoZm/verifier/network.json",
+      "sha256": "sha256:e901d754bcf3691de168e10c48adb2a9cfa6417a3b968af0901893a5dd3a5d0a"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 24,
+      "passed": 24,
+      "reward": 1.0,
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/shellingham -a nop --job-name shellingham-empty-final-1 -o .nl2repo/runs/shellingham-empty-final-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/shellingham-empty-final-1/shellingham-empty-final-1/shellingham__oC2ryxR/verifier/grading.json",
+        "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/shellingham-empty-final-1/shellingham-empty-final-1/shellingham__oC2ryxR/verifier/network.json",
+        "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+      },
+      "summary": {
+        "valid": true,
+        "failure_reason": "candidate-installation-failed",
+        "failure_class": "model",
+        "collected": 0,
+        "reward": 0.0
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/shellingham-stub -a oracle --job-name shellingham-stub-final-1 -o .nl2repo/runs/shellingham-stub-final-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/shellingham-stub-final-1/shellingham-stub-final-1/shellingham-stub__P75hLCY/verifier/grading.json",
+        "sha256": "sha256:8197febec89b442da6926d71e9643e0c7efb8eef21eaf57a37d2bf872fd3ba05"
+      },
+      "network": {
+        "path": ".nl2repo/runs/shellingham-stub-final-1/shellingham-stub-final-1/shellingham-stub__P75hLCY/verifier/network.json",
+        "sha256": "sha256:2d451cfe9d5c64dc60b9925b226b743c5f3951323551313d8098674a8fd74dbb"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 24,
+        "passed": 0,
+        "reward": 0.0
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/shellingham-forgery -a oracle --job-name shellingham-forgery-final-1 -o .nl2repo/runs/shellingham-forgery-final-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/shellingham-forgery-final-1/shellingham-forgery-final-1/shellingham-forgery__WYDQCn8/verifier/grading.json",
+        "sha256": "sha256:8197febec89b442da6926d71e9643e0c7efb8eef21eaf57a37d2bf872fd3ba05"
+      },
+      "network": {
+        "path": ".nl2repo/runs/shellingham-forgery-final-1/shellingham-forgery-final-1/shellingham-forgery__WYDQCn8/verifier/network.json",
+        "sha256": "sha256:034fa6a8f52e8049ae32ec27f0028c5436831ee6428d039bc7a05c7fe807b3a5"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 24,
+        "passed": 0,
+        "reward": 0.0,
+        "candidate_fake_report_ignored": true
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/shellingham-call-hang -a oracle --job-name shellingham-call-hang-final-1 -o .nl2repo/runs/shellingham-call-hang-final-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/shellingham-call-hang-final-1/shellingham-call-hang-final-1/shellingham-call-hang__smrxXoe/verifier/grading.json",
+        "sha256": "sha256:8197febec89b442da6926d71e9643e0c7efb8eef21eaf57a37d2bf872fd3ba05"
+      },
+      "network": {
+        "path": ".nl2repo/runs/shellingham-call-hang-final-1/shellingham-call-hang-final-1/shellingham-call-hang__smrxXoe/verifier/network.json",
+        "sha256": "sha256:47aac80074aa65879e3e3a8413c58df1c5279114de6a1134be87c1e3feee6738"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 24,
+        "passed": 0,
+        "reward": 0.0,
+        "bounded_child_timeout": true
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from shellingham Oracle final run",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/shellingham-oracle-final-1/shellingham-oracle-final-1/shellingham__pHjAoZm/verifier/network.json",
+        "sha256": "sha256:e901d754bcf3691de168e10c48adb2a9cfa6417a3b968af0901893a5dd3a5d0a"
+      }
+    }
+  }
+}

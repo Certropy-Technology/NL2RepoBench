@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "shellingham"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "shell-detection", "process-tree", "posix", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sarugaku/shellingham"
+revision = "926401c4543b84f9f579932d30fb52a104639398"
+license_spdx = "ISC"
+source_digest = "sha256:b936de13a28f170163f749e81556a65834f630af7e7f08914749c5c64fff728b"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked setuptools and wheel closure during Docker build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate build dependencies are installed during the Docker build from a private hash-locked requirements artifact. Agent and separate verifier runs require no egress; the Oracle uses a private digest-verified source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:db542dc107969243b03e96be67a3c81e13d8c829ce6273d121f5d02a97b63286", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:db542dc107969243b03e96be67a3c81e13d8c829ce6273d121f5d02a97b63286", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build shellingham 1.5.4 from an empty workspace and implement deterministic shell detection and POSIX process-tree parsing."
+keywords = ["python", "shell-detection", "process-tree", "posix", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:b976af079a4e1f5f06d352a2ec8421243314a85936aa408da16c34162a90b388"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b976af079a4e1f5f06d352a2ec8421243314a85936aa408da16c34162a90b388"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "worker/shellingham"
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, call-hang, and offline network controls passed; independent model Agent Run, review, and publication remain for the integration loop."

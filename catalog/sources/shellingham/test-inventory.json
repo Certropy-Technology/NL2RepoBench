@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "shellingham",
+  "source_revision": "926401c4543b84f9f579932d30fb52a104639398",
+  "upstream_test_files": ["tests/test_posix.py"],
+  "upstream_named_test_functions": 1,
+  "upstream_collection": 1,
+  "frozen_total": 24,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_groups": {
+    "metadata-and-exports": 3,
+    "shell-classification": 9,
+    "proc-parser": 6,
+    "ps-fallback-and-dispatch": 6
+  },
+  "excluded_categories": [
+    "live host shell and process tree",
+    "Windows ctypes execution",
+    "upstream test monkeypatch fixture internals"
+  ]
+}

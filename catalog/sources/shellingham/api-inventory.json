@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "shellingham",
+  "source_revision": "926401c4543b84f9f579932d30fb52a104639398",
+  "runtime_modules": [
+    "shellingham.__init__",
+    "shellingham._core",
+    "shellingham.posix",
+    "shellingham.posix._core",
+    "shellingham.posix.proc",
+    "shellingham.posix.ps",
+    "shellingham.nt"
+  ],
+  "public_surface": {
+    "shellingham": ["detect_shell", "ShellDetectionFailure", "__version__"],
+    "shellingham.posix": ["get_shell"],
+    "shellingham.posix._core": ["Process"],
+    "shellingham.posix.proc": ["detect_proc", "iter_process_parents", "ProcFormatError"],
+    "shellingham.posix.ps": ["iter_process_parents", "PsNotAvailable"]
+  },
+  "runtime_dependencies": [],
+  "build_dependencies": ["setuptools==80.10.2", "wheel==0.45.1"],
+  "risk_adaptations": [
+    "Live process inspection is replaced in hidden tests by child-side monkeypatched proc/ps records.",
+    "Windows ctypes code is excluded from the Linux runtime contract; import dispatch is tested without loading it."
+  ]
+}
