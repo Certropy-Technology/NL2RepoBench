@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "normalize-url",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 45,
+  "collection_source": "private contract.test.mjs",
+  "groups": {
+    "package identity and install shape": 1,
+    "protocol and host normalization": 15,
+    "authentication, ports, and paths": 9,
+    "query filtering, sorting, and empty values": 9,
+    "fragments, data URLs, and path removal": 7,
+    "invalid input and determinism": 4
+  },
+  "boundary": {
+    "candidate_invocation": "UID/GID-separated one-shot JSON child",
+    "json_compatible_options": true,
+    "excluded": ["transformPath callback", "RegExp-valued query filters"]
+  },
+  "collection_evidence": {
+    "oracle_collected": 45,
+    "stub_collected": 45,
+    "forgery_collected": 45,
+    "offline_collected": 45,
+    "empty_collected": 0,
+    "hang_collected": 0
+  }
+}

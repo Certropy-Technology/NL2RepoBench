@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "normalize-url",
+  "package_version": "9.0.1",
+  "module_kind": "esm",
+  "root_runtime_exports": {"default": "function"},
+  "public_api": [{"name":"normalizeUrl","export":"default","signature":"normalizeUrl(url: string, options?: Options): string"}],
+  "options": ["defaultProtocol", "customProtocols", "normalizeProtocol", "forceHttp", "forceHttps", "stripAuthentication", "stripHash", "stripProtocol", "stripTextFragment", "stripWWW", "removeQueryParameters", "keepQueryParameters", "removeTrailingSlash", "removeSingleSlash", "removeDirectoryIndex", "removeExplicitPort", "sortQueryParameters", "emptyQueryValue", "removePath"],
+  "excluded_functional_options": ["transformPath", "RegExp-valued query filters"],
+  "source_metrics": {"tracked_files": 13, "implementation_loc": 437, "upstream_test_loc": 1428, "upstream_test_declarations": 33}
+}

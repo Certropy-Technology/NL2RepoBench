@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "task_id": "normalize-url",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 45,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/normalize-url",
+    "revision": "863d275c21d6411a7494b8f728a515633bc01d84",
+    "source_digest": "sha256:6c7fd8315e3feae64c76202281560a3b4a27f807d736371c783d921049ab5cfe",
+    "license_spdx": "MIT",
+    "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "package": "normalize-url@9.0.1",
+    "source_worktree_clean": true
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:42cd11254f21773556e283f96880912da02ad615e30fcae75b90f26dcc3875ef",
+    "dependency_artifact": "sha256:2c2465abe004222aa6046f08f8b9e64e5bbd84934574facc0b3ffae57ccb467e",
+    "commands_artifact": "sha256:f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d",
+    "test_bundle": "sha256:670d1df92be1a7691288d679682d4c47c622519cbf884f720522048a7c621d27",
+    "oracle_bundle": "sha256:29bf24608fa8f45f215ba1e165df12fceb387b9f9868b89f7a1e2f78041d1ec2",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/normalize-url --output .nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/compile-final-45 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/compile-handoff/normalize-url",
+    "bundle_manifest_sha256": "sha256:b59546d9cefd2bb8b24d89451a8141c905208874a28fab4e81e1de06106af074",
+    "canonical_manifest_digest": "sha256:35c8c7ccbbee1545a4ff6264c1f95755a5b66ba5868cd3f82f055245f77b21b7",
+    "file_count": 76,
+    "repeat_compile_byte_identical": true
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "toolchain_agent_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "authoring_host_agent_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/compile-final-45/normalize-url -a oracle --allow-agent-host github.com --job-name normalize-url-45-oracle -o .nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/45-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 45,
+    "collected": 45,
+    "passed": 45,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-oracle/normalize-url-handoff-oracle/normalize-url__cZ5f8oR/verifier/grading.json", "sha256": "sha256:6208e14549761e6e607267ebaaf50290d6c28d0620f98f2a2af93a52aa780e1f"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-oracle/normalize-url-handoff-oracle/normalize-url__cZ5f8oR/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"}
+  },
+  "controls": {
+    "empty": {"command": "Harbor run normalize-url-empty", "exit_code": 0, "valid": true, "expected_total": 45, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-empty/normalize-url-handoff-empty/normalize-url-empty__xtdyFJN/verifier/grading.json", "sha256": "sha256:daa8ce5047cd7a8c414c6e9b72c5708776cb1f8cbc9c4ce1ec3fa51e63ee1e93"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-empty/normalize-url-handoff-empty/normalize-url-empty__xtdyFJN/verifier/network.json", "sha256": "sha256:ab134b085e6da9487cbe3999f4a447d0e9e33585342bd710cd4ce427484180ef"}},
+    "stub": {"command": "Harbor run normalize-url-stub", "exit_code": 0, "valid": true, "expected_total": 45, "collected": 45, "passed": 2, "reward": 0.044444444444444446, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-stub/normalize-url-handoff-stub/normalize-url-stub__ncg87HU/verifier/grading.json", "sha256": "sha256:1b78b02d080a5ffa9c8d867cea25976b1addae9f932a5b2e20407483e2f40ec9"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-stub/normalize-url-handoff-stub/normalize-url-stub__ncg87HU/verifier/network.json", "sha256": "sha256:44530469303a798527473ce49fc49cb59f3a36d2dba50423e3888595e2fa4eac"}},
+    "forgery": {"command": "Harbor run normalize-url-forgery", "exit_code": 0, "valid": true, "expected_total": 45, "collected": 45, "passed": 1, "reward": 0.022222222222222223, "verifier_owned_reward": true, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-forgery/normalize-url-handoff-forgery/normalize-url-forgery__UJekpQ9/verifier/grading.json", "sha256": "sha256:14d8646e255c827922467f91419a48dd659fdecf6acc6bd1c38fba10b1d18685"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-forgery/normalize-url-handoff-forgery/normalize-url-forgery__UJekpQ9/verifier/network.json", "sha256": "sha256:074e8527cf329e0a462511f22066a0ec154c6b869af549030658c9dd8ab30cc7"}},
+    "hang": {"command": "Harbor run normalize-url-hang", "exit_code": 0, "valid": true, "expected_total": 45, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-call-failed", "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-hang/normalize-url-handoff-hang/normalize-url-hang__6hEDps6/verifier/grading.json", "sha256": "sha256:ac5a203c3c0750c6820f0f5e8771ccadfc06a3428567a5a330b292a6468ee2fb"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-hang/normalize-url-handoff-hang/normalize-url-hang__6hEDps6/verifier/network.json", "sha256": "sha256:82d5fce0ffa174baf3d58dc08cad1f9ae5ea0dd8c43eeac797365d098b27b956"}},
+    "offline": {"command": "Harbor run normalize-url-offline", "exit_code": 0, "valid": true, "expected_total": 45, "collected": 45, "passed": 1, "reward": 0.022222222222222223, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-offline/normalize-url-handoff-offline/normalize-url-offline__VSyBMDB/verifier/grading.json", "sha256": "sha256:b9c063cfc6bbca844ffc16f8eeba423d7fb15e8da5686160598580da0d421fb5"}, "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/normalize-url/runs/handoff-offline/normalize-url-handoff-offline/normalize-url-offline__VSyBMDB/verifier/network.json", "sha256": "sha256:5744ed861952ea38eec5868ad36b917203eff54449132ef17b8a844a2fdf698c"}}
+  },
+  "residual_risks": [
+    "The locally present agent runtime image ID differs from toolchain.node.lock.toml; integrator must restore or verify the official immutable image before a model Agent Run.",
+    "Integrator review, model Agent Run, pilot, dataset integration, publication, and parity validation remain pending and are not claimed."
+  ]
+}

@@ -1,0 +1,19 @@
+import {readFileSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+const PACKAGE = 'normalize-url';
+const PACKAGE_ROOT = `${process.cwd()}/node_modules/${PACKAGE}`;
+let request;
+try { request = JSON.parse(readFileSync(0, 'utf8')); }
+catch { process.stdout.write('{"id":"unknown","ok":false,"error_type":"malformed-json","message":"malformed request"}\n'); process.exit(64); }
+const emit = (payload, code = 0) => { const output = JSON.stringify(payload); if (Buffer.byteLength(output) > 256 * 1024) process.exit(70); process.stdout.write(`${output}\n`); process.exit(code); };
+try {
+  if (request.operation === 'inventory') {
+    const manifest = JSON.parse(readFileSync(`${process.cwd()}/node_modules/${PACKAGE}/package.json`, 'utf8'));
+    const module = await import(pathToFileURL(`${PACKAGE_ROOT}/index.js`));
+    emit({id: request.id, ok: true, value: {name: manifest.name, version: manifest.version, type: manifest.type, exports: manifest.exports, runtime_exports: Object.keys(module).sort(), default_type: typeof module.default}});
+  }
+  if (request.operation !== 'call' || !request.payload || !Array.isArray(request.payload.args) || request.payload.args.length < 1 || request.payload.args.length > 2) emit({id: request.id, ok: false, error_type: 'invalid-request', message: 'invalid call payload'}, 64);
+  const module = await import(pathToFileURL(`${PACKAGE_ROOT}/index.js`));
+  if (typeof module.default !== 'function') emit({id: request.id, ok: false, error_type: 'export-is-not-callable', message: 'default export is not callable'}, 65);
+  emit({id: request.id, ok: true, value: module.default(...request.payload.args)});
+} catch (error) { emit({id: request.id, ok: false, error_type: error?.constructor?.name ?? 'Error', message: String(error?.message ?? error).slice(0, 4096)}, 1); }

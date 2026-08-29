@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "normalize-url",
+  "status": "production-json-boundary",
+  "purpose": "Verifier-owned bounded child protocol for the default normalize-url export.",
+  "transport": {"mode":"one-shot-json","encoding":"utf-8","request_bytes":65536,"response_bytes":262144,"argument_count":2,"network":"none"},
+  "request": {"package":"normalize-url","export":"default","args":"JSON array containing one URL string and optionally one plain options object"},
+  "response": {"success":"JSON string","failure":"bounded exception type/message record"},
+  "isolation": {"candidate_uid":10001,"candidate_network":"none","candidate_source":"empty workspace only","forbidden":["function","symbol","BigInt","Date","cycle","file handle","custom loader","source code"]}
+}
