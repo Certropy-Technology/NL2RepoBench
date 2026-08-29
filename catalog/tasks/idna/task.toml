@@ -1,0 +1,62 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/idna"
+version = "1.0.0"
+description = "Build the idna IDNA 2008 and UTS #46 Unicode domain library from an empty workspace; grading uses a bounded separate verifier over deterministic encoding, decoding, validation, codec, compatibility, and CLI scenarios."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "unicode",
+    "idna2008",
+    "uts46",
+    "punycode",
+    "codec",
+    "cli",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "unicode-networking"
+tags = [
+    "python",
+    "unicode",
+    "idna2008",
+    "uts46",
+    "punycode",
+    "codec",
+    "cli",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 25
+canonical_manifest_digest = "sha256:b1dd490adcc4825f7fc374b6fe9c7bb4d5c9e051d4602b89b3c223f805a107e3"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 2400.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0",
+  "task_id": "idna",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/kjd/idna",
+    "revision": "e2073db14d28d1c3299649dd0c2dd4205b43ebfd",
+    "archive_sha256": "sha256:9f05c7eabad5785cddefcb84a85230194b42dccb20b349027135854db25161f8",
+    "archive_prefix": "idna/",
+    "license_spdx": "BSD-3-Clause",
+    "license_file": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/upstream/LICENSE.md",
+    "license_file_sha256": "sha256:1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04"
+  },
+  "environment": {
+    "python": "3.12",
+    "pytest": "9.1.1",
+    "harbor": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "public_network_available": false
+  },
+  "dependency_lock": {
+    "packages": ["flit_core==3.12.0"],
+    "vendor_wheels": false,
+    "artifact": {
+      "digest": "sha256:9ebd5cfcb72a1f3e0e0f3bc3d2586b0ca18a3c7db81163f90f73b7f4358cc444",
+      "size_bytes": 188,
+      "path": ".nl2repo/artifacts/private/sha256/9e/9ebd5cfcb72a1f3e0e0f3bc3d2586b0ca18a3c7db81163f90f73b7f4358cc444"
+    }
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "denominator": 25,
+    "artifact": {
+      "digest": "sha256:f25bb7966325165e6e9677de59f335c17822af730d2edc3001f7c01e531c2a20",
+      "size_bytes": 10240,
+      "path": ".nl2repo/artifacts/private/sha256/f2/f25bb7966325165e6e9677de59f335c17822af730d2edc3001f7c01e531c2a20"
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/compiled-current/idna/bundle.manifest.json",
+    "sha256": "sha256:c1ad3031324bf5bd796b41ad3de803c118295359ee51e6a1c357464f570dba9f",
+    "file_count": 58,
+    "mode": "production",
+    "toolchain": "toolchain.lock.toml"
+  },
+  "gates": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/idna",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/logs/validate-source-final-current.log"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/logs/network-lint-final-current.log",
+      "note": "The full catalog reported 141 pre-existing warnings; no idna finding was present."
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/idna --output .nl2repo/authoring-work/python-author-wave2-20260828/idna/compiled-current --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/logs/compile-current-final.log"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/idna/compiled-current/idna -a oracle --allow-agent-host github.com --job-name idna-oracle-current-20260828 -o .nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 25,
+    "passed": 25,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-oracle/idna-oracle-current-20260828/idna__EQYjQuQ/verifier/grading.json",
+      "sha256": "sha256:811398280574e3832d4ccd5310a2401348631215c48e59568f3790dcf66d3f5a"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-oracle/idna-oracle-current-20260828/idna__EQYjQuQ/verifier/network.json",
+      "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "completed": true,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/empty/idna-empty-current-20260828/idna__iCWXCmg/verifier/grading.json",
+        "sha256": "sha256:f000584376e7ee5ebc3e4a9542ff7f8973fc6dac8a9f0ed6bf4d98f671fd9b8e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/empty/idna-empty-current-20260828/idna__iCWXCmg/verifier/network.json",
+        "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "completed": true,
+      "valid": true,
+      "collected": 25,
+      "passed": 1,
+      "reward": 0.04,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/stub/idna-stub-current-20260828/idna-stub__WLTom54/verifier/grading.json",
+        "sha256": "sha256:f1df7b76f17f537bb200736d04eede933e5e72b8ecbbaf2293dd86151a1f5a37"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/stub/idna-stub-current-20260828/idna-stub__WLTom54/verifier/network.json",
+        "sha256": "sha256:4b9b7ac9a67ca68e1e20ef22dddf837e30a7afad62a4aa7baf8486046ef88b71",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "completed": true,
+      "valid": true,
+      "collected": 25,
+      "passed": 3,
+      "reward": 0.12,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/forgery/idna-forgery-current-20260828/idna-forgery__BD66vL3/verifier/grading.json",
+        "sha256": "sha256:7bce824103a1b2ced34039ea245e9c4205f37a881e2190a663efe199531046d5"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/forgery/idna-forgery-current-20260828/idna-forgery__BD66vL3/verifier/network.json",
+        "sha256": "sha256:7a44c248d44c292e26bbeabba7252f1f97610211d72a46159532dc7d0ea26390",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-oracle/idna-oracle-current-20260828/idna__EQYjQuQ/verifier/network.json",
+        "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+      },
+      "note": "The verifier completed its network gate and all candidate operations in the no-network verifier namespace."
+    },
+    "install_hang": {
+      "completed": true,
+      "valid": true,
+      "collected": 25,
+      "passed": 1,
+      "reward": 0.04,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/install-hang/idna-install-hang-current-20260828/idna-install-hang__n7PJ2qh/verifier/grading.json",
+        "sha256": "sha256:f1df7b76f17f537bb200736d04eede933e5e72b8ecbbaf2293dd86151a1f5a37"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/install-hang/idna-install-hang-current-20260828/idna-install-hang__n7PJ2qh/verifier/network.json",
+        "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e",
+        "public_network_available": false
+      }
+    },
+    "call_hang": {
+      "completed": true,
+      "valid": true,
+      "collected": 25,
+      "passed": 1,
+      "reward": 0.04,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/call-hang/idna-call-hang-current-20260828/idna-call-hang__QhQX6QD/verifier/grading.json",
+        "sha256": "sha256:f1df7b76f17f537bb200736d04eede933e5e72b8ecbbaf2293dd86151a1f5a37"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/idna/runs/current-controls/call-hang/idna-call-hang-current-20260828/idna-call-hang__QhQX6QD/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+        "public_network_available": false
+      }
+    }
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this authoring lane.",
+    "The full upstream suite includes 6444 passing tests and one skipped test; the production score is the explicitly bounded 25-leaf custom verifier contract.",
+    "Review, model pilot, dataset integration, publication, commit, and push remain integrator-stage gates."
+  ]
+}
