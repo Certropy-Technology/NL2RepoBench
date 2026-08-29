@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/mdast-util-from-markdown"
+version = "1.0.0"
+description = "Build the mdast-util-from-markdown ESM parser for a deterministic JSON-safe markdown-to-mdast contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "markdown",
+    "mdast",
+    "parser",
+    "ast",
+    "json",
+]
+
+[metadata]
+difficulty = "hard"
+category = "markdown-parser"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "markdown",
+    "mdast",
+    "parser",
+    "ast",
+    "json",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 21
+canonical_manifest_digest = "sha256:cf5c7be3cb41811f3b630567de9565a0ab6b94f2d27ee7cbdb932d7800315f38"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192

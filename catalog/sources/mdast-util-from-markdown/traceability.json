@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "source_revision": "f94143765912425fb94ed6518d3a3d1c54f994d4",
+  "requirements": [
+    {"id": "R1", "description": "Installable ESM package and named root export", "tests": ["package root is callable"]},
+    {"id": "R2", "description": "Root and paragraph structure", "tests": ["empty document", "paragraph and soft break"]},
+    {"id": "R3", "description": "Block syntax", "tests": ["headings", "blockquote", "unordered list", "ordered list", "thematic break", "code blocks"]},
+    {"id": "R4", "description": "Inline syntax and references", "tests": ["emphasis and strong", "inline code", "links and images", "reference links", "autolink", "html", "character references", "hard break"]},
+    {"id": "R5", "description": "Positions, Unicode, and determinism", "tests": ["positions", "Unicode", "repeat determinism"]}
+  ],
+  "excluded_upstream_features": ["typed-array input", "extension callbacks", "custom micromark extensions", "full development build condition"]
+}

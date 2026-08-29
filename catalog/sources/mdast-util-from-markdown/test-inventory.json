@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "upstream_framework": "node:test",
+  "upstream_test_file": "test/index.js",
+  "upstream_leaf_count": 727,
+  "fixture_files": 54,
+  "fixture_expected_json_files": 27,
+  "frozen_private_leaf_count": 21,
+  "private_contract_files": ["contract.test.mjs", "test_client.mjs"],
+  "adaptation": "The private denominator is a deterministic JSON-safe semantic slice; the complete upstream suite is retained only as authoring baseline evidence."
+}

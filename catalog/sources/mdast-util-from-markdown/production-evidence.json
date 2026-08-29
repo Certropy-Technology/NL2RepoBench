@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "task_version": "1.0.0",
+  "status": "controls-passed",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/mdast-util-from-markdown",
+    "revision": "f94143765912425fb94ed6518d3a3d1c54f994d4",
+    "license_spdx": "MIT",
+    "source_archive_sha256": "sha256:515825acb5478f8bf59c32403e5febc499a100ed0b1183f4596e8be2f38b5a19",
+    "submodules": []
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_status": "locked",
+    "harbor_version": "0.21.0",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_allowed_hosts": []
+  },
+  "dependencies": {
+    "status": "known",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "runtime_packages": [
+      "@types/mdast@4.0.4",
+      "@types/unist@3.0.3",
+      "decode-named-character-reference@1.3.0",
+      "devlop@1.1.0",
+      "mdast-util-to-string@4.0.0",
+      "micromark@4.0.2",
+      "micromark-util-decode-numeric-character-reference@2.0.2",
+      "micromark-util-decode-string@2.0.1",
+      "micromark-util-normalize-identifier@2.0.1",
+      "micromark-util-symbol@2.0.1",
+      "micromark-util-types@2.0.2",
+      "unist-util-stringify-position@4.0.0"
+    ],
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "artifact": {
+      "digest": "sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c",
+      "size_bytes": 2222080,
+      "uri": "artifact://private/sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c"
+    },
+    "remediation": "Node 24/npm 11 online install and packed-tarball install were run before sealing the cache; a subsequent offline install passed. The cache contains 67 content files and 69 index files."
+  },
+  "tests": {
+    "framework": "node:test",
+    "protocol": "custom-json-v1",
+    "report_format": "node-test-json-v1",
+    "expected_total": 21,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "private_bundle": {
+      "digest": "sha256:132c271ac97ca12cc0f761796c4db70a9d4f665dd81973975d92481196286842",
+      "size_bytes": 20480,
+      "files": ["contract.test.mjs", "test_client.mjs"]
+    },
+    "adapter_boundary": "The trusted bridge is inline in the root-only test_client.mjs and launches the candidate package in a UID-separated child process."
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/mdast-util-from-markdown/evidence-final/compiled-production/mdast-util-from-markdown",
+    "manifest_sha256": "sha256:b211337dfbe29a4380c53f36d78b0b0c7edeb2b0e78c4ab28bba8150e665a62a",
+    "canonical_manifest_digest": "sha256:dae1f9bf8ede3d16224dfec3255400fb4d52772bf4b51dec9998e34adfc27575",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 362,
+    "integrity_check": "all manifest files present and hash-verified"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/mdast-util-from-markdown",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/mdast-util-from-markdown/evidence-final/validate-source-final.log",
+      "log_sha256": "sha256:b7dd6c3655b1931a1df9dc17f2a68c41ae40ec533afd16d786993fb1b1fc082a"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; tasks_scanned=262; warning_count=141; no mdast-util-from-markdown finding",
+      "log": ".nl2repo/authoring-work/mdast-util-from-markdown/evidence-final/lint-network.log",
+      "log_sha256": "sha256:ffc7269f618098f745dfe09c1d91f8c78737df5e80100deddc86b0f2138071ae"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/mdast-util-from-markdown --output .nl2repo/authoring-work/mdast-util-from-markdown/evidence-final/compiled-production --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/mdast-util-from-markdown/evidence-final/compile-production.log",
+      "log_sha256": "sha256:752ba1cc990aaebcae276dc1978a86bc987c350a222b57a103b18ff450bccc31"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-mdast-util-from-markdown-verifier:final4 compiled-production/tests",
+      "exit_code": 0,
+      "image_id": "sha256:c496e3b971c9137e39e07040944b73697b6eff05807cc8ae0dc58a137f163979",
+      "log": ".nl2repo/authoring-work/mdast-util-from-markdown/docker-verifier-final4.log"
+    }
+  ],
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdast-util-from-markdown/evidence-final/compiled-production/mdast-util-from-markdown -a oracle --job-name mdast-util-from-markdown-oracle-final --jobs-dir .nl2repo/authoring-work/mdast-util-from-markdown/harbor-runs/final-oracle --n-concurrent 1 --max-retries 0 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 21,
+    "collected": 21,
+    "passed": 21,
+    "failed": 0,
+    "reward": 1.0,
+    "result_path": ".nl2repo/authoring-work/mdast-util-from-markdown/harbor-runs/final-oracle/mdast-util-from-markdown-oracle-final/mdast-util-from-markdown__2xEmgS6/result.json",
+    "result_sha256": "sha256:e0e19d856e2446aa6058cee0068da8c789189c8965bbb0481c86dffa106cc5b2",
+    "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/harbor-runs/final-oracle/mdast-util-from-markdown-oracle-final/mdast-util-from-markdown__2xEmgS6/verifier/grading.json",
+    "grading_sha256": "sha256:24a51434310899c679227af171d1c5e408953317459b950212c644f7d91ee2f4",
+    "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/harbor-runs/final-oracle/mdast-util-from-markdown-oracle-final/mdast-util-from-markdown__2xEmgS6/verifier/network.json",
+    "network_sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/empty/logs/verifier/grading.json", "grading_sha256": "sha256:3a55bf3ab02d3f9214dc62e1e8b7c75f8c8f0d9669c2569d55cbccdd13f31b3c", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/empty/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"},
+    "stub": {"exit_code": 0, "valid": true, "collected": 21, "passed": 3, "reward": 0.14285714285714285, "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/stub/logs/verifier/grading.json", "grading_sha256": "sha256:d1e6756344f40cd015ed0d62237895037598585612103743c49697ac923aac18", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/stub/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 21, "passed": 3, "reward": 0.14285714285714285, "verifier_owned_reward": true, "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/forgery/logs/verifier/grading.json", "grading_sha256": "sha256:d1e6756344f40cd015ed0d62237895037598585612103743c49697ac923aac18", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/forgery/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"},
+    "install-script": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/install-script/logs/verifier/grading.json", "grading_sha256": "sha256:3a55bf3ab02d3f9214dc62e1e8b7c75f8c8f0d9669c2569d55cbccdd13f31b3c", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/install-script/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"},
+    "loader-hook": {"exit_code": 0, "valid": true, "collected": 21, "passed": 3, "reward": 0.14285714285714285, "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/loader-hook/logs/verifier/grading.json", "grading_sha256": "sha256:d1e6756344f40cd015ed0d62237895037598585612103743c49697ac923aac18", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/loader-hook/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"},
+    "timeout": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "bounded": true, "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/timeout/logs/verifier/grading.json", "grading_sha256": "sha256:70a1366c04e85f66512bb360a3b9779e57553372356a19cc580a5e524a7b66dd", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/timeout/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"},
+    "offline": {"exit_code": 0, "valid": true, "collected": 21, "passed": 1, "reward": 0.047619047619047616, "public_network_available": false, "grading_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/offline/logs/verifier/grading.json", "grading_sha256": "sha256:54d41437f11afbe372ab028dc9b118630865a45c5fbb1607d11be7349b07627a", "network_path": ".nl2repo/authoring-work/mdast-util-from-markdown/controls-final/offline/logs/verifier/network.json", "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}
+  },
+  "remediation": {
+    "dependency_cache": "The initial cache lacked npm packed-tarball registry metadata; Node 24/npm 11 online then offline install was used to seal the final cache.",
+    "private_bridge": "The initial private adapter was discovered as a test and later inaccessible to UID 10001. The final root-only client embeds the adapter code and launches it with node --eval.",
+    "old_failed_receipts": [".nl2repo/authoring-work/mdast-util-from-markdown/harbor-runs/oracle/mdast-util-from-markdown-oracle-author-one", ".nl2repo/authoring-work/mdast-util-from-markdown/verifier-probe-final2"],
+    "old_receipts_not_used_as_final": true
+  },
+  "residual_risks": [
+    "No model Harbor Agent Run was started in this authoring lane by contract.",
+    "Blind review, independent spec review, dataset integration, and publication remain integrator-owned.",
+    "catalog/tasks/mdast-util-from-markdown was intentionally not created or hand-edited."
+  ]
+}

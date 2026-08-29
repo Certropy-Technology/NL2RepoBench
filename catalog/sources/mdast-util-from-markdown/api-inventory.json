@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "source_revision": "f94143765912425fb94ed6518d3a3d1c54f994d4",
+  "package": {
+    "name": "mdast-util-from-markdown",
+    "version": "2.0.3",
+    "module_type": "esm",
+    "root_exports": ["fromMarkdown"],
+    "runtime_dependencies": [
+      "@types/mdast",
+      "@types/unist",
+      "decode-named-character-reference",
+      "devlop",
+      "mdast-util-to-string",
+      "micromark",
+      "micromark-util-decode-numeric-character-reference",
+      "micromark-util-decode-string",
+      "micromark-util-normalize-identifier",
+      "micromark-util-symbol",
+      "micromark-util-types",
+      "unist-util-stringify-position"
+    ]
+  },
+  "public_contract": {
+    "call": "fromMarkdown(string)",
+    "return": "JSON-serializable mdast Root",
+    "excluded": ["typed-array input", "custom extensions", "streaming", "browser APIs"]
+  }
+}

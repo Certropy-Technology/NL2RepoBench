@@ -1,0 +1,32 @@
+{
+  "name": "mdast-util-from-markdown",
+  "version": "2.0.3",
+  "description": "mdast utility to parse markdown",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "development": "./dev/index.js",
+    "default": "./index.js"
+  },
+  "files": [
+    "dev/",
+    "lib/",
+    "index.d.ts",
+    "index.js"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "@types/mdast": "4.0.4",
+    "@types/unist": "3.0.3",
+    "decode-named-character-reference": "1.3.0",
+    "devlop": "1.1.0",
+    "mdast-util-to-string": "4.0.0",
+    "micromark": "4.0.2",
+    "micromark-util-decode-numeric-character-reference": "2.0.2",
+    "micromark-util-decode-string": "2.0.1",
+    "micromark-util-normalize-identifier": "2.0.1",
+    "micromark-util-symbol": "2.0.1",
+    "micromark-util-types": "2.0.2",
+    "unist-util-stringify-position": "4.0.0"
+  }
+}

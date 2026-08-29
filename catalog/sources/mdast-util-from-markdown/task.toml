@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "mdast-util-from-markdown"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "markdown-parser"
+tags = ["node", "npm", "esm", "markdown", "mdast", "parser", "ast", "json"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/mdast-util-from-markdown"
+revision = "f94143765912425fb94ed6518d3a3d1c54f994d4"
+license_spdx = "MIT"
+source_digest = "sha256:515825acb5478f8bf59c32403e5febc499a100ed0b1183f4596e8be2f38b5a19"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The npm runtime closure is preinstalled from a private integrity-checked cache bundle, while the frozen reference package is present only in the trusted Oracle bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/mdast", "@types/unist", "decode-named-character-reference", "devlop", "mdast-util-to-string", "micromark", "micromark-util-decode-numeric-character-reference", "micromark-util-decode-string", "micromark-util-normalize-identifier", "micromark-util-symbol", "micromark-util-types", "unist-util-stringify-position"]
+
+[dependencies.artifact]
+digest = "sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c"
+size_bytes = 2222080
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 21
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:bcca2dc13d661e0f698c924844ed13d0bca1c13687d8318ac92fd63fdcfb147f"
+size_bytes = 175
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:bcca2dc13d661e0f698c924844ed13d0bca1c13687d8318ac92fd63fdcfb147f"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:132c271ac97ca12cc0f761796c4db70a9d4f665dd81973975d92481196286842"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:132c271ac97ca12cc0f761796c4db70a9d4f665dd81973975d92481196286842"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the mdast-util-from-markdown ESM parser for a deterministic JSON-safe markdown-to-mdast contract."
+keywords = ["node", "npm", "esm", "markdown", "mdast", "parser", "ast", "json"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-archive-r2-c2"
+reason = "Frozen source, Node 24/npm 11 offline closure, isolated private node:test contract, final production compile, Oracle, and task-local controls have passed. Blind review, Agent Run, dataset integration, and publication remain downstream integrator work."
+
+[oracle_bundle]
+digest = "sha256:1d9e66196b40bfd3c3a4a139e76b7d68a0765ea57a75272d6e765e84258da2c7"
+size_bytes = 56882
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:1d9e66196b40bfd3c3a4a139e76b7d68a0765ea57a75272d6e765e84258da2c7"
+visibility = "private"
