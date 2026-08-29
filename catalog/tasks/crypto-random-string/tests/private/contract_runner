@@ -1,0 +1,78 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const emit = (payload, code = 0) => {
+  process.stdout.write(`${JSON.stringify(payload)}\n`);
+  process.exit(code);
+};
+
+const input = readFileSync(0);
+if (input.byteLength > 4096) emit({ok: false, error: 'request-too-large'}, 64);
+
+let request;
+try {
+  request = JSON.parse(input.toString('utf8'));
+} catch {
+  emit({ok: false, error: 'malformed-json'}, 64);
+}
+
+try {
+  const packageRoot = join(process.cwd(), 'node_modules', 'crypto-random-string');
+  const packageJson = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
+  const exports = packageJson.exports;
+  const entry = typeof exports === 'string'
+    ? exports
+    : exports?.['.']?.import ?? exports?.import ?? packageJson.module ?? packageJson.main;
+  if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+    throw new Error('candidate package has no safe ESM entry');
+  }
+
+  const candidate = await import(pathToFileURL(join(packageRoot, entry)).href);
+  const cryptoRandomString = candidate.default;
+  if (typeof cryptoRandomString !== 'function') throw new TypeError('default export is not callable');
+
+  if (request.command === 'successive') {
+    const first = await cryptoRandomString({length: 64});
+    const second = await cryptoRandomString({length: 64});
+    emit({ok: true, value: {different: first !== second, firstLength: first.length, secondLength: second.length}});
+  }
+
+  if (request.command === 'custom-weight') {
+    const output = [...await cryptoRandomString({length: 20_000, characters: 'aabc'})];
+    const counts = Object.fromEntries(['a', 'b', 'c'].map(character => [character, output.filter(value => value === character).length]));
+    emit({ok: true, value: {length: output.length, counts}});
+  }
+
+  if (request.command === 'character-boundary') {
+    const maximum = await cryptoRandomString({length: 0, characters: 'a'.repeat(65_536)});
+    let oversizedError;
+    try {
+      await cryptoRandomString({length: 0, characters: 'a'.repeat(65_537)});
+    } catch (error) {
+      oversizedError = {name: error?.constructor?.name ?? 'Error', message: String(error?.message ?? error)};
+    }
+    emit({ok: true, value: {maximum, oversizedError}});
+  }
+
+  if (request.command === 'rejection-distribution') {
+    const size = 40_000;
+    const characters = Array.from({length: size}, (_, index) => String.fromCodePoint(index + 0x1_00_00)).join('');
+    const output = [...await cryptoRandomString({length: 40_000, characters})];
+    const invalid = output.filter(character => {
+      const index = character.codePointAt(0) - 0x1_00_00;
+      return index < 0 || index >= size;
+    }).length;
+    const firstHalf = output.filter(character => (character.codePointAt(0) - 0x1_00_00) < (size / 2)).length;
+    emit({ok: true, value: {length: output.length, invalid, firstHalfRatio: firstHalf / output.length}});
+  }
+
+  emit({ok: false, error: 'unknown-command'}, 64);
+} catch (error) {
+  emit({
+    ok: false,
+    error: 'candidate-call-failed',
+    exception_type: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+  }, 1);
+}

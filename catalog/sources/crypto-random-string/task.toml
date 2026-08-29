@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "crypto-random-string"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "cryptographic-random-string"
+tags = ["node", "npm", "esm", "random", "crypto", "unicode", "rejection-sampling"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/crypto-random-string"
+revision = "09e2f1d01be98dff129f52555a733cf25a319067"
+license_spdx = "MIT"
+source_digest = "sha256:f2c17dd0596c7e2b89f506f78b22ea49265ecda48d6822051413a401b29d177c"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The adapted package has no runtime dependencies. A verifier-owned root-only npm v3 lock and empty cache permit offline candidate installation; only the trusted Oracle may receive the exact upstream source host at run time."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:54c0b32fe8cdd23d50a801a05d9553d855dfa496404002f0a9f29fa43b92658e", size_bytes = 444, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:54c0b32fe8cdd23d50a801a05d9553d855dfa496404002f0a9f29fa43b92658e", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:a1ce120f5ee308f04ea88dc1891bc2199704d5c2c3957ae0839033e48efddbb4", size_bytes = 248, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:a1ce120f5ee308f04ea88dc1891bc2199704d5c2c3957ae0839033e48efddbb4", visibility = "private" }
+test_bundle = { digest = "sha256:646a508a5efe562392587a0189692ea3b989acfce510461456e68e6da9dbc670", size_bytes = 3618, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:646a508a5efe562392587a0189692ea3b989acfce510461456e68e6da9dbc670", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build crypto-random-string 6.0.0 as a self-contained ESM cryptographic random string generator with bounded Unicode and rejection-sampled custom alphabets."
+keywords = ["node", "npm", "esm", "random", "crypto", "unicode", "rejection-sampling"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source/API/test inventory, root-only npm v3 closure, and private 32-leaf subprocess verifier are packaged. Fresh Oracle and controls receipts are recorded in production-evidence.json. No model Agent Run was started."
+
+[oracle_bundle]
+digest = "sha256:c02d574eafcb4c0f7c7bec645dda501f72d414c9914bef059bbbb2003f34d618"
+size_bytes = 2243
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:c02d574eafcb4c0f7c7bec645dda501f72d414c9914bef059bbbb2003f34d618"
+visibility = "private"

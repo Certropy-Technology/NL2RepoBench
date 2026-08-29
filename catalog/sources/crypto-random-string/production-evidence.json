@@ -1,0 +1,284 @@
+{
+  "schema_version": "1.0",
+  "task_id": "crypto-random-string",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 32,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/crypto-random-string",
+    "revision": "09e2f1d01be98dff129f52555a733cf25a319067",
+    "tree": "e9a5c198c584ea20967a1a3990402c0fae6eec5a",
+    "source_digest": "sha256:f2c17dd0596c7e2b89f506f78b22ea49265ecda48d6822051413a401b29d177c",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/upstream/license",
+    "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "tracked_files": 13,
+    "submodules": [],
+    "source_worktree_clean": true,
+    "frozen_package": "crypto-random-string@6.0.0"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:ef63123345be63b3b613b804433b53d7c2b977527e88eb2ce53b31720ef30b65",
+    "source_task_sha256": "sha256:4ce8b2e1d4bf422dc661256547cc8f425fa2526bc717d7482b1bc5a20ff74eb0",
+    "bundle_manifest_sha256": "sha256:372c00bbf357668038fba58ba987e6a307d01aaa7955f954b5e46897173403ef",
+    "dependency_artifact": "sha256:54c0b32fe8cdd23d50a801a05d9553d855dfa496404002f0a9f29fa43b92658e",
+    "commands_artifact": "sha256:a1ce120f5ee308f04ea88dc1891bc2199704d5c2c3957ae0839033e48efddbb4",
+    "test_bundle": "sha256:646a508a5efe562392587a0189692ea3b989acfce510461456e68e6da9dbc670",
+    "oracle_bundle": "sha256:c02d574eafcb4c0f7c7bec645dda501f72d414c9914bef059bbbb2003f34d618",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_runtime_sha256": "sha256:eb9a0b49eae48b213325fb753a314de6a091676233ce977b70fc1306fabed054",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/crypto-random-string --output .nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/compiled-production --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/compiled-production/crypto-random-string",
+    "bundle_manifest_sha256": "sha256:372c00bbf357668038fba58ba987e6a307d01aaa7955f954b5e46897173403ef",
+    "bundle_schema": "2.0",
+    "manifest_file_count": 75,
+    "deterministic_repeat": true,
+    "manifest_mismatches": 0
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": {
+      "language": "node",
+      "runtime": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network",
+    "reference_source_fetch": "forbidden"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/compiled-production/crypto-random-string -a oracle --allow-agent-host github.com --job-name crypto-random-string-oracle-32-current -o .nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/oracle-32-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "crypto-random-string__ueo7f97",
+    "harbor_exceptions": 0,
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/oracle-32-final/crypto-random-string-oracle-32-current/crypto-random-string__ueo7f97/verifier/grading.json",
+      "sha256": "sha256:2604ac1cc91f5e4f334a2ab107df5fd868cfc35292c90c0157320301672ce0c5"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/oracle-32-final/crypto-random-string-oracle-32-current/crypto-random-string__ueo7f97/verifier/network.json",
+      "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-empty",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/empty/crypto-random-string-empty-32-current/crypto-random-string-empty__4FF8SdS/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/empty/crypto-random-string-empty-32-current/crypto-random-string-empty__4FF8SdS/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "stub": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-stub",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 2,
+      "failed": 30,
+      "reward": 0.0625,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/stub/crypto-random-string-stub-32-current/crypto-random-string-stub__6bdX5R8/verifier/grading.json",
+        "sha256": "sha256:d41bd3423aff2c0eac47bf57090fdbbafe4f34d792b3451f7347fb6d75cb83c6"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/stub/crypto-random-string-stub-32-current/crypto-random-string-stub__6bdX5R8/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+      }
+    },
+    "forgery": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-forgery",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "failed": 31,
+      "reward": 0.03125,
+      "verifier_owned_reward": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/forgery/crypto-random-string-forgery-32-current/crypto-random-string-forgery__2Nrp62Q/verifier/grading.json",
+        "sha256": "sha256:990cf25ea54d8d578bac26a5a34955719245582e4c27fbf567e43ff97ae43ddc"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/forgery/crypto-random-string-forgery-32-current/crypto-random-string-forgery__2Nrp62Q/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "hang": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-hang",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "duration_seconds": 178.8,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/hang/crypto-random-string-hang-32-current/crypto-random-string-hang__vpHts8L/verifier/grading.json",
+        "sha256": "sha256:47f90bc79aea76213c04d06ec6d29824220f58db2b8119ce656421c7b1d6176a"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/hang/crypto-random-string-hang-32-current/crypto-random-string-hang__vpHts8L/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+      }
+    },
+    "install-script": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-install-script",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/install-script/crypto-random-string-install-script-32-current/crypto-random-string-install-scr__sAUTFuG/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/install-script/crypto-random-string-install-script-32-current/crypto-random-string-install-scr__sAUTFuG/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "loader-hook": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-loader-hook",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "failed": 31,
+      "reward": 0.03125,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/loader-hook/crypto-random-string-loader-hook-32-current/crypto-random-string-loader-hook__f6WrZkJ/verifier/grading.json",
+        "sha256": "sha256:990cf25ea54d8d578bac26a5a34955719245582e4c27fbf567e43ff97ae43ddc"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/loader-hook/crypto-random-string-loader-hook-32-current/crypto-random-string-loader-hook__f6WrZkJ/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "offline": {
+      "command": "Harbor 0.21.0 Oracle run of controls-32/crypto-random-string-offline",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "failed": 31,
+      "reward": 0.03125,
+      "completed": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/offline/crypto-random-string-offline-32-current/crypto-random-string-offline__JFKNWrS/verifier/grading.json",
+        "sha256": "sha256:990cf25ea54d8d578bac26a5a34955719245582e4c27fbf567e43ff97ae43ddc"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/control-results-32/offline/crypto-random-string-offline-32-current/crypto-random-string-offline__JFKNWrS/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-freeze",
+      "command": "git clone/fetch/checkout 09e2f1d01be98dff129f52555a733cf25a319067 and git archive verification",
+      "exit_code": 0,
+      "result": "exact commit and tree; 13 tracked files; no submodules; clean worktree; archive and license hashes matched"
+    },
+    {
+      "stage": "upstream-tests",
+      "command": "npm install --ignore-scripts --no-audit --no-fund && npm test in an isolated git-archive extraction",
+      "exit_code": 0,
+      "result": "550 packages installed for the source-only probe; xo, AVA, and tsd passed; 15 AVA tests passed"
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/crypto-random-string",
+      "exit_code": 0,
+      "result": "controls-passed"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; no crypto-random-string finding; 139 unrelated repository warnings"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/crypto-random-string --output .nl2repo/authoring-work/node-author-wave2-20260828/crypto-random-string/compiled-production --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "result": "schema 2.0 production bundle; 75 manifest entries; repeat compile byte-identical"
+    },
+    {
+      "stage": "oracle",
+      "command": "Harbor 0.21.0 Oracle with run-scoped github.com authorization on current compiled bundle",
+      "exit_code": 0,
+      "result": "valid=true; 32/32; reward=1.0; public_network_available=false"
+    },
+    {
+      "stage": "controls",
+      "command": "Harbor 0.21.0 Oracle runs for empty, stub, forgery, hang, install-script, loader-hook, and offline bundles",
+      "exit_code": 0,
+      "result": "all seven controls completed; current task-local production gate passed"
+    }
+  ],
+  "residual_risks": [
+    "Human blind review, independent spec-traceability approval, model Agent Run, and publication remain integrator-stage work.",
+    "The benchmark contract is a documented dependency-free adaptation; upstream source-only xo, AVA, and tsd passed, but byte-for-byte implementation parity is not claimed.",
+    "The worker keeps generated runtime only under task-local .nl2repo; the integrator must compile and review catalog/tasks/crypto-random-string before publication.",
+    "The shared Node control summarizer change recognizes bounded candidate-call-failed hang results and remains for integrator review.",
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da-bookworm image ID is sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, not the toolchain-locked sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; the integrator must restore or verify the immutable Agent image before a model run."
+  ]
+}
