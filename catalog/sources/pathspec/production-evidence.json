@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pathspec",
+  "terminal_kind": "valid",
+  "source_revision": "df3de4595df6e8a1cfa5782b01926b4fe461a864",
+  "source_archive_sha256": "sha256:0d8c72748d26926b3b0e7a3a983dd3135e9ad4b462388408a1bafc936a0236d9",
+  "bundle_manifest": {
+    "path": ".nl2repo/compile/pathspec/pathspec/bundle.manifest.json",
+    "sha256": "sha256:8097f570b5544c8dddd0b75cba38dae8a2aa56b8650bfb73d436f9e81cfcea6e"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "uv": "0.11.32",
+    "docker": "29.7.2",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["flit-core==3.12.0"],
+    "lock_artifact": "sha256:b3d7456ecf8cd481ce5ea8a7e28ad58078a134e6dd51c1a69e1cf6d6074f7d0e",
+    "lock_size_bytes": 442
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 43,
+    "collection": 43,
+    "verifier_bundle": "sha256:91cbef328f5dd0e20215ae547e6f0878e349ac4f0b3276edf01ebcce4b2e024a"
+  },
+  "commands": [
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/pathspec",
+      "tool_version": "nl2repo from current checkout",
+      "exit_code": 0
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "nl2repo from current checkout",
+      "exit_code": 0,
+      "result": "0 errors; warnings belong to other source tasks"
+    },
+    {
+      "stage": "compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/pathspec --output .nl2repo/compile/pathspec --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "nl2repo from current checkout",
+      "exit_code": 0,
+      "mode": "production"
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compile/pathspec/pathspec -a oracle --allow-agent-host github.com --job-name pathspec-oracle-20260830 -o .nl2repo/runs/pathspec-oracle-20260830 --n-concurrent 1 --yes --no-delete",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 43,
+    "total": 43,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/pathspec-oracle-20260830/pathspec-oracle-20260830/pathspec__NVWMCWJ/verifier/grading.json",
+      "sha256": "sha256:a06f1a4ede256675ca2ff7cc9fa1b421ddc5f1a2658dba06d27d14a25117c4f5"
+    },
+    "network": {
+      "path": ".nl2repo/runs/pathspec-oracle-20260830/pathspec-oracle-20260830/pathspec__NVWMCWJ/verifier/network.json",
+      "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+    },
+    "source_fetch": "solve.sh asserted the frozen revision and archive digest"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compile/pathspec/pathspec -a nop --job-name pathspec-empty-20260830 -o .nl2repo/runs/pathspec-controls --n-concurrent 1 --yes --no-delete",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-empty-20260830/pathspec__hq3q8E6/verifier/grading.json",
+        "sha256": "sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-empty-20260830/pathspec__hq3q8E6/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathspec/pathspec-stub -a oracle --job-name pathspec-stub-20260830 -o .nl2repo/runs/pathspec-controls --n-concurrent 1 --yes --no-delete",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-stub-20260830/pathspec-stub__QpUS4hB/verifier/grading.json",
+        "sha256": "sha256:032e77c98bafb779340641acc4b2f98d79ce817f62326498550f4fddf6404a8b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-stub-20260830/pathspec-stub__QpUS4hB/verifier/network.json",
+        "sha256": "sha256:be5c9b151442773f1b569b5b63d0d645d14785669e1d17848e1965258cb4e541"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathspec/pathspec-forgery -a oracle --job-name pathspec-forgery-20260830 -o .nl2repo/runs/pathspec-controls --n-concurrent 1 --yes --no-delete",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-forgery-20260830/pathspec-forgery__NM3xibG/verifier/grading.json",
+        "sha256": "sha256:032e77c98bafb779340641acc4b2f98d79ce817f62326498550f4fddf6404a8b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-forgery-20260830/pathspec-forgery__NM3xibG/verifier/network.json",
+        "sha256": "sha256:f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathspec/pathspec-install-hang -a oracle --job-name pathspec-install-hang-20260830 -o .nl2repo/runs/pathspec-controls --n-concurrent 1 --yes --no-delete",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "bounded_runtime_seconds": 105,
+      "grading": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-install-hang-20260830/pathspec-install-hang__efiePvJ/verifier/grading.json",
+        "sha256": "sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-install-hang-20260830/pathspec-install-hang__efiePvJ/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pathspec/pathspec-call-hang -a oracle --job-name pathspec-call-hang-20260830 -o .nl2repo/runs/pathspec-controls --n-concurrent 1 --yes --no-delete",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded_runtime_seconds": 87,
+      "grading": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-call-hang-20260830/pathspec-call-hang__WuBiTuN/verifier/grading.json",
+        "sha256": "sha256:032e77c98bafb779340641acc4b2f98d79ce817f62326498550f4fddf6404a8b"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pathspec-controls/pathspec-call-hang-20260830/pathspec-call-hang__WuBiTuN/verifier/network.json",
+        "sha256": "sha256:08c74c3e88ad463ca2e1431870669c7b99d4d7d3003cb7aaaf51e02ee9bb0c55"
+      }
+    },
+    "offline": {
+      "command": "Verifier-integrated network_check.py in every fresh Oracle and control run",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/pathspec-oracle-20260830/pathspec-oracle-20260830/pathspec__NVWMCWJ/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      }
+    }
+  },
+  "residual_risks": [
+    "The upstream suite includes optional native backends and integration paths; the deterministic contract freezes 43 JSON-adapted leaves for the always-available simple backend.",
+    "The exact source-host authorization is used only by the trusted Oracle solve; model Agent metadata remains no-network with no allowed hosts.",
+    "The generated catalog/tasks projection, independent model Agent Run, blind review, and publication approval remain with the integrator."
+  ],
+  "status": "controls-passed"
+}

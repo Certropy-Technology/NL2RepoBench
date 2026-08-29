@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pathspec",
+  "source_revision": "df3de4595df6e8a1cfa5782b01926b4fe461a864",
+  "frozen_denominator": 43,
+  "public_to_private": {
+    "root_exports_and_version": ["exports", "version"],
+    "pattern_and_regex_contract": ["pattern", "regex", "wildmatch"],
+    "pathspec_matching_and_composition": ["pathspec", "composition"],
+    "gitignore_precedence": ["gitignore"],
+    "utility_normalization_and_registration": ["utilities", "registration"],
+    "filesystem_walk_and_recursion": ["filesystem", "recursion"],
+    "data_classes_and_errors": ["data"],
+    "installable_project": ["installation"],
+    "candidate_process_isolation": ["runtime"]
+  },
+  "private_to_public": {
+    "exports": "Root exports and version",
+    "version": "Root exports and version",
+    "pattern": "Pattern and RegexPattern",
+    "regex": "Pattern and RegexPattern",
+    "wildmatch": "GitWildMatchPattern",
+    "pathspec": "PathSpec",
+    "composition": "PathSpec",
+    "gitignore": "GitIgnoreSpec",
+    "utilities": "Utilities and data classes",
+    "registration": "Utilities and data classes",
+    "filesystem": "Utilities and data classes",
+    "recursion": "Utilities and data classes",
+    "data": "Utilities and data classes",
+    "installation": "Supports and Implementation Notes",
+    "runtime": "Implementation Notes"
+  }
+}
