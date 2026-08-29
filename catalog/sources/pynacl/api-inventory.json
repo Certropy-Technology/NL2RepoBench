@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pynacl",
+  "source_revision": "fddb5f3a012baa28d5ead6497ab2ae72c4221246",
+  "distribution": {
+    "name": "PyNaCl",
+    "version": "1.6.2",
+    "import_root": "nacl",
+    "requires_python": ">=3.8",
+    "typed_marker": "nacl/py.typed"
+  },
+  "selected_surface": [
+    {
+      "module": "nacl.encoding",
+      "symbols": [
+        "RawEncoder.encode(data: bytes) -> bytes",
+        "RawEncoder.decode(data: bytes) -> bytes",
+        "HexEncoder.encode(data: bytes) -> bytes",
+        "HexEncoder.decode(data: bytes) -> bytes",
+        "Base16Encoder.encode(data: bytes) -> bytes",
+        "Base16Encoder.decode(data: bytes) -> bytes",
+        "Base32Encoder.encode(data: bytes) -> bytes",
+        "Base32Encoder.decode(data: bytes) -> bytes",
+        "Base64Encoder.encode(data: bytes) -> bytes",
+        "Base64Encoder.decode(data: bytes) -> bytes",
+        "URLSafeBase64Encoder.encode(data: bytes) -> bytes",
+        "URLSafeBase64Encoder.decode(data: bytes) -> bytes",
+        "Encodable.encode(self, encoder: Encoder = RawEncoder) -> bytes"
+      ]
+    },
+    {
+      "module": "nacl.utils",
+      "symbols": [
+        "EncryptedMessage.nonce",
+        "EncryptedMessage.ciphertext",
+        "bytes_as_string(bytes_in: bytes) -> str",
+        "random(size: int = 32) -> bytes",
+        "randombytes_deterministic(size: int, seed: bytes, encoder: Encoder = RawEncoder) -> bytes"
+      ]
+    },
+    {
+      "module": "nacl.secret",
+      "symbols": [
+        "SecretBox(key: bytes, encoder: Encoder = RawEncoder)",
+        "SecretBox.encrypt(plaintext: bytes, nonce: bytes | None = None, encoder: Encoder = RawEncoder) -> EncryptedMessage",
+        "SecretBox.decrypt(ciphertext: bytes, nonce: bytes | None = None, encoder: Encoder = RawEncoder) -> bytes",
+        "Aead(key: bytes, encoder: Encoder = RawEncoder)",
+        "Aead.encrypt(plaintext: bytes, aad: bytes = b'', nonce: bytes | None = None, encoder: Encoder = RawEncoder) -> EncryptedMessage",
+        "Aead.decrypt(ciphertext: bytes, aad: bytes = b'', nonce: bytes | None = None, encoder: Encoder = RawEncoder) -> bytes"
+      ]
+    },
+    {
+      "module": "nacl.public",
+      "symbols": [
+        "PublicKey(public_key: bytes, encoder: Encoder = RawEncoder)",
+        "PrivateKey(private_key: bytes, encoder: Encoder = RawEncoder)",
+        "PrivateKey.from_seed(seed: bytes, encoder: Encoder = RawEncoder) -> PrivateKey",
+        "PrivateKey.generate() -> PrivateKey",
+        "Box(private_key: PrivateKey, public_key: PublicKey)",
+        "Box.decode(encoded: bytes, encoder: Encoder = RawEncoder) -> Box",
+        "Box.encrypt(plaintext: bytes, nonce: bytes | None = None, encoder: Encoder = RawEncoder) -> EncryptedMessage",
+        "Box.decrypt(ciphertext: bytes, nonce: bytes | None = None, encoder: Encoder = RawEncoder) -> bytes",
+        "Box.shared_key() -> bytes",
+        "SealedBox(recipient_key: PublicKey | PrivateKey)",
+        "SealedBox.encrypt(plaintext: bytes, encoder: Encoder = RawEncoder) -> bytes",
+        "SealedBox.decrypt(ciphertext: bytes, encoder: Encoder = RawEncoder) -> bytes"
+      ]
+    },
+    {
+      "module": "nacl.signing",
+      "symbols": [
+        "SignedMessage.signature",
+        "SignedMessage.message",
+        "VerifyKey(key: bytes, encoder: Encoder = RawEncoder)",
+        "VerifyKey.verify(smessage: bytes, signature: bytes | None = None, encoder: Encoder = RawEncoder) -> bytes",
+        "VerifyKey.to_curve25519_public_key() -> PublicKey",
+        "SigningKey(seed: bytes, encoder: Encoder = RawEncoder)",
+        "SigningKey.generate() -> SigningKey",
+        "SigningKey.sign(message: bytes, encoder: Encoder = RawEncoder) -> SignedMessage",
+        "SigningKey.to_curve25519_private_key() -> PrivateKey"
+      ]
+    },
+    {
+      "module": "nacl.hash",
+      "symbols": [
+        "sha256(message: bytes, encoder: Encoder = HexEncoder) -> bytes",
+        "sha512(message: bytes, encoder: Encoder = HexEncoder) -> bytes",
+        "blake2b(data: bytes, digest_size: int = BLAKE2B_BYTES, key: bytes = b'', salt: bytes = b'', person: bytes = b'', encoder: Encoder = HexEncoder) -> bytes",
+        "siphash24(message: bytes, key: bytes = b'', encoder: Encoder = HexEncoder) -> bytes",
+        "siphashx24(message: bytes, key: bytes = b'', encoder: Encoder = HexEncoder) -> bytes"
+      ]
+    },
+    {
+      "module": "nacl.hashlib",
+      "symbols": [
+        "blake2b(data: bytes = b'', digest_size: int = BYTES, key: bytes = b'', salt: bytes = b'', person: bytes = b'')",
+        "blake2b.update(data: bytes) -> None",
+        "blake2b.digest() -> bytes",
+        "blake2b.hexdigest() -> str",
+        "blake2b.copy() -> blake2b"
+      ]
+    },
+    {
+      "module": "nacl.pwhash.argon2id",
+      "symbols": [
+        "kdf(size: int, password: bytes, salt: bytes, opslimit: int = OPSLIMIT_SENSITIVE, memlimit: int = MEMLIMIT_SENSITIVE, encoder: Encoder = RawEncoder) -> bytes",
+        "str(password: bytes, opslimit: int = OPSLIMIT_INTERACTIVE, memlimit: int = MEMLIMIT_INTERACTIVE) -> bytes",
+        "verify(password_hash: bytes, password: bytes) -> bool",
+        "nacl.pwhash.verify(password_hash: bytes, password: bytes) -> bool"
+      ]
+    },
+    {
+      "module": "nacl.exceptions",
+      "symbols": [
+        "CryptoError",
+        "BadSignatureError",
+        "RuntimeError",
+        "AssertionError",
+        "TypeError",
+        "ValueError",
+        "InvalidkeyError",
+        "CryptPrefixError",
+        "UnavailableError",
+        "ensure(cond: bool, *args: object, **kwds: type[Exception]) -> None"
+      ]
+    }
+  ],
+  "excluded_surface": [
+    "nacl.bindings low-level CFFI functions and state handles",
+    "nacl.bindings.crypto_secretstream stateful native handles",
+    "nacl.bindings.crypto_kx raw session-key functions",
+    "nacl.pwhash.argon2i and scrypt compatibility aliases beyond generic verify",
+    "documentation and release tooling"
+  ],
+  "boundary": {
+    "protocol": "custom-json-v1",
+    "candidate_import": "UID 10001 child process only",
+    "serialization": "bounded JSON containing text, integers, booleans, null, and hex/base encodings of bytes",
+    "randomness": "random APIs are asserted by shape, uniqueness, and successful roundtrip; deterministic APIs use fixed public vectors",
+    "native_objects": "keys, boxes, hash state, and signed/encrypted bytes are created and inspected entirely inside the candidate child"
+  }
+}

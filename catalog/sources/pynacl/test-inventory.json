@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pynacl",
+  "source_revision": "fddb5f3a012baa28d5ead6497ab2ae72c4221246",
+  "upstream": {
+    "framework": "pytest",
+    "files": 19,
+    "data_files": 17,
+    "collection_command": "python -m pytest --collect-only -q",
+    "test_command": "python -m pytest -q",
+    "collected": 4671,
+    "passed": 4661,
+    "skipped": 10,
+    "failed": 0,
+    "collection_seconds": 3.16,
+    "test_seconds": 29.66,
+    "network_mode": "none",
+    "skip_reasons": [
+      "four generated split-message cases are too short",
+      "six cases require a minimal rather than full libsodium build"
+    ],
+    "log": ".nl2repo/authoring-work/python-author-wave2-20260828/pynacl/logs/upstream-baseline-offline-v2.log"
+  },
+  "frozen_verifier": {
+    "protocol": "custom-json-v1",
+    "expected_total": 49,
+    "leaf_id_prefix": "pynacl/",
+    "per_call_timeout_seconds": 5,
+    "cumulative_call_budget_seconds": 60,
+    "candidate_uid": 10001,
+    "categories": {
+      "metadata_packaging": 1,
+      "encoding_utils_exceptions": 7,
+      "secretbox": 6,
+      "aead": 5,
+      "public_keys_box_sealed_box": 9,
+      "signing": 6,
+      "fixed_hashes": 4,
+      "incremental_hash": 4,
+      "password_hashing": 5,
+      "generated_key_shapes": 1,
+      "encrypted_message_shape": 1
+    },
+    "determinism": "fixed keys, seeds, nonces, salts, AAD, messages, and minimum Argon2id work parameters; random APIs use invariant assertions",
+    "expected_vectors_sha256": "sha256:4c78be1c17e18c01af80ad88632de47b45663824ced3b7a94ef801c108178915"
+  }
+}

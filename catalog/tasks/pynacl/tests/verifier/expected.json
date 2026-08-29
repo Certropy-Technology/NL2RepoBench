@@ -1,0 +1,383 @@
+{
+  "aead-constants-key": {
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "key_size": 32,
+    "macbytes": 16,
+    "nonce_size": 24,
+    "str": "b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f'"
+  },
+  "aead-deterministic": {
+    "ciphertext": "cebb411ed3beadca563043bca63bc681383341c6ddb572850b685ed54910247eb44c2ce93572664c4ce7878da3",
+    "combined": "000102030405060708090a0b0c0d0e0f1011121314151617cebb411ed3beadca563043bca63bc681383341c6ddb572850b685ed54910247eb44c2ce93572664c4ce7878da3",
+    "decrypt_combined": "PyNaCl deterministic contract",
+    "decrypt_detached": "PyNaCl deterministic contract",
+    "nonce": "000102030405060708090a0b0c0d0e0f1011121314151617"
+  },
+  "aead-encoded": {
+    "combined": "000102030405060708090a0b0c0d0e0f1011121314151617fbac6c10f4b7e9f6e8bca0fdc204fe794feceea1ffaf5f",
+    "decrypt": "encoded",
+    "nonce": "000102030405060708090a0b0c0d0e0f1011121314151617"
+  },
+  "aead-errors": {
+    "bad_aad": {
+      "message": "Decryption failed.",
+      "type": "nacl.exceptions.CryptoError"
+    },
+    "bad_nonce": {
+      "message": "The nonce must be exactly 24 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "short_key": {
+      "message": "The key must be exactly 32 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "tamper": {
+      "message": "Decryption failed.",
+      "type": "nacl.exceptions.CryptoError"
+    }
+  },
+  "aead-random-nonce": {
+    "ciphertext_len": 28,
+    "combined_len": 52,
+    "nonce_len": 24,
+    "roundtrip": "random nonce"
+  },
+  "box-decode-encoded": {
+    "decrypt": "decoded",
+    "equal_key": true,
+    "str": "b\"{\\x91Y~j\\r\\xbe*\\xcd4\\xf1?\\x7f\\xe3E\\xf7\\x82\\xc9;\\x04?'Z\\x80\\xe5\\xf8\\x10\\xb6\\x0f\\xa6\\xba\\x12\""
+  },
+  "box-deterministic": {
+    "ciphertext": "01fabc61915ea706b3ce2c48370d9291b7f64eaa4bf9ae22dbdb81d8bfa1987fdf61a76495949ba588b3f78222",
+    "combined": "000102030405060708090a0b0c0d0e0f101112131415161701fabc61915ea706b3ce2c48370d9291b7f64eaa4bf9ae22dbdb81d8bfa1987fdf61a76495949ba588b3f78222",
+    "decrypt_combined": "PyNaCl deterministic contract",
+    "decrypt_detached": "PyNaCl deterministic contract",
+    "nonce": "000102030405060708090a0b0c0d0e0f1011121314151617"
+  },
+  "box-errors": {
+    "bad_ctor": {
+      "message": "Box must be created from a PrivateKey and a PublicKey",
+      "type": "nacl.exceptions.TypeError"
+    },
+    "bad_nonce": {
+      "message": "The nonce must be exactly 24 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "tamper": {
+      "message": "An error occurred trying to decrypt the message",
+      "type": "nacl.exceptions.CryptoError"
+    }
+  },
+  "box-shared-key": {
+    "bytes": "7b91597e6a0dbe2acd34f13f7fe345f782c93b043f275a80e5f810b60fa6ba12",
+    "equal": true,
+    "length": 32
+  },
+  "encoding-base32-base64": {
+    "base32": "MVXGG33EMUQG2ZI=",
+    "base32_roundtrip": "656e636f6465206d65",
+    "base64": "ZW5jb2RlIG1l",
+    "base64_roundtrip": "656e636f6465206d65"
+  },
+  "encoding-hex-base16": {
+    "base16": "416200",
+    "base16_roundtrip": "416200",
+    "hex": "416200",
+    "hex_roundtrip": "416200"
+  },
+  "encoding-raw": {
+    "decode": "726177006279746573",
+    "encode": "726177006279746573"
+  },
+  "encoding-urlsafe-errors": {
+    "encoded": "-__v",
+    "invalid_hex": {
+      "message": "Odd-length string",
+      "type": "binascii.Error"
+    },
+    "roundtrip": "fbffef"
+  },
+  "encrypted-message-bytes": {
+    "bytes_subclass": true,
+    "ciphertext_suffix": true,
+    "nonce_prefix": true,
+    "type": "EncryptedMessage"
+  },
+  "exceptions-hierarchy-ensure": {
+    "bad_signature_crypto": true,
+    "ensure_failure": {
+      "message": "('nope', <class 'ValueError'>)",
+      "type": "nacl.exceptions.AssertionError"
+    },
+    "ensure_success": null,
+    "value_error_builtin": true
+  },
+  "generated-key-shapes": {
+    "private_len": 32,
+    "public_len": 32,
+    "signing_len": 32,
+    "verify_len": 32
+  },
+  "hash-blake2b": {
+    "default": "1c06f042a0b4a47f398305c7f3eaa6d4ff82b9eaff3229ddde68cff4cf3a9457",
+    "keyed": "8552a2cba30b5849759fdaffceaa7935b88bead9e9d8b4c692011bb8a5b414de",
+    "raw_length": 17
+  },
+  "hash-errors": {
+    "blake_size": {
+      "message": null,
+      "type": null
+    },
+    "sip_key": {
+      "message": "Key length must be exactly 16 bytes",
+      "type": "nacl.exceptions.ValueError"
+    }
+  },
+  "hash-sha": {
+    "sha256": "fb2e3252e75de3589bca466d863288d563ce1e3799bbf9b047f99353e73119d5",
+    "sha256_raw": "fb2e3252e75de3589bca466d863288d563ce1e3799bbf9b047f99353e73119d5",
+    "sha512": "5bd43bd2f0a5d3afda46558a6726116cbdcaf4f341e77215818e77406e3aae561b75e43fbd096ea83107bb7f6f8c9275f584d6295d9ee00729155f8d20158d8b"
+  },
+  "hash-siphash": {
+    "available_x": true,
+    "siphash24": "b8fb64dac3e1d2fa",
+    "siphash24_raw": "b8fb64dac3e1d2fa",
+    "siphashx24": "403a905d8c3dc344f341307f95dc510d"
+  },
+  "hashlib-basic": {
+    "block_size": 128,
+    "digest": "1c06f042a0b4a47f398305c7f3eaa6d4ff82b9eaff3229ddde68cff4cf3a9457",
+    "digest_size": 32,
+    "hexdigest": "1c06f042a0b4a47f398305c7f3eaa6d4ff82b9eaff3229ddde68cff4cf3a9457",
+    "name": "blake2b"
+  },
+  "hashlib-copy": {
+    "different": true,
+    "first": "e60799c3af694606e4be55d0c3f799fad52bc2a6",
+    "second": "209fafacc43ec52bd57ecd1a91172612a4f60b85"
+  },
+  "hashlib-errors": {
+    "digest_size": {
+      "message": null,
+      "type": null
+    },
+    "pickle": {
+      "message": "can't pickle blake2b objects",
+      "type": "builtins.TypeError"
+    }
+  },
+  "hashlib-incremental": {
+    "before": "d6025b4eadf887bd3dc447784e284738ff42d32294f8d14619824b04fcc51320",
+    "final": "8a1d7f767d777ed3b379eab6b9674ec900ce0be3ab6009be222f744e8eac2e12",
+    "stdlib_equal": true
+  },
+  "metadata-imports": {
+    "all": [
+      "__email__",
+      "__uri__",
+      "__version__"
+    ],
+    "py_typed": true,
+    "version": "1.6.2"
+  },
+  "public-key-encoding-equality": {
+    "encoded": "RwHQhIhFH1RaQJ+1iuPlhYHKQKw/fxFGmM1x3qxzygE=",
+    "equal": true,
+    "hash_equal": true,
+    "not_bytes": true,
+    "size": 32
+  },
+  "public-key-validation": {
+    "private_seed_short": {
+      "message": "PrivateKey seed must be a 32 bytes long binary sequence",
+      "type": "nacl.exceptions.TypeError"
+    },
+    "private_short": {
+      "message": "PrivateKey must be created from a 32 bytes long raw secret key",
+      "type": "nacl.exceptions.TypeError"
+    },
+    "public_short": {
+      "message": "The public key must be exactly 32 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    }
+  },
+  "public-private-from-seed": {
+    "private": "3d94eea49c580aef816935762be049559d6d1440dede12e6a125f1841fff8e6f",
+    "public": "4701d08488451f545a409fb58ae3e58581ca40ac3f7f114698cd71deac73ca01",
+    "seed_size": 32,
+    "size": 32
+  },
+  "pwhash-constants": {
+    "alg": 2,
+    "bytes_min": 16,
+    "memlimit_min": 8192,
+    "opslimit_min": 1,
+    "passwd_min": 0,
+    "saltbytes": 16,
+    "strprefix": "$argon2id$"
+  },
+  "pwhash-errors": {
+    "bad_prefix": {
+      "message": "given password_hash is not in a supported format",
+      "type": "nacl.exceptions.CryptPrefixError"
+    },
+    "short_output": {
+      "message": "derived key must be at least 16 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "short_salt": {
+      "message": "salt must be exactly 16 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    }
+  },
+  "pwhash-kdf": {
+    "derived": "d17ea6341ca93da6079ea2f64dc4aa31dd1aaf9caa67fb42ac4afd0714706f26",
+    "length": 32
+  },
+  "pwhash-kdf-encoded": {
+    "derived": "1ae16f7ebdcbb584527aad0608c0fe20a1f0c3d1c5ae7f06",
+    "length": 48
+  },
+  "pwhash-string-verify": {
+    "generic_verify": true,
+    "length": 93,
+    "prefix": true,
+    "verify": true,
+    "wrong": {
+      "message": "Wrong password",
+      "type": "nacl.exceptions.InvalidkeyError"
+    }
+  },
+  "sealedbox-encoded-errors": {
+    "decrypt": "sealed",
+    "public_decrypt": {
+      "message": "SealedBoxes created with a public key cannot decrypt",
+      "type": "builtins.TypeError"
+    },
+    "tamper": {
+      "message": "An error occurred trying to decrypt the message",
+      "type": "nacl.exceptions.CryptoError"
+    }
+  },
+  "sealedbox-roundtrip": {
+    "bytes": "4701d08488451f545a409fb58ae3e58581ca40ac3f7f114698cd71deac73ca01",
+    "decrypt": "PyNaCl deterministic contract",
+    "different": true,
+    "length": 77
+  },
+  "secretbox-constants-key": {
+    "bytes": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "key_size": 32,
+    "macbytes": 16,
+    "nonce_size": 24,
+    "str": "b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f'"
+  },
+  "secretbox-deterministic": {
+    "ciphertext": "580fcfc10e96ceba19f8f08eaa17cd950e86762e84a68274de48ea4c05e624fe21d12fbcac46508163d006f721",
+    "combined": "000102030405060708090a0b0c0d0e0f1011121314151617580fcfc10e96ceba19f8f08eaa17cd950e86762e84a68274de48ea4c05e624fe21d12fbcac46508163d006f721",
+    "decrypt_combined": "PyNaCl deterministic contract",
+    "decrypt_detached": "PyNaCl deterministic contract",
+    "nonce": "000102030405060708090a0b0c0d0e0f1011121314151617",
+    "type": "EncryptedMessage"
+  },
+  "secretbox-encoded": {
+    "combined": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYX8a88Q7ZV8tjQt2Ov+5ppzjuRWyCjr8Y=",
+    "decrypt": "encoded",
+    "nonce": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYX"
+  },
+  "secretbox-errors": {
+    "bad_nonce": {
+      "message": "The nonce must be exactly 24 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "tamper": {
+      "message": "Decryption failed. Ciphertext failed verification",
+      "type": "nacl.exceptions.CryptoError"
+    },
+    "wrong_key": {
+      "message": "Decryption failed. Ciphertext failed verification",
+      "type": "nacl.exceptions.CryptoError"
+    }
+  },
+  "secretbox-key-validation": {
+    "hex_key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "short": {
+      "message": "The key must be exactly 32 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "wrong_type": {
+      "message": "SecretBox must be created from 32 bytes",
+      "type": "nacl.exceptions.TypeError"
+    }
+  },
+  "secretbox-random-nonce": {
+    "ciphertext_len": 28,
+    "combined_len": 52,
+    "nonce_len": 24,
+    "roundtrip": "random nonce"
+  },
+  "signing-combined": {
+    "combined": "fa03519267fdd3ce280fb9814cd5f2bdcf0b46af1486d057cce3ce855fae66959da1e996d3a6ca62321bba81ce42a22ae1e76bdbac1ffa77a063c23c97b1ad0d50794e61436c2064657465726d696e697374696320636f6e7472616374",
+    "message": "50794e61436c2064657465726d696e697374696320636f6e7472616374",
+    "signature": "fa03519267fdd3ce280fb9814cd5f2bdcf0b46af1486d057cce3ce855fae66959da1e996d3a6ca62321bba81ce42a22ae1e76bdbac1ffa77a063c23c97b1ad0d",
+    "type": "SignedMessage",
+    "verify": "PyNaCl deterministic contract"
+  },
+  "signing-curve-conversion": {
+    "private": "3894eea49c580aef816935762be049559d6d1440dede12e6a125f1841fff8e6f",
+    "public": "4701d08488451f545a409fb58ae3e58581ca40ac3f7f114698cd71deac73ca01",
+    "public_matches": true
+  },
+  "signing-detached-encoded": {
+    "message": "UHlOYUNsIGRldGVybWluaXN0aWMgY29udHJhY3Q=",
+    "signature": "+gNRkmf9084oD7mBTNXyvc8LRq8UhtBXzOPOhV+uZpWdoemW06bKYjIbuoHOQqIq4edr26wf+negY8I8l7GtDQ==",
+    "verify_combined": "PyNaCl deterministic contract",
+    "verify_detached": "PyNaCl deterministic contract"
+  },
+  "signing-encoding-equality": {
+    "equal": true,
+    "hash_equal": true,
+    "verify_equal": true,
+    "verify_hash_equal": true
+  },
+  "signing-errors": {
+    "bad_signature": {
+      "message": "Signature was forged or corrupt",
+      "type": "nacl.exceptions.BadSignatureError"
+    },
+    "short_seed": {
+      "message": "The seed must be exactly 32 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "short_signature": {
+      "message": "The signature must be exactly 64 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    },
+    "short_verify_key": {
+      "message": "The key must be exactly 32 bytes long",
+      "type": "nacl.exceptions.ValueError"
+    }
+  },
+  "signing-seed-keys": {
+    "seed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "str": "b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f'",
+    "verify": "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8"
+  },
+  "utils-deterministic-random": {
+    "hex": "0d8e6cc68715648926732e7ea73250cfaf2d58422083904c841a8ba33b986111f346ba50723a68ae283524a6bded09f8",
+    "hex_encoder": "0d8e6cc68715648926732e7ea73250cf",
+    "invalid_seed": {
+      "message": "Deterministic random bytes must be generated from 32 bytes",
+      "type": "nacl.exceptions.TypeError"
+    }
+  },
+  "utils-random-shape": {
+    "different": true,
+    "first_len": 17,
+    "second_len": 17,
+    "types": [
+      "bytes",
+      "bytes"
+    ]
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pynacl",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/pyca/pynacl",
+    "revision": "fddb5f3a012baa28d5ead6497ab2ae72c4221246",
+    "tree": "871a1524d614a7feedc9165e624d52ef17ba26ec",
+    "archive_sha256": "sha256:eec62a1ac27fd9cbe0452b5b7f12f2c1ca4f568c63b3b0b565a4ca0d3c7ac958",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:d3174ad63e721d4c9dccb8ad4320848992d314369bc46319720b5802c9153fe9",
+    "bundled_libsodium_license_sha256": "sha256:508a76d186356c0dd807a670ef510964f8724557024796a2c426c6c0e19ab683"
+  },
+  "environment": {
+    "python": "3.12.14 in task image; 3.14.6 authoring interpreter",
+    "os": "debian-13-amd64",
+    "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "base_image_local_id": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_image_declared_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "agent_image_local_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "verifier_image_local_id": "sha256:a6aeee2c250d2abb89ba80f629aa6abc02df1c7696a79c70bf17aee02c1bd6b3",
+    "system_packages": [
+      "build-essential=12.12",
+      "git=1:2.47.3-0+deb13u1"
+    ],
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "packages": [
+      "cffi==2.1.1",
+      "packaging==26.3",
+      "pycparser==3.0",
+      "setuptools==84.0.0",
+      "wheel==0.48.0"
+    ],
+    "lock_path": "catalog/sources/pynacl/provenance/requirements.lock.txt",
+    "lock_sha256": "sha256:0219751081b3099f05b069b50128fe6a94df58dc1aa8c34f22ab92d7dead368d",
+    "lock_size_bytes": 9863,
+    "lock_artifact": "artifact://private/sha256:0219751081b3099f05b069b50128fe6a94df58dc1aa8c34f22ab92d7dead368d"
+  },
+  "inventory": {
+    "api_path": "catalog/sources/pynacl/api-inventory.json",
+    "api_sha256": "sha256:19b8a15a58da9e679f4791d45b219c575a2ec266fc170aa8ffd2e7ed397a6cbe",
+    "test_path": "catalog/sources/pynacl/test-inventory.json",
+    "test_sha256": "sha256:c0f8dddf03176d92e2753262646f575907a6499910e75c88d67d70df51b0bb47",
+    "upstream_collected": 4671,
+    "upstream_passed": 4661,
+    "upstream_skipped": 10,
+    "frozen_verifier_leaves": 49,
+    "expected_vectors_sha256": "sha256:4c78be1c17e18c01af80ad88632de47b45663824ced3b7a94ef801c108178915"
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/final-compile/pynacl/pynacl/bundle.manifest.json",
+    "manifest_sha256": "sha256:7cf8d937f0aa62dfd4cd74696db2821b0d472635342165b33fdc98f3f5c2915e",
+    "canonical_manifest_digest": "sha256:ad4ed5af53ee61584818c3e4124126bca6860b0c8e2f8fe1ef620bb443d463bf",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "verifier_bundle": "artifact://private/sha256:f1e2b40c487399ec44c7de330052ea63fafb8028fd980ea0f456662e62bb9489",
+    "oracle_bundle": "artifact://private/sha256:e98a6fb4ef5bae437cb8fb16867664750eacbdbafdd53ba791e51f4cf3a11dbb"
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "expected_total": 49,
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "candidate_uid": 10001,
+    "per_call_timeout_seconds": 5,
+    "cumulative_call_budget_seconds": 60
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pynacl/pynacl -a oracle --allow-agent-host github.com --job-name pynacl-oracle-20260830 --jobs-dir .nl2repo/runs/pynacl-oracle-20260830 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "source_fetch_and_archive_check": "passed",
+    "valid": true,
+    "passed": 49,
+    "total": 49,
+    "reward": 1.0,
+    "result": {
+      "path": ".nl2repo/runs/pynacl-oracle-20260830/pynacl-oracle-20260830/result.json",
+      "sha256": "sha256:43afd3440771a6517d39e6511b0bf81207c9e39cb1dee6a5c02fd6424d301973"
+    },
+    "grading": {
+      "path": ".nl2repo/runs/pynacl-oracle-20260830/pynacl-oracle-20260830/pynacl__o33iZws/verifier/grading.json",
+      "sha256": "sha256:50f251d53af0d5830890e61212dd0983993bd8ad139a3c1fb57759d2b547c8f7"
+    },
+    "network": {
+      "path": ".nl2repo/runs/pynacl-oracle-20260830/pynacl-oracle-20260830/pynacl__o33iZws/verifier/network.json",
+      "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pynacl/pynacl -a nop --job-name pynacl-empty-20260830 --jobs-dir .nl2repo/runs/pynacl-empty-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/pynacl-empty-20260830/pynacl-empty-20260830/pynacl__UBm6jNy/verifier/grading.json",
+        "sha256": "sha256:bf9d5951199b3ad3837108719f97d2b8ab9b8730883f59e9bcfcae31b95acd0a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pynacl-empty-20260830/pynacl-empty-20260830/pynacl__UBm6jNy/verifier/network.json",
+        "sha256": "sha256:bafb6ba322a52b4e37776eb1d21302447b7e8c4ad724a768ac88299ba046c843",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pynacl/pynacl-stub -a oracle --job-name pynacl-stub-20260830 --jobs-dir .nl2repo/runs/pynacl-stub-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 49,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/pynacl-stub-20260830/pynacl-stub-20260830/pynacl-stub__8zEV56t/verifier/grading.json",
+        "sha256": "sha256:1bdf2690456cfe17e243a06a469d5e5d9d9fea4a623a72d6449c2945dc42f3fc"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pynacl-stub-20260830/pynacl-stub-20260830/pynacl-stub__8zEV56t/verifier/network.json",
+        "sha256": "sha256:0f441b742e19792ed7bfc823a1527ec4a8cdaf95b2cc8c8bc883b99a3f9a9d5f",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pynacl/pynacl-forgery -a oracle --job-name pynacl-forgery-20260830 --jobs-dir .nl2repo/runs/pynacl-forgery-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 49,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/pynacl-forgery-20260830/pynacl-forgery-20260830/pynacl-forgery__QUUXZJA/verifier/grading.json",
+        "sha256": "sha256:1bdf2690456cfe17e243a06a469d5e5d9d9fea4a623a72d6449c2945dc42f3fc"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pynacl-forgery-20260830/pynacl-forgery-20260830/pynacl-forgery__QUUXZJA/verifier/network.json",
+        "sha256": "sha256:f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8",
+        "public_network_available": false
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/pynacl/pynacl-call-hang -a oracle --job-name pynacl-call-hang-20260830 --jobs-dir .nl2repo/runs/pynacl-call-hang-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 49,
+      "reward": 0.0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/runs/pynacl-call-hang-20260830/pynacl-call-hang-20260830/pynacl-call-hang__6VpYJDc/verifier/grading.json",
+        "sha256": "sha256:1bdf2690456cfe17e243a06a469d5e5d9d9fea4a623a72d6449c2945dc42f3fc"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pynacl-call-hang-20260830/pynacl-call-hang-20260830/pynacl-call-hang__6VpYJDc/verifier/network.json",
+        "sha256": "sha256:f8e5796aa93b14220614ccf609d2e5de5244e9a73b22acfff71bcfc9272d25d8",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/pynacl/pynacl -a nop --job-name pynacl-offline-20260830 --jobs-dir .nl2repo/runs/pynacl-offline-20260830-harbor --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/pynacl-offline-20260830-harbor/pynacl-offline-20260830/pynacl__H3tjp7u/verifier/grading.json",
+        "sha256": "sha256:bf9d5951199b3ad3837108719f97d2b8ab9b8730883f59e9bcfcae31b95acd0a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/pynacl-offline-20260830-harbor/pynacl-offline-20260830/pynacl__H3tjp7u/verifier/network.json",
+        "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3",
+        "public_network_available": false
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/pynacl",
+      "exit_code": 0,
+      "source_digest": "sha256:0698f300cf8a3f65767b1114d17bbe9c40746e67e7d2ae1f6f18ec8d77eca241"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 141,
+      "warning_scope": "pre-existing findings in other catalog tasks; no pynacl finding"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/pynacl --output .nl2repo/final-compile/pynacl --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "manifest_sha256": "sha256:7cf8d937f0aa62dfd4cd74696db2821b0d472635342165b33fdc98f3f5c2915e"
+    },
+    "syntax": {
+      "command": "python3 -m py_compile generated verifier Python files && bash -n generated solution/test/control scripts",
+      "exit_code": 0
+    },
+    "verifier_image_build": {
+      "command": "docker build --network default --pull=false -t nl2repo-pynacl-verifier:current .nl2repo/final-compile/pynacl/pynacl/tests",
+      "exit_code": 0,
+      "image_id": "sha256:a6aeee2c250d2abb89ba80f629aa6abc02df1c7696a79c70bf17aee02c1bd6b3",
+      "warning": "FromPlatformFlagConstDisallowed for fixed linux/amd64 platform"
+    },
+    "versions": {
+      "uv": "0.11.32",
+      "python": "3.14.6",
+      "docker_server": "29.7.2",
+      "harbor": "0.21.0"
+    }
+  },
+  "residual_risks": [
+    "The locked OpenHands agent image id 70525a...c7ea is not locally available; the local tag resolves to dbfa15...ec123. Harbor Oracle/control runs completed with the local image, but the integrator must restore or relock the immutable agent image before a model Agent Run.",
+    "A direct network-none replay using the Oracle workspace hit host resource pressure while the candidate native build was under the verifier nproc=32 limit (posix_spawn/fork Resource temporarily unavailable). The failed replay is infrastructure evidence, not a candidate or model score; Harbor Oracle and the no-network nop verifier control completed successfully.",
+    "The Python compiler source exposes call-hang but no install-hang or workspace-invalid control script, so call-hang is the available bounded timeout control for this task.",
+    "Independent review, model Agent Run, pilot, parity validation, and publication were not run in this authoring lane."
+  ],
+  "blockers": []
+}

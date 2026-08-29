@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pynacl",
+  "authoring": {
+    "batch_id": "python-author-wave2-20260828",
+    "mode": "author-one",
+    "work_root": ".nl2repo/authoring-work/python-author-wave2-20260828/pynacl"
+  },
+  "source": {
+    "upstream_url": "https://github.com/pyca/pynacl",
+    "revision": "fddb5f3a012baa28d5ead6497ab2ae72c4221246",
+    "tree": "871a1524d614a7feedc9165e624d52ef17ba26ec",
+    "archive_sha256": "sha256:eec62a1ac27fd9cbe0452b5b7f12f2c1ca4f568c63b3b0b565a4ca0d3c7ac958",
+    "archive_size_bytes": 38676480,
+    "submodules": []
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "file": "LICENSE",
+    "sha256": "sha256:d3174ad63e721d4c9dccb8ad4320848992d314369bc46319720b5802c9153fe9",
+    "bundled_libsodium_file": "licenses/LICENSE.libsodium.txt",
+    "bundled_libsodium_sha256": "sha256:508a76d186356c0dd807a670ef510964f8724557024796a2c426c6c0e19ab683"
+  },
+  "environment": {
+    "python_version": "3.12.14",
+    "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "os_name": "debian-13-amd64",
+    "system_packages": [
+      "build-essential=12.12",
+      "git=1:2.47.3-0+deb13u1"
+    ],
+    "baseline_image_id": "sha256:bf7d5a5a79363dac2d979afe524b3e16e942c6d6d5a3e56276e0f5d096e9a896",
+    "network_run_mode": "none"
+  },
+  "dependency_lock": {
+    "path": "catalog/sources/pynacl/provenance/requirements.lock.txt",
+    "sha256": "sha256:0219751081b3099f05b069b50128fe6a94df58dc1aa8c34f22ab92d7dead368d",
+    "size_bytes": 9863,
+    "packages": [
+      "cffi==2.1.1",
+      "packaging==26.3",
+      "pycparser==3.0",
+      "setuptools==84.0.0",
+      "wheel==0.48.0"
+    ]
+  },
+  "upstream_baseline": {
+    "collected": 4671,
+    "passed": 4661,
+    "skipped": 10,
+    "failed": 0,
+    "log": ".nl2repo/authoring-work/python-author-wave2-20260828/pynacl/logs/upstream-baseline-offline-v2.log"
+  },
+  "frozen_verifier": {
+    "protocol": "custom-json-v1",
+    "expected_total": 49,
+    "expected_vectors_sha256": "sha256:4c78be1c17e18c01af80ad88632de47b45663824ced3b7a94ef801c108178915",
+    "candidate_uid": 10001,
+    "per_call_timeout_seconds": 5,
+    "cumulative_timeout_seconds": 60
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:0219751081b3099f05b069b50128fe6a94df58dc1aa8c34f22ab92d7dead368d",
+      "size_bytes": 9863
+    },
+    "verifier": {
+      "digest": "sha256:f1e2b40c487399ec44c7de330052ea63fafb8028fd980ea0f456662e62bb9489",
+      "size_bytes": 51200
+    },
+    "oracle": {
+      "digest": "sha256:e98a6fb4ef5bae437cb8fb16867664750eacbdbafdd53ba791e51f4cf3a11dbb",
+      "size_bytes": 10240
+    }
+  },
+  "remediation_attempts": [
+    {
+      "stage": "upstream-offline-baseline-v1",
+      "exit_code": 1,
+      "failure_class": "environment",
+      "reason": "The initial network-none container tried to install dependencies at run time and the slim image lacked gcc and make.",
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/pynacl/logs/upstream-baseline.log"
+    },
+    {
+      "stage": "upstream-offline-baseline-v2",
+      "exit_code": 2,
+      "failure_class": "environment",
+      "reason": "The first generated test lock omitted PEP 517 build requirements, so setuptools.build_meta was unavailable.",
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/pynacl/logs/upstream-baseline-offline.log"
+    },
+    {
+      "stage": "upstream-offline-baseline-v3",
+      "exit_code": 0,
+      "failure_class": null,
+      "reason": "Corrected online-build/offline-run closure; bundled libsodium build and full upstream suite passed.",
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/pynacl/logs/upstream-baseline-offline-v2.log"
+    }
+  ]
+}
