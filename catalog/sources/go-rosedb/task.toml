@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-rosedb"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:3b1da7461f78e6260e434b32508dc80ab31508589fe42b484b713edaaef19716", size_bytes = 1164929, uri = "artifact://private/sha256:3b1da7461f78e6260e434b32508dc80ab31508589fe42b484b713edaaef19716", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "embedded-key-value-store"
+tags = ["go", "go-modules", "storage", "wal", "batch", "iterator", "ttl", "typed-bridge"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rosedblabs/rosedb"
+revision = "bcb43052ada686ec6d1345328e8299f502d3ef01"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:41153fd1e40c1e7b18b90d46cfcf3a4bdc93fdc54c286823d2966b01686f527e"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier use a private pre-materialized Go module closure and run without network; only the trusted Oracle may fetch the frozen revision."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = ["github.com/google/btree@v1.1.2", "github.com/rosedblabs/wal@v1.3.8", "github.com/valyala/bytebufferpool@v1.0.0", "github.com/bwmarrin/snowflake@v0.3.0", "github.com/gofrs/flock@v0.8.1", "github.com/robfig/cron/v3@v3.0.0", "github.com/stretchr/testify@v1.9.0"]
+module_bundle = { digest = "sha256:ac4281abe988fe298d9725768acefdd698c427441e9c8cd24654cde765cf821a", size_bytes = 1184053, uri = "artifact://private/sha256:ac4281abe988fe298d9725768acefdd698c427441e9c8cd24654cde765cf821a", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate a bounded filesystem-safe slice of the pure-Go RoseDB v2 key/value storage API through a typed subprocess bridge."
+keywords = ["go", "go-modules", "storage", "wal", "batch", "iterator", "ttl", "typed-bridge"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-wave2-20260828-c2"
+reason = "The frozen source, offline Go closure, production compile, Oracle, separate-verifier network checks, and adversarial controls passed; awaiting independent model evaluation and publication review."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "contract.sh"
+bundle = { digest = "sha256:515d84e66eaa8f83b302a1eb7a603565067e1d161a3be25c207885bc66bee62a", size_bytes = 717, uri = "artifact://private/sha256:515d84e66eaa8f83b302a1eb7a603565067e1d161a3be25c207885bc66bee62a", visibility = "private" }

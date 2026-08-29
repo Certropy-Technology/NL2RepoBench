@@ -1,0 +1,8 @@
+stage: harbor-control-preparation
+command: uv run nl2repo harbor prepare-control .nl2repo/authoring-work/compiled/go-rosedb stub --output .nl2repo/authoring-work/controls/go-rosedb
+version: nl2repo current checkout; command help confirmed --toolchain defaults to toolchain.lock.toml
+exit_code: 1
+failure_class: command-configuration
+failure_log: control preparation failed: invalid Go toolchain lock: toolchain.lock.toml
+next_step: rerun with --toolchain toolchain.go.lock.toml
+result: all seven Go control bundles were generated successfully with the explicit locked Go toolchain

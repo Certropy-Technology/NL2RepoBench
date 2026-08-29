@@ -1,0 +1,8 @@
+stage: upstream-offline-test-probe
+command: GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOWORK=off CGO_ENABLED=0 /usr/local/go/bin/go test -json -count=1 ./...
+version: go1.26.5-X:nodwarf5 linux/amd64 is installed at /usr/bin/go; /usr/local/go/bin/go is absent
+exit_code: 127
+failure_class: command-configuration
+failure_log: /usr/local/go/bin/go: No such file or directory
+next_step: rerun the same probe with the installed go executable resolved from PATH
+result: rerun passed with 83 test runs, 0 failures, 6 skips; raw log is .nl2repo/authoring-work/upstream-go-test.json

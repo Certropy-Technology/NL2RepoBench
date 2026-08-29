@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-rosedb",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/rosedblabs/rosedb",
+    "revision": "bcb43052ada686ec6d1345328e8299f502d3ef01",
+    "source_digest": "sha256:41153fd1e40c1e7b18b90d46cfcf3a4bdc93fdc54c286823d2966b01686f527e",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+  },
+  "environment": {
+    "go": "1.26.5",
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false,
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "harbor": "0.21.0",
+    "network_policy": "no-network"
+  },
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:ac4281abe988fe298d9725768acefdd698c427441e9c8cd24654cde765cf821a",
+      "size_bytes": 1184053
+    },
+    "verifier_bundle": {
+      "digest": "sha256:515d84e66eaa8f83b302a1eb7a603565067e1d161a3be25c207885bc66bee62a",
+      "size_bytes": 717
+    },
+    "oracle_bundle": {
+      "digest": "sha256:3b1da7461f78e6260e434b32508dc80ab31508589fe42b484b713edaaef19716",
+      "size_bytes": 1164929
+    },
+    "compiled_bundle_manifest": {
+      "path": ".nl2repo/authoring-work/compiled-final3/go-rosedb/bundle.manifest.json",
+      "sha256": "sha256:17f07cc3ada85a263be5f2a79e3f15e307466dfb20850ce75523559187cc3b08",
+      "size_bytes": 270049,
+      "file_count": 1280,
+      "canonical_manifest_digest": "sha256:bed78318722461a10c7a2766aa3eca770486d663974bf2207a4e52ab7f466c5e"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compiled/go-rosedb -a oracle --allow-agent-host github.com --job-name go-rosedb-oracle-20260829 -o .nl2repo/runs/go-rosedb-oracle-20260829 --n-concurrent 1 --no-delete --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "grading": ".nl2repo/runs/go-rosedb-oracle-20260829/go-rosedb-oracle-20260829/go-rosedb__Kgzgp4v/verifier/grading.json",
+    "grading_sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+    "network": ".nl2repo/runs/go-rosedb-oracle-20260829/go-rosedb-oracle-20260829/go-rosedb__Kgzgp4v/verifier/network.json",
+    "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "agent": "nop",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/go-rosedb-control-empty-20260829/go-rosedb-control-empty-20260829/go-rosedb__yQ9V74L/verifier/grading.json",
+      "grading_sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+      "network": ".nl2repo/runs/go-rosedb-control-empty-20260829/go-rosedb-control-empty-20260829/go-rosedb__yQ9V74L/verifier/network.json",
+      "network_sha256": "sha256:eae2c2df827e519e8e556edac6659aaf980e49b4b3a732d77815d12e77478957",
+      "public_network_available": false
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/go-rosedb-control-stub-20260829/go-rosedb-control-stub-20260829/go-rosedb-stub__XnpcCcy/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "network": ".nl2repo/runs/go-rosedb-control-stub-20260829/go-rosedb-control-stub-20260829/go-rosedb-stub__XnpcCcy/verifier/network.json",
+      "network_sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11",
+      "public_network_available": false
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/runs/go-rosedb-control-forgery-20260829/go-rosedb-control-forgery-20260829/go-rosedb-forgery__csp73iQ/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "network": ".nl2repo/runs/go-rosedb-control-forgery-20260829/go-rosedb-control-forgery-20260829/go-rosedb-forgery__csp73iQ/verifier/network.json",
+      "network_sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0",
+      "public_network_available": false
+    },
+    "install-failure": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/runs/go-rosedb-control-install-failure-20260829/go-rosedb-control-install-failure-20260829/go-rosedb-install-failure__t6CmH82/verifier/grading.json",
+      "grading_sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+      "network": ".nl2repo/runs/go-rosedb-control-install-failure-20260829/go-rosedb-control-install-failure-20260829/go-rosedb-install-failure__t6CmH82/verifier/network.json",
+      "network_sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0",
+      "public_network_available": false
+    },
+    "panic": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/go-rosedb-control-panic-20260829/go-rosedb-control-panic-20260829/go-rosedb-panic__3FzcAmT/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "network": ".nl2repo/runs/go-rosedb-control-panic-20260829/go-rosedb-control-panic-20260829/go-rosedb-panic__3FzcAmT/verifier/network.json",
+      "network_sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc",
+      "public_network_available": false
+    },
+    "hang": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/go-rosedb-control-hang-20260829/go-rosedb-control-hang-20260829/go-rosedb-hang__62PX8VN/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "network": ".nl2repo/runs/go-rosedb-control-hang-20260829/go-rosedb-control-hang-20260829/go-rosedb-hang__62PX8VN/verifier/network.json",
+      "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+      "public_network_available": false
+    },
+    "oversized-output": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "grading": ".nl2repo/runs/go-rosedb-control-oversized-output-20260829/go-rosedb-control-oversized-output-20260829/go-rosedb-oversized-output__5XT72Tr/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "network": ".nl2repo/runs/go-rosedb-control-oversized-output-20260829/go-rosedb-control-oversized-output-20260829/go-rosedb-oversized-output__5XT72Tr/verifier/network.json",
+      "network_sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a",
+      "public_network_available": false
+    },
+    "background-process": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "residual_process_found": false,
+      "grading": ".nl2repo/runs/go-rosedb-control-background-process-20260829/go-rosedb-control-background-process-20260829/go-rosedb-background-process__LXS6kxd/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "network": ".nl2repo/runs/go-rosedb-control-background-process-20260829/go-rosedb-control-background-process-20260829/go-rosedb-background-process__LXS6kxd/verifier/network.json",
+      "network_sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+      "public_network_available": false
+    },
+    "offline": {
+      "valid": true,
+      "reward": 1.0,
+      "public_network_available": false,
+      "source": "Oracle separate-verifier network probe"
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-rosedb",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "errors": 0,
+      "task_findings": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-rosedb --output .nl2repo/authoring-work/compiled --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py",
+      "exit_code": 0,
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "command": "GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOWORK=off CGO_ENABLED=0 go test -json -count=1 ./... (in the frozen Oracle workspace)",
+      "exit_code": 0,
+      "test_runs": 83,
+      "failures": 0,
+      "skips": 6,
+      "log": ".nl2repo/authoring-work/upstream-go-test.json",
+      "log_sha256": "sha256:deb814594f0067c1df7089d5edc0a9738302873d2a102302d2d699827660c9a7"
+    },
+    {
+      "command": "uv run ruff check src/nl2repobench/harbor/go_compiler.py tests/test_go_adapter.py",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/compiled/go-rosedb <kind> --output .nl2repo/authoring-work/controls/go-rosedb --toolchain toolchain.go.lock.toml",
+      "exit_code": 0,
+      "kinds": ["stub", "forgery", "install-failure", "panic", "hang", "oversized-output", "background-process"]
+    }
+  ],
+  "residual_risks": [
+    "The verifier intentionally uses one fixed public-api leaf containing six bounded typed-bridge scenarios; task-level scoring is therefore all-or-nothing for this release.",
+    "Independent blind/spec review, model Agent Run, dataset integration, and publication remain integrator responsibilities.",
+    "The trusted Oracle requires the run-scoped github.com source host authorization; model Agent runs remain no-network with no source host authorization."
+  ]
+}

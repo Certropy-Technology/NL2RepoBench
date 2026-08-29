@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-rosedb",
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "expected_total": 1,
+    "verifier_protocol": "custom-json-v1",
+    "entrypoint": "contract.sh"
+  },
+  "source_baseline": {
+    "revision": "bcb43052ada686ec6d1345328e8299f502d3ef01",
+    "archive_digest": "sha256:41153fd1e40c1e7b18b90d46cfcf3a4bdc93fdc54c286823d2966b01686f527e",
+    "license_spdx": "Apache-2.0",
+    "tracked_entries": 40,
+    "static_test_functions": 83,
+    "offline_test_functions": 83,
+    "offline_test_failures": 0
+  },
+  "public_to_private": [
+    {"public": "instruction.md#opening-and-single-key-operations", "bridge_operation": "basic", "assertions": ["put/get/exist/delete", "missing-key error identity", "sync", "close/reopen durability", "stat key count"]},
+    {"public": "instruction.md#batches", "bridge_operation": "batch", "assertions": ["pending read", "commit visibility", "delete in batch", "rollback invisibility"]},
+    {"public": "instruction.md#ordered-traversal-and-watch", "bridge_operation": "iterator", "assertions": ["ascending prefix order", "reverse seek", "reverse next", "close safety"]},
+    {"public": "instruction.md#ttl-and-expiration", "bridge_operation": "ttl", "assertions": ["positive remaining TTL", "expired get", "persist", "persistent TTL sentinel"]},
+    {"public": "instruction.md#ordered-traversal-and-watch", "bridge_operation": "scans", "assertions": ["ascending key order", "descending half-open range", "regular-expression key filter"]},
+    {"public": "instruction.md#ordered-traversal-and-watch", "bridge_operation": "watch", "assertions": ["put event", "delete event", "action/key/value shape", "bounded delivery timeout"]}
+  ],
+  "private_to_public": {
+    "basic": ["Open", "DB.Put", "DB.Get", "DB.Exist", "DB.Delete", "DB.Sync", "DB.Close", "DB.Stat", "ErrKeyNotFound"],
+    "batch": ["DB.NewBatch", "Batch.Put", "Batch.Get", "Batch.Delete", "Batch.Commit", "Batch.Rollback"],
+    "iterator": ["IteratorOptions", "DB.NewIterator", "Iterator.Rewind", "Iterator.Seek", "Iterator.Next", "Iterator.Valid", "Iterator.Item", "Iterator.Close"],
+    "ttl": ["DB.PutWithTTL", "DB.TTL", "DB.Persist", "ErrKeyNotFound"],
+    "scans": ["DB.Ascend", "DB.DescendRange", "DB.AscendKeys"],
+    "watch": ["Options.WatchQueueSize", "DB.Watch", "WatchActionPut", "WatchActionDelete", "Event"]
+  },
+  "risk_adaptation": {
+    "filesystem": "Every request uses a fresh os.MkdirTemp directory, a 1 MiB segment size, explicit DB close, and recursive cleanup inside the candidate process.",
+    "callbacks": "Scan callbacks execute only in the candidate child and return bounded string summaries to trusted code.",
+    "channels": "Watch events are consumed in the candidate child with two-second timeouts; channels and native DB objects never cross the JSON boundary.",
+    "time": "TTL checks use a 25 ms expiry and 45 ms wait, with range assertions rather than exact duration equality.",
+    "resources": "The bridge accepts only six no-argument operations, a 16 KiB input line limit, one response per process, and the shared UID/output/CPU/process-group supervisor limits."
+  }
+}

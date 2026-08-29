@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-rosedb",
+  "source_revision": "bcb43052ada686ec6d1345328e8299f502d3ef01",
+  "collection": {
+    "method": "go test -json -count=1 ./...",
+    "test_files": 10,
+    "static_test_functions": 83,
+    "offline_test_functions": 83,
+    "offline_failures": 0,
+    "offline_skips": 6,
+    "offline_log": ".nl2repo/authoring-work/upstream-go-test.json",
+    "offline_log_sha256": "sha256:deb814594f0067c1df7089d5edc0a9738302873d2a102302d2d699827660c9a7"
+  },
+  "harbor_contract": {
+    "framework": "custom-json-v1",
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "bridge_operations": ["basic", "batch", "iterator", "ttl", "scans", "watch"],
+    "reason": "Upstream tests are retained as inventory evidence; the Harbor verifier uses a bounded child-side bridge rather than transplanting upstream tests."
+  },
+  "excluded_upstream_groups": [
+    "merge and cron scheduling",
+    "raw WAL record encoding",
+    "internal index and utils packages",
+    "benchmarks and random helpers",
+    "long-running concurrency stress"
+  ]
+}

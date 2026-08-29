@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-rosedb",
+  "source": {
+    "upstream_url": "https://github.com/rosedblabs/rosedb",
+    "revision": "bcb43052ada686ec6d1345328e8299f502d3ef01",
+    "module_path": "github.com/rosedblabs/rosedb/v2",
+    "root_public_declarations": 64,
+    "inventory_method": "go doc -all on the frozen root package"
+  },
+  "covered": {
+    "configuration": ["Options", "DefaultOptions", "BatchOptions", "DefaultBatchOptions", "IteratorOptions", "DefaultIteratorOptions"],
+    "database": ["Open", "DB.Close", "DB.Sync", "DB.Put", "DB.Get", "DB.Delete", "DB.Exist", "DB.Stat"],
+    "expiration": ["DB.PutWithTTL", "DB.Expire", "DB.TTL", "DB.Persist", "DB.DeleteExpiredKeys"],
+    "batch": ["DB.NewBatch", "Batch.Put", "Batch.PutWithTTL", "Batch.Get", "Batch.Delete", "Batch.Exist", "Batch.Expire", "Batch.TTL", "Batch.Persist", "Batch.Commit", "Batch.Rollback"],
+    "iteration": ["DB.NewIterator", "Iterator.Rewind", "Iterator.Seek", "Iterator.Next", "Iterator.Valid", "Iterator.Item", "Iterator.Close", "Iterator.Err", "Item"],
+    "scans": ["DB.Ascend", "DB.AscendRange", "DB.AscendGreaterOrEqual", "DB.Descend", "DB.DescendRange", "DB.DescendLessOrEqual", "DB.AscendKeys", "DB.AscendKeysRange", "DB.DescendKeys", "DB.DescendKeysRange"],
+    "watch": ["DB.Watch", "Event", "WatchActionType", "WatchActionPut", "WatchActionDelete", "NewWatcher", "Watcher.Close"],
+    "errors": ["ErrKeyIsEmpty", "ErrKeyNotFound", "ErrDatabaseIsUsing", "ErrReadOnlyBatch", "ErrBatchCommitted", "ErrBatchRollbacked", "ErrDBClosed", "ErrMergeRunning", "ErrWatchDisabled"]
+  },
+  "excluded_from_hidden_contract": {
+    "merge": ["DB.Merge", "AutoMergeCronExpr"],
+    "record_encoding": ["LogRecord", "LogRecordType", "IndexRecord"],
+    "subpackages": ["github.com/rosedblabs/rosedb/v2/index", "github.com/rosedblabs/rosedb/v2/utils"],
+    "reason": "The task isolates bounded root-package filesystem behavior. Merge/cron, raw WAL record representation, internal index structures, benchmark helpers, random data helpers, and long-running concurrency stress are not stable serializable contracts."
+  }
+}
