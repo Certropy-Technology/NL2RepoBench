@@ -1,0 +1,242 @@
+{
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/ansi-styles",
+      "exit_code": 0,
+      "result": "source descriptor parsed; source digest computed after terminal lifecycle update"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; no ansi-styles finding; repository warnings are unrelated"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-ansi-styles-agent:authoring-final2 .nl2repo/authoring-work/ansi-styles/compiled/final/ansi-styles/environment",
+      "exit_code": 0,
+      "result": "image built; Docker emitted only constant-platform warnings"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-ansi-styles-verifier:authoring-final2 .nl2repo/authoring-work/ansi-styles/compiled/final/ansi-styles/tests",
+      "exit_code": 0,
+      "result": "image built; hash-locked verifier dependencies installed at build time"
+    },
+    {
+      "command": "python3 -m py_compile ...; bash -n ...; node --check ...",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/validate_harbor_evidence.py --report .nl2repo/authoring-work/ansi-styles/evidence-gate/reports/ansi-styles-gate.json --kind oracle && python3 scripts/validate_harbor_evidence.py --report .nl2repo/authoring-work/ansi-styles/evidence-gate/reports/ansi-styles-gate.json --kind controls",
+      "exit_code": 0,
+      "result": "hash-bound task-local evidence accepted"
+    },
+    {
+      "command": "NODE_CANDIDATE_SITE=$(pwd)/.nl2repo/authoring-work/ansi-styles/local-site NODE_TEST_CLIENT=$(pwd)/catalog/sources/ansi-styles/harbor/tests/private/test_client.mjs node --test catalog/sources/ansi-styles/harbor/tests/private/contract.test.mjs",
+      "exit_code": 0,
+      "result": "32/32 private contract leaves passed; output:.nl2repo/authoring-work/ansi-styles/private-contract-test.txt"
+    }
+  ],
+  "compile": {
+    "bundle": ".nl2repo/authoring-work/ansi-styles/compiled/verify-a/ansi-styles",
+    "bundle_manifest_sha256": "sha256:1ea2c5a7fe868a0bd85833b5d1a758c937dc7c0370fbbde85dfa45f53a1532fd",
+    "canonical_manifest_digest": "sha256:97117a79ba3ebab3c16fef6e9a811ba89bb6f26bd50b89b53b91fb87659208e5",
+    "command": "uv run nl2repo harbor compile catalog/sources/ansi-styles --output .nl2repo/authoring-work/ansi-styles/compiled/verify-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/compiled/verify-a/ansi-styles -a nop --job-name ansi-styles-control-empty-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/empty/ansi-styles-control-empty-current/ansi-styles__kdmHLvU/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/empty/ansi-styles-control-empty-current/ansi-styles__kdmHLvU/verifier/network.json",
+        "sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-current-controls/ansi-styles-forgery -a oracle --job-name ansi-styles-control-forgery-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/forgery/ansi-styles-control-forgery-current/ansi-styles-forgery__2RURTiu/verifier/grading.json",
+        "sha256": "sha256:68cf78da0f521764a02a24b3c1e66b41306470cb0be7f8677c7aae099af3b8b0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/forgery/ansi-styles-control-forgery-current/ansi-styles-forgery__2RURTiu/verifier/network.json",
+        "sha256": "sha256:218320115490129eea846775b9e02f95aaacfd0fda376c419dbb3bf5af42868d"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-current-controls/ansi-styles-hang -a oracle --job-name ansi-styles-control-hang-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/hang/ansi-styles-control-hang-current/ansi-styles-hang__SVPNtyd/verifier/grading.json",
+        "sha256": "sha256:68cf78da0f521764a02a24b3c1e66b41306470cb0be7f8677c7aae099af3b8b0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/hang/ansi-styles-control-hang-current/ansi-styles-hang__SVPNtyd/verifier/network.json",
+        "sha256": "sha256:9cd9aa20bd5b038ceb07baee04a13c4e658a4ae133f7f8024c0f9d151f4f6183"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-script": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-current-controls/ansi-styles-install-script -a oracle --job-name ansi-styles-control-install-script-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/install-script/ansi-styles-control-install-script-current/ansi-styles-install-script__6ehA5VS/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/install-script/ansi-styles-control-install-script-current/ansi-styles-install-script__6ehA5VS/verifier/network.json",
+        "sha256": "sha256:faa1dc6b62c80d45b1b0a5510f1d4e4fdb2743b020a72d403ce4100a06ea5472"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "loader-hook": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-current-controls/ansi-styles-loader-hook -a oracle --job-name ansi-styles-control-loader-hook-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/loader-hook/ansi-styles-control-loader-hook-current/ansi-styles-loader-hook__t4DtZoJ/verifier/grading.json",
+        "sha256": "sha256:68cf78da0f521764a02a24b3c1e66b41306470cb0be7f8677c7aae099af3b8b0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/loader-hook/ansi-styles-control-loader-hook-current/ansi-styles-loader-hook__t4DtZoJ/verifier/network.json",
+        "sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-current-controls/ansi-styles-offline -a oracle --job-name ansi-styles-control-offline-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/offline --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/offline/ansi-styles-control-offline-current/ansi-styles-offline__tdPsLPA/verifier/grading.json",
+        "sha256": "sha256:68cf78da0f521764a02a24b3c1e66b41306470cb0be7f8677c7aae099af3b8b0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/offline/ansi-styles-control-offline-current/ansi-styles-offline__tdPsLPA/verifier/network.json",
+        "sha256": "sha256:6b6f0e5d5938f2cd717e6e2d9020d2c0673e657f8724a1d367c822008adf67cc"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 32,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-current-controls/ansi-styles-stub -a oracle --job-name ansi-styles-control-stub-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/stub/ansi-styles-control-stub-current/ansi-styles-stub__K9cVC9G/verifier/grading.json",
+        "sha256": "sha256:68cf78da0f521764a02a24b3c1e66b41306470cb0be7f8677c7aae099af3b8b0"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/stub/ansi-styles-control-stub-current/ansi-styles-stub__K9cVC9G/verifier/network.json",
+        "sha256": "sha256:958ef33e60cce075dc798f7dcf3371992d7c9d2ce5b3c968e7e1880fa9a4f3b0"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "environment": {
+    "agent_network": "no-network",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_status": "locked",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_network": "none"
+  },
+  "next_unblock_action": "Integrator reviews traceability and commits the generated catalog/tasks/ansi-styles projection; do not start an Agent Run from this lane.",
+  "oracle": {
+    "collected": 32,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/compiled/verify-a/ansi-styles -a oracle --allow-agent-host codeload.github.com --job-name ansi-styles-authoring-oracle-current -o .nl2repo/authoring-work/ansi-styles/final-current-runs/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/oracle/ansi-styles-authoring-oracle-current/ansi-styles__zsKzM8d/verifier/grading.json",
+      "sha256": "sha256:a6465beb8e6865171c5797eb9670e6836a0095019a6c148ca58b1d0bc686c96c"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/authoring-work/ansi-styles/final-current-runs/oracle/ansi-styles-authoring-oracle-current/ansi-styles__zsKzM8d/verifier/network.json",
+      "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"
+    },
+    "passed": 32,
+    "reward": 1.0,
+    "valid": true
+  },
+  "private_artifacts": {
+    "commands_bundle": {
+      "digest": "sha256:cab621dcaf7260f80d7c66f04c60ed005c26aa2b0a374856ead7c4cd08bf995e",
+      "size_bytes": 236
+    },
+    "dependency_bundle": {
+      "digest": "sha256:7a9d19aa3a974d1d98b2efa737054916be0a385036536a2a793fc1b4220ea4b5",
+      "size_bytes": 443
+    },
+    "oracle_bundle": {
+      "digest": "sha256:624a3021bc2b388d07ab47ee85f5ab94fa79a424945da7eb7fa719183c96f20e",
+      "size_bytes": 7762
+    },
+    "test_bundle": {
+      "digest": "sha256:eb823ef76d0bd6546c0c88d116db288603ad0548174981c190f5b26d4ec63d67",
+      "size_bytes": 4034
+    }
+  },
+  "residual_risks": [
+    "Human blind/spec review, dataset integration, publication, and generated catalog/tasks projection remain integrator-owned.",
+    "No model Agent Run was started in this lane by policy.",
+    "The generic node control summary helper expects a different invalid collection-error hang contract; this task records the actual bounded candidate-call timeout probe separately and uses a collected low-score hang control for the production matrix."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "archive_materialization": "private Oracle bundle; codeload archive bytes verified before extraction",
+    "license_spdx": "MIT",
+    "revision": "c1c3dd4e017a2938807aaff0d361f46d086aeab7",
+    "source_digest": "sha256:80fa2b7b4faa2668694c75de5cce44e8b46fa897d31f86d90e3e4dd526c2e120",
+    "status": "known",
+    "upstream_url": "https://github.com/chalk/ansi-styles"
+  },
+  "status": "controls-passed",
+  "task_id": "ansi-styles",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "timeout_probe": {
+    "bounded_result": "candidate-call-failed",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/ansi-styles/final-controls/ansi-styles-hang -a oracle --job-name ansi-styles-control-hang-timeout-probe -o .nl2repo/authoring-work/ansi-styles/final-control-runs/hang-timeout-probe --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/ansi-styles/final-control-runs/hang-timeout-probe/ansi-styles-control-hang-timeout-probe/ansi-styles-hang__SyFwD8r/verifier/grading.json",
+      "sha256": "sha256:47f90bc79aea76213c04d06ec6d29824220f58db2b8119ce656421c7b1d6176a"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/ansi-styles/final-control-runs/hang-timeout-probe/ansi-styles-control-hang-timeout-probe/ansi-styles-hang__SyFwD8r/verifier/network.json",
+      "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399"
+    }
+  }
+}
