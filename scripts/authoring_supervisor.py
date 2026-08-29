@@ -330,7 +330,12 @@ def _director_decision(
         try:
             cached = _json(cache_path)
             age = time.time() - cache_path.stat().st_mtime
-            if age < args.director_interval_sec:
+            cached_clean = cached.get("integration_clean")
+            safety_state_matches = (
+                isinstance(cached_clean, bool)
+                and cached_clean == snapshot.get("integration_clean")
+            )
+            if age < args.director_interval_sec and safety_state_matches:
                 decision = _parse_director_response(str(cached["response"]))
                 decision["cached"] = True
                 return decision
@@ -347,7 +352,11 @@ def _director_decision(
         }
         _atomic_write(
             cache_path,
-            {"response": json.dumps(decision, sort_keys=True), "decision": decision},
+            {
+                "response": json.dumps(decision, sort_keys=True),
+                "decision": decision,
+                "integration_clean": snapshot.get("integration_clean"),
+            },
         )
         return decision
     command = shlex.split(args.director_command)
@@ -387,7 +396,11 @@ def _director_decision(
     decision = _parse_director_response(completed.stdout)
     _atomic_write(
         cache_path,
-        {"response": completed.stdout, "decision": decision},
+        {
+            "response": completed.stdout,
+            "decision": decision,
+            "integration_clean": snapshot.get("integration_clean"),
+        },
     )
     return decision
 
