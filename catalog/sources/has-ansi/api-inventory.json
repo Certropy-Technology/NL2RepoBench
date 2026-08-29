@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "has-ansi",
+  "source_revision": "8ad46b5ecc1f66de8e526c506d72fbe3e092ef20",
+  "package": {
+    "name": "has-ansi",
+    "version": "6.0.2",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=18",
+    "runtime_dependencies": {
+      "ansi-regex": "6.3.0"
+    }
+  },
+  "public_exports": [
+    {
+      "export": "default",
+      "name": "hasAnsi",
+      "signature": "hasAnsi(string: string): boolean"
+    }
+  ],
+  "behavior": [
+    "Returns a primitive boolean without mutating the input.",
+    "Detects accepted ANSI terminal control sequences anywhere in a string.",
+    "Rejects ordinary text, literal escape notation, a lone escape, and an escape followed by an ordinary character.",
+    "Inputs other than strings are outside the scored contract."
+  ],
+  "source_metrics": {
+    "tracked_files": 7,
+    "runtime_loc": 7,
+    "declaration_loc": 2,
+    "upstream_test_loc": 29,
+    "upstream_ava_leaves": 2
+  },
+  "inventory_notes": [
+    "The package exposes one synchronous pure function and has no CLI, filesystem, TTY, clock, random, native, or external-service behavior.",
+    "The production verifier invokes the package through a JSON-safe child-process adapter; candidate code is never imported by the trusted test process.",
+    "The dependency is used for ANSI grammar matching and is supplied by the pinned private npm cache closure."
+  ]
+}

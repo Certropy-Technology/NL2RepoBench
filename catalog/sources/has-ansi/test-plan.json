@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "has-ansi",
+  "framework": "node:test",
+  "expected_total": 24,
+  "adapter": "one JSON request and response per fresh candidate child process",
+  "coverage": [
+    {"area": "package metadata, ESM root export, and declaration", "leaves": 2},
+    {"area": "ordinary, empty, whitespace, Unicode, and literal text", "leaves": 5},
+    {"area": "lone and partial escape boundaries", "leaves": 2},
+    {"area": "SGR, CSI, OSC, C1, private, and intermediate sequences", "leaves": 9},
+    {"area": "embedded, multiline, repeated, start, and end positions", "leaves": 5},
+    {"area": "non-ANSI DEL boundary", "leaves": 1}
+  ],
+  "excluded_upstream_checks": [
+    "lint configuration",
+    "benchmark scripts",
+    "type inference assertions beyond declaration entry presence",
+    "repository metadata and release workflow"
+  ],
+  "determinism": "Fixed string fixtures and fresh child processes replace timing, TTY, and environment-dependent checks."
+}
