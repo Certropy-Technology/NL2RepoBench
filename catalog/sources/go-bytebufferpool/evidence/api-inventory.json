@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "method": "go/parser, go/ast, go/types review at Go 1.26.5",
+  "module_path": "github.com/valyala/bytebufferpool",
+  "packages": ["github.com/valyala/bytebufferpool"],
+  "public_symbol_count": 17,
+  "public_symbols": [
+    "ByteBuffer", "ByteBuffer.Len", "ByteBuffer.ReadFrom", "ByteBuffer.WriteTo",
+    "ByteBuffer.Bytes", "ByteBuffer.Write", "ByteBuffer.WriteByte",
+    "ByteBuffer.WriteString", "ByteBuffer.Set", "ByteBuffer.SetString",
+    "ByteBuffer.String", "ByteBuffer.Reset", "Get", "Put", "Pool",
+    "Pool.Get", "Pool.Put"
+  ],
+  "test_files": [
+    "bytebuffer_test.go", "pool_test.go", "bytebuffer_example_test.go",
+    "bytebuffer_timing_test.go"
+  ],
+  "dynamic_top_level_tests": [
+    "TestByteBufferReadFrom", "TestByteBufferWriteTo", "TestByteBufferGetPutSerial",
+    "TestByteBufferGetPutConcurrent", "TestByteBufferGetStringSerial",
+    "TestByteBufferGetStringConcurrent", "TestIndex", "TestPoolCalibrate",
+    "TestPoolVariousSizesSerial", "TestPoolVariousSizesConcurrent"
+  ],
+  "benchmarks_excluded_from_metric": ["BenchmarkByteBufferWrite", "BenchmarkBytesBufferWrite"],
+  "reviewed_bridge_operations": [
+    "buffer_sequence", "set_copy", "read_from", "read_from_error", "write_to",
+    "write_to_error", "pool_roundtrip", "custom_pool_roundtrip", "invalid", "unknown_operation"
+  ]
+}

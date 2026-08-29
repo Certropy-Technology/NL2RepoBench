@@ -1,0 +1,80 @@
+schema_version = "1.0"
+task_id = "go-bytebufferpool"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "buffer", "pool", "io", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/valyala/bytebufferpool"
+revision = "18533face0dfe7042f8157bba9010bd7f8df54b1"
+license_spdx = "MIT"
+source_digest = "sha256:a070768e029bc8a99e64611b6cf9905c193fe51b7a17044d3fb5b5fec7ca08cd"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier use the pre-materialized standard-library-only Go module closure and run without network."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:47f336a69aff8a84fdd375c3f9acd13c4172f9d509c36b5eca59e50c16ba460c", size_bytes = 505, uri = "artifact://private/sha256:47f336a69aff8a84fdd375c3f9acd13c4172f9d509c36b5eca59e50c16ba460c", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic public byte-buffer and pool API of valyala/bytebufferpool through a typed Go subprocess bridge."
+keywords = ["go", "go-modules", "buffer", "pool", "io", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-wave2-20260828-c2"
+reason = "Frozen source, production compile, one successful Oracle run, and all required negative controls passed; awaiting integrator review and model pilot."
+
+[oracle_bundle]
+digest = "sha256:7b59ac69ba057ecd1669a47381d2cc195bc6da1f89952ac44213fcb39b82f4e2"
+size_bytes = 1023
+uri = "artifact://private/sha256:7b59ac69ba057ecd1669a47381d2cc195bc6da1f89952ac44213fcb39b82f4e2"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:dd0ca9e0aa581dd9dbc3b6ac6d9e803203331e8ce6ae8a448e9d69f971067290", size_bytes = 1239, uri = "artifact://private/sha256:dd0ca9e0aa581dd9dbc3b6ac6d9e803203331e8ce6ae8a448e9d69f971067290", visibility = "private" }
+entrypoint = "contract.sh"

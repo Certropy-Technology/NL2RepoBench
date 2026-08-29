@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "source_freeze": {
+    "upstream_url": "https://github.com/valyala/bytebufferpool",
+    "revision": "18533face0dfe7042f8157bba9010bd7f8df54b1",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:a070768e029bc8a99e64611b6cf9905c193fe51b7a17044d3fb5b5fec7ca08cd"
+  },
+  "api_inventory": {
+    "inventory": "evidence/api-inventory.json",
+    "public_symbol_count": 17,
+    "selected_contract_symbols": [
+      "ByteBuffer.Len", "ByteBuffer.ReadFrom", "ByteBuffer.WriteTo",
+      "ByteBuffer.Bytes", "ByteBuffer.Write", "ByteBuffer.WriteByte",
+      "ByteBuffer.WriteString", "ByteBuffer.Set", "ByteBuffer.SetString",
+      "ByteBuffer.String", "ByteBuffer.Reset", "Get", "Put", "Pool.Get", "Pool.Put"
+    ]
+  },
+  "bridge": {
+    "path": "harbor/tests/bridge.go",
+    "serialization": "newline-delimited JSON with bounded scalar, sequence, and result objects",
+    "trust_boundary": "public API mapping and caller-provided adapter objects only; hidden inputs, expected values, assertions, and grading are absent"
+  },
+  "contract_leaf": {
+    "frozen_total": 1,
+    "id": "contract::public-api",
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_count": 14,
+    "private_assertion_classes": [
+      "append and replacement semantics",
+      "Set defensive copy",
+      "byte length and UTF-8 contents",
+      "reset and repeated setters",
+      "reader EOF normalization",
+      "reader error propagation",
+      "writer output and error propagation",
+      "package and custom pool get/put emptiness",
+      "invalid bridge requests"
+    ]
+  }
+}

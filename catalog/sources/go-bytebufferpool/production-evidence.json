@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "status": "controls-passed",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/valyala/bytebufferpool",
+    "revision": "18533face0dfe7042f8157bba9010bd7f8df54b1",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:a070768e029bc8a99e64611b6cf9905c193fe51b7a17044d3fb5b5fec7ca08cd",
+    "source_archive_bytes": 30720
+  },
+  "environment": {
+    "go_version": "1.26.5",
+    "go_runtime_lock": "toolchain.go.lock.toml",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "platform": "linux/amd64",
+    "network_mode": "no-network",
+    "candidate_uid": 10001,
+    "module_closure": "standard-library-only, private hash-addressed bundle"
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:47f336a69aff8a84fdd375c3f9acd13c4172f9d509c36b5eca59e50c16ba460c", "size_bytes": 505},
+    "verifier_bundle": {"digest": "sha256:dd0ca9e0aa581dd9dbc3b6ac6d9e803203331e8ce6ae8a448e9d69f971067290", "size_bytes": 1239},
+    "oracle_bundle": {"digest": "sha256:7b59ac69ba057ecd1669a47381d2cc195bc6da1f89952ac44213fcb39b82f4e2", "size_bytes": 1023}
+  },
+  "commands": [
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "runs": 3, "exit_codes": [0, 0, 0], "result": "10 top-level tests passed per run", "evidence": ".nl2repo/evidence/go-bytebufferpool/source-test-1.jsonl"},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=1 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -race -count=1 ./...", "exit_code": 0, "result": "race test passed", "evidence": ".nl2repo/evidence/go-bytebufferpool/source-race.log"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-bytebufferpool", "exit_code": 0, "evidence": ".nl2repo/evidence/go-bytebufferpool/validate-source-final.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "0 errors; no findings for go-bytebufferpool", "evidence": ".nl2repo/evidence/go-bytebufferpool/lint-network-final.log"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-bytebufferpool --output .nl2repo/compiled-final-current --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "result": "67-file production bundle; manifest sha256:0d69f2d16f30195a993cd0c23d328122312394c9e4ccfcbcefd633435ebbbd70; integrity mismatches=0; deterministic second compile byte-identical", "evidence": ".nl2repo/evidence/go-bytebufferpool/final-current-runs.json"},
+    {"command": "bash -n task-local shell scripts; gofmt -d harbor/tests/bridge.go", "exit_code": 0, "result": "shell syntax and bridge formatting passed"},
+    {"command": "uv run --frozen pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py", "exit_code": 0, "result": "9 passed", "evidence": ".nl2repo/evidence/go-bytebufferpool/focused-tests-final.log"}
+  ],
+  "oracle": {
+    "runs": 1,
+    "valid_each_run": true,
+    "passed_each_run": 1,
+    "frozen_total": 1,
+    "reward_each_run": 1.0,
+    "run_root": ".nl2repo/runs-final-current/oracle",
+    "summary": ".nl2repo/evidence/go-bytebufferpool/final-current-runs.json",
+    "summary_sha256": "sha256:1d933522a46c1e00474760e3b49b75d67542e5ce1d865dbe6781bb558f758b54",
+    "source_host_authorization": "github.com only for Oracle",
+    "environment_remediation": "The initial Oracle attempt rejected frozen go.mod go 1.12; the digest-verified Oracle now applies go mod edit -go=1.26.5, clears go.sum, creates an empty vendor manifest, and passes without changing source behavior."
+  },
+  "controls": {
+    "matrix": ".nl2repo/evidence/go-bytebufferpool/final-current-runs.json",
+    "matrix_sha256": "sha256:1d933522a46c1e00474760e3b49b75d67542e5ce1d865dbe6781bb558f758b54",
+    "network_receipts": "all final verifier network.json files report public_network_available=false",
+    "empty": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed", "alias_of": "install-failure control (empty candidate material)"},
+    "stub": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "forgery": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed", "trusted_reward_unchanged": true},
+    "install-failure": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "panic": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "hang": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "oversized-output": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "background-process": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "offline-verifier": {"valid": true, "reward": 1.0, "passed": 1, "frozen_total": 1, "public_network_available": false}
+  },
+  "final_bundle": {
+    "path": ".nl2repo/compiled-final-current/go-bytebufferpool/bundle.manifest.json",
+    "sha256": "sha256:0d69f2d16f30195a993cd0c23d328122312394c9e4ccfcbcefd633435ebbbd70",
+    "canonical_manifest_digest": "sha256:50ee4382b0816419bed37278805b238eb3b5bf01c7a58fb5dbfc7a4b7271b12e",
+    "file_count": 67
+  },
+  "residual_risks": [
+    "The task freezes one verifier-owned contract leaf; the 10-test upstream suite is retained as source baseline evidence, not the published denominator.",
+    "The first Oracle attempt was an environment mismatch and is retained as remediation evidence; the final current-bundle Oracle passed.",
+    "No Harbor model Agent Run was started in this authoring lane; integrator review and model pilot remain pending."
+  ]
+}

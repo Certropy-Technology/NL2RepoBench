@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "upstream_url": "https://github.com/valyala/bytebufferpool",
+  "revision": "18533face0dfe7042f8157bba9010bd7f8df54b1",
+  "license_spdx": "MIT",
+  "license_file": "LICENSE",
+  "source_digest": "sha256:a070768e029bc8a99e64611b6cf9905c193fe51b7a17044d3fb5b5fec7ca08cd",
+  "source_archive_bytes": 30720,
+  "tracked_file_count": 11,
+  "first_lane_scan": {
+    "cgo": false,
+    "external_replace": false,
+    "go_generate": false,
+    "go_workspace": false,
+    "plugin": false,
+    "submodules": false,
+    "unsafe_import": false,
+    "symlinks": 0
+  },
+  "upstream_tests": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "runs": 3,
+    "passed_top_level_tests_each_run": 10,
+    "failed_top_level_tests_each_run": 0,
+    "skipped_top_level_tests_each_run": 0,
+    "exit_codes": [0, 0, 0],
+    "race_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=1 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -race -count=1 ./...",
+    "race_exit_code": 0
+  }
+}
