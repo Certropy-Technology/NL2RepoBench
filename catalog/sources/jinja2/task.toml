@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "jinja2"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "template-engine"
+tags = ["python", "templates", "parsing", "loaders", "async", "sandbox", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pallets/jinja"
+revision = "5ef70112a1ff19c05324ff889dd30405b1002044"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:61082a25b5f6e7c49a0e4c12d9aa6be8e684489e0d613dc14512e8ea0c001421"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build closure is installed during Docker build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit_core==3.12.0", "MarkupSafe==3.0.2"]
+lock_artifact = { digest = "sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5", size_bytes = 5612, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 44
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pinned Jinja template engine from an empty workspace with deterministic rendering, loaders, async, sandbox, and parser behavior."
+keywords = ["python", "templates", "rendering", "loaders", "async", "sandbox", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:3e31f6816a1186a8f30bb15645bc99f76ad4cfa00711a7e0c145598b47837c4a", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3e31f6816a1186a8f30bb15645bc99f76ad4cfa00711a7e0c145598b47837c4a", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:f343631558527535794c15412ac39fe3c80ec1932507b1a38105a30db797a1b4"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:f343631558527535794c15412ac39fe3c80ec1932507b1a38105a30db797a1b4"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Frozen source, hash-locked dependency closure, separate custom-json-v1 verifier, production Oracle, empty, stub, forgery, timeout, and offline controls passed. Review, pilot, and publication remain separate integrator stages."

@@ -1,0 +1,234 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jinja2",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/pallets/jinja",
+    "revision": "5ef70112a1ff19c05324ff889dd30405b1002044",
+    "archive_sha256": "sha256:61082a25b5f6e7c49a0e4c12d9aa6be8e684489e0d613dc14512e8ea0c001421",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:3b49dcee4105eb37bac10faf1be260408fe85d252b8e9df2e0979fc1e094437b"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "agent_image_digest_locked": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "agent_image_digest_observed": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "toolchain_sha256": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "packages": ["flit_core==3.12.0", "MarkupSafe==3.0.2"],
+    "lock_artifact": {
+      "digest": "sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5",
+      "size_bytes": 5612,
+      "uri": "artifact://private/sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "upstream_python_files": 25,
+    "upstream_test_modules": 22,
+    "upstream_test_functions": 911,
+    "deterministic_verifier_leaves": 44,
+    "verifier_protocol": "custom-json-v1"
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-gate/jinja2-production-final4/jinja2/bundle.manifest.json",
+    "manifest_sha256": "sha256:5715d94a8d53743f15a2e2341558aaaaa1fafeb31fa5e2a8483f5eb4786d4f29",
+    "canonical_manifest_digest": "sha256:437af3c54d1faa0baaf8734628d24b94d12ca57d7669561bad1f2d6ce1b2c1bc",
+    "verifier_bundle": "artifact://private/sha256:3e31f6816a1186a8f30bb15645bc99f76ad4cfa00711a7e0c145598b47837c4a",
+    "oracle_bundle": "artifact://private/sha256:f343631558527535794c15412ac39fe3c80ec1932507b1a38105a30db797a1b4"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 44,
+    "collection": 44,
+    "metric_contract": "fixed-test-pass-rate-v1"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/jinja2-production-final2/jinja2 -a oracle --allow-agent-host github.com --job-name jinja2-oracle-final2 --jobs-dir .nl2repo/authoring-work/jinja2/final2/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "harbor_version": "0.21.0",
+    "expected": 44,
+    "collected": 44,
+    "passed": 44,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/jinja2/final2/oracle/jinja2-oracle-final2/jinja2__39e5KR4/verifier/grading.json",
+      "sha256": "sha256:57c00926793f4f1de624168b8391be9913d6ad5876363d2a31f9e2aa6e04de88"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/jinja2/final2/oracle/jinja2-oracle-final2/jinja2__39e5KR4/verifier/network.json",
+      "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517"
+    },
+    "public_network_available": false,
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/jinja2-production-final2/jinja2 -a nop --job-name jinja2-empty-final2 --jobs-dir .nl2repo/authoring-work/jinja2/final2/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/empty/jinja2-empty-final2/jinja2__Z7bB7rv/verifier/grading.json",
+        "sha256": "sha256:376f529d02f6e9b2d0f5a9a5c22892c249720ec7dab9cda4608352e6b810b939"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/empty/jinja2-empty-final2/jinja2__Z7bB7rv/verifier/network.json",
+        "sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/jinja2/final2/controls/jinja2-stub -a oracle --job-name jinja2-stub-final2 --jobs-dir .nl2repo/authoring-work/jinja2/final2/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 44,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/stub/jinja2-stub-final2/jinja2-stub__sWi4PQH/verifier/grading.json",
+        "sha256": "sha256:5c68ac95103add58108b0d2f490d11026719c1688c0b5054827e3bf3cea05269"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/stub/jinja2-stub-final2/jinja2-stub__sWi4PQH/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/jinja2/final2/controls/jinja2-forgery -a oracle --job-name jinja2-forgery-final2 --jobs-dir .nl2repo/authoring-work/jinja2/final2/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 44,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward_absent": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/forgery/jinja2-forgery-final2/jinja2-forgery__ZbUgCqL/verifier/grading.json",
+        "sha256": "sha256:5c68ac95103add58108b0d2f490d11026719c1688c0b5054827e3bf3cea05269"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/forgery/jinja2-forgery-final2/jinja2-forgery__ZbUgCqL/verifier/network.json",
+        "sha256": "sha256:9161a66d725d2850505c74dc6f832977a0c1ae3f359ff99a9d1bf941b451e1d5"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/jinja2/final2/controls/jinja2-install-hang -a oracle --job-name jinja2-install-hang-final2 --jobs-dir .nl2repo/authoring-work/jinja2/final2/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/install-hang/jinja2-install-hang-final2/jinja2-install-hang__qtYdWDs/verifier/candidate-install.json",
+        "sha256": "sha256:f16ce205e0b118dc7e8df9af6ba9ca8b8d4d80128b049a254ff5e7415d7871ea"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/install-hang/jinja2-install-hang-final2/jinja2-install-hang__qtYdWDs/verifier/grading.json",
+        "sha256": "sha256:376f529d02f6e9b2d0f5a9a5c22892c249720ec7dab9cda4608352e6b810b939"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/install-hang/jinja2-install-hang-final2/jinja2-install-hang__qtYdWDs/verifier/network.json",
+        "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/jinja2/final2/controls/jinja2-call-hang -a oracle --job-name jinja2-call-hang-final2 --jobs-dir .nl2repo/authoring-work/jinja2/final2/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 44,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/call-hang/jinja2-call-hang-final2/jinja2-call-hang__pBwBBqW/verifier/grading.json",
+        "sha256": "sha256:5c68ac95103add58108b0d2f490d11026719c1688c0b5054827e3bf3cea05269"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/call-hang/jinja2-call-hang-final2/jinja2-call-hang__pBwBBqW/verifier/network.json",
+        "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"
+      }
+    },
+    "offline": {
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "source": "oracle.network",
+      "network": {
+        "path": ".nl2repo/authoring-work/jinja2/final2/oracle/jinja2-oracle-final2/jinja2__39e5KR4/verifier/network.json",
+        "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517"
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/jinja2",
+      "exit_code": 0,
+      "source_content_sha256": "sha256:afdf90d071a2dc6cbdeb4172c311ee6940d28f7feffdbf47ffd851e7af44c96c"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 142,
+      "task_findings": [
+        "oracle-requires-host-authorization: harbor/solution/solve.sh requires explicit github.com authorization for trusted Oracle only"
+      ]
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/jinja2 --output .nl2repo/authoring-gate/jinja2-production-final4 --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": ".nl2repo/authoring-gate/jinja2-production-final4/jinja2/bundle.manifest.json",
+      "bundle_manifest_sha256": "sha256:5715d94a8d53743f15a2e2341558aaaaa1fafeb31fa5e2a8483f5eb4786d4f29"
+    },
+    "syntax": {
+      "command": "bash -n catalog/sources/jinja2/harbor/solution/solve.sh catalog/sources/jinja2/harbor/controls/*.sh; python3 -m py_compile src/nl2repobench/harbor/compiler.py scripts/harbor_production_validation.py",
+      "exit_code": 0
+    },
+    "upstream_tests": {
+      "command": "uv run --locked --offline --no-default-groups --group tests pytest -q -o addopts=''",
+      "exit_code": 0,
+      "passed": 911,
+      "duration_seconds": 3.17
+    },
+    "upstream_tests_initial_probe": {
+      "command": "PYTHONPATH=<oracle-workspace>/src uv run python -m pytest -q -o addopts='' <oracle-workspace>/tests",
+      "exit_code": 4,
+      "failure_class": "environment"
+    },
+    "default_group_offline_sync": {
+      "command": "uv sync --locked --offline --all-groups",
+      "exit_code": 1,
+      "failure_class": "environment",
+      "reason": "uncached uv==0.7.8 required by pre-commit-uv; excluded from runtime/test closure"
+    },
+    "call_hang_initial_probe": {
+      "command": "harbor run with the initial module-level call-hang control",
+      "exit_code": 0,
+      "failure_class": "verifier",
+      "reason": "verifier-internal-error after cumulative timeout; corrected by a single call-path hang"
+    }
+  },
+  "residual_risks": [
+    "The production denominator is a bounded 44-scenario behavioral subset of 911 upstream tests.",
+    "The shared toolchain locks agent image id sha256:70525a5f..., while the current local tag resolves to sha256:dbfa15a3...; the integrator must restore the locked image or deliberately relock and rerun before a model Agent Run.",
+    "Network lint has 142 pre-existing warnings across the catalog; the only jinja2 finding is the expected explicit Oracle host-authorization warning.",
+    "No model Agent Run, blind review, traceability review, or publication is claimed from this lane."
+  ],
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run"
+}

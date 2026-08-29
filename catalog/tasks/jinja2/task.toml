@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/jinja2"
+version = "0.1.0"
+description = "Build the pinned Jinja template engine from an empty workspace with deterministic rendering, loaders, async, sandbox, and parser behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "templates",
+    "rendering",
+    "loaders",
+    "async",
+    "sandbox",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "template-engine"
+tags = [
+    "python",
+    "templates",
+    "parsing",
+    "loaders",
+    "async",
+    "sandbox",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 44
+canonical_manifest_digest = "sha256:437af3c54d1faa0baaf8734628d24b94d12ca57d7669561bad1f2d6ce1b2c1bc"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
