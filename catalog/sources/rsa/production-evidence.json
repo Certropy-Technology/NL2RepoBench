@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rsa",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/sybrenstuvel/python-rsa",
+    "revision": "42b0e14ffbeeb9d99d1037e6440a2cc61780e4ea",
+    "archive_sha256": "sha256:d5f3ae5ac30dc2c284dd449bb8f3aada2612ed41a0eab1decdd1d70b11806ed8",
+    "license": "Apache-2.0",
+    "license_file_sha256": "sha256:073f28b7d389c8fe74f607e17c27f81eaa5ace69edc43a884f23f41b41c5c726"
+  },
+  "environment": {
+    "python": "3.12.11 authoring; python:3.12-slim runtime",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "toolchain_image_digest": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "verifier_image_digest": "sha256:204d2d5db2dd2f397c2951eecd54f0ce0c1752c5d74053079287bd02a12c99d0",
+    "local_toolchain_image_observed": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "packages": [
+      "coverage==7.16.0",
+      "iniconfig==2.3.0",
+      "mypy==1.5.1",
+      "mypy-extensions==1.1.0",
+      "packaging==26.3",
+      "pluggy==1.6.0",
+      "poetry-core==1.9.1",
+      "pyasn1==0.5.0",
+      "pytest==7.4.0",
+      "pytest-cov==4.1.0",
+      "typing-extensions==4.16.0"
+    ],
+    "lock_artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/66/66b2e89bac10a56ee786628d1bbac6586215d27c8e73bd8eb6abf5950b58bd52",
+      "sha256": "sha256:66b2e89bac10a56ee786628d1bbac6586215d27c8e73bd8eb6abf5950b58bd52",
+      "size_bytes": 14749
+    },
+    "verifier_bundle": {
+      "uri": "artifact://private/sha256:4f2ffae1c5159ada1d0d042f357cec19654315185af6c5ec5aa12994baba88cc",
+      "sha256": "sha256:4f2ffae1c5159ada1d0d042f357cec19654315185af6c5ec5aa12994baba88cc",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "uri": "artifact://private/sha256:39379d4fb13c73144845ba2bd49b3b2b8d5404b72fb6a154c049328e9f5edfd4",
+      "sha256": "sha256:39379d4fb13c73144845ba2bd49b3b2b8d5404b72fb6a154c049328e9f5edfd4",
+      "size_bytes": 10240
+    }
+  },
+  "inventory": {
+    "api_path": "catalog/sources/rsa/api-inventory.json",
+    "api_sha256": "sha256:bb8fc9904b66d03af8bf76b18cbb5c48347aee2205fc04ec1ede1ff84aed73ad",
+    "test_path": "catalog/sources/rsa/test-inventory.json",
+    "test_sha256": "sha256:b947b8c78dab348c4074f923f59a8e4c9e0fcfb49cdb44e3c05622aab2fac55f",
+    "traceability_path": "catalog/sources/rsa/traceability.json",
+    "traceability_sha256": "sha256:9e3f4f3ce33ce78a449bdac0fe0d4756b17f0a270707894181bbcda687621f97",
+    "upstream_collection": 100,
+    "upstream_passed": 99,
+    "frozen_total": 100,
+    "verifier_leaves": 100
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled/rsa-final/rsa/bundle.manifest.json",
+    "manifest_sha256": "sha256:5cb2e87fc6ef9e0eb32b1c2cab9b18fcbd66589d4adb910a83b63c205323e498",
+    "canonical_manifest_digest": "sha256:59d85623173544a16e2708d2e28abb63792075ba78cea77ba67860aa59d23086",
+    "file_count": 58,
+    "toolchain_lock": "toolchain.lock.toml",
+    "toolchain_lock_sha256": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 100,
+    "collection": 100,
+    "metric_contract": "fixed-test-pass-rate-v1"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/rsa-final/rsa -a oracle --allow-agent-host github.com --job-name rsa-oracle-final -o .nl2repo/runs/rsa-oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 100,
+    "passed": 100,
+    "total": 100,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/rsa-oracle-final/rsa-oracle-final/rsa__5cRhGNw/verifier/grading.json",
+      "sha256": "sha256:d82d0fa5806216d42e82122234f6eabb0f1518e2c367bea9ca3e78c57e5a05d4"
+    },
+    "collection": {
+      "path": ".nl2repo/runs/rsa-oracle-final/rsa-oracle-final/rsa__5cRhGNw/verifier/collection.json",
+      "sha256": "sha256:67b840eff8fdb9e4ad93d1190f6f7d8956d62491a272971742c9c1333bb355eb"
+    },
+    "network": {
+      "path": ".nl2repo/runs/rsa-oracle-final/rsa-oracle-final/rsa__5cRhGNw/verifier/network.json",
+      "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/rsa-final/rsa -a nop --job-name rsa-final-empty -o .nl2repo/runs/rsa-final-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/rsa-final-empty/rsa-final-empty/rsa__fuDwFD9/verifier/grading.json",
+        "sha256": "sha256:738fb30e1eae3ed664103030e26724d740128630e22ada69dfd5e4d46df73442"
+      },
+      "network": {
+        "path": ".nl2repo/runs/rsa-final-empty/rsa-final-empty/rsa__fuDwFD9/verifier/network.json",
+        "sha256": "sha256:5c85888ef1eadaca659384fac0679e8a2ee4c4059189b1f4b925414c2b68806b"
+      }
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/rsa-final/rsa stub --output .nl2repo/controls/rsa-final-stub --toolchain toolchain.lock.toml; harbor run -p .nl2repo/controls/rsa-final-stub/rsa-stub -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 100,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/rsa-final-stub/rsa-final-stub/rsa-stub__94PjddC/verifier/grading.json",
+        "sha256": "sha256:403194443d1e9f1da65c3e4cdbe1fdc65ef1423f891d38ca277ec57256f0a2cf"
+      },
+      "network": {
+        "path": ".nl2repo/runs/rsa-final-stub/rsa-final-stub/rsa-stub__94PjddC/verifier/network.json",
+        "sha256": "sha256:ffada738387aee9acf0995ff4a7dbf33d552e6a9095327ecfe10897f1717b56d"
+      }
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/rsa-final/rsa forgery --output .nl2repo/controls/rsa-final-forgery --toolchain toolchain.lock.toml; harbor run -p .nl2repo/controls/rsa-final-forgery/rsa-forgery -a oracle",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 100,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/rsa-final-forgery/rsa-final-forgery/rsa-forgery__iAhcBvG/verifier/grading.json",
+        "sha256": "sha256:403194443d1e9f1da65c3e4cdbe1fdc65ef1423f891d38ca277ec57256f0a2cf"
+      },
+      "network": {
+        "path": ".nl2repo/runs/rsa-final-forgery/rsa-final-forgery/rsa-forgery__iAhcBvG/verifier/network.json",
+        "sha256": "sha256:e578c3cef43c017c940b2d0c33e5989a485bb0edeb2d0a35e7d212b570785a52"
+      }
+    },
+    "offline": {
+      "command": "Verifier network probes from final Oracle, empty, stub, forgery, install-hang, and call-hang runs",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/rsa-oracle-final/rsa-oracle-final/rsa__5cRhGNw/verifier/network.json",
+        "sha256": "sha256:c749be3fa8511053db44c8c115d5084bf30fd482593ba3fed068031570a9cca6"
+      }
+    },
+    "install_timeout": {
+      "command": "timeout 180s docker run --rm --network none -v control-workspaces/install-hang:/workspace -v control-logs/install-hang:/logs nl2repo-rsa-verifier:final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/rsa/control-logs/install-hang/verifier/candidate-install.json",
+        "sha256": "sha256:7bcd7539d54be8ff8b6efe728a23e0f600d134591b3d0b8ec7352baf8e1f8e19",
+        "outcome": "timeout",
+        "returncode": -9
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/rsa/control-logs/install-hang/verifier/grading.json",
+        "sha256": "sha256:738fb30e1eae3ed664103030e26724d740128630e22ada69dfd5e4d46df73442"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/rsa/control-logs/install-hang/verifier/network.json",
+        "sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"
+      }
+    },
+    "call_timeout": {
+      "command": "timeout 300s docker run --rm --network none -v control-workspaces/call-hang:/workspace -v control-logs/call-hang:/logs nl2repo-rsa-verifier:final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 100,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/rsa/control-logs/call-hang/verifier/candidate-install.json",
+        "sha256": "sha256:4aa6ec897db104d4eef1bcd422c550f271d9338b04a945fcbba77e84f2b48805",
+        "outcome": "success",
+        "returncode": 0
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/rsa/control-logs/call-hang/verifier/grading.json",
+        "sha256": "sha256:403194443d1e9f1da65c3e4cdbe1fdc65ef1423f891d38ca277ec57256f0a2cf"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/rsa/control-logs/call-hang/verifier/network.json",
+        "sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81"
+      }
+    }
+  },
+  "commands": {
+    "source_freeze": {
+      "command": "git fetch --depth 1 origin 42b0e14ffbeeb9d99d1037e6440a2cc61780e4ea; git archive --format=tar 42b0e14ffbeeb9d99d1037e6440a2cc61780e4ea",
+      "exit_code": 0,
+      "revision": "42b0e14ffbeeb9d99d1037e6440a2cc61780e4ea",
+      "archive_sha256": "sha256:d5f3ae5ac30dc2c284dd449bb8f3aada2612ed41a0eab1decdd1d70b11806ed8"
+    },
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/rsa",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "warning_scope": "pre-existing findings in other catalog tasks; no rsa finding"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/rsa --output .nl2repo/compiled/rsa-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "manifest_sha256": "sha256:5cb2e87fc6ef9e0eb32b1c2cab9b18fcbd66589d4adb910a83b63c205323e498"
+    },
+    "syntax": {
+      "command": "python3 -m py_compile verifier/run.py; bash -n solution/solve.sh harbor/controls/*.sh",
+      "exit_code": 0
+    },
+    "upstream_collection": {
+      "command": "python -m pytest -o addopts='' --collect-only -q tests",
+      "exit_code": 0,
+      "collected": 100,
+      "log": ".nl2repo/authoring-work/rsa/provenance/upstream-collect.log",
+      "log_sha256": "sha256:81c75b6027ba7f85bdfd039e362e642821aada48424d300624e8353da23b92b5"
+    },
+    "upstream_tests": {
+      "command": "python -m pytest -o addopts='' -q tests",
+      "exit_code": 1,
+      "passed": 99,
+      "failed": 1,
+      "log": ".nl2repo/authoring-work/rsa/provenance/upstream-test.log",
+      "log_sha256": "sha256:5f6ce90f2c1248d40fb73ae90406ad64f16ceb2bf0775c93138dab2dc68aad3"
+    }
+  },
+  "residual_risks": [
+    "The local same-name OpenHands image tag resolves to sha256:dbfa15...ec123, while toolchain.lock.toml requires sha256:70525a...c7ea5. The immutable requirement is declared and the Oracle/controls completed, but the integrator must restore the locked image or update the shared lock before a model Agent Run.",
+    "The upstream mypy self-check is tool-version-sensitive and failed 1 of 100 direct upstream tests with mypy 1.5.1 under Python 3.12; the private verifier uses a fixed public typing/import leaf and retains a 100-leaf denominator.",
+    "The task uses PKCS#1 v1.5 behavior from the frozen pure-Python package; this benchmark contract is not a claim of modern cryptographic protocol suitability.",
+    "No model Agent Run was started in this authoring lane. Review, pilot, publication, and dataset integration remain pending."
+  ],
+  "handoff_status": "awaiting-agent-run"
+}

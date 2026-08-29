@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rsa",
+  "source_revision": "42b0e14ffbeeb9d99d1037e6440a2cc61780e4ea",
+  "upstream_framework": "pytest",
+  "upstream_collection": 100,
+  "upstream_passed": 99,
+  "upstream_skipped": 0,
+  "frozen_total": 100,
+  "test_files": {
+    "test_cli.py": 14,
+    "test_common.py": 9,
+    "test_integers.py": 3,
+    "test_key.py": 7,
+    "test_load_save_keys.py": 21,
+    "test_mypy.py": 1,
+    "test_parallel.py": 1,
+    "test_pem.py": 9,
+    "test_pkcs1.py": 19,
+    "test_pkcs1_v2.py": 3,
+    "test_prime.py": 4,
+    "test_strings.py": 1,
+    "test_transform.py": 8
+  },
+  "collection_command": "python -m pytest -o addopts='' --collect-only -q tests",
+  "execution_command": "python -m pytest -o addopts='' -q tests",
+  "adapted_verifier": "custom-json-v1",
+  "notes": [
+    "The upstream suite was executed after installing the frozen build, runtime, and test closure; 99 of 100 tests passed.",
+    "The single upstream failure is tests/test_mypy.py: the frozen mypy 1.5.1 invocation reports 184 diagnostics in the upstream test tree under Python 3.12. The production contract keeps a separate public typing/import leaf instead of treating this tool-version-sensitive self-check as a candidate behavior failure.",
+    "The private verifier preserves the 100-leaf denominator while using isolated child scenarios for binary, filesystem, multiprocessing, and non-JSON key behavior.",
+    "Mypy is represented by public typing and import checks in the private verifier; the model is not given the upstream test files."
+  ]
+}

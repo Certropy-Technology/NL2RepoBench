@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rsa",
+  "source_revision": "42b0e14ffbeeb9d99d1037e6440a2cc61780e4ea",
+  "package_modules": [
+    "rsa", "rsa.asn1", "rsa.cli", "rsa.common", "rsa.core", "rsa.key",
+    "rsa.parallel", "rsa.pem", "rsa.pkcs1", "rsa.pkcs1_v2", "rsa.prime",
+    "rsa.randnum", "rsa.transform", "rsa.util"
+  ],
+  "public_surface": {
+    "root": ["newkeys", "encrypt", "decrypt", "sign", "verify", "PublicKey", "PrivateKey", "DecryptionError", "VerificationError", "find_signature_hash", "compute_hash", "sign_hash", "__version__"],
+    "common": ["byte_size", "bit_size", "inverse", "NotRelativePrimeError"],
+    "core": ["encrypt_int", "decrypt_int", "sign_int", "verify_int"],
+    "key": ["AbstractKey", "PublicKey", "PrivateKey", "newkeys", "gen_keys"],
+    "pem": ["_markers", "load_pem", "save_pem"],
+    "pkcs1": ["CryptoError", "DecryptionError", "VerificationError", "encrypt", "decrypt", "sign", "verify", "compute_hash", "sign_hash", "find_signature_hash", "yield_fixedblocks"],
+    "pkcs1_v2": ["mgf1"],
+    "prime": ["is_prime", "get_primality_testing_rounds"],
+    "randnum": ["read_random_bits", "read_random_int", "read_random_odd_int"],
+    "transform": ["bytes2int", "int2bytes"],
+    "cli": ["keygen", "encrypt", "decrypt", "sign", "verify"],
+    "util": ["private_to_public"]
+  },
+  "classes": {
+    "rsa.key.PublicKey": ["__init__", "save_pkcs1", "load_pkcs1", "__eq__", "__hash__"],
+    "rsa.key.PrivateKey": ["__init__", "save_pkcs1", "load_pkcs1", "blind", "unblind", "__eq__", "__hash__"],
+    "rsa.cli.CryptoOperation": ["parse_cli", "read_key", "read_infile", "write_outfile", "perform_operation", "__call__"]
+  },
+  "risk_flags": ["cryptographic-randomness", "binary-serialization", "filesystem-cli", "multiprocessing", "external-pyasn1-runtime"],
+  "adaptation": "Private tests exercise JSON-serializable scalars and hex/base64 encodings through the candidate subprocess. CLI and serialization scenarios run entirely in candidate-owned temporary files; no trusted process imports candidate modules."
+}

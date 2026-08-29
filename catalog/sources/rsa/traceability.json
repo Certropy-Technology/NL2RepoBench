@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rsa",
+  "frozen_total": 100,
+  "spec_sections": [
+    {"id": "root", "instruction": "API Usage Guide / Root exports", "leaf_prefix": "root", "leaf_count": 5},
+    {"id": "transform-common", "instruction": "API Usage Guide / Integer and byte primitives", "leaf_prefixes": ["transform", "common"], "leaf_count": 20},
+    {"id": "core", "instruction": "API Usage Guide / Integer and byte primitives", "leaf_prefix": "core", "leaf_count": 10},
+    {"id": "keys", "instruction": "API Usage Guide / Keys", "leaf_prefix": "key", "leaf_count": 20},
+    {"id": "pkcs1", "instruction": "API Usage Guide / PKCS#1 operations", "leaf_prefix": "pkcs1", "leaf_count": 20},
+    {"id": "prime-random", "instruction": "API Usage Guide / Prime and random helpers", "leaf_prefix": "prime", "leaf_count": 10},
+    {"id": "pem-cli", "instruction": "API Usage Guide / PEM and command line tools", "leaf_prefixes": ["pem", "cli"], "leaf_count": 15}
+  ],
+  "leaf_count_sum": 100,
+  "coverage_note": "Leaf IDs are stable verifier IDs grouped by documented behavior. The verifier contains exactly 100 unique leaves; this record documents the source-to-spec mapping without embedding private assertions or upstream tests."
+}
