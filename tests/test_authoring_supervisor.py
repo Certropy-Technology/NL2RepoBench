@@ -45,6 +45,37 @@ def test_copy_if_new_scans_secrets_and_refuses_collisions(tmp_path: Path) -> Non
         supervisor._copy_if_new(source, tmp_path / "secret-target")
 
 
+def test_sync_private_cas_copies_only_referenced_verified_objects(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    worktree = tmp_path / "worktree"
+    source = worktree / "catalog/sources/demo"
+    source.mkdir(parents=True)
+    payload = b"private bundle"
+    import hashlib
+
+    digest = hashlib.sha256(payload).hexdigest()
+    (source / "task.toml").write_text(
+        f"bundle = {{ digest = 'sha256:{digest}' }}\n",
+        encoding="utf-8",
+    )
+    artifact = worktree / ".nl2repo/artifacts/private/sha256" / digest[:2] / digest
+    artifact.parent.mkdir(parents=True)
+    artifact.write_bytes(payload)
+    (worktree / ".nl2repo/artifacts/private/sha256/ff/unreferenced").parent.mkdir(
+        parents=True
+    )
+    (worktree / ".nl2repo/artifacts/private/sha256/ff/unreferenced").write_bytes(
+        b"unused"
+    )
+
+    copied = supervisor._sync_private_cas(root, worktree, source)
+
+    assert copied == [f"sha256:{digest}"]
+    central_artifact = root / ".nl2repo/artifacts/private/sha256" / digest[:2] / digest
+    assert central_artifact.read_bytes() == payload
+    assert not (root / ".nl2repo/artifacts/private/sha256/ff/unreferenced").exists()
+
+
 def test_integrate_task_pushes_before_archive_and_removes_worktree(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -222,3 +253,51 @@ def test_integrate_task_does_not_mutate_without_oss(tmp_path: Path) -> None:
     )
 
     assert result == {"package": "demo", "status": "oss-unavailable"}
+
+
+def test_release_stale_claims_only_releases_expired_inactive_claims(
+    tmp_path: Path, monkeypatch
+) -> None:
+    queue = tmp_path / "queue.json"
+    queue.write_text("{}", encoding="utf-8")
+    state = tmp_path / "state.json"
+    state.write_text(
+        json.dumps(
+            {
+                "items": {
+                    "expired": {
+                        "status": "running",
+                        "package": "expired",
+                        "candidate_id": "candidate-expired",
+                        "owner": "dead-owner",
+                        "lease_expires_at": "2020-01-01T00:00:00+00:00",
+                        "attempts": 1,
+                    },
+                    "live": {
+                        "status": "running",
+                        "package": "live",
+                        "candidate_id": "candidate-live",
+                        "owner": "live-owner",
+                        "lease_expires_at": "2999-01-01T00:00:00+00:00",
+                        "attempts": 1,
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    lane = supervisor.Lane("go", "batch", queue, tmp_path / "plan", state)
+    calls: list[list[str]] = []
+
+    def fake_run(command, *, cwd, timeout):
+        del cwd, timeout
+        calls.append(command)
+        return {"command": command, "exit_code": 0, "output": "released", "timeout": False}
+
+    monkeypatch.setattr(supervisor, "_run", fake_run)
+    monkeypatch.setattr(supervisor, "_docker_uses", lambda _worktree: False)
+
+    actions = supervisor._release_stale_claims(tmp_path, lane, [], max_attempts=3)
+
+    assert [action["package"] for action in actions] == ["expired"]
+    assert calls and calls[0][1:3] == [str(tmp_path / "scripts/package_queue_loop.py"), "release"]

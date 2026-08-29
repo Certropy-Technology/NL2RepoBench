@@ -57,6 +57,7 @@ DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 DEFAULT_WATCHER_MIN_FREE_BYTES = 2 * 1024**3
+DEFAULT_FAILURE_BACKOFF_SECONDS = 1800
 
 
 @dataclass(frozen=True)
@@ -137,6 +138,51 @@ def _secret_paths(root: Path) -> list[str]:
         if any(pattern.search(text) for pattern in SECRET_PATTERNS):
             findings.append(str(path))
     return findings
+
+
+def _referenced_digests(source: Path) -> set[str]:
+    text = (source / "task.toml").read_text(encoding="utf-8")
+    return set(re.findall(r"sha256:[0-9a-f]{64}", text))
+
+
+def _cas_file(root: Path, digest: str) -> Path:
+    value = digest.removeprefix("sha256:")
+    return root / ".nl2repo/artifacts/private/sha256" / value[:2] / value
+
+
+def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
+    """Copy only this task's missing private artifacts into the central CAS."""
+
+    copied: list[str] = []
+    for digest in sorted(_referenced_digests(source)):
+        source_file = _cas_file(worktree, digest)
+        if not source_file.is_file() or source_file.is_symlink():
+            continue
+        if _sha256(source_file) != digest.removeprefix("sha256:"):
+            raise ValueError(f"private artifact failed source hash: {digest}")
+        target = _cas_file(root, digest)
+        if target.exists() or target.is_symlink():
+            if (
+                target.is_symlink()
+                or not target.is_file()
+                or _sha256(target) != digest.removeprefix("sha256:")
+            ):
+                raise ValueError(f"central private artifact collision: {digest}")
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.link(source_file, target)
+        except OSError:
+            temporary = target.with_name(f".{target.name}.supervisor.tmp")
+            shutil.copyfile(source_file, temporary)
+            if _sha256(temporary) != digest.removeprefix("sha256:"):
+                temporary.unlink(missing_ok=True)
+                raise ValueError(
+                    f"private artifact copy failed hash: {digest}"
+                ) from None
+            os.replace(temporary, target)
+        copied.append(digest)
+    return copied
 
 
 def _proc_table() -> list[Proc]:
@@ -251,17 +297,25 @@ def _queue_summary(lane: Lane) -> dict[str, Any]:
 def _release_stale_claims(
     root: Path, lane: Lane, procs: list[Proc], *, max_attempts: int
 ) -> list[dict[str, Any]]:
+    now = datetime.now(UTC)
     actions: list[dict[str, Any]] = []
     queue_loop = root / "scripts/package_queue_loop.py"
     for record in _lane_records(lane):
         if record.get("status") != "running":
             continue
+        expires_value = record.get("lease_expires_at")
         owner = record.get("owner")
         package = record.get("package")
         candidate_id = record.get("candidate_id")
-        if not isinstance(owner, str):
+        if not isinstance(expires_value, str) or not isinstance(owner, str):
             continue
         if not isinstance(package, str) or not isinstance(candidate_id, str):
+            continue
+        try:
+            expired = datetime.fromisoformat(expires_value) <= now
+        except ValueError:
+            expired = True
+        if not expired:
             continue
         worktree = root / ".nl2repo/authoring-live/worktrees" / lane.batch_id / package
         active = worktree.is_dir() and (
@@ -534,8 +588,10 @@ def _integrate_task(
     source_changed = False
     generated_changed = False
     generated_target: Path | None = None
+    cas_copied: list[str] = []
     try:
         source_changed = _copy_if_new(source, source_target)
+        cas_copied = _sync_private_cas(root, worktree, source_target)
         checks, compiled = _validate_and_compile(root, source_target, lane.language)
         task_id = _compiled_task_id(source_target)
         generated_target = root / "catalog/tasks" / task_id
@@ -659,6 +715,7 @@ def _integrate_task(
         "status": "integrated",
         "source_changed": source_changed,
         "generated_changed": generated_changed,
+        "private_cas_copied": cas_copied,
         "commit": commit,
         "archive": archived,
         "checks": checks,
@@ -673,6 +730,44 @@ def _integration_attempt(action: dict[str, Any]) -> bool:
         "oss-unavailable",
         "ready",
     }
+
+
+def _failure_key(worktree: Path, package: str) -> str:
+    source = _source_path(worktree, package)
+    handoff = worktree / ".nl2repo/authoring-handoff.json"
+    digest = hashlib.sha256()
+    for path in (source / "task.toml", handoff):
+        if path.is_file():
+            digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def _load_failure_state(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _save_failure_state(path: Path, value: dict[str, Any]) -> None:
+    _atomic_write(path, value)
+
+
+def _failure_is_in_backoff(
+    state: dict[str, Any], worktree: Path, package: str
+) -> bool:
+    record = state.get(package)
+    if not isinstance(record, dict):
+        return False
+    try:
+        retry_after = float(record.get("retry_after", 0))
+        fingerprint = str(record.get("fingerprint"))
+        return retry_after > time.time() and fingerprint == _failure_key(worktree, package)
+    except (OSError, ValueError):
+        return False
 
 
 def _oss_bucket() -> Any | None:
@@ -843,6 +938,7 @@ def supervise(args: argparse.Namespace) -> int:
             raise ValueError(f"lane input is missing: {lane}")
     lock_path = live / "supervisor.lock"
     report_path = live / "supervisor/status.json"
+    failure_state_path = live / "supervisor/integration-failures.json"
     with _exclusive_lock(lock_path, blocking=False) as acquired:
         if not acquired:
             print("another authoring supervisor owns the lock", file=sys.stderr)
@@ -867,6 +963,7 @@ def supervise(args: argparse.Namespace) -> int:
             archive_module = _archive_module(root)
             integration_clean = not _git_status(root)
             report["integration_clean"] = integration_clean
+            failure_state = _load_failure_state(failure_state_path)
             report["actions"].extend(
                 _release_stale_claims(root, lanes[0], procs, max_attempts=3)
                 if lanes
@@ -891,6 +988,14 @@ def supervise(args: argparse.Namespace) -> int:
                                 / lane.batch_id
                                 / record["package"]
                             ).is_dir()
+                            and not _failure_is_in_backoff(
+                                failure_state,
+                                root
+                                / ".nl2repo/authoring-live/worktrees"
+                                / lane.batch_id
+                                / record["package"],
+                                record["package"],
+                            )
                         ]
                         for lane in lanes
                     }
@@ -924,18 +1029,41 @@ def supervise(args: argparse.Namespace) -> int:
                                     timeout=args.command_timeout,
                                 )
                             except Exception as exc:  # noqa: BLE001 - persist task failure
+                                error_text = _redact(f"{type(exc).__name__}: {exc}")
                                 action = {
                                     "package": package,
                                     "status": "error",
-                                    "error": _redact(f"{type(exc).__name__}: {exc}"),
+                                    "error": error_text,
                                 }
                                 report["errors"].append(action)
                             report["actions"].append({"language": lane.language, **action})
+                            if action.get("status") == "integrated":
+                                failure_state.pop(package, None)
+                            elif action.get("status") == "error" and not args.dry_run:
+                                try:
+                                    failure_state[package] = {
+                                        "language": lane.language,
+                                        "fingerprint": _failure_key(
+                                            root
+                                            / ".nl2repo/authoring-live/worktrees"
+                                            / lane.batch_id
+                                            / package,
+                                            package,
+                                        ),
+                                        "retry_after": time.time()
+                                        + args.failure_backoff_seconds,
+                                        "error": action.get("error"),
+                                        "recorded_at": datetime.now(UTC).isoformat(),
+                                    }
+                                except (OSError, ValueError):
+                                    pass
                             if _integration_attempt(action):
                                 integration_attempts += 1
                             progress = True
                         if not progress:
                             break
+                    if not args.dry_run:
+                        _save_failure_state(failure_state_path, failure_state)
                 else:
                     report["actions"].append({"status": "archive-lock-busy"})
             can_start_workers = (
@@ -1025,6 +1153,11 @@ def main() -> int:
     parser.add_argument("--max-integrations", type=int, default=3)
     parser.add_argument("--interval-sec", type=int, default=60)
     parser.add_argument("--command-timeout", type=int, default=1800)
+    parser.add_argument(
+        "--failure-backoff-seconds",
+        type=int,
+        default=DEFAULT_FAILURE_BACKOFF_SECONDS,
+    )
     parser.add_argument("--min-free-bytes", type=int, default=DEFAULT_MIN_FREE_BYTES)
     parser.add_argument(
         "--watcher-min-free-bytes",
@@ -1040,6 +1173,7 @@ def main() -> int:
         or args.max_total_controllers < 1
         or args.max_integrations < 1
         or args.interval_sec < 1
+        or args.failure_backoff_seconds < 1
     ):
         parser.error(
             "workers, max-total-controllers, max-integrations, and interval-sec "
