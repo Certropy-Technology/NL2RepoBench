@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "source_revision": "555ac487f450f24928d859478ea2f41b58906206",
+  "upstream_test_files": 213,
+  "upstream_named_test_functions": 3358,
+  "baseline_probe": {"python": "3.12.11", "selected_tests": 232, "passed": 232, "failed": 0, "exit_code": 0},
+  "frozen_total": 36,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_ids": [
+    "version", "exports", "sentinel", "model_repr", "model_dict_alias", "model_json", "model_construct", "model_extra", "model_validation",
+    "qs_empty_basic", "qs_nested_brackets", "qs_nested_dots", "qs_array_repeat", "qs_array_comma", "qs_array_brackets", "qs_parse",
+    "sse_sync", "sse_multiline", "sse_id_retry", "sse_fragmented", "sse_comments", "sse_async",
+    "webhook_raw", "webhook_prefixed_multiple", "webhook_bytes", "webhook_replay", "webhook_missing_header", "webhook_mismatch", "webhook_unwrap", "webhook_async",
+    "client_properties", "client_copy", "client_auth_headers", "client_get_transport", "client_async_get", "client_context_close"
+  ],
+  "excluded_upstream_categories": [
+    "live API and network service calls", "generated endpoint breadth", "Azure and Bedrock integrations", "realtime websocket transport", "TLS/mTLS and proxies", "file upload and native optional transports", "repository metadata and release tooling"
+  ]
+}

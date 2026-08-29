@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "openai"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-sdk-library"
+tags = ["python", "openai", "sdk", "pydantic", "sse", "webhooks", "httpx2", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/openai/openai-python"
+revision = "555ac487f450f24928d859478ea2f41b58906206"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:3fee3c1832ceafd565161d3a0c42555823c7bdb7ca20dc2f217e8f7437365720"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier build closures are installed during Docker build from private hash-locked requirements; Agent and verifier runs are network-isolated. Only a trusted Oracle run may receive the exact frozen upstream host authorization."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["anyio==4.10.0", "httpx2==2.7.0", "pydantic==2.12.5", "typing-extensions==4.15.0", "sniffio==1.3.1", "jiter==0.16.0", "hatchling==1.27.0", "packaging==25.0", "pathspec==0.12.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:de1b15d7edd089e220dade99d3893c148aac8640a75e34fbba649cf3de3a30fb", size_bytes = 24906, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:de1b15d7edd089e220dade99d3893c148aac8640a75e34fbba649cf3de3a30fb", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 36
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:db75123fd565cec1e8dfee99876d74545e16a72e23bab045fd2b24a42f415767", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:db75123fd565cec1e8dfee99876d74545e16a72e23bab045fd2b24a42f415767", visibility = "private" }
+
+[harbor]
+description = "Build the offline openai 3.3.1 Python SDK core from an empty workspace, covering Pydantic models, query serialization, SSE decoding, webhook verification, and injected sync/async HTTP client behavior."
+keywords = ["python", "openai", "sdk", "pydantic", "sse", "webhooks", "httpx2", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:491ad31932867232eeb184b3a1662a7f4d770962588007a0e657fdb57aa7f988"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:491ad31932867232eeb184b3a1662a7f4d770962588007a0e657fdb57aa7f988"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Production compile, one Harbor Oracle, empty/stub/forgery controls, offline probes, and the bounded install-timeout probe passed for the frozen 36-leaf contract."

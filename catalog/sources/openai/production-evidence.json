@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "terminal_kind": "valid",
+  "source_revision": "555ac487f450f24928d859478ea2f41b58906206",
+  "source_archive_sha256": "sha256:3fee3c1832ceafd565161d3a0c42555823c7bdb7ca20dc2f217e8f7437365720",
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/openai/compiled-final3/openai/bundle.manifest.json",
+    "sha256": "sha256:394d908edf9558932fbff175c74393a6c60e541d665398b1bf83c49c4321477b"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "observed_agent_runtime_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "sha256:de1b15d7edd089e220dade99d3893c148aac8640a75e34fbba649cf3de3a30fb",
+    "lock_size_bytes": 24906,
+    "distribution_count": 20
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 36,
+    "collection": 36,
+    "verifier_bundle": "sha256:db75123fd565cec1e8dfee99876d74545e16a72e23bab045fd2b24a42f415767"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/openai/compiled-final3/openai -a oracle --allow-agent-host github.com --job-name openai-final3-oracle-20260829 -o .nl2repo/runs/openai-final3-oracle-20260829 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 36,
+    "total": 36,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/openai-final3-oracle-20260829/openai-final3-oracle-20260829/openai__jQ8MSrN/verifier/grading.json",
+      "sha256": "sha256:4c13d9e74a97ac38866f95b2f58acdb8acfa119a4ee4c82bb8a5dc50f429ac17"
+    },
+    "network": {
+      "path": ".nl2repo/runs/openai-final3-oracle-20260829/openai-final3-oracle-20260829/openai__jQ8MSrN/verifier/network.json",
+      "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+    },
+    "source_fetch": "The trusted Oracle fetched only the fixed revision from github.com and asserted both the resolved commit and Git archive digest before installation."
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/openai/compiled-final3/openai -a nop --job-name openai-final3-empty-20260829 -o .nl2repo/runs/openai-final3-empty-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/openai-final3-empty-20260829/openai-final3-empty-20260829/openai__3uKYVCV/verifier/grading.json",
+        "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2"
+      },
+      "network": {
+        "path": ".nl2repo/runs/openai-final3-empty-20260829/openai-final3-empty-20260829/openai__3uKYVCV/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/openai/controls-final3/openai-stub -a oracle --job-name openai-final3-stub-20260829 -o .nl2repo/runs/openai-final3-stub-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "total": 36,
+      "reward": 0.027777777777777776,
+      "grading": {
+        "path": ".nl2repo/runs/openai-final3-stub-20260829/openai-final3-stub-20260829/openai-stub__d65hqNe/verifier/grading.json",
+        "sha256": "sha256:f702658b5f5c72028961c9746236dde05446fc5ab6f8bb5678afcdf9d49e844f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/openai-final3-stub-20260829/openai-final3-stub-20260829/openai-stub__d65hqNe/verifier/network.json",
+        "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/openai/controls-final3/openai-forgery -a oracle --job-name openai-final3-forgery-20260829 -o .nl2repo/runs/openai-final3-forgery-20260829 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 36,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/openai-final3-forgery-20260829/openai-final3-forgery-20260829/openai-forgery__vS7fuCo/verifier/grading.json",
+        "sha256": "sha256:c91331bf16676e7ccec094a38c815c9b1365187fba355242f6cd1e09a62ff122"
+      },
+      "network": {
+        "path": ".nl2repo/runs/openai-final3-forgery-20260829/openai-final3-forgery-20260829/openai-forgery__vS7fuCo/verifier/network.json",
+        "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"
+      }
+    },
+    "offline": {
+      "command": "Oracle verifier executed in its generated separate environment with tests/docker-compose.yaml network_mode none and both public probes false.",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/openai-final3-oracle-20260829/openai-final3-oracle-20260829/openai__jQ8MSrN/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98"
+      }
+    },
+    "install_timeout": {
+      "command": "docker run --rm --network none -v <task-local-hang-work>:/workspace -v <task-local-result>:/logs/verifier nl2repo-openai-verifier:authoring-20260829 python -I -B -m nl2repobench.verification.candidate_install --source /workspace --target /tmp/candidate-site --timeout-sec 3 --status /logs/verifier/candidate-install.json",
+      "exit_code": 20,
+      "outcome": "timeout",
+      "status": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/openai/install-hang-probe/candidate-install.json",
+        "sha256": "sha256:aec95c3c5ce69bca0006df6ada09113c259e1e9b93186804c95c2020e2c003b4"
+      }
+    }
+  },
+  "residual_risks": [
+    "The 36-leaf deterministic offline contract intentionally excludes the generated endpoint surface and live/provider/network integrations from the much larger upstream suite.",
+    "The local OpenHands runtime tag does not match the toolchain-locked immutable image ID; restore or relock it before a model Agent Run.",
+    "Blind review, traceability review, model Agent Run, dataset integration, and publication approval remain outside this lane."
+  ],
+  "status": "controls-passed"
+}

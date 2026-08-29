@@ -1,0 +1,62 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/openai"
+version = "0.1.0"
+description = "Build the offline openai 3.3.1 Python SDK core from an empty workspace, covering Pydantic models, query serialization, SSE decoding, webhook verification, and injected sync/async HTTP client behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "openai",
+    "sdk",
+    "pydantic",
+    "sse",
+    "webhooks",
+    "httpx2",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-sdk-library"
+tags = [
+    "python",
+    "openai",
+    "sdk",
+    "pydantic",
+    "sse",
+    "webhooks",
+    "httpx2",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 36
+canonical_manifest_digest = "sha256:1da92325d9fad17980523cf1f3bbe84c2f2d3e05e327ef244714a8147d80ce5f"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

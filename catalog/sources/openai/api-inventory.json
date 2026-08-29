@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "source_revision": "555ac487f450f24928d859478ea2f41b58906206",
+  "distribution": "openai==3.3.1",
+  "package_root": "src/openai",
+  "public_contract": [
+    "openai.__version__",
+    "openai.OpenAI",
+    "openai.AsyncOpenAI",
+    "openai.BaseModel",
+    "openai.NOT_GIVEN and openai.omit",
+    "openai._models.BaseModel.to_dict/to_json/construct",
+    "openai._qs.Querystring and stringify",
+    "openai._streaming.ServerSentEvent and SSEDecoder",
+    "openai.lib._webhooks.webhook_signature_matches",
+    "openai.OpenAI.webhooks.verify_signature/unwrap",
+    "openai.AsyncOpenAI.webhooks.verify_signature"
+  ],
+  "adaptation_boundaries": [
+    "The task is an offline deterministic core-SDK adaptation; no live API, credentials, or external service is used.",
+    "Generated endpoint resources, Azure/Bedrock providers, realtime websockets, TLS/mTLS, file uploads, and optional transports are outside the frozen contract.",
+    "HTTP behavior is exercised only with an injected in-memory httpx2 transport through the child-side JSON adapter.",
+    "Candidate code is imported only in an unprivileged subprocess; trusted verifier tests never import candidate modules."
+  ]
+}
