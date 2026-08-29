@@ -1422,7 +1422,7 @@ def main() -> int:
     parser.add_argument("--live-root", type=Path, default=Path(".nl2repo/authoring-live"))
     parser.add_argument("--queue-root", type=Path, default=Path("/data/NL2RepoBench/reports"))
     parser.add_argument("--remote", default="origin")
-    parser.add_argument("--branch", default="codex/integrate-authored-tasks-20260827")
+    parser.add_argument("--branch", default="main")
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
     parser.add_argument(
         "--max-total-controllers",
