@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/oauthlib"
+version = "1.0.0"
+description = "Build OAuthLib from an empty workspace and satisfy a deterministic OAuth1/OAuth2 request and URI behavior contract through a separate child-side verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "oauth1",
+    "oauth2",
+    "uri-signing",
+    "request-building",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "oauth-protocol-library"
+tags = [
+    "python",
+    "oauth1",
+    "oauth2",
+    "uri-signing",
+    "request-building",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 42
+canonical_manifest_digest = "sha256:4788303fa72773caaeabdf62baa5278908b6fa34b2498915b570c35b58adb3c6"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

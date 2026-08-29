@@ -1,0 +1,9 @@
+{
+  "protocol": "custom-json-v1",
+  "candidate_uid": 10001,
+  "candidate_site": "/tmp/candidate-site",
+  "trusted_process_imports_candidate": false,
+  "child_operations": "execute_script through nl2repobench.verification.candidate_client",
+  "limits": {"timeout_seconds": 10, "cumulative_seconds": 300, "output_bytes": 1048576},
+  "network": "no-network"
+}

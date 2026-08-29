@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "task_id": "oauthlib",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/oauthlib/oauthlib",
+    "revision": "40b0ab56da3682c2484a4b78bbff309f8025d950",
+    "archive_sha256": "sha256:7d459f401eb8595ad42c7a77edfb0ee17b67acf27213812d1c13a1ed505d7c2b",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:0028aa4763a8a0b09ca4c68d585263474cf9aaa6ec69ffbef3a31a9eccdd3b91"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "toolchain_sha256": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest": "sha256:a55530deb66485e0d12a067aa6b80a0a92b51f0a5b79c9097b80e5a8ee1cbb11", "size_bytes": 440},
+    "verifier_bundle": {"digest": "sha256:2acd29360c533e8b07384a1381f6aa9d636316440d647e22a08ff0fedf5e994b", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:e1ceac0c33ca06aa7f6b2f9e30abd72e13e4eb120eaa3517190e8b712ef24639", "size_bytes": 10240}
+  },
+  "baseline": {
+    "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -c /dev/null --junitxml=<run>.xml tests",
+    "python": "3.12.11",
+    "passed": 703,
+    "skipped": 2,
+    "subtests": 21,
+    "exit_code": 0,
+    "junit": ".nl2repo/authoring-work/python-author-wave2-20260828/oauthlib/upstream-baseline.xml"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/oauthlib --output .nl2repo/compiled/oauthlib-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/compiled/oauthlib-production/oauthlib/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:fb0b6a2ce7c94acd4e7cb188cd96b0fa9bdc6128ae83a90f30b7dba8dff11821"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/oauthlib-production/oauthlib -a oracle --job-name oauthlib-oracle-final-42-v3 -o .nl2repo/runs/oauthlib/oracle-final --n-concurrent 1 --allow-agent-host github.com --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 42,
+    "collected": 42,
+    "passed": 42,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/runs/oauthlib/final-oracle/oauthlib-oracle-controls-final/oauthlib__rMsLGRN/verifier/grading.json", "sha256": "sha256:011b62aecd5505eb9169162b71352ad8540901e1a23243652e8d0ec5f18af757"},
+    "network": {"path": ".nl2repo/runs/oauthlib/final-oracle/oauthlib-oracle-controls-final/oauthlib__rMsLGRN/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80"},
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/oauthlib-production/oauthlib -a nop --job-name oauthlib-empty-42 -o .nl2repo/runs/oauthlib/empty --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/oauthlib/final-empty/oauthlib-final-empty/oauthlib__BNohnvX/verifier/grading.json", "sha256": "sha256:99c743677126504bb89060ac2f569ecb7209e71122322b6fb8bb4f02bfc1c0ab"},
+      "network": {"path": ".nl2repo/runs/oauthlib/final-empty/oauthlib-final-empty/oauthlib__BNohnvX/verifier/network.json", "sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/oauthlib/oauthlib-stub -a oracle --job-name oauthlib-stub-42 -o .nl2repo/runs/oauthlib/stub --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "collected": 42, "passed": 2, "reward": 0.047619047619047616,
+      "grading": {"path": ".nl2repo/runs/oauthlib/final-stub/oauthlib-final-stub/oauthlib-stub__wMitFAH/verifier/grading.json", "sha256": "sha256:fbd49778597abd03822f09c5759813c6bd5b5240105180828657b12a1af284a8"},
+      "network": {"path": ".nl2repo/runs/oauthlib/final-stub/oauthlib-final-stub/oauthlib-stub__wMitFAH/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/oauthlib/oauthlib-forgery -a oracle --job-name oauthlib-forgery-42 -o .nl2repo/runs/oauthlib/forgery --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "collected": 42, "passed": 2, "reward": 0.047619047619047616, "verifier_owned_reward": true, "workspace_forged_reward_absent": true,
+      "grading": {"path": ".nl2repo/runs/oauthlib/final-forgery/oauthlib-final-forgery/oauthlib-forgery__CBxkYWT/verifier/grading.json", "sha256": "sha256:fbd49778597abd03822f09c5759813c6bd5b5240105180828657b12a1af284a8"},
+      "network": {"path": ".nl2repo/runs/oauthlib/final-forgery/oauthlib-final-forgery/oauthlib-forgery__CBxkYWT/verifier/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/oauthlib/oauthlib-install-hang -a oracle --job-name oauthlib-install-hang-42 -o .nl2repo/runs/oauthlib/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/oauthlib/final-install-hang/oauthlib-final-install-hang/oauthlib-install-hang__jEwPoAY/verifier/grading.json", "sha256": "sha256:99c743677126504bb89060ac2f569ecb7209e71122322b6fb8bb4f02bfc1c0ab"},
+      "network": {"path": ".nl2repo/runs/oauthlib/final-install-hang/oauthlib-final-install-hang/oauthlib-install-hang__jEwPoAY/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"}
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/oauthlib/oauthlib-call-hang -a oracle --job-name oauthlib-call-hang-42 -o .nl2repo/runs/oauthlib/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "collected": 42, "passed": 2, "reward": 0.047619047619047616,
+      "grading": {"path": ".nl2repo/runs/oauthlib/final-call-hang/oauthlib-final-call-hang/oauthlib-call-hang__Sr7qDvn/verifier/grading.json", "sha256": "sha256:fbd49778597abd03822f09c5759813c6bd5b5240105180828657b12a1af284a8"},
+      "network": {"path": ".nl2repo/runs/oauthlib/final-call-hang/oauthlib-final-call-hang/oauthlib-call-hang__Sr7qDvn/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"}
+    },
+    "offline": {"command": "official Harbor verifier network probe from oauthlib Oracle and control runs", "completed": true, "exit_code": 0, "public_network_available": false, "source": "all verifier/network.json receipts"}
+  },
+  "gates": {"validate_source_exit_code": 0, "network_lint_exit_code": 0, "network_lint_error_count": 0, "oauthlib_network_findings": 0, "python_compile_exit_code": 0, "shell_syntax_exit_code": 0},
+  "unsupported_controls": {"loader-hook": "not registered by the Python Harbor compiler control registry; no claim of execution"},
+  "residual_risks": ["The production denominator is a bounded 42-scenario deterministic subset rather than all 703 passing upstream tests.", "Optional cryptography/JWT/signals extras, callback validators, server endpoints, and network I/O are documented but outside the deterministic contract.", "Independent blind/spec review and model-agent pilot were not run in this authoring lane."]
+}
