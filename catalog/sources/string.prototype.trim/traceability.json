@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "string.prototype.trim",
+  "frozen_total": 31,
+  "public_to_private": {
+    "root_and_helpers": [1, 22, 23, 24, 25],
+    "whitespace_and_unicode": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "coercion_and_errors": [16, 17, 18, 19, 20],
+    "shim_and_boundaries": [21, 26, 27, 28, 29, 30, 31]
+  },
+  "private_to_public": {
+    "contract.test.mjs": {
+      "1": "root export and helper surface",
+      "2-15": "Supports and trim(value) whitespace/Unicode contract",
+      "16-20": "API Usage Guide coercion and Errors and boundary",
+      "21-25": "Helper properties and shim contract",
+      "26-31": "Implementation Notes boundaries, non-mutation, and determinism"
+    }
+  },
+  "excluded_upstream_behavior": [
+    "legacy browser compatibility matrix",
+    "Tape/NYC/ESLint tooling and posttest network audit",
+    "timing threshold as a scored requirement",
+    "non-JSON custom objects and host-specific native trim bugs"
+  ]
+}

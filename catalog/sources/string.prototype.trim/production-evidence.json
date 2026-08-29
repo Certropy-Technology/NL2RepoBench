@@ -1,0 +1,323 @@
+{
+  "compile": {
+    "allow_incomplete": false,
+    "bundle_manifest_sha256": "sha256:892d6963ef09a396a198b87b186c9e801ae16d95175c924cd61ea7dbc1ee4c37",
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/compiled-production/string.prototype.trim",
+    "bundle_schema": "2.0",
+    "command": "uv run nl2repo harbor compile catalog/sources/string.prototype.trim --output .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/compiled-production --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "deterministic_repeat": true,
+    "exit_code": 0,
+    "manifest_file_count": 811,
+    "repeat_bundle_manifest_sha256": "sha256:892d6963ef09a396a198b87b186c9e801ae16d95175c924cd61ea7dbc1ee4c37"
+  },
+  "controls": {
+    "call-hang": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-call-hang -a oracle --job-name string-prototype-trim-call-hang-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/call-hang --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 0,
+      "failure_reason": "candidate-call-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/call-hang/string-prototype-trim-call-hang-final/string.prototype.trim-call-hang__3fp9A2T/verifier/grading.json",
+        "sha256": "sha256:026bffb0a9f0114acd600ba4dabbf921320853d9289577fcaf44cbb75c114199",
+        "size_bytes": 299
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/call-hang/string-prototype-trim-call-hang-final/string.prototype.trim-call-hang__3fp9A2T/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:bf672d9fd3b32974b085a7da23857832a334f0424b90651ba730f3676103e0d9",
+        "size_bytes": 342
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-empty -a oracle --job-name string-prototype-trim-empty-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/empty --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/empty/string-prototype-trim-empty-final/string.prototype.trim-empty__GaKhQQj/verifier/grading.json",
+        "sha256": "sha256:0eb6fd22880ff3926527f720d3dde541abe861d9fb37d6d590f69ca7a3159c7c",
+        "size_bytes": 307
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/empty/string-prototype-trim-empty-final/string.prototype.trim-empty__GaKhQQj/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:4d6b3a5fb93a8ee1eed9ce32671d5cabe220ccf2c0e01368a9402022339e1cdf",
+        "size_bytes": 342
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 31,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-forgery -a oracle --job-name string-prototype-trim-forgery-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/forgery --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 28,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/forgery/string-prototype-trim-forgery-final/string.prototype.trim-forgery__ozP99Ly/verifier/grading.json",
+        "sha256": "sha256:02e3009d5475eec694fd3bc245fcb11b61dd552f0e8948d587fe8e0e4edb35d8",
+        "size_bytes": 4627
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/forgery/string-prototype-trim-forgery-final/string.prototype.trim-forgery__ozP99Ly/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:22e823e1d1014a5d009eaeff7122fdb031a737fd302e10b00ed2c1b4c036f92c",
+        "size_bytes": 342
+      },
+      "passed": 3,
+      "reward": 0.0967741935483871,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "install-script": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-install-script -a oracle --job-name string-prototype-trim-install-script-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/install-script --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/install-script/string-prototype-trim-install-script-final/string.prototype.trim-install-sc__Q5M7cUW/verifier/grading.json",
+        "sha256": "sha256:0eb6fd22880ff3926527f720d3dde541abe861d9fb37d6d590f69ca7a3159c7c",
+        "size_bytes": 307
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/install-script/string-prototype-trim-install-script-final/string.prototype.trim-install-sc__Q5M7cUW/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:546864dcb848681c1606897862848559b53dc298aab2be245c9305a4efb06576",
+        "size_bytes": 342
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "loader-hook": {
+      "collected": 31,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-loader-hook -a oracle --job-name string-prototype-trim-loader-hook-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/loader-hook --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 28,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/loader-hook/string-prototype-trim-loader-hook-final/string.prototype.trim-loader-hoo__ExXfpCd/verifier/grading.json",
+        "sha256": "sha256:02e3009d5475eec694fd3bc245fcb11b61dd552f0e8948d587fe8e0e4edb35d8",
+        "size_bytes": 4627
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/loader-hook/string-prototype-trim-loader-hook-final/string.prototype.trim-loader-hoo__ExXfpCd/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:96516d25562546c01a03e5dab426dfa6b9d138690db228456f6ea13f44b3e1fc",
+        "size_bytes": 342
+      },
+      "passed": 3,
+      "reward": 0.0967741935483871,
+      "valid": true
+    },
+    "offline": {
+      "collected": 31,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-offline -a oracle --job-name string-prototype-trim-offline-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/offline --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 30,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/offline/string-prototype-trim-offline-final/string.prototype.trim-offline__jELzfEx/verifier/grading.json",
+        "sha256": "sha256:b2d79a09deedcf3350fde415d9bf9a88d24818b3ee9a0c5df934df2e591d1f02",
+        "size_bytes": 4628
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/offline/string-prototype-trim-offline-final/string.prototype.trim-offline__jELzfEx/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:e0412cfeba8bf346432b5c3c422d06a9560b1dbc40322e2baf651b0e73c5c12d",
+        "size_bytes": 342
+      },
+      "passed": 1,
+      "reward": 0.03225806451612903,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 31,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-oversized-output -a oracle --job-name string-prototype-trim-oversized-output-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/oversized-output --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 30,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/oversized-output/string-prototype-trim-oversized-output-final/string.prototype.trim-oversized__bN9TfQc/verifier/grading.json",
+        "sha256": "sha256:b2d79a09deedcf3350fde415d9bf9a88d24818b3ee9a0c5df934df2e591d1f02",
+        "size_bytes": 4628
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/oversized-output/string-prototype-trim-oversized-output-final/string.prototype.trim-oversized__bN9TfQc/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:327af90fe329733604374992dae3bff54d54a60319283ef1b0dd41ef39575b83",
+        "size_bytes": 342
+      },
+      "passed": 1,
+      "reward": 0.03225806451612903,
+      "valid": true
+    },
+    "stub": {
+      "collected": 31,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-final/string.prototype.trim-stub -a oracle --job-name string-prototype-trim-stub-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/stub --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "expected_total": 31,
+      "failed": 28,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/stub/string-prototype-trim-stub-final/string.prototype.trim-stub__WF3WgRy/verifier/grading.json",
+        "sha256": "sha256:02e3009d5475eec694fd3bc245fcb11b61dd552f0e8948d587fe8e0e4edb35d8",
+        "size_bytes": 4627
+      },
+      "harbor_version": "0.21.0",
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/controls-runs/stub/string-prototype-trim-stub-final/string.prototype.trim-stub__WF3WgRy/verifier/network.json",
+        "public_network_available": false,
+        "sha256": "sha256:f7914ee474038239230df97ee947bfa42a8b967c41c012943e27d644219c1706",
+        "size_bytes": 342
+      },
+      "passed": 3,
+      "reward": 0.0967741935483871,
+      "valid": true
+    }
+  },
+  "environment": {
+    "agent_allowed_hosts": [],
+    "agent_network_mode": "no-network",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "reference_source_fetch": "forbidden",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "verifier_network_mode": "no-network"
+  },
+  "expected_total": 31,
+  "gates": {
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/network-lint.log",
+        "sha256": "sha256:62c9a173ac4c435c95b7642b5a3063db5f328fdefb577bb5208033edfb386ddc",
+        "size_bytes": 54779
+      },
+      "task_error_count": 0
+    },
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/string.prototype.trim",
+      "exit_code": 0
+    },
+    "upstream_lint": {
+      "command": "npm run lint (frozen checkout with authoring dev closure)",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/upstream-lint.log",
+        "sha256": "sha256:1ce4b561185bfb2ce875cb3733102bf0698d206cfb11f584526d42f6a69aed29",
+        "size_bytes": 1985
+      }
+    },
+    "upstream_tests": {
+      "command": "npm run tests-only (frozen checkout with authoring dev closure)",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/upstream-tests.log",
+        "sha256": "sha256:7c75ae738ab3bb4ff6713293229fbe4c76cc7b3839930cb439c53c09b4303555",
+        "size_bytes": 4273
+      },
+      "passed": 57
+    }
+  },
+  "oracle": {
+    "collected": 31,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/compiled-production/string.prototype.trim -a oracle --allow-agent-host github.com --job-name string-prototype-trim-oracle-final -o .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "expected_total": 31,
+    "failed": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/oracle-final/string-prototype-trim-oracle-final/string.prototype.trim__4Sx2Uhg/verifier/grading.json",
+      "sha256": "sha256:90b553fee478bb30e1154e97075172008c9f492c65d1662d8b6e604f20476253",
+      "size_bytes": 4612
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/oracle-final/string-prototype-trim-oracle-final/string.prototype.trim__4Sx2Uhg/verifier/network.json",
+      "public_network_available": false,
+      "sha256": "sha256:e578c3cef43c017c940b2d0c33e5989a485bb0edeb2d0a35e7d212b570785a52",
+      "size_bytes": 342
+    },
+    "passed": 31,
+    "public_network_available": false,
+    "reward": 1.0,
+    "trial": "string.prototype.trim__4Sx2Uhg",
+    "valid": true
+  },
+  "receipt_binding": {
+    "bundle_manifest_sha256": "sha256:892d6963ef09a396a198b87b186c9e801ae16d95175c924cd61ea7dbc1ee4c37",
+    "canonical_manifest_digest": "sha256:788323af30e1ae2471bd3e60f9889fa87869160eaf50a8ee752cd3e268d598ec",
+    "commands_artifact": "sha256:fed71170c8618593587421b8d4e794c732571cf809e94cf2dd06cbc33cff0dae",
+    "dependency_artifact": "sha256:7ef7a8bd06b92607c848ebf933f10a621bf70ae1c24ad2d7c3b890f013e9b1d8",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "instruction_sha256": "sha256:56a4b1b4345d1f374821d6bf7e8994bb8be57fb49a51a7fb9278fb373247e613",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "oracle_bundle": "sha256:1a5a25363a23231fd4afa53b7da8fe02e0dab47c77d82e0a4b478ed8ca7b8d7b",
+    "source_task_sha256": "sha256:72f68a1ff44062e4b4888a7e0c413d84aa1ef2dbf72b94aaae9fa4e577a0474d",
+    "test_bundle": "sha256:ed97d1c0536b6dfb6045f32c742f0ecfa40b4cb10c1aaec42702b50781c01dbc",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853",
+    "verifier_runtime_sha256": "sha256:eb9a0b49eae48b213325fb753a314de6a091676233ce977b70fc1306fabed054"
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this lane by contract.",
+    "Independent blind/spec review, model pilot, dataset projection, and publication remain integrator-stage work.",
+    "The local host npm is 10.9.8; production evidence uses the locked Node image profile Node 24.19.0/npm 11.17.0.",
+    "The Oracle solution fetches only the exact frozen revision with run-scoped github.com authorization; model Agent runs remain no-network with an empty allowlist."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "archive_size_bytes": 71680,
+    "frozen_package": "string.prototype.trim@1.2.11",
+    "license_digest": "sha256:c16d06f1808d8d8c6ec0f6b6fb7e951126c46730fbb67320863a81f8aa8ca033",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trim/upstream/LICENSE",
+    "license_spdx": "MIT",
+    "revision": "81993cc9f134d72f778bea27d77a4b1ac0e98244",
+    "source_digest": "sha256:7bc78bdfb13f9647ad7de4835d75f48624d143fa48bc1b37d4ce75ef6c225609",
+    "source_worktree_clean": true,
+    "status": "known",
+    "submodules": [],
+    "tracked_files": 13,
+    "tree": "7bed88b878618229326c3c7e3d6ee1cbb10a3df4",
+    "upstream_url": "https://github.com/es-shims/String.prototype.trim"
+  },
+  "status": "controls-passed",
+  "task_id": "string.prototype.trim",
+  "terminal_kind": "valid"
+}

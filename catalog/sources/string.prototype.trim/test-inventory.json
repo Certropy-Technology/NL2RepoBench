@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 31,
+  "private_entry": "contract.test.mjs",
+  "groups": {
+    "package_and_helpers": 7,
+    "whitespace_and_unicode": 10,
+    "coercion_and_errors": 8,
+    "boundaries_and_determinism": 6
+  },
+  "collection_method": "independent deterministic custom-json-v1 child adapter",
+  "traceability": "traceability.json maps each leaf to the public instruction and frozen source behavior."
+}
