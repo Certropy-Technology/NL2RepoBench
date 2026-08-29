@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-phrasing",
+  "source_revision": "67d563d643f75cf4fd26bc3121ddebb89e3a0a9c",
+  "package": {
+    "name": "mdast-util-phrasing",
+    "version": "4.1.0",
+    "module_kind": "esm",
+    "upstream_node_compatibility": ">=16",
+    "root_export": "./index.js"
+  },
+  "public_exports": {
+    "named": ["phrasing"],
+    "default": null
+  },
+  "signatures": {
+    "phrasing": "phrasing(value?: unknown): boolean"
+  },
+  "accepted_node_types": [
+    "break",
+    "delete",
+    "emphasis",
+    "footnote",
+    "footnoteReference",
+    "image",
+    "imageReference",
+    "inlineCode",
+    "inlineMath",
+    "link",
+    "linkReference",
+    "mdxJsxTextElement",
+    "mdxTextExpression",
+    "strong",
+    "text",
+    "textDirective"
+  ],
+  "explicit_exclusion": "html",
+  "runtime_dependencies": [
+    "@types/mdast@4.0.4",
+    "@types/unist@3.0.3",
+    "unist-util-is@6.0.1"
+  ],
+  "runtime_files": ["index.js", "lib/index.js"],
+  "generated_declaration_files": ["index.d.ts", "lib/index.d.ts"],
+  "upstream_test_files": ["test.js"],
+  "side_effects": false,
+  "risk_adaptations": [
+    "unknown JavaScript inputs are restricted to the documented JSON-representable scored domain",
+    "candidate exports are loaded only in a UID 10001 child process",
+    "only bounded JSON booleans and inventory records cross the verifier boundary"
+  ]
+}

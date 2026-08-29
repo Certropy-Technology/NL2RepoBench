@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-phrasing",
+  "task_version": "4.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/mdast-util-phrasing",
+    "revision": "67d563d643f75cf4fd26bc3121ddebb89e3a0a9c",
+    "git_tree": "c3d4e6b34f4eade0b566afa3a11691a9b9fbcd32",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:b6d1a4e1831b177acc96f22a817d4f0f4c18419355badc3125754445fc69e3a7",
+    "source_digest": "sha256:fe71915a39869c97b9a9132886ff511654b42d4109183853592b580db458650b",
+    "submodules": []
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "verifier_requirements_sha256": "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_bundle": {
+      "digest": "sha256:4e853fb5f3465a9f302a37286aed17c260e3b13e7ab2301887db779e8d333bcb",
+      "size_bytes": 276480,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar"
+    },
+    "test_bundle": {
+      "digest": "sha256:4da2121bc1639031f31c2df6d06e835f66a8cf57b58295f7b25ab6bf019450d2",
+      "size_bytes": 20480,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar"
+    },
+    "commands_bundle": {
+      "digest": "sha256:41d2aaf847aac1154dc6dafc98cc48273f4b1ac59b05c000c0f42ca4af5836e0",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:e80f7a51ddf561aa6f531e7a591274ee783b627f0b52aeaa5f44c0512efdbbc7",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.oracle+tar"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 36,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "candidate_uid": 10001,
+    "candidate_gid": 10001,
+    "separate_verifier": true
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runtime/mdast-util-phrasing",
+    "bundle_manifest_sha256": "sha256:e627a6a3c4e95e3f5601de523dbcf30f86f0b09fd53a3e3d0b71bb94f252cb4a",
+    "canonical_manifest_digest": "sha256:acec3f592aae49be370a0e3a7bd9cbcdeeac45d64113776a5218cf4398997612",
+    "schema_version": "2.0",
+    "mode": "production",
+    "file_count": 100,
+    "repeat_compile_identical": true
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runtime/mdast-util-phrasing -a oracle --allow-agent-host github.com --job-name mdast-util-phrasing-final-oracle-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 36,
+    "collected": 36,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/oracle/mdast-util-phrasing-final-oracle-20260829/mdast-util-phrasing__2cK7ioF/verifier/grading.json",
+      "sha256": "sha256:b8b0878f55ee96e6caeb2ebd27ac9b8ee115b1185d0f03f052ba225cc5540dd4"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/oracle/mdast-util-phrasing-final-oracle-20260829/mdast-util-phrasing__2cK7ioF/verifier/network.json",
+      "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+    },
+    "report": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/oracle/mdast-util-phrasing-final-oracle-20260829/mdast-util-phrasing__2cK7ioF/verifier/report.json",
+      "sha256": "sha256:34c10dd315e795e00046b5481bd9ab0ed4d20460ef6163eac353c08fdffe061f"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-controls/mdast-util-phrasing-empty -a oracle --job-name mdast-util-phrasing-final-empty-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/empty/mdast-util-phrasing-final-empty-20260829/mdast-util-phrasing-empty__5qY8tWT/verifier/grading.json",
+        "sha256": "sha256:0970d8c2c227e913caa713cb63694298ee002087ff52e34318dd5e6e47218f43"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/empty/mdast-util-phrasing-final-empty-20260829/mdast-util-phrasing-empty__5qY8tWT/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      },
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-controls/mdast-util-phrasing-stub -a oracle --job-name mdast-util-phrasing-final-stub-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 3,
+      "collected": 36,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/stub/mdast-util-phrasing-final-stub-20260829/mdast-util-phrasing-stub__oCVbMoH/verifier/grading.json",
+        "sha256": "sha256:028a6d4c4c2462dd6a38cbb573113feff1aac870b5cdc97f6694185714c38854"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/stub/mdast-util-phrasing-final-stub-20260829/mdast-util-phrasing-stub__oCVbMoH/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      },
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-controls/mdast-util-phrasing-forgery -a oracle --job-name mdast-util-phrasing-final-forgery-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 3,
+      "collected": 36,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward_ignored": true,
+      "forged_workspace_files": [
+        "grading.json",
+        "logs/reward.json",
+        "reward.json",
+        "tests/grading.json",
+        "verifier/grading.json"
+      ],
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/forgery/mdast-util-phrasing-final-forgery-20260829/mdast-util-phrasing-forgery__ephy2uE/verifier/grading.json",
+        "sha256": "sha256:028a6d4c4c2462dd6a38cbb573113feff1aac870b5cdc97f6694185714c38854"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/forgery/mdast-util-phrasing-final-forgery-20260829/mdast-util-phrasing-forgery__ephy2uE/verifier/network.json",
+        "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+      },
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-controls/mdast-util-phrasing-hang -a oracle --job-name mdast-util-phrasing-final-hang-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 3,
+      "collected": 36,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/hang/mdast-util-phrasing-final-hang-20260829/mdast-util-phrasing-hang__wJxtGjR/verifier/grading.json",
+        "sha256": "sha256:028a6d4c4c2462dd6a38cbb573113feff1aac870b5cdc97f6694185714c38854"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/hang/mdast-util-phrasing-final-hang-20260829/mdast-util-phrasing-hang__wJxtGjR/verifier/network.json",
+        "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+      },
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-controls/mdast-util-phrasing-offline -a oracle --job-name mdast-util-phrasing-final-offline-20260829 -o .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/offline --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "reward": 0.08333333333333333,
+      "passed": 3,
+      "collected": 36,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/offline/mdast-util-phrasing-final-offline-20260829/mdast-util-phrasing-offline__VCQac7W/verifier/grading.json",
+        "sha256": "sha256:028a6d4c4c2462dd6a38cbb573113feff1aac870b5cdc97f6694185714c38854"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runs/offline/mdast-util-phrasing-final-offline-20260829/mdast-util-phrasing-offline__VCQac7W/verifier/network.json",
+        "sha256": "sha256:f68f0fda7fb7712ad269ef0b0c7a5ae7f0e327426ffb2680ad5d41f2db7539bc"
+      },
+      "public_network_available": false
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/mdast-util-phrasing",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "task_findings": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/mdast-util-phrasing --output .nl2repo/authoring-work/node-author-wave2-20260828/mdast-util-phrasing/final-runtime --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    }
+  ],
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane.",
+    "Blind review, integrator traceability review, dataset integration, pilot, and publication remain downstream stages.",
+    "The local agent runtime tag currently resolves to image ID sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3 while toolchain.node.lock.toml records sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; the final Oracle and controls passed on this host, but the integrator must restore or verify the official immutable agent runtime before a model Agent Run."
+  ]
+}

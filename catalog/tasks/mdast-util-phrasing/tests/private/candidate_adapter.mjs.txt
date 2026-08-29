@@ -1,0 +1,68 @@
+import {readFileSync} from 'node:fs'
+import {createRequire} from 'node:module'
+import {join} from 'node:path'
+import {pathToFileURL} from 'node:url'
+
+const site = process.env.NODE_CANDIDATE_SITE
+const allowedPackage = process.env.NODE_ALLOWED_PACKAGE
+const maximumRequestBytes = 64 * 1024
+const maximumResponseBytes = 256 * 1024
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload)
+  if (Buffer.byteLength(encoded) > maximumResponseBytes) process.exit(70)
+  process.stdout.write(`${encoded}\n`)
+  process.exit(code)
+}
+
+const bytes = readFileSync(0)
+if (bytes.byteLength > maximumRequestBytes) emit({ok: false, error: 'request-too-large'}, 64)
+let request
+try {
+  request = JSON.parse(bytes.toString('utf8'))
+} catch {
+  emit({ok: false, error: 'malformed-json'}, 64)
+}
+if (!site || allowedPackage !== 'mdast-util-phrasing' || !request || typeof request !== 'object') {
+  emit({ok: false, error: 'invalid-boundary'}, 64)
+}
+
+try {
+  const require = createRequire(pathToFileURL(`${site}/package.json`))
+  let candidate
+  try {
+    candidate = require(allowedPackage)
+  } catch (error) {
+    if (error?.code !== 'ERR_REQUIRE_ESM' && error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') throw error
+    const root = join(site, 'node_modules', allowedPackage)
+    const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+    const target = typeof manifest.exports === 'string'
+      ? manifest.exports
+      : manifest.exports?.['.']?.import ?? manifest.exports?.import ?? manifest.module ?? manifest.main
+    if (typeof target !== 'string' || !target.startsWith('./') || target.includes('..')) {
+      throw new Error('unsafe package export')
+    }
+    candidate = await import(pathToFileURL(join(root, target)).href)
+  }
+
+  if (request.operation === 'inventory') {
+    emit({
+      ok: true,
+      value: {
+        exports: Object.keys(candidate).sort(),
+        uid: process.getuid(),
+        gid: process.getgid()
+      }
+    })
+  }
+  if (request.operation !== 'call' || typeof candidate.phrasing !== 'function') {
+    emit({ok: false, error: 'invalid-operation'}, 65)
+  }
+  const hasValue = Object.hasOwn(request, 'value')
+  const before = hasValue ? JSON.stringify(request.value) : null
+  const value = hasValue ? candidate.phrasing(request.value) : candidate.phrasing()
+  const after = hasValue ? JSON.stringify(request.value) : null
+  emit({ok: true, value, valueType: typeof value, unchanged: before === after})
+} catch (error) {
+  emit({ok: false, error: 'candidate-call-failed', message: String(error?.message ?? error)}, 1)
+}

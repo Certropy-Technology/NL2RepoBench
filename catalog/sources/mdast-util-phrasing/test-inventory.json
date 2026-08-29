@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-phrasing",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 36,
+  "collection_source": "private/contract.test.mjs",
+  "upstream_baseline": {
+    "command": "npm run build && npm run test-api",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "type_coverage": "73/73",
+    "node_test_total_including_parent": 10,
+    "node_test_passed_including_parent": 10,
+    "upstream_leaf_subtests": 9
+  },
+  "leaf_groups": {
+    "package_surface_and_isolation": 3,
+    "invalid_and_boundary_inputs": 11,
+    "accepted_phrasing_types": 16,
+    "excluded_flow_types": 5,
+    "field_independence_and_immutability": 1
+  },
+  "metric": "passed / 36; skipped and todo are non-passing; collection mismatch is verifier-invalid",
+  "adapter_boundary": "node-test-subprocess-boundary-v1; one bounded JSON request per UID 10001 child"
+}
