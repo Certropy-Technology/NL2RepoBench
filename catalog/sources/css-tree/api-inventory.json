@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "package": "css-tree",
+  "runtime_entry": "lib/index.js",
+  "public_exports": [
+    "parse", "generate", "tokenize", "walk", "find", "findLast", "findAll",
+    "toPlainObject", "fromPlainObject", "clone", "lexer", "definitionSyntax",
+    "ident", "string", "url", "tokenNames", "tokenTypes", "version", "List",
+    "Lexer", "TokenStream", "OffsetToLocation", "createSyntax", "createLexer", "fork"
+  ],
+  "covered_modules": [
+    "lib/index.js", "lib/parser", "lib/generator", "lib/tokenizer", "lib/walker",
+    "lib/convertor", "lib/definition-syntax", "lib/lexer", "lib/utils", "lib/syntax"
+  ],
+  "runtime_dependencies": ["mdn-data", "source-map-js"],
+  "excluded_risk_surfaces": [
+    "source-map callback objects", "TokenStream methods and mutable List internals",
+    "custom syntax forks", "browser bundles", "CLI scripts", "TTY and filesystem behavior"
+  ]
+}

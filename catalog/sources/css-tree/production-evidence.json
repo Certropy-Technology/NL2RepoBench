@@ -1,0 +1,98 @@
+{
+  "bundle": {
+    "path": ".nl2repo/authoring-gate/css-tree-production-clean-5UieX1/css-tree/bundle.manifest.json",
+    "sha256": "sha256:39ea5242069ed053fa6fef5f0aee5f1a65c07a7536bf3f34bedb8885aca7a847"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/css-tree-production-clean-5UieX1/css-tree -a oracle --allow-agent-host codeload.github.com --job-name css-tree-oracle-clean-20260828 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/oracle-production-clean --yes",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/oracle-production-clean/css-tree-oracle-clean-20260828/css-tree__XXyTF4f/verifier/grading.json",
+      "sha256": "sha256:183285760e601e7391d82ee389d19a172918e0bb69366a979e2ea31feb90fd5f"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/oracle-production-clean/css-tree-oracle-clean-20260828/css-tree__XXyTF4f/verifier/network.json",
+      "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-empty -a oracle --job-name css-tree-empty-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-empty-final2 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-empty-final2/css-tree-empty-final2/css-tree-empty__TFSzSqd/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-empty-final2/css-tree-empty-final2/css-tree-empty__TFSzSqd/verifier/network.json",
+        "sha256": "sha256:831df49691bacfd1a6fa772a3aa3de8fd1c7e0a74aeef5ba7546e16eaee8eeaa"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-forgery -a oracle --job-name css-tree-forgery-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-forgery-final2 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-forgery-final2/css-tree-forgery-final2/css-tree-forgery__YvR4NB4/verifier/grading.json",
+        "sha256": "sha256:9734c6c41a50f7f6fa54df9011e01c29f85b34636b51cebfac93125365bff0e1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-forgery-final2/css-tree-forgery-final2/css-tree-forgery__YvR4NB4/verifier/network.json",
+        "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c"
+      },
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-offline -a oracle --job-name css-tree-offline-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-offline-final2 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-offline-final2/css-tree-offline-final2/css-tree-offline__UXiYVBV/verifier/network.json",
+        "sha256": "sha256:6f2fd4f339b424d75232bf9b7f5208eaed658deeba2ae6b28ff91f19795fc673"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-stub -a oracle --job-name css-tree-stub-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-stub-final2 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-stub-final2/css-tree-stub-final2/css-tree-stub__jSdVgYT/verifier/grading.json",
+        "sha256": "sha256:9734c6c41a50f7f6fa54df9011e01c29f85b34636b51cebfac93125365bff0e1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-stub-final2/css-tree-stub-final2/css-tree-stub__jSdVgYT/verifier/network.json",
+        "sha256": "sha256:28d32c0edcced5aa635d21edf9f4134f7d6d9ebe9ddd8680ea2492fcc79a4d01"
+      }
+    }
+  },
+  "extended_controls": {
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-hang -a oracle --job-name css-tree-hang-final2-20260828 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-hang-final2 --yes",
+      "exit_code": 0,
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-hang-final2/css-tree-hang-final2-20260828/css-tree-hang__jQCKkYX/verifier/grading.json",
+      "grading_sha256": "sha256:47f90bc79aea76213c04d06ec6d29824220f58db2b8119ce656421c7b1d6176a"
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-install-script -a oracle --job-name css-tree-install-script-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-install-script-final2 --yes",
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-install-script-final2/css-tree-install-script-final2/css-tree-install-script__bCwsmGY/verifier/grading.json",
+      "grading_sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-loader-hook -a oracle --job-name css-tree-loader-hook-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-loader-hook-final2 --yes",
+      "exit_code": 0,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-loader-hook-final2/css-tree-loader-hook-final2/css-tree-loader-hook__ehHRZSp/verifier/grading.json",
+      "grading_sha256": "sha256:9734c6c41a50f7f6fa54df9011e01c29f85b34636b51cebfac93125365bff0e1"
+    },
+    "oversized-output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/controls-production-final2/css-tree-oversized-output -a oracle --job-name css-tree-oversized-output-final2 --n-concurrent 1 -o .nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-oversized-output-final2 --yes",
+      "exit_code": 0,
+      "grading_path": ".nl2repo/authoring-work/node-author-wave2-20260828/css-tree/runs/control-oversized-output-final2/css-tree-oversized-output-final2/css-tree-oversized-output__JX2oyAu/verifier/grading.json",
+      "grading_sha256": "sha256:9734c6c41a50f7f6fa54df9011e01c29f85b34636b51cebfac93125365bff0e1"
+    }
+  },
+  "schema_version": "1.0",
+  "task_id": "css-tree",
+  "terminal_kind": "valid"
+}

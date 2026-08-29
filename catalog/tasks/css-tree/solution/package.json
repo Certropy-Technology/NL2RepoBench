@@ -1,0 +1,19 @@
+{
+  "name": "css-tree",
+  "version": "3.2.1",
+  "description": "A tool set for CSS: parser, walker, generator and lexer",
+  "license": "MIT",
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": ["lib", "data", "LICENSE", "README.md", "package.json", "package-lock.json"],
+  "dependencies": {
+    "mdn-data": "2.27.1",
+    "source-map-js": "1.2.1"
+  }
+}

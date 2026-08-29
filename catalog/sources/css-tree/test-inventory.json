@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_path": "lib/__tests",
+  "upstream_framework": "mocha",
+  "upstream_collected": 16727,
+  "upstream_passed": 16725,
+  "upstream_pending": 2,
+  "frozen_private_collection": 32,
+  "collection_method": "independent node:test contract over bounded JSON child adapter",
+  "groups": {
+    "package_shape": 2,
+    "parse_generate": 8,
+    "tokenizer": 4,
+    "ast_conversion_and_walk": 6,
+    "definition_syntax": 4,
+    "lexer": 3,
+    "css_escape_utilities": 5
+  },
+  "notes": "The upstream suite is retained as provenance only; production scoring uses the fixed 32-leaf contract and fails on collection mismatch."
+}

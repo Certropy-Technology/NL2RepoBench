@@ -1,0 +1,91 @@
+schema_version = "2.0"
+task_id = "css-tree"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "css-parser"
+tags = ["node", "npm", "esm", "css", "parser", "ast", "tokenizer", "lexer"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/csstree/csstree"
+revision = "88e3d965c0b1628642a30a841745b410d6835052"
+license_spdx = "MIT"
+source_digest = "sha256:8b568680478944896703c6bc412665f5abb0720efe9f39372d3cb66ffa7ad778"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases use the private npm lock/cache closure and have no egress; only the trusted Oracle receives a run-scoped codeload.github.com authorization for the frozen revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["mdn-data", "source-map-js"]
+artifact = { digest = "sha256:a653f0948aa5a3f7441dd3f7e4214cf45db2e9218728185d8fb09acdbc79ab70", size_bytes = 207051, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:a653f0948aa5a3f7441dd3f7e4214cf45db2e9218728185d8fb09acdbc79ab70", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:c7e2e354ddab062344e63e276f7b10dddcc707b39d89eefa9e7332870b0ce5c6", size_bytes = 3895, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:c7e2e354ddab062344e63e276f7b10dddcc707b39d89eefa9e7332870b0ce5c6", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the css-tree ESM CSS parser, AST, tokenizer, walker, lexer, and definition-syntax APIs from an empty Node workspace."
+keywords = ["node", "npm", "esm", "css", "parser", "ast", "tokenizer", "lexer"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c2"
+reason = "Frozen source, deterministic JSON-safe 32-leaf contract, private npm closure, production bundle, Oracle, and required controls passed in this authoring lane; integrator review and publication remain outstanding."
+
+[oracle_bundle]
+digest = "sha256:88cd55254a577f2cec7641465478f2e0f31e1ce0d048a3e1afebf554faf7d27c"
+size_bytes = 150371
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:88cd55254a577f2cec7641465478f2e0f31e1ce0d048a3e1afebf554faf7d27c"
+visibility = "private"

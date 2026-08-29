@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "status": "proposed-audit-contract",
+  "purpose": "Deterministic JSONL child boundary for the css-tree core API; not a candidate CLI requirement.",
+  "transport": {
+    "mode": "jsonl",
+    "encoding": "utf-8",
+    "request": "one JSON object per line on stdin",
+    "response": "one JSON object per line on stdout",
+    "stderr": "diagnostics only; never parsed as a result"
+  },
+  "operations": {
+    "shape": "export type/version inventory",
+    "parse-generate": "parse a bounded CSS string, return plain AST and generated text",
+    "tokens": "callback token records with type, name, and source slice",
+    "walk": "node-type/property traversal records",
+    "find": "first, last, and all matches for an allowlisted node type",
+    "definition": "definition-syntax parse/generate and optional walk",
+    "lexer": "property match result after parsing a value context",
+    "utils": "ident/string/url encode/decode"
+  },
+  "json_values": ["null", "boolean", "finite number", "string", "array", "plain object"],
+  "forbidden_values": ["undefined", "function", "symbol", "BigInt", "Date", "cycle", "file handle", "TTY handle"],
+  "determinism": {
+    "environment": "TERM=dumb, CI=true, LC_ALL=C.UTF-8, no proxy or registry variables",
+    "streams": "stdout and stderr are pipes",
+    "limits": "one bounded child per request; no candidate stdout diagnostics"
+  },
+  "response": {
+    "success": "{ok:true,value:<JSON value>}",
+    "failure": "{ok:false,errorType:<string>,message:<bounded string>}"
+  }
+}
