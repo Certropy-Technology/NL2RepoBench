@@ -1181,8 +1181,10 @@ def _oss_bucket() -> Any | None:
 
     return oss2.Bucket(
         oss2.Auth(key_id, key_secret),
-        "https://oss-ap-southeast-1.aliyuncs.com",
-        "dingshang-sg",
+        os.environ.get(
+            "OSS_ENDPOINT", "https://oss-ap-southeast-1.aliyuncs.com"
+        ),
+        os.environ.get("OSS_BUCKET", "dingshang-sg"),
     )
 
 
@@ -1529,7 +1531,7 @@ def supervise(args: argparse.Namespace) -> int:
                         for lane in lanes:
                             if integration_attempts >= integration_limit:
                                 break
-                            records = candidates[lane.language]
+                            records = candidates.get(lane.language, [])
                             offset = offsets[lane.language]
                             if offset >= len(records):
                                 continue
