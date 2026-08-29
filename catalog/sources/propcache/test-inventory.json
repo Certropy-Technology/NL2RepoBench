@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "propcache",
+  "source_revision": "1ab64c4a5c9b0bbaa94679a546afbdf28e79533f",
+  "upstream_test_files": [
+    "tests/test_api.py",
+    "tests/test_cached_property.py",
+    "tests/test_init.py",
+    "tests/test_under_cached_property.py"
+  ],
+  "upstream_test_nodes": 43,
+  "upstream_benchmark_nodes": 4,
+  "upstream_benchmark_status": "excluded: pytest_codspeed performance harness",
+  "frozen_total": 28,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_ids": [
+    "metadata/version", "metadata/exports", "metadata/dir", "metadata/invalid-attr",
+    "api/identity", "cached/class-access", "cached/cache-hit", "cached/docstring",
+    "cached/wrapped-callable", "cached/delete-recompute", "cached/set-name-guard",
+    "cached/missing-set-name", "cached/no-dict", "cached/generic-alias",
+    "under/class-access", "under/cache-hit", "under/docstring", "under/wrapped-callable",
+    "under/readonly", "under/missing-cache", "under/cache-preserves-none",
+    "under/generic-alias", "fallback/cached", "fallback/under", "extension/import",
+    "extension/cached", "extension/under", "metadata/no-wildcard"
+  ],
+  "upstream_to_contract": {
+    "tests/test_api.py": ["api/identity"],
+    "tests/test_init.py": ["metadata/version", "metadata/exports", "metadata/dir", "metadata/invalid-attr", "metadata/no-wildcard"],
+    "tests/test_cached_property.py": ["cached/class-access", "cached/cache-hit", "cached/docstring", "cached/wrapped-callable", "cached/delete-recompute", "cached/set-name-guard", "cached/missing-set-name", "cached/no-dict", "cached/generic-alias", "extension/cached", "fallback/cached"],
+    "tests/test_under_cached_property.py": ["under/class-access", "under/cache-hit", "under/docstring", "under/wrapped-callable", "under/readonly", "under/missing-cache", "under/cache-preserves-none", "under/generic-alias", "extension/under", "fallback/under"]
+  },
+  "excluded_upstream_categories": [
+    "tests/test_benchmarks.py performance-only cases",
+    "reference-count exactness beyond observable cache identity"
+  ]
+}

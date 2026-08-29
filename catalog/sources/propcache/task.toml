@@ -1,0 +1,99 @@
+schema_version = "1.0"
+task_id = "propcache"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "descriptor-library"
+tags = ["python", "descriptors", "cached-property", "asyncio-adjacent", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/aio-libs/propcache"
+revision = "1ab64c4a5c9b0bbaa94679a546afbdf28e79533f"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:8f4d7e6e6a388c7d45e4830dcbfe286d3b43df40b97df0b7611f37f987ec79f2"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["gcc", "libc6-dev"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate build dependencies are installed during image construction from the private hash lock; Agent and separate verifier execution have no egress. Only the trusted Oracle receives the exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "Cython==3.3.0",
+  "coverage==7.16.0",
+  "execnet==2.1.2",
+  "expandvars==1.0.0",
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==9.1.1",
+  "pytest-cov==7.1.0",
+  "pytest-xdist==3.8.0",
+  "setuptools==80.9.0",
+]
+lock_artifact = { digest = "sha256:fee99e3a0694f0b8f7bf08a897343ed0be3afd74f26e35d3c7be464e6124690c", size_bytes = 16539, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fee99e3a0694f0b8f7bf08a897343ed0be3afd74f26e35d3c7be464e6124690c", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 28
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:c72645cf40594d9b34a8ec0f6826444b56c80f5fd6f76d170b9a1db753dba04c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c72645cf40594d9b34a8ec0f6826444b56c80f5fd6f76d170b9a1db753dba04c", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build propcache from an empty workspace and implement deterministic cached-property descriptors with both the instance-dict and caller-owned-cache variants."
+keywords = ["python", "descriptors", "cached-property", "property-cache", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:18decaad5b31aac33ba6531141c39534fda4ff74eb3f41b53f9bd18023aca5c6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:18decaad5b31aac33ba6531141c39534fda4ff74eb3f41b53f9bd18023aca5c6"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Production Harbor bundle passed Oracle 28/28 reward 1.0 and empty, stub, forgery, install-hang, call-hang, and no-network controls; independent model Agent Run, review, pilot, and publication remain separate stages."

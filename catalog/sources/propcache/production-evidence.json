@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "task_id": "propcache",
+  "terminal_kind": "valid",
+  "source": {
+    "revision": "1ab64c4a5c9b0bbaa94679a546afbdf28e79533f",
+    "license_spdx": "Apache-2.0",
+    "source_digest": "sha256:8f4d7e6e6a388c7d45e4830dcbfe286d3b43df40b97df0b7611f37f987ec79f2"
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/compile-final/propcache/bundle.manifest.json",
+    "sha256": "sha256:5e9c6386523634d0898da8c780b7decd8477a9b0d2d3ae5fbcbd764d0c534f38",
+    "canonical_manifest_digest": "sha256:8cf91d66fe151acc91f6f1cb640ed6becfb57937864be1f04876496232d8b44f",
+    "file_count": 59,
+    "repeat_compile": "byte-identical"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compile-final/propcache -a oracle --job-name propcache-authoring-oracle-current --jobs-dir .nl2repo/authoring-work/runs/propcache-oracle --n-concurrent 1 --yes --allow-agent-host github.com --allow-agent-host codeload.github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "grading": {
+      "path": ".nl2repo/authoring-work/runs/propcache-oracle/propcache-authoring-oracle-current/propcache__cTw9Tub/verifier/grading.json",
+      "sha256": "sha256:48636060700d7e86dcc71e1f112afc09f34c6f20eca5db300d89583eb735eb06",
+      "passed": 28,
+      "collected": 28,
+      "reward": 1.0
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/runs/propcache-oracle/propcache-authoring-oracle-current/propcache__cTw9Tub/verifier/network.json",
+      "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/compile-final/propcache -a nop --job-name propcache-control-empty-current --jobs-dir .nl2repo/authoring-work/runs/control-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/authoring-work/runs/control-empty/propcache-control-empty-current/propcache__aJ8oDtr/verifier/grading.json", "sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4", "valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+      "network": {"path": ".nl2repo/authoring-work/runs/control-empty/propcache-control-empty-current/propcache__aJ8oDtr/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/controls/propcache-stub -a oracle --job-name propcache-control-stub-current --jobs-dir .nl2repo/authoring-work/runs/control-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/authoring-work/runs/control-stub/propcache-control-stub-current/propcache-stub__95EyQ6h/verifier/grading.json", "sha256": "sha256:77ac0e773dd9b575de13fd11bcc8f541c12932127b6472048129b7d1efe32c59", "valid": true, "collected": 28, "reward": 0.0},
+      "network": {"path": ".nl2repo/authoring-work/runs/control-stub/propcache-control-stub-current/propcache-stub__95EyQ6h/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/controls/propcache-forgery -a oracle --job-name propcache-control-forgery-current --jobs-dir .nl2repo/authoring-work/runs/control-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/runs/control-forgery/propcache-control-forgery-current/propcache-forgery__cBED2Zz/verifier/grading.json", "sha256": "sha256:77ac0e773dd9b575de13fd11bcc8f541c12932127b6472048129b7d1efe32c59", "valid": true, "collected": 28, "reward": 0.0},
+      "network": {"path": ".nl2repo/authoring-work/runs/control-forgery/propcache-control-forgery-current/propcache-forgery__cBED2Zz/verifier/network.json", "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98", "public_network_available": false}
+    },
+    "offline": {
+      "command": "Harbor verifier network-none probe from current propcache Oracle run",
+      "completed": true,
+      "exit_code": 0,
+      "network": {"path": ".nl2repo/authoring-work/runs/propcache-oracle/propcache-authoring-oracle-current/propcache__cTw9Tub/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false}
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/controls/propcache-install-hang -a oracle --job-name propcache-control-install-hang-current --jobs-dir .nl2repo/authoring-work/runs/control-install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/authoring-work/runs/control-install-hang/propcache-control-install-hang-current/propcache-install-hang__iZJF8fc/verifier/grading.json", "sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4", "valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+      "network": {"path": ".nl2repo/authoring-work/runs/control-install-hang/propcache-control-install-hang-current/propcache-install-hang__iZJF8fc/verifier/network.json", "sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30", "public_network_available": false},
+      "result": "bounded by the 120 second candidate installation timeout"
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/controls/propcache-call-hang -a oracle --job-name propcache-control-call-hang-current --jobs-dir .nl2repo/authoring-work/runs/control-call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/authoring-work/runs/control-call-hang/propcache-control-call-hang-current/propcache-call-hang__9xBhqcR/verifier/grading.json", "sha256": "sha256:77ac0e773dd9b575de13fd11bcc8f541c12932127b6472048129b7d1efe32c59", "valid": true, "collected": 28, "reward": 0.0},
+      "network": {"path": ".nl2repo/authoring-work/runs/control-call-hang/propcache-control-call-hang-current/propcache-call-hang__9xBhqcR/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b", "public_network_available": false},
+      "result": "all 28 child calls were bounded and failed without escaping the verifier timeout"
+    }
+  },
+  "residual_risks": [
+    "Model Agent Run was not started in this authoring lane.",
+    "Independent review, pilot, and publication are integrator-owned stages.",
+    "Docker build emitted the non-blocking FromPlatformFlagConstDisallowed warning for the generated fixed-platform Dockerfile.",
+    "Network lint reports the expected Oracle host authorization warning; the model Agent policy remains no-network with empty static allowlist.",
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da tag resolves to sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123 instead of the toolchain-locked sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5; restore or relock that image before the separate model Agent Run."
+  ]
+}

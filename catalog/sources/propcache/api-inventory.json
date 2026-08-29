@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "propcache",
+  "source_revision": "1ab64c4a5c9b0bbaa94679a546afbdf28e79533f",
+  "public_modules": ["propcache", "propcache.api"],
+  "public_exports": [
+    "propcache.cached_property",
+    "propcache.under_cached_property",
+    "propcache.api.cached_property",
+    "propcache.api.under_cached_property",
+    "propcache.__version__"
+  ],
+  "implementation_modules": [
+    "propcache._helpers",
+    "propcache._helpers_py",
+    "propcache._helpers_c"
+  ],
+  "contracts": [
+    {"name": "cached_property", "kind": "descriptor", "signature": "cached_property(func)"},
+    {"name": "under_cached_property", "kind": "descriptor", "signature": "under_cached_property(wrapped)"},
+    {"name": "cached_property.__set_name__", "kind": "descriptor-hook", "signature": "__set_name__(owner, name)"},
+    {"name": "cached_property.__get__", "kind": "descriptor-hook", "signature": "__get__(instance, owner=None)"},
+    {"name": "under_cached_property.__get__", "kind": "descriptor-hook", "signature": "__get__(instance, owner=None)"},
+    {"name": "under_cached_property.__set__", "kind": "descriptor-hook", "signature": "__set__(instance, value)"}
+  ],
+  "observed_properties": [
+    "cached_property stores in instance __dict__",
+    "under_cached_property stores in instance _cache",
+    "class access returns the descriptor",
+    "cache hits preserve object identity",
+    "wrapped callable and docstring remain accessible",
+    "top-level API is lazily discoverable and __all__ is empty",
+    "generic subscription is supported"
+  ],
+  "adaptation_boundaries": [
+    "Benchmark-only pytest_codspeed tests are excluded from the fixed functional denominator.",
+    "No external service, filesystem, subprocess, or network behavior is required at runtime.",
+    "The optional Cython module is exercised when installed; pure Python behavior is always required."
+  ]
+}

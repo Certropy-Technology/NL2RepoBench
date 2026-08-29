@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "propcache",
+  "instruction_sections": [
+    "Project Description", "Supports", "API Usage Guide", "Implementation Notes"
+  ],
+  "coverage": {
+    "metadata": "API Usage Guide / Module facade and aliases",
+    "cached": "API Usage Guide / propcache.cached_property",
+    "under": "API Usage Guide / propcache.under_cached_property",
+    "fallback": "Typing and fallback behavior",
+    "extension": "Supports / Implementation Notes"
+  },
+  "leaf_traceability": {
+    "metadata/version": "__version__ is 0.5.2",
+    "metadata/exports": "top-level and API exports are identical",
+    "metadata/dir": "dir(propcache) includes both public names",
+    "metadata/invalid-attr": "invalid attributes raise module-style AttributeError",
+    "api/identity": "propcache.api objects are the helper objects",
+    "cached/class-access": "class access returns cached_property descriptor",
+    "cached/cache-hit": "first call computes and later reads preserve identity",
+    "cached/docstring": "descriptor __doc__ follows wrapped function",
+    "cached/wrapped-callable": "descriptor exposes .func",
+    "cached/delete-recompute": "deleting __dict__ entry causes recomputation",
+    "cached/set-name-guard": "a descriptor cannot be assigned under a second name",
+    "cached/missing-set-name": "manual attachment without __set_name__ raises TypeError",
+    "cached/no-dict": "instances without __dict__ expose the cache failure",
+    "cached/generic-alias": "cached_property[int] is supported",
+    "under/class-access": "class access returns under_cached_property descriptor",
+    "under/cache-hit": "caller-owned _cache stores and reuses values",
+    "under/docstring": "descriptor __doc__ follows wrapped function",
+    "under/wrapped-callable": "descriptor exposes .wrapped and .name",
+    "under/readonly": "assignment raises cached property is read-only",
+    "under/missing-cache": "missing _cache raises AttributeError",
+    "under/cache-preserves-none": "existing None is a cache hit",
+    "under/generic-alias": "under_cached_property[int] is supported",
+    "fallback/cached": "pure Python cached descriptor matches contract",
+    "fallback/under": "pure Python under descriptor matches contract",
+    "extension/import": "optional Cython module is importable after normal build",
+    "extension/cached": "Cython cached descriptor matches public behavior",
+    "extension/under": "Cython under descriptor matches public behavior",
+    "metadata/no-wildcard": "__all__ is empty"
+  }
+}
