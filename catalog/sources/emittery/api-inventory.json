@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "emittery",
+  "source_revision": "147a8591045e00d0fe8088e2393e3eefea3aa4a5",
+  "package": {
+    "name": "emittery",
+    "version": "2.0.0",
+    "module_kind": "esm",
+    "node_engine": ">=22",
+    "root_default_export": "./index.js",
+    "root_types_export": "./index.d.ts"
+  },
+  "public_exports": {
+    "default": "Emittery class",
+    "static": ["isDebugEnabled", "listenerAdded", "listenerRemoved", "mixin"],
+    "instance": ["debug", "on", "off", "once", "events", "emit", "emitSerial", "onAny", "anyEvent", "offAny", "clearListeners", "init", "listenerCount", "logIfDebugEnabled", "bindMethods"]
+  },
+  "signatures": {
+    "constructor": "new Emittery<EventData = Record<PropertyKey, unknown>>(options?: Options<EventData>)",
+    "on": "on(eventName: EventName | readonly EventName[], listener: Listener, options?: {signal?: AbortSignal}): UnsubscribeFunction",
+    "off": "off(eventName: EventName | readonly EventName[], listener: Listener): void",
+    "once": "once(eventName: EventName | readonly EventName[], predicateOrOptions?): EmitteryOncePromise<Event>",
+    "events": "events(eventName: EventName | readonly EventName[], options?: {signal?: AbortSignal}): AsyncIterableIterator<Event> & AsyncDisposable",
+    "emit": "emit(eventName: EventName, eventData?: unknown): Promise<void>",
+    "emitSerial": "emitSerial(eventName: EventName, eventData?: unknown): Promise<void>",
+    "onAny": "onAny(listener: Listener, options?: {signal?: AbortSignal}): UnsubscribeFunction",
+    "anyEvent": "anyEvent(options?: {signal?: AbortSignal}): AsyncIterableIterator<Event> & AsyncDisposable",
+    "offAny": "offAny(listener: Listener): void",
+    "clearListeners": "clearListeners(eventNames?: EventName | readonly EventName[]): void",
+    "init": "init(eventName: EventName, initFn: () => (() => void) | void): UnsubscribeFunction",
+    "listenerCount": "listenerCount(eventNames?: EventName | readonly EventName[]): number",
+    "logIfDebugEnabled": "logIfDebugEnabled(type: string, eventName?: EventName, eventData?: unknown): void",
+    "bindMethods": "bindMethods(target: object, methodNames?: readonly string[]): void",
+    "mixin": "Emittery.mixin(propertyName: string | symbol, methodNames?: readonly string[]): ClassDecorator"
+  },
+  "runtime_files": ["index.js"],
+  "declaration_files": ["index.d.ts"],
+  "upstream_test_files": ["test/index.js", "index.test-d.ts"],
+  "runtime_dependencies": [],
+  "risk_adaptations": [
+    "callbacks, symbols, AbortSignal, and iterator state are exercised only inside a verifier-owned child adapter; JSON-safe observations cross the subprocess boundary",
+    "debug logging uses a verifier callback only inside the child and returns structured records",
+    "wall-clock timing and external services are excluded from the deterministic scored slice"
+  ]
+}

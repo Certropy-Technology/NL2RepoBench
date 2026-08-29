@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "emittery",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 44,
+  "collection_source": "private/contract.test.mjs",
+  "upstream_baseline": {
+    "runner": "npm test (XO, AVA, and tsd)",
+    "ava_total": 253,
+    "ava_passed": 253,
+    "source_test_file": "test/index.js",
+    "type_test_file": "index.test-d.ts"
+  },
+  "leaf_groups": {
+    "packaging_and_surface": 2,
+    "subscriptions_and_events": 16,
+    "once_and_iterators": 12,
+    "management_and_lifecycle": 13,
+    "debug": 1
+  },
+  "metric": "passed / 44; skipped and todo are non-passing; collection mismatch is verifier-invalid",
+  "adapter_boundary": "custom-json-v1; requests are allowlisted scenario names with object input and responses are bounded JSON"
+}

@@ -1,0 +1,634 @@
+import {readFileSync, statSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const maxRequestBytes = 64 * 1024;
+const maxResponseBytes = 256 * 1024;
+
+function emitResponse(payload, exitCode = 0) {
+	const encoded = JSON.stringify(payload);
+	if (Buffer.byteLength(encoded) > maxResponseBytes) {
+		process.stdout.write('{"ok":false,"error":"response-too-large"}\n');
+		process.exit(70);
+	}
+
+	process.stdout.write(`${encoded}\n`);
+	process.exit(exitCode);
+}
+
+function readRequest() {
+	const bytes = readFileSync(0);
+	if (bytes.byteLength > maxRequestBytes) {
+		emitResponse({ok: false, error: 'request-too-large'}, 64);
+	}
+
+	let request;
+	try {
+		request = JSON.parse(bytes.toString('utf8'));
+	} catch {
+		emitResponse({ok: false, error: 'malformed-request'}, 64);
+	}
+
+	if (!request || typeof request !== 'object' || Array.isArray(request)) {
+		emitResponse({ok: false, error: 'request-must-be-object'}, 64);
+	}
+
+	if (!/^[a-z][a-z0-9-]{0,63}$/.test(request.scenario)) {
+		emitResponse({ok: false, error: 'scenario-not-allowlisted'}, 64);
+	}
+
+	const input = request.input ?? {};
+	if (!input || typeof input !== 'object' || Array.isArray(input)) {
+		emitResponse({ok: false, error: 'input-must-be-object'}, 64);
+	}
+
+	return {scenario: request.scenario, input};
+}
+
+function errorRecord(error) {
+	return {
+		name: error?.constructor?.name ?? typeof error,
+		message: String(error?.message ?? error),
+	};
+}
+
+async function captureError(function_) {
+	try {
+		await function_();
+		return null;
+	} catch (error) {
+		return errorRecord(error);
+	}
+}
+
+function rootExport(packageJson, condition) {
+	const exports = packageJson.exports;
+	if (typeof exports === 'string') {
+		return condition === 'default' ? exports : undefined;
+	}
+
+	const root = exports?.['.'] ?? exports;
+	if (typeof root === 'string') {
+		return condition === 'default' ? root : undefined;
+	}
+
+	return root?.[condition];
+}
+
+async function loadPackage() {
+	const candidateSite = process.env.NODE_CANDIDATE_SITE;
+	if (typeof candidateSite !== 'string' || !candidateSite.startsWith('/')) {
+		throw new Error('candidate site is not configured');
+	}
+
+	const packageRoot = join(candidateSite, 'node_modules', 'emittery');
+	const packagePath = join(packageRoot, 'package.json');
+	const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
+	const entry = rootExport(packageJson, 'default') ?? rootExport(packageJson, 'import');
+	if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+		throw new Error('package has no safe ESM root export');
+	}
+
+	const namespace = await import(pathToFileURL(join(packageRoot, entry)).href);
+	if (typeof namespace.default !== 'function') {
+		throw new TypeError('default export must be the Emittery class');
+	}
+
+	return {Emittery: namespace.default, packageJson, packageRoot};
+}
+
+function methodNames(Emittery) {
+	return Object.getOwnPropertyNames(Emittery.prototype)
+		.filter(name => name !== 'constructor')
+		.sort();
+}
+
+async function runScenario(Emittery, packageJson, packageRoot, scenario) {
+	switch (scenario) {
+		case 'metadata': {
+			const types = rootExport(packageJson, 'types');
+			let hasTypes = false;
+			if (typeof types === 'string' && types.startsWith('./') && !types.includes('..')) {
+				try {
+					hasTypes = statSync(join(packageRoot, types)).isFile();
+				} catch {}
+			}
+
+			return {
+				name: packageJson.name,
+				version: packageJson.version,
+				type: packageJson.type,
+				defaultExport: rootExport(packageJson, 'default'),
+				typesExport: types,
+				hasTypes,
+				dependencies: Object.keys(packageJson.dependencies ?? {}).sort(),
+				hasScripts: Object.keys(packageJson.scripts ?? {}).length > 0,
+			};
+		}
+
+		case 'method-surface': {
+			const emitter = new Emittery();
+			const methods = methodNames(Emittery);
+			return {
+				methods,
+				boundOwnMethods: methods.every(name => Object.hasOwn(emitter, name) && typeof emitter[name] === 'function'),
+				enumerableMethods: Object.keys(emitter).filter(name => methods.includes(name)),
+				listenerAdded: typeof Emittery.listenerAdded,
+				listenerRemoved: typeof Emittery.listenerRemoved,
+				debugEnabled: emitter.debug.enabled,
+			};
+		}
+
+		case 'on-basic': {
+			const emitter = new Emittery();
+			const seen = [];
+			const off = emitter.on('alpha', event => seen.push(event));
+			await emitter.emit('alpha', {value: 1});
+			off();
+			await emitter.emit('alpha', {value: 2});
+			return {seen, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'on-multiple': {
+			const emitter = new Emittery();
+			const seen = [];
+			emitter.on(['alpha', 'beta'], event => seen.push(event));
+			await emitter.emit('alpha', 1);
+			await emitter.emit('beta', 2);
+			return seen;
+		}
+
+		case 'on-dedupe': {
+			const emitter = new Emittery();
+			let calls = 0;
+			const listener = () => { calls++; };
+			const off1 = emitter.on('alpha', listener);
+			const off2 = emitter.on('alpha', listener);
+			await emitter.emit('alpha');
+			off1();
+			off2();
+			return {calls, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'event-name-types': {
+			const emitter = new Emittery();
+			const symbol = Symbol('token');
+			const seen = [];
+			emitter.on(7, event => seen.push({name: event.name, data: event.data}));
+			emitter.on(symbol, event => seen.push({name: String(event.name), data: event.data}));
+			await emitter.emit(7, 'number');
+			await emitter.emit(symbol, 'symbol');
+			return seen;
+		}
+
+		case 'listener-validation': {
+			const emitter = new Emittery();
+			return {
+				badName: await captureError(() => emitter.emit({}, 1)),
+				badListener: await captureError(() => emitter.on('alpha', 1)),
+				badOffListener: await captureError(() => emitter.off('alpha', null)),
+			};
+		}
+
+		case 'data-shape': {
+			const emitter = new Emittery();
+			const seen = [];
+			emitter.on('alpha', event => seen.push({hasData: Object.hasOwn(event, 'data'), event}));
+			await emitter.emit('alpha');
+			await emitter.emit('alpha', undefined);
+			return seen;
+		}
+
+		case 'isolated-events': {
+			const emitter = new Emittery();
+			const seen = [];
+			emitter.on('alpha', event => {
+				event.extra = 'first';
+				seen.push(event.extra);
+			});
+			emitter.on('alpha', event => seen.push(event.extra ?? 'isolated'));
+			await emitter.emit('alpha', 1);
+			return seen;
+		}
+
+		case 'on-abort': {
+			const emitter = new Emittery();
+			const controller = new AbortController();
+			let calls = 0;
+			emitter.on('alpha', () => { calls++; }, {signal: controller.signal});
+			controller.abort();
+			await emitter.emit('alpha');
+			return {calls, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'disposable': {
+			const emitter = new Emittery();
+			let calls = 0;
+			const off = emitter.on('alpha', () => { calls++; });
+			const same = off[Symbol.dispose] === off;
+			off[Symbol.dispose]();
+			await emitter.emit('alpha');
+			const removeInit = emitter.init('beta', () => {});
+			return {calls, same, initDisposable: removeInit[Symbol.dispose] === removeInit};
+		}
+
+		case 'emit-concurrent': {
+			const emitter = new Emittery();
+			const order = [];
+			const {promise, resolve} = Promise.withResolvers();
+			emitter.on('alpha', async () => {
+				order.push('a-start');
+				await promise;
+				order.push('a-end');
+			});
+			emitter.on('alpha', async () => {
+				order.push('b-start');
+				await promise;
+				order.push('b-end');
+			});
+			const emitting = emitter.emit('alpha');
+			await Promise.resolve();
+			await Promise.resolve();
+			const beforeRelease = [...order];
+			resolve();
+			await emitting;
+			return {beforeRelease, order};
+		}
+
+		case 'emit-errors': {
+			const emitter = new Emittery();
+			const calls = [];
+			emitter.on('alpha', () => {
+				calls.push('sync');
+				throw new Error('first');
+			});
+			emitter.on('alpha', async () => {
+				calls.push('async');
+				throw new TypeError('second');
+			});
+			try {
+				await emitter.emit('alpha');
+				return {calls, error: null};
+			} catch (error) {
+				return {
+					calls,
+					error: errorRecord(error),
+					errors: [...error.errors].map(errorRecord),
+				};
+			}
+		}
+
+		case 'serial-order': {
+			const emitter = new Emittery();
+			const order = [];
+			emitter.on('alpha', async () => {
+				order.push('a-start');
+				await Promise.resolve();
+				order.push('a-end');
+			});
+			emitter.on('alpha', () => order.push('b'));
+			await emitter.emitSerial('alpha');
+			return order;
+		}
+
+		case 'serial-error': {
+			const emitter = new Emittery();
+			const calls = [];
+			emitter.on('alpha', () => {
+				calls.push('first');
+				throw new RangeError('stop');
+			});
+			emitter.on('alpha', () => calls.push('second'));
+			return {callsAfter: calls, error: await captureError(() => emitter.emitSerial('alpha'))};
+		}
+
+		case 'any-listener': {
+			const emitter = new Emittery();
+			const seen = [];
+			const off = emitter.onAny(event => seen.push(event));
+			await emitter.emit('alpha', 1);
+			await emitter.emit(2, 'two');
+			off();
+			await emitter.emit('beta', 3);
+			return {seen, count: emitter.listenerCount()};
+		}
+
+		case 'any-abort': {
+			const emitter = new Emittery();
+			const controller = new AbortController();
+			let calls = 0;
+			emitter.onAny(() => { calls++; }, {signal: controller.signal});
+			controller.abort();
+			await emitter.emit('alpha');
+			return {calls, count: emitter.listenerCount()};
+		}
+
+		case 'listener-count': {
+			const emitter = new Emittery();
+			const listener = () => {};
+			emitter.on('alpha', listener);
+			emitter.on('beta', listener);
+			emitter.onAny(listener);
+			const iterator = emitter.events('alpha');
+			const counts = {
+				alpha: emitter.listenerCount('alpha'),
+				beta: emitter.listenerCount('beta'),
+				both: emitter.listenerCount(['alpha', 'beta']),
+				all: emitter.listenerCount(),
+			};
+			await iterator.return();
+			return counts;
+		}
+
+		case 'once-basic': {
+			const emitter = new Emittery();
+			const once = emitter.once('alpha');
+			await emitter.emit('alpha', {value: 1});
+			return {event: await once, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'once-multiple': {
+			const emitter = new Emittery();
+			const once = emitter.once(['alpha', 'beta']);
+			await emitter.emit('beta', 2);
+			return {event: await once, alpha: emitter.listenerCount('alpha'), beta: emitter.listenerCount('beta')};
+		}
+
+		case 'once-predicate': {
+			const emitter = new Emittery();
+			const once = emitter.once('alpha', ({data}) => data > 2);
+			await emitter.emit('alpha', 1);
+			const afterFirst = emitter.listenerCount('alpha');
+			await emitter.emit('alpha', 3);
+			return {afterFirst, event: await once, afterMatch: emitter.listenerCount('alpha')};
+		}
+
+		case 'once-validation': {
+			const emitter = new Emittery();
+			return {
+				badPredicate: await captureError(() => emitter.once('alpha', 1)),
+				badOptionPredicate: await captureError(() => emitter.once('alpha', {predicate: 1})),
+			};
+		}
+
+		case 'once-cancel': {
+			const emitter = new Emittery();
+			const once = emitter.once('alpha');
+			const hasOff = typeof once.off === 'function';
+			once.off();
+			once.off();
+			return {hasOff, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'once-abort': {
+			const emitter = new Emittery();
+			const controller = new AbortController();
+			const once = emitter.once('alpha', {signal: controller.signal});
+			controller.abort(new Error('cancelled'));
+			return {error: await captureError(() => once), count: emitter.listenerCount('alpha')};
+		}
+
+		case 'events-buffer': {
+			const emitter = new Emittery();
+			const iterator = emitter.events('alpha');
+			await emitter.emit('alpha', 1);
+			await emitter.emit('alpha', 2);
+			const first = await iterator.next();
+			const second = await iterator.next();
+			await iterator.return();
+			return {first, second, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'events-multiple': {
+			const emitter = new Emittery();
+			const iterator = emitter.events(['alpha', 'beta']);
+			await emitter.emit('beta', 2);
+			const value = await iterator.next();
+			await iterator.return();
+			return value;
+		}
+
+		case 'events-return': {
+			const emitter = new Emittery();
+			const iterator = emitter.events('alpha');
+			const hasDispose = typeof iterator[Symbol.asyncDispose] === 'function';
+			const returned = await iterator.return(Promise.resolve('done'));
+			const next = await iterator.next();
+			return {hasDispose, returned, next, count: emitter.listenerCount('alpha')};
+		}
+
+		case 'events-abort': {
+			const emitter = new Emittery();
+			const controller = new AbortController();
+			const iterator = emitter.events('alpha', {signal: controller.signal});
+			controller.abort();
+			return {next: await iterator.next(), count: emitter.listenerCount('alpha')};
+		}
+
+		case 'any-event': {
+			const emitter = new Emittery();
+			const iterator = emitter.anyEvent();
+			await emitter.emit('alpha', 1);
+			await emitter.emit('beta');
+			const first = await iterator.next();
+			const second = await iterator.next();
+			await iterator.return();
+			return {first, second, count: emitter.listenerCount()};
+		}
+
+		case 'any-event-abort': {
+			const emitter = new Emittery();
+			const controller = new AbortController();
+			const iterator = emitter.anyEvent({signal: controller.signal});
+			controller.abort();
+			return {next: await iterator.next(), count: emitter.listenerCount()};
+		}
+
+		case 'clear-selected': {
+			const emitter = new Emittery();
+			const calls = [];
+			emitter.on('alpha', () => calls.push('alpha'));
+			emitter.on('beta', () => calls.push('beta'));
+			emitter.clearListeners('alpha');
+			await emitter.emit('alpha');
+			await emitter.emit('beta');
+			return {calls, alpha: emitter.listenerCount('alpha'), beta: emitter.listenerCount('beta')};
+		}
+
+		case 'clear-all': {
+			const emitter = new Emittery();
+			emitter.on('alpha', () => {});
+			emitter.onAny(() => {});
+			const iterator = emitter.events('alpha');
+			emitter.clearListeners();
+			return {count: emitter.listenerCount(), iterator: await iterator.next()};
+		}
+
+		case 'bind-methods': {
+			const emitter = new Emittery();
+			const target = {};
+			emitter.bindMethods(target, ['on', 'emit', 'listenerCount']);
+			let calls = 0;
+			target.on('alpha', () => { calls++; });
+			await target.emit('alpha');
+			return {
+				calls,
+				count: target.listenerCount('alpha'),
+				enumerable: Object.keys(target),
+			};
+		}
+
+		case 'bind-validation': {
+			const emitter = new Emittery();
+			return {
+				badTarget: await captureError(() => emitter.bindMethods(null)),
+				badNames: await captureError(() => emitter.bindMethods({}, 'on')),
+				unknown: await captureError(() => emitter.bindMethods({}, ['missing'])),
+				conflict: await captureError(() => emitter.bindMethods({on: true}, ['on'])),
+			};
+		}
+
+		case 'mixin': {
+			class Base {}
+			const Decorated = Emittery.mixin('eventsBus', ['on', 'emit', 'listenerCount'])(Base);
+			const instance = new Decorated();
+			const before = Object.hasOwn(instance, 'eventsBus');
+			let calls = 0;
+			instance.on('alpha', () => { calls++; });
+			await instance.emit('alpha');
+			return {
+				sameClass: Decorated === Base,
+				before,
+				after: Object.hasOwn(instance, 'eventsBus'),
+				calls,
+				count: instance.listenerCount('alpha'),
+				enumerable: Object.keys(instance),
+			};
+		}
+
+		case 'mixin-validation': {
+			return {
+				badTarget: await captureError(() => Emittery.mixin('bus')({})),
+				badNames: await captureError(() => Emittery.mixin('bus', 'on')(class {})),
+				unknown: await captureError(() => Emittery.mixin('bus', ['missing'])(class {})),
+				conflict: await captureError(() => Emittery.mixin('bus', ['on'])(class {on() {}})),
+			};
+		}
+
+		case 'meta-events': {
+			const emitter = new Emittery();
+			const added = [];
+			const removed = [];
+			emitter.on(Emittery.listenerAdded, ({data}) => added.push({eventName: data.eventName, listenerType: typeof data.listener}));
+			emitter.on(Emittery.listenerRemoved, ({data}) => removed.push({eventName: data.eventName, listenerType: typeof data.listener}));
+			const listener = () => {};
+			const off = emitter.on('alpha', listener);
+			await Promise.resolve();
+			off();
+			await Promise.resolve();
+			return {added, removed};
+		}
+
+		case 'meta-blocked': {
+			const emitter = new Emittery();
+			return {
+				emit: await captureError(() => emitter.emit(Emittery.listenerAdded, {})),
+				serial: await captureError(() => emitter.emitSerial(Emittery.listenerRemoved, {})),
+			};
+		}
+
+		case 'init-lifecycle': {
+			const emitter = new Emittery();
+			const order = [];
+			emitter.init('alpha', () => {
+				order.push('init');
+				return () => order.push('deinit');
+			});
+			const one = () => {};
+			const two = () => {};
+			emitter.on('alpha', one);
+			emitter.on('alpha', two);
+			emitter.off('alpha', one);
+			const beforeLast = [...order];
+			emitter.off('alpha', two);
+			return {beforeLast, order};
+		}
+
+		case 'init-immediate': {
+			const emitter = new Emittery();
+			const order = [];
+			emitter.on('alpha', () => {});
+			const remove = emitter.init('alpha', () => {
+				order.push('init');
+				return () => order.push('deinit');
+			});
+			remove();
+			remove();
+			return order;
+		}
+
+		case 'init-clear': {
+			const emitter = new Emittery();
+			const order = [];
+			for (const name of ['alpha', 'beta']) {
+				emitter.init(name, () => {
+					order.push(`init-${name}`);
+					return () => order.push(`deinit-${name}`);
+				});
+				emitter.on(name, () => {});
+			}
+			emitter.clearListeners(['alpha', 'beta']);
+			return {order, count: emitter.listenerCount()};
+		}
+
+		case 'init-validation': {
+			const emitter = new Emittery();
+			emitter.init('alpha', () => {});
+			return {
+				duplicate: await captureError(() => emitter.init('alpha', () => {})),
+				badFunction: await captureError(() => emitter.init('beta', 1)),
+				meta: await captureError(() => emitter.init(Emittery.listenerAdded, () => {})),
+			};
+		}
+
+		case 'init-rollback': {
+			const emitter = new Emittery();
+			emitter.init('alpha', () => {
+				throw new Error('init failed');
+			});
+			return {
+				error: await captureError(() => emitter.on('alpha', () => {})),
+				count: emitter.listenerCount('alpha'),
+			};
+		}
+
+		case 'debug': {
+			const records = [];
+			const emitter = new Emittery({
+				debug: {
+					enabled: true,
+					name: 'unit',
+					logger: (type, name, eventName, data) => records.push({type, name, eventName, data}),
+				},
+			});
+			const listener = () => {};
+			emitter.on('alpha', listener);
+			await emitter.emit('alpha', 1);
+			emitter.off('alpha', listener);
+			emitter.clearListeners('alpha');
+			return records;
+		}
+
+		default:
+			throw new Error('scenario-not-allowlisted');
+	}
+}
+
+const {scenario} = readRequest();
+try {
+	const {Emittery, packageJson, packageRoot} = await loadPackage();
+	const value = await runScenario(Emittery, packageJson, packageRoot, scenario);
+	emitResponse({ok: true, value});
+} catch (error) {
+	emitResponse({ok: false, error: 'candidate-call-failed', exception: errorRecord(error)}, 1);
+}

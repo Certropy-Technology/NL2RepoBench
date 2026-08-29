@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "task_id": "emittery",
+  "task_version": "2.0.0",
+  "status": "controls-passed",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/emittery",
+    "revision": "147a8591045e00d0fe8088e2393e3eefea3aa4a5",
+    "license_spdx": "MIT",
+    "source_archive_sha256": "sha256:b650e76fc6fb9b6dc3ed45c5456b3226f1c05e3cf06e376f47d8b647a92ae138",
+    "license_file_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": []
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_status": "locked",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_allowed_hosts": []
+  },
+  "dependencies": {
+    "status": "known",
+    "runtime_dependencies": [],
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "private_artifact": {
+      "digest": "sha256:5df0a195e6db37c96d9999295a5862be8203dde913b7ca9f4c474be4db94e1be",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:5df0a195e6db37c96d9999295a5862be8203dde913b7ca9f4c474be4db94e1be"
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 44,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "collection_source": "private/contract.test.mjs"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/compiled-production-final-r2/emittery",
+    "manifest_sha256": "sha256:a847a41fb1add9c42f071493c63eb953ab829181b799d4638bf3a0b5b4855e6f",
+    "canonical_manifest_digest": "sha256:8cbff28b0cbfd34ae4fccffabc3f96b94aa56993b2dd8fc7113b824ca7d397e2",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 76
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/emittery",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/validate-source-final.log",
+      "log_sha256": "sha256:75442435a5752a601d7642567c343976f35fcabbd231eda47724ae2dcb837f21"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; emittery findings=0; 139 repository warnings are unrelated",
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/lint-network-final.log",
+      "log_sha256": "sha256:345768b9e6568263f8dee4996e26b80b31baca5394b7edbc09518a9aac6979ff"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/emittery --output .nl2repo/authoring-work/node-author-wave2-20260828/emittery/compiled-production-final-r2 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/compile-production-final-r2.log",
+      "log_sha256": "sha256:77223d071b9919d3fff19985dbfd6b7ebe431a659570a64649c6b089ee707808"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-emittery-agent:final compiled-production/environment",
+      "exit_code": 0,
+      "image_id": "sha256:73e5f1027e472ae886233cafd29d0740b952fd299df0ac1ad4b1ed7b545f66ed",
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/docker-agent-final.log",
+      "log_sha256": "sha256:8858b5c40a3f29df5bf085df00129766b0b834650ee0882f0ce0f8fa188d887f"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-emittery-verifier:final compiled-production/tests",
+      "exit_code": 0,
+      "image_id": "sha256:8d19d19e061fb55c647ad05abdd47b5cbd631618f046776fc0e205f3dfaf8b9",
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/docker-verifier-final.log",
+      "log_sha256": "sha256:c06deefa2e61b86f734219c6ac53ac0440f0b73f5d92dfb81ec6d039dd79c945"
+    },
+    {
+      "command": "python3 scripts/validate_node_production.py --task catalog/sources/emittery --bundle compiled-production-final-r2/emittery --toolchain toolchain.node.lock.toml --oracle-root final-runs-r3/oracle --controls final-evidence/control-summary-r3.json",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/validate-production-r3.log",
+      "log_sha256": "sha256:dfe10379bffd84e7a9de1e50f37ac6f81a267b9c21a978db4e88b5c7f6d884fd"
+    }
+  ],
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/emittery/compiled-production-final-r2/emittery -a oracle --allow-agent-host github.com --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/emittery/harbor-runs-final-r3/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 44,
+    "passed": 44,
+    "reward": 1.0,
+    "result": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/oracle/emittery-oracle-production-final-r3/emittery__SFaD6wU/result.json",
+    "result_sha256": "sha256:1263e288b5df3a72c9a0e86e743ee0a4ac0ebf759af36e33482c0f4a41ca2b62",
+    "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/oracle/emittery-oracle-production-final-r3/emittery__SFaD6wU/verifier/grading.json",
+    "grading_sha256": "sha256:cb525be40b5a51ca29a58fd5b96eab2430b8a8772719444dfd1bad13abe7eba5",
+    "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/oracle/emittery-oracle-production-final-r3/emittery__SFaD6wU/verifier/network.json",
+    "network_sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080",
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/empty/emittery-empty-production-final-r2/emittery-empty__Ytmn6MP/verifier/grading.json",
+      "grading_sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/empty/emittery-empty-production-final-r2/emittery-empty__Ytmn6MP/verifier/network.json",
+      "network_sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80"
+    },
+    "stub": {
+      "valid": true,
+      "collected": 44,
+      "passed": 6,
+      "reward": 0.13636363636363635,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/stub/emittery-stub-production-final-r2/emittery-stub__2bcgVUc/verifier/grading.json",
+      "grading_sha256": "sha256:ab8b946944c2017eeea22e79abb0e460088d68ef5d740cd8e2336db25e699771",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/stub/emittery-stub-production-final-r2/emittery-stub__2bcgVUc/verifier/network.json",
+      "network_sha256": "sha256:9ca5ddcd8c648520f0073eec9a0c8c01c1bf8a84f623aa27995d8e27b153d15f"
+    },
+    "forgery": {
+      "valid": true,
+      "collected": 44,
+      "passed": 6,
+      "reward": 0.13636363636363635,
+      "verifier_owned_reward": true,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/forgery/emittery-forgery-production-final-r2/emittery-forgery__REaqxzV/verifier/grading.json",
+      "grading_sha256": "sha256:ab8b946944c2017eeea22e79abb0e460088d68ef5d740cd8e2336db25e699771",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/forgery/emittery-forgery-production-final-r2/emittery-forgery__REaqxzV/verifier/network.json",
+      "network_sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+    },
+    "install-script": {
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/install-script/emittery-install-script-production-final-r2/emittery-install-script__2wscA28/verifier/grading.json",
+      "grading_sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/install-script/emittery-install-script-production-final-r2/emittery-install-script__2wscA28/verifier/network.json",
+      "network_sha256": "sha256:f7f138e1c36c4489454c249a627f990eb599220e6809b8325cc58e24ffd6696a"
+    },
+    "loader-hook": {
+      "valid": true,
+      "collected": 44,
+      "passed": 2,
+      "reward": 0.045454545454545456,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/loader-hook/emittery-loader-hook-production-final-r2/emittery-loader-hook__TaYH9g7/verifier/grading.json",
+      "grading_sha256": "sha256:afa34cd7a9db0a135f36e4fdb3fbf34e6014d452ed1f3655d0df087af620b7a2",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/loader-hook/emittery-loader-hook-production-final-r2/emittery-loader-hook__TaYH9g7/verifier/network.json",
+      "network_sha256": "sha256:1517eabc67c8c23c917decb2e1054a6edbb9f7dfe2f3aa218a443f6bdaf6060c"
+    },
+    "hang": {
+      "valid": true,
+      "collected": 44,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/hang/emittery-hang-production-final-r2/emittery-hang__Zc7XVkr/verifier/grading.json",
+      "grading_sha256": "sha256:013fa4e6fc6916c96c46e6fedc82bf77df3abfa3cb8ea6ad420c8c6030024e5d",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/hang/emittery-hang-production-final-r2/emittery-hang__Zc7XVkr/verifier/network.json",
+      "network_sha256": "sha256:05b97cfcb0f6015ce768227957f40ceae61cd5c976bbf32f8369b23b8f9e2d6d"
+    },
+    "offline": {
+      "valid": true,
+      "collected": 44,
+      "passed": 3,
+      "reward": 0.06818181818181818,
+      "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/offline/emittery-offline-production-final-r2/emittery-offline__L8vDZTL/verifier/grading.json",
+      "grading_sha256": "sha256:47dfc51de78fa1549be24627beb3a6f6ecbb572bb5eb54b590bf3992a8ec36a6",
+      "network": ".nl2repo/authoring-work/node-author-wave2-20260828/emittery/final-runs-r3/offline/emittery-offline-production-final-r2/emittery-offline__L8vDZTL/verifier/network.json",
+      "network_sha256": "sha256:7f3815574c3c2ecd6aeef1f9ead667f305365622dc8d770feaf32bb33b55e274"
+    }
+  },
+  "residual_risks": [
+    "No Harbor model Agent Run was started in this lane by contract.",
+    "Blind review, independent spec traceability approval, dataset integration, and publication remain integrator-owned.",
+    "One earlier final bundle Oracle attempt scored 43/44 on the on-dedupe leaf; a bounded retry on the same final bundle scored 44/44. The earlier receipt is retained as a flaky execution observation and is not used as the final Oracle receipt.",
+    "The generated runtime was intentionally kept task-local; catalog/tasks/emittery was not created or hand-edited.",
+    "Docker emitted constant-platform warnings during local image builds; the locked linux/amd64 image digests and build exit codes were verified."
+  ]
+}
