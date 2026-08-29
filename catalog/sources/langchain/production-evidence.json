@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.0",
+  "task_id": "langchain",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/langchain-ai/langchain",
+    "revision": "502b2b445b89b753cd468df979b71503f8f99425",
+    "package_path": "libs/langchain_v1",
+    "package_version": "1.3.17",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:324411670c256bcbdf4dfab75a1b099910b6fc8880a4e9722270288c5a1e4ccd",
+    "source_archive_size_bytes": 3010560
+  },
+  "environment": {
+    "python_version": "3.12.11",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "package_count": 39,
+    "lock_artifact": {
+      "digest": "sha256:1e1776a529947716f00354f83073a7b567d6c8a68b55c803f24184dd2177a538",
+      "size_bytes": 92414,
+      "media_type": "text/plain; charset=utf-8",
+      "uri": "artifact://private/sha256:1e1776a529947716f00354f83073a7b567d6c8a68b55c803f24184dd2177a538",
+      "visibility": "private"
+    }
+  },
+  "private_artifacts": {
+    "verifier_bundle": {
+      "digest": "sha256:dbebf5022d11f7d81ba0d89acb4f1418568b918d5873a74fac1ebbba0d510be0",
+      "size_bytes": 40960,
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "uri": "artifact://private/sha256:dbebf5022d11f7d81ba0d89acb4f1418568b918d5873a74fac1ebbba0d510be0",
+      "visibility": "private"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:2ebeaca61789b954bfb8b6405e25cb6f162b9154bfb024ef13c38f1ece43a488",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+      "uri": "artifact://private/sha256:2ebeaca61789b954bfb8b6405e25cb6f162b9154bfb024ef13c38f1ece43a488",
+      "visibility": "private"
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled/langchain-final/langchain",
+    "mode": "production",
+    "file_count": 59,
+    "bundle_manifest_sha256": "sha256:47bce11420ad238a446e87ecd268d64dc0b2d17cbee9d7e5a65a6cbc08c91f9d",
+    "canonical_manifest_digest": "sha256:98927616493542ca355101537860e6a3c8cd44787ca18969337a3e37d8694304",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/langchain-final/langchain -a oracle --allow-agent-host github.com --job-name langchain-oracle-final -o .nl2repo/runs/langchain/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/langchain/oracle-final/langchain-oracle-final/langchain__w44gkH6/verifier/grading.json",
+      "sha256": "sha256:721007e6fa6d5bb9c83afdfd5c9ca271a0c243bc65d757ef27934655ca064110"
+    },
+    "network": {
+      "path": ".nl2repo/runs/langchain/oracle-final/langchain-oracle-final/langchain__w44gkH6/verifier/network.json",
+      "sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30"
+    },
+    "summary": {
+      "valid": true,
+      "collected": 88,
+      "passed": 88,
+      "failed": 0,
+      "reward": 1.0,
+      "public_network_available": false,
+      "candidate_install_outcome": "success"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/langchain-final/langchain -a nop --job-name langchain-empty-final -o .nl2repo/runs/langchain/empty-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/langchain/empty-final/langchain-empty-final/langchain__vpTgR7M/verifier/grading.json",
+        "sha256": "sha256:b30b128bd04a0bee58aba0947bfa7bf996e7ee5260e59e499fca1ddb82a1343f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/langchain/empty-final/langchain-empty-final/langchain__vpTgR7M/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/runs/langchain/empty-final/langchain-empty-final/langchain__vpTgR7M/verifier/candidate-install.json",
+        "sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 0,
+        "passed": 0,
+        "reward": 0.0,
+        "failure_reason": "candidate-installation-failed",
+        "candidate_install_outcome": "candidate-failure",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/langchain-final/langchain-stub -a oracle --job-name langchain-stub-final -o .nl2repo/runs/langchain/stub-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/langchain/stub-final/langchain-stub-final/langchain-stub__uC32rQf/verifier/grading.json",
+        "sha256": "sha256:dd1b8598b8ab009b241ec63f7992362d7632e1536af745d104d0c846e8f4d2c4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/langchain/stub-final/langchain-stub-final/langchain-stub__uC32rQf/verifier/network.json",
+        "sha256": "sha256:e89617c134ec9f86f425045b376c9d620b0266781286ae65ffef6e03b9d1d17a"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 88,
+        "passed": 0,
+        "failed": 88,
+        "reward": 0.0,
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/langchain-final/langchain-forgery -a oracle --job-name langchain-forgery-final -o .nl2repo/runs/langchain/forgery-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/langchain/forgery-final/langchain-forgery-final/langchain-forgery__5H98b2z/verifier/grading.json",
+        "sha256": "sha256:dd1b8598b8ab009b241ec63f7992362d7632e1536af745d104d0c846e8f4d2c4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/langchain/forgery-final/langchain-forgery-final/langchain-forgery__5H98b2z/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 88,
+        "passed": 0,
+        "failed": 88,
+        "reward": 0.0,
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/langchain-final/langchain -a nop --job-name langchain-empty-final -o .nl2repo/runs/langchain/empty-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/langchain/empty-final/langchain-empty-final/langchain__vpTgR7M/verifier/network.json",
+        "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"
+      },
+      "summary": {
+        "public_network_available": false,
+        "probes": ["pypi.org:443", "1.1.1.1:443"]
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/langchain-final/langchain-install-hang -a oracle --job-name langchain-install-hang-final -o .nl2repo/runs/langchain/install-hang-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/runs/langchain/install-hang-final/langchain-install-hang-final/langchain-install-hang__XvLnK6M/verifier/grading.json",
+        "sha256": "sha256:b30b128bd04a0bee58aba0947bfa7bf996e7ee5260e59e499fca1ddb82a1343f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/langchain/install-hang-final/langchain-install-hang-final/langchain-install-hang__XvLnK6M/verifier/network.json",
+        "sha256": "sha256:968e7d526444ef755114f324b29c19909d4856eec99bf80bd8f6c6d5b370f33f"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/runs/langchain/install-hang-final/langchain-install-hang-final/langchain-install-hang__XvLnK6M/verifier/candidate-install.json",
+        "sha256": "sha256:cfa47509dfcf548f6d3769707e6ab6e3dadaf00d210693d2be8db29cb5996fb8"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 0,
+        "reward": 0.0,
+        "candidate_install_outcome": "timeout",
+        "candidate_install_returncode": -9,
+        "public_network_available": false
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/langchain-final/langchain-call-hang -a oracle --job-name langchain-call-hang-final -o .nl2repo/runs/langchain/call-hang-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/runs/langchain/call-hang-final/langchain-call-hang-final/langchain-call-hang__DaiNF73/verifier/grading.json",
+        "sha256": "sha256:dd1b8598b8ab009b241ec63f7992362d7632e1536af745d104d0c846e8f4d2c4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/langchain/call-hang-final/langchain-call-hang-final/langchain-call-hang__DaiNF73/verifier/network.json",
+        "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"
+      },
+      "summary": {
+        "valid": true,
+        "collected": 88,
+        "passed": 0,
+        "failed": 88,
+        "reward": 0.0,
+        "candidate_install_outcome": "success",
+        "public_network_available": false
+      }
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/langchain",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "zero langchain findings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/langchain --output .nl2repo/compiled/langchain-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m pytest selected frozen upstream unit tests",
+      "exit_code": 0,
+      "result": "218 passed"
+    }
+  ],
+  "versions": {
+    "git": "2.55.0",
+    "harbor": "0.21.0",
+    "python": "3.12.11",
+    "uv": "0.11.32"
+  },
+  "residual_risks": [
+    "Blind/spec traceability review, canonical catalog projection, dataset integration, and the model Harbor Agent Run remain integrator-owned.",
+    "The task deliberately covers a deterministic LangChain API slice rather than provider integrations, graph execution, or the full create_agent surface.",
+    "The exact github.com host override is required only for trusted Oracle source acquisition; model Agent metadata remains no-network with no allowed hosts."
+  ]
+}

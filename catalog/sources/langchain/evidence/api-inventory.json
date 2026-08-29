@@ -1,0 +1,37 @@
+{
+  "excluded": [
+    "create_agent and graph execution",
+    "chat model and embedding provider initialization",
+    "provider integrations and network calls",
+    "shell, file-search, and human-in-the-loop middleware",
+    "stream protocol transformation internals"
+  ],
+  "method": "AST/module inventory plus frozen upstream unit-test inspection",
+  "package_path": "libs/langchain_v1",
+  "public": [
+    {"kind": "class", "module": "langchain.agents.structured_output", "name": "ToolStrategy"},
+    {"kind": "class", "module": "langchain.agents.structured_output", "name": "ProviderStrategy"},
+    {"kind": "class", "module": "langchain.agents.structured_output", "name": "OutputToolBinding"},
+    {"kind": "class", "module": "langchain.agents.structured_output", "name": "ProviderStrategyBinding"},
+    {"kind": "class", "module": "langchain.agents.structured_output", "name": "AutoStrategy"},
+    {"kind": "exception", "module": "langchain.agents.structured_output", "name": "MultipleStructuredOutputsError"},
+    {"kind": "exception", "module": "langchain.agents.structured_output", "name": "StructuredOutputValidationError"},
+    {"kind": "function", "module": "langchain.agents.middleware.pii", "name": "detect_email"},
+    {"kind": "function", "module": "langchain.agents.middleware.pii", "name": "detect_credit_card"},
+    {"kind": "function", "module": "langchain.agents.middleware.pii", "name": "detect_ip"},
+    {"kind": "function", "module": "langchain.agents.middleware.pii", "name": "detect_mac_address"},
+    {"kind": "function", "module": "langchain.agents.middleware.pii", "name": "detect_url"},
+    {"kind": "class", "module": "langchain.agents.middleware", "name": "PIIMiddleware"},
+    {"kind": "exception", "module": "langchain.agents.middleware", "name": "PIIDetectionError"},
+    {"kind": "class", "module": "langchain.agents.middleware", "name": "ModelCallLimitMiddleware"},
+    {"kind": "exception", "module": "langchain.agents.middleware.model_call_limit", "name": "ModelCallLimitExceededError"},
+    {"kind": "class", "module": "langchain.agents.middleware", "name": "ToolCallLimitMiddleware"},
+    {"kind": "exception", "module": "langchain.agents.middleware.tool_call_limit", "name": "ToolCallLimitExceededError"}
+  ],
+  "revision": "502b2b445b89b753cd468df979b71503f8f99425",
+  "upstream_test_probe": {
+    "command": "python -m pytest -q tests/unit_tests/agents/test_response_format.py tests/unit_tests/agents/middleware/implementations/test_pii.py tests/unit_tests/agents/middleware/implementations/test_model_call_limit.py tests/unit_tests/agents/middleware/implementations/test_tool_call_limit.py",
+    "passed": 218,
+    "total": 218
+  }
+}
