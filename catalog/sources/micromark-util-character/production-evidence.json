@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-character",
+  "task_version": "2.1.1",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 106,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/micromark/micromark",
+    "revision": "774a70c6bae6dd94486d3385dbd9a0f14550b709",
+    "source_digest": "sha256:ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/upstream/packages/micromark-util-character/license",
+    "license_digest": "sha256:dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb",
+    "submodules": [],
+    "source_worktree_clean": false,
+    "source_worktree_note": "Only compiler-generated tsconfig.tsbuildinfo files are untracked; they are absent from the frozen git archive."
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:0cdbdeed390497819d6dd22e89537f0eda1d7e97381bc1b62d3e54c22d3f480c",
+    "dependency_artifact": "sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace",
+    "commands_artifact": "sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa",
+    "test_bundle": "sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089",
+    "oracle_bundle": "sha256:8e2a036e842d8db9e12a4db670f28c1a9a5430c96407db149000b2c039e054cd",
+    "toolchain_path": "/data/NL2RepoBench-integration-20260827/toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/micromark-util-character --output .nl2repo/final-compile-final/micromark-util-character --toolchain /data/NL2RepoBench-integration-20260827/toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/final-compile-final/micromark-util-character/micromark-util-character",
+    "bundle_manifest_sha256": "sha256:0b7546533da008a784757a5b6c216289dbf8e4ebb235095a9d9a67713bce39de",
+    "canonical_manifest_digest": "sha256:c9b2d8d332392bcbfa86c144a26eea045edee628bf7b10c9510c3696a9847304",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 99,
+    "manifest_mismatches": 0,
+    "repeat_compile_byte_identical": true,
+    "repeat_command": "uv run nl2repo harbor compile catalog/sources/micromark-util-character --output .nl2repo/final-compile-repeat/micromark-util-character --toolchain /data/NL2RepoBench-integration-20260827/toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "repeat_bundle_manifest_sha256": "sha256:0b7546533da008a784757a5b6c216289dbf8e4ebb235095a9d9a67713bce39de"
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "local_agent_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_network_mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["micromark-util-symbol@2.0.1", "micromark-util-types@2.0.2"],
+    "artifact": {
+      "digest": "sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace",
+      "size_bytes": 112640,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 106,
+    "collection": "106 node:test leaves; no collection errors",
+    "test_bundle": {
+      "digest": "sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089",
+      "size_bytes": 20480,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar",
+      "uri": "artifact://private/sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089",
+      "visibility": "private"
+    },
+    "commands_artifact": {
+      "digest": "sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar",
+      "uri": "artifact://private/sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa",
+      "visibility": "private"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/recompile-20260829/micromark-util-character -a oracle --allow-agent-host github.com --job-name micromark-util-character-oracle-20260829-r2 -o .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 106,
+    "collected": 106,
+    "passed": 106,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/oracle/micromark-util-character-oracle-20260829-r2/micromark-util-character__7jX3tHH/verifier/grading.json",
+      "sha256": "sha256:7d86fbc27c0491d204daf1869790913eb2b895781b544b5715e89e98d21067e0"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/oracle/micromark-util-character-oracle-20260829-r2/micromark-util-character__7jX3tHH/verifier/network.json",
+      "sha256": "sha256:eae2c2df827e519e8e556edac6659aaf980e49b4b3a732d77815d12e77478957"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-controls-20260829/micromark-util-character-empty -a oracle --job-name micromark-util-character-empty-20260829-r2 -o .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/empty/micromark-util-character-empty-20260829-r2/micromark-util-character-empty__scrmsmY/verifier/grading.json",
+        "sha256": "sha256:03665975aff5e23a831c8c8a164c1db6cc133b38bbc7086f92395e3e6649eca7"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/empty/micromark-util-character-empty-20260829-r2/micromark-util-character-empty__scrmsmY/verifier/network.json",
+        "sha256": "sha256:034fa6a8f52e8049ae32ec27f0028c5436831ee6428d039bc7a05c7fe807b3a5"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-controls-20260829/micromark-util-character-stub -a oracle --job-name micromark-util-character-stub-20260829-r2 -o .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "collected": 106,
+      "reward": 0.009433962264150943,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/stub/micromark-util-character-stub-20260829-r2/micromark-util-character-stub__UvkqiCv/verifier/grading.json",
+        "sha256": "sha256:11f469e9ceec5b2f5ca9153c4eea87f00b414c9550575bbb68253c4438388c9c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/stub/micromark-util-character-stub-20260829-r2/micromark-util-character-stub__UvkqiCv/verifier/network.json",
+        "sha256": "sha256:819cf093e9e9c18a1f5cd2ab3a3644573dd9dbe0df30b0fdf569af1c43813556"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-controls-20260829/micromark-util-character-forgery -a oracle --job-name micromark-util-character-forgery-20260829-r2 -o .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "forged_workspace_reports_ignored": true,
+      "passed": 1,
+      "collected": 106,
+      "reward": 0.009433962264150943,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/forgery/micromark-util-character-forgery-20260829-r2/micromark-util-character-forgery__zV3MqUB/verifier/grading.json",
+        "sha256": "sha256:11f469e9ceec5b2f5ca9153c4eea87f00b414c9550575bbb68253c4438388c9c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/forgery/micromark-util-character-forgery-20260829-r2/micromark-util-character-forgery__zV3MqUB/verifier/network.json",
+        "sha256": "sha256:93cbaecd5e7032ecc4dd933e74f5d55444f88273d42590134755dfaad89db26c"
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-controls-20260829/micromark-util-character-hang -a oracle --job-name micromark-util-character-hang-20260829-r2 -o .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "bounded": true,
+      "passed": 1,
+      "collected": 106,
+      "reward": 0.009433962264150943,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/hang/micromark-util-character-hang-20260829-r2/micromark-util-character-hang__wv6CVPJ/verifier/grading.json",
+        "sha256": "sha256:11f469e9ceec5b2f5ca9153c4eea87f00b414c9550575bbb68253c4438388c9c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/hang/micromark-util-character-hang-20260829-r2/micromark-util-character-hang__wv6CVPJ/verifier/network.json",
+        "sha256": "sha256:59c5588ce0e1988c1ca683d902c74ba6f59d852e346ed141e94431d77fc9e90f"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-controls-20260829/micromark-util-character-offline -a oracle --job-name micromark-util-character-offline-20260829-r2 -o .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "passed": 1,
+      "collected": 106,
+      "reward": 0.009433962264150943,
+      "grading": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/offline/micromark-util-character-offline-20260829-r2/micromark-util-character-offline__zwDwEQw/verifier/grading.json",
+        "sha256": "sha256:11f469e9ceec5b2f5ca9153c4eea87f00b414c9550575bbb68253c4438388c9c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/controls/offline/micromark-util-character-offline-20260829-r2/micromark-util-character-offline__zwDwEQw/verifier/network.json",
+        "sha256": "sha256:b39691f5f499ca4fbe6bfb39d405542c04323b3e4736db4f219e5e23e8e9576e",
+        "public_network_available": false
+      }
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-freeze",
+      "command": "git -C .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/upstream rev-parse HEAD && git archive --format=tar --output source-774a70c6bae6dd94486d3385dbd9a0f14550b709.tar HEAD",
+      "tool_version": "git 2.55.0; coreutils sha256sum",
+      "exit_code": 0,
+      "result": "revision 774a70c6bae6dd94486d3385dbd9a0f14550b709; archive sha256:ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1"
+    },
+    {
+      "stage": "upstream-build-remediation",
+      "command": "npx --no-install tsc --build packages/micromark-util-types packages/micromark-util-symbol packages/micromark-util-character && npm run build --workspace micromark-util-character",
+      "tool_version": "Node 24.19.0; npm 11.17.0",
+      "exit_code": 0,
+      "result": "generated runtime/declarations; Node probe loaded 12 named exports"
+    },
+    {
+      "stage": "dependency-closure",
+      "command": "npm ci --offline --ignore-scripts --no-audit --no-fund",
+      "tool_version": "Node 24.19.0; npm 11.17.0",
+      "exit_code": 0,
+      "result": "exact micromark-util-symbol@2.0.1 and micromark-util-types@2.0.2 installed from private cache"
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/micromark-util-character",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "status packaged before evidence update"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/micromark-util-character --output .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/recompile-20260829 --toolchain /data/NL2RepoBench-integration-20260827/toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "nl2repobench current checkout; Harbor 0.21.0; Node toolchain lock",
+      "exit_code": 0,
+      "result": "100-file production bundle; manifest sha256:8feef657c386002f544b8a1aecd94982f0fe261312189088f6873d43b5cb8f22"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "result": "error_count 0; existing unrelated catalog warnings remain"
+    },
+    {
+      "stage": "syntax-and-integrity",
+      "command": "bash -n catalog/sources/micromark-util-character/harbor/controls/*.sh && node --check .nl2repo/authoring-work/node-author-wave2-20260828/micromark-util-character/final-runs-20260829/oracle/micromark-util-character-oracle-20260829-r2/micromark-util-character__7jX3tHH/verifier/grading.json",
+      "tool_version": "bash 5.x; Node 22.23.1 host",
+      "exit_code": 0,
+      "result": "task-local control shell syntax and JSON/TOML parsing passed"
+    }
+  ],
+  "residual_risks": [
+    "The locked agent image ID sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f differs from this host's local tag image ID sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3; integrator must restore or verify the official immutable runtime before a model Agent Run.",
+    "Independent blind/spec traceability review, model Agent Run, dataset integration, and publication remain pending; this lane did not start an Agent Run."
+  ],
+  "notes": "Task-local source and evidence are ready for integrator review and an independent Agent Run. No generated catalog/tasks runtime was created in this lane."
+}

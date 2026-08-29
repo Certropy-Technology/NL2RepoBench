@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-character",
+  "source_revision": "774a70c6bae6dd94486d3385dbd9a0f14550b709",
+  "package": {
+    "name": "micromark-util-character",
+    "version": "2.1.1",
+    "module_kind": "esm",
+    "upstream_node_compatibility": ">=16",
+    "root_export": "./index.js",
+    "development_export": "./dev/index.js",
+    "declaration": "./index.d.ts"
+  },
+  "public_exports": {
+    "named": [
+      "asciiAlpha",
+      "asciiAlphanumeric",
+      "asciiAtext",
+      "asciiControl",
+      "asciiDigit",
+      "asciiHexDigit",
+      "asciiPunctuation",
+      "markdownLineEnding",
+      "markdownLineEndingOrSpace",
+      "markdownSpace",
+      "unicodePunctuation",
+      "unicodeWhitespace"
+    ],
+    "default": null
+  },
+  "signatures": {
+    "asciiAlpha": "asciiAlpha(code: Code): boolean",
+    "asciiAlphanumeric": "asciiAlphanumeric(code: Code): boolean",
+    "asciiAtext": "asciiAtext(code: Code): boolean",
+    "asciiControl": "asciiControl(code: Code): boolean",
+    "asciiDigit": "asciiDigit(code: Code): boolean",
+    "asciiHexDigit": "asciiHexDigit(code: Code): boolean",
+    "asciiPunctuation": "asciiPunctuation(code: Code): boolean",
+    "markdownLineEnding": "markdownLineEnding(code: Code): boolean",
+    "markdownLineEndingOrSpace": "markdownLineEndingOrSpace(code: Code): boolean",
+    "markdownSpace": "markdownSpace(code: Code): boolean",
+    "unicodePunctuation": "unicodePunctuation(code: Code): boolean",
+    "unicodeWhitespace": "unicodeWhitespace(code: Code): boolean"
+  },
+  "input_type": "Code = number | null",
+  "scored_domain": "null, integer virtual codes -5..-1, and UTF-16 code units 0..65535",
+  "runtime_dependencies": [
+    "micromark-util-symbol@2.0.1",
+    "micromark-util-types@2.0.2"
+  ],
+  "source_files": [
+    "packages/micromark-util-character/dev/index.js",
+    "packages/micromark-util-symbol/lib/codes.js",
+    "packages/micromark-util-types/index.d.ts"
+  ],
+  "generated_runtime_files": ["index.js", "index.d.ts", "index.d.ts.map"],
+  "side_effects": false,
+  "risk_adaptations": [
+    "candidate exports load only in UID/GID 10001 subprocesses",
+    "each call transports one allowlisted export name and one bounded JSON code",
+    "only booleans and bounded package inventory cross the verifier boundary",
+    "the Oracle privately carries generated production output built from the exact frozen revision"
+  ]
+}

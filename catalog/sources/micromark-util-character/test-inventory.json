@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-character",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 106,
+  "collection_source": "private/contract.test.mjs",
+  "upstream_baseline": {
+    "first_package_only_build_exit_code": 1,
+    "first_package_only_build_reason": "micromark-build generated index.js but the declaration build had not run",
+    "remediated_command": "npx --no-install tsc --build packages/micromark-util-types packages/micromark-util-symbol packages/micromark-util-character && npm run build --workspace micromark-util-character",
+    "remediated_exit_code": 0,
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "runtime_export_count": 12
+  },
+  "leaf_groups": {
+    "package_surface_and_determinism": 2,
+    "asciiAlpha": 8,
+    "asciiAlphanumeric": 7,
+    "asciiAtext": 12,
+    "asciiControl": 9,
+    "asciiDigit": 5,
+    "asciiHexDigit": 8,
+    "asciiPunctuation": 11,
+    "markdownLineEnding": 7,
+    "markdownLineEndingOrSpace": 8,
+    "markdownSpace": 6,
+    "unicodePunctuation": 10,
+    "unicodeWhitespace": 13
+  },
+  "metric": "passed / 106; skipped and todo are non-passing; collection mismatch is verifier-invalid",
+  "adapter_boundary": "node-test-subprocess-boundary-v1; one bounded JSON request per UID/GID 10001 child"
+}
