@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "source_revision": "22b88c3f4d51f3777929758e980c257a2838a4b2",
+  "upstream_test_file": "test.js",
+  "upstream_nested_cases": 6,
+  "frozen_private_leaf_total": 24,
+  "framework": "node:test",
+  "adaptation": "The six upstream behaviors are retained and split into deterministic boundary and package-contract leaves. Calls cross the candidate subprocess JSON boundary; no callback, filesystem, time, random, or network behavior is used."
+}

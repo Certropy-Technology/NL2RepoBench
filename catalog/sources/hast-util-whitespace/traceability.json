@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "task_version": "2.0.0",
+  "mappings": [
+    {"leaf_prefix": "public-export", "instruction": "API Usage Guide: whitespace; Supports", "source_behavior": "root ESM named export"},
+    {"leaf_prefix": "string", "instruction": "API Usage Guide: whitespace string semantics", "source_behavior": "string branch and exact ASCII set"},
+    {"leaf_prefix": "text-node", "instruction": "API Usage Guide: whitespace node semantics", "source_behavior": "text node value branch"},
+    {"leaf_prefix": "other-node", "instruction": "API Usage Guide: whitespace node semantics", "source_behavior": "non-text node returns false"},
+    {"leaf_prefix": "determinism", "instruction": "Implementation Notes", "source_behavior": "pure synchronous repeated calls"}
+  ],
+  "coverage": {"public_exports": 1, "covered_exports": 1, "contract_families": 5}
+}

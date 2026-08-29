@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "hast-util-whitespace"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "html-tree-utility"
+tags = ["node", "npm", "esm", "hast", "html", "whitespace", "utility", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/hast-util-whitespace"
+revision = "22b88c3f4d51f3777929758e980c257a2838a4b2"
+license_spdx = "MIT"
+source_digest = "sha256:d012e1fee404e631ad5a5b5aa3f338b413417e73f80b53d5d0c0e7a469f8e1be"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate has no runtime dependency roots. The verifier owns an empty npm v3 cache and lock closure at build time; Agent and verifier phases have no egress, while the trusted Oracle receives only a private digest-checked source bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232", size_bytes = 475, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898", size_bytes = 206, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898", visibility = "private" }
+test_bundle = { digest = "sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596", size_bytes = 1493, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build hast-util-whitespace, an ESM utility that recognizes HTML inter-element whitespace in strings and text nodes."
+keywords = ["node", "npm", "esm", "hast", "html", "whitespace"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-hast-util-whitespace"
+reason = "Frozen source, API/test inventory, private npm closure, production compile, verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. No Harbor Agent Run was started in this lane; review, pilot, and publication remain integrator-stage gates."
+
+[oracle_bundle]
+digest = "sha256:abcadf37573c3a374fed8ae05497ed84c1d294a6893ba34effa140eca43a74c0"
+size_bytes = 5930
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:abcadf37573c3a374fed8ae05497ed84c1d294a6893ba34effa140eca43a74c0"
+visibility = "private"

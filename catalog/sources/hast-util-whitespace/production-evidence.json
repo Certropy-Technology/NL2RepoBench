@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/hast-util-whitespace",
+    "revision": "22b88c3f4d51f3777929758e980c257a2838a4b2",
+    "source_digest": "sha256:d012e1fee404e631ad5a5b5aa3f338b413417e73f80b53d5d0c0e7a469f8e1be",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/hast-util-whitespace/upstream/license",
+    "license_digest": "sha256:ca4662cb5d1b738fbe5350c0d5485ba11773b4b7208974082ae6e129a52d631d",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "package_version": "3.0.0",
+    "upstream_file_count": 13
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:bb95cab67a44d4d95cb5527d73685282afa6a8d58730e695fce91db5e0cd3950",
+    "dependency_artifact": "sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232",
+    "commands_artifact": "sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898",
+    "test_bundle": "sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596",
+    "oracle_bundle": "sha256:abcadf37573c3a374fed8ae05497ed84c1d294a6893ba34effa140eca43a74c0",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/hast-util-whitespace --output .nl2repo/runs/hast-util-whitespace-production/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/runs/hast-util-whitespace-production/compiled/hast-util-whitespace",
+    "bundle_manifest_sha256": "sha256:7064b010b4594800206bc87b50b4e7d4ed8f1f4a24e8921a64014040736cd426",
+    "canonical_manifest_digest": "sha256:9ff57f1c4455d18678e85992c58d9e8d0c1679ee80b8417ced0f1ab0fe482508",
+    "toolchain_lock_digest": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "file_count": 77,
+    "manifest_mismatches": 0
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "local_verifier_image_id": "sha256:e33e4f8b3c6c01419495c08b62d99174356f313f4cf265b811c26430621fd80a",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden",
+      "oracle_source_host": "none; Oracle consumes the private digest-checked source archive"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": "3",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232",
+      "size_bytes": 475,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 24,
+    "expected_total_source": "frozen-collection",
+    "public_contract_families": ["public-export", "string", "text-node", "other-node", "determinism"]
+  },
+  "oracle": {
+    "command": "direct Docker verifier run with --network none and digest-checked private Oracle workspace",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-oracle-current/verifier/grading.json", "sha256": "sha256:2ded3ed7752e235585a67ed460023089da4331dac6be5808f165220f2f4efbce"},
+    "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-oracle-current/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+  },
+  "controls": {
+    "empty": {"command": "prepare-control empty plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-empty-current/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-empty-current/verifier/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"}},
+    "stub": {"command": "prepare-control stub plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 24, "passed": 1, "failed": 23, "reward": 0.041666666666666664, "public_network_available": false, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-stub-current/verifier/grading.json", "sha256": "sha256:107d62fd5dbc2a9a9cb76f098ad7c964b1a2168eeb1075d94b4879d2551025af"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-stub-current/verifier/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"}},
+    "forgery": {"command": "prepare-control forgery plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 24, "passed": 1, "failed": 23, "reward": 0.041666666666666664, "public_network_available": false, "verifier_owned_reward": true, "workspace_forged_reward": 1.0, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-forgery-current/verifier/grading.json", "sha256": "sha256:107d62fd5dbc2a9a9cb76f098ad7c964b1a2168eeb1075d94b4879d2551025af"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-forgery-current/verifier/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"}},
+    "hang": {"command": "prepare-control hang plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 24, "passed": 0, "failed": 24, "reward": 0.0, "bounded": true, "public_network_available": false, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-hang-current/verifier/grading.json", "sha256": "sha256:2c62b1a1d272f6e9358d1bc79f5dbc3047d1f4da445c1de83403dcbfc373f025"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-hang-current/verifier/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"}},
+    "install-script": {"command": "prepare-control install-script plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-install-script-current/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-install-script-current/verifier/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"}},
+    "loader-hook": {"command": "prepare-control loader-hook plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 24, "passed": 2, "failed": 22, "reward": 0.08333333333333333, "public_network_available": false, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-loader-hook-current/verifier/grading.json", "sha256": "sha256:68f11e50603c9ac84293d0ccaf37da09f02ce251a3ce04a26d8af4003f94d374"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-loader-hook-current/verifier/network.json", "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"}},
+    "offline": {"command": "prepare-control offline plus direct Docker verifier run --network none", "exit_code": 0, "valid": true, "collected": 24, "passed": 20, "failed": 4, "reward": 0.8333333333333334, "completed": true, "public_network_available": false, "grading": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-offline-current/verifier/grading.json", "sha256": "sha256:bca4582ef17bdc059a33dc2c2513e8dabccc767c2f8cc3f879d7bb9062e56e34"}, "network": {"path": ".nl2repo/runs/hast-util-whitespace-production/logs-offline-current/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone --no-checkout https://github.com/syntax-tree/hast-util-whitespace && git checkout --detach 22b88c3f4d51f3777929758e980c257a2838a4b2 && git archive --format=tar --prefix=hast-util-whitespace/ HEAD", "exit_code": 0, "result": "revision and archive digest verified"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/hast-util-whitespace", "exit_code": 0, "result": "packaged source accepted"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "0 errors; unrelated catalog warnings only; no finding for hast-util-whitespace"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/hast-util-whitespace --output .nl2repo/runs/hast-util-whitespace-production/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "result": "75-file production bundle; no manifest mismatch"},
+    {"stage": "verifier-build", "command": "docker build --platform linux/amd64 --no-cache -f .nl2repo/runs/hast-util-whitespace-production/compiled/hast-util-whitespace/tests/Dockerfile -t nl2repo/hast-util-whitespace-verifier:authoring", "exit_code": 0, "result": "image built; Docker emitted only constant-platform lint warnings"},
+    {"stage": "production-gate", "command": "uv run python scripts/validate_node_production.py --task catalog/sources/hast-util-whitespace --bundle .nl2repo/runs/hast-util-whitespace-production/compiled/hast-util-whitespace --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/runs/hast-util-whitespace-production/oracle-logs-final --controls .nl2repo/runs/hast-util-whitespace-production/control-summary.json --output .nl2repo/runs/hast-util-whitespace-production/production-gate.json", "exit_code": 0, "result": "Oracle and all seven Node controls passed"},
+    {"stage": "syntax-and-serialization", "command": "node --check private test modules; bash -n Oracle/control scripts; python3 -m json.tool inventory files", "exit_code": 0, "result": "all task-local syntax and JSON checks passed"}
+  ],
+  "residual_risks": [
+    "No Harbor Agent Run was started, as required by this lane boundary.",
+    "Independent blind review, pilot, dataset integration, and publication remain integrator-stage work.",
+    "The Oracle uses a private source archive rather than runtime source-host access; model Agent remains no-network and cannot access reference source.",
+    "The production compile output and Docker receipts are task-local authoring artifacts; the integrator must regenerate and retain the final catalog/tasks projection."
+  ]
+}

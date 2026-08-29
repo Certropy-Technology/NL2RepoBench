@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "source_revision": "22b88c3f4d51f3777929758e980c257a2838a4b2",
+  "exports": [
+    {
+      "module": ".",
+      "name": "whitespace",
+      "kind": "function",
+      "signature": "whitespace(thing: Nodes | string): boolean",
+      "async": false,
+      "side_effects": false
+    }
+  ],
+  "package_boundary": {
+    "type": "module",
+    "root_entry": "./index.js",
+    "runtime_dependencies": []
+  }
+}
