@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyyaml",
+  "terminal_kind": "valid",
+  "bundle": {
+    "path": ".nl2repo/compiled-final/pyyaml/bundle.manifest.json",
+    "sha256": "sha256:7df52d9393353b6b229c11306e2914a5056f16cc600af0d0fc4433804f660ce6",
+    "canonical_manifest_digest": "sha256:6acb6db1fef711c6d210c5180985320114314df8a72ffbe359b0256951c43928",
+    "file_count": 58,
+    "mode": "production"
+  },
+  "source": {
+    "upstream_url": "https://github.com/yaml/pyyaml",
+    "revision": "34a9bf82357f4952d8f194a5a31f1c39743652d0",
+    "archive_sha256": "sha256:18387c6163aa3de3221240cade5f77768963c1096061119d67503462049eab68",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/pyyaml -a oracle --allow-agent-host github.com --job-name pyyaml-authoring-current-oracle -o .nl2repo/runs/pyyaml-authoring-current/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/runs/pyyaml-authoring-current/oracle/pyyaml-authoring-current-oracle/pyyaml__2roaD8x/verifier/grading.json",
+      "sha256": "sha256:c82b78b8f182252ff64ff400d3067f3599d4a50cf1df443c9cf0a6662ce1d1c9",
+      "valid": true,
+      "collected": 64,
+      "passed": 64,
+      "reward": 1.0
+    },
+    "network": {
+      "path": ".nl2repo/runs/pyyaml-authoring-current/oracle/pyyaml-authoring-current-oracle/pyyaml__2roaD8x/verifier/network.json",
+      "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final/pyyaml -a nop --job-name pyyaml-authoring-current-empty -o .nl2repo/runs/pyyaml-authoring-current/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/empty/pyyaml-authoring-current-empty/pyyaml__4dJ5tJf/verifier/grading.json",
+        "sha256": "sha256:30e8c3fda65193fadc5d8cf20d0f98dfa5c1746fd190f294a00fca8e55f9bca0",
+        "valid": true,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "collected": 0,
+        "reward": 0.0
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/empty/pyyaml-authoring-current-empty/pyyaml__4dJ5tJf/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current-stub/pyyaml-stub -a oracle --job-name pyyaml-authoring-current-stub -o .nl2repo/runs/pyyaml-authoring-current/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/stub/pyyaml-authoring-current-stub/pyyaml-stub__MaxDyjY/verifier/grading.json",
+        "sha256": "sha256:46182d6d3cf09c6368c8f78ded439df21da1c715b2532ca09d26f2a5a9d3e820",
+        "valid": true,
+        "collected": 64,
+        "passed": 2,
+        "reward": 0.03125
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/stub/pyyaml-authoring-current-stub/pyyaml-stub__MaxDyjY/verifier/network.json",
+        "sha256": "sha256:3d01fcb610ff0764b8e0abaf1d78ebcc23364668deeeeaa1717b904bbade70b4",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current-forgery/pyyaml-forgery -a oracle --job-name pyyaml-authoring-current-forgery -o .nl2repo/runs/pyyaml-authoring-current/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/forgery/pyyaml-authoring-current-forgery/pyyaml-forgery__AJ7Acrw/verifier/grading.json",
+        "sha256": "sha256:3e80946362cbe2ee334def7001918cd84a0e1930811a0643d3f9186d3374b052",
+        "valid": true,
+        "collected": 64,
+        "passed": 1,
+        "reward": 0.015625
+      },
+      "network": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/forgery/pyyaml-authoring-current-forgery/pyyaml-forgery__AJ7Acrw/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "Harbor separate verifier network-none probe from pyyaml-authoring-current-oracle",
+      "exit_code": 0,
+      "completed": true,
+      "network": {
+        "path": ".nl2repo/runs/pyyaml-authoring-current/oracle/pyyaml-authoring-current-oracle/pyyaml__2roaD8x/verifier/network.json",
+        "sha256": "sha256:5cad50aea66ccb7c73822abc5b49e7ef0fee95e8ab7909dba0b4fd35285efe98",
+        "public_network_available": false
+      }
+    }
+  },
+  "timeout_controls": {
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current-install-hang/pyyaml-install-hang -a oracle --job-name pyyaml-authoring-current-install-hang -o .nl2repo/runs/pyyaml-authoring-current/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "install_outcome": "timeout",
+      "install_returncode": -9,
+      "grading_path": ".nl2repo/runs/pyyaml-authoring-current/install-hang/pyyaml-authoring-current-install-hang/pyyaml-install-hang__2pWWbNN/verifier/grading.json",
+      "grading_sha256": "sha256:30e8c3fda65193fadc5d8cf20d0f98dfa5c1746fd190f294a00fca8e55f9bca0",
+      "network_path": ".nl2repo/runs/pyyaml-authoring-current/install-hang/pyyaml-authoring-current-install-hang/pyyaml-install-hang__2pWWbNN/verifier/network.json",
+      "network_sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+      "public_network_available": false
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current-call-hang/pyyaml-call-hang -a oracle --job-name pyyaml-authoring-current-call-hang -o .nl2repo/runs/pyyaml-authoring-current/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "collected": 64,
+      "passed": 1,
+      "reward": 0.015625,
+      "grading_path": ".nl2repo/runs/pyyaml-authoring-current/call-hang/pyyaml-authoring-current-call-hang/pyyaml-call-hang__5LruQJu/verifier/grading.json",
+      "grading_sha256": "sha256:3e80946362cbe2ee334def7001918cd84a0e1930811a0643d3f9186d3374b052",
+      "network_path": ".nl2repo/runs/pyyaml-authoring-current/call-hang/pyyaml-authoring-current-call-hang/pyyaml-call-hang__5LruQJu/verifier/network.json",
+      "network_sha256": "sha256:87d07d4be1c1013b5e183dba5f19a19d2725da9d7b55e0587e02ea8139e1e149",
+      "public_network_available": false
+    }
+  }
+}

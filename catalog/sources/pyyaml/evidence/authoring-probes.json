@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyyaml",
+  "revision": "34a9bf82357f4952d8f194a5a31f1c39743652d0",
+  "source_archive": {
+    "command": "git archive --format=tar HEAD",
+    "sha256": "sha256:18387c6163aa3de3221240cade5f77768963c1096061119d67503462049eab68",
+    "size_bytes": 1218560
+  },
+  "license": {
+    "spdx": "MIT",
+    "license_sha256": "sha256:8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4"
+  },
+  "environment": {
+    "python": "3.12.11 probe / 3.12.14 locked target",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_policy": "no-network",
+    "optional_libyaml": "excluded from denominator; pure-Python baseline"
+  },
+  "commands": [
+    {"command": "pip install -e . --no-build-isolation", "exit_code": 0},
+    {"command": "PYTHONPATH=lib python -m pytest -c /dev/null --collect-only -q tests", "exit_code": 0, "collected": 1287},
+    {"command": "PYTHONPATH=lib python -m pytest -c /dev/null -q tests", "exit_code": 0, "passed": 1287},
+    {"command": "python -m py_compile verifier/run.py && bash -n solution/solve.sh controls/*.sh", "exit_code": 0},
+    {"command": "PYTHONPATH=lib python -m pytest -c /dev/null --collect-only -q tests", "exit_code": 0, "collected": 1287},
+    {"command": "PYTHONPATH=lib python -m pytest -c /dev/null -q tests", "exit_code": 0, "collected": 1287, "passed": 1287},
+    {"command": "uv pip install --require-hashes -r provenance/requirements.lock.txt; uv pip install --no-deps --no-build-isolation frozen-source", "exit_code": 0, "installed": "pyyaml==7.0.0.dev0"},
+    {"command": "Harbor 0.21.0 custom-json-v1 verifier against frozen source", "exit_code": 0, "collected": 64, "passed": 64}
+  ],
+  "production_compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/pyyaml --output .nl2repo/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/compiled-final/pyyaml/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:7df52d9393353b6b229c11306e2914a5056f16cc600af0d0fc4433804f660ce6",
+    "canonical_manifest_digest": "sha256:6acb6db1fef711c6d210c5180985320114314df8a72ffbe359b0256951c43928",
+    "file_count": 58,
+    "mode": "production"
+  },
+  "pending_gates": []
+}

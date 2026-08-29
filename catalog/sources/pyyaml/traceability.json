@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyyaml",
+  "denominator": 64,
+  "source_test_collection": 1287,
+  "adaptation": "custom-json-v1 bounded child-side scenarios",
+  "groups": [
+    {"ids": ["yaml-version", "yaml-safe-load-mapping", "yaml-safe-load-sequence", "yaml-safe-load-scalars", "yaml-safe-load-unicode", "yaml-safe-load-empty", "yaml-safe-load-alias", "yaml-safe-load-merge"], "spec": ["Root package functions", "Implementation Notes"]},
+    {"ids": ["yaml-load-requires-loader", "yaml-safe-load-all", "yaml-full-load", "yaml-full-load-all", "yaml-safe-tag-rejected", "yaml-parser-error", "yaml-scanner-error", "yaml-composer-error"], "spec": ["Root package functions", "Custom types and errors"]},
+    {"ids": ["yaml-dump-sorted", "yaml-dump-insertion", "yaml-safe-dump", "yaml-safe-dump-rejects-object", "yaml-dump-unicode", "yaml-dump-flow", "yaml-dump-all", "yaml-safe-dump-all"], "spec": ["Root package functions", "Implementation Notes"]},
+    {"ids": ["yaml-parse-events", "yaml-scan-tokens", "yaml-compose-scalar", "yaml-compose-sequence", "yaml-compose-mapping", "yaml-emit-events", "yaml-serialize-node", "yaml-serialize-all"], "spec": ["Loaders, dumpers, events, tokens, and nodes"]},
+    {"ids": ["yaml-custom-constructor", "yaml-multi-constructor", "yaml-custom-representer", "yaml-multi-representer", "yaml-implicit-resolver", "yaml-path-resolver", "yaml-yamlobject", "yaml-class-registration"], "spec": ["Custom types and errors", "Root package functions"]},
+    {"ids": ["yaml-token-attributes", "yaml-event-attributes", "yaml-node-tags", "yaml-node-order", "yaml-loader-classes", "yaml-dumper-classes", "yaml-error-classes", "yaml-libyaml-flag"], "spec": ["Loaders, dumpers, events, tokens, and nodes"]},
+    {"ids": ["yaml-merge-direct", "yaml-merge-sequence", "yaml-merge-nested", "yaml-merge-fanout", "yaml-roundtrip", "yaml-binary-roundtrip", "yaml-multiple-documents", "yaml-explicit-boundaries"], "spec": ["Implementation Notes", "Root package functions"]},
+    {"ids": ["yaml-set-roundtrip", "yaml-tuple-roundtrip", "yaml-timestamp", "yaml-unsafe-python-tag", "yaml-dump-bytes", "yaml-stream-write", "yaml-encoding", "yaml-sort-option"], "spec": ["Root package functions", "Implementation Notes"]}
+  ]
+}
