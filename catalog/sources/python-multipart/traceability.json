@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-multipart",
+  "source_revision": "d9cb4c62db5b9defeeaa99bfe0e4da51e760108f",
+  "frozen_total": 48,
+  "metric_contract": "fixed-test-pass-rate-v1",
+  "coverage": [
+    {"leaf_prefix": "imports", "instruction": "Root exports, version, compatibility package, exception hierarchy", "source": "python_multipart/__init__.py; multipart/__init__.py; python_multipart/exceptions.py", "count": 4},
+    {"leaf_prefix": "headers", "instruction": "parse_options_header input and parameter behavior", "source": "python_multipart/multipart.py", "count": 7},
+    {"leaf_prefix": "values", "instruction": "Field and File metadata, lifecycle, and bounded disk transition", "source": "python_multipart/multipart.py", "count": 8},
+    {"leaf_prefix": "decoders", "instruction": "Streaming base64 and quoted-printable adapters", "source": "python_multipart/decoders.py", "count": 6},
+    {"leaf_prefix": "parsers", "instruction": "BaseParser, QuerystringParser, OctetStreamParser, incremental callbacks and limits", "source": "python_multipart/multipart.py", "count": 12},
+    {"leaf_prefix": "multipart", "instruction": "Multipart/FormParser helper behavior, encodings, and error paths", "source": "python_multipart/multipart.py", "count": 12}
+  ],
+  "bidirectional_notes": [
+    "Every public group in the API inventory has at least one private leaf.",
+    "Each private leaf is named by behavior rather than copied upstream nodeid.",
+    "The instruction describes all tested input domains, return shapes, order guarantees, side effects, and parser exceptions without embedding private assertions."
+  ]
+}

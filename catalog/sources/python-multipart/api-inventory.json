@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-multipart",
+  "source_revision": "d9cb4c62db5b9defeeaa99bfe0e4da51e760108f",
+  "public_imports": {
+    "python_multipart": [
+      "BaseParser",
+      "FormParser",
+      "MultipartParser",
+      "OctetStreamParser",
+      "QuerystringParser",
+      "create_form_parser",
+      "parse_form",
+      "__version__"
+    ],
+    "python_multipart.multipart": [
+      "BaseParser",
+      "Field",
+      "File",
+      "FormParser",
+      "MultipartParser",
+      "OctetStreamParser",
+      "QuerystringParser",
+      "create_form_parser",
+      "parse_form",
+      "parse_options_header"
+    ],
+    "python_multipart.decoders": ["Base64Decoder", "QuotedPrintableDecoder"],
+    "python_multipart.exceptions": [
+      "DecodeError",
+      "FileError",
+      "FormParserError",
+      "MultipartParseError",
+      "ParseError",
+      "QuerystringParseError"
+    ],
+    "multipart": [
+      "BaseParser",
+      "FormParser",
+      "MultipartParser",
+      "OctetStreamParser",
+      "QuerystringParser",
+      "create_form_parser",
+      "parse_form",
+      "__version__"
+    ]
+  },
+  "public_classes": {
+    "Field": ["from_value", "write", "on_data", "on_end", "finalize", "close", "set_none", "field_name@property", "value@property", "content_type@property"],
+    "File": ["field_name@property", "file_name@property", "actual_file_name@property", "file_object@property", "size@property", "in_memory@property", "content_type@property", "flush_to_disk", "write", "on_data", "on_end", "finalize", "close"],
+    "BaseParser": ["callback", "set_callback", "close", "finalize"],
+    "OctetStreamParser": ["write", "finalize"],
+    "QuerystringParser": ["write", "finalize"],
+    "MultipartParser": ["write", "finalize"],
+    "FormParser": ["write", "finalize", "close"],
+    "Base64Decoder": ["write", "close", "finalize"],
+    "QuotedPrintableDecoder": ["write", "close", "finalize"]
+  },
+  "source_files": [
+    "python_multipart/__init__.py",
+    "python_multipart/multipart.py",
+    "python_multipart/decoders.py",
+    "python_multipart/exceptions.py",
+    "multipart/__init__.py",
+    "tests/test_multipart.py",
+    "tests/test_file.py",
+    "tests/test_benchmarks.py"
+  ]
+}

@@ -1,0 +1,61 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/python-multipart"
+version = "1.0.0"
+description = "Build python-multipart from an empty workspace and implement its isolated streaming multipart, query-string, file, callback, and decoder contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "multipart",
+    "streaming",
+    "callbacks",
+    "form-parser",
+    "decoders",
+    "pytest",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-streaming-parser"
+tags = [
+    "python",
+    "multipart",
+    "form-parser",
+    "streaming",
+    "callbacks",
+    "decoders",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 48
+canonical_manifest_digest = "sha256:bae7d02a10939ff2434206d795432e3fd3a875159cdf420218f8b37dd72be045"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

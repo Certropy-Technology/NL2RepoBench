@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-multipart",
+  "terminal_kind": "valid",
+  "source_revision": "d9cb4c62db5b9defeeaa99bfe0e4da51e760108f",
+  "source_archive_sha256": "sha256:8a6e1fa8c2372a6e637d4b202598ab79264c5a81636a35fb0c02d2ad1ae0be67",
+  "source_archive_size_bytes": 573440,
+  "license": {
+    "spdx": "Apache-2.0",
+    "license_file_sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/compiled-python-multipart-final-final/python-multipart/bundle.manifest.json",
+    "sha256": "sha256:fea1908e17fb49380161faa6bae2f4cda3d2cf81748a16e5088785ee989b8b09",
+    "canonical_manifest_digest": "sha256:bae7d02a10939ff2434206d795432e3fd3a875159cdf420218f8b37dd72be045",
+    "file_count": 60
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "toolchain_lock_sha256": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden",
+      "oracle_source_host": "github.com"
+    },
+    "agent_runtime": {
+      "image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+      "expected_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+      "local_tag_observed_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+      "status": "requires_integrator_image_verification"
+    }
+  },
+  "dependencies": {
+    "runtime": [],
+    "build_packages": [
+      "hatchling==1.27.0",
+      "packaging==26.3",
+      "pathspec==1.1.1",
+      "pluggy==1.6.0",
+      "trove-classifiers==2026.6.1.19"
+    ],
+    "lock_artifact": {
+      "digest": "sha256:724c24e8bc09704f8c2337206e2b818eecbd66f0c791000997b28218e0e60324",
+      "size_bytes": 1238,
+      "path": ".nl2repo/artifacts/private/sha256/72/724c24e8bc09704f8c2337206e2b818eecbd66f0c791000997b28218e0e60324"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:91f107e0e8d7214f5ee19d58ae5d4146483b480f03d7ef4bae40c585a5c4b8a2",
+      "size_bytes": 30720,
+      "path": ".nl2repo/artifacts/private/sha256/91/91f107e0e8d7214f5ee19d58ae5d4146483b480f03d7ef4bae40c585a5c4b8a2"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:26a2b5dfbf749f94c81bedb2c8c1707b45734a421f959be0377e7dec66362058",
+      "size_bytes": 10240,
+      "path": ".nl2repo/artifacts/private/sha256/26/26a2b5dfbf749f94c81bedb2c8c1707b45734a421f959be0377e7dec66362058"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 48,
+    "collection": 48,
+    "verifier_entrypoint": "run.py",
+    "verifier_bundle": "sha256:91f107e0e8d7214f5ee19d58ae5d4146483b480f03d7ef4bae40c585a5c4b8a2",
+    "source_collection": {
+      "framework": "pytest",
+      "total": 160,
+      "deterministic_non_benchmark": 155,
+      "benchmark_deselected": 5
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-python-multipart-final-final/python-multipart -a oracle --allow-agent-host github.com --job-name python-multipart-final-final-oracle -o .nl2repo/runs/oracle/python-multipart-final-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 48,
+    "total": 48,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/oracle/python-multipart-final-final/python-multipart-final-final-oracle/python-multipart__BgBVMTd/verifier/grading.json",
+      "sha256": "sha256:88e477c1956ad3e4e042684ca18776fa9649ce5dce8270f722cb00b74928377a"
+    },
+    "network": {
+      "path": ".nl2repo/runs/oracle/python-multipart-final-final/python-multipart-final-final-oracle/python-multipart__BgBVMTd/verifier/network.json",
+      "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+    },
+    "source_fetch": "solve.sh fetched and asserted the exact revision and archive digest"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-python-multipart-final-final/python-multipart -a nop --job-name python-multipart-final-final-empty -o .nl2repo/runs/controls/python-multipart-final-final-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-empty/python-multipart-final-final-empty/python-multipart__cmJGRnj/verifier/grading.json",
+        "sha256": "sha256:831da25baeb729bbf57ead3d8a000cdf91a5a246def4eb8d32fa1eff37cb866f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-empty/python-multipart-final-final-empty/python-multipart__cmJGRnj/verifier/network.json",
+        "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/python-multipart-final-final/python-multipart-stub -a oracle --job-name python-multipart-final-final-stub -o .nl2repo/runs/controls/python-multipart-final-final-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 48,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-stub/python-multipart-final-final-stub/python-multipart-stub__HaoG5eV/verifier/grading.json",
+        "sha256": "sha256:001ade54b8f437e5e81720d59ec4f2897c601aa05c8187a7d2ba42321cedc8b6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-stub/python-multipart-final-final-stub/python-multipart-stub__HaoG5eV/verifier/network.json",
+        "sha256": "sha256:cfdea25213cf501bbb8fe1b30e6c46be8c2796b47c726be01246fb72d0d90cc5"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/python-multipart-final-final/python-multipart-forgery -a oracle --job-name python-multipart-final-final-forgery -o .nl2repo/runs/controls/python-multipart-final-final-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 48,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-forgery/python-multipart-final-final-forgery/python-multipart-forgery__hLYBy42/verifier/grading.json",
+        "sha256": "sha256:001ade54b8f437e5e81720d59ec4f2897c601aa05c8187a7d2ba42321cedc8b6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-forgery/python-multipart-final-final-forgery/python-multipart-forgery__hLYBy42/verifier/network.json",
+        "sha256": "sha256:59c5588ce0e1988c1ca683d902c74ba6f59d852e346ed141e94431d77fc9e90f"
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from python-multipart-remediated Oracle run",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/oracle/python-multipart-final-final/python-multipart-final-final-oracle/python-multipart__BgBVMTd/verifier/network.json",
+        "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9"
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/python-multipart-final-final/python-multipart-call-hang -a oracle --job-name python-multipart-final-final-call-hang -o .nl2repo/runs/controls/python-multipart-final-final-call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 48,
+      "reward": 0.0,
+      "bounded_seconds": 299,
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-call-hang/python-multipart-final-final-call-hang/python-multipart-call-hang__JqTHiEy/verifier/grading.json",
+        "sha256": "sha256:001ade54b8f437e5e81720d59ec4f2897c601aa05c8187a7d2ba42321cedc8b6"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-call-hang/python-multipart-final-final-call-hang/python-multipart-call-hang__JqTHiEy/verifier/network.json",
+        "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+      }
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/python-multipart-final-final/python-multipart-install-hang -a oracle --job-name python-multipart-final-final-install-hang -o .nl2repo/runs/controls/python-multipart-final-final-install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-install-hang/python-multipart-final-final-install-hang/python-multipart-install-hang__NcquAMF/verifier/grading.json",
+        "sha256": "sha256:831da25baeb729bbf57ead3d8a000cdf91a5a246def4eb8d32fa1eff37cb866f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/controls/python-multipart-final-final-install-hang/python-multipart-final-final-install-hang/python-multipart-install-hang__NcquAMF/verifier/network.json",
+        "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"
+      }
+    }
+  },
+  "remediation": {
+    "initial_failure": "private verifier invoked /usr/bin/runuser, absent from the locked Python image; all leaves observed null despite a successful candidate installation",
+    "fix": "task-local verifier now invokes /usr/sbin/runuser, the path present in the verifier image",
+    "old_verifier_bundle": "sha256:e6234007d9b72853abc845e8d2480c13018038b74c1da394a16df75a9bb75054",
+    "new_verifier_bundle": "sha256:91f107e0e8d7214f5ee19d58ae5d4146483b480f03d7ef4bae40c585a5c4b8a2"
+  },
+  "residual_risks": [
+    "The local OpenHands runtime tag ID differs from the toolchain-locked immutable image ID; integrator must restore or verify the official image before a model Agent Run.",
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "Blind review, traceability review, pilot, and publication approval remain pending."
+  ],
+  "status": "controls-passed"
+}

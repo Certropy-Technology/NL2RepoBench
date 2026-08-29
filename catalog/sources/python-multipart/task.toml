@@ -1,0 +1,92 @@
+schema_version = "1.0"
+task_id = "python-multipart"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-streaming-parser"
+tags = ["python", "multipart", "form-parser", "streaming", "callbacks", "decoders", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Kludex/python-multipart"
+revision = "d9cb4c62db5b9defeeaa99bfe0e4da51e760108f"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:8a6e1fa8c2372a6e637d4b202598ab79264c5a81636a35fb0c02d2ad1ae0be67"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["util-linux"]
+network_mode = "no-network"
+build_command = "install the hash-locked Hatchling build closure during Docker image construction"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate has no runtime dependencies. The hash-locked Hatchling build closure is installed during image construction; agent and verifier execution have no egress, while only the trusted Oracle receives the exact upstream source host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "hatchling==1.27.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "trove-classifiers==2026.6.1.19",
+]
+lock_artifact = { digest = "sha256:724c24e8bc09704f8c2337206e2b818eecbd66f0c791000997b28218e0e60324", size_bytes = 1238, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:724c24e8bc09704f8c2337206e2b818eecbd66f0c791000997b28218e0e60324", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 48
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build python-multipart from an empty workspace and implement its isolated streaming multipart, query-string, file, callback, and decoder contract."
+keywords = ["python", "multipart", "streaming", "callbacks", "form-parser", "decoders", "pytest", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:91f107e0e8d7214f5ee19d58ae5d4146483b480f03d7ef4bae40c585a5c4b8a2", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:91f107e0e8d7214f5ee19d58ae5d4146483b480f03d7ef4bae40c585a5c4b8a2", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:26a2b5dfbf749f94c81bedb2c8c1707b45734a421f959be0377e7dec66362058"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:26a2b5dfbf749f94c81bedb2c8c1707b45734a421f959be0377e7dec66362058"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Production Harbor bundle compiled with the remediated separate verifier; Oracle passed 48/48 with reward 1.0, and empty, stub, forgery, timeout, and offline controls completed with verifier-owned grading. Blind review, model Agent Run, and publication remain pending."

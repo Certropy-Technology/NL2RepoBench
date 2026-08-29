@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-multipart",
+  "source_revision": "d9cb4c62db5b9defeeaa99bfe0e4da51e760108f",
+  "upstream_collection": {
+    "framework": "pytest",
+    "total": 160,
+    "deterministic_non_benchmark": 155,
+    "benchmark_deselected": 5,
+    "collection_command": "python3 -m pytest --collect-only -q",
+    "behavior_command": "python3 -m pytest -q --no-cov -m 'not benchmark'",
+    "behavior_result": "155 passed, 5 deselected"
+  },
+  "frozen_verifier": {
+    "framework": "custom-json-v1",
+    "expected_total": 48,
+    "collection_source": "private deterministic scenario matrix",
+    "groups": {
+      "imports_and_exceptions": 4,
+      "header_and_values": 7,
+    "field_and_file": 8,
+      "decoders": 6,
+      "streaming_parsers": 8,
+      "multipart_and_helpers": 15
+    }
+  },
+  "adaptations": [
+    "Upstream randomized splitting and fuzz tests are represented by fixed chunk boundaries.",
+    "Benchmark-only leaves are excluded from the frozen task denominator.",
+    "Filesystem upload behavior is exercised only through the package temporary-file API in a bounded child process.",
+    "Private tests use a JSON child adapter rather than importing candidate code in the trusted verifier."
+  ]
+}
