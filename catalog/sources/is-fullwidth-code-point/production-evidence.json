@@ -1,0 +1,259 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-fullwidth-code-point",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 24,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/is-fullwidth-code-point",
+    "revision": "2696d873463fde9f6b09b49c98380bd49c67b00a",
+    "source_archive_sha256": "sha256:fdc4bd52b082a3ac5654f92c8b6b1d50d4c105cb48b65930e2e40a7673a7fdd0",
+    "license_spdx": "MIT",
+    "license_path": "license",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "source_worktree_clean": true
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["get-east-asian-width@1.6.0"],
+    "artifact": {
+      "digest": "sha256:9607e338cacf9eb43b7d8d7fcdbaf8447cabfc777c27a7ea635569ef6abe1376",
+      "size_bytes": 51200,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:9607e338cacf9eb43b7d8d7fcdbaf8447cabfc777c27a7ea635569ef6abe1376",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 24,
+    "commands_artifact": "sha256:7ab4a775639ec6c6f9d6c2038698f8cd66bb08e7c8234520edf4f881bee3d785",
+    "test_bundle": "sha256:a28ac087b1ebd11b492841ea2d1c670ad0bc705a7514f346c0208dac146c4901",
+    "collection": "24 node:test leaves; no collection errors",
+    "candidate_boundary": "candidate-boundary.json"
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/final-compile/is-fullwidth-code-point",
+    "bundle_manifest_sha256": "sha256:658e066def3d2990b665686d89abe869c6c9b09a0e57c4b941f436b5e8682d7d",
+    "canonical_manifest_digest": "sha256:7517589661d13cb98391836366ac396b02aabc52e8945eb4f5d07aa794c039f4",
+    "file_count": 84,
+    "manifest_mismatches": 0,
+    "allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/is-fullwidth-code-point -a oracle --allow-agent-host github.com --job-name is-fullwidth-code-point-oracle-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/oracle-current3 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "is-fullwidth-code-point__TmZ3WxC",
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/is-fullwidth-code-point/oracle-current3/is-fullwidth-code-point-oracle-current3/is-fullwidth-code-point__TmZ3WxC/verifier/grading.json",
+      "sha256": "sha256:4ca6734bd3788ce2ce269932edd6994c56836eeb16df7386c8f1169fe7852a36"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/is-fullwidth-code-point/oracle-current3/is-fullwidth-code-point-oracle-current3/is-fullwidth-code-point__TmZ3WxC/verifier/network.json",
+      "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-empty -a oracle --job-name is-fullwidth-code-point-empty-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/empty-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/empty-current3/is-fullwidth-code-point-empty-current3/is-fullwidth-code-point-empty__fdjft5r/verifier/grading.json",
+        "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/empty-current3/is-fullwidth-code-point-empty-current3/is-fullwidth-code-point-empty__fdjft5r/verifier/network.json",
+        "sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-stub -a oracle --job-name is-fullwidth-code-point-stub-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/stub-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/stub-current3/is-fullwidth-code-point-stub-current3/is-fullwidth-code-point-stub__PrAhukc/verifier/grading.json",
+        "sha256": "sha256:f9494b45daebeb393ffb8c4a7a4920e84c8947512adb1afe42e822c926552d6a"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/stub-current3/is-fullwidth-code-point-stub-current3/is-fullwidth-code-point-stub__PrAhukc/verifier/network.json",
+        "sha256": "sha256:bb952c4c508347e40306c11184ba53ba1e6506e1ddc7b27b72f9b3bab6705d30",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-forgery -a oracle --job-name is-fullwidth-code-point-forgery-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/forgery-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/forgery-current3/is-fullwidth-code-point-forgery-current3/is-fullwidth-code-point-forgery__xNhsVDC/verifier/grading.json",
+        "sha256": "sha256:f9494b45daebeb393ffb8c4a7a4920e84c8947512adb1afe42e822c926552d6a"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/forgery-current3/is-fullwidth-code-point-forgery-current3/is-fullwidth-code-point-forgery__xNhsVDC/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+        "public_network_available": false
+      }
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-install-script -a oracle --job-name is-fullwidth-code-point-install-script-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/install-script-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/install-script-current3/is-fullwidth-code-point-install-script-current3/is-fullwidth-code-point-install__xPN2ALw/verifier/grading.json",
+        "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/install-script-current3/is-fullwidth-code-point-install-script-current3/is-fullwidth-code-point-install__xPN2ALw/verifier/network.json",
+        "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b",
+        "public_network_available": false
+      }
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-loader-hook -a oracle --job-name is-fullwidth-code-point-loader-hook-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/loader-hook-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/loader-hook-current3/is-fullwidth-code-point-loader-hook-current3/is-fullwidth-code-point-loader-h__HDdBhXG/verifier/grading.json",
+        "sha256": "sha256:f9494b45daebeb393ffb8c4a7a4920e84c8947512adb1afe42e822c926552d6a"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/loader-hook-current3/is-fullwidth-code-point-loader-hook-current3/is-fullwidth-code-point-loader-h__HDdBhXG/verifier/network.json",
+        "sha256": "sha256:33a91dc07bf0dfcc17a87a327fc6c64d0a5b95a0a2b5c4db986e3df06653de1e",
+        "public_network_available": false
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-hang -a oracle --job-name is-fullwidth-code-point-hang-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/hang-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "failed": 24,
+      "reward": 0.0,
+      "bounded": true,
+      "classification": "bounded-candidate-hang",
+      "receipt_failure_class": null,
+      "receipt_failure_reason": null,
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/hang-current3/is-fullwidth-code-point-hang-current3/is-fullwidth-code-point-hang__o8Ji7WG/verifier/grading.json",
+        "sha256": "sha256:f9494b45daebeb393ffb8c4a7a4920e84c8947512adb1afe42e822c926552d6a"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/hang-current3/is-fullwidth-code-point-hang-current3/is-fullwidth-code-point-hang__o8Ji7WG/verifier/network.json",
+        "sha256": "sha256:ee1d8d7dc73a92cb43d9373f08f5b24fc9f9d4626cb8f8e0ac53c40c348371c9",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/is-fullwidth-code-point/is-fullwidth-code-point-offline -a oracle --job-name is-fullwidth-code-point-offline-current3 --jobs-dir .nl2repo/evidence/is-fullwidth-code-point/offline-current3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 24,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "completed": true,
+      "grading": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/offline-current3/is-fullwidth-code-point-offline-current3/is-fullwidth-code-point-offline__SknRiBr/verifier/grading.json",
+        "sha256": "sha256:f9494b45daebeb393ffb8c4a7a4920e84c8947512adb1afe42e822c926552d6a"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/is-fullwidth-code-point/offline-current3/is-fullwidth-code-point-offline-current3/is-fullwidth-code-point-offline__SknRiBr/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a",
+        "public_network_available": false
+      }
+    }
+  },
+  "oracle_bundle": {
+    "digest": "sha256:baf58342b89db76dee1cc13b94f19f8dfeae3b883975ce40f401ec8f31b828ea",
+    "size_bytes": 10240,
+    "media_type": "application/vnd.nl2repobench.oracle+tar",
+    "uri": "artifact://private/sha256:baf58342b89db76dee1cc13b94f19f8dfeae3b883975ce40f401ec8f31b828ea",
+    "visibility": "private"
+  },
+  "commands": [
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/is-fullwidth-code-point", "exit_code": 0},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "outcome": "0 errors; unrelated catalog warnings remain"},
+    {"stage": "production-compile", "command": "rm -rf .nl2repo/final-compile && uv run nl2repo harbor compile catalog/sources/is-fullwidth-code-point --output .nl2repo/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "bundle_manifest_sha256": "sha256:658e066def3d2990b665686d89abe869c6c9b09a0e57c4b941f436b5e8682d7d"},
+    {"stage": "syntax-and-integrity", "command": "git diff --check && bash -n catalog/sources/is-fullwidth-code-point/harbor/solution/solve.sh catalog/sources/is-fullwidth-code-point/harbor/controls/*.sh && node --check catalog/sources/is-fullwidth-code-point/harbor/tests/contract.test.mjs && node --check catalog/sources/is-fullwidth-code-point/harbor/tests/test_client.mjs", "exit_code": 0},
+    {"stage": "production-gate", "command": "python3 scripts/validate_node_production.py --task catalog/sources/is-fullwidth-code-point --bundle .nl2repo/final-compile/is-fullwidth-code-point --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/evidence/is-fullwidth-code-point/oracle-current3 --controls .nl2repo/evidence/is-fullwidth-code-point/control-summary-current3.json --output .nl2repo/evidence/is-fullwidth-code-point/production-gate-current3.json", "exit_code": 0}
+  ],
+  "residual_risks": [
+    "Independent review, model Agent Run, publication approval, and generated catalog/tasks integration remain outside this lane.",
+    "The host reports Node 22.23.1/npm 10.9.8; the production contract is pinned to the Node 24.19.0 image and npm 11.17.0 toolchain.",
+    "The full upstream test suite is not the denominator; the frozen deterministic contract is 24 node:test leaves.",
+    "Full catalog network lint retains unrelated warnings; this task has zero lint errors and only the expected Oracle host-authorization warning."
+  ]
+}

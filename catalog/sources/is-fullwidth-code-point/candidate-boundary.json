@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-fullwidth-code-point",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript out of the trusted node:test process while exercising the package root through a bounded JSON request/response boundary.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "call": "Import the package root default ESM export and call it once with one JSON-compatible value. Return only a boolean result or a bounded exception record.",
+    "inventory": "Not used by the generic runner; package shape is checked by install/package validation and the default export call contract."
+  },
+  "in_scope_values": [
+    "finite and non-finite JSON-representable number values",
+    "strings",
+    "booleans",
+    "null, arrays, and plain JSON objects"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

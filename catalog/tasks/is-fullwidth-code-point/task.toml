@@ -1,0 +1,63 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/is-fullwidth-code-point"
+version = "2.0.0"
+description = "Build an offline ESM package that classifies Unicode code points as fullwidth or wide."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "east-asian-width",
+    "code-point",
+]
+
+[metadata]
+difficulty = "easy"
+category = "unicode-classification"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "east-asian-width",
+    "code-point",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:7517589661d13cb98391836366ac396b02aabc52e8945eb4f5d07aa794c039f4"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
