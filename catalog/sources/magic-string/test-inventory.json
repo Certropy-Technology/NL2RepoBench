@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "magic-string",
+  "source_revision": "5473bfb5138e7b7c2fc91d964c0425f57f1470ce",
+  "upstream_framework": "vitest",
+  "upstream_files": 4,
+  "upstream_lines": 3377,
+  "frozen_framework": "node:test",
+  "frozen_report": "node-test-json-v1",
+  "frozen_total": 44,
+  "groups": {
+    "package-shape": 1,
+    "basic-edits": 10,
+    "range-and-movement": 10,
+    "text-helpers": 7,
+    "clone-and-metadata": 10,
+    "source-maps": 4,
+    "bundle": 4,
+    "errors": 4
+  },
+  "collection": "44 direct node:test leaves from one private contract file; adapter and tests are private artifacts"
+}

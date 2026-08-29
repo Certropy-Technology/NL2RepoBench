@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "magic-string",
+  "source_revision": "5473bfb5138e7b7c2fc91d964c0425f57f1470ce",
+  "module_format": "esm",
+  "root_exports": ["default", "Bundle", "MagicString", "MagicStringError", "SourceMap"],
+  "classes": {
+    "MagicString": ["constructor", "append", "appendLeft", "appendRight", "clone", "generateDecodedMap", "generateMap", "getIndentString", "indent", "lastChar", "lastLine", "length", "move", "overwrite", "prepend", "prependLeft", "prependRight", "remove", "replace", "replaceAll", "reset", "slice", "toString", "trim", "trimEnd", "trimLines", "trimStart", "update", "isEmpty", "hasChanged", "addSourcemapLocation"],
+    "Bundle": ["constructor", "addSource", "append", "clone", "generateDecodedMap", "generateMap", "getIndentString", "indent", "isEmpty", "length", "prepend", "toString", "trim", "trimEnd", "trimLines", "trimStart"],
+    "SourceMap": ["constructor", "toString", "toUrl"],
+    "MagicStringError": ["constructor"]
+  },
+  "excluded": ["callback substitutions", "regular-expression search", "browser globals", "non-JSON values", "complete upstream Vitest suite"]
+}

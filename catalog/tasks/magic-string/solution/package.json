@@ -1,0 +1,11 @@
+{
+  "name": "magic-string",
+  "version": "1.2.3",
+  "type": "module",
+  "exports": ".",
+  "types": "./dist/index.d.mts",
+  "files": ["dist"],
+  "dependencies": {
+    "@jridgewell/sourcemap-codec": "1.5.5"
+  }
+}

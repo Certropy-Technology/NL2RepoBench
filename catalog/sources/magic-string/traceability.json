@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "magic-string",
+  "contract_to_tests": {
+    "package root exports and metadata": ["package-shape"],
+    "append/prepend and indexed inserts": ["basic-edits"],
+    "update/overwrite/remove/reset/slice": ["range-and-movement"],
+    "move and original-index semantics": ["range-and-movement"],
+    "replace and replaceAll": ["basic-edits"],
+    "indent and trimming": ["text-helpers"],
+    "clone/length/empty/changed observations": ["clone-and-metadata"],
+    "decoded and encoded source maps": ["source-maps"],
+    "Bundle joining and independent clone": ["bundle"],
+    "MagicStringError identity and range failures": ["errors"]
+  },
+  "private_test_policy": "Tests invoke only JSON-safe operations through a UID-separated child adapter; no trusted process imports candidate code."
+}

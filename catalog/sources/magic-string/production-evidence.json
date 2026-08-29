@@ -1,0 +1,243 @@
+{
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/magic-string",
+      "exit_code": 0,
+      "stage": "source-validation"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated",
+      "exit_code": 0,
+      "outcome": "0 errors; magic-string has no findings; repository warnings are unrelated",
+      "stage": "network-lint"
+    },
+    {
+      "bundle_manifest": ".nl2repo/authoring-gate/magic-string/bundle.manifest.json",
+      "command": "uv run nl2repo harbor compile catalog/sources/magic-string --output .nl2repo/authoring-gate --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "stage": "production-compile"
+    },
+    {
+      "command": "node --test private contract against frozen Oracle distribution",
+      "exit_code": 0,
+      "outcome": "44/44 passed",
+      "stage": "private-contract"
+    },
+    {
+      "command": "bash -n harbor controls; node --check private mjs; parse JSON/TOML",
+      "exit_code": 0,
+      "stage": "syntax-integrity"
+    },
+    {
+      "command": "python3 scripts/validate_harbor_evidence.py --report .nl2repo/magic-string-production-gate.json --kind oracle",
+      "exit_code": 0,
+      "stage": "oracle-evidence-validation"
+    },
+    {
+      "command": "python3 scripts/validate_harbor_evidence.py --report .nl2repo/magic-string-production-gate.json --kind controls",
+      "exit_code": 0,
+      "stage": "controls-evidence-validation"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "stage": "diff-check"
+    }
+  ],
+  "compiled_bundle": {
+    "bundle_manifest_sha256": "sha256:85dcb41e7d38b5383a31f3154b59f181ffcbba5f1fcd10b7bcf908ee905413b2",
+    "canonical_manifest_digest": "sha256:6a39b4323bf9e4bb2156be1febe35081cfcdadad51690d26c863ca09f197c6ec",
+    "file_count": 93,
+    "mode": "production",
+    "path": ".nl2repo/authoring-gate/magic-string"
+  },
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-controls/magic-string-final/magic-string-empty -a oracle --job-name magic-string-final-empty-20260829 -o .nl2repo/runs/magic-string-final-empty-20260829 --n-concurrent 1 --force-build --yes",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/magic-string-final-empty-20260829/magic-string-final-empty-20260829/magic-string-empty__UPeYWvG/verifier/grading.json",
+        "sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca"
+      },
+      "network": {
+        "path": ".nl2repo/runs/magic-string-final-empty-20260829/magic-string-final-empty-20260829/magic-string-empty__UPeYWvG/verifier/network.json",
+        "sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 44,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-controls/magic-string-final/magic-string-forgery -a oracle --job-name magic-string-final-forgery-20260829 -o .nl2repo/runs/magic-string-final-forgery-20260829 --n-concurrent 1 --force-build --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/magic-string-final-forgery-20260829/magic-string-final-forgery-20260829/magic-string-forgery__XXw2WdG/verifier/grading.json",
+        "sha256": "sha256:7a9bebbf9f33a19d340607982b97c92e83233b6504af46533fa8e293ea08f752"
+      },
+      "network": {
+        "path": ".nl2repo/runs/magic-string-final-forgery-20260829/magic-string-final-forgery-20260829/magic-string-forgery__XXw2WdG/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "offline": {
+      "collected": 44,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-controls/magic-string-final/magic-string-offline -a oracle --job-name magic-string-final-offline-20260829 -o .nl2repo/runs/magic-string-final-offline-20260829 --n-concurrent 1 --force-build --yes",
+      "completed": true,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/magic-string-final-offline-20260829/magic-string-final-offline-20260829/magic-string-offline__eEZbm2R/verifier/grading.json",
+        "sha256": "sha256:7a9bebbf9f33a19d340607982b97c92e83233b6504af46533fa8e293ea08f752"
+      },
+      "network": {
+        "path": ".nl2repo/runs/magic-string-final-offline-20260829/magic-string-final-offline-20260829/magic-string-offline__eEZbm2R/verifier/network.json",
+        "sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"
+      },
+      "network_public_available": false,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 44,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-controls/magic-string-final/magic-string-stub -a oracle --job-name magic-string-final-stub-20260829 -o .nl2repo/runs/magic-string-final-stub-20260829 --n-concurrent 1 --force-build --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/magic-string-final-stub-20260829/magic-string-final-stub-20260829/magic-string-stub__a6NUBgs/verifier/grading.json",
+        "sha256": "sha256:7a9bebbf9f33a19d340607982b97c92e83233b6504af46533fa8e293ea08f752"
+      },
+      "network": {
+        "path": ".nl2repo/runs/magic-string-final-stub-20260829/magic-string-final-stub-20260829/magic-string-stub__a6NUBgs/verifier/network.json",
+        "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"
+      },
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependencies": {
+    "bundle": {
+      "digest": "sha256:6f7ee0c4aed7b295ee5248da37f9804a9c1880ab862b68c50aa7a0ef76e7be35",
+      "size_bytes": 133120,
+      "uri": "artifact://private/sha256:6f7ee0c4aed7b295ee5248da37f9804a9c1880ab862b68c50aa7a0ef76e7be35"
+    },
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile": "package-lock.json v3",
+    "packages": [
+      "@jridgewell/sourcemap-codec@1.5.5"
+    ]
+  },
+  "environment": {
+    "agent_allowed_hosts": [],
+    "architecture": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os_name": "debian-bookworm",
+    "toolchain": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "verifier_network": "none"
+  },
+  "extra_controls": {
+    "hang": {
+      "collected": 0,
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/runs/magic-string-hang-20260829/magic-string-hang-20260829/magic-string-hang__H8K8ett/verifier/grading.json",
+      "network_path": ".nl2repo/runs/magic-string-hang-20260829/magic-string-hang-20260829/magic-string-hang__H8K8ett/verifier/network.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-script": {
+      "collected": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/runs/magic-string-install-script-20260829/magic-string-install-script-20260829/magic-string-install-script__LadaKg3/verifier/grading.json",
+      "network_path": ".nl2repo/runs/magic-string-install-script-20260829/magic-string-install-script-20260829/magic-string-install-script__LadaKg3/verifier/network.json",
+      "reward": 0.0,
+      "valid": true
+    },
+    "loader-hook": {
+      "collected": 44,
+      "grading_path": ".nl2repo/runs/magic-string-loader-hook-20260829/magic-string-loader-hook-20260829/magic-string-loader-hook__DZhQ4iX/verifier/grading.json",
+      "network_path": ".nl2repo/runs/magic-string-loader-hook-20260829/magic-string-loader-hook-20260829/magic-string-loader-hook__DZhQ4iX/verifier/network.json",
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "next_unblock_action": "Integrator reviews the source/spec and accepts the compiled projection before any model Agent Run or publication.",
+  "oracle": {
+    "collected": 44,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/magic-string -a oracle --job-name magic-string-final-oracle-20260829 -o .nl2repo/runs/magic-string-final-oracle-20260829 --n-concurrent 1 --force-build --yes",
+    "exit_code": 0,
+    "expected_total": 44,
+    "failed": 0,
+    "grading": {
+      "path": ".nl2repo/runs/magic-string-final-oracle-20260829/magic-string-final-oracle-20260829/magic-string__X5ZFkPH/verifier/grading.json",
+      "sha256": "sha256:f88a3879204c82ce53c697478ce0e3eadcde1e78396d69a54582f9b0c9c2d96d"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/magic-string-final-oracle-20260829/magic-string-final-oracle-20260829/magic-string__X5ZFkPH/verifier/network.json",
+      "sha256": "sha256:ea969af0043868592fb30015700dffdf7d6076d4f578b2a54499bb28aa11a450"
+    },
+    "network_public_available": false,
+    "passed": 44,
+    "reward": 1.0,
+    "valid": true
+  },
+  "remediation": [
+    {
+      "issue": "Node verifier private tests were root-only (0500), preventing candidate UID from reading its adapter",
+      "resolution": "Changed generated Node verifier private tree permissions to 0555 in src/nl2repobench/harbor/node_compiler.py; rebuilt production bundle and Oracle passed 44/44."
+    },
+    {
+      "issue": "CLI control preparation defaulted to Python toolchain",
+      "resolution": "Prepared all controls with explicit toolchain.node.lock.toml."
+    }
+  ],
+  "residual_risks": [
+    "The contract is a bounded JSON-safe slice of the upstream API; callbacks, RegExp inputs, browser globals, and the complete Vitest suite are excluded by design.",
+    "No Harbor model Agent Run was started in this authoring lane.",
+    "Blind/spec review, traceability approval, pilot, publication, frozen input integration, and generated catalog/tasks projection remain integrator-owned."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_file_sha256": "sha256:1cbe51b907662f6cb1492b16c359384a595180bf0e4d101603ed525e75c4e484",
+    "license_spdx": "MIT",
+    "revision": "5473bfb5138e7b7c2fc91d964c0425f57f1470ce",
+    "source_digest": "sha256:1b3e623bb3bb86c83379df039c375108a2b468fecc4bcaf6ff02d3ee89275503",
+    "status": "known",
+    "submodules": [],
+    "upstream_url": "https://github.com/Rich-Harris/magic-string"
+  },
+  "status": "controls-passed",
+  "task_id": "magic-string",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "tests": {
+    "commands_bundle": {
+      "digest": "sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176"
+    },
+    "framework": "node:test",
+    "frozen_total": 44,
+    "report_format": "node-test-json-v1",
+    "test_bundle": {
+      "digest": "sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf",
+      "size_bytes": 20480,
+      "uri": "artifact://private/sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf"
+    }
+  }
+}
