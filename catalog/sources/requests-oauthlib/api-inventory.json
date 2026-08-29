@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-oauthlib",
+  "source_revision": "f33dac32bd065b835b34e7f0a48025700aae1e31",
+  "package_modules": 12,
+  "public_contract": ["requests_oauthlib.__version__", "requests_oauthlib.OAuth1", "requests_oauthlib.OAuth1Session", "requests_oauthlib.OAuth2", "requests_oauthlib.OAuth2Session", "requests_oauthlib.TokenUpdated", "requests_oauthlib.oauth1_session.TokenMissing", "requests_oauthlib.oauth1_session.TokenRequestDenied", "requests_oauthlib.oauth1_session.VerifierMissing", "requests_oauthlib.compliance_fixes.*_compliance_fix"],
+  "adaptation_boundaries": ["No live OAuth authorization, token, or protected-resource endpoints", "No browser, callback listener, credential store, proxy, TLS, or netrc integration", "Network-capable methods are observed only through local patched request implementations", "Private verifier executes candidate scenarios in an unprivileged JSON-safe subprocess"]
+}

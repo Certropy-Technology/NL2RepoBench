@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-oauthlib",
+  "source_revision": "f33dac32bd065b835b34e7f0a48025700aae1e31",
+  "upstream_test_files": 5,
+  "upstream_named_test_functions": 74,
+  "frozen_total": 20,
+  "frozen_total_source": "custom-json-v1 deterministic offline adaptation",
+  "leaf_ids": ["version_exports", "package_metadata", "oauth1_header_signing", "oauth1_query_signing", "oauth1_session_token", "oauth1_authorization_url", "oauth1_parse_response", "oauth1_missing_verifier", "oauth1_fetch_token", "oauth2_auth_header", "oauth2_auth_insecure", "oauth2_session_properties", "oauth2_authorization_url", "oauth2_pkce", "oauth2_invalid_pkce", "oauth2_token_fragment", "oauth2_fetch_token", "oauth2_refresh_token", "oauth2_request_and_hook", "compliance_fixes"],
+  "excluded_upstream_categories": ["real provider token and protected-resource traffic", "browser and Selenium examples", "netrc and proxy integration", "real TLS/client certificate paths", "wall-clock expiry behavior"]
+}

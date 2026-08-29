@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-oauthlib",
+  "terminal_kind": "valid",
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/compiled-final3/requests-oauthlib/bundle.manifest.json",
+    "sha256": "sha256:ea16c667b7e44aa96f56fc92d045e35d3890aeb0e50e03103bb956b7400a1b72"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/compiled-final3/requests-oauthlib -a oracle --job-name requests-oauthlib-oracle-final3 --allow-agent-host github.com -o .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/oracle-final3 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/oracle-final3/requests-oauthlib-oracle-final3/requests-oauthlib__k9n7xkG/verifier/grading.json",
+      "sha256": "sha256:7da33a29b0e8d63ddd2b0424c6d736fd9e855557ec012b1003dae96f97e6f416"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/oracle-final3/requests-oauthlib-oracle-final3/requests-oauthlib__k9n7xkG/verifier/network.json",
+      "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/compiled-final3/requests-oauthlib -a nop --job-name requests-oauthlib-empty-final3 -o .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/empty-final3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": "catalog/sources/requests-oauthlib/evidence/empty-grading.json",
+        "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+      },
+      "network": {
+        "path": "catalog/sources/requests-oauthlib/evidence/empty-network.json",
+        "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/controls-final3/stub/requests-oauthlib-stub -a oracle --job-name requests-oauthlib-stub-final3 -o .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/stub-final3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/stub-final3/requests-oauthlib-stub-final3/requests-oauthlib-stub__YMEVjwW/verifier/grading.json",
+        "sha256": "sha256:812db08671d3c47f72f6d11f914cfeda4539b3d79f86b085d2685853731e038e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/stub-final3/requests-oauthlib-stub-final3/requests-oauthlib-stub__YMEVjwW/verifier/network.json",
+        "sha256": "sha256:f68f0fda7fb7712ad269ef0b0c7a5ae7f0e327426ffb2680ad5d41f2db7539bc"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/controls-final3/forgery/requests-oauthlib-forgery -a oracle --job-name requests-oauthlib-forgery-final3 -o .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/forgery-final3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/forgery-final3/requests-oauthlib-forgery-final3/requests-oauthlib-forgery__sZPZWPq/verifier/grading.json",
+        "sha256": "sha256:812db08671d3c47f72f6d11f914cfeda4539b3d79f86b085d2685853731e038e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/forgery-final3/requests-oauthlib-forgery-final3/requests-oauthlib-forgery__sZPZWPq/verifier/network.json",
+        "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+      }
+    },
+    "offline": {
+      "command": "Official Harbor Oracle verifier network-none probe from the final3 bundle",
+      "completed": true,
+      "exit_code": 0,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/oracle-final3/requests-oauthlib-oracle-final3/requests-oauthlib__k9n7xkG/verifier/network.json",
+        "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/controls-final3/call-hang/requests-oauthlib-call-hang -a oracle --job-name requests-oauthlib-call-hang-final3 -o .nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/call-hang-final3 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/call-hang-final3/requests-oauthlib-call-hang-final3/requests-oauthlib-call-hang__xDJabZY/verifier/grading.json",
+        "sha256": "sha256:02724bb8c0813b83cc97111a9f60801c958cbc28057e37c496b64fa24e147e85"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/requests-oauthlib/runs/call-hang-final3/requests-oauthlib-call-hang-final3/requests-oauthlib-call-hang__xDJabZY/verifier/network.json",
+        "sha256": "sha256:af04a43116fabf3b411e64b1bc48e345fe375b461067a5530ae263a181a77e36"
+      }
+    }
+  }
+}

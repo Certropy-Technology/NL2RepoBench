@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-oauthlib",
+  "source_revision": "f33dac32bd065b835b34e7f0a48025700aae1e31",
+  "areas": {
+    "package": ["version_exports", "package_metadata"],
+    "oauth1_auth": ["oauth1_header_signing", "oauth1_query_signing", "oauth1_force_body"],
+    "oauth1_session": ["oauth1_session_initial", "oauth1_token_property", "oauth1_authorized", "oauth1_authorization_url", "oauth1_parse_response", "oauth1_missing_token", "oauth1_missing_verifier", "oauth1_fetch_request_token", "oauth1_fetch_denied"],
+    "oauth2_auth": ["oauth2_auth_header", "oauth2_auth_insecure"],
+    "oauth2_session": ["oauth2_session_initial", "oauth2_authorization_url", "oauth2_pkce", "oauth2_invalid_pkce", "oauth2_token_fragment", "oauth2_fetch_token", "oauth2_fetch_insecure", "oauth2_refresh_token", "oauth2_request_token", "oauth2_request_withhold", "oauth2_invalid_hook", "token_updated"],
+    "compliance_fixes": ["facebook_fix", "fitbit_fix", "mailchimp_fix", "weibo_fix", "slack_fix", "instagram_fix", "ebay_fix", "plentymarkets_fix"]
+  }
+}

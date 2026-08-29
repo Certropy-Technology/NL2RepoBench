@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "requests-oauthlib"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "oauth-client-library"
+tags = ["python", "oauth", "requests", "oauthlib", "offline", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/requests/requests-oauthlib"
+revision = "f33dac32bd065b835b34e7f0a48025700aae1e31"
+license_spdx = "ISC"
+source_digest = "sha256:478d1cc6726b58529aa658fc873d6d5086059e17ecefba87f3ab4083868d9df1"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier dependency closure is installed only during Docker build from a private hash-locked requirements artifact. Agent and verifier execution are network-isolated; only the trusted Oracle receives run-scoped access to the frozen upstream host."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["certifi==2026.7.22", "cffi==2.1.1", "charset-normalizer==3.5.1", "cryptography==50.0.1", "idna==3.19", "oauthlib==3.3.0", "pycparser==3.0", "pyjwt==2.13.0", "requests==2.31.0", "setuptools==80.9.0", "urllib3==2.7.0"]
+lock_artifact = { digest = "sha256:f6e0bac76cf4def49e6f48f503361f8c220a188d457c390cd94b936027848752", size_bytes = 28898, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:f6e0bac76cf4def49e6f48f503361f8c220a188d457c390cd94b936027848752", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:903d4c393e506258bfd1879e02dc0f30b6afa4835cd1d4313a02e6a8fe71a6b6", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:903d4c393e506258bfd1879e02dc0f30b6afa4835cd1d4313a02e6a8fe71a6b6", visibility = "private" }
+
+[harbor]
+description = "Build requests-oauthlib from an empty workspace and implement the deterministic offline OAuth 1 signing, OAuth 2 authorization/token handling, and local provider-compliance contract."
+keywords = ["python", "oauth", "requests", "oauthlib", "offline", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 150.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:65fda4b94372dc955d6dfd631305fe4a15485b3d149d71eebbd1bd7981e42f31"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:65fda4b94372dc955d6dfd631305fe4a15485b3d149d71eebbd1bd7981e42f31"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-archive-r2-c3"
+reason = "Frozen source, private hash-locked dependency closure, separate custom verifier, Oracle, and bounded controls passed; awaiting integrator model run."
