@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "source_revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+  "private_test_bundle": "sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c",
+  "bidirectional_groups": [
+    {"private_group": "package-shape-and-cli", "instruction_sections": ["Supports", "CLI"]},
+    {"private_group": "strings-and-control-escapes", "instruction_sections": ["jsesc", "String output"]},
+    {"private_group": "unicode-and-surrogates", "instruction_sections": ["String output", "es6"]},
+    {"private_group": "quote-and-context-options", "instruction_sections": ["options object", "quotes", "isScriptContext"]},
+    {"private_group": "numeric-modes-and-primitives", "instruction_sections": ["numbers", "jsesc"]},
+    {"private_group": "json-safe-recursive-values", "instruction_sections": ["value domain", "compact", "json"]},
+    {"private_group": "cli-io-and-errors", "instruction_sections": ["CLI", "Supports"]}
+  ],
+  "reverse_coverage": "Every scored behavior group is described by the public instruction; native/non-JSON upstream behaviors are explicitly excluded from the child adapter.",
+  "review_status": "authoring evidence; independent blind review remains integrator-owned"
+}

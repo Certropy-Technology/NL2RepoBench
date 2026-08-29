@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "source_revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+  "public_surface": [
+    {
+      "name": "jsesc",
+      "import_path": "require('jsesc')",
+      "signature": "jsesc(value, options?)",
+      "return_type": "string",
+      "kind": "callable CommonJS export",
+      "scored_inputs": ["string", "finite number", "boolean", "null", "array", "plain object"],
+      "options": [
+        "escapeEverything", "minimal", "isScriptContext", "quotes", "wrap", "es6",
+        "json", "compact", "lowercaseHex", "numbers", "indent", "indentLevel"
+      ],
+      "determinism": "No time, random, filesystem, or network state; array and own-key order are preserved.",
+      "errors": "Malformed CLI JSON is an error; ordinary JSON-safe library calls return source text."
+    },
+    {
+      "name": "jsesc.js",
+      "import_path": "require('jsesc').jsesc",
+      "signature": "jsesc(value, options?)",
+      "return_type": "string",
+      "kind": "same callable re-export"
+    },
+    {
+      "name": "version",
+      "import_path": "require('jsesc').version",
+      "signature": "string property",
+      "return_type": "'3.0.2'",
+      "kind": "metadata property"
+    },
+    {
+      "name": "CLI",
+      "import_path": "bin/jsesc",
+      "signature": "jsesc [options] [string]",
+      "return_type": "stdout text and process exit status",
+      "kind": "executable",
+      "options": ["single-quotes", "double-quotes", "wrap", "escape-everything", "escape-etago", "es6", "lowercase-hex", "json", "object", "pretty", "version", "help"]
+    }
+  ],
+  "out_of_scored_adapter": ["bigint", "undefined", "boxed primitives", "Map", "Set", "Buffer", "callbacks", "cycles", "Date", "Symbol", "RegExp"]
+}

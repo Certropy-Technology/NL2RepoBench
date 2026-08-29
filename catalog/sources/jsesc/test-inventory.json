@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "source_revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+  "upstream_test_runner": "npm test",
+  "upstream_test_framework": "Mocha",
+  "upstream_collection": {"scenarios": 2, "exit_code": 0},
+  "frozen_private_collection": {"framework": "node:test", "leaf_count": 48, "report_format": "node-test-json-v1"},
+  "behavior_groups": [
+    {"group": "package-shape-and-cli", "leaves": 5},
+    {"group": "strings-and-control-escapes", "leaves": 7},
+    {"group": "unicode-and-surrogates", "leaves": 6},
+    {"group": "quote-and-context-options", "leaves": 9},
+    {"group": "numeric-modes-and-primitives", "leaves": 9},
+    {"group": "json-safe-recursive-values", "leaves": 9},
+    {"group": "cli-io-and-errors", "leaves": 3}
+  ],
+  "excluded_upstream_behaviors": ["Map", "Set", "Buffer", "BigInt", "toJSON callback", "generated Unicode corpus"],
+  "collection_source": "private artifact sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c"
+}

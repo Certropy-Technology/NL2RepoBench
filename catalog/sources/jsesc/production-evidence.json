@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 48,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/mathiasbynens/jsesc",
+    "revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+    "source_digest": "sha256:2f611c6a89206ce324ec112596b7aef0f76a22ddf402fb1960ac11be15532cce",
+    "source_archive_path": ".nl2repo/authoring-work/jsesc/source.tar",
+    "source_archive_size_bytes": 81920,
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/jsesc/upstream/LICENSE-MIT.txt",
+    "license_digest": "sha256:483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "frozen_package": "jsesc@3.1.0"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:ea1e02e9e19e52e00fa71bfeaf9a275e3a7b33938d4430d274637c9e6d041065",
+    "dependency_artifact": "sha256:7ff145bb826a3ae8413d64b8759d4d92a07aad8e5be7e2f5a88966f4e48dca20",
+    "commands_artifact": "sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9",
+    "test_bundle": "sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c",
+    "oracle_bundle": "sha256:bc296bb069f9065c3905539b1060f4e1be7af92d8a00e50be260773704f21e1a",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled-jsesc-v2/jsesc/bundle.manifest.json",
+    "mode": "production",
+    "file_count": 74,
+    "canonical_manifest_digest": "sha256:d74e350ec2cd01a21a6d2bb7c7781897d6d672b8d677d248c0d30ba025f9266f",
+    "manifest_sha256": "sha256:a4c7d16601fbc0b54107fdf538b91db9a8de046e6918513c0b34f6678408a3b8",
+    "repeat_compile_byte_identical": true
+  },
+  "environment": {
+    "status": "known",
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "runtime": {"language": "node", "version": "24.19.0", "package_manager": "npm", "package_manager_version": "11.17.0", "architecture": "linux/amd64", "libc": "glibc"},
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "oracle_run_scoped_host": "github.com"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "consumer": "candidate-runtime",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {"digest": "sha256:7ff145bb826a3ae8413d64b8759d4d92a07aad8e5be7e2f5a88966f4e48dca20", "size_bytes": 10240, "media_type": "application/vnd.nl2repobench.npm-bundle+tar", "uri": "artifact://private/sha256:7ff145bb826a3ae8413d64b8759d4d92a07aad8e5be7e2f5a88966f4e48dca20", "visibility": "private"}
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 48,
+    "collection": "48 private node:test leaves; no collection errors",
+    "test_bundle": {"digest": "sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c", "size_bytes": 20480, "media_type": "application/vnd.nl2repobench.node-tests+tar", "uri": "artifact://private/sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c", "visibility": "private"},
+    "commands_artifact": {"digest": "sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9", "size_bytes": 10240, "media_type": "application/vnd.nl2repobench.node-commands+tar", "uri": "artifact://private/sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9", "visibility": "private"}
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-jsesc-v2/jsesc -a oracle --job-name jsesc-oracle-r3 --jobs-dir .nl2repo/runs-jsesc/oracle --n-concurrent 1 --allow-agent-host github.com --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 48,
+    "collected": 48,
+    "passed": 48,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/runs-jsesc/oracle/jsesc-oracle-r3/jsesc__PnGGDAx/verifier/grading.json", "sha256": "sha256:5db1e0daaa670427a61be34256dc52b482fa9aa3ecf8d987f815f5101bb2661a"},
+    "network": {"path": ".nl2repo/runs-jsesc/oracle/jsesc-oracle-r3/jsesc__PnGGDAx/verifier/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-jsesc/jsesc-empty -a oracle --job-name jsesc-empty-r3 --jobs-dir .nl2repo/runs-jsesc/empty --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "expected_total": 48, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading": {"path": ".nl2repo/runs-jsesc/empty/jsesc-empty-r3/jsesc-empty__6MB7FoP/verifier/grading.json", "sha256": "sha256:afdd78b352773cb24872bc1a4603c40176534371beae59a0c3a7361adf7b0936"}, "network": {"path": ".nl2repo/runs-jsesc/empty/jsesc-empty-r3/jsesc-empty__6MB7FoP/verifier/network.json", "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"}},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-jsesc/jsesc-stub -a oracle --job-name jsesc-stub-r3 --jobs-dir .nl2repo/runs-jsesc/stub --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "expected_total": 48, "collected": 48, "passed": 0, "reward": 0.0, "public_network_available": false, "grading": {"path": ".nl2repo/runs-jsesc/stub/jsesc-stub-r3/jsesc-stub__WzJtUw7/verifier/grading.json", "sha256": "sha256:413777f6c17d88dfd1f84d0a0a2de1506487cd3fb1604d850ef4ef5c554c4947"}, "network": {"path": ".nl2repo/runs-jsesc/stub/jsesc-stub-r3/jsesc-stub__WzJtUw7/verifier/network.json", "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"}},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-jsesc/jsesc-forgery -a oracle --job-name jsesc-forgery-r3 --jobs-dir .nl2repo/runs-jsesc/forgery --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "expected_total": 48, "collected": 48, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "workspace_forged_reward": 1.0, "public_network_available": false, "grading": {"path": ".nl2repo/runs-jsesc/forgery/jsesc-forgery-r3/jsesc-forgery__wAxZPda/verifier/grading.json", "sha256": "sha256:413777f6c17d88dfd1f84d0a0a2de1506487cd3fb1604d850ef4ef5c554c4947"}, "network": {"path": ".nl2repo/runs-jsesc/forgery/jsesc-forgery-r3/jsesc-forgery__wAxZPda/verifier/network.json", "sha256": "sha256:b45b718faf7fdf530f162eb810bd8e93a52a235681d52d4f6613410d76bc29de"}},
+    "offline": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-jsesc/jsesc-offline -a oracle --job-name jsesc-offline-r3 --jobs-dir .nl2repo/runs-jsesc/offline --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "completed": true, "expected_total": 48, "collected": 48, "passed": 0, "reward": 0.0, "public_network_available": false, "grading": {"path": ".nl2repo/runs-jsesc/offline/jsesc-offline-r3/jsesc-offline__TSbvXhe/verifier/grading.json", "sha256": "sha256:413777f6c17d88dfd1f84d0a0a2de1506487cd3fb1604d850ef4ef5c554c4947"}, "network": {"path": ".nl2repo/runs-jsesc/offline/jsesc-offline-r3/jsesc-offline__TSbvXhe/verifier/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}}
+  },
+  "additional_controls": {
+    "install-script": {"collected": 0, "passed": 0, "reward": 0.0, "bounded": true, "failure_reason": "candidate-installation-failed", "public_network_available": false, "grading_sha256": "sha256:afdd78b352773cb24872bc1a4603c40176534371beae59a0c3a7361adf7b0936", "network_sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"},
+    "loader-hook": {"collected": 48, "passed": 0, "reward": 0.0, "bounded": true, "public_network_available": false, "grading_sha256": "sha256:413777f6c17d88dfd1f84d0a0a2de1506487cd3fb1604d850ef4ef5c554c4947", "network_sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"},
+    "hang": {"collected": 48, "passed": 0, "reward": 0.0, "bounded": true, "public_network_available": false, "grading_sha256": "sha256:413777f6c17d88dfd1f84d0a0a2de1506487cd3fb1604d850ef4ef5c554c4947", "network_sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone https://github.com/mathiasbynens/jsesc; git fetch origin 203c8694d605b6f29d4c67d372897499ec4468fb; git checkout --detach 203c8694d605b6f29d4c67d372897499ec4468fb; git archive --format=tar 203c8694d605b6f29d4c67d372897499ec4468fb | sha256sum", "tool_version": "git 2.x; coreutils sha256sum", "exit_code": 0, "result": "revision and archive digest match"},
+    {"stage": "upstream-dependency-probe", "command": "npm install --ignore-scripts --no-audit --no-fund; npm test", "tool_version": "Node 22.23.1; npm 10.9.8", "exit_code": 0, "result": "225 development packages installed; upstream Mocha suite passed 2/2"},
+    {"stage": "environment-remediation", "command": "docker run --rm --platform linux/amd64 --entrypoint sh node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 -c 'node --version; npm --version; cat /etc/os-release | grep VERSION_ID; ldd --version | head -1'", "tool_version": "Docker 29.7.2", "exit_code": 0, "result": "Node 24.19.0; npm 11.17.0; Debian 12; glibc 2.36"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/jsesc", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "source manifest valid"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "zero errors; no jsesc finding"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/jsesc --output .nl2repo/compiled-jsesc-v2 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "production bundle with 74 files; manifest sha256:a4c7d16601fbc0b54107fdf538b91db9a8de046e6918513c0b34f6678408a3b8"},
+    {"stage": "deterministic-compile", "command": "repeat production compile and diff -qr .nl2repo/compiled-jsesc-v2 .nl2repo/compiled-jsesc-repeat", "tool_version": "nl2repobench current checkout", "exit_code": 0, "result": "byte-identical"},
+    {"stage": "syntax-and-inventory", "command": "python3 -m json.tool api-inventory.json; python3 -m json.tool test-inventory.json; python3 -m json.tool traceability.json; bash -n harbor/controls/*.sh; node --check frozen upstream JavaScript", "tool_version": "Python 3.12.11; Node 24.19.0; bash", "exit_code": 0, "result": "all task-local audits and scripts passed"},
+    {"stage": "oracle", "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-jsesc-v2/jsesc -a oracle --job-name jsesc-oracle-r3 --jobs-dir .nl2repo/runs-jsesc/oracle --n-concurrent 1 --allow-agent-host github.com --yes", "tool_version": "Harbor 0.21.0; Docker 29.7.2", "exit_code": 0, "result": "valid=true; 48/48; reward=1.0; no public network"},
+    {"stage": "controls", "command": "prepare-control plus Harbor oracle runs for empty, stub, forgery, install-script, loader-hook, hang, and offline", "tool_version": "Harbor 0.21.0; Docker 29.7.2", "exit_code": 0, "result": "all bounded controls completed; valid=true; reward=0.0; no public network"}
+  ],
+  "residual_risks": [
+    "Independent blind review and test-to-spec approval remain integrator/reviewer work.",
+    "No model Agent Run was started, as required by this lane boundary.",
+    "The source archive and full Harbor run trees remain task-local under .nl2repo and are not public catalog bytes."
+  ]
+}
