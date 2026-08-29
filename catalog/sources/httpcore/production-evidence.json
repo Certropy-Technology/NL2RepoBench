@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "terminal_kind": "valid",
+  "source_revision": "10a658221deb38a4c5b16db55ab554b0bf731707",
+  "source_digest": "sha256:0bbaaef868b9fbba549659a718592c2d938ca8af8809cb5f898eace7b3e282d9",
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/httpcore/compiled-production-final/httpcore/bundle.manifest.json",
+    "sha256": "sha256:0aa3a2def2a9865debb0ffe4d55654b12ada68b28796d54f1e5e77cb91950428",
+    "files": 60,
+    "mode": "production"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httpcore/compiled-production-final/httpcore -a oracle --job-name httpcore-oracle-handoff-20260828 -o .nl2repo/runs/httpcore-oracle-handoff-20260828 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/httpcore-oracle-handoff-20260828/httpcore-oracle-handoff-20260828/httpcore__azp7A6P/verifier/grading.json",
+      "sha256": "sha256:ee0f23d334f8fed64d20b2e35fb342e6285cc537d41ade0f12d06f1e9c6e0deb"
+    },
+    "network": {
+      "path": ".nl2repo/runs/httpcore-oracle-handoff-20260828/httpcore-oracle-handoff-20260828/httpcore__azp7A6P/verifier/network.json",
+      "sha256": "sha256:ab2e6731d1cafa2d73f56d3de8e047390dc49b571f2736a1bc10d4be89c2e18e",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httpcore/compiled-production-final/httpcore -a nop --job-name httpcore-empty-handoff-20260828 -o .nl2repo/runs/httpcore-empty-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/httpcore-empty-handoff-20260828/httpcore-empty-handoff-20260828/httpcore__b8aib3o/verifier/grading.json", "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"},
+      "network": {"path": ".nl2repo/runs/httpcore-empty-handoff-20260828/httpcore-empty-handoff-20260828/httpcore__b8aib3o/verifier/network.json", "sha256": "sha256:faa1dc6b62c80d45b1b0a5510f1d4e4fdb2743b020a72d403ce4100a06ea5472", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httpcore/controls-final/httpcore-stub -a oracle --job-name httpcore-stub-handoff-20260828 -o .nl2repo/runs/httpcore-stub-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/httpcore-stub-handoff-20260828/httpcore-stub-handoff-20260828/httpcore-stub__HGXYQTM/verifier/grading.json", "sha256": "sha256:650e6580bf3aebe29608e62080f1a1344a532cd2bf5a678f313d1fe7fe1a72c7"},
+      "network": {"path": ".nl2repo/runs/httpcore-stub-handoff-20260828/httpcore-stub-handoff-20260828/httpcore-stub__HGXYQTM/verifier/network.json", "sha256": "sha256:452553e30517e1cb6d7e65fbd1e6f21e58fe2a71e5f1726035afc35abd0f5be3", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httpcore/controls-final/httpcore-forgery -a oracle --job-name httpcore-forgery-handoff-20260828 -o .nl2repo/runs/httpcore-forgery-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 24,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/runs/httpcore-forgery-handoff-20260828/httpcore-forgery-handoff-20260828/httpcore-forgery__w7muFHh/verifier/grading.json", "sha256": "sha256:650e6580bf3aebe29608e62080f1a1344a532cd2bf5a678f313d1fe7fe1a72c7"},
+      "network": {"path": ".nl2repo/runs/httpcore-forgery-handoff-20260828/httpcore-forgery-handoff-20260828/httpcore-forgery__w7muFHh/verifier/network.json", "sha256": "sha256:9161a66d725d2850505c74dc6f832977a0c1ae3f359ff99a9d1bf941b451e1d5", "public_network_available": false}
+    },
+    "timeout": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httpcore/controls-final/httpcore-install-hang -a oracle --job-name httpcore-install-hang-handoff-20260828 -o .nl2repo/runs/httpcore-install-hang-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "reason": "candidate-installation-timeout",
+      "grading": {"path": ".nl2repo/runs/httpcore-install-hang-handoff-20260828/httpcore-install-hang-handoff-20260828/httpcore-install-hang__SSd5ESF/verifier/grading.json", "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"},
+      "network": {"path": ".nl2repo/runs/httpcore-install-hang-handoff-20260828/httpcore-install-hang-handoff-20260828/httpcore-install-hang__SSd5ESF/verifier/network.json", "sha256": "sha256:452553e30517e1cb6d7e65fbd1e6f21e58fe2a71e5f1726035afc35abd0f5be3", "public_network_available": false}
+    },
+    "workspace-invalid": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/httpcore/controls-final/httpcore-workspace-invalid -a oracle --job-name httpcore-workspace-invalid-handoff-20260828 -o .nl2repo/runs/httpcore-workspace-invalid-handoff-20260828 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "reason": "candidate-workspace-rejected",
+      "grading": {"path": ".nl2repo/runs/httpcore-workspace-invalid-handoff-20260828/httpcore-workspace-invalid-handoff-20260828/httpcore-workspace-invalid__T8L5Ebh/verifier/grading.json", "sha256": "sha256:5b344afc638cd8733ce3f751536de6e19d72259319507c5aca4eab1efbac46aa"},
+      "network": {"path": ".nl2repo/runs/httpcore-workspace-invalid-handoff-20260828/httpcore-workspace-invalid-handoff-20260828/httpcore-workspace-invalid__T8L5Ebh/verifier/network.json", "sha256": "sha256:e8de4b28910504802fd7764067ed4c80eb39b7f352d6c189fe5483c0ec54fb99", "public_network_available": false}
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "probes": {"pypi.org:443": false, "1.1.1.1:443": false},
+      "network_path": ".nl2repo/runs/httpcore-oracle-handoff-20260828/httpcore-oracle-handoff-20260828/httpcore__azp7A6P/verifier/network.json",
+      "network_sha256": "sha256:ab2e6731d1cafa2d73f56d3de8e047390dc49b571f2736a1bc10d4be89c2e18e"
+    }
+  },
+  "residual_risks": [
+    "The upstream full suite includes live socket, DNS, proxy, Trio, and AnyIO integration paths; they are documented but outside the bounded deterministic denominator.",
+    "The source network lint reports unrelated warnings for other catalog tasks; httpcore has zero task-local findings and zero errors.",
+    "Review, model Agent Run, dataset integration, and publication remain integrator-owned stages."
+  ]
+}

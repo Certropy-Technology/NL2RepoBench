@@ -1,0 +1,102 @@
+schema_version = "1.0"
+task_id = "httpcore"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "http-transport"
+tags = ["python", "http", "http11", "http2", "async", "connection-pool", "mock-backend", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/encode/httpcore"
+revision = "10a658221deb38a4c5b16db55ab554b0bf731707"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:0bbaaef868b9fbba549659a718592c2d938ca8af8809cb5f898eace7b3e282d9"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "pip installs the candidate build/runtime closure during image build from the private hash lock"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier dependency closures are installed during Docker build from private hash-locked requirements. Agent and verifier execution is network-isolated; only the trusted Oracle receives the private digest-verified source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "anyio==4.14.2",
+  "certifi==2026.7.22",
+  "h11==0.16.0",
+  "h2==4.4.1",
+  "hatch-fancy-pypi-readme==25.1.0",
+  "hatchling==1.27.0",
+  "hpack==4.2.0",
+  "hyperframe==6.1.0",
+  "idna==3.19",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "trove-classifiers==2026.6.1.19",
+  "typing-extensions==4.16.0",
+]
+lock_artifact = { digest = "sha256:dc2a13a34eb0da9ba22a1de076a125e02a98403b015d5729ebfdf24dd51733b5", size_bytes = 3653, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:dc2a13a34eb0da9ba22a1de076a125e02a98403b015d5729ebfdf24dd51733b5", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pinned httpcore low-level HTTP transport library from an empty workspace and satisfy a deterministic MockBackend contract for models, HTTP/1.1, HTTP/2, async transport, and connection pools."
+keywords = ["python", "http", "http11", "http2", "async", "mock-backend", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:213c0497a6559a4125519f8bb6b6ae41caa969ed81504ef9c8330e8492306856", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:213c0497a6559a4125519f8bb6b6ae41caa969ed81504ef9c8330e8492306856", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[oracle_bundle]
+digest = "sha256:8ce57d5d76951cdb69bca863b03620112fb4534adeb092e82158ae7dfad5e281"
+size_bytes = 645120
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8ce57d5d76951cdb69bca863b03620112fb4534adeb092e82158ae7dfad5e281"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-httpcore"
+reason = "Production compile, Oracle 24/24 reward 1.0, empty/stub/forgery/timeout/workspace-invalid controls, and offline network evidence passed; model Agent Run, review, and publication remain outside this lane."

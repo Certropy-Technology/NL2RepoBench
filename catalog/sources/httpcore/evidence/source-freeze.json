@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "upstream_url": "https://github.com/encode/httpcore",
+  "revision": "10a658221deb38a4c5b16db55ab554b0bf731707",
+  "revision_verified": true,
+  "license_spdx": "BSD-3-Clause",
+  "license_path": ".nl2repo/authoring-work/python-author-wave2-20260828/httpcore/source/LICENSE.md",
+  "license_sha256": "sha256:fdcb59154c74cbaba16a11242f7740bea9f23d6feb5547917d8c5f94a80392a5",
+  "source_acquisition": "git clone from upstream followed by detached checkout",
+  "source_tree": ".nl2repo/authoring-work/python-author-wave2-20260828/httpcore/source",
+  "python_inventory_digest": "sha256:0bbaaef868b9fbba549659a718592c2d938ca8af8809cb5f898eace7b3e282d9",
+  "notes": "The scored task uses a private deterministic adapter; upstream live network integration tests are excluded from the frozen denominator."
+}

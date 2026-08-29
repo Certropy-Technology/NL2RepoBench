@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "scanner": "python-ast-stdlib",
+  "source_revision": "10a658221deb38a4c5b16db55ab554b0bf731707",
+  "implementation_loc": 5767,
+  "test_loc": 4738,
+  "python_files": 32,
+  "test_files": 23,
+  "public_symbol_count": 591,
+  "upstream_test_definitions": 153,
+  "import_edges": 593,
+  "risk_flags": ["dynamic-execution", "external-service"],
+  "adaptation": {
+    "external-service": "live socket, DNS, httpbin, and proxy integration tests are excluded; MockStream and MockBackend protocol cases are retained",
+    "dynamic-execution": "candidate imports are confined to child-side adapters and no trusted process imports candidate modules"
+  },
+  "scored_surface": [
+    "URL, Origin, Proxy, Request, Response",
+    "sync and async byte-stream consumption",
+    "MockStream and MockBackend",
+    "HTTP/1.1 status/header/body parsing and upgrade handling",
+    "HTTP/2 frame parsing through MockBackend",
+    "connection pools, keepalive, close headers, tracing, and lifecycle state",
+    "public exception hierarchy and sync/async interfaces"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "source_revision": "10a658221deb38a4c5b16db55ab554b0bf731707",
+  "frozen_denominator": 24,
+  "cases": [
+    {"id": "api-surface", "behavior": "root exports, version, sync/async interfaces", "instruction": "Models and exports"},
+    {"id": "url-origin-proxy", "behavior": "URL parsing, origin defaults, proxy auth", "instruction": "Models and exports"},
+    {"id": "request-model", "behavior": "request normalization and target extension", "instruction": "Models and exports"},
+    {"id": "response-buffered", "behavior": "buffered response read/content", "instruction": "Response streams"},
+    {"id": "response-sync-stream", "behavior": "one-shot sync stream", "instruction": "Response streams"},
+    {"id": "response-async-stream", "behavior": "one-shot async stream", "instruction": "Response streams"},
+    {"id": "mock-stream", "behavior": "deterministic mock stream IO", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http11-basic", "behavior": "HTTP/1.1 request/response and idle state", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http11-post-body", "behavior": "HTTP/1.1 request body path", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http11-interim", "behavior": "ignore interim 1xx responses", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http11-upgrade", "behavior": "101 upgrade network stream", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http11-errors", "behavior": "protocol and illegal-header errors", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http11-lifecycle", "behavior": "concurrency, wrong origin, unread close", "instruction": "Mock backends and HTTP connections"},
+    {"id": "pool-keepalive", "behavior": "connection reuse", "instruction": "Mock backends and HTTP connections"},
+    {"id": "pool-close-header", "behavior": "close header discards connection", "instruction": "Mock backends and HTTP connections"},
+    {"id": "pool-trace", "behavior": "sync trace callbacks", "instruction": "Mock backends and HTTP connections"},
+    {"id": "async-http11-basic", "behavior": "async HTTP/1.1 request/response", "instruction": "Mock backends and HTTP connections"},
+    {"id": "async-http11-interim", "behavior": "async interim responses", "instruction": "Mock backends and HTTP connections"},
+    {"id": "async-pool-keepalive", "behavior": "async connection reuse", "instruction": "Mock backends and HTTP connections"},
+    {"id": "async-trace", "behavior": "async trace callbacks", "instruction": "Mock backends and HTTP connections"},
+    {"id": "http2-basic", "behavior": "HTTP/2 frame response", "instruction": "Mock backends and HTTP connections"},
+    {"id": "interfaces", "behavior": "sync/async origin interface methods", "instruction": "Mock backends and HTTP connections"},
+    {"id": "exception-contracts", "behavior": "exception inheritance", "instruction": "Exceptions and top-level helpers"},
+    {"id": "deterministic-projection", "behavior": "stable repr/URL/origin projections", "instruction": "Implementation Notes"}
+  ]
+}

@@ -1,0 +1,61 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/httpcore"
+version = "0.1.0"
+description = "Build the pinned httpcore low-level HTTP transport library from an empty workspace and satisfy a deterministic MockBackend contract for models, HTTP/1.1, HTTP/2, async transport, and connection pools."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "http",
+    "http11",
+    "http2",
+    "async",
+    "mock-backend",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "http-transport"
+tags = [
+    "python",
+    "http",
+    "http11",
+    "http2",
+    "async",
+    "connection-pool",
+    "mock-backend",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:7e73f2cca20ea76de16f5894a53ff94c88cc6f7dccf6bda3c7b88121c806dd44"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
