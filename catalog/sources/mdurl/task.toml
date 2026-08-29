@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "mdurl"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "url-parsing-and-encoding"
+tags = ["python", "url", "parsing", "percent-encoding", "commonmark", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/executablebooks/mdurl"
+revision = "524d2edbbcb8bb48301ba716c7482827bcabb281"
+license_spdx = "MIT"
+source_digest = "sha256:f0caa116deb9e08c885a2ae9df766a05b9a4974ea684d298fbaed0f2d0884595"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked Flit build dependency is installed during Docker image construction. Candidate and verifier execution have no egress; only the trusted Oracle receives the exact upstream host override and verifies the frozen revision and archive digest."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit_core==3.12.0"]
+lock_artifact = { digest = "sha256:4b02b4a26d9cc1cf2ea6dbbe11fdeb65ce9bec6372e2bab1343a7f59064a1b1f", size_bytes = 176, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:4b02b4a26d9cc1cf2ea6dbbe11fdeb65ce9bec6372e2bab1343a7f59064a1b1f", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 199
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/fixture-url.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b922945d177720a6b319b2ffeca15480ee103e3c3a248df59c8ebd1f0290e8b8", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b922945d177720a6b319b2ffeca15480ee103e3c3a248df59c8ebd1f0290e8b8", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build mdurl 0.1.2 from an empty workspace and satisfy a deterministic URL parse, format, percent-encode, and percent-decode contract through a separate subprocess verifier."
+keywords = ["python", "url", "parsing", "encoding", "decoding", "separate-verifier", "no-network"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-mdurl"
+reason = "Harbor 0.21.0 Oracle, empty, stub, forgery, install-timeout, and offline controls passed on the final compiled bundle. Harbor Agent Run, review, and publication remain separate integrator stages."

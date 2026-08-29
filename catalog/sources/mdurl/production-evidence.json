@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdurl",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/executablebooks/mdurl",
+    "revision": "524d2edbbcb8bb48301ba716c7482827bcabb281",
+    "archive_sha256": "sha256:f0caa116deb9e08c885a2ae9df766a05b9a4974ea684d298fbaed0f2d0884595",
+    "archive_size_bytes": 81920,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:7c605df6e28667a9603118e98274f64a49ce3eed0d26fccce9534a345e0ef955",
+    "license_size_bytes": 2338
+  },
+  "environment": {
+    "python": "3.12.14",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "declared_agent_runtime_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "observed_local_agent_runtime_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "sha256:4b02b4a26d9cc1cf2ea6dbbe11fdeb65ce9bec6372e2bab1343a7f59064a1b1f",
+    "lock_size_bytes": 176,
+    "packages": [
+      "flit_core==3.12.0"
+    ],
+    "hash_locked_install_verified": true
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "upstream_collected": 189,
+    "upstream_passed": 189,
+    "frozen_total": 199,
+    "verifier_bundle": "sha256:b922945d177720a6b319b2ffeca15480ee103e3c3a248df59c8ebd1f0290e8b8",
+    "verifier_bundle_size_bytes": 30720,
+    "oracle_bundle": "sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a",
+    "oracle_bundle_size_bytes": 10240
+  },
+  "bundle_manifest": {
+    "path": ".nl2repo/authoring-work/mdurl/compiled-handoff/mdurl/bundle.manifest.json",
+    "sha256": "sha256:c1cb88dc8847768c280a1fed93f2646523262e9e105f05a29f2f6c649456df89",
+    "canonical_manifest_digest": "sha256:fb593cdddeda181556263f1314d3a15d5ee49e3ebbe5f2411c37618ecc6695ba",
+    "file_count": 59,
+    "repeat_compile_byte_identical": true
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/mdurl",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/mdurl/evidence/handoff-source-validate.log",
+        "sha256": "sha256:726e6b5f2161c6563c2f4b8d796e8845b8302016fecbfaa95a7fd343a7652d24"
+      }
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "task_warning": "oracle-requires-host-authorization",
+      "log": {
+        "path": ".nl2repo/authoring-work/mdurl/evidence/handoff-network-lint.log",
+        "sha256": "sha256:8cf7af60074ca5393f442a54a0ba26d703916efb1e269b56b88232a64864f4b8"
+      }
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/mdurl --output .nl2repo/authoring-work/mdurl/compiled-handoff --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": {
+        "path": ".nl2repo/authoring-work/mdurl/evidence/handoff-compile.log",
+        "sha256": "sha256:f868c8ca1c609fb1b236f07c2069c1f633ef75a8ef95e101ef72c4fd02700c7f"
+      }
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdurl/compiled-v2/mdurl -a oracle --allow-agent-host github.com --job-name mdurl-v2-oracle-20260829 -o .nl2repo/authoring-work/mdurl/runs-v2/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 199,
+    "passed": 199,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/mdurl/runs-v2/oracle/mdurl-v2-oracle-20260829/mdurl__5aiCAoM/verifier/grading.json",
+      "sha256": "sha256:28bcabf48cd952e070ee79c4665a6d06a8d14fc78c0089cf76e0cd7f0814dcd8"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/mdurl/runs-v2/oracle/mdurl-v2-oracle-20260829/mdurl__5aiCAoM/verifier/network.json",
+      "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+    },
+    "source_fetch": "solve.sh asserted the exact revision and source archive digest"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdurl/compiled-v2/mdurl -a nop --job-name mdurl-v2-empty-20260829 -o .nl2repo/authoring-work/mdurl/runs-v2/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_reason": "candidate-installation-failed",
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/empty/mdurl-v2-empty-20260829/mdurl__PemZtQk/verifier/grading.json",
+        "sha256": "sha256:e287decdcb84f6175fa29fdb921c3486dbd3fff612ea68b2c6b0f60c62f52a29"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/empty/mdurl-v2-empty-20260829/mdurl__PemZtQk/verifier/network.json",
+        "sha256": "sha256:d7c5caa7a046db68edc37686cb36fdbf31b079283365d624845ec6696c08d6ba"
+      }
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/mdurl/compiled-v2/mdurl stub --output .nl2repo/authoring-work/mdurl/controls-v2 --toolchain toolchain.lock.toml && uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdurl/controls-v2/mdurl-stub -a oracle --job-name mdurl-v2-stub-20260829 -o .nl2repo/authoring-work/mdurl/runs-v2/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 199,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/stub/mdurl-v2-stub-20260829/mdurl-stub__MMgMpjv/verifier/grading.json",
+        "sha256": "sha256:96f6a23355c10c94eb56442850a54c6366676faf15c18efbad132f06fec342d4"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/stub/mdurl-v2-stub-20260829/mdurl-stub__MMgMpjv/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+      }
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/mdurl/compiled-v2/mdurl forgery --output .nl2repo/authoring-work/mdurl/controls-v2 --toolchain toolchain.lock.toml && uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdurl/controls-v2/mdurl-forgery -a oracle --job-name mdurl-v2-forgery-retry-20260829 -o .nl2repo/authoring-work/mdurl/runs-v2/forgery-retry --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 199,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "candidate_fake_report_ignored": true,
+      "candidate_fake_report": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/forgery-retry/mdurl-v2-forgery-retry-20260829/mdurl-forgery__qrvDXN6/artifacts/workspace/reward.json",
+        "sha256": "sha256:f7a33bde80147770d70bbf07b3cfb60688a4f80a5e0a2ea5e63bfb5c3b1194bc"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/forgery-retry/mdurl-v2-forgery-retry-20260829/mdurl-forgery__qrvDXN6/verifier/grading.json",
+        "sha256": "sha256:96f6a23355c10c94eb56442850a54c6366676faf15c18efbad132f06fec342d4"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/forgery-retry/mdurl-v2-forgery-retry-20260829/mdurl-forgery__qrvDXN6/verifier/network.json",
+        "sha256": "sha256:87d07d4be1c1013b5e183dba5f19a19d2725da9d7b55e0587e02ea8139e1e149"
+      }
+    },
+    "install_timeout": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/mdurl/compiled-v2/mdurl install-hang --output .nl2repo/authoring-work/mdurl/controls-v2 --toolchain toolchain.lock.toml && uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/mdurl/controls-v2/mdurl-install-hang -a oracle --job-name mdurl-v2-install-hang-20260829 -o .nl2repo/authoring-work/mdurl/runs-v2/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_reason": "candidate-installation-failed",
+      "install_outcome": "timeout",
+      "install_returncode": -9,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/install-hang/mdurl-v2-install-hang-20260829/mdurl-install-hang__sKhF4im/verifier/grading.json",
+        "sha256": "sha256:e287decdcb84f6175fa29fdb921c3486dbd3fff612ea68b2c6b0f60c62f52a29"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/install-hang/mdurl-v2-install-hang-20260829/mdurl-install-hang__sKhF4im/verifier/network.json",
+        "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/install-hang/mdurl-v2-install-hang-20260829/mdurl-install-hang__sKhF4im/verifier/candidate-install.json",
+        "sha256": "sha256:ea0575015e2e21e86dc891e296a20a3e6db91e5d09024094e3d358d9ed296060"
+      }
+    },
+    "offline": {
+      "command": "official Harbor verifier network probe from the mdurl Oracle run",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/authoring-work/mdurl/runs-v2/oracle/mdurl-v2-oracle-20260829/mdurl__5aiCAoM/verifier/network.json",
+        "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"
+      }
+    }
+  },
+  "residual_risks": [
+    "The immutable OpenHands agent image ID declared by toolchain.lock.toml is not present locally; the configured tag resolves to sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123 and the bounded pull attempt was denied. The integrator must restore sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5 or relock and rerun before a model Agent Run.",
+    "The github.com authorization was supplied only to the trusted Oracle solution; model Agent metadata remains no-network with no allowed hosts.",
+    "No model Agent Run, review, pilot, dataset integration, or publication was performed in this lane."
+  ]
+}
