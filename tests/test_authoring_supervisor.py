@@ -267,6 +267,7 @@ def test_runtime_config_is_bounded_and_operator_owned(tmp_path: Path) -> None:
 def test_go_discovery_pool_has_explicit_repository_mappings() -> None:
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-btree"] == "google/btree"
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-cast"] == "spf13/cast"
+    assert supervisor.GO_DISCOVERY_REPOSITORIES["go-mapstructure"] == "mitchellh/mapstructure"
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-uuid"] == "google/uuid"
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-xxhash"] == "cespare/xxhash"
 
