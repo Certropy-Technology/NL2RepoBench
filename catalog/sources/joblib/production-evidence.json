@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "task_id": "joblib",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/joblib/joblib",
+    "revision": "4ff61afd0849f18fddf5fbd137c1f02bfaed5223",
+    "archive_sha256": "sha256:d72b0680c99b50f5bfed07eaef12763c59e30e07e151f5181d75dbfda3d525c6",
+    "archive_size_bytes": 1628160,
+    "license_spdx": "BSD-3-Clause",
+    "license_file_sha256": "sha256:42612911c1872c5e4b43f6ae0e8ee59467cd350332241cf72ce90640264fae6a",
+    "oracle_bundle_member": "source.tar",
+    "oracle_bundle": "artifact://private/sha256:110395e4297e5d14316a5cc0a37792386261d4bf5905674020bffd2b1de02637"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "lock_artifact": "artifact://private/sha256:107dec1f59314223e9245ef5e05afff4d16fc3ac10e2a5f14d3b7729a62e95b7",
+    "lock_sha256": "sha256:107dec1f59314223e9245ef5e05afff4d16fc3ac10e2a5f14d3b7729a62e95b7",
+    "lock_size_bytes": 11178,
+    "packages": [
+      "cloudpickle==3.1.1",
+      "lz4==4.4.4",
+      "numpy==2.3.2",
+      "setuptools==84.0.0",
+      "wheel==0.45.1"
+    ]
+  },
+  "frozen_collection": {
+    "expected_total": 33,
+    "source": "private custom-json-v1 deterministic local contract",
+    "upstream_collect_only": 1540,
+    "scenario_groups": {
+      "parallel": 10,
+      "persistence": 7,
+      "hashing": 4,
+      "memory": 8,
+      "utilities": 4
+    }
+  },
+  "bundle": {
+    "manifest": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun/joblib/bundle.manifest.json",
+    "manifest_sha256": "sha256:890016b446c8a967a27738b9d9134bb77d3cfb3840ba029027965803004cce80",
+    "canonical_manifest_digest": "sha256:65680f314cd874a0dbf21efb085a129bf1452b7e724c758a33bb55df95bcfc73",
+    "entries": 59,
+    "toolchain_lock": "toolchain.lock.toml",
+    "toolchain_lock_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+    "compiled_toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "verifier_bundle": "artifact://private/sha256:6b696b9ac82c3e59deb142f3f13d460878117d5f9177b6aff4548b6844a8db20",
+    "oracle_bundle": "artifact://private/sha256:110395e4297e5d14316a5cc0a37792386261d4bf5905674020bffd2b1de02637"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run --frozen nl2repo task validate-source catalog/sources/joblib",
+      "exit_code": 0,
+      "source_content_sha256": "sha256:dc4337866b1fe86f72e02424ee607dbf446561c5d8ca280f32b4bb486899696d"
+    },
+    "lint_network": {
+      "command": "uv run --frozen nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "joblib_errors": 0,
+      "repository_warnings": 141
+    },
+    "production_compile": {
+      "command": "uv run --frozen nl2repo harbor compile catalog/sources/joblib --output .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest_sha256": "sha256:890016b446c8a967a27738b9d9134bb77d3cfb3840ba029027965803004cce80"
+    },
+    "syntax_and_parse": {
+      "command": "python3 -m py_compile private verifier files; bash -n solution and controls; parse task JSON/TOML; git diff --check",
+      "exit_code": 0
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun/joblib -a oracle --job-name joblib-oracle-authoring-20260829-rerun --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 33,
+    "passed": 33,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/oracle/joblib-oracle-authoring-20260829-rerun/joblib__daGbcNZ/verifier/grading.json",
+      "sha256": "sha256:2997aa231089603a6d43798055649e68a7ed199c3e35c30002980702ccc1b2da"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/oracle/joblib-oracle-authoring-20260829-rerun/joblib__daGbcNZ/verifier/network.json",
+      "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun/joblib -a nop --job-name joblib-empty-authoring-20260829-rerun --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/empty/joblib-empty-authoring-20260829-rerun/joblib__R8R9bCd/verifier/grading.json",
+        "sha256": "sha256:69ad76caf40f2031671365d8a48b1ec3bf7eb2d5c32ef539e7f319690329b711"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/empty/joblib-empty-authoring-20260829-rerun/joblib__R8R9bCd/verifier/network.json",
+        "sha256": "sha256:e41d147c86aeb8af96ad9e9abe71e11e85de3316c6283a0510f6199ad40c86be"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen nl2repo harbor prepare-control .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun/joblib stub --output .nl2repo/authoring-work/python-author-wave2-20260828/joblib/controls-rerun/stub --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/joblib/controls-rerun/stub/joblib-stub -a oracle --job-name joblib-stub-authoring-20260829-rerun --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 3,
+      "reward": 0.09090909090909091,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/stub/joblib-stub-authoring-20260829-rerun/joblib-stub__TzFKvcz/verifier/grading.json",
+        "sha256": "sha256:142312c287582d4837b014815535421d844fd6a2da66bdff150aa33d06e66c26"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/stub/joblib-stub-authoring-20260829-rerun/joblib-stub__TzFKvcz/verifier/network.json",
+        "sha256": "sha256:6b6f0e5d5938f2cd717e6e2d9020d2c0673e657f8724a1d367c822008adf67cc"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen nl2repo harbor prepare-control .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun/joblib forgery --output .nl2repo/authoring-work/python-author-wave2-20260828/joblib/controls-rerun/forgery --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/joblib/controls-rerun/forgery/joblib-forgery -a oracle --job-name joblib-forgery-authoring-20260829-rerun --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 33,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/forgery/joblib-forgery-authoring-20260829-rerun/joblib-forgery__iKazd4M/verifier/grading.json",
+        "sha256": "sha256:9cca268022893e81c9fb6560ab2607478a46b91874efa3988e5463495496173a"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/joblib/runs/rerun/forgery/joblib-forgery-authoring-20260829-rerun/joblib-forgery__iKazd4M/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      },
+      "forged_workspace_reward_sha256": "sha256:99dc3946cfe1b6030baface6499cecda44adec4e5f8e69ea3b098f7e84832a59"
+    },
+    "offline": {
+      "command": "Harbor separate-verifier network probes from rerun Oracle, empty, stub, and forgery trials",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      }
+    }
+  },
+  "timeout_control_boundary": {
+    "formal_harbor_control": "unsupported",
+    "attempted_command": "uv run --frozen nl2repo harbor prepare-control .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled-rerun/joblib hang --output .nl2repo/authoring-work/python-author-wave2-20260828/joblib/controls-rerun/hang --toolchain toolchain.lock.toml",
+    "exit_code": 1,
+    "failure_class": "infrastructure",
+    "log": "catalog/sources/joblib/evidence/timeout-control-boundary.txt"
+  },
+  "residual_risks": [
+    "No model Harbor Agent Run was started in this authoring lane by contract.",
+    "The current compiler registry has no formal hang control kind; the task-local bounded hang script and failed preparation command are recorded, and no hang receipt is claimed.",
+    "The fixed denominator is a private deterministic 33-leaf adaptation; upstream pytest collection of 1540 nodes is inventory evidence, not the scored denominator.",
+    "Review, pilot, generated catalog/tasks projection, dataset integration, and publication remain integrator-stage gates."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "joblib",
+  "upstream_revision": "4ff61afd0849f18fddf5fbd137c1f02bfaed5223",
+  "upstream_test_files": 30,
+  "static_test_function_count": 322,
+  "collect_only_command": "python -m pytest --collect-only -q -p no:cacheprovider joblib",
+  "collect_only_exit_code": 0,
+  "collect_only_count": 1540,
+  "frozen_total": 33,
+  "frozen_total_source": "private custom-json-v1 deterministic local contract",
+  "adaptation": "Child-side JSON scenarios retain observable public behavior while excluding Dask, platform-specific, timing, and private helper tests.",
+  "scenario_groups": {
+    "parallel": 10,
+    "persistence": 7,
+    "hashing": 4,
+    "memory": 8,
+    "utilities": 4
+  }
+}

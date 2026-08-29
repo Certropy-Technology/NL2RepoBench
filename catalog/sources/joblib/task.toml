@@ -1,0 +1,92 @@
+schema_version = "1.0"
+task_id = "joblib"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "parallel-computing-and-caching"
+tags = ["python", "parallel", "caching", "serialization", "numpy", "hashing", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/joblib/joblib"
+revision = "4ff61afd0849f18fddf5fbd137c1f02bfaed5223"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:d72b0680c99b50f5bfed07eaef12763c59e30e07e151f5181d75dbfda3d525c6"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked candidate and verifier dependencies during the image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier dependencies are installed during the image build from the private hash lock. Agent and verifier execution is network-isolated; the Oracle consumes a bundled digest-verified source archive and does not fetch at run time."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "cloudpickle==3.1.1",
+  "lz4==4.4.4",
+  "numpy==2.3.2",
+  "setuptools==84.0.0",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:107dec1f59314223e9245ef5e05afff4d16fc3ac10e2a5f14d3b7729a62e95b7", size_bytes = 11178, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:107dec1f59314223e9245ef5e05afff4d16fc3ac10e2a5f14d3b7729a62e95b7", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 33
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:6b696b9ac82c3e59deb142f3f13d460878117d5f9177b6aff4548b6844a8db20", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6b696b9ac82c3e59deb142f3f13d460878117d5f9177b6aff4548b6844a8db20", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build joblib from an empty workspace and satisfy a deterministic separate-verifier contract for parallel execution, disk caching, persistence, hashing, compression, and utility behavior."
+keywords = ["python", "parallel", "caching", "serialization", "numpy", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:110395e4297e5d14316a5cc0a37792386261d4bf5905674020bffd2b1de02637"
+size_bytes = 1638400
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:110395e4297e5d14316a5cc0a37792386261d4bf5905674020bffd2b1de02637"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-c2"
+reason = "Frozen source, private hash-locked closure, production compile, Oracle 33/33, empty, stub, forgery, and offline controls passed. Model Agent Run, review, pilot, and publication remain separate stages; the current compiler does not expose a formal hang control kind."

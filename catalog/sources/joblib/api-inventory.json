@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "joblib",
+  "source_revision": "4ff61afd0849f18fddf5fbd137c1f02bfaed5223",
+  "public_modules": [
+    "joblib",
+    "joblib.parallel",
+    "joblib.memory",
+    "joblib.numpy_pickle",
+    "joblib.hashing",
+    "joblib.compressor",
+    "joblib.disk",
+    "joblib.testing"
+  ],
+  "root_exports": [
+    "Memory", "MemorizedResult", "expires_after", "Parallel", "delayed",
+    "cpu_count", "effective_n_jobs", "parallel_config", "parallel_backend",
+    "register_parallel_backend", "register_store_backend", "register_compressor",
+    "ParallelBackendBase", "StoreBackendBase", "wrap_non_picklable_objects",
+    "dump", "load", "hash", "Logger", "PrintTime"
+  ],
+  "behavior_groups": [
+    "parallel delayed execution and context configuration",
+    "path and file-object persistence with compression",
+    "numpy array and memmap persistence",
+    "deterministic object hashing",
+    "filesystem-backed Memory caching",
+    "disk size parsing and testing utilities",
+    "validation of invalid backend/compressor/hash inputs"
+  ],
+  "excluded": [
+    "Dask distributed integration",
+    "external services and network access",
+    "platform-specific Windows branches",
+    "private helper modules and benchmark timing"
+  ]
+}

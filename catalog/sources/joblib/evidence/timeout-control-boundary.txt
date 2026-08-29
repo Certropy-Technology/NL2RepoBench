@@ -1,0 +1,13 @@
+Command:
+uv run --frozen nl2repo harbor prepare-control .nl2repo/authoring-work/python-author-wave2-20260828/joblib/compiled/joblib hang --output .nl2repo/authoring-work/python-author-wave2-20260828/joblib/controls/hang --toolchain toolchain.lock.toml
+
+Observed result:
+control preparation failed: unsupported control kind: hang
+
+Exit code: 1
+
+Classification:
+The current Harbor compiler registry exposes stub and forgery control preparation
+but no hang control kind. This is a repository capability boundary, not a task
+or verifier failure. The task-local `hang.sh` remains available for integrator
+review; no formal Harbor hang receipt is claimed.

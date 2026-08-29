@@ -1,0 +1,59 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/joblib"
+version = "1.0.0"
+description = "Build joblib from an empty workspace and satisfy a deterministic separate-verifier contract for parallel execution, disk caching, persistence, hashing, compression, and utility behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "parallel",
+    "caching",
+    "serialization",
+    "numpy",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "parallel-computing-and-caching"
+tags = [
+    "python",
+    "parallel",
+    "caching",
+    "serialization",
+    "numpy",
+    "hashing",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 33
+canonical_manifest_digest = "sha256:65680f314cd874a0dbf21efb085a129bf1452b7e724c758a33bb55df95bcfc73"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
