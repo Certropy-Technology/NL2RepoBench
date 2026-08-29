@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "package": "google-api-core",
+  "version": "2.35.0",
+  "package_path": "packages/google-api-core",
+  "runtime_package": "google.api_core",
+  "implementation_python_files": 65,
+  "typed_marker": "google/api_core/py.typed",
+  "public_modules": [
+    "client_info", "client_options", "datetime_helpers", "exceptions",
+    "page_iterator", "path_template", "protobuf_helpers", "rest_helpers",
+    "retry", "timeout", "universe", "version_header"
+  ],
+  "public_surfaces": [
+    "ClientInfo", "ClientOptions", "from_dict", "utcnow", "to_rfc3339",
+    "from_rfc3339", "DatetimeWithNanoseconds", "GoogleAPIError",
+    "from_http_status", "from_grpc_status", "Page", "Iterator", "expand",
+    "get_field", "delete_field", "validate", "flatten_query_params",
+    "transcode", "transcode_request", "from_any_pb", "check_oneof", "get_messages",
+    "get", "set", "setdefault", "field_mask", "Retry", "if_exception_type",
+    "if_transient_error", "exponential_sleep_generator", "ConstantTimeout",
+    "ExponentialTimeout", "TimeToDeadlineTimeout", "get_universe_domain",
+    "determine_domain", "compare_domains", "get_default_mtls_endpoint",
+    "get_api_endpoint", "to_api_version_header"
+  ],
+  "reexports": ["google.api_core.__version__", "google.api_core.check_python_version", "google.api_core.check_dependency_versions"],
+  "optional_or_excluded": [
+    "gRPC channel creation", "metadata servers", "external HTTP services",
+    "background bidi consumers", "filesystem and TTY behavior", "wall-clock sleeps"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_root": "packages/google-api-core/tests",
+  "upstream_test_files": 46,
+  "upstream_function_definitions": 711,
+  "collection_probe": {
+    "environment": "CPython 3.12.11, pytest 9.1.1, pytest-asyncio 1.3.0, pytest-mock 3.15.1, and the frozen runtime dependency closure",
+    "collected": 892,
+    "collection_errors": 0,
+    "authoring_remediation": "Pinned pytest-asyncio and pytest-mock were installed only in the task-local source probe venv; they are not candidate or verifier runtime dependencies."
+  },
+  "upstream_baseline": {
+    "command": "python -m pytest -q -p no:cacheprovider packages/google-api-core/tests",
+    "exit_code": 0,
+    "passed": 882,
+    "skipped": 25,
+    "note": "The result count includes pytest-subtests cases and therefore exceeds the 892 collected pytest node IDs."
+  },
+  "production_collection": 21,
+  "collection_method": "independent custom-json-v1 deterministic child adapter",
+  "excluded_surfaces": [
+    "live HTTP or metadata services", "gRPC channel/network setup", "filesystem-backed credentials",
+    "background thread and bidi lifecycle", "wall-clock dependent retries", "full operations client transport"
+  ],
+  "notes": "The production denominator is a bounded, public-spec traceable behavior contract. It does not claim to be the complete upstream suite or copy upstream assertions."
+}

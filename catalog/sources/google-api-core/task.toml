@@ -1,0 +1,102 @@
+schema_version = "1.0"
+task_id = "google-api-core"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-api-core"
+tags = ["python", "google-cloud", "api-core", "retry", "protobuf", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/googleapis/google-cloud-python"
+revision = "082a99a2c4a3e8d5df28eaeab9b2c710dd4296d5"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:673b703e9c4d227ea29b4f1ad06aba4c7f872cbaa634424ceb08991b113d6b07"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13.6-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the private hash-locked closure during image build and install the candidate with the generated pip target contract"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. Hash-locked dependencies are installed during image build; only the trusted Oracle receives a run-scoped authorization for github.com."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "certifi==2026.7.22",
+  "cffi==2.1.1",
+  "charset-normalizer==3.5.1",
+  "cryptography==50.0.1",
+  "google-auth==2.57.0",
+  "googleapis-common-protos==1.75.2",
+  "idna==3.19",
+  "proto-plus==1.28.4",
+  "protobuf==7.36.0",
+  "pyasn1==0.6.4",
+  "pyasn1-modules==0.4.2",
+  "pycparser==3.0",
+  "requests==2.34.2",
+  "setuptools==80.9.0",
+  "urllib3==2.7.0",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:caec483297b1c9ba10d20812b953cd84c3bd53efae4da16d67f5c6fc85eafc2d", size_bytes = 30519, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:caec483297b1c9ba10d20812b953cd84c3bd53efae4da16d67f5c6fc85eafc2d", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 21
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/run_scenarios.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:71451eab7339331daf1af5f771eba9563ed91a4d604a4d6454dab3a917ff9c08", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:71451eab7339331daf1af5f771eba9563ed91a4d604a4d6454dab3a917ff9c08", visibility = "private" }
+entrypoint = "run.py"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build google-api-core 2.35.0 from an empty workspace and reproduce deterministic helpers, retry and timeout behavior, path and REST serialization, protobuf utilities, client metadata, exceptions, and universe-domain contracts through a separate child-side JSON verifier."
+keywords = ["python", "google-cloud", "api-core", "retry", "protobuf", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Source freeze, dependency closure, custom verifier, Oracle and empty/stub/forgery/offline controls passed in the current compiled bundle. No model Agent Run was started in this authoring lane."
+
+[oracle_bundle]
+digest = "sha256:3f04d6bc515c93c26a6711d9505e30de176c1792b4b93517a1a2b28aaad465ef"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:3f04d6bc515c93c26a6711d9505e30de176c1792b4b93517a1a2b28aaad465ef"
+visibility = "private"

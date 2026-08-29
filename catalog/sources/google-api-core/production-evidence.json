@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "task_id": "google-api-core",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "mode": "production",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/googleapis/google-cloud-python",
+    "package_path": "packages/google-api-core",
+    "revision": "082a99a2c4a3e8d5df28eaeab9b2c710dd4296d5",
+    "source_digest": "sha256:673b703e9c4d227ea29b4f1ad06aba4c7f872cbaa634424ceb08991b113d6b07",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "environment": {
+    "python": "3.12.14 task image; 3.12.11 authoring host",
+    "os": "debian-13.6-amd64",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "uv": "0.11.32",
+    "harbor": "0.21.0",
+    "network_policy": "no-network"
+  },
+  "artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:caec483297b1c9ba10d20812b953cd84c3bd53efae4da16d67f5c6fc85eafc2d",
+      "size_bytes": 30519,
+      "path": ".nl2repo/artifacts/private/sha256/ca/caec483297b1c9ba10d20812b953cd84c3bd53efae4da16d67f5c6fc85eafc2d"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:71451eab7339331daf1af5f771eba9563ed91a4d604a4d6454dab3a917ff9c08",
+      "size_bytes": 20480,
+      "path": ".nl2repo/artifacts/private/sha256/71/71451eab7339331daf1af5f771eba9563ed91a4d604a4d6454dab3a917ff9c08"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:3f04d6bc515c93c26a6711d9505e30de176c1792b4b93517a1a2b28aaad465ef",
+      "size_bytes": 10240,
+      "path": ".nl2repo/artifacts/private/sha256/3f/3f04d6bc515c93c26a6711d9505e30de176c1792b4b93517a1a2b28aaad465ef"
+    },
+    "compiled_bundle": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-final3/google-api-core",
+      "manifest_digest": "sha256:31686d97612a51de73c25f70624d2c91a347f49cf4dd3dd0289d93d399348e94",
+      "manifest_sha256": "sha256:ed21ad7338f0bc3ece2332c940ea001d0f99ba5606bbe676400326c33e4b4c4a"
+    }
+  },
+  "frozen_collection": {
+    "expected_total": 21,
+    "collected": 21,
+    "collection_errors": [],
+    "collection": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/oracle/google-api-core-oracle-final5/google-api-core__9KNAVJ8/verifier/collection.json"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/google-api-core",
+      "exit_code": 0,
+      "evidence": "source validation stdout from authoring lane"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "evidence": "network lint stdout; zero findings for google-api-core"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/google-api-core --output .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-final3 --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "evidence": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-final3/google-api-core/bundle.manifest.json"
+    },
+    {
+      "command": "python -m py_compile private verifier; bash -n controls and Oracle solution; python -m json.tool inventories",
+      "exit_code": 0,
+      "evidence": "task-local syntax and structured-data checks"
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-final3/google-api-core -a oracle --job-name google-api-core-oracle-final5 --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/oracle --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 21,
+    "total": 21,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/oracle/google-api-core-oracle-final5/google-api-core__9KNAVJ8/verifier/grading.json",
+      "sha256": "sha256:7640d603aec6b3d4514aebebe155d02ae90a5f3dbb0ce78d7b8253d156d22248"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/oracle/google-api-core-oracle-final5/google-api-core__9KNAVJ8/verifier/network.json",
+      "sha256": "sha256:1517eabc67c8c23c917decb2e1054a6edbb9f7dfe2f3aa218a443f6bdaf6060c"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-final3/google-api-core -a nop --job-name google-api-core-empty-final5 --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.0,
+      "passed": 0,
+      "total": 0,
+      "failure_class": "model",
+      "reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/empty/google-api-core-empty-final5/google-api-core__5YgJRPe/verifier/grading.json", "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/empty/google-api-core-empty-final5/google-api-core__5YgJRPe/verifier/network.json", "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-controls-final3/google-api-core-stub -a oracle --job-name google-api-core-stub-final5 --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.047619047619047616,
+      "passed": 1,
+      "total": 21,
+      "valid": true,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/stub/google-api-core-stub-final5/google-api-core-stub__8kWJWig/verifier/grading.json", "sha256": "sha256:52b59905ef3b56bf5bcf07e00fbd2d18677eea7423d5458879ec309822964915"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/stub/google-api-core-stub-final5/google-api-core-stub__8kWJWig/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-controls-final3/google-api-core-forgery -a oracle --job-name google-api-core-forgery-final5 --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.047619047619047616,
+      "passed": 1,
+      "total": 21,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/forgery/google-api-core-forgery-final5/google-api-core-forgery__SqJmfYG/verifier/grading.json", "sha256": "sha256:52b59905ef3b56bf5bcf07e00fbd2d18677eea7423d5458879ec309822964915"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/forgery/google-api-core-forgery-final5/google-api-core-forgery__SqJmfYG/verifier/network.json", "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"}
+    },
+    "offline": {
+      "command": "Harbor verifier network check from oracle and control runs",
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final5/oracle/google-api-core-oracle-final5/google-api-core__9KNAVJ8/verifier/network.json", "sha256": "sha256:1517eabc67c8c23c917decb2e1054a6edbb9f7dfe2f3aa218a443f6bdaf6060c"}
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/recompile-controls-final/google-api-core-install-hang -a oracle --job-name google-api-core-install-hang-final2 --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final4/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.0,
+      "passed": 0,
+      "total": 21,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final4/install-hang/google-api-core-install-hang-final2/google-api-core-install-hang__omX6CQy/verifier/candidate-install.json", "sha256": "sha256:0400300e34693de547a9c8b66d29883eb30bf93a396b2756adf879671fb94ed9"},
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final4/install-hang/google-api-core-install-hang-final2/google-api-core-install-hang__omX6CQy/verifier/grading.json", "sha256": "sha256:c5b89fd2418bac516db707d8bcf485bf5e43a11d6471fb13075989cf9ef3f8a2"},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/google-api-core/runs-final4/install-hang/google-api-core-install-hang-final2/google-api-core-install-hang__omX6CQy/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80"}
+    }
+  },
+  "residual_risks": [
+    "The custom adapter covers 21 deterministic leaves rather than all 647 collected upstream nodes or the full transport surface.",
+    "Only one trusted Oracle run was executed; cross-run stability was not measured.",
+    "No Harbor model Agent Run was started in this authoring lane, so model difficulty is unmeasured.",
+    "The install-hang control is intentionally a bounded negative control; its build backend timed out and was killed at the candidate-install budget."
+  ]
+}
