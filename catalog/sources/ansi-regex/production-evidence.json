@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ansi-regex",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/chalk/ansi-regex",
+    "revision": "7cf0228990eb38c27f9897f4fb17d42d39075a20",
+    "tree": "ad282c6f6d7ae1b9ad77425ad6e6cd558aee8446",
+    "source_digest": "sha256:b59d0cd17c95437b3f80a0c25a69854d3ec4a5c2f27a732a9e45eabeb84faf96",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:9b8dba657c3e08401fc4f387e9cc07514dab3e296057042e938b37462b4cc438", "size_bytes": 506},
+    "commands": {"digest": "sha256:c679c69bf755ee78373d6979c41ef99500631c6f83cae6bc1afa6a42393bfeb7", "size_bytes": 257},
+    "tests": {"digest": "sha256:0c145afaf5eeb06d263de84275efb3490854698bd7586cf9ebc1fde48f01d58d", "size_bytes": 2723},
+    "oracle": {"digest": "sha256:3b241247341e442768d120fc8cee3b81a4205b80790a5fe7810b66b368193f56", "size_bytes": 9664}
+  },
+  "production_bundle": {
+    "path": ".nl2repo/compiled/ansi-regex-production/ansi-regex/bundle.manifest.json",
+    "sha256": "sha256:0d4c4f903688096b93703d65c468cfd6462025eced1d334b97f37c8ff789462c",
+    "canonical_manifest_digest": "sha256:2e6d88f821ec8e3e79989de5b45eb5283b762f1e6be73d64ce6f88258095b279",
+    "mode": "production",
+    "file_count": 75,
+    "integrity_errors": 0
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/ansi-regex-production/ansi-regex -a oracle --job-name ansi-regex-authoring-oracle-20260829 -o .nl2repo/runs/ansi-regex-current --n-concurrent 1 --yes --quiet",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {"path": ".nl2repo/runs/ansi-regex-current/ansi-regex-authoring-oracle-20260829/ansi-regex__6KRtoYD/verifier/grading.json", "sha256": "sha256:35dc21adc73daaa0c129a181060e4d0e18000618491de72aaebbb3b4daea7f5e"},
+    "network": {"path": ".nl2repo/runs/ansi-regex-current/ansi-regex-authoring-oracle-20260829/ansi-regex__6KRtoYD/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"},
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-empty -a oracle --job-name ansi-regex-authoring-empty-20260829 -o .nl2repo/runs/ansi-regex-current/empty --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/empty/ansi-regex-authoring-empty-20260829/ansi-regex-empty__PoTsLNi/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/empty/ansi-regex-authoring-empty-20260829/ansi-regex-empty__PoTsLNi/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"},
+      "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-stub -a oracle --job-name ansi-regex-authoring-stub-20260829 -o .nl2repo/runs/ansi-regex-current/stub --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/stub/ansi-regex-authoring-stub-20260829/ansi-regex-stub__QTkt8tt/verifier/grading.json", "sha256": "sha256:3735bc6e535ab3b0b96a9b19109ef9fdbfe04c4b2c4d3aa1356a1e601f2e85c1"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/stub/ansi-regex-authoring-stub-20260829/ansi-regex-stub__QTkt8tt/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"},
+      "valid": true, "reward": 0.16666666666666666, "collected": 24, "passed": 4, "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-forgery -a oracle --job-name ansi-regex-authoring-forgery-20260829 -o .nl2repo/runs/ansi-regex-current/forgery --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/forgery/ansi-regex-authoring-forgery-20260829/ansi-regex-forgery__Vq9Un9L/verifier/grading.json", "sha256": "sha256:3735bc6e535ab3b0b96a9b19109ef9fdbfe04c4b2c4d3aa1356a1e601f2e85c1"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/forgery/ansi-regex-authoring-forgery-20260829/ansi-regex-forgery__Vq9Un9L/verifier/network.json", "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"},
+      "valid": true, "reward": 0.16666666666666666, "collected": 24, "passed": 4, "verifier_owned_reward": true, "forged_workspace_reward_ignored": true, "public_network_available": false
+    },
+    "install_script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-install-script -a oracle --job-name ansi-regex-authoring-install-script-20260829 -o .nl2repo/runs/ansi-regex-current/install-script --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/install-script/ansi-regex-authoring-install-script-20260829/ansi-regex-install-script__8YzZVLE/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/install-script/ansi-regex-authoring-install-script-20260829/ansi-regex-install-script__8YzZVLE/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"},
+      "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "public_network_available": false
+    },
+    "loader_hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-loader-hook -a oracle --job-name ansi-regex-authoring-loader-hook-20260829 -o .nl2repo/runs/ansi-regex-current/loader-hook --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/loader-hook/ansi-regex-authoring-loader-hook-20260829/ansi-regex-loader-hook__LMibscG/verifier/grading.json", "sha256": "sha256:3735bc6e535ab3b0b96a9b19109ef9fdbfe04c4b2c4d3aa1356a1e601f2e85c1"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/loader-hook/ansi-regex-authoring-loader-hook-20260829/ansi-regex-loader-hook__LMibscG/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"},
+      "valid": true, "reward": 0.16666666666666666, "collected": 24, "passed": 4, "loader_activated": false, "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-hang -a oracle --job-name ansi-regex-authoring-hang-20260829 -o .nl2repo/runs/ansi-regex-current/hang --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/hang/ansi-regex-authoring-hang-20260829/ansi-regex-hang__G46GRTV/verifier/grading.json", "sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/hang/ansi-regex-authoring-hang-20260829/ansi-regex-hang__G46GRTV/verifier/network.json", "sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b"},
+      "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-call-failed", "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/ansi-regex-current/ansi-regex-offline -a oracle --job-name ansi-regex-authoring-offline-20260829 -o .nl2repo/runs/ansi-regex-current/offline --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/ansi-regex-current/offline/ansi-regex-authoring-offline-20260829/ansi-regex-offline__X3K4YsV/verifier/grading.json", "sha256": "sha256:74a1ec4b84fc1d07c3ccac72322b593659f843e194789bfa4392ac3eb9b09c18"},
+      "network": {"path": ".nl2repo/runs/ansi-regex-current/offline/ansi-regex-authoring-offline-20260829/ansi-regex-offline__X3K4YsV/verifier/network.json", "sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809"},
+      "valid": true, "reward": 0.0, "collected": 24, "passed": 0, "completed": true, "public_network_available": false
+    }
+  },
+  "authoring_attempts": [
+    {
+      "stage": "oracle",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/ansi-regex-production/ansi-regex -a oracle --job-name ansi-regex-oracle-final -o .nl2repo/runs/ansi-regex-oracle-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "result": "reward 0 due to solution removing its own cwd; fixed by preserving /workspace and rerun",
+      "failure_class": "verifier"
+    }
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this lane.",
+    "Blind review, pilot, dataset integration, publication approval, and cross-run stability remain integrator stages.",
+    "The 24-leaf verifier is a deterministic public-behavior slice, not full upstream AVA/XO/tsd parity."
+  ],
+  "blockers": []
+}

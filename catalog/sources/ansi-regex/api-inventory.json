@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ansi-regex",
+  "package": "ansi-regex",
+  "version": "6.3.0",
+  "runtime_entry": "index.js",
+  "public_exports": ["default"],
+  "declarations": ["index.d.ts"],
+  "api": {
+    "default": {
+      "signature": "ansiRegex(options?: Options): RegExp",
+      "options": {"onlyFirst": "boolean, default false"},
+      "side_effects": "none",
+      "determinism": "new equivalent RegExp per call"
+    }
+  },
+  "excluded_risk_surfaces": ["ReDoS timeout policy", "custom prototypes", "non-JSON RegExp transport"]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ansi-regex",
+  "status": "implemented",
+  "purpose": "Keep candidate ESM code out of the trusted node:test process while exercising the RegExp-returning API through a bounded child adapter.",
+  "transport": {"mode": "one-shot-json", "encoding": "utf-8", "request_limit_bytes": 65536, "response_limit_bytes": 262144, "candidate_uid": 10001, "timeout_seconds": 30, "network": "none"},
+  "operations": {
+    "inspect": "Child adapter imports the candidate package and returns bounded package metadata.",
+    "match": "Child adapter constructs the candidate RegExp, applies String.match, and returns source/flags/matches.",
+    "test": "Child adapter constructs the candidate RegExp and returns one bounded boolean test result."
+  },
+  "in_scope_values": ["UTF-8 strings", "onlyFirst boolean"],
+  "forbidden_candidate_capabilities": ["network", "native addons", "custom loaders", "unbounded output", "trusted-process import"]
+}

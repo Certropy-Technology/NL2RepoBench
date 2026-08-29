@@ -1,0 +1,93 @@
+schema_version = "2.0"
+task_id = "ansi-regex"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "terminal-text-processing"
+tags = ["node", "npm", "esm", "terminal", "ansi", "regex", "unicode"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/chalk/ansi-regex"
+revision = "7cf0228990eb38c27f9897f4fb17d42d39075a20"
+license_spdx = "MIT"
+source_digest = "sha256:b59d0cd17c95437b3f80a0c25a69854d3ec4a5c2f27a732a9e45eabeb84faf96"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The zero-dependency candidate is installed during the image build from an integrity-checked npm v3 bundle; candidate and verifier runs have no egress, and the frozen reference is confined to the private Oracle bundle."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:9b8dba657c3e08401fc4f387e9cc07514dab3e296057042e938b37462b4cc438", size_bytes = 506, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:9b8dba657c3e08401fc4f387e9cc07514dab3e296057042e938b37462b4cc438", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:c679c69bf755ee78373d6979c41ef99500631c6f83cae6bc1afa6a42393bfeb7", size_bytes = 257, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:c679c69bf755ee78373d6979c41ef99500631c6f83cae6bc1afa6a42393bfeb7", visibility = "private" }
+test_bundle = { digest = "sha256:0c145afaf5eeb06d263de84275efb3490854698bd7586cf9ebc1fde48f01d58d", size_bytes = 2723, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:0c145afaf5eeb06d263de84275efb3490854698bd7586cf9ebc1fde48f01d58d", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build an offline ESM ansi-regex package with deterministic ANSI escape matching behavior."
+keywords = ["node", "npm", "esm", "terminal", "ansi", "regex", "unicode"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c2"
+reason = "Source validation, zero-error network lint, production compile, Harbor 0.21 Oracle 24/24, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Blind review, model pilot, dataset integration, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:3b241247341e442768d120fc8cee3b81a4205b80790a5fe7810b66b368193f56"
+size_bytes = 9664
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:3b241247341e442768d120fc8cee3b81a4205b80790a5fe7810b66b368193f56"
+visibility = "private"
+

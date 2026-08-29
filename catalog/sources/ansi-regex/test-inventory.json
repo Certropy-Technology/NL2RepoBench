@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ansi-regex",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 24,
+  "private_entry": "ansi-regex.test.mjs",
+  "groups": {
+    "package_shape": 1,
+    "plain_text_and_state": 5,
+    "csi_sequences": 6,
+    "osc_sequences": 5,
+    "options_and_boundaries": 4,
+    "repeatability": 3
+  },
+  "upstream_basis": "Frozen ansi-regex 6.3.0 package metadata, implementation, README examples, and ANSI/VT test families.",
+  "adapter": "private child-side adapter serializes RegExp source, flags, and match results as JSON."
+}
