@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "coverage",
+  "terminal_kind": "valid",
+  "bundle_manifest_sha256": "sha256:a995b5cffe4455ec756cf618987d7738f2d5fbe5fff8e1482f76f912f3d49bf2",
+  "canonical_manifest_digest": "sha256:2b2950bfa25a06bfcaaf44e3d31becf7f2fd851190ebb870f037a1d19961b7dc",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/coveragepy/coveragepy",
+    "revision": "aeaa79b812d1bc637ebb5582ab12c076e192c87e",
+    "source_digest": "sha256:d4c34fff118dcfe6e22a637411cdd5c5a7605dd2e65ed510560637ee94467e56",
+    "license_spdx": "Apache-2.0",
+    "license_path": ".nl2repo/authoring-work/coverage/upstream/LICENSE.txt"
+  },
+  "environment": {
+    "python": "3.12.11 host / task declaration 3.12.4",
+    "harbor": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "network_policy": "no-network"
+  },
+  "dependency_closure": {
+    "lock_artifact": "sha256:9415ac080e4169856325998ab71d3258c16c02a1d0d3cfa837bfca1290faa8db",
+    "packages": ["setuptools==84.0.0"],
+    "hash_locked": true,
+    "runtime_dependencies": "standard library only"
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "expected_total": 12,
+    "leaf_ids": ["basic-measurement", "branch-measurement", "data-roundtrip", "data-arcs", "contexts", "reports", "lifecycle", "configuration", "combine-data", "cli", "errors", "plugin-protocol"]
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/coverage/compiled-handoff/coverage -a oracle --allow-agent-host github.com --job-name coverage-handoff-oracle-3 -o .nl2repo/authoring-work/coverage/runs/handoff-oracle-3 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 12,
+    "passed": 12,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-oracle-3/coverage-handoff-oracle-3/coverage__u9h2v4j/verifier/grading.json", "sha256": "sha256:b2260d5ef65e7f5d9eb85e47753f4e442bd782985322c11fdf7feb323f00b5c0"},
+    "network": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-oracle-3/coverage-handoff-oracle-3/coverage__u9h2v4j/verifier/network.json", "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"}
+  },
+  "controls": {
+    "empty": {"command": "harbor run -a nop coverage-handoff-empty", "exit_code": 0, "valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-empty/coverage-handoff-empty/coverage__3PqAxsK/verifier/grading.json", "sha256": "sha256:cfb59fad1d38600636d199b1ccc76aa668c1655a8975dcf5fe8ff595932c24c2"}, "network": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-empty/coverage-handoff-empty/coverage__3PqAxsK/verifier/network.json", "sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"}},
+    "stub": {"command": "harbor run -a oracle coverage-handoff-stub", "exit_code": 0, "valid": true, "collected": 12, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-stub/coverage-handoff-stub/coverage-stub__Bjw85Ut/verifier/grading.json", "sha256": "sha256:c9cddc454da88aa3678ea7eefaf495a51a37bfcaa345cd9793fd3ef6b81c3fd8"}, "network": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-stub/coverage-handoff-stub/coverage-stub__Bjw85Ut/verifier/network.json", "sha256": "sha256:93cbaecd5e7032ecc4dd933e74f5d55444f88273d42590134755dfaad89db26c"}},
+    "forgery": {"command": "harbor run -a oracle coverage-handoff-forgery", "exit_code": 0, "valid": true, "collected": 12, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-forgery/coverage-handoff-forgery/coverage-forgery__2KzvaDG/verifier/grading.json", "sha256": "sha256:c9cddc454da88aa3678ea7eefaf495a51a37bfcaa345cd9793fd3ef6b81c3fd8"}, "network": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-forgery/coverage-handoff-forgery/coverage-forgery__2KzvaDG/verifier/network.json", "sha256": "sha256:a16df705c177152f3e30f2dee7b1d0f3c44cd2492d777da182b86996fdc5fd96"}},
+    "install-hang": {"command": "harbor run -a oracle coverage-handoff-install-hang", "exit_code": 0, "valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-install-hang/coverage-handoff-install-hang/coverage-install-hang__Pddr8H4/verifier/grading.json", "sha256": "sha256:cfb59fad1d38600636d199b1ccc76aa668c1655a8975dcf5fe8ff595932c24c2"}, "network": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-install-hang/coverage-handoff-install-hang/coverage-install-hang__Pddr8H4/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}},
+    "offline": {"command": "official Harbor verifier network probe from coverage-handoff-oracle-3", "completed": true, "exit_code": 0, "public_network_available": false, "network": {"path": ".nl2repo/authoring-work/coverage/runs/handoff-oracle-3/coverage-handoff-oracle-3/coverage__u9h2v4j/verifier/network.json", "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"}}
+  },
+  "residual_risks": [
+    "The fixed slice is a deterministic public-API adaptation and excludes native C tracer, multiprocessing, sys.monitoring, TTY color, and live external plugins.",
+    "Two earlier retries of the fresh bundle hit Docker Errno 11 resource exhaustion before the successful third Oracle; those infrastructure logs remain in the task-local run tree.",
+    "No model Agent Run, blind review, pilot, publication, or generated catalog/tasks projection was performed in this lane."
+  ],
+  "status": "controls-passed",
+  "next_unblock_action": "Integrator reviews the bounded contract and compiles the generated catalog/tasks projection; do not start an Agent Run from this lane."
+}

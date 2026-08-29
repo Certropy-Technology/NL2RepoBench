@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {"id": "basic-measurement", "request": {"schema_version": "1.0", "scenario": "basic-measurement"}, "expected": {"data_exists": true, "has_arcs": false, "lines": [1, 3, 4], "measured": ["sample.py"], "report": 100.0}},
+    {"id": "branch-measurement", "request": {"schema_version": "1.0", "scenario": "branch-measurement"}, "expected": {"arc_count": 6, "has_arcs": true, "missing": "4"}},
+    {"id": "data-roundtrip", "request": {"schema_version": "1.0", "scenario": "data-roundtrip"}, "expected": {"contexts": ["", "unit"], "files": ["pkg/mod.py"], "has_arcs": false, "lines": [1, 3, 5, 7]}},
+    {"id": "data-arcs", "request": {"schema_version": "1.0", "scenario": "data-arcs"}, "expected": {"arcs": [[1, 2], [2, -1]], "contexts": ["branch"], "files": ["pkg/mod.py"], "has_arcs": true}},
+    {"id": "contexts", "request": {"schema_version": "1.0", "scenario": "contexts"}, "expected": {"context_by_line": {"1": ["alpha"]}, "contexts": ["alpha"], "lines_alpha": [1]}},
+    {"id": "reports", "request": {"schema_version": "1.0", "scenario": "reports"}, "expected": {"annotated": true, "html_index": true, "json_files": ["reportme.py"], "json_status": 100.0, "json_version": "7.16.0a0.dev1", "lcov_prefix": "SF:", "lcov_status": 100.0, "xml_prefix": "<?xml", "xml_status": 100.0}},
+    {"id": "lifecycle", "request": {"schema_version": "1.0", "scenario": "lifecycle"}, "expected": {"after": true, "before": true, "during": true, "running": false}},
+    {"id": "configuration", "request": {"schema_version": "1.0", "scenario": "configuration"}, "expected": {"branch": true, "data_file": ".coverage", "timid": true}},
+    {"id": "combine-data", "request": {"schema_version": "1.0", "scenario": "combine-data"}, "expected": {"lines": [1, 2, 3], "parallel_left": []}},
+    {"id": "cli", "request": {"schema_version": "1.0", "scenario": "cli"}, "expected": {"report_exit": 0, "report_has_file": true, "run_exit": 0, "run_stdout": "hello-cli"}},
+    {"id": "errors", "request": {"schema_version": "1.0", "scenario": "errors"}, "expected": {"exception_is_root": true, "failures": [["coverage.exceptions.ConfigError", "Source dir is not a directory: 'missing-directory'"], ["coverage.exceptions.NoDataError", "No data to report."]]}},
+    {"id": "plugin-protocol", "request": {"schema_version": "1.0", "scenario": "plugin-protocol"}, "expected": {"plugin": true, "reporter": "virtual.py", "tracer": "virtual.py"}}
+  ]
+}
