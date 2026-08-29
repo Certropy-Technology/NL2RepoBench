@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "package": "get-east-asian-width",
+  "version": "1.6.0",
+  "runtime_entry": "index.js",
+  "declaration_entry": "index.d.ts",
+  "public_exports": ["eastAsianWidth", "eastAsianWidthType"],
+  "runtime_dependencies": [],
+  "upstream_modules": ["index.js", "lookup.js", "lookup-data.js", "utilities.js"],
+  "excluded_risk_surfaces": [
+    "Unicode data download/build script",
+    "private _isFullWidth and _isWide exports",
+    "non-safe-integer JavaScript values such as bigint and symbol",
+    "CLI and filesystem behavior"
+  ]
+}

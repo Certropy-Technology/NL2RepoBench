@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-east-asian-width",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/get-east-asian-width",
+    "revision": "75cd90f988bb24afc6e9889485acf21fe86076f8",
+    "archive_sha256": "sha256:b412e8d6253a64848848d2b2e9a1e397b7668505d78c43a1c6583a29ec413593",
+    "license": "MIT",
+    "license_file_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image_digest": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "runtime_packages": [],
+    "npm_bundle": {
+      "digest": "sha256:96670cffb6951bc0de2652cd858a32415d663ac11b5982d6cc0c25902a456d97",
+      "size_bytes": 507,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "lockfile": "package-lock.json",
+      "lockfile_version": 3,
+      "install": "npm ci --offline --ignore-scripts --no-audit --no-fund"
+    }
+  },
+  "frozen_collection": {
+    "expected_total": 26,
+    "source": "independent node:test contract over bounded JSON child adapter",
+    "test_bundle_digest": "sha256:6460ecbc24dac6a8b1af38533f761810b927197fed69c35788a0e4e3428accf1"
+  },
+  "bundle": {
+    "manifest": ".nl2repo/authoring-work/get-east-asian-width/compiled-final-4/get-east-asian-width/bundle.manifest.json",
+    "manifest_sha256": "sha256:ab8bbd269900e0fbf6862d909e057d0e912f0cf49dc1a3cd795df9c54dcf36f5",
+    "canonical_manifest_digest": "sha256:13efa7958254287b74a3b0ece597aeef4d3983a31e792b4327676921226efe9a",
+    "file_count": 78,
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "gates": {
+    "validate_source": {
+      "command": "uv run nl2repo task validate-source catalog/sources/get-east-asian-width",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/get-east-asian-width/evidence/validate-source-handoff.log"
+    },
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_errors": 0,
+      "log": ".nl2repo/authoring-work/get-east-asian-width/evidence/lint-network-final.log",
+      "note": "The command reports 141 warnings for other catalog sources; this task has no network error or finding."
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/get-east-asian-width --output .nl2repo/authoring-work/get-east-asian-width/compiled-final-4 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": ".nl2repo/authoring-work/get-east-asian-width/compiled-final-4/get-east-asian-width/bundle.manifest.json",
+      "log": ".nl2repo/authoring-work/get-east-asian-width/evidence/harbor-compile-final.log"
+    },
+    "syntax_and_integrity": {
+      "exit_code": 0,
+      "checks": [
+        "bash -n on all task control scripts",
+        "JSON/TOML parsing for source metadata and evidence",
+        "SHA-256 verification of Oracle, tests, command-plan, and npm CAS artifacts"
+      ]
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/compiled-final-4/get-east-asian-width -a oracle --job-name get-east-asian-width-oracle-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/oracle-final-4 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 26,
+    "collected": 26,
+    "passed": 26,
+    "reward": 1.0,
+    "result": {
+      "path": ".nl2repo/authoring-work/get-east-asian-width/runs/oracle-final-4/get-east-asian-width-oracle-final4-20260828/result.json",
+      "sha256": "sha256:03deafd3412adf7d9cb4fb1a6f2d79cc56a3db9ff2d8adb641876c758bb50aee"
+    },
+    "grading": {
+      "path": ".nl2repo/authoring-work/get-east-asian-width/runs/oracle-final-4/get-east-asian-width-oracle-final4-20260828/get-east-asian-width__hAxYWbo/verifier/grading.json",
+      "sha256": "sha256:23b79558738078c178f0a6bb5cf0122268d4d4af9a319f3467b044fd62bf2daf"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/get-east-asian-width/runs/oracle-final-4/get-east-asian-width-oracle-final4-20260828/get-east-asian-width__hAxYWbo/verifier/network.json",
+      "sha256": "sha256:58052cc9e8d3f11a49e804d7679ce1eb5e444911a37e02542b95b1cba4c4f84b",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-empty/get-east-asian-width-empty -a oracle --job-name get-east-asian-width-empty-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-empty/get-east-asian-width-empty-final4-20260828/get-east-asian-width-empty__YRgqGyF/verifier/grading.json",
+        "sha256": "sha256:9b884cbcee28892d6eb2ebf6afa565a04c139efbaaa0d699fe545c70da911b63"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-empty/get-east-asian-width-empty-final4-20260828/get-east-asian-width-empty__YRgqGyF/verifier/network.json",
+        "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-stub/get-east-asian-width-stub -a oracle --job-name get-east-asian-width-stub-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 26,
+      "passed": 5,
+      "reward": 0.19230769230769232,
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-stub/get-east-asian-width-stub-final4-20260828/get-east-asian-width-stub__oR35o5F/verifier/grading.json",
+        "sha256": "sha256:06c67bdf7c37135c5e4fd095ded2c62667a450ec1dcacedf92c2dd91b1de81af"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-stub/get-east-asian-width-stub-final4-20260828/get-east-asian-width-stub__oR35o5F/verifier/network.json",
+        "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-forgery/get-east-asian-width-forgery -a oracle --job-name get-east-asian-width-forgery-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 26,
+      "passed": 5,
+      "reward": 0.19230769230769232,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-forgery/get-east-asian-width-forgery-final4-20260828/get-east-asian-width-forgery__g9NHoXn/verifier/grading.json",
+        "sha256": "sha256:06c67bdf7c37135c5e4fd095ded2c62667a450ec1dcacedf92c2dd91b1de81af"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-forgery/get-east-asian-width-forgery-final4-20260828/get-east-asian-width-forgery__g9NHoXn/verifier/network.json",
+        "sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522",
+        "public_network_available": false
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-hang/get-east-asian-width-hang -a oracle --job-name get-east-asian-width-hang-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 26,
+      "passed": 2,
+      "reward": 0.07692307692307693,
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-hang/get-east-asian-width-hang-final4-20260828/get-east-asian-width-hang__CHPRNxu/verifier/grading.json",
+        "sha256": "sha256:1f0547efd737ebbeb0cdb4cc30edbace8498b4b52b404feb5606a4278b6e04c8"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-hang/get-east-asian-width-hang-final4-20260828/get-east-asian-width-hang__CHPRNxu/verifier/network.json",
+        "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+        "public_network_available": false
+      }
+    },
+    "install_script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-install-script/get-east-asian-width-install-script -a oracle --job-name get-east-asian-width-install-script-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-install-script/get-east-asian-width-install-script-final4-20260828/get-east-asian-width-install-scr__b5z64ah/verifier/grading.json",
+        "sha256": "sha256:9b884cbcee28892d6eb2ebf6afa565a04c139efbaaa0d699fe545c70da911b63"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-install-script/get-east-asian-width-install-script-final4-20260828/get-east-asian-width-install-scr__b5z64ah/verifier/network.json",
+        "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+        "public_network_available": false
+      }
+    },
+    "loader_hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-loader-hook/get-east-asian-width-loader-hook -a oracle --job-name get-east-asian-width-loader-hook-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 26,
+      "passed": 5,
+      "reward": 0.19230769230769232,
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-loader-hook/get-east-asian-width-loader-hook-final4-20260828/get-east-asian-width-loader-hook__uD6GWMs/verifier/grading.json",
+        "sha256": "sha256:06c67bdf7c37135c5e4fd095ded2c62667a450ec1dcacedf92c2dd91b1de81af"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-loader-hook/get-east-asian-width-loader-hook-final4-20260828/get-east-asian-width-loader-hook__uD6GWMs/verifier/network.json",
+        "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/get-east-asian-width/controls-final-4-offline/get-east-asian-width-offline -a oracle --job-name get-east-asian-width-offline-final4-20260828 -o .nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 26,
+      "collected": 26,
+      "passed": 4,
+      "reward": 0.15384615384615385,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-offline/get-east-asian-width-offline-final4-20260828/get-east-asian-width-offline__Mn3Nfzr/verifier/grading.json",
+        "sha256": "sha256:08099f7473f49b3949c90ada6d6e82ecf927ff401a456738a1f082d170a5837a"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/get-east-asian-width/runs/control-final-4-offline/get-east-asian-width-offline-final4-20260828/get-east-asian-width-offline__Mn3Nfzr/verifier/network.json",
+        "sha256": "sha256:9d99d18b4206308c9cd8260818f9afcfb230ca401642d2ca264a9346369ae4c4",
+        "public_network_available": false
+      }
+    }
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this authoring lane by design.",
+    "The upstream AVA suite was not collected because authoring-time development dependencies were absent; the independent 26-leaf node:test contract was collected and passed under the trusted Oracle.",
+    "Review, pilot, publication, and dataset integration remain integrator-stage gates.",
+    "The authoring shell provided Node 22.23.1/npm 10.9.8; the task and compiled image remain pinned to Node 24.19.0/npm 11.17.0."
+  ]
+}

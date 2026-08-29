@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cat > package.json <<'JSON'
+{"name":"get-east-asian-width","version":"1.6.0","type":"module","exports":{".":"./index.js"}}
+JSON
+cat > package-lock.json <<'JSON'
+{"name":"get-east-asian-width","version":"1.6.0","lockfileVersion":3,"requires":true,"packages":{"":{"name":"get-east-asian-width","version":"1.6.0","type":"module"}}}
+JSON
+cat > index.js <<'JS'
+export const eastAsianWidth = () => 1;
+export const eastAsianWidthType = () => 'neutral';
+JS
+printf 'NODE_OPTIONS=--loader=./evil.mjs\n' > node-options.txt

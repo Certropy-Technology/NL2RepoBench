@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_path": "test.js",
+  "upstream_framework": "ava",
+  "upstream_collected": 7,
+  "upstream_status": "not-collected",
+  "upstream_probe": "The exact checkout could not load ava because development dependencies are not installed in the authoring shell; the seven assertions were independently ported to the private node:test contract.",
+  "frozen_private_collection": 26,
+  "collection_method": "independent node:test contract over bounded JSON child adapter",
+  "covered_groups": ["package-shape", "category-classification", "numeric-width", "validation", "determinism"],
+  "notes": "The production denominator is independent of the AVA suite and excludes private helper exports and the Unicode fetch/build script."
+}
