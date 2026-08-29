@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0",
+  "task_id": "basic-ftp",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/patrickjuchli/basic-ftp",
+    "revision": "9cbc5cf23cb2b62231bc1822a868138e4772d4e5",
+    "source_digest": "sha256:e7998232ed9c801ef5b2277b8164c74d7595317bbbb08f57ef8dc1c8aca27364",
+    "archive_digest": "sha256:515fbf4bfc6fed25ed9b58d5ef72d9d67cbe13cb4a2b6ca5abdcff4435ae092e",
+    "license_spdx": "MIT",
+    "license_digest": "sha256:5b417c1f5ee996875e86b4959851c94e102edbbb3c68199bd3336c7351c924f9",
+    "submodules": []
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/compiled-production-final/basic-ftp",
+    "bundle_manifest_sha256": "sha256:ff8d59e3197ad0098c826fc516220663dd850cb909e9af2d90ca0b3d1e050110",
+    "canonical_manifest_digest": "sha256:6f48a0313ea7ee0b6f70c51615cd777e98a86caab9ee1f05119bedfdf01ca785",
+    "file_count": 110
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "os": "debian-bookworm",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image": "sha256:4c82f9aa8aa124d4a51a6f85f8a0ad69576163bbd7e9b6ffea22409ce3bbcda1",
+    "network_mode": "no-network"
+  },
+  "runtime": {
+    "language": "node",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": 3,
+    "runtime_dependencies": [],
+    "dependency_bundle_digest": "sha256:2207addbed089ebf4f39de04e47d0d6f703ef099e5f628060d3216d8a3d980b3"
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 47,
+    "source": "frozen-collection"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/basic-ftp",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_error_count": 0,
+      "task_warning_count": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/basic-ftp --output .nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/compiled-production-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -t nl2repo-basic-ftp-verifier:authoring .nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/compiled-production-final/basic-ftp/tests",
+      "exit_code": 0,
+      "image_digest": "sha256:4c82f9aa8aa124d4a51a6f85f8a0ad69576163bbd7e9b6ffea22409ce3bbcda1"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/compiled-production-final/basic-ftp -a oracle --allow-agent-host codeload.github.com --job-name basic-ftp-official-oracle-20260828 -o .nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/runs/official-oracle --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "harbor_version": "0.21.0"
+    },
+    {
+      "command": "bash -n catalog/sources/basic-ftp/harbor/controls/*.sh && node --check test bundle scripts",
+      "exit_code": 0
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/compiled-production-final/basic-ftp -a oracle --allow-agent-host codeload.github.com --job-name basic-ftp-official-oracle-20260828 -o .nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/runs/official-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 47,
+    "passed": 47,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/runs/official-oracle/basic-ftp-official-oracle-20260828/basic-ftp__6cYTCgJ/verifier/grading.json",
+      "sha256": "sha256:0c88c3c452289b15b1a3deef59975af27d5d902262355f129ceeea0b1f3744e4"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/runs/official-oracle/basic-ftp-official-oracle-20260828/basic-ftp__6cYTCgJ/verifier/network.json",
+      "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "direct Docker verifier replay after controls/empty.sh with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-empty/verifier/grading.json", "sha256": "sha256:d685a56a3f444a3c429f0675fb610b31da667f74f2df305164ea446d64b763f7"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-empty/verifier/network.json", "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f"}
+    },
+    "stub": {
+      "command": "direct Docker verifier replay from an empty workspace after controls/stub.sh with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 47,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-stub/verifier/grading.json", "sha256": "sha256:f1c9e069752a387e68eeaf6611643087c25b161061e9b0240121c6156d803514"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-stub/verifier/network.json", "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f"}
+    },
+    "forgery": {
+      "command": "direct Docker verifier replay from an empty workspace after controls/forgery.sh with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 47,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "forged_workspace_report_ignored": true,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-forgery/verifier/grading.json", "sha256": "sha256:f1c9e069752a387e68eeaf6611643087c25b161061e9b0240121c6156d803514"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-forgery/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    },
+    "offline": {
+      "command": "direct Docker verifier replay from an empty workspace after controls/offline.sh with --network none",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "collected": 47,
+      "passed": 0,
+      "reward": 0.0,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-offline/verifier/grading.json", "sha256": "sha256:f1c9e069752a387e68eeaf6611643087c25b161061e9b0240121c6156d803514"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-offline/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"}
+    },
+    "install-script": {
+      "command": "direct Docker verifier replay after controls/install-script.sh with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-install-script/verifier/grading.json", "sha256": "sha256:d685a56a3f444a3c429f0675fb610b31da667f74f2df305164ea446d64b763f7"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-install-script/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"}
+    },
+    "loader-hook": {
+      "command": "direct Docker verifier replay from an empty workspace after controls/loader-hook.sh with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 47,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-loader-hook/verifier/grading.json", "sha256": "sha256:f1c9e069752a387e68eeaf6611643087c25b161061e9b0240121c6156d803514"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-loader-hook/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"}
+    },
+    "call-hang": {
+      "command": "direct Docker verifier replay after controls/call-hang.sh with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-call-hang/verifier/grading.json", "sha256": "sha256:55c6b86495c90862a44427b5cf2770ac0703d71aa0aca8a380a5255e9d2ee8f8"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/basic-ftp/direct-replay/clean-call-hang/verifier/network.json", "sha256": "sha256:29ced6a18336819d7f80ccb947263fdfea03dc2ae7939221ad53afb4fd9e9e27"}
+    }
+  },
+  "residual_risks": [
+    "No model Harbor Agent Run was started in this authoring lane.",
+    "FTP server connectivity, TLS handshakes, uploads, downloads, and filesystem transfer semantics are outside the deterministic 47-leaf slice.",
+    "Docker emitted two generic constant-platform FROM warnings; all image bases are digest pinned and builds completed.",
+    "The clean-workspace stub, forgery, offline, and loader-hook controls collect the frozen 47 leaves and score 0/47; their trusted reports remain verifier-owned.",
+    "Integrator review, pilot, dataset integration, and publication remain separate gates."
+  ]
+}

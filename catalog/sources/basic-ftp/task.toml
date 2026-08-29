@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "basic-ftp"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "ftp-client"
+tags = ["node", "npm", "commonjs", "ftp", "ftps", "parsing", "streams", "subprocess"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/patrickjuchli/basic-ftp"
+revision = "9cbc5cf23cb2b62231bc1822a868138e4772d4e5"
+license_spdx = "MIT"
+source_digest = "sha256:e7998232ed9c801ef5b2277b8164c74d7595317bbbb08f57ef8dc1c8aca27364"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The deterministic parser and stream slice is zero-runtime-dependency. Candidate and verifier phases are network-isolated; only the trusted Oracle may fetch the exact upstream revision from its run-scoped source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:2207addbed089ebf4f39de04e47d0d6f703ef099e5f628060d3216d8a3d980b3", size_bytes = 405, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:2207addbed089ebf4f39de04e47d0d6f703ef099e5f628060d3216d8a3d980b3", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 47
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", size_bytes = 261, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", visibility = "private" }
+test_bundle = { digest = "sha256:3ad7d79c6000d6229ae1377ce1763ed439ef8a9bee681cc4675336a9f8f2977f", size_bytes = 4567, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:3ad7d79c6000d6229ae1377ce1763ed439ef8a9bee681cc4675336a9f8f2977f", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the basic-ftp CommonJS package with a deterministic offline slice for FTP metadata parsing and stream utilities."
+keywords = ["node", "npm", "commonjs", "ftp", "ftps", "parsing", "streams", "node-test"]
+agent_timeout_sec = 1500.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-c3/basic-ftp"
+reason = "Source validation, network lint, production compile, verifier image build, direct offline replay, Harbor Oracle, empty, stub, forgery, offline, and bounded call-hang controls passed. Integrator review, pilot, and publication remain separate gates."
+
+[oracle_bundle]
+digest = "sha256:dcbdc8666b78b25a61568f9030850abf6a17bfeaa5380244d1ae2528b409701c"
+size_bytes = 35423
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:dcbdc8666b78b25a61568f9030850abf6a17bfeaa5380244d1ae2528b409701c"
+visibility = "private"
