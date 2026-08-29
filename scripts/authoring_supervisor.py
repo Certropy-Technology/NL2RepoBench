@@ -248,26 +248,20 @@ def _queue_summary(lane: Lane) -> dict[str, Any]:
     return {"language": lane.language, "counts": dict(sorted(counts.items()))}
 
 
-def _release_expired_claims(
+def _release_stale_claims(
     root: Path, lane: Lane, procs: list[Proc], *, max_attempts: int
 ) -> list[dict[str, Any]]:
-    now = datetime.now(UTC)
     actions: list[dict[str, Any]] = []
     queue_loop = root / "scripts/package_queue_loop.py"
     for record in _lane_records(lane):
         if record.get("status") != "running":
             continue
-        expires_value = record.get("lease_expires_at")
         owner = record.get("owner")
         package = record.get("package")
         candidate_id = record.get("candidate_id")
-        if not isinstance(expires_value, str) or not isinstance(owner, str):
+        if not isinstance(owner, str):
             continue
-        try:
-            expired = datetime.fromisoformat(expires_value) <= now
-        except ValueError:
-            expired = True
-        if not expired or not isinstance(package, str) or not isinstance(candidate_id, str):
+        if not isinstance(package, str) or not isinstance(candidate_id, str):
             continue
         worktree = root / ".nl2repo/authoring-live/worktrees" / lane.batch_id / package
         active = worktree.is_dir() and (
@@ -275,8 +269,15 @@ def _release_expired_claims(
         )
         if active:
             actions.append(
-                {"language": lane.language, "package": package, "status": "expired-but-active"}
+                {"language": lane.language, "package": package, "status": "stale-but-active"}
             )
+            continue
+        owner_active = any(
+            proc
+            for proc in _controller_processes(lane, procs)
+            if f"--owner {owner}" in proc.command
+        )
+        if owner_active:
             continue
         attempts = int(record.get("attempts", 0))
         if attempts >= max_attempts:
@@ -284,7 +285,7 @@ def _release_expired_claims(
                 {
                     "language": lane.language,
                     "package": package,
-                    "status": "expired-at-retry-limit",
+                    "status": "stale-at-retry-limit",
                     "owner": owner,
                 }
             )
@@ -312,9 +313,9 @@ def _release_expired_claims(
                 "language": lane.language,
                 "package": package,
                 "status": (
-                    "expired-released"
+                    "stale-released"
                     if released["exit_code"] == 0
-                    else "expired-release-error"
+                    else "stale-release-error"
                 ),
                 "output": released["output"],
             }
@@ -664,6 +665,16 @@ def _integrate_task(
     }
 
 
+def _integration_attempt(action: dict[str, Any]) -> bool:
+    return action.get("status") not in {
+        "active",
+        "missing-worktree",
+        "not-ready",
+        "oss-unavailable",
+        "ready",
+    }
+
+
 def _oss_bucket() -> Any | None:
     key_id = os.environ.get("OSS_ACCESS_KEY_ID")
     key_secret = os.environ.get("OSS_ACCESS_KEY_SECRET")
@@ -846,7 +857,7 @@ def supervise(args: argparse.Namespace) -> int:
                 "free_bytes": free,
                 "lanes": [_queue_summary(lane) for lane in lanes],
                 "controllers": {
-                    lane.language: len(_controller_processes(lane, procs))
+                    lane.language: len(_controller_slots(lane, procs))
                     for lane in lanes
                 },
                 "watcher_count": len(_watcher_processes(procs)),
@@ -857,32 +868,46 @@ def supervise(args: argparse.Namespace) -> int:
             integration_clean = not _git_status(root)
             report["integration_clean"] = integration_clean
             report["actions"].extend(
-                _release_expired_claims(root, lanes[0], procs, max_attempts=3)
+                _release_stale_claims(root, lanes[0], procs, max_attempts=3)
                 if lanes
                 else []
             )
             for lane in lanes[1:]:
                 report["actions"].extend(
-                    _release_expired_claims(root, lane, procs, max_attempts=3)
+                    _release_stale_claims(root, lane, procs, max_attempts=3)
                 )
             with _exclusive_lock(live / "archive.lock", blocking=False) as archive_lock:
                 if archive_lock:
                     bucket = _oss_bucket()
-                    for lane in lanes:
-                        for record in _lane_records(lane):
-                            if record.get("status") != "complete":
-                                continue
-                            package = record.get("package")
-                            if not isinstance(package, str):
-                                continue
-                            if len(
-                                [
-                                    action
-                                    for action in report["actions"]
-                                    if action.get("status") == "integrated"
-                                ]
-                            ) >= args.max_integrations:
+                    candidates = {
+                        lane.language: [
+                            record
+                            for record in _lane_records(lane)
+                            if record.get("status") == "complete"
+                            and isinstance(record.get("package"), str)
+                            and (
+                                root
+                                / ".nl2repo/authoring-live/worktrees"
+                                / lane.batch_id
+                                / record["package"]
+                            ).is_dir()
+                        ]
+                        for lane in lanes
+                    }
+                    offsets = {lane.language: 0 for lane in lanes}
+                    integration_attempts = 0
+                    while integration_attempts < args.max_integrations:
+                        progress = False
+                        for lane in lanes:
+                            if integration_attempts >= args.max_integrations:
                                 break
+                            records = candidates[lane.language]
+                            offset = offsets[lane.language]
+                            if offset >= len(records):
+                                continue
+                            offsets[lane.language] += 1
+                            record = records[offset]
+                            package = record["package"]
                             try:
                                 action = _integrate_task(
                                     root,
@@ -906,6 +931,11 @@ def supervise(args: argparse.Namespace) -> int:
                                 }
                                 report["errors"].append(action)
                             report["actions"].append({"language": lane.language, **action})
+                            if _integration_attempt(action):
+                                integration_attempts += 1
+                            progress = True
+                        if not progress:
+                            break
                 else:
                     report["actions"].append({"status": "archive-lock-busy"})
             can_start_workers = (
