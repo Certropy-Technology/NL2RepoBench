@@ -33,7 +33,7 @@ history and immutable archives. The current SDK fork is the `openhands/` submodu
 ```bash
 uv sync
 uv run nl2repo doctor
-uv run nl2repo task import-legacy
+uv run nl2repo task validate-source catalog/sources/<task-id>
 uv run nl2repo dataset validate authoring
 uv run nl2repo harbor compile catalog/tasks/ministats --allow-incomplete
 ```
@@ -43,7 +43,8 @@ live under `catalog/sources/<task-id>/`; generated Harbor projections live under
 `catalog/tasks/<task-id>/`. `examples/harbor/` is reserved for infrastructure
 examples. Run outputs belong under `.nl2repo/runs/` and are not dataset assets.
 
-The importer writes canonical task manifests, a SQLite state index, and
+Historical conversion is confined to the offline archive/migration boundary;
+the active pipeline writes canonical task manifests, a SQLite state index, and
 content-addressed artifacts. Private command/test-path JSON is referenced by
 digest and is not embedded in public manifests. See
 [`docs/metadata-core.zh-CN.md`](docs/metadata-core.zh-CN.md) for the data model
