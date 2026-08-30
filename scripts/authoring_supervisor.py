@@ -80,6 +80,7 @@ DEFAULT_MAX_TOTAL_CONTROLLERS = 3
 MAX_RUNTIME_CONTROLLERS = 6
 MAX_RUNTIME_CONCURRENCY = 4
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
+DEFAULT_DOCKER_MIN_FREE_BYTES = 20 * 1024**3
 DEFAULT_WATCHER_MIN_FREE_BYTES = 2 * 1024**3
 DEFAULT_FAILURE_BACKOFF_SECONDS = 1800
 DEFAULT_DIRECTOR_INTERVAL_SECONDS = 600
@@ -283,6 +284,43 @@ def _idle(worktree: Path, procs: list[Proc]) -> bool:
 
 def _free_bytes(path: Path) -> int:
     return shutil.disk_usage(path).free
+
+
+def _docker_storage_status() -> tuple[Path, int, str | None]:
+    """Return the Docker storage filesystem and fail closed when it is unknown."""
+
+    try:
+        completed = subprocess.run(
+            ["docker", "info", "--format", "{{.DockerRootDir}}"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return Path("/"), 0, str(exc)
+    raw_path = completed.stdout.strip()
+    if completed.returncode != 0 or not raw_path:
+        detail = (completed.stderr or completed.stdout or "docker info returned no root")[-1000:]
+        return Path("/"), 0, detail
+    path = Path(raw_path).resolve()
+    try:
+        return path, _free_bytes(path), None
+    except OSError as exc:
+        return path, 0, str(exc)
+
+
+def _worker_disk_capacity(
+    repository_free_bytes: int,
+    docker_free_bytes: int,
+    *,
+    repository_min_free_bytes: int,
+    docker_min_free_bytes: int,
+) -> bool:
+    return (
+        repository_free_bytes >= repository_min_free_bytes
+        and docker_free_bytes >= docker_min_free_bytes
+    )
 
 
 def _redact(text: str) -> str:
@@ -1463,18 +1501,37 @@ def supervise(args: argparse.Namespace) -> int:
         while True:
             lanes = _lanes(root, live, queue_root)
             free = _free_bytes(root)
+            docker_root, docker_free, docker_storage_error = _docker_storage_status()
             procs = _proc_table()
             report: dict[str, Any] = {
                 "schema_version": "1.0",
                 "kind": "authoring-supervisor-status",
                 "observed_at": datetime.now(UTC).isoformat(),
                 "free_bytes": free,
+                "repository_free_bytes": free,
+                "repository_min_free_bytes": args.min_free_bytes,
+                "docker_root": str(docker_root),
+                "docker_free_bytes": docker_free,
+                "docker_min_free_bytes": args.docker_min_free_bytes,
+                "worker_disk_capacity": _worker_disk_capacity(
+                    free,
+                    docker_free,
+                    repository_min_free_bytes=args.min_free_bytes,
+                    docker_min_free_bytes=args.docker_min_free_bytes,
+                ),
                 "lanes": [_queue_summary(lane) for lane in lanes],
                 "controllers": _controller_counts(lanes, procs),
                 "watcher_count": len(_watcher_processes(procs)),
                 "actions": [],
                 "errors": [],
             }
+            if docker_storage_error is not None:
+                report["errors"].append(
+                    {
+                        "status": "docker-storage-error",
+                        "error": _redact(docker_storage_error),
+                    }
+                )
             try:
                 runtime = _runtime_config(runtime_config_path, args)
                 last_runtime_config = runtime
@@ -1496,6 +1553,12 @@ def supervise(args: argparse.Namespace) -> int:
             discovery_pool = _discovery_pool(args.discovery_pool)
             snapshot = {
                 "free_bytes": free,
+                "repository_free_bytes": free,
+                "repository_min_free_bytes": args.min_free_bytes,
+                "docker_root": str(docker_root),
+                "docker_free_bytes": docker_free,
+                "docker_min_free_bytes": args.docker_min_free_bytes,
+                "worker_disk_capacity": report["worker_disk_capacity"],
                 "integration_clean": integration_clean,
                 "lanes": report["lanes"],
                 "controllers": report["controllers"],
@@ -1556,7 +1619,7 @@ def supervise(args: argparse.Namespace) -> int:
             if (
                 director.get("action") == "discover"
                 and integration_clean
-                and free >= args.min_free_bytes
+                and report["worker_disk_capacity"]
             ):
                 report["actions"].append(
                     _run_discovery(args, root, live, director, lanes)
@@ -1567,7 +1630,7 @@ def supervise(args: argparse.Namespace) -> int:
                     if "all" in args.replenish_language
                     else list(args.replenish_language)
                 )
-                if not integration_clean or free < args.min_free_bytes:
+                if not integration_clean or not report["worker_disk_capacity"]:
                     report["errors"].append(
                         {
                             "status": "replenishment-blocked",
@@ -1699,7 +1762,7 @@ def supervise(args: argparse.Namespace) -> int:
             can_start_workers = (
                 not args.dry_run
                 and integration_clean
-                and free >= args.min_free_bytes
+                and report["worker_disk_capacity"]
                 and worker_limit > 0
             )
             can_run_maintenance = (
@@ -1850,6 +1913,12 @@ def main() -> int:
     )
     parser.add_argument("--min-free-bytes", type=int, default=DEFAULT_MIN_FREE_BYTES)
     parser.add_argument(
+        "--docker-min-free-bytes",
+        type=int,
+        default=DEFAULT_DOCKER_MIN_FREE_BYTES,
+        help="Stop starting workers when the Docker storage filesystem is below this value.",
+    )
+    parser.add_argument(
         "--watcher-min-free-bytes",
         type=int,
         default=DEFAULT_WATCHER_MIN_FREE_BYTES,
@@ -1874,10 +1943,12 @@ def main() -> int:
         or args.failure_backoff_seconds < 1
         or args.director_interval_sec < 1
         or args.director_timeout_sec < 1
+        or args.min_free_bytes < 1
+        or args.docker_min_free_bytes < 1
+        or args.watcher_min_free_bytes < 1
     ):
         parser.error(
-            "workers, max-total-controllers, max-integrations, and interval-sec "
-            "must be positive"
+            "worker, integration, interval, timeout, and disk thresholds must be positive"
         )
     try:
         return supervise(args)

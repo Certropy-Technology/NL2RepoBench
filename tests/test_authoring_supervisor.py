@@ -264,6 +264,60 @@ def test_runtime_config_is_bounded_and_operator_owned(tmp_path: Path) -> None:
         supervisor._runtime_config(config, args)
 
 
+def test_worker_disk_capacity_requires_repository_and_docker_space() -> None:
+    gib = 1024**3
+
+    assert supervisor._worker_disk_capacity(
+        30 * gib,
+        25 * gib,
+        repository_min_free_bytes=12 * gib,
+        docker_min_free_bytes=20 * gib,
+    )
+    assert not supervisor._worker_disk_capacity(
+        10 * gib,
+        25 * gib,
+        repository_min_free_bytes=12 * gib,
+        docker_min_free_bytes=20 * gib,
+    )
+    assert not supervisor._worker_disk_capacity(
+        30 * gib,
+        18 * gib,
+        repository_min_free_bytes=12 * gib,
+        docker_min_free_bytes=20 * gib,
+    )
+
+
+def test_docker_storage_status_uses_docker_root_filesystem(monkeypatch) -> None:
+    completed = type(
+        "Completed",
+        (),
+        {"returncode": 0, "stdout": "/var/lib/docker\n", "stderr": ""},
+    )()
+    monkeypatch.setattr(supervisor.subprocess, "run", lambda *args, **kwargs: completed)
+    monkeypatch.setattr(supervisor, "_free_bytes", lambda path: 23 * 1024**3)
+
+    path, free, error = supervisor._docker_storage_status()
+
+    assert path == Path("/var/lib/docker")
+    assert free == 23 * 1024**3
+    assert error is None
+
+
+def test_docker_storage_status_fails_closed(monkeypatch) -> None:
+    completed = type(
+        "Completed",
+        (),
+        {"returncode": 1, "stdout": "", "stderr": "daemon unavailable"},
+    )()
+    monkeypatch.setattr(supervisor.subprocess, "run", lambda *args, **kwargs: completed)
+
+    path, free, error = supervisor._docker_storage_status()
+
+    assert path == Path("/")
+    assert free == 0
+    assert error == "daemon unavailable"
+
+
 def test_go_discovery_pool_has_explicit_repository_mappings() -> None:
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-btree"] == "google/btree"
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-cast"] == "spf13/cast"

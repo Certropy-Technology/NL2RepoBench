@@ -286,8 +286,11 @@ scripts/run_authoring_supervisor.sh --once --dry-run
 
 默认每种语言最多 3 个 `max-concurrency=1` controller，但受全局最多 3 个 controller
 的磁盘保护上限约束，确保 Python、Node、Go 不会在 100 GiB 工作盘上同时无限扩张。
-`/data` 剩余空间低于 12 GiB 时 supervisor 停止启动新 Loop，但仍允许归档和清理已验证
-的完成题；剩余空间低于 2 GiB 时不启动 watcher。状态、动作、错误和队列快照写入
+supervisor 同时检查 repository/worktree filesystem 和 `docker info` 返回的 DockerRootDir
+filesystem。`/data` 剩余空间低于 12 GiB，或 Docker storage 所在 filesystem 剩余低于
+20 GiB 时，停止 discovery 和新 Loop，但仍允许归档、集成和清理已验证完成题。Docker
+storage 无法查询时 fail closed，不启动 worker。`/data` 剩余空间低于 2 GiB 时不启动
+watcher。状态、动作、错误和队列快照写入
 `.nl2repo/authoring-live/supervisor/status.json`。source、generated projection、
 OSS manifest 或 worktree 发生冲突时 fail closed 并保留现场。
 
