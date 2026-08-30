@@ -306,6 +306,13 @@ def test_controller_registration_requires_reservation_and_stop_releases_usage(tm
         assert db.execute("SELECT used_count FROM capacity_rows WHERE capacity_unit='controller_slot' AND capacity_kind='global'").fetchone()[0] == 0
 
 
+def test_reserved_slots_count_against_controller_configuration(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    scheduler.configure(enabled=True, max_total_controllers=1, controller_concurrency=1)
+    with pytest.raises(ConflictError, match="configuration capacity"):
+        scheduler.reserve_controller("lane", "another-owner", 1)
+
+
 def test_reconcile_separates_unstarted_and_running_trials(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
     first = _task(scheduler, "unstarted")

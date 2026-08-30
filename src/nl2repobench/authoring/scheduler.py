@@ -629,12 +629,15 @@ class Scheduler:
             if cfg is None or not cfg["enabled"]:
                 raise ConflictError("scheduler is disabled")
             controller_count = db.execute(
-                "SELECT count(*) FROM controllers WHERE role='authoring_controller' "
-                "AND state IN ('running','draining')"
+                "SELECT (SELECT count(*) FROM controllers WHERE role='authoring_controller' "
+                "AND state IN ('running','draining')) + (SELECT count(*) FROM "
+                "controller_slot_reservations WHERE state='reserved')"
             ).fetchone()[0]
             language_count = db.execute(
-                "SELECT count(*) FROM controllers WHERE role='authoring_controller' "
-                "AND language=? AND state IN ('running','draining')", (lane["language"],)
+                "SELECT (SELECT count(*) FROM controllers WHERE role='authoring_controller' "
+                "AND language=? AND state IN ('running','draining')) + (SELECT count(*) "
+                "FROM controller_slot_reservations WHERE language=? AND state='reserved')",
+                (lane["language"], lane["language"]),
             ).fetchone()[0]
             if controller_count >= cfg["max_total_controllers"] or language_count >= cfg["controller_concurrency"]:
                 raise ConflictError("controller configuration capacity exhausted")
