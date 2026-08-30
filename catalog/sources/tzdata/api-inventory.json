@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tzdata",
+  "revision": "6c7fa78dc6b8fc9bf5301a0a1052d336f7efa192",
+  "python_modules": {
+    "tzdata": {
+      "constants": [
+        {
+          "name": "__version__",
+          "type": "str",
+          "value": "2026.3"
+        },
+        {
+          "name": "IANA_VERSION",
+          "type": "str",
+          "value": "2026c"
+        }
+      ],
+      "public_callables": []
+    }
+  },
+  "resource_contracts": [
+    {
+      "access": "importlib.resources.files('tzdata').joinpath('zones').read_text(encoding='utf-8')",
+      "shape": "598 unique non-empty newline-delimited zone keys"
+    },
+    {
+      "access": "importlib.resources.files('tzdata.zoneinfo').joinpath(*key.split('/')).read_bytes()",
+      "shape": "TZif bytes for every key in the zones manifest"
+    },
+    {
+      "access": "zoneinfo.ZoneInfo(key) after zoneinfo.reset_tzpath([])",
+      "shape": "standard-library ZoneInfo backed only by package resources"
+    }
+  ],
+  "distribution": {
+    "name": "tzdata",
+    "version": "2026.3",
+    "license": "Apache-2.0",
+    "requires_python": ">=2",
+    "runtime_dependencies": []
+  },
+  "side_effects": "Import is read-only. Resource reads perform local filesystem or wheel-loader I/O only.",
+  "exceptions": "Missing resource paths use importlib.resources errors; unknown zone keys raise zoneinfo.ZoneInfoNotFoundError."
+}

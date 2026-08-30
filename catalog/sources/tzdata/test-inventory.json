@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tzdata",
+  "revision": "6c7fa78dc6b8fc9bf5301a0a1052d336f7efa192",
+  "upstream": {
+    "framework": "pytest 9.1.1",
+    "command": "pytest -q",
+    "python": "3.12.14",
+    "collected_tests": 30,
+    "subtests": 598,
+    "passed_tests": 30,
+    "passed_subtests": 598,
+    "exit_code": 0,
+    "log": ".nl2repo/authoring-work/tzdata/logs/upstream-build-test-remediated.txt",
+    "log_sha256": "sha256:303aa19df6f15ea92f945bdc9bc74da51b7c831e1760f2882d8da2df8ecac50a"
+  },
+  "authored_verifier": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 53,
+    "candidate_boundary": "One bounded trusted scenario is executed by the shared candidate runner as UID 10001 against /tmp/candidate-site. Expected values remain root-only in the custom verifier.",
+    "categories": {
+      "metadata": 7,
+      "manifest_and_resources": 12,
+      "zoneinfo_integration": 3,
+      "timezone_behavior": 31
+    }
+  }
+}

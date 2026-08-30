@@ -1,0 +1,61 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/tzdata"
+version = "1.0.0"
+description = "Build the frozen tzdata 2026c Python distribution from an empty workspace and reproduce its package metadata, importlib resource hierarchy, TZif data, aliases, and zoneinfo fallback behavior through a separate offline verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "tzdata",
+    "iana",
+    "zoneinfo",
+    "resources",
+    "offline",
+    "repository-generation",
+]
+
+[metadata]
+difficulty = "hard"
+category = "timezone-data-package"
+tags = [
+    "python",
+    "timezone",
+    "iana",
+    "resources",
+    "zoneinfo",
+    "packaging",
+    "offline",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 53
+canonical_manifest_digest = "sha256:30c8dca989e2ed7635eb0e648d05e5ef565c087b3185219e49d09b6e3c2c07ed"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 300.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

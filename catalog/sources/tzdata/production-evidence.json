@@ -1,0 +1,237 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tzdata",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python/tzdata",
+    "revision": "6c7fa78dc6b8fc9bf5301a0a1052d336f7efa192",
+    "tree": "80b4be5f1b4ce623e55060004aae69e26d534bc7",
+    "source_digest": "sha256:5b4ac0fb237db87b95008d329ec1d038b3e86513ee6c11c51098f7bcc20a51b0",
+    "archive_size_bytes": 1208320,
+    "license_spdx": "Apache-2.0",
+    "license_digest": "sha256:df58f69ea88683035d720b5375bcef0cf5aeaa98a1d098d572e0992c378deb46"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-13-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_policy": "no-network"
+  },
+  "dependency_lock": {
+    "digest": "sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae",
+    "package_count": 2,
+    "hash_count": 4,
+    "pip_require_hashes_replay_exit_code": 0,
+    "offline_candidate_install_exit_code": 0,
+    "vendor_wheels": false
+  },
+  "bundle": {
+    "path": ".nl2repo/final-compile-a/tzdata/bundle.manifest.json",
+    "sha256": "sha256:83f06bfdd34fd9bafc2dfea82b605ed3734cc8089a07d829bf6e4d7cd0a284b1",
+    "canonical_manifest_digest": "sha256:30c8dca989e2ed7635eb0e648d05e5ef565c087b3185219e49d09b6e3c2c07ed",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "mode": "production",
+    "file_count": 62,
+    "repeat_byte_identical": true
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/tzdata --output .nl2repo/final-compile-a --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "used_allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-a/tzdata -a oracle --allow-agent-host github.com --job-name tzdata-final-oracle-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-oracle-20260830-1 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 53,
+    "passed": 53,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/tzdata-final-oracle-20260830-1/tzdata-final-oracle-authoring-20260830-1/tzdata__MDCAQAZ/verifier/grading.json",
+      "sha256": "sha256:11acc07ed7d8d97b7bdb8af55d37ceafd5a3734bc33a10a3fbe19129f4879bab"
+    },
+    "network": {
+      "path": ".nl2repo/runs/tzdata-final-oracle-20260830-1/tzdata-final-oracle-authoring-20260830-1/tzdata__MDCAQAZ/verifier/network.json",
+      "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-a/tzdata -a nop --job-name tzdata-final-empty-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-empty-20260830-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/tzdata-final-empty-20260830-1/tzdata-final-empty-authoring-20260830-1/tzdata__uBArPbh/verifier/grading.json",
+        "sha256": "sha256:6fbcb79eeecf9a1b303cecbbd048ee4482ba90ddbd82bee5af61abe8d9f93fb4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-empty-20260830-1/tzdata-final-empty-authoring-20260830-1/tzdata__uBArPbh/verifier/network.json",
+        "sha256": "sha256:87d07d4be1c1013b5e183dba5f19a19d2725da9d7b55e0587e02ea8139e1e149"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/tzdata/tzdata-stub -a oracle --job-name tzdata-final-stub-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-stub-20260830-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 53,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/tzdata-final-stub-20260830-1/tzdata-final-stub-authoring-20260830-1/tzdata-stub__axeBZr7/verifier/grading.json",
+        "sha256": "sha256:5e0dd9df052ea6b56ae6b4eb9227ce241b73ecc794dcc418b370a47b4d8d664e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-stub-20260830-1/tzdata-final-stub-authoring-20260830-1/tzdata-stub__axeBZr7/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/tzdata/tzdata-forgery -a oracle --job-name tzdata-final-forgery-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-forgery-20260830-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 53,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "candidate_forged_reward": {
+        "path": ".nl2repo/runs/tzdata-final-forgery-20260830-1/tzdata-final-forgery-authoring-20260830-1/tzdata-forgery__DJfcHwi/artifacts/workspace/reward.json",
+        "sha256": "sha256:0f8f35b770ff837e10df993d52fa18b6a75f1b90f75878f4c4daaefe3d618618"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/tzdata-final-forgery-20260830-1/tzdata-final-forgery-authoring-20260830-1/tzdata-forgery__DJfcHwi/verifier/grading.json",
+        "sha256": "sha256:5e0dd9df052ea6b56ae6b4eb9227ce241b73ecc794dcc418b370a47b4d8d664e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-forgery-20260830-1/tzdata-final-forgery-authoring-20260830-1/tzdata-forgery__DJfcHwi/verifier/network.json",
+        "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a"
+      }
+    },
+    "offline": {
+      "command": "Official Harbor separate-verifier network-none probes from the final Oracle and control runs",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-oracle-20260830-1/tzdata-final-oracle-authoring-20260830-1/tzdata__MDCAQAZ/verifier/network.json",
+        "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0"
+      },
+      "network_receipts": [
+        ".nl2repo/runs/tzdata-final-oracle-20260830-1/tzdata-final-oracle-authoring-20260830-1/tzdata__MDCAQAZ/verifier/network.json",
+        ".nl2repo/runs/tzdata-final-empty-20260830-1/tzdata-final-empty-authoring-20260830-1/tzdata__uBArPbh/verifier/network.json",
+        ".nl2repo/runs/tzdata-final-stub-20260830-1/tzdata-final-stub-authoring-20260830-1/tzdata-stub__axeBZr7/verifier/network.json",
+        ".nl2repo/runs/tzdata-final-forgery-20260830-1/tzdata-final-forgery-authoring-20260830-1/tzdata-forgery__DJfcHwi/verifier/network.json",
+        ".nl2repo/runs/tzdata-final-workspace-invalid-20260830-1/tzdata-final-workspace-invalid-authoring-20260830-1/tzdata-workspace-invalid__rMhc9dk/verifier/network.json",
+        ".nl2repo/runs/tzdata-final-call-hang-20260830-1/tzdata-final-call-hang-authoring-20260830-1/tzdata-call-hang__rJcSFLi/verifier/network.json",
+        ".nl2repo/runs/tzdata-final-install-hang-20260830-1/tzdata-final-install-hang-authoring-20260830-1/tzdata-install-hang__2NPF2PP/verifier/network.json"
+      ]
+    },
+    "workspace-invalid": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/tzdata/tzdata-workspace-invalid -a oracle --job-name tzdata-final-workspace-invalid-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-workspace-invalid-20260830-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-workspace-rejected",
+      "grading": {
+        "path": ".nl2repo/runs/tzdata-final-workspace-invalid-20260830-1/tzdata-final-workspace-invalid-authoring-20260830-1/tzdata-workspace-invalid__rMhc9dk/verifier/grading.json",
+        "sha256": "sha256:7740447e68315ac60bf900fbf88a9d2f3474533f48fc995982806dd575cf0143"
+      },
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-workspace-invalid-20260830-1/tzdata-final-workspace-invalid-authoring-20260830-1/tzdata-workspace-invalid__rMhc9dk/verifier/network.json",
+        "sha256": "sha256:0f0f539d9b7fbe7c44bb53f1b5bd652f008c2657b8ece7d407fd3e272328a1c0"
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/tzdata/tzdata-call-hang -a oracle --job-name tzdata-final-call-hang-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-call-hang-20260830-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 125,
+      "valid": true,
+      "collected": 53,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/tzdata-final-call-hang-20260830-1/tzdata-final-call-hang-authoring-20260830-1/tzdata-call-hang__rJcSFLi/verifier/grading.json",
+        "sha256": "sha256:5e0dd9df052ea6b56ae6b4eb9227ce241b73ecc794dcc418b370a47b4d8d664e"
+      },
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-call-hang-20260830-1/tzdata-final-call-hang-authoring-20260830-1/tzdata-call-hang__rJcSFLi/verifier/network.json",
+        "sha256": "sha256:4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb"
+      }
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls/tzdata/tzdata-install-hang -a oracle --job-name tzdata-final-install-hang-authoring-20260830-1 -o .nl2repo/runs/tzdata-final-install-hang-20260830-1 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 151,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install": {
+        "path": ".nl2repo/runs/tzdata-final-install-hang-20260830-1/tzdata-final-install-hang-authoring-20260830-1/tzdata-install-hang__2NPF2PP/verifier/candidate-install.json",
+        "sha256": "sha256:a379b1d24573219fd263322dd41d5773f99947a501a1560cefa73f9ab9b74787",
+        "outcome": "timeout",
+        "returncode": -9
+      },
+      "grading": {
+        "path": ".nl2repo/runs/tzdata-final-install-hang-20260830-1/tzdata-final-install-hang-authoring-20260830-1/tzdata-install-hang__2NPF2PP/verifier/grading.json",
+        "sha256": "sha256:6fbcb79eeecf9a1b303cecbbd048ee4482ba90ddbd82bee5af61abe8d9f93fb4"
+      },
+      "network": {
+        "path": ".nl2repo/runs/tzdata-final-install-hang-20260830-1/tzdata-final-install-hang-authoring-20260830-1/tzdata-install-hang__2NPF2PP/verifier/network.json",
+        "sha256": "sha256:b45b718faf7fdf530f162eb810bd8e93a52a235681d52d4f6613410d76bc29de"
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/tzdata",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "warning_count": 166,
+      "warning_scope": "Repository-wide pre-existing findings in other catalog tasks; no tzdata finding and no network-policy error."
+    },
+    "syntax": {
+      "command": "python3 -m py_compile private verifier && bash -n Oracle/control scripts; parse task TOML and inventory/traceability JSON",
+      "exit_code": 0
+    },
+    "upstream_tests": {
+      "command": "Locked Python 3.12.14 container: pip install frozen source and pytest==9.1.1; pytest -q",
+      "exit_code": 0,
+      "passed": 30,
+      "passed_subtests": 598
+    }
+  },
+  "residual_risks": [
+    {
+      "failure_class": "infrastructure",
+      "expected_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+      "local_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+      "reason": "The local tag for the locked OpenHands fork does not match the immutable toolchain image ID. Oracle and verifier controls do not exercise the model runtime.",
+      "next_step": "Restore or import the immutable toolchain agent image before the integrator compiles catalog/tasks/tzdata and starts any model Agent Run."
+    },
+    {
+      "reason": "The data-heavy task validates complete TZif manifest coverage plus representative historical and future behavior, not byte hashes for every resource. This keeps the task behavioral rather than a source-retrieval checksum exercise."
+    },
+    {
+      "reason": "Review, pilot, publication, and parity are not claimed. No Harbor model Agent Run was started from this lane."
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tzdata",
+  "public_to_hidden": {
+    "SPEC-METADATA": [
+      "metadata.version",
+      "metadata.iana_version",
+      "metadata.distribution_name",
+      "metadata.distribution_version",
+      "metadata.requires",
+      "metadata.requires_python",
+      "metadata.license"
+    ],
+    "SPEC-ZONES-MANIFEST": [
+      "zones.count",
+      "zones.unique",
+      "zones.nonempty",
+      "zones.canonical_members",
+      "zones.alias_members",
+      "zones.recent_members",
+      "zones.no_posixrules"
+    ],
+    "SPEC-RESOURCE-TREE": [
+      "resources.ancillary",
+      "resources.packages",
+      "resources.selected_tzif",
+      "resources.all_manifest_tzif",
+      "resources.tzdata_zi_version"
+    ],
+    "SPEC-ZONEINFO-INTEGRATION": [
+      "zoneinfo.available_matches_manifest",
+      "zoneinfo.invalid_key",
+      "zoneinfo.keys"
+    ],
+    "SPEC-BEHAVIOR-TABLE": [
+      "behavior.utc",
+      "behavior.etc_gmt_plus5",
+      "behavior.etc_gmt_minus9",
+      "behavior.new_york_winter",
+      "behavior.new_york_summer",
+      "behavior.new_york_fold_first",
+      "behavior.new_york_fold_second",
+      "behavior.london_winter",
+      "behavior.london_summer",
+      "behavior.kathmandu_1970",
+      "behavior.kathmandu_current",
+      "behavior.lord_howe_summer",
+      "behavior.lord_howe_winter",
+      "behavior.chatham_summer",
+      "behavior.chatham_winter",
+      "behavior.edmonton_before_2026c_switch",
+      "behavior.edmonton_at_2026c_switch",
+      "behavior.edmonton_future_winter",
+      "behavior.edmonton_future_summer",
+      "behavior.canada_mountain_alias",
+      "behavior.casablanca_before_2026c_switch",
+      "behavior.casablanca_at_2026c_switch",
+      "behavior.casablanca_fold_end",
+      "behavior.casablanca_future_winter",
+      "behavior.casablanca_future_summer",
+      "behavior.el_aaiun_at_2026c_switch",
+      "behavior.el_aaiun_future",
+      "behavior.coyhaique_2024_winter",
+      "behavior.coyhaique_future",
+      "behavior.asuncion_2024_winter",
+      "behavior.asuncion_future"
+    ]
+  },
+  "coverage": {
+    "hidden_leaves": 53,
+    "mapped_hidden_leaves": 53,
+    "unmapped_hidden_leaves": []
+  }
+}
