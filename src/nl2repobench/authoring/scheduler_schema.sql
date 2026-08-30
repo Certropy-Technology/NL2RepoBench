@@ -235,17 +235,17 @@ BEGIN SELECT RAISE(ABORT, 'terminal task insert forbidden'); END;
 CREATE TRIGGER task_transition_guard BEFORE UPDATE OF state ON tasks
 WHEN NOT (
  (OLD.state='pending' AND NEW.state IN ('claimed','blocked','excluded','cancelled')) OR
- (OLD.state='claimed' AND NEW.state IN ('preparing','stale','pending','blocked','cancelled')) OR
- (OLD.state='preparing' AND NEW.state IN ('authoring','stale','pending','blocked','cancelled')) OR
- (OLD.state='authoring' AND NEW.state IN ('handoff_ready','stale','pending','blocked','cancelled')) OR
- (OLD.state='handoff_ready' AND NEW.state IN ('integrating','blocked','cancelled')) OR
- (OLD.state='stale' AND NEW.state IN ('pending','blocked','cancelled')) OR
- (OLD.state='integrating' AND NEW.state IN ('archiving','integration_retry','blocked','cancelled')) OR
- (OLD.state='integration_retry' AND NEW.state IN ('integrating','blocked','cancelled')) OR
- (OLD.state='archiving' AND NEW.state IN ('cleaning','archive_retry','blocked','cancelled')) OR
- (OLD.state='archive_retry' AND NEW.state IN ('archiving','blocked','cancelled')) OR
- (OLD.state='cleaning' AND NEW.state IN ('complete','cleanup_retry','blocked','cancelled')) OR
- (OLD.state='cleanup_retry' AND NEW.state IN ('cleaning','blocked','cancelled')) OR OLD.state=NEW.state
+ (OLD.state='claimed' AND NEW.state IN ('preparing','stale','pending','blocked','excluded','cancelled')) OR
+ (OLD.state='preparing' AND NEW.state IN ('authoring','stale','pending','blocked','excluded','cancelled')) OR
+ (OLD.state='authoring' AND NEW.state IN ('handoff_ready','stale','pending','blocked','excluded','cancelled')) OR
+ (OLD.state='handoff_ready' AND NEW.state IN ('integrating','blocked','excluded','cancelled')) OR
+ (OLD.state='stale' AND NEW.state IN ('pending','blocked','excluded','cancelled')) OR
+ (OLD.state='integrating' AND NEW.state IN ('archiving','integration_retry','blocked','excluded','cancelled')) OR
+ (OLD.state='integration_retry' AND NEW.state IN ('integrating','blocked','excluded','cancelled')) OR
+ (OLD.state='archiving' AND NEW.state IN ('cleaning','archive_retry','blocked','excluded','cancelled')) OR
+ (OLD.state='archive_retry' AND NEW.state IN ('archiving','blocked','excluded','cancelled')) OR
+ (OLD.state='cleaning' AND NEW.state IN ('complete','cleanup_retry','blocked','excluded','cancelled')) OR
+ (OLD.state='cleanup_retry' AND NEW.state IN ('cleaning','blocked','excluded','cancelled')) OR OLD.state=NEW.state
 ) BEGIN SELECT RAISE(ABORT, 'invalid task transition'); END;
 CREATE TRIGGER task_complete_guard BEFORE UPDATE OF state ON tasks WHEN NEW.state='complete' BEGIN
  SELECT CASE WHEN NEW.terminal_reason IS NULL OR length(trim(NEW.terminal_reason))=0 THEN RAISE(ABORT,'terminal reason required') END;

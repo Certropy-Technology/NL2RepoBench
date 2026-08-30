@@ -346,6 +346,77 @@ def test_generic_transition_cannot_bypass_claim_lifecycle(tmp_path: Path) -> Non
     scheduler.transition(task_id, "blocked", reason="operator", operator_actor=_actor(scheduler, "supervisor"), owner_uuid="owner", controller_id="controller", generation=claim.generation, pid=1, process_starttime_ticks=0, boot_id="test")
 
 
+def test_operator_can_exclude_post_authoring_and_post_operation(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    post_authoring = _task(scheduler, "exclude-authored")
+    claim = scheduler.claim_next("controller", "owner")[0]
+    scheduler.prepare(claim.claim_id, "owner", "controller")
+    scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
+    scheduler.finish(claim.claim_id, "owner", "controller", success=True)
+    scheduler.transition(
+        post_authoring, "excluded", reason="operator exclusion",
+        operator_actor=_actor(scheduler, "supervisor"),
+    )
+    post_operation = _task(scheduler, "exclude-operation")
+    claim2 = scheduler.claim_next("controller", "owner")[0]
+    scheduler.prepare(claim2.claim_id, "owner", "controller")
+    scheduler.start(claim2.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
+    scheduler.finish(claim2.claim_id, "owner", "controller", success=True)
+    scheduler.begin_operation(
+        post_operation, "integration", "exclude-integration",
+        actor=_actor(scheduler, "integration"),
+    )
+    scheduler.transition(
+        post_operation, "excluded", reason="operator exclusion",
+        operator_actor=_actor(scheduler, "supervisor"),
+    )
+    with scheduler.connect() as db:
+        states = dict(db.execute(
+            "SELECT task_id,state FROM tasks WHERE task_id IN (?,?)",
+            (post_authoring, post_operation),
+        ).fetchall())
+    assert states == {post_authoring: "excluded", post_operation: "excluded"}
+
+
+def test_generic_receipt_update_rejects_failure_and_collision(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    task_id = _task(scheduler, "collision")
+    claim = scheduler.claim_next("controller", "owner")[0]
+    scheduler.prepare(claim.claim_id, "owner", "controller")
+    scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
+    scheduler.finish(claim.claim_id, "owner", "controller", success=True)
+    integration_actor = _actor(scheduler, "integration")
+    archive_actor = _actor(scheduler, "archive")
+    integration = scheduler.begin_operation(
+        task_id, "integration", "collision-integration", actor=integration_actor
+    )
+    scheduler.update_receipt(
+        integration, "pushed", actor=integration_actor,
+        commit_sha="c" * 40, external_ref="refs/heads/main",
+    )
+    archive = scheduler.begin_operation(
+        task_id, "archive", "collision-archive", actor=archive_actor
+    )
+    with pytest.raises(ValidationError, match="invalid receipt status"):
+        scheduler.update_receipt(
+            archive, "collision", actor=archive_actor,
+            failure_class="infrastructure", failure_reason="remote exists",
+        )
+    scheduler.collide_operation(
+        archive, "infrastructure", "remote object already exists",
+        evidence_path="evidence/collision.json", evidence_sha256="a" * 64,
+        actor=archive_actor,
+    )
+    with scheduler.connect() as db:
+        receipt = db.execute(
+            "SELECT status,failure_class,evidence_sha256 FROM operation_receipts WHERE receipt_id=?",
+            (archive,),
+        ).fetchone()
+        task = db.execute("SELECT state FROM tasks WHERE task_id=?", (task_id,)).fetchone()
+    assert tuple(receipt) == ("collision", "infrastructure", "a" * 64)
+    assert task[0] == "blocked"
+
+
 def test_spawn_failure_releases_reservation_immediately(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
     token = scheduler.reserve_controller("lane", "spawn-owner", 1)
@@ -374,6 +445,23 @@ def test_fairness_dispatch_advances_language_and_lane_sequence(tmp_path: Path) -
         fairness = db.execute("SELECT next_language_index,dispatch_sequence FROM fairness_state WHERE fairness_id=1").fetchone()
     assert [tuple(row) for row in rows] == [("lane", 1), ("node-lane", 2)]
     assert tuple(fairness) == (2, 2)
+
+
+def test_fairness_dispatch_skips_tasks_outside_retry_and_attempt_budget(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    task_id = _task(scheduler, "ineligible")
+    with scheduler.connect() as db:
+        db.execute(
+            "UPDATE tasks SET next_retry_at='2999-01-01T00:00:00+00:00' WHERE task_id=?",
+            (task_id,),
+        )
+    assert scheduler.dispatch_next_lane(now="2026-01-01T00:00:00+00:00") is None
+    with scheduler.connect() as db:
+        db.execute(
+            "UPDATE tasks SET next_retry_at=NULL,authoring_attempts=attempt_limit WHERE task_id=?",
+            (task_id,),
+        )
+    assert scheduler.dispatch_next_lane() is None
 
 
 def test_cli_derives_current_process_identity_and_exposes_generation() -> None:

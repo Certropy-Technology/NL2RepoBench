@@ -1091,8 +1091,11 @@ class Scheduler:
                 language = LANGUAGES[index]
                 lane = db.execute(
                     "SELECT l.lane_id FROM lanes l WHERE l.language=? AND l.status='active' "
-                    "AND EXISTS (SELECT 1 FROM tasks t WHERE t.lane_id=l.lane_id AND t.state='pending') "
-                    "ORDER BY l.last_dispatch_seq,l.fairness_rank,l.lane_id LIMIT 1", (language,)
+                    "AND EXISTS (SELECT 1 FROM tasks t WHERE t.lane_id=l.lane_id AND t.state='pending' "
+                    "AND (t.next_retry_at IS NULL OR t.next_retry_at<=?) "
+                    "AND t.authoring_attempts<t.attempt_limit) "
+                    "ORDER BY l.last_dispatch_seq,l.fairness_rank,l.lane_id LIMIT 1",
+                    (language, moment),
                 ).fetchone()
                 if lane is None:
                     continue
@@ -1481,6 +1484,50 @@ class Scheduler:
                     (reason, failure_class, reason, now, task["task_id"]),
                 )
 
+    def collide_operation(
+        self, receipt_id: str, failure_class: str, reason: str, *,
+        evidence_path: str, evidence_sha256: str, actor: ActorFence | None = None,
+    ) -> None:
+        """Record a classified remote collision and block cleanup atomically."""
+        if failure_class not in {"source", "environment", "infrastructure"} or not reason:
+            raise ValidationError("collision requires a classified failure")
+        path = Path(evidence_path)
+        if not evidence_path or path.is_absolute() or ".." in path.parts:
+            raise ValidationError("collision evidence_path must be relative")
+        digest = _digest(evidence_sha256, "evidence_sha256")
+        with self._db() as db, _transaction(db):
+            receipt = db.execute(
+                "SELECT * FROM operation_receipts WHERE receipt_id=?", (receipt_id,)
+            ).fetchone()
+            if receipt is None or receipt["operation_kind"] != "archive":
+                raise ConflictError("collision requires an archive receipt")
+            if actor is None:
+                raise LostLeaseError("collision requires a live archive actor")
+            self._fenced_actor(db, actor, "archive", _now())
+            if (receipt["actor_lease_id"], receipt["actor_generation"], receipt["actor_id"],
+                    receipt["actor_owner_uuid"]) != (
+                        actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
+                raise LostLeaseError("receipt actor context mismatch")
+            task = db.execute(
+                "SELECT state FROM tasks WHERE task_id=?", (receipt["task_id"],)
+            ).fetchone()
+            if task is None or task["state"] != "archiving":
+                raise ConflictError("collision task-state fence failed")
+            now = _now()
+            cur = db.execute(
+                "UPDATE operation_receipts SET status='collision',failure_class=?,failure_reason=?,"
+                "evidence_path=?,evidence_sha256=?,finished_at=?,updated_at=? "
+                "WHERE receipt_id=? AND status='started'",
+                (failure_class, reason, evidence_path, digest, now, now, receipt_id),
+            )
+            if cur.rowcount != 1:
+                raise ConflictError("receipt is no longer collision-reportable")
+            db.execute(
+                "UPDATE tasks SET state='blocked',terminal_reason=?,last_failure_class=?,"
+                "last_failure_reason=?,updated_at=? WHERE task_id=? AND state='archiving'",
+                (reason, failure_class, reason, now, receipt["task_id"]),
+            )
+
     def reconcile_stale(self, *, now: str | None = None) -> int:
         """Close expired claims atomically; heartbeat wins any TOCTOU race."""
         moment = now or _now()
@@ -1548,7 +1595,7 @@ class Scheduler:
 
     def update_receipt(self, receipt_id: str, status: str, *, actor: ActorFence | None = None, **fields: Any) -> None:
         _id(receipt_id, "receipt_id")
-        if status not in {"committed", "pushed", "verified", "applied", "failed", "collision"}:
+        if status not in {"committed", "pushed", "verified", "applied"}:
             raise ValidationError("invalid receipt status")
         allowed = {
             "source_digest",
@@ -1562,8 +1609,6 @@ class Scheduler:
             "byte_count",
             "evidence_path",
             "evidence_sha256",
-            "failure_class",
-            "failure_reason",
             "receipt_json",
         }
         if set(fields) - allowed:
@@ -1612,15 +1657,15 @@ class Scheduler:
                 raise ConflictError("receipt task-state fence failed")
             current = receipt["status"]
             transitions = {
-                "started": {"committed", "pushed", "verified", "applied", "failed", "collision"},
-                "committed": {"pushed", "failed", "collision"},
+                "started": {"committed", "pushed", "verified", "applied"},
+                "committed": {"pushed"},
             }
             if status not in transitions.get(current, set()):
                 raise ConflictError("invalid receipt status transition")
             allowed_statuses = {
-                "integration": {"committed", "pushed", "failed", "collision"},
-                "archive": {"verified", "failed", "collision"},
-                "cleanup": {"applied", "failed"},
+                "integration": {"committed", "pushed"},
+                "archive": {"verified"},
+                "cleanup": {"applied"},
             }
             if status not in allowed_statuses[receipt["operation_kind"]]:
                 raise ConflictError("status does not match operation kind")
