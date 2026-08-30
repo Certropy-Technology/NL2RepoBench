@@ -39,6 +39,38 @@ class PackageManager(StrEnum):
     NONE = "none"
 
 
+class RuntimeProfile(BaseModel):
+    """Exact runtime identity shared by source and generated manifests."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    language: RuntimeLanguage
+    runtime: str
+    version: str
+    package_manager: PackageManager
+    package_manager_version: str | None = None
+
+    @model_validator(mode="after")
+    def validate_profile(self) -> Self:
+        expected = {
+            RuntimeLanguage.PYTHON: "cpython",
+            RuntimeLanguage.NODE: "node",
+            RuntimeLanguage.GO: "go",
+        }[self.language]
+        if self.runtime != expected:
+            raise ValueError(f"{self.language.value} requires runtime {expected}")
+        if not self.version.strip():
+            raise ValueError("runtime version must be exact and non-empty")
+        if self.package_manager is PackageManager.NONE and self.package_manager_version is not None:
+            raise ValueError("none package manager cannot have a version")
+        if (
+            self.package_manager is not PackageManager.NONE
+            and not (self.package_manager_version or "").strip()
+        ):
+            raise ValueError("package manager version is required")
+        return self
+
+
 class RuntimeDiscriminator(BaseModel):
     """Explicit language and package-manager identity for one task.
 
@@ -94,9 +126,36 @@ class RuntimeDiscriminator(BaseModel):
 
         metadata = _required_mapping(source, "metadata")
         language = metadata.get("language")
-        if language == RuntimeLanguage.PYTHON.value:
+        if not isinstance(language, str):
+            raise RuntimeContractError("metadata.language must be a string")
+        package_manager: str | None
+        environment = source.get("environment")
+        if isinstance(environment, Mapping):
+            runtime = environment.get("runtime")
+            if isinstance(runtime, Mapping):
+                canonical_language = runtime.get("language")
+                canonical_manager = runtime.get("package_manager")
+                if canonical_language != language:
+                    raise RuntimeContractError(
+                        "environment.runtime.language must explicitly match metadata.language"
+                    )
+                if isinstance(canonical_manager, str) and canonical_manager:
+                    if not isinstance(canonical_language, str):
+                        raise RuntimeContractError("environment.runtime.language must be a string")
+                    language = canonical_language
+                    package_manager = canonical_manager
+                else:
+                    package_manager = None
+            else:
+                package_manager = None
+        else:
+            package_manager = None
+        if package_manager is not None:
+            pass
+        elif language == RuntimeLanguage.PYTHON.value:
             dependencies = _required_mapping(source, "dependencies")
-            package_manager = dependencies.get("installer")
+            candidate = dependencies.get("package_manager", dependencies.get("installer"))
+            package_manager = candidate if isinstance(candidate, str) else None
         elif language == RuntimeLanguage.NODE.value:
             environment = _required_mapping(source, "environment")
             runtime = _required_mapping(environment, "runtime")
@@ -104,7 +163,8 @@ class RuntimeDiscriminator(BaseModel):
                 raise RuntimeContractError(
                     "environment.runtime.language must explicitly match metadata.language"
                 )
-            package_manager = runtime.get("package_manager")
+            candidate = runtime.get("package_manager")
+            package_manager = candidate if isinstance(candidate, str) else None
         elif language == RuntimeLanguage.GO.value:
             package_manager = PackageManager.GO_MODULES.value
         else:

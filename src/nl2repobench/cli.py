@@ -40,7 +40,11 @@ from nl2repobench.harbor.registry import (
     UnknownRuntimeAdapterError,
 )
 from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    FileArtifactStore,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.storage.state import StateStore
 from nl2repobench.verification.models import CollectionReport, GradingResult
 
@@ -144,8 +148,7 @@ def export_schemas(
         typer.Option("--output", help="Directory for generated JSON Schemas."),
     ] = Path("schemas/v1"),
     version: Annotated[
-        str,
-        typer.Option("--version", help="Schema family to export: 1.0 or 2.0."),
+        str, typer.Option("--version", help="Current schema version (1.0).")
     ] = "1.0",
 ) -> None:
     """Export one immutable schema family without rewriting the other family."""
@@ -161,20 +164,8 @@ def export_schemas(
             "grading-result.schema.json": GradingResult,
             "harbor-toolchain-lock.schema.json": HarborToolchainLock,
         }
-    elif version == "2.0":
-        from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2, TaskManifestV2
-        from nl2repobench.harbor.models_v2 import NodeHarborToolchainLockV2
-        from nl2repobench.verification.node_models import NodeGradingResultV2, NodeTestReportV2
-
-        models = {
-            "task-manifest.schema.json": TaskManifestV2,
-            "declarative-task-source.schema.json": DeclarativeTaskSourceV2,
-            "test-report.schema.json": NodeTestReportV2,
-            "grading-result.schema.json": NodeGradingResultV2,
-            "harbor-toolchain-lock.schema.json": NodeHarborToolchainLockV2,
-        }
     else:
-        raise typer.BadParameter("version must be 1.0 or 2.0")
+        raise typer.BadParameter("version must be 1.0")
     output.mkdir(parents=True, exist_ok=True)
     paths: list[str] = []
     for filename, model in models.items():
@@ -186,6 +177,44 @@ def export_schemas(
         )
         paths.append(str(path))
     _json_print({"schema_version": version, "files": paths})
+
+
+@schema_app.command("check")
+def check_schemas(
+    root: Annotated[
+        Path,
+        typer.Option("--root", help="Tracked canonical schema directory."),
+    ] = Path("schemas/v1"),
+) -> None:
+    """Fail when checked-in canonical schemas are not generated from models."""
+
+    import tempfile
+
+    with tempfile.TemporaryDirectory(prefix="nl2repo-schema-"):
+        # F0 has one current contract.  ``export`` remains the writer while
+        # this command provides a reproducible CI gate for the tracked bytes.
+        models: dict[str, type[BaseModel]] = {
+            "task-manifest.schema.json": TaskManifest,
+            "dataset-manifest.schema.json": DatasetManifest,
+            "metadata-gap-report.schema.json": MetadataGapReport,
+            "declarative-task-source.schema.json": DeclarativeTaskSource,
+            "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
+            "collection-report.schema.json": CollectionReport,
+            "grading-result.schema.json": GradingResult,
+            "harbor-toolchain-lock.schema.json": HarborToolchainLock,
+        }
+        mismatches: list[str] = []
+        for filename, model in models.items():
+            expected = (
+                json.dumps(model.model_json_schema(), ensure_ascii=False, sort_keys=True, indent=2)
+                + "\n"
+            )
+            path = root / filename
+            if not path.is_file() or path.read_text(encoding="utf-8") != expected:
+                mismatches.append(str(path))
+    _json_print({"schema_version": "1.0", "root": str(root), "mismatches": mismatches})
+    if mismatches:
+        raise typer.Exit(code=1)
 
 
 @app.command()
@@ -226,9 +255,12 @@ def compile_harbor_task(
         Path,
         typer.Option("--artifact-root", help="Content-addressed private artifact root."),
     ] = Path(".nl2repo/artifacts"),
-    allow_private: Annotated[
+    authorize_task_private_artifacts: Annotated[
         bool,
-        typer.Option("--allow-private", help="Authorize private test/Oracle bundle reads."),
+        typer.Option(
+            "--authorize-task-private-artifacts",
+            help="Authorize only private artifacts declared by this task.",
+        ),
     ] = False,
     allow_incomplete: Annotated[
         bool,
@@ -240,10 +272,34 @@ def compile_harbor_task(
 ) -> None:
     """Compile one declarative task into a deterministic Harbor bundle."""
 
-    resolver = LocalArtifactResolver(
-        FileArtifactStore(artifact_root),
-        allow_private=allow_private,
-    )
+    authorization = None
+    if authorize_task_private_artifacts:
+        try:
+            source_record = CatalogCompiler.load_task(source)
+            refs: list[str] = []
+            for value in (
+                getattr(source_record.dependencies, "lock_artifact", None),
+                getattr(source_record.dependencies, "module_bundle", None),
+                getattr(source_record.dependencies, "artifact", None),
+                source_record.tests.commands_artifact,
+                source_record.tests.protected_paths_artifact,
+                source_record.tests.test_bundle,
+                getattr(source_record, "oracle_bundle", None),
+                getattr(getattr(source_record, "verifier", None), "bundle", None),
+            ):
+                if value is not None and value.visibility.value == "private":
+                    refs.append(value.digest)
+            authorization = PrivateArtifactAuthorization(
+                task_id=source_record.task_id,
+                manifest_digest=source_record.content_digest(),
+                purpose="compile",
+                allowed_digests=frozenset(refs),
+                staging_root=(Path(".nl2repo/compiled") / source_record.task_id).resolve(),
+            )
+        except (CatalogError, ValueError) as exc:
+            typer.echo(f"private artifact authorization failed: {exc}", err=True)
+            raise typer.Exit(code=1) from exc
+    resolver = LocalArtifactResolver(FileArtifactStore(artifact_root), authorization)
     try:
         task_root = HarborCompilerRegistry.default().compile_task(
             source,

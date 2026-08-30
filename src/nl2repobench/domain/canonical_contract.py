@@ -1,0 +1,194 @@
+"""Strict F0 canonical records.
+
+This module is the migration target.  It intentionally has no decoder for the
+historical v1/v2 records; decoding belongs exclusively to the migration tool.
+"""
+
+from __future__ import annotations
+
+from enum import StrEnum
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from .canonical import content_digest
+from .models import (
+    ArtifactRef,
+    HarborExecutionProfile,
+    MetricContract,
+    NetworkPolicy,
+    SourceLock,
+    TaskLifecycleRecord,
+)
+
+SHA256 = r"^sha256:[0-9a-f]{64}$"
+TaskId = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")]
+
+
+class CanonicalRecord(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+    schema_version: Literal["1.0"] = "1.0"
+
+    def content_digest(self) -> str:
+        return content_digest(self)
+
+
+class RuntimeLanguage(StrEnum):
+    PYTHON = "python"
+    NODE = "node"
+    GO = "go"
+
+
+class PackageManager(StrEnum):
+    UV = "uv"
+    PIP = "pip"
+    NPM = "npm"
+    PNPM = "pnpm"
+    GO_MODULES = "go-modules"
+    NONE = "none"
+
+
+class RuntimeProfile(CanonicalRecord):
+    language: RuntimeLanguage
+    runtime: Literal["cpython", "node", "go"]
+    version: str = Field(min_length=1)
+    package_manager: PackageManager
+    package_manager_version: str | None = None
+
+    @model_validator(mode="after")
+    def validate_identity(self) -> RuntimeProfile:
+        expected = {"python": "cpython", "node": "node", "go": "go"}[self.language.value]
+        if self.runtime != expected:
+            raise ValueError("runtime does not match language")
+        if self.package_manager is PackageManager.NONE and self.package_manager_version is not None:
+            raise ValueError("none package manager must not have a version")
+        if self.package_manager is not PackageManager.NONE and not self.package_manager_version:
+            raise ValueError("package manager version is required")
+        allowed = {
+            "python": {PackageManager.UV, PackageManager.PIP, PackageManager.NONE},
+            "node": {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE},
+            "go": {PackageManager.GO_MODULES},
+        }
+        if self.package_manager not in allowed[self.language.value]:
+            raise ValueError("package manager is not valid for runtime")
+        return self
+
+
+class EnvironmentLock(CanonicalRecord):
+    status: Literal["known", "unknown"] = "unknown"
+    runtime: RuntimeProfile | None = None
+    os_name: str | None = None
+    base_image: str | None = None
+    base_image_digest: Annotated[str | None, Field(pattern=SHA256)] = None
+    system_packages: tuple[str, ...] = ()
+    build_command: str | None = None
+    network_policy: NetworkPolicy | None = None
+
+    @model_validator(mode="after")
+    def validate_known(self) -> EnvironmentLock:
+        if self.status == "known":
+            if (
+                not self.runtime
+                or not self.os_name
+                or not self.base_image
+                or not self.base_image_digest
+            ):
+                raise ValueError("known environment requires runtime, OS, image, and digest")
+            if self.network_policy is None:
+                raise ValueError("known environment requires network policy")
+        return self
+
+
+class DependencyBundle(CanonicalRecord):
+    status: Literal["known", "unknown"] = "unknown"
+    package_manager: PackageManager
+    lock: ArtifactRef | None = None
+    offline_store: ArtifactRef | None = None
+    inventory: ArtifactRef | None = None
+    packages: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_refs(self) -> DependencyBundle:
+        refs = (self.lock, self.offline_store, self.inventory)
+        if self.status == "known" and any(ref is None for ref in refs):
+            raise ValueError("known dependency bundle requires lock, offline_store, and inventory")
+        for name, ref in zip(("lock", "offline_store", "inventory"), refs, strict=True):
+            if ref is not None and ref.visibility.value != "private":
+                raise ValueError(f"dependencies.{name} must be private")
+        if (
+            self.package_manager is PackageManager.NONE
+            and self.status == "known"
+            and any(ref is None for ref in refs)
+        ):
+            raise ValueError(
+                "known none dependency bundle still requires canonical empty artifacts"
+            )
+        return self
+
+
+class TestManifest(CanonicalRecord):
+    framework: Literal["pytest", "node:test", "go-bridge", "custom"]
+    report_format: Literal[
+        "pytest-junit-xml-v1", "node-test-json-v1", "go-test-json-v1", "custom-json-v1"
+    ]
+    expected_total: Annotated[int, Field(ge=0)] = 0
+    expected_total_source: Literal["frozen-collection", "unknown"] = "unknown"
+    commands_artifact: ArtifactRef | None = None
+    protected_paths_artifact: ArtifactRef | None = None
+    test_bundle: ArtifactRef | None = None
+
+    @model_validator(mode="after")
+    def validate_contract(self) -> TestManifest:
+        if self.framework == "pytest" and self.report_format != "pytest-junit-xml-v1":
+            raise ValueError("pytest requires pytest-junit-xml-v1")
+        if self.framework == "node:test" and self.report_format != "node-test-json-v1":
+            raise ValueError("node:test requires node-test-json-v1")
+        return self
+
+
+class TaskMetadata(CanonicalRecord):
+    difficulty: Literal["easy", "medium", "hard", "unknown"] = "unknown"
+    category: str = "unknown"
+    tags: tuple[str, ...] = ()
+    language: RuntimeLanguage
+
+
+class TaskSource(CanonicalRecord):
+    task_id: TaskId
+    version: str = "1.0.0"
+    instruction: str = "instruction.md"
+    metadata: TaskMetadata
+    source: SourceLock = Field(default_factory=SourceLock)
+    environment: EnvironmentLock
+    dependencies: DependencyBundle
+    tests: TestManifest
+    metric: MetricContract = Field(default_factory=MetricContract)
+    lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
+    harbor: HarborExecutionProfile | None = None
+    oracle_bundle: ArtifactRef | None = None
+    verifier: object | None = None
+
+    @model_validator(mode="after")
+    def validate_instruction(self) -> TaskSource:
+        if (
+            not self.instruction
+            or self.instruction.startswith("/")
+            or ".." in self.instruction.split("/")
+        ):
+            raise ValueError("instruction must be a safe relative path")
+        return self
+
+
+TaskManifest = TaskSource
+
+__all__ = [
+    "DependencyBundle",
+    "EnvironmentLock",
+    "PackageManager",
+    "RuntimeLanguage",
+    "RuntimeProfile",
+    "TaskManifest",
+    "TaskMetadata",
+    "TaskSource",
+    "TestManifest",
+]

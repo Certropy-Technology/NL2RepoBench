@@ -109,10 +109,9 @@ class ArtifactRef(RecordModel):
 
     @model_validator(mode="after")
     def validate_content_addressed_uri(self) -> ArtifactRef:
-        if self.uri.startswith("artifact://"):
-            expected = f"artifact://{self.visibility.value}/{self.digest}"
-            if self.uri != expected:
-                raise ValueError(f"artifact URI must match visibility and digest: {expected}")
+        expected = f"artifact://{self.visibility.value}/{self.digest}"
+        if self.uri != expected:
+            raise ValueError(f"artifact URI must match visibility and digest: {expected}")
         return self
 
 

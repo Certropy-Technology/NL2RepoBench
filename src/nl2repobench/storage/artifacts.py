@@ -11,6 +11,7 @@ import hashlib
 import os
 import stat
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 
 from nl2repobench.domain.canonical import bytes_digest
@@ -19,6 +20,39 @@ from nl2repobench.domain.models import ArtifactRef, Visibility
 
 class ArtifactStoreError(RuntimeError):
     """Raised when an artifact cannot be written, resolved, or verified."""
+
+
+@dataclass(frozen=True, slots=True)
+class PrivateArtifactAuthorization:
+    """Task-scoped capability for resolving private CAS bytes.
+
+    This object is constructed by trusted compiler/verifier orchestration and
+    deliberately carries no filesystem authority beyond its staging root.
+    """
+
+    task_id: str
+    manifest_digest: str
+    purpose: str
+    allowed_digests: frozenset[str]
+    staging_root: Path
+
+    def permits(
+        self, reference: ArtifactRef, *, task_id: str | None = None, purpose: str | None = None
+    ) -> bool:
+        return (
+            reference.visibility is Visibility.PRIVATE
+            and reference.digest in self.allowed_digests
+            and (task_id is None or task_id == self.task_id)
+            and (purpose is None or purpose == self.purpose)
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class PublicArtifactAuthorization:
+    """Marker used when a caller intentionally permits public artifacts only."""
+
+    task_id: str = "public"
+    purpose: str = "public"
 
 
 class FileArtifactStore:
@@ -121,10 +155,17 @@ class FileArtifactStore:
         data = path.read_bytes()
         return self.put_bytes(data, media_type=media_type, visibility=visibility)
 
-    def path_for(self, reference: ArtifactRef, *, allow_private: bool = False) -> Path:
+    def path_for(
+        self,
+        reference: ArtifactRef,
+        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+    ) -> Path:
         """Resolve a reference and verify its stored bytes before returning it."""
 
-        if reference.visibility is Visibility.PRIVATE and not allow_private:
+        if reference.visibility is Visibility.PRIVATE and not (
+            isinstance(authorization, PrivateArtifactAuthorization)
+            and authorization.permits(reference)
+        ):
             raise ArtifactStoreError("private artifact resolution is not authorized")
         path = self._path_for_digest(reference.digest, reference.visibility)
         if not path.is_file():
@@ -136,8 +177,12 @@ class FileArtifactStore:
             raise ArtifactStoreError(f"artifact failed integrity check: {reference.digest}")
         return path
 
-    def read_bytes(self, reference: ArtifactRef, *, allow_private: bool = False) -> bytes:
-        path = self.path_for(reference, allow_private=allow_private)
+    def read_bytes(
+        self,
+        reference: ArtifactRef,
+        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+    ) -> bytes:
+        path = self.path_for(reference, authorization)
         flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
         descriptor = os.open(path, flags)
         with os.fdopen(descriptor, "rb") as handle:
@@ -150,11 +195,33 @@ class FileArtifactStore:
 class LocalArtifactResolver:
     """Resolve local refs while enforcing the public/private boundary."""
 
-    def __init__(self, store: FileArtifactStore, *, allow_private: bool = False) -> None:
+    def __init__(
+        self,
+        store: FileArtifactStore,
+        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+    ) -> None:
         self.store = store
-        self.allow_private = allow_private
+        self.authorization = authorization
 
-    def resolve(self, reference: ArtifactRef) -> Path:
-        if reference.visibility is Visibility.PRIVATE and not self.allow_private:
-            raise ArtifactStoreError("private artifact resolution is not authorized")
-        return self.store.path_for(reference, allow_private=self.allow_private)
+    def resolve(
+        self,
+        reference: ArtifactRef,
+        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+    ) -> Path:
+        return self.store.path_for(reference, authorization or self.authorization)
+
+    def read_bytes(
+        self,
+        reference: ArtifactRef,
+        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+    ) -> bytes:
+        return self.store.read_bytes(reference, authorization or self.authorization)
+
+
+__all__ = [
+    "ArtifactStoreError",
+    "FileArtifactStore",
+    "LocalArtifactResolver",
+    "PrivateArtifactAuthorization",
+    "PublicArtifactAuthorization",
+]

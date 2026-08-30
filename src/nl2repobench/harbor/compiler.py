@@ -38,6 +38,16 @@ class HarborCompileError(ValueError):
     """Raised when a task cannot safely become a Harbor bundle."""
 
 
+def _private_digest_payload(value: object) -> object:
+    """Project ArtifactRef values to the strict categorized digest object."""
+
+    if isinstance(value, dict):
+        return {key: _private_digest_payload(item) for key, item in value.items()}
+    if isinstance(value, ArtifactRef):
+        return value.digest if value.visibility.value == "private" else None
+    return value
+
+
 class HarborCompiler:
     """Generate Harbor files without executing Docker or contacting a registry."""
 
@@ -116,9 +126,7 @@ class HarborCompiler:
         try:
             dependency_lock = self._resolve_dependency_lock(manifest, allow_incomplete)
             self._write_instruction(source_dir, source.instruction, temporary_root)
-            self._write_environment(
-                manifest, temporary_root, dependency_lock, allow_incomplete
-            )
+            self._write_environment(manifest, temporary_root, dependency_lock, allow_incomplete)
             self._write_verifier(
                 source_dir,
                 manifest,
@@ -211,13 +219,12 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 """
         dockerfile = (
             f"FROM --platform=linux/amd64 {image}\n\n"
-            f"LABEL org.nl2repobench.agent-runtime-image=\"{image}\" "
-            f"org.nl2repobench.agent-runtime-image-id=\"{self.toolchain.agent_runtime.image_id}\" "
-            "org.nl2repobench.agent-dependency-build=\"pip-index-hash-locked-v1\"\n\n"
+            f'LABEL org.nl2repobench.agent-runtime-image="{image}" '
+            f'org.nl2repobench.agent-runtime-image-id="{self.toolchain.agent_runtime.image_id}" '
+            'org.nl2repobench.agent-dependency-build="pip-index-hash-locked-v1"\n\n'
             + install
             + "RUN test -x /opt/openhands-sdk-venv/bin/python "
-            "&& test -x /usr/bin/curl\n\n"
-            + "WORKDIR /workspace\n"
+            "&& test -x /usr/bin/curl\n\n" + "WORKDIR /workspace\n"
         )
         atomic_write(task_root / "environment/Dockerfile", dockerfile.encode())
 
@@ -466,6 +473,12 @@ WORKDIR /tests
                 "keywords": list(profile.keywords),
             },
             "metadata": {
+                "language": manifest.metadata.language,
+                "package_manager": (
+                    "go-modules"
+                    if manifest.metadata.language == "go"
+                    else manifest.dependency_bundle.installer
+                ),
                 "difficulty": manifest.metadata.difficulty,
                 "category": manifest.metadata.category,
                 "tags": list(manifest.metadata.tags),
@@ -642,9 +655,7 @@ python -I -m nl2repobench.verification.cli \
 exit 0
         """
 
-    def _custom_test_script(
-        self, manifest: TaskManifest, allow_incomplete: bool
-    ) -> str:
+    def _custom_test_script(self, manifest: TaskManifest, allow_incomplete: bool) -> str:
         profile = self._effective_profile(manifest)
         assert manifest.verifier is not None
         expected = manifest.tests.expected_total
@@ -785,7 +796,26 @@ Run with Harbor {self.toolchain.harbor.version}:
             "mode": "development" if allow_incomplete else "production",
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
+            "private_artifacts": {
+                "task_id": manifest.task_id,
+                "canonical_manifest_digest": manifest.content_digest(),
+                "dependencies": {
+                    "lock": getattr(manifest.dependency_bundle, "lock_artifact", None),
+                    "store": getattr(manifest.dependency_bundle, "offline_store", None),
+                    "inventory": getattr(manifest.dependency_bundle, "inventory", None),
+                },
+                "tests": {
+                    "commands": manifest.tests.commands_artifact,
+                    "protected_paths": manifest.tests.protected_paths_artifact,
+                    "bundle": manifest.tests.test_bundle,
+                },
+                "verifier": {
+                    "bundle": manifest.verifier.bundle if manifest.verifier is not None else None,
+                },
+                "oracle": {"bundle": manifest.oracle_bundle},
+            },
         }
+        payload["private_artifacts"] = _private_digest_payload(payload["private_artifacts"])
         write_file_manifest(task_root, payload=payload, schema_version="1.0")
 
     def _refresh_bundle_manifest(self, task_root: Path, kind: str) -> None:

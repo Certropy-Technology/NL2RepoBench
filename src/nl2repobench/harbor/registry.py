@@ -9,7 +9,6 @@ fail closed instead of silently using a similar toolchain.
 
 from __future__ import annotations
 
-import json
 import tomllib
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
@@ -197,20 +196,6 @@ class HarborCompilerRegistry:
             raise UnknownRuntimeAdapterError("compiled task metadata must contain [metadata]")
         language = metadata.get("language")
         package_manager = metadata.get("package_manager")
-        if language is None:
-            manifest_path = task_root / "bundle.manifest.json"
-            try:
-                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-                raise UnknownRuntimeAdapterError(
-                    f"compiled task runtime identity is missing: {manifest_path}"
-                ) from exc
-            if manifest.get("schema_version") == "1.0":
-                # v1 Harbor task metadata predates the unified runtime fields.
-                # Its compiler is Python-only, so preserve that established
-                # dispatch while rejecting unknown bundle shapes.
-                language = RuntimeLanguage.PYTHON.value
-                package_manager = PackageManager.NONE.value
         if not isinstance(language, str) or not isinstance(package_manager, str):
             raise UnknownRuntimeAdapterError(
                 "compiled task metadata must declare language and package_manager"
