@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit",
+  "status": "implemented",
+  "purpose": "Exercise callback-based tree traversal without importing candidate code in the trusted verifier process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "walk": "adapter.mjs reads a JSON request, invokes the package visit export with a verifier-selected callback, and returns visits, call count, and the mutated tree."
+  },
+  "in_scope_values": [
+    "plain JSON unist nodes and parent nodes",
+    "string, string-array, and object node tests",
+    "reverse traversal and bounded visitor actions"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}
