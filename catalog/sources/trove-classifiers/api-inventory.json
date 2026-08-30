@@ -1,0 +1,48 @@
+{
+  "task_id": "trove-classifiers",
+  "source_revision": "71cb041f383cee31668d07e3302d2b09d10471a8",
+  "source_tag": "2026.6.1.19",
+  "source_digest": "sha256:cf3257e1a57e7dddf0e883955c5bfb579fcd5bea3d154b6ab43748b7b78454ca",
+  "distribution": {
+    "name": "trove-classifiers",
+    "version": "2026.6.1.19",
+    "runtime_dependencies": [],
+    "console_scripts": [
+      "trove-classifiers = trove_classifiers.__main__:cli"
+    ],
+    "package_data": [
+      "trove_classifiers/py.typed"
+    ]
+  },
+  "public_surfaces": {
+    "trove_classifiers": {
+      "all_classifiers": "list[str] with 903 lexical-order values",
+      "classifiers": "set[str] with 895 valid values",
+      "deprecated_classifiers": "dict[str, list[str]] with 8 mappings",
+      "sorted_classifiers": "list[str] with 895 natural-order values",
+      "__all__": [
+        "all_classifiers",
+        "classifiers",
+        "deprecated_classifiers",
+        "sorted_classifiers"
+      ]
+    },
+    "trove_classifiers.__main__": {
+      "cli": "() -> None"
+    }
+  },
+  "source_metrics": {
+    "tracked_files": 21,
+    "python_modules": 3,
+    "classifier_rows": 895,
+    "deprecated_rows": 8,
+    "root_families": 10
+  },
+  "deterministic_adaptation": "The task freezes the real container relationships, grammar, hierarchy, family counts, deprecation map, representative values, package metadata, and CLI behavior. Exact unlisted static rows are explicitly outside the scored contract because they cannot be reconstructed fairly in a no-network empty workspace.",
+  "excluded_surfaces": [
+    "live PyPI classifier lookup",
+    "network synchronization",
+    "release publishing workflow",
+    "development-only natsort maintenance script"
+  ]
+}

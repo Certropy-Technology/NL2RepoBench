@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "trove-classifiers",
+  "instruction_to_tests": {
+    "Supports and distribution metadata": [
+      "distribution-metadata",
+      "typing-marker",
+      "runtime-dependencies"
+    ],
+    "API exports and container relationships": [
+      "package-import-and-exports",
+      "exported-container-types",
+      "core-counts",
+      "set-list-relationship",
+      "all-classifier-relationship",
+      "unique-valid-classifiers",
+      "mutable-containers"
+    ],
+    "Classifier grammar, hierarchy, families, and ordering": [
+      "root-families",
+      "root-counts",
+      "classifier-grammar",
+      "parent-closure",
+      "python-natural-order",
+      "order-boundaries"
+    ],
+    "Documented frozen classifier values": [
+      "development-status-family",
+      "environment-samples",
+      "framework-samples",
+      "intended-audience-samples",
+      "license-samples",
+      "natural-language-samples",
+      "operating-system-samples",
+      "programming-language-samples",
+      "topic-samples",
+      "typing-family",
+      "revision-additions",
+      "positive-membership",
+      "negative-membership"
+    ],
+    "Deprecated classifier mapping": [
+      "deprecated-map",
+      "deprecated-disjoint",
+      "deprecated-replacements"
+    ],
+    "Command-line interface": [
+      "cli-function",
+      "module-cli-output",
+      "console-cli-output"
+    ]
+  },
+  "test_to_instruction": "Every one of the 35 frozen leaf IDs appears exactly once and maps to a named public contract section.",
+  "excluded_surfaces": "Exact unlisted classifier strings, live PyPI synchronization, publishing automation, and the development-only sorting utility are explicit non-scored boundaries."
+}

@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0",
+  "task_id": "trove-classifiers",
+  "terminal_kind": "valid",
+  "status": "awaiting-agent-run",
+  "recorded_at": "2026-08-30T09:25:53Z",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/pypa/trove-classifiers",
+    "revision": "71cb041f383cee31668d07e3302d2b09d10471a8",
+    "tag": "2026.6.1.19",
+    "tree": "c3c5aac244eb6892c631fc449d555f8dd82db75b",
+    "source_archive_sha256": "sha256:cf3257e1a57e7dddf0e883955c5bfb579fcd5bea3d154b6ab43748b7b78454ca",
+    "source_archive_size_bytes": 92160,
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "commit_time": "2026-06-01T15:40:38-04:00"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/compiled/trove-classifiers-current/trove-classifiers/bundle.manifest.json",
+    "sha256": "sha256:a2bba911c9c19807c2e155c9850cd0add15714a2615f09f314c79192d6aa6aa7",
+    "canonical_manifest_digest": "sha256:ebf6ee6887ac5e390c39e0bc20e54b42fce0b158eb3d162ac7165679732585a7",
+    "file_count": 60,
+    "repeat_compile": "byte-identical"
+  },
+  "runtime": {
+    "harbor_version": "0.21.0",
+    "python": "3.12.14",
+    "authoring_python": "3.14.6",
+    "os": "debian-13-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image": "nl2repobench/trove-classifiers-verifier:authoring-current",
+    "verifier_image_id": "sha256:1f66e052888ebb1b4db955f612fd7add4ecf5127b88a2a5dda7bcf489faf1852",
+    "locked_agent_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "local_agent_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "none"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": [
+      "calver==2025.10.20",
+      "setuptools==80.10.2",
+      "wheel==0.45.1"
+    ],
+    "lock_artifact": "artifact://private/sha256:14727b57e136ea76fe6adb916c5caf91cabae9f0213255455cee18364d54049e",
+    "lock_sha256": "sha256:14727b57e136ea76fe6adb916c5caf91cabae9f0213255455cee18364d54049e",
+    "lock_size_bytes": 1223,
+    "vendor_wheels": false
+  },
+  "collection": {
+    "framework": "custom-json-v1",
+    "upstream_collected": 18,
+    "upstream_passed": 18,
+    "expected_total": 35,
+    "collected": 35
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "bundle": "artifact://private/sha256:23e483c7563a0af5947946344ba6a4e1cf918767f5f3ff21f9e069ce13b7a939",
+    "bundle_sha256": "sha256:23e483c7563a0af5947946344ba6a4e1cf918767f5f3ff21f9e069ce13b7a939",
+    "frozen_total": 35,
+    "candidate_boundary": "UID-10001 subprocess",
+    "trusted_candidate_import": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/trove-classifiers-current/trove-classifiers -a oracle --allow-agent-host github.com --job-name trove-classifiers-oracle-current -o .nl2repo/runs/trove-classifiers-oracle-current --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 35,
+    "failed": 0,
+    "collected": 35,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/trove-classifiers-oracle-current/trove-classifiers-oracle-current/trove-classifiers__Tm6g52b/verifier/grading.json",
+      "sha256": "sha256:d78062d9bf3177351910c9443735fb7726b7f2d21b17a93a48b96b1d8c805d5a"
+    },
+    "collection": {
+      "path": ".nl2repo/runs/trove-classifiers-oracle-current/trove-classifiers-oracle-current/trove-classifiers__Tm6g52b/verifier/collection.json",
+      "sha256": "sha256:1dcd4447674e60a6e9e26dc965ed6b5ab4b9892ea2f5b243ff58fc6e687b7207"
+    },
+    "network": {
+      "path": ".nl2repo/runs/trove-classifiers-oracle-current/trove-classifiers-oracle-current/trove-classifiers__Tm6g52b/verifier/network.json",
+      "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/trove-classifiers-current/trove-classifiers-empty -a oracle --job-name trove-classifiers-empty-current -o .nl2repo/runs/trove-classifiers-empty-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install_outcome": "candidate-failure",
+      "collected": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/trove-classifiers-empty-current/trove-classifiers-empty-current/trove-classifiers-empty__Jai6Fuy/verifier/grading.json",
+        "sha256": "sha256:bc1198649b53b0f9769f1cdd94c89b02b4d0d12b144bd39903c99a8e3d051869"
+      },
+      "network": {
+        "path": ".nl2repo/runs/trove-classifiers-empty-current/trove-classifiers-empty-current/trove-classifiers-empty__Jai6Fuy/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/trove-classifiers-current/trove-classifiers-stub -a oracle --job-name trove-classifiers-stub-current -o .nl2repo/runs/trove-classifiers-stub-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "failed": 34,
+      "collected": 35,
+      "reward": 0.02857142857142857,
+      "grading": {
+        "path": ".nl2repo/runs/trove-classifiers-stub-current/trove-classifiers-stub-current/trove-classifiers-stub__iFz8E6f/verifier/grading.json",
+        "sha256": "sha256:289478b4e41d1ded162bd76e53ad8444be887359dc432fdfff5ac122c975983a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/trove-classifiers-stub-current/trove-classifiers-stub-current/trove-classifiers-stub__iFz8E6f/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/trove-classifiers-current/trove-classifiers-forgery -a oracle --job-name trove-classifiers-forgery-current -o .nl2repo/runs/trove-classifiers-forgery-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "failed": 34,
+      "collected": 35,
+      "reward": 0.02857142857142857,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward": 1.0,
+      "grading": {
+        "path": ".nl2repo/runs/trove-classifiers-forgery-current/trove-classifiers-forgery-current/trove-classifiers-forgery__oBRLvgx/verifier/grading.json",
+        "sha256": "sha256:289478b4e41d1ded162bd76e53ad8444be887359dc432fdfff5ac122c975983a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/trove-classifiers-forgery-current/trove-classifiers-forgery-current/trove-classifiers-forgery__oBRLvgx/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      }
+    },
+    "offline": {
+      "command": "separate verifier network probe in the stub Harbor control",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/runs/trove-classifiers-stub-current/trove-classifiers-stub-current/trove-classifiers-stub__iFz8E6f/verifier/grading.json",
+        "sha256": "sha256:289478b4e41d1ded162bd76e53ad8444be887359dc432fdfff5ac122c975983a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/trove-classifiers-stub-current/trove-classifiers-stub-current/trove-classifiers-stub__iFz8E6f/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/trove-classifiers-current/trove-classifiers-install-hang -a oracle --job-name trove-classifiers-install-hang-current -o .nl2repo/runs/trove-classifiers-install-hang-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install_outcome": "timeout",
+      "candidate_install_returncode": -9,
+      "collected": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/trove-classifiers-install-hang-current/trove-classifiers-install-hang-current/trove-classifiers-install-hang__EbBEgdB/verifier/grading.json",
+        "sha256": "sha256:bc1198649b53b0f9769f1cdd94c89b02b4d0d12b144bd39903c99a8e3d051869"
+      },
+      "network": {
+        "path": ".nl2repo/runs/trove-classifiers-install-hang-current/trove-classifiers-install-hang-current/trove-classifiers-install-hang__EbBEgdB/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/trove-classifiers-current/trove-classifiers-call-hang -a oracle --job-name trove-classifiers-call-hang-current -o .nl2repo/runs/trove-classifiers-call-hang-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "failed": 34,
+      "collected": 35,
+      "reward": 0.02857142857142857,
+      "grading": {
+        "path": ".nl2repo/runs/trove-classifiers-call-hang-current/trove-classifiers-call-hang-current/trove-classifiers-call-hang__bcKyMmf/verifier/grading.json",
+        "sha256": "sha256:289478b4e41d1ded162bd76e53ad8444be887359dc432fdfff5ac122c975983a"
+      },
+      "network": {
+        "path": ".nl2repo/runs/trove-classifiers-call-hang-current/trove-classifiers-call-hang-current/trove-classifiers-call-hang__bcKyMmf/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      }
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/trove-classifiers",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/trove-classifiers --output .nl2repo/compiled/trove-classifiers-current --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "docker run --rm --network none nl2repobench/trove-classifiers-verifier:authoring-current pytest -q -p no:cacheprovider",
+      "exit_code": 0,
+      "summary": "CPython 3.12.14, pytest 9.1.1, 18 passed"
+    }
+  ],
+  "residual_risks": [
+    "The shared toolchain locks agent image ID sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5, while the local tag resolves to the fork-equivalent derived ID sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123. The integrator must restore the immutable image or relock the shared toolchain before a model Agent Run.",
+    "No Harbor model Agent Run, publication, blind review, pilot, dataset integration, or cross-version parity claim was performed in this authoring lane.",
+    "Full Harbor run trees and private verifier, dependency, and Oracle artifacts remain task-local under .nl2repo and are not part of the public source projection."
+  ]
+}
