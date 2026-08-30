@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0",
+  "task_id": "websockets",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python-websockets/websockets",
+    "revision": "e87ea9be0373edd5065b5e94dfa714cfde23023b",
+    "tree": "66f0ca4fc786486a23ca82093ad064af096da59d",
+    "archive_sha256": "sha256:f2e255aa0f376ef720727ff3568fd8b0614f91bb0b65a43ccd2e44119bb5d672",
+    "archive_size_bytes": 2775040,
+    "license_spdx": "BSD-3-Clause",
+    "license_file": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle/websockets-oracle-resume-20260830/websockets__HffJmiE/artifacts/workspace/LICENSE",
+    "license_file_sha256": "sha256:3d6a0c050d8bec52fabad502e45fb25bd02bcadbd70dea34d447b6a0ff4e6da8",
+    "oracle_fetch_log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle/websockets-oracle-resume-20260830/websockets__HffJmiE/agent/oracle.txt",
+    "oracle_fetch_log_sha256": "sha256:ee4b0fa666933bc90188912476aa45c5019c962a41410c5901b5ad5af39bd91e"
+  },
+  "upstream_baseline": {
+    "python": "3.12.14",
+    "network_mode": "no-network",
+    "command": "python -W error::DeprecationWarning -W error::PendingDeprecationWarning -X context_aware_warnings=0 -m unittest",
+    "exit_code": 0,
+    "ran": 2565,
+    "passed": 2557,
+    "skipped": 8,
+    "elapsed_seconds": 100.802,
+    "archive_receipt": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/prior-attempt-archive-receipt.json",
+    "archive_receipt_sha256": "sha256:3a38fc3c1917f554fb39e3249ca67bc12312661aa6ece1aba0e63cac3dd4185f"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "harbor": "0.21.0",
+    "uv": "0.11.32",
+    "docker": "29.7.2",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "os": "debian-12-amd64",
+    "network_mode": "no-network"
+  },
+  "dependency_lock": {
+    "packages": [
+      "setuptools==80.10.2",
+      "wheel==0.45.1"
+    ],
+    "vendor_wheels": false,
+    "artifact": {
+      "digest": "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7",
+      "size_bytes": 204,
+      "path": ".nl2repo/artifacts/private/sha256/24/24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7"
+    }
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "denominator": 28,
+    "candidate_uid": 10001,
+    "per_scenario_timeout_seconds": 5,
+    "artifact": {
+      "digest": "sha256:34146315b5d16f8c28f977eb62a69317d6629340777fe815f09b40f4c9d51202",
+      "size_bytes": 20480,
+      "path": ".nl2repo/artifacts/private/sha256/34/34146315b5d16f8c28f977eb62a69317d6629340777fe815f09b40f4c9d51202"
+    },
+    "oracle_contract_probe": {
+      "exit_code": 0,
+      "collected": 28,
+      "passed": 28,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle/websockets-oracle-resume-20260830/websockets__HffJmiE/verifier/grading.json",
+      "grading_sha256": "sha256:e7a577daf12719671f5d46afe423f7a5c4be59c8b6cd9ab04571613d5c089690"
+    }
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/compiled-resume/websockets/bundle.manifest.json",
+    "sha256": "sha256:2d237a0038913db506beb13e45f7199a5f58a39baf1aadbfd00580ea74e8f81a",
+    "canonical_manifest_digest": "sha256:c9004a8209711973d10e566ee3a8d4b836627c0edcbe524cfcb42b120b5aae5b",
+    "file_count": 59,
+    "mode": "production",
+    "repeat_byte_identical": true,
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+  },
+  "gates": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/websockets",
+      "exit_code": 0,
+      "source_digest": "sha256:0ab4c021000018db974a7c08201404b433da767cd0adc92c55f19fde79ea26ce",
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/validate-source-resume.log"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "error_count": 0,
+      "task_warning_count": 1,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/network-lint-resume.log",
+      "note": "The only websockets warning documents the trusted Oracle's digest-verified github.com source-host authorization. Model Agent runs remain no-network with no task-declared hosts."
+    },
+    "generated_network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated",
+      "exit_code": 0,
+      "error_count": 0,
+      "task_warning_count": 1,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/network-lint-generated-resume.log",
+      "note": "The generated-runtime scan reports the same expected Oracle source-host warning for websockets and no errors."
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/websockets --output .nl2repo/authoring-work/python-author-wave2-20260828/websockets/compiled-resume --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/compile-resume.log"
+    },
+    "repeat_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/websockets --output .nl2repo/authoring-work/python-author-wave2-20260828/websockets/compiled-resume-repeat --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "byte_identical": true,
+      "file_count": 60,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/compile-resume-repeat.log"
+    },
+    "no_vendor_install": {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py",
+      "exit_code": 0,
+      "passed": 1,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/no-vendor-install-resume.log"
+    },
+    "repository_tests": {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "passed": 427,
+      "coverage_percent": 80,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/pytest-full-resume.log"
+    },
+    "ruff": {
+      "command": "uv run ruff check src tests scripts",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/ruff-resume.log"
+    },
+    "mypy": {
+      "command": "uv run mypy src/nl2repobench",
+      "exit_code": 0,
+      "checked_source_files": 81,
+      "log": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/logs/mypy-resume.log"
+    }
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/websockets/compiled-resume/websockets -a oracle --allow-agent-host github.com --job-name websockets-oracle-resume-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "elapsed_seconds": 71.656,
+    "valid": true,
+    "collected": 28,
+    "passed": 28,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle/websockets-oracle-resume-20260830/websockets__HffJmiE/verifier/grading.json",
+      "sha256": "sha256:e7a577daf12719671f5d46afe423f7a5c4be59c8b6cd9ab04571613d5c089690"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle/websockets-oracle-resume-20260830/websockets__HffJmiE/verifier/network.json",
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+      "public_network_available": false
+    },
+    "candidate_install": {
+      "outcome": "success",
+      "entries": 280,
+      "total_bytes": 3196853
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/websockets/compiled-resume/websockets -a nop --job-name websockets-empty-resume-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 54.607,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install_outcome": "candidate-failure",
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/empty/websockets-empty-resume-20260830/websockets__qXZHguV/verifier/grading.json",
+      "grading_sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/empty/websockets-empty-resume-20260830/websockets__qXZHguV/verifier/network.json",
+      "network_sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/websockets/control-bundles-resume/websockets-stub -a oracle --job-name websockets-stub-resume-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 64.482,
+      "valid": true,
+      "collected": 28,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/stub/websockets-stub-resume-20260830/websockets-stub__ueNxqBc/verifier/grading.json",
+      "grading_sha256": "sha256:83b2cf7f1bc171283b4e2ce34cc801ef34810d6fe60aab130332cb4b37e73b23",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/stub/websockets-stub-resume-20260830/websockets-stub__ueNxqBc/verifier/network.json",
+      "network_sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/websockets/control-bundles-resume/websockets-forgery -a oracle --job-name websockets-forgery-resume-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 66.47,
+      "valid": true,
+      "collected": 28,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward": 1.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/forgery/websockets-forgery-resume-20260830/websockets-forgery__Kz7eDAN/verifier/grading.json",
+      "grading_sha256": "sha256:83b2cf7f1bc171283b4e2ce34cc801ef34810d6fe60aab130332cb4b37e73b23",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/forgery/websockets-forgery-resume-20260830/websockets-forgery__Kz7eDAN/verifier/network.json",
+      "network_sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+      "public_network_available": false
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/websockets/control-bundles-resume/websockets-install-hang -a oracle --job-name websockets-install-hang-resume-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 178.224,
+      "valid": true,
+      "candidate_install_outcome": "timeout",
+      "candidate_install_returncode": -9,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/install-hang/websockets-install-hang-resume-20260830/websockets-install-hang__RVLDnRu/verifier/grading.json",
+      "grading_sha256": "sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/install-hang/websockets-install-hang-resume-20260830/websockets-install-hang__RVLDnRu/verifier/network.json",
+      "network_sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1",
+      "public_network_available": false
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/websockets/control-bundles-resume/websockets-call-hang -a oracle --job-name websockets-call-hang-resume-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "elapsed_seconds": 198.661,
+      "valid": true,
+      "collected": 28,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/call-hang/websockets-call-hang-resume-20260830/websockets-call-hang__xJsx3AJ/verifier/grading.json",
+      "grading_sha256": "sha256:83b2cf7f1bc171283b4e2ce34cc801ef34810d6fe60aab130332cb4b37e73b23",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/call-hang/websockets-call-hang-resume-20260830/websockets-call-hang__xJsx3AJ/verifier/network.json",
+      "network_sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+      "public_network_available": false
+    },
+    "offline": {
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/websockets/runs/resume/oracle/websockets-oracle-resume-20260830/websockets__HffJmiE/verifier/network.json",
+      "network_sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+      "note": "The verifier completed its network gate and all 28 candidate operations in a no-network verifier namespace."
+    }
+  },
+  "residual_risks": [
+    "No model Harbor Agent Run was started in this authoring lane.",
+    "The shared toolchain expects OpenHands image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5, while the local mutable tag currently resolves to sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123. Oracle and controls do not use this model runtime, but the integrator must restore or relock it before a model Agent Run.",
+    "The scored contract intentionally excludes live socket, DNS, TLS, proxy, server/client lifecycle, Trio, legacy, and optional C-extension behavior.",
+    "Blind review, model pilot, dataset integration, publication, commit, and push remain integrator-stage gates."
+  ]
+}

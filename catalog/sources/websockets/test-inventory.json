@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_paths": [
+    "tests/test_datastructures.py", "tests/test_uri.py", "tests/test_frames.py",
+    "tests/test_protocol.py", "tests/asyncio/test_messages.py",
+    "tests/test_exceptions.py", "tests/test_exports.py"
+  ],
+  "upstream_framework": "pytest and unittest",
+  "upstream_collected": 2565,
+  "upstream_passed": 2557,
+  "upstream_skipped": 8,
+  "upstream_command": "python -W error::DeprecationWarning -W error::PendingDeprecationWarning -X context_aware_warnings=0 -m unittest",
+  "upstream_network_mode": "no-network",
+  "upstream_exit_code": 0,
+  "frozen_private_collection": 28,
+  "private_scenarios": [
+    "package-identity", "root-exports", "headers-init", "headers-lookup",
+    "headers-duplicates", "headers-mutation", "headers-serialize",
+    "headers-invalid", "headers-copy", "uri-basic", "uri-secure-userinfo",
+    "uri-idna", "uri-invalid-scheme", "uri-invalid-fragment", "frame-text",
+    "frame-masked", "frame-long", "frame-parse", "frame-invalid",
+    "close-roundtrip", "close-invalid", "exception-contract",
+    "protocol-receive", "protocol-send", "protocol-close",
+    "assembler-fragments", "assembler-binary-decode", "assembler-concurrency"
+  ],
+  "collection_method": "independent custom-json-v1 contract over bounded child adapter",
+  "baseline_python": "3.12.14",
+  "notes": "The full upstream suite completed offline. One non-fatal background-thread bad-file-descriptor traceback was printed after a sync server teardown, while unittest still exited 0. The focused contract covers local protocol data structures while excluding external services and optional integrations."
+}

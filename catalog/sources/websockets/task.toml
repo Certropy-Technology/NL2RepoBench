@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "websockets"
+version = "17.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "websocket-protocol-library"
+tags = ["python", "websocket", "rfc6455", "asyncio", "frames", "headers", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-websockets/websockets"
+revision = "e87ea9be0373edd5065b5e94dfa714cfde23023b"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:f2e255aa0f376ef720727ff3568fd8b0614f91bb0b65a43ccd2e44119bb5d672"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked setuptools and wheel build closure during image build; candidate installation uses pip --no-deps --no-build-isolation"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "websockets has no third-party runtime dependencies; its setuptools and wheel build closure is installed during image build. Candidate and separate verifier execution have no egress, while only the trusted Oracle receives the exact upstream source-host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 28
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:34146315b5d16f8c28f977eb62a69317d6629340777fe815f09b40f4c9d51202", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:34146315b5d16f8c28f977eb62a69317d6629340777fe815f09b40f4c9d51202", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build websockets 17.1 from an empty workspace and reproduce deterministic WebSocket headers, URI parsing, frame codecs, close codes, protocol events, and asyncio message assembly through a separate child-side JSON adapter."
+keywords = ["python", "websocket", "rfc6455", "asyncio", "frames", "headers", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-websockets"
+reason = "The production compiler is deterministic; the official Harbor Oracle passed 28/28 at reward 1.0, and empty, stub, forgery, install-hang, call-hang, and offline controls completed with verifier-owned reports. Review and model Agent Run remain separate stages."
+
+[oracle_bundle]
+digest = "sha256:8492407c5c7ca3dbf76d69587827231513024cbc42b7a66256bfdfa0522af120"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8492407c5c7ca3dbf76d69587827231513024cbc42b7a66256bfdfa0522af120"
+visibility = "private"

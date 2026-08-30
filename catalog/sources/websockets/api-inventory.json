@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "package": "websockets",
+  "version": "17.1",
+  "runtime_entry": "src/websockets/__init__.py",
+  "upstream_python_modules": 52,
+  "upstream_native_extensions": ["src/websockets/speedups.c"],
+  "console_scripts": ["websockets = websockets.cli:main"],
+  "public_modules": [
+    "websockets.datastructures",
+    "websockets.uri",
+    "websockets.frames",
+    "websockets.protocol",
+    "websockets.asyncio.messages"
+  ],
+  "scored_exports": [
+    "__version__", "Headers", "MultipleValuesError", "Frame", "Close",
+    "CloseCode", "Opcode", "Protocol", "Side", "State", "InvalidURI",
+    "InvalidHeaderValue", "ProtocolError", "ConcurrencyError", "Assembler"
+  ],
+  "scored_contract": {
+    "websockets.datastructures": ["Headers", "MultipleValuesError"],
+    "websockets.uri": ["WebSocketURI", "parse_uri"],
+    "websockets.frames": ["Frame", "Close", "CloseCode", "Opcode"],
+    "websockets.protocol": ["Protocol", "Side", "State"],
+    "websockets.asyncio.messages": ["Assembler"]
+  },
+  "runtime_dependencies": [],
+  "build_dependencies": ["setuptools", "wheel"],
+  "excluded_risk_surfaces": [
+    "live network services", "DNS", "TLS", "proxy", "server/client lifecycle",
+    "Trio integration", "legacy compatibility", "optional C speedups"
+  ]
+}
