@@ -15,6 +15,7 @@ from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.pnpm import PnpmPackageManager
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
+from nl2repobench.storage.materialize import ArchiveKind
 from nl2repobench.verification.node_pnpm_command_plan import EXPECTED_PNPM_PLAN
 
 from .node_compiler import NodeHarborCompileError, NodeHarborCompiler
@@ -55,8 +56,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
         self._write_python_verifier_runtime(tests_root)
         atomic_write(
             tests_root / "command-plan.json",
-            json.dumps(EXPECTED_PNPM_PLAN, sort_keys=True, separators=(",", ":")).encode()
-            + b"\n",
+            json.dumps(EXPECTED_PNPM_PLAN, sort_keys=True, separators=(",", ":")).encode() + b"\n",
         )
 
         dependencies_root = tests_root / "dependencies"
@@ -78,7 +78,9 @@ class PnpmHarborCompiler(NodeHarborCompiler):
 
         private_root = tests_root / "private"
         if manifest.tests.test_bundle is not None and not allow_incomplete:
-            self._extract_private_bundle(manifest.tests.test_bundle, private_root)
+            self._extract_private_bundle(
+                manifest.tests.test_bundle, private_root, ArchiveKind.TEST_BUNDLE
+            )
         else:
             fixture = source_dir / "harbor/tests"
             if not fixture.is_dir():

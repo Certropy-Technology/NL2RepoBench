@@ -22,21 +22,41 @@ import sys
 import tarfile
 import tempfile
 import tomllib
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path, PurePosixPath
 from typing import Any, cast
 
 import tomli_w
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
+from nl2repobench.authoring.network_lint import lint_catalog
+from nl2repobench.domain.canonical_contract import TaskSource
 from nl2repobench.domain.models import ArtifactRef, Visibility
-from nl2repobench.domain.runtime import RuntimeDiscriminator
+from nl2repobench.domain.runtime import (
+    PackageManager as RuntimePackageManager,
+)
+from nl2repobench.domain.runtime import (
+    RuntimeDiscriminator,
+)
+from nl2repobench.domain.runtime import (
+    RuntimeLanguage as DiscriminatorLanguage,
+)
 from nl2repobench.package_managers.registry import PackageManagerRegistry
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
+    LocalArtifactResolver,
     MigrationArtifactAuthorization,
+    PublicArtifactAuthorization,
 )
-from nl2repobench.storage.canonical_ustar import encode_files, tree_digest, tree_entries
+from nl2repobench.storage.canonical_ustar import (
+    decode_archive,
+    encode_files,
+    tree_digest,
+    tree_entries,
+)
+from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
 
 ROOT_NAME = "unified-runtime-20260830"
 STATES = {
@@ -101,6 +121,30 @@ def _toml_safe(value: Any) -> Any:
     return value
 
 
+def _leaf_fields(value: Any, prefix: str = "") -> dict[str, Any]:
+    if isinstance(value, dict):
+        result: dict[str, Any] = {}
+        for key, item in sorted(value.items()):
+            path = f"{prefix}.{key}" if prefix else key
+            result.update(_leaf_fields(item, path))
+        return result
+    return {prefix: value}
+
+
+def _field_mapping(old: dict[str, Any], new: dict[str, Any]) -> list[dict[str, str]]:
+    old_fields = _leaf_fields(old)
+    return [
+        {
+            "target": target,
+            "source": target if target in old_fields else "migration-derived",
+            "value_digest": digest_bytes(
+                json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+            ),
+        }
+        for target, value in sorted(_leaf_fields(new).items())
+    ]
+
+
 def transform_lock_artifact(
     artifact_root: Path,
     lock_bytes: bytes,
@@ -141,9 +185,7 @@ def transform_lock_artifact(
     if manager == "none" and language != "python":
         raise MigrationError("plan-invalid", "plan", "only python+none may have a known closure")
     if store_files is None:
-        raise MigrationError(
-            "plan-invalid", "plan", "offline dependency closure was not prepared"
-        )
+        raise MigrationError("plan-invalid", "plan", "offline dependency closure was not prepared")
     lock_files = {} if lock_name is None else (lock_files or {lock_name: lock_bytes})
     if lock_name is not None and lock_name not in lock_files:
         lock_files[lock_name] = lock_bytes
@@ -209,8 +251,8 @@ def transform_lock_artifact(
         raise MigrationError("plan-invalid", "plan", "package-manager toolchain is unknown")
     try:
         runtime_identity = RuntimeDiscriminator(
-            language=language,
-            package_manager=manager,
+            language=DiscriminatorLanguage(language),
+            package_manager=RuntimePackageManager(manager),
         )
         adapter = PackageManagerRegistry.default().resolve(runtime_identity)
         with tempfile.TemporaryDirectory(prefix="nl2repo-adapter-lock-") as lock_temporary:
@@ -357,6 +399,167 @@ def _source_dirs(root: Path) -> list[Path]:
     return result
 
 
+def _source_artifact_refs(source: TaskSource) -> tuple[ArtifactRef, ...]:
+    refs = [
+        source.dependencies.lock,
+        source.dependencies.offline_store,
+        source.dependencies.inventory,
+        source.tests.commands_artifact,
+        source.tests.protected_paths_artifact,
+        source.tests.test_bundle,
+        source.verifier.bundle if source.verifier is not None else None,
+        source.oracle_bundle,
+        *source.lifecycle.evidence,
+    ]
+    return tuple(ref for ref in refs if ref is not None)
+
+
+def _validate_selected_compiles(staged: Path, artifact_root: Path) -> tuple[dict[str, Any], ...]:
+    """Compile each selected task twice, or report the F0.5 blocker explicitly."""
+
+    if not PRIVATE_STAGING_CONTRACT.is_file():
+        return tuple(
+            {
+                "task_id": task_id,
+                "status": "blocked",
+                "reason": "private-staging-contract-missing",
+            }
+            for task_id in SELECTED
+        )
+    toolchains = {
+        "ministats": "toolchain.lock.toml",
+        "canonicalize": "toolchain.node.lock.toml",
+        "node-pnpm-synthetic": "toolchain.node.lock.toml",
+        "go-google-uuid": "toolchain.go.lock.toml",
+    }
+    repository_root = Path(__file__).parents[2]
+    results: list[dict[str, Any]] = []
+    for task_id in SELECTED:
+        digests: list[str] = []
+        with tempfile.TemporaryDirectory(prefix=f"nl2repo-selected-{task_id}-") as temporary:
+            for attempt in (1, 2):
+                output_root = Path(temporary) / f"compile-{attempt}"
+                command = [
+                    sys.executable,
+                    "-m",
+                    "nl2repobench",
+                    "harbor",
+                    "compile",
+                    str(staged / task_id),
+                    "--output",
+                    str(output_root),
+                    "--toolchain",
+                    str(repository_root / toolchains[task_id]),
+                    "--artifact-root",
+                    str(artifact_root),
+                    "--authorize-task-private-artifacts",
+                ]
+                completed = subprocess.run(
+                    command,
+                    cwd=repository_root,
+                    stdin=subprocess.DEVNULL,
+                    capture_output=True,
+                    timeout=1200,
+                    check=False,
+                )
+                if completed.returncode != 0:
+                    detail = completed.stderr[-4096:].decode("utf-8", errors="replace")
+                    raise MigrationError(
+                        "plan-invalid",
+                        "plan",
+                        f"selected compile failed for {task_id}: {detail}",
+                    )
+                generated = output_root / task_id
+                if not generated.is_dir():
+                    raise MigrationError(
+                        "plan-invalid", "plan", f"selected compile omitted {task_id}"
+                    )
+                digests.append(digest_tree(generated))
+        if len(set(digests)) != 1:
+            raise MigrationError(
+                "plan-invalid", "plan", f"selected compile is nondeterministic: {task_id}"
+            )
+        results.append({"task_id": task_id, "status": "passed", "output_tree_digest": digests[0]})
+    return tuple(results)
+
+
+def validate_staged_tree(
+    staged: Path,
+    artifact_root: Path,
+    *,
+    run_selected_compiles: bool = True,
+) -> dict[str, Any]:
+    """Run every canonical pre-apply validation stage against a mirror."""
+
+    schema = TaskSource.model_json_schema()
+    validator = Draft202012Validator(schema)
+    store = FileArtifactStore(artifact_root)
+    parsed: list[TaskSource] = []
+    artifact_digests: set[str] = set()
+    seen_ids: set[str] = set()
+    for directory in _source_dirs(staged):
+        task_file = directory / "task.toml"
+        try:
+            payload = tomllib.loads(task_file.read_text(encoding="utf-8"))
+            validator.validate(payload)
+            source = TaskSource.model_validate(payload)
+        except Exception as exc:
+            raise MigrationError(
+                "plan-invalid", "plan", f"canonical source validation failed for {task_file}: {exc}"
+            ) from exc
+        if source.task_id in seen_ids:
+            raise MigrationError("plan-invalid", "plan", f"duplicate task_id: {source.task_id}")
+        seen_ids.add(source.task_id)
+        instruction = directory / source.instruction
+        if instruction.is_symlink() or not instruction.is_file():
+            raise MigrationError(
+                "plan-invalid", "plan", f"source instruction is missing: {source.task_id}"
+            )
+        parsed.append(source)
+        artifact_digests.update(ref.digest for ref in _source_artifact_refs(source))
+    if artifact_digests:
+        authorization = MigrationArtifactAuthorization(
+            migration_id=ROOT_NAME,
+            allowed_digests=frozenset(artifact_digests),
+            workspace_root=staged.parent.resolve(),
+        )
+        resolver = LocalArtifactResolver(store, authorization)
+        for source in parsed:
+            for ref in _source_artifact_refs(source):
+                selected_authorization = (
+                    authorization
+                    if ref.visibility is Visibility.PRIVATE
+                    else PublicArtifactAuthorization(
+                        task_id=source.task_id, purpose="migration-validation"
+                    )
+                )
+                resolver.read_bytes(
+                    ref,
+                    selected_authorization,
+                    max_bytes=MAX_LEGACY_ARCHIVE_BYTES,
+                )
+    network = lint_catalog(staged)
+    if network.errors:
+        raise MigrationError(
+            "plan-invalid",
+            "plan",
+            "network lint failed: "
+            + "; ".join(f"{item.task_id}:{item.rule}" for item in network.errors[:20]),
+        )
+    compiles = _validate_selected_compiles(staged, artifact_root) if run_selected_compiles else ()
+    blocked = [item for item in compiles if item["status"] == "blocked"]
+    return {
+        "model": {"status": "passed", "task_count": len(parsed)},
+        "schema": {"status": "passed", "task_count": len(parsed)},
+        "source_validator": {"status": "passed", "task_count": len(parsed)},
+        "artifact_resolver": {"status": "passed", "artifact_count": len(artifact_digests)},
+        "network_lint": network.as_dict(),
+        "selected_compiles": list(compiles),
+        "status": "blocked" if blocked else "passed",
+        "blockers": sorted({str(item["reason"]) for item in blocked}),
+    }
+
+
 def _legacy_archive_files(data: bytes) -> tuple[dict[str, bytes], dict[str, bytes]]:
     """Boundedly split a legacy dependency archive into lock and store files."""
 
@@ -402,6 +605,135 @@ def _legacy_archive_files(data: bytes) -> tuple[dict[str, bytes], dict[str, byte
             "plan-invalid", "plan", f"dependency archive conversion failed: {exc}"
         ) from exc
     return lock_files, store_files
+
+
+def _legacy_bundle_payload(data: bytes) -> tuple[dict[str, bytes], frozenset[str]]:
+    """Read one legacy runtime bundle without changing payload paths or bytes."""
+
+    if len(data) > MAX_LEGACY_ARCHIVE_BYTES:
+        raise MigrationError("plan-invalid", "plan", "legacy runtime bundle is too large")
+    files: dict[str, bytes] = {}
+    executable: set[str] = set()
+    total = 0
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as archive:
+            for index, member in enumerate(archive, start=1):
+                if index > MAX_LEGACY_MEMBERS:
+                    raise ValueError("legacy runtime bundle has too many members")
+                if member.issym() or member.islnk() or member.isdev():
+                    raise ValueError("legacy runtime bundle contains an unsafe member")
+                path = PurePosixPath(member.name.rstrip("/"))
+                if path.is_absolute() or not path.parts or ".." in path.parts:
+                    raise ValueError("legacy runtime bundle contains an unsafe path")
+                if member.isdir():
+                    continue
+                if not member.isfile() or member.size > MAX_LEGACY_MEMBER_BYTES:
+                    raise ValueError("legacy runtime bundle contains an unsupported member")
+                total += member.size
+                if total > MAX_LEGACY_ARCHIVE_BYTES:
+                    raise ValueError("legacy runtime payload exceeds size limit")
+                payload = archive.extractfile(member)
+                if payload is None:
+                    raise ValueError("legacy runtime member cannot be read")
+                member_data = payload.read(member.size + 1)
+                if len(member_data) != member.size:
+                    raise ValueError("legacy runtime member size does not match")
+                name = path.as_posix()
+                if name == "_nl2repo.bundle-inventory.json" or name in files:
+                    raise ValueError("legacy runtime bundle contains a reserved or duplicate path")
+                files[name] = member_data
+                if member.mode & 0o111:
+                    if path.name not in {
+                        "test.sh",
+                        "solve.sh",
+                        "run.py",
+                        "contract.sh",
+                        "verifier.sh",
+                    }:
+                        raise ValueError(f"legacy runtime executable is not allowlisted: {name}")
+                    executable.add(name)
+    except (OSError, tarfile.TarError, ValueError) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"runtime bundle conversion failed: {exc}"
+        ) from exc
+    return files, frozenset(executable)
+
+
+def repackage_runtime_bundle(
+    artifact_store: FileArtifactStore,
+    legacy_bytes: bytes,
+    *,
+    kind: ArchiveKind,
+) -> ArtifactRef:
+    """Repackage a test, verifier, or Oracle bundle as canonical USTAR."""
+
+    if kind not in {
+        ArchiveKind.TEST_BUNDLE,
+        ArchiveKind.VERIFIER_BUNDLE,
+        ArchiveKind.ORACLE_BUNDLE,
+    }:
+        raise MigrationError("plan-invalid", "plan", "runtime bundle kind is invalid")
+    files, executable = _legacy_bundle_payload(legacy_bytes)
+    payload_members = decode_archive(encode_files(files, executable))
+    entries = [member.entry for member in payload_members]
+    inventory = {
+        "schema_version": "1.0",
+        "archive_kind": kind.value,
+        "tree_digest": tree_digest(entries),
+        "entries": [
+            {
+                "path": entry.path,
+                "type": entry.type,
+                "mode": entry.mode,
+                "size": entry.size,
+                "sha256": entry.sha256,
+            }
+            for entry in entries
+        ],
+        "file_count": sum(entry.type == "file" for entry in entries),
+        "directory_count": sum(entry.type == "directory" for entry in entries),
+        "total_bytes": sum(entry.size for entry in entries),
+    }
+    files["_nl2repo.bundle-inventory.json"] = (
+        json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+    )
+    return artifact_store.put_bytes(
+        encode_files(files, executable),
+        media_type=TARGET_MEDIA_TYPES[kind],
+        visibility=Visibility.PRIVATE,
+    )
+
+
+def _migrate_bundle_reference(
+    artifact_store: FileArtifactStore,
+    value: object,
+    *,
+    kind: ArchiveKind,
+    task_id: str,
+    workspace_root: Path,
+) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    try:
+        reference = ArtifactRef.model_validate(value)
+        authorization = MigrationArtifactAuthorization(
+            migration_id=ROOT_NAME,
+            allowed_digests=frozenset({reference.digest}),
+            workspace_root=workspace_root.resolve(),
+        )
+        legacy_bytes = artifact_store.read_bytes(
+            reference,
+            authorization,
+            max_bytes=MAX_LEGACY_ARCHIVE_BYTES,
+        )
+        migrated = repackage_runtime_bundle(artifact_store, legacy_bytes, kind=kind)
+    except (ArtifactStoreError, OSError, ValueError) as exc:
+        raise MigrationError(
+            "plan-invalid",
+            "plan",
+            f"{kind.value} unavailable for {task_id}: {exc}",
+        ) from exc
+    return migrated.model_dump(mode="json")
 
 
 def _write_regular_files(root: Path, files: dict[str, bytes]) -> None:
@@ -569,9 +901,13 @@ def _execute_bundle_smoke(
             executable = shutil.which("go")
             if executable is None:
                 raise MigrationError("plan-invalid", "plan", "Go executable is unavailable")
-            version = subprocess.run(
-                [executable, "env", "GOVERSION"], check=True, capture_output=True, text=True
-            ).stdout.strip().removeprefix("go")
+            version = (
+                subprocess.run(
+                    [executable, "env", "GOVERSION"], check=True, capture_output=True, text=True
+                )
+                .stdout.strip()
+                .removeprefix("go")
+            )
             if version != runtime_version:
                 raise MigrationError("plan-invalid", "plan", "Go toolchain version mismatch")
             environment.update({"GOPROXY": "off", "GOSUMDB": "off", "GOWORK": "off"})
@@ -647,9 +983,7 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                 manager = identity.split("+", 1)[1]
                 runtime_version = _runtime(old)[2]
                 package_manager_version = (
-                    old.get("environment", {}).get("runtime", {}).get(
-                        "package_manager_version"
-                    )
+                    old.get("environment", {}).get("runtime", {}).get("package_manager_version")
                     if isinstance(old.get("environment"), dict)
                     else None
                 )
@@ -760,6 +1094,30 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                 )
                 test_data["protected_paths_artifact"] = protected_ref.model_dump(mode="json")
             test_data.pop("protected_paths", None)
+
+            test_data["test_bundle"] = _migrate_bundle_reference(
+                artifact_store,
+                old_tests.get("test_bundle"),
+                kind=ArchiveKind.TEST_BUNDLE,
+                task_id=task_id,
+                workspace_root=output.parent,
+            )
+            verifier = new.get("verifier")
+            if isinstance(verifier, dict):
+                verifier["bundle"] = _migrate_bundle_reference(
+                    artifact_store,
+                    verifier.get("bundle"),
+                    kind=ArchiveKind.VERIFIER_BUNDLE,
+                    task_id=task_id,
+                    workspace_root=output.parent,
+                )
+            new["oracle_bundle"] = _migrate_bundle_reference(
+                artifact_store,
+                old.get("oracle_bundle"),
+                kind=ArchiveKind.ORACLE_BUNDLE,
+                task_id=task_id,
+                workspace_root=output.parent,
+            )
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
             raise MigrationError(
                 "plan-invalid", "plan", f"cannot decode {directory.name}: {exc}"
@@ -771,6 +1129,7 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                 "relative_path": directory.relative_to(source_root).as_posix(),
                 "old_digest": digest_bytes(raw),
                 "new_toml": tomli_w.dumps(_toml_safe(new)),
+                "field_mapping": _field_mapping(old, new),
             }
         )
     input_digest = digest_tree(source_root)
@@ -786,6 +1145,10 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
             )
             (destination / "task.toml").write_text(record["new_toml"], encoding="utf-8")
         output_digest = digest_tree(mirror)
+        validation = validate_staged_tree(mirror, artifact_root)
+        if validation["status"] != "passed":
+            blockers = ", ".join(cast(list[str], validation["blockers"]))
+            raise MigrationError("plan-invalid", "plan", blockers)
     finally:
         shutil.rmtree(mirror, ignore_errors=True)
     task_mapping = digest_bytes(json.dumps(records, sort_keys=True, separators=(",", ":")).encode())
@@ -802,6 +1165,40 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
         "task_count": len(records),
         "task_mapping_digest": task_mapping,
         "records": records,
+        "mapping_report": [
+            {
+                "task_id": record["task_id"],
+                "source_path": record["relative_path"],
+                "old_digest": record["old_digest"],
+                "new_digest": digest_bytes(record["new_toml"].encode()),
+                "fields": record["field_mapping"],
+            }
+            for record in records
+        ],
+        "new_artifact_refs": sorted(
+            {
+                ref.digest
+                for directory in _source_dirs(source_root)
+                for ref in _source_artifact_refs(
+                    TaskSource.model_validate(
+                        tomllib.loads(
+                            next(
+                                record["new_toml"]
+                                for record in records
+                                if record["relative_path"]
+                                == directory.relative_to(source_root).as_posix()
+                            )
+                        )
+                    )
+                )
+            }
+        ),
+        "migration_warnings": cast(dict[str, Any], validation["network_lint"])["findings"],
+        "expected_git_diff": [
+            {"path": f"{record['relative_path']}/task.toml", "change": "modify"}
+            for record in records
+        ],
+        "validation": validation,
     }
     plan["plan_digest"] = digest_bytes(
         json.dumps(plan, sort_keys=True, separators=(",", ":")).encode()
@@ -847,7 +1244,7 @@ def _fsync_directory(path: Path) -> None:
 
 
 @contextmanager
-def _exclusive_lock(root: Path):
+def _exclusive_lock(root: Path) -> Iterator[None]:
     root.mkdir(parents=True, exist_ok=True)
     lock_path = root / "migration.lock"
     descriptor = os.open(lock_path, os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
@@ -873,7 +1270,18 @@ def _validate_plan(plan: dict[str, Any], plan_path: Path) -> None:
         "records",
         "plan_digest",
     }
-    if set(plan) != required or plan.get("schema_version") != "1.0":
+    report_fields = {
+        "mapping_report",
+        "new_artifact_refs",
+        "migration_warnings",
+        "expected_git_diff",
+        "validation",
+    }
+    if (
+        not required.issubset(plan)
+        or not set(plan).issubset(required | report_fields)
+        or plan.get("schema_version") != "1.0"
+    ):
         raise MigrationError("plan-invalid", "preflight", "migration plan shape is invalid")
     unsigned = {key: value for key, value in plan.items() if key != "plan_digest"}
     expected = digest_bytes(json.dumps(unsigned, sort_keys=True, separators=(",", ":")).encode())
@@ -894,13 +1302,24 @@ def _validate_staged(plan: dict[str, Any], staged: Path) -> None:
     if staged.is_symlink() or digest_tree(staged) != plan["output_tree_digest"]:
         raise MigrationError("staged-changed", "preflight", "staged tree digest mismatch")
     directories = _source_dirs(staged)
-    observed = sorted(
-        tomllib.loads((directory / "task.toml").read_text(encoding="utf-8")).get("task_id")
-        for directory in directories
-    )
+    observed: list[str] = []
+    for directory in directories:
+        task_id = tomllib.loads((directory / "task.toml").read_text(encoding="utf-8")).get(
+            "task_id"
+        )
+        if not isinstance(task_id, str):
+            raise MigrationError("staged-changed", "preflight", "staged task ID is invalid")
+        observed.append(task_id)
+    observed.sort()
     expected = sorted(record["task_id"] for record in plan["records"])
     if observed != expected or len(observed) != plan["task_count"]:
         raise MigrationError("staged-changed", "preflight", "staged task mapping is invalid")
+    if "validation" in plan:
+        report = validate_staged_tree(staged, Path(plan["artifact_root"]))
+        if report != plan["validation"]:
+            raise MigrationError(
+                "staged-changed", "preflight", "staged validation report differs from plan"
+            )
 
 
 def _validate_transaction(transaction: dict[str, Any], transaction_path: Path) -> None:
@@ -945,9 +1364,7 @@ def _validate_transaction(transaction: dict[str, Any], transaction_path: Path) -
         if not isinstance(transaction.get(field), str) or not re.fullmatch(
             r"sha256:[0-9a-f]{64}", transaction[field]
         ):
-            raise MigrationError(
-                "plan-invalid", "recovery", f"transaction {field} is invalid"
-            )
+            raise MigrationError("plan-invalid", "recovery", f"transaction {field} is invalid")
     current, staged, previous, plan = map(
         Path,
         (
@@ -1114,6 +1531,28 @@ def _apply_plan_unlocked(plan_path: Path) -> dict[str, Any]:
         # Before exchange the staged tree is disposable.  Once intent is
         # durable, both trees are rollback evidence and must never be deleted
         # by a generic exception handler.
+        if transaction["state"] in {"verified", "old-tree-retained", "complete"}:
+            transaction["last_error"] = {
+                "code": "retention-failed",
+                "stage": "retention",
+                "message": str(exc)[:4096],
+                "observed_digests": tuple(
+                    digest
+                    for digest in (
+                        digest_tree(current) if current.exists() else None,
+                        digest_tree(staged) if staged.exists() else None,
+                        digest_tree(previous) if previous.exists() else None,
+                    )
+                    if digest is not None
+                )[:4],
+            }
+            transaction["state"] = "old-tree-retained" if previous.exists() else "verified"
+            transaction["retention_status"] = "retained" if previous.exists() else "moving"
+            transaction["previous_tree_digest"] = (
+                plan["input_tree_digest"] if previous.exists() else None
+            )
+            _write_record(state_path, transaction)
+            raise
         if transaction["state"] in {
             "exchange-intent",
             "exchanged-unverified",
@@ -1244,12 +1683,20 @@ def _recover_unlocked(transaction_path: Path, force: bool = False) -> dict[str, 
         if input_locations[0] == staged:
             if previous.exists() or previous.is_symlink():
                 recovery_required("retention destination is unexpectedly occupied")
-            os.rename(staged, previous)
-            _fsync_directory(previous.parent)
+            try:
+                os.rename(staged, previous)
+                _fsync_directory(previous.parent)
+            except OSError as exc:
+                recovery_required(f"retention move could not be made durable: {exc}")
         transaction["state"] = "old-tree-retained"
         transaction["retention_status"] = "retained"
         transaction["previous_tree_digest"] = input_digest
         _write_record(transaction_path, transaction)
+        try:
+            _fsync_directory(current.parent)
+            _fsync_directory(previous.parent)
+        except OSError as exc:
+            recovery_required(f"retained trees could not be made durable: {exc}")
         transaction["state"] = "complete"
         _write_record(transaction_path, transaction)
         return transaction

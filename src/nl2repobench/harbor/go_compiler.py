@@ -19,6 +19,7 @@ from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
+from nl2repobench.storage.materialize import ArchiveKind
 
 from .bundle_io import BundleLimits
 from .models import AgentRuntimeImageLock
@@ -147,8 +148,7 @@ class GoHarborCompiler:
         if source.harbor is None:
             raise GoHarborCompileError("Go task source is missing [harbor] settings")
         if not allow_incomplete and (
-            source.harbor.agent_network_mode != "no-network"
-            or source.harbor.agent_allowed_hosts
+            source.harbor.agent_network_mode != "no-network" or source.harbor.agent_allowed_hosts
         ):
             raise GoHarborCompileError(
                 "production Agent runtime must be no-network with no static allowed hosts"
@@ -169,9 +169,7 @@ class GoHarborCompiler:
             raise GoHarborCompileError("Go source did not produce a v1 manifest")
         gaps = manifest.publication_gaps()
         if gaps and not allow_incomplete:
-            raise GoHarborCompileError(
-                "Go production source is incomplete: " + ", ".join(gaps)
-            )
+            raise GoHarborCompileError("Go production source is incomplete: " + ", ".join(gaps))
         if source.tests.expected_total != 1:
             raise GoHarborCompileError(
                 "the first Go bridge profile supports exactly one verifier-owned leaf"
@@ -338,9 +336,7 @@ WORKDIR /tests
             if allow_incomplete:
                 dependencies = fixture / "dependencies"
                 if not dependencies.is_dir():
-                    raise GoHarborCompileError(
-                        "Go task is missing a frozen dependencies closure"
-                    )
+                    raise GoHarborCompileError("Go task is missing a frozen dependencies closure")
                 copy_tree(dependencies, destination)
             else:
                 raise GoHarborCompileError(
@@ -370,7 +366,7 @@ WORKDIR /tests
                 raise GoHarborCompileError(
                     "the first Go verifier profile requires entrypoint=contract.sh"
                 )
-            self._extract_private_bundle(verifier.bundle, private_root)
+            self._extract_private_bundle(verifier.bundle, private_root, ArchiveKind.VERIFIER_BUNDLE)
             entrypoint = verifier.entrypoint
             bridge = fixture / "tests/bridge.go"
             if bridge.is_symlink() or not bridge.is_file():
@@ -396,7 +392,9 @@ WORKDIR /tests
         else:
             if source.oracle_bundle is None:
                 raise GoHarborCompileError("Go production task requires oracle_bundle")
-            self._extract_private_bundle(source.oracle_bundle, solution_root)
+            self._extract_private_bundle(
+                source.oracle_bundle, solution_root, ArchiveKind.ORACLE_BUNDLE
+            )
         solve = solution_root / "solve.sh"
         if solve.is_symlink() or not solve.is_file():
             raise GoHarborCompileError("Go Oracle bundle must contain solve.sh")
@@ -449,11 +447,14 @@ WORKDIR /tests
         }
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
-    def _extract_private_bundle(self, reference: ArtifactRef, destination: Path) -> None:
+    def _extract_private_bundle(
+        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind | None = None
+    ) -> None:
         try:
             extract_private_bundle(
                 reference,
                 destination,
+                kind=kind,
                 artifact_resolver=self.artifact_resolver,
                 limits=BundleLimits(
                     max_members=10_000,
@@ -525,7 +526,7 @@ GO_VALIDATE=$(cat <<'PY'
 from pathlib import Path
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 GoModulesPackageManager().validate_lock(
-    Path("/tmp/go-candidate/go.mod"), expected_version="__GO_VERSION__"
+    Path("/tmp/go-candidate"), expected_toolchain="__GO_VERSION__"
 )
 PY
 )

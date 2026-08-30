@@ -7,9 +7,10 @@ historical v1/v2 records; decoding belongs exclusively to the migration tool.
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import Annotated, Literal
+from typing import Annotated, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic.json_schema import JsonSchemaValue
 
 from .canonical import content_digest
 from .models import (
@@ -57,6 +58,41 @@ class PackageManager(StrEnum):
 
 
 class RuntimeProfile(CanonicalRecord):
+    model_config = ConfigDict(
+        json_schema_extra=cast(
+            JsonSchemaValue,
+            {
+                "allOf": [
+                    {
+                        "if": {"properties": {"language": {"const": language}}},
+                        "then": {
+                            "properties": {
+                                "runtime": {"const": runtime},
+                                "package_manager": {"enum": managers},
+                            }
+                        },
+                    }
+                    for language, runtime, managers in (
+                        ("python", "cpython", ["uv", "pip", "none"]),
+                        ("node", "node", ["npm", "pnpm", "none"]),
+                        ("go", "go", ["go-modules"]),
+                    )
+                ]
+                + [
+                    {
+                        "if": {"properties": {"package_manager": {"const": "none"}}},
+                        "then": {"properties": {"package_manager_version": {"type": "null"}}},
+                        "else": {
+                            "required": ["package_manager_version"],
+                            "properties": {
+                                "package_manager_version": {"type": "string", "minLength": 1}
+                            },
+                        },
+                    }
+                ]
+            },
+        )
+    )
     language: RuntimeLanguage
     runtime: Literal["cpython", "node", "go"]
     version: str = Field(min_length=1)
@@ -83,6 +119,37 @@ class RuntimeProfile(CanonicalRecord):
 
 
 class EnvironmentLock(CanonicalRecord):
+    model_config = ConfigDict(
+        json_schema_extra=cast(
+            JsonSchemaValue,
+            {
+                "allOf": [
+                    {
+                        "if": {
+                            "required": ["status"],
+                            "properties": {"status": {"const": "known"}},
+                        },
+                        "then": {
+                            "required": [
+                                "runtime",
+                                "os_name",
+                                "base_image",
+                                "base_image_digest",
+                                "network_policy",
+                            ],
+                            "properties": {
+                                "runtime": {"not": {"type": "null"}},
+                                "os_name": {"type": "string", "minLength": 1},
+                                "base_image": {"type": "string", "minLength": 1},
+                                "base_image_digest": {"type": "string", "pattern": SHA256},
+                                "network_policy": {"not": {"type": "null"}},
+                            },
+                        },
+                    }
+                ]
+            },
+        )
+    )
     status: Literal["known", "unknown"] = "unknown"
     runtime: RuntimeProfile | None = None
     os_name: str | None = None
@@ -108,6 +175,46 @@ class EnvironmentLock(CanonicalRecord):
 
 
 class DependencyBundle(CanonicalRecord):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "allOf": [
+                {
+                    "if": {
+                        "required": ["status"],
+                        "properties": {"status": {"const": "known"}},
+                    },
+                    "then": {
+                        "required": ["lock", "offline_store", "inventory"],
+                        "properties": {
+                            name: {
+                                "allOf": [
+                                    {"not": {"type": "null"}},
+                                    {"properties": {"visibility": {"const": "private"}}},
+                                ]
+                            }
+                            for name in ("lock", "offline_store", "inventory")
+                        },
+                    },
+                    "else": {
+                        "properties": {
+                            name: {"type": "null"}
+                            for name in ("lock", "offline_store", "inventory")
+                        }
+                    },
+                },
+                {
+                    "if": {
+                        "required": ["status", "package_manager"],
+                        "properties": {
+                            "status": {"const": "known"},
+                            "package_manager": {"const": "none"},
+                        },
+                    },
+                    "then": {"properties": {"packages": {"maxItems": 0}}},
+                },
+            ]
+        }
+    )
     status: Literal["known", "unknown"] = "unknown"
     package_manager: PackageManager
     lock: ArtifactRef | None = None
@@ -141,6 +248,54 @@ class DependencyBundle(CanonicalRecord):
 
 
 class TestManifest(CanonicalRecord):
+    model_config = ConfigDict(
+        json_schema_extra=cast(
+            JsonSchemaValue,
+            {
+                "allOf": [
+                    {
+                        "if": {"properties": {"framework": {"const": framework}}},
+                        "then": {"properties": {"report_format": {"const": report}}},
+                    }
+                    for framework, report in (
+                        ("pytest", "pytest-junit-xml-v1"),
+                        ("node:test", "node-test-json-v1"),
+                        ("go-bridge", "go-test-json-v1"),
+                        ("custom", "custom-json-v1"),
+                    )
+                ]
+                + [
+                    {
+                        "if": {
+                            "required": ["expected_total_source"],
+                            "properties": {"expected_total_source": {"const": "frozen-collection"}},
+                        },
+                        "then": {"properties": {"expected_total": {"minimum": 1}}},
+                    },
+                    *(
+                        {
+                            "properties": {
+                                name: {
+                                    "anyOf": [
+                                        {"type": "null"},
+                                        {
+                                            "type": "object",
+                                            "properties": {"visibility": {"const": "private"}},
+                                        },
+                                    ]
+                                }
+                            }
+                        }
+                        for name in (
+                            "commands_artifact",
+                            "protected_paths_artifact",
+                            "test_bundle",
+                        )
+                    ),
+                ]
+            },
+        )
+    )
     framework: Literal["pytest", "node:test", "go-bridge", "custom"]
     report_format: Literal[
         "pytest-junit-xml-v1", "node-test-json-v1", "go-test-json-v1", "custom-json-v1"
@@ -180,7 +335,192 @@ class TaskMetadata(CanonicalRecord):
     language: RuntimeLanguage
 
 
+def _task_contract_schema(environment_field: str, dependency_field: str) -> JsonSchemaValue:
+    production = [
+        "packaged",
+        "oracle-passed",
+        "controls-passed",
+        "reviewed",
+        "piloted",
+        "published",
+    ]
+    rules: list[dict[str, object]] = []
+    for language, frameworks in (
+        ("python", ["pytest", "custom"]),
+        ("node", ["node:test"]),
+        ("go", ["go-bridge"]),
+    ):
+        rules.append(
+            {
+                "if": {
+                    "properties": {
+                        environment_field: {
+                            "properties": {
+                                "runtime": {
+                                    "type": "object",
+                                    "properties": {"language": {"const": language}},
+                                    "required": ["language"],
+                                }
+                            },
+                            "required": ["runtime"],
+                        }
+                    },
+                },
+                "then": {
+                    "properties": {
+                        "metadata": {"properties": {"language": {"const": language}}},
+                        "tests": {"properties": {"framework": {"enum": frameworks}}},
+                    }
+                },
+            }
+        )
+    for manager in PackageManager:
+        rules.append(
+            {
+                "if": {
+                    "properties": {
+                        environment_field: {
+                            "properties": {
+                                "runtime": {
+                                    "type": "object",
+                                    "properties": {"package_manager": {"const": manager.value}},
+                                    "required": ["package_manager"],
+                                }
+                            },
+                            "required": ["runtime"],
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        dependency_field: {
+                            "properties": {"package_manager": {"const": manager.value}}
+                        }
+                    }
+                },
+            }
+        )
+    rules.extend(
+        [
+            {
+                "if": {"properties": {"tests": {"properties": {"framework": {"const": "custom"}}}}},
+                "then": {
+                    "required": ["verifier"],
+                    "properties": {"verifier": {"not": {"type": "null"}}},
+                },
+                "else": {"properties": {"verifier": {"type": "null"}}},
+            },
+            {
+                "if": {
+                    "properties": {
+                        environment_field: {
+                            "properties": {
+                                "runtime": {
+                                    "type": "object",
+                                    "properties": {
+                                        "language": {"const": "node"},
+                                        "package_manager": {"const": "none"},
+                                    },
+                                    "required": ["language", "package_manager"],
+                                }
+                            },
+                            "required": ["runtime"],
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        dependency_field: {"properties": {"status": {"const": "unknown"}}}
+                    }
+                },
+            },
+            {
+                "if": {
+                    "required": ["lifecycle"],
+                    "properties": {"lifecycle": {"properties": {"status": {"enum": production}}}},
+                },
+                "then": {
+                    "properties": {
+                        environment_field: {"properties": {"status": {"const": "known"}}},
+                        dependency_field: {"properties": {"status": {"const": "known"}}},
+                        "tests": {
+                            "required": ["commands_artifact"],
+                            "properties": {
+                                "expected_total_source": {"const": "frozen-collection"},
+                                "expected_total": {"minimum": 1},
+                                "commands_artifact": {"not": {"type": "null"}},
+                            },
+                        },
+                    },
+                    "anyOf": [
+                        {
+                            "required": ["verifier"],
+                            "properties": {"verifier": {"not": {"type": "null"}}},
+                        },
+                        {
+                            "properties": {
+                                "tests": {
+                                    "required": ["test_bundle"],
+                                    "properties": {"test_bundle": {"not": {"type": "null"}}},
+                                }
+                            }
+                        },
+                    ],
+                },
+            },
+            {
+                "properties": {
+                    "oracle_bundle": {
+                        "anyOf": [
+                            {"type": "null"},
+                            {
+                                "type": "object",
+                                "properties": {"visibility": {"const": "private"}},
+                            },
+                        ]
+                    }
+                }
+            },
+        ]
+    )
+    return cast(JsonSchemaValue, {"allOf": rules})
+
+
+def _manifest_contract_schema() -> JsonSchemaValue:
+    schema = _task_contract_schema("environment_lock", "dependency_bundle")
+    rules = cast(list[dict[str, object]], schema["allOf"])
+    rules.append(
+        {
+            "properties": {
+                "instruction": {
+                    "type": "object",
+                    "properties": {"visibility": {"const": "public"}},
+                }
+            }
+        }
+    )
+    return schema
+
+
+def _source_contract_schema() -> JsonSchemaValue:
+    schema = _task_contract_schema("environment", "dependencies")
+    rules = cast(list[dict[str, object]], schema["allOf"])
+    rules.append(
+        {
+            "properties": {
+                "instruction": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": r"^(?!/)(?!.*(?:^|/)\.\.(?:/|$)).+$",
+                }
+            }
+        }
+    )
+    return schema
+
+
 class TaskSource(CanonicalRecord):
+    model_config = ConfigDict(json_schema_extra=_source_contract_schema())
     task_id: TaskId
     version: str = "1.0.0"
     instruction: str = "instruction.md"
@@ -277,6 +617,8 @@ class TaskSource(CanonicalRecord):
 class TaskManifest(CanonicalRecord):
     """Canonical compiled manifest with public instruction artifact."""
 
+    model_config = ConfigDict(json_schema_extra=_manifest_contract_schema())
+
     task_id: TaskId
     version: str = "1.0.0"
     metadata: TaskMetadata
@@ -293,30 +635,50 @@ class TaskManifest(CanonicalRecord):
 
     @model_validator(mode="after")
     def validate_runtime_contract(self) -> TaskManifest:
+        if self.instruction.visibility is not Visibility.PUBLIC:
+            raise ValueError("compiled instruction artifact must be public")
         runtime = self.environment_lock.runtime
-        if runtime is None:
-            return self
-        if runtime.language.value != self.metadata.language.value:
-            raise ValueError("metadata language must match environment runtime")
-        if runtime.package_manager != self.dependency_bundle.package_manager:
-            raise ValueError("dependency package manager must match environment runtime")
         if self.tests.framework == "custom" and self.verifier is None:
             raise ValueError("custom tests require a typed verifier specification")
         if self.tests.framework != "custom" and self.verifier is not None:
             raise ValueError("typed verifier is only valid for custom tests")
-        expected_tests = {
-            RuntimeLanguage.PYTHON: ("pytest", "custom"),
-            RuntimeLanguage.NODE: ("node:test",),
-            RuntimeLanguage.GO: ("go-bridge",),
-        }[runtime.language]
-        if self.tests.framework not in expected_tests:
-            raise ValueError("test framework does not match runtime language")
-        if (
-            runtime.language is RuntimeLanguage.NODE
-            and runtime.package_manager is PackageManager.NONE
-            and self.dependency_bundle.status == "known"
-        ):
-            raise ValueError("node+none cannot have a known dependency closure")
+        if runtime is not None:
+            if runtime.language.value != self.metadata.language.value:
+                raise ValueError("metadata language must match environment runtime")
+            if runtime.package_manager != self.dependency_bundle.package_manager:
+                raise ValueError("dependency package manager must match environment runtime")
+            expected_tests = {
+                RuntimeLanguage.PYTHON: ("pytest", "custom"),
+                RuntimeLanguage.NODE: ("node:test",),
+                RuntimeLanguage.GO: ("go-bridge",),
+            }[runtime.language]
+            if self.tests.framework not in expected_tests:
+                raise ValueError("test framework does not match runtime language")
+            if (
+                runtime.language is RuntimeLanguage.NODE
+                and runtime.package_manager is PackageManager.NONE
+                and self.dependency_bundle.status == "known"
+            ):
+                raise ValueError("node+none cannot have a known dependency closure")
+        production = self.lifecycle.status in {
+            TaskStatus.PACKAGED,
+            TaskStatus.ORACLE_PASSED,
+            TaskStatus.CONTROLS_PASSED,
+            TaskStatus.REVIEWED,
+            TaskStatus.PILOTED,
+            TaskStatus.PUBLISHED,
+        }
+        if production:
+            if self.environment_lock.status != "known" or self.dependency_bundle.status != "known":
+                raise ValueError("production lifecycle requires known environment and dependencies")
+            if (
+                self.tests.expected_total_source != "frozen-collection"
+                or self.tests.expected_total <= 0
+                or self.tests.commands_artifact is None
+            ):
+                raise ValueError("production lifecycle requires a frozen test command plan")
+            if self.verifier is None and self.tests.test_bundle is None:
+                raise ValueError("production lifecycle requires a private test or verifier bundle")
         if (
             self.oracle_bundle is not None
             and self.oracle_bundle.visibility is not Visibility.PRIVATE

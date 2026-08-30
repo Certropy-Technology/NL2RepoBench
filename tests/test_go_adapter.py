@@ -193,7 +193,26 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert not (output / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (output / "tests/docker-compose.yaml").read_text()
     test_script = (output / "tests/test.sh").read_text()
-    assert 'expected_version="1.26.5"' in test_script
+    assert 'Path("/tmp/go-candidate"), expected_toolchain="1.26.5"' in test_script
+    snippet = re.search(r"GO_VALIDATE=\$\(cat <<'PY'\n(.*?)\nPY\n\)", test_script, re.DOTALL)
+    assert snippet is not None
+    candidate = tmp_path / "go-candidate"
+    candidate.mkdir()
+    (candidate / "go.mod").write_text(
+        "module example.com/synthetic\n\ngo 1.26.5\n", encoding="utf-8"
+    )
+    (candidate / "go.sum").write_text("", encoding="utf-8")
+    validation = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            snippet.group(1).replace("/tmp/go-candidate", str(candidate)),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert validation.returncode == 0, validation.stdout + validation.stderr
     assert '"status":"failed"' in test_script
     assert "--runner-exit-code 1" in test_script
     assert "cp -a /opt/go-module-bundle/vendor" in test_script

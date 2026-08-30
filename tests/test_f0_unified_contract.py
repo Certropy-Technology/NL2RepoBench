@@ -4,11 +4,19 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
+import tarfile
 import tomllib
 import unicodedata
+from copy import deepcopy
+from io import BytesIO
 from pathlib import Path
 
 import pytest
+import tomli_w
+from jsonschema import ValidationError as JsonSchemaValidationError
+from jsonschema import validate as validate_json_schema
+from pydantic import ValidationError as PydanticValidationError
 
 from nl2repobench.domain.canonical_contract import (
     DependencyBundle,
@@ -16,19 +24,23 @@ from nl2repobench.domain.canonical_contract import (
     PackageManager,
     TaskManifest,
     TaskMetadata,
+    TaskSource,
 )
 from nl2repobench.domain.canonical_contract import (
     TestManifest as CanonicalTestManifest,
 )
-from nl2repobench.domain.models import Visibility
+from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.harbor.bundle_io import BundleLimits
 from nl2repobench.harbor.private_artifacts import (
     categorized_private_artifacts,
     compile_authorization,
 )
+from nl2repobench.harbor.task_writer import extract_private_bundle
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
     LocalArtifactResolver,
+    MigrationArtifactAuthorization,
     PrivateArtifactAuthorization,
 )
 from nl2repobench.storage.canonical_ustar import (
@@ -240,13 +252,62 @@ def test_materializer_atomically_extracts_valid_canonical_bundle(tmp_path: Path)
     assert (destination / "data.txt").stat().st_mode & 0o777 == 0o444
 
 
+def test_task_writer_uses_scoped_canonical_materializer(tmp_path: Path) -> None:
+    reference, authorization, resolver = _materializer(tmp_path, _bundle_archive())
+    destination = authorization.staging_root / "tests"
+    extract_private_bundle(
+        reference,
+        destination,
+        artifact_resolver=resolver,
+        limits=BundleLimits(10, 1024, 4096),
+        kind=ArchiveKind.TEST_BUNDLE,
+    )
+    assert (destination / "data.txt").read_bytes() == b"payload"
+    assert not (destination / "_nl2repo.bundle-inventory.json").exists()
+
+
+def test_migration_repackages_runtime_bundle_with_internal_inventory(tmp_path: Path) -> None:
+    module = _migration_module()
+    payload = BytesIO()
+    with tarfile.open(fileobj=payload, mode="w:gz") as archive:
+        for name, data, mode in (
+            ("test.sh", b"#!/bin/sh\nexit 0\n", 0o755),
+            ("fixtures/data.txt", b"payload", 0o644),
+        ):
+            member = tarfile.TarInfo(name)
+            member.size = len(data)
+            member.mode = mode
+            archive.addfile(member, BytesIO(data))
+    store = FileArtifactStore(tmp_path / "cas")
+    reference = module.repackage_runtime_bundle(
+        store, payload.getvalue(), kind=ArchiveKind.TEST_BUNDLE
+    )
+    assert reference.media_type == "application/vnd.nl2repobench.test-bundle.tar"
+    authorization = MigrationArtifactAuthorization(
+        migration_id="test-migration",
+        allowed_digests=frozenset({reference.digest}),
+        workspace_root=tmp_path.resolve(),
+    )
+    members = decode_archive(store.read_bytes(reference, authorization))
+    inventory_member = next(
+        item for item in members if item.entry.path == "_nl2repo.bundle-inventory.json"
+    )
+    inventory = json.loads(inventory_member.data)
+    assert inventory["archive_kind"] == "test-bundle"
+    assert [item["path"] for item in inventory["entries"]] == [
+        "fixtures",
+        "fixtures/data.txt",
+        "test.sh",
+    ]
+    assert next(item for item in members if item.entry.path == "test.sh").entry.mode == 0o555
+
+
 def test_private_artifact_manifest_is_strict_and_excludes_oracle_from_verify(
     tmp_path: Path,
 ) -> None:
     store = FileArtifactStore(tmp_path / "cas")
     refs = [
-        store.put_bytes(str(index).encode(), visibility=Visibility.PRIVATE)
-        for index in range(6)
+        store.put_bytes(str(index).encode(), visibility=Visibility.PRIVATE) for index in range(6)
     ]
     instruction = store.put_bytes(
         b"instruction",
@@ -278,9 +339,110 @@ def test_private_artifact_manifest_is_strict_and_excludes_oracle_from_verify(
     assert refs[5].digest not in categorized.verify_digests()
     authorization = compile_authorization(manifest, compiled_root=(tmp_path / "compiled").resolve())
     prefix = manifest.content_digest().removeprefix("sha256:")[:16]
-    assert authorization.staging_root == (
-        tmp_path / "compiled/contract-test/private" / prefix
-    ).resolve()
+    assert (
+        authorization.staging_root
+        == (tmp_path / "compiled/contract-test/private" / prefix).resolve()
+    )
+
+
+def _canonical_source_payload() -> dict[str, object]:
+    return {
+        "schema_version": "1.0",
+        "task_id": "schema-parity",
+        "metadata": {"language": "python"},
+        "environment": {"status": "unknown"},
+        "dependencies": {"status": "unknown", "package_manager": "uv"},
+        "tests": {
+            "framework": "pytest",
+            "report_format": "pytest-junit-xml-v1",
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda data: data.update(environment={"status": "known"}),
+        lambda data: data.update(dependencies={"status": "known", "package_manager": "uv"}),
+        lambda data: data.update(
+            environment={
+                "status": "unknown",
+                "runtime": {
+                    "language": "python",
+                    "runtime": "node",
+                    "version": "3.12",
+                    "package_manager": "uv",
+                    "package_manager_version": "0.8",
+                },
+            }
+        ),
+        lambda data: data.update(
+            environment={
+                "status": "unknown",
+                "runtime": {
+                    "language": "python",
+                    "runtime": "cpython",
+                    "version": "3.12",
+                    "package_manager": "uv",
+                    "package_manager_version": "0.8",
+                },
+            },
+            dependencies={"status": "unknown", "package_manager": "pip"},
+        ),
+        lambda data: data.update(
+            metadata={"language": "node"},
+            environment={
+                "status": "unknown",
+                "runtime": {
+                    "language": "python",
+                    "runtime": "cpython",
+                    "version": "3.12",
+                    "package_manager": "uv",
+                    "package_manager_version": "0.8",
+                },
+            },
+        ),
+        lambda data: data.update(
+            environment={
+                "status": "unknown",
+                "runtime": {
+                    "language": "python",
+                    "runtime": "cpython",
+                    "version": "3.12",
+                    "package_manager": "uv",
+                    "package_manager_version": "0.8",
+                },
+            },
+            tests={"framework": "node:test", "report_format": "node-test-json-v1"},
+        ),
+        lambda data: data.update(lifecycle={"status": "packaged"}),
+        lambda data: data.update(tests={"framework": "custom", "report_format": "custom-json-v1"}),
+    ],
+)
+def test_task_source_model_and_schema_reject_same_cross_field_gaps(mutate) -> None:
+    payload = deepcopy(_canonical_source_payload())
+    mutate(payload)
+    with pytest.raises(PydanticValidationError):
+        TaskSource.model_validate(payload)
+    with pytest.raises(JsonSchemaValidationError):
+        validate_json_schema(payload, TaskSource.model_json_schema())
+
+
+def test_task_manifest_mirrors_source_production_invariants() -> None:
+    source = TaskSource.model_validate(_canonical_source_payload())
+    instruction = {
+        "digest": "sha256:" + "1" * 64,
+        "size_bytes": 1,
+        "media_type": "text/markdown",
+        "uri": "artifact://public/sha256:" + "1" * 64,
+        "visibility": "public",
+    }
+    manifest = source.to_manifest(ArtifactRef.model_validate(instruction)).model_dump(mode="json")
+    manifest["lifecycle"] = {"status": "packaged"}
+    with pytest.raises(PydanticValidationError):
+        TaskManifest.model_validate(manifest)
+    with pytest.raises(JsonSchemaValidationError):
+        validate_json_schema(manifest, TaskManifest.model_json_schema())
 
 
 def test_materializer_rejects_noncanonical_tar_and_member_limits(tmp_path: Path) -> None:
@@ -337,6 +499,9 @@ def test_migration_fails_closed_without_private_staging_contract(tmp_path: Path)
         (task / "task.toml").write_text(f'task_id="{task_id}"\n', encoding="utf-8")
     with pytest.raises(module.MigrationError, match="private-staging-contract-missing"):
         module.make_plan(root, tmp_path / "artifacts", tmp_path / "plan.json")
+    selected = module._validate_selected_compiles(root, tmp_path / "artifacts")
+    assert {item["status"] for item in selected} == {"blocked"}
+    assert {item["reason"] for item in selected} == {"private-staging-contract-missing"}
 
 
 def test_migration_never_attests_an_unprepared_closure(tmp_path: Path) -> None:
@@ -351,6 +516,33 @@ def test_migration_never_attests_an_unprepared_closure(tmp_path: Path) -> None:
             offline_smoke_command_id="python-uv-offline-install-v1",
             expected_toolchain="1.0.0",
         )
+
+
+def test_migration_staged_validation_runs_canonical_and_network_gates(tmp_path: Path) -> None:
+    module = _migration_module()
+    staged = tmp_path / "sources"
+    task = staged / "blocked-task"
+    task.mkdir(parents=True)
+    payload = _canonical_source_payload()
+    payload["task_id"] = "blocked-task"
+    payload["environment"] = {
+        "status": "unknown",
+        "network_policy": {
+            "mode": "no-network",
+            "offline_dependencies": "missing",
+            "reference_source_fetch": "forbidden",
+            "reason": "Dependency closure is not yet prepared.",
+        },
+    }
+    payload["lifecycle"] = {"status": "blocked", "reason": "F0 migration fixture"}
+    (task / "task.toml").write_text(tomli_w.dumps(payload), encoding="utf-8")
+    (task / "instruction.md").write_text("# Blocked task\n", encoding="utf-8")
+    report = module.validate_staged_tree(
+        staged, tmp_path / "artifacts", run_selected_compiles=False
+    )
+    assert report["status"] == "passed"
+    assert report["model"] == {"status": "passed", "task_count": 1}
+    assert report["network_lint"]["error_count"] == 0
 
 
 def test_migration_transaction_is_idempotent(tmp_path: Path) -> None:
@@ -470,3 +662,82 @@ def test_migration_recovery_restores_input_after_exchange_crash(tmp_path: Path) 
     assert module.digest_tree(current) == input_digest
     assert not staged.exists()
     assert module.recover(transaction_path)["state"] == "rolled-back"
+
+
+def _retention_transaction(tmp_path: Path, state: str) -> tuple[object, Path, Path, Path, Path]:
+    module = _migration_module()
+    catalog = tmp_path / "catalog"
+    current = catalog / "sources"
+    current.mkdir(parents=True)
+    (current / "output").write_text("new", encoding="utf-8")
+    input_tree = tmp_path / "input-tree"
+    input_tree.mkdir()
+    (input_tree / "input").write_text("old", encoding="utf-8")
+    input_digest = module.digest_tree(input_tree)
+    output_digest = module.digest_tree(current)
+    migration = tmp_path / "migration"
+    migration.mkdir()
+    staged = catalog / ".sources.unified-test"
+    previous = migration / "previous-sources"
+    target = previous if state == "old-tree-retained" else staged
+    shutil.copytree(input_tree, target)
+    shutil.rmtree(input_tree)
+    plan_path = migration / "plan.json"
+    plan_path.write_text("{}\n", encoding="utf-8")
+    transaction_path = migration / "transaction.json"
+    transaction_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "transaction_id": "c" * 32,
+                "state": state,
+                "plan_path": str(plan_path.resolve()),
+                "plan_digest": "sha256:" + "a" * 64,
+                "current_path": str(current.resolve()),
+                "staged_path": str(staged.resolve()),
+                "previous_path": str(previous.resolve()),
+                "input_tree_digest": input_digest,
+                "output_tree_digest": output_digest,
+                "previous_tree_digest": input_digest if previous.exists() else None,
+                "task_mapping_digest": "sha256:" + "b" * 64,
+                "task_count": 1,
+                "filesystem_device": current.stat().st_dev,
+                "owner_uid": os.getuid(),
+                "owner_gid": os.getgid(),
+                "retention_status": "retained" if previous.exists() else "moving",
+                "last_error": None,
+            }
+        ),
+        encoding="utf-8",
+    )
+    return module, transaction_path, current, staged, previous
+
+
+@pytest.mark.parametrize("state", ["verified", "old-tree-retained"])
+def test_migration_recovery_completes_retention_crash_windows(tmp_path: Path, state: str) -> None:
+    module, transaction_path, current, staged, previous = _retention_transaction(tmp_path, state)
+    recovered = module.recover(transaction_path)
+    assert recovered["state"] == "complete"
+    assert module.digest_tree(current) == recovered["output_tree_digest"]
+    assert module.digest_tree(previous) == recovered["input_tree_digest"]
+    assert not staged.exists()
+
+
+def test_migration_retention_fsync_failure_preserves_both_trees(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module, transaction_path, current, staged, previous = _retention_transaction(
+        tmp_path, "verified"
+    )
+
+    def fail_fsync(_path: Path) -> None:
+        raise OSError("injected retention fsync failure")
+
+    monkeypatch.setattr(module, "_fsync_directory", fail_fsync)
+    with pytest.raises(module.MigrationError, match="retention move"):
+        module.recover(transaction_path)
+    record = json.loads(transaction_path.read_text(encoding="utf-8"))
+    assert record["state"] == "recovery-required"
+    assert module.digest_tree(current) == record["output_tree_digest"]
+    assert module.digest_tree(previous) == record["input_tree_digest"]
+    assert not staged.exists()

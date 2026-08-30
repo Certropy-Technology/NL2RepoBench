@@ -14,8 +14,17 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from nl2repobench.domain.models import ArtifactRef
-from nl2repobench.storage.artifacts import LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.storage.files import atomic_write
+from nl2repobench.storage.materialize import (
+    TARGET_MEDIA_TYPES,
+    ArchiveKind,
+    MaterializationLimits,
+    materialize_archive,
+)
 
 from .bundle_io import (
     BundleArchiveError,
@@ -63,11 +72,45 @@ def extract_private_bundle(
     *,
     artifact_resolver: LocalArtifactResolver | None,
     limits: BundleLimits,
+    kind: ArchiveKind | None = None,
 ) -> None:
-    """Extract a private artifact through the shared bounded bundle policy."""
+    """Materialize a canonical private bundle through the scoped resolver.
+
+    ``kind`` is optional only for the transition period: canonical media types
+    make the bundle purpose unambiguous, while callers that still use the
+    generic helper retain their old error boundary.
+    """
 
     if artifact_resolver is None:
         raise TaskWriterError("private artifact resolver is required")
+    if kind is None:
+        media_to_kind = {
+            value: key
+            for key, value in {
+                ArchiveKind.TEST_BUNDLE: "application/vnd.nl2repobench.test-bundle.tar",
+                ArchiveKind.VERIFIER_BUNDLE: "application/vnd.nl2repobench.verifier-bundle.tar",
+                ArchiveKind.ORACLE_BUNDLE: "application/vnd.nl2repobench.oracle-bundle.tar",
+            }.items()
+        }
+        kind = media_to_kind.get(reference.media_type)
+    if kind is not None and reference.media_type == TARGET_MEDIA_TYPES[kind]:
+        authorization = artifact_resolver.authorization
+        if not isinstance(authorization, PrivateArtifactAuthorization):
+            raise TaskWriterError("canonical bundle materialization requires scoped authorization")
+        try:
+            materialize_archive(
+                reference,
+                kind,
+                destination,
+                MaterializationLimits(
+                    limits.max_members, limits.max_member_bytes, limits.max_total_bytes
+                ),
+                authorization,
+                resolver=artifact_resolver,
+            )
+            return
+        except (OSError, RuntimeError, ValueError) as exc:
+            raise TaskWriterError(f"cannot materialize private bundle: {exc}") from exc
     try:
         archive = artifact_resolver.resolve(reference)
         extract_bundle_archive(archive, destination, limits=limits)

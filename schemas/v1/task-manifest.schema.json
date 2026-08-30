@@ -46,6 +46,113 @@
     },
     "DependencyBundle": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "else": {
+            "properties": {
+              "inventory": {
+                "type": "null"
+              },
+              "lock": {
+                "type": "null"
+              },
+              "offline_store": {
+                "type": "null"
+              }
+            }
+          },
+          "if": {
+            "properties": {
+              "status": {
+                "const": "known"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "inventory": {
+                "allOf": [
+                  {
+                    "not": {
+                      "type": "null"
+                    }
+                  },
+                  {
+                    "properties": {
+                      "visibility": {
+                        "const": "private"
+                      }
+                    }
+                  }
+                ]
+              },
+              "lock": {
+                "allOf": [
+                  {
+                    "not": {
+                      "type": "null"
+                    }
+                  },
+                  {
+                    "properties": {
+                      "visibility": {
+                        "const": "private"
+                      }
+                    }
+                  }
+                ]
+              },
+              "offline_store": {
+                "allOf": [
+                  {
+                    "not": {
+                      "type": "null"
+                    }
+                  },
+                  {
+                    "properties": {
+                      "visibility": {
+                        "const": "private"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "required": [
+              "lock",
+              "offline_store",
+              "inventory"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "package_manager": {
+                "const": "none"
+              },
+              "status": {
+                "const": "known"
+              }
+            },
+            "required": [
+              "status",
+              "package_manager"
+            ]
+          },
+          "then": {
+            "properties": {
+              "packages": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ],
       "properties": {
         "inventory": {
           "anyOf": [
@@ -115,6 +222,53 @@
     },
     "EnvironmentLock": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "known"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "base_image": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "base_image_digest": {
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "network_policy": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "os_name": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "runtime": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            },
+            "required": [
+              "runtime",
+              "os_name",
+              "base_image",
+              "base_image_digest",
+              "network_policy"
+            ]
+          }
+        }
+      ],
       "properties": {
         "base_image": {
           "anyOf": [
@@ -545,6 +699,102 @@
     },
     "RuntimeProfile": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "language": {
+                "const": "python"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager": {
+                "enum": [
+                  "uv",
+                  "pip",
+                  "none"
+                ]
+              },
+              "runtime": {
+                "const": "cpython"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "language": {
+                "const": "node"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager": {
+                "enum": [
+                  "npm",
+                  "pnpm",
+                  "none"
+                ]
+              },
+              "runtime": {
+                "const": "node"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "language": {
+                "const": "go"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager": {
+                "enum": [
+                  "go-modules"
+                ]
+              },
+              "runtime": {
+                "const": "go"
+              }
+            }
+          }
+        },
+        {
+          "else": {
+            "properties": {
+              "package_manager_version": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "package_manager_version"
+            ]
+          },
+          "if": {
+            "properties": {
+              "package_manager": {
+                "const": "none"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager_version": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
       "properties": {
         "language": {
           "$ref": "#/$defs/RuntimeLanguage"
@@ -933,6 +1183,148 @@
     },
     "TestManifest": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "framework": {
+                "const": "pytest"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "report_format": {
+                "const": "pytest-junit-xml-v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "framework": {
+                "const": "node:test"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "report_format": {
+                "const": "node-test-json-v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "framework": {
+                "const": "go-bridge"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "report_format": {
+                "const": "go-test-json-v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "framework": {
+                "const": "custom"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "report_format": {
+                "const": "custom-json-v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "expected_total_source": {
+                "const": "frozen-collection"
+              }
+            },
+            "required": [
+              "expected_total_source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "expected_total": {
+                "minimum": 1
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "commands_artifact": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "properties": {
+                    "visibility": {
+                      "const": "private"
+                    }
+                  },
+                  "type": "object"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "protected_paths_artifact": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "properties": {
+                    "visibility": {
+                      "const": "private"
+                    }
+                  },
+                  "type": "object"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "properties": {
+            "test_bundle": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "properties": {
+                    "visibility": {
+                      "const": "private"
+                    }
+                  },
+                  "type": "object"
+                }
+              ]
+            }
+          }
+        }
+      ],
       "properties": {
         "commands_artifact": {
           "anyOf": [
@@ -1026,6 +1418,542 @@
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "language": {
+                    "const": "python"
+                  }
+                },
+                "required": [
+                  "language"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "language": {
+                "const": "python"
+              }
+            }
+          },
+          "tests": {
+            "properties": {
+              "framework": {
+                "enum": [
+                  "pytest",
+                  "custom"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "language": {
+                    "const": "node"
+                  }
+                },
+                "required": [
+                  "language"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "language": {
+                "const": "node"
+              }
+            }
+          },
+          "tests": {
+            "properties": {
+              "framework": {
+                "enum": [
+                  "node:test"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "language": {
+                    "const": "go"
+                  }
+                },
+                "required": [
+                  "language"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "language": {
+                "const": "go"
+              }
+            }
+          },
+          "tests": {
+            "properties": {
+              "framework": {
+                "enum": [
+                  "go-bridge"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "uv"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "package_manager": {
+                "const": "uv"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "pip"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "package_manager": {
+                "const": "pip"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "npm"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "package_manager": {
+                "const": "npm"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "pnpm"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "package_manager": {
+                "const": "pnpm"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "go-modules"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "package_manager": {
+                "const": "go-modules"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "none"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "package_manager": {
+                "const": "none"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "else": {
+        "properties": {
+          "verifier": {
+            "type": "null"
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "tests": {
+            "properties": {
+              "framework": {
+                "const": "custom"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "verifier": {
+            "not": {
+              "type": "null"
+            }
+          }
+        },
+        "required": [
+          "verifier"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment_lock": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "language": {
+                    "const": "node"
+                  },
+                  "package_manager": {
+                    "const": "none"
+                  }
+                },
+                "required": [
+                  "language",
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "status": {
+                "const": "unknown"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "lifecycle": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "packaged",
+                  "oracle-passed",
+                  "controls-passed",
+                  "reviewed",
+                  "piloted",
+                  "published"
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "lifecycle"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "verifier": {
+                "not": {
+                  "type": "null"
+                }
+              }
+            },
+            "required": [
+              "verifier"
+            ]
+          },
+          {
+            "properties": {
+              "tests": {
+                "properties": {
+                  "test_bundle": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "test_bundle"
+                ]
+              }
+            }
+          }
+        ],
+        "properties": {
+          "dependency_bundle": {
+            "properties": {
+              "status": {
+                "const": "known"
+              }
+            }
+          },
+          "environment_lock": {
+            "properties": {
+              "status": {
+                "const": "known"
+              }
+            }
+          },
+          "tests": {
+            "properties": {
+              "commands_artifact": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "expected_total": {
+                "minimum": 1
+              },
+              "expected_total_source": {
+                "const": "frozen-collection"
+              }
+            },
+            "required": [
+              "commands_artifact"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "oracle_bundle": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "properties": {
+                "visibility": {
+                  "const": "private"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "properties": {
+        "instruction": {
+          "properties": {
+            "visibility": {
+              "const": "public"
+            }
+          },
+          "type": "object"
+        }
+      }
+    }
+  ],
   "description": "Canonical compiled manifest with public instruction artifact.",
   "properties": {
     "dependency_bundle": {

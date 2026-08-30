@@ -19,6 +19,7 @@ from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile, TaskManifest
 from nl2repobench.storage.artifacts import ArtifactStoreError, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
+from nl2repobench.storage.materialize import ArchiveKind
 
 from .bundle_io import (
     BundleLimits,
@@ -309,12 +310,16 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
         if custom_verifier:
             assert manifest.verifier is not None
             verifier_root = tests_root / "verifier"
-            self._extract_private_bundle(manifest.verifier.bundle, verifier_root)
+            self._extract_private_bundle(
+                manifest.verifier.bundle, verifier_root, ArchiveKind.VERIFIER_BUNDLE
+            )
             entrypoint = verifier_root / manifest.verifier.entrypoint
             if entrypoint.is_symlink() or not entrypoint.is_file():
                 raise HarborCompileError("custom verifier entrypoint is missing")
         elif manifest.tests.test_bundle is not None:
-            self._extract_private_bundle(manifest.tests.test_bundle, private_root)
+            self._extract_private_bundle(
+                manifest.tests.test_bundle, private_root, ArchiveKind.TEST_BUNDLE
+            )
         elif allow_incomplete:
             self._copy_tree(source_dir / "harbor/tests", private_root)
         else:
@@ -455,7 +460,7 @@ WORKDIR /tests
     ) -> None:
         solution_root = task_root / "solution"
         if oracle_bundle is not None:
-            self._extract_private_bundle(oracle_bundle, solution_root)
+            self._extract_private_bundle(oracle_bundle, solution_root, ArchiveKind.ORACLE_BUNDLE)
         elif allow_incomplete:
             self._copy_tree(source_dir / "harbor/solution", solution_root)
         else:
@@ -744,11 +749,14 @@ exit 0
         except TaskWriterError as exc:
             raise HarborCompileError(str(exc)) from exc
 
-    def _extract_private_bundle(self, reference: ArtifactRef, destination: Path) -> None:
+    def _extract_private_bundle(
+        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind | None = None
+    ) -> None:
         try:
             extract_private_bundle(
                 reference,
                 destination,
+                kind=kind,
                 artifact_resolver=self.artifact_resolver,
                 limits=BundleLimits(
                     max_members=self.MAX_BUNDLE_MEMBERS,

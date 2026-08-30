@@ -24,6 +24,7 @@ from nl2repobench.domain.models import ArtifactRef
 from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2, TaskManifestV2
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
+from nl2repobench.storage.materialize import ArchiveKind
 from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
 
 from .bundle_io import (
@@ -278,7 +279,7 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
             if separator:
                 checks.append(
                     "test \"$(dpkg-query -W -f='${Version}' "
-                    f"{quoted_package})\" = {shlex.quote(version)}"
+                    f'{quoted_package})" = {shlex.quote(version)}'
                 )
             else:
                 checks.append(f"dpkg-query -W {quoted_package} >/dev/null")
@@ -322,7 +323,9 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
 
         private_root = tests_root / "private"
         if manifest.tests.test_bundle is not None and not allow_incomplete:
-            self._extract_private_bundle(manifest.tests.test_bundle, private_root)
+            self._extract_private_bundle(
+                manifest.tests.test_bundle, private_root, ArchiveKind.TEST_BUNDLE
+            )
         else:
             fixture = source_dir / "harbor/tests"
             if not fixture.is_dir():
@@ -401,7 +404,7 @@ WORKDIR /tests
     ) -> None:
         solution_root = task_root / "solution"
         if oracle_bundle is not None and not allow_incomplete:
-            self._extract_private_bundle(oracle_bundle, solution_root)
+            self._extract_private_bundle(oracle_bundle, solution_root, ArchiveKind.ORACLE_BUNDLE)
         else:
             fixture = source_dir / "harbor/solution"
             if not fixture.is_dir():
@@ -566,11 +569,14 @@ node /tests/runtime/node/grade-report.mjs \\
 exit 0
 """
 
-    def _extract_private_bundle(self, reference: ArtifactRef, destination: Path) -> None:
+    def _extract_private_bundle(
+        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind | None = None
+    ) -> None:
         try:
             extract_private_bundle(
                 reference,
                 destination,
+                kind=kind,
                 artifact_resolver=self.artifact_resolver,
                 limits=BundleLimits(
                     max_members=self.MAX_BUNDLE_MEMBERS,
