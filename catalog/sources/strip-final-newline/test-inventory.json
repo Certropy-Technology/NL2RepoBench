@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-final-newline",
+  "upstream_test_path": "test.js",
+  "upstream_framework": "ava",
+  "upstream_executable_assertions": 15,
+  "frozen_private_collection": 29,
+  "collection_method": "independent node:test contract over bounded JSON child adapter",
+  "groups": {
+    "package_shape": 1,
+    "string_behavior": 9,
+    "uint8array_behavior": 10,
+    "invalid_inputs": 5,
+    "repeatability": 4
+  },
+  "excluded": ["AVA runner mechanics", "tsd declaration compilation", "unbounded performance tests", "non-JSON arbitrary objects"],
+  "notes": "The production denominator is an independently authored behavior contract derived from the public API, README examples, and frozen source baseline."
+}

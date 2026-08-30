@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-final-newline",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/strip-final-newline",
+    "revision": "a1bfe78e3a3de2f73ed3a7600932d7cc952732b4",
+    "tree": "14325a323da3cffd0a134a79e3e02e0528e272f4",
+    "source_digest": "sha256:83aae0869106aec568aae42cf3fc4cbf49c3dca21492dfc797d1b0b79a201077",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:a89d740b8726db527a4cb3e3d6c93adaede4fce62cfc26a393e56403d4100315", "size_bytes": 10240},
+    "commands": {"digest": "sha256:5dfcd757fb1d0fe90da92e3cd12212deb70a1938509f08adf09ad08c53542cb2", "size_bytes": 10240},
+    "tests": {"digest": "sha256:7540f521150a8e33d1f44cd330a9e371625e76d012f2a650d063de7419a77cf5", "size_bytes": 20480},
+    "oracle": {"digest": "sha256:615228feb1d9fab667f8bd6edf39c995ab97277d740955b800c05f848154fd13", "size_bytes": 40960}
+  },
+  "production_bundle": {
+    "path": ".nl2repo/final-compile/strip-final-newline/strip-final-newline/bundle.manifest.json",
+    "sha256": "sha256:6f99813295eafcd8ddbf1d6d05aabf63fd8eb63e69541113047cdaf6acde92e5",
+    "canonical_manifest_digest": "sha256:075cebcccbe9d6bdbcf2f5a26639309df39bc2c05732efe41e92cb9aede0217d",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "mode": "production",
+    "file_count": 75,
+    "integrity_errors": 0
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/strip-final-newline/strip-final-newline -a oracle --job-name strip-final-newline-authoring-oracle-v4-20260830 -o .nl2repo/runs/strip-final-newline/oracle-v4 --n-concurrent 1 --yes --quiet",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "result": {"path": ".nl2repo/runs/strip-final-newline/oracle-v4/strip-final-newline-authoring-oracle-v4-20260830/result.json", "sha256": "sha256:a054d2a25fee288a7b345b31e32085b2a636caab368dcc2b1ae05313f91ca442"},
+    "grading": {"path": ".nl2repo/runs/strip-final-newline/oracle-v4/strip-final-newline-authoring-oracle-v4-20260830/strip-final-newline__LmFW6Uq/verifier/grading.json", "sha256": "sha256:3d1f3bf4b49aec6f6818457b7050460dde0207e0426af4dd9199e0338cd8be09"},
+    "network": {"path": ".nl2repo/runs/strip-final-newline/oracle-v4/strip-final-newline-authoring-oracle-v4-20260830/strip-final-newline__LmFW6Uq/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"},
+    "valid": true,
+    "expected_total": 29,
+    "collected": 29,
+    "passed": 29,
+    "reward": 1.0,
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-empty -a oracle --job-name strip-final-newline-authoring-empty-v4-20260830 -o .nl2repo/runs/strip-final-newline/empty-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/empty-v4/strip-final-newline-authoring-empty-v4-20260830/strip-final-newline-empty__NM6KTnv/verifier/grading.json", "sha256": "sha256:68293ee8907ce42f26ebdb31c590904385815382029969a3a6274b4f23e2196d"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/empty-v4/strip-final-newline-authoring-empty-v4-20260830/strip-final-newline-empty__NM6KTnv/verifier/network.json", "sha256": "sha256:452553e30517e1cb6d7e65fbd1e6f21e58fe2a71e5f1726035afc35abd0f5be3"},
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-stub -a oracle --job-name strip-final-newline-authoring-stub-v4-20260830 -o .nl2repo/runs/strip-final-newline/stub-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/stub-v4/strip-final-newline-authoring-stub-v4-20260830/strip-final-newline-stub__XCzcCs7/verifier/grading.json", "sha256": "sha256:0515e199036197655f2c006f4ba14ba160bd56da735b9959aa749cfa98418000"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/stub-v4/strip-final-newline-authoring-stub-v4-20260830/strip-final-newline-stub__XCzcCs7/verifier/network.json", "sha256": "sha256:4ff764ce6b70c41454c11c506334df7cb964fbe39f0fbf13d841d783a4eb0639"},
+      "valid": true,
+      "reward": 0.06896551724137931,
+      "expected_total": 29,
+      "collected": 29,
+      "passed": 2,
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-forgery -a oracle --job-name strip-final-newline-authoring-forgery-v4-20260830 -o .nl2repo/runs/strip-final-newline/forgery-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/forgery-v4/strip-final-newline-authoring-forgery-v4-20260830/strip-final-newline-forgery__3q4tsCa/verifier/grading.json", "sha256": "sha256:0515e199036197655f2c006f4ba14ba160bd56da735b9959aa749cfa98418000"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/forgery-v4/strip-final-newline-authoring-forgery-v4-20260830/strip-final-newline-forgery__3q4tsCa/verifier/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7"},
+      "valid": true,
+      "reward": 0.06896551724137931,
+      "expected_total": 29,
+      "collected": 29,
+      "passed": 2,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward_ignored": true,
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-hang -a oracle --job-name strip-final-newline-authoring-hang-v4-20260830 -o .nl2repo/runs/strip-final-newline/hang-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/hang-v4/strip-final-newline-authoring-hang-v4-20260830/strip-final-newline-hang__TdX7vEN/verifier/grading.json", "sha256": "sha256:5bd4634cff3e206012e9adb4e67c25855b777e786d29402dce653db0c2237105"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/hang-v4/strip-final-newline-authoring-hang-v4-20260830/strip-final-newline-hang__TdX7vEN/verifier/network.json", "sha256": "sha256:b45b718faf7fdf530f162eb810bd8e93a52a235681d52d4f6613410d76bc29de"},
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "public_network_available": false
+    },
+    "install_script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-install-script -a oracle --job-name strip-final-newline-authoring-install-script-v4-20260830 -o .nl2repo/runs/strip-final-newline/install-script-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/install-script-v4/strip-final-newline-authoring-install-script-v4-20260830/strip-final-newline-install-scri__mcFKfxT/verifier/grading.json", "sha256": "sha256:68293ee8907ce42f26ebdb31c590904385815382029969a3a6274b4f23e2196d"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/install-script-v4/strip-final-newline-authoring-install-script-v4-20260830/strip-final-newline-install-scri__mcFKfxT/verifier/network.json", "sha256": "sha256:29e3e7d2553ece8f5a6197093a812aa6583bdc6aef4dcb067a14401ceace13f2"},
+      "valid": true,
+      "reward": 0.0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false
+    },
+    "loader_hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-loader-hook -a oracle --job-name strip-final-newline-authoring-loader-hook-v4-20260830 -o .nl2repo/runs/strip-final-newline/loader-hook-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/loader-hook-v4/strip-final-newline-authoring-loader-hook-v4-20260830/strip-final-newline-loader-hook__HYgWh9y/verifier/grading.json", "sha256": "sha256:c7aaa8553eb773756ccb161341ab21bc1be8322bc0a944a40659483120a95fe5"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/loader-hook-v4/strip-final-newline-authoring-loader-hook-v4-20260830/strip-final-newline-loader-hook__HYgWh9y/verifier/network.json", "sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043"},
+      "valid": true,
+      "reward": 0.41379310344827586,
+      "expected_total": 29,
+      "collected": 29,
+      "passed": 12,
+      "loader_activated": false,
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/strip-final-newline/strip-final-newline-offline -a oracle --job-name strip-final-newline-authoring-offline-v4-20260830 -o .nl2repo/runs/strip-final-newline/offline-v4 --n-concurrent 1 --yes --quiet",
+      "exit_code": 0,
+      "grading": {"path": ".nl2repo/runs/strip-final-newline/offline-v4/strip-final-newline-authoring-offline-v4-20260830/strip-final-newline-offline__ZDqewXR/verifier/grading.json", "sha256": "sha256:d5a98a5c432ec9212740320be816825e54689cffc5a59ebca85105844b48ac5f"},
+      "network": {"path": ".nl2repo/runs/strip-final-newline/offline-v4/strip-final-newline-authoring-offline-v4-20260830/strip-final-newline-offline__ZDqewXR/verifier/network.json", "sha256": "sha256:eac57a17046453a2076b2cfcdeb95e2c916d97634afd4160ba74df2130421f12"},
+      "valid": true,
+      "reward": 0.0,
+      "expected_total": 29,
+      "collected": 29,
+      "passed": 0,
+      "completed": true,
+      "public_network_available": false
+    }
+  },
+  "authoring_attempts": [
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/strip-final-newline --output .nl2repo/final-compile/strip-final-newline --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 1,
+      "failure_class": "environment",
+      "result": "The root toolchain.lock.toml is Python schema 1.0; Node compiler requires the separate production toolchain.node.lock.toml schema 2.0."
+    },
+    {
+      "stage": "oracle-command",
+      "command": "harbor run ... --output .nl2repo/runs/strip-final-newline/oracle-v4",
+      "exit_code": 2,
+      "failure_class": "infrastructure",
+      "result": "Harbor 0.21 uses -o/--output-dir; retry with -o completed successfully."
+    }
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this lane by contract.",
+    "Blind review, pilot, dataset integration, publication approval, and campaign-level quality remain integrator stages.",
+    "The 29-leaf verifier is an independently authored deterministic behavior slice, not full upstream AVA/XO/tsd parity.",
+    "scripts/validate_harbor_evidence.py could not be imported in the authoring venv because tomli_w is absent; Harbor runtime grading and network receipts were validated directly.",
+    "The source tree and generated catalog/tasks projection remain uncommitted for integrator review in this detached authoring lane."
+  ],
+  "blockers": []
+}

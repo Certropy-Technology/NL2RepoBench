@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-final-newline",
+  "package": "strip-final-newline",
+  "version": "4.0.0",
+  "runtime_entry": "index.js",
+  "public_exports": ["default"],
+  "declarations": ["index.d.ts"],
+  "api": {
+    "default": {
+      "signature": "stripFinalNewline<T extends string | Uint8Array>(input: T): T",
+      "input_domain": "string or Uint8Array",
+      "return_shape": "same input kind; Uint8Array result may share storage",
+      "side_effects": "none",
+      "determinism": "same input produces the same value and type",
+      "errors": "Error with message containing 'Input must be' for unsupported values"
+    }
+  },
+  "excluded_risk_surfaces": [
+    "TypeScript compiler diagnostics",
+    "wall-clock performance thresholds",
+    "filesystem and network",
+    "non-JSON object identity outside the byte-view checks"
+  ]
+}

@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/strip-final-newline"
+version = "2.0.0"
+description = "Build the strip-final-newline ESM package with deterministic final LF and CRLF handling for strings and Uint8Array values."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "string",
+    "unicode",
+    "uint8array",
+    "newline",
+]
+
+[metadata]
+difficulty = "easy"
+category = "string-transformation"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "string",
+    "unicode",
+    "uint8array",
+    "newline",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 29
+canonical_manifest_digest = "sha256:075cebcccbe9d6bdbcf2f5a26639309df39bc2c05732efe41e92cb9aede0217d"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

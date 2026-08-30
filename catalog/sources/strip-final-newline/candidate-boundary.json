@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-final-newline",
+  "status": "implemented",
+  "purpose": "Keep candidate ESM code out of the trusted node:test process while testing strings and byte arrays through a bounded child adapter.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "inspect": "Child adapter reads bounded package metadata and imports the default export.",
+    "string": "Child adapter calls the candidate with one string and returns the string result.",
+    "bytes": "Child adapter calls the candidate with Uint8Array.from(bytes) and returns bytes, type, and view properties.",
+    "invalid": "Child adapter supplies one allowlisted invalid value and returns the candidate error contract."
+  },
+  "in_scope_values": ["UTF-8 strings", "arrays of byte values 0..255", "allowlisted invalid types"],
+  "forbidden_candidate_capabilities": ["network", "native addons", "custom loaders", "unbounded output", "trusted-process import"]
+}
