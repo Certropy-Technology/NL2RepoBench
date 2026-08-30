@@ -1,0 +1,109 @@
+schema_version = "2.0"
+task_id = "string.prototype.trimstart"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "string-whitespace-shim"
+tags = ["node", "npm", "commonjs", "string", "unicode", "shim", "subprocess"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/es-shims/String.prototype.trimStart"
+revision = "6f8ee88da5b570d3addc1e8c6caf1461013bce45"
+license_spdx = "MIT"
+source_digest = "sha256:84b565180bcba3823194a1c96923d64e27871375c6dcc275622907641bd50531"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier run without egress. The exact npm v3 dependency closure is installed from a private integrity-checked cache at build time; only the trusted Oracle receives run-scoped access to github.com."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["call-bind", "define-properties", "es-object-atoms"]
+
+[dependencies.artifact]
+digest = "sha256:2d870cc839432195502b231ee661e25b9115bc053470fac9b8a8d097713d83db"
+size_bytes = 1003520
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:2d870cc839432195502b231ee661e25b9115bc053470fac9b8a8d097713d83db"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 31
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:8ea80b840370bd62a659abcac9ba75156b377015c28455d0c3b13a1be3ecaef8"
+size_bytes = 212
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:8ea80b840370bd62a659abcac9ba75156b377015c28455d0c3b13a1be3ecaef8"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:e140cf04de11c317532151dd890ee75ae9e9fa99d97eed137db06b2efb774887"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:e140cf04de11c317532151dd890ee75ae9e9fa99d97eed137db06b2efb774887"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the string.prototype.trimstart CommonJS ES2019 whitespace shim with a bounded JSON-tested API and helper methods."
+keywords = ["node", "npm", "commonjs", "string", "unicode", "shim", "trimStart"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-wave2-20260828"
+reason = "Source, independent contract, private npm closure, and Harbor assets are prepared; Oracle and negative controls remain to be run in this lane."
+
+[oracle_bundle]
+digest = "sha256:f89fb88b5a7477ddec065f9964d97d4fcc8f2e8f47f18ea63de22d2a674ac8ca"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f89fb88b5a7477ddec065f9964d97d4fcc8f2e8f47f18ea63de22d2a674ac8ca"
+visibility = "private"

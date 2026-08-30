@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "task_id": "string.prototype.trimstart",
+  "terminal_kind": "awaiting-agent-run",
+  "source_freeze": {
+    "upstream_url": "https://github.com/es-shims/String.prototype.trimStart",
+    "revision": "6f8ee88da5b570d3addc1e8c6caf1461013bce45",
+    "tree": "127dec998b54db809f26665908303e88ffb9c46c",
+    "archive_sha256": "sha256:84b565180bcba3823194a1c96923d64e27871375c6dcc275622907641bd50531",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:a5e49293b629194f16e08c965807b34a4a8f45aa2735658a3b0e3c1478a34b30",
+    "verification": "Oracle solve.sh fetched the fixed commit, asserted HEAD, and passed sha256sum --check --strict over git archive output."
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "harbor_version": "0.21.0",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "artifacts": {
+    "dependency_bundle": {
+      "digest": "sha256:2d870cc839432195502b231ee661e25b9115bc053470fac9b8a8d097713d83db",
+      "size_bytes": 1003520,
+      "path": ".nl2repo/artifacts/private/sha256/2d/2d870cc839432195502b231ee661e25b9115bc053470fac9b8a8d097713d83db"
+    },
+    "commands": {
+      "digest": "sha256:8ea80b840370bd62a659abcac9ba75156b377015c28455d0c3b13a1be3ecaef8",
+      "size_bytes": 212,
+      "path": ".nl2repo/artifacts/private/sha256/8e/8ea80b840370bd62a659abcac9ba75156b377015c28455d0c3b13a1be3ecaef8"
+    },
+    "test_bundle": {
+      "digest": "sha256:e140cf04de11c317532151dd890ee75ae9e9fa99d97eed137db06b2efb774887",
+      "size_bytes": 20480,
+      "path": ".nl2repo/artifacts/private/sha256/e1/e140cf04de11c317532151dd890ee75ae9e9fa99d97eed137db06b2efb774887"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:f89fb88b5a7477ddec065f9964d97d4fcc8f2e8f47f18ea63de22d2a674ac8ca",
+      "size_bytes": 20480,
+      "path": ".nl2repo/artifacts/private/sha256/f8/f89fb88b5a7477ddec065f9964d97d4fcc8f2e8f47f18ea63de22d2a674ac8ca"
+    }
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/string.prototype.trimstart --output .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trimstart/compiled-production --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_path": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trimstart/compiled-production/string.prototype.trimstart",
+    "bundle_manifest_sha256": "sha256:ed39a783a9dc4d6d5b1240a8ed9796bd5c4585479022ed8e41d589be21b79568",
+    "repeat_bundle_manifest_sha256": "sha256:ed39a783a9dc4d6d5b1240a8ed9796bd5c4585479022ed8e41d589be21b79568",
+    "deterministic_repeat": true
+  },
+  "collection_and_local_verifier": {
+    "command": "node run_tests.mjs plus grade-report.mjs with NODE_CANDIDATE_SITE=/tmp/trimstart-smoke-site",
+    "exit_code": 0,
+    "expected_total": 31,
+    "collected": 31,
+    "passed": 31,
+    "failed": 0,
+    "reward": 1.0,
+    "network": "local smoke only; Harbor network.json not produced"
+  },
+  "oracle_attempt": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trimstart/compiled-production/string.prototype.trimstart -a oracle --allow-agent-host github.com --job-name string-prototype-trimstart-oracle-authoring --jobs-dir .nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trimstart/runs/oracle --n-concurrent 1 --max-retries 0 --no-delete --yes",
+    "exit_code": 0,
+    "completed": false,
+    "failure_class": "infrastructure",
+    "failure_log": ".nl2repo/authoring-work/node-author-wave2-20260828/string.prototype.trimstart/runs/oracle/string-prototype-trimstart-oracle-authoring/string.prototype.trimstart__X4cxEh9/exception.txt",
+    "reason": "Docker built the environment image but could not create the default network: all predefined address pools have been fully subnetted. No Oracle grading or network evidence was produced."
+  },
+  "controls": {
+    "status": "not-run",
+    "reason": "Harbor controls depend on the same unavailable Docker network allocation; task-local stub and forgery bundles were prepared successfully."
+  },
+  "residual_risks": [
+    "Restore the locked OpenHands image digest before any model Agent Run; local same-name image resolved to a different digest during the attempted build.",
+    "Free or explicitly allocate a Harbor Docker network pool, then run one Oracle and empty/stub/forgery/timeout/offline controls.",
+    "This lane has no model Agent Run, independent review, publication approval, or dataset integration evidence."
+  ]
+}
