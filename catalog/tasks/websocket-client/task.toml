@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/websocket-client"
+version = "1.0.0"
+description = "Build websocket-client from an empty workspace and reproduce a bounded offline WebSocket framing, URL/proxy, cookie, handshake, object-state, logging, and exception contract through a separate child-side verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "websocket",
+    "rfc6455",
+    "framing",
+    "url-parsing",
+    "offline",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-websocket-protocol"
+tags = [
+    "python",
+    "websocket",
+    "rfc6455",
+    "framing",
+    "url-parsing",
+    "offline",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 30
+canonical_manifest_digest = "sha256:dba8f58b078ad6c5dd7bc93a17cf3064f97d28a19c6af7166bba10d3a995b044"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

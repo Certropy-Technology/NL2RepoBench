@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "websocket-client",
+  "revision": "26f1c6439eb71489f2c5a2869942e049b78c2e41",
+  "public_modules": ["websocket", "websocket._abnf", "websocket._url", "websocket._cookiejar", "websocket._handshake", "websocket._socket", "websocket._core", "websocket._app", "websocket._logging", "websocket._utils", "websocket._exceptions"],
+  "scored_symbols": {
+    "websocket": ["ABNF", "WebSocket", "WebSocketApp", "create_connection", "setdefaulttimeout", "getdefaulttimeout", "enableTrace", "__version__"],
+    "websocket._abnf": ["ABNF", "frame_buffer", "continuous_frame"],
+    "websocket._url": ["parse_url", "get_proxy_info"],
+    "websocket._cookiejar": ["SimpleCookieJar"],
+    "websocket._handshake": ["_get_handshake_headers", "_validate"],
+    "websocket._socket": ["sock_opt", "setdefaulttimeout", "getdefaulttimeout"],
+    "websocket._logging": ["enableTrace", "isEnabledForTrace", "trace", "dump"],
+    "websocket._exceptions": ["WebSocketException", "WebSocketProtocolException", "WebSocketBadStatusException"]
+  },
+  "excluded_risk_surface": ["live TCP/WebSocket sockets", "TLS certificate and SSL I/O", "HTTP and SOCKS proxy connections", "dispatcher threads and reconnect timing", "external echo server", "optional python-socks and wsaccel", "wsdump interactive terminal"],
+  "notes": "Candidate imports and all scenario code run in the UID-10001 child. The scored surface uses deterministic mask keys, in-memory frame chunks, explicit environment values, and no network calls."
+}

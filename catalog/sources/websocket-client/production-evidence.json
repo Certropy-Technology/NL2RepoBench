@@ -1,0 +1,234 @@
+{
+  "schema_version": "1.0",
+  "task_id": "websocket-client",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/websocket-client/websocket-client",
+    "revision": "26f1c6439eb71489f2c5a2869942e049b78c2e41",
+    "version": "1.9.0",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:d7ad8d0966aa363d45c7b16b0838cadcd51676acdf215ad967307d581b47872c",
+    "source_digest": "sha256:dd31f1cc888e206078188aa1b208ec9ffdc887ed5108f49ed837ecba3ddeccb2",
+    "source_archive_size_bytes": 931840,
+    "tracked_files": 80,
+    "tracked_test_files": 21
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "verifier_image_id": "sha256:c398d08dd32f13ea478ed6c25fb0da0627424c8d3c2e45f331184f31a2f51e75",
+    "network_policy": "no-network",
+    "agent_network_hosts": [],
+    "verifier_network_hosts": []
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": "artifact://private/sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+    "lock_sha256": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+    "lock_size_bytes": 373,
+    "packages": [
+      "setuptools==80.9.0",
+      "wheel==0.45.1"
+    ]
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/final-compiled/websocket-client/bundle.manifest.json",
+    "manifest_sha256": "sha256:6e734456758b5640ced6fba0fc4afed6c921fbf3888f2762c88f2f93caab73d1",
+    "canonical_manifest_digest": "sha256:dba8f58b078ad6c5dd7bc93a17cf3064f97d28a19c6af7166bba10d3a995b044",
+    "repeat_manifest_sha256": "sha256:6e734456758b5640ced6fba0fc4afed6c921fbf3888f2762c88f2f93caab73d1",
+    "file_count": 58
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "bundle": "artifact://private/sha256:bb17c5aaaebb16709b39f82a51af1b50f592861fb13f2b5fc569fcbd5cbef542",
+    "bundle_sha256": "sha256:bb17c5aaaebb16709b39f82a51af1b50f592861fb13f2b5fc569fcbd5cbef542",
+    "bundle_size_bytes": 20480,
+    "frozen_total": 30,
+    "candidate_boundary": "UID-10001 subprocess; verifier owns collection, reports, and reward"
+  },
+  "oracle": {
+    "mode": "task-local separate-verifier replay; no Harbor Agent Run",
+    "command": "extract the digest-verified source.tar into an empty workspace; docker run --rm --network none with nl2repo-websocket-client-verifier:current and /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 30,
+    "collected": 30,
+    "passed": 30,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/oracle-logs/verifier/grading.json",
+      "sha256": "sha256:2459f32144e0a0d2084a9cc0faba0cc957f3a0751bbe162a479a945f8d5ecfe4"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/oracle-logs/verifier/network.json",
+      "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f"
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/oracle-logs/verifier/candidate-install.json",
+      "sha256": "sha256:e4b28d250c3e9793087e281af139de1065f465c82d5c68b9bb37b2db0fb3c551",
+      "outcome": "success",
+      "entries": 229,
+      "total_bytes": 1959566
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none with an empty workspace and /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "expected_total": 30,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-empty/logs/verifier/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-empty/logs/verifier/network.json",
+        "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"
+      }
+    },
+    "stub": {
+      "command": "prepare-control stub; run its solve.sh on the pinned Python base; run the separate verifier with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 30,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-stub/logs/verifier/grading.json",
+        "sha256": "sha256:cd7e50fe3b37c0b5fa89511cc12aa97912729f4553c8cc24195fb8e1d0b75439"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-stub/logs/verifier/network.json",
+        "sha256": "sha256:397ab686ad970de1881bd4f3f81d54c4e27decee17c2a64083234468fe2e3433"
+      }
+    },
+    "forgery": {
+      "command": "prepare-control forgery; run its solve.sh on the pinned Python base; run the separate verifier with --network none",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "candidate_fake_reward": 1.0,
+      "expected_total": 30,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-forgery/logs/verifier/grading.json",
+        "sha256": "sha256:cd7e50fe3b37c0b5fa89511cc12aa97912729f4553c8cc24195fb8e1d0b75439"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-forgery/logs/verifier/network.json",
+        "sha256": "sha256:f7a996799a0fc181b8df4d4500d5828da8ece749963cb4300767bc23f5135114"
+      }
+    },
+    "install_hang": {
+      "command": "run the install-hang control and separate verifier with an outer 180-second bound",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install_outcome": "timeout",
+      "candidate_install_returncode": -9,
+      "expected_total": 30,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-install-hang/logs/verifier/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-install-hang/logs/verifier/network.json",
+        "sha256": "sha256:d9e31f0e87295e4cf7625c75e6b51395f92367d1c325edfb2ec6537c66d72a61"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-install-hang/logs/verifier/candidate-install.json",
+        "sha256": "sha256:957dd5afd514704a0e668639233d399a5d0efef76d5c74e01cf1e5b0a642cfb3"
+      }
+    },
+    "call_hang": {
+      "command": "run the call-hang control and separate verifier with an outer 420-second bound",
+      "exit_code": 0,
+      "valid": true,
+      "candidate_install_outcome": "success",
+      "expected_total": 30,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-call-hang/logs/verifier/grading.json",
+        "sha256": "sha256:cd7e50fe3b37c0b5fa89511cc12aa97912729f4553c8cc24195fb8e1d0b75439"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-call-hang/logs/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      },
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/control-call-hang/logs/verifier/candidate-install.json",
+        "sha256": "sha256:830a29cc39a61ed0e3fa28d9ec31da08e9ebc87cd47363888d6ccdc4b6885fa7"
+      }
+    },
+    "offline": {
+      "command": "complete the Oracle verifier replay under docker --network none and inspect both hostname and numeric-IP probes",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/current/oracle-logs/verifier/network.json",
+        "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f"
+      }
+    }
+  },
+  "gates": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/websocket-client",
+      "exit_code": 0
+    },
+    "network_lint_source": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_warning": "Oracle source-fetch authorization warning only; no websocket-client error"
+    },
+    "network_lint_generated": {
+      "command": "uv run nl2repo task lint-network --include-generated --tasks-root .nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/final-compiled",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 1
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/websocket-client --output .nl2repo/authoring-work/python-author-wave2-20260828/websocket-client/build/final-compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    "repeat_compile": {
+      "command": "repeat the same production compile to build/final-compiled-repeat",
+      "exit_code": 0,
+      "manifest_byte_identical": true
+    },
+    "verifier_image_build": {
+      "command": "docker build --pull=false -t nl2repo-websocket-client-verifier:current build/compiled/websocket-client/tests",
+      "exit_code": 0,
+      "image_id": "sha256:c398d08dd32f13ea478ed6c25fb0da0627424c8d3c2e45f331184f31a2f51e75"
+    },
+    "upstream_tests": {
+      "command": "PYTHONPATH=. uv run --project <worktree> pytest -q -o addopts= websocket/tests",
+      "exit_code": 0,
+      "result": "181 passed, 26 skipped, 21 subtests passed in 6.56s"
+    }
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this lane by contract; the handoff remains awaiting-agent-run.",
+    "The toolchain-locked OpenHands image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5 is not locally available; the same-tag local image is sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123. The integrator must restore the locked image before a model run.",
+    "Blind review, pilot, dataset integration, and publication remain integrator-owned.",
+    "The scored contract excludes live socket/TLS/proxy transport, dispatcher timing, optional dependencies, and interactive wsdump behavior; these exclusions are explicit in test-inventory.json and traceability.json."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "task_id": "websocket-client",
+  "revision": "26f1c6439eb71489f2c5a2869942e049b78c2e41",
+  "upstream_tests": {"path": "websocket/tests", "tracked_files": 21, "passed": 181, "skipped": 26, "passed_subtests": 21, "command": "PYTHONPATH=. pytest -q -o addopts='' websocket/tests"},
+  "private_contract": {"framework": "custom-json-v1", "frozen_total": 30, "scenarios": ["exports", "parse-ws", "parse-wss-query", "parse-invalid-scheme", "parse-invalid-host", "proxy-explicit", "proxy-no-port", "proxy-no-proxy", "proxy-env", "mask-known", "frame-unmasked", "frame-masked", "frame-lengths", "invalid-ping", "invalid-close", "frame-buffer", "continuous-frame", "cookiejar", "cookiejar-set", "handshake-headers", "handshake-validate-ok", "handshake-validate-bad", "sockopt-state", "default-timeout", "websocket-state", "websocket-fileno-error", "app-state", "app-close-inactive", "exception-status", "utf8"]},
+  "collection_policy": "Every scenario emits exactly one unique leaf; collection mismatch is fatal.",
+  "failure_note": "Upstream cases requiring live sockets, TLS, proxy servers, dispatcher timing, optional dependencies, or an interactive terminal are excluded from the deterministic contract and are not silently converted into passing tests."
+}
