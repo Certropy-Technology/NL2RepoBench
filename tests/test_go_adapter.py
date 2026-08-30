@@ -35,7 +35,9 @@ from nl2repobench.verification.go_bridge import (
     GoBridgeSpec,
     generate_go_bridge,
 )
+from nl2repobench.verification.go_grader import grade_go_report
 from nl2repobench.verification.go_supervisor import run_go_bridge
+from nl2repobench.verification.taxonomy import VerificationReason
 
 
 def _go_bundle(root) -> None:
@@ -214,6 +216,17 @@ def test_go_runtime_identity_is_explicit() -> None:
         language=RuntimeLanguage.GO,
         package_manager=PackageManager.GO_MODULES,
     )
+
+
+@pytest.mark.parametrize("report_data", [None, b"not-json", {"tests": []}])
+def test_go_grader_rejects_zero_denominator_with_structured_reason(report_data) -> None:
+    result = grade_go_report(expected_total=0, report_data=report_data)
+
+    assert result.valid is False
+    assert result.failure_reason is VerificationReason.REPORT_MALFORMED
+    assert result.failure_class.value == "verifier"
+    assert result.reward == 0.0
+    assert result.details == ("expected_total must be positive (got 0)",)
 
 
 def test_typed_go_bridge_compiles_and_calls_public_string_api(tmp_path) -> None:

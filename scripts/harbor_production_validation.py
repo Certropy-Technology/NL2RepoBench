@@ -26,7 +26,7 @@ from nl2repobench.storage.artifacts import FileArtifactStore
 
 JsonObject = dict[str, Any]
 BundleManifestSchema = Literal["1.0", "2.0"]
-RuntimeLanguage = Literal["python", "node"]
+RuntimeLanguage = Literal["python", "node", "go"]
 
 VALID_STATUSES = frozenset({"controls-passed", "reviewed", "piloted", "published"})
 BLOCKED_STATUSES = frozenset({"blocked", "excluded"})
@@ -237,8 +237,10 @@ def _bundle_manifest_schema_for_source(
         return "python", "1.0"
     if language == "node":
         return "node", "2.0"
+    if language == "go":
+        return "go", "1.0"
     raise ProductionGateError(
-        f"{task_id}: source metadata.language must be python or node, got {language!r}"
+        f"{task_id}: unknown source metadata.language: {language!r}"
     )
 
 
@@ -288,6 +290,22 @@ def _validate_bundle_manifest(
     return manifest
 
 
+def _validate_go_toolchain(path: Path, task_id: str) -> None:
+    """Validate the locked Go lane before asking the registry to compile."""
+
+    data = read_toml_object(path)
+    if data.get("schema_version") != "1.0" or data.get("status") != "locked":
+        raise ProductionGateError(f"{task_id}: Go production toolchain must be locked schema 1.0")
+    if data.get("go_report_schema") != "go-test-json-v1":
+        raise ProductionGateError(f"{task_id}: Go report schema is not go-test-json-v1")
+    go = data.get("go")
+    if not isinstance(go, dict) or go.get("platform") != "linux/amd64":
+        raise ProductionGateError(f"{task_id}: Go toolchain platform must be linux/amd64")
+    base_image = go.get("base_image")
+    if not isinstance(base_image, str) or "@sha256:" not in base_image:
+        raise ProductionGateError(f"{task_id}: Go toolchain image is not digest pinned")
+
+
 def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Path) -> JsonObject:
     actual_files = {
         path.relative_to(task_root).as_posix()
@@ -309,6 +327,17 @@ def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Pa
         raise ProductionGateError(f"{task_id}: test metadata is malformed")
     if metadata.get("expected_test_count") != source_tests.get("expected_total"):
         raise ProductionGateError(f"{task_id}: generated expected denominator differs from source")
+    language, expected_schema = _bundle_manifest_schema_for_source(task_id, source_data)
+    expected_framework = {
+        "python": {"pytest", "custom"},
+        "node": {"node:test"},
+        "go": {"go-bridge"},
+    }[language]
+    if (
+        source_tests.get("framework") is not None
+        and source_tests.get("framework") not in expected_framework
+    ):
+        raise ProductionGateError(f"{task_id}: {language} test framework is invalid")
     source_environment = source_data.get("environment")
     runtime_environment = task_data.get("environment")
     if not isinstance(source_environment, dict) or not isinstance(runtime_environment, dict):
@@ -328,13 +357,25 @@ def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Pa
     )
     if not any(path.is_file() for path in grader_paths):
         raise ProductionGateError(f"{task_id}: structured grader entrypoint is missing")
-    language, expected_schema = _bundle_manifest_schema_for_source(task_id, source_data)
     manifest = _validate_bundle_manifest(
         task_id,
         task_root,
         language=language,
         expected_schema=expected_schema,
     )
+    if language == "go":
+        go_files = {
+            "environment/Dockerfile",
+            "environment/go-module-bundle/go.mod",
+            "tests/dependencies/go.mod",
+            "tests/runtime/nl2repobench/verification/go_grader.py",
+            "tests/runtime/nl2repobench/verification/go_contract_runner.py",
+        }
+        missing_go = sorted(path for path in go_files if path not in actual_files)
+        if missing_go:
+            raise ProductionGateError(f"{task_id}: Go runtime files are missing: {missing_go}")
+        if not (task_root / "tests/private/contract.sh").is_file():
+            raise ProductionGateError(f"{task_id}: Go verifier contract.sh is missing")
     if manifest.get("canonical_manifest_digest") != metadata.get("canonical_manifest_digest"):
         raise ProductionGateError(
             f"{task_id}: canonical manifest digest differs across bundle files"
@@ -378,6 +419,7 @@ def validate_catalog(
     artifact_root: Path,
     python_toolchain: Path,
     node_toolchain: Path,
+    go_toolchain: Path | None = None,
     verify_git: bool = True,
     compile_tasks: bool = True,
     require_evidence: bool = True,
@@ -437,6 +479,11 @@ def validate_catalog(
                 row["status"] = status
                 row["source_content_sha256"] = directory_sha256(source_root)
                 if status in VALID_STATUSES:
+                    source_lock = source_data.get("source")
+                    if not isinstance(source_lock, dict) or source_lock.get("status") != "known":
+                        raise ProductionGateError(
+                            "production lifecycle requires known source provenance"
+                        )
                     category = "valid"
                     valid_ids.add(task_id)
                 elif status == "blocked":
@@ -481,11 +528,18 @@ def validate_catalog(
                             compiled_root=(repository_root / ".nl2repo/compiled").resolve(),
                         )
                         output_root = Path(compile_parent.name) / task_id
-                        toolchain = (
-                            node_toolchain
-                            if source_data.get("metadata", {}).get("language") == "node"
-                            else python_toolchain
-                        )
+                        language = source_data.get("metadata", {}).get("language")
+                        if language == "node":
+                            toolchain = node_toolchain
+                        elif language == "python":
+                            toolchain = python_toolchain
+                        elif language == "go":
+                            toolchain = go_toolchain or (repository_root / "toolchain.go.lock.toml")
+                            _validate_go_toolchain(toolchain, task_id)
+                        else:
+                            raise ProductionGateError(
+                                f"{task_id}: unknown runtime language: {language!r}"
+                            )
                         compiled = registry.compile_task(
                             source_root,
                             output_root,

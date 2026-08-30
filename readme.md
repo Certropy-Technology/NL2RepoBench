@@ -35,7 +35,7 @@ uv sync
 uv run nl2repo doctor
 uv run nl2repo task validate-source catalog/sources/<task-id>
 uv run nl2repo dataset validate authoring
-uv run nl2repo harbor compile catalog/tasks/ministats --allow-incomplete
+uv run nl2repo harbor compile catalog/sources/ministats --allow-incomplete
 ```
 
 The current Harbor pipeline is catalog-backed. Human-maintained task sources

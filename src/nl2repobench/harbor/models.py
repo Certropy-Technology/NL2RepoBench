@@ -12,6 +12,7 @@ from pydantic import Field, model_validator
 
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
+from nl2repobench.domain.command_plan import CommandPlan as VerifierCommandPlan
 
 PINNED_IMAGE = r"^[A-Za-z0-9._/-]+@sha256:[0-9a-f]{64}$"
 LOCAL_IMAGE_TAG = r"^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9._-]+$"
@@ -89,14 +90,6 @@ class HarborToolchainLock(RecordModel):
     authoring: AuthoringRuntimeLock
 
 
-class VerifierCommandPlan(RecordModel):
-    """Allowlisted verifier behavior; arbitrary shell commands are not executed."""
-
-    runner: Literal["pytest-subprocess-boundary-v1"]
-    candidate_install: Literal["pip-target-no-deps-v1"]
-    test_root: Literal["/tests/private"] = "/tests/private"
-
-
 def load_command_plan(data: bytes) -> VerifierCommandPlan:
     if len(data) > 4096:
         raise ValueError("invalid verifier command plan: exceeds size limit")
@@ -115,3 +108,16 @@ def load_toolchain_lock(path: Path) -> HarborToolchainLock:
         return HarborToolchainLock.model_validate(data)
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
         raise ValueError(f"invalid toolchain lock {path}: {exc}") from exc
+
+
+__all__ = [
+    "AgentRuntimeImageLock",
+    "AuthoringRuntimeLock",
+    "HarborToolchainLock",
+    "HarborVersionLock",
+    "ImageLock",
+    "VerifierCommandPlan",
+    "VerifierRuntimeLock",
+    "load_command_plan",
+    "load_toolchain_lock",
+]

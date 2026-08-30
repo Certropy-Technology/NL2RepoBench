@@ -6,6 +6,7 @@ import re
 from enum import StrEnum
 from pathlib import PurePosixPath
 from typing import Annotated, Literal, Self
+from urllib.parse import urlparse
 
 from pydantic import (
     BaseModel,
@@ -155,6 +156,12 @@ class SourceLock(CanonicalRecord):
             r"(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})", self.revision
         ):
             raise ValueError("revision must be a complete 40- or 64-character Git commit")
+        if self.upstream_url:
+            parsed = urlparse(self.upstream_url)
+            if parsed.scheme != "https" or not parsed.hostname or parsed.query or parsed.fragment:
+                raise ValueError(
+                    "upstream_url must be an immutable HTTPS URL without query or fragment"
+                )
         return self
 
 

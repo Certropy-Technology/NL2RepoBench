@@ -302,6 +302,46 @@ def test_migration_repackages_runtime_bundle_with_internal_inventory(tmp_path: P
     assert next(item for item in members if item.entry.path == "test.sh").entry.mode == 0o555
 
 
+def test_migration_converts_legacy_artifact_backed_command_and_paths(tmp_path: Path) -> None:
+    module = _migration_module()
+    store = FileArtifactStore(tmp_path / "cas")
+    command = store.put_bytes(
+        json.dumps({"runner": "legacy", "candidate_install": "legacy"}).encode(),
+        visibility=Visibility.PRIVATE,
+    )
+    protected = store.put_bytes(
+        json.dumps({"paths": ["/tests/private/contract.mjs"]}).encode(),
+        visibility=Visibility.PRIVATE,
+    )
+    converted = module._migrate_command_reference(
+        store,
+        command.model_dump(mode="json"),
+        identity="node+npm",
+        report_format="node-test-json-v1",
+        task_id="legacy-task",
+        workspace_root=tmp_path,
+    )
+    converted_paths = module._migrate_protected_reference(
+        store,
+        protected.model_dump(mode="json"),
+        task_id="legacy-task",
+        workspace_root=tmp_path,
+    )
+    assert converted is not None and converted["media_type"].endswith("command-plan+json")
+    assert converted_paths is not None and converted_paths["media_type"].endswith(
+        "protected-paths+json"
+    )
+    converted_ref = ArtifactRef.model_validate(converted)
+    converted_auth = module.MigrationArtifactAuthorization(
+        migration_id=module.ROOT_NAME,
+        allowed_digests=frozenset({converted["digest"]}),
+        workspace_root=tmp_path,
+    )
+    command_payload = json.loads(store.read_bytes(converted_ref, converted_auth))
+    assert command_payload["identity"] == "node+npm"
+    assert command_payload["steps"] == []
+
+
 def test_private_artifact_manifest_is_strict_and_excludes_oracle_from_verify(
     tmp_path: Path,
 ) -> None:
@@ -443,6 +483,69 @@ def test_task_manifest_mirrors_source_production_invariants() -> None:
         TaskManifest.model_validate(manifest)
     with pytest.raises(JsonSchemaValidationError):
         validate_json_schema(manifest, TaskManifest.model_json_schema())
+
+
+def test_production_lifecycle_requires_known_immutable_source_provenance() -> None:
+    payload = _canonical_source_payload()
+    payload["lifecycle"] = {"status": "packaged"}
+    payload["environment"] = {
+        "status": "known",
+        "runtime": {
+            "language": "python",
+            "runtime": "cpython",
+            "version": "3.12",
+            "package_manager": "uv",
+            "package_manager_version": "0.8.15",
+        },
+        "os_name": "linux",
+        "base_image": "python@sha256:" + "a" * 64,
+        "base_image_digest": "sha256:" + "a" * 64,
+        "network_policy": {
+            "mode": "no-network",
+            "offline_dependencies": "private-artifact",
+            "reason": "private closure",
+        },
+    }
+    private = {
+        "digest": "sha256:" + "b" * 64,
+        "size_bytes": 1,
+        "media_type": "application/octet-stream",
+        "uri": "artifact://private/sha256:" + "b" * 64,
+        "visibility": "private",
+    }
+    payload["dependencies"] = {
+        "status": "known",
+        "package_manager": "uv",
+        "lock": private,
+        "offline_store": private,
+        "inventory": private,
+    }
+    payload["tests"] = {
+        "framework": "pytest",
+        "report_format": "pytest-junit-xml-v1",
+        "expected_total": 1,
+        "expected_total_source": "frozen-collection",
+        "commands_artifact": private,
+        "test_bundle": private,
+    }
+    with pytest.raises(PydanticValidationError, match="source provenance"):
+        TaskSource.model_validate(payload)
+
+
+def test_known_source_rejects_mutable_url_shape() -> None:
+    with pytest.raises(PydanticValidationError, match="immutable HTTPS URL"):
+        TaskSource.model_validate(
+            {
+                **_canonical_source_payload(),
+                "source": {
+                    "status": "known",
+                    "upstream_url": "http://example.test/repo?branch=main",
+                    "revision": "a" * 40,
+                    "license_spdx": "MIT",
+                    "source_digest": "sha256:" + "a" * 64,
+                },
+            }
+        )
 
 
 def test_materializer_rejects_noncanonical_tar_and_member_limits(tmp_path: Path) -> None:

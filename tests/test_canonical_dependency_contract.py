@@ -102,10 +102,12 @@ def _manifest(
         json.dumps(
             {
                 "schema_version": "1.0",
+                "identity": f"node+{manager}",
                 "runner": "node-test-subprocess-boundary-v1",
                 "candidate_install": command_id,
                 "report_format": "node-test-json-v1",
                 "test_root": "/tests/private",
+                "steps": [],
             },
             sort_keys=True,
             separators=(",", ":"),

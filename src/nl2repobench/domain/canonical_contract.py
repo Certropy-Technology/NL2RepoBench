@@ -454,6 +454,15 @@ def _task_contract_schema(environment_field: str, dependency_field: str) -> Json
                 "then": {
                     "properties": {
                         environment_field: {"properties": {"status": {"const": "known"}}},
+                        "source" if environment_field == "environment" else "source_lock": {
+                            "required": [
+                                "upstream_url",
+                                "revision",
+                                "license_spdx",
+                                "source_digest",
+                            ],
+                            "properties": {"status": {"const": "known"}},
+                        },
                         dependency_field: {"properties": {"status": {"const": "known"}}},
                         "tests": {
                             "required": ["commands_artifact"],
@@ -589,6 +598,8 @@ class TaskSource(CanonicalRecord):
         if production:
             if self.environment.status != "known" or self.dependencies.status != "known":
                 raise ValueError("production lifecycle requires known environment and dependencies")
+            if self.source.status.value != "known":
+                raise ValueError("production lifecycle requires known source provenance")
             if (
                 self.tests.expected_total_source != "frozen-collection"
                 or self.tests.expected_total <= 0
@@ -660,6 +671,14 @@ class TaskManifest(CanonicalRecord):
             gaps.append("instruction.visibility=public")
         if self.source_lock.status.value != "known":
             gaps.append("source_lock.status=known")
+        for name, value in {
+            "source_lock.upstream_url": self.source_lock.upstream_url,
+            "source_lock.revision": self.source_lock.revision,
+            "source_lock.license_spdx": self.source_lock.license_spdx,
+            "source_lock.source_digest": self.source_lock.source_digest,
+        }.items():
+            if not value:
+                gaps.append(name)
         if self.environment_lock.status != "known":
             gaps.append("environment_lock.status=known")
         if self.environment_lock.runtime is None:
@@ -731,6 +750,8 @@ class TaskManifest(CanonicalRecord):
         if production:
             if self.environment_lock.status != "known" or self.dependency_bundle.status != "known":
                 raise ValueError("production lifecycle requires known environment and dependencies")
+            if self.source_lock.status.value != "known":
+                raise ValueError("production lifecycle requires known source provenance")
             if (
                 self.tests.expected_total_source != "frozen-collection"
                 or self.tests.expected_total <= 0

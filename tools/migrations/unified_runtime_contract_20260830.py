@@ -659,6 +659,174 @@ def _legacy_bundle_payload(data: bytes) -> tuple[dict[str, bytes], frozenset[str
     return files, frozenset(executable)
 
 
+def _legacy_json_payload(data: bytes) -> Any:
+    """Decode a legacy JSON artifact, or one JSON member from a legacy tar."""
+
+    candidates = [data]
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as archive:
+            for member in archive:
+                if member.isfile() and member.size <= 4 * 1024 * 1024:
+                    stream = archive.extractfile(member)
+                    if stream is not None:
+                        candidates.append(stream.read(member.size + 1))
+    except (OSError, tarfile.TarError):
+        pass
+    for candidate in candidates:
+        try:
+            value = json.loads(candidate)
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        return value
+    for candidate in candidates:
+        try:
+            lines = [line.strip() for line in candidate.decode().splitlines() if line.strip()]
+        except UnicodeDecodeError:
+            continue
+        if lines:
+            return lines
+    raise MigrationError("plan-invalid", "plan", "legacy JSON artifact is not decodable")
+
+
+def _canonical_command_plan(
+    payload: Any, *, identity: str, report_format: str
+) -> dict[str, Any]:
+    """Convert old command arrays/records to the one current plan shape."""
+
+    legacy_runner = "migrated-command-plan-v1"
+    legacy_install = "migrated-candidate-install-v1"
+    raw_steps = payload.get("steps") if isinstance(payload, dict) else payload
+    if isinstance(payload, dict) and "commands" in payload:
+        raw_steps = payload["commands"]
+    elif isinstance(payload, dict) and "steps" not in payload:
+        if payload.get("runner") is not None:
+            legacy_runner = str(payload["runner"])
+        if payload.get("candidate_install") is not None:
+            legacy_install = str(payload["candidate_install"])
+        raw_steps = []
+    if not isinstance(raw_steps, list):
+        raise MigrationError("plan-invalid", "plan", "legacy command artifact has no command list")
+    steps: list[dict[str, Any]] = []
+    for index, raw in enumerate(raw_steps):
+        if isinstance(raw, str):
+            argv = shlex.split(raw, posix=True)
+            step_id = f"step-{index:04d}"
+            cwd, environment, timeout = ".", {}, 600
+        elif isinstance(raw, dict):
+            argv_value = raw.get("argv", raw.get("command"))
+            if isinstance(argv_value, str):
+                argv = shlex.split(argv_value, posix=True)
+            elif isinstance(argv_value, list) and all(isinstance(item, str) for item in argv_value):
+                argv = argv_value
+            else:
+                raise MigrationError("plan-invalid", "plan", "legacy command step argv is invalid")
+            step_id = str(raw.get("step_id") or f"step-{index:04d}")
+            cwd = str(raw.get("cwd") or ".")
+            environment = raw.get("environment") or {}
+            timeout = int(raw.get("timeout_sec") or 600)
+        else:
+            raise MigrationError("plan-invalid", "plan", "legacy command step is invalid")
+        if not argv or cwd.startswith("/") or ".." in PurePosixPath(cwd).parts:
+            raise MigrationError("plan-invalid", "plan", "legacy command step is unsafe")
+        if not isinstance(environment, dict) or any(
+            not isinstance(key, str) or not isinstance(value, str)
+            for key, value in environment.items()
+        ):
+            raise MigrationError("plan-invalid", "plan", "legacy command environment is invalid")
+        steps.append(
+            {
+                "step_id": step_id,
+                "argv": argv,
+                "cwd": cwd,
+                "environment": environment,
+                "timeout_sec": timeout,
+            }
+        )
+    return {
+        "schema_version": "1.0",
+        "identity": identity,
+        "runner": legacy_runner,
+        "candidate_install": legacy_install,
+        "report_format": report_format,
+        "test_root": "/tests/private",
+        "steps": steps,
+    }
+
+
+def _migrate_command_reference(
+    artifact_store: FileArtifactStore,
+    value: object,
+    *,
+    identity: str,
+    report_format: str,
+    task_id: str,
+    workspace_root: Path,
+) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    try:
+        reference = ArtifactRef.model_validate(value)
+        authorization = MigrationArtifactAuthorization(
+            migration_id=ROOT_NAME,
+            allowed_digests=frozenset({reference.digest}),
+            workspace_root=workspace_root.resolve(),
+        )
+        data = artifact_store.read_bytes(reference, authorization, max_bytes=4 * 1024 * 1024)
+        plan = _canonical_command_plan(
+            _legacy_json_payload(data), identity=identity, report_format=report_format
+        )
+        return artifact_store.put_bytes(
+            json.dumps(plan, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+            media_type="application/vnd.nl2repobench.command-plan+json",
+            visibility=Visibility.PRIVATE,
+        ).model_dump(mode="json")
+    except (ArtifactStoreError, OSError, ValueError) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"command plan unavailable for {task_id}: {exc}"
+        ) from exc
+
+
+def _migrate_protected_reference(
+    artifact_store: FileArtifactStore,
+    value: object,
+    *,
+    task_id: str,
+    workspace_root: Path,
+) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    try:
+        reference = ArtifactRef.model_validate(value)
+        authorization = MigrationArtifactAuthorization(
+            migration_id=ROOT_NAME,
+            allowed_digests=frozenset({reference.digest}),
+            workspace_root=workspace_root.resolve(),
+        )
+        data = artifact_store.read_bytes(reference, authorization, max_bytes=1024 * 1024)
+        payload = _legacy_json_payload(data)
+        paths = payload.get("paths") if isinstance(payload, dict) else payload
+        if not isinstance(paths, list) or not all(isinstance(item, str) for item in paths):
+            raise MigrationError(
+                "plan-invalid", "plan", "legacy protected-path artifact is invalid"
+            )
+        normalized: set[str] = set()
+        for item in paths:
+            path = PurePosixPath(item.lstrip("/"))
+            if not path.parts or ".." in path.parts or "." in path.parts:
+                raise MigrationError("plan-invalid", "plan", "legacy protected path is unsafe")
+            normalized.add(path.as_posix())
+        protected = {"schema_version": "1.0", "paths": sorted(normalized)}
+        return artifact_store.put_bytes(
+            json.dumps(protected, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+            media_type="application/vnd.nl2repobench.protected-paths+json",
+            visibility=Visibility.PRIVATE,
+        ).model_dump(mode="json")
+    except (ArtifactStoreError, OSError, ValueError) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"protected paths unavailable for {task_id}: {exc}"
+        ) from exc
+
+
 def repackage_runtime_bundle(
     artifact_store: FileArtifactStore,
     legacy_bytes: bytes,
@@ -1030,6 +1198,7 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                 new["dependencies"].update(transformed)
             test_data = new["tests"]
             old_tests = old.get("tests", {})
+            language, _, _, command_manager = _runtime(old)
             commands = old_tests.get("commands", [])
             if commands:
                 if not isinstance(commands, list) or any(
@@ -1038,7 +1207,6 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     raise MigrationError(
                         "plan-invalid", "plan", f"cannot convert test commands for {directory.name}"
                     )
-                language, _, _, command_manager = _runtime(old)
                 steps = []
                 for index, command in enumerate(commands):
                     argv = tuple(shlex.split(command, posix=True))
@@ -1071,6 +1239,15 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     visibility=Visibility.PRIVATE,
                 )
                 test_data["commands_artifact"] = command_ref.model_dump(mode="json")
+            elif old_tests.get("commands_artifact") is not None:
+                test_data["commands_artifact"] = _migrate_command_reference(
+                    artifact_store,
+                    old_tests.get("commands_artifact"),
+                    identity=f"{language}+{command_manager or 'none'}",
+                    report_format=test_data["report_format"],
+                    task_id=task_id,
+                    workspace_root=output.parent,
+                )
             test_data.pop("commands", None)
             protected_paths = old_tests.get("protected_paths", [])
             if protected_paths:
@@ -1093,6 +1270,13 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     visibility=Visibility.PRIVATE,
                 )
                 test_data["protected_paths_artifact"] = protected_ref.model_dump(mode="json")
+            elif old_tests.get("protected_paths_artifact") is not None:
+                test_data["protected_paths_artifact"] = _migrate_protected_reference(
+                    artifact_store,
+                    old_tests.get("protected_paths_artifact"),
+                    task_id=task_id,
+                    workspace_root=output.parent,
+                )
             test_data.pop("protected_paths", None)
 
             test_data["test_bundle"] = _migrate_bundle_reference(

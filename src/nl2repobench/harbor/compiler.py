@@ -297,8 +297,10 @@ RUN python -m pip install --no-cache-dir --no-index --require-hashes \\
         custom_verifier = manifest.verifier is not None and not allow_incomplete
         if allow_incomplete:
             command_plan = VerifierCommandPlan(
+                identity=f"python+{manifest.dependency_bundle.package_manager.value}",
                 runner="pytest-subprocess-boundary-v1",
                 candidate_install="pip-target-no-deps-v1",
+                report_format="pytest-junit-xml-v1",
             )
         else:
             command_artifact = manifest.tests.commands_artifact
@@ -391,9 +393,16 @@ WORKDIR /tests
     def _resolve_command_plan(self, reference: ArtifactRef) -> VerifierCommandPlan:
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required")
+        if reference.media_type in {
+            "application/gzip",
+            "application/x-tar",
+            "application/vnd.nl2repobench.node-commands+tar",
+            "application/vnd.nl2repobench.node-commands+json",
+        }:
+            raise HarborCompileError("canonical runtime rejects legacy command-plan media types")
         try:
             return load_command_plan(
-                self.artifact_resolver.read_bytes(reference, max_bytes=4096)
+                self.artifact_resolver.read_bytes(reference, max_bytes=4 * 1024 * 1024)
             )
         except (ArtifactStoreError, OSError, ValueError) as exc:
             raise HarborCompileError(str(exc)) from exc

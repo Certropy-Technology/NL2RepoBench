@@ -9,13 +9,15 @@ import stat
 from pathlib import Path
 from typing import Any
 
-MAX_PLAN_BYTES = 4096
-EXPECTED_PLAN: dict[str, Any] = {
-    "candidate_install": "pip-target-no-deps-v1",
-    "runner": "pytest-subprocess-boundary-v1",
-    "schema_version": "1.0",
-    "test_root": "/tests/private",
-}
+from nl2repobench.domain.command_plan import CommandPlan
+
+MAX_PLAN_BYTES = 4 * 1024 * 1024
+EXPECTED_PLAN: dict[str, Any] = CommandPlan(
+    identity="python+uv",
+    runner="pytest-subprocess-boundary-v1",
+    candidate_install="pip-target-no-deps-v1",
+    report_format="pytest-junit-xml-v1",
+).model_dump(mode="json")
 
 
 def validate_command_plan(path: Path) -> None:
@@ -31,8 +33,13 @@ def validate_command_plan(path: Path) -> None:
         payload = json.loads(data)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f"invalid command plan JSON: {exc}") from exc
-    if payload != EXPECTED_PLAN:
-        raise ValueError("command plan does not match the allowlisted verifier protocol")
+    try:
+        CommandPlan.model_validate(payload)
+    except ValueError as exc:
+        raise ValueError(
+            "command plan does not match the allowlisted verifier protocol; "
+            f"canonical validation failed: {exc}"
+        ) from exc
 
 
 def main() -> None:

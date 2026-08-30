@@ -30,6 +30,14 @@ def grade_go_report(
     explicit_reason: VerificationReason | None = None,
 ) -> EvaluationResult:
     contract = canonical_metric_contract(metric_contract)
+    if isinstance(expected_total, bool) or expected_total <= 0:
+        return failure_result_for_reason(
+            contract=contract,
+            expected_total=1,
+            reason=VerificationReason.REPORT_MALFORMED,
+            runner_exit_code=runner_exit_code,
+            details=(f"expected_total must be positive (got {expected_total!r})",),
+        )
     if explicit_reason is not None:
         return failure_result_for_reason(
             contract=contract,

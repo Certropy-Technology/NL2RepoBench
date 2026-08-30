@@ -9,32 +9,34 @@ import stat
 from pathlib import Path
 from typing import Any, Literal
 
-from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
+from nl2repobench.domain.command_plan import CommandPlan
 
-MAX_NODE_PLAN_BYTES = 4096
+MAX_NODE_PLAN_BYTES = 4 * 1024 * 1024
 EXPECTED_NODE_PLAN: dict[str, Any] = {
+    "identity": "node+npm",
     "candidate_install": "npm-pack-offline-v1",
     "report_format": "node-test-json-v1",
     "runner": "node-test-subprocess-boundary-v1",
     "schema_version": "1.0",
     "test_root": "/tests/private",
+    "steps": [],
 }
 
 
-class NodeVerifierCommandPlan(RecordModel):
-    """Allowlisted Node verifier behavior; arbitrary shell is never accepted."""
+NodeVerifierCommandPlan = CommandPlan
 
-    runner: Literal["node-test-subprocess-boundary-v1"] = "node-test-subprocess-boundary-v1"
-    candidate_install: Literal["npm-pack-offline-v1", "pnpm-pack-offline-v1"]
-    report_format: Literal["node-test-json-v1"] = "node-test-json-v1"
-    test_root: Literal["/tests/private"] = "/tests/private"
 
-    @classmethod
-    def expected(cls, candidate_install: str = "npm-pack-offline-v1") -> NodeVerifierCommandPlan:
-        return cls.model_validate({**EXPECTED_NODE_PLAN, "candidate_install": candidate_install})
-
-    def as_allowlist(self) -> dict[str, Any]:
-        return self.model_dump(mode="json")
+def expected_node_command_plan(
+    candidate_install: str = "npm-pack-offline-v1",
+) -> NodeVerifierCommandPlan:
+    manager = "pnpm" if candidate_install.startswith("pnpm-") else "npm"
+    return NodeVerifierCommandPlan.model_validate(
+        {
+            **EXPECTED_NODE_PLAN,
+            "identity": f"node+{manager}",
+            "candidate_install": candidate_install,
+        }
+    )
 
 
 def validate_node_command_plan(path: Path) -> None:
@@ -52,7 +54,15 @@ def validate_node_command_plan(path: Path) -> None:
         payload = json.loads(data)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f"invalid Node command plan JSON: {exc}") from exc
-    if payload != EXPECTED_NODE_PLAN:
+    if not isinstance(payload, dict) or payload.get("candidate_install") not in {
+        "npm-pack-offline-v1",
+        "pnpm-pack-offline-v1",
+    }:
+        raise ValueError("Node command plan does not match the allowlisted verifier protocol")
+    expected = expected_node_command_plan(str(payload["candidate_install"])).model_dump(
+        mode="json"
+    )
+    if payload != expected:
         raise ValueError("Node command plan does not match the allowlisted verifier protocol")
 
 
@@ -70,7 +80,8 @@ def load_node_command_plan(
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f"invalid Node command plan JSON: {exc}") from exc
     plan = NodeVerifierCommandPlan.model_validate(payload)
-    if plan.candidate_install != candidate_install:
+    expected = expected_node_command_plan(candidate_install)
+    if plan != expected:
         raise ValueError("Node command plan package manager does not match runtime")
     if data != json.dumps(
         plan.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
