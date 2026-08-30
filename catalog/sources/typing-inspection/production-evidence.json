@@ -1,0 +1,216 @@
+{
+  "schema_version": "1.0",
+  "task_id": "typing-inspection",
+  "terminal_kind": "controls-passed",
+  "runtime_identity": {
+    "harbor_version": "0.21.0",
+    "locked_agent_image": "nl2repobench/openhands-sdk-fork:930e9b1da",
+    "locked_agent_image_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "observed_agent_image_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "agent_image_identity_match": false,
+    "verifier_base_image": "python:3.12.14-slim-bookworm@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image": "nl2repo-typing-inspection-verifier:resume",
+    "verifier_image_id": "sha256:862587aeebbb96e08b29c92bad7875bb5d01eb306d0327133056713919df92f8",
+    "python_version": "3.12.14",
+    "platform": "linux/amd64",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "bundle": {
+    "path": ".nl2repo/final-compile-typing-inspection-handoff/typing-inspection/bundle.manifest.json",
+    "sha256": "sha256:2e6a623f28ec6616ca608de7cad6914f1289dc6f06f09395edfd422550e59940",
+    "canonical_manifest_digest": "sha256:72c8b7e9b2b988c525f39c279f647beafa916e06b3b0ea8142b7fc7b3b05f566",
+    "file_count": 60,
+    "repeat_compile_path": ".nl2repo/final-compile-typing-inspection-resume-repeat/typing-inspection/bundle.manifest.json",
+    "repeat_compile_sha256": "sha256:2e6a623f28ec6616ca608de7cad6914f1289dc6f06f09395edfd422550e59940",
+    "repeat_canonical_manifest_digest": "sha256:72c8b7e9b2b988c525f39c279f647beafa916e06b3b0ea8142b7fc7b3b05f566"
+  },
+  "oracle": {
+    "kind": "local-separate-verifier-replay",
+    "official_harbor_run": false,
+    "command": "docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/oracle:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/oracle-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/oracle-rw/grading.json",
+      "sha256": "sha256:e6a713287d3bf6f457e34e229c566e69114df64a409084dd9c917a4ad5a03546"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/oracle-rw/network.json",
+      "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e",
+      "public_network_available": false
+    },
+    "collection": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/oracle-rw/collection.json",
+      "sha256": "sha256:59d8996719a189643690e42d224d85388792dabee3474653f7942d26091add56"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/empty:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/empty-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/empty-rw/grading.json",
+        "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/empty-rw/network.json",
+        "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/final-compile-typing-inspection-resume/typing-inspection stub --output .nl2repo/controls-typing-inspection-resume; docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/stub:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/stub-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 3,
+      "failed": 29,
+      "reward": 0.09375,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/stub-rw/grading.json",
+        "sha256": "sha256:77ed86372e365e7990c48a9fa450e069d93c897d71f73951dc40a2bc0dc6492c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/stub-rw/network.json",
+        "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e",
+        "public_network_available": false
+      },
+      "collection": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/stub-rw/collection.json",
+        "sha256": "sha256:59d8996719a189643690e42d224d85388792dabee3474653f7942d26091add56"
+      }
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/final-compile-typing-inspection-resume/typing-inspection forgery --output .nl2repo/controls-typing-inspection-resume; docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/forgery:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/forgery-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 0,
+      "failed": 32,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/forgery-rw/grading.json",
+        "sha256": "sha256:89f50cfde0b16b88c991a50150da2593d9b238326881d85e95632727249861ed"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/forgery-rw/network.json",
+        "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e",
+        "public_network_available": false
+      },
+      "collection": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/forgery-rw/collection.json",
+        "sha256": "sha256:59d8996719a189643690e42d224d85388792dabee3474653f7942d26091add56"
+      },
+      "forged_workspace_reward_accepted": false
+    },
+    "install_hang": {
+      "command": "docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/install-hang:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/install-hang-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "duration_sec": 41,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/install-hang-rw/grading.json",
+        "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/install-hang-rw/network.json",
+        "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca",
+        "public_network_available": false
+      },
+      "candidate_install": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/install-hang-rw/candidate-install.json",
+        "sha256": "sha256:35f69d928df175856e36573b643b7597f717482f779eb1668f20fc0505664606",
+        "outcome": "timeout"
+      }
+    },
+    "call_hang": {
+      "command": "docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/call-hang:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/call-hang-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "duration_sec": 108,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 0,
+      "failed": 32,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/call-hang-rw/grading.json",
+        "sha256": "sha256:89f50cfde0b16b88c991a50150da2593d9b238326881d85e95632727249861ed"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/call-hang-rw/network.json",
+        "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567",
+        "public_network_available": false
+      },
+      "collection": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/call-hang-rw/collection.json",
+        "sha256": "sha256:59d8996719a189643690e42d224d85388792dabee3474653f7942d26091add56"
+      }
+    },
+    "workspace_invalid": {
+      "command": "docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/workspace-invalid:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/workspace-invalid-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-workspace-rejected",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/workspace-invalid-rw/grading.json",
+        "sha256": "sha256:42cf80d96475fc2949c0b6b1c4b363cb401d70a5700cfb97ebbc6e61421c076f"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/workspace-invalid-rw/network.json",
+        "sha256": "sha256:390dd3e30582d729f4f0153e2f9991018570b089a415100cc6bac8e2a87538e8",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none --cpus 2 --memory 4g -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/workspaces/oracle:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/offline-rw:/logs/verifier nl2repo-typing-inspection-verifier:resume /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 32,
+      "failed": 0,
+      "reward": 1.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/offline-rw/grading.json",
+        "sha256": "sha256:e6a713287d3bf6f457e34e229c566e69114df64a409084dd9c917a4ad5a03546"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/offline-rw/network.json",
+        "sha256": "sha256:cc2248b03acba164fb6504153b99c3e0ec70f61577d471dae5d315a3470dca53",
+        "public_network_available": false
+      },
+      "collection": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/resume/results/offline-rw/collection.json",
+        "sha256": "sha256:59d8996719a189643690e42d224d85388792dabee3474653f7942d26091add56"
+      }
+    }
+  },
+  "residual_risks": [
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da tag has image ID sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123, not the toolchain-locked sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5. Restore the locked image before the future model Agent Run.",
+    "This lane did not start an official Harbor Oracle job or a model Agent Run. Oracle and controls are exact-bundle local separate-verifier replays."
+  ]
+}

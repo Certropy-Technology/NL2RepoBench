@@ -1,0 +1,26 @@
+{
+  "base_image": "python:3.12.14-slim-bookworm",
+  "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "base_image_os": "debian-13-amd64",
+  "base_image_python": "3.12.14",
+  "build_backend": "hatchling.build",
+  "build_requires": ["hatchling>=1.27.0"],
+  "generation_command": "uv pip compile .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/private/requirements.in --python-version 3.12 --generate-hashes --universal --output-file .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/private/requirements.lock.txt",
+  "generation_exit_code": 0,
+  "lock_sha256": "de73ddf89ab1141d8f54290bd6030dc93e6186936fd9892ff444c8aacdd2d1a5",
+  "lock_size_bytes": 2371,
+  "packages": [
+    "hatchling==1.28.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
+    "wheel==0.45.1"
+  ],
+  "require_hashes_install_exit_code": 0,
+  "source_install_command": "uv pip install --python .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/candidate-venv/bin/python --no-build-isolation .nl2repo/authoring-work/python-author-wave2-20260828/typing-inspection/upstream",
+  "source_install_exit_code": 0,
+  "uv_version": "0.11.32"
+}

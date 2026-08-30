@@ -1,0 +1,28 @@
+{
+  "contract_id": "typing-inspection-custom-json-v1",
+  "frozen_total": 32,
+  "groups": [
+    {
+      "instruction_surface": "distribution metadata, import layout, typed marker, and public exports",
+      "leaf_ids": ["package-metadata", "module-exports"]
+    },
+    {
+      "instruction_surface": "is_union_origin and Literal value extraction, validation, ordering, and boundaries",
+      "leaf_ids": ["union-origins", "literal-basic", "literal-none-deduplication", "literal-enum-type-check", "literal-type-check-error", "literal-unhashable-values"]
+    },
+    {
+      "instruction_surface": "AnnotationSource, Qualifier, UNKNOWN, InspectedAnnotation, and inspect_annotation",
+      "leaf_ids": ["annotation-source-members", "unknown-sentinel", "inspected-annotation-shape", "inspect-simple", "inspect-annotated", "inspect-nested-metadata", "inspect-class-qualifiers", "inspect-dataclass-initvar", "inspect-typed-dict-qualifiers", "inspect-bare-final", "forbidden-qualifier"]
+    },
+    {
+      "instruction_surface": "typing_objects identity predicates and compatibility distinctions",
+      "leaf_ids": ["typing-basic-forms", "union-member-distinction", "type-variable-objects", "stdlib-special-forms", "extensions-special-forms", "namedtuple-detection", "newtype-detection", "type-alias-type", "deprecated-marker", "negative-predicate-table"]
+    },
+    {
+      "instruction_surface": "deprecated alias maps, positional-only signatures, and deterministic repeated behavior",
+      "leaf_ids": ["deprecated-alias-maps", "positional-only-contract", "repeat-determinism"]
+    }
+  ],
+  "private_assertions_exposed": false,
+  "source_revision": "83d4dbb74fc367db4403c76be8c0f83cd4b63fbe"
+}

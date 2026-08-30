@@ -1,0 +1,29 @@
+{
+  "collection_command": "docker run --rm --network none -e PYTHONPATH=/src/src -v <upstream>:/src:ro -w /src nl2repo-typing-inspection-verifier:final3 python -m pytest --collect-only -q -p no:cacheprovider",
+  "collection_exit_code": 0,
+  "collected": 94,
+  "execution_command": "docker run --rm --network none -e PYTHONPATH=/src/src -v <upstream>:/src:ro -w /src nl2repo-typing-inspection-verifier:final3 python -m pytest -q -p no:cacheprovider -o addopts=''",
+  "execution_exit_code": 0,
+  "execution_summary": "94 passed in 0.23s",
+  "frozen_verifier_total": 32,
+  "source_files": {
+    "tests/introspection/test_inspect_annotation.py": {
+      "test_functions": 9,
+      "parametrized_functions": 5
+    },
+    "tests/introspection/test_is_union_origin.py": {
+      "test_functions": 1,
+      "parametrized_functions": 1
+    },
+    "tests/introspection/test_literal_values.py": {
+      "test_functions": 7,
+      "parametrized_functions": 1
+    },
+    "tests/typing_objects/test_member_checks.py": {
+      "test_functions": 12,
+      "parametrized_functions": 11
+    }
+  },
+  "source_python": "3.12.14",
+  "verifier_protocol": "custom-json-v1"
+}
