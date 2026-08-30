@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tiktoken",
+  "source_revision": "4e71bbe0c078468e00fefbf94b39849389f346e5",
+  "upstream_test_files": 7,
+  "upstream_named_test_functions": 25,
+  "upstream_baseline": {"python": "3.12.11", "selected_tests": 33, "passed": 33, "max_examples": 25, "exit_code": 0},
+  "frozen_total": 24,
+  "frozen_total_source": "custom-json-v1 deterministic offline adaptation",
+  "leaf_ids": ["exports", "encoding_repr", "bpe_merge", "special_guard", "single_token", "decode_errors", "offsets", "batch_order", "surrogate_replace", "pickle", "explicit_vocab", "registry_names", "model_exact", "model_prefix", "model_unknown", "load_bpe", "load_hash_mismatch", "dump_bpe", "data_gym_local", "educational_bpe", "educational_train", "educational_wrapper", "unknown_encoding", "no_remote_loader"],
+  "excluded_upstream_categories": ["large remote vocabulary downloads", "private tests", "Rust extension performance", "NumPy acceleration", "optional blobfile", "benchmark and wheel-download scripts"]
+}

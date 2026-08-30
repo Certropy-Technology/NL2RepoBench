@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/tiktoken"
+version = "1.0.0"
+description = "Build an offline tiktoken-compatible BPE/tokenization package from an empty workspace and satisfy a deterministic Encoding, loading, model-mapping, and educational API contract through an isolated child-side verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "bpe",
+    "tokenization",
+    "regex",
+    "separate-verifier",
+    "no-network",
+]
+
+[metadata]
+difficulty = "hard"
+category = "tokenization-library"
+tags = [
+    "python",
+    "bpe",
+    "tokenization",
+    "regex",
+    "native-adaptation",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 24
+canonical_manifest_digest = "sha256:e0fe5458bf9b28099fb1e64a5a656234a6a90645a3c6f46124770ad7413dccf1"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

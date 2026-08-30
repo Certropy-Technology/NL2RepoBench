@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "tiktoken"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "tokenization-library"
+tags = ["python", "bpe", "tokenization", "regex", "native-adaptation", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/openai/tiktoken"
+revision = "4e71bbe0c078468e00fefbf94b39849389f346e5"
+license_spdx = "MIT"
+source_digest = "sha256:80736cfc1a7cf9c87e530f3cf4cc7b536a3261208ded244138872b130b9f41d7"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the exact hash-locked dependency closure during image build; build the candidate with a standard PEP 517 backend and no runtime network access"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier dependency closures are installed during image build from a private hash lock. Evaluation is network-isolated; only a trusted Oracle may receive the exact frozen upstream host authorization."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["regex==2025.11.3", "requests==2.32.5", "setuptools==80.9.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:5649458ada38d73e6f38baff0eee6e6866884fbc8c2ab1f75c1c5dd21083ed52", size_bytes = 26173, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5649458ada38d73e6f38baff0eee6e6866884fbc8c2ab1f75c1c5dd21083ed52", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:9ac5c04015e86ec877d1cbf1bbdf121ef031413a4d2a92b41b26b62765cdfbfd", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9ac5c04015e86ec877d1cbf1bbdf121ef031413a4d2a92b41b26b62765cdfbfd", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build an offline tiktoken-compatible BPE/tokenization package from an empty workspace and satisfy a deterministic Encoding, loading, model-mapping, and educational API contract through an isolated child-side verifier."
+keywords = ["python", "bpe", "tokenization", "regex", "separate-verifier", "no-network"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8b7ea827a586563b074021e38531c1652a35f206d56438df72a6c9dbecf092f2"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8b7ea827a586563b074021e38531c1652a35f206d56438df72a6c9dbecf092f2"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-tiktoken"
+reason = "Frozen source, hash-locked dependency closure, separate custom-json verifier, production compile, one Harbor Oracle, and empty/stub/forgery/offline controls passed. Model Agent Run, review, pilot, and publication remain integrator stages."

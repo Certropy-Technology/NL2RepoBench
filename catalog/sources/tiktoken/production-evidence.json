@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tiktoken",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/openai/tiktoken",
+    "revision": "4e71bbe0c078468e00fefbf94b39849389f346e5",
+    "release": "0.14.0",
+    "license_spdx": "MIT",
+    "license_file_sha256": "sha256:418cb499b436128d653d79941333a5437b7be2ea9213dcc2f04d15d5d2c51d86",
+    "git_archive_sha256": "sha256:80736cfc1a7cf9c87e530f3cf4cc7b536a3261208ded244138872b130b9f41d7",
+    "checkout": ".nl2repo/authoring-work/tiktoken/source"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "toolchain_lock": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest": "sha256:5649458ada38d73e6f38baff0eee6e6866884fbc8c2ab1f75c1c5dd21083ed52", "size_bytes": 26173},
+    "verifier_bundle": {"digest": "sha256:9ac5c04015e86ec877d1cbf1bbdf121ef031413a4d2a92b41b26b62765cdfbfd", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:8b7ea827a586563b074021e38531c1652a35f206d56438df72a6c9dbecf092f2", "size_bytes": 10240}
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/tiktoken/compile-final-a/tiktoken/bundle.manifest.json",
+    "manifest_sha256": "sha256:05a44f632ab40e1e80ea32099643c1be16926925ac845b7c77dd4afc4e009ca8",
+    "canonical_manifest_digest": "sha256:e0fe5458bf9b28099fb1e64a5a656234a6a90645a3c6f46124770ad7413dccf1",
+    "runtime_files": 58,
+    "mode": "production",
+    "repeat_compile_byte_identical": true
+  },
+  "frozen_collection": {
+    "framework": "custom-json-v1",
+    "expected_total": 24,
+    "source": "custom-json-v1 deterministic offline adaptation",
+    "leaf_ids": ["exports", "encoding_repr", "bpe_merge", "special_guard", "single_token", "decode_errors", "offsets", "batch_order", "surrogate_replace", "pickle", "explicit_vocab", "registry_names", "model_exact", "model_prefix", "model_unknown", "load_bpe", "load_hash_mismatch", "dump_bpe", "data_gym_local", "educational_bpe", "educational_train", "educational_wrapper", "unknown_encoding", "offline_local_loader"]
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/tiktoken/compile-final-a/tiktoken -a oracle --job-name tiktoken-final-oracle-current -o .nl2repo/authoring-work/tiktoken/runs/final-oracle --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-oracle/tiktoken-final-oracle-current/tiktoken__42sxDFX/verifier/grading.json", "sha256": "sha256:74f45b787fd30521c90559d2fc176922727f3b74b096f696d8782ef176f264c9"},
+    "network": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-oracle/tiktoken-final-oracle-current/tiktoken__42sxDFX/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/tiktoken/compile-final-a/tiktoken -a nop --job-name tiktoken-final-empty-current -o .nl2repo/authoring-work/tiktoken/runs/final-empty --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "failure_class": "model", "failure_reason": "candidate-installation-failed", "collected": 0, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-empty/tiktoken-final-empty-current/tiktoken__TQMK7cF/verifier/grading.json", "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"}, "network": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-empty/tiktoken-final-empty-current/tiktoken__TQMK7cF/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1", "public_network_available": false}},
+    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/tiktoken/controls/tiktoken-stub -a oracle --job-name tiktoken-final-stub-current -o .nl2repo/authoring-work/tiktoken/runs/final-stub --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-stub/tiktoken-final-stub-current/tiktoken-stub__Uji9xT3/verifier/grading.json", "sha256": "sha256:6c911f2da29bb0eeaf12ac32ecc68354e9dc11463bd2b68a4826b6870caabc8e"}, "network": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-stub/tiktoken-final-stub-current/tiktoken-stub__Uji9xT3/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "public_network_available": false}},
+    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/tiktoken/controls/tiktoken-forgery -a oracle --job-name tiktoken-final-forgery-current -o .nl2repo/authoring-work/tiktoken/runs/final-forgery --n-concurrent 1 --yes", "exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-forgery/tiktoken-final-forgery-current/tiktoken-forgery__nSLPc4n/verifier/grading.json", "sha256": "sha256:6c911f2da29bb0eeaf12ac32ecc68354e9dc11463bd2b68a4826b6870caabc8e"}, "network": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-forgery/tiktoken-final-forgery-current/tiktoken-forgery__nSLPc4n/verifier/network.json", "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a", "public_network_available": false}},
+    "offline": {"command": "production Oracle verifier network probe from tiktoken-final-oracle-current", "completed": true, "exit_code": 0, "valid": true, "collected": 24, "passed": 24, "reward": 1.0, "network": {"path": ".nl2repo/authoring-work/tiktoken/runs/final-oracle/tiktoken-final-oracle-current/tiktoken__42sxDFX/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "public_network_available": false}}
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The task is a bounded deterministic offline adaptation, not transparent parity with all upstream private tests or remote vocabulary data.",
+    "The host has a locked OpenHands image mismatch noted by the integrator campaign; it is unrelated to this task's source/verifier gates.",
+    "Review, pilot, dataset integration, and publication remain integrator stages."
+  ]
+}
