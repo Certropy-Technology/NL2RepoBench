@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "widest-line",
+  "source_revision": "d1f04193564d484ca6e24fd8d78d96545ccb0a83",
+  "package": {
+    "name": "widest-line",
+    "version": "6.0.0",
+    "module_kind": "esm",
+    "node_engine": ">=20",
+    "root_default_export": "./index.js",
+    "root_types_export": "./index.d.ts",
+    "runtime_dependency": "string-width@^8.1.0"
+  },
+  "runtime_files": ["index.js"],
+  "declaration_files": ["index.d.ts"],
+  "upstream_test_files": ["test.js"],
+  "public_exports": ["default widestLine(string: string): number"],
+  "risk_flags": ["unicode-width", "ansi-control-sequences"],
+  "adaptations": [
+    "The upstream AVA/XO runner is not exposed to the candidate; deterministic node:test leaves use the verifier-owned generic JSON subprocess adapter.",
+    "No filesystem, TTY, network, time, randomness, native addon, or callback behavior is part of the scored API."
+  ]
+}

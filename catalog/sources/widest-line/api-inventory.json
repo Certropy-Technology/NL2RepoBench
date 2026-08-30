@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "widest-line",
+  "source_revision": "d1f04193564d484ca6e24fd8d78d96545ccb0a83",
+  "exports": [
+    {
+      "path": "package root",
+      "name": "default",
+      "signature": "widestLine(string: string): number",
+      "input_domain": "primitive string",
+      "return_shape": "non-negative integer terminal column count",
+      "side_effects": "none",
+      "determinism": "synchronous and deterministic",
+      "errors": "non-string input raises TypeError",
+      "upstream_implementation": "index.js"
+    }
+  ],
+  "dependency_boundary": "string-width@8 default measurement semantics",
+  "excluded": ["CLI", "filesystem", "network", "source-text inspection"]
+}

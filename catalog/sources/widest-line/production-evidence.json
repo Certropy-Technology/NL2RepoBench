@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "task_id": "widest-line",
+  "task_version": "2.0.0",
+  "terminal_kind": "controls-passed",
+  "status": "awaiting-agent-run",
+  "source_freeze": {
+    "upstream_url": "https://github.com/sindresorhus/widest-line",
+    "revision": "d1f04193564d484ca6e24fd8d78d96545ccb0a83",
+    "source_archive_sha256": "sha256:39a6707282ade39a464de258151bb698e31daad5920fa7b40283ade60714aba7",
+    "license_spdx": "MIT",
+    "license_file_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "environment": {
+    "toolchain": "toolchain.node.lock.toml",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "architecture": "linux/amd64",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_allowed_hosts": []
+  },
+  "artifacts": {
+    "dependency_bundle": "sha256:ba57de80e0aeee35c76b6564fbd64d2ce8b9a775d8b35413af259075baed1f72",
+    "test_bundle": "sha256:8de52269ee3179c4c72b1b4798675a3562e158a27fe6bbb169c12d9fb02367ca",
+    "commands_bundle": "sha256:2d83b8e15049e124adaea4263896dca240be544137bbe9ec6c4802255c4d98b6",
+    "oracle_bundle": "sha256:815dc314132533e9595863037b1800322bbd681b28c655bd411b57f0e356ec2a",
+    "compiled_bundle_manifest": "sha256:a8e6bd8ddef9eb96e2b671fe074aa1d229c73054b18a8ceeba19a6719628a620",
+    "canonical_manifest_digest": "sha256:9f079b464d7f53fb766dfdb5dceb288c057e6a77a1a2d0fbd4a60365d55ffc39"
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "protocol": "custom-json-v1",
+    "expected_total": 20,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "collection_source": "private/contract.test.mjs"
+  },
+  "gates": {
+    "validate_source": {"command": "uv run nl2repo task validate-source catalog/sources/widest-line", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/validate-source-final.log", "log_sha256": "sha256:9368e83852206d1dfb620f96822aef55d6959994875cea3e67502aa37296be6b"},
+    "lint_network": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "warning_count": 168, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/lint-network-final.log", "log_sha256": "sha256:f2e992629deff2ce6bf23462070a548eeab756e2c8f4b2a39f6b678807e9d9d4"},
+    "production_compile": {"command": "uv run nl2repobench harbor compile catalog/sources/widest-line --output .nl2repo/compiled/widest-line-production --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/compile-final.log", "log_sha256": "sha256:10e986532888ca3afca4b880b9383371670e0fcb6d5cddf426ed64556f62ed22"},
+    "docker_agent_build": {"command": "docker build --platform linux/amd64 -t nl2repo-widest-line-agent:final .nl2repo/compiled/widest-line-production/widest-line/environment", "exit_code": 0, "image_id": "sha256:434c4e846a2aa70162e5328b7f0bfbb7694c42e63f5f016c66ce7c206f5ef1fc", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/docker-agent-final.log", "log_sha256": "sha256:74840686f06d5ae24415d18cb3df4c0a74d6b8afa39d890110d8bfa1af994834"},
+    "docker_verifier_build": {"command": "docker build --platform linux/amd64 -t nl2repo-widest-line-verifier:final .nl2repo/compiled/widest-line-production/widest-line/tests", "exit_code": 0, "image_id": "sha256:48d2e21378755885154bb346ae67dedee2dd6a318d2599ec260dda7fd45743ee", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/docker-verifier-final2.log", "log_sha256": "sha256:2bdaf97522f7d140df95f84c15146f80f57e06afe427cca56b70c19fbfcd737"}
+  },
+  "oracle_equivalent_smoke": {
+    "command": "docker run --rm --network none ... nl2repo-widest-line-verifier:final /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 20,
+    "collected": 20,
+    "passed": 20,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/verifier-logs-final/grading.json", "sha256": "sha256:18ff13c61859aff70fca6c09f8d0e7395299d73b71e84bac7d366a03b7976ed4"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/widest-line/verifier-logs-final/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading_sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b", "network_sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8"},
+    "stub": {"valid": true, "collected": 20, "passed": 1, "reward": 0.05, "grading_sha256": "sha256:9c05f035aa8853346f77fff32763806cff0a51a275f5ba4498ae3d41700732c1", "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"},
+    "forgery": {"valid": true, "collected": 20, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading_sha256": "sha256:a859e190e48027735fca7142c36b9ecee6b44af5b998592d0a0a023adeb53f42", "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"},
+    "hang": {"valid": true, "collected": 20, "passed": 0, "reward": 0.0, "bounded": true, "grading_sha256": "sha256:a859e190e48027735fca7142c36b9ecee6b44af5b998592d0a0a023adeb53f42", "network_sha256": "sha256:f9169068e446277387e632eb7d33c622464eade9f8d230476d73c15adf12632b"},
+    "install-script": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading_sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b", "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"},
+    "loader-hook": {"valid": true, "collected": 20, "passed": 1, "reward": 0.05, "grading_sha256": "sha256:9c05f035aa8853346f77fff32763806cff0a51a275f5ba4498ae3d41700732c1", "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"},
+    "offline": {"valid": true, "collected": 20, "passed": 3, "reward": 0.15, "public_network_available": false, "grading_sha256": "sha256:2d4149c1df50213e53cd82001b345a366e48caf23fbcc7e21bf6e994ac5d29de", "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+  },
+  "residual_risks": [
+    "No official Harbor Oracle or model Agent Run was started in this lane by contract; the recorded Oracle result is verifier-only equivalent smoke.",
+    "The shared Node installer and toolchain lock were minimally updated to support offline local-package dependency resolution and candidate-owned npm target metadata; integrator review is required.",
+    "Independent blind/spec review, dataset integration, publication, and formal Harbor Oracle authorization remain downstream."
+  ]
+}

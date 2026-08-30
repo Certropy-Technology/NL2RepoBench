@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "widest-line",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 20,
+  "collection_source": "private/contract.test.mjs",
+  "upstream_baseline": {
+    "runner": "npm test (XO and AVA)",
+    "test_files": ["test.js"],
+    "ava_tests": 1,
+    "ava_assertions": 3,
+    "exit_code": 0
+  },
+  "leaf_groups": {
+    "line_selection": 5,
+    "terminal_width": 10,
+    "error_and_determinism": 5
+  },
+  "metric": "passed / 20; skipped and todo are non-passing; collection mismatch is verifier-invalid",
+  "adapter_boundary": "custom-json-v1; only bounded JSON-safe arguments and observations cross the candidate subprocess boundary"
+}

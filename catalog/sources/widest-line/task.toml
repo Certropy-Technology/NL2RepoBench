@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "widest-line"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "terminal-text-processing"
+tags = ["node", "npm", "esm", "unicode", "ansi", "terminal", "string-width"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/widest-line"
+revision = "d1f04193564d484ca6e24fd8d78d96545ccb0a83"
+license_spdx = "MIT"
+source_digest = "sha256:39a6707282ade39a464de258151bb698e31daad5920fa7b40283ade60714aba7"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate-verifier phases are offline. The exact npm runtime closure is installed during image build; only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen source revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["string-width@8.2.2", "get-east-asian-width@1.6.0", "strip-ansi@7.2.0", "ansi-regex@6.3.0"]
+
+[dependencies.artifact]
+digest = "sha256:ba57de80e0aeee35c76b6564fbd64d2ce8b9a775d8b35413af259075baed1f72"
+size_bytes = 256000
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:ba57de80e0aeee35c76b6564fbd64d2ce8b9a775d8b35413af259075baed1f72"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 20
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:2d83b8e15049e124adaea4263896dca240be544137bbe9ec6c4802255c4d98b6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:2d83b8e15049e124adaea4263896dca240be544137bbe9ec6c4802255c4d98b6"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:8de52269ee3179c4c72b1b4798675a3562e158a27fe6bbb169c12d9fb02367ca"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:8de52269ee3179c4c72b1b4798675a3562e158a27fe6bbb169c12d9fb02367ca"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the widest-line 6.0.0 ESM package, measuring the maximum terminal display width across newline-separated text with Unicode and ANSI support."
+keywords = ["node", "npm", "esm", "unicode", "ansi", "terminal", "string-width"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-widest-line"
+reason = "Source, package metadata, npm closure, deterministic custom-json-v1 tests, production compile, and verifier-only Oracle-equivalent/control smoke have passed in this authoring lane. Formal Harbor Oracle receipt, independent review, dataset integration, and model execution remain downstream."
+
+[oracle_bundle]
+digest = "sha256:815dc314132533e9595863037b1800322bbd681b28c655bd411b57f0e356ec2a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:815dc314132533e9595863037b1800322bbd681b28c655bd411b57f0e356ec2a"
+visibility = "private"

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "widest-line",
+  "protocol": "custom-json-v1",
+  "candidate_package": "widest-line",
+  "candidate_export": "default",
+  "request": "{package, export, args}",
+  "allowed_args": "at most 32 JSON values; this task supplies one bounded primitive per call",
+  "response": "{ok: true, value} or {ok: false, error, exception_type, message}",
+  "limits": {"request_bytes": 65536, "response_bytes": 262144, "call_timeout_seconds": 30},
+  "isolation": ["no-addons", "sanitized environment", "no NODE_PATH", "no NODE_OPTIONS", "no network"]
+}
