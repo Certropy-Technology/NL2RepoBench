@@ -1,0 +1,573 @@
+# Java/Maven 与 Rust/Cargo Runtime 扩展技术规格
+
+状态：approved-for-foundation
+日期：2026-08-30
+目标分支：`main`
+基线提交：`9c276fc0ec407e3a248cd2c092084cd8d0c3c89f`
+工作模式：foundation implementation -> synthetic vertical slice -> real candidate -> pilot
+
+## 1. 摘要
+
+本规格定义 NL2RepoBench 从 Python、Node、Go 扩展到 Java/Maven，并随后用 Rust/Cargo
+验证 runtime adapter 抽象的完整实施合同。扩展不能引入新的顶层 schema family、grader、
+metric family、legacy reader 或语言专属 orchestration。所有语言继续使用：
+
+- 一份 canonical task contract；
+- `(language, package_manager)` 显式 runtime discriminator；
+- 一个 Harbor compiler registry；
+- 一个 runtime-neutral `LeafReport`；
+- 一个 `fixed-test-pass-rate-v1` evaluator；
+- separate verifier、固定分母、断网 Agent 和 verifier-owned reward；
+- content-addressed private artifacts 与现有 OSS/archive 门禁。
+
+第一交付目标是 `java+maven`，只支持 Linux/amd64、JDK 21、Maven 3.9.x 和纯 Java
+library Package。Gradle、Kotlin、Android、JNI、annotation processor、外部服务、数据库、
+多 module reactor 和动态 Maven 版本不在首个 production profile 中。
+
+Rust/Cargo 只能在 Java pilot 稳定后启动。它的作用不仅是增加题目，也是验证新增语言时
+不需要修改 generic evaluator、dependency contract 或 subprocess supervisor。
+
+## 2. 目标与非目标
+
+### 2.1 目标
+
+1. 把 dependency bundle 收敛成通用 `lock + offline_store + inventory`。
+2. 把 Go bounded process/resource 逻辑抽成语言无关 supervisor，并保持 Go 行为不变。
+3. 增加 Java bridge IR、Maven package-manager adapter 和 JUnit XML normalizer。
+4. 建立 digest-pinned JDK 21/Maven toolchain 和预装 OpenHands Agent runtime。
+5. 完成 synthetic Java vertical slice。
+6. 完成一个真实 Easy Java candidate 的 authoring、Oracle 和 controls。
+7. 完成 3 到 5 题 Java pilot 后才开放 Java discovery/controller lane。
+8. 随后实现 Rust/Cargo adapter，证明 generic seams 不需要再次重构。
+
+### 2.2 非目标
+
+- 不读取或兼容新的 Python v1、Node v2、Java v3 等运行时 schema。
+- 不把 Maven、JUnit、Cargo 名称写进 generic evaluator。
+- 不直接让 trusted verifier JVM import/load candidate class。
+- 不执行 candidate 提供的 `pom.xml` plugin、Gradle plugin、annotation processor 或脚本。
+- 不在 Agent/verifier 运行阶段访问 Maven Central、GitHub、crates.io 或其他网络来源。
+- 不把 Java/Rust 新 release 与论文、legacy OpenHands 或旧 Harbor release 分数合并。
+- 不在 synthetic、Oracle 和 controls 通过前批量发现或 author Java/Rust task。
+- 不通过删除、重写或弱化上游真实行为断言跨过 Oracle 门槛。
+
+## 3. 当前实现事实与迁移约束
+
+当前 checkout 已有显式 `HarborCompilerRegistry` 和统一 `LeafReport`/evaluator，但仍有以下
+封闭点：
+
+- `RuntimeLanguage` 只包含 `python|node|go`；
+- `PackageManager` 只包含 `uv|pip|npm|pnpm|go-modules|none`；
+- `DependencyBundle` 使用 Python `lock_artifact` 和 Go `module_bundle` 专属字段；
+- `TestManifest.framework` 固定为 `pytest`；
+- Go compiler 和 verifier 仍包含 profile-specific bridge/supervisor；
+- catalog compiler 仍有 schema/runtime 分支，不能再为 Java 增加一套平行 model；
+- production toolchain 没有 JDK/Maven image lock；
+- authoring/discovery/supervisor 尚无 Java lane。
+
+本迁移直接修改当前 canonical contract。旧字段只存在于不可变历史 archive，不由新 parser、
+compiler 或 verifier 读取。迁移提交必须原子更新 catalog source、schema、fixtures、compiler
+和 tests；不能保留 public compatibility shim。
+
+## 4. 目标架构
+
+```text
+catalog/sources/<task>/task.toml
+        |
+        v
+domain canonical TaskSource
+  runtime = (language, package_manager)
+  dependency_bundle = (lock, offline_store, inventory)
+        |
+        +--> package_managers/registry.py
+        |      +--> uv/npm/pnpm/go-modules/maven/cargo
+        |
+        +--> harbor/registry.py
+               +--> python/node/go/java/rust compiler adapter
+                         |
+                         v
+                separate verifier
+                  trusted test process
+                         |
+                  candidate client
+                         |
+                  bounded subprocess
+                         |
+                candidate language bridge
+                         |
+                         v
+                  normalized LeafReport
+                         |
+                  fixed-denominator evaluator
+```
+
+Generic orchestration 不得通过 `if language == ...` 选择行为；仅 registry 和 runtime-specific
+adapter 可以认识语言和 package manager。
+
+## 5. 通用 Dependency Bundle
+
+### 5.1 Canonical model
+
+`DependencyBundle` 的 production 形状必须收敛为：
+
+```text
+DependencyBundle
+  status: known | unknown
+  package_manager: uv | pip | npm | pnpm | go-modules | maven | cargo | none
+  lock: ArtifactRef | null
+  offline_store: ArtifactRef | null
+  inventory: ArtifactRef | null
+  packages: tuple[str, ...]
+```
+
+约束：
+
+- `status=known` 必须同时提供 `lock`、`offline_store` 和 `inventory`；`none` profile 可由
+  validator 明确豁免空依赖，但仍须有 inventory 记录空 closure。
+- 三个 artifact 必须是 content-addressed URI；offline store 和 inventory 必须 private。
+- generic model 不包含 `module_bundle`、`maven_bundle`、`cargo_vendor` 等语言专属字段。
+- package-manager adapter 拥有 lock 语义、store 目录结构和 install/build command。
+- inventory 是 verifier-owned JSON，至少包含 schema、package manager、lock digest、store
+  digest、逐文件相对路径、size、SHA-256、生成命令身份、offline smoke 结果和时间。
+- 拒绝 symlink、device、FIFO、absolute path、`..`、重复 path、超限 member 和 hash mismatch。
+
+### 5.2 迁移
+
+- Python `lock_artifact` 迁移到 `lock`；build-time index closure 生成 store/inventory。
+- Go `module_bundle` 拆为 `go.mod/go.sum` lock、vendor/module-cache store 和 inventory。
+- Node npm/pnpm 迁移 lockfile、offline store 和 inventory 到同一模型。
+- 同一提交重生成 JSON schema、canonical manifest fixtures 和 compiler golden trees。
+- 新 parser 不接受旧字段；历史 archive reader 留在 analysis/archive 边界。
+
+### 5.3 PackageManagerAdapter protocol
+
+```text
+identity
+lockfile_name
+validate_lock(lock, expected_toolchain) -> LockSummary
+validate_offline_store(store, lock, inventory, expected_toolchain) -> StoreSummary
+build_commands(profile) -> allowlisted argv sequences
+offline_environment(profile) -> exact environment map
+```
+
+返回值必须是 typed record，不能返回自由 shell 字符串。
+
+## 6. 通用 Bounded Subprocess Supervisor
+
+新增 `verification/subprocess_supervisor.py`：
+
+```text
+SubprocessLimits
+  timeout_sec
+  cpu_sec
+  max_output_bytes
+  max_file_bytes
+  max_open_files
+  uid
+  max_processes
+
+SubprocessResult
+  returncode
+  stdout
+  stderr
+  timed_out
+  output_limit_exceeded
+  cleanup_complete
+```
+
+必须保持并测试：
+
+- argv 直接执行，禁止 `shell=True`；
+- non-root UID 10001；
+- 独立 process group/session；
+- wall clock、CPU、FD、输出和文件大小限制；
+- stdout/stderr 合并计入 aggregate output cap；
+- success、failure、timeout、output flood 全路径 kill process group；
+- 检查 UID/process group quiescence，后台 child 不得残留；
+- bounded stderr/details 进入 grading，原始大输出只进入受控 artifact；
+- 不设置通用 RLIMIT_AS。JVM 使用 cgroup、`-Xmx`、Metaspace 和 PID 限制；
+- spawn/exec 失败产生结构化 candidate failure，不抛出到 grader 外层。
+
+Go `run_go_bridge()` 必须改为薄 wrapper 或直接调用 generic supervisor。Go 的现有返回码、
+timeout、output cap 和 tests 必须保持行为兼容；不允许为了重构修改 Go metric 或已冻结 task。
+
+## 7. Java/Maven Runtime
+
+### 7.1 Runtime identity
+
+```text
+RuntimeLanguage.JAVA = "java"
+PackageManager.MAVEN = "maven"
+allowed pair = java+maven
+```
+
+首个 profile 固定：
+
+- JDK 21 LTS；
+- Maven 3.9.x；
+- Linux/amd64；
+- single-module JAR；
+- source/target/release 8、11、17 或 21；
+- JUnit Jupiter，或通过 JUnit Vintage 执行冻结 JUnit 4 tests；
+- 无 JNI、Android、Kotlin、Groovy、Scala、annotation processor 和 custom classloader。
+
+### 7.2 Maven lock 与 offline store
+
+Maven 没有 Cargo/NuGet 等价的原生完整 lock。adapter 必须生成 verifier-owned
+`maven-lock-v1.json`：
+
+```text
+schema_version
+maven_version
+jdk_version
+effective_project
+artifacts[]
+  group_id, artifact_id, version, type, classifier, scope, sha256, size
+plugins[]
+  group_id, artifact_id, version, dependencies[]
+repositories[]
+offline_smoke
+```
+
+生产流程：
+
+1. 从冻结 revision 的 verifier-owned harness POM 解析 effective model。
+2. 拒绝 SNAPSHOT、version range、`LATEST`、`RELEASE`、system scope、未允许 repository、
+   extension、profile 激活脚本和未锁 plugin。
+3. 用固定 Maven dependency plugin 执行 `dependency:go-offline`。
+4. 对本地 Maven repository 生成逐文件 inventory。
+5. 在新的断网容器中只挂载该 repository，执行 `mvn -o` compile/test discovery smoke。
+6. lock、repository store 和 inventory 分别写入 private CAS。
+
+`go-offline` 只是依赖获取步骤，不是完整性证明；只有 inventory hash 和断网复验通过，
+closure 才是 `known`。
+
+### 7.3 Candidate workspace 与 build boundary
+
+Agent 可以生成标准 Maven repository，但 verifier 不执行 candidate `pom.xml`。verifier 只接受：
+
+- `src/main/java/**/*.java`；
+- 明确允许的 `src/main/resources/**`；
+- 用于 packaging contract 的 `pom.xml` 仅做安全静态解析。
+
+拒绝 symlink、超限文件、`target/`、`.mvn/extensions.xml`、wrapper binary、plugin、build
+extension、annotation processor、native library 和可执行脚本。源码复制到 UID 10001 staging，
+由 verifier-owned POM/argv 在 offline Maven repository 上编译。
+
+### 7.4 Java Bridge IR
+
+新增 `verification/java_bridge.py`，首个 profile 只支持可安全序列化的 public API：
+
+- scalar：string、boolean、int32、int64、float64；
+- bytes：base64 transport；
+- array/list/set of supported values；
+- map with string keys and supported values；
+- enum by stable name；
+- simple immutable value object projected to explicit named fields；
+- declared exception mapped to `error_type/message`。
+
+首 profile 只允许 public constructor、public static method 和显式 allowlisted instance method。
+不支持 callback、stream、thread、socket、reflection API、arbitrary object graph 或 Java
+serialization。bridge 源码只包含 public API mapping 和 transport，不包含隐藏断言。
+
+candidate bridge 在独立 JVM 中运行：
+
+```text
+java
+  -Xmx256m
+  -XX:MaxMetaspaceSize=128m
+  -Djava.awt.headless=true
+  -cp <verifier-owned bridge + candidate classes + locked transport deps>
+  <generated bridge main>
+```
+
+trusted JUnit process 只通过 client 调用该 JVM。candidate 不能写 reward/report，也不能在
+trusted JUnit JVM 中执行。
+
+### 7.5 JUnit report normalizer
+
+新增 `verification/normalize/junit_open_test_report.py`：
+
+- 输入为 JUnit Platform Open Test Reporting XML；
+- 使用安全 XML parser，禁用 entity、DTD、外部资源；
+- 限制总字节、节点数、depth、属性长度和 details 长度；
+- 把 stable unique id、display name、status、duration 和 collection error 转为 `LeafReport`；
+- 验证 report leaf IDs 唯一、collected 与 leaves 长度一致、trusted exit code 一致；
+- unknown status 或 malformed hierarchy 产生 `ReportNormalizationError`；
+- evaluator 不出现 `junit`、`maven`、`java` 字符串。
+
+## 8. Java Toolchain 与 Compiler
+
+新增：
+
+```text
+toolchain.java.dev.lock.toml
+toolchain.java.lock.toml                  # production gate 后生成
+src/nl2repobench/package_managers/maven.py
+src/nl2repobench/runtimes/java.py
+src/nl2repobench/harbor/java_compiler.py
+src/nl2repobench/verification/java_bridge.py
+src/nl2repobench/verification/java_candidate_client.py
+src/nl2repobench/verification/normalize/junit_open_test_report.py
+```
+
+Java dev toolchain 必须锁：
+
+- JDK 21 image name、RepoDigest 和 image ID；
+- Maven image/distribution version、digest 和 executable；
+- OpenHands Agent runtime image ID、fork commit、SDK/tools/LiteLLM versions；
+- JUnit Platform、Vintage、reporting 和 transport dependency versions；
+- Harbor 0.21.0/task schema 1.4 lock digest；
+- Java runtime/bridge source digest；
+- verifier requirements digest；
+- platform `linux/amd64`。
+
+Agent image 从现有 OpenHands runtime 派生，通过 digest-pinned toolchain stage 复制 JDK/Maven，
+并在断网 probe 中验证 `java -version`、`javac -version`、`mvn -version`、OpenHands import、
+curl 和 provider protocol。production Agent 和 verifier 运行均为 no-network。
+
+Java compiler 只能通过 registry `(JAVA, MAVEN)` 解析；unknown combination fail closed。
+
+## 9. Synthetic Java Vertical Slice
+
+建立 synthetic fixture，建议 task ID `java-ministats`，不进入 production dataset。fixture 包含：
+
+- 字符串、数值、list/map 和 value object bridge operations；
+- public exception contract；
+- verifier-owned JUnit Jupiter tests；
+- Open Test Reporting XML；
+- fixed frozen denominator；
+- Maven lock/store/inventory private artifacts；
+- empty、stub、forgery、plugin-injection、hang、`System.exit`、output flood、child process、
+  offline controls。
+
+Synthetic Done 条件：
+
+- source/schema validation 通过；
+- deterministic compile 两次 byte-identical；
+- Harbor Oracle reward 1.0、valid=true、collected=frozen_total；
+- empty/stub/forgery/plugin-injection/hang/offline 不得异常高分；
+- forged XML/reward 不影响 verifier-owned grading；
+- hang/System.exit/output flood/child process bounded，cleanup_complete=true；
+- Agent context 不含 hidden tests、bridge assertions、Oracle source 或 reward；
+- network=false；
+- fresh container 可复现。
+
+## 10. 首个真实 Easy Candidate
+
+首选审计对象：`vdurmont/semver4j` 的冻结 release revision。理由：单 module、纯 Java、API 小、
+输入输出可序列化、MIT。当前 upstream POM 使用 Java 7/JUnit 4，因此 candidate gate 必须确认：
+
+- 选定 revision 不是 branch/latest；
+- JDK 21 controlled harness 能用受支持 `--release` 编译；
+- JUnit Vintage/adapted client 能保持上游断言语义；
+- 测试 collection、失败集合和 baseline 达到 authoring gate；
+- 不执行 release/GPG/Nexus/Cobertura plugin；
+- 公共 instruction 覆盖全部隐藏 behavior。
+
+若 semver4j 在 exact revision、JDK compatibility 或测试质量门禁失败，候选依次为：
+
+1. `java-diff-utils/java-diff-utils` 的稳定 release；
+2. Apache Commons CSV 稳定 release；
+3. Apache Commons Codec 稳定 release。
+
+不得使用 master 上的 SNAPSHOT POM 作为 release identity；由 source freeze 选择完整 commit 和
+稳定测试版本。
+
+真实 Easy Done 条件沿用仓库单题 Definition of Done，并额外要求 Java candidate boundary、
+Maven plugin injection 和 offline closure controls 通过。
+
+## 11. Java Controls 与 3 到 5 题 Pilot
+
+最低 control matrix：
+
+| control | 预期 |
+| --- | --- |
+| Oracle | valid=true，reward >= 0.80，collection=frozen_total |
+| empty | 近 0 或结构化 candidate installation failure |
+| stub | 低分 |
+| forgery | 伪造 XML/reward 不影响 trusted result |
+| malicious pom/plugin | plugin 不执行，candidate workspace 被拒绝或 controlled harness 忽略 |
+| compile failure | valid model failure，reward=0 |
+| hang | bounded timeout，process group 清理 |
+| System.exit | 不终止 trusted verifier |
+| output flood | bounded capture，reward=0 |
+| child process | UID/process group quiescent |
+| offline | verifier 完成且 network=false |
+
+建议 pilot 形态：Easy、Medium、Hard 各至少一题，parser/codec/value-object/algorithm 至少三类。
+候选只是 discovery 输入，不因能编译就发布。只有 synthetic、首个真实题、完整 controls、blind
+review 和真实 Agent pilot 无系统性问题后，才允许：
+
+- 增加 `scripts/discover_java_candidates.py`；
+- 增加 Java queue/plan/state；
+- 扩展 authoring supervisor language fairness；
+- 将 Java controller 纳入 systemd 动态并发；
+- 建新 dataset/release identity。
+
+## 12. Rust/Cargo 伪证实验
+
+Java pilot 稳定后新增：
+
+```text
+RuntimeLanguage.RUST
+PackageManager.CARGO
+package_managers/cargo.py
+runtimes/rust.py
+harbor/rust_compiler.py
+toolchain.rust.dev.lock.toml
+```
+
+Cargo profile 固定 `Cargo.lock + cargo vendor + cargo --frozen`。offline store 和 inventory
+必须使用第 5 节 generic contract。candidate 通过受限 Rust bridge/subprocess 执行，不依赖
+unstable libtest JSON；normalizer 仍输出 `LeafReport`。
+
+Rust 验收的关键伪证指标：
+
+- `verification/evaluator.py` 业务逻辑改动 0 行；
+- generic dependency model 字段改动 0 行；
+- generic subprocess supervisor API 改动 0 行；
+- generic Harbor writer 业务分支改动 0 行；
+- 仅允许 enum/registry additive registration、Cargo/Rust adapter、tests、toolchain 和 docs；
+- synthetic Rust Oracle/controls 与 Java 使用同一 gate contract。
+
+若 Rust 需要修改上述 generic seams，停止扩语言并回到 foundation 修复，不得复制实现。
+
+## 13. 分阶段 TODO 与依赖
+
+### F0 Generic dependency contract
+
+- [ ] 新 model、schema 和 validators。
+- [ ] Python/Node/Go source 一次性迁移。
+- [ ] package-manager adapters 使用统一 protocol。
+- [ ] golden/schema/catalog/compiler tests 更新。
+- [ ] `rg` 确认 runtime path 无旧字段消费者。
+
+Gate：全量 tests、Ruff、Mypy、deterministic selected task compile 通过；现有 score 语义不变。
+
+### F1 Generic subprocess supervisor
+
+- [ ] 新 bounded supervisor 和 focused tests。
+- [ ] Go wrapper 迁移。
+- [ ] timeout/output/background cleanup sibling tests。
+- [ ] Go synthetic/production focused controls 不回归。
+
+Gate：Go 现有测试和 controls 通过；无残留 UID/process group。
+
+### J0 Java domain and adapters
+
+- [ ] Java/Maven enum、validation、registry。
+- [ ] Maven lock/store/inventory adapter。
+- [ ] Java bridge IR/client/supervisor composition。
+- [ ] JUnit report normalizer。
+
+Gate：pure unit tests、malformed inputs、unknown runtime fail closed。
+
+### J1 Java toolchain and compiler
+
+- [ ] dev lock 和 digest-pinned image。
+- [ ] Java Agent/offline probe。
+- [ ] Java Harbor compiler、README、task.toml、bundle manifest。
+- [ ] deterministic compilation。
+
+Gate：development fixture compile 两次 byte-identical，Agent/verifier no-network。
+
+### J2 Synthetic vertical slice
+
+- [ ] `java-ministats` fixture。
+- [ ] Oracle 和完整 controls。
+- [ ] evidence/report/archive manifest。
+
+Gate：第 9 节全部满足。
+
+### J3 Real Easy candidate
+
+- [ ] exact revision/license/baselines。
+- [ ] API inventory/spec/traceability。
+- [ ] private tests/bridge/closure。
+- [ ] Oracle/controls/blind review。
+
+Gate：单题 Definition of Done。
+
+### J4 Java pilot
+
+- [ ] 3 到 5 题，覆盖难度和类别。
+- [ ] 至少两个 Agent/model pilot，保存 ATIF/workspace/cost coverage。
+- [ ] 无系统性 spec/environment/verifier failure。
+
+Gate：批准 Java dataset/release 和 controller lane。
+
+### J5 Java production lane
+
+- [ ] discovery pool/adapter/queue。
+- [ ] authoring supervisor/systemd dynamic fairness。
+- [ ] archive/source/private CAS/integration gates。
+
+Gate：Java 新 lane 的完成题能自动 validate -> compile -> commit -> push -> OSS verify -> cleanup。
+
+### R0 Rust/Cargo proof
+
+- [ ] Cargo adapter、Rust bridge/compiler/toolchain。
+- [ ] synthetic vertical slice 和 controls。
+- [ ] generic seam diff audit。
+
+Gate：第 12 节伪证指标全部满足。
+
+## 14. 验收命令
+
+每阶段至少运行：
+
+```bash
+uv run pytest -q --no-cov
+uv run ruff check src tests scripts
+uv run mypy src/nl2repobench
+git diff --check
+```
+
+涉及 schema/manifest：
+
+```bash
+uv run nl2repo schema --check
+uv run nl2repo task validate-source <source>
+uv run nl2repo harbor compile <source> --output <out1> --toolchain <lock> \
+  --artifact-root .nl2repo/artifacts --allow-private
+uv run nl2repo harbor compile <source> --output <out2> --toolchain <lock> \
+  --artifact-root .nl2repo/artifacts --allow-private
+diff -qr <out1> <out2>
+```
+
+Harbor 使用仓库锁定 runner：
+
+```bash
+uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle
+```
+
+每次运行保存完整 command、exit code、JUnit/Open Test Report、LeafReport、grading、reward、
+network evidence、image identity、manifest digest 和 artifact path。不得把未运行写成已通过。
+
+## 15. Subagent 执行合同
+
+实施采用单 writer、独立 worktree、分 milestone review：
+
+1. 第一轮只实现 F0 + F1，不启动 Java adapter。
+2. worker 可编辑、添加 tests、运行本地 gates 和提交到其 topic branch；不得 push、merge、
+   删除其他 worktree、修改 `catalog/tasks` generated output 或启动 benchmark campaign。
+3. 遇到 canonical schema 迁移范围扩大、现有 published task digest 变化、metric 变化或无法保持
+   Go behavior 时，停止并向 parent 请求决定。
+4. worker handoff 必须列 changed files、migration、commands/exit codes、失败、残余风险、commit。
+5. fresh reviewer 检查 F0/F1 diff；parent 决定修复和是否进入 J0。
+6. 后续 J0/J1/J2/J3/J4/J5/R0 每个 milestone 单独 writer、review 和 gate，不并发写同一 seam。
+
+## 16. Definition of Done
+
+整个规格只有在以下条件同时满足时完成：
+
+- current runtime 只读取一套 dependency bundle 和 canonical schema；
+- Python/Node/Go behavior 与 fixed denominator 不回归；
+- Java synthetic 和真实 Easy task 通过 Oracle/controls/offline/separate verifier；
+- Java 3 到 5 题 pilot 无未解决系统性 blocker；
+- Java lane 自动化归档集成闭环通过；
+- Rust synthetic proof 通过且 generic seam 无业务改动；
+- 所有 image/source/toolchain/content digest 可追踪；
+- 新 dataset/release 不与旧结果混合；
+- docs、tests、schema、toolchain、artifact manifests 和运行证据完整。
