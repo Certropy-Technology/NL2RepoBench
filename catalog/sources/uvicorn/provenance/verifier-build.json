@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "protocol": "custom-json-v1",
+  "frozen_total": 45,
+  "reference_probe": {"exit_code": 0, "collected": 45, "passed": 45, "failed": 0},
+  "candidate_boundary": "UID 10001 subprocess through nl2repobench.verification.candidate_client.execute_script",
+  "verifier_bundle": {"digest": "sha256:1d096771a9b72504a1ca4fed339f009be3b1d99afa5e6b587f569751e14f1432", "size_bytes": 30720},
+  "oracle_bundle": {"digest": "sha256:8c6377db8fa23e9bd5b5d727277d44fea5284482f836bf18aada56a7f1a3daf8", "size_bytes": 10240},
+  "network": "candidate and verifier no-network; trusted Oracle exact source-host exception only"
+}

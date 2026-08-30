@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "upstream_url": "https://github.com/Kludex/uvicorn",
+  "revision": "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae",
+  "resolved_revision": "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae",
+  "version": "0.52.4",
+  "license_spdx": "BSD-3-Clause",
+  "license_file": "LICENSE.md",
+  "license_sha256": "sha256:efe1acf3e62fb99c288b0ec73e5a773b7268ef4320fe757ea994214e4b63c371",
+  "archive_format": "raw-git-archive-tar",
+  "archive_size_bytes": 1955840,
+  "archive_sha256": "sha256:ea14dd890be1bf0e78f1a5f4984794b9c1b762251a2701435f8d7c29145b0184",
+  "submodules": [],
+  "commands": [
+    {"command": "git fetch --no-tags origin 9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae", "exit_code": 0},
+    {"command": "git checkout --detach 9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae", "exit_code": 0},
+    {"command": "git archive --format=tar 9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae", "exit_code": 0},
+    {"command": "sha256sum uvicorn-source.tar LICENSE.md", "exit_code": 0}
+  ]
+}

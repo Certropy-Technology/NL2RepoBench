@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "revision": "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae",
+  "contract_to_leaves": {
+    "package exports, version and CLI": ["exports-version", "metadata-version", "cli-help", "cli-version"],
+    "ANSI styling": ["ansi-style"],
+    "import resolution": ["importer-passthrough", "importer-nested", "importer-invalid-format", "importer-invalid-module", "importer-invalid-attribute"],
+    "Config defaults and properties": ["config-defaults", "config-properties"],
+    "Config load and interface adaptation": ["config-load-asgi3", "config-load-asgi2", "config-load-wsgi", "config-factory", "config-header-precedence", "config-bad-app-exit"],
+    "loop and reload configuration": ["config-loop-factories", "config-setup-event-loop", "reload-patterns"],
+    "logging formatters and redaction": ["formatter-default", "formatter-access", "formatter-unknown-status", "message-placeholders"],
+    "proxy header trust": ["proxy-trusted-http", "proxy-untrusted", "proxy-websocket", "proxy-network-and-port", "proxy-duplicate-headers", "proxy-lifespan"],
+    "protocol addressing and path helpers": ["path-query", "client-addresses", "transport-addresses", "socket-addresses", "transport-ssl"],
+    "WSGI and ASGI adapters": ["wsgi-environ", "asgi2-middleware"],
+    "HTTP flow control": ["service-unavailable", "flow-control"],
+    "server and lifespan state": ["server-state", "server-request-limit", "lifespan-off"],
+    "optional backend fallback and constants": ["auto-protocols", "public-constants"]
+  },
+  "leaf_count": 45,
+  "bidirectional_complete": true
+}

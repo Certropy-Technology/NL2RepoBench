@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "terminal_kind": "valid",
+  "source_revision": "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae",
+  "source_archive_sha256": "sha256:ea14dd890be1bf0e78f1a5f4984794b9c1b762251a2701435f8d7c29145b0184",
+  "bundle_manifest": {
+    "path": ".nl2repo/handoff-compile-uvicorn/uvicorn/bundle.manifest.json",
+    "sha256": "sha256:ba070e701b91580a38fd8a53d6f650ce9697b39a051ef508540e5108461ee4cb"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_runtime_image_expected_id": "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5",
+    "agent_runtime_image_observed_id": "sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "lock_artifact": "sha256:9e004a37049cd9aee2e2d768ebcfe413ba180572d6280d76a032ebf945a12229",
+    "lock_size_bytes": 1874,
+    "packages": [
+      "click==8.3.1",
+      "h11==0.16.0",
+      "hatchling==1.27.0",
+      "packaging==26.3",
+      "pathspec==1.1.1",
+      "pluggy==1.6.0",
+      "setuptools==80.9.0",
+      "trove-classifiers==2026.6.1.19",
+      "wheel==0.45.1"
+    ]
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "frozen_total": 45,
+    "collection": 45,
+    "verifier_bundle": "sha256:1d096771a9b72504a1ca4fed339f009be3b1d99afa5e6b587f569751e14f1432"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-uvicorn/uvicorn -a oracle --job-name uvicorn-final-oracle-20260830 -o .nl2repo/final-runs-uvicorn/oracle --allow-agent-host github.com --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 45,
+    "total": 45,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/final-runs-uvicorn/oracle/uvicorn-final-oracle-20260830/uvicorn__gYwkJvk/verifier/grading.json",
+      "sha256": "sha256:be580309239133d2c1ae091a3e0cc4070c4a5d30a5d7418229e6c852571698f7"
+    },
+    "network": {
+      "path": ".nl2repo/final-runs-uvicorn/oracle/uvicorn-final-oracle-20260830/uvicorn__gYwkJvk/verifier/network.json",
+      "sha256": "sha256:93cbaecd5e7032ecc4dd933e74f5d55444f88273d42590134755dfaad89db26c"
+    },
+    "source_fetch": "solve.sh asserted the exact revision and raw git archive SHA-256 before restoring the workspace"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile-uvicorn/uvicorn -a nop --job-name uvicorn-final-empty-20260830 -o .nl2repo/final-runs-uvicorn/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/empty/uvicorn-final-empty-20260830/uvicorn__WYMgahQ/verifier/grading.json",
+        "sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/empty/uvicorn-final-empty-20260830/uvicorn__WYMgahQ/verifier/network.json",
+        "sha256": "sha256:c85c9c3489d2cac7bc25c95bc67ef7759714ea9c5642cab7add5c188a017533c"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-uvicorn/uvicorn-stub -a oracle --job-name uvicorn-final-stub-20260830 -o .nl2repo/final-runs-uvicorn/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 2,
+      "total": 45,
+      "reward": 0.044444444444444446,
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/stub/uvicorn-final-stub-20260830/uvicorn-stub__pAtB56Y/verifier/grading.json",
+        "sha256": "sha256:5bd7a4024018d0568ce510a8a445caf05c03f77b6eed989f8de2a38df8755d02"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/stub/uvicorn-final-stub-20260830/uvicorn-stub__pAtB56Y/verifier/network.json",
+        "sha256": "sha256:bafb6ba322a52b4e37776eb1d21302447b7e8c4ad724a768ac88299ba046c843"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-uvicorn/uvicorn-forgery -a oracle --job-name uvicorn-final-forgery-20260830b -o .nl2repo/final-runs-uvicorn/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 2,
+      "total": 45,
+      "reward": 0.044444444444444446,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/forgery/uvicorn-final-forgery-20260830b/uvicorn-forgery__5G7CpYR/verifier/grading.json",
+        "sha256": "sha256:5bd7a4024018d0568ce510a8a445caf05c03f77b6eed989f8de2a38df8755d02"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/forgery/uvicorn-final-forgery-20260830b/uvicorn-forgery__5G7CpYR/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-uvicorn/uvicorn-install-hang -a oracle --job-name uvicorn-final-install-hang-20260830b -o .nl2repo/final-runs-uvicorn/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "install_outcome": "timeout",
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/install-hang/uvicorn-final-install-hang-20260830b/uvicorn-install-hang__KKot6mL/verifier/grading.json",
+        "sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/install-hang/uvicorn-final-install-hang-20260830b/uvicorn-install-hang__KKot6mL/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-uvicorn/uvicorn-call-hang -a oracle --job-name uvicorn-final-call-hang-20260830b -o .nl2repo/final-runs-uvicorn/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "total": 45,
+      "reward": 0.022222222222222223,
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/call-hang/uvicorn-final-call-hang-20260830b/uvicorn-call-hang__HMYBDD7/verifier/grading.json",
+        "sha256": "sha256:58de9f5598c905a6a5d0bdca6bf6bfcc7653f6f73dec487088bba0701ef3608e"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/call-hang/uvicorn-final-call-hang-20260830b/uvicorn-call-hang__HMYBDD7/verifier/network.json",
+        "sha256": "sha256:5895df1b3fefffe39eef752debb6387715237cb1ec7cbf15a7a4f788ffd110a2"
+      }
+    },
+    "workspace_invalid": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-uvicorn/uvicorn-workspace-invalid -a oracle --job-name uvicorn-final-workspace-invalid-20260830b -o .nl2repo/final-runs-uvicorn/workspace-invalid --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_reason": "candidate-workspace-rejected",
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/workspace-invalid/uvicorn-final-workspace-invalid-20260830b/uvicorn-workspace-invalid__oUrQuLF/verifier/grading.json",
+        "sha256": "sha256:b0a3a312b636c777e4523cca67c9c3d55c25fb4c772622e9ad3aa750f44dbc35"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/workspace-invalid/uvicorn-final-workspace-invalid-20260830b/uvicorn-workspace-invalid__oUrQuLF/verifier/network.json",
+        "sha256": "sha256:673a154e21b2697c411220a74914feaaec12babbf3ffd095afe55ac79ade2097"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-uvicorn/uvicorn-stub -a oracle --job-name uvicorn-final-offline-20260830b -o .nl2repo/final-runs-uvicorn/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "passed": 2,
+      "total": 45,
+      "reward": 0.044444444444444446,
+      "public_network_available": false,
+      "hostname_probe_available": false,
+      "numeric_ip_probe_available": false,
+      "grading": {
+        "path": ".nl2repo/final-runs-uvicorn/offline/uvicorn-final-offline-20260830b/uvicorn-stub__3W65haq/verifier/grading.json",
+        "sha256": "sha256:5bd7a4024018d0568ce510a8a445caf05c03f77b6eed989f8de2a38df8755d02"
+      },
+      "network": {
+        "path": ".nl2repo/final-runs-uvicorn/offline/uvicorn-final-offline-20260830b/uvicorn-stub__3W65haq/verifier/network.json",
+        "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b"
+      }
+    }
+  },
+  "residual_risks": [
+    "The deterministic 45-leaf contract excludes live listeners, TLS, signals, supervisors, reload watchers, and optional native or WebSocket backends from the 1,329-test upstream suite.",
+    "The trusted Oracle alone used an exact github.com source-host override; model Agent metadata remains no-network with no allowed hosts.",
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da tag currently has image ID sha256:dbfa15a... rather than the toolchain-locked sha256:70525a5...; the integrator must restore the immutable image before a model Agent Run.",
+    "Blind review, model Agent Run, dataset integration, and publication remain outside this lane."
+  ],
+  "status": "controls-passed"
+}

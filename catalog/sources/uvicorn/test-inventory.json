@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "source_revision": "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae",
+  "upstream_test_files": 24,
+  "upstream_test_functions": 367,
+  "upstream_collected": 1329,
+  "upstream_result": {"passed": 1319, "skipped": 10, "failed": 0, "exit_code": 0, "seconds": 33.89},
+  "upstream_environment": "CPython 3.12.14 in python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a, Debian 13.6 amd64, run with network disabled",
+  "adapted_leaf_count": 45,
+  "collection_source": "task-local custom-json-v1 verifier",
+  "collection_policy": "Every scenario emits exactly one unique leaf; collection mismatch is fatal.",
+  "adaptation_groups": ["exports and CLI", "import resolution", "configuration", "logging", "proxy headers", "protocol utilities", "ASGI/WSGI adapters", "flow control", "server and lifespan state"],
+  "excluded_reasons": {
+    "live_protocols": "require listening sockets or transport engines",
+    "tls": "requires certificate and key fixtures",
+    "supervisors": "requires signals, subprocesses, or platform-specific process behavior",
+    "reload": "requires filesystem watchers and wall-clock polling",
+    "optional_backends": "requires native or optional protocol packages outside the locked deterministic closure"
+  }
+}

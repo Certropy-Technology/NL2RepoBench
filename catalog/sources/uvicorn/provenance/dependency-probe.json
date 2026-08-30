@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "python": "3.12.14",
+  "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+  "os": "Debian 13.6 amd64",
+  "uv": "0.11.32",
+  "upstream_lock_sync_exit_code": 0,
+  "upstream_collection": 1329,
+  "upstream_test_exit_code": 0,
+  "upstream_passed": 1319,
+  "upstream_skipped": 10,
+  "upstream_seconds": 33.89,
+  "dependency_lock": {
+    "digest": "sha256:9e004a37049cd9aee2e2d768ebcfe413ba180572d6280d76a032ebf945a12229",
+    "size_bytes": 1874,
+    "package_count": 9,
+    "require_hashes_install_exit_code": 0,
+    "vendor_bytes": false
+  },
+  "network": {"upstream_test_run": "none", "candidate_runtime": "none", "verifier_runtime": "none"}
+}

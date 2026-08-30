@@ -1,0 +1,97 @@
+schema_version = "1.0"
+task_id = "uvicorn"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "asgi-server"
+tags = ["python", "asgi", "http", "server", "middleware", "configuration", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Kludex/uvicorn"
+revision = "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:ea14dd890be1bf0e78f1a5f4984794b9c1b762251a2701435f8d7c29145b0184"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13.6-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the private hash-locked closure during image build and install the candidate with the generated pip target contract"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Click, h11, and candidate build backends are installed during image construction from a private hash lock. Candidate and verifier runs have no egress; only the trusted Oracle receives an exact run-scoped github.com authorization."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "click==8.3.1",
+  "h11==0.16.0",
+  "hatchling==1.27.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "setuptools==80.9.0",
+  "trove-classifiers==2026.6.1.19",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:9e004a37049cd9aee2e2d768ebcfe413ba180572d6280d76a032ebf945a12229", size_bytes = 1874, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9e004a37049cd9aee2e2d768ebcfe413ba180572d6280d76a032ebf945a12229", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 45
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:1d096771a9b72504a1ca4fed339f009be3b1d99afa5e6b587f569751e14f1432", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:1d096771a9b72504a1ca4fed339f009be3b1d99afa5e6b587f569751e14f1432", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build Uvicorn 0.52.4 from an empty workspace and reproduce deterministic configuration, import, logging, proxy middleware, protocol-helper, WSGI-adaptation, flow-control, and server-state behavior through a separate verifier."
+keywords = ["python", "asgi", "http", "server", "middleware", "configuration", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8c6377db8fa23e9bd5b5d727277d44fea5284482f836bf18aada56a7f1a3daf8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8c6377db8fa23e9bd5b5d727277d44fea5284482f836bf18aada56a7f1a3daf8"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828-uvicorn"
+reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, bounded timeout probes, and offline network checks passed. Model Agent Run, review, pilot, dataset integration, and publication remain separate stages."

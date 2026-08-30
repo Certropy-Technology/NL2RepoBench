@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "uvicorn",
+  "revision": "9ee5694516b01f1d3d6ff9ed38f117fc869ee6ae",
+  "scanner": "python-ast-stdlib",
+  "package_version": "0.52.4",
+  "implementation_files": 44,
+  "scope": "deterministic configuration, import, logging, middleware, protocol helpers, WSGI adaptation, flow control, and server state",
+  "scored_symbols": {
+    "uvicorn": ["__version__", "__all__", "main", "run", "Config", "Server"],
+    "uvicorn._ansi": ["style"],
+    "uvicorn.importer": ["ImportFromStringError", "import_from_string"],
+    "uvicorn.config": ["Config", "UvicornDeprecationWarning", "is_dir", "resolve_reload_patterns", "LOG_LEVELS", "INTERFACES", "STARTUP_FAILURE"],
+    "uvicorn.logging": ["TRACE_LOG_LEVEL", "ColourizedFormatter", "DefaultFormatter", "AccessFormatter"],
+    "uvicorn.middleware.asgi2": ["ASGI2Middleware"],
+    "uvicorn.middleware.message_logger": ["message_with_placeholders", "MessageLoggerMiddleware"],
+    "uvicorn.middleware.proxy_headers": ["ProxyHeadersMiddleware"],
+    "uvicorn.middleware.wsgi": ["build_environ", "WSGIMiddleware", "WSGIResponder"],
+    "uvicorn.protocols.utils": ["ClientDisconnected", "get_remote_addr", "get_local_addr", "is_ssl", "get_client_addr", "get_path_with_query_string"],
+    "uvicorn.protocols.http.flow_control": ["FlowControl", "service_unavailable", "HIGH_WATER_LIMIT", "CLOSE_HEADER"],
+    "uvicorn.protocols.http.auto": ["AutoHTTPProtocol"],
+    "uvicorn.protocols.websockets.auto": ["AutoWebSocketsProtocol"],
+    "uvicorn.loops.auto": ["auto_loop_factory"],
+    "uvicorn.loops.asyncio": ["asyncio_loop_factory"],
+    "uvicorn.server": ["ServerState", "Server"],
+    "uvicorn.lifespan.off": ["LifespanOff"]
+  },
+  "risk_flags": ["asgi", "asyncio", "network-server", "filesystem-configuration", "signals", "multiprocessing", "tls", "optional-native-dependencies"],
+  "excluded_risk_surface": ["real listeners and network transports", "TLS certificate files", "signal capture", "worker and reload subprocesses", "filesystem reload watchers", "native httptools and uvloop", "optional WebSocket engines", "Gunicorn workers"],
+  "candidate_boundary": "UID-isolated subprocess with JSON-safe in-memory scenarios"
+}

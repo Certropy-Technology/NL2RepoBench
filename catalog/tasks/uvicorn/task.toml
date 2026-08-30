@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/uvicorn"
+version = "1.0.0"
+description = "Build Uvicorn 0.52.4 from an empty workspace and reproduce deterministic configuration, import, logging, proxy middleware, protocol-helper, WSGI-adaptation, flow-control, and server-state behavior through a separate verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "asgi",
+    "http",
+    "server",
+    "middleware",
+    "configuration",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "asgi-server"
+tags = [
+    "python",
+    "asgi",
+    "http",
+    "server",
+    "middleware",
+    "configuration",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 45
+canonical_manifest_digest = "sha256:34eb89f691a03a03910d142400ae1a7e4d549dde7e8d6e694f53324b3e04c124"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
