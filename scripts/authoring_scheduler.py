@@ -33,7 +33,7 @@ def _output(command: str, data: dict[str, Any], error: str | None = None) -> Non
     print(
         json.dumps(
             {
-                "schema_version": "authoring-scheduler/v2",
+                "schema_version": "authoring-scheduler/v3",
                 "command": command,
                 "observed_at": datetime.now(UTC).isoformat(),
                 "data": data,

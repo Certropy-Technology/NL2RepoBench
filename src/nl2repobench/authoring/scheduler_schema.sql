@@ -171,6 +171,17 @@ CREATE TABLE runtime_config (
 CREATE VIEW current_runtime_config AS SELECT * FROM runtime_config
   WHERE config_version = (SELECT max(config_version) FROM runtime_config);
 
+CREATE TABLE resource_policy (
+  policy_version INTEGER PRIMARY KEY AUTOINCREMENT,
+  repository_min_free_bytes INTEGER NOT NULL CHECK(repository_min_free_bytes > 0),
+  docker_min_free_bytes INTEGER NOT NULL CHECK(docker_min_free_bytes > 0),
+  watcher_min_free_bytes INTEGER NOT NULL CHECK(watcher_min_free_bytes > 0),
+  changed_by TEXT NOT NULL, changed_at TEXT NOT NULL,
+  reason TEXT NOT NULL CHECK(length(reason) BETWEEN 1 AND 500)
+);
+CREATE VIEW current_resource_policy AS SELECT * FROM resource_policy
+  WHERE policy_version = (SELECT max(policy_version) FROM resource_policy);
+
 CREATE TABLE operation_receipts (
   receipt_id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(task_id),
   operation_kind TEXT NOT NULL CHECK(operation_kind IN ('integration','archive','cleanup')),

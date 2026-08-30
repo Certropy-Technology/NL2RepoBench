@@ -492,6 +492,14 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 release_count = min(release_limit, max(0, int(item.get("release_count", item.get("releases", 0)) or 0)))
                 conn.execute("INSERT INTO tasks(task_id,candidate_id,lane_id,task_release,state,attempt_limit,authoring_attempts,retry_limit,retry_count,release_count,release_limit,integration_attempts,integration_retry_count,integration_retry_limit,archive_attempts,archive_retry_count,archive_retry_limit,cleanup_attempts,cleanup_retry_count,cleanup_retry_limit,input_ordinal,last_failure_class,last_failure_reason,terminal_reason,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
                              (task_id, candidate_id, lane_id, "legacy", initial_state, attempt_limit, attempts, retry_limit, retry_count, release_count, release_limit, int(item.get("integration_attempts", 0) or 0), int(item.get("integration_retry_count", 0) or 0), max(0, int(item.get("integration_retry_limit", 3) or 0)), int(item.get("archive_attempts", 0) or 0), int(item.get("archive_retry_count", 0) or 0), max(0, int(item.get("archive_retry_limit", 3) or 0)), int(item.get("cleanup_attempts", 0) or 0), int(item.get("cleanup_retry_count", 0) or 0), max(0, int(item.get("cleanup_retry_limit", 3) or 0)), int(item.get("ordinal", 0) or 0), failure, reason if failure else None, None))
+                worktree = root / "worktrees" / str(lane["batch_id"]) / package
+                handoff = worktree / ".nl2repo/authoring-handoff.json"
+                if worktree.is_dir() and not worktree.is_symlink():
+                    conn.execute(
+                        "UPDATE tasks SET worktree_path=?,handoff_path=?,handoff_sha256=? WHERE task_id=?",
+                        (str(worktree), str(handoff) if handoff.is_file() else None,
+                         _sha(handoff) if handoff.is_file() else None, task_id),
+                    )
                 for artifact in item.get("artifacts", []) if isinstance(item.get("artifacts"), list) else []:
                     artifact_path = str(artifact.get("path", "")) if isinstance(artifact, dict) else str(artifact)
                     artifact_digest = str(artifact.get("sha256", "")) if isinstance(artifact, dict) else ""

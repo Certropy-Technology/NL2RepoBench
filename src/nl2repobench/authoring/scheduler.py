@@ -66,8 +66,12 @@ class _LockedConnection(sqlite3.Connection):
         finally:
             os.close(self._scheduler_lock_fd)
 
-    def __exit__(self, exc_type: type[BaseException] | None, exc: BaseException | None,
-                 traceback: TracebackType | None) -> Literal[False]:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> Literal[False]:
         try:
             super().__exit__(exc_type, exc, traceback)
         finally:
@@ -183,11 +187,10 @@ class Scheduler:
     def __init__(self, path: Path | str, *, supplied_root: Path | str | None = None) -> None:
         self.path = Path(path).expanduser()
         if supplied_root is None:
-            raise ValidationError("supplied_root is required in Phase 1")
+            raise ValidationError("supplied_root is required")
         root = Path(supplied_root).expanduser().resolve()
-        tmp_root = Path("/tmp").resolve()
-        if root != tmp_root and tmp_root not in root.parents:
-            raise ValidationError("Phase 1 supplied_root must be under /tmp")
+        if not root.is_absolute() or root.is_symlink():
+            raise ValidationError("supplied_root must be an absolute non-symlink path")
         resolved = self.path.resolve()
         if root != resolved and root not in resolved.parents:
             raise ValidationError("database must be under supplied root")
@@ -207,17 +210,27 @@ class Scheduler:
                         os.close(lock_fd)
                         raise BusyError("scheduler lock is busy") from exc
                     time.sleep(0.02)
-            db = sqlite3.connect(self.path, timeout=0.0, isolation_level=None,
-                                 factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, **kw)))
+            db = sqlite3.connect(
+                self.path,
+                timeout=0.0,
+                isolation_level=None,
+                factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, **kw)),
+            )
         except sqlite3.OperationalError as exc:
             if "busy" in str(exc).lower() or "locked" in str(exc).lower():
                 raise BusyError("sqlite connection is busy") from exc
             raise
         db.row_factory = sqlite3.Row
-        pragmas = ("PRAGMA journal_mode=WAL", "PRAGMA synchronous=FULL",
-                   "PRAGMA busy_timeout=0", "PRAGMA foreign_keys=ON",
-                   "PRAGMA temp_store=MEMORY", "PRAGMA wal_autocheckpoint=1000",
-                   "PRAGMA journal_size_limit=67108864", "PRAGMA trusted_schema=OFF")
+        pragmas = (
+            "PRAGMA journal_mode=WAL",
+            "PRAGMA synchronous=FULL",
+            "PRAGMA busy_timeout=0",
+            "PRAGMA foreign_keys=ON",
+            "PRAGMA temp_store=MEMORY",
+            "PRAGMA wal_autocheckpoint=1000",
+            "PRAGMA journal_size_limit=67108864",
+            "PRAGMA trusted_schema=OFF",
+        )
         try:
             for pragma in pragmas:
                 while True:
@@ -238,6 +251,164 @@ class Scheduler:
     def connect(self) -> sqlite3.Connection:
         return self._connect()
 
+    def runtime_config(self) -> dict[str, Any]:
+        """Return the current operator configuration from the DB authority."""
+        with self._db() as db:
+            row = db.execute("SELECT * FROM current_runtime_config").fetchone()
+            if row is None:
+                raise ConflictError("scheduler runtime configuration is missing")
+            return dict(row)
+
+    def resource_policy(self) -> dict[str, Any]:
+        with self._db() as db:
+            row = db.execute("SELECT * FROM current_resource_policy").fetchone()
+            if row is None:
+                raise ConflictError("scheduler resource policy is missing")
+            return dict(row)
+
+    def configure_resource_policy(
+        self,
+        *,
+        repository_min_free_bytes: int,
+        docker_min_free_bytes: int,
+        watcher_min_free_bytes: int,
+        changed_by: str = "operator",
+        reason: str = "resource policy configuration",
+    ) -> int:
+        values = (repository_min_free_bytes, docker_min_free_bytes, watcher_min_free_bytes)
+        if any(not isinstance(value, int) or value <= 0 for value in values):
+            raise ValidationError("resource policy limits must be positive integers")
+        _id(changed_by, "changed_by")
+        if not reason or len(reason) > 500:
+            raise ValidationError("reason is required and bounded")
+        with self._db() as db, _transaction(db):
+            cur = db.execute(
+                "INSERT INTO resource_policy(repository_min_free_bytes,docker_min_free_bytes,"
+                "watcher_min_free_bytes,changed_by,changed_at,reason) VALUES(?,?,?,?,?,?)",
+                (*values, changed_by, _now(), reason),
+            )
+            if cur.lastrowid is None:
+                raise CorruptionError("resource policy insert did not return an id")
+            return int(cur.lastrowid)
+
+    def task_context(self, task_id: str) -> dict[str, Any]:
+        """Return the immutable candidate and mutable task context for one worker."""
+        _id(task_id, "task_id")
+        with self._db() as db:
+            row = db.execute(
+                "SELECT t.*,l.batch_id,l.language,i.package,i.upstream_url,i.revision,"
+                "c.selection_json FROM tasks t JOIN lanes l ON l.lane_id=t.lane_id "
+                "JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id "
+                "JOIN candidate_identities i ON i.identity_digest=c.identity_digest "
+                "WHERE t.task_id=?",
+                (task_id,),
+            ).fetchone()
+            if row is None:
+                raise ConflictError("unknown task")
+            result = dict(row)
+            result["selection"] = json.loads(str(result.pop("selection_json")))
+            return result
+
+    def operation_candidates(self, kind: str, *, limit: int = 8) -> list[dict[str, Any]]:
+        """Return DB-owned work awaiting a fenced external operation."""
+        states = {
+            "integration": ("handoff_ready", "integration_retry"),
+            "archive": ("integrating", "archive_retry"),
+            "cleanup": ("archiving", "cleanup_retry"),
+        }
+        if kind not in states or not 1 <= limit <= 64:
+            raise ValidationError("invalid operation candidate request")
+        placeholders = ",".join("?" for _ in states[kind])
+        with self._db() as db:
+            rows = db.execute(
+                f"SELECT t.*,l.batch_id,l.language,i.package FROM tasks t "
+                "JOIN lanes l ON l.lane_id=t.lane_id "
+                "JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id "
+                "JOIN candidate_identities i ON i.identity_digest=c.identity_digest "
+                f"WHERE t.state IN ({placeholders}) ORDER BY t.updated_at,t.task_id LIMIT ?",
+                (*states[kind], limit),
+            ).fetchall()
+            return [dict(row) for row in rows]
+
+    def controller_active(
+        self,
+        controller_id: str,
+        owner_uuid: str,
+        *,
+        pid: int,
+        process_starttime_ticks: int,
+        boot_id: str,
+    ) -> bool:
+        with self._db() as db:
+            row = db.execute(
+                "SELECT 1 FROM controllers WHERE controller_id=? AND owner_uuid=? "
+                "AND pid=? AND process_starttime_ticks=? AND boot_id=? "
+                "AND state='running' AND desired=1",
+                (controller_id, owner_uuid, pid, process_starttime_ticks, boot_id),
+            ).fetchone()
+            return row is not None
+
+    def next_available_slot(self, lane_id: str) -> int:
+        """Return the first lane slot not occupied by a controller or reservation."""
+        _id(lane_id, "lane_id")
+        config = self.runtime_config()
+        with self._db() as db:
+            for slot in range(int(config["controller_concurrency"])):
+                occupied = db.execute(
+                    "SELECT 1 FROM controllers WHERE lane_id=? AND slot=? "
+                    "AND state IN ('running','draining') UNION ALL "
+                    "SELECT 1 FROM controller_slot_reservations WHERE lane_id=? AND slot=? "
+                    "AND state='reserved' LIMIT 1",
+                    (lane_id, slot, lane_id, slot),
+                ).fetchone()
+                if occupied is None:
+                    return slot
+        raise ConflictError("lane controller slots are exhausted")
+
+    def record_handoff(
+        self,
+        claim_id: str,
+        owner_uuid: str,
+        controller_id: str,
+        generation: int,
+        *,
+        worktree_path: str,
+        worktree_git_head: str,
+        handoff_path: str,
+        handoff_sha256: str,
+        pid: int,
+        process_starttime_ticks: int,
+        boot_id: str,
+    ) -> None:
+        """Bind a successful worker handoff to its still-live claim fence."""
+        _digest(handoff_sha256, "handoff_sha256")
+        if not worktree_path or not handoff_path or not HEX40_RE.fullmatch(worktree_git_head):
+            raise ValidationError("invalid handoff metadata")
+        with self._db() as db, _transaction(db):
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                _now(),
+            )
+            db.execute(
+                "UPDATE tasks SET worktree_path=?,worktree_git_head=?,handoff_path=?,"
+                "handoff_sha256=?,updated_at=? WHERE task_id=? AND state='authoring'",
+                (
+                    worktree_path,
+                    worktree_git_head,
+                    handoff_path,
+                    handoff_sha256,
+                    _now(),
+                    row["task_id"],
+                ),
+            )
+
     def init(self) -> None:
         schema = Path(__file__).with_name("scheduler_schema.sql").read_text(encoding="utf-8")
         if self.path.exists() and self.path.stat().st_size:
@@ -246,12 +417,22 @@ class Scheduler:
                     row = existing.execute(
                         "SELECT value FROM schema_meta WHERE key='schema_version'"
                     ).fetchone()
-                    if row is None or row[0] != "2":
+                    if row is None or row[0] != "3":
                         raise ValidationError("incompatible scheduler schema version")
-                    required = {"lanes", "tasks", "controllers", "events", "runtime_config"}
-                    actual = {str(r[0]) for r in existing.execute(
-                        "SELECT name FROM sqlite_master WHERE type='table'"
-                    )}
+                    required = {
+                        "lanes",
+                        "tasks",
+                        "controllers",
+                        "events",
+                        "runtime_config",
+                        "resource_policy",
+                    }
+                    actual = {
+                        str(r[0])
+                        for r in existing.execute(
+                            "SELECT name FROM sqlite_master WHERE type='table'"
+                        )
+                    }
                     if not required <= actual:
                         raise ValidationError("incomplete scheduler schema")
                     return
@@ -262,7 +443,13 @@ class Scheduler:
             with _transaction(db):
                 now = _now()
                 db.execute("INSERT OR IGNORE INTO fairness_state VALUES (1,0,0,?)", (now,))
-                db.execute("INSERT OR IGNORE INTO schema_meta VALUES ('schema_version','2')")
+                db.execute("INSERT OR IGNORE INTO schema_meta VALUES ('schema_version','3')")
+                db.execute(
+                    "INSERT OR IGNORE INTO resource_policy(policy_version,repository_min_free_bytes,"
+                    "docker_min_free_bytes,watcher_min_free_bytes,changed_by,changed_at,reason) "
+                    "VALUES(1,?,?,?,?,?,?)",
+                    (12 * 1024**3, 20 * 1024**3, 2 * 1024**3, "schema", now, "Phase 3 defaults"),
+                )
 
     def _db(self) -> sqlite3.Connection:
         return self.connect()
@@ -278,7 +465,8 @@ class Scheduler:
         starttime: int,
         boot_id: str,
         moment: str,
-        *, by_task: bool = False,
+        *,
+        by_task: bool = False,
     ) -> sqlite3.Row:
         selector = "cl.task_id=?" if by_task else "cl.claim_id=?"
         row = db.execute(
@@ -303,8 +491,14 @@ class Scheduler:
         )
         if cur.rowcount != 1:
             raise LostLeaseError("claim was concurrently closed")
-        db.execute("UPDATE trials SET state='cancelled',updated_at=? WHERE trial_id=? AND state='created'", (now, row["trial_id"]))
-        db.execute("UPDATE trials SET state='failed',finished_at=?,updated_at=? WHERE trial_id=? AND state='running'", (now, now, row["trial_id"]))
+        db.execute(
+            "UPDATE trials SET state='cancelled',updated_at=? WHERE trial_id=? AND state='created'",
+            (now, row["trial_id"]),
+        )
+        db.execute(
+            "UPDATE trials SET state='failed',finished_at=?,updated_at=? WHERE trial_id=? AND state='running'",
+            (now, now, row["trial_id"]),
+        )
         Scheduler._decrement(db, row["controller_id"], row["task_id"], now)
 
     @staticmethod
@@ -314,7 +508,8 @@ class Scheduler:
         for kind, key in (("global", "controllers"), ("language", language)):
             row = db.execute(
                 "SELECT used_count,remaining_count FROM capacity_rows WHERE capacity_unit='controller_slot' "
-                "AND capacity_kind=? AND capacity_key=?", (kind, key)
+                "AND capacity_kind=? AND capacity_key=?",
+                (kind, key),
             ).fetchone()
             if row is None or row["used_count"] + delta < 0 or row["remaining_count"] - delta < 0:
                 raise CorruptionError("controller capacity invariant failed")
@@ -336,8 +531,17 @@ class Scheduler:
             "AND c.owner_uuid=l.owner_uuid WHERE l.lease_id=? AND l.scope=? AND l.generation=? "
             "AND l.controller_id=? AND l.owner_uuid=? AND l.active=1 AND l.lease_expires_at>? "
             "AND c.state='running' AND c.desired=1 AND c.pid=? AND c.process_starttime_ticks=? AND c.boot_id=?",
-            (actor.lease_id, actor.scope, actor.generation, actor.controller_id, actor.owner_uuid,
-             moment, actor.pid, actor.process_starttime_ticks, actor.boot_id),
+            (
+                actor.lease_id,
+                actor.scope,
+                actor.generation,
+                actor.controller_id,
+                actor.owner_uuid,
+                moment,
+                actor.pid,
+                actor.process_starttime_ticks,
+                actor.boot_id,
+            ),
         ).fetchone()
         if row is None:
             raise LostLeaseError("operation actor fence failed")
@@ -353,8 +557,16 @@ class Scheduler:
             "AND l.generation=? AND l.controller_id=? AND l.owner_uuid=? AND l.active=1 "
             "AND l.lease_expires_at>? AND c.state='running' AND c.desired=1 AND c.pid=? "
             "AND c.process_starttime_ticks=? AND c.boot_id=?",
-            (actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid, moment,
-             actor.pid, actor.process_starttime_ticks, actor.boot_id),
+            (
+                actor.lease_id,
+                actor.generation,
+                actor.controller_id,
+                actor.owner_uuid,
+                moment,
+                actor.pid,
+                actor.process_starttime_ticks,
+                actor.boot_id,
+            ),
         ).fetchone()
         if row is None:
             raise LostLeaseError("operator actor fence failed")
@@ -384,7 +596,9 @@ class Scheduler:
             raise ValidationError("reason is required and bounded")
         if not 0 <= max_total_controllers <= 6 or not 0 <= controller_concurrency <= 4:
             raise ValidationError("controller limits out of bounds")
-        if not 0 <= max_integrations <= 3 or (agent_limit is not None and not 0 <= agent_limit <= 6):
+        if not 0 <= max_integrations <= 3 or (
+            agent_limit is not None and not 0 <= agent_limit <= 6
+        ):
             raise ValidationError("operation limits out of bounds")
         with self._db() as db, _transaction(db):
             cur = db.execute(
@@ -646,8 +860,14 @@ class Scheduler:
             )
 
     def stop_controller(
-        self, controller_id: str, owner_uuid: str, *, pid: int, process_starttime_ticks: int,
-        boot_id: str, state: str = "stopped",
+        self,
+        controller_id: str,
+        owner_uuid: str,
+        *,
+        pid: int,
+        process_starttime_ticks: int,
+        boot_id: str,
+        state: str = "stopped",
     ) -> None:
         if state not in {"stopped", "lost", "reconciled"}:
             raise ValidationError("invalid controller stop state")
@@ -670,11 +890,12 @@ class Scheduler:
                 "UPDATE controllers SET state=?,desired=0,stopped_at=?,updated_at=? WHERE controller_id=? AND state IN ('running','draining')",
                 (state, now, now, controller_id),
             )
-            db.execute(
-                "UPDATE controller_slot_reservations SET state='released',updated_at=? WHERE controller_id=? AND state='activated'",
-                (now, controller_id),
-            )
-            self._controller_capacity_delta(db, controller_id, row["language"], -1, now)
+            if row["role"] == "authoring_controller":
+                db.execute(
+                    "UPDATE controller_slot_reservations SET state='released',updated_at=? WHERE controller_id=? AND state='activated'",
+                    (now, controller_id),
+                )
+                self._controller_capacity_delta(db, controller_id, row["language"], -1, now)
 
     def register_actor(
         self,
@@ -744,7 +965,10 @@ class Scheduler:
                 "FROM controller_slot_reservations WHERE language=? AND state='reserved')",
                 (lane["language"], lane["language"]),
             ).fetchone()[0]
-            if controller_count >= cfg["max_total_controllers"] or language_count >= cfg["controller_concurrency"]:
+            if (
+                controller_count >= cfg["max_total_controllers"]
+                or language_count >= cfg["controller_concurrency"]
+            ):
                 raise ConflictError("controller configuration capacity exhausted")
             occupied = db.execute(
                 "SELECT 1 FROM controllers WHERE lane_id=? AND slot=? "
@@ -887,7 +1111,8 @@ class Scheduler:
             now = _now()
             row = db.execute(
                 "SELECT * FROM controller_slot_reservations WHERE reservation_token=? "
-                "AND owner_uuid=? AND state='reserved'", (token, owner_uuid)
+                "AND owner_uuid=? AND state='reserved'",
+                (token, owner_uuid),
             ).fetchone()
             if row is None:
                 raise ConflictError("reservation is not releasable")
@@ -908,8 +1133,15 @@ class Scheduler:
                     raise CorruptionError("controller capacity invariant failed")
 
     def acquire_singleton(
-        self, scope: str, controller_id: str, owner_uuid: str, *, lease_seconds: int = 7200,
-        pid: int = 1, process_starttime_ticks: int = 0, boot_id: str = "test"
+        self,
+        scope: str,
+        controller_id: str,
+        owner_uuid: str,
+        *,
+        lease_seconds: int = 7200,
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
+        boot_id: str = "test",
     ) -> tuple[str, int]:
         if (
             scope not in {"supervisor", "watcher", "integration", "archive"}
@@ -962,9 +1194,17 @@ class Scheduler:
             return lease_id, generation
 
     def heartbeat_singleton(
-        self, lease_id: str, scope: str, controller_id: str, owner_uuid: str,
-        generation: int, *, lease_seconds: int = 7200, pid: int = 1,
-        process_starttime_ticks: int = 0, boot_id: str = "test",
+        self,
+        lease_id: str,
+        scope: str,
+        controller_id: str,
+        owner_uuid: str,
+        generation: int,
+        *,
+        lease_seconds: int = 7200,
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
+        boot_id: str = "test",
     ) -> None:
         if scope not in {"supervisor", "watcher", "integration", "archive"}:
             raise ValidationError("invalid singleton scope")
@@ -977,16 +1217,37 @@ class Scheduler:
                 "(SELECT 1 FROM controllers c WHERE c.controller_id=? AND c.owner_uuid=? "
                 "AND c.role=? AND c.state='running' AND c.desired=1 AND c.pid=? "
                 "AND c.process_starttime_ticks=? AND c.boot_id=?)",
-                (now, _future(lease_seconds), now, lease_id, scope, controller_id,
-                 owner_uuid, generation, now, controller_id, owner_uuid, scope, pid,
-                 process_starttime_ticks, boot_id),
+                (
+                    now,
+                    _future(lease_seconds),
+                    now,
+                    lease_id,
+                    scope,
+                    controller_id,
+                    owner_uuid,
+                    generation,
+                    now,
+                    controller_id,
+                    owner_uuid,
+                    scope,
+                    pid,
+                    process_starttime_ticks,
+                    boot_id,
+                ),
             )
             if cur.rowcount != 1:
                 raise LostLeaseError("singleton lease is lost or expired")
 
     def release_singleton(
-        self, lease_id: str, scope: str, controller_id: str, owner_uuid: str,
-        generation: int, *, pid: int = 1, process_starttime_ticks: int = 0,
+        self,
+        lease_id: str,
+        scope: str,
+        controller_id: str,
+        owner_uuid: str,
+        generation: int,
+        *,
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
         boot_id: str = "test",
     ) -> None:
         with self._db() as db, _transaction(db):
@@ -996,8 +1257,21 @@ class Scheduler:
                 "AND scope=? AND controller_id=? AND owner_uuid=? AND generation=? AND active=1 "
                 "AND EXISTS (SELECT 1 FROM controllers c WHERE c.controller_id=? AND c.owner_uuid=? "
                 "AND c.role=? AND c.state='running' AND c.pid=? AND c.process_starttime_ticks=? AND c.boot_id=?)",
-                (now, now, lease_id, scope, controller_id, owner_uuid, generation, controller_id,
-                 owner_uuid, scope, pid, process_starttime_ticks, boot_id),
+                (
+                    now,
+                    now,
+                    lease_id,
+                    scope,
+                    controller_id,
+                    owner_uuid,
+                    generation,
+                    controller_id,
+                    owner_uuid,
+                    scope,
+                    pid,
+                    process_starttime_ticks,
+                    boot_id,
+                ),
             )
             if cur.rowcount != 1:
                 raise LostLeaseError("singleton release fence failed")
@@ -1052,10 +1326,12 @@ class Scheduler:
                     "UPDATE tasks SET state='claimed',authoring_attempts=authoring_attempts+1,updated_at=? WHERE task_id=? AND state='pending'",
                     (now, task["task_id"]),
                 )
-                generation = int(db.execute(
-                    "SELECT COALESCE(MAX(generation),0)+1 FROM claims WHERE task_id=?",
-                    (task["task_id"],),
-                ).fetchone()[0])
+                generation = int(
+                    db.execute(
+                        "SELECT COALESCE(MAX(generation),0)+1 FROM claims WHERE task_id=?",
+                        (task["task_id"],),
+                    ).fetchone()[0]
+                )
                 seq = int(
                     db.execute("SELECT COALESCE(MAX(trial_sequence),0)+1 FROM trials").fetchone()[0]
                 )
@@ -1157,16 +1433,29 @@ class Scheduler:
                 if lane is None:
                     continue
                 sequence = int(fairness["dispatch_sequence"]) + 1
-                db.execute("UPDATE fairness_state SET next_language_index=?,dispatch_sequence=?,updated_at=? WHERE fairness_id=1", ((index + 1) % 3, sequence, moment))
-                db.execute("UPDATE lanes SET last_dispatch_seq=?,updated_at=? WHERE lane_id=?", (sequence, moment, lane["lane_id"]))
+                db.execute(
+                    "UPDATE fairness_state SET next_language_index=?,dispatch_sequence=?,updated_at=? WHERE fairness_id=1",
+                    ((index + 1) % 3, sequence, moment),
+                )
+                db.execute(
+                    "UPDATE lanes SET last_dispatch_seq=?,updated_at=? WHERE lane_id=?",
+                    (sequence, moment, lane["lane_id"]),
+                )
                 return str(lane["lane_id"])
             return None
 
     def transition(
-        self, task_id: str, state: str, *, reason: str | None = None,
-        owner_uuid: str | None = None, controller_id: str | None = None,
-        generation: int | None = None, pid: int | None = None,
-        process_starttime_ticks: int | None = None, boot_id: str | None = None,
+        self,
+        task_id: str,
+        state: str,
+        *,
+        reason: str | None = None,
+        owner_uuid: str | None = None,
+        controller_id: str | None = None,
+        generation: int | None = None,
+        pid: int | None = None,
+        process_starttime_ticks: int | None = None,
+        boot_id: str | None = None,
         operator_actor: ActorFence | None = None,
     ) -> None:
         _id(task_id, "task_id")
@@ -1182,7 +1471,14 @@ class Scheduler:
                 if operator_actor is None:
                     raise LostLeaseError("terminal transition requires operator fence")
                 self._fenced_operator(db, operator_actor, _now())
-                if None in (owner_uuid, controller_id, generation, pid, process_starttime_ticks, boot_id):
+                if None in (
+                    owner_uuid,
+                    controller_id,
+                    generation,
+                    pid,
+                    process_starttime_ticks,
+                    boot_id,
+                ):
                     raise LostLeaseError("terminal task transition requires full claim fence")
                 assert controller_id is not None
                 assert owner_uuid is not None
@@ -1190,8 +1486,18 @@ class Scheduler:
                 assert pid is not None
                 assert process_starttime_ticks is not None
                 assert boot_id is not None
-                claim = self._fenced_claim(db, task_id, owner_uuid, controller_id, generation,
-                                           pid, process_starttime_ticks, boot_id, _now(), by_task=True)
+                claim = self._fenced_claim(
+                    db,
+                    task_id,
+                    owner_uuid,
+                    controller_id,
+                    generation,
+                    pid,
+                    process_starttime_ticks,
+                    boot_id,
+                    _now(),
+                    by_task=True,
+                )
                 if state in {"blocked", "excluded", "cancelled"}:
                     self._close_claim(db, claim, _now(), "operator terminal transition")
             elif operator_actor is None:
@@ -1213,19 +1519,36 @@ class Scheduler:
         with self._db() as db, _transaction(db):
             cur = db.execute(
                 "UPDATE tasks SET state='complete',terminal_reason=?,updated_at=? "
-                "WHERE task_id=? AND state='cleaning'", (reason, _now(), task_id)
+                "WHERE task_id=? AND state='cleaning'",
+                (reason, _now(), task_id),
             )
             if cur.rowcount != 1:
                 raise ConflictError("task is not ready for completion")
 
     def prepare(
-        self, claim_id: str, owner_uuid: str, controller_id: str, generation: int = 1,
-        *, pid: int = 1, process_starttime_ticks: int = 0, boot_id: str = "test",
+        self,
+        claim_id: str,
+        owner_uuid: str,
+        controller_id: str,
+        generation: int = 1,
+        *,
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
+        boot_id: str = "test",
     ) -> None:
         with self._db() as db, _transaction(db):
             now = _now()
-            row = self._fenced_claim(db, claim_id, owner_uuid, controller_id, generation,
-                                     pid, process_starttime_ticks, boot_id, now)
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                now,
+            )
             cur = db.execute(
                 "UPDATE tasks SET state='preparing',updated_at=? WHERE task_id=? AND state='claimed'",
                 (now, row["task_id"]),
@@ -1238,17 +1561,39 @@ class Scheduler:
             )
 
     def start(
-        self, claim_id: str, owner_uuid: str, controller_id: str, generation: int = 1,
-        *, pid: int = 1, process_starttime_ticks: int = 0, boot_id: str = "test",
-        child_pid: int | None = None, child_starttime_ticks: int | None = None,
+        self,
+        claim_id: str,
+        owner_uuid: str,
+        controller_id: str,
+        generation: int = 1,
+        *,
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
+        boot_id: str = "test",
+        child_pid: int | None = None,
+        child_starttime_ticks: int | None = None,
     ) -> None:
         """Confirm a launch intent after Popen succeeded; never before it."""
-        if child_pid is None or child_starttime_ticks is None or child_pid <= 0 or child_starttime_ticks < 0:
+        if (
+            child_pid is None
+            or child_starttime_ticks is None
+            or child_pid <= 0
+            or child_starttime_ticks < 0
+        ):
             raise ValidationError("invalid child pid")
         with self._db() as db, _transaction(db):
             now = _now()
-            row = self._fenced_claim(db, claim_id, owner_uuid, controller_id, generation,
-                                     pid, process_starttime_ticks, boot_id, now)
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                now,
+            )
             cur = db.execute(
                 "UPDATE tasks SET state='authoring',updated_at=? WHERE task_id=? AND state='preparing'",
                 (now, row["task_id"]),
@@ -1258,8 +1603,14 @@ class Scheduler:
             cur = db.execute(
                 "UPDATE trials SET state='running',child_pid=?,child_starttime_ticks=?,child_boot_id=?,started_at=?,updated_at=? WHERE trial_id=? "
                 "AND state='created' AND launch_intent_at IS NOT NULL",
-                (child_pid, child_starttime_ticks, boot_id if child_pid is not None else None,
-                 now, now, row["trial_id"]),
+                (
+                    child_pid,
+                    child_starttime_ticks,
+                    boot_id if child_pid is not None else None,
+                    now,
+                    now,
+                    row["trial_id"],
+                ),
             )
             if cur.rowcount != 1:
                 raise ConflictError("trial lacks launch intent")
@@ -1278,8 +1629,17 @@ class Scheduler:
     ) -> None:
         moment = now or _now()
         with self._db() as db, _transaction(db):
-            row = self._fenced_claim(db, claim_id, owner_uuid, controller_id, generation,
-                                     pid, process_starttime_ticks, boot_id, moment)
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                moment,
+            )
             db.execute(
                 "UPDATE claims SET heartbeat_at=?,lease_expires_at=?,updated_at=? WHERE claim_id=?",
                 (
@@ -1293,13 +1653,29 @@ class Scheduler:
             )
 
     def release(
-        self, claim_id: str, owner_uuid: str, controller_id: str, generation: int = 1,
-        *, reason: str = "released", pid: int = 1, process_starttime_ticks: int = 0,
-        boot_id: str = "test"
+        self,
+        claim_id: str,
+        owner_uuid: str,
+        controller_id: str,
+        generation: int = 1,
+        *,
+        reason: str = "released",
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
+        boot_id: str = "test",
     ) -> None:
         with self._db() as db, _transaction(db):
-            row = self._fenced_claim(db, claim_id, owner_uuid, controller_id, generation,
-                                     pid, process_starttime_ticks, boot_id, _now())
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                _now(),
+            )
             task = db.execute(
                 "SELECT release_count,release_limit FROM tasks WHERE task_id=?", (row["task_id"],)
             ).fetchone()
@@ -1310,8 +1686,14 @@ class Scheduler:
                 "UPDATE claims SET active=0,released_at=?,release_reason=?,updated_at=? WHERE claim_id=? AND active=1",
                 (now, reason, now, claim_id),
             )
-            db.execute("UPDATE trials SET state='released',finished_at=?,updated_at=? WHERE trial_id=? AND state='running'", (now, now, row["trial_id"]))
-            db.execute("UPDATE trials SET state='released',updated_at=? WHERE trial_id=? AND state='created'", (now, row["trial_id"]))
+            db.execute(
+                "UPDATE trials SET state='released',finished_at=?,updated_at=? WHERE trial_id=? AND state='running'",
+                (now, now, row["trial_id"]),
+            )
+            db.execute(
+                "UPDATE trials SET state='released',updated_at=? WHERE trial_id=? AND state='created'",
+                (now, row["trial_id"]),
+            )
             db.execute(
                 "UPDATE tasks SET state='pending',release_count=release_count+1,updated_at=? WHERE task_id=?",
                 (now, row["task_id"]),
@@ -1350,12 +1732,30 @@ class Scheduler:
         process_starttime_ticks: int = 0,
         boot_id: str = "test",
     ) -> None:
-        if not success and failure_class not in {"source", "spec", "environment", "verifier", "model", "infrastructure"}:
+        if not success and failure_class not in {
+            "source",
+            "spec",
+            "environment",
+            "verifier",
+            "model",
+            "infrastructure",
+        }:
             raise ValidationError("failed finish requires a failure class")
         with self._db() as db, _transaction(db):
-            row = self._fenced_claim(db, claim_id, owner_uuid, controller_id, generation,
-                                     pid, process_starttime_ticks, boot_id, _now())
-            trial = db.execute("SELECT state FROM trials WHERE trial_id=?", (row["trial_id"],)).fetchone()
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                _now(),
+            )
+            trial = db.execute(
+                "SELECT state FROM trials WHERE trial_id=?", (row["trial_id"],)
+            ).fetchone()
             if trial is None or trial["state"] != "running":
                 raise ConflictError("trial has not started")
             now = _now()
@@ -1367,12 +1767,22 @@ class Scheduler:
                 "UPDATE trials SET state=?,finished_at=?,updated_at=? WHERE trial_id=? AND state='running'",
                 ("succeeded" if success else "failed", now, now, row["trial_id"]),
             )
-            task = db.execute("SELECT retry_count,retry_limit FROM tasks WHERE task_id=?", (row["task_id"],)).fetchone()
-            retryable = not success and failure_class == "infrastructure" and task["retry_count"] < task["retry_limit"]
+            task = db.execute(
+                "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?", (row["task_id"],)
+            ).fetchone()
+            retryable = (
+                not success
+                and failure_class == "infrastructure"
+                and task["retry_count"] < task["retry_limit"]
+            )
             if retryable:
                 new_retry = int(task["retry_count"]) + 1
-                delay = min(1800, 30 * (2**new_retry)) + (int(hashlib.sha256(row["task_id"].encode()).hexdigest()[:4], 16) % 30)
-                next_retry = (datetime.fromisoformat(now) + timedelta(seconds=delay)).isoformat(timespec="microseconds")
+                delay = min(1800, 30 * (2**new_retry)) + (
+                    int(hashlib.sha256(row["task_id"].encode()).hexdigest()[:4], 16) % 30
+                )
+                next_retry = (datetime.fromisoformat(now) + timedelta(seconds=delay)).isoformat(
+                    timespec="microseconds"
+                )
                 db.execute(
                     "UPDATE tasks SET state='pending',terminal_reason=NULL,retry_count=?,next_retry_at=?,last_failure_class=?,last_failure_reason=?,updated_at=? WHERE task_id=?",
                     (new_retry, next_retry, failure_class, reason, now, row["task_id"]),
@@ -1380,26 +1790,46 @@ class Scheduler:
             else:
                 db.execute(
                     "UPDATE tasks SET state=?,terminal_reason=?,last_failure_class=?,last_failure_reason=?,updated_at=? WHERE task_id=?",
-                    ("handoff_ready" if success else "blocked", None if success else reason,
-                     None if success else failure_class, None if success else reason, now, row["task_id"]),
+                    (
+                        "handoff_ready" if success else "blocked",
+                        None if success else reason,
+                        None if success else failure_class,
+                        None if success else reason,
+                        now,
+                        row["task_id"],
+                    ),
                 )
             self._decrement(db, controller_id, row["task_id"], now)
 
     def begin_receipt(
-        self, task_id: str, kind: str, attempt: int, retry_no: int, idempotency_key: str,
-        *, actor: ActorFence | None = None,
+        self,
+        task_id: str,
+        kind: str,
+        attempt: int,
+        retry_no: int,
+        idempotency_key: str,
+        *,
+        actor: ActorFence | None = None,
     ) -> str:
         if attempt < 1 or retry_no < 0:
             raise ValidationError("invalid operation receipt counters")
         return self.begin_operation(
-            task_id, kind, idempotency_key,
-            operation_attempt=attempt, retry_no=retry_no,
+            task_id,
+            kind,
+            idempotency_key,
+            operation_attempt=attempt,
+            retry_no=retry_no,
             actor=actor,
         )
 
     def begin_operation(
-        self, task_id: str, kind: str, idempotency_key: str, *,
-        operation_attempt: int | None = None, retry_no: int | None = None,
+        self,
+        task_id: str,
+        kind: str,
+        idempotency_key: str,
+        *,
+        operation_attempt: int | None = None,
+        retry_no: int | None = None,
         actor: ActorFence | None = None,
     ) -> str:
         """Persist an operation intent and move only its matching stage forward.
@@ -1443,27 +1873,41 @@ class Scheduler:
             if existing is not None:
                 if existing["task_id"] != task_id or existing["operation_kind"] != kind:
                     raise ConflictError("idempotency key context mismatch")
-                if operation_attempt is not None and existing["operation_attempt"] != operation_attempt:
+                if (
+                    operation_attempt is not None
+                    and existing["operation_attempt"] != operation_attempt
+                ):
                     raise ConflictError("idempotency attempt mismatch")
                 if retry_no is not None and existing["retry_no"] != retry_no:
                     raise ConflictError("idempotency retry mismatch")
-                if (existing["actor_lease_id"], existing["actor_generation"],
-                        existing["actor_id"], existing["actor_owner_uuid"]) != (
-                            actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
+                if (
+                    existing["actor_lease_id"],
+                    existing["actor_generation"],
+                    existing["actor_id"],
+                    existing["actor_owner_uuid"],
+                ) != (actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
                     raise LostLeaseError("receipt actor context mismatch")
                 return str(existing[0])
             task = db.execute("SELECT * FROM tasks WHERE task_id=?", (task_id,)).fetchone()
             if task is None or task["state"] not in accepted:
                 raise ConflictError("task is not ready for this operation")
-            if kind == "archive" and db.execute(
-                "SELECT 1 FROM operation_receipts WHERE task_id=? AND operation_kind='integration' AND status='pushed'",
-                (task_id,),
-            ).fetchone() is None:
+            if (
+                kind == "archive"
+                and db.execute(
+                    "SELECT 1 FROM operation_receipts WHERE task_id=? AND operation_kind='integration' AND status='pushed'",
+                    (task_id,),
+                ).fetchone()
+                is None
+            ):
                 raise ConflictError("pushed integration receipt required")
-            if kind == "cleanup" and db.execute(
-                "SELECT 1 FROM operation_receipts WHERE task_id=? AND operation_kind='archive' AND status='verified'",
-                (task_id,),
-            ).fetchone() is None:
+            if (
+                kind == "cleanup"
+                and db.execute(
+                    "SELECT 1 FROM operation_receipts WHERE task_id=? AND operation_kind='archive' AND status='verified'",
+                    (task_id,),
+                ).fetchone()
+                is None
+            ):
                 raise ConflictError("verified archive receipt required")
             now = _now()
             attempt = int(task[attempt_col]) + 1
@@ -1479,13 +1923,32 @@ class Scheduler:
             receipt = str(uuid.uuid4())
             db.execute(
                 "INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,actor_scope,actor_lease_id,actor_generation,actor_id,actor_owner_uuid,actor_pid,actor_starttime_ticks,actor_boot_id,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (receipt, task_id, kind, attempt, retry, idempotency_key, "started", actor.scope,
-                 actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid, actor.pid,
-                 actor.process_starttime_ticks, actor.boot_id, now, now, now),
+                (
+                    receipt,
+                    task_id,
+                    kind,
+                    attempt,
+                    retry,
+                    idempotency_key,
+                    "started",
+                    actor.scope,
+                    actor.lease_id,
+                    actor.generation,
+                    actor.controller_id,
+                    actor.owner_uuid,
+                    actor.pid,
+                    actor.process_starttime_ticks,
+                    actor.boot_id,
+                    now,
+                    now,
+                    now,
+                ),
             )
             return receipt
 
-    def fail_operation(self, receipt_id: str, failure_class: str, reason: str, *, actor: ActorFence | None = None) -> None:
+    def fail_operation(
+        self, receipt_id: str, failure_class: str, reason: str, *, actor: ActorFence | None = None
+    ) -> None:
         """Record a failure; only infrastructure failures enter the same-stage retry state."""
         if (
             failure_class
@@ -1506,9 +1969,12 @@ class Scheduler:
             if actor is None:
                 raise LostLeaseError("operation requires a live singleton actor")
             self._fenced_actor(db, actor, kind, _now())
-            if (receipt["actor_lease_id"], receipt["actor_generation"], receipt["actor_id"],
-                    receipt["actor_owner_uuid"]) != (
-                        actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
+            if (
+                receipt["actor_lease_id"],
+                receipt["actor_generation"],
+                receipt["actor_id"],
+                receipt["actor_owner_uuid"],
+            ) != (actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
                 raise LostLeaseError("receipt actor context mismatch")
             retry_col, limit_col, retry_state = {
                 "integration": (
@@ -1542,8 +2008,14 @@ class Scheduler:
                 )
 
     def collide_operation(
-        self, receipt_id: str, failure_class: str, reason: str, *,
-        evidence_path: str, evidence_sha256: str, actor: ActorFence | None = None,
+        self,
+        receipt_id: str,
+        failure_class: str,
+        reason: str,
+        *,
+        evidence_path: str,
+        evidence_sha256: str,
+        actor: ActorFence | None = None,
     ) -> None:
         """Record a classified remote collision and block cleanup atomically."""
         if failure_class not in {"source", "environment", "infrastructure"} or not reason:
@@ -1561,9 +2033,12 @@ class Scheduler:
             if actor is None:
                 raise LostLeaseError("collision requires a live archive actor")
             self._fenced_actor(db, actor, "archive", _now())
-            if (receipt["actor_lease_id"], receipt["actor_generation"], receipt["actor_id"],
-                    receipt["actor_owner_uuid"]) != (
-                        actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
+            if (
+                receipt["actor_lease_id"],
+                receipt["actor_generation"],
+                receipt["actor_id"],
+                receipt["actor_owner_uuid"],
+            ) != (actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
                 raise LostLeaseError("receipt actor context mismatch")
             task = db.execute(
                 "SELECT state FROM tasks WHERE task_id=?", (receipt["task_id"],)
@@ -1603,8 +2078,14 @@ class Scheduler:
                 task = db.execute(
                     "SELECT * FROM tasks WHERE task_id=?", (row["task_id"],)
                 ).fetchone()
-                db.execute("UPDATE trials SET state='stale',updated_at=? WHERE trial_id=? AND state='created'", (moment, row["trial_id"]))
-                db.execute("UPDATE trials SET state='stale',finished_at=?,failure_class='infrastructure',failure_reason='lease expired',updated_at=? WHERE trial_id=? AND state='running'", (moment, moment, row["trial_id"]))
+                db.execute(
+                    "UPDATE trials SET state='stale',updated_at=? WHERE trial_id=? AND state='created'",
+                    (moment, row["trial_id"]),
+                )
+                db.execute(
+                    "UPDATE trials SET state='stale',finished_at=?,failure_class='infrastructure',failure_reason='lease expired',updated_at=? WHERE trial_id=? AND state='running'",
+                    (moment, moment, row["trial_id"]),
+                )
                 db.execute(
                     "UPDATE tasks SET state='stale',last_failure_class='infrastructure',last_failure_reason='lease expired',updated_at=? WHERE task_id=?",
                     (moment, row["task_id"]),
@@ -1642,15 +2123,129 @@ class Scheduler:
             ).fetchall()
             for row in rows:
                 self._close_claim(db, row, moment, "launch intent expired before process start")
-                db.execute("UPDATE tasks SET state='stale',last_failure_class='infrastructure',last_failure_reason='launch intent expired',updated_at=? WHERE task_id=?", (moment, row["task_id"]))
-                task = db.execute("SELECT retry_count,retry_limit FROM tasks WHERE task_id=?", (row["task_id"],)).fetchone()
+                db.execute(
+                    "UPDATE tasks SET state='stale',last_failure_class='infrastructure',last_failure_reason='launch intent expired',updated_at=? WHERE task_id=?",
+                    (moment, row["task_id"]),
+                )
+                task = db.execute(
+                    "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?", (row["task_id"],)
+                ).fetchone()
                 if task["retry_count"] < task["retry_limit"]:
-                    db.execute("UPDATE tasks SET state='pending',retry_count=retry_count+1,updated_at=? WHERE task_id=?", (moment, row["task_id"]))
+                    db.execute(
+                        "UPDATE tasks SET state='pending',retry_count=retry_count+1,updated_at=? WHERE task_id=?",
+                        (moment, row["task_id"]),
+                    )
                 else:
-                    db.execute("UPDATE tasks SET state='blocked',terminal_reason='launch retry limit exhausted',updated_at=? WHERE task_id=?", (moment, row["task_id"]))
+                    db.execute(
+                        "UPDATE tasks SET state='blocked',terminal_reason='launch retry limit exhausted',updated_at=? WHERE task_id=?",
+                        (moment, row["task_id"]),
+                    )
             return len(rows)
 
-    def update_receipt(self, receipt_id: str, status: str, *, actor: ActorFence | None = None, **fields: Any) -> None:
+    def reconcile_controllers(self, *, now: str | None = None) -> int:
+        """Fence dead/reused local processes and release their scheduler usage."""
+        moment = now or _now()
+
+        def alive(pid: int, starttime: int, boot_id: str) -> bool:
+            try:
+                current_boot = Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+                fields = Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()
+                return current_boot == boot_id and int(fields[19]) == starttime
+            except (OSError, ValueError, IndexError):
+                return False
+
+        with self._db() as db, _transaction(db):
+            rows = db.execute(
+                "SELECT * FROM controllers WHERE state IN ('running','draining')"
+            ).fetchall()
+            changed = 0
+            for controller in rows:
+                if alive(
+                    int(controller["pid"]),
+                    int(controller["process_starttime_ticks"]),
+                    str(controller["boot_id"]),
+                ):
+                    continue
+                claims = db.execute(
+                    "SELECT * FROM claims WHERE controller_id=? AND owner_uuid=? AND active=1",
+                    (controller["controller_id"], controller["owner_uuid"]),
+                ).fetchall()
+                for claim in claims:
+                    self._close_claim(db, claim, moment, "controller process disappeared")
+                    task = db.execute(
+                        "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?",
+                        (claim["task_id"],),
+                    ).fetchone()
+                    if task["retry_count"] < task["retry_limit"]:
+                        db.execute(
+                            "UPDATE tasks SET state='pending',retry_count=retry_count+1,"
+                            "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                            "WHERE task_id=?",
+                            ("controller process disappeared", moment, claim["task_id"]),
+                        )
+                    else:
+                        db.execute(
+                            "UPDATE tasks SET state='blocked',terminal_reason=?,"
+                            "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                            "WHERE task_id=?",
+                            (
+                                "controller reconciliation retry limit exhausted",
+                                "controller process disappeared",
+                                moment,
+                                claim["task_id"],
+                            ),
+                        )
+                db.execute(
+                    "UPDATE scheduler_leases SET active=0,released_at=?,updated_at=? "
+                    "WHERE controller_id=? AND active=1",
+                    (moment, moment, controller["controller_id"]),
+                )
+                db.execute(
+                    "UPDATE controllers SET state='reconciled',desired=0,stopped_at=?,updated_at=? "
+                    "WHERE controller_id=? AND state IN ('running','draining')",
+                    (moment, moment, controller["controller_id"]),
+                )
+                if controller["role"] == "authoring_controller":
+                    db.execute(
+                        "UPDATE controller_slot_reservations SET state='released',updated_at=? "
+                        "WHERE controller_id=? AND state='activated'",
+                        (moment, controller["controller_id"]),
+                    )
+                    self._controller_capacity_delta(
+                        db,
+                        str(controller["controller_id"]),
+                        str(controller["language"]),
+                        -1,
+                        moment,
+                    )
+                changed += 1
+            return changed
+
+    def reconcile_singletons(self, *, now: str | None = None) -> int:
+        """Expire singleton leases even when a wedged process still exists."""
+        moment = now or _now()
+        with self._db() as db, _transaction(db):
+            rows = db.execute(
+                "SELECT * FROM scheduler_leases WHERE active=1 AND lease_expires_at<=?",
+                (moment,),
+            ).fetchall()
+            for row in rows:
+                db.execute(
+                    "UPDATE scheduler_leases SET active=0,released_at=?,updated_at=? "
+                    "WHERE lease_id=? AND active=1 AND lease_expires_at<=?",
+                    (moment, moment, row["lease_id"], moment),
+                )
+                db.execute(
+                    "UPDATE controllers SET state='reconciled',desired=0,stopped_at=?,updated_at=? "
+                    "WHERE controller_id=? AND role<>'authoring_controller' "
+                    "AND state IN ('running','draining')",
+                    (moment, moment, row["controller_id"]),
+                )
+            return len(rows)
+
+    def update_receipt(
+        self, receipt_id: str, status: str, *, actor: ActorFence | None = None, **fields: Any
+    ) -> None:
         _id(receipt_id, "receipt_id")
         if status not in {"committed", "pushed", "verified", "applied"}:
             raise ValidationError("invalid receipt status")
@@ -1670,14 +2265,22 @@ class Scheduler:
         }
         if set(fields) - allowed:
             raise ValidationError("unknown receipt field")
-        for key in ("source_digest", "generated_digest", "manifest_sha256", "source_snapshot_sha256", "evidence_sha256"):
+        for key in (
+            "source_digest",
+            "generated_digest",
+            "manifest_sha256",
+            "source_snapshot_sha256",
+            "evidence_sha256",
+        ):
             if key in fields:
                 fields[key] = _digest(fields[key], key)
         if status == "pushed":
             commit_sha = fields.get("commit_sha")
             if not isinstance(commit_sha, str) or not HEX40_RE.fullmatch(commit_sha):
                 raise ValidationError("pushed receipt requires a 40-hex commit_sha")
-            if not isinstance(fields.get("external_ref"), str) or not fields["external_ref"].startswith("refs/"):
+            if not isinstance(fields.get("external_ref"), str) or not fields[
+                "external_ref"
+            ].startswith("refs/"):
                 raise ValidationError("pushed receipt requires external_ref")
         if status == "verified":
             if not isinstance(fields.get("manifest_key"), str) or not fields["manifest_key"]:
@@ -1706,10 +2309,16 @@ class Scheduler:
             if actor is None:
                 raise LostLeaseError("receipt update requires a live singleton actor")
             self._fenced_actor(db, actor, receipt["operation_kind"], _now())
-            task = db.execute("SELECT state FROM tasks WHERE task_id=?", (receipt["task_id"],)).fetchone()
+            task = db.execute(
+                "SELECT state FROM tasks WHERE task_id=?", (receipt["task_id"],)
+            ).fetchone()
             if task is None:
                 raise CorruptionError("receipt task is missing")
-            expected_state = {"integration": "integrating", "archive": "archiving", "cleanup": "cleaning"}[receipt["operation_kind"]]
+            expected_state = {
+                "integration": "integrating",
+                "archive": "archiving",
+                "cleanup": "cleaning",
+            }[receipt["operation_kind"]]
             if task["state"] != expected_state:
                 raise ConflictError("receipt task-state fence failed")
             current = receipt["status"]
@@ -1726,9 +2335,12 @@ class Scheduler:
             }
             if status not in allowed_statuses[receipt["operation_kind"]]:
                 raise ConflictError("status does not match operation kind")
-            if (receipt["actor_lease_id"], receipt["actor_generation"], receipt["actor_id"],
-                    receipt["actor_owner_uuid"]) != (
-                        actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
+            if (
+                receipt["actor_lease_id"],
+                receipt["actor_generation"],
+                receipt["actor_id"],
+                receipt["actor_owner_uuid"],
+            ) != (actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid):
                 raise LostLeaseError("receipt actor context mismatch")
             values = {
                 key: (
@@ -1771,32 +2383,55 @@ class Scheduler:
 
     @staticmethod
     def _status_from(db: sqlite3.Connection, path: Path) -> dict[str, Any]:
-            config = db.execute("SELECT * FROM current_runtime_config").fetchone()
-            counts = {
-                str(row["state"]): int(row["count"])
-                for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
+        config = db.execute("SELECT * FROM current_runtime_config").fetchone()
+        resource_policy = db.execute("SELECT * FROM current_resource_policy").fetchone()
+        counts = {
+            str(row["state"]): int(row["count"])
+            for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
+        }
+        leases = [
+            {
+                "scope": row["scope"],
+                "generation": row["generation"],
+                "active": bool(row["active"]),
+                "expires_at": row["lease_expires_at"],
             }
-            leases = [
-                {"scope": row["scope"], "generation": row["generation"], "active": bool(row["active"]),
-                 "expires_at": row["lease_expires_at"]}
-                for row in db.execute("SELECT scope,generation,active,lease_expires_at FROM scheduler_leases ORDER BY scope,generation")
-            ]
-            capacities = [dict(row) for row in db.execute("SELECT * FROM capacity_rows ORDER BY capacity_unit,capacity_kind,capacity_key")]
-            safe_config = dict(config) if config is not None else None
-            if safe_config is not None:
-                safe_config.pop("changed_by", None)
-                safe_config.pop("reason", None)
-            return {
-                "schema_version": "authoring-scheduler/v2", "database": str(path.name),
-                "event_id": int(db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]),
-                "task_counts": counts, "wal": {
-                    "present": Path(str(path) + "-wal").is_file(),
-                    "size_bytes": Path(str(path) + "-wal").stat().st_size
-                    if Path(str(path) + "-wal").is_file() else 0,
-                },
-                "config": safe_config, "leases": leases,
-                "capacities": capacities,
-            }
+            for row in db.execute(
+                "SELECT scope,generation,active,lease_expires_at FROM scheduler_leases ORDER BY scope,generation"
+            )
+        ]
+        capacities = [
+            dict(row)
+            for row in db.execute(
+                "SELECT * FROM capacity_rows ORDER BY capacity_unit,capacity_kind,capacity_key"
+            )
+        ]
+        safe_config = dict(config) if config is not None else None
+        if safe_config is not None:
+            safe_config.pop("changed_by", None)
+            safe_config.pop("reason", None)
+        safe_policy = dict(resource_policy) if resource_policy is not None else None
+        if safe_policy is not None:
+            safe_policy.pop("changed_by", None)
+            safe_policy.pop("reason", None)
+        return {
+            "schema_version": "authoring-scheduler/v3",
+            "database": str(path.name),
+            "event_id": int(
+                db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]
+            ),
+            "task_counts": counts,
+            "wal": {
+                "present": Path(str(path) + "-wal").is_file(),
+                "size_bytes": Path(str(path) + "-wal").stat().st_size
+                if Path(str(path) + "-wal").is_file()
+                else 0,
+            },
+            "config": safe_config,
+            "resource_policy": safe_policy,
+            "leases": leases,
+            "capacities": capacities,
+        }
 
 
 def readonly_status(path: Path | str) -> dict[str, Any]:

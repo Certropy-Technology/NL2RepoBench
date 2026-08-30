@@ -24,12 +24,23 @@ import sys
 import tempfile
 import time
 import tomllib
+import uuid
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Any, cast
+
+from nl2repobench.authoring.runtime import (
+    SingletonActor,
+    command_digest,
+    executable_digest,
+    idempotency_key,
+    process_identity,
+    scheduler_for,
+)
+from nl2repobench.authoring.scheduler import ConflictError, Scheduler
 
 SAFE_PACKAGE = re.compile(
     r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
@@ -104,9 +115,7 @@ def _lane_key(lane: Lane) -> str:
 def _controller_counts(lanes: list[Lane], procs: list[Proc]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for lane in lanes:
-        counts[lane.language] = counts.get(lane.language, 0) + len(
-            _controller_slots(lane, procs)
-        )
+        counts[lane.language] = counts.get(lane.language, 0) + len(_controller_slots(lane, procs))
     return counts
 
 
@@ -229,9 +238,7 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
             shutil.copyfile(source_file, temporary)
             if _sha256(temporary) != digest.removeprefix("sha256:"):
                 temporary.unlink(missing_ok=True)
-                raise ValueError(
-                    f"private artifact copy failed hash: {digest}"
-                ) from None
+                raise ValueError(f"private artifact copy failed hash: {digest}") from None
             os.replace(temporary, target)
         copied.append(digest)
     return copied
@@ -246,9 +253,13 @@ def _proc_table() -> list[Proc]:
             stat = (entry / "stat").read_text(encoding="utf-8")
             state = stat.rsplit(")", 1)[1].split()[0]
             cwd = os.path.realpath(entry / "cwd")
-            command = (entry / "cmdline").read_bytes().replace(b"\0", b" ").decode(
-                errors="replace"
-            ).strip()
+            command = (
+                (entry / "cmdline")
+                .read_bytes()
+                .replace(b"\0", b" ")
+                .decode(errors="replace")
+                .strip()
+            )
         except (OSError, UnicodeDecodeError):
             continue
         if state != "Z":
@@ -261,16 +272,12 @@ def _worktree_processes(worktree: Path, procs: list[Proc]) -> list[Proc]:
     return [
         proc
         for proc in procs
-        if proc.cwd == target
-        or proc.cwd.startswith(target + os.sep)
-        or target in proc.command
+        if proc.cwd == target or proc.cwd.startswith(target + os.sep) or target in proc.command
     ]
 
 
 def _docker_uses(worktree: Path) -> bool:
-    listed = subprocess.run(
-        ["docker", "ps", "-q"], capture_output=True, text=True, check=False
-    )
+    listed = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, check=False)
     if listed.returncode != 0:
         return True
     ids = listed.stdout.split()
@@ -380,9 +387,12 @@ def _parse_director_response(text: str) -> dict[str, Any]:
     if value["language"] not in {"python", "node", "go", "all", "none"}:
         raise ValueError("Director language is invalid")
     packages = value["discover_packages"]
-    if not isinstance(packages, list) or len(packages) > 8 or not all(
-        isinstance(package, str) and SAFE_PACKAGE.fullmatch(package)
-        for package in packages
+    if (
+        not isinstance(packages, list)
+        or len(packages) > 8
+        or not all(
+            isinstance(package, str) and SAFE_PACKAGE.fullmatch(package) for package in packages
+        )
     ):
         raise ValueError("Director discover_packages is invalid")
     for field in ("integrate_limit", "worker_limit"):
@@ -390,9 +400,7 @@ def _parse_director_response(text: str) -> dict[str, Any]:
             raise ValueError(f"Director {field} is invalid")
     if not isinstance(value["reason"], str) or not value["reason"].strip():
         raise ValueError("Director reason is required")
-    if value["action"] == "pause" and (
-        value["integrate_limit"] or value["worker_limit"]
-    ):
+    if value["action"] == "pause" and (value["integrate_limit"] or value["worker_limit"]):
         raise ValueError("pause must use zero limits")
     return value
 
@@ -406,17 +414,15 @@ def _director_decision(
     cache_path = live / "supervisor/director-decision.json"
     runtime_path = live / "supervisor/runtime-config.json"
     runtime_changed = runtime_path.is_file() and (
-        not cache_path.is_file()
-        or runtime_path.stat().st_mtime > cache_path.stat().st_mtime
+        not cache_path.is_file() or runtime_path.stat().st_mtime > cache_path.stat().st_mtime
     )
     if not args.refresh_director and not runtime_changed and cache_path.is_file():
         try:
             cached = _json(cache_path)
             age = time.time() - cache_path.stat().st_mtime
             cached_clean = cached.get("integration_clean")
-            safety_state_matches = (
-                isinstance(cached_clean, bool)
-                and cached_clean == snapshot.get("integration_clean")
+            safety_state_matches = isinstance(cached_clean, bool) and cached_clean == snapshot.get(
+                "integration_clean"
             )
             if age < args.director_interval_sec and safety_state_matches:
                 decision = _parse_director_response(str(cached["response"]))
@@ -525,9 +531,7 @@ def _run_discovery(
     }
     requested = decision.get("discover_packages") or pool[language]
     packages = [
-        package
-        for package in requested
-        if package in pool[language] and package not in known
+        package for package in requested if package in pool[language] and package not in known
     ][:8]
     if not packages:
         return {"status": "discovery-rejected", "reason": "discovery pool has no new packages"}
@@ -549,9 +553,7 @@ def _run_discovery(
                 "reason": f"Go discovery pool lacks repository mapping: {missing[0]}",
             }
         for package in packages:
-            command.extend(
-                ("--repository", f"{package}={GO_DISCOVERY_REPOSITORIES[package]}")
-            )
+            command.extend(("--repository", f"{package}={GO_DISCOVERY_REPOSITORIES[package]}"))
     else:
         for package in packages:
             command.extend(("--package", package))
@@ -600,12 +602,8 @@ def _run_discovery(
         and record.get("status") in {"candidate", "needs-evidence"}
     ]
     queue["counts"] = {
-        "candidate": sum(
-            r.get("status") == "candidate" for r in queue["queue"]
-        ),
-        "needs-evidence": sum(
-            r.get("status") == "needs-evidence" for r in queue["queue"]
-        ),
+        "candidate": sum(r.get("status") == "candidate" for r in queue["queue"]),
+        "needs-evidence": sum(r.get("status") == "needs-evidence" for r in queue["queue"]),
     }
     _atomic_write(queue_path, queue)
     if not queue["queue"]:
@@ -730,18 +728,14 @@ def _queue_summary(lane: Lane) -> dict[str, Any]:
         "exhausted": sum(
             1
             for record in records
-            if record.get("status") == "pending"
-            and int(record.get("attempts", 0)) >= 3
+            if record.get("status") == "pending" and int(record.get("attempts", 0)) >= 3
         ),
     }
 
 
-def _lane_has_claimable_work(
-    records: list[dict[str, Any]], *, max_attempts: int
-) -> bool:
+def _lane_has_claimable_work(records: list[dict[str, Any]], *, max_attempts: int) -> bool:
     return any(
-        record.get("status") == "pending"
-        and int(record.get("attempts", 0)) < max_attempts
+        record.get("status") == "pending" and int(record.get("attempts", 0)) < max_attempts
         for record in records
     )
 
@@ -819,9 +813,7 @@ def _release_stale_claims(
                 "language": lane.language,
                 "package": package,
                 "status": (
-                    "stale-released"
-                    if released["exit_code"] == 0
-                    else "stale-release-error"
+                    "stale-released" if released["exit_code"] == 0 else "stale-release-error"
                 ),
                 "output": released["output"],
             }
@@ -934,13 +926,16 @@ def _validate_and_compile(root: Path, source: Path, language: str) -> tuple[dict
     )
     if network["exit_code"] != 0:
         raise RuntimeError(f"network lint failed: {network['output']}")
-    toolchain = root / {
-        "python": "toolchain.lock.toml",
-        "node": "toolchain.node.lock.toml",
-        "go": "toolchain.go.lock.toml",
-    }[language]
-    compile_root = root / ".nl2repo/supervisor/compile" / re.sub(
-        r"[^A-Za-z0-9._-]+", "_", source.name
+    toolchain = (
+        root
+        / {
+            "python": "toolchain.lock.toml",
+            "node": "toolchain.node.lock.toml",
+            "go": "toolchain.go.lock.toml",
+        }[language]
+    )
+    compile_root = (
+        root / ".nl2repo/supervisor/compile" / re.sub(r"[^A-Za-z0-9._-]+", "_", source.name)
     )
     if compile_root.exists():
         shutil.rmtree(compile_root)
@@ -994,9 +989,7 @@ def _git_status(root: Path) -> list[str]:
 
 
 def _remote_sync(root: Path, remote: str, branch: str) -> None:
-    result = _run(
-        ["git", "push", remote, f"HEAD:{branch}"], cwd=root, timeout=600
-    )
+    result = _run(["git", "push", remote, f"HEAD:{branch}"], cwd=root, timeout=600)
     if result["exit_code"] != 0:
         raise RuntimeError(f"git push failed: {result['output']}")
 
@@ -1015,11 +1008,12 @@ def _integrate_task(
     receipt_root: Path,
     dry_run: bool,
     timeout: int,
+    archive_after_push: bool = True,
 ) -> dict[str, Any]:
     worktree = root / ".nl2repo/authoring-live/worktrees" / lane.batch_id / package
     if not worktree.is_dir():
         return {"package": package, "status": "missing-worktree"}
-    if not dry_run and archive_bucket is None:
+    if not dry_run and archive_after_push and archive_bucket is None:
         return {"package": package, "status": "oss-unavailable"}
     active = _worktree_processes(worktree, procs)
     if active or _docker_uses(worktree):
@@ -1090,9 +1084,7 @@ def _integrate_task(
         if source_changed:
             shutil.rmtree(source_target, ignore_errors=True)
         raise RuntimeError(f"git add failed: {staged['output']}")
-    staged_paths = _run(
-        ["git", "diff", "--cached", "--name-only"], cwd=root, timeout=60
-    )
+    staged_paths = _run(["git", "diff", "--cached", "--name-only"], cwd=root, timeout=60)
     if staged_paths["exit_code"] != 0:
         _run(
             ["git", "reset", "--", f"catalog/sources/{package}", f"catalog/tasks/{task_id}"],
@@ -1139,17 +1131,23 @@ def _integrate_task(
             if source_changed:
                 shutil.rmtree(source_target, ignore_errors=True)
             raise RuntimeError(f"git commit failed: {committed['output']}")
-        commit = _command_output(
-            _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)
-        ).strip()
+        commit = _command_output(_run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)).strip()
     _remote_sync(root, remote, branch)
+    if not archive_after_push:
+        return {
+            "package": package,
+            "status": "integrated",
+            "source_changed": source_changed,
+            "generated_changed": generated_changed,
+            "private_cas_copied": cas_copied,
+            "commit": commit,
+            "checks": checks,
+        }
     if archive_bucket is None:
         raise RuntimeError("OSS credentials are missing; worktree retained")
     archived = archive_module.archive_task(
         archive_bucket,
-        lane=archive_module.Lane(
-            lane.language, lane.batch_id, lane.queue_state
-        ),
+        lane=archive_module.Lane(lane.language, lane.batch_id, lane.queue_state),
         package=package,
         worktree=worktree,
         receipt_root=receipt_root,
@@ -1227,19 +1225,14 @@ def _runtime_config(path: Path, args: argparse.Namespace) -> dict[str, Any]:
     if value.get("schema_version", "1.0") != "1.0":
         raise ValueError("runtime config schema_version must be 1.0")
     enabled = value.get("enabled", defaults["enabled"])
-    max_controllers = value.get(
-        "max_total_controllers", defaults["max_total_controllers"]
-    )
-    concurrency = value.get(
-        "controller_concurrency", defaults["controller_concurrency"]
-    )
+    max_controllers = value.get("max_total_controllers", defaults["max_total_controllers"])
+    concurrency = value.get("controller_concurrency", defaults["controller_concurrency"])
     max_integrations = value.get("max_integrations", defaults["max_integrations"])
     agent_limit = value.get("agent_limit", defaults["agent_limit"])
     if not isinstance(enabled, bool):
         raise ValueError("runtime config enabled must be boolean")
-    if (
-        not isinstance(max_controllers, int)
-        or not 0 <= max_controllers <= min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS)
+    if not isinstance(max_controllers, int) or not 0 <= max_controllers <= min(
+        args.max_total_controllers, MAX_RUNTIME_CONTROLLERS
     ):
         raise ValueError("runtime config max_total_controllers is out of bounds")
     if not isinstance(concurrency, int) or not 0 <= concurrency <= MAX_RUNTIME_CONCURRENCY:
@@ -1265,9 +1258,7 @@ def _save_failure_state(path: Path, value: dict[str, Any]) -> None:
     _atomic_write(path, value)
 
 
-def _failure_is_in_backoff(
-    state: dict[str, Any], worktree: Path, package: str
-) -> bool:
+def _failure_is_in_backoff(state: dict[str, Any], worktree: Path, package: str) -> bool:
     record = state.get(package)
     if not isinstance(record, dict):
         return False
@@ -1288,9 +1279,7 @@ def _oss_bucket() -> Any | None:
 
     return oss2.Bucket(
         oss2.Auth(key_id, key_secret),
-        os.environ.get(
-            "OSS_ENDPOINT", "https://oss-ap-southeast-1.aliyuncs.com"
-        ),
+        os.environ.get("OSS_ENDPOINT", "https://oss-ap-southeast-1.aliyuncs.com"),
         os.environ.get("OSS_BUCKET", "dingshang-sg"),
     )
 
@@ -1404,9 +1393,7 @@ def _start_controller(
     return process.pid
 
 
-def _resume_stopped_controllers(
-    lanes: list[Lane], procs: list[Proc]
-) -> list[int]:
+def _resume_stopped_controllers(lanes: list[Lane], procs: list[Proc]) -> list[int]:
     resumed: list[int] = []
     for lane in lanes:
         for proc in _controller_processes(lane, procs):
@@ -1476,6 +1463,266 @@ def _lanes(root: Path, live: Path, queue_root: Path) -> list[Lane]:
     return lanes
 
 
+def _start_db_controller(
+    args: argparse.Namespace,
+    scheduler: Scheduler,
+    root: Path,
+    live: Path,
+    lane_id: str,
+    slot: int,
+) -> dict[str, Any]:
+    owner = f"controller-{uuid.uuid4()}"
+    controller_id = f"authoring-{uuid.uuid4()}"
+    token = scheduler.reserve_controller(lane_id, owner, slot)
+    output = live / "results" / f"{controller_id}.json"
+    log = live / "logs" / f"{controller_id}.log"
+    command = [
+        sys.executable,
+        str(root / "scripts/run_authoring_loop.py"),
+        "--scheduler-db",
+        str(args.scheduler_db),
+        "--controller-id",
+        controller_id,
+        "--owner",
+        owner,
+        "--state-root",
+        str(live / "state"),
+        "--worktree-root",
+        str(live / "worktrees"),
+        "--output",
+        str(output),
+        "--provider",
+        os.environ.get("PI_PROVIDER", "z-open-api-gpt-openai-responses"),
+        "--model",
+        os.environ.get("PI_MODEL", "gpt-5.6-sol"),
+        "--thinking",
+        os.environ.get("PI_THINKING", "high"),
+        "--models-file",
+        str(Path.home() / ".pi/agent/models.json"),
+        "--session-root",
+        str(live / "sessions"),
+    ]
+    log.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with log.open("a", encoding="utf-8") as stream:
+            process = subprocess.Popen(
+                command,
+                cwd=root,
+                env={**os.environ, "TMPDIR": str(live / "tmp")},
+                stdout=stream,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,
+            )
+        pid, starttime, boot_id = process_identity(process.pid)
+        scheduler.capacity("active_claim", "controller", controller_id, 1)
+        scheduler.activate_controller(
+            token,
+            controller_id,
+            owner,
+            pid=pid,
+            process_starttime_ticks=starttime,
+            boot_id=boot_id,
+            executable_digest=executable_digest(command[0]),
+            argv_digest=command_digest(command),
+        )
+    except Exception:
+        try:
+            scheduler.release_controller_reservation(token, owner, reason="Popen activation failed")
+        except ConflictError:
+            pass
+        raise
+    return {
+        "status": "controller-started",
+        "lane_id": lane_id,
+        "pid": pid,
+        "controller_id": controller_id,
+    }
+
+
+def _start_db_watcher(args: argparse.Namespace, root: Path, live: Path) -> int:
+    command = [
+        sys.executable,
+        str(root / "scripts/archive_authoring_live.py"),
+        "--scheduler-db",
+        str(args.scheduler_db),
+        "--receipt-root",
+        str(live / "archive-receipts"),
+        "--workers",
+        "8",
+        "--interval-sec",
+        str(args.interval_sec),
+    ]
+    log = live / "logs/archive-watcher-sqlite.log"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    with log.open("a", encoding="utf-8") as stream:
+        process = subprocess.Popen(
+            command,
+            cwd=root,
+            env={**os.environ, "TMPDIR": str(live / "tmp")},
+            stdout=stream,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+    return process.pid
+
+
+def _integrate_db_task(
+    args: argparse.Namespace,
+    scheduler: Scheduler,
+    actor: SingletonActor,
+    root: Path,
+    task: dict[str, Any],
+    procs: list[Proc],
+) -> dict[str, Any]:
+    receipt = scheduler.begin_operation(
+        str(task["task_id"]),
+        "integration",
+        idempotency_key(task, "integration"),
+        actor=actor.fence,
+    )
+    lane = Lane(
+        str(task["language"]),
+        str(task["batch_id"]),
+        Path("scheduler-db-only"),
+        Path("scheduler-db-only"),
+        Path("scheduler-db-only"),
+    )
+    try:
+        action = _integrate_task(
+            root,
+            lane,
+            str(task["package"]),
+            task,
+            procs,
+            remote=args.remote,
+            branch=args.branch,
+            archive_bucket=None,
+            archive_module=None,
+            receipt_root=Path("scheduler-db-only"),
+            dry_run=args.dry_run,
+            timeout=args.command_timeout,
+            archive_after_push=False,
+        )
+        if action["status"] == "integrated" and not args.dry_run:
+            commit = _command_output(
+                _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)
+            ).strip()
+            scheduler.update_receipt(
+                receipt,
+                "pushed",
+                actor=actor.fence,
+                commit_sha=commit,
+                external_ref=f"refs/heads/{args.branch}",
+                receipt_json=action,
+            )
+        return {"task_id": task["task_id"], **action}
+    except Exception as exc:
+        scheduler.fail_operation(
+            receipt,
+            "infrastructure"
+            if any(word in str(exc).lower() for word in ("git", "docker", "disk", "network"))
+            else "verifier",
+            str(exc),
+            actor=actor.fence,
+        )
+        raise
+
+
+def supervise_db(args: argparse.Namespace) -> int:
+    root = Path(args.repository_root).resolve()
+    live = (root / args.live_root).resolve()
+    scheduler = scheduler_for(args.scheduler_db)
+    scheduler.init()
+    supervisor_actor = SingletonActor.acquire(scheduler, "supervisor")
+    integration_actor = SingletonActor.acquire(scheduler, "integration")
+    try:
+        config = scheduler.runtime_config()
+        policy = scheduler.resource_policy()
+        reconciled = {
+            "reservations": scheduler.reconcile_reservations(),
+            "claims": scheduler.reconcile_stale(),
+            "launch_intents": scheduler.reconcile_launch_intents(),
+            "singletons": scheduler.reconcile_singletons(),
+            "controllers": scheduler.reconcile_controllers(),
+        }
+        free = _free_bytes(root)
+        docker_root, docker_free, docker_error = _docker_storage_status()
+        resources_ok = (
+            free >= int(policy["repository_min_free_bytes"])
+            and docker_free >= int(policy["docker_min_free_bytes"])
+            and docker_error is None
+        )
+        report: dict[str, Any] = {
+            "schema_version": "authoring-supervisor/v3",
+            "authority": "sqlite",
+            "observed_at": datetime.now(UTC).isoformat(),
+            "runtime_config": {
+                key: value for key, value in config.items() if key not in {"changed_by", "reason"}
+            },
+            "resource_policy": {
+                key: value for key, value in policy.items() if key not in {"changed_by", "reason"}
+            },
+            "resources": {
+                "repository_free_bytes": free,
+                "docker_root": str(docker_root),
+                "docker_free_bytes": docker_free,
+                "docker_error": _redact(docker_error) if docker_error else None,
+                "worker_capacity": resources_ok,
+            },
+            "reconciled": reconciled,
+            "actions": [],
+            "errors": [],
+        }
+        integration_clean = not _git_status(root)
+        if bool(config["enabled"]) and resources_ok and integration_clean:
+            for task in scheduler.operation_candidates(
+                "integration", limit=int(config["max_integrations"])
+            ):
+                try:
+                    report["actions"].append(
+                        _integrate_db_task(
+                            args, scheduler, integration_actor, root, task, _proc_table()
+                        )
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    report["errors"].append(
+                        {"task_id": task["task_id"], "error": _redact(str(exc))}
+                    )
+            status = scheduler.status()
+            watcher_live = any(
+                lease["scope"] == "watcher" and lease["active"] for lease in status["leases"]
+            )
+            if not watcher_live and free >= int(policy["watcher_min_free_bytes"]):
+                report["actions"].append(
+                    {"status": "watcher-started", "pid": _start_db_watcher(args, root, live)}
+                )
+            for _ in range(int(config["max_total_controllers"])):
+                lane_id = scheduler.dispatch_next_lane()
+                if lane_id is None:
+                    break
+                try:
+                    slot = scheduler.next_available_slot(lane_id)
+                    report["actions"].append(
+                        _start_db_controller(args, scheduler, root, live, lane_id, slot)
+                    )
+                except ConflictError:
+                    break
+        supervisor_actor.heartbeat()
+        integration_actor.heartbeat()
+        scheduler.snapshot(
+            supervisor_actor.controller_id,
+            supervisor_actor.fence.lease_id,
+            supervisor_actor.fence.generation,
+            report,
+            int(config["config_version"]),
+        )
+        print(json.dumps(report, ensure_ascii=False, sort_keys=True), flush=True)
+        return 1 if report["errors"] else 0
+    finally:
+        integration_actor.release()
+        supervisor_actor.release()
+
+
 def supervise(args: argparse.Namespace) -> int:
     root = Path(args.repository_root).resolve()
     live = (root / args.live_root).resolve()
@@ -1490,16 +1737,12 @@ def supervise(args: argparse.Namespace) -> int:
     report_path = live / "supervisor/status.json"
     failure_state_path = live / "supervisor/integration-failures.json"
     runtime_config_path = (
-        args.runtime_config
-        if args.runtime_config.is_absolute()
-        else root / args.runtime_config
+        args.runtime_config if args.runtime_config.is_absolute() else root / args.runtime_config
     ).resolve()
     last_runtime_config = {
         "schema_version": "1.0",
         "enabled": True,
-        "max_total_controllers": min(
-            args.max_total_controllers, MAX_RUNTIME_CONTROLLERS
-        ),
+        "max_total_controllers": min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS),
         "controller_concurrency": 1,
         "max_integrations": args.max_integrations,
         "agent_limit": None,
@@ -1631,9 +1874,7 @@ def supervise(args: argparse.Namespace) -> int:
                 and integration_clean
                 and report["worker_disk_capacity"]
             ):
-                report["actions"].append(
-                    _run_discovery(args, root, live, director, lanes)
-                )
+                report["actions"].append(_run_discovery(args, root, live, director, lanes))
             if args.replenish_language:
                 selected = (
                     ["python", "node", "go"]
@@ -1667,14 +1908,10 @@ def supervise(args: argparse.Namespace) -> int:
                         )
             failure_state = _load_failure_state(failure_state_path)
             report["actions"].extend(
-                _release_stale_claims(root, lanes[0], procs, max_attempts=3)
-                if lanes
-                else []
+                _release_stale_claims(root, lanes[0], procs, max_attempts=3) if lanes else []
             )
             for lane in lanes[1:]:
-                report["actions"].extend(
-                    _release_stale_claims(root, lane, procs, max_attempts=3)
-                )
+                report["actions"].extend(_release_stale_claims(root, lane, procs, max_attempts=3))
             with _exclusive_lock(live / "archive.lock", blocking=False) as archive_lock:
                 if archive_lock:
                     bucket = _oss_bucket()
@@ -1753,8 +1990,7 @@ def supervise(args: argparse.Namespace) -> int:
                                             / package,
                                             package,
                                         ),
-                                        "retry_after": time.time()
-                                        + args.failure_backoff_seconds,
+                                        "retry_after": time.time() + args.failure_backoff_seconds,
                                         "error": action.get("error"),
                                         "recorded_at": datetime.now(UTC).isoformat(),
                                     }
@@ -1776,9 +2012,7 @@ def supervise(args: argparse.Namespace) -> int:
                 and worker_limit > 0
             )
             can_run_maintenance = (
-                not args.dry_run
-                and integration_clean
-                and free >= args.watcher_min_free_bytes
+                not args.dry_run and integration_clean and free >= args.watcher_min_free_bytes
             )
             if can_run_maintenance:
                 current = _watcher_processes(_proc_table())
@@ -1798,13 +2032,9 @@ def supervise(args: argparse.Namespace) -> int:
                 if args.resume_stopped_controllers:
                     resumed = _resume_stopped_controllers(lanes, current)
                     if resumed:
-                        report["actions"].append(
-                            {"status": "controllers-resumed", "pids": resumed}
-                        )
+                        report["actions"].append({"status": "controllers-resumed", "pids": resumed})
                         current = _proc_table()
-                active_total = sum(
-                    len(_controller_slots(lane, current)) for lane in lanes
-                )
+                active_total = sum(len(_controller_slots(lane, current)) for lane in lanes)
                 lane_records = {_lane_key(lane): _lane_records(lane) for lane in lanes}
                 language_lanes: dict[str, list[Lane]] = {}
                 for lane in lanes:
@@ -1839,9 +2069,7 @@ def supervise(args: argparse.Namespace) -> int:
                                 runtime_config_path,
                             )
                             active_total += 1
-                            language_counts[language] = (
-                                language_counts.get(language, 0) + 1
-                            )
+                            language_counts[language] = language_counts.get(language, 0) + 1
                             report["actions"].append(
                                 {
                                     "status": "controller-started",
@@ -1866,6 +2094,7 @@ def supervise(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--scheduler-db", type=Path)
     parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--live-root", type=Path, default=Path(".nl2repo/authoring-live"))
     parser.add_argument("--queue-root", type=Path, default=Path("/data/NL2RepoBench/reports"))
@@ -1943,6 +2172,10 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--resume-stopped-controllers", action="store_true")
     args = parser.parse_args()
+    if args.scheduler_db is not None:
+        args.scheduler_db = args.scheduler_db.resolve()
+        if args.replenish_language:
+            parser.error("DB mode does not consume legacy discovery authorities")
     if args.replenish_language and not args.once:
         parser.error("--replenish-language requires --once")
     if (
@@ -1957,11 +2190,18 @@ def main() -> int:
         or args.docker_min_free_bytes < 1
         or args.watcher_min_free_bytes < 1
     ):
-        parser.error(
-            "worker, integration, interval, timeout, and disk thresholds must be positive"
-        )
+        parser.error("worker, integration, interval, timeout, and disk thresholds must be positive")
     try:
+        if args.scheduler_db is not None:
+            while True:
+                result = supervise_db(args)
+                if args.once or result:
+                    return result
+                time.sleep(args.interval_sec)
         return supervise(args)
+    except ConflictError as exc:
+        print(f"authoring supervisor singleton unavailable: {_redact(str(exc))}", file=sys.stderr)
+        return 2
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:
         print(f"authoring supervisor failed: {_redact(str(exc))}", file=sys.stderr)
         return 1

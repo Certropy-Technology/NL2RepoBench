@@ -1,0 +1,8 @@
+[Unit]
+Description=Record NL2RepoBench authoring supervisor failure (%i)
+
+[Service]
+Type=oneshot
+User=root
+StateDirectory=nl2repobench-authoring-failures
+ExecStart=/usr/bin/touch /var/lib/nl2repobench-authoring-failures/%i.failed
