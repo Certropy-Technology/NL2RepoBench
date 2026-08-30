@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "urllib3",
+  "revision": "85a8a9cfad3398bc504d088233d0a11af219a82a",
+  "public_modules": ["urllib3", "urllib3._collections", "urllib3.exceptions", "urllib3.fields", "urllib3.filepost", "urllib3.response", "urllib3.util", "urllib3.util.request", "urllib3.util.retry", "urllib3.util.timeout", "urllib3.util.url"],
+  "scored_symbols": {
+    "urllib3": ["HTTPHeaderDict", "HTTPResponse", "Retry", "Timeout", "PoolManager", "HTTPConnectionPool", "HTTPSConnectionPool", "make_headers", "parse_url", "encode_multipart_formdata", "connection_from_url", "proxy_from_url", "request", "disable_warnings"],
+    "urllib3._collections": ["HTTPHeaderDict"],
+    "urllib3.fields": ["RequestField", "guess_content_type"],
+    "urllib3.filepost": ["encode_multipart_formdata"],
+    "urllib3.response": ["HTTPResponse", "BaseHTTPResponse"],
+    "urllib3.util.request": ["make_headers"],
+    "urllib3.util.retry": ["Retry", "RequestHistory"],
+    "urllib3.util.timeout": ["Timeout"],
+    "urllib3.util.url": ["Url", "parse_url"]
+  },
+  "excluded_risk_surface": ["socket and network I/O", "TLS and certificate handshakes", "proxy servers", "HTTP/2 transport", "browser and Emscripten adapters", "optional compression dependencies", "fuzz and performance tests"],
+  "notes": "The scored surface is a deterministic child-side adaptation using in-memory bodies and JSON-compatible arguments. Candidate imports occur only in the UID-10001 child."
+}

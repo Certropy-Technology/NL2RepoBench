@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "task_id": "urllib3",
+  "task_version": "1.0.0",
+  "terminal_kind": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/urllib3/urllib3",
+    "revision": "85a8a9cfad3398bc504d088233d0a11af219a82a",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:130e3a64d5fdd5d096a752694634a7d9df284469de86e5732100268041e3d686",
+    "source_digest": "sha256:3a5d7d03213b00b8e8f18be2df77b38bc55829380ffe91302c0cca6821e186c0",
+    "source_archive_size_bytes": 2058240
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_policy": "no-network",
+    "agent_network_hosts": [],
+    "verifier_network_hosts": [],
+    "candidate_build_env": {
+      "SETUPTOOLS_SCM_PRETEND_VERSION": "2.7.1.dev42",
+      "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_URLLIB3": "2.7.1.dev42"
+    }
+  },
+  "dependencies": {
+    "installer": "pip",
+    "lock_artifact": "artifact://private/sha256:a7d9c8379c1a6529ab2f34abc12a6e5fc926af7b133b6be5dfa40f2684a69a40",
+    "lock_sha256": "sha256:a7d9c8379c1a6529ab2f34abc12a6e5fc926af7b133b6be5dfa40f2684a69a40",
+    "lock_size_bytes": 2775,
+    "packages": ["hatch-vcs==0.5.0", "hatchling==1.32.0", "setuptools-scm==10.2.1", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "setuptools==84.0.0", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19", "vcs-versioning==2.3.1"]
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/compiled/urllib3/bundle.manifest.json",
+    "manifest_sha256": "sha256:eb557279834f47e44226ffe0672391bccb78fb202f12280475f776b9463f0ca4",
+    "canonical_manifest_digest": "sha256:f67ef9729c9793681b28a30a1234140d8a8da73f53ee15065568d7f7bbfe4891",
+    "file_count": 59
+  },
+  "oracle": {
+    "mode": "task-local separate-verifier replay",
+    "command": "docker run --rm --network none --user 0 ... solution/solve.sh; docker run --rm --network none ... verifier/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/oracle-final/logs/verifier/grading.json",
+      "sha256": "sha256:8d7eb1450b95f931159868478bd46f7af4b146e3835dc08c75f1dd0b9f60fe12"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/oracle-final/logs/verifier/network.json",
+      "sha256": "sha256:77c3cf2934bd807ce6a230e0cade7bc77293c5611c78a5ce7c117141fed0f2dc"
+    },
+    "candidate_install": {"outcome": "success", "entries": 297, "total_bytes": 2827429}
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none ... empty workspace ... verifier/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "expected_total": 32,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/empty-logs/verifier/grading.json",
+      "grading_sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/empty-logs/verifier/network.json",
+      "network_sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517"
+    },
+    "stub": {
+      "command": "docker run --rm --network none ... controls/stub.sh ... verifier/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/stub-logs/verifier/grading.json",
+      "grading_sha256": "sha256:77092b8fdda9f61b8b67a18c7220ae25f9fc6bcd13c4b9a532271c75e46513bd",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/stub-logs/verifier/network.json",
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+    },
+    "forgery": {
+      "command": "docker run --rm --network none ... controls/forgery.sh ... verifier/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 1,
+      "reward": 0.03125,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/forgery-logs/verifier/grading.json",
+      "grading_sha256": "sha256:77092b8fdda9f61b8b67a18c7220ae25f9fc6bcd13c4b9a532271c75e46513bd",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/forgery-logs/verifier/network.json",
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+    },
+    "install_hang": {
+      "command": "timeout 300 docker run --rm --network none ... controls/install-hang.sh ... verifier/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install_outcome": "timeout",
+      "candidate_install_returncode": -9,
+      "expected_total": 32,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/install-hang-logs/verifier/grading.json",
+      "grading_sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4",
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/controls-final/install-hang-logs/verifier/network.json",
+      "network_sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+    },
+    "offline": {
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network_path": ".nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/oracle-final/logs/verifier/network.json"
+    }
+  },
+  "gates": {
+    "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/urllib3", "exit_code": 0},
+    "network_lint_source": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "tasks_scanned": 385, "warning_count": 167},
+    "network_lint_generated": {"command": "uv run nl2repo task lint-network --include-generated --tasks-root .nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/compiled-final", "exit_code": 0, "error_count": 0, "warning_count": 0},
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/urllib3 --output .nl2repo/authoring-work/python-author-wave2-20260828/urllib3/build/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    "verifier_image_build": {"exit_code": 0, "image_id": "sha256:1a9bd9373485844ce61104ffb976cef21b7337247f3614931b6bfd859d254145"},
+    "agent_image_build": {"exit_code": 0, "image_id": "sha256:707f6d99c78db58a85e5c727753c2d1699be062d981586da5c8f3582feb7f63d"}
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this lane by contract.",
+    "The shared toolchain's locked OpenHands image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5 is unavailable locally; local tag image identity is sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123. The integrator must restore the locked image and rerun the official matrix.",
+    "Blind review, pilot, dataset integration, and publication remain integrator-owned.",
+    "The scored contract excludes live socket/TLS/proxy/HTTP2 transport and optional compression dependencies; upstream no-network failures are documented in test-inventory.json."
+  ]
+}

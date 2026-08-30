@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/urllib3"
+version = "1.0.0"
+description = "Build urllib3 from an empty workspace and satisfy a deterministic local HTTP utility contract covering URL parsing, headers, retries, timeouts, multipart encoding, response decoding, and package exports."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "http",
+    "urllib3",
+    "url-parsing",
+    "headers",
+    "retry",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-http-library"
+tags = [
+    "python",
+    "http",
+    "urllib3",
+    "url-parsing",
+    "headers",
+    "retry",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 32
+canonical_manifest_digest = "sha256:f67ef9729c9793681b28a30a1234140d8a8da73f53ee15065568d7f7bbfe4891"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

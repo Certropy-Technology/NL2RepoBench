@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "task_id": "urllib3",
+  "revision": "85a8a9cfad3398bc504d088233d0a11af219a82a",
+  "upstream_tests": {"path": "test", "tracked_files": 30, "collected": 2627, "network_isolated_passed": 2252, "network_isolated_failed": 46, "network_isolated_skipped": 326, "collection_command": "python -m pytest --collect-only -q -o addopts='' -p no:cacheprovider test"},
+  "private_contract": {"framework": "custom-json-v1", "frozen_total": 32, "scenarios": ["exports-and-version", "url-http", "url-auth-port", "url-ipv6", "url-query-fragment", "url-invalid-port", "headers-case-insensitive", "headers-repeat-order", "headers-combine", "headers-copy", "make-headers", "basic-auth", "content-type-guess", "request-field", "multipart-fixed-boundary", "timeout-from-float", "timeout-clone", "timeout-invalid", "retry-from-int", "retry-is-retry", "retry-backoff", "retry-history", "retry-exhausted", "response-read", "response-stream", "response-headers", "response-json", "response-decode-disabled", "exceptions-inheritance", "root-exports", "deterministic-repetition", "no-network-contract"]},
+  "collection_policy": "Every scenario emits exactly one unique leaf; collection mismatch is fatal.",
+  "failure_note": "The 46 upstream failures were confined to dummy-server TLS/proxy and pyOpenSSL integration cases in a network-isolated container; they are excluded from the deterministic local contract rather than hidden by weakening assertions."
+}
