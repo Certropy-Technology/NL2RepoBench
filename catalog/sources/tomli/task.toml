@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "tomli"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "toml-parser"
+tags = ["python", "parser", "toml", "datetime", "errors", "typed", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/hukkin/tomli"
+revision = "5a77b12a7a9f052ce5a20c335d2825658f6aea52"
+license_spdx = "MIT"
+source_digest = "sha256:200b6c7f01286ef30a889ff4742c93e333049821badb15b53b8d2c3af584e322"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The pure-Python candidate and separate verifier build closures are installed during image build from a private hash lock. Agent and verifier runs have no egress; only the trusted Oracle receives a run-scoped github.com authorization to fetch the fixed revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["flit-core==3.12.0"]
+lock_artifact = { digest = "sha256:bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6", size_bytes = 254, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:4e9ce0be18dfc472ddd6b20050fd886b1cc5ff94ef144808bff0f127baf5f934", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4e9ce0be18dfc472ddd6b20050fd886b1cc5ff94ef144808bff0f127baf5f934", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pure-Python tomli TOML parser from an empty workspace and satisfy a deterministic JSON contract for parsing, types, files, and syntax errors."
+keywords = ["python", "parser", "toml", "datetime", "errors", "separate-verifier"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:c08e1b7633c41eb1fb95fa5c93127c686edb66716f27c6446fd5121c2f3402da"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c08e1b7633c41eb1fb95fa5c93127c686edb66716f27c6446fd5121c2f3402da"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-wave2-20260828-tomli"
+reason = "Frozen tomli source, hash-locked Flit build dependency, task-local custom verifier, and digest-checked Oracle bundle are prepared. Production compile and Oracle/control gates are recorded in production-evidence.json; model Agent Run and integrator review remain separate."
