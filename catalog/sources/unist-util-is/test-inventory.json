@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-is",
+  "source_revision": "82b9c2547dfa52e6078a546ab5a1c64bb9381480",
+  "upstream": {
+    "framework": "node:test, tsd, type-coverage, c8",
+    "command": "npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "git_version": "2.39.5",
+    "type_coverage": "380/380 (100.00%)",
+    "node_test_total_including_parent": 24,
+    "passed": 24,
+    "failed": 0,
+    "coverage_threshold": "100%"
+  },
+  "production": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "frozen_total": 56,
+    "private_entry": "contract.test.mjs",
+    "candidate_boundary": "one-shot bounded JSON task adapter under UID/GID 10001",
+    "groups": {
+      "package_surface_and_isolation": 4,
+      "node_recognition": 8,
+      "string_selectors": 4,
+      "object_selectors": 8,
+      "array_selectors": 6,
+      "function_selectors": 8,
+      "validation_and_errors": 9,
+      "converted_checks": 9
+    },
+    "collection_errors": 0
+  },
+  "excluded": [
+    "TypeScript compiler inference details beyond exported declaration availability",
+    "custom prototypes, accessors, symbols, BigInts, cycles, and inherited enumerable selector fields",
+    "native addons, custom loaders, filesystem state, timing, and network behavior"
+  ]
+}

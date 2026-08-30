@@ -1,0 +1,176 @@
+import {createRequire} from 'node:module'
+import {lstatSync, readFileSync} from 'node:fs'
+import {join} from 'node:path'
+import {pathToFileURL} from 'node:url'
+
+const input = JSON.parse(readFileSync(0, 'utf8'))
+const id = input.id
+let sentinel = false
+
+try {
+  const packageName = 'unist-util-is'
+  const packageRoot = join(process.cwd(), 'node_modules', packageName)
+  const manifestPath = join(packageRoot, 'package.json')
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`))
+  let mod
+
+  try {
+    mod = require(packageName)
+  } catch (error) {
+    if (
+      error?.code !== 'ERR_REQUIRE_ESM' &&
+      error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+    ) {
+      throw error
+    }
+
+    const entry =
+      typeof manifest.exports === 'string'
+        ? manifest.exports
+        : manifest.exports?.['.']?.import ?? manifest.module ?? manifest.main
+
+    if (
+      typeof entry !== 'string' ||
+      !entry.startsWith('./') ||
+      entry.includes('..')
+    ) {
+      throw new Error('allowlisted package has no safe ESM entry')
+    }
+
+    mod = await import(pathToFileURL(join(packageRoot, entry)).href)
+  }
+
+  sentinel =
+    typeof mod.is === 'function' &&
+    typeof mod.convert === 'function' &&
+    mod.is({type: 'sentinel'}, 'sentinel') === true &&
+    mod.is({type: 'sentinel'}, 'other') === false
+
+  const shared = new Map()
+  const trace = []
+
+  function decode(value) {
+    if (Array.isArray(value)) return value.map(decode)
+    if (!value || typeof value !== 'object') return value
+
+    if (Object.hasOwn(value, '$undefined')) return undefined
+    if (Object.hasOwn(value, '$number')) {
+      if (value.$number === 'Infinity') return Number.POSITIVE_INFINITY
+      if (value.$number === '-Infinity') return Number.NEGATIVE_INFINITY
+      if (value.$number === 'NaN') return Number.NaN
+      throw new Error('unsupported numeric tag')
+    }
+
+    if (typeof value.$shared === 'string') {
+      if (shared.has(value.$shared)) return shared.get(value.$shared)
+      if (!Object.hasOwn(value, 'value')) throw new Error('unknown shared value')
+      const decoded = decode(value.value)
+      shared.set(value.$shared, decoded)
+      return decoded
+    }
+
+    const result = {}
+    for (const [key, nested] of Object.entries(value)) result[key] = decode(nested)
+    return result
+  }
+
+  function buildTest(value) {
+    if (Array.isArray(value)) return value.map(buildTest)
+    if (!value || typeof value !== 'object' || !value.$callback) {
+      return decode(value)
+    }
+
+    const descriptor = value.$callback
+    return function callback(node, index, parent) {
+      trace.push({
+        contextToken: this?.token,
+        index,
+        nodeType: node?.type,
+        parentType: parent?.type
+      })
+
+      if (descriptor.mode === 'true') return true
+      if (descriptor.mode === 'false') return false
+      if (descriptor.mode === 'void') return undefined
+      if (descriptor.mode !== 'match') throw new Error('unsupported callback mode')
+
+      if (Object.hasOwn(descriptor, 'type') && node?.type !== descriptor.type) {
+        return false
+      }
+      if (Object.hasOwn(descriptor, 'index') && index !== descriptor.index) {
+        return false
+      }
+      if (
+        Object.hasOwn(descriptor, 'parentType') &&
+        parent?.type !== descriptor.parentType
+      ) {
+        return false
+      }
+      if (
+        Object.hasOwn(descriptor, 'contextToken') &&
+        this?.token !== descriptor.contextToken
+      ) {
+        return false
+      }
+
+      return true
+    }
+  }
+
+  let value
+  if (input.operation === 'inventory') {
+    const declaration = lstatSync(join(packageRoot, 'index.d.ts'))
+    value = {
+      declarationEntry: declaration.isFile() && declaration.size > 0,
+      dependencies: manifest.dependencies ?? {},
+      exportNames: Object.keys(mod).sort(),
+      exportsField: manifest.exports,
+      gid: process.getgid?.(),
+      moduleType: manifest.type,
+      packageName: manifest.name,
+      packageVersion: manifest.version,
+      uid: process.getuid?.()
+    }
+  } else if (input.operation === 'is') {
+    const payload = input.payload ?? {}
+    const node = decode(payload.node)
+    const test = buildTest(payload.test)
+    const index = decode(payload.index)
+    const parent = decode(payload.parent)
+    const context = decode(payload.context)
+    value = {
+      result: mod.is(node, test, index, parent, context),
+      trace
+    }
+  } else if (input.operation === 'convert') {
+    const payload = input.payload ?? {}
+    const check = mod.convert(buildTest(payload.test))
+    const results = []
+    for (const call of payload.calls ?? []) {
+      results.push(
+        check.call(
+          decode(call.context),
+          decode(call.node),
+          decode(call.index),
+          decode(call.parent)
+        )
+      )
+    }
+    value = {results, trace}
+  } else {
+    throw new Error('operation is not allowlisted')
+  }
+
+  process.stdout.write(JSON.stringify({id, ok: true, sentinel, value}) + '\n')
+} catch (error) {
+  process.stdout.write(
+    JSON.stringify({
+      id,
+      ok: false,
+      sentinel,
+      error_type: error?.constructor?.name ?? 'Error',
+      message: String(error?.message ?? error)
+    }) + '\n'
+  )
+}

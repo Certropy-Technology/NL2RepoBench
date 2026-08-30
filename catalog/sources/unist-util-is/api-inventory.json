@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-is",
+  "package": "unist-util-is",
+  "package_version": "6.0.1",
+  "source_revision": "82b9c2547dfa52e6078a546ab5a1c64bb9381480",
+  "source_digest": "sha256:e9136a0d23958fc6b29161c357dcbedf2e98d9478da87a9e77c2167a938403f4",
+  "module_type": "esm",
+  "package_entry": "./index.js",
+  "public_exports": [
+    {
+      "kind": "named-function",
+      "name": "is",
+      "signature": "is(node?: unknown, test?: Test, index?: number | null, parent?: Parent | null, context?: unknown) -> boolean",
+      "synchronous": true,
+      "stateful": false
+    },
+    {
+      "kind": "named-function",
+      "name": "convert",
+      "signature": "convert(test?: Test) -> Check",
+      "synchronous": true,
+      "stateful": false
+    }
+  ],
+  "exported_types": ["Check", "Test", "TestFunction"],
+  "test_forms": ["nullish", "string", "property-object", "function", "array"],
+  "runtime_dependencies": ["@types/unist@3.0.3"],
+  "runtime_files": ["index.js", "lib/index.js"],
+  "generated_declarations": [
+    "index.d.ts",
+    "index.d.ts.map",
+    "lib/index.d.ts",
+    "lib/index.d.ts.map"
+  ],
+  "upstream_test_files": ["test/index.js", "index.test-d.ts"],
+  "dynamic_risks": [
+    "function-valued selectors",
+    "callback this binding",
+    "node-parent reference identity",
+    "strict nested object identity",
+    "ordered array short-circuiting"
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-is",
+  "task_version": "6.0.1",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 56,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/unist-util-is",
+    "revision": "82b9c2547dfa52e6078a546ab5a1c64bb9381480",
+    "source_tree_sha256": "sha256:fbf540856b6541466090b6b4cb76e6e3050b3ed8",
+    "source_archive_sha256": "sha256:e9136a0d23958fc6b29161c357dcbedf2e98d9478da87a9e77c2167a938403f4",
+    "license_spdx": "MIT",
+    "license_path": "license",
+    "license_sha256": "sha256:82974dbf2639d13edab95c32ed9cb6c0867ede272cd2e07ce47ce8548fe55c05",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "verification": {
+      "command": "git fetch --depth 1 origin 82b9c2547dfa52e6078a546ab5a1c64bb9381480; git archive --format=tar 82b9c2547dfa52e6078a546ab5a1c64bb9381480; sha256sum --check --strict",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/unist-util-is/oracle/prepare.stdout.log"
+    }
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "verifier_image_digest": "sha256:adca6f21395825911fb0379bdf21aa3a4a46609b82e21561d55b3dd456ddf423",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["@types/unist@3.0.3"],
+    "artifact": {
+      "digest": "sha256:1b7db8404885ad444b1059f1edd8cea20ea31b86e6b3b310d666d82e7f5bf2e8",
+      "size_bytes": 61440,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:1b7db8404885ad444b1059f1edd8cea20ea31b86e6b3b310d666d82e7f5bf2e8",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 56,
+    "commands_artifact": "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+    "test_bundle": "sha256:2cfa0ed823f37ebd7dffe0a8e3c6cf281c9c959b743c5f79b9a72fc8d173890b",
+    "collection": "56 node:test leaves; no collection errors",
+    "candidate_boundary": "candidate-boundary.json"
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/production-compile/unist-util-is/unist-util-is",
+    "file_count": 84,
+    "bundle_manifest_sha256": "sha256:dfdd63cd9febfcdb65de9b16611ff667a01e28e92b4d71df9b3a008db67129b4",
+    "canonical_manifest_digest": "sha256:0fcd09a412cac73f41025d0d6d01099c3bdaaed67d81b7932e622969360b26f2",
+    "allow_incomplete": false,
+    "production_gate": ".nl2repo/evidence/unist-util-is/production-gate-current.json"
+  },
+  "oracle": {
+    "command": "docker run --platform linux/amd64 --network bridge node:24.19.0-bookworm-slim /oracle-solution/solve.sh, then docker run --platform linux/amd64 --network none nl2repo/unist-util-is-verifier:authoring /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 56,
+    "collected": 56,
+    "passed": 56,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/unist-util-is/oracle-authoring-current/unist-util-is-oracle__authoring/verifier/grading.json",
+      "sha256": "sha256:cd1464a6008b3ae0b59f4a84a61e1bcf79a9e756d20098594b9542b41c8e3539"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/unist-util-is/oracle-authoring-current/unist-util-is-oracle__authoring/verifier/network.json",
+      "sha256": "sha256:a8b88a7d504ab668b4ea04b397d1398e8fe57e17c50cd86093359742a9084703",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/empty/verifier/grading.json",
+      "grading_sha256": "sha256:b3423f215aaf77c3b33db62f60b79b192524d0b58a4686aaf09a44bad6f3d679",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/empty/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    },
+    "stub": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 56,
+      "collected": 56,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/stub/verifier/grading.json",
+      "grading_sha256": "sha256:418eb9a620b22b8a510c3731eb9427d7ae740ac64ee5955067a1f5abf27deda0",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/stub/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    },
+    "forgery": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 56,
+      "collected": 56,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/forgery/verifier/grading.json",
+      "grading_sha256": "sha256:418eb9a620b22b8a510c3731eb9427d7ae740ac64ee5955067a1f5abf27deda0",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/forgery/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    },
+    "install-script": {
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/install-script/verifier/grading.json",
+      "grading_sha256": "sha256:b3423f215aaf77c3b33db62f60b79b192524d0b58a4686aaf09a44bad6f3d679",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/install-script/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    },
+    "loader-hook": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 56,
+      "collected": 56,
+      "passed": 0,
+      "reward": 0.0,
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/loader-hook/verifier/grading.json",
+      "grading_sha256": "sha256:418eb9a620b22b8a510c3731eb9427d7ae740ac64ee5955067a1f5abf27deda0",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/loader-hook/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    },
+    "hang": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 56,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/call-hang/verifier/grading.json",
+      "grading_sha256": "sha256:a6ffb6dccc7f63ce23975a5b504116dcac86a357ecddbc8a8d3dd2af675d02c0",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/call-hang/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    },
+    "offline": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 56,
+      "collected": 56,
+      "passed": 0,
+      "reward": 0.0,
+      "completed": true,
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/offline/verifier/grading.json",
+      "grading_sha256": "sha256:418eb9a620b22b8a510c3731eb9427d7ae740ac64ee5955067a1f5abf27deda0",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/offline/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    }
+  },
+  "additional_controls": {
+    "oversized-output": {
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 56,
+      "collected": 56,
+      "passed": 0,
+      "reward": 0.0,
+      "bounded": true,
+      "grading_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/oversized-output/verifier/grading.json",
+      "grading_sha256": "sha256:418eb9a620b22b8a510c3731eb9427d7ae740ac64ee5955067a1f5abf27deda0",
+      "network_path": ".nl2repo/evidence/unist-util-is/controls-authoring-current/oversized-output/verifier/network.json",
+      "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+      "public_network_available": false
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/unist-util-is",
+      "exit_code": 0
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_findings": 0,
+      "note": "Unrelated catalog warnings remain."
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/unist-util-is --output .nl2repo/production-compile/unist-util-is --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest_sha256": "sha256:dfdd63cd9febfcdb65de9b16611ff667a01e28e92b4d71df9b3a008db67129b4"
+    },
+    {
+      "stage": "verifier-image",
+      "command": "docker build --platform linux/amd64 -f .nl2repo/production-compile/unist-util-is/unist-util-is/tests/Dockerfile -t nl2repo/unist-util-is-verifier:authoring .nl2repo/production-compile/unist-util-is/unist-util-is/tests",
+      "exit_code": 0,
+      "image_digest": "sha256:adca6f21395825911fb0379bdf21aa3a4a46609b82e21561d55b3dd456ddf423"
+    },
+    {
+      "stage": "syntax-and-integrity",
+      "command": "git diff --check && bash -n solution/solve.sh tests/test.sh tests/runtime/node/*.mjs tests/private/*.mjs controls/*.sh && node --check tests/runtime/node/*.mjs tests/private/*.mjs",
+      "exit_code": 0
+    },
+    {
+      "stage": "production-gate",
+      "command": "python3 scripts/validate_node_production.py --task catalog/sources/unist-util-is --bundle .nl2repo/production-compile/unist-util-is/unist-util-is --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/evidence/unist-util-is/oracle-authoring-current --controls .nl2repo/evidence/unist-util-is/control-summary-current.json --output .nl2repo/evidence/unist-util-is/production-gate-current.json",
+      "exit_code": 0
+    }
+  ],
+  "residual_risks": [
+    "Independent review, model Agent Run, dataset integration, and publication remain integrator-stage gates.",
+    "The frozen denominator is the deterministic 56-leaf custom contract, not the upstream test count.",
+    "The full catalog network lint retains unrelated warnings; this task has zero findings.",
+    "The verifier image build emits only Docker's constant --platform lint warnings."
+  ]
+}
