@@ -5,11 +5,24 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
 from nl2repobench.domain.canonical_contract import DependencyBundle, PackageManager
-from nl2repobench.storage.artifacts import ArtifactStoreError, LocalArtifactResolver
+from nl2repobench.domain.runtime import RuntimeDiscriminator
+from nl2repobench.package_managers.base import LockSummary, StoreSummary
+from nl2repobench.package_managers.registry import PackageManagerRegistry
+from nl2repobench.storage.artifacts import (
+    ArtifactStoreError,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.storage.canonical_ustar import ArchiveMember, decode_archive, tree_digest
-from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
+from nl2repobench.storage.materialize import (
+    TARGET_MEDIA_TYPES,
+    ArchiveKind,
+    MaterializationLimits,
+    materialize_archive,
+)
 
 
 class DependencyContractError(ValueError):
@@ -79,15 +92,6 @@ def validate_dependency_artifacts(
 ) -> ValidatedDependencyArtifacts:
     """Validate all three canonical dependency artifacts under one scoped resolver."""
 
-    if bundle.package_manager is PackageManager.NONE:
-        if bundle.status != "known" or any(
-            reference is not None
-            for reference in (bundle.lock, bundle.offline_store, bundle.inventory)
-        ):
-            raise DependencyContractError(
-                "package_manager=none requires known status and no dependency artifacts"
-            )
-        return ValidatedDependencyArtifacts({}, 0, None)
     if bundle.status != "known":
         raise DependencyContractError("dependency closure status must be known")
     lock = bundle.lock
@@ -161,6 +165,24 @@ def validate_dependency_artifacts(
         archive_digest=store.digest,
         members=store_members,
     )
+    if bundle.package_manager is PackageManager.NONE:
+        if lock_bytes != b"\0" * 10240 or store_bytes != b"\0" * 10240:
+            raise DependencyContractError(
+                "known none dependency closure must use canonical empty archives"
+            )
+        if payload["offline_smoke"] != {
+            "status": "passed",
+            "command_id": "none-noop-v1",
+        }:
+            raise DependencyContractError(
+                "known none dependency closure requires the canonical offline smoke"
+            )
+        for name in ("lock", "store"):
+            section = payload[name]
+            if section["entries"] or section["file_count"] != 0 or section["directory_count"] != 0:
+                raise DependencyContractError(
+                    "known none dependency closure inventory must be empty"
+                )
     lock_files = {
         member.entry.path: member.data
         for member in lock_members
@@ -171,6 +193,64 @@ def validate_dependency_artifacts(
         store_file_count=sum(member.entry.type == "file" for member in store_members),
         inventory=payload,
     )
+
+
+def materialize_dependency_bundle(
+    bundle: DependencyBundle,
+    *,
+    identity: RuntimeDiscriminator,
+    expected_toolchain: str,
+    resolver: LocalArtifactResolver,
+    destination: Path,
+) -> tuple[LockSummary, StoreSummary]:
+    """Materialize and validate the canonical triple through its adapter.
+
+    This is intentionally a compiler-side staging operation. It does not
+    install dependencies or provide a fallback to an online package index.
+    """
+
+    if bundle.lock is None or bundle.offline_store is None or bundle.inventory is None:
+        raise DependencyContractError("canonical dependency artifact triple is incomplete")
+    if identity.package_manager.value != bundle.package_manager.value:
+        raise DependencyContractError("dependency identity does not match the bundle")
+    authorization = resolver.authorization
+    if not isinstance(authorization, PrivateArtifactAuthorization):
+        raise DependencyContractError("private artifact authorization is required")
+    destination = destination.resolve()
+    destination.mkdir(parents=True, exist_ok=True)
+    lock_root = destination / "lock"
+    store_root = destination / "store"
+    try:
+        materialize_archive(
+            bundle.lock,
+            ArchiveKind.DEPENDENCY_LOCK,
+            lock_root,
+            MaterializationLimits(64, 4 * 1024 * 1024, 16 * 1024 * 1024),
+            authorization,
+            resolver=resolver,
+            inventory_ref=bundle.inventory,
+            inventory_section="lock",
+        )
+        materialize_archive(
+            bundle.offline_store,
+            ArchiveKind.OFFLINE_STORE,
+            store_root,
+            MaterializationLimits(100_000, 512 * 1024 * 1024, 2 * 1024**3),
+            authorization,
+            resolver=resolver,
+            inventory_ref=bundle.inventory,
+            inventory_section="store",
+        )
+        inventory_bytes = resolver.read_bytes(bundle.inventory, max_bytes=4 * 1024 * 1024)
+        inventory = json.loads(inventory_bytes)
+        adapter = PackageManagerRegistry.default().resolve(identity)
+        lock_summary = adapter.validate_lock(lock_root, expected_toolchain)
+        store_summary = adapter.validate_offline_store(
+            store_root, lock_summary, inventory, expected_toolchain
+        )
+    except (ArtifactStoreError, OSError, ValueError) as exc:
+        raise DependencyContractError(f"cannot stage dependency closure: {exc}") from exc
+    return lock_summary, store_summary
 
 
 __all__ = [

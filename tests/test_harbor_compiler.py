@@ -338,20 +338,25 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
         in agent_dockerfile
     )
     assert "agent-runtime-image-id" in agent_dockerfile
-    assert "pip-index-hash-locked-v1" in agent_dockerfile
+    assert "private-staged-offline-v1" in agent_dockerfile
     assert "/opt/openhands-sdk-venv/bin/python" in agent_dockerfile
     assert not (task_root / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (task_root / "tests/docker-compose.yaml").read_text()
     verifier_dockerfile = (task_root / "tests/Dockerfile").read_text()
     assert "--require-hashes" in verifier_dockerfile
-    assert "--index-url https://pypi.org/simple" in verifier_dockerfile
+    assert "--no-index" in verifier_dockerfile
     assert "COPY candidate-requirements.lock.txt" in verifier_dockerfile
     assert "COPY dependencies" not in verifier_dockerfile
-    assert "--no-index" not in verifier_dockerfile
+    candidate_install = verifier_dockerfile.split(
+        "COPY candidate-requirements.lock.txt", 1
+    )[1]
+    assert "--index-url https://pypi.org/simple" not in candidate_install
     assert not (task_root / "tests/dependencies").exists()
     assert "useradd --uid 10001" in (task_root / "tests/Dockerfile").read_text()
     assert "chmod -R 0500 /tests/private" in (task_root / "tests/Dockerfile").read_text()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_client.py").is_file()
+    assert not (task_root / "tests/runtime/nl2repobench/verification/models.py").exists()
+    assert not (task_root / "tests/runtime/nl2repobench/verification/node_models.py").exists()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_install.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_runner.py").is_file()
     assert (task_root / "tests/runtime/nl2repobench/verification/workspace_copy.py").is_file()
@@ -628,7 +633,7 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         ),
     )
 
-    with pytest.raises(HarborCompileError, match="outside scoped staging"):
+    with pytest.raises(HarborCompileError, match="private-staging-contract-missing"):
         compiler.compile_task(source_dir, tmp_path / "output")
 
 
@@ -769,7 +774,7 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
             task_id="custom",
         ),
     )
-    with pytest.raises(HarborCompileError, match="outside scoped staging"):
+    with pytest.raises(HarborCompileError, match="private-staging-contract-missing"):
         compiler.compile_task(source_dir, tmp_path / "output")
 
 

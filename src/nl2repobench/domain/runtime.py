@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import TYPE_CHECKING, Self
 
 from pydantic import BaseModel, ConfigDict, ValidationError, model_validator
+
+from .canonical_contract import PackageManager, RuntimeLanguage
 
 if TYPE_CHECKING:
     from .canonical_contract import TaskSource
@@ -13,57 +14,6 @@ if TYPE_CHECKING:
 
 class RuntimeContractError(ValueError):
     """Raised when a catalog source cannot provide an explicit runtime choice."""
-
-
-class RuntimeLanguage(StrEnum):
-    """Languages supported by the current runtime adapter boundary."""
-
-    PYTHON = "python"
-    NODE = "node"
-    GO = "go"
-
-
-class PackageManager(StrEnum):
-    """Package managers understood by the current runtime discriminator."""
-
-    UV = "uv"
-    PIP = "pip"
-    NPM = "npm"
-    PNPM = "pnpm"
-    GO_MODULES = "go-modules"
-    NONE = "none"
-
-
-class RuntimeProfile(BaseModel):
-    """Exact runtime identity shared by source and generated manifests."""
-
-    model_config = ConfigDict(extra="forbid", frozen=True)
-
-    language: RuntimeLanguage
-    runtime: str
-    version: str
-    package_manager: PackageManager
-    package_manager_version: str | None = None
-
-    @model_validator(mode="after")
-    def validate_profile(self) -> Self:
-        expected = {
-            RuntimeLanguage.PYTHON: "cpython",
-            RuntimeLanguage.NODE: "node",
-            RuntimeLanguage.GO: "go",
-        }[self.language]
-        if self.runtime != expected:
-            raise ValueError(f"{self.language.value} requires runtime {expected}")
-        if not self.version.strip():
-            raise ValueError("runtime version must be exact and non-empty")
-        if self.package_manager is PackageManager.NONE and self.package_manager_version is not None:
-            raise ValueError("none package manager cannot have a version")
-        if (
-            self.package_manager is not PackageManager.NONE
-            and not (self.package_manager_version or "").strip()
-        ):
-            raise ValueError("package manager version is required")
-        return self
 
 
 class RuntimeDiscriminator(BaseModel):
@@ -115,8 +65,11 @@ class RuntimeDiscriminator(BaseModel):
             )
         try:
             return cls(
-                language=RuntimeLanguage(runtime.language.value),
-                package_manager=PackageManager(runtime.package_manager.value),
+                language=runtime.language,
+                package_manager=runtime.package_manager,
             )
         except (ValidationError, ValueError) as exc:
             raise RuntimeContractError(f"invalid runtime discriminator: {exc}") from exc
+
+
+__all__ = ["RuntimeContractError", "RuntimeDiscriminator"]

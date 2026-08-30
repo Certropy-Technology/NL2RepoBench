@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from defusedxml import ElementTree
 
-from .models import TestCounts
+from .evaluator import LeafCounts
 
 
 class JUnitError(ValueError):
     """Raised when a JUnit document cannot be graded safely."""
 
 
-def parse_junit(data: bytes) -> TestCounts:
+def parse_junit(data: bytes) -> LeafCounts:
     """Count testcase elements and classify each terminal child exactly once."""
 
     if not data.strip():
@@ -32,10 +32,12 @@ def parse_junit(data: bytes) -> TestCounts:
             skipped += 1
         else:
             passed += 1
-    return TestCounts(
+    return LeafCounts(
         collected=len(cases),
         passed=passed,
         failed=failed,
         errors=errors,
         skipped=skipped,
+        todo=0,
+        xfail=0,
     )

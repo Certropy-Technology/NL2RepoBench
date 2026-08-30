@@ -7,11 +7,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from nl2repobench.domain.runtime import (
+from nl2repobench.domain.canonical_contract import (
     PackageManager,
-    RuntimeDiscriminator,
     RuntimeLanguage,
 )
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
 
 from .base import (

@@ -16,11 +16,11 @@ from pathlib import Path
 from typing import Protocol
 
 from nl2repobench.authoring.catalog import CatalogCompiler
-from nl2repobench.domain.runtime import (
+from nl2repobench.domain.canonical_contract import (
     PackageManager,
-    RuntimeDiscriminator,
     RuntimeLanguage,
 )
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 
 

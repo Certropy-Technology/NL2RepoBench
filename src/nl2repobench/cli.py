@@ -50,7 +50,8 @@ from nl2repobench.storage.artifacts import (
     LocalArtifactResolver,
 )
 from nl2repobench.storage.state import StateStore
-from nl2repobench.verification.models import CollectionReport, GradingResult
+from nl2repobench.verification.evaluator import EvaluationResult
+from nl2repobench.verification.leaf_report import CollectionReport
 
 app = typer.Typer(
     name="nl2repo",
@@ -165,7 +166,7 @@ def export_schemas(
             "declarative-task-source.schema.json": CanonicalTaskSource,
             "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
             "collection-report.schema.json": CollectionReport,
-            "grading-result.schema.json": GradingResult,
+            "grading-result.schema.json": EvaluationResult,
             "harbor-toolchain-lock.schema.json": HarborToolchainLock,
         }
     else:
@@ -204,7 +205,7 @@ def check_schemas(
             "declarative-task-source.schema.json": CanonicalTaskSource,
             "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
             "collection-report.schema.json": CollectionReport,
-            "grading-result.schema.json": GradingResult,
+            "grading-result.schema.json": EvaluationResult,
             "harbor-toolchain-lock.schema.json": HarborToolchainLock,
         }
         mismatches: list[str] = []

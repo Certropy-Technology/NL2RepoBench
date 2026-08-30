@@ -9,27 +9,27 @@ from .evaluator import (
 )
 from .go_grader import grade_go_report, write_go_grading_outputs
 from .grader import grade_verification, write_grading_outputs
-from .leaf_report import LeafCase, LeafCollectionError, LeafReport
-from .metric_contract import MetricContract as CanonicalMetricContract
-from .models import (
+from .leaf_report import (
+    CollectionError,
     CollectionReport,
-    GradingResult,
-    TestCounts,
-    VerificationReason,
+    LeafCase,
+    LeafCollectionError,
+    LeafReport,
 )
+from .metric_contract import MetricContract as CanonicalMetricContract
 from .registry import UnknownVerifierRuntimeError, VerifierRuntimeRegistry
+from .taxonomy import VerificationReason
 
 __all__ = [
     "CURRENT_CONTRACT_ID",
-    "CollectionReport",
     "EvaluationResult",
-    "GradingResult",
+    "CollectionError",
+    "CollectionReport",
     "LeafCase",
     "LeafCollectionError",
     "LeafCounts",
     "LeafReport",
     "CanonicalMetricContract",
-    "TestCounts",
     "UnknownVerifierRuntimeError",
     "VerificationReason",
     "VerifierRuntimeRegistry",

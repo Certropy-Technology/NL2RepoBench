@@ -62,11 +62,6 @@
           },
           "if": {
             "properties": {
-              "package_manager": {
-                "not": {
-                  "const": "none"
-                }
-              },
               "status": {
                 "const": "known"
               }

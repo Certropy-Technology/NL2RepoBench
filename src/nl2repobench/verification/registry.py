@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol, cast
 
+from .evaluator import EvaluationResult
 from .metric_contract import MetricContract
 from .taxonomy import VerificationReason
 
@@ -16,7 +17,7 @@ class UnknownVerifierRuntimeError(ValueError):
 
 
 class VerifierAdapter(Protocol):
-    """Runtime-specific input normalization and compatibility projection."""
+    """Runtime-specific input normalization into the canonical result."""
 
     limits: Mapping[str, int]
 
@@ -31,9 +32,9 @@ class VerifierAdapter(Protocol):
         pytest_exit_code: int | None,
         runner_exit_code: int | None,
         explicit_reason: VerificationReason | None,
-    ) -> Any: ...
+    ) -> EvaluationResult: ...
 
-    def write(self, result: Any, output_dir: Path) -> None: ...
+    def write(self, result: EvaluationResult, output_dir: Path) -> None: ...
 
 
 @dataclass(frozen=True)

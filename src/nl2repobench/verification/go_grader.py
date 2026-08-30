@@ -18,7 +18,7 @@ from .evaluator import (
 from .leaf_report import ReportNormalizationError
 from .metric_contract import MetricContract
 from .normalize.go_json import MAX_GO_REPORT_BYTES, normalize_go_json
-from .taxonomy import VerificationReason, canonical_reason
+from .taxonomy import VerificationReason
 
 
 def grade_go_report(
@@ -34,7 +34,7 @@ def grade_go_report(
         return failure_result_for_reason(
             contract=contract,
             expected_total=expected_total,
-            reason=canonical_reason(explicit_reason),
+            reason=explicit_reason,
             runner_exit_code=runner_exit_code,
         )
     if runner_exit_code is not None and runner_exit_code not in {0, 1}:

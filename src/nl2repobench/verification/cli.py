@@ -8,7 +8,7 @@ import stat
 from pathlib import Path
 
 from .registry import VerifierRuntimeRegistry
-from .taxonomy import canonical_reason
+from .taxonomy import VerificationReason
 
 MAX_COLLECTION_BYTES = 4 * 1024 * 1024
 MAX_JUNIT_BYTES = 64 * 1024 * 1024
@@ -59,7 +59,10 @@ def main() -> None:
     if runtime in {"node", "go"} and (args.junit is not None or args.collection is not None):
         parser.error("Node/Go runtimes cannot receive pytest report arguments")
     adapter = VerifierRuntimeRegistry.default().resolve(runtime)
-    reason = canonical_reason(args.reason) if args.reason else None
+    try:
+        reason = VerificationReason(args.reason) if args.reason else None
+    except ValueError as exc:
+        parser.error(str(exc))
     result = adapter.grade(
         expected_total=args.expected,
         metric_contract=args.metric_contract,

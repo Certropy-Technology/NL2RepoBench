@@ -2,12 +2,10 @@ from __future__ import annotations
 
 import pytest
 
-from nl2repobench.domain.canonical_contract import TaskSource
+from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage, TaskSource
 from nl2repobench.domain.runtime import (
-    PackageManager,
     RuntimeContractError,
     RuntimeDiscriminator,
-    RuntimeLanguage,
 )
 
 

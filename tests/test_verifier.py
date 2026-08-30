@@ -12,11 +12,12 @@ import pytest
 from nl2repobench.domain.canonical_models import FailureClass
 from nl2repobench.verification import cli as verifier_cli
 from nl2repobench.verification import network_check, pytest_plugin
+from nl2repobench.verification.evaluator import EvaluationResult
 from nl2repobench.verification.grader import grade_verification, write_grading_outputs
 from nl2repobench.verification.integrity import hash_paths
 from nl2repobench.verification.junit import JUnitError, parse_junit
-from nl2repobench.verification.models import VerificationReason
 from nl2repobench.verification.network_check import public_network_available
+from nl2repobench.verification.taxonomy import VerificationReason
 
 
 def test_network_receipt_rejects_oversized_route_table(tmp_path: Path) -> None:
@@ -105,6 +106,7 @@ def test_fixed_denominator_returns_partial_reward() -> None:
     assert result.valid is True
     assert result.reward == 0.5
     assert result.failure_reason is None
+    assert isinstance(result, EvaluationResult)
 
 
 def test_candidate_install_failure_is_valid_model_zero() -> None:
@@ -130,7 +132,7 @@ def test_missing_junit_is_invalid_verifier_result() -> None:
     )
 
     assert result.valid is False
-    assert result.failure_reason is VerificationReason.JUNIT_MISSING
+    assert result.failure_reason is VerificationReason.REPORT_MISSING
     assert result.failure_class is FailureClass.VERIFIER
 
 
@@ -157,7 +159,7 @@ def test_abnormal_pytest_exit_is_invalid() -> None:
     )
 
     assert result.valid is False
-    assert result.failure_reason is VerificationReason.PYTEST_ABNORMAL_EXIT
+    assert result.failure_reason is VerificationReason.RUNNER_ABNORMAL_EXIT
 
 
 def test_abnormal_exit_takes_precedence_over_collection_mismatch() -> None:
@@ -169,7 +171,7 @@ def test_abnormal_exit_takes_precedence_over_collection_mismatch() -> None:
     )
 
     assert result.valid is False
-    assert result.failure_reason is VerificationReason.PYTEST_ABNORMAL_EXIT
+    assert result.failure_reason is VerificationReason.RUNNER_ABNORMAL_EXIT
 
 
 @pytest.mark.parametrize(
@@ -191,7 +193,7 @@ def test_pytest_exit_must_match_junit_statuses(junit: bytes, exit_code: int) -> 
     )
 
     assert result.valid is False
-    assert result.failure_reason is VerificationReason.PYTEST_REPORT_MISMATCH
+    assert result.failure_reason is VerificationReason.REPORT_EXIT_MISMATCH
     assert result.failure_class is FailureClass.VERIFIER
 
 

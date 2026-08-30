@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
+from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.node_compiler import NodeHarborCompiler
 from nl2repobench.harbor.pnpm_compiler import PnpmHarborCompiler
 from nl2repobench.harbor.registry import HarborCompilerRegistry

@@ -6,8 +6,6 @@ import json
 from collections.abc import Mapping
 from typing import Any
 
-from pydantic import ValidationError
-
 from nl2repobench.verification.leaf_report import (
     LeafCase,
     LeafCollectionError,
@@ -15,8 +13,6 @@ from nl2repobench.verification.leaf_report import (
     ReportNormalizationError,
 )
 from nl2repobench.verification.taxonomy import VerificationReason
-
-from ..node_models import NodeTestReport
 
 MAX_NODE_REPORT_BYTES = 8 * 1024 * 1024
 
@@ -76,38 +72,91 @@ def normalize_node_test_json(
                 VerificationReason.REPORT_COUNT_MISMATCH,
                 f"report has {len(tests)} tests, collected says {collected}",
             )
+    expected_keys = {
+        "schema_version",
+        "framework",
+        "report_format",
+        "collected",
+        "tests",
+        "collection_errors",
+        "runner_exit_code",
+    }
+    if set(payload) != expected_keys or payload.get("schema_version") != "1.0":
+        raise ReportNormalizationError(
+            VerificationReason.REPORT_MALFORMED,
+            "Node report has an invalid canonical shape",
+        )
+    if payload.get("framework") != "node:test" or payload.get(
+        "report_format"
+    ) != "node-test-json-v1":
+        raise ReportNormalizationError(
+            VerificationReason.REPORT_MALFORMED,
+            "Node report framework or format is invalid",
+        )
+    raw_tests = payload["tests"]
+    raw_errors = payload["collection_errors"]
+    collected = payload["collected"]
+    runner_exit = payload["runner_exit_code"]
+    if (
+        not isinstance(raw_tests, list)
+        or not isinstance(raw_errors, list)
+        or not isinstance(collected, int)
+        or isinstance(collected, bool)
+        or not isinstance(runner_exit, int)
+        or isinstance(runner_exit, bool)
+    ):
+        raise ReportNormalizationError(
+            VerificationReason.REPORT_MALFORMED,
+            "Node report has invalid test, error, or exit fields",
+        )
     try:
-        report = NodeTestReport.model_validate(payload)
-    except (ValidationError, ValueError) as exc:
+        cases = []
+        for item in raw_tests:
+            if not isinstance(item, dict) or not set(item).issubset(
+                {"schema_version", "test_id", "status", "duration_ms", "details"}
+            ):
+                raise ValueError("Node test case has unexpected fields")
+            if item.get("schema_version", "1.0") != "1.0":
+                raise ValueError("Node test case schema version is invalid")
+            cases.append({"leaf_id": item.get("test_id"), "status": item.get("status"),
+                          "duration_ms": item.get("duration_ms", 0.0),
+                          "details": item.get("details")})
+        errors = []
+        for item in raw_errors:
+            if not isinstance(item, dict) or not set(item).issubset(
+                {"schema_version", "message", "test_id"}
+            ):
+                raise ValueError("Node collection error has unexpected fields")
+            if item.get("schema_version", "1.0") != "1.0":
+                raise ValueError("Node collection error schema version is invalid")
+            errors.append(item)
+    except ValueError as exc:
         raise ReportNormalizationError(VerificationReason.REPORT_MALFORMED, str(exc)) from exc
-    effective_exit = report.runner_exit_code
+    effective_exit = runner_exit
     if trusted_runner_exit_code is not None:
-        if report.runner_exit_code != trusted_runner_exit_code:
+        if runner_exit != trusted_runner_exit_code:
             raise ReportNormalizationError(
                 VerificationReason.REPORT_EXIT_MISMATCH,
-                f"report runner_exit_code {report.runner_exit_code} != trusted exit "
+                f"report runner_exit_code {runner_exit} != trusted exit "
                 f"{trusted_runner_exit_code}",
             )
         effective_exit = trusted_runner_exit_code
-    leaves = tuple(
-        LeafCase(
-            leaf_id=case.test_id,
-            status=case.status,
-            duration_ms=case.duration_ms,
-            details=case.details,
+    try:
+        leaves = tuple(LeafCase.model_validate(case) for case in cases)
+        collection_errors = tuple(
+            LeafCollectionError.model_validate(
+                {"message": item.get("message"), "leaf_id": item.get("test_id")}
+            )
+            for item in errors
         )
-        for case in report.tests
-    )
-    errors = tuple(
-        LeafCollectionError(message=error.message, leaf_id=error.test_id)
-        for error in report.collection_errors
-    )
+    except ValueError as exc:
+        raise ReportNormalizationError(VerificationReason.REPORT_MALFORMED, str(exc)) from exc
     return LeafReport(
         framework="node:test",
-        report_format=report.report_format,
-        collected=report.collected,
+        report_format="node-test-json-v1",
+        collected=collected,
         leaves=leaves,
-        collection_errors=errors,
+        collection_errors=collection_errors,
         trusted_runner_exit_code=effective_exit,
         frozen_total=frozen_total,
     )

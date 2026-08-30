@@ -8,12 +8,12 @@ from typing import Any
 from defusedxml import ElementTree
 
 from nl2repobench.verification.leaf_report import (
+    CollectionReport,
     LeafCase,
     LeafCollectionError,
     LeafReport,
     ReportNormalizationError,
 )
-from nl2repobench.verification.models import CollectionReport
 from nl2repobench.verification.taxonomy import VerificationReason
 
 MAX_COLLECTION_BYTES = 4 * 1024 * 1024

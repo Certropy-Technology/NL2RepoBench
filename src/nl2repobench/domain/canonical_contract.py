@@ -185,7 +185,6 @@ class DependencyBundle(CanonicalRecord):
                         "required": ["status"],
                         "properties": {
                             "status": {"const": "known"},
-                            "package_manager": {"not": {"const": "none"}},
                         },
                     },
                     "then": {
@@ -230,9 +229,7 @@ class DependencyBundle(CanonicalRecord):
     @model_validator(mode="after")
     def validate_refs(self) -> DependencyBundle:
         refs = (self.lock, self.offline_store, self.inventory)
-        requires_closure = (
-            self.status == "known" and self.package_manager is not PackageManager.NONE
-        )
+        requires_closure = self.status == "known"
         if requires_closure and any(ref is None for ref in refs):
             raise ValueError("known dependency bundle requires lock, offline_store, and inventory")
         if not requires_closure and any(ref is not None for ref in refs):
@@ -242,10 +239,8 @@ class DependencyBundle(CanonicalRecord):
         for name, ref in zip(("lock", "offline_store", "inventory"), refs, strict=True):
             if ref is not None and ref.visibility.value != "private":
                 raise ValueError(f"dependencies.{name} must be private")
-        if self.package_manager is PackageManager.NONE and self.status == "known":
-            # node+none is rejected at the TaskSource runtime-pair boundary.
-            if self.packages:
-                raise ValueError("known none dependency bundle cannot declare packages")
+        if self.package_manager is PackageManager.NONE and self.status == "known" and self.packages:
+            raise ValueError("known none dependency bundle cannot declare packages")
         return self
 
 
@@ -671,16 +666,15 @@ class TaskManifest(CanonicalRecord):
             gaps.append("environment_lock.runtime")
         if self.dependency_bundle.status != "known":
             gaps.append("dependency_bundle.status=known")
-        if self.dependency_bundle.package_manager is not PackageManager.NONE:
-            for field_name, reference in (
-                ("dependency_bundle.lock", self.dependency_bundle.lock),
-                ("dependency_bundle.offline_store", self.dependency_bundle.offline_store),
-                ("dependency_bundle.inventory", self.dependency_bundle.inventory),
-            ):
-                if reference is None:
-                    gaps.append(field_name)
-                elif reference.visibility is not Visibility.PRIVATE:
-                    gaps.append(f"{field_name}.visibility=private")
+        for field_name, reference in (
+            ("dependency_bundle.lock", self.dependency_bundle.lock),
+            ("dependency_bundle.offline_store", self.dependency_bundle.offline_store),
+            ("dependency_bundle.inventory", self.dependency_bundle.inventory),
+        ):
+            if reference is None:
+                gaps.append(field_name)
+            elif reference.visibility is not Visibility.PRIVATE:
+                gaps.append(f"{field_name}.visibility=private")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.tests.expected_total <= 0:

@@ -5,8 +5,9 @@ import json
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
-from nl2repobench.domain.canonical_contract import TaskManifest
+from nl2repobench.domain.canonical_contract import DependencyBundle, TaskManifest
 from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.harbor.compiler import HarborCompiler
 from nl2repobench.harbor.dependency_contract import (
@@ -255,10 +256,38 @@ def test_dependency_inventory_tampering_fails_closed(tmp_path: Path) -> None:
         )
 
 
-def test_python_none_requires_no_fabricated_closure(tmp_path: Path) -> None:
+def test_python_none_requires_canonical_empty_closure(tmp_path: Path) -> None:
     store = FileArtifactStore(tmp_path / "artifacts")
     instruction = store.put_bytes(b"instruction", visibility=Visibility.PUBLIC)
     commands = store.put_bytes(b"commands", visibility=Visibility.PRIVATE)
+    empty_archive = b"\0" * 10240
+    lock = store.put_bytes(
+        empty_archive,
+        media_type=TARGET_MEDIA_TYPES[ArchiveKind.DEPENDENCY_LOCK],
+        visibility=Visibility.PRIVATE,
+    )
+    offline_store = store.put_bytes(
+        empty_archive,
+        media_type=TARGET_MEDIA_TYPES[ArchiveKind.OFFLINE_STORE],
+        visibility=Visibility.PRIVATE,
+    )
+    toolchain_digest = "sha256:" + hashlib.sha256(
+        (ROOT / "toolchain.lock.toml").read_bytes()
+    ).hexdigest()
+    payload = {
+        "schema_version": "1.0",
+        "identity": "python+none",
+        "adapter_version": "test-v1",
+        "toolchain_digest": toolchain_digest,
+        "lock": _section("dependency-lock", lock.digest, empty_archive),
+        "store": _section("offline-store", offline_store.digest, empty_archive),
+        "offline_smoke": {"status": "passed", "command_id": "none-noop-v1"},
+    }
+    inventory = store.put_bytes(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+        media_type="application/vnd.nl2repobench.inventory+json",
+        visibility=Visibility.PRIVATE,
+    )
     manifest = TaskManifest.model_validate(
         {
             "task_id": "python-none",
@@ -273,7 +302,13 @@ def test_python_none_requires_no_fabricated_closure(tmp_path: Path) -> None:
                     "package_manager": "none",
                 },
             },
-            "dependency_bundle": {"status": "known", "package_manager": "none"},
+            "dependency_bundle": {
+                "status": "known",
+                "package_manager": "none",
+                "lock": lock,
+                "offline_store": offline_store,
+                "inventory": inventory,
+            },
             "tests": {
                 "framework": "pytest",
                 "report_format": "pytest-junit-xml-v1",
@@ -290,6 +325,11 @@ def test_python_none_requires_no_fabricated_closure(tmp_path: Path) -> None:
     dockerfile = (tmp_path / "task/environment/Dockerfile").read_text(encoding="utf-8")
     assert 'agent-dependency-build="none-v1"' in dockerfile
     assert "candidate-requirements.lock.txt /tmp" not in dockerfile
+
+
+def test_known_none_dependency_bundle_requires_all_three_private_refs() -> None:
+    with pytest.raises(ValidationError, match="requires lock, offline_store, and inventory"):
+        DependencyBundle.model_validate({"status": "known", "package_manager": "none"})
 
 
 def test_node_private_artifact_projection_is_strict(tmp_path: Path) -> None:

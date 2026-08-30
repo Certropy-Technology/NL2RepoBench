@@ -528,9 +528,15 @@ grade() {
     --runtime go --expected 1 --metric-contract fixed-test-pass-rate-v1 --output /logs/verifier "$@"
 }
 mkdir -p /logs/verifier
-if ! python3 -I -c "$NETWORK_CHECK" \
-  --output /logs/verifier/network.json; then
+network_exit=0
+python3 -I -c "$NETWORK_CHECK" \
+  --output /logs/verifier/network.json || network_exit=$?
+if [[ "$network_exit" -eq 1 ]]; then
   grade --reason verifier-network-available
+  exit 0
+fi
+if [[ "$network_exit" -ne 0 ]]; then
+  grade --reason verifier-internal-error
   exit 0
 fi
 COPY_WORKSPACE='from nl2repobench.verification.workspace_copy import main; main()'

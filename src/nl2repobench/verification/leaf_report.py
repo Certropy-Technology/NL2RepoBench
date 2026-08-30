@@ -13,6 +13,25 @@ from .taxonomy import VerificationReason
 LeafStatus = Literal["passed", "failed", "error", "skipped", "todo", "xfail"]
 
 
+class CollectionError(RecordModel):
+    nodeid: str
+    message: str
+
+
+class CollectionReport(RecordModel):
+    collected: int = Field(ge=0)
+    nodeids: tuple[str, ...] = ()
+    collection_errors: tuple[CollectionError, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_nodeids(self) -> CollectionReport:
+        if self.nodeids and len(self.nodeids) != self.collected:
+            raise ValueError("collection nodeid count does not match collected")
+        if len(set(self.nodeids)) != len(self.nodeids):
+            raise ValueError("collection nodeids must be unique")
+        return self
+
+
 class LeafCase(RecordModel):
     """One verifier-owned test leaf after framework normalization."""
 
@@ -63,3 +82,13 @@ class ReportNormalizationError(ValueError):
         super().__init__(message)
         self.reason = reason
         self.details = details or (message,)
+
+
+__all__ = [
+    "CollectionError",
+    "CollectionReport",
+    "LeafCase",
+    "LeafCollectionError",
+    "LeafReport",
+    "ReportNormalizationError",
+]

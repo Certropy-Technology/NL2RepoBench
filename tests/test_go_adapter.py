@@ -14,8 +14,9 @@ import pytest
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.canonical_models import Visibility
-from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
 from nl2repobench.harbor.private_artifacts import PrivateArtifactsManifest
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
@@ -410,3 +411,13 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
     _canonical_go_source(root, multi_leaf, expected_total=2)
     with pytest.raises(GoHarborCompileError, match="exactly one verifier-owned leaf"):
         development.compile_task(multi_leaf, tmp_path / "multi-output", allow_incomplete=True)
+
+
+def test_go_network_script_distinguishes_network_and_internal_exit_codes() -> None:
+    compiler = GoHarborCompiler(Path(__file__).parents[1] / "toolchain.go.dev.lock.toml")
+    script = compiler._test_script()  # noqa: SLF001
+    network_branch = script.index('[[ "$network_exit" -eq 1 ]]')
+    internal_branch = script.index('[[ "$network_exit" -ne 0 ]]')
+    assert network_branch < internal_branch
+    assert "grade --reason verifier-network-available" in script[network_branch:internal_branch]
+    assert "grade --reason verifier-internal-error" in script[internal_branch:]

@@ -1,71 +1,5 @@
 {
   "$defs": {
-    "CollectionError": {
-      "additionalProperties": false,
-      "properties": {
-        "message": {
-          "title": "Message",
-          "type": "string"
-        },
-        "nodeid": {
-          "title": "Nodeid",
-          "type": "string"
-        },
-        "schema_version": {
-          "const": "1.0",
-          "default": "1.0",
-          "title": "Schema Version",
-          "type": "string"
-        }
-      },
-      "required": [
-        "nodeid",
-        "message"
-      ],
-      "title": "CollectionError",
-      "type": "object",
-      "x-nl2repobench-model": "CollectionError",
-      "x-nl2repobench-runtime-validation": true
-    },
-    "CollectionReport": {
-      "additionalProperties": false,
-      "properties": {
-        "collected": {
-          "minimum": 0,
-          "title": "Collected",
-          "type": "integer"
-        },
-        "collection_errors": {
-          "default": [],
-          "items": {
-            "$ref": "#/$defs/CollectionError"
-          },
-          "title": "Collection Errors",
-          "type": "array"
-        },
-        "nodeids": {
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "title": "Nodeids",
-          "type": "array"
-        },
-        "schema_version": {
-          "const": "1.0",
-          "default": "1.0",
-          "title": "Schema Version",
-          "type": "string"
-        }
-      },
-      "required": [
-        "collected"
-      ],
-      "title": "CollectionReport",
-      "type": "object",
-      "x-nl2repobench-model": "CollectionReport",
-      "x-nl2repobench-runtime-validation": true
-    },
     "FailureClass": {
       "enum": [
         "source",
@@ -78,11 +12,107 @@
       "title": "FailureClass",
       "type": "string"
     },
-    "TestCounts": {
+    "LeafCase": {
       "additionalProperties": false,
+      "description": "One verifier-owned test leaf after framework normalization.",
+      "properties": {
+        "details": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Details"
+        },
+        "duration_ms": {
+          "default": 0.0,
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "number"
+        },
+        "leaf_id": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Leaf Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "error",
+            "skipped",
+            "todo",
+            "xfail"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "leaf_id",
+        "status"
+      ],
+      "title": "LeafCase",
+      "type": "object",
+      "x-nl2repobench-model": "LeafCase",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "LeafCollectionError": {
+      "additionalProperties": false,
+      "description": "A trusted runner error that prevents a valid score.",
+      "properties": {
+        "leaf_id": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Leaf Id"
+        },
+        "message": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "title": "LeafCollectionError",
+      "type": "object",
+      "x-nl2repobench-model": "LeafCollectionError",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "LeafCounts": {
+      "additionalProperties": false,
+      "description": "Counts derived from individual canonical leaves, never aggregates.",
       "properties": {
         "collected": {
-          "default": 0,
           "minimum": 0,
           "title": "Collected",
           "type": "integer"
@@ -116,11 +146,98 @@
           "minimum": 0,
           "title": "Skipped",
           "type": "integer"
+        },
+        "todo": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Todo",
+          "type": "integer"
+        },
+        "xfail": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Xfail",
+          "type": "integer"
         }
       },
-      "title": "TestCounts",
+      "required": [
+        "collected"
+      ],
+      "title": "LeafCounts",
       "type": "object",
-      "x-nl2repobench-model": "TestCounts",
+      "x-nl2repobench-model": "LeafCounts",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "LeafReport": {
+      "additionalProperties": false,
+      "description": "Runtime-neutral report consumed by the sole fixed-denominator evaluator.",
+      "properties": {
+        "collected": {
+          "minimum": 0,
+          "title": "Collected",
+          "type": "integer"
+        },
+        "collection_errors": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/LeafCollectionError"
+          },
+          "title": "Collection Errors",
+          "type": "array"
+        },
+        "framework": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Framework",
+          "type": "string"
+        },
+        "frozen_total": {
+          "exclusiveMinimum": 0,
+          "title": "Frozen Total",
+          "type": "integer"
+        },
+        "leaves": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/LeafCase"
+          },
+          "title": "Leaves",
+          "type": "array"
+        },
+        "report_format": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Report Format",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "trusted_runner_exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trusted Runner Exit Code"
+        }
+      },
+      "required": [
+        "framework",
+        "report_format",
+        "collected",
+        "frozen_total"
+      ],
+      "title": "LeafReport",
+      "type": "object",
+      "x-nl2repobench-model": "LeafReport",
       "x-nl2repobench-runtime-validation": true
     },
     "VerificationReason": {
@@ -128,39 +245,30 @@
         "artifact-copy-failed",
         "candidate-workspace-rejected",
         "candidate-installation-failed",
+        "candidate-call-failed",
         "setup-command-failed",
-        "collection-report-missing",
-        "collection-report-malformed",
+        "report-missing",
+        "report-malformed",
+        "duplicate-leaf-id",
         "collection-error",
         "collection-mismatch",
-        "junit-missing",
-        "junit-malformed",
-        "junit-count-mismatch",
-        "pytest-abnormal-exit",
-        "pytest-report-mismatch",
+        "report-count-mismatch",
+        "runner-abnormal-exit",
+        "report-exit-mismatch",
         "verifier-timeout",
         "verifier-network-available",
-        "verifier-internal-error"
+        "verifier-internal-error",
+        "integrity-failure"
       ],
       "title": "VerificationReason",
       "type": "string"
     }
   },
   "additionalProperties": false,
+  "description": "Canonical reward and classification emitted by the evaluator.",
   "properties": {
-    "collection": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/CollectionReport"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null
-    },
     "counts": {
-      "$ref": "#/$defs/TestCounts"
+      "$ref": "#/$defs/LeafCounts"
     },
     "details": {
       "default": [],
@@ -169,11 +277,6 @@
       },
       "title": "Details",
       "type": "array"
-    },
-    "expected_total": {
-      "exclusiveMinimum": 0,
-      "title": "Expected Total",
-      "type": "integer"
     },
     "failure_class": {
       "anyOf": [
@@ -197,11 +300,33 @@
       ],
       "default": null
     },
+    "frozen_total": {
+      "exclusiveMinimum": 0,
+      "title": "Frozen Total",
+      "type": "integer"
+    },
     "metric_contract": {
       "title": "Metric Contract",
       "type": "string"
     },
-    "pytest_exit_code": {
+    "report": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LeafReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "reward": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Reward",
+      "type": "number"
+    },
+    "runner_exit_code": {
       "anyOf": [
         {
           "type": "integer"
@@ -211,13 +336,7 @@
         }
       ],
       "default": null,
-      "title": "Pytest Exit Code"
-    },
-    "reward": {
-      "maximum": 1.0,
-      "minimum": 0.0,
-      "title": "Reward",
-      "type": "number"
+      "title": "Runner Exit Code"
     },
     "schema_version": {
       "const": "1.0",
@@ -234,11 +353,11 @@
     "metric_contract",
     "valid",
     "reward",
-    "expected_total",
+    "frozen_total",
     "counts"
   ],
-  "title": "GradingResult",
+  "title": "EvaluationResult",
   "type": "object",
-  "x-nl2repobench-model": "GradingResult",
+  "x-nl2repobench-model": "EvaluationResult",
   "x-nl2repobench-runtime-validation": true
 }

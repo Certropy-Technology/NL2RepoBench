@@ -40,13 +40,14 @@ from nl2repobench.storage.artifacts import (
 from nl2repobench.storage.materialize import ArchiveKind
 from nl2repobench.verification import cli as verifier_cli
 from nl2repobench.verification import node_candidate_install
+from nl2repobench.verification.evaluator import EvaluationResult
 from nl2repobench.verification.node_candidate_client import run_candidate
 from nl2repobench.verification.node_command_plan import (
     EXPECTED_NODE_PLAN,
     validate_node_command_plan,
 )
 from nl2repobench.verification.node_grader import grade_node_test_report
-from nl2repobench.verification.node_models import NodeVerificationReason
+from nl2repobench.verification.taxonomy import VerificationReason
 
 ROOT = Path(__file__).parents[1]
 NODE_TASK = ROOT / "catalog/sources/node-synthetic"
@@ -448,6 +449,7 @@ def test_node_report_grades_leaf_statuses_and_todo_denominator() -> None:
     assert result.valid is True
     assert result.reward == 0.2
     assert result.metric_contract == "fixed-test-pass-rate-v1"
+    assert isinstance(result, EvaluationResult)
     assert result.counts.model_dump(mode="json") | {} == {
         "schema_version": "1.0",
         "collected": 5,
@@ -456,24 +458,25 @@ def test_node_report_grades_leaf_statuses_and_todo_denominator() -> None:
         "errors": 1,
         "skipped": 1,
         "todo": 1,
+        "xfail": 0,
     }
 
 
 @pytest.mark.parametrize(
     ("payload", "reason"),
     [
-        (None, NodeVerificationReason.REPORT_MISSING),
-        (b"not-json", NodeVerificationReason.REPORT_MALFORMED),
-        (_report([("a", "passed"), ("a", "passed")]), NodeVerificationReason.DUPLICATE_TEST_ID),
-        (_report([("a", "passed")], collected=2), NodeVerificationReason.REPORT_COUNT_MISMATCH),
+        (None, VerificationReason.REPORT_MISSING),
+        (b"not-json", VerificationReason.REPORT_MALFORMED),
+        (_report([("a", "passed"), ("a", "passed")]), VerificationReason.DUPLICATE_LEAF_ID),
+        (_report([("a", "passed")], collected=2), VerificationReason.REPORT_COUNT_MISMATCH),
         (
             _report([("a", "passed")], collection_errors=[{"message": "syntax error"}]),
-            NodeVerificationReason.COLLECTION_ERROR,
+            VerificationReason.COLLECTION_ERROR,
         ),
     ],
 )
 def test_node_report_rejects_invalid_collection_and_shape(
-    payload: object, reason: NodeVerificationReason
+    payload: object, reason: VerificationReason
 ) -> None:
     result = grade_node_test_report(expected_total=1, report_data=payload)  # type: ignore[arg-type]
     assert result.valid is False
@@ -486,11 +489,11 @@ def test_node_report_exit_semantics_and_model_install_failure() -> None:
         report_data=_report([("a", "passed")], exit_code=1),
         runner_exit_code=1,
     )
-    assert mismatch.failure_reason is NodeVerificationReason.REPORT_EXIT_MISMATCH
+    assert mismatch.failure_reason is VerificationReason.REPORT_EXIT_MISMATCH
     model_failure = grade_node_test_report(
         expected_total=1,
         report_data=None,
-        explicit_reason=NodeVerificationReason.CANDIDATE_INSTALLATION_FAILED,
+        explicit_reason=VerificationReason.CANDIDATE_INSTALLATION_FAILED,
     )
     assert model_failure.valid is True
     assert model_failure.failure_class.value == "model"

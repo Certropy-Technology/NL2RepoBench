@@ -12,7 +12,8 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
+from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
 
 from .base import (

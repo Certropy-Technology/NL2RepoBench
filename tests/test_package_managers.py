@@ -5,11 +5,11 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from nl2repobench.domain.runtime import (
+from nl2repobench.domain.canonical_contract import (
     PackageManager,
-    RuntimeDiscriminator,
     RuntimeLanguage,
 )
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.package_managers import (
     PackageManagerError,
     PackageManagerErrorCode,

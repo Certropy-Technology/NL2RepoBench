@@ -1,4 +1,4 @@
-"""Compatibility wrapper for the common evaluator and Node report normalizer."""
+"""Node report adapter delegating to the canonical evaluator."""
 
 from __future__ import annotations
 
@@ -17,70 +17,8 @@ from .evaluator import (
 )
 from .leaf_report import ReportNormalizationError
 from .metric_contract import MetricContract
-from .node_models import (
-    NodeCollectionError,
-    NodeGradingResult,
-    NodeTestCase,
-    NodeTestCounts,
-    NodeTestReport,
-    NodeVerificationReason,
-)
 from .normalize.node_test_json import MAX_NODE_REPORT_BYTES, normalize_node_test_json
-from .taxonomy import VerificationReason, canonical_reason, legacy_node_reason
-
-NODE_MODEL_FAILURES = {
-    NodeVerificationReason.CANDIDATE_WORKSPACE_REJECTED,
-    NodeVerificationReason.CANDIDATE_INSTALLATION_FAILED,
-    NodeVerificationReason.CANDIDATE_CALL_FAILED,
-}
-
-
-def _node_report(report: EvaluationResult) -> NodeTestReport | None:
-    if report.report is None:
-        return None
-    return NodeTestReport(
-        collected=report.report.collected,
-        tests=tuple(
-            NodeTestCase(
-                test_id=leaf.leaf_id,
-                status=leaf.status,  # type: ignore[arg-type]
-                duration_ms=leaf.duration_ms,
-                details=leaf.details,
-            )
-            for leaf in report.report.leaves
-        ),
-        collection_errors=tuple(
-            NodeCollectionError(message=error.message, test_id=error.leaf_id)
-            for error in report.report.collection_errors
-        ),
-        runner_exit_code=report.report.trusted_runner_exit_code or 0,
-    )
-
-
-def _as_node_result(result: EvaluationResult) -> NodeGradingResult:
-    return NodeGradingResult(
-        metric_contract="fixed-test-pass-rate-v1",
-        valid=result.valid,
-        reward=result.reward,
-        expected_total=result.frozen_total,
-        counts=NodeTestCounts(
-            collected=result.counts.collected,
-            passed=result.counts.passed,
-            failed=result.counts.failed,
-            errors=result.counts.errors,
-            skipped=result.counts.skipped,
-            todo=result.counts.todo + result.counts.xfail,
-        ),
-        report=_node_report(result),
-        runner_exit_code=result.runner_exit_code,
-        failure_class=result.failure_class,
-        failure_reason=(
-            legacy_node_reason(result.failure_reason)
-            if result.failure_reason is not None
-            else None
-        ),
-        details=result.details,
-    )
+from .taxonomy import VerificationReason
 
 
 def grade_node_test_report(
@@ -89,34 +27,26 @@ def grade_node_test_report(
     report_data: bytes | Mapping[str, Any] | None,
     runner_exit_code: int | None = None,
     metric_contract: MetricContract | str = "fixed-test-pass-rate-v1",
-    explicit_reason: NodeVerificationReason | None = None,
-) -> NodeGradingResult:
-    """Grade Node JSON through the same evaluator used by pytest."""
+    explicit_reason: VerificationReason | None = None,
+) -> EvaluationResult:
+    """Grade Node JSON into the canonical evaluation result."""
 
     if expected_total <= 0:
         raise ValueError("expected_total must be positive")
     contract = canonical_metric_contract(metric_contract)
-
-    def as_node_result(result: EvaluationResult) -> NodeGradingResult:
-        return _as_node_result(result)
     if explicit_reason is not None:
-        canonical_explicit_reason = canonical_reason(explicit_reason)
-        return as_node_result(
-            failure_result_for_reason(
-                contract=contract,
-                expected_total=expected_total,
-                reason=canonical_explicit_reason,
-                runner_exit_code=runner_exit_code,
-            )
+        return failure_result_for_reason(
+            contract=contract,
+            expected_total=expected_total,
+            reason=explicit_reason,
+            runner_exit_code=runner_exit_code,
         )
     if runner_exit_code is not None and runner_exit_code not in {0, 1}:
-        return as_node_result(
-            failure_result_for_reason(
-                contract=contract,
-                expected_total=expected_total,
-                reason=VerificationReason.RUNNER_ABNORMAL_EXIT,
-                runner_exit_code=runner_exit_code,
-            )
+        return failure_result_for_reason(
+            contract=contract,
+            expected_total=expected_total,
+            reason=VerificationReason.RUNNER_ABNORMAL_EXIT,
+            runner_exit_code=runner_exit_code,
         )
     try:
         report = normalize_node_test_json(
@@ -125,20 +55,18 @@ def grade_node_test_report(
             trusted_runner_exit_code=runner_exit_code,
         )
     except ReportNormalizationError as exc:
-        return as_node_result(
-            failure_result_for_reason(
-                contract=contract,
-                expected_total=expected_total,
-                reason=exc.reason,
-                runner_exit_code=runner_exit_code,
-                details=exc.details,
-            )
+        return failure_result_for_reason(
+            contract=contract,
+            expected_total=expected_total,
+            reason=exc.reason,
+            runner_exit_code=runner_exit_code,
+            details=exc.details,
         )
-    return as_node_result(evaluate_leaf_report(report, contract))
+    return evaluate_leaf_report(report, contract)
 
 
-def write_node_grading_outputs(result: NodeGradingResult, output_dir: Path) -> None:
-    """Write the numeric reward and canonical Node grading record."""
+def write_node_grading_outputs(result: EvaluationResult, output_dir: Path) -> None:
+    """Write the canonical Node grading and numeric reward outputs."""
 
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "reward.json").write_text(

@@ -18,14 +18,23 @@ from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_contract import PackageManager, TaskManifest
 from nl2repobench.domain.canonical_models import ArtifactRef, HarborExecutionProfile
-from nl2repobench.storage.artifacts import ArtifactStoreError, LocalArtifactResolver
+from nl2repobench.domain.runtime import RuntimeDiscriminator
+from nl2repobench.storage.artifacts import (
+    ArtifactStoreError,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
 
 from .bundle_io import (
     BundleLimits,
 )
-from .dependency_contract import DependencyContractError, validate_dependency_artifacts
+from .dependency_contract import (
+    DependencyContractError,
+    materialize_dependency_bundle,
+    validate_dependency_artifacts,
+)
 from .models import VerifierCommandPlan, load_command_plan, load_toolchain_lock
 from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
@@ -200,6 +209,14 @@ class HarborCompiler:
         dependency_lock: bytes,
         allow_incomplete: bool,
     ) -> None:
+        if (
+            not allow_incomplete
+            and manifest.dependency_bundle.package_manager is not PackageManager.NONE
+        ):
+            raise HarborCompileError(
+                "private-staging-contract-missing: production Python dependency staging "
+                "requires F0.5"
+            )
         image = self.toolchain.agent_runtime.image
         install = self._system_packages_install(manifest)
         # The Docker build phase still has network, so the third-party build and
@@ -213,10 +230,9 @@ class HarborCompiler:
         )
         dependency_build = "none-v1"
         if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
-            dependency_build = "pip-index-hash-locked-v1"
+            dependency_build = "private-staged-offline-v1"
             install += """COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
-RUN python -m pip install --no-cache-dir --require-hashes \\
-  --index-url https://pypi.org/simple \\
+RUN python -m pip install --no-cache-dir --no-index --require-hashes \\
   -r /tmp/candidate-requirements.lock.txt
 
 """
@@ -320,7 +336,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install \\
   --no-cache-dir \\
-  --index-url https://pypi.org/simple \\
+  --no-index \\
   --target /opt/candidate-dependencies/site \\
   --require-hashes \\
   -r /tmp/candidate-requirements.lock.txt
@@ -400,6 +416,33 @@ WORKDIR /tests
             )
         except DependencyContractError as exc:
             raise HarborCompileError(str(exc)) from exc
+        runtime = manifest.environment_lock.runtime
+        if runtime is None:
+            raise HarborCompileError("production Python dependency staging requires a runtime")
+        authorization = self.artifact_resolver.authorization
+        if not isinstance(authorization, PrivateArtifactAuthorization):
+            raise HarborCompileError(
+                "private artifact authorization is required for dependency staging"
+            )
+        staging = authorization.staging_root / "dependencies"
+        try:
+            materialize_dependency_bundle(
+                manifest.dependency_bundle,
+                identity=RuntimeDiscriminator(
+                    language=runtime.language,
+                    package_manager=runtime.package_manager,
+                ),
+                expected_toolchain=runtime.package_manager_version or "none",
+                resolver=self.artifact_resolver,
+                destination=staging,
+            )
+        except (DependencyContractError, OSError, ValueError) as exc:
+            raise HarborCompileError(str(exc)) from exc
+        if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
+            raise HarborCompileError(
+                "private-staging-contract-missing: production Python dependency staging "
+                "requires F0.5"
+            )
         if manifest.dependency_bundle.package_manager is PackageManager.NONE:
             return b""
         files = validated.lock_files
