@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "starlette",
+  "source_revision": "d9ed5b0f98fdf081fb138473129b72eb035153a3",
+  "upstream_test_files": 35,
+  "upstream_test_functions": 546,
+  "upstream_test_mode": "mixed ASGI, filesystem, client, optional integration and service-adjacent tests; not used transparently",
+  "adapted_leaf_count": 24,
+  "collection_source": "task-local custom-json-v1 verifier",
+  "scenarios": ["exports", "url", "multidict", "headers", "state", "convertors", "routing", "response", "cookies", "response-asgi", "streaming", "ranges", "request", "stream-consumption", "exceptions", "cors", "cors-simple", "concurrency", "background", "determinism", "status", "middleware-export", "config-and-auth", "websocket-and-status"],
+  "collection_policy": "Every scenario emits exactly one unique leaf; collection mismatch is fatal.",
+  "excluded_reasons": ["TestClient, WebSocketTestSession and live transport behavior require an HTTP client backend or a broader integration harness.", "Multipart, templates, static file delivery and OpenTelemetry require optional dependencies or filesystem/service adaptation outside this deterministic contract."]
+}

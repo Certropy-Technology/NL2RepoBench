@@ -1,0 +1,95 @@
+schema_version = "1.0"
+task_id = "starlette"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "asgi-web-framework"
+tags = ["python", "asgi", "http", "routing", "responses", "middleware", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Kludex/starlette"
+revision = "d9ed5b0f98fdf081fb138473129b72eb035153a3"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:044f15d81b61b252cca22d4ea0893626dbbbbe56f3400090b304c083cfe71bb5"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the candidate and verifier closures during image build from private hash-locked requirements"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier dependencies are installed during the image build from a private hash lock; only the trusted Oracle may receive a run-scoped exact GitHub host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "anyio==4.14.2",
+  "hatchling==1.27.0",
+  "idna==3.19",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "pluggy==1.6.0",
+  "trove-classifiers==2026.6.1.19",
+  "typing-extensions==4.15.0",
+]
+lock_artifact = { digest = "sha256:eae0b61331efd96e46f5a698c066ced450b0cb31479b4a42fe7318a87b1312d8", size_bytes = 2201, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:eae0b61331efd96e46f5a698c066ced450b0cb31479b4a42fe7318a87b1312d8", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b1a0a28c896ccc329678cd432f4c7432acf6a7103251257073b6ae1c65f66877", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b1a0a28c896ccc329678cd432f4c7432acf6a7103251257073b6ae1c65f66877", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the Starlette ASGI toolkit from an empty workspace and satisfy a deterministic local HTTP contract through a separate verifier."
+keywords = ["python", "asgi", "http", "routing", "responses", "middleware"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 480.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:c94f001ee627dd1c62f7d0e10e0e53bed34ea54b292d16c68ee53bddd48b986c"
+size_bytes = 4167680
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c94f001ee627dd1c62f7d0e10e0e53bed34ea54b292d16c68ee53bddd48b986c"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, timeout probes, and offline network checks passed. Model Agent Run, review, pilot, and publication remain separate stages."

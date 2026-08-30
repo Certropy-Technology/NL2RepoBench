@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "starlette",
+  "revision": "d9ed5b0f98fdf081fb138473129b72eb035153a3",
+  "scanner": "python-ast-stdlib",
+  "scope": "deterministic local and ASGI core contract",
+  "public_modules": [
+    "starlette.datastructures", "starlette.convertors", "starlette.routing",
+    "starlette.requests", "starlette.responses", "starlette.middleware.cors",
+    "starlette.background", "starlette.concurrency", "starlette.authentication",
+    "starlette.config", "starlette.exceptions", "starlette.websockets", "starlette.status"
+  ],
+  "scored_symbols": {
+    "starlette.datastructures": ["URL", "URLPath", "Headers", "MutableHeaders", "ImmutableMultiDict", "MultiDict", "QueryParams", "FormData", "Secret", "CommaSeparatedStrings", "State", "Address"],
+    "starlette.convertors": ["StringConvertor", "PathConvertor", "IntegerConvertor", "FloatConvertor", "UUIDConvertor", "register_url_convertor"],
+    "starlette.routing": ["compile_path", "replace_params", "Route", "Match", "NoMatchFound"],
+    "starlette.requests": ["cookie_parser", "Request"],
+    "starlette.responses": ["Response", "PlainTextResponse", "HTMLResponse", "JSONResponse", "RedirectResponse", "StreamingResponse", "FileResponse"],
+    "starlette.middleware.cors": ["CORSMiddleware"],
+    "starlette.background": ["BackgroundTask", "BackgroundTasks"],
+    "starlette.concurrency": ["run_in_threadpool", "iterate_in_threadpool"],
+    "starlette.authentication": ["AuthCredentials", "SimpleUser", "UnauthenticatedUser"],
+    "starlette.config": ["Config"],
+    "starlette.exceptions": ["HTTPException", "WebSocketException"],
+    "starlette.websockets": ["WebSocketState", "WebSocketDisconnect"]
+  },
+  "excluded_risk_surface": ["TestClient transport", "real sockets", "filesystem delivery", "multipart", "Jinja2 templates", "OpenTelemetry", "browser and external service integration"],
+  "risk_flags": ["asgi", "asyncio", "filesystem-api", "optional-dependencies"],
+  "notes": "The scored surface is a deterministic adaptation of the frozen ASGI toolkit; the verifier uses child-side subprocesses and only in-memory ASGI scopes/messages."
+}

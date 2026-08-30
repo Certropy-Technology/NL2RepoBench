@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "task_id": "starlette",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/Kludex/starlette",
+    "revision": "d9ed5b0f98fdf081fb138473129b72eb035153a3",
+    "source_digest": "sha256:044f15d81b61b252cca22d4ea0893626dbbbbe56f3400090b304c083cfe71bb5",
+    "license_spdx": "BSD-3-Clause"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/compiled-final/starlette/bundle.manifest.json",
+    "sha256": "sha256:d772e3d03b3c703ff34954607bac84852e75cba0e9756d229ebabaa1e00904df",
+    "files": 60
+  },
+  "runtime": {
+    "harbor_version": "0.21.0",
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "verifier_image": "nl2repo-starlette-verifier:author-v4",
+    "verifier_image_id": "sha256:050c9d60ac117b800935deec0d90d57335ed6f10cae6c087dbe211bb2bd89ecd",
+    "agent_image_id": "sha256:fe1bd469b4d7ebeae84bb8ac96e64ef10f7ac6c7ea80a07d88480dc0f57ba17b",
+    "network_policy": "no-network"
+  },
+  "collection": {"framework": "custom-json-v1", "expected_total": 24, "collected": 24},
+  "oracle": {
+    "command": "docker run --network none solution/solve.sh; docker run --network none nl2repo-starlette-verifier:author-v3 bash /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/oracle-logs/verifier/grading.json", "sha256": "sha256:d0fc0f5cade6f9472d415f67c90200a8df239299f7efc2d04e599715cbddb7dc"},
+    "collection": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/oracle-logs/verifier/collection.json", "sha256": "sha256:3d0735db1d27c26c15a638fe4c557ebde602ab52acd5dc89c90694f47cf6e935"},
+    "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/oracle-logs/verifier/network.json", "sha256": "sha256:5ab701fec934db237d2876a79e205fa4ddd84140093b6de426ed2ccc2f10df8c"}
+  },
+  "controls": {
+    "empty": {"command": "empty workspace; verifier test.sh", "exit_code": 0, "valid": true, "failure_reason": "candidate-installation-failed", "collected": 0, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-empty-logs/verifier/grading.json", "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"}, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-empty-logs/verifier/network.json", "sha256": "sha256:5f92ee64cda48a9a38c601acceca72f2282348e58ecaf0c91289dc8300657a3a"}},
+    "stub": {"command": "prepare-control stub; verifier test.sh", "exit_code": 0, "valid": true, "passed": 0, "failed": 24, "collected": 24, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-stub-logs/verifier/grading.json", "sha256": "sha256:6ff140842ec85f528249946f582de7a92ff07219bc9d6f0075e98f2b2512ae31"}, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-stub-logs/verifier/network.json", "sha256": "sha256:3f4205c3ecc888ddb67e32ba22a1df9f28e90f88be3c6e86419cc334abe7766c"}},
+    "forgery": {"command": "prepare-control forgery; verifier test.sh", "exit_code": 0, "valid": true, "passed": 0, "failed": 24, "collected": 24, "reward": 0.0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-forgery-logs/verifier/grading.json", "sha256": "sha256:6ff140842ec85f528249946f582de7a92ff07219bc9d6f0075e98f2b2512ae31"}, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-forgery-logs/verifier/network.json", "sha256": "sha256:740c57393eaa8b464cd32e764b13dea31f129c0d1fa576a6257a43515a35a0d0"}},
+    "offline": {"command": "verifier test.sh with network none using stub workspace", "exit_code": 0, "completed": true, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-stub-logs/verifier/grading.json", "sha256": "sha256:6ff140842ec85f528249946f582de7a92ff07219bc9d6f0075e98f2b2512ae31"}, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-stub-logs/verifier/network.json", "sha256": "sha256:3f4205c3ecc888ddb67e32ba22a1df9f28e90f88be3c6e86419cc334abe7766c"}},
+    "install-hang": {"command": "prepare-control install-hang; verifier test.sh", "exit_code": 0, "valid": true, "failure_reason": "candidate-installation-failed", "candidate_install_outcome": "timeout", "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-install-hang-logs/verifier/grading.json", "sha256": "sha256:38f6e6cd3e82a6ea31596bd6aa1da3e98727c4e12c2a6fa0e0c1539cd922e7c6"}, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-install-hang-logs/verifier/network.json", "sha256": "sha256:5f92ee64cda48a9a38c601acceca72f2282348e58ecaf0c91289dc8300657a3a"}},
+    "call-hang": {"command": "prepare-control call-hang; verifier test.sh", "exit_code": 0, "valid": true, "passed": 0, "failed": 24, "collected": 24, "reward": 0.0, "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-call-hang-logs/verifier/grading.json", "sha256": "sha256:6ff140842ec85f528249946f582de7a92ff07219bc9d6f0075e98f2b2512ae31"}, "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/starlette/control-call-hang-logs/verifier/network.json", "sha256": "sha256:f32b0d4675d7d57e1adb5b121dc088bafde666f49cd46976c6187facf980e4f5"}}
+  },
+  "status": "awaiting-agent-run",
+  "residual_risks": [
+    "The local prebuilt OpenHands tag resolves to a different image digest than the locked toolchain image_id; integrator must restore the immutable image or relock the shared toolchain before any model Agent Run.",
+    "No Harbor Agent Run, publication, review, pilot, or dataset integration was performed in this authoring lane."
+  ]
+}
