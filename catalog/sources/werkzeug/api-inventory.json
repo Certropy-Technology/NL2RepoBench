@@ -1,0 +1,11 @@
+{
+  "package": "werkzeug",
+  "revision": "0005c79e09bae5f4cc2bd8ccd468d7dafe24a455",
+  "source_files": 52,
+  "test_files": 25,
+  "full_upstream_collection": 1045,
+  "deterministic_private_collection": 35,
+  "public_modules": ["datastructures", "http", "urls", "security", "wsgi", "routing", "sansio", "wrappers", "test"],
+  "candidate_boundary": "custom-json-v1 child subprocess with no trusted-process candidate imports",
+  "risk_adaptations": ["live dev server and external sockets excluded", "filesystem scenarios use in-memory streams and fixed temporary paths", "password hash verification checks semantics without asserting random salt"]
+}

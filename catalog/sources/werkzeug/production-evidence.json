@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "task_id": "werkzeug",
+  "terminal_kind": "valid",
+  "source_revision": "0005c79e09bae5f4cc2bd8ccd468d7dafe24a455",
+  "source_archive_sha256": "sha256:239273928c7e07cb69a74fa21305921f41901f59b7e7d188eb46c47e9855ae4c",
+  "license": "BSD-3-Clause",
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_policy": "no-network"
+  },
+  "dependencies": {
+    "packages": ["flit_core==3.12.0", "markupsafe==3.0.3"],
+    "lock_artifact": {
+      "digest": "sha256:5c3a43a596e4b578cd3689d9a253e1d82deca429e134468cd951c109e0050f1e",
+      "size_bytes": 8252,
+      "uri": "artifact://private/sha256:5c3a43a596e4b578cd3689d9a253e1d82deca429e134468cd951c109e0050f1e",
+      "visibility": "private"
+    }
+  },
+  "inventory": {
+    "api_path": "catalog/sources/werkzeug/api-inventory.json",
+    "api_sha256": "sha256:588d05df91e80b68ad5a541f60e2d0e5e6f510bc1ac95b5c1fd1111b109a92b1",
+    "test_path": "catalog/sources/werkzeug/test-inventory.json",
+    "test_sha256": "sha256:ccdc8e67e89bb75350220e75528469e77d6ef5a5d808de85070b2d72db1d7d15",
+    "upstream_tests": 1045,
+    "deterministic_verifier_leaves": 35
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled/werkzeug/werkzeug/bundle.manifest.json",
+    "manifest_sha256": "sha256:5707675b1e7af2adafd9c1d9d901cc00a0a31439b83f54ae3ffafe346ad8bf6e",
+    "verifier_bundle": "artifact://private/sha256:ccf9f17647f4f7f41dca2d2be5b799288f0eaeb996651f2a059249fab573f0bc",
+    "oracle_bundle": "artifact://private/sha256:23ea6b418747eef806bfdcc8281837ec5602a4604a8e5bc59f8d24f65fdcb789"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 35,
+    "collection": 35,
+    "metric_contract": "fixed-test-pass-rate-v1"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/werkzeug/werkzeug -a oracle --job-name werkzeug-oracle-20260830-r5 -o .nl2repo/runs/werkzeug/oracle-r5 --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 35,
+    "total": 35,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/werkzeug/oracle-r5/werkzeug-oracle-20260830-r5/werkzeug__fuPoL9j/verifier/grading.json",
+      "sha256": "sha256:d906b44486e47fee0ad70493dde352e3efcb4c8af246a0eb23bbf92c9d236766"
+    },
+    "network": {
+      "path": ".nl2repo/runs/werkzeug/oracle-r5/werkzeug-oracle-20260830-r5/werkzeug__fuPoL9j/verifier/network.json",
+      "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399"
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/werkzeug/werkzeug -a nop --job-name werkzeug-empty-20260830-r2 -o .nl2repo/runs/werkzeug/empty-r2 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/werkzeug/empty-r2/werkzeug-empty-20260830-r2/werkzeug__5imhFou/verifier/grading.json", "sha256": "sha256:bc1198649b53b0f9769f1cdd94c89b02b4d0d12b144bd39903c99a8e3d051869"},
+      "network": {"path": ".nl2repo/runs/werkzeug/empty-r2/werkzeug-empty-20260830-r2/werkzeug__5imhFou/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/werkzeug/werkzeug-stub -a oracle --job-name werkzeug-stub-20260830-r5 -o .nl2repo/runs/werkzeug/stub-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 35,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/werkzeug/stub-r5/werkzeug-stub-20260830-r5/werkzeug-stub__MgGSHXf/verifier/grading.json", "sha256": "sha256:438399b864cf81569238ba3809320515ff5bc68970711ec09bb486476a38e9db"},
+      "network": {"path": ".nl2repo/runs/werkzeug/stub-r5/werkzeug-stub-20260830-r5/werkzeug-stub__MgGSHXf/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/werkzeug/werkzeug-forgery -a oracle --job-name werkzeug-forgery-20260830-r5 -o .nl2repo/runs/werkzeug/forgery-r5 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 35,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/runs/werkzeug/forgery-r5/werkzeug-forgery-20260830-r5/werkzeug-forgery__JqZ5XvT/verifier/grading.json", "sha256": "sha256:438399b864cf81569238ba3809320515ff5bc68970711ec09bb486476a38e9db"},
+      "network": {"path": ".nl2repo/runs/werkzeug/forgery-r5/werkzeug-forgery-20260830-r5/werkzeug-forgery__JqZ5XvT/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}
+    },
+    "offline": {
+      "command": "docker verifier probe with --network none and the Oracle workspace",
+      "completed": true,
+      "exit_code": 0,
+      "passed": 35,
+      "total": 35,
+      "reward": 1.0,
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/werkzeug/probe-logs/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}
+    }
+  },
+  "commands": {
+    "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/werkzeug", "exit_code": 0},
+    "network_lint_task": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources/werkzeug", "exit_code": 0, "error_count": 0},
+    "network_lint_catalog": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated", "exit_code": 0, "error_count": 0, "warning_scope": "pre-existing catalog warnings plus expected Oracle host authorization warning for werkzeug"},
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/werkzeug --output .nl2repo/compiled/werkzeug --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    "upstream_tests": {"command": "uv run pytest -q --disable-warnings --basetemp=/tmp/wz", "exit_code": 0, "passed": 1045},
+    "syntax": {"command": "python3 -m py_compile verifier adapter and bash -n solution/controls", "exit_code": 0},
+    "verifier_probe": {"command": "docker run --rm --network none --memory=2g --cpus=1 verifier-image /tests/test.sh", "exit_code": 0, "passed": 35}
+  },
+  "remediation": [
+    {"issue": "long UNIX socket path in full upstream test run", "result": "remediated with --basetemp=/tmp/wz"},
+    {"issue": "private verifier adapter path and Debian runuser path", "result": "fixed and recompiled; Harbor Oracle passed"},
+    {"issue": "stub/forgery controls initially used non-installable metadata", "result": "fixed to installable src package; final controls collected 35 leaves"}
+  ],
+  "residual_risks": [
+    "Live development-server, debugger-browser, watchdog, proxy, and external-network cases are excluded from the fixed deterministic denominator and documented in test-inventory.json.",
+    "The Oracle solve fetches only the exact frozen revision and verifies the archive digest; github.com authorization is Oracle-only.",
+    "Review, pilot, and publication are not claimed; no Harbor model Agent Run was started from this lane."
+  ]
+}

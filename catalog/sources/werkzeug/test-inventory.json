@@ -1,0 +1,9 @@
+{
+  "collection_method": "full upstream pytest collection with --basetemp=/tmp/wz",
+  "full_upstream_collected": 1045,
+  "full_upstream_passed": 1045,
+  "frozen_total": 35,
+  "frozen_collection_source": "private deterministic custom-json-v1 scenarios",
+  "excluded_upstream_areas": ["serving live server", "debug browser console", "watchdog reloader", "external proxy and network integration", "cryptography optional password methods"],
+  "coverage": {"datastructures": 8, "http": 8, "urls": 2, "security": 2, "wsgi": 3, "sansio": 4, "wrappers": 4, "routing": 2, "test_client": 2}
+}
