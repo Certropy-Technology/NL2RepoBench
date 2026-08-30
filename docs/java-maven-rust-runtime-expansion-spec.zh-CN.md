@@ -107,6 +107,10 @@ F0 merge 前必须同时证明：
 - source validation、network lint、private artifact resolution 和 Agent boundary 通过；
 - full tests、Ruff、Mypy、schema check 通过。
 
+F0 selected gate IDs 固定为：Python `ministats`、Node/npm `canonicalize`、Node/pnpm
+`node-pnpm-synthetic`、Go/modules `go-google-uuid`。若任一 source 在 implementation base 不存在，
+plan 在 mutation 前失败并要求 parent 通过 Spec commit 更换 ID；worker 不自行选择替代题。
+
 ### 3.3 One-shot migration transaction
 
 迁移工具固定为：
@@ -155,6 +159,49 @@ planned -> staged-validated -> exchange-intent -> exchanged-unverified
                           -> rollback-intent -> rolled-back
                                               -> recovery-required
 ```
+
+transaction JSON 是 strict record，至少包含：
+
+```text
+schema_version: "1.0"
+transaction_id: 32 lowercase hex = prefix of plan digest
+state: enum from graph
+plan_path: absolute path under migration root
+plan_digest: sha256
+current_path: absolute catalog/sources path
+staged_path: absolute sibling path
+previous_path: absolute migration-root path
+input_tree_digest: sha256
+output_tree_digest: sha256
+previous_tree_digest: sha256 | null
+task_mapping_digest: sha256
+task_count: positive int
+filesystem_device: int
+owner_uid: int
+owner_gid: int
+retention_status: not-started | moving | retained | removed
+last_error: bounded ProcessError-like record | null
+```
+
+path 必须 resolved、non-symlink、位于允许 root，record 每次写入都带完整字段；不使用 timestamp
+决定恢复行为。`recover --transaction <path>` 是 idempotent，持同一 exclusive lock，并按下表执行：
+
+| state/crash window | required observed digests | recover action |
+| --- | --- | --- |
+| `planned` | current=input，staged 可不存在 | 删除不完整 staged，保留 current，终态 rolled-back |
+| `staged-validated` | current=input，staged=output | 不 exchange；可安全重新 apply 或显式 rollback 删除 staged |
+| `exchange-intent` | current=input/staged=output 或 current=output/staged=input | 前者退回 staged-validated；后者立即 exchange 回 input 并 rolled-back |
+| `exchanged-unverified` | current=output，staged=input | exchange 回 input，验证后 rolled-back |
+| `verified` | current=output，staged=input 或 previous=input | 保持 new active；将 input tree move/确认到 previous，进入 old-tree-retained |
+| `old-tree-retained` | current=output，previous=input | fsync paths/record，进入 complete |
+| `rollback-intent` | 依据 digest 唯一识别 current/staged | 确保 current=input；成功 rolled-back |
+| `rolled-back` | current=input | idempotent no-op；可删除 output staged only with explicit cleanup |
+| `complete` | current=output，previous=input retained | idempotent no-op |
+| `recovery-required` | 任意 | 自动 no-op/non-zero，只允许 human-audited `recover --force`，默认禁止 |
+
+crash 发生在 retention rename 前/中/后时，recover 同时检查 staged 和 previous：恰有一处 input
+digest 才可继续；两处、零处或其他 digest 进入 recovery-required。任何 rollback/exchange/fsync
+失败也进入 recovery-required，保留所有 paths 和 lock evidence，不删除树。
 
 写入 `exchange-intent` 后才能调用 renameat2；exchange 后立即写 `exchanged-unverified`。验证 task
 count/output digest/source validation/selected compile 成功后写 `verified`。进程启动时若发现非终态
@@ -361,6 +408,23 @@ F0 package-manager registry 必须能 resolve 上表每个 identity；`node+none
 empty state并拒绝 build command，Harbor registry 不注册其 compiler。J0 添加 `java+maven`，R0
 添加 `rust+cargo`，不属于 F0 current-runtime migration。
 
+`none` 的规范真值表：
+
+| identity/status | lock/store/inventory refs | canonical bytes | lifecycle/publication |
+| --- | --- | --- | --- |
+| `python+none/known` | 三个 private refs 必须全部存在 | lock/store 都是 zero-member deterministic ustar；inventory 为下述 empty JSON | 可进入 compiler/publish，表示无第三方依赖 |
+| `python+none/unknown` | 三个 refs 必须全 null | 无 artifact | 只能 blocked/discovered，publication gap |
+| `node+none/unknown` | 三个 refs 必须全 null | 无 artifact | 当前 7 个 descriptor 保持 blocked；adapter 只验证，永不 build/publish |
+| `node+none/known` | 禁止 | 无 | hard validation error |
+
+zero-member ustar 是恰好 10240 个 `0x00` bytes。empty inventory canonical JSON 在结尾带一个
+LF，字段固定为 `schema_version=1.0`、language-qualified identity、lock/store digest、
+`entries=[]`、`file_count=0`、`total_bytes=0`、empty tree digest、adapter/toolchain identity 和
+`offline_smoke={status:"passed",command_id:"none-noop-v1"}`；禁止额外字段。unknown bundle 不创建
+假 empty artifact。generic `status=known` 因此仍统一要求三 refs，无 validator 隐式豁免。
+empty tree digest 固定为
+`sha256:56b0e6f8e2ffbf069c1319192b76aee5bcc431328aca04d4835abeeaed461579`。
+
 ### 5.3 PackageManagerAdapter protocol
 
 ```text
@@ -447,6 +511,26 @@ escape 或 reuse 到另一 task 均拒绝。`FileArtifactStore.path_for/read_byt
 `LocalArtifactResolver` 的 runtime consumers 改为要求该 typed authorization；migration/archive
 tool 可以有独立、显式的 authority type，不保留 public `allow_private=True` escape hatch。
 
+F0 删除 CLI `--allow-private`。替代选项固定为 `--authorize-task-private-artifacts`，它只是要求
+compiler 为当前 source 建立 scoped authorization，不等价于 broad read：CLI 先用 public catalog
+loader 读取 task ID 和允许持有 private ref 的固定字段（dependency lock/store/inventory、tests
+commands/protected/bundle、verifier bundle、oracle bundle），收集 exact digest set，验证 refs 均属于
+该 task 后构造 `PrivateArtifactAuthorization(purpose="compile")`。用户不能通过 argv 提供额外 digest、
+path、purpose 或 staging root。verify path 从 compiled manifest 的固定字段独立构造
+purpose=`verify` authorization。旧 flag 在 CLI/parser/scripts/docs 中零引用；遇到旧 flag直接 usage
+error，不提供 alias。
+
+resolver/materializer 调用固定为：
+
+```text
+resolver.resolve(reference, authorization)
+resolver.read_bytes(reference, authorization, max_bytes)
+materialize_archive(reference, kind, destination, limits, authorization, inventory_ref)
+```
+
+public reference 可以用 `PublicArtifactAuthorization` 或 public-only resolver；private reference 缺少
+matching scoped authorization 永远拒绝。
+
 新增 `storage/materialize.py`：
 
 ```text
@@ -456,6 +540,57 @@ ArchiveKind = dependency-lock | offline-store | test-bundle | verifier-bundle | 
 materialize_archive(ref, kind, destination, limits, authorization, inventory_ref=null)
 ```
 
+per-kind target media/inventory contract：
+
+| kind | accepted target media_type | inventory |
+| --- | --- | --- |
+| dependency-lock | `application/vnd.nl2repobench.package-lock.tar` | external `inventory_ref` required |
+| offline-store | `application/vnd.nl2repobench.offline-store.tar` | external `inventory_ref` required |
+| test-bundle | `application/vnd.nl2repobench.test-bundle.tar` | internal `_nl2repo.bundle-inventory.json` required；external forbidden |
+| verifier-bundle | `application/vnd.nl2repobench.verifier-bundle.tar` | internal manifest required；external forbidden |
+| oracle-bundle | `application/vnd.nl2repobench.oracle-bundle.tar` | internal manifest required；external forbidden |
+
+旧 `application/gzip`、`application/x-tar`、Node/Go/Python 专属 media types 只作为 migration input；
+plan 必须安全解包并重新封装为 target deterministic ustar/new ref。target runtime 不接受旧 media。
+
+inventory JSON strict schema：
+
+```text
+schema_version: "1.0"
+archive_kind: ArchiveKind
+archive_digest: sha256
+tree_digest: sha256
+identity: language+package-manager | null   # dependency kinds required, other kinds null
+adapter_version: exact str | null
+toolchain_digest: sha256 | null
+entries: sorted tuple[InventoryEntry, ...]
+file_count: int
+directory_count: int
+total_bytes: int
+offline_smoke: {status: passed, command_id: str} | null
+
+InventoryEntry
+  path: normalized UTF-8 POSIX relative path
+  type: file | directory
+  mode: 0444 | 0555
+  size: int                         # directory=0
+  sha256: sha256 | null             # file required, directory=null
+```
+
+bundle internal manifest 不列出自身；archive 中除 manifest 和 entries 外不能有其他 member。
+dependency external inventory entries覆盖 archive 全部 payload。file_count/directory_count/total_bytes
+必须由 entries 精确重算。
+
+tree digest 算法固定为 SHA-256，初始 bytes 为 `nl2repobench-tree-v1\0`。按 UTF-8 path byte
+lexicographic 顺序，对每项追加：1 byte type (`F`/`D`)；8-byte unsigned big-endian path length；path
+bytes；4-byte unsigned big-endian mode；8-byte unsigned big-endian size；file 内容 SHA-256 raw 32
+bytes（directory 追加 32 zero bytes）。禁止 Unicode normalization rewrite，输入 path 必须已是 NFC。
+
+mode normalization：directory=`0555`；普通数据 file=`0444`；只有 kind-specific allowlisted
+entrypoint（`test.sh`、`solve.sh`、verifier entrypoint）可=`0555`。USTAR 只接受 name<=100 bytes，
+或可无损 split 为 prefix<=155/name<=100；总 UTF-8 path<=255 bytes，各 component 非空且不是
+`.`/`..`。不使用 PAX/GNU longname；不可表示路径 hard error。
+
 materializer 在读取前验证 CAS blob digest/size/media type/private authorization；用 `openat`/
 `O_NOFOLLOW` 风格的安全 extractor 拒绝 absolute/`..`/duplicate/symlink/hardlink/device/FIFO，解包到
 destination sibling temp，按 inventory 逐文件校验 path/size/SHA-256 和 aggregate tree digest，
@@ -463,10 +598,11 @@ destination sibling temp，按 inventory 逐文件校验 path/size/SHA-256 和 a
 destination 不变。
 
 dependency-lock/offline-store 必须提供 inventory_ref，且 inventory 的 archive kind/digest/tree
-必须匹配。test/verifier/Oracle bundle 保持当前 file bytes、layout 和 bundle limits，不强制使用
-dependency inventory；`harbor/task_writer.extract_private_bundle()` 改为调用同一个 safe extractor
-core 和 scoped authorization，但仍按原目的地/entrypoint 语义 materialize。dependency call sites
-不再调用 task_writer 私有 bundle helper。
+必须匹配。test/verifier/Oracle bundle 保持 payload file 内容、relative layout、entrypoint 语义和
+bundle limits，但 migration 以 canonical ustar/internal inventory 重新封装，因此新 release 的
+archive bytes/ref 会改变；不使用 dependency external inventory。`harbor/task_writer.extract_private_bundle()`
+改为调用同一个 safe extractor core 和 scoped authorization，但仍按原目的地/entrypoint 语义
+materialize。dependency call sites 不再调用 task_writer 私有 bundle helper。
 
 dependency destination 固定为 `.nl2repo/compiled/<task-id>/private/{lock|store}/<artifact-digest>/`；
 test/verifier/Oracle destination 继续由 task writer 的受限相对路径决定。每个 compile/run 使用
@@ -593,6 +729,12 @@ valid error combinations由 model validator 固定：spawn/preexec/exec code 只
 cleanup-timeout/residue 只能在 cleanup_error；cleanup_complete=true 时 cleanup_error 必须 null；
 timed_out/output_limit 不能同时为 true；result request_id 必须匹配。
 
+F1 checked-in hard constants：candidate UID=10001、GID=10001；timeout/cpu 上限=600s；stdin
+上限=1 MiB；aggregate stdout+stderr 上限=8 MiB；file 上限=512 MiB；open files 上限=256；
+process 上限=64；error PID list 上限=64；request/result JSON 上限分别=1 MiB/20 MiB。runtime/task
+profile 只能降低这些值。Go wrapper default output cap 保持 256 KiB。超出 hard constants 是 request
+validation error，不自动 clamp。
+
 `spawn_error` 和 `cleanup_error` 是 bounded typed records：
 
 ```text
@@ -602,6 +744,29 @@ ProcessError
   message: <= 4096 chars
   pids: tuple[int, ...] bounded
 ```
+
+request 额外带 trusted enum `context=install|call|bridge`，candidate 不能覆盖；bridge 使用 call
+classification。generic result/CLI 到统一 taxonomy 的规范映射：
+
+| condition | context | VerificationReason | valid | FailureClass | reward |
+| --- | --- | --- | --- | --- | --- |
+| workspace rejected before spawn | any | `candidate-workspace-rejected` | true | model | 0 |
+| spawn/preexec/exec error or candidate non-zero | install | `candidate-installation-failed` | true | model | 0 |
+| spawn/preexec/exec error or candidate non-zero | call/bridge | `candidate-call-failed` | true | model | 0 |
+| candidate timeout | install | `candidate-installation-failed`，details=`timeout` | true | model | 0 |
+| candidate timeout | call/bridge | `candidate-call-failed`，details=`timeout` | true | model | 0 |
+| candidate output limit | install | `candidate-installation-failed`，details=`output-limit` | true | model | 0 |
+| candidate output limit | call/bridge | `candidate-call-failed`，details=`output-limit` | true | model | 0 |
+| CLI 64 malformed trusted request | any | `verifier-internal-error` | false | verifier | 0 |
+| CLI 70 internal/invariant error | any | `verifier-internal-error` | false | verifier | 0 |
+| CLI 75、pre-start residue、cleanup_complete=false | any | `verifier-internal-error` | false | verifier | 0 |
+| outer Harbor/verifier deadline before bounded result | any | `verifier-timeout` | false | verifier | 0 |
+| trusted test runner abnormal exit without valid report | trusted runner | `runner-abnormal-exit` | false | verifier | 0 |
+
+Go wrapper 对 timed_out/output-limit 仍暴露 legacy returncode 124/125，但 taxonomy 分别按上表
+candidate-call-failed；returncode 只是 details，不改变 valid/class。`setup-command-failed` 只用于
+verifier-owned allowlisted setup command 失败，不用于 candidate supervisor。report missing/malformed、
+collection 和 exit mismatch 继续由 normalizer/evaluator 处理，不被 process wrapper覆盖。
 
 spawn/pre-exec/exec failure 返回 `returncode=127`、`cleanup_complete` 取实际清理结果，并由语言
 wrapper 映射 candidate setup/build failure。`cleanup_complete=false` 或非空 `cleanup_error` 使本次
@@ -1044,9 +1209,9 @@ git diff --check
 uv run nl2repo schema --check
 uv run nl2repo task validate-source <source>
 uv run nl2repo harbor compile <source> --output <out1> --toolchain <lock> \
-  --artifact-root .nl2repo/artifacts --allow-private
+  --artifact-root .nl2repo/artifacts --authorize-task-private-artifacts
 uv run nl2repo harbor compile <source> --output <out2> --toolchain <lock> \
-  --artifact-root .nl2repo/artifacts --allow-private
+  --artifact-root .nl2repo/artifacts --authorize-task-private-artifacts
 diff -qr <out1> <out2>
 ```
 
