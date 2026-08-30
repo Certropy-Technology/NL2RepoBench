@@ -1193,6 +1193,8 @@ def _recover_db_claim(
         )
     except Exception:
         scheduler.recover_controller(
+            claim.claim_id,
+            claim.generation,
             claim.controller_id,
             claim.owner_uuid,
             reason=reason,

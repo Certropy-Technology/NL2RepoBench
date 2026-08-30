@@ -8,7 +8,11 @@ import argparse
 import json
 from pathlib import Path
 
-from nl2repobench.authoring.cutover import execute_cutover, rollback_cutover
+from nl2repobench.authoring.cutover import (
+    execute_cutover,
+    restore_cutover_database,
+    rollback_cutover,
+)
 from nl2repobench.authoring.migration import (
     barrier_check,
     generate_manifest,
@@ -27,6 +31,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--import", dest="do_import", action="store_true")
     p.add_argument("--execute-cutover", action="store_true")
     p.add_argument("--rollback-cutover", action="store_true")
+    p.add_argument("--restore-cutover", action="store_true")
     p.add_argument("--repository-root", type=Path)
     p.add_argument("--journal", type=Path)
     p.add_argument("--external-side-effect-barrier", type=Path)
@@ -39,6 +44,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--repository-min-free-bytes", type=int)
     p.add_argument("--docker-min-free-bytes", type=int)
     p.add_argument("--watcher-min-free-bytes", type=int)
+    p.add_argument("--receipt-authority", type=Path)
     return p
 
 
@@ -100,6 +106,27 @@ def main(argv: list[str] | None = None) -> int:
             database=args.db.resolve(),
         )
         print(json.dumps({"status": "rolled-back"}, sort_keys=True))
+        return 0
+    if args.restore_cutover:
+        restore_required = (
+            args.db,
+            args.journal,
+            args.external_side_effect_barrier,
+            args.legacy_runtime_config,
+            args.backup_directory,
+            args.receipt_authority,
+        )
+        if any(value is None for value in restore_required):
+            raise SystemExit("restore requires DB, journal, barrier, runtime config, backup, and receipt authority")
+        restore_result = restore_cutover_database(
+            backup_directory=args.backup_directory.resolve(),
+            database=args.db.resolve(),
+            journal_path=args.journal.resolve(),
+            barrier_path=args.external_side_effect_barrier.resolve(),
+            runtime_config=args.legacy_runtime_config.resolve(),
+            receipt_authority=args.receipt_authority.resolve(),
+        )
+        print(json.dumps(restore_result, sort_keys=True))
         return 0
     if args.do_import:
         try:

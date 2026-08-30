@@ -142,6 +142,14 @@ class GeneratedTaskCollision(SourceIntegrationError):
         self.actual_digest = actual_digest
 
 
+class PrivateArtifactCollision(SourceIntegrationError):
+    def __init__(self, target: Path, expected_digest: str, actual_digest: str) -> None:
+        super().__init__(f"private artifact collision: {target}")
+        self.target = target
+        self.expected_digest = expected_digest
+        self.actual_digest = actual_digest
+
+
 def _db_legacy_options(argv: list[str]) -> list[str]:
     supplied = {token.split("=", 1)[0] for token in argv if token.startswith("--")}
     return sorted(supplied & DB_FORBIDDEN_OPTIONS)
@@ -267,8 +275,10 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
         source_file = _cas_file(worktree, digest)
         if not source_file.is_file() or source_file.is_symlink():
             continue
-        if _sha256(source_file) != digest.removeprefix("sha256:"):
-            raise ValueError(f"private artifact failed source hash: {digest}")
+        expected = digest.removeprefix("sha256:")
+        source_digest = _sha256(source_file)
+        if source_digest != expected:
+            raise PrivateArtifactCollision(source_file, expected, source_digest)
         target = _cas_file(root, digest)
         if target.exists() or target.is_symlink():
             if (
@@ -276,7 +286,14 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
                 or not target.is_file()
                 or _sha256(target) != digest.removeprefix("sha256:")
             ):
-                raise ValueError(f"central private artifact collision: {digest}")
+                actual = (
+                    "symlink"
+                    if target.is_symlink()
+                    else _sha256(target)
+                    if target.is_file()
+                    else "non-regular"
+                )
+                raise PrivateArtifactCollision(target, expected, actual)
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         try:
@@ -286,7 +303,9 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
             shutil.copyfile(source_file, temporary)
             if _sha256(temporary) != digest.removeprefix("sha256:"):
                 temporary.unlink(missing_ok=True)
-                raise ValueError(f"private artifact copy failed hash: {digest}") from None
+                raise PrivateArtifactCollision(
+                    temporary, expected, _sha256(temporary)
+                ) from None
             os.replace(temporary, target)
         copied.append(digest)
     return copied
@@ -1578,21 +1597,25 @@ def _start_db_controller(
             executable_digest=executable_digest(command[0]),
             argv_digest=command_digest(command),
         )
-    except Exception:
-        if process is not None:
-            try:
-                os.killpg(process.pid, signal.SIGTERM)
-            except (ProcessLookupError, PermissionError):
-                process.terminate()
-            try:
-                process.wait(timeout=15)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                process.wait()
+    except BaseException:
         try:
-            scheduler.release_controller_reservation(token, owner, reason="Popen activation failed")
-        except ConflictError:
-            pass
+            if process is not None:
+                try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                except (ProcessLookupError, PermissionError):
+                    process.terminate()
+                try:
+                    process.wait(timeout=15)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+        finally:
+            try:
+                scheduler.release_controller_reservation(
+                    token, owner, reason="Popen activation failed"
+                )
+            except ConflictError:
+                pass
         raise
     return {
         "status": "controller-started",
@@ -1693,12 +1716,13 @@ def _integrate_db_task(
                 receipt_json=action,
             )
         return {"task_id": task["task_id"], **action}
-    except GeneratedTaskCollision as exc:
+    except (GeneratedTaskCollision, PrivateArtifactCollision) as exc:
         evidence = root / ".nl2repo/supervisor/collision-evidence" / f"{task['task_id']}.json"
         _atomic_write(
             evidence,
             {
-                "schema_version": "authoring-generated-collision/v1",
+                "schema_version": "authoring-source-collision/v1",
+                "collision_kind": type(exc).__name__,
                 "task_id": task["task_id"],
                 "target": str(exc.target),
                 "expected_digest": exc.expected_digest,

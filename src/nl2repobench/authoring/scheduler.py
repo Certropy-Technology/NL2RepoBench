@@ -2436,6 +2436,8 @@ class Scheduler:
 
     def recover_controller(
         self,
+        claim_id: str,
+        generation: int,
         controller_id: str,
         owner_uuid: str,
         *,
@@ -2458,30 +2460,38 @@ class Scheduler:
             if controller["state"] in {"stopped", "lost", "reconciled"}:
                 return 0
             now = _now()
-            claims = db.execute(
-                "SELECT * FROM claims WHERE controller_id=? AND owner_uuid=? AND active=1",
+            claim = db.execute(
+                "SELECT * FROM claims WHERE claim_id=? AND generation=? AND controller_id=? "
+                "AND owner_uuid=? AND active=1",
+                (claim_id, generation, controller_id, owner_uuid),
+            ).fetchone()
+            if claim is None:
+                raise LostLeaseError("claim recovery generation fence failed")
+            self._close_claim(db, claim, now, reason)
+            task = db.execute(
+                "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?",
+                (claim["task_id"],),
+            ).fetchone()
+            if int(task["retry_count"]) < int(task["retry_limit"]):
+                db.execute(
+                    "UPDATE tasks SET state='pending',retry_count=retry_count+1,"
+                    "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                    "WHERE task_id=?",
+                    (reason, now, claim["task_id"]),
+                )
+            else:
+                db.execute(
+                    "UPDATE tasks SET state='blocked',terminal_reason=?,"
+                    "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                    "WHERE task_id=?",
+                    (reason, reason, now, claim["task_id"]),
+                )
+            remaining = db.execute(
+                "SELECT 1 FROM claims WHERE controller_id=? AND owner_uuid=? AND active=1 LIMIT 1",
                 (controller_id, owner_uuid),
-            ).fetchall()
-            for claim in claims:
-                self._close_claim(db, claim, now, reason)
-                task = db.execute(
-                    "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?",
-                    (claim["task_id"],),
-                ).fetchone()
-                if int(task["retry_count"]) < int(task["retry_limit"]):
-                    db.execute(
-                        "UPDATE tasks SET state='pending',retry_count=retry_count+1,"
-                        "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
-                        "WHERE task_id=?",
-                        (reason, now, claim["task_id"]),
-                    )
-                else:
-                    db.execute(
-                        "UPDATE tasks SET state='blocked',terminal_reason=?,"
-                        "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
-                        "WHERE task_id=?",
-                        (reason, reason, now, claim["task_id"]),
-                    )
+            ).fetchone()
+            if remaining is not None:
+                return 1
             db.execute(
                 "UPDATE scheduler_leases SET active=0,released_at=?,updated_at=? "
                 "WHERE controller_id=? AND active=1",
@@ -2501,7 +2511,7 @@ class Scheduler:
                 self._controller_capacity_delta(
                     db, controller_id, str(controller["language"]), -1, now
                 )
-            return len(claims)
+            return 1
 
     def reconcile_singletons(self, *, now: str | None = None) -> int:
         """Expire singleton leases even when a wedged process still exists."""

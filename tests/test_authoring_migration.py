@@ -11,6 +11,7 @@ import nl2repobench.authoring.migration as migration
 from nl2repobench.authoring.backup import (
     activate_database,
     backup_database,
+    issue_development_quiescence_receipt,
     issue_quiescence_receipt,
     restore_database,
     verify_backup,
@@ -149,7 +150,7 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
     backup_database(scheduler.path, backup_dir)
     assert verify_backup(backup_dir)["verified"] is True
     target = tmp_path / "restored.sqlite3"
-    marker = issue_quiescence_receipt(backup_dir, target, tmp_path / "authority")
+    marker = issue_development_quiescence_receipt(backup_dir, target, tmp_path / "authority")
     dry = restore_database(backup_dir, target, quiescence_marker=marker)
     assert dry["dry_run"] is True and not target.exists()
     with pytest.raises(MigrationError, match="explicit"):
@@ -206,13 +207,22 @@ def test_static_quiescence_marker_is_not_a_restore_receipt(tmp_path: Path) -> No
         restore_database(backup_dir, tmp_path / "target.sqlite3", quiescence_marker=marker)
 
 
+def test_production_receipt_refuses_unobserved_quiescence(tmp_path: Path) -> None:
+    scheduler = Scheduler(tmp_path / "source.sqlite3", supplied_root=tmp_path)
+    scheduler.init()
+    backup_dir = tmp_path / "backup"
+    backup_database(scheduler.path, backup_dir)
+    with pytest.raises(MigrationError, match="cutover-grade evidence"):
+        issue_quiescence_receipt(backup_dir, tmp_path / "target.sqlite3")
+
+
 def test_quiescence_receipt_hmac_and_backup_destination_safety(tmp_path: Path) -> None:
     scheduler = Scheduler(tmp_path / "source.sqlite3", supplied_root=tmp_path)
     scheduler.init()
     backup_dir = tmp_path / "backup"
     backup_database(scheduler.path, backup_dir)
     target = tmp_path / "target.sqlite3"
-    receipt = issue_quiescence_receipt(backup_dir, target, tmp_path / "authority")
+    receipt = issue_development_quiescence_receipt(backup_dir, target, tmp_path / "authority")
     payload = json.loads(receipt.read_text(encoding="utf-8"))
     payload["generation"] = 1
     receipt.write_text(json.dumps(payload), encoding="utf-8")

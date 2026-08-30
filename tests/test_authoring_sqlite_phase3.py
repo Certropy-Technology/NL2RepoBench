@@ -19,7 +19,7 @@ from nl2repobench.authoring import cutover
 from nl2repobench.authoring import migration as authoring_migration
 from nl2repobench.authoring.migration import MigrationError
 from nl2repobench.authoring.runtime import SingletonActor, process_identity
-from nl2repobench.authoring.scheduler import Identity, Scheduler
+from nl2repobench.authoring.scheduler import Identity, LostLeaseError, Scheduler
 
 
 def _script(name: str):
@@ -35,6 +35,7 @@ def _script(name: str):
 loop = _script("run_authoring_loop.py")
 supervisor = _script("authoring_supervisor.py")
 archive = _script("archive_authoring_live.py")
+installer = _script("install_authoring_sqlite_service.py")
 
 
 def _scheduler(tmp_path: Path) -> tuple[Scheduler, str, str]:
@@ -276,6 +277,49 @@ def test_prestart_abort_is_classified_and_closes_claim(tmp_path: Path) -> None:
         ).fetchone()[0]
     assert tuple(task) == ("pending", 1, "infrastructure")
     assert active == 0
+
+
+def test_controller_recovery_cannot_close_replacement_claim(tmp_path: Path) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    pid, starttime, boot_id = process_identity()
+    first = scheduler.claim_next(
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )[0]
+    scheduler.release(
+        first.claim_id,
+        owner,
+        controller,
+        first.generation,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )
+    second = scheduler.claim_next(
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )[0]
+    with pytest.raises(LostLeaseError, match="generation fence"):
+        scheduler.recover_controller(
+            first.claim_id,
+            first.generation,
+            controller,
+            owner,
+            pid=pid,
+            process_starttime_ticks=starttime,
+            boot_id=boot_id,
+            reason="delayed recovery",
+        )
+    with scheduler.connect() as db:
+        assert db.execute(
+            "SELECT active FROM claims WHERE claim_id=?", (second.claim_id,)
+        ).fetchone()[0] == 1
 
 
 def test_db_supervisor_honors_dynamic_disable_and_records_snapshot(
@@ -534,6 +578,47 @@ def test_malformed_scheduler_database_returns_restart_preventing_78(
         ],
     )
     assert supervisor.main() == 78
+    assert "corruption marker" in capsys.readouterr().err
+
+
+def test_binding_installer_maps_corruption_to_78(
+    tmp_path: Path, capsys
+) -> None:
+    database = tmp_path / "malformed.sqlite3"
+    database.write_bytes(b"not sqlite")
+    journal = tmp_path / "journal.json"
+    barrier = tmp_path / "barrier.json"
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "repository",
+        live_root=tmp_path / "live",
+        disabled={
+            "enabled": False,
+            "max_total_controllers": 0,
+            "controller_concurrency": 0,
+            "max_integrations": 0,
+            "agent_limit": 0,
+        },
+        cutover_id="malformed",
+        manifest_sha256="a" * 64,
+    )
+    result = installer.main(
+        [
+            "--journal",
+            str(journal),
+            "--barrier",
+            str(barrier),
+            "--db",
+            str(database),
+            "--sqlite-service-unit",
+            "nl2repobench-authoring-supervisor-sqlite@phase3.service",
+            "--sqlite-env-file",
+            "/etc/nl2repobench/authoring-scheduler-phase3.env",
+        ]
+    )
+    assert result == 78
     assert "corruption marker" in capsys.readouterr().err
 
 
@@ -863,6 +948,69 @@ def test_generated_task_collision_has_source_receipt_and_evidence(
     actor.release()
 
 
+def test_private_cas_collision_has_digest_bound_source_evidence(
+    tmp_path: Path, monkeypatch
+) -> None:
+    cas_root = tmp_path / "cas-root"
+    cas_worktree = tmp_path / "cas-worktree"
+    cas_source = cas_worktree / "catalog/sources/demo"
+    cas_source.mkdir(parents=True)
+    payload = b"expected private artifact"
+    expected_digest = hashlib.sha256(payload).hexdigest()
+    (cas_source / "task.toml").write_text(
+        f"artifact = 'sha256:{expected_digest}'\n", encoding="utf-8"
+    )
+    source_artifact = supervisor._cas_file(cas_worktree, expected_digest)
+    source_artifact.parent.mkdir(parents=True)
+    source_artifact.write_bytes(payload)
+    central_artifact = supervisor._cas_file(cas_root, expected_digest)
+    central_artifact.parent.mkdir(parents=True)
+    central_artifact.write_bytes(b"collision")
+    with pytest.raises(supervisor.PrivateArtifactCollision) as direct_collision:
+        supervisor._sync_private_cas(cas_root, cas_worktree, cas_source)
+    assert direct_collision.value.expected_digest == expected_digest
+    assert direct_collision.value.actual_digest == hashlib.sha256(b"collision").hexdigest()
+
+    scheduler, owner, controller = _scheduler(tmp_path)
+    _finish_authoring(scheduler, owner, controller, tmp_path / "worktree")
+    actor = SingletonActor.acquire(scheduler, "integration")
+    task = scheduler.operation_candidates("integration")[0]
+    collision = supervisor.PrivateArtifactCollision(
+        tmp_path / ".nl2repo/artifacts/private/object",
+        "a" * 64,
+        "b" * 64,
+    )
+    monkeypatch.setattr(
+        supervisor,
+        "_integrate_task",
+        lambda *args, **kwargs: (_ for _ in ()).throw(collision),
+    )
+    with pytest.raises(supervisor.PrivateArtifactCollision):
+        supervisor._integrate_db_task(
+            SimpleNamespace(
+                dry_run=False, remote="fake", branch="main", command_timeout=10
+            ),
+            scheduler,
+            actor,
+            tmp_path,
+            task,
+            [],
+        )
+    with scheduler.connect() as db:
+        receipt = db.execute(
+            "SELECT failure_class,evidence_path,evidence_sha256 FROM operation_receipts"
+        ).fetchone()
+        state = db.execute("SELECT state FROM tasks WHERE task_id='task'").fetchone()[0]
+    evidence = tmp_path / receipt[1]
+    payload = json.loads(evidence.read_text())
+    assert receipt[0] == "source" and state == "blocked"
+    assert payload["collision_kind"] == "PrivateArtifactCollision"
+    assert payload["expected_digest"] == "a" * 64
+    assert payload["actual_digest"] == "b" * 64
+    assert hashlib.sha256(evidence.read_bytes()).hexdigest() == receipt[2]
+    actor.release()
+
+
 def test_archive_watcher_disable_and_partial_singleton_rollback(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -996,7 +1144,7 @@ def test_archive_secret_failure_is_classified_as_source(tmp_path: Path, monkeypa
     archive_actor.release()
 
 
-def test_controller_popen_activation_failure_kills_child(tmp_path: Path, monkeypatch) -> None:
+def test_controller_cancellation_after_popen_kills_child(tmp_path: Path, monkeypatch) -> None:
     events: list[str] = []
 
     class Process:
@@ -1017,7 +1165,7 @@ def test_controller_popen_activation_failure_kills_child(tmp_path: Path, monkeyp
             return "token"
 
         def capacity(self, *args):
-            raise RuntimeError("capacity failure")
+            raise KeyboardInterrupt("cancelled")
 
         def release_controller_reservation(self, *args, **kwargs):
             events.append("reservation-released")
@@ -1029,7 +1177,7 @@ def test_controller_popen_activation_failure_kills_child(tmp_path: Path, monkeyp
         scheduler_db=tmp_path / "scheduler.sqlite3",
         interval_sec=1,
     )
-    with pytest.raises(RuntimeError, match="capacity failure"):
+    with pytest.raises(KeyboardInterrupt, match="cancelled"):
         supervisor._start_db_controller(
             args, FailingScheduler(), tmp_path, tmp_path / "live", "lane", 0
         )
@@ -1281,6 +1429,22 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
     )
     assert cutover._mountinfo_conflicts([bind_root_line], worktrees)
 
+    class UnreadableMount:
+        def read_text(self, **kwargs):
+            raise OSError("denied")
+
+    class ExtantProcess:
+        name = "123"
+
+        def __truediv__(self, _name):
+            return UnreadableMount()
+
+        def exists(self):
+            return True
+
+    with pytest.raises(MigrationError, match="cannot inspect mountinfo"):
+        cutover._read_mountinfo(ExtantProcess())
+
     calls: list[tuple[str, ...]] = []
 
     def systemctl(*arguments: str) -> str:
@@ -1296,6 +1460,18 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
     (cgroup / "cgroup.procs").write_text("123\n", encoding="utf-8")
     with pytest.raises(MigrationError, match="not empty"):
         cutover._verify_empty_cgroup("/service", cgroup_root=tmp_path / "cgroup")
+
+
+def test_activation_rechecks_late_target_sidecars(tmp_path: Path) -> None:
+    staging = tmp_path / "staging.sqlite3"
+    target = tmp_path / "target.sqlite3"
+    with sqlite3.connect(staging) as db:
+        db.execute("CREATE TABLE proof(value TEXT)")
+    Path(str(target) + "-wal").write_bytes(b"late collision")
+    with pytest.raises(MigrationError, match="target file set changed"):
+        cutover._activate_cutover_database(staging, target)
+    assert staging.is_file()
+    assert Path(str(target) + "-wal").is_file()
 
 
 def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monkeypatch) -> None:
@@ -1382,6 +1558,61 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
             sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@other.service",
             sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-other.env"),
         )
+    monkeypatch.setattr(cutover, "_verify_sqlite_service_stopped", lambda _unit: None)
+    restored = cutover.restore_cutover_database(
+        backup_directory=tmp_path / "backup",
+        database=tmp_path / "scheduler.sqlite3",
+        journal_path=tmp_path / "journal.json",
+        barrier_path=barrier,
+        runtime_config=config,
+        receipt_authority=tmp_path / "restore-authority-success",
+    )
+    assert restored["restore"]["verified"] is True
+    assert (tmp_path / ".scheduler.sqlite3.restore-consumed.json").is_file()
+    activated.first_enable()
+    activated.add_lane("restore-lane", "restore-batch", "python")
+    restore_identity = Identity(
+        "6" * 64,
+        "python",
+        "restore-demo",
+        "https://example.invalid/restore",
+        "git",
+        "7" * 40,
+    )
+    activated.add_identity(restore_identity)
+    activated.add_candidate("restore-candidate", "restore-lane", restore_identity.digest)
+    activated.add_task("restore-task", "restore-candidate", "restore-lane", "r1")
+    owner, controller = "restore-owner", "restore-controller"
+    token = activated.reserve_controller("restore-lane", owner, 0)
+    pid, starttime, boot_id = process_identity()
+    activated.capacity("active_claim", "controller", controller, 1)
+    activated.activate_controller(
+        token,
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+        executable_digest="8" * 64,
+        argv_digest="9" * 64,
+    )
+    assert activated.claim_next(
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )
+    with pytest.raises(MigrationError, match="not disabled cutover|capacity or active"):
+        cutover.restore_cutover_database(
+            backup_directory=tmp_path / "backup",
+            database=tmp_path / "scheduler.sqlite3",
+            journal_path=tmp_path / "journal.json",
+            barrier_path=barrier,
+            runtime_config=config,
+            receipt_authority=tmp_path / "restore-authority",
+        )
+    assert not (tmp_path / "restore-authority").exists()
 
 
 def test_import_receipt_times_are_preserved_and_reverse_chronology_rejected() -> None:
@@ -1402,6 +1633,21 @@ def test_import_receipt_times_are_preserved_and_reverse_chronology_rejected() ->
                 "finished_at": "2026-01-01T00:00:00+00:00",
             },
             fallback="2027-01-01T00:00:00+00:00",
+        )
+    with pytest.raises(MigrationError, match="overlap"):
+        cutover._validate_stage_chronology(
+            {
+                "integration": {
+                    "finished_at": "2026-01-01T00:00:05.000000+00:00"
+                },
+                "archive": {
+                    "started_at": "2026-01-01T00:00:04.000000+00:00",
+                    "finished_at": "2026-01-01T00:00:06.000000+00:00",
+                },
+                "cleanup": {
+                    "started_at": "2026-01-01T00:00:06.000000+00:00"
+                },
+            }
         )
 
 

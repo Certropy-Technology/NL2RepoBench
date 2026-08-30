@@ -15,10 +15,18 @@ import time
 from collections.abc import Iterator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from .backup import activate_database, backup_database, verify_backup
+from .backup import (
+    activate_database,
+    backup_database,
+    database_content_digest,
+    issue_quiescence_receipt,
+    restore_database,
+    verify_backup,
+)
 from .migration import MigrationError, generate_manifest, import_manifest, validate_manifest
 from .runtime import command_digest, executable_digest, scheduler_for
 
@@ -256,12 +264,21 @@ def _verify_mountinfo(worktree_root: Path) -> None:
         mountinfo = entry / "mountinfo"
         if not entry.name.isdigit() or not mountinfo.is_file():
             continue
-        try:
-            lines = mountinfo.read_text(encoding="utf-8", errors="replace").splitlines()
-        except OSError:
-            continue
+        lines = _read_mountinfo(entry)
         if _mountinfo_conflicts(lines, worktree_root):
             raise MigrationError(f"process mount remains under worktrees: pid={entry.name}")
+
+
+def _read_mountinfo(entry: Path) -> list[str]:
+    mountinfo = entry / "mountinfo"
+    try:
+        return mountinfo.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError as exc:
+        if entry.exists():
+            raise MigrationError(
+                f"cannot inspect mountinfo for live pid: {entry.name}"
+            ) from exc
+        return []
 
 
 def _mountinfo_conflicts(lines: list[str], worktree_root: Path) -> bool:
@@ -404,6 +421,7 @@ def _database_validation(database: Path, expected_tasks: int) -> dict[str, Any]:
             ]
             if any(value is None for value in times) or times != sorted(times):
                 raise MigrationError("receipt chronology is invalid")
+            _validate_stage_chronology(terminal)
         counts = {
             str(row["state"]): int(row["count"])
             for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
@@ -414,6 +432,16 @@ def _database_validation(database: Path, expected_tasks: int) -> dict[str, Any]:
         "task_count": task_count,
         "task_counts": counts,
     }
+
+
+def _validate_stage_chronology(terminal: dict[str, Any]) -> None:
+    if not (
+        terminal["integration"]["finished_at"]
+        <= terminal["archive"]["started_at"]
+        and terminal["archive"]["finished_at"]
+        <= terminal["cleanup"]["started_at"]
+    ):
+        raise MigrationError("receipt operation stages overlap or are reversed")
 
 
 def _initialize_staging(
@@ -443,6 +471,49 @@ def _initialize_staging(
         reason="operator supplied cutover resource policy",
     )
     scheduler.prepare_cutover_barrier(cutover_id, manifest_sha256)
+
+
+@contextmanager
+def _activation_authority(database: Path) -> Iterator[None]:
+    independent = database.parent / f".{database.name}.activation.lock"
+    scheduler_lock = database.parent / f".{database.name}.lock"
+    with ExitStack() as stack:
+        for path in (independent, scheduler_lock):
+            if path.is_symlink():
+                raise MigrationError("activation authority lock is a symlink")
+            fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+            stream = stack.enter_context(os.fdopen(fd, "a+"))
+            fcntl.flock(stream, fcntl.LOCK_EX)
+        yield
+
+
+def _prepare_staged_activation(staging: Path) -> None:
+    if staging.is_symlink() or not staging.is_file():
+        raise MigrationError("activation staging main file is missing or unsafe")
+    with sqlite3.connect(staging) as db:
+        checkpoint = db.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+        db.commit()
+    if checkpoint is None or int(checkpoint[0]) != 0:
+        raise MigrationError("activation staging WAL checkpoint did not quiesce")
+    for suffix in ("-wal", "-shm"):
+        sidecar = Path(str(staging) + suffix)
+        if sidecar.is_symlink() or (sidecar.exists() and not sidecar.is_file()):
+            raise MigrationError("activation staging sidecar is unsafe")
+        sidecar.unlink(missing_ok=True)
+
+
+def _activate_cutover_database(staging: Path, database: Path) -> None:
+    _prepare_staged_activation(staging)
+    with _activation_authority(database):
+        if not staging.is_file() or any(
+            Path(str(staging) + suffix).exists() for suffix in ("-wal", "-shm")
+        ):
+            raise MigrationError("activation staging file set changed before rename")
+        if any(
+            Path(str(database) + suffix).exists() for suffix in ("", "-wal", "-shm")
+        ):
+            raise MigrationError("activation target file set changed before rename")
+        activate_database(staging, database, activate=True)
 
 
 def execute_cutover(
@@ -548,7 +619,7 @@ def execute_cutover(
                 raise MigrationError("import summary does not match final database counts")
             backup_database(staging, backup_directory)
             backup = verify_backup(backup_directory)
-            activate_database(staging, database, activate=True)
+            _activate_cutover_database(staging, database)
             activated = _database_validation(database, validation["task_count"])
             database_digest = hashlib.sha256(database.read_bytes()).hexdigest()
             preclaim = {
@@ -784,6 +855,146 @@ def _validate_service_database(database: Path, journal: dict[str, Any]) -> None:
             != journal["database_sha256"]
         ):
             raise MigrationError("prepared service database digest changed before first enable")
+
+
+@contextmanager
+def _restore_authority(database: Path) -> Iterator[None]:
+    independent = database.parent / f".{database.name}.restore-authority.lock"
+    scheduler_lock = database.parent / f".{database.name}.lock"
+    with ExitStack() as stack:
+        for path in (independent, scheduler_lock):
+            if path.is_symlink():
+                raise MigrationError("restore authority lock is a symlink")
+            fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+            stream = stack.enter_context(os.fdopen(fd, "a+"))
+            fcntl.flock(stream, fcntl.LOCK_EX)
+        yield
+
+
+def _validate_restore_quiescence(
+    database: Path, journal: dict[str, Any]
+) -> dict[str, Any]:
+    uri = f"file:{database.resolve().as_posix()}?mode=ro"
+    with sqlite3.connect(uri, uri=True) as db:
+        db.row_factory = sqlite3.Row
+        if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
+            raise MigrationError("restore target database integrity check failed")
+        if db.execute("PRAGMA foreign_key_check").fetchall():
+            raise MigrationError("restore target database foreign keys are invalid")
+        config = db.execute("SELECT * FROM current_runtime_config").fetchone()
+        barrier = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
+        if (
+            config is None
+            or bool(config["enabled"])
+            or any(
+                int(config[key]) != 0
+                for key in (
+                    "max_total_controllers",
+                    "controller_concurrency",
+                    "max_integrations",
+                    "agent_limit",
+                )
+            )
+            or barrier is None
+            or barrier["cutover_id"] != journal["cutover_id"]
+            or barrier["manifest_sha256"] != journal["manifest_sha256"]
+        ):
+            raise MigrationError("restore target is not disabled cutover state")
+        nonzero = int(
+            db.execute(
+                "SELECT count(*) FROM capacity_rows WHERE limit_count<>0 OR used_count<>0 "
+                "OR remaining_count<>0"
+            ).fetchone()[0]
+        )
+        active = int(
+            db.execute(
+                "SELECT (SELECT count(*) FROM claims WHERE active=1) + "
+                "(SELECT count(*) FROM controllers WHERE state IN ('running','draining')) + "
+                "(SELECT count(*) FROM scheduler_leases WHERE active=1) + "
+                "(SELECT count(*) FROM controller_slot_reservations "
+                "WHERE state IN ('reserved','activated'))"
+            ).fetchone()[0]
+        )
+        generation = int(
+            db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0]
+        )
+        if nonzero or active:
+            raise MigrationError("restore target has capacity or active scheduler actors")
+    return {
+        "generation": generation,
+        "target_file_sha256": hashlib.sha256(database.read_bytes()).hexdigest(),
+        "target_content_digest": database_content_digest(database),
+    }
+
+
+def restore_cutover_database(
+    *,
+    backup_directory: Path,
+    database: Path,
+    journal_path: Path,
+    barrier_path: Path,
+    runtime_config: Path,
+    receipt_authority: Path,
+) -> dict[str, Any]:
+    """Issue and consume a cutover-grade restore receipt under held authorities."""
+    with _restore_authority(database):
+        journal, _record = _rollback_identity(journal_path, barrier_path, database)
+        repository = Path(str(journal.get("repository", "")))
+        live_root = Path(str(journal.get("live_root", "")))
+        disabled = _read_json_object(runtime_config, "legacy runtime config")
+        if (
+            runtime_config.resolve()
+            != (live_root / "supervisor/runtime-config.json").resolve()
+            or disabled.get("enabled") is not False
+            or any(
+                int(disabled.get(key, -1)) != 0
+                for key in (
+                    "max_total_controllers",
+                    "controller_concurrency",
+                    "max_integrations",
+                    "agent_limit",
+                )
+            )
+        ):
+            raise MigrationError("legacy admissions are not disabled for restore")
+        if _authoring_processes(repository, live_root):
+            raise MigrationError("repository actors remain during restore")
+        _verify_sqlite_service_stopped(str(journal["sqlite_service_unit"]))
+        _verify_docker(live_root / "worktrees")
+        verify_backup(backup_directory)
+        _validate_restore_quiescence(backup_directory / "database.sqlite3", journal)
+        observed = _validate_restore_quiescence(database, journal)
+        evidence = {
+            "schema_version": "cutover-restore-quiescence/v1",
+            "cutover_id": journal["cutover_id"],
+            "database": str(database.resolve()),
+            "target_file_sha256": observed["target_file_sha256"],
+            "target_content_digest": observed["target_content_digest"],
+            "generation": observed["generation"],
+            "observed_at": datetime.now(UTC).isoformat(),
+            "quiesced": True,
+        }
+        receipt = issue_quiescence_receipt(
+            backup_directory,
+            database,
+            receipt_authority,
+            cutover_evidence=evidence,
+            generation=int(observed["generation"]),
+        )
+        if _authoring_processes(repository, live_root):
+            raise MigrationError("repository actors appeared before restore activation")
+        _verify_sqlite_service_stopped(str(journal["sqlite_service_unit"]))
+        _verify_docker(live_root / "worktrees")
+        if _validate_restore_quiescence(database, journal) != observed:
+            raise MigrationError("restore target changed after receipt issuance")
+        result = restore_database(
+            backup_directory,
+            database,
+            activate=True,
+            quiescence_marker=receipt,
+            _scheduler_lock_held=True,
+        )
+        return {"receipt": str(receipt), "restore": result, "evidence": evidence}
 
 
 def rollback_cutover(

@@ -12,7 +12,7 @@ import shutil
 import sqlite3
 import stat
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from contextlib import nullcontext
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -105,10 +105,10 @@ def _authority_key(authority_root: Path) -> bytes:
     return key
 
 
-def issue_quiescence_receipt(backup_directory: Path | str, target: Path | str,
-                             authority_root: Path | str | None = None,
-                             *, generation: int = 1, ttl_seconds: int = 300) -> Path:
-    """Issue an authenticated one-use restore receipt under a new authority root."""
+def _issue_quiescence_receipt(backup_directory: Path | str, target: Path | str,
+                              authority_root: Path | str | None = None,
+                              *, generation: int = 1, ttl_seconds: int = 300,
+                              cutover_evidence: Mapping[str, Any] | None = None) -> Path:
     backup_dir = Path(backup_directory)
     target_path = Path(target)
     verified = verify_backup(backup_dir)
@@ -130,6 +130,7 @@ def issue_quiescence_receipt(backup_directory: Path | str, target: Path | str,
         "backup_digest": hashlib.sha256(json.dumps(summary, sort_keys=True).encode()).hexdigest(),
         "observed_at": now.isoformat(), "expires_at": (now + timedelta(seconds=ttl_seconds)).isoformat(),
         "lock_observed": True, "quiesced": True,
+        "cutover_evidence": dict(cutover_evidence or {}),
     }
     receipt["hmac_sha256"] = hmac.new(key, _canonical_receipt(receipt), hashlib.sha256).hexdigest()
     path = authority / f"receipt-{receipt['receipt_id']}.json"
@@ -141,6 +142,82 @@ def issue_quiescence_receipt(backup_directory: Path | str, target: Path | str,
         os.close(fd)
     _sync_dir(authority)
     return path
+
+
+def issue_quiescence_receipt(
+    backup_directory: Path | str,
+    target: Path | str,
+    authority_root: Path | str | None = None,
+    *,
+    cutover_evidence: Mapping[str, Any] | None = None,
+    generation: int = 1,
+    ttl_seconds: int = 300,
+) -> Path:
+    """Issue a restore receipt only from observed cutover-grade evidence."""
+    required = {
+        "schema_version",
+        "cutover_id",
+        "database",
+        "target_file_sha256",
+        "target_content_digest",
+        "generation",
+        "observed_at",
+        "quiesced",
+    }
+    if (
+        not isinstance(cutover_evidence, Mapping)
+        or set(cutover_evidence) != required
+        or cutover_evidence.get("quiesced") is not True
+        or cutover_evidence.get("database") != str(Path(target).resolve())
+        or int(cutover_evidence.get("generation", -1)) != generation
+    ):
+        raise MigrationError("restore receipt requires exact cutover-grade evidence")
+    return _issue_quiescence_receipt(
+        backup_directory,
+        target,
+        authority_root,
+        generation=generation,
+        ttl_seconds=ttl_seconds,
+        cutover_evidence=cutover_evidence,
+    )
+
+
+def issue_development_quiescence_receipt(
+    backup_directory: Path | str,
+    target: Path | str,
+    authority_root: Path | str | None = None,
+    *,
+    generation: int = 1,
+    ttl_seconds: int = 300,
+) -> Path:
+    """Test-only compatibility helper; production callers use cutover evidence."""
+    target_path = Path(target).resolve()
+    current_generation = 0
+    if target_path.is_file():
+        with sqlite3.connect(f"file:{target_path.as_posix()}?mode=ro", uri=True) as db:
+            current_generation = int(
+                db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0]
+            )
+    evidence = {
+        "schema_version": "development-quiescence/v1",
+        "cutover_id": "development-only",
+        "database": str(target_path),
+        "target_file_sha256": _digest(target_path) if target_path.is_file() else "absent",
+        "target_content_digest": (
+            str(_database_summary(target_path)["digest"]) if target_path.is_file() else "absent"
+        ),
+        "generation": current_generation,
+        "observed_at": datetime.now(UTC).isoformat(),
+        "quiesced": True,
+    }
+    return _issue_quiescence_receipt(
+        backup_directory,
+        target,
+        authority_root,
+        generation=current_generation,
+        ttl_seconds=ttl_seconds,
+        cutover_evidence=evidence,
+    )
 
 
 def _consumed_receipts(path: Path) -> set[str]:
@@ -191,6 +268,10 @@ def _database_summary(path: Path) -> dict[str, object]:
             for row in db.execute(f'SELECT * FROM "{name}"'):
                 digest.update(repr(tuple(row)).encode())
     return {"tables": counts, "digest": digest.hexdigest()}
+
+
+def database_content_digest(path: Path | str) -> str:
+    return str(_database_summary(Path(path))["digest"])
 
 
 def _manifest(directory: Path) -> dict[str, object]:
@@ -299,8 +380,15 @@ def activate_database(staged: Path | str, target: Path | str, *, activate: bool 
     if target_path.parent.is_symlink():
         raise MigrationError("activation target directory must not be a symlink")
     with sqlite3.connect(staged_path) as db:
-        db.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        checkpoint = db.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
         db.commit()
+    if checkpoint is None or int(checkpoint[0]) != 0:
+        raise MigrationError("staged database WAL checkpoint did not quiesce")
+    for suffix in ("-wal", "-shm"):
+        sidecar = Path(str(staged_path) + suffix)
+        if sidecar.is_symlink() or (sidecar.exists() and not sidecar.is_file()):
+            raise MigrationError("staged database sidecar is unsafe")
+        sidecar.unlink(missing_ok=True)
     _sync(staged_path)
     target_path.parent.mkdir(parents=True, exist_ok=True)
     os.replace(staged_path, target_path)
@@ -309,7 +397,8 @@ def activate_database(staged: Path | str, target: Path | str, *, activate: bool 
 
 def restore_database(backup_directory: Path | str, target: Path | str, *, activate: bool = False,
                      quiescence_marker: Path | str | None = None,
-                     quiesced: Callable[[], dict[str, Any] | bool] | None = None) -> dict[str, object]:
+                     quiesced: Callable[[], dict[str, Any] | bool] | None = None,
+                     _scheduler_lock_held: bool = False) -> dict[str, object]:
     """Validate and (only with activation) restore a backup with sidecar quarantine."""
     if quiesced is not None:
         raise MigrationError("restore callback receipts are not accepted; issue a trusted receipt")
@@ -322,13 +411,13 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
     if lock_path.is_symlink():
         raise MigrationError("restore lock must not be a symlink")
     lock = None
-    if activate:
+    if activate and not _scheduler_lock_held:
         try:
             lock_fd = os.open(lock_path, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
         except FileExistsError:
             lock_fd = os.open(lock_path, os.O_RDWR | os.O_NOFOLLOW)
         lock = os.fdopen(lock_fd, "a+")
-    elif lock_path.exists():
+    elif not _scheduler_lock_held and lock_path.exists():
         lock = lock_path.open("r")
     with (lock if lock is not None else nullcontext()) as held_lock:
         if held_lock is not None:
@@ -376,15 +465,31 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
                 raise MigrationError("restore receipt HMAC is invalid")
             if receipt.get("backup_digest") != hashlib.sha256(json.dumps(backup_manifest.get("database_summary", {}), sort_keys=True).encode()).hexdigest():
                 raise MigrationError("restore receipt backup digest does not match backup")
+            consumed_path = target_path.parent / f".{target_path.name}.restore-consumed.json"
+            if activate and receipt_key in _consumed_receipts(consumed_path):
+                raise MigrationError("restore quiescence receipt was already used")
+            cutover_evidence = receipt.get("cutover_evidence")
+            if activate:
+                if not isinstance(cutover_evidence, dict) or cutover_evidence.get("quiesced") is not True:
+                    raise MigrationError("activation requires cutover-grade receipt evidence")
+                current_file_digest = _digest(target_path) if target_path.is_file() else "absent"
+                current_content_digest = (
+                    str(_database_summary(target_path)["digest"])
+                    if target_path.is_file()
+                    else "absent"
+                )
+                if (
+                    cutover_evidence.get("database") != str(target_path)
+                    or cutover_evidence.get("target_file_sha256") != current_file_digest
+                    or cutover_evidence.get("target_content_digest") != current_content_digest
+                ):
+                    raise MigrationError("restore target changed after quiescence observation")
             current_generation = 0
             if target_path.is_file() and not target_path.is_symlink():
                 with sqlite3.connect(f"file:{target_path.resolve().as_posix()}?mode=ro", uri=True) as current_db:
                     current_generation = int(current_db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0])
             if int(receipt["generation"]) != current_generation:
                 raise MigrationError("restore receipt generation is not current")
-            consumed_path = target_path.parent / f".{target_path.name}.restore-consumed.json"
-            if activate and receipt_key in _consumed_receipts(consumed_path):
-                raise MigrationError("restore quiescence receipt was already used")
             source = next(backup_dir / str(item["name"]) for item in backup_manifest["files"] if str(item["name"]) == "database.sqlite3")
             if not activate:
                 return {"dry_run": True, "verified": True, "target": str(target_path), "quiesced": True}

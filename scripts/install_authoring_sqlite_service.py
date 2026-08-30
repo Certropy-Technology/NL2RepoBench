@@ -5,11 +5,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import sqlite3
 import sys
 from pathlib import Path
 
 from nl2repobench.authoring.cutover import install_service_binding
 from nl2repobench.authoring.migration import MigrationError
+from nl2repobench.authoring.scheduler import CorruptionError, ValidationError
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -30,9 +32,16 @@ def main(argv: list[str] | None = None) -> int:
             sqlite_env_file=args.sqlite_env_file,
             write=args.write,
         )
-    except (MigrationError, OSError, ValueError) as exc:
-        print(f"SQLite service binding failed: {exc}", file=sys.stderr)
-        return 1
+    except (
+        MigrationError,
+        ValidationError,
+        CorruptionError,
+        sqlite3.DatabaseError,
+        OSError,
+        ValueError,
+    ) as exc:
+        print(f"SQLite service binding corruption marker: {exc}", file=sys.stderr)
+        return 78
     print(json.dumps(result, sort_keys=True))
     return 0
 
