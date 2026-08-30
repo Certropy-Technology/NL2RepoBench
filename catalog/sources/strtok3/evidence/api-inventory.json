@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strtok3",
+  "source_revision": "acac939a405a6dfebcf3fe9b9caba3641c491c95",
+  "source_files": [
+    "lib/index.ts",
+    "lib/core.ts",
+    "lib/types.ts",
+    "lib/AbstractTokenizer.ts",
+    "lib/BufferTokenizer.ts",
+    "lib/BlobTokenizer.ts",
+    "lib/ReadStreamTokenizer.ts",
+    "lib/FileTokenizer.ts",
+    "lib/stream/*.ts"
+  ],
+  "runtime_exports": [
+    "fromBuffer",
+    "fromBlob",
+    "fromWebStream",
+    "fromStream",
+    "fromFile",
+    "AbstractTokenizer",
+    "FileTokenizer",
+    "EndOfStreamError",
+    "AbortError"
+  ],
+  "tokenizer_methods": [
+    "readBuffer",
+    "peekBuffer",
+    "readToken",
+    "peekToken",
+    "readNumber",
+    "peekNumber",
+    "ignore",
+    "close",
+    "abort",
+    "supportsRandomAccess",
+    "setPosition (random access only)"
+  ],
+  "package_contract": {
+    "name": "strtok3",
+    "version": "10.3.5",
+    "type": "module",
+    "node_root": "./lib/index.js",
+    "default_root": "./lib/core.js",
+    "core_subpath": "./lib/core.js",
+    "types": "./lib/index.d.ts",
+    "runtime_dependencies": ["@tokenizer/token@0.3.0"]
+  },
+  "adapter_boundary": "Private node:test invokes a fixed UID-separated child. The child alone imports candidate code and constructs Uint8Array, Blob, WHATWG stream, Node stream, temporary-file, and custom-token objects. Trusted tests exchange bounded JSON results only."
+}

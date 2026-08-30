@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strtok3",
+  "source_revision": "acac939a405a6dfebcf3fe9b9caba3641c491c95",
+  "upstream": {
+    "framework": "mocha",
+    "files": ["test/test.ts", "test/util.ts", "test/resources/*"],
+    "collected": 329,
+    "passed": 329,
+    "command": "npm test",
+    "host_runtime": "node 22.23.1 / npm 10.9.8",
+    "exit_code": 0
+  },
+  "production": {
+    "framework": "node:test",
+    "expected_total": 44,
+    "report_format": "node-test-json-v1",
+    "collection_source": "Independent public-contract tests using a task-specific child-side tokenizer adapter",
+    "test_bundle_visibility": "private"
+  },
+  "coverage_families": [
+    "package and export shape",
+    "buffer and Blob metadata",
+    "readBuffer and peekBuffer options",
+    "strict and partial EOF behavior",
+    "position, ignore, and random access",
+    "custom token and numeric decoding",
+    "Blob, WHATWG stream, Node stream, file, and file-stream factories",
+    "close and abort",
+    "determinism"
+  ]
+}

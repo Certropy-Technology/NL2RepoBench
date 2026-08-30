@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "strtok3"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "binary-tokenization"
+tags = ["node", "npm", "esm", "binary", "tokenizer", "stream", "buffer", "blob"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/Borewit/strtok3"
+revision = "acac939a405a6dfebcf3fe9b9caba3641c491c95"
+license_spdx = "MIT"
+source_digest = "sha256:07d655e73200185f3c76b21a86538e09fddb9e3971bc907641d1929bdfa3c54c"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact @tokenizer/token runtime metadata package and npm v3 lock/cache closure are preinstalled. The model Agent and separate verifier have no egress. Only the trusted Oracle receives a run-scoped github.com authorization to verify the pinned source revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@tokenizer/token@0.3.0"]
+artifact = { digest = "sha256:ddc02065114c6931074bf867d505067610a29cbc483de672a5087656c5c40409", size_bytes = 51200, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:ddc02065114c6931074bf867d505067610a29cbc483de672a5087656c5c40409", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 44
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
+test_bundle = { digest = "sha256:a4ad1617417128d1a5f35201e16bbb01639f3fca3f614fca376ccd2501421a37", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a4ad1617417128d1a5f35201e16bbb01639f3fca3f614fca376ccd2501421a37", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Implement the strtok3 ESM binary tokenizer with buffer, Blob, Web stream, Node stream, and file factories plus deterministic read, peek, token, seek, ignore, abort, and close behavior."
+keywords = ["node", "npm", "esm", "binary", "tokenizer", "stream", "buffer"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-strtok3"
+reason = "Frozen source, API/test inventory, exact offline npm closure, private 44-leaf contract, deterministic production compile, local no-network Oracle replay, and empty/stub/forgery/install-script/loader-hook/call-hang/offline controls passed. Independent review and model Agent Run remain outside this lane."
+
+[oracle_bundle]
+digest = "sha256:630c33086c8b91e2046449939738acf0455f37e02bf60df2697da51c366f64f2"
+size_bytes = 81920
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:630c33086c8b91e2046449939738acf0455f37e02bf60df2697da51c366f64f2"
+visibility = "private"

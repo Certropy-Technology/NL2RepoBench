@@ -1,0 +1,177 @@
+const { readFileSync, writeFileSync, rmSync, createReadStream } = require("node:fs");
+const { createRequire } = require("node:module");
+const { join } = require("node:path");
+const { Readable } = require("node:stream");
+const { pathToFileURL } = require("node:url");
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const PACKAGE = "strtok3";
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) process.exit(70);
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function tokenFrom(spec) {
+  if (!spec || !Number.isSafeInteger(spec.len) || spec.len < 1 || spec.len > 16) {
+    throw new TypeError("invalid token specification");
+  }
+  return {
+    len: spec.len,
+    get(array, offset) {
+      const view = new DataView(array.buffer, array.byteOffset, array.byteLength);
+      switch (spec.kind) {
+        case "uint8": return view.getUint8(offset);
+        case "int16be": return view.getInt16(offset, false);
+        case "uint16le": return view.getUint16(offset, true);
+        case "uint32be": return view.getUint32(offset, false);
+        case "utf8": return new TextDecoder("utf-8").decode(array.subarray(offset, offset + spec.len));
+        default: throw new TypeError("unsupported token kind");
+      }
+    },
+  };
+}
+
+async function loadCandidate() {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+  const entry = require.resolve(PACKAGE);
+  return import(pathToFileURL(entry).href);
+}
+
+async function makeTokenizer(candidate, request) {
+  const bytes = Uint8Array.from(request.bytes ?? []);
+  const options = request.fileInfo ? { fileInfo: request.fileInfo } : undefined;
+  switch (request.source) {
+    case "buffer": return candidate.fromBuffer(bytes, options);
+    case "blob": return candidate.fromBlob(new Blob([bytes]), options);
+    case "web": {
+      const midpoint = Math.max(1, Math.floor(bytes.length / 2));
+      const chunks = [bytes.slice(0, midpoint), bytes.slice(midpoint)].filter(x => x.length);
+      const stream = new ReadableStream({
+        type: "bytes",
+        pull(controller) {
+          const chunk = chunks.shift();
+          if (chunk) controller.enqueue(chunk);
+          else controller.close();
+        },
+      });
+      return candidate.fromWebStream(stream, options);
+    }
+    case "stream": {
+      const chunks = [...bytes].map(value => Uint8Array.of(value));
+      return candidate.fromStream(Readable.from(chunks), options);
+    }
+    case "file": {
+      const path = join(process.env.TMPDIR, "strtok3-candidate.bin");
+      writeFileSync(path, bytes, { mode: 0o600 });
+      return candidate.fromFile(path);
+    }
+    case "file-stream": {
+      const path = join(process.env.TMPDIR, "strtok3-candidate-stream.bin");
+      writeFileSync(path, bytes, { mode: 0o600 });
+      return candidate.fromStream(createReadStream(path));
+    }
+    default: throw new TypeError("unsupported source");
+  }
+}
+
+async function executeStep(tokenizer, step) {
+  switch (step.op) {
+    case "info":
+      return {
+        position: tokenizer.position,
+        fileInfo: tokenizer.fileInfo,
+        randomAccess: tokenizer.supportsRandomAccess(),
+      };
+    case "readBuffer":
+    case "peekBuffer": {
+      const target = new Uint8Array(step.targetSize);
+      if (Array.isArray(step.initial)) target.set(step.initial);
+      const method = step.op === "readBuffer" ? tokenizer.readBuffer : tokenizer.peekBuffer;
+      const count = await method.call(tokenizer, target, step.options);
+      return { count, bytes: [...target], position: tokenizer.position };
+    }
+    case "readToken":
+    case "peekToken": {
+      const method = step.op === "readToken" ? tokenizer.readToken : tokenizer.peekToken;
+      const value = await method.call(tokenizer, tokenFrom(step.token), step.position);
+      return { value, position: tokenizer.position };
+    }
+    case "readNumber":
+    case "peekNumber": {
+      const method = step.op === "readNumber" ? tokenizer.readNumber : tokenizer.peekNumber;
+      const value = await method.call(tokenizer, tokenFrom(step.token));
+      return { value, position: tokenizer.position };
+    }
+    case "ignore": {
+      const count = await tokenizer.ignore(step.length);
+      return { count, position: tokenizer.position };
+    }
+    case "setPosition":
+      tokenizer.setPosition(step.position);
+      return { position: tokenizer.position };
+    case "abort":
+      await tokenizer.abort();
+      return { position: tokenizer.position };
+    case "close":
+      await tokenizer.close();
+      return { position: tokenizer.position };
+    default: throw new TypeError("unsupported operation");
+  }
+}
+
+async function main() {
+  const raw = readFileSync(0);
+  if (raw.byteLength > MAX_REQUEST_BYTES) emit({ ok: false, error: "request-too-large" }, 64);
+  const request = JSON.parse(raw.toString("utf8"));
+  const candidate = await loadCandidate();
+  if (request.op === "inventory") {
+    const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`));
+    const entry = require.resolve(PACKAGE);
+    const packageRoot = entry.slice(0, entry.lastIndexOf("/lib/"));
+    const manifest = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
+    emit({
+      ok: true,
+      value: {
+        name: manifest.name,
+        version: manifest.version,
+        type: manifest.type,
+        exports: Object.keys(candidate).sort(),
+        packageExports: manifest.exports,
+        types: manifest.types,
+        dependencies: manifest.dependencies ?? {},
+      },
+    });
+  }
+  const tokenizer = await makeTokenizer(candidate, request);
+  const results = [];
+  try {
+    for (const step of request.steps ?? []) {
+      try {
+        results.push({ ok: true, value: await executeStep(tokenizer, step) });
+      } catch (error) {
+        results.push({
+          ok: false,
+          exceptionType: error?.constructor?.name ?? "Error",
+          message: String(error?.message ?? error),
+          position: tokenizer.position,
+        });
+      }
+    }
+  } finally {
+    try { await tokenizer.close(); } catch {}
+    for (const name of ["strtok3-candidate.bin", "strtok3-candidate-stream.bin"]) {
+      try { rmSync(join(process.env.TMPDIR, name)); } catch {}
+    }
+  }
+  emit({ ok: true, value: results });
+}
+
+main().catch(error => emit({
+  ok: false,
+  exceptionType: error?.constructor?.name ?? "Error",
+  message: String(error?.message ?? error),
+}, 1));

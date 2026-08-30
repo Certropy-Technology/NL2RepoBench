@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strtok3",
+  "status": "implemented",
+  "purpose": "Exercise object-rich tokenizer behavior without importing candidate JavaScript into the trusted verifier process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "per_call_timeout_seconds": 12,
+    "node_addons": "disabled",
+    "network": "none"
+  },
+  "child_constructed_values": [
+    "Uint8Array",
+    "Blob",
+    "ReadableStream<Uint8Array>",
+    "node:stream Readable",
+    "bounded temporary file and fs.ReadStream",
+    "IGetToken-compatible decoder objects"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import",
+    "writes outside the candidate-owned temporary directory"
+  ]
+}
