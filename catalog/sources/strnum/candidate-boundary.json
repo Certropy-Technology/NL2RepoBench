@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strnum",
+  "status": "implemented",
+  "protocol": "node-subprocess-json-v1-with-task-adapter",
+  "purpose": "Exercise the ESM package root and RegExp option without importing candidate JavaScript into the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "request": {
+    "input": "tagged JSON value; undefined has an explicit tag",
+    "options": "JSON-compatible booleans/strings plus skipLike {source, flags}",
+    "skipLike_limit": "source <= 256 bytes; flags restricted to gimsuy"
+  },
+  "response": {
+    "result": "tagged scalar preserving undefined, null, Infinity, -Infinity, NaN, and negative zero",
+    "exceptions": "bounded type and message record"
+  },
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

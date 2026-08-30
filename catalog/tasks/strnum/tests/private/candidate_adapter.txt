@@ -1,0 +1,89 @@
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const data = readFileSync(0);
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write('candidate response exceeds the bound\n');
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+if (data.byteLength > MAX_REQUEST_BYTES) emit({ok: false, error: 'request-too-large'}, 64);
+
+let request;
+try {
+  request = JSON.parse(data.toString('utf8'));
+} catch {
+  emit({ok: false, error: 'malformed-json'}, 64);
+}
+
+function decodeInput(value) {
+  if (value?.type === 'undefined') return undefined;
+  return value?.value;
+}
+
+function decodeOptions(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const options = {...value};
+  if (options.skipLike !== undefined) {
+    const regex = options.skipLike;
+    if (!regex || typeof regex.source !== 'string' || regex.source.length > 256
+      || typeof regex.flags !== 'string' || !/^[gimsuy]*$/.test(regex.flags)) {
+      throw new TypeError('invalid declarative skipLike regular expression');
+    }
+    options.skipLike = new RegExp(regex.source, regex.flags);
+  }
+  return options;
+}
+
+function encode(value) {
+  if (value === undefined) return {type: 'undefined'};
+  if (value === null) return {type: 'null'};
+  if (typeof value === 'number') {
+    if (Number.isNaN(value)) return {type: 'number', value: 'NaN'};
+    if (value === Infinity) return {type: 'number', value: 'Infinity'};
+    if (value === -Infinity) return {type: 'number', value: '-Infinity'};
+    return {type: 'number', value, negativeZero: Object.is(value, -0)};
+  }
+  return {type: typeof value, value};
+}
+
+try {
+  const require = createRequire(pathToFileURL(join(process.cwd(), 'package.json')));
+  let candidate;
+  try {
+    candidate = require('strnum');
+  } catch (error) {
+    if (error?.code !== 'ERR_REQUIRE_ESM' && error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') throw error;
+    const packageRoot = join(process.cwd(), 'node_modules', 'strnum');
+    const manifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
+    const entry = typeof manifest.exports === 'string'
+      ? manifest.exports
+      : manifest.exports?.['.']?.import ?? manifest.exports?.import ?? manifest.module ?? manifest.main;
+    if (typeof entry !== 'string' || entry.includes('..') || entry.startsWith('/')) {
+      throw new Error('strnum has no safe package-root entry');
+    }
+    candidate = await import(pathToFileURL(join(packageRoot, entry)).href);
+  }
+  const toNumber = candidate.default ?? candidate;
+  if (typeof toNumber !== 'function') emit({ok: false, error: 'default-export-not-callable'}, 65);
+  const value = toNumber(decodeInput(request.input), decodeOptions(request.options));
+  emit({ok: true, id: request.id, result: encode(value)});
+} catch (error) {
+  emit({
+    ok: false,
+    id: request?.id,
+    error: 'candidate-call-failed',
+    exceptionType: error?.constructor?.name ?? 'Error',
+    message: String(error?.message ?? error),
+  }, 1);
+}

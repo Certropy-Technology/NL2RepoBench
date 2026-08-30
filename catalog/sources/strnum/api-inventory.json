@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strnum",
+  "package": "strnum",
+  "package_version": "2.4.2",
+  "source_revision": "117d6a5f59fbb8f29d2f88c0c292d7dc44d67a7f",
+  "source_digest": "sha256:af9a609e1a8e3ded71cb69e2362710a2dfbf51dfbff0d8755f8d205be9c05e04",
+  "module_type": "esm",
+  "package_entry": "strnum.js",
+  "public_exports": [
+    {
+      "kind": "default-function",
+      "name": "toNumber",
+      "signature": "toNumber(value, options = {}) -> number | string | null | original non-string value",
+      "synchronous": true,
+      "stateful": false
+    }
+  ],
+  "options": {
+    "hex": {"type": "boolean", "default": true},
+    "binary": {"type": "boolean", "default": false},
+    "octal": {"type": "boolean", "default": false},
+    "leadingZeros": {"type": "boolean", "default": true},
+    "eNotation": {"type": "boolean", "default": true},
+    "skipLike": {"type": "RegExp", "default": "absent"},
+    "infinity": {"type": "original|null|infinity|string", "default": "original"},
+    "unicode": {"type": "boolean", "default": false}
+  },
+  "runtime_dependencies": ["anynum@1.0.1"],
+  "source_files": ["strnum.js"],
+  "test_files": [
+    "tests/anynum_test.js",
+    "tests/infinity_test.js",
+    "tests/specs_test.js",
+    "tests/strnum_test.js"
+  ],
+  "upstream_framework": "jasmine",
+  "upstream_specs": 30,
+  "dynamic_risks": [
+    "regexp-state-in-skipLike",
+    "negative-zero-serialization",
+    "numeric-precision-round-trip",
+    "unicode-normalization",
+    "overflow-to-infinity"
+  ]
+}

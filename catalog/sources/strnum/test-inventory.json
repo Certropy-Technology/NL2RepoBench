@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strnum",
+  "source_revision": "117d6a5f59fbb8f29d2f88c0c292d7dc44d67a7f",
+  "upstream": {
+    "framework": "jasmine 5.13.0",
+    "command": "npm test",
+    "test_files": 4,
+    "specs": 30,
+    "result": "30 specs, 0 failures under Node 24.19.0/npm 11.17.0"
+  },
+  "production": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "frozen_total": 42,
+    "private_entry": "contract.test.mjs",
+    "candidate_boundary": "one-shot bounded JSON child adapter",
+    "groups": {
+      "package-and-pass-through": 4,
+      "ordinary-numeric-syntax": 7,
+      "radix-options": 7,
+      "leading-zero-and-decimal-policy": 8,
+      "scientific-notation-and-overflow": 10,
+      "unicode-and-skipLike": 6
+    },
+    "collection_errors": 0,
+    "oracle_smoke": "42/42 passed"
+  },
+  "excluded": [
+    "upstream @byspec implementation helper internals",
+    "Jasmine runner and development dependency behavior",
+    "unadvertised decimalPoint placeholder option",
+    "mutation of caller-owned global or sticky RegExp.lastIndex",
+    "non-deterministic timing thresholds"
+  ]
+}
