@@ -12,7 +12,9 @@ import pytest
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_models import Visibility
+from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import (
     AgentRuntimeImageLock,
@@ -28,7 +30,11 @@ from nl2repobench.storage.artifacts import (
 )
 from nl2repobench.storage.canonical_ustar import decode_archive, encode_files, tree_digest
 from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
-from nl2repobench.verification.command_plan import validate_command_plan
+from nl2repobench.verification.command_plan import (
+    EXPECTED_PLAN,
+    load_python_command_plan,
+    validate_command_plan,
+)
 
 ROOT = Path(__file__).parents[1]
 SOURCE = ROOT / "catalog/sources/ministats"
@@ -114,6 +120,17 @@ def _files(root: Path) -> dict[str, bytes]:
         for path in sorted(root.rglob("*"))
         if path.is_file()
     }
+
+
+def _python_plan_bytes(
+    *,
+    identity: str = "python+uv",
+    report_format: str = "pytest-junit-xml-v1",
+) -> bytes:
+    plan = CommandPlan.model_validate(
+        {**EXPECTED_PLAN, "identity": identity, "report_format": report_format}
+    )
+    return canonical_json(plan) + b"\n"
 
 
 def _tar_bytes(files: dict[str, bytes]) -> bytes:
@@ -355,6 +372,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "useradd --uid 10001" in (task_root / "tests/Dockerfile").read_text()
     assert "chmod -R 0500 /tests/private" in (task_root / "tests/Dockerfile").read_text()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_client.py").is_file()
+    assert (task_root / "tests/runtime/nl2repobench/domain/command_plan.py").is_file()
     assert not (task_root / "tests/runtime/nl2repobench/verification/models.py").exists()
     assert not (task_root / "tests/runtime/nl2repobench/verification/node_models.py").exists()
     assert (task_root / "tests/runtime/nl2repobench/verification/candidate_install.py").is_file()
@@ -372,6 +390,8 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "--reason verifier-internal-error" in test_script
     assert "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1" in test_script
     assert "verification.command_plan" in test_script
+    assert "--identity python+uv" in test_script
+    assert "--report-format pytest-junit-xml-v1" in test_script
     assert "setsid runuser" not in test_script
     assert "env HOME=/root" in test_script
     assert "PYTHONDONTWRITEBYTECODE=1" in test_script
@@ -556,9 +576,8 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         },
     )
     commands = store.put_bytes(
-        b'{"candidate_install":"pip-target-no-deps-v1",'
-        b'"runner":"pytest-subprocess-boundary-v1","schema_version":"1.0",'
-        b'"test_root":"/tests/private"}\n',
+        _python_plan_bytes(),
+        media_type="application/vnd.nl2repobench.command-plan+json",
         visibility=Visibility.PRIVATE,
     )
     source_dir = tmp_path / "catalog/sources/production"
@@ -637,16 +656,61 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         compiler.compile_task(source_dir, tmp_path / "output")
 
 
-def test_runtime_command_plan_rejects_modified_protocol(tmp_path) -> None:
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("identity", "go+go-modules"),
+        ("runner", "go-test-subprocess-boundary-v1"),
+        ("candidate_install", "go-modules-offline-v1"),
+        ("report_format", "go-test-json-v1"),
+    ],
+)
+def test_python_command_plan_rejects_modified_semantics(
+    tmp_path: Path,
+    field: str,
+    value: str,
+) -> None:
+    payload = {**EXPECTED_PLAN, field: value}
     plan = tmp_path / "command-plan.json"
-    plan.write_text(
-        '{"schema_version":"1.0","runner":"pytest-private-tree-v1",'
-        '"candidate_install":"pip-target-no-deps-v1","test_root":"/tests/private"}',
-        encoding="utf-8",
-    )
+    plan.write_text(json.dumps(payload), encoding="utf-8")
 
     with pytest.raises(ValueError, match="allowlisted verifier protocol"):
         validate_command_plan(plan)
+
+    store = FileArtifactStore(tmp_path / "artifacts")
+    reference = store.put_bytes(
+        canonical_json(CommandPlan.model_validate(payload)) + b"\n",
+        media_type="application/vnd.nl2repobench.command-plan+json",
+        visibility=Visibility.PRIVATE,
+    )
+    compiler = HarborCompiler(
+        TOOLCHAIN,
+        artifact_resolver=_private_resolver(store, tmp_path),
+    )
+    with pytest.raises(HarborCompileError, match="allowlisted verifier protocol"):
+        compiler._resolve_command_plan(reference)  # noqa: SLF001
+
+
+def test_python_command_plan_accepts_exact_adapter_semantics(tmp_path: Path) -> None:
+    data = _python_plan_bytes()
+    plan = tmp_path / "command-plan.json"
+    plan.write_bytes(data)
+    validate_command_plan(plan)
+    assert load_python_command_plan(data) == CommandPlan.model_validate(EXPECTED_PLAN)
+
+    store = FileArtifactStore(tmp_path / "artifacts")
+    reference = store.put_bytes(
+        data,
+        media_type="application/vnd.nl2repobench.command-plan+json",
+        visibility=Visibility.PRIVATE,
+    )
+    compiler = HarborCompiler(
+        TOOLCHAIN,
+        artifact_resolver=_private_resolver(store, tmp_path),
+    )
+    assert compiler._resolve_command_plan(reference) == CommandPlan.model_validate(  # noqa: SLF001
+        EXPECTED_PLAN
+    )
 
 
 def test_dependency_lock_requires_hashes() -> None:
@@ -674,9 +738,8 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
         lock_files={"requirements.lock.txt": b""},
     )
     commands = store.put_bytes(
-        b'{"candidate_install":"pip-target-no-deps-v1",'
-        b'"runner":"pytest-subprocess-boundary-v1","schema_version":"1.0",'
-        b'"test_root":"/tests/private"}\n',
+        _python_plan_bytes(report_format="custom-json-v1"),
+        media_type="application/vnd.nl2repobench.command-plan+json",
         visibility=Visibility.PRIVATE,
     )
     verifier_bundle = _canonical_bundle(

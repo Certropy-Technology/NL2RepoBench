@@ -26,6 +26,10 @@ from nl2repobench.storage.artifacts import (
 )
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
+from nl2repobench.verification.command_plan import (
+    expected_python_command_plan,
+    load_python_command_plan,
+)
 
 from .bundle_io import (
     BundleLimits,
@@ -35,7 +39,7 @@ from .dependency_contract import (
     materialize_dependency_bundle,
     validate_dependency_artifacts,
 )
-from .models import VerifierCommandPlan, load_command_plan, load_toolchain_lock
+from .models import VerifierCommandPlan, load_toolchain_lock
 from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
     TaskWriterError,
@@ -133,6 +137,7 @@ class HarborCompiler:
         output_root.mkdir(parents=True, exist_ok=True)
         temporary_root = Path(tempfile.mkdtemp(prefix=f".{manifest.task_id}-", dir=output_root))
         try:
+            command_plan = self._select_command_plan(manifest, allow_incomplete)
             dependency_lock = self._resolve_dependency_lock(manifest, allow_incomplete)
             self._write_instruction(source_dir, source.instruction, temporary_root)
             self._write_environment(manifest, temporary_root, dependency_lock, allow_incomplete)
@@ -141,6 +146,7 @@ class HarborCompiler:
                 manifest,
                 temporary_root,
                 dependency_lock,
+                command_plan,
                 allow_incomplete,
             )
             self._write_solution(
@@ -277,6 +283,7 @@ RUN python -m pip install --no-cache-dir --no-index --require-hashes \\
         manifest: TaskManifest,
         task_root: Path,
         dependency_lock: bytes,
+        command_plan: VerifierCommandPlan,
         allow_incomplete: bool,
     ) -> None:
         tests_root = task_root / "tests"
@@ -295,17 +302,6 @@ RUN python -m pip install --no-cache-dir --no-index --require-hashes \\
 
         atomic_write(tests_root / "candidate-requirements.lock.txt", dependency_lock)
         custom_verifier = manifest.verifier is not None and not allow_incomplete
-        if allow_incomplete:
-            command_plan = VerifierCommandPlan(
-                identity=f"python+{manifest.dependency_bundle.package_manager.value}",
-                runner="pytest-subprocess-boundary-v1",
-                candidate_install="pip-target-no-deps-v1",
-                report_format="pytest-junit-xml-v1",
-            )
-        else:
-            command_artifact = manifest.tests.commands_artifact
-            assert command_artifact is not None
-            command_plan = self._resolve_command_plan(command_artifact)
         atomic_write(
             tests_root / "command-plan.json",
             canonical_json(command_plan) + b"\n",
@@ -390,14 +386,49 @@ WORKDIR /tests
         image_name = environment.base_image.split("@", 1)[0]
         return f"{image_name}@{environment.base_image_digest}"
 
-    def _resolve_command_plan(self, reference: ArtifactRef) -> VerifierCommandPlan:
+    @staticmethod
+    def _command_plan_semantics(manifest: TaskManifest) -> tuple[str, str]:
+        return (
+            f"python+{manifest.dependency_bundle.package_manager.value}",
+            manifest.tests.report_format,
+        )
+
+    def _select_command_plan(
+        self,
+        manifest: TaskManifest,
+        allow_incomplete: bool,
+    ) -> VerifierCommandPlan:
+        identity, report_format = self._command_plan_semantics(manifest)
+        if allow_incomplete:
+            return expected_python_command_plan(
+                identity=identity,
+                report_format=report_format,
+            )
+        reference = manifest.tests.commands_artifact
+        if reference is None:
+            raise HarborCompileError("production Python task requires commands_artifact")
+        return self._resolve_command_plan(
+            reference,
+            identity=identity,
+            report_format=report_format,
+        )
+
+    def _resolve_command_plan(
+        self,
+        reference: ArtifactRef,
+        *,
+        identity: str = "python+uv",
+        report_format: str = "pytest-junit-xml-v1",
+    ) -> VerifierCommandPlan:
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required")
         if reference.media_type != "application/vnd.nl2repobench.command-plan+json":
             raise HarborCompileError("canonical runtime requires command-plan media type")
         try:
-            return load_command_plan(
-                self.artifact_resolver.read_bytes(reference, max_bytes=4 * 1024 * 1024)
+            return load_python_command_plan(
+                self.artifact_resolver.read_bytes(reference, max_bytes=4 * 1024 * 1024),
+                identity=identity,
+                report_format=report_format,
             )
         except (ArtifactStoreError, OSError, ValueError) as exc:
             raise HarborCompileError(str(exc)) from exc
@@ -588,6 +619,7 @@ WORKDIR /tests
         verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
+        command_identity, command_report = self._command_plan_semantics(manifest)
         return f"""#!/usr/bin/env bash
 set -uo pipefail
 
@@ -619,7 +651,9 @@ elif [[ "$network_exit" -ne 0 ]]; then
 fi
 
 if ! python -I -m nl2repobench.verification.command_plan \
-  --path /tests/command-plan.json; then
+  --path /tests/command-plan.json \
+  --identity {shlex.quote(command_identity)} \
+  --report-format {shlex.quote(command_report)}; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} \
     --runtime python \
@@ -743,6 +777,7 @@ exit 0
             for name, value in sorted(manifest.verifier.environment.items())
         )
         verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
+        command_identity, command_report = self._command_plan_semantics(manifest)
         return f"""#!/usr/bin/env bash
 set -uo pipefail
 rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
@@ -759,6 +794,15 @@ if [[ "$network_exit" -eq 1 ]]; then
     --reason verifier-network-available
   exit 0
 elif [[ "$network_exit" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --runtime python --metric-contract {metric} \
+    --reason verifier-internal-error
+  exit 0
+fi
+if ! python -I -m nl2repobench.verification.command_plan \
+  --path /tests/command-plan.json \
+  --identity {shlex.quote(command_identity)} \
+  --report-format {shlex.quote(command_report)}; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-internal-error

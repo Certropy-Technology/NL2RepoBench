@@ -12,7 +12,12 @@ from pydantic import Field, model_validator
 
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
-from nl2repobench.domain.command_plan import CommandPlan as VerifierCommandPlan
+from nl2repobench.domain.command_plan import (
+    MAX_COMMAND_PLAN_BYTES,
+)
+from nl2repobench.domain.command_plan import (
+    CommandPlan as VerifierCommandPlan,
+)
 
 PINNED_IMAGE = r"^[A-Za-z0-9._/-]+@sha256:[0-9a-f]{64}$"
 LOCAL_IMAGE_TAG = r"^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9._-]+$"
@@ -91,7 +96,7 @@ class HarborToolchainLock(RecordModel):
 
 
 def load_command_plan(data: bytes) -> VerifierCommandPlan:
-    if len(data) > 4096:
+    if len(data) > MAX_COMMAND_PLAN_BYTES:
         raise ValueError("invalid verifier command plan: exceeds size limit")
     try:
         plan = VerifierCommandPlan.model_validate(json.loads(data))

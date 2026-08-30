@@ -14,8 +14,10 @@ import pytest
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.canonical_models import Visibility
+from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.go_compiler import (
     GoHarborCompileError,
@@ -34,6 +36,11 @@ from nl2repobench.verification.go_bridge import (
     GoBridgeOperation,
     GoBridgeSpec,
     generate_go_bridge,
+)
+from nl2repobench.verification.go_command_plan import (
+    EXPECTED_GO_PLAN,
+    load_go_command_plan,
+    validate_go_command_plan,
 )
 from nl2repobench.verification.go_grader import grade_go_report
 from nl2repobench.verification.go_supervisor import run_go_bridge
@@ -88,6 +95,7 @@ def _canonical_go_source(
     module=None,
     verifier=None,
     oracle=None,
+    commands=None,
     expected_total: int = 1,
 ) -> Path:
     shutil.copytree(root / "catalog/sources/go-synthetic", destination)
@@ -151,7 +159,12 @@ def _canonical_go_source(
         },
     }
     if production:
-        assert module is not None and verifier is not None and oracle is not None
+        assert (
+            module is not None
+            and verifier is not None
+            and oracle is not None
+            and commands is not None
+        )
         task["source"] = {
             "status": "known",
             "upstream_url": "https://example.invalid/go-source",
@@ -177,7 +190,7 @@ def _canonical_go_source(
             offline_store=reference,
             inventory=reference,
         )
-        tests["commands_artifact"] = verifier.model_dump(mode="json")
+        tests["commands_artifact"] = commands.model_dump(mode="json")
         task["verifier"] = {
             "protocol": "custom-json-v1",
             "bundle": verifier.model_dump(mode="json"),
@@ -318,6 +331,12 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert 'language = "go"' in task
     assert 'package_manager = "go-modules"' in task
     assert (output / "tests/private/bridge.go").is_file()
+    command_plan = output / "tests/command-plan.json"
+    assert load_go_command_plan(command_plan.read_bytes()).identity == "go+go-modules"
+    validate_go_command_plan(command_plan)
+    assert "COPY command-plan.json /tests/command-plan.json" in (
+        output / "tests/Dockerfile"
+    ).read_text()
     assert (output / "tests/test.sh").stat().st_mode & 0o111
     assert not (output / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (output / "tests/docker-compose.yaml").read_text()
@@ -345,6 +364,7 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert '"status":"failed"' in test_script
     assert "--runner-exit-code 1" in test_script
     assert "cp -a /opt/go-module-bundle/vendor" in test_script
+    assert "verification.go_command_plan" in test_script
     bundle = json.loads((output / "bundle.manifest.json").read_text(encoding="utf-8"))
     private = PrivateArtifactsManifest.model_validate(bundle["private_artifacts"])
     assert private.task_id == "go-synthetic"
@@ -389,12 +409,18 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         store,
         {"solve.sh": b"#!/bin/sh\nexit 0\n"},
     )
+    commands = store.put_bytes(
+        canonical_json(CommandPlan.model_validate(EXPECTED_GO_PLAN)) + b"\n",
+        media_type="application/vnd.nl2repobench.command-plan+json",
+        visibility=Visibility.PRIVATE,
+    )
     _canonical_go_source(
         root,
         source,
         module=module_bundle,
         verifier=verifier_bundle,
         oracle=oracle_bundle,
+        commands=commands,
     )
     manifest_digest = CatalogCompiler(
         FileArtifactStore(tmp_path / "manifest-artifacts")
@@ -405,7 +431,12 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         manifest_digest=manifest_digest,
         purpose="compile",
         allowed_digests=frozenset(
-            {module_bundle.digest, verifier_bundle.digest, oracle_bundle.digest}
+            {
+                module_bundle.digest,
+                verifier_bundle.digest,
+                oracle_bundle.digest,
+                commands.digest,
+            }
         ),
         staging_root=(tmp_path / "compiled/go/private/aaaaaaaaaaaaaaaa").resolve(),
     )
@@ -421,6 +452,9 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         root / "toolchain.go.lock.toml",
         artifact_resolver=resolver,
     )
+    assert production._resolve_go_command_plan(commands) == CommandPlan.model_validate(  # noqa: SLF001
+        EXPECTED_GO_PLAN
+    )
     with pytest.raises(GoHarborCompileError, match="private-staging-contract-missing"):
         production.compile_task(source, tmp_path / "production")
 
@@ -428,6 +462,69 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
     _canonical_go_source(root, multi_leaf, expected_total=2)
     with pytest.raises(GoHarborCompileError, match="exactly one verifier-owned leaf"):
         development.compile_task(multi_leaf, tmp_path / "multi-output", allow_incomplete=True)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("identity", "python+uv"),
+        ("runner", "pytest-subprocess-boundary-v1"),
+        ("candidate_install", "pip-target-no-deps-v1"),
+        ("report_format", "pytest-junit-xml-v1"),
+    ],
+)
+def test_go_command_plan_rejects_other_adapter_semantics(field: str, value: str) -> None:
+    payload = {**EXPECTED_GO_PLAN, field: value}
+    data = canonical_json(CommandPlan.model_validate(payload)) + b"\n"
+
+    with pytest.raises(ValueError, match="allowlisted verifier protocol"):
+        load_go_command_plan(data)
+
+
+def test_go_compiler_requires_private_authorized_command_plan_media(tmp_path: Path) -> None:
+    root = Path(__file__).parents[1]
+    store = FileArtifactStore(tmp_path / "artifacts")
+    data = canonical_json(CommandPlan.model_validate(EXPECTED_GO_PLAN)) + b"\n"
+    commands = store.put_bytes(
+        data,
+        media_type="application/vnd.nl2repobench.command-plan+json",
+        visibility=Visibility.PRIVATE,
+    )
+    allowed = store.put_bytes(b"allowed", visibility=Visibility.PRIVATE)
+    authorization = PrivateArtifactAuthorization(
+        task_id="go-synthetic",
+        manifest_digest="sha256:" + "a" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({commands.digest}),
+        staging_root=(tmp_path / "staging").resolve(),
+    )
+    resolver = LocalArtifactResolver.scoped_private(
+        store,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
+    compiler = GoHarborCompiler(root / "toolchain.go.lock.toml", artifact_resolver=resolver)
+
+    wrong_media = commands.model_copy(update={"media_type": "application/json"})
+    with pytest.raises(GoHarborCompileError, match="command-plan media type"):
+        compiler._resolve_go_command_plan(wrong_media)  # noqa: SLF001
+
+    public = store.put_bytes(
+        data,
+        media_type="application/vnd.nl2repobench.command-plan+json",
+        visibility=Visibility.PUBLIC,
+    )
+    with pytest.raises(GoHarborCompileError, match="must be private"):
+        compiler._resolve_go_command_plan(public)  # noqa: SLF001
+
+    unauthorized = allowed.model_copy(
+        update={"media_type": "application/vnd.nl2repobench.command-plan+json"}
+    )
+    with pytest.raises(GoHarborCompileError, match="not authorized"):
+        compiler._resolve_go_command_plan(unauthorized)  # noqa: SLF001
 
 
 def test_go_network_script_distinguishes_network_and_internal_exit_codes() -> None:

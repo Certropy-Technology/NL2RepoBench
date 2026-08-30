@@ -18,6 +18,7 @@ from jsonschema import ValidationError as JsonSchemaValidationError
 from jsonschema import validate as validate_json_schema
 from pydantic import ValidationError as PydanticValidationError
 
+from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_contract import (
     DependencyBundle,
     EnvironmentLock,
@@ -51,6 +52,8 @@ from nl2repobench.storage.canonical_ustar import (
     tree_digest,
 )
 from nl2repobench.storage.materialize import ArchiveKind, MaterializationLimits, materialize_archive
+from nl2repobench.verification.command_plan import load_python_command_plan
+from nl2repobench.verification.go_command_plan import load_go_command_plan
 from nl2repobench.verification.node_command_plan import load_node_command_plan
 
 
@@ -373,6 +376,72 @@ def test_migrated_command_plan_uses_adapter_contract(
     if identity.startswith("node+"):
         load_node_command_plan(data, candidate_install=candidate_install)  # type: ignore[arg-type]
     else:
+        load_command_plan(data)
+
+
+def test_python_and_go_consumers_load_canonical_plan_larger_than_four_kib() -> None:
+    steps = [
+        {
+            "step_id": f"step-{index:04d}",
+            "argv": ["runner", "x" * 160],
+            "cwd": ".",
+            "environment": {"CASE": str(index)},
+            "timeout_sec": 600,
+        }
+        for index in range(32)
+    ]
+    plans = (
+        (
+            {
+                "identity": "python+uv",
+                "runner": "pytest-subprocess-boundary-v1",
+                "candidate_install": "pip-target-no-deps-v1",
+                "report_format": "pytest-junit-xml-v1",
+                "steps": steps,
+            },
+            load_python_command_plan,
+        ),
+        (
+            {
+                "identity": "go+go-modules",
+                "runner": "go-test-subprocess-boundary-v1",
+                "candidate_install": "go-modules-offline-v1",
+                "report_format": "go-test-json-v1",
+                "steps": steps,
+            },
+            load_go_command_plan,
+        ),
+    )
+    for payload, loader in plans:
+        plan = CommandPlan.model_validate(payload)
+        data = canonical_json(plan) + b"\n"
+        assert 4096 < len(data) <= 4 * 1024 * 1024
+        assert load_command_plan(data) == plan
+        assert loader(data) == plan
+
+
+def test_shared_command_plan_loader_rejects_more_than_four_mib() -> None:
+    plan = CommandPlan.model_validate(
+        {
+            "identity": "python+uv",
+            "runner": "pytest-subprocess-boundary-v1",
+            "candidate_install": "pip-target-no-deps-v1",
+            "report_format": "pytest-junit-xml-v1",
+            "steps": [
+                {
+                    "step_id": "large",
+                    "argv": ["runner", "x" * (4 * 1024 * 1024)],
+                    "cwd": ".",
+                    "environment": {},
+                    "timeout_sec": 600,
+                }
+            ],
+        }
+    )
+    data = canonical_json(plan) + b"\n"
+    assert len(data) > 4 * 1024 * 1024
+
+    with pytest.raises(ValueError, match="exceeds size limit"):
         load_command_plan(data)
 
 

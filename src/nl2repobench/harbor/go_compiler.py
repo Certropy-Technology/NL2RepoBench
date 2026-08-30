@@ -14,17 +14,24 @@ from typing import Any
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.canonical_contract import RuntimeLanguage, TaskManifest, TaskSource
-from nl2repobench.domain.canonical_models import ArtifactRef
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
+from nl2repobench.domain.command_plan import MAX_COMMAND_PLAN_BYTES, CommandPlan
 from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
     LocalArtifactResolver,
+    PrivateArtifactAuthorization,
 )
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
+from nl2repobench.verification.go_command_plan import (
+    expected_go_command_plan,
+    load_go_command_plan,
+)
 
 from .bundle_io import BundleLimits
 from .models import AgentRuntimeImageLock
@@ -54,9 +61,11 @@ def go_network_failure_reason(exit_code: int) -> str | None:
 
 
 GO_RUNTIME_LOCK_FILES = (
+    "src/nl2repobench/domain/command_plan.py",
     "src/nl2repobench/verification/go_bridge.py",
     "src/nl2repobench/verification/go_bridge_proxy.py",
     "src/nl2repobench/verification/go_contract_runner.py",
+    "src/nl2repobench/verification/go_command_plan.py",
     "src/nl2repobench/verification/go_grader.py",
     "src/nl2repobench/verification/go_supervisor.py",
     "src/nl2repobench/verification/normalize/go_json.py",
@@ -221,6 +230,7 @@ class GoHarborCompiler:
         try:
             write_instruction(source_dir, source.instruction, temporary)
             self._write_environment(temporary)
+            self._write_command_plan(manifest, temporary, allow_incomplete)
             self._write_dependencies(source, fixture, temporary, allow_incomplete)
             self._write_verifier(source, fixture, temporary, allow_incomplete)
             self._write_solution(source, fixture, temporary, allow_incomplete)
@@ -341,6 +351,7 @@ COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
 RUN python3 -m pip install --break-system-packages --no-cache-dir --require-hashes \\
   -r /tmp/verifier-requirements.lock.txt
 COPY --chmod=0500 private /tests/private
+COPY command-plan.json /tests/command-plan.json
 COPY dependencies /opt/go-module-bundle
 COPY --chmod=0555 test.sh /tests/test.sh
 RUN useradd --uid 10001 --create-home candidate \\
@@ -354,6 +365,44 @@ WORKDIR /tests
             b"services:\n  main:\n    network_mode: none\n",
         )
         os.chmod(tests_root / "test.sh", 0o755)
+
+    def _write_command_plan(
+        self,
+        manifest: TaskManifest,
+        task_root: Path,
+        allow_incomplete: bool,
+    ) -> None:
+        if allow_incomplete:
+            plan = expected_go_command_plan()
+        else:
+            reference = manifest.tests.commands_artifact
+            if reference is None:
+                raise GoHarborCompileError("production Go task requires commands_artifact")
+            plan = self._resolve_go_command_plan(reference)
+        atomic_write(task_root / "tests/command-plan.json", canonical_json(plan) + b"\n")
+
+    def _resolve_go_command_plan(self, reference: ArtifactRef) -> CommandPlan:
+        if self.artifact_resolver is None:
+            raise GoHarborCompileError("private artifact resolver is required")
+        if not isinstance(
+            self.artifact_resolver.authorization,
+            PrivateArtifactAuthorization,
+        ):
+            raise GoHarborCompileError(
+                "private artifact authorization is required for the Go command plan"
+            )
+        if reference.visibility is not Visibility.PRIVATE:
+            raise GoHarborCompileError("Go commands_artifact must be private")
+        if reference.media_type != "application/vnd.nl2repobench.command-plan+json":
+            raise GoHarborCompileError("canonical runtime requires command-plan media type")
+        try:
+            data = self.artifact_resolver.read_bytes(
+                reference,
+                max_bytes=MAX_COMMAND_PLAN_BYTES,
+            )
+            return load_go_command_plan(data)
+        except (ArtifactStoreError, OSError, ValueError) as exc:
+            raise GoHarborCompileError(f"invalid Go command plan: {exc}") from exc
 
     def _write_dependencies(
         self,
@@ -546,6 +595,12 @@ if [[ "$network_exit" -eq 1 ]]; then
   exit 0
 fi
 if [[ "$network_exit" -ne 0 ]]; then
+  grade --reason verifier-internal-error
+  exit 0
+fi
+VALIDATE_PLAN='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
+VALIDATE_PLAN+='from nl2repobench.verification.go_command_plan import main; main()'
+if ! python3 -I -c "$VALIDATE_PLAN" --path /tests/command-plan.json; then
   grade --reason verifier-internal-error
   exit 0
 fi

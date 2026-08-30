@@ -9,6 +9,8 @@ from pydantic import Field, field_validator, model_validator
 
 from .canonical_models import CanonicalRecord
 
+MAX_COMMAND_PLAN_BYTES = 4 * 1024 * 1024
+
 
 class CommandStep(CanonicalRecord):
     """One bounded, argv-based verifier step."""
@@ -68,4 +70,4 @@ class CommandPlan(CanonicalRecord):
         return self
 
 
-__all__ = ["CommandPlan", "CommandStep"]
+__all__ = ["CommandPlan", "CommandStep", "MAX_COMMAND_PLAN_BYTES"]
