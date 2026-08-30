@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "authoring": {"batch_id": "python-author-wave2-20260828", "mode": "author-one", "task_id": "wcwidth"},
+  "source": {
+    "upstream_url": "https://github.com/jquast/wcwidth",
+    "revision": "551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9",
+    "archive_sha256": "sha256:d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6",
+    "archive_size_bytes": 2263040,
+    "license_spdx": "MIT",
+    "submodules": ["ucs-detect@4ce9df355f17ee8278768d05dcbdde878b80dd48"]
+  },
+  "environment": {
+    "python_version": "3.12.14",
+    "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "platform": "linux/amd64",
+    "harbor_version": "0.21.0",
+    "uv_version": "0.11.32"
+  },
+  "dependencies": {
+    "runtime": [],
+    "build": ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"],
+    "lock_path": "provenance/requirements.lock.txt"
+  },
+  "tests": {
+    "upstream_python_files": 18,
+    "upstream_static_test_functions": 389,
+    "frozen_verifier_total": 36,
+    "excluded": ["benchmark-only cases", "downloaded Unicode conformance fixtures", "attached-terminal detection probes"]
+  }
+}
