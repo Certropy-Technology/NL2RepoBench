@@ -1,0 +1,16 @@
+{
+  "task_id": "tokenizers",
+  "upstream_collection": {"python_files": 19, "test_functions": 223, "network_or_platform_cases": true},
+  "frozen_private_collection": 32,
+  "frozen_collection_source": "deterministic custom-json-v1 adapter scenarios derived from frozen public APIs and upstream binding assertions",
+  "behavior_groups": {
+    "packaging": ["packaging-surface", "metadata-dependencies", "module-reexports"],
+    "encoding": ["wordlevel-encoding", "encoding-fields", "unknown-token", "pretokenized", "pair-processing", "batch-order", "decode"],
+    "configuration": ["padding", "padding-multiple", "truncation", "serialization", "added-tokens", "special-tokens"],
+    "components": ["normalizer", "pretokenizer", "wordpiece", "bert-wrapper", "bytelevel-wrapper", "char-wrapper", "unigram-wrapper"],
+    "training": ["wordlevel-training", "bpe-training", "unigram-training", "trainer-special-tokens"],
+    "async": ["async-batch"],
+    "boundaries": ["invalid-input", "local-save-load", "vocabulary-api"]
+  },
+  "excluded_surfaces": ["Hub downloads", "SentencePiece protobuf", "live network", "multiprocessing", "platform-specific free-threaded integration"]
+}

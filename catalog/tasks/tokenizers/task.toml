@@ -1,0 +1,63 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/tokenizers"
+version = "1.0.0"
+description = "Build the frozen Hugging Face tokenizers Python package from an empty workspace and reproduce deterministic tokenizer construction, encoding, training, padding, truncation, serialization, and provided-tokenizer contracts through a separate offline verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "tokenizers",
+    "bpe",
+    "wordpiece",
+    "unigram",
+    "rust",
+    "json",
+    "offline",
+]
+
+[metadata]
+difficulty = "hard"
+category = "nlp-tokenization"
+tags = [
+    "python",
+    "rust-extension",
+    "tokenization",
+    "bpe",
+    "wordpiece",
+    "training",
+    "serialization",
+    "offline",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 32
+canonical_manifest_digest = "sha256:c2853e569f2c520811599fd7520aafa95786a7115fb4b4892d9e315711e23c80"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

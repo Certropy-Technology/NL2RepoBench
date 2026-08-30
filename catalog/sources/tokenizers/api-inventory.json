@@ -1,0 +1,17 @@
+{
+  "task_id": "tokenizers",
+  "source_revision": "d5827816baedcbf1cb5b452dea8048150b6872df",
+  "source_digest": "sha256:ee078d644cd1e414f7a27a3085124577584dccbdeb4bc3f0addc4b065bc4b2d1",
+  "upstream_python_files": 46,
+  "binding_python_files": 16,
+  "binding_nonblank_noncomment_loc": 1479,
+  "upstream_test_files": 19,
+  "upstream_test_functions": 223,
+  "public_surfaces": {
+    "tokenizers": ["Tokenizer", "Encoding", "AddedToken", "models", "normalizers", "pre_tokenizers", "processors", "trainers", "decoders", "__version__"],
+    "models": ["BPE", "WordLevel", "WordPiece", "Unigram"],
+    "implementations": ["CharBPETokenizer", "ByteLevelBPETokenizer", "SentencePieceBPETokenizer", "SentencePieceUnigramTokenizer", "BertWordPieceTokenizer"],
+    "components": ["Lowercase", "NFKC", "Sequence", "Whitespace", "WhitespaceSplit", "BertPreTokenizer", "ByteLevel", "Metaspace", "TemplateProcessing", "BertProcessing", "BpeTrainer", "WordLevelTrainer", "WordPieceTrainer", "UnigramTrainer"]
+  },
+  "deterministic_adaptation": "Private custom-json-v1 scenarios exercise JSON-serializable local pipeline behavior through candidate_client; network Hub, SentencePiece protobuf, platform and multiprocessing surfaces are excluded."
+}

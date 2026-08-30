@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tokenizers",
+  "instruction_to_tests": {
+    "Supports": ["packaging-surface", "metadata-dependencies", "module-reexports"],
+    "Top-level package and model pipeline": ["wordlevel-encoding", "encoding-fields", "unknown-token", "pretokenized", "pair-processing", "batch-order", "decode", "padding", "padding-multiple", "truncation", "serialization", "added-tokens", "special-tokens", "async-batch", "vocabulary-api", "invalid-input", "local-save-load"],
+    "Components and trainers": ["component-reexports", "normalizer", "pretokenizer", "wordpiece", "bert-wrapper", "bytelevel-wrapper", "char-wrapper", "unigram-wrapper", "wordlevel-training", "bpe-training", "unigram-training", "trainer-special-tokens"],
+    "Boundary behavior": ["unknown-token", "encoding-fields", "async-batch"]
+  },
+  "test_to_instruction": "Every frozen leaf ID appears exactly once across the instruction sections and maps to a named public behavior.",
+  "excluded_surfaces": "Live Hub/network, protobuf SentencePiece loading, multiprocessing, and platform-specific integration are explicit implementation boundaries with no frozen private leaf."
+}
