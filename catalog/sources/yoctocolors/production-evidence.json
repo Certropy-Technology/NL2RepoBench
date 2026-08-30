@@ -1,0 +1,209 @@
+{
+  "schema_version": "1.0",
+  "task_id": "yoctocolors",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 80,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/yoctocolors",
+    "revision": "a02a16ec36fbd58a0848e95598fb4913c54c7591",
+    "source_archive_sha256": "sha256:eae1cee24fce2d4242f126fcb614bd4d446c4390b2ee299674425cf35f69e640",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/yoctocolors/source/license",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789e0",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "verification": {
+      "command": "git fetch --depth 1 origin a02a16ec36fbd58a0848e95598fb4913c54c7591; git archive --format=tar a02a16ec36fbd58a0848e95598fb4913c54c7591; sha256sum --check source archive",
+      "exit_code": 0,
+      "archive_size_bytes": 51200,
+      "fetch_log": ".nl2repo/authoring-work/node-author-wave2-20260828/yoctocolors/logs/source-fetch.log",
+      "fetch_log_sha256": "sha256:c1fa7cd00a67ca63d845ac0154197ffd590f9055057a67b50a90333c43baeb3e"
+    }
+  },
+  "environment": {
+    "os_name": "debian-bookworm-amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "locked_agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "locked_agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "local_agent_runtime_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:7bb469009b242bd60e22888692ac44b21fe288f729eb06beff34cb4175a3821b",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:7bb469009b242bd60e22888692ac44b21fe288f729eb06beff34cb4175a3821b",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 80,
+    "commands_artifact": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+    "test_bundle": "sha256:d3c0c369c24225e4a840b201b108812e2d848b9bf597bf58734b012f81c99cae",
+    "collection": "80 node:test leaves; no collection errors",
+    "candidate_boundary": "candidate-boundary.json",
+    "preflight_report": ".nl2repo/authoring-work/node-author-wave2-20260828/yoctocolors/preflight-output/report.json",
+    "preflight_report_sha256": "sha256:b25cbefca5e477ea68678419f74a3f29fa6bb47ceb9521a79ffc70141a25a985"
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/final-compile/yoctocolors",
+    "bundle_manifest_sha256": "sha256:7eb5fb2b629af18aba473858e772f4bca29aba129f8aad46aae53be42fbcd449",
+    "canonical_manifest_digest": "sha256:aa647812cd1d6fe68a5f0cc207b412e23cf6f459622fc710cc2d1094f8f5f287",
+    "file_count": 79,
+    "repeat_compile": "byte-identical",
+    "allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/yoctocolors -a oracle --allow-agent-host github.com --job-name yoctocolors-oracle-final --jobs-dir .nl2repo/evidence/yoctocolors/final/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 80,
+    "collected": 80,
+    "passed": 80,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/yoctocolors/final/oracle/yoctocolors-oracle-final/yoctocolors__oUR6ggY/verifier/grading.json",
+      "sha256": "sha256:713cb3f85d796f2a12ae541ad09c0c034a59d4f100b16cecfbb8f690b21975c9"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/yoctocolors/final/oracle/yoctocolors-oracle-final/yoctocolors__oUR6ggY/verifier/network.json",
+      "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-empty -a oracle --job-name yoctocolors-empty-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/empty --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/empty/yoctocolors-empty-final/yoctocolors-empty__YJUz8Q9/verifier/grading.json", "sha256": "sha256:c58e8d83f09a90101f92394bc620aabacb9faefcc8131a5f2bd1f299ae6b2f76"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/empty/yoctocolors-empty-final/yoctocolors-empty__YJUz8Q9/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-stub -a oracle --job-name yoctocolors-stub-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/stub --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 80,
+      "passed": 2,
+      "reward": 0.025,
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/stub/yoctocolors-stub-final/yoctocolors-stub__jkNLMbe/verifier/grading.json", "sha256": "sha256:d6126ab63c628691376c7e740647f3366077ebf38d15e2efb84bfe3c1feb0876"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/stub/yoctocolors-stub-final/yoctocolors-stub__jkNLMbe/verifier/network.json", "sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-forgery -a oracle --job-name yoctocolors-forgery-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/forgery --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 80,
+      "passed": 2,
+      "reward": 0.025,
+      "candidate_written_reward": 1.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/forgery/yoctocolors-forgery-final/yoctocolors-forgery__DsHDmkz/verifier/grading.json", "sha256": "sha256:d6126ab63c628691376c7e740647f3366077ebf38d15e2efb84bfe3c1feb0876"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/forgery/yoctocolors-forgery-final/yoctocolors-forgery__DsHDmkz/verifier/network.json", "sha256": "sha256:cb41000696c81c7c867a03e1be4de2c7432a3377c8d1a811cd327428cfac0bb0"}
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-install-script -a oracle --job-name yoctocolors-install-script-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/install-script --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/install-script/yoctocolors-install-script-final/yoctocolors-install-script__mErEmsV/verifier/grading.json", "sha256": "sha256:c58e8d83f09a90101f92394bc620aabacb9faefcc8131a5f2bd1f299ae6b2f76"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/install-script/yoctocolors-install-script-final/yoctocolors-install-script__mErEmsV/verifier/network.json", "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"}
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-loader-hook -a oracle --job-name yoctocolors-loader-hook-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/loader-hook --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 80,
+      "passed": 1,
+      "reward": 0.0125,
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/loader-hook/yoctocolors-loader-hook-final/yoctocolors-loader-hook__dnjTJqc/verifier/grading.json", "sha256": "sha256:038e8576d2105dbb8e046bcc50d02e90411219af1acfc03a1513f55f0e117a46"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/loader-hook/yoctocolors-loader-hook-final/yoctocolors-loader-hook__dnjTJqc/verifier/network.json", "sha256": "sha256:cdf744142241ecbbf1c81b6514ca3895ada6650aab7315e5987c46bde13a1c9f"}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-call-hang -a oracle --job-name yoctocolors-call-hang-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/call-hang --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 80,
+      "passed": 1,
+      "reward": 0.0125,
+      "bounded": true,
+      "wall_seconds": 298,
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/call-hang/yoctocolors-call-hang-final/yoctocolors-call-hang__TRJiZSB/verifier/grading.json", "sha256": "sha256:a9637e2f91e941c2b011f36966a864d6089dda0cb45d80a5a4e03a6c8ecbeea7"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/call-hang/yoctocolors-call-hang-final/yoctocolors-call-hang__TRJiZSB/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-controls-yoctocolors/yoctocolors-offline -a oracle --job-name yoctocolors-offline-final --jobs-dir .nl2repo/evidence/yoctocolors/final/controls/offline --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 80,
+      "passed": 1,
+      "reward": 0.0125,
+      "completed": true,
+      "public_network_available": false,
+      "public_hostname_probe": false,
+      "numeric_ip_probe": false,
+      "grading": {"path": ".nl2repo/evidence/yoctocolors/final/controls/offline/yoctocolors-offline-final/yoctocolors-offline__FCMraNA/verifier/grading.json", "sha256": "sha256:a9637e2f91e941c2b011f36966a864d6089dda0cb45d80a5a4e03a6c8ecbeea7"},
+      "network": {"path": ".nl2repo/evidence/yoctocolors/final/controls/offline/yoctocolors-offline-final/yoctocolors-offline__FCMraNA/verifier/network.json", "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8"}
+    }
+  },
+  "static_gates": {
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/yoctocolors --output .nl2repo/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    "repeat_compile_byte_identical": true,
+    "docker_agent_build": {"exit_code": 0, "image_id": "sha256:09a5716bda88c0dc1c681184608e5691770e1ce6f844cd7fa4e11d2c30468659"},
+    "docker_verifier_build": {"exit_code": 0, "image_id": "sha256:2a98fe6bc68c9eef7f04f4b0c2d7175854a924ff864d808719e3f32688716bdd"},
+    "node_production_gate": {"path": ".nl2repo/evidence/yoctocolors/final/production-gate.json", "exit_code": 0}
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this lane, as required.",
+    "The locked OpenHands image ID is unavailable locally; the local tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3. Restore sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f before any model Agent Run.",
+    "Independent blind review, traceability approval, generated catalog/tasks integration, dataset inclusion, pilot, and publication remain integrator-stage gates.",
+    "Docker builds emitted only constant --platform lint warnings."
+  ]
+}

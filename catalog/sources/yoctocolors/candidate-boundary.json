@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "yoctocolors",
+  "status": "implemented",
+  "purpose": "Exercise ESM exports, nested format composition, metadata, and declarations without importing candidate JavaScript into the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json-expression",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 2,
+    "cpu_seconds": 2,
+    "network": "none"
+  },
+  "operations": {
+    "evaluate": "Evaluate a bounded literal/concat/style expression against either named exports or the default namespace under an explicit FORCE_COLOR value.",
+    "metadata": "Return a bounded projection of package metadata, runtime export names, and declaration names."
+  },
+  "adapter_notes": [
+    "The trusted test process constructs only bounded JSON expressions.",
+    "A fixed inline child adapter reads and imports the installed candidate as UID 10001.",
+    "The child environment is rebuilt from an allowlist and removes NODE_OPTIONS, NODE_PATH, npm registry, proxy, and loader variables.",
+    "Every request starts a new process, preventing import-time color state or candidate mutations from crossing leaves."
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import",
+    "trusted report writes"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "yoctocolors",
+  "upstream": {
+    "framework": "ava",
+    "command": "npm install --ignore-scripts --no-audit --no-fund && npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "functional_tests": 78,
+    "type_assertions": 1,
+    "passed": 78,
+    "failed": 0,
+    "lint_and_typecheck": "xo and tsd completed successfully",
+    "log": ".nl2repo/authoring-work/node-author-wave2-20260828/yoctocolors/logs/upstream-baseline.log",
+    "log_sha256": "sha256:0f0e0037a532e45fb3397be2952bf0d01ef794492d46c19cf836c1f6da7918bb"
+  },
+  "verifier": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 80,
+    "boundary": "verifier-owned UID-10001 child adapter with bounded JSON expression requests",
+    "groups": {
+      "exact_style_sequences": 61,
+      "nesting_and_literal_close_sequences": 13,
+      "color_detection_coercion_empty_and_default": 4,
+      "package_and_declaration_surface": 2
+    },
+    "preflight": {
+      "collected": 80,
+      "passed": 80,
+      "failed": 0,
+      "collection_errors": 0,
+      "report": ".nl2repo/authoring-work/node-author-wave2-20260828/yoctocolors/preflight-output/report.json",
+      "report_sha256": "sha256:b25cbefca5e477ea68678419f74a3f29fa6bb47ceb9521a79ffc70141a25a985"
+    }
+  }
+}

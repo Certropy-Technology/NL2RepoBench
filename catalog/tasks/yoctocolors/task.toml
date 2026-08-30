@@ -1,0 +1,66 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/yoctocolors"
+version = "1.0.0"
+description = "Build the dependency-free yoctocolors 2.2.0 ESM package with deterministic ANSI styles, color detection, nesting, and TypeScript declarations."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "terminal",
+    "ansi",
+    "colors",
+    "formatting",
+]
+
+[metadata]
+difficulty = "easy"
+category = "terminal-styling"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "terminal",
+    "ansi",
+    "colors",
+    "formatting",
+    "separate-verifier",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 80
+canonical_manifest_digest = "sha256:aa647812cd1d6fe68a5f0cc207b412e23cf6f459622fc710cc2d1094f8f5f287"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
