@@ -11,8 +11,9 @@ import sys
 import tomllib
 from pathlib import Path
 
+from nl2repobench.harbor.private_artifacts import compile_resolver_for_source
 from nl2repobench.harbor.registry import HarborCompilerRegistry
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import FileArtifactStore
 
 
 class SelectedGateError(ValueError):
@@ -146,10 +147,7 @@ def validate(
     for root in (first_root, second_root):
         if root.exists():
             shutil.rmtree(root)
-    resolver = LocalArtifactResolver(
-        FileArtifactStore(artifact_root),
-        allow_private=True,
-    )
+    artifact_store = FileArtifactStore(artifact_root)
     registry = HarborCompilerRegistry.default()
     rows: list[dict[str, object]] = []
     for task_id in task_ids:
@@ -172,6 +170,11 @@ def validate(
             checked_in,
             str(runtime["image"]),
             str(runtime["image_id"]),
+        )
+        resolver = compile_resolver_for_source(
+            source_root,
+            artifact_store=artifact_store,
+            compiled_root=(repository_root / ".nl2repo/compiled").resolve(),
         )
         first = registry.compile_task(
             source_root,

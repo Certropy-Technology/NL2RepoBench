@@ -343,19 +343,11 @@ WORKDIR /tests
                     )
                 copy_tree(dependencies, destination)
             else:
-                reference = source.dependencies.module_bundle
-                if reference is None:
-                    raise GoHarborCompileError(
-                        "Go production task requires dependencies.module_bundle"
-                    )
-                self._extract_private_bundle(reference, destination)
+                raise GoHarborCompileError(
+                    "private-staging-contract-missing: production Go closure staging requires F0.5"
+                )
             copy_tree(destination, task_root / "environment/go-module-bundle")
-            GoModulesPackageManager().validate_offline_store(
-                destination,
-                lockfile=destination / "go.mod",
-                manifest=destination / "module.manifest.json",
-                expected_version=self.go_version,
-            )
+            GoModulesPackageManager().validate_lock(destination, self.go_version)
         except (TaskWriterError, PackageManagerError) as exc:
             raise GoHarborCompileError(f"invalid Go module closure: {exc}") from exc
 

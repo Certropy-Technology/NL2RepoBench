@@ -4,6 +4,7 @@ from .artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
     LocalArtifactResolver,
+    MigrationArtifactAuthorization,
     PrivateArtifactAuthorization,
     PublicArtifactAuthorization,
 )
@@ -33,6 +34,7 @@ __all__ = [
     "ArtifactStoreError",
     "FileArtifactStore",
     "LocalArtifactResolver",
+    "MigrationArtifactAuthorization",
     "PrivateArtifactAuthorization",
     "PublicArtifactAuthorization",
     "CanonicalArchiveError",

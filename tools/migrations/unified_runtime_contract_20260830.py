@@ -9,26 +9,32 @@ from __future__ import annotations
 
 import argparse
 import ctypes
+import fcntl
 import hashlib
 import io
 import json
 import os
+import re
 import shlex
 import shutil
+import subprocess
 import sys
 import tarfile
 import tempfile
 import tomllib
+from contextlib import contextmanager
 from pathlib import Path, PurePosixPath
 from typing import Any, cast
 
 import tomli_w
 
 from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.domain.runtime import RuntimeDiscriminator
+from nl2repobench.package_managers.registry import PackageManagerRegistry
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
-    PrivateArtifactAuthorization,
+    MigrationArtifactAuthorization,
 )
 from nl2repobench.storage.canonical_ustar import encode_files, tree_digest, tree_entries
 
@@ -46,6 +52,10 @@ STATES = {
     "recovery-required",
 }
 SELECTED = ("ministats", "canonicalize", "node-pnpm-synthetic", "go-google-uuid")
+MAX_LEGACY_ARCHIVE_BYTES = 2 * 1024 * 1024 * 1024
+MAX_LEGACY_MEMBERS = 100_000
+MAX_LEGACY_MEMBER_BYTES = 512 * 1024 * 1024
+PRIVATE_STAGING_CONTRACT = Path(__file__).parents[2] / "harbor-runner/private-staging-contract.json"
 
 
 class MigrationError(RuntimeError):
@@ -99,6 +109,8 @@ def transform_lock_artifact(
     toolchain_digest: str,
     store_files: dict[str, bytes] | None = None,
     lock_files: dict[str, bytes] | None = None,
+    offline_smoke_command_id: str | None = None,
+    expected_toolchain: str | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Repackage legacy lock/closure bytes into the three canonical CAS refs.
 
@@ -111,19 +123,29 @@ def transform_lock_artifact(
         raise MigrationError(
             "plan-invalid", "plan", "dependency identity must be language-qualified"
         )
-    manager = identity.split("+", 1)[1]
+    language, manager = identity.split("+", 1)
+    if not offline_smoke_command_id:
+        raise MigrationError(
+            "plan-invalid", "plan", "dependency closure has no executed offline smoke"
+        )
     lock_name = {
         "uv": "requirements.lock.txt",
         "pip": "requirements.lock.txt",
         "npm": "package-lock.json",
         "pnpm": "pnpm-lock.yaml",
         "go-modules": "go.mod",
+        "none": None,
     }.get(manager)
-    if lock_name is None:
+    if manager not in {"uv", "pip", "npm", "pnpm", "go-modules", "none"}:
         raise MigrationError("plan-invalid", "plan", f"unsupported dependency identity: {identity}")
-    store_files = store_files or {}
-    lock_files = lock_files or {lock_name: lock_bytes}
-    if lock_name not in lock_files:
+    if manager == "none" and language != "python":
+        raise MigrationError("plan-invalid", "plan", "only python+none may have a known closure")
+    if store_files is None:
+        raise MigrationError(
+            "plan-invalid", "plan", "offline dependency closure was not prepared"
+        )
+    lock_files = {} if lock_name is None else (lock_files or {lock_name: lock_bytes})
+    if lock_name is not None and lock_name not in lock_files:
         lock_files[lock_name] = lock_bytes
     lock_archive = encode_files(lock_files)
     store_archive = encode_files(store_files)
@@ -181,8 +203,35 @@ def transform_lock_artifact(
         "toolchain_digest": toolchain_digest,
         "lock": inventory("dependency-lock", lock_ref, lock_entries),
         "store": inventory("offline-store", store_ref, store_entries),
-        "offline_smoke": {"status": "passed", "command_id": "migration-closure-prepared-v1"},
+        "offline_smoke": {"status": "passed", "command_id": offline_smoke_command_id},
     }
+    if not expected_toolchain:
+        raise MigrationError("plan-invalid", "plan", "package-manager toolchain is unknown")
+    try:
+        runtime_identity = RuntimeDiscriminator(
+            language=language,
+            package_manager=manager,
+        )
+        adapter = PackageManagerRegistry.default().resolve(runtime_identity)
+        with tempfile.TemporaryDirectory(prefix="nl2repo-adapter-lock-") as lock_temporary:
+            lock_root = Path(lock_temporary)
+            _write_regular_files(lock_root, lock_files)
+            lock_summary = adapter.validate_lock(lock_root, expected_toolchain)
+        with tempfile.TemporaryDirectory(prefix="nl2repo-adapter-store-") as store_temporary:
+            store_root = Path(store_temporary)
+            _write_regular_files(store_root, store_files)
+            summary = adapter.validate_offline_store(
+                store_root,
+                lock_summary,
+                payload,
+                expected_toolchain,
+            )
+            if not summary.offline_smoke:
+                raise ValueError("adapter did not confirm offline smoke")
+    except (OSError, ValueError) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"package-manager adapter validation failed: {exc}"
+        ) from exc
     inventory_ref = store.put_bytes(
         json.dumps(payload, sort_keys=True, separators=(",", ":")).encode() + b"\n",
         media_type="application/vnd.nl2repobench.inventory+json",
@@ -308,6 +357,236 @@ def _source_dirs(root: Path) -> list[Path]:
     return result
 
 
+def _legacy_archive_files(data: bytes) -> tuple[dict[str, bytes], dict[str, bytes]]:
+    """Boundedly split a legacy dependency archive into lock and store files."""
+
+    if len(data) > MAX_LEGACY_ARCHIVE_BYTES:
+        raise MigrationError("plan-invalid", "plan", "legacy dependency archive is too large")
+    lock_files: dict[str, bytes] = {}
+    store_files: dict[str, bytes] = {}
+    total = 0
+    try:
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as archive:
+            for index, member in enumerate(archive, start=1):
+                if index > MAX_LEGACY_MEMBERS:
+                    raise ValueError("legacy dependency archive has too many members")
+                if member.issym() or member.islnk() or member.isdev():
+                    raise ValueError("legacy dependency archive contains unsafe member")
+                name = PurePosixPath(member.name)
+                if name.is_absolute() or ".." in name.parts:
+                    raise ValueError("legacy dependency archive contains unsafe path")
+                if member.isdir():
+                    continue
+                if not member.isfile() or member.size > MAX_LEGACY_MEMBER_BYTES:
+                    raise ValueError("legacy dependency archive contains unsupported member")
+                total += member.size
+                if total > MAX_LEGACY_ARCHIVE_BYTES:
+                    raise ValueError("legacy dependency payload exceeds size limit")
+                payload = archive.extractfile(member)
+                if payload is None:
+                    raise ValueError("legacy dependency member cannot be read")
+                member_data = payload.read(member.size + 1)
+                if len(member_data) != member.size:
+                    raise ValueError("legacy dependency member size does not match")
+                clean = name.as_posix()
+                target = (
+                    lock_files
+                    if clean in {"package-lock.json", "pnpm-lock.yaml", "go.mod", "go.sum"}
+                    else store_files
+                )
+                if clean in target:
+                    raise ValueError("legacy dependency archive contains duplicate path")
+                target[clean] = member_data
+    except (OSError, tarfile.TarError, ValueError) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"dependency archive conversion failed: {exc}"
+        ) from exc
+    return lock_files, store_files
+
+
+def _write_regular_files(root: Path, files: dict[str, bytes]) -> None:
+    for name, data in sorted(files.items()):
+        path = PurePosixPath(name)
+        if path.is_absolute() or ".." in path.parts or not path.parts:
+            raise MigrationError("plan-invalid", "plan", f"unsafe closure path: {name}")
+        target = root.joinpath(*path.parts)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists() or target.is_symlink():
+            raise MigrationError("plan-invalid", "plan", f"duplicate closure path: {name}")
+        target.write_bytes(data)
+
+
+def _run_smoke(
+    argv: list[str],
+    *,
+    cwd: Path,
+    environment: dict[str, str],
+    command_id: str,
+) -> str:
+    try:
+        result = subprocess.run(
+            argv,
+            cwd=cwd,
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            capture_output=True,
+            timeout=600,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"offline smoke {command_id} could not run: {exc}"
+        ) from exc
+    if result.returncode != 0:
+        detail = result.stderr[-4096:].decode("utf-8", errors="replace")
+        raise MigrationError(
+            "plan-invalid",
+            "plan",
+            f"offline smoke {command_id} failed with {result.returncode}: {detail}",
+        )
+    return command_id
+
+
+def _prepare_python_closure(
+    lock_bytes: bytes,
+    *,
+    manager: str,
+) -> tuple[dict[str, bytes], str, str]:
+    """Fetch a hash-locked wheel closure, then prove a fresh offline install."""
+
+    with tempfile.TemporaryDirectory(prefix="nl2repo-python-closure-") as temporary:
+        root = Path(temporary)
+        lock = root / "requirements.lock.txt"
+        store = root / "store"
+        smoke = root / "smoke"
+        store.mkdir()
+        lock.write_bytes(lock_bytes)
+        prepare = [
+            sys.executable,
+            "-m",
+            "pip",
+            "download",
+            "--require-hashes",
+            "--only-binary=:all:",
+            "--dest",
+            str(store),
+            "--requirement",
+            str(lock),
+        ]
+        _run_smoke(
+            prepare,
+            cwd=root,
+            environment=dict(os.environ),
+            command_id=f"python-{manager}-closure-prepare-v1",
+        )
+        offline_environment = {
+            **os.environ,
+            "PIP_NO_INDEX": "1",
+            "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+        }
+        _run_smoke(
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "--no-index",
+                "--require-hashes",
+                "--find-links",
+                str(store),
+                "--target",
+                str(smoke),
+                "--requirement",
+                str(lock),
+            ],
+            cwd=root,
+            environment=offline_environment,
+            command_id=f"python-{manager}-offline-install-v1",
+        )
+        files = {
+            path.relative_to(store).as_posix(): path.read_bytes()
+            for path in sorted(store.rglob("*"))
+            if path.is_file() and not path.is_symlink()
+        }
+        pip_version = subprocess.run(
+            [sys.executable, "-m", "pip", "--version"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.split()[1]
+        return files, f"python-{manager}-offline-install-v1", pip_version
+
+
+def _execute_bundle_smoke(
+    identity: str,
+    *,
+    lock_files: dict[str, bytes],
+    store_files: dict[str, bytes],
+    runtime_version: str,
+    package_manager_version: str | None,
+) -> tuple[str, str]:
+    language, manager = identity.split("+", 1)
+    with tempfile.TemporaryDirectory(prefix="nl2repo-bundle-smoke-") as temporary:
+        root = Path(temporary)
+        _write_regular_files(root, {**store_files, **lock_files})
+        environment = dict(os.environ)
+        if manager == "npm":
+            executable = shutil.which("npm")
+            if executable is None:
+                raise MigrationError("plan-invalid", "plan", "npm executable is unavailable")
+            version = subprocess.run(
+                [executable, "--version"], check=True, capture_output=True, text=True
+            ).stdout.strip()
+            if package_manager_version and version != package_manager_version:
+                raise MigrationError("plan-invalid", "plan", "npm toolchain version mismatch")
+            environment.update(
+                {
+                    "npm_config_offline": "true",
+                    "npm_config_ignore_scripts": "true",
+                    "npm_config_cache": str(root / "npm-cache"),
+                }
+            )
+            command = [executable, "ci", "--offline", "--ignore-scripts", "--audit=false"]
+        elif manager == "pnpm":
+            executable = shutil.which("pnpm")
+            if executable is None:
+                raise MigrationError("plan-invalid", "plan", "pnpm executable is unavailable")
+            version = subprocess.run(
+                [executable, "--version"], check=True, capture_output=True, text=True
+            ).stdout.strip()
+            if package_manager_version and version != package_manager_version:
+                raise MigrationError("plan-invalid", "plan", "pnpm toolchain version mismatch")
+            command = [
+                executable,
+                "install",
+                "--offline",
+                "--frozen-lockfile",
+                "--ignore-scripts",
+                "--store-dir",
+                str(root / "pnpm-store"),
+            ]
+        elif manager == "go-modules":
+            executable = shutil.which("go")
+            if executable is None:
+                raise MigrationError("plan-invalid", "plan", "Go executable is unavailable")
+            version = subprocess.run(
+                [executable, "env", "GOVERSION"], check=True, capture_output=True, text=True
+            ).stdout.strip().removeprefix("go")
+            if version != runtime_version:
+                raise MigrationError("plan-invalid", "plan", "Go toolchain version mismatch")
+            environment.update({"GOPROXY": "off", "GOSUMDB": "off", "GOWORK": "off"})
+            command = [executable, "list", "-mod=vendor", "all"]
+        else:
+            raise MigrationError(
+                "plan-invalid", "plan", f"unsupported bundle smoke identity: {identity}"
+            )
+        command_id = f"{language}-{manager}-offline-smoke-v1"
+        return (
+            _run_smoke(command, cwd=root, environment=environment, command_id=command_id),
+            version,
+        )
+
+
 def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str, Any]:
     source_root = source_root.resolve()
     dirs = _source_dirs(source_root)
@@ -317,6 +596,12 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
     if missing:
         raise MigrationError(
             "plan-invalid", "plan", f"selected migration tasks are missing: {', '.join(missing)}"
+        )
+    if not PRIVATE_STAGING_CONTRACT.is_file():
+        raise MigrationError(
+            "plan-invalid",
+            "plan",
+            "private-staging-contract-missing: F0.5 Harbor staging capability is not installed",
         )
     records: list[dict[str, Any]] = []
     task_ids: set[str] = set()
@@ -340,14 +625,16 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
             if old_dependency_ref is not None:
                 try:
                     reference = ArtifactRef.model_validate(old_dependency_ref)
-                    authorization = PrivateArtifactAuthorization(
-                        task_id=task_id,
-                        manifest_digest=digest_bytes(raw),
-                        purpose="compile",
+                    authorization = MigrationArtifactAuthorization(
+                        migration_id=ROOT_NAME,
                         allowed_digests=frozenset({reference.digest}),
-                        staging_root=source_root,
+                        workspace_root=output.parent.resolve(),
                     )
-                    legacy_bytes = artifact_store.read_bytes(reference, authorization)
+                    legacy_bytes = artifact_store.read_bytes(
+                        reference,
+                        authorization,
+                        max_bytes=MAX_LEGACY_ARCHIVE_BYTES,
+                    )
                 except (ArtifactStoreError, OSError, ValueError) as exc:
                     raise MigrationError(
                         "plan-invalid",
@@ -358,39 +645,16 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                 lock_files: dict[str, bytes] | None = None
                 store_files: dict[str, bytes] | None = None
                 manager = identity.split("+", 1)[1]
+                runtime_version = _runtime(old)[2]
+                package_manager_version = (
+                    old.get("environment", {}).get("runtime", {}).get(
+                        "package_manager_version"
+                    )
+                    if isinstance(old.get("environment"), dict)
+                    else None
+                )
                 if manager in {"npm", "pnpm", "go-modules"}:
-                    lock_files = {}
-                    store_files = {}
-                    try:
-                        with tarfile.open(fileobj=io.BytesIO(legacy_bytes), mode="r:*") as archive:
-                            for member in archive:
-                                if member.issym() or member.islnk() or member.isdev():
-                                    raise ValueError(
-                                        "legacy dependency archive contains unsafe member"
-                                    )
-                                name = PurePosixPath(member.name)
-                                if name.is_absolute() or ".." in name.parts or not member.isfile():
-                                    continue
-                                payload = archive.extractfile(member)
-                                if payload is None:
-                                    continue
-                                data = payload.read()
-                                clean = name.as_posix()
-                                if clean in {
-                                    "package-lock.json",
-                                    "pnpm-lock.yaml",
-                                    "go.mod",
-                                    "go.sum",
-                                }:
-                                    lock_files[clean] = data
-                                else:
-                                    store_files[clean] = data
-                    except (OSError, tarfile.TarError, ValueError) as exc:
-                        raise MigrationError(
-                            "plan-invalid",
-                            "plan",
-                            f"dependency archive conversion failed for {task_id}: {exc}",
-                        ) from exc
+                    lock_files, store_files = _legacy_archive_files(legacy_bytes)
                     lock_name = {
                         "npm": "package-lock.json",
                         "pnpm": "pnpm-lock.yaml",
@@ -403,8 +667,22 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                             f"dependency lock is missing for {task_id}: {lock_name}",
                         )
                     lock_bytes = lock_files[lock_name]
+                    offline_smoke_command_id, expected_toolchain = _execute_bundle_smoke(
+                        identity,
+                        lock_files=lock_files,
+                        store_files=store_files,
+                        runtime_version=runtime_version,
+                        package_manager_version=(
+                            str(package_manager_version)
+                            if package_manager_version is not None
+                            else None
+                        ),
+                    )
                 else:
                     lock_bytes = legacy_bytes
+                    store_files, offline_smoke_command_id, expected_toolchain = (
+                        _prepare_python_closure(lock_bytes, manager=manager)
+                    )
                 transformed = transform_lock_artifact(
                     artifact_root,
                     lock_bytes,
@@ -412,6 +690,8 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     toolchain_digest=digest_bytes(raw),
                     store_files=store_files,
                     lock_files=lock_files,
+                    offline_smoke_command_id=offline_smoke_command_id,
+                    expected_toolchain=expected_toolchain,
                 )
                 new["dependencies"].update(transformed)
             test_data = new["tests"]
@@ -558,19 +838,240 @@ def _write_record(path: Path, record: dict[str, Any]) -> None:
         os.close(descriptor)
 
 
-def apply_plan(plan_path: Path) -> dict[str, Any]:
+def _fsync_directory(path: Path) -> None:
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+@contextmanager
+def _exclusive_lock(root: Path):
+    root.mkdir(parents=True, exist_ok=True)
+    lock_path = root / "migration.lock"
+    descriptor = os.open(lock_path, os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
+
+
+def _validate_plan(plan: dict[str, Any], plan_path: Path) -> None:
+    required = {
+        "schema_version",
+        "input_tree_digest",
+        "output_tree_digest",
+        "source_root",
+        "artifact_root",
+        "staged_path",
+        "previous_path",
+        "task_count",
+        "task_mapping_digest",
+        "records",
+        "plan_digest",
+    }
+    if set(plan) != required or plan.get("schema_version") != "1.0":
+        raise MigrationError("plan-invalid", "preflight", "migration plan shape is invalid")
+    unsigned = {key: value for key, value in plan.items() if key != "plan_digest"}
+    expected = digest_bytes(json.dumps(unsigned, sort_keys=True, separators=(",", ":")).encode())
+    if plan.get("plan_digest") != expected:
+        raise MigrationError("plan-invalid", "preflight", "migration plan digest is invalid")
+    records = plan.get("records")
+    if not isinstance(records, list) or not records or plan.get("task_count") != len(records):
+        raise MigrationError("plan-invalid", "preflight", "migration task count is invalid")
+    mapping = digest_bytes(json.dumps(records, sort_keys=True, separators=(",", ":")).encode())
+    if mapping != plan.get("task_mapping_digest"):
+        raise MigrationError("plan-invalid", "preflight", "migration task mapping is invalid")
+    root = plan_path.parent.resolve()
+    if plan_path.is_symlink() or not plan_path.resolve().is_relative_to(root):
+        raise MigrationError("plan-invalid", "preflight", "migration plan path is unsafe")
+
+
+def _validate_staged(plan: dict[str, Any], staged: Path) -> None:
+    if staged.is_symlink() or digest_tree(staged) != plan["output_tree_digest"]:
+        raise MigrationError("staged-changed", "preflight", "staged tree digest mismatch")
+    directories = _source_dirs(staged)
+    observed = sorted(
+        tomllib.loads((directory / "task.toml").read_text(encoding="utf-8")).get("task_id")
+        for directory in directories
+    )
+    expected = sorted(record["task_id"] for record in plan["records"])
+    if observed != expected or len(observed) != plan["task_count"]:
+        raise MigrationError("staged-changed", "preflight", "staged task mapping is invalid")
+
+
+def _validate_transaction(transaction: dict[str, Any], transaction_path: Path) -> None:
+    required = {
+        "schema_version",
+        "transaction_id",
+        "state",
+        "plan_path",
+        "plan_digest",
+        "current_path",
+        "staged_path",
+        "previous_path",
+        "input_tree_digest",
+        "output_tree_digest",
+        "previous_tree_digest",
+        "task_mapping_digest",
+        "task_count",
+        "filesystem_device",
+        "owner_uid",
+        "owner_gid",
+        "retention_status",
+        "last_error",
+    }
+    if set(transaction) != required or transaction.get("schema_version") != "1.0":
+        raise MigrationError("plan-invalid", "recovery", "transaction record shape is invalid")
+    if (
+        not isinstance(transaction.get("transaction_id"), str)
+        or not re.fullmatch(r"[0-9a-f]{32}", transaction["transaction_id"])
+        or transaction.get("state") not in STATES
+        or transaction.get("retention_status")
+        not in {"not-started", "moving", "retained", "removed"}
+        or not isinstance(transaction.get("task_count"), int)
+        or transaction["task_count"] <= 0
+    ):
+        raise MigrationError("plan-invalid", "recovery", "transaction identity is invalid")
+    for field in (
+        "plan_digest",
+        "input_tree_digest",
+        "output_tree_digest",
+        "task_mapping_digest",
+    ):
+        if not isinstance(transaction.get(field), str) or not re.fullmatch(
+            r"sha256:[0-9a-f]{64}", transaction[field]
+        ):
+            raise MigrationError(
+                "plan-invalid", "recovery", f"transaction {field} is invalid"
+            )
+    current, staged, previous, plan = map(
+        Path,
+        (
+            transaction["current_path"],
+            transaction["staged_path"],
+            transaction["previous_path"],
+            transaction["plan_path"],
+        ),
+    )
+    root = transaction_path.parent.resolve()
+    if (
+        any(not path.is_absolute() for path in (current, staged, previous, plan))
+        or current.parent.resolve() != staged.parent.resolve()
+        or not previous.resolve().is_relative_to(root)
+        or not plan.resolve().is_relative_to(root)
+        or transaction_path.is_symlink()
+    ):
+        raise MigrationError("plan-invalid", "recovery", "transaction paths are unsafe")
+    expected_owner = (transaction["owner_uid"], transaction["owner_gid"])
+    expected_device = transaction["filesystem_device"]
+    for path in (current, staged, previous):
+        if not path.exists():
+            continue
+        status = path.lstat()
+        if path.is_symlink() or (status.st_uid, status.st_gid) != expected_owner:
+            raise MigrationError("ambiguous-tree", "recovery", "transaction tree owner differs")
+        if status.st_dev != expected_device:
+            raise MigrationError("ambiguous-tree", "recovery", "transaction tree device differs")
+    error = transaction.get("last_error")
+    if error is not None:
+        if not isinstance(error, dict) or set(error) != {
+            "code",
+            "stage",
+            "message",
+            "observed_digests",
+        }:
+            raise MigrationError("plan-invalid", "recovery", "transaction error is malformed")
+        if (
+            error.get("code")
+            not in {
+                "plan-invalid",
+                "staged-changed",
+                "exchange-failed",
+                "verify-failed",
+                "rollback-failed",
+                "retention-failed",
+                "ambiguous-tree",
+            }
+            or not isinstance(error.get("message"), str)
+            or not error["message"]
+            or len(error["message"]) > 4096
+            or not isinstance(error.get("observed_digests"), (list, tuple))
+            or len(error["observed_digests"]) > 4
+            or error.get("stage")
+            not in {"plan", "preflight", "exchange", "verify", "rollback", "retention", "recovery"}
+        ):
+            raise MigrationError("plan-invalid", "recovery", "transaction error is invalid")
+
+
+def _apply_plan_unlocked(plan_path: Path) -> dict[str, Any]:
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    _validate_plan(plan, plan_path)
     current = Path(plan["source_root"]).resolve()
+    if current.is_symlink() or not current.is_dir():
+        raise MigrationError("staged-changed", "preflight", "current source tree is unsafe")
     if digest_tree(current) != plan["input_tree_digest"]:
         raise MigrationError("staged-changed", "preflight", "source tree changed after planning")
     staged = Path(plan["staged_path"])
+    if not staged.is_absolute() or staged.parent.resolve() != current.parent.resolve():
+        raise MigrationError(
+            "staged-changed", "preflight", "staged tree must be an absolute source sibling"
+        )
     if staged.exists() or staged.is_symlink():
         raise MigrationError("staged-changed", "preflight", "staged path already exists")
     previous = Path(plan["previous_path"])
-    staged.mkdir(parents=True)
+    if (
+        not previous.is_absolute()
+        or not previous.resolve().is_relative_to(plan_path.parent.resolve())
+        or previous.exists()
+        or previous.is_symlink()
+    ):
+        raise MigrationError("staged-changed", "preflight", "retention path is unsafe")
+    previous.parent.mkdir(parents=True, exist_ok=True)
+    expected_uid, expected_gid = current.stat().st_uid, current.stat().st_gid
+    if (expected_uid, expected_gid) != (os.getuid(), os.getgid()):
+        raise MigrationError("staged-changed", "preflight", "source tree is not process-owned")
+    parents = (current.parent, staged.parent, previous.parent)
+    if len({parent.stat().st_dev for parent in parents}) != 1:
+        raise MigrationError("staged-changed", "preflight", "migration trees cross filesystems")
+    if any(
+        (parent.stat().st_uid, parent.stat().st_gid) != (expected_uid, expected_gid)
+        for parent in parents
+    ):
+        raise MigrationError("staged-changed", "preflight", "migration tree ownership differs")
     state_path = plan_path.parent / "transaction.json"
-    transaction: dict[str, Any] | None = None
+    if state_path.exists():
+        existing = json.loads(state_path.read_text(encoding="utf-8"))
+        if existing.get("state") not in {"complete", "rolled-back"}:
+            raise MigrationError(
+                "ambiguous-tree", "preflight", "non-terminal migration transaction exists"
+            )
+    transaction: dict[str, Any] = {
+        "schema_version": "1.0",
+        "transaction_id": plan["plan_digest"][7:39],
+        "state": "planned",
+        "plan_path": str(plan_path.resolve()),
+        "plan_digest": plan["plan_digest"],
+        "current_path": str(current),
+        "staged_path": str(staged),
+        "previous_path": str(previous),
+        "input_tree_digest": plan["input_tree_digest"],
+        "output_tree_digest": plan["output_tree_digest"],
+        "previous_tree_digest": None,
+        "task_mapping_digest": plan["task_mapping_digest"],
+        "task_count": plan["task_count"],
+        "filesystem_device": current.stat().st_dev,
+        "owner_uid": expected_uid,
+        "owner_gid": expected_gid,
+        "retention_status": "not-started",
+        "last_error": None,
+    }
+    _write_record(state_path, transaction)
     try:
+        staged.mkdir(parents=True)
         shutil.copytree(current, staged, dirs_exist_ok=True, symlinks=True)
         for directory in _source_dirs(current):
             destination = staged / directory.relative_to(current)
@@ -580,32 +1081,14 @@ def apply_plan(plan_path: Path) -> dict[str, Any]:
                 if item["relative_path"] == directory.relative_to(current).as_posix()
             )
             (destination / "task.toml").write_text(record["new_toml"], encoding="utf-8")
-        if digest_tree(staged) != plan["output_tree_digest"]:
-            raise MigrationError("staged-changed", "preflight", "staged tree digest mismatch")
-        transaction = {
-            "schema_version": "1.0",
-            "transaction_id": plan["plan_digest"][7:39],
-            "state": "staged-validated",
-            "plan_path": str(plan_path.resolve()),
-            "plan_digest": plan["plan_digest"],
-            "current_path": str(current),
-            "staged_path": str(staged),
-            "previous_path": str(previous),
-            "input_tree_digest": plan["input_tree_digest"],
-            "output_tree_digest": plan["output_tree_digest"],
-            "previous_tree_digest": None,
-            "task_mapping_digest": plan["task_mapping_digest"],
-            "task_count": plan["task_count"],
-            "filesystem_device": current.stat().st_dev,
-            "owner_uid": os.getuid(),
-            "owner_gid": os.getgid(),
-            "retention_status": "not-started",
-            "last_error": None,
-        }
+        _validate_staged(plan, staged)
+        _fsync_directory(staged)
+        transaction["state"] = "staged-validated"
         _write_record(state_path, transaction)
         transaction["state"] = "exchange-intent"
         _write_record(state_path, transaction)
         _exchange(current, staged)
+        _fsync_directory(current.parent)
         transaction["state"] = "exchanged-unverified"
         _write_record(state_path, transaction)
         if (
@@ -616,9 +1099,13 @@ def apply_plan(plan_path: Path) -> dict[str, Any]:
         transaction["state"] = "verified"
         _write_record(state_path, transaction)
         previous.parent.mkdir(parents=True, exist_ok=True)
+        transaction["retention_status"] = "moving"
+        _write_record(state_path, transaction)
         os.rename(staged, previous)
+        _fsync_directory(previous.parent)
         transaction["state"] = "old-tree-retained"
         transaction["retention_status"] = "retained"
+        transaction["previous_tree_digest"] = plan["input_tree_digest"]
         _write_record(state_path, transaction)
         transaction["state"] = "complete"
         _write_record(state_path, transaction)
@@ -627,7 +1114,7 @@ def apply_plan(plan_path: Path) -> dict[str, Any]:
         # Before exchange the staged tree is disposable.  Once intent is
         # durable, both trees are rollback evidence and must never be deleted
         # by a generic exception handler.
-        if transaction is not None and transaction["state"] in {
+        if transaction["state"] in {
             "exchange-intent",
             "exchanged-unverified",
             "verified",
@@ -677,11 +1164,26 @@ def apply_plan(plan_path: Path) -> dict[str, Any]:
             raise
         if staged.exists():
             shutil.rmtree(staged, ignore_errors=True)
+        transaction["state"] = "rolled-back"
+        transaction["retention_status"] = "removed"
+        transaction["last_error"] = {
+            "code": getattr(exc, "code", "staged-changed"),
+            "stage": getattr(exc, "stage", "preflight"),
+            "message": str(exc)[:4096],
+            "observed_digests": (),
+        }
+        _write_record(state_path, transaction)
         raise
 
 
-def recover(transaction_path: Path, force: bool = False) -> dict[str, Any]:
+def apply_plan(plan_path: Path) -> dict[str, Any]:
+    with _exclusive_lock(plan_path.parent / "lock"):
+        return _apply_plan_unlocked(plan_path)
+
+
+def _recover_unlocked(transaction_path: Path, force: bool = False) -> dict[str, Any]:
     transaction = cast(dict[str, Any], json.loads(transaction_path.read_text(encoding="utf-8")))
+    _validate_transaction(transaction, transaction_path)
     if force:
         print(
             json.dumps(
@@ -695,35 +1197,87 @@ def recover(transaction_path: Path, force: bool = False) -> dict[str, Any]:
         Path,
         (transaction["current_path"], transaction["staged_path"], transaction["previous_path"]),
     )
-    if state in {"rolled-back", "complete"}:
+    input_digest = transaction["input_tree_digest"]
+    output_digest = transaction["output_tree_digest"]
+
+    def observed(path: Path) -> str | None:
+        return digest_tree(path) if path.exists() and not path.is_symlink() else None
+
+    def recovery_required(message: str) -> None:
+        transaction["state"] = "recovery-required"
+        transaction["last_error"] = {
+            "code": "ambiguous-tree",
+            "stage": "recovery",
+            "message": message,
+            "observed_digests": tuple(
+                sorted(
+                    digest
+                    for digest in (observed(current), observed(staged), observed(previous))
+                    if digest is not None
+                )
+            )[:4],
+        }
+        _write_record(transaction_path, transaction)
+        raise MigrationError("ambiguous-tree", "recovery", message)
+
+    current_digest = observed(current)
+    staged_digest = observed(staged)
+    previous_digest = observed(previous)
+    if state == "rolled-back":
+        if current_digest != input_digest:
+            recovery_required("rolled-back transaction does not have the input tree active")
+        return transaction
+    if state == "complete":
+        if current_digest != output_digest or previous_digest != input_digest:
+            recovery_required("complete transaction trees do not match durable state")
         return transaction
     if state in {"verified", "old-tree-retained"}:
-        if state == "verified" and staged.exists():
+        if current_digest != output_digest:
+            recovery_required("verified transaction does not have the output tree active")
+        input_locations = [
+            path
+            for path, digest in ((staged, staged_digest), (previous, previous_digest))
+            if digest == input_digest
+        ]
+        if len(input_locations) != 1:
+            recovery_required("verified transaction has an ambiguous retained input tree")
+        if input_locations[0] == staged:
+            if previous.exists() or previous.is_symlink():
+                recovery_required("retention destination is unexpectedly occupied")
             os.rename(staged, previous)
-        transaction["state"] = "complete"
+            _fsync_directory(previous.parent)
+        transaction["state"] = "old-tree-retained"
         transaction["retention_status"] = "retained"
+        transaction["previous_tree_digest"] = input_digest
+        _write_record(transaction_path, transaction)
+        transaction["state"] = "complete"
         _write_record(transaction_path, transaction)
         return transaction
-    if (
-        state in {"exchange-intent", "exchanged-unverified"}
-        and current.exists()
-        and staged.exists()
-    ):
-        if (
-            digest_tree(current) == transaction["output_tree_digest"]
-            and digest_tree(staged) == transaction["input_tree_digest"]
-        ):
+    if state in {"exchange-intent", "exchanged-unverified", "rollback-intent"}:
+        if current_digest == output_digest and staged_digest == input_digest:
             _exchange(current, staged)
-    if staged.exists():
-        shutil.rmtree(staged, ignore_errors=True)
-    if not current.exists() or digest_tree(current) != transaction["input_tree_digest"]:
-        transaction["state"] = "recovery-required"
-        _write_record(transaction_path, transaction)
-        raise MigrationError("verify-failed", "recovery", "cannot identify the input tree")
+            _fsync_directory(current.parent)
+            current_digest, staged_digest = input_digest, output_digest
+        elif not (current_digest == input_digest and staged_digest == output_digest):
+            recovery_required("pre-verified transaction trees are ambiguous")
+    elif state in {"planned", "staged-validated"}:
+        if current_digest != input_digest or staged_digest not in {None, output_digest}:
+            recovery_required("planned transaction trees are ambiguous")
+    else:
+        recovery_required(f"unsupported transaction state: {state}")
+    if staged.exists() and staged_digest == output_digest:
+        shutil.rmtree(staged)
+    if observed(current) != input_digest:
+        recovery_required("cannot restore the input tree")
     transaction["state"] = "rolled-back"
     transaction["retention_status"] = "removed"
     _write_record(transaction_path, transaction)
     return transaction
+
+
+def recover(transaction_path: Path, force: bool = False) -> dict[str, Any]:
+    with _exclusive_lock(transaction_path.parent / "lock"):
+        return _recover_unlocked(transaction_path, force)
 
 
 def main(argv: list[str] | None = None) -> int:

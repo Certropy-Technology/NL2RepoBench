@@ -315,10 +315,11 @@ translate a README and do not lower tests to hide failures.
 Network policy is a security gate. The future Harbor Agent Run must not be
 able to clone or download the reference implementation from GitHub. Set
 an explicit `[environment.network_policy]` with `mode = "no-network"` for
-normal tasks. Python tasks must use a hash-locked `lock_artifact` installed at
-Docker build time and must not vendor a wheelhouse. Node tasks use the pinned
-npm lock/cache contract. Go tasks use the locked module bundle and typed bridge
-contract. Do not make the evaluation Agent run
+normal tasks. Python tasks must use canonical private `lock`, `offline_store`, and
+`inventory` artifacts validated by the language-qualified package-manager adapter at
+Docker build time and must not vendor a wheelhouse. Node and Go tasks use the
+same canonical lock/store/inventory shape with their typed adapter and bridge
+contracts. Do not make the evaluation Agent run
 `pip install`, `npm install`, `git clone`, `curl`, or `wget` to discover or
 install dependencies. If a special package needs an extra system library or
 runtime dependency, declare and freeze it in the source contract, then compile

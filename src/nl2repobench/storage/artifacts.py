@@ -57,13 +57,21 @@ class PrivateArtifactAuthorization:
             raise ArtifactStoreError("authorization contains an invalid digest")
 
     def permits(
-        self, reference: ArtifactRef, *, task_id: str | None = None, purpose: str | None = None
+        self,
+        reference: ArtifactRef,
+        *,
+        task_id: str,
+        manifest_digest: str,
+        purpose: str,
+        staging_root: Path,
     ) -> bool:
         return (
             reference.visibility is Visibility.PRIVATE
             and reference.digest in self.allowed_digests
-            and task_id in {None, self.task_id}
-            and purpose in {None, self.purpose}
+            and task_id == self.task_id
+            and manifest_digest == self.manifest_digest
+            and purpose == self.purpose
+            and staging_root.resolve() == self.staging_root.resolve()
         )
 
 
@@ -73,6 +81,32 @@ class PublicArtifactAuthorization:
 
     task_id: str = "public"
     purpose: str = "public"
+
+
+@dataclass(frozen=True, slots=True)
+class MigrationArtifactAuthorization:
+    """Explicit non-runtime authority used only by the one-shot migration tool."""
+
+    migration_id: str
+    allowed_digests: frozenset[str]
+    workspace_root: Path
+
+    def __post_init__(self) -> None:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,127}", self.migration_id):
+            raise ArtifactStoreError("migration authorization id is invalid")
+        if not self.allowed_digests or any(
+            not re.fullmatch(r"sha256:[0-9a-f]{64}", digest)
+            for digest in self.allowed_digests
+        ):
+            raise ArtifactStoreError("migration authorization digests are invalid")
+        if not self.workspace_root.is_absolute() or self.workspace_root.is_symlink():
+            raise ArtifactStoreError("migration workspace root must be absolute and non-symlink")
+
+    def permits(self, reference: ArtifactRef) -> bool:
+        return (
+            reference.visibility is Visibility.PRIVATE
+            and reference.digest in self.allowed_digests
+        )
 
 
 class FileArtifactStore:
@@ -178,14 +212,36 @@ class FileArtifactStore:
     def path_for(
         self,
         reference: ArtifactRef,
-        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        authorization: PrivateArtifactAuthorization
+        | MigrationArtifactAuthorization
+        | PublicArtifactAuthorization
+        | None = None,
+        *,
+        task_id: str | None = None,
+        manifest_digest: str | None = None,
+        purpose: str | None = None,
+        staging_root: Path | None = None,
     ) -> Path:
         """Resolve a reference and verify its stored bytes before returning it."""
 
-        if reference.visibility is Visibility.PRIVATE and not (
+        private_permitted = (
             isinstance(authorization, PrivateArtifactAuthorization)
+            and task_id is not None
+            and manifest_digest is not None
+            and purpose is not None
+            and staging_root is not None
+            and authorization.permits(
+                reference,
+                task_id=task_id,
+                manifest_digest=manifest_digest,
+                purpose=purpose,
+                staging_root=staging_root,
+            )
+        ) or (
+            isinstance(authorization, MigrationArtifactAuthorization)
             and authorization.permits(reference)
-        ):
+        )
+        if reference.visibility is Visibility.PRIVATE and not private_permitted:
             raise ArtifactStoreError("private artifact resolution is not authorized")
         path = self._path_for_digest(reference.digest, reference.visibility)
         if not path.is_file():
@@ -200,10 +256,25 @@ class FileArtifactStore:
     def read_bytes(
         self,
         reference: ArtifactRef,
-        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        authorization: PrivateArtifactAuthorization
+        | MigrationArtifactAuthorization
+        | PublicArtifactAuthorization
+        | None = None,
         max_bytes: int | None = None,
+        *,
+        task_id: str | None = None,
+        manifest_digest: str | None = None,
+        purpose: str | None = None,
+        staging_root: Path | None = None,
     ) -> bytes:
-        path = self.path_for(reference, authorization)
+        path = self.path_for(
+            reference,
+            authorization,
+            task_id=task_id,
+            manifest_digest=manifest_digest,
+            purpose=purpose,
+            staging_root=staging_root,
+        )
         flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
         descriptor = os.open(path, flags)
         with os.fdopen(descriptor, "rb") as handle:
@@ -221,31 +292,105 @@ class LocalArtifactResolver:
     def __init__(
         self,
         store: FileArtifactStore,
-        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        authorization: PrivateArtifactAuthorization
+        | MigrationArtifactAuthorization
+        | PublicArtifactAuthorization
+        | None = None,
     ) -> None:
         self.store = store
         self.authorization = authorization
 
+    @classmethod
+    def scoped_private(
+        cls,
+        store: FileArtifactStore,
+        authorization: PrivateArtifactAuthorization,
+        *,
+        task_id: str,
+        manifest_digest: str,
+        purpose: str,
+        staging_root: Path,
+    ) -> LocalArtifactResolver:
+        """Construct a resolver only when every operation scope field matches."""
+
+        if (
+            authorization.task_id != task_id
+            or authorization.manifest_digest != manifest_digest
+            or authorization.purpose != purpose
+            or authorization.staging_root.resolve() != staging_root.resolve()
+        ):
+            raise ArtifactStoreError("private resolver scope does not match authorization")
+        return cls(store, authorization)
+
+    def assert_scope(
+        self,
+        *,
+        task_id: str,
+        manifest_digest: str,
+        purpose: str,
+        staging_root: Path | None = None,
+    ) -> PrivateArtifactAuthorization:
+        authorization = self.authorization
+        if not isinstance(authorization, PrivateArtifactAuthorization):
+            raise ArtifactStoreError("private artifact resolution is not authorized")
+        expected_root = staging_root or authorization.staging_root
+        if (
+            authorization.task_id != task_id
+            or authorization.manifest_digest != manifest_digest
+            or authorization.purpose != purpose
+            or authorization.staging_root.resolve() != expected_root.resolve()
+        ):
+            raise ArtifactStoreError("private resolver operation scope does not match")
+        return authorization
+
     def resolve(
         self,
         reference: ArtifactRef,
-        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        authorization: PrivateArtifactAuthorization
+        | MigrationArtifactAuthorization
+        | PublicArtifactAuthorization
+        | None = None,
     ) -> Path:
-        return self.store.path_for(reference, authorization or self.authorization)
+        selected = authorization or self.authorization
+        if isinstance(selected, PrivateArtifactAuthorization):
+            return self.store.path_for(
+                reference,
+                selected,
+                task_id=selected.task_id,
+                manifest_digest=selected.manifest_digest,
+                purpose=selected.purpose,
+                staging_root=selected.staging_root,
+            )
+        return self.store.path_for(reference, selected)
 
     def read_bytes(
         self,
         reference: ArtifactRef,
-        authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        authorization: PrivateArtifactAuthorization
+        | MigrationArtifactAuthorization
+        | PublicArtifactAuthorization
+        | None = None,
         max_bytes: int | None = None,
     ) -> bytes:
-        return self.store.read_bytes(reference, authorization or self.authorization, max_bytes)
+        selected = authorization or self.authorization
+        if isinstance(selected, PrivateArtifactAuthorization):
+            return self.store.read_bytes(
+                reference,
+                selected,
+                max_bytes,
+                task_id=selected.task_id,
+                manifest_digest=selected.manifest_digest,
+                purpose=selected.purpose,
+                staging_root=selected.staging_root,
+            )
+        return self.store.read_bytes(reference, selected, max_bytes)
 
 
 __all__ = [
     "ArtifactStoreError",
     "FileArtifactStore",
     "LocalArtifactResolver",
+    "MigrationArtifactAuthorization",
     "PrivateArtifactAuthorization",
     "PublicArtifactAuthorization",
 ]

@@ -11,7 +11,6 @@ import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import cast
 
 from pydantic import Field, model_validator
 
@@ -153,7 +152,7 @@ class CatalogCompiler:
     def compile_task(self, source_dir: Path, output_root: Path) -> CompiledTask:
         source = self.load_task(source_dir)
         RuntimeDiscriminator.from_catalog_source(source.model_dump(mode="python"))
-        python_source = cast(DeclarativeTaskSource, source)
+        python_source = source
         instruction_path = source_dir / python_source.instruction
         instruction_ref = self.artifact_store.put_file(
             instruction_path,
@@ -238,7 +237,7 @@ class CatalogCompiler:
             version=source.version,
             description=source.description,
             metric_contract=source.metric_contract,
-            tasks=tuple(cast(TaskRef, task.reference) for task in compiled),
+            tasks=tuple(task.reference for task in compiled),
             source_format="declarative-catalog",
         )
         output_root.mkdir(parents=True, exist_ok=True)

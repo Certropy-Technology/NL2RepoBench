@@ -11,6 +11,7 @@ from pathlib import Path
 import tomli_w
 
 from nl2repobench.domain.models_v2 import TaskManifestV2
+from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.pnpm import PnpmPackageManager
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
@@ -65,13 +66,13 @@ class PnpmHarborCompiler(NodeHarborCompiler):
         else:
             self._write_empty_pnpm_bundle(dependencies_root)
         try:
-            self.package_manager.validate_offline_store(
-                dependencies_root,
-                lockfile=dependencies_root / "pnpm-lock.yaml",
-                manifest=dependencies_root / "bundle.manifest.json",
-                expected_version=self.pnpm_version,
-            )
-        except ValueError as exc:
+            if not allow_incomplete:
+                raise NodeHarborCompileError(
+                    "private-staging-contract-missing: production pnpm closure "
+                    "staging requires F0.5"
+                )
+            self.package_manager.validate_lock(dependencies_root, self.pnpm_version)
+        except PackageManagerError as exc:
             raise NodeHarborCompileError(str(exc)) from exc
         self._copy_tree(dependencies_root, task_root / "environment/pnpm-bundle")
 

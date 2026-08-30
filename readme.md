@@ -62,7 +62,7 @@ uv run nl2repo harbor compile catalog/sources/<task-id> \
   --output .nl2repo/compiled/<task-id> \
   --toolchain toolchain.lock.toml \
   --artifact-root .nl2repo/artifacts \
-  --allow-private
+  --authorize-task-private-artifacts
 ```
 
 The pinned SDK fork is the `openhands/` submodule. Build and verify its runtime

@@ -11,6 +11,7 @@ import importlib.metadata
 import json
 import shutil
 import sys
+import tomllib
 from pathlib import Path
 from typing import Annotated
 
@@ -21,13 +22,18 @@ from nl2repobench.authoring.catalog import (
     CatalogCompiler,
     CatalogError,
     DeclarativeDatasetSource,
-    DeclarativeTaskSource,
     scaffold_task,
     validate_compiled_dataset,
 )
 from nl2repobench.authoring.inventory import InventoryError, scan_python_source, write_inventory
 from nl2repobench.authoring.network_lint import lint_catalog_roots
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
+from nl2repobench.domain.canonical_contract import (
+    TaskManifest as CanonicalTaskManifest,
+)
+from nl2repobench.domain.canonical_contract import (
+    TaskSource as CanonicalTaskSource,
+)
 from nl2repobench.domain.models import (
     DatasetManifest,
     MetadataGapReport,
@@ -35,6 +41,7 @@ from nl2repobench.domain.models import (
 )
 from nl2repobench.harbor.compiler import HarborCompileError
 from nl2repobench.harbor.models import HarborToolchainLock
+from nl2repobench.harbor.private_artifacts import compile_authorization
 from nl2repobench.harbor.registry import (
     HarborCompilerRegistry,
     UnknownRuntimeAdapterError,
@@ -43,7 +50,6 @@ from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
 from nl2repobench.storage.artifacts import (
     FileArtifactStore,
     LocalArtifactResolver,
-    PrivateArtifactAuthorization,
 )
 from nl2repobench.storage.state import StateStore
 from nl2repobench.verification.models import CollectionReport, GradingResult
@@ -155,10 +161,10 @@ def export_schemas(
 
     if version == "1.0":
         models: dict[str, type[BaseModel]] = {
-            "task-manifest.schema.json": TaskManifest,
+            "task-manifest.schema.json": CanonicalTaskManifest,
             "dataset-manifest.schema.json": DatasetManifest,
             "metadata-gap-report.schema.json": MetadataGapReport,
-            "declarative-task-source.schema.json": DeclarativeTaskSource,
+            "declarative-task-source.schema.json": CanonicalTaskSource,
             "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
             "collection-report.schema.json": CollectionReport,
             "grading-result.schema.json": GradingResult,
@@ -194,10 +200,10 @@ def check_schemas(
         # F0 has one current contract.  ``export`` remains the writer while
         # this command provides a reproducible CI gate for the tracked bytes.
         models: dict[str, type[BaseModel]] = {
-            "task-manifest.schema.json": TaskManifest,
+            "task-manifest.schema.json": CanonicalTaskManifest,
             "dataset-manifest.schema.json": DatasetManifest,
             "metadata-gap-report.schema.json": MetadataGapReport,
-            "declarative-task-source.schema.json": DeclarativeTaskSource,
+            "declarative-task-source.schema.json": CanonicalTaskSource,
             "declarative-dataset-source.schema.json": DeclarativeDatasetSource,
             "collection-report.schema.json": CollectionReport,
             "grading-result.schema.json": GradingResult,
@@ -272,34 +278,37 @@ def compile_harbor_task(
 ) -> None:
     """Compile one declarative task into a deterministic Harbor bundle."""
 
+    artifact_store = FileArtifactStore(artifact_root)
     authorization = None
     if authorize_task_private_artifacts:
         try:
-            source_record = CatalogCompiler.load_task(source)
-            refs: list[str] = []
-            for value in (
-                getattr(source_record.dependencies, "lock_artifact", None),
-                getattr(source_record.dependencies, "module_bundle", None),
-                getattr(source_record.dependencies, "artifact", None),
-                source_record.tests.commands_artifact,
-                source_record.tests.protected_paths_artifact,
-                source_record.tests.test_bundle,
-                getattr(source_record, "oracle_bundle", None),
-                getattr(getattr(source_record, "verifier", None), "bundle", None),
-            ):
-                if value is not None and value.visibility.value == "private":
-                    refs.append(value.digest)
-            authorization = PrivateArtifactAuthorization(
-                task_id=source_record.task_id,
-                manifest_digest=source_record.content_digest(),
-                purpose="compile",
-                allowed_digests=frozenset(refs),
-                staging_root=(Path(".nl2repo/compiled") / source_record.task_id).resolve(),
+            source_record = CanonicalTaskSource.model_validate(
+                tomllib.loads((source / "task.toml").read_text(encoding="utf-8"))
             )
-        except (CatalogError, ValueError) as exc:
+            instruction = artifact_store.put_file(
+                source / source_record.instruction,
+                media_type="text/markdown; charset=utf-8",
+            )
+            manifest = source_record.to_manifest(instruction)
+            authorization = compile_authorization(
+                manifest,
+                compiled_root=Path(".nl2repo/compiled").resolve(),
+            )
+        except (OSError, tomllib.TOMLDecodeError, ValueError) as exc:
             typer.echo(f"private artifact authorization failed: {exc}", err=True)
             raise typer.Exit(code=1) from exc
-    resolver = LocalArtifactResolver(FileArtifactStore(artifact_root), authorization)
+    resolver = (
+        LocalArtifactResolver.scoped_private(
+            artifact_store,
+            authorization,
+            task_id=authorization.task_id,
+            manifest_digest=authorization.manifest_digest,
+            purpose="compile",
+            staging_root=authorization.staging_root,
+        )
+        if authorization is not None
+        else LocalArtifactResolver(artifact_store)
+    )
     try:
         task_root = HarborCompilerRegistry.default().compile_task(
             source,

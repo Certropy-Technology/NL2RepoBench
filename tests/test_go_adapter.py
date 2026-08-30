@@ -17,7 +17,11 @@ from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, Ru
 from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.runtimes.go import GoRuntimeAdapter
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    FileArtifactStore,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.verification.go_bridge import (
     GoBridgeOperation,
     GoBridgeSpec,
@@ -42,9 +46,8 @@ def _go_bundle(root) -> None:
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
         )
-    summary = GoModulesPackageManager().validate_lock(go_mod, expected_version="1.26.5")
     (root / "module.manifest.json").write_text(
-        json.dumps({"schema_version": "1.0", **summary, "offline": True, "files": files}),
+        json.dumps({"schema_version": "1.0", "offline": True, "files": files}),
         encoding="utf-8",
     )
 
@@ -71,13 +74,9 @@ def _artifact_toml(reference) -> str:
 def test_go_modules_validates_offline_vendor_closure(tmp_path) -> None:
     _go_bundle(tmp_path)
     adapter = GoModulesPackageManager()
-    adapter.validate_offline_store(
-        tmp_path,
-        lockfile=tmp_path / "go.mod",
-        manifest=tmp_path / "module.manifest.json",
-        expected_version="1.26.5",
-    )
-    assert adapter.install_command(store_dir="/vendor") == (
+    summary = adapter.validate_lock(tmp_path, "1.26.5")
+    assert summary.identity == adapter.identity
+    assert adapter.build_commands({})[0].argv == (
         "/usr/local/go/bin/go",
         "test",
         "-mod=vendor",
@@ -92,7 +91,7 @@ def test_go_modules_reject_replace_directive(tmp_path) -> None:
     )
     (tmp_path / "go.sum").write_text("", encoding="utf-8")
     with pytest.raises(ValueError, match="replace directives"):
-        GoModulesPackageManager().validate_lock(tmp_path / "go.mod", expected_version="1.26.5")
+        GoModulesPackageManager().validate_lock(tmp_path, "1.26.5")
 
 
 def test_go_runtime_identity_is_explicit() -> None:
@@ -214,7 +213,7 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
 
     with pytest.raises(GoHarborCompileError, match="toolchain.go.lock.toml"):
         development.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
-    with pytest.raises(GoHarborCompileError, match="private artifact resolver is required"):
+    with pytest.raises(GoHarborCompileError, match="private-staging-contract-missing"):
         locked.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
 
     source = tmp_path / "source"
@@ -261,21 +260,29 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
     )
     descriptor.write_text(data, encoding="utf-8")
 
+    authorization = PrivateArtifactAuthorization(
+        task_id="go-google-uuid",
+        manifest_digest="sha256:" + "a" * 64,
+        purpose="compile",
+        allowed_digests=frozenset(
+            {module_bundle.digest, verifier_bundle.digest, oracle_bundle.digest}
+        ),
+        staging_root=(tmp_path / "compiled/go/private/aaaaaaaaaaaaaaaa").resolve(),
+    )
+    resolver = LocalArtifactResolver.scoped_private(
+        store,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
     production = GoHarborCompiler(
         root / "toolchain.go.lock.toml",
-        artifact_resolver=LocalArtifactResolver(
-            store,
-            allow_private=True,
-        ),
+        artifact_resolver=resolver,
     )
-    output = production.compile_task(
-        source, tmp_path / "production"
-    )
-    manifest = json.loads((output / "bundle.manifest.json").read_text())
-    assert manifest["mode"] == "production"
-    assert (output / "tests/private/contract.sh").is_file()
-    assert (output / "tests/private/bridge.go").is_file()
-    assert (output / "solution/solve.sh").is_file()
+    with pytest.raises(GoHarborCompileError, match="private-staging-contract-missing"):
+        production.compile_task(source, tmp_path / "production")
 
     multi_leaf = tmp_path / "multi-leaf"
     shutil.copytree(root / "catalog/sources/go-google-uuid", multi_leaf)

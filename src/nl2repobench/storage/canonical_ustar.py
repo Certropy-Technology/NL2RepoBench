@@ -33,6 +33,14 @@ class TreeEntry:
     sha256: str | None
 
 
+@dataclass(frozen=True, slots=True)
+class ArchiveMember:
+    """One fully validated member from a canonical USTAR archive."""
+
+    entry: TreeEntry
+    data: bytes | None
+
+
 def _path(path: str) -> PurePosixPath:
     if not isinstance(path, str) or not path or "\\" in path:
         raise CanonicalArchiveError(f"invalid archive path: {path!r}")
@@ -62,7 +70,7 @@ def tree_digest(entries: tuple[TreeEntry, ...] | list[TreeEntry]) -> str:
             raise CanonicalArchiveError(f"unsupported normalized mode: {entry.mode:o}")
         if entry.size < 0:
             raise CanonicalArchiveError("tree entry size cannot be negative")
-        digest.update(entry.type[0].encode("ascii"))
+        digest.update(b"F" if entry.type == "file" else b"D")
         digest.update(len(path).to_bytes(8, "big"))
         digest.update(path)
         digest.update(entry.mode.to_bytes(4, "big"))
@@ -70,7 +78,12 @@ def tree_digest(entries: tuple[TreeEntry, ...] | list[TreeEntry]) -> str:
         if entry.type == "file":
             if entry.sha256 is None or len(entry.sha256) != 64:
                 raise CanonicalArchiveError(f"file entry has no SHA-256: {entry.path}")
-            digest.update(bytes.fromhex(entry.sha256))
+            try:
+                digest.update(bytes.fromhex(entry.sha256))
+            except ValueError as exc:
+                raise CanonicalArchiveError(
+                    f"file entry has invalid SHA-256: {entry.path}"
+                ) from exc
         else:
             if entry.size != 0 or entry.sha256 is not None:
                 raise CanonicalArchiveError(f"directory entry has file metadata: {entry.path}")
@@ -145,6 +158,78 @@ def _header(entry: TreeEntry) -> bytes:
     return bytes(header)
 
 
+def decode_archive(data: bytes) -> tuple[ArchiveMember, ...]:
+    """Decode only the exact canonical USTAR encoding emitted by this module."""
+
+    if len(data) < 10240 or len(data) % 10240:
+        raise CanonicalArchiveError("canonical ustar size must be a positive 10240-byte multiple")
+    members: list[ArchiveMember] = []
+    seen: set[str] = set()
+    offset = 0
+    while offset + 512 <= len(data):
+        header = data[offset : offset + 512]
+        if header == b"\0" * 512:
+            if data[offset:] != b"\0" * (len(data) - offset):
+                raise CanonicalArchiveError("canonical ustar trailer contains non-zero bytes")
+            if len(data) - offset < 1024:
+                raise CanonicalArchiveError("canonical ustar trailer is incomplete")
+            break
+        if header[257:263] != b"ustar\0" or header[263:265] != b"00":
+            raise CanonicalArchiveError("archive is not canonical POSIX ustar")
+        try:
+            name = header[0:100].split(b"\0", 1)[0]
+            prefix = header[345:500].split(b"\0", 1)[0]
+            raw_path = prefix + (b"/" if prefix else b"") + name
+            path_text = raw_path.decode("utf-8")
+            member_type = header[156:157]
+            entry_type = "directory" if member_type == b"5" else "file"
+            if member_type not in {b"0", b"5"}:
+                raise CanonicalArchiveError("canonical ustar member type is invalid")
+            if entry_type == "directory":
+                if not path_text.endswith("/"):
+                    raise CanonicalArchiveError("canonical directory member must end in slash")
+                path_text = path_text[:-1]
+            mode = int(header[100:108].rstrip(b"\0") or b"0", 8)
+            size = int(header[124:136].rstrip(b"\0") or b"0", 8)
+        except (UnicodeDecodeError, ValueError) as exc:
+            raise CanonicalArchiveError("canonical ustar header is malformed") from exc
+        normalized = _path(path_text).as_posix()
+        if normalized in seen:
+            raise CanonicalArchiveError(f"duplicate archive path: {normalized}")
+        seen.add(normalized)
+        payload_start = offset + 512
+        payload_end = payload_start + size
+        padded_end = payload_start + ((size + 511) // 512) * 512
+        if padded_end > len(data):
+            raise CanonicalArchiveError("canonical ustar payload is truncated")
+        payload = data[payload_start:payload_end]
+        if data[payload_end:padded_end] != b"\0" * (padded_end - payload_end):
+            raise CanonicalArchiveError("canonical ustar payload padding is non-zero")
+        if entry_type == "directory" and size != 0:
+            raise CanonicalArchiveError("canonical directory member has payload bytes")
+        if (entry_type == "directory" and mode != 0o555) or (
+            entry_type == "file" and mode not in {0o444, 0o555}
+        ):
+            raise CanonicalArchiveError("canonical ustar member mode is invalid")
+        entry = TreeEntry(
+            normalized,
+            entry_type,
+            mode,
+            size,
+            hashlib.sha256(payload).hexdigest() if entry_type == "file" else None,
+        )
+        if header != _header(entry):
+            raise CanonicalArchiveError("archive header is not in canonical USTAR form")
+        members.append(ArchiveMember(entry, payload if entry_type == "file" else None))
+        offset = padded_end
+    else:
+        raise CanonicalArchiveError("canonical ustar trailer is missing")
+    ordered = sorted(members, key=lambda item: (item.entry.path.encode("utf-8"), item.entry.type))
+    if members != ordered:
+        raise CanonicalArchiveError("canonical ustar members are not sorted")
+    return tuple(members)
+
+
 def encode_tree(root: Path) -> bytes:
     """Encode ``root`` as deterministic ustar bytes, including empty trees."""
 
@@ -180,9 +265,11 @@ def encode_files(files: dict[str, bytes], executable: frozenset[str] = frozenset
 
 
 __all__ = [
+    "ArchiveMember",
     "CanonicalArchiveError",
     "EMPTY_TREE_DIGEST",
     "TreeEntry",
+    "decode_archive",
     "encode_files",
     "encode_tree",
     "tree_digest",

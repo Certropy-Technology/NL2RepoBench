@@ -7,6 +7,7 @@ from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
     LocalArtifactResolver,
+    PrivateArtifactAuthorization,
 )
 from nl2repobench.storage.state import StateStore, StateStoreError
 
@@ -42,7 +43,22 @@ def test_private_artifact_requires_explicit_authorization(tmp_path) -> None:
         store.read_bytes(forged_public)
     with pytest.raises(ArtifactStoreError, match="not authorized"):
         LocalArtifactResolver(store).resolve(reference)
-    assert LocalArtifactResolver(store, allow_private=True).resolve(reference).is_file()
+    authorization = PrivateArtifactAuthorization(
+        task_id="test",
+        manifest_digest="sha256:" + "a" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({reference.digest}),
+        staging_root=(tmp_path / "compiled/test/private/aaaaaaaaaaaaaaaa").resolve(),
+    )
+    resolver = LocalArtifactResolver.scoped_private(
+        store,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
+    assert resolver.resolve(reference).is_file()
 
 
 def test_artifact_store_rejects_symlinked_visibility_namespace(tmp_path) -> None:
@@ -60,7 +76,21 @@ def test_public_digest_leaf_cannot_symlink_to_private_bytes(tmp_path) -> None:
     root = tmp_path / "artifacts"
     store = FileArtifactStore(root)
     private = store.put_bytes(b"same-digest", visibility=Visibility.PRIVATE)
-    private_path = store.path_for(private, allow_private=True)
+    authorization = PrivateArtifactAuthorization(
+        task_id="test",
+        manifest_digest="sha256:" + "a" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({private.digest}),
+        staging_root=(tmp_path / "compiled/test/private/aaaaaaaaaaaaaaaa").resolve(),
+    )
+    private_path = store.path_for(
+        private,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
     digest = private.digest.removeprefix("sha256:")
     public_leaf = root / "public" / "sha256" / digest[:2] / digest
     public_leaf.parent.mkdir(parents=True)

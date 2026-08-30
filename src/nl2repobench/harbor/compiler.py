@@ -17,7 +17,7 @@ import tomli_w
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile, TaskManifest
-from nl2repobench.storage.artifacts import LocalArtifactResolver
+from nl2repobench.storage.artifacts import ArtifactStoreError, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 
 from .bundle_io import (
@@ -117,6 +117,16 @@ class HarborCompiler:
                 raise HarborCompileError(
                     "production Agent runtime must be no-network with no static allowed hosts"
                 )
+            if self.artifact_resolver is None:
+                raise HarborCompileError("private artifact resolver is required")
+            try:
+                self.artifact_resolver.assert_scope(
+                    task_id=manifest.task_id,
+                    manifest_digest=manifest.content_digest(),
+                    purpose="compile",
+                )
+            except ArtifactStoreError as exc:
+                raise HarborCompileError(f"private artifact authorization mismatch: {exc}") from exc
 
         final_root = output_root / manifest.task_id
         if final_root.exists() or final_root.is_symlink():
@@ -790,7 +800,7 @@ Run with Harbor {self.toolchain.harbor.version}:
         task_root: Path,
         allow_incomplete: bool,
     ) -> None:
-        payload = {
+        payload: dict[str, Any] = {
             "task_id": manifest.task_id,
             "task_version": manifest.version,
             "mode": "development" if allow_incomplete else "production",

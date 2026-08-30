@@ -19,7 +19,9 @@ from .models import (
     NetworkPolicy,
     SourceLock,
     TaskLifecycleRecord,
+    TaskStatus,
     TaskVerifierSpec,
+    Visibility,
 )
 
 SHA256 = r"^sha256:[0-9a-f]{64}$"
@@ -118,6 +120,8 @@ class DependencyBundle(CanonicalRecord):
         refs = (self.lock, self.offline_store, self.inventory)
         if self.status == "known" and any(ref is None for ref in refs):
             raise ValueError("known dependency bundle requires lock, offline_store, and inventory")
+        if self.status == "unknown" and any(ref is not None for ref in refs):
+            raise ValueError("unknown dependency bundle must not claim artifact references")
         for name, ref in zip(("lock", "offline_store", "inventory"), refs, strict=True):
             if ref is not None and ref.visibility.value != "private":
                 raise ValueError(f"dependencies.{name} must be private")
@@ -129,6 +133,10 @@ class DependencyBundle(CanonicalRecord):
             raise ValueError(
                 "known none dependency bundle still requires canonical empty artifacts"
             )
+        if self.package_manager is PackageManager.NONE and self.status == "known":
+            # node+none is rejected at the TaskSource runtime-pair boundary.
+            if self.packages:
+                raise ValueError("known none dependency bundle cannot declare packages")
         return self
 
 
@@ -149,6 +157,19 @@ class TestManifest(CanonicalRecord):
             raise ValueError("pytest requires pytest-junit-xml-v1")
         if self.framework == "node:test" and self.report_format != "node-test-json-v1":
             raise ValueError("node:test requires node-test-json-v1")
+        if self.framework == "go-bridge" and self.report_format != "go-test-json-v1":
+            raise ValueError("go-bridge requires go-test-json-v1")
+        if self.framework == "custom" and self.report_format != "custom-json-v1":
+            raise ValueError("custom requires custom-json-v1")
+        for name, ref in (
+            ("commands_artifact", self.commands_artifact),
+            ("protected_paths_artifact", self.protected_paths_artifact),
+            ("test_bundle", self.test_bundle),
+        ):
+            if ref is not None and ref.visibility is not Visibility.PRIVATE:
+                raise ValueError(f"tests.{name} must be private")
+        if self.expected_total_source == "frozen-collection" and self.expected_total <= 0:
+            raise ValueError("frozen test collection must have a positive expected_total")
         return self
 
 
@@ -189,7 +210,68 @@ class TaskSource(CanonicalRecord):
                 raise ValueError("dependency package manager must match environment runtime")
         if self.tests.framework == "custom" and self.verifier is None:
             raise ValueError("custom tests require a typed verifier specification")
+        if self.tests.framework != "custom" and self.verifier is not None:
+            raise ValueError("typed verifier is only valid for custom tests")
+        if self.environment.runtime is not None:
+            expected_tests = {
+                RuntimeLanguage.PYTHON: ("pytest", "custom"),
+                RuntimeLanguage.NODE: ("node:test",),
+                RuntimeLanguage.GO: ("go-bridge",),
+            }[self.environment.runtime.language]
+            if self.tests.framework not in expected_tests:
+                raise ValueError("test framework does not match runtime language")
+            if (
+                self.environment.runtime.language is RuntimeLanguage.NODE
+                and self.environment.runtime.package_manager is PackageManager.NONE
+                and self.dependencies.status == "known"
+            ):
+                raise ValueError("node+none cannot have a known dependency closure")
+        production = self.lifecycle.status in {
+            TaskStatus.PACKAGED,
+            TaskStatus.ORACLE_PASSED,
+            TaskStatus.CONTROLS_PASSED,
+            TaskStatus.REVIEWED,
+            TaskStatus.PILOTED,
+            TaskStatus.PUBLISHED,
+        }
+        if production:
+            if self.environment.status != "known" or self.dependencies.status != "known":
+                raise ValueError("production lifecycle requires known environment and dependencies")
+            if (
+                self.tests.expected_total_source != "frozen-collection"
+                or self.tests.expected_total <= 0
+                or self.tests.commands_artifact is None
+            ):
+                raise ValueError("production lifecycle requires a frozen test command plan")
+            if self.verifier is None and self.tests.test_bundle is None:
+                raise ValueError("production lifecycle requires a private test or verifier bundle")
+        if (
+            self.oracle_bundle is not None
+            and self.oracle_bundle.visibility is not Visibility.PRIVATE
+        ):
+            raise ValueError("oracle_bundle must be private")
         return self
+
+    def to_manifest(self, instruction: ArtifactRef) -> TaskManifest:
+        """Project a validated source into the single canonical manifest shape."""
+
+        if instruction.visibility is not Visibility.PUBLIC:
+            raise ValueError("compiled instruction artifact must be public")
+        return TaskManifest(
+            task_id=self.task_id,
+            version=self.version,
+            metadata=self.metadata,
+            instruction=instruction,
+            source_lock=self.source,
+            environment_lock=self.environment,
+            dependency_bundle=self.dependencies,
+            tests=self.tests,
+            metric=self.metric,
+            lifecycle=self.lifecycle,
+            harbor=self.harbor,
+            oracle_bundle=self.oracle_bundle,
+            verifier=self.verifier,
+        )
 
 
 class TaskManifest(CanonicalRecord):
@@ -222,6 +304,24 @@ class TaskManifest(CanonicalRecord):
             raise ValueError("custom tests require a typed verifier specification")
         if self.tests.framework != "custom" and self.verifier is not None:
             raise ValueError("typed verifier is only valid for custom tests")
+        expected_tests = {
+            RuntimeLanguage.PYTHON: ("pytest", "custom"),
+            RuntimeLanguage.NODE: ("node:test",),
+            RuntimeLanguage.GO: ("go-bridge",),
+        }[runtime.language]
+        if self.tests.framework not in expected_tests:
+            raise ValueError("test framework does not match runtime language")
+        if (
+            runtime.language is RuntimeLanguage.NODE
+            and runtime.package_manager is PackageManager.NONE
+            and self.dependency_bundle.status == "known"
+        ):
+            raise ValueError("node+none cannot have a known dependency closure")
+        if (
+            self.oracle_bundle is not None
+            and self.oracle_bundle.visibility is not Visibility.PRIVATE
+        ):
+            raise ValueError("oracle_bundle must be private")
         return self
 
 

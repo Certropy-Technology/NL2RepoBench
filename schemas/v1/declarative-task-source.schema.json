@@ -46,51 +46,8 @@
     },
     "DependencyBundle": {
       "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "known"
-              }
-            },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "oneOf": [
-              {
-                "properties": {
-                  "lock_artifact": {
-                    "not": {
-                      "type": "null"
-                    }
-                  }
-                },
-                "required": [
-                  "lock_artifact"
-                ]
-              },
-              {
-                "properties": {
-                  "module_bundle": {
-                    "not": {
-                      "type": "null"
-                    }
-                  }
-                },
-                "required": [
-                  "module_bundle"
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "description": "Hash-locked build-time dependencies for Python task images.\n\nPython Harbor images install candidate dependencies from the package index\nduring the Docker build.  The final task never carries a wheelhouse and\nthe verifier never uses ``--no-index``.  ``lock_artifact`` contains only a\nrequirements lock file with hashes; ``artifact`` is retained solely so\nolder catalog records can be diagnosed and rejected during publication.",
       "properties": {
-        "artifact": {
+        "inventory": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -101,18 +58,7 @@
           ],
           "default": null
         },
-        "installer": {
-          "default": "unknown",
-          "enum": [
-            "uv",
-            "pip",
-            "system",
-            "unknown"
-          ],
-          "title": "Installer",
-          "type": "string"
-        },
-        "lock_artifact": {
+        "lock": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -123,7 +69,7 @@
           ],
           "default": null
         },
-        "module_bundle": {
+        "offline_store": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -133,6 +79,9 @@
             }
           ],
           "default": null
+        },
+        "package_manager": {
+          "$ref": "#/$defs/PackageManager"
         },
         "packages": {
           "default": [],
@@ -149,73 +98,23 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/$defs/ProvenanceStatus",
-          "default": "unknown"
+          "default": "unknown",
+          "enum": [
+            "known",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
         }
       },
+      "required": [
+        "package_manager"
+      ],
       "title": "DependencyBundle",
-      "type": "object",
-      "x-nl2repobench-model": "DependencyBundle",
-      "x-nl2repobench-runtime-validation": true
+      "type": "object"
     },
     "EnvironmentLock": {
       "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "known"
-              }
-            },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "oneOf": [
-              {
-                "required": [
-                  "python_version"
-                ]
-              },
-              {
-                "required": [
-                  "runtime_version"
-                ]
-              }
-            ],
-            "properties": {
-              "base_image": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "base_image_digest": {
-                "pattern": "^sha256:[0-9a-f]{64}$",
-                "type": "string"
-              },
-              "os_name": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "python_version": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "runtime_version": {
-                "minLength": 1,
-                "type": "string"
-              }
-            },
-            "required": [
-              "os_name",
-              "base_image",
-              "base_image_digest"
-            ]
-          }
-        }
-      ],
-      "description": "Reproducible execution environment metadata across supported runtimes.",
       "properties": {
         "base_image": {
           "anyOf": [
@@ -254,23 +153,6 @@
           "default": null,
           "title": "Build Command"
         },
-        "network_mode": {
-          "anyOf": [
-            {
-              "enum": [
-                "public",
-                "no-network",
-                "allowlist"
-              ],
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Network Mode"
-        },
         "network_policy": {
           "anyOf": [
             {
@@ -294,29 +176,16 @@
           "default": null,
           "title": "Os Name"
         },
-        "python_version": {
+        "runtime": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/$defs/RuntimeProfile"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Python Version"
-        },
-        "runtime_version": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Runtime Version"
+          "default": null
         },
         "schema_version": {
           "const": "1.0",
@@ -325,8 +194,13 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/$defs/ProvenanceStatus",
-          "default": "unknown"
+          "default": "unknown",
+          "enum": [
+            "known",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
         },
         "system_packages": {
           "default": [],
@@ -338,9 +212,7 @@
         }
       },
       "title": "EnvironmentLock",
-      "type": "object",
-      "x-nl2repobench-model": "EnvironmentLock",
-      "x-nl2repobench-runtime-validation": true
+      "type": "object"
     },
     "HarborExecutionProfile": {
       "additionalProperties": false,
@@ -642,6 +514,18 @@
       "x-nl2repobench-model": "NetworkPolicy",
       "x-nl2repobench-runtime-validation": true
     },
+    "PackageManager": {
+      "enum": [
+        "uv",
+        "pip",
+        "npm",
+        "pnpm",
+        "go-modules",
+        "none"
+      ],
+      "title": "PackageManager",
+      "type": "string"
+    },
     "ProvenanceStatus": {
       "enum": [
         "known",
@@ -649,6 +533,66 @@
       ],
       "title": "ProvenanceStatus",
       "type": "string"
+    },
+    "RuntimeLanguage": {
+      "enum": [
+        "python",
+        "node",
+        "go"
+      ],
+      "title": "RuntimeLanguage",
+      "type": "string"
+    },
+    "RuntimeProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "$ref": "#/$defs/RuntimeLanguage"
+        },
+        "package_manager": {
+          "$ref": "#/$defs/PackageManager"
+        },
+        "package_manager_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Package Manager Version"
+        },
+        "runtime": {
+          "enum": [
+            "cpython",
+            "node",
+            "go"
+          ],
+          "title": "Runtime",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "language",
+        "runtime",
+        "version",
+        "package_manager"
+      ],
+      "title": "RuntimeProfile",
+      "type": "object"
     },
     "SourceLock": {
       "additionalProperties": false,
@@ -888,7 +832,6 @@
     },
     "TaskMetadata": {
       "additionalProperties": false,
-      "description": "Search and reporting metadata. Unknown is explicit, not guessed.",
       "properties": {
         "category": {
           "default": "unknown",
@@ -907,9 +850,7 @@
           "type": "string"
         },
         "language": {
-          "default": "python",
-          "title": "Language",
-          "type": "string"
+          "$ref": "#/$defs/RuntimeLanguage"
         },
         "schema_version": {
           "const": "1.0",
@@ -926,10 +867,11 @@
           "type": "array"
         }
       },
+      "required": [
+        "language"
+      ],
       "title": "TaskMetadata",
-      "type": "object",
-      "x-nl2repobench-model": "TaskMetadata",
-      "x-nl2repobench-runtime-validation": true
+      "type": "object"
     },
     "TaskStatus": {
       "enum": [
@@ -991,55 +933,7 @@
     },
     "TestManifest": {
       "additionalProperties": false,
-      "allOf": [
-        {
-          "oneOf": [
-            {
-              "not": {
-                "required": [
-                  "commands_artifact"
-                ]
-              },
-              "properties": {
-                "commands": {
-                  "minItems": 1
-                }
-              },
-              "required": [
-                "commands"
-              ]
-            },
-            {
-              "properties": {
-                "commands": {
-                  "maxItems": 0
-                }
-              },
-              "required": [
-                "commands_artifact"
-              ]
-            }
-          ]
-        },
-        {
-          "not": {
-            "required": [
-              "protected_paths",
-              "protected_paths_artifact"
-            ]
-          }
-        }
-      ],
-      "description": "Frozen test contract; hidden command bytes may be private artifacts.",
       "properties": {
-        "commands": {
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "title": "Commands",
-          "type": "array"
-        },
         "commands_artifact": {
           "anyOf": [
             {
@@ -1061,25 +955,20 @@
           "default": "unknown",
           "enum": [
             "frozen-collection",
-            "legacy-file",
             "unknown"
           ],
           "title": "Expected Total Source",
           "type": "string"
         },
         "framework": {
-          "const": "pytest",
-          "default": "pytest",
+          "enum": [
+            "pytest",
+            "node:test",
+            "go-bridge",
+            "custom"
+          ],
           "title": "Framework",
           "type": "string"
-        },
-        "protected_paths": {
-          "default": [],
-          "items": {
-            "type": "string"
-          },
-          "title": "Protected Paths",
-          "type": "array"
         },
         "protected_paths_artifact": {
           "anyOf": [
@@ -1091,6 +980,16 @@
             }
           ],
           "default": null
+        },
+        "report_format": {
+          "enum": [
+            "pytest-junit-xml-v1",
+            "node-test-json-v1",
+            "go-test-json-v1",
+            "custom-json-v1"
+          ],
+          "title": "Report Format",
+          "type": "string"
         },
         "schema_version": {
           "const": "1.0",
@@ -1110,10 +1009,12 @@
           "default": null
         }
       },
+      "required": [
+        "framework",
+        "report_format"
+      ],
       "title": "TestManifest",
-      "type": "object",
-      "x-nl2repobench-model": "TestManifest",
-      "x-nl2repobench-runtime-validation": true
+      "type": "object"
     },
     "Visibility": {
       "enum": [
@@ -1125,7 +1026,6 @@
     }
   },
   "additionalProperties": false,
-  "description": "Human-maintained task definition loaded from ``task.toml``.",
   "properties": {
     "dependencies": {
       "$ref": "#/$defs/DependencyBundle"
@@ -1179,7 +1079,7 @@
       "$ref": "#/$defs/SourceLock"
     },
     "task_id": {
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$",
       "title": "Task Id",
       "type": "string"
     },
@@ -1205,10 +1105,11 @@
   },
   "required": [
     "task_id",
+    "metadata",
+    "environment",
+    "dependencies",
     "tests"
   ],
-  "title": "DeclarativeTaskSource",
-  "type": "object",
-  "x-nl2repobench-model": "DeclarativeTaskSource",
-  "x-nl2repobench-runtime-validation": true
+  "title": "TaskSource",
+  "type": "object"
 }

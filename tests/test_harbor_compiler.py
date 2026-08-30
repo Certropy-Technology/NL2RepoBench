@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 import tomli_w
 
+from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.models import Visibility
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import (
@@ -18,7 +19,11 @@ from nl2repobench.harbor.models import (
     load_toolchain_lock,
 )
 from nl2repobench.harbor.registry import HarborCompilerRegistry
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    FileArtifactStore,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.verification.command_plan import validate_command_plan
 
 ROOT = Path(__file__).parents[1]
@@ -43,6 +48,41 @@ def _tar_bytes(files: dict[str, bytes]) -> bytes:
             info.mode = 0o755 if name.endswith(".sh") else 0o644
             archive.addfile(info, io.BytesIO(content))
     return buffer.getvalue()
+
+
+def _private_resolver(
+    store: FileArtifactStore,
+    tmp_path: Path,
+    *,
+    manifest_digest: str = "sha256:" + "a" * 64,
+    task_id: str = "test",
+) -> LocalArtifactResolver:
+    digests = frozenset(
+        f"sha256:{path.name}" for path in (store.root / "private/sha256").glob("*/*")
+    )
+    authorization = PrivateArtifactAuthorization(
+        task_id=task_id,
+        manifest_digest=manifest_digest,
+        purpose="compile",
+        allowed_digests=digests,
+        staging_root=(tmp_path / "compiled/test/private/aaaaaaaaaaaaaaaa").resolve(),
+    )
+    return LocalArtifactResolver.scoped_private(
+        store,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
+
+
+def _compiled_manifest_digest(source_dir: Path, tmp_path: Path) -> str:
+    compiler = CatalogCompiler(FileArtifactStore(tmp_path / "authorization-artifacts"))
+    compiled = compiler.compile_task(
+        source_dir, tmp_path / "authorization-manifest"
+    )
+    return compiled.manifest.content_digest()
 
 
 def test_toolchain_images_are_digest_pinned() -> None:
@@ -255,7 +295,7 @@ def test_private_tar_rejects_path_traversal(tmp_path) -> None:
     reference = store.put_bytes(buffer.getvalue(), visibility=Visibility.PRIVATE)
     compiler = HarborCompiler(
         TOOLCHAIN,
-        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+        artifact_resolver=_private_resolver(store, tmp_path),
     )
 
     with pytest.raises(HarborCompileError, match="escapes bundle"):
@@ -275,7 +315,7 @@ def test_private_tar_rejects_duplicate_paths(tmp_path) -> None:
     reference = store.put_bytes(buffer.getvalue(), visibility=Visibility.PRIVATE)
     compiler = HarborCompiler(
         TOOLCHAIN,
-        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+        artifact_resolver=_private_resolver(store, tmp_path),
     )
 
     with pytest.raises(HarborCompileError, match="duplicate archive path"):
@@ -292,7 +332,7 @@ def test_private_tar_enforces_member_limit_while_streaming(tmp_path) -> None:
     )
     compiler = HarborCompiler(
         TOOLCHAIN,
-        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+        artifact_resolver=_private_resolver(store, tmp_path),
     )
     compiler.MAX_BUNDLE_MEMBERS = 1
 
@@ -371,7 +411,12 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
     (source_dir / "task.toml").write_text(tomli_w.dumps(task), encoding="utf-8")
     compiler = HarborCompiler(
         TOOLCHAIN,
-        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+        artifact_resolver=_private_resolver(
+            store,
+            tmp_path,
+            manifest_digest=_compiled_manifest_digest(source_dir, tmp_path),
+            task_id="production",
+        ),
     )
 
     output = compiler.compile_task(source_dir, tmp_path / "output")
@@ -495,7 +540,12 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
 
     output = HarborCompiler(
         TOOLCHAIN,
-        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+        artifact_resolver=_private_resolver(
+            store,
+            tmp_path,
+            manifest_digest=_compiled_manifest_digest(source_dir, tmp_path),
+            task_id="custom",
+        ),
     ).compile_task(source_dir, tmp_path / "output")
 
     assert (output / "tests/verifier/run.py").is_file()

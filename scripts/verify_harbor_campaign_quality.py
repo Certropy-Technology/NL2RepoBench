@@ -127,6 +127,14 @@ def verify(root: Path, gate_report: Path) -> dict[str, Any]:
         ["uv", "run", "ruff", "check", "src", "scripts", "tests"], cwd=root, timeout=300
     )
     checks["mypy"] = _run(["uv", "run", "mypy"], cwd=root, timeout=300)
+    checks["schema_current"] = _run(
+        ["uv", "run", "nl2repo", "schema", "check"], cwd=root, timeout=300
+    )
+    checks["f0_runtime_contract"] = _run(
+        ["uv", "run", "python", "scripts/check_f0_runtime_contract.py"],
+        cwd=root,
+        timeout=300,
+    )
     checks["pytest"] = _run(
         ["uv", "run", "pytest", "-q", "-p", "no:cacheprovider"], cwd=root, timeout=1800
     )

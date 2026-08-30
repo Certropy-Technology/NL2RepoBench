@@ -2,15 +2,27 @@
 
 from typing import Any
 
-from .base import PackageManagerAdapter, PackageManagerError
+from .base import (
+    CommandSpec,
+    LockSummary,
+    PackageManagerAdapter,
+    PackageManagerError,
+    PackageManagerErrorCode,
+    ResolvedPackage,
+    StoreSummary,
+)
 
 __all__ = [
+    "CommandSpec",
+    "LockSummary",
     "PackageManagerAdapter",
     "PackageManagerError",
+    "PackageManagerErrorCode",
     "PackageManagerRegistry",
     "GoModulesPackageManager",
-    "PnpmLockSummary",
     "PnpmPackageManager",
+    "ResolvedPackage",
+    "StoreSummary",
     "UnknownPackageManagerError",
 ]
 
@@ -24,10 +36,6 @@ def __getattr__(name: str) -> Any:
         from .pnpm import PnpmPackageManager
 
         return PnpmPackageManager
-    if name == "PnpmLockSummary":
-        from .pnpm import PnpmLockSummary
-
-        return PnpmLockSummary
     if name in {"PackageManagerRegistry", "UnknownPackageManagerError"}:
         from .registry import PackageManagerRegistry, UnknownPackageManagerError
 

@@ -20,8 +20,9 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Literal
 
 from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.harbor.private_artifacts import compile_resolver_for_source
 from nl2repobench.harbor.registry import HarborCompilerRegistry
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import FileArtifactStore
 
 JsonObject = dict[str, Any]
 BundleManifestSchema = Literal["1.0", "2.0"]
@@ -409,7 +410,7 @@ def validate_catalog(
     valid_ids: set[str] = set()
     blocked_ids: set[str] = set()
     excluded_ids: set[str] = set()
-    resolver = LocalArtifactResolver(FileArtifactStore(artifact_root), allow_private=True)
+    artifact_store = FileArtifactStore(artifact_root)
     registry = HarborCompilerRegistry.default()
     compile_parent = tempfile.TemporaryDirectory(prefix="nl2repo-production-gate-")
     try:
@@ -474,10 +475,15 @@ def validate_catalog(
                         runtime_root / "bundle.manifest.json"
                     )
                     if compile_tasks:
+                        resolver = compile_resolver_for_source(
+                            source_root,
+                            artifact_store=artifact_store,
+                            compiled_root=(repository_root / ".nl2repo/compiled").resolve(),
+                        )
                         output_root = Path(compile_parent.name) / task_id
                         toolchain = (
                             node_toolchain
-                            if source_data.get("schema_version") == "2.0"
+                            if source_data.get("metadata", {}).get("language") == "node"
                             else python_toolchain
                         )
                         compiled = registry.compile_task(

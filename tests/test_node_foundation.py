@@ -32,7 +32,11 @@ from nl2repobench.harbor.node_dependencies import (
     validate_npm_package_tarball,
 )
 from nl2repobench.harbor.registry import HarborCompilerRegistry
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    FileArtifactStore,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.verification import cli as verifier_cli
 from nl2repobench.verification import node_candidate_install
 from nl2repobench.verification.node_candidate_client import run_candidate
@@ -835,10 +839,22 @@ def test_node_compiler_extracts_private_bundle_and_rejects_missing_resolver(tmp_
     reference = store.put_bytes(
         _tar_bytes([("nested/test.mjs", b"test\n")]), visibility=Visibility.PRIVATE
     )
-    compiler = NodeHarborCompiler(
-        NODE_TOOLCHAIN,
-        artifact_resolver=LocalArtifactResolver(store, allow_private=True),
+    authorization = PrivateArtifactAuthorization(
+        task_id="node-synthetic",
+        manifest_digest="sha256:" + "a" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({reference.digest}),
+        staging_root=(tmp_path / "compiled/node/private/aaaaaaaaaaaaaaaa").resolve(),
     )
+    resolver = LocalArtifactResolver.scoped_private(
+        store,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
+    compiler = NodeHarborCompiler(NODE_TOOLCHAIN, artifact_resolver=resolver)
     destination = tmp_path / "extracted"
     compiler._extract_private_bundle(reference, destination)  # noqa: SLF001
     assert (destination / "nested/test.mjs").read_text() == "test\n"

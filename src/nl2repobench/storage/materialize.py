@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import hashlib
-import io
 import json
 import os
 import shutil
-import tarfile
 import tempfile
+import unicodedata
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path, PurePosixPath
@@ -21,7 +20,7 @@ from .artifacts import (
     PrivateArtifactAuthorization,
     PublicArtifactAuthorization,
 )
-from .canonical_ustar import TreeEntry, tree_digest
+from .canonical_ustar import CanonicalArchiveError, TreeEntry, decode_archive, tree_digest
 
 
 class ArchiveKind(StrEnum):
@@ -90,6 +89,8 @@ def _bounded_limits(
 
 
 def _member_path(name: str, max_bytes: int) -> PurePosixPath:
+    if unicodedata.normalize("NFC", name) != name:
+        raise ValueError(f"archive member path is not NFC normalized: {name}")
     raw = name.rstrip("/")
     path = PurePosixPath(raw)
     if len(name.encode("utf-8")) > max_bytes or path.is_absolute() or not raw or ".." in path.parts:
@@ -97,6 +98,19 @@ def _member_path(name: str, max_bytes: int) -> PurePosixPath:
     if any(part in {"", "."} for part in path.parts):
         raise ValueError(f"non-normalized archive member path: {name}")
     return path
+
+
+def _inventory_tree_digest(payload: object) -> str:
+    if not isinstance(payload, dict) or not isinstance(payload.get("tree_digest"), str):
+        raise ValueError("bundle inventory tree digest is malformed")
+    value = cast(str, payload["tree_digest"])
+    if len(value) != 71 or not value.startswith("sha256:"):
+        raise ValueError("bundle inventory tree digest is malformed")
+    try:
+        bytes.fromhex(value.removeprefix("sha256:"))
+    except ValueError as exc:
+        raise ValueError("bundle inventory tree digest is malformed") from exc
+    return value
 
 
 def _inventory_entries(payload: object, kind: ArchiveKind) -> tuple[dict[str, object], ...]:
@@ -134,6 +148,10 @@ def _inventory_entries(payload: object, kind: ArchiveKind) -> tuple[dict[str, ob
         if entry["type"] == "file":
             if not isinstance(entry["sha256"], str) or len(entry["sha256"]) != 64:
                 raise ValueError("bundle inventory file hash is invalid")
+            try:
+                bytes.fromhex(entry["sha256"])
+            except ValueError as exc:
+                raise ValueError("bundle inventory file hash is invalid") from exc
         elif entry["size"] != 0 or entry["sha256"] is not None:
             raise ValueError("bundle inventory directory metadata is invalid")
         result.append(entry)
@@ -147,6 +165,7 @@ def _inventory_entries(payload: object, kind: ArchiveKind) -> tuple[dict[str, ob
         raise ValueError("bundle inventory directory count is incorrect")
     if payload["total_bytes"] != sum(cast(int, entry["size"]) for entry in result):
         raise ValueError("bundle inventory total size is incorrect")
+    _inventory_tree_digest(payload)
     return tuple(result)
 
 
@@ -161,6 +180,57 @@ def _entry_payload(entries: list[TreeEntry]) -> tuple[dict[str, object], ...]:
         }
         for entry in sorted(entries, key=lambda item: (item.path.encode(), item.type))
     )
+
+
+def _extract_with_openat(root: Path, entries: list[tuple[TreeEntry, bytes | None]]) -> None:
+    """Write a validated tree without following any path component."""
+
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    directory = getattr(os, "O_DIRECTORY", 0)
+    root_fd = os.open(root, os.O_RDONLY | directory | nofollow)
+    try:
+        for entry, data in entries:
+            parts = PurePosixPath(entry.path).parts
+            parent_fd = os.dup(root_fd)
+            try:
+                for component in parts[:-1]:
+                    try:
+                        child_fd = os.open(
+                            component, os.O_RDONLY | directory | nofollow, dir_fd=parent_fd
+                        )
+                    except FileNotFoundError:
+                        os.mkdir(component, 0o700, dir_fd=parent_fd)
+                        child_fd = os.open(
+                            component, os.O_RDONLY | directory | nofollow, dir_fd=parent_fd
+                        )
+                    os.close(parent_fd)
+                    parent_fd = child_fd
+                leaf = parts[-1]
+                if entry.type == "directory":
+                    try:
+                        os.mkdir(leaf, 0o700, dir_fd=parent_fd)
+                    except FileExistsError:
+                        child_fd = os.open(
+                            leaf, os.O_RDONLY | directory | nofollow, dir_fd=parent_fd
+                        )
+                        os.close(child_fd)
+                    continue
+                assert data is not None
+                flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | nofollow
+                file_fd = os.open(leaf, flags, 0o600, dir_fd=parent_fd)
+                try:
+                    view = memoryview(data)
+                    while view:
+                        written = os.write(file_fd, view)
+                        view = view[written:]
+                    os.fsync(file_fd)
+                    os.fchmod(file_fd, entry.mode)
+                finally:
+                    os.close(file_fd)
+            finally:
+                os.close(parent_fd)
+    finally:
+        os.close(root_fd)
 
 
 def materialize_archive(
@@ -181,7 +251,8 @@ def materialize_archive(
         raise ValueError(f"artifact media type does not match {kind.value}")
     if resolver is None:
         raise ValueError("a local artifact resolver is required")
-    archive = resolver.read_bytes(ref, authorization, max_bytes=bounded.max_total_bytes * 2)
+    archive_limit = bounded.max_total_bytes + bounded.max_members * 1024 + 10240
+    archive = resolver.read_bytes(ref, authorization, max_bytes=archive_limit)
     if isinstance(authorization, PrivateArtifactAuthorization):
         if not destination.resolve().is_relative_to(authorization.staging_root.resolve()):
             raise ValueError("private materialization destination is outside scoped staging root")
@@ -194,74 +265,45 @@ def materialize_archive(
     temporary = Path(tempfile.mkdtemp(prefix=f".{destination.name}-", dir=destination.parent))
     try:
         entries: list[TreeEntry] = []
-        seen: set[str] = set()
+        extracted: list[tuple[TreeEntry, bytes | None]] = []
         total = 0
         internal_inventory: bytes | None = None
-        with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as handle:
-            member_count = 0
-            for member in handle:
-                member_count += 1
-                if member_count > bounded.max_members:
-                    raise ValueError("archive contains too many members")
-                path = _member_path(member.name, bounded.max_path_bytes)
-                name = path.as_posix()
-                if name in seen:
-                    raise ValueError(f"duplicate archive path: {name}")
-                seen.add(name)
-                if name == INTERNAL_INVENTORY:
-                    if not member.isfile():
-                        raise ValueError("bundle inventory must be a regular file")
-                    if member.size > bounded.max_member_bytes:
-                        raise ValueError("bundle inventory exceeds member limit")
-                    source = handle.extractfile(member)
-                    internal_inventory = source.read(member.size + 1) if source else None
-                    if internal_inventory is None or len(internal_inventory) != member.size:
-                        raise ValueError("bundle inventory cannot be read")
-                    continue
-                mode = member.mode & 0o777
-                if (
-                    member.issym()
-                    or member.islnk()
-                    or member.isdev()
-                    or not (member.isdir() or member.isfile())
-                ):
-                    raise ValueError(f"unsafe archive member type: {name}")
-                if (
-                    member.isfile()
-                    and mode & 0o111
-                    and Path(name).name
-                    not in {"test.sh", "solve.sh", "run.py", "contract.sh", "verifier.sh"}
-                ):
-                    raise ValueError(f"executable archive member is not allowlisted: {name}")
-                target = temporary / path
-                if member.isdir():
-                    target.mkdir(parents=True, exist_ok=False)
-                    entries.append(TreeEntry(name, "directory", 0o555, 0, None))
-                    continue
-                if (
-                    member.size > bounded.max_member_bytes
-                    or total + member.size > bounded.max_total_bytes
-                ):
-                    raise ValueError(f"archive member exceeds size limits: {name}")
-                source = handle.extractfile(member)
-                if source is None:
-                    raise ValueError(f"archive member cannot be read: {name}")
-                target.parent.mkdir(parents=True, exist_ok=True)
-                data = source.read(member.size + 1)
-                if len(data) != member.size:
-                    raise ValueError(f"archive member size mismatch: {name}")
-                target.write_bytes(data)
-                os.chmod(target, 0o555 if mode & 0o111 else 0o444)
-                total += len(data)
-                entries.append(
-                    TreeEntry(
-                        name,
-                        "file",
-                        0o555 if mode & 0o111 else 0o444,
-                        len(data),
-                        hashlib.sha256(data).hexdigest(),
-                    )
-                )
+        try:
+            members = decode_archive(archive)
+        except CanonicalArchiveError as exc:
+            raise ValueError(str(exc)) from exc
+        if len(members) > bounded.max_members:
+            raise ValueError("archive contains too many members")
+        for member in members:
+            entry = member.entry
+            _member_path(entry.path, bounded.max_path_bytes)
+            if entry.path == INTERNAL_INVENTORY:
+                if entry.type != "file" or entry.size > bounded.max_member_bytes:
+                    raise ValueError("bundle inventory must be a bounded regular file")
+                internal_inventory = member.data
+                continue
+            if (
+                entry.type == "file"
+                and entry.mode == 0o555
+                and Path(entry.path).name
+                not in {"test.sh", "solve.sh", "run.py", "contract.sh", "verifier.sh"}
+            ):
+                raise ValueError(f"executable archive member is not allowlisted: {entry.path}")
+            if (
+                entry.size > bounded.max_member_bytes
+                or total + entry.size > bounded.max_total_bytes
+            ):
+                raise ValueError(f"archive member exceeds size limits: {entry.path}")
+            total += entry.size
+            entries.append(entry)
+            extracted.append((entry, member.data))
+        entry_types = {entry.path: entry.type for entry in entries}
+        for entry in entries:
+            parent = PurePosixPath(entry.path).parent
+            while parent != PurePosixPath("."):
+                if entry_types.get(parent.as_posix()) != "directory":
+                    raise ValueError(f"archive omits declared parent directory: {parent}")
+                parent = parent.parent
 
         if (
             kind
@@ -283,9 +325,19 @@ def materialize_archive(
             and internal_inventory is not None
         ):
             payload = json.loads(internal_inventory)
+            canonical_inventory = (
+                json.dumps(payload, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+            )
+            if internal_inventory != canonical_inventory:
+                raise ValueError("internal bundle inventory is not canonical JSON")
             declared = _inventory_entries(payload, kind)
             if declared != _entry_payload(entries):
                 raise ValueError("internal bundle inventory does not match archive")
+            declared_tree_digest = _inventory_tree_digest(payload)
+            inventory_digest = f"sha256:{hashlib.sha256(internal_inventory).hexdigest()}"
+        else:
+            declared_tree_digest = None
+            inventory_digest = None
         if inventory_ref is not None:
             if inventory_section not in {"lock", "store"}:
                 raise ValueError("dependency inventory section must be lock or store")
@@ -293,6 +345,11 @@ def materialize_archive(
                 raise ValueError("external inventory has invalid media type")
             inventory = resolver.read_bytes(inventory_ref, authorization, max_bytes=4 * 1024 * 1024)
             payload = json.loads(inventory)
+            canonical_inventory = (
+                json.dumps(payload, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+            )
+            if inventory != canonical_inventory:
+                raise ValueError("external inventory is not canonical JSON")
             if not isinstance(payload, dict) or set(payload) != {
                 "schema_version",
                 "identity",
@@ -303,7 +360,33 @@ def materialize_archive(
                 "offline_smoke",
             }:
                 raise ValueError("external inventory has unexpected fields")
+            if payload["schema_version"] != "1.0":
+                raise ValueError("external inventory schema is invalid")
+            if not isinstance(payload["identity"], str) or "+" not in payload["identity"]:
+                raise ValueError("external inventory identity is invalid")
+            if not isinstance(payload["adapter_version"], str) or not payload["adapter_version"]:
+                raise ValueError("external inventory adapter version is invalid")
+            if (
+                not isinstance(payload["toolchain_digest"], str)
+                or not payload["toolchain_digest"].startswith("sha256:")
+                or len(payload["toolchain_digest"]) != 71
+            ):
+                raise ValueError("external inventory toolchain digest is invalid")
+            try:
+                bytes.fromhex(payload["toolchain_digest"].removeprefix("sha256:"))
+            except ValueError as exc:
+                raise ValueError("external inventory toolchain digest is invalid") from exc
+            if (
+                not isinstance(payload["offline_smoke"], dict)
+                or set(payload["offline_smoke"]) != {"status", "command_id"}
+                or payload["offline_smoke"].get("status") != "passed"
+                or not isinstance(payload["offline_smoke"].get("command_id"), str)
+                or not payload["offline_smoke"].get("command_id")
+            ):
+                raise ValueError("external inventory offline smoke is invalid")
             section = payload[inventory_section]
+            if not isinstance(section, dict):
+                raise ValueError("external inventory section is malformed")
             declared = _inventory_entries(
                 {
                     "schema_version": "1.0",
@@ -313,9 +396,14 @@ def materialize_archive(
             )
             if section["archive_digest"] != ref.digest or declared != _entry_payload(entries):
                 raise ValueError("external inventory does not match archive")
+            declared_tree_digest = _inventory_tree_digest(section)
+            inventory_digest = inventory_ref.digest
         elif kind in {ArchiveKind.DEPENDENCY_LOCK, ArchiveKind.OFFLINE_STORE}:
             raise ValueError("dependency archive requires an external inventory")
         result_digest = tree_digest(entries)
+        if declared_tree_digest != result_digest:
+            raise ValueError("inventory tree digest does not match materialized archive")
+        _extract_with_openat(temporary, extracted)
         for output_path in temporary.rglob("*"):
             if output_path.is_dir():
                 os.chmod(output_path, 0o555)
@@ -325,7 +413,11 @@ def materialize_archive(
             raise ValueError(f"materialization destination already exists: {destination}")
         os.replace(temporary, destination)
         return MaterializationResult(
-            destination, sum(item.type == "file" for item in entries), total, result_digest
+            destination,
+            sum(item.type == "file" for item in entries),
+            total,
+            result_digest,
+            inventory_digest,
         )
     except Exception:
         shutil.rmtree(temporary, ignore_errors=True)

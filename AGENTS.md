@@ -221,7 +221,7 @@ uv run nl2repo harbor compile catalog/sources/<task-id> \
   --output catalog/tasks \
   --toolchain toolchain.lock.toml \
   --artifact-root .nl2repo/artifacts \
-  --allow-private
+  --authorize-task-private-artifacts
 ```
 
 `--allow-incomplete` 仅用于公开 synthetic/development fixture，不能用于 production
