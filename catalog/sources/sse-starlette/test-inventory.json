@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sse-starlette",
+  "upstream_tests": {
+    "tracked_modules": 10,
+    "test_definitions": 59,
+    "collection_status": "host environment missing pytest and Starlette; Docker closure required",
+    "excluded": ["tests/integration", "tests/experimentation", "real-timeout and endless-stream cases"]
+  },
+  "private_contract": {
+    "framework": "custom-json-v1",
+    "frozen_total": 28,
+    "scenarios": ["exports-version", "event-basic", "event-multiline", "event-sanitize", "event-comment-only", "event-retry-type", "json-event", "ensure-memoryview", "ensure-dict-separator", "ensure-other", "response-default-headers", "response-header-precedence", "response-separator-validation", "response-grace-validation", "ping-validation", "ping-negative", "compression-disabled", "stream-async", "stream-sync", "websocket-denial", "send-timeout", "ping-factory", "background-task", "disconnect-callback", "shutdown-event", "websocket-wrapper", "metadata-version", "import-without-uvicorn"]
+  },
+  "collection_policy": "Every scenario emits exactly one unique leaf; collection mismatch is fatal."
+}

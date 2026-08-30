@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sse-starlette",
+  "revision": "a815cd3682ce4b01f28e93f4bc59f3d6d5db3d00",
+  "modules": {
+    "sse_starlette": ["EventSourceResponse", "ServerSentEvent", "JSONServerSentEvent"],
+    "sse_starlette.event": ["ServerSentEvent", "JSONServerSentEvent", "ensure_bytes"],
+    "sse_starlette.sse": ["EventSourceResponse", "SendTimeoutError", "AppStatus"]
+  },
+  "excluded_surface": ["uvicorn signal monkey-patch", "live sockets", "database examples", "thread and multi-loop stress experiments"],
+  "notes": "The public task contract is a deterministic child-side adaptation of event formatting and bounded ASGI message behavior."
+}

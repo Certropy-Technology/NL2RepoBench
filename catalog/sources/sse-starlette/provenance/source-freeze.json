@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sse-starlette",
+  "upstream_url": "https://github.com/sysid/sse-starlette",
+  "revision": "a815cd3682ce4b01f28e93f4bc59f3d6d5db3d00",
+  "archive_sha256": "sha256:9945c5a862cd5d6cd5182347c2dad4a633caea80a4bcd21d7b82fcc0941a9703",
+  "license_spdx": "BSD-3-Clause",
+  "license_file": "LICENSE",
+  "license_sha256": "sha256:80af6bfccbebd2c14d4aab96695cab9950e177190cc80f5ef819e99996883e8e",
+  "submodules": [],
+  "source_files": 24,
+  "package_modules": ["sse_starlette/__init__.py", "sse_starlette/event.py", "sse_starlette/sse.py", "sse_starlette/_utils.py"]
+}

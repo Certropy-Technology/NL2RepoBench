@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sse-starlette",
+  "terminal_kind": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/sysid/sse-starlette",
+    "revision": "a815cd3682ce4b01f28e93f4bc59f3d6d5db3d00",
+    "archive_sha256": "sha256:9945c5a862cd5d6cd5182347c2dad4a633caea80a4bcd21d7b82fcc0941a9703",
+    "license": "BSD-3-Clause",
+    "license_file_sha256": "sha256:80af6bfccbebd2c14d4aab96695cab9950e177190cc80f5ef819e99996883e8e"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_mode": "no-network"
+  },
+  "dependencies": {
+    "lock_sha256": "sha256:33b43814cf359ad02c46c1e5289cd4b8a8e268435a113a9c88f7ef0a09981fb2",
+    "lock_size_bytes": 2242,
+    "packages": 12
+  },
+  "bundle": {
+    "manifest": ".nl2repo/compile-sse-starlette/sse-starlette/bundle.manifest.json",
+    "manifest_sha256": "sha256:fb276dbccd07341d83ed54e75413baba7632b2b53e50bc8f8440ba29fb7daaa5",
+    "verifier_bundle_sha256": "sha256:1b5ab552d1b2ba5510cdbd3c38689d388ab65cbcc7be65ea8de3559088115719",
+    "oracle_bundle_sha256": "sha256:5ee519dc5693db138b565cab5fd866fcd4660495585cbad6161a92bb81c0e7a6",
+    "deterministic_repeat": true
+  },
+  "gates": {
+    "validate_source": {"command": "uv run --frozen nl2repo task validate-source catalog/sources/sse-starlette", "exit_code": 0},
+    "lint_network": {"command": "uv run --frozen nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "task_errors": 0, "repository_warnings": 164},
+    "production_compile": {"command": "uv run --frozen nl2repo harbor compile catalog/sources/sse-starlette --output .nl2repo/compile-sse-starlette --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    "local_verifier_replay": {"command": "docker run --rm --network none ... nl2repo-sse-starlette-verifier:local bash /tests/test.sh", "exit_code": 0, "valid": true, "collected": 28, "passed": 28, "reward": 1.0, "network": false},
+    "oracle_source_fetch": {"command": "docker run --rm --network host ... /solution/solve.sh", "exit_code": 0, "revision_asserted": true, "archive_digest_asserted": true}
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "network": false},
+    "stub": {"exit_code": 0, "valid": true, "collected": 28, "passed": 2, "reward": 0.07142857142857142, "network": false},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 28, "passed": 2, "reward": 0.07142857142857142, "verifier_owned_reward": true, "network": false},
+    "install_hang": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "candidate_install_outcome": "timeout", "candidate_install_returncode": -9, "network": false}
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started in this authoring lane.",
+    "The locked OpenHands agent image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5 was not locally available; integrator must restore and verify it before the model run.",
+    "Review, pilot, dataset integration, and publication remain integrator-owned.",
+    "Live sockets, real ASGI servers, database examples, and thread/multi-loop experiments are excluded from the deterministic JSON contract."
+  ]
+}

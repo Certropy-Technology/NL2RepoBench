@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sse-starlette",
+  "protocol": "custom-json-v1",
+  "verifier_bundle_sha256": "sha256:1b5ab552d1b2ba5510cdbd3c38689d388ab65cbcc7be65ea8de3559088115719",
+  "verifier_bundle_size_bytes": 20480,
+  "oracle_bundle_sha256": "sha256:5ee519dc5693db138b565cab5fd866fcd4660495585cbad6161a92bb81c0e7a6",
+  "oracle_bundle_size_bytes": 10240,
+  "frozen_total": 28,
+  "candidate_boundary": "UID-isolated subprocess via nl2repobench.verification.candidate_client",
+  "network": "no-network for verifier and candidate; Oracle source host exception only"
+}

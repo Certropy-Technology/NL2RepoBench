@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "sse-starlette",
+  "revision": "a815cd3682ce4b01f28e93f4bc59f3d6d5db3d00",
+  "contract_to_public_behavior": {
+    "exports-version": ["sse_starlette.__init__", "__version__", "__all__"],
+    "event-basic": ["sse_starlette.event.ServerSentEvent.encode"],
+    "event-multiline": ["ServerSentEvent comment/data separator handling"],
+    "event-sanitize": ["ServerSentEvent id/event newline removal"],
+    "event-comment-only": ["ServerSentEvent comment encoding"],
+    "event-retry-type": ["ServerSentEvent retry validation"],
+    "json-event": ["JSONServerSentEvent compact JSON encoding"],
+    "ensure-memoryview": ["ensure_bytes memoryview boundary"],
+    "ensure-dict-separator": ["ensure_bytes dictionary adapter"],
+    "ensure-other": ["ensure_bytes scalar conversion"],
+    "response-default-headers": ["EventSourceResponse.init_headers"],
+    "response-header-precedence": ["SSE default header override rules"],
+    "response-separator-validation": ["EventSourceResponse sep validation"],
+    "response-grace-validation": ["shutdown_grace_period validation"],
+    "ping-validation": ["ping_interval type contract"],
+    "ping-negative": ["ping_interval range contract"],
+    "compression-disabled": ["enable_compression explicit rejection"],
+    "stream-async": ["_stream_response async iterable contract"],
+    "stream-sync": ["_stream_response synchronous iterable adapter"],
+    "websocket-denial": ["ASGI websocket response adaptation"],
+    "send-timeout": ["send_timeout and SendTimeoutError"],
+    "ping-factory": ["_ping and ping_message_factory"],
+    "background-task": ["ASGI background completion hook"],
+    "disconnect-callback": ["_listen_for_disconnect callback"],
+    "shutdown-event": ["shutdown event and graceful drain"],
+    "websocket-wrapper": ["_wrap_websocket_denial_send"],
+    "metadata-version": ["installed distribution metadata"],
+    "import-without-uvicorn": ["safe optional uvicorn import"]
+  },
+  "excluded_upstream_tests": {
+    "integration": "requires a live ASGI server and network transport",
+    "experimentation": "thread and multi-loop stress tests are not JSON-safe bounded scenarios",
+    "endless-stream": "requires wall-clock cancellation and is replaced by controlled timeout/shutdown cases"
+  }
+}
