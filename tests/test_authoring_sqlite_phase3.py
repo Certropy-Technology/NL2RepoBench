@@ -8,12 +8,15 @@ import json
 import os
 import sqlite3
 import sys
+import threading
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 from nl2repobench.authoring import cutover
+from nl2repobench.authoring import migration as authoring_migration
 from nl2repobench.authoring.migration import MigrationError
 from nl2repobench.authoring.runtime import SingletonActor, process_identity
 from nl2repobench.authoring.scheduler import Identity, Scheduler
@@ -124,6 +127,57 @@ def _finish_authoring(
         pid=pid,
         process_starttime_ticks=starttime,
         boot_id=boot_id,
+    )
+
+
+def _write_rollback_authorities(
+    *,
+    database: Path,
+    journal: Path,
+    barrier: Path,
+    repository: Path,
+    live_root: Path,
+    disabled: dict[str, object],
+    cutover_id: str,
+    manifest_sha256: str,
+) -> None:
+    database_digest = hashlib.sha256(database.read_bytes()).hexdigest()
+    unit = "nl2repobench-authoring-supervisor-sqlite@phase3.service"
+    env_file = "/etc/nl2repobench/authoring-scheduler-phase3.env"
+    journal.write_text(
+        json.dumps(
+            {
+                "phase": "activated-preclaim",
+                "rollback_allowed": True,
+                "cutover_id": cutover_id,
+                "manifest_sha256": manifest_sha256,
+                "database": str(database.resolve()),
+                "database_sha256": database_digest,
+                "repository": str(repository.resolve()),
+                "live_root": str(live_root.resolve()),
+                "legacy_runtime_config": disabled,
+                "sqlite_service_unit": unit,
+                "sqlite_env_file": env_file,
+            }
+        ),
+        encoding="utf-8",
+    )
+    barrier.write_text(
+        json.dumps(
+            {
+                "schema_version": "authoring-cutover-barrier/v2",
+                "cutover_id": cutover_id,
+                "manifest_sha256": manifest_sha256,
+                "database": str(database.resolve()),
+                "database_sha256": database_digest,
+                "rollback_allowed": True,
+                "state_at_activation": "prepared",
+                "authority": "database.cutover_barrier",
+                "sqlite_service_unit": unit,
+                "sqlite_env_file": env_file,
+            }
+        ),
+        encoding="utf-8",
     )
 
 
@@ -769,6 +823,46 @@ def test_integration_source_error_is_classified_as_source(tmp_path: Path, monkey
     actor.release()
 
 
+def test_generated_task_collision_has_source_receipt_and_evidence(
+    tmp_path: Path, monkeypatch
+) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    _finish_authoring(scheduler, owner, controller, tmp_path / "worktree")
+    actor = SingletonActor.acquire(scheduler, "integration")
+    task = scheduler.operation_candidates("integration")[0]
+    collision = supervisor.GeneratedTaskCollision(
+        tmp_path / "catalog/tasks/demo", "expected", "actual"
+    )
+    monkeypatch.setattr(
+        supervisor,
+        "_integrate_task",
+        lambda *args, **kwargs: (_ for _ in ()).throw(collision),
+    )
+    with pytest.raises(supervisor.GeneratedTaskCollision):
+        supervisor._integrate_db_task(
+            SimpleNamespace(
+                dry_run=False, remote="fake", branch="main", command_timeout=10
+            ),
+            scheduler,
+            actor,
+            tmp_path,
+            task,
+            [],
+        )
+    with scheduler.connect() as db:
+        receipt = db.execute(
+            "SELECT status,failure_class,evidence_path,evidence_sha256 "
+            "FROM operation_receipts WHERE operation_kind='integration'"
+        ).fetchone()
+        state = db.execute("SELECT state FROM tasks WHERE task_id='task'").fetchone()[0]
+    assert tuple(receipt[:2]) == ("failed", "source")
+    evidence = tmp_path / receipt[2]
+    assert evidence.is_file()
+    assert hashlib.sha256(evidence.read_bytes()).hexdigest() == receipt[3]
+    assert state == "blocked"
+    actor.release()
+
+
 def test_archive_watcher_disable_and_partial_singleton_rollback(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -1043,6 +1137,85 @@ def test_worker_heartbeat_failure_kills_running_child(tmp_path: Path, monkeypatc
     assert events == ["prepared", "started", "heartbeat-failed", "terminated"]
 
 
+def test_heartbeat_and_finish_failure_recovers_claim_and_controller(
+    tmp_path: Path, monkeypatch
+) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    events: list[str] = []
+
+    class Process:
+        pid = 12348
+
+        def wait(self, timeout=None):
+            raise loop.subprocess.TimeoutExpired(["pi"], timeout)
+
+    monkeypatch.setattr(loop, "TMPFS_ROOTS", ())
+    monkeypatch.setattr(loop, "scheduler_for", lambda _path: scheduler)
+    monkeypatch.setattr(loop, "_agent_prompt", lambda **kwargs: "prompt")
+    monkeypatch.setattr(loop, "_pi_command", lambda *args, **kwargs: ["pi"])
+    monkeypatch.setattr(loop, "_agent_environment", lambda _args: {})
+    monkeypatch.setattr(loop.subprocess, "Popen", lambda *args, **kwargs: Process())
+    monkeypatch.setattr(loop, "_terminate_process", lambda _process: events.append("terminated"))
+    original_identity = process_identity()
+    monkeypatch.setattr(
+        loop,
+        "process_identity",
+        lambda pid=None: (
+            (pid, 2, original_identity[2])
+            if pid is not None
+            else original_identity
+        ),
+    )
+    monkeypatch.setattr(
+        scheduler,
+        "heartbeat",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("heartbeat failed")),
+    )
+    monkeypatch.setattr(
+        scheduler,
+        "finish",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("finish failed")),
+    )
+
+    def context(_args, _scheduler, claim, **_kwargs):
+        return {
+            "claim": claim,
+            "plan": {"batch_id": "batch"},
+            "task": {"package": "demo"},
+            "brief": tmp_path / "brief.json",
+            "worktree": tmp_path,
+            "session_root": tmp_path / "sessions",
+            "log": tmp_path / "child.log",
+            "handoff": tmp_path / "handoff.json",
+            "task_root": tmp_path / "catalog/sources/demo",
+            "package": "demo",
+        }
+
+    monkeypatch.setattr(loop, "_prepare_db_claim", context)
+    args = SimpleNamespace(
+        scheduler_db=scheduler.path,
+        controller_id=controller,
+        owner=owner,
+        state_root=tmp_path / "state",
+        worktree_root=tmp_path / "worktrees",
+        agent_timeout_sec=10,
+    )
+    with pytest.raises(RuntimeError, match="heartbeat failed"):
+        loop.run_db(args)
+    with scheduler.connect() as db:
+        active_claims = db.execute("SELECT count(*) FROM claims WHERE active=1").fetchone()[0]
+        controller_state = db.execute(
+            "SELECT state FROM controllers WHERE controller_id=?", (controller,)
+        ).fetchone()[0]
+        task = db.execute(
+            "SELECT state,retry_count,last_failure_class FROM tasks WHERE task_id='task'"
+        ).fetchone()
+    assert events == ["terminated"]
+    assert active_claims == 0
+    assert controller_state == "stopped"
+    assert tuple(task) == ("pending", 1, "infrastructure")
+
+
 def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypatch) -> None:
     record = cutover.ProcessRecord(
         123,
@@ -1059,6 +1232,22 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
     monkeypatch.setattr(cutover, "_read_process", lambda _pid: None)
     with pytest.raises(MigrationError, match="identity changed"):
         cutover._stop_watcher([record], 1)
+    generic = cutover.ProcessRecord(
+        124,
+        5,
+        "boot",
+        "/usr/bin/bash",
+        "c" * 64,
+        "d" * 64,
+        "bash",
+        str(tmp_path / "repository"),
+        "0::/user.slice",
+        "other",
+    )
+    scoped = cutover._scope_process(
+        generic, tmp_path / "repository", tmp_path / "live"
+    )
+    assert scoped is not None and scoped.role == "generic"
 
     lock = tmp_path / "archive.lock"
     with lock.open("a+") as held:
@@ -1161,7 +1350,9 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
         journal_path=tmp_path / "journal.json",
         barrier_path=barrier,
         cutover_id="cutover-3",
-        service_unit="fake.service",
+        service_unit=cutover.LEGACY_SERVICE_UNIT,
+        sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@phase3.service",
+        sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-phase3.env"),
         drain_timeout=1,
         repository_min_free_bytes=1,
         docker_min_free_bytes=1,
@@ -1175,9 +1366,126 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
     assert activated.runtime_config()["enabled"] == 0
     assert activated.status()["cutover_barrier"]["state"] == "prepared"
     assert json.loads(config.read_text())["enabled"] is False
+    binding = cutover.install_service_binding(
+        journal_path=tmp_path / "journal.json",
+        barrier_path=barrier,
+        database=tmp_path / "scheduler.sqlite3",
+        sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@phase3.service",
+        sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-phase3.env"),
+    )
+    assert binding["scheduler_db"] == str((tmp_path / "scheduler.sqlite3").resolve())
+    with pytest.raises(MigrationError, match="do not match"):
+        cutover.install_service_binding(
+            journal_path=tmp_path / "journal.json",
+            barrier_path=barrier,
+            database=tmp_path / "scheduler.sqlite3",
+            sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@other.service",
+            sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-other.env"),
+        )
 
 
-def test_preclaim_rollback_and_first_claim_seals_barrier(tmp_path: Path) -> None:
+def test_import_receipt_times_are_preserved_and_reverse_chronology_rejected() -> None:
+    receipt = {
+        "status": "pushed",
+        "started_at": "2026-01-01T00:00:00+00:00",
+        "finished_at": "2026-01-01T00:00:05+00:00",
+    }
+    assert authoring_migration._receipt_times(receipt, fallback="2027-01-01T00:00:00+00:00") == (
+        "2026-01-01T00:00:00.000000+00:00",
+        "2026-01-01T00:00:05.000000+00:00",
+    )
+    with pytest.raises(MigrationError, match="finishes before"):
+        authoring_migration._receipt_times(
+            {
+                "status": "verified",
+                "started_at": "2026-01-01T00:00:05+00:00",
+                "finished_at": "2026-01-01T00:00:00+00:00",
+            },
+            fallback="2027-01-01T00:00:00+00:00",
+        )
+
+
+def test_cutover_validation_rejects_duplicate_terminal_receipts(tmp_path: Path) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    _finish_authoring(scheduler, owner, controller, tmp_path / "worktree")
+    integration = SingletonActor.acquire(scheduler, "integration")
+    pushed = scheduler.begin_operation(
+        "task", "integration", "duplicate-integration", actor=integration.fence
+    )
+    scheduler.update_receipt(
+        pushed,
+        "pushed",
+        actor=integration.fence,
+        commit_sha="a" * 40,
+        external_ref="refs/heads/main",
+    )
+    integration.release()
+    archive_actor = SingletonActor.acquire(scheduler, "archive")
+    verified = scheduler.begin_operation(
+        "task", "archive", "duplicate-archive", actor=archive_actor.fence
+    )
+    scheduler.update_receipt(
+        verified,
+        "verified",
+        actor=archive_actor.fence,
+        manifest_key="manifest.json",
+        manifest_sha256="b" * 64,
+        source_snapshot_sha256="c" * 64,
+        object_count=1,
+        byte_count=1,
+        evidence_sha256="d" * 64,
+    )
+    cleanup = scheduler.begin_operation(
+        "task", "cleanup", "duplicate-cleanup", actor=archive_actor.fence
+    )
+    scheduler.apply_cleanup_and_complete(
+        cleanup,
+        actor=archive_actor.fence,
+        evidence_path="cleanup.json",
+        evidence_sha256="e" * 64,
+        receipt_json={"done": True},
+        reason="done",
+    )
+    archive_actor.release()
+    pid, starttime, boot_id = process_identity()
+    scheduler.stop_controller(
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )
+    scheduler.configure(
+        enabled=False,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+    )
+    scheduler.prepare_cutover_barrier("duplicate", "f" * 64)
+    with scheduler.connect() as db:
+        db.execute(
+            "INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,"
+            "operation_attempt,retry_no,idempotency_key,status,commit_sha,external_ref,"
+            "actor_lease_id,receipt_json,started_at,finished_at,created_at,updated_at) "
+            "VALUES('duplicate-pushed','task','integration',2,1,'duplicate-terminal',"
+            "'pushed',?,?,'legacy','{}',?,?,?,?)",
+            (
+                "f" * 40,
+                "refs/heads/main",
+                "2026-01-01T00:00:00.000000+00:00",
+                "2026-01-01T00:00:01.000000+00:00",
+                "2026-01-01T00:00:00.000000+00:00",
+                "2026-01-01T00:00:01.000000+00:00",
+            ),
+        )
+    with pytest.raises(MigrationError, match="terminal receipt uniqueness"):
+        cutover._database_validation(scheduler.path, 1)
+
+
+def test_preclaim_rollback_and_first_claim_seals_barrier(
+    tmp_path: Path, monkeypatch
+) -> None:
     disabled = {
         "enabled": False,
         "max_total_controllers": 0,
@@ -1196,14 +1504,24 @@ def test_preclaim_rollback_and_first_claim_seals_barrier(tmp_path: Path) -> None
         agent_limit=0,
     )
     rollback_scheduler.prepare_cutover_barrier("rollback", "f" * 64)
-    rollback_config = tmp_path / "rollback-runtime.json"
+    rollback_live = tmp_path / "rollback-live"
+    rollback_config = rollback_live / "supervisor/runtime-config.json"
+    rollback_config.parent.mkdir(parents=True)
     rollback_config.write_text(json.dumps(disabled), encoding="utf-8")
     rollback_journal = tmp_path / "rollback-journal.json"
-    rollback_journal.write_text(
-        json.dumps({"legacy_runtime_config": disabled}), encoding="utf-8"
-    )
     rollback_record = tmp_path / "rollback-record.json"
-    rollback_record.write_text(json.dumps({"rollback_allowed": True}), encoding="utf-8")
+    _write_rollback_authorities(
+        database=rollback_db,
+        journal=rollback_journal,
+        barrier=rollback_record,
+        repository=tmp_path / "rollback-repository",
+        live_root=rollback_live,
+        disabled=disabled,
+        cutover_id="rollback",
+        manifest_sha256="f" * 64,
+    )
+    monkeypatch.setattr(cutover, "_verify_sqlite_service_stopped", lambda _unit: None)
+    monkeypatch.setattr(cutover, "_authoring_processes", lambda *_args: [])
     cutover.rollback_cutover(
         journal_path=rollback_journal,
         barrier_path=rollback_record,
@@ -1246,13 +1564,23 @@ def test_preclaim_rollback_and_first_claim_seals_barrier(tmp_path: Path) -> None
     )
     live_supervisor = SingletonActor.acquire(scheduler, "supervisor")
     assert scheduler.status()["cutover_barrier"]["first_effect_kind"] == "first-enable"
-    config = tmp_path / "runtime.json"
+    live = tmp_path / "live"
+    config = live / "supervisor/runtime-config.json"
+    config.parent.mkdir(parents=True)
     config.write_text(json.dumps(disabled), encoding="utf-8")
     journal = tmp_path / "journal.json"
-    journal.write_text(json.dumps({"legacy_runtime_config": disabled}), encoding="utf-8")
     barrier = tmp_path / "barrier.json"
-    barrier.write_text(json.dumps({"rollback_allowed": True}), encoding="utf-8")
-    with pytest.raises(MigrationError, match="forbidden"):
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "repository",
+        live_root=live,
+        disabled=disabled,
+        cutover_id="cutover",
+        manifest_sha256="a" * 64,
+    )
+    with pytest.raises(MigrationError, match="not disabled preclaim"):
         cutover.rollback_cutover(
             journal_path=journal,
             barrier_path=barrier,
@@ -1289,6 +1617,94 @@ def test_preclaim_rollback_and_first_claim_seals_barrier(tmp_path: Path) -> None
     integration.release()
 
 
+def test_rollback_serializes_concurrent_first_enable(tmp_path: Path, monkeypatch) -> None:
+    database = tmp_path / "race.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    scheduler.configure(
+        enabled=False,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+    )
+    scheduler.prepare_cutover_barrier("race", "a" * 64)
+    disabled: dict[str, object] = {
+        "enabled": False,
+        "max_total_controllers": 0,
+        "controller_concurrency": 0,
+        "max_integrations": 0,
+        "agent_limit": 0,
+    }
+    live = tmp_path / "live"
+    runtime_config = live / "supervisor/runtime-config.json"
+    runtime_config.parent.mkdir(parents=True)
+    runtime_config.write_text(json.dumps(disabled), encoding="utf-8")
+    journal = tmp_path / "journal.json"
+    barrier = tmp_path / "barrier.json"
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "repository",
+        live_root=live,
+        disabled=disabled,
+        cutover_id="race",
+        manifest_sha256="a" * 64,
+    )
+    monkeypatch.setattr(cutover, "_verify_sqlite_service_stopped", lambda _unit: None)
+    monkeypatch.setattr(cutover, "_authoring_processes", lambda *_args: [])
+    entered = threading.Event()
+    proceed = threading.Event()
+    original_validate = cutover._validate_rollback_database
+    calls = 0
+
+    def blocking_validate(path: Path, identity: dict[str, object]) -> None:
+        nonlocal calls
+        original_validate(path, identity)
+        calls += 1
+        if calls == 1:
+            entered.set()
+            assert proceed.wait(timeout=5)
+
+    monkeypatch.setattr(cutover, "_validate_rollback_database", blocking_validate)
+    rollback_errors: list[BaseException] = []
+    enable_errors: list[BaseException] = []
+
+    def rollback_worker() -> None:
+        try:
+            cutover.rollback_cutover(
+                journal_path=journal,
+                barrier_path=barrier,
+                runtime_config=runtime_config,
+                database=database,
+            )
+        except BaseException as exc:  # pragma: no cover - asserted below
+            rollback_errors.append(exc)
+
+    def enable_worker() -> None:
+        try:
+            scheduler.first_enable()
+        except BaseException as exc:
+            enable_errors.append(exc)
+
+    rollback_thread = threading.Thread(target=rollback_worker)
+    rollback_thread.start()
+    assert entered.wait(timeout=5)
+    enable_thread = threading.Thread(target=enable_worker)
+    enable_thread.start()
+    time.sleep(0.1)
+    assert enable_thread.is_alive()
+    proceed.set()
+    rollback_thread.join(timeout=5)
+    enable_thread.join(timeout=5)
+    assert not rollback_errors
+    assert enable_errors
+    assert not database.exists()
+    assert (tmp_path / ".race.sqlite3.rolled-back.json").is_file()
+    assert json.loads(journal.read_text())["phase"] == "rolled-back-preclaim"
+
+
 def test_sqlite_service_template_has_singleton_failure_contract() -> None:
     root = Path(__file__).parents[1]
     service = (root / "ops/nl2repobench-authoring-supervisor-sqlite@.service").read_text()
@@ -1296,5 +1712,7 @@ def test_sqlite_service_template_has_singleton_failure_contract() -> None:
     assert "--scheduler-db ${SCHEDULER_DB}" in service
     assert "RestartPreventExitStatus=2 64 78" in service
     assert "KillMode=control-group" in service
+    assert "ExecStartPre=" in service
+    assert "install_authoring_sqlite_service.py" in service
     assert "OnFailure=nl2repobench-authoring-failure-marker@%i.service" in service
     assert "StateDirectory=nl2repobench-authoring-failures" in marker

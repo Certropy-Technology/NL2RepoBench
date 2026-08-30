@@ -83,6 +83,65 @@ def test_import_preserves_status_attempts_and_orphan_evidence_without_controller
         import_manifest(manifest, tmp_path, db_path=db, dry_run=False)
 
 
+def test_import_preserves_legacy_receipt_chronology(tmp_path: Path) -> None:
+    _live(tmp_path)
+    state_path = tmp_path / "queues/python-wave2-20260828.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["items"]["python-candidate"]["receipts"] = [
+        {
+            "operation_kind": "integration",
+            "status": "pushed",
+            "operation_attempt": 1,
+            "retry_no": 0,
+            "commit_sha": "1" * 40,
+            "external_ref": "refs/heads/main",
+            "started_at": "2026-01-01T00:00:00+00:00",
+            "finished_at": "2026-01-01T00:00:01+00:00",
+        },
+        {
+            "operation_kind": "archive",
+            "status": "verified",
+            "operation_attempt": 1,
+            "retry_no": 0,
+            "manifest_key": "archive/manifest.json",
+            "manifest_sha256": "2" * 64,
+            "source_snapshot_sha256": "3" * 64,
+            "object_count": 1,
+            "byte_count": 1,
+            "evidence_sha256": "4" * 64,
+            "started_at": "2026-01-01T00:00:02+00:00",
+            "finished_at": "2026-01-01T00:00:03+00:00",
+        },
+        {
+            "operation_kind": "cleanup",
+            "status": "applied",
+            "operation_attempt": 1,
+            "retry_no": 0,
+            "evidence_path": "cleanup.json",
+            "evidence_sha256": "5" * 64,
+            "started_at": "2026-01-01T00:00:04+00:00",
+            "finished_at": "2026-01-01T00:00:05+00:00",
+        },
+    ]
+    state_path.write_text(json.dumps(state), encoding="utf-8")
+    manifest = generate_manifest(tmp_path, cutover_id="receipt-chronology")
+    database = tmp_path.parent / "receipt-chronology.sqlite3"
+
+    import_manifest(manifest, tmp_path, db_path=database, dry_run=False)
+
+    with sqlite3.connect(database) as db:
+        rows = db.execute(
+            "SELECT operation_kind,started_at,finished_at FROM operation_receipts r "
+            "JOIN tasks t ON t.task_id=r.task_id WHERE t.candidate_id='python-candidate' "
+            "ORDER BY started_at"
+        ).fetchall()
+    assert rows == [
+        ("integration", "2026-01-01T00:00:00.000000+00:00", "2026-01-01T00:00:01.000000+00:00"),
+        ("archive", "2026-01-01T00:00:02.000000+00:00", "2026-01-01T00:00:03.000000+00:00"),
+        ("cleanup", "2026-01-01T00:00:04.000000+00:00", "2026-01-01T00:00:05.000000+00:00"),
+    ]
+
+
 def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Path) -> None:
     scheduler = Scheduler(tmp_path / "source.sqlite3", supplied_root=tmp_path)
     scheduler.init()

@@ -1192,11 +1192,9 @@ def _recover_db_claim(
             boot_id=identity[2],
         )
     except Exception:
-        scheduler.abort_claim(
-            claim.claim_id,
-            claim.owner_uuid,
+        scheduler.recover_controller(
             claim.controller_id,
-            claim.generation,
+            claim.owner_uuid,
             reason=reason,
             pid=identity[0],
             process_starttime_ticks=identity[1],
@@ -1255,13 +1253,20 @@ def run_db(args: argparse.Namespace) -> dict[str, Any]:
                     pass
                 raise
     finally:
-        scheduler.stop_controller(
+        if scheduler.controller_active(
             args.controller_id,
             args.owner,
             pid=identity[0],
             process_starttime_ticks=identity[1],
             boot_id=identity[2],
-        )
+        ):
+            scheduler.stop_controller(
+                args.controller_id,
+                args.owner,
+                pid=identity[0],
+                process_starttime_ticks=identity[1],
+                boot_id=identity[2],
+            )
     return {
         "schema_version": "authoring-scheduler/v3",
         "authority": "sqlite",

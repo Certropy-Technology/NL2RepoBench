@@ -32,6 +32,8 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--external-side-effect-barrier", type=Path)
     p.add_argument("--legacy-runtime-config", type=Path)
     p.add_argument("--service-unit", default="nl2repobench-authoring-supervisor.service")
+    p.add_argument("--sqlite-service-unit")
+    p.add_argument("--sqlite-env-file", type=Path)
     p.add_argument("--drain-timeout", type=int, default=7200)
     p.add_argument("--backup-directory", type=Path)
     p.add_argument("--repository-min-free-bytes", type=int)
@@ -53,11 +55,15 @@ def main(argv: list[str] | None = None) -> int:
             args.repository_min_free_bytes,
             args.docker_min_free_bytes,
             args.watcher_min_free_bytes,
+            args.sqlite_service_unit,
+            args.sqlite_env_file,
         )
         if any(value is None for value in required):
             raise SystemExit(
                 "cutover requires identifiers/paths plus explicit backup and resource limits"
             )
+        assert args.sqlite_service_unit is not None
+        assert args.sqlite_env_file is not None
         cutover_result = execute_cutover(
             repository=args.repository_root.resolve(),
             live_root=args.live_root.resolve(),
@@ -68,6 +74,8 @@ def main(argv: list[str] | None = None) -> int:
             barrier_path=args.external_side_effect_barrier.resolve(),
             cutover_id=args.cutover_id,
             service_unit=args.service_unit,
+            sqlite_service_unit=args.sqlite_service_unit,
+            sqlite_env_file=args.sqlite_env_file,
             drain_timeout=args.drain_timeout,
             repository_min_free_bytes=args.repository_min_free_bytes,
             docker_min_free_bytes=args.docker_min_free_bytes,

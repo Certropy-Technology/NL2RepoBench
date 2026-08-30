@@ -13,6 +13,7 @@ import re
 import stat as statmod
 import tempfile
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
@@ -37,6 +38,28 @@ _STATUS = {
 
 class MigrationError(ValueError):
     """A manifest, source, or import invariant failed."""
+
+
+def _receipt_times(
+    receipt: dict[str, Any], *, fallback: str
+) -> tuple[str, str | None]:
+    def parse(value: Any, label: str) -> str:
+        try:
+            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise MigrationError(f"legacy receipt has invalid {label}") from exc
+        if parsed.tzinfo is None:
+            raise MigrationError(f"legacy receipt {label} must be timezone-aware")
+        return parsed.astimezone(UTC).isoformat(timespec="microseconds")
+
+    started_raw = receipt.get("started_at", receipt.get("created_at", fallback))
+    started = parse(started_raw, "started_at")
+    terminal = str(receipt.get("status")) not in {"started", "committed"}
+    finished_raw = receipt.get("finished_at", receipt.get("updated_at"))
+    finished = parse(finished_raw or fallback, "finished_at") if terminal else None
+    if finished is not None and datetime.fromisoformat(finished) < datetime.fromisoformat(started):
+        raise MigrationError("legacy receipt finishes before it starts")
+    return started, finished
 
 
 @dataclass(frozen=True)
@@ -435,6 +458,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
     committed = False
     try:
         conn.execute("BEGIN IMMEDIATE")
+        import_time = datetime.now(UTC).isoformat(timespec="microseconds")
         for lane in manifest["lanes"]:
             lane_id = str(lane["lane_id"])
             kind, language = str(lane["kind"]), str(lane["language"])
@@ -526,7 +550,8 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         fields = dict(receipt)
                         fields.pop("operation_kind", None)
                         idempotency = "legacy:" + hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-                        conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
+                        started_at, finished_at = _receipt_times(receipt, fallback=import_time)
+                        conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,finished_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True), started_at, finished_at, started_at, finished_at or started_at))
                 if legacy_status == "complete":
                     complete_candidates.append(task_id)
                 final_state = initial_state
@@ -563,7 +588,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     if "collision" in reason.lower() or "remote object" in reason.lower():
                         task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (package,)).fetchone()
                         if task is not None:
-                            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "legacy-collision:" + raw_digest, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason))
+                            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,finished_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "legacy-collision:" + raw_digest, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason, import_time, import_time, import_time, import_time))
         for record in manifest.get("inventory", []):
             path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
             if not path_name.startswith("archive-receipts/") or not path_name.endswith(".json"):
@@ -581,7 +606,8 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             raw_digest = _sha(receipt_path)
             objects = archive.get("objects", [])
             idempotency = "legacy:" + hashlib.sha256(receipt_path.read_bytes()).hexdigest()
-            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
+            archive_started, archive_finished = _receipt_times({**archive, "status": "verified"}, fallback=import_time)
+            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,finished_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True), archive_started, archive_finished, archive_started, archive_finished or archive_started))
         conn.execute(
             "UPDATE operation_receipts SET status='failed',failure_class='infrastructure',"
             "failure_reason='legacy operation intent was abandoned at cutover',"

@@ -210,6 +210,10 @@ class Scheduler:
                         os.close(lock_fd)
                         raise BusyError("scheduler lock is busy") from exc
                     time.sleep(0.02)
+            rollback_marker = self.path.parent / f".{self.path.name}.rolled-back.json"
+            if rollback_marker.exists():
+                os.close(lock_fd)
+                raise ConflictError("scheduler database was rolled back")
             db = sqlite3.connect(
                 self.path,
                 timeout=0.0,
@@ -2131,7 +2135,14 @@ class Scheduler:
             return receipt
 
     def fail_operation(
-        self, receipt_id: str, failure_class: str, reason: str, *, actor: ActorFence | None = None
+        self,
+        receipt_id: str,
+        failure_class: str,
+        reason: str,
+        *,
+        actor: ActorFence | None = None,
+        evidence_path: str | None = None,
+        evidence_sha256: str | None = None,
     ) -> None:
         """Record a failure; only infrastructure failures enter the same-stage retry state."""
         if (
@@ -2140,6 +2151,14 @@ class Scheduler:
             or not reason
         ):
             raise ValidationError("invalid operation failure")
+        evidence_digest: str | None = None
+        if (evidence_path is None) != (evidence_sha256 is None):
+            raise ValidationError("operation failure evidence must be complete")
+        if evidence_path is not None and evidence_sha256 is not None:
+            path = Path(evidence_path)
+            if path.is_absolute() or ".." in path.parts:
+                raise ValidationError("operation failure evidence_path must be relative")
+            evidence_digest = _digest(evidence_sha256, "evidence_sha256")
         with self._db() as db, _transaction(db):
             receipt = db.execute(
                 "SELECT * FROM operation_receipts WHERE receipt_id=?", (receipt_id,)
@@ -2175,8 +2194,18 @@ class Scheduler:
             if receipt["status"] not in {"started", "committed"}:
                 raise ConflictError("receipt is no longer fail-able")
             cur = db.execute(
-                "UPDATE operation_receipts SET status='failed',failure_class=?,failure_reason=?,finished_at=?,updated_at=? WHERE receipt_id=? AND status IN ('started','committed')",
-                (failure_class, reason, now, now, receipt_id),
+                "UPDATE operation_receipts SET status='failed',failure_class=?,failure_reason=?,"
+                "evidence_path=?,evidence_sha256=?,finished_at=?,updated_at=? "
+                "WHERE receipt_id=? AND status IN ('started','committed')",
+                (
+                    failure_class,
+                    reason,
+                    evidence_path,
+                    evidence_digest,
+                    now,
+                    now,
+                    receipt_id,
+                ),
             )
             if cur.rowcount != 1:
                 return
@@ -2404,6 +2433,75 @@ class Scheduler:
                     )
                 changed += 1
             return changed
+
+    def recover_controller(
+        self,
+        controller_id: str,
+        owner_uuid: str,
+        *,
+        pid: int,
+        process_starttime_ticks: int,
+        boot_id: str,
+        reason: str,
+    ) -> int:
+        """Atomically close running claims after their child has been reaped."""
+        if not reason:
+            raise ValidationError("controller recovery reason is required")
+        with self._db() as db, _transaction(db):
+            controller = db.execute(
+                "SELECT * FROM controllers WHERE controller_id=? AND owner_uuid=? "
+                "AND pid=? AND process_starttime_ticks=? AND boot_id=?",
+                (controller_id, owner_uuid, pid, process_starttime_ticks, boot_id),
+            ).fetchone()
+            if controller is None:
+                raise LostLeaseError("controller recovery identity fence failed")
+            if controller["state"] in {"stopped", "lost", "reconciled"}:
+                return 0
+            now = _now()
+            claims = db.execute(
+                "SELECT * FROM claims WHERE controller_id=? AND owner_uuid=? AND active=1",
+                (controller_id, owner_uuid),
+            ).fetchall()
+            for claim in claims:
+                self._close_claim(db, claim, now, reason)
+                task = db.execute(
+                    "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?",
+                    (claim["task_id"],),
+                ).fetchone()
+                if int(task["retry_count"]) < int(task["retry_limit"]):
+                    db.execute(
+                        "UPDATE tasks SET state='pending',retry_count=retry_count+1,"
+                        "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                        "WHERE task_id=?",
+                        (reason, now, claim["task_id"]),
+                    )
+                else:
+                    db.execute(
+                        "UPDATE tasks SET state='blocked',terminal_reason=?,"
+                        "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                        "WHERE task_id=?",
+                        (reason, reason, now, claim["task_id"]),
+                    )
+            db.execute(
+                "UPDATE scheduler_leases SET active=0,released_at=?,updated_at=? "
+                "WHERE controller_id=? AND active=1",
+                (now, now, controller_id),
+            )
+            db.execute(
+                "UPDATE controllers SET state='stopped',desired=0,stopped_at=?,updated_at=? "
+                "WHERE controller_id=? AND state IN ('running','draining')",
+                (now, now, controller_id),
+            )
+            if controller["role"] == "authoring_controller":
+                db.execute(
+                    "UPDATE controller_slot_reservations SET state='released',updated_at=? "
+                    "WHERE controller_id=? AND state='activated'",
+                    (now, controller_id),
+                )
+                self._controller_capacity_delta(
+                    db, controller_id, str(controller["language"]), -1, now
+                )
+            return len(claims)
 
     def reconcile_singletons(self, *, now: str | None = None) -> int:
         """Expire singleton leases even when a wedged process still exists."""

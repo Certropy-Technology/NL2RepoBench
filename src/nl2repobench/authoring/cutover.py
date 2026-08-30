@@ -12,7 +12,8 @@ import sqlite3
 import subprocess
 import tempfile
 import time
-from contextlib import ExitStack
+from collections.abc import Iterator
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -20,6 +21,11 @@ from typing import Any
 from .backup import activate_database, backup_database, verify_backup
 from .migration import MigrationError, generate_manifest, import_manifest, validate_manifest
 from .runtime import command_digest, executable_digest, scheduler_for
+
+LEGACY_SERVICE_UNIT = "nl2repobench-authoring-supervisor.service"
+SQLITE_SERVICE_UNIT = re.compile(
+    r"^nl2repobench-authoring-supervisor-sqlite@([A-Za-z0-9._-]+)\.service$"
+)
 
 
 @dataclass(frozen=True)
@@ -43,6 +49,20 @@ def _atomic_json(path: Path, value: Any) -> None:
         with os.fdopen(fd, "w", encoding="utf-8") as stream:
             json.dump(value, stream, sort_keys=True, indent=2)
             stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def _atomic_text(path: Path, value: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}-", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(value)
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(temporary, path)
@@ -128,18 +148,26 @@ def _authoring_processes(repository: Path, live_root: Path) -> list[ProcessRecor
             continue
         record = _read_process(int(entry.name))
         if record is None:
+            if entry.exists():
+                raise MigrationError(f"cannot inspect live process identity: {entry.name}")
             continue
-        cwd_worktree = _under(record.cwd, live_root / "worktrees")
-        if record.role == "other" and cwd_worktree:
-            record = replace(record, role="workspace")
-        if record.role == "other":
-            continue
-        command_scoped = str(repository) in record.command or str(live_root) in record.command
-        cwd_scoped = _under(record.cwd, repository)
-        cgroup_scoped = "nl2repobench-authoring" in record.cgroup
-        if command_scoped or cwd_scoped or cgroup_scoped:
-            records.append(record)
+        scoped = _scope_process(record, repository, live_root)
+        if scoped is not None:
+            records.append(scoped)
     return records
+
+
+def _scope_process(
+    record: ProcessRecord, repository: Path, live_root: Path
+) -> ProcessRecord | None:
+    command_scoped = str(repository.resolve()) in record.command or str(
+        live_root.resolve()
+    ) in record.command
+    cwd_scoped = _under(record.cwd, repository)
+    cgroup_scoped = "nl2repobench-authoring" in record.cgroup
+    if not (command_scoped or cwd_scoped or cgroup_scoped):
+        return None
+    return replace(record, role="generic") if record.role == "other" else record
 
 
 def _same_process(record: ProcessRecord) -> bool:
@@ -317,6 +345,21 @@ def _database_validation(database: Path, expected_tasks: int) -> dict[str, Any]:
         )
         if dangling:
             raise MigrationError("import contains abandoned operation receipts")
+        invalid_chronology = int(
+            db.execute(
+                "SELECT count(*) FROM operation_receipts WHERE finished_at IS NOT NULL "
+                "AND finished_at<started_at"
+            ).fetchone()[0]
+        )
+        duplicate_terminal = db.execute(
+            "SELECT task_id,operation_kind,count(*) count FROM operation_receipts "
+            "WHERE (operation_kind='integration' AND status='pushed') "
+            "OR (operation_kind='archive' AND status='verified') "
+            "OR (operation_kind='cleanup' AND status='applied') "
+            "GROUP BY task_id,operation_kind HAVING count(*)<>1"
+        ).fetchall()
+        if invalid_chronology or duplicate_terminal:
+            raise MigrationError("receipt chronology or terminal receipt uniqueness is invalid")
         config = db.execute("SELECT * FROM current_runtime_config").fetchone()
         if config is None or bool(config["enabled"]) or any(
             int(config[key]) != 0
@@ -347,8 +390,9 @@ def _database_validation(database: Path, expected_tasks: int) -> dict[str, Any]:
         completed = db.execute("SELECT task_id FROM tasks WHERE state='complete'").fetchall()
         for task in completed:
             receipts = db.execute(
-                "SELECT operation_kind,status,finished_at FROM operation_receipts "
-                "WHERE task_id=? AND status IN ('pushed','verified','applied')",
+                "SELECT operation_kind,status,started_at,finished_at FROM operation_receipts "
+                "WHERE task_id=? AND status IN ('pushed','verified','applied') "
+                "ORDER BY finished_at,operation_kind,receipt_id",
                 (task["task_id"],),
             ).fetchall()
             terminal = {str(row["operation_kind"]): row for row in receipts}
@@ -412,6 +456,8 @@ def execute_cutover(
     barrier_path: Path,
     cutover_id: str,
     service_unit: str,
+    sqlite_service_unit: str,
+    sqlite_env_file: Path,
     drain_timeout: int,
     repository_min_free_bytes: int,
     docker_min_free_bytes: int,
@@ -428,9 +474,17 @@ def execute_cutover(
                 watcher_min_free_bytes,
             )
         )
-        or not service_unit.strip()
+        or service_unit != LEGACY_SERVICE_UNIT
     ):
         raise MigrationError("cutover identifiers, timeout, or resource limits are invalid")
+    unit_match = SQLITE_SERVICE_UNIT.fullmatch(sqlite_service_unit)
+    if unit_match is None:
+        raise MigrationError("SQLite service unit is not the tracked template instance")
+    expected_env = Path(
+        f"/etc/nl2repobench/authoring-scheduler-{unit_match.group(1)}.env"
+    )
+    if sqlite_env_file != expected_env or not database.is_absolute():
+        raise MigrationError("SQLite service environment or database path is not exact")
     live_resolved = live_root.resolve()
     for output in (
         manifest_path,
@@ -444,7 +498,7 @@ def execute_cutover(
             raise MigrationError("cutover outputs must remain outside the legacy live tree")
     if barrier_path.exists() or any(
         Path(str(database) + suffix).exists() for suffix in ("", "-wal", "-shm")
-    ):
+    ) or (database.parent / f".{database.name}.rolled-back.json").exists():
         raise MigrationError("cutover target or preclaim record already exists")
     runtime_config = live_root / "supervisor/runtime-config.json"
     audit = {"pre_drain_inventory_sha256": inventory_digest(live_root), "cutover_id": cutover_id}
@@ -496,13 +550,18 @@ def execute_cutover(
             backup = verify_backup(backup_directory)
             activate_database(staging, database, activate=True)
             activated = _database_validation(database, validation["task_count"])
+            database_digest = hashlib.sha256(database.read_bytes()).hexdigest()
             preclaim = {
                 "schema_version": "authoring-cutover-barrier/v2",
                 "cutover_id": cutover_id,
                 "manifest_sha256": manifest["manifest_sha256"],
-                "database": str(database),
+                "database": str(database.resolve()),
+                "database_sha256": database_digest,
+                "rollback_allowed": True,
                 "state_at_activation": "prepared",
                 "authority": "database.cutover_barrier",
+                "sqlite_service_unit": sqlite_service_unit,
+                "sqlite_env_file": str(sqlite_env_file),
             }
             _atomic_json(barrier_path, preclaim)
             _atomic_json(
@@ -513,6 +572,14 @@ def execute_cutover(
                     "barrier": str(barrier_path),
                     "legacy_runtime_config": disabled,
                     "rollback_allowed": True,
+                    "manifest_sha256": manifest["manifest_sha256"],
+                    "database": str(database.resolve()),
+                    "database_sha256": database_digest,
+                    "repository": str(repository.resolve()),
+                    "live_root": str(live_root.resolve()),
+                    "legacy_service_unit": service_unit,
+                    "sqlite_service_unit": sqlite_service_unit,
+                    "sqlite_env_file": str(sqlite_env_file),
                 },
             )
             return {
@@ -538,26 +605,230 @@ def execute_cutover(
         raise
 
 
+def _read_json_object(path: Path, label: str) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise MigrationError(f"{label} is missing or invalid") from exc
+    if not isinstance(value, dict):
+        raise MigrationError(f"{label} must be an object")
+    return value
+
+
+def _rollback_identity(
+    journal_path: Path, barrier_path: Path, database: Path
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    journal = _read_json_object(journal_path, "cutover journal")
+    record = _read_json_object(barrier_path, "cutover barrier record")
+    database_name = str(database.resolve())
+    required = {
+        "phase": "activated-preclaim",
+        "rollback_allowed": True,
+        "database": database_name,
+    }
+    if any(journal.get(key) != value for key, value in required.items()):
+        raise MigrationError("cutover journal is not rollback-eligible")
+    cutover_id = journal.get("cutover_id")
+    manifest_digest = journal.get("manifest_sha256")
+    database_digest = journal.get("database_sha256")
+    if (
+        not isinstance(cutover_id, str)
+        or not re.fullmatch(r"[A-Za-z0-9._:-]{1,200}", cutover_id)
+        or not isinstance(manifest_digest, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", manifest_digest)
+        or not isinstance(database_digest, str)
+        or not re.fullmatch(r"[0-9a-f]{64}", database_digest)
+    ):
+        raise MigrationError("cutover journal identity is incomplete")
+    sqlite_unit = journal.get("sqlite_service_unit")
+    sqlite_env = journal.get("sqlite_env_file")
+    unit_match = SQLITE_SERVICE_UNIT.fullmatch(str(sqlite_unit))
+    if (
+        unit_match is None
+        or sqlite_env
+        != f"/etc/nl2repobench/authoring-scheduler-{unit_match.group(1)}.env"
+    ):
+        raise MigrationError("cutover deployment binding is incomplete")
+    record_required = {
+        "schema_version": "authoring-cutover-barrier/v2",
+        "cutover_id": cutover_id,
+        "manifest_sha256": manifest_digest,
+        "database": database_name,
+        "database_sha256": database_digest,
+        "rollback_allowed": True,
+        "state_at_activation": "prepared",
+        "authority": "database.cutover_barrier",
+        "sqlite_service_unit": journal.get("sqlite_service_unit"),
+        "sqlite_env_file": journal.get("sqlite_env_file"),
+    }
+    if any(record.get(key) != value for key, value in record_required.items()):
+        raise MigrationError("cutover barrier identity does not match journal")
+    return journal, record
+
+
+@contextmanager
+def _rollback_authority(database: Path, journal_path: Path) -> Iterator[None]:
+    independent = journal_path.parent / f".{journal_path.name}.rollback.lock"
+    scheduler_lock = database.parent / f".{database.name}.lock"
+    with ExitStack() as stack:
+        for path in (independent, scheduler_lock):
+            if path.is_symlink():
+                raise MigrationError("rollback authority lock is a symlink")
+            fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+            stream = stack.enter_context(os.fdopen(fd, "a+"))
+            fcntl.flock(stream, fcntl.LOCK_EX)
+        yield
+
+
+def _validate_rollback_database(
+    database: Path, journal: dict[str, Any]
+) -> None:
+    if hashlib.sha256(database.read_bytes()).hexdigest() != journal["database_sha256"]:
+        raise MigrationError("rollback database digest does not match cutover journal")
+    uri = f"file:{database.resolve().as_posix()}?mode=ro"
+    with sqlite3.connect(uri, uri=True) as db:
+        db.row_factory = sqlite3.Row
+        barrier = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
+        config = db.execute("SELECT * FROM current_runtime_config").fetchone()
+        if (
+            barrier is None
+            or barrier["cutover_id"] != journal["cutover_id"]
+            or barrier["manifest_sha256"] != journal["manifest_sha256"]
+            or barrier["state"] != "prepared"
+            or int(barrier["rollback_allowed"]) != 1
+            or config is None
+            or bool(config["enabled"])
+            or any(
+                int(config[key]) != 0
+                for key in (
+                    "max_total_controllers",
+                    "controller_concurrency",
+                    "max_integrations",
+                    "agent_limit",
+                )
+            )
+        ):
+            raise MigrationError("rollback database is not disabled preclaim state")
+        nonzero = db.execute(
+            "SELECT count(*) FROM capacity_rows WHERE limit_count<>0 OR used_count<>0 "
+            "OR remaining_count<>0"
+        ).fetchone()[0]
+        live = db.execute(
+            "SELECT (SELECT count(*) FROM controllers WHERE state IN ('running','draining')) + "
+            "(SELECT count(*) FROM claims WHERE active=1) + "
+            "(SELECT count(*) FROM scheduler_leases WHERE active=1) + "
+            "(SELECT count(*) FROM controller_slot_reservations "
+            "WHERE state IN ('reserved','activated'))"
+        ).fetchone()[0]
+        if int(nonzero) or int(live):
+            raise MigrationError("rollback database still has capacity or live actors")
+
+
+def _verify_sqlite_service_stopped(unit: str) -> None:
+    if SQLITE_SERVICE_UNIT.fullmatch(unit) is None:
+        raise MigrationError("rollback SQLite service unit is invalid")
+    control_group = _systemctl("show", "--property=ControlGroup", "--value", unit)
+    _verify_empty_cgroup(control_group)
+
+
+def install_service_binding(
+    *,
+    journal_path: Path,
+    barrier_path: Path,
+    database: Path,
+    sqlite_service_unit: str,
+    sqlite_env_file: Path,
+    write: bool = False,
+) -> dict[str, str]:
+    """Validate and optionally install the exact cutover DB environment binding."""
+    with _rollback_authority(database, journal_path):
+        journal, _record = _rollback_identity(journal_path, barrier_path, database)
+        if (
+            journal.get("sqlite_service_unit") != sqlite_service_unit
+            or journal.get("sqlite_env_file") != str(sqlite_env_file)
+        ):
+            raise MigrationError("installer arguments do not match cutover deployment binding")
+        _validate_service_database(database, journal)
+        content = (
+            f"SCHEDULER_DB={database.resolve()}\n"
+            f"CUTOVER_ID={journal['cutover_id']}\n"
+            f"CUTOVER_JOURNAL={journal_path.resolve()}\n"
+            f"CUTOVER_BARRIER={barrier_path.resolve()}\n"
+        )
+        if write:
+            _atomic_text(sqlite_env_file, content)
+        return {
+            "sqlite_service_unit": sqlite_service_unit,
+            "sqlite_env_file": str(sqlite_env_file),
+            "scheduler_db": str(database.resolve()),
+            "cutover_id": str(journal["cutover_id"]),
+            "content_sha256": hashlib.sha256(content.encode()).hexdigest(),
+            "installed": str(write).lower(),
+        }
+
+
+def _validate_service_database(database: Path, journal: dict[str, Any]) -> None:
+    uri = f"file:{database.resolve().as_posix()}?mode=ro"
+    with sqlite3.connect(uri, uri=True) as db:
+        db.row_factory = sqlite3.Row
+        barrier = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
+        if (
+            barrier is None
+            or barrier["cutover_id"] != journal["cutover_id"]
+            or barrier["manifest_sha256"] != journal["manifest_sha256"]
+            or barrier["state"] not in {"prepared", "sealed"}
+        ):
+            raise MigrationError("installed service database does not match cutover identity")
+        if barrier["state"] == "prepared" and (
+            hashlib.sha256(database.read_bytes()).hexdigest()
+            != journal["database_sha256"]
+        ):
+            raise MigrationError("prepared service database digest changed before first enable")
+
+
 def rollback_cutover(
     *, journal_path: Path, barrier_path: Path, runtime_config: Path, database: Path
 ) -> None:
-    journal = json.loads(journal_path.read_text(encoding="utf-8"))
-    disabled = journal.get("legacy_runtime_config")
-    if not isinstance(disabled, dict) or disabled.get("enabled") is not False:
-        raise MigrationError("cutover journal lacks a disabled legacy configuration")
-    if database.is_file():
-        scheduler = scheduler_for(database)
-        barrier = scheduler.status().get("cutover_barrier")
-        if not isinstance(barrier, dict) or barrier.get("state") != "prepared":
-            raise MigrationError("rollback is forbidden after the first SQLite side effect")
-    if barrier_path.is_file():
-        record = json.loads(barrier_path.read_text(encoding="utf-8"))
-        if record.get("database") not in {None, str(database)}:
-            raise MigrationError("rollback record points to another database")
-    _atomic_json(runtime_config, disabled)
-    for suffix in ("", "-wal", "-shm"):
-        Path(str(database) + suffix).unlink(missing_ok=True)
-    _atomic_json(
-        journal_path,
-        {**journal, "phase": "rolled-back-preclaim", "rollback_allowed": True},
-    )
+    with _rollback_authority(database, journal_path):
+        journal, _record = _rollback_identity(journal_path, barrier_path, database)
+        disabled = journal.get("legacy_runtime_config")
+        if not isinstance(disabled, dict) or disabled.get("enabled") is not False:
+            raise MigrationError("cutover journal lacks a disabled legacy configuration")
+        repository = Path(str(journal.get("repository", "")))
+        live_root = Path(str(journal.get("live_root", "")))
+        if (
+            not repository.is_absolute()
+            or not live_root.is_absolute()
+            or runtime_config.resolve()
+            != (live_root / "supervisor/runtime-config.json").resolve()
+        ):
+            raise MigrationError("rollback repository or runtime config identity is invalid")
+        actors = _authoring_processes(repository, live_root)
+        if actors:
+            raise MigrationError(
+                f"rollback found live SQLite/repository actors: {[actor.pid for actor in actors]}"
+            )
+        _verify_sqlite_service_stopped(str(journal.get("sqlite_service_unit", "")))
+        _validate_rollback_database(database, journal)
+        # Re-read every authority under both locks immediately before deletion.
+        current_journal, _current_record = _rollback_identity(
+            journal_path, barrier_path, database
+        )
+        _validate_rollback_database(database, current_journal)
+        _atomic_json(runtime_config, disabled)
+        rollback_marker = database.parent / f".{database.name}.rolled-back.json"
+        _atomic_json(
+            rollback_marker,
+            {
+                "schema_version": "authoring-rollback-tombstone/v1",
+                "cutover_id": current_journal["cutover_id"],
+                "manifest_sha256": current_journal["manifest_sha256"],
+                "database_sha256": current_journal["database_sha256"],
+            },
+        )
+        for suffix in ("", "-wal", "-shm"):
+            Path(str(database) + suffix).unlink(missing_ok=True)
+        _atomic_json(
+            journal_path,
+            {**current_journal, "phase": "rolled-back-preclaim", "rollback_allowed": False},
+        )

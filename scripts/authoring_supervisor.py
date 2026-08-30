@@ -134,6 +134,14 @@ class SourceIntegrationError(ValueError):
     """Candidate source cannot be safely integrated."""
 
 
+class GeneratedTaskCollision(SourceIntegrationError):
+    def __init__(self, target: Path, expected_digest: str, actual_digest: str) -> None:
+        super().__init__(f"generated task collision: {target}")
+        self.target = target
+        self.expected_digest = expected_digest
+        self.actual_digest = actual_digest
+
+
 def _db_legacy_options(argv: list[str]) -> list[str]:
     supplied = {token.split("=", 1)[0] for token in argv if token.startswith("--")}
     return sorted(supplied & DB_FORBIDDEN_OPTIONS)
@@ -1010,7 +1018,11 @@ def _validate_and_compile(root: Path, source: Path, language: str) -> tuple[dict
 def _copy_generated(compiled: Path, target: Path) -> bool:
     if target.exists() or target.is_symlink():
         if target.is_symlink() or _tree_digest(compiled) != _tree_digest(target):
-            raise ValueError(f"generated task collision: {target}")
+            raise GeneratedTaskCollision(
+                target,
+                _tree_digest(compiled),
+                "symlink" if target.is_symlink() else _tree_digest(target),
+            )
         return False
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(compiled, target, symlinks=False)
@@ -1681,6 +1693,27 @@ def _integrate_db_task(
                 receipt_json=action,
             )
         return {"task_id": task["task_id"], **action}
+    except GeneratedTaskCollision as exc:
+        evidence = root / ".nl2repo/supervisor/collision-evidence" / f"{task['task_id']}.json"
+        _atomic_write(
+            evidence,
+            {
+                "schema_version": "authoring-generated-collision/v1",
+                "task_id": task["task_id"],
+                "target": str(exc.target),
+                "expected_digest": exc.expected_digest,
+                "actual_digest": exc.actual_digest,
+            },
+        )
+        scheduler.fail_operation(
+            receipt,
+            "source",
+            str(exc),
+            actor=actor.fence,
+            evidence_path=evidence.relative_to(root).as_posix(),
+            evidence_sha256=_sha256(evidence),
+        )
+        raise
     except Exception as exc:
         failure_class = (
             "source"
