@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.0",
+  "task_id": "tzlocal",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/regebro/tzlocal",
+    "revision": "6ef2c295f36c6053b13dc77e59e629d943e3ac91",
+    "source_archive_sha256": "sha256:c1466d3636fa00320760c2e5ae8f287c10f978a80b529690b6afb4bcdbebe935",
+    "source_archive_size_bytes": 163840,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:d99ab209aeb16aad2c25c90ffd83c1a981e290ffff76a420a2ab03e03f041b8c",
+    "distribution_version": "5.4.5.dev0"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image": "nl2repo-tzlocal-verifier:final@sha256:13f9d212a81c6b80ec0d4fa6ecda9d2cfb5288010255de8c4937ef9ff41fb64d",
+    "network_policy": "no-network",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["setuptools==80.9.0"],
+    "lock_artifact": {
+      "digest": "sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9",
+      "size_bytes": 634,
+      "uri": "artifact://private/sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9",
+      "visibility": "private"
+    },
+    "offline_install_probe": {
+      "command": "PIP_NO_INDEX=1 PYTHONPATH=<absolute-build-deps> python3.12 -m pip install --target <candidate-site> --no-deps --no-build-isolation <frozen-source>",
+      "exit_code": 0,
+      "installed_version": "5.4.5.dev0"
+    }
+  },
+  "inventory": {
+    "api_path": "catalog/sources/tzlocal/provenance/inventory.md",
+    "traceability_path": "catalog/sources/tzlocal/provenance/traceability.md",
+    "candidate_boundary_path": "catalog/sources/tzlocal/provenance/candidate-boundary.md",
+    "upstream_collected": 20,
+    "upstream_passed": 20,
+    "frozen_total": 30
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/compiled-current/tzlocal/bundle.manifest.json",
+    "manifest_sha256": "sha256:2ed144781d57ef23158e68ca42acb4c4942f13566f115756faa4f014ff8c1a57",
+    "canonical_manifest_digest": "sha256:c781a6a44e535e3f517c251473923e096a53a417f296fde95eff80fb70d8ae16",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "file_count": 59,
+    "repeat_compile_identical": true,
+    "verifier_bundle": "artifact://private/sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0",
+    "oracle_bundle": "artifact://private/sha256:e1974f87c28a5d200f687bc47c5988272b1cd731ba147bcb2d0ac26916237e0b",
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "frozen_total": 30
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/compiled-current/tzlocal -a oracle --allow-agent-host github.com --job-name tzlocal-oracle-current-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/oracle-current --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 30,
+    "total": 30,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/oracle-current/tzlocal-oracle-current-20260830/tzlocal__6z4Ca4d/verifier/grading.json",
+      "sha256": "sha256:216b6793ffbb015f0913aae05c1af7c6dcc65835c6cf631d267b464208f794ea"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/oracle-current/tzlocal-oracle-current-20260830/tzlocal__6z4Ca4d/verifier/network.json",
+      "sha256": "sha256:cfdea25213cf501bbb8fe1b30e6c46be8c2796b47c726be01246fb72d0d90cc5",
+      "public_network_available": false
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/oracle-current/tzlocal-oracle-current-20260830/tzlocal__6z4Ca4d/verifier/candidate-install.json",
+      "outcome": "success",
+      "returncode": 0
+    },
+    "source_fetch_exit_code": 0,
+    "source_archive_check": "passed",
+    "source_host_authorization": "github.com only for trusted Oracle"
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/compiled-current/tzlocal -a nop --job-name tzlocal-empty-current-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/empty-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/empty-current/tzlocal-empty-current-20260830/tzlocal__bGwgwrN/verifier/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/empty-current/tzlocal-empty-current-20260830/tzlocal__bGwgwrN/verifier/network.json",
+        "sha256": "sha256:b17957e4490bdce5968e61df6e6a582fe7f1b31b85fc1efc8c6aee9684babf72"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/controls-current/tzlocal-stub -a oracle --job-name tzlocal-stub-current-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/stub-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 5,
+      "total": 30,
+      "reward": 0.16666666666666666,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/stub-current/tzlocal-stub-current-20260830/tzlocal-stub__gHH9bzV/verifier/grading.json",
+        "sha256": "sha256:423f47e1a17a64aea8341c6e282288742dd53f2b53fbfbbf03c42c884b57e0e2"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/stub-current/tzlocal-stub-current-20260830/tzlocal-stub__gHH9bzV/verifier/network.json",
+        "sha256": "sha256:a16df705c177152f3e30f2dee7b1d0f3c44cd2492d777da182b86996fdc5fd96"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/controls-current/tzlocal-forgery -a oracle --job-name tzlocal-forgery-current-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/forgery-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 4,
+      "total": 30,
+      "reward": 0.13333333333333333,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/forgery-current/tzlocal-forgery-current-20260830/tzlocal-forgery__bwHZ25j/verifier/grading.json",
+        "sha256": "sha256:9341e15c3305e95b0053d6426d7ae70b4f0bbe0ad46eb47a1ae46d61ce6cf171"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/forgery-current/tzlocal-forgery-current-20260830/tzlocal-forgery__bwHZ25j/verifier/network.json",
+        "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/controls-current/tzlocal-install-hang -a oracle --job-name tzlocal-install-hang-current-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/install-hang-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/install-hang-current/tzlocal-install-hang-current-20260830/tzlocal-install-hang__e7SdJ2X/verifier/grading.json",
+        "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/install-hang-current/tzlocal-install-hang-current-20260830/tzlocal-install-hang__e7SdJ2X/verifier/network.json",
+        "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/controls-current/tzlocal-call-hang -a oracle --job-name tzlocal-call-hang-current-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/call-hang-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 1,
+      "total": 30,
+      "reward": 0.03333333333333333,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/call-hang-current/tzlocal-call-hang-current-20260830/tzlocal-call-hang__yuyEXqf/verifier/grading.json",
+        "sha256": "sha256:9fbfb7fb376007ea114cc0715cc232168e94034c44a9c1de77e465ba68833e2b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/runs/call-hang-current/tzlocal-call-hang-current-20260830/tzlocal-call-hang__yuyEXqf/verifier/network.json",
+        "sha256": "sha256:6bf7af5cb705fffe9a8368deac2f596cd02b5c6e6fb91c0f2c88707f572c3ddc"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none -v <task-local-workspace>:/workspace -v <task-local-logs>:/logs nl2repo-tzlocal-verifier:final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "passed": 30,
+      "total": 30,
+      "reward": 1.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/direct/offline-current/logs/verifier/grading.json",
+        "sha256": "sha256:216b6793ffbb015f0913aae05c1af7c6dcc65835c6cf631d267b464208f794ea"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/tzlocal/direct/offline-current/logs/verifier/network.json",
+        "sha256": "sha256:f4cc3547991035460afaf996605e04830cb56b577833e3cdc867b32f1d5a2106",
+        "public_network_available": false
+      }
+    }
+  },
+  "residual_risks": [
+    "The locked OpenHands runtime image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5 is unavailable locally; the trusted Oracle used the locally available image tag and the model Agent Run must wait for the immutable image to be restored.",
+    "No Harbor model Agent Run was started from this authoring lane.",
+    "Blind review, model pilot, dataset publication, and cross-runtime parity remain integrator-owned stages."
+  ]
+}

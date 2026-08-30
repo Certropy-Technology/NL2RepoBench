@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "tzlocal"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "time-zone-discovery"
+tags = ["python", "datetime", "timezone", "zoneinfo", "filesystem", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/regebro/tzlocal"
+revision = "6ef2c295f36c6053b13dc77e59e629d943e3ac91"
+license_spdx = "MIT"
+source_digest = "sha256:c1466d3636fa00320760c2e5ae8f287c10f978a80b529690b6afb4bcdbebe935"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "python -m pip install --no-deps --no-build-isolation --target /tmp/candidate-site /tmp/candidate"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact setuptools build backend is installed from a private hash-locked requirements file during image build. Candidate and verifier execution have no egress; only the trusted Oracle receives an exact run-scoped github.com authorization to fetch and verify the frozen source revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0"]
+lock_artifact = { digest = "sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9", size_bytes = 634, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+environment = {}
+bundle = { digest = "sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0", visibility = "private" }
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build tzlocal from an empty workspace and reproduce deterministic zone discovery, cache, reload, offset, and packaging behavior through a separate child-side verifier."
+keywords = ["python", "datetime", "timezone", "zoneinfo", "filesystem", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 480.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:e1974f87c28a5d200f687bc47c5988272b1cd731ba147bcb2d0ac26916237e0b"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e1974f87c28a5d200f687bc47c5988272b1cd731ba147bcb2d0ac26916237e0b"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828/tzlocal"
+reason = "The final production bundle passed the 30/30 Oracle verifier plus empty, stub, forgery, install-hang, call-hang, and direct offline controls. The locked OpenHands runtime image must be restored before the independent model Agent Run."
