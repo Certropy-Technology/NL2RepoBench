@@ -621,6 +621,23 @@ class Scheduler:
                 != (1, 1, 0, 1)
             ):
                 raise ConflictError("prepared cutover requires bounded first enable")
+            bounded_first_enable = (
+                enabled
+                and barrier is not None
+                and barrier["state"] == "prepared"
+                and current is not None
+                and not bool(current["enabled"])
+                and (
+                    max_total_controllers,
+                    controller_concurrency,
+                    max_integrations,
+                    agent_limit,
+                )
+                == (1, 1, 0, 1)
+            )
+            now = _now()
+            if bounded_first_enable:
+                self._seal_cutover_barrier(db, "first-enable", None, now)
             cur = db.execute(
                 "INSERT INTO runtime_config(enabled,max_total_controllers,controller_concurrency,max_integrations,agent_limit,lease_seconds,heartbeat_interval_seconds,changed_by,changed_at,reason) VALUES(?,?,?,?,?,?,?,?,?,?)",
                 (
@@ -632,7 +649,7 @@ class Scheduler:
                     lease_seconds,
                     heartbeat_interval_seconds,
                     changed_by,
-                    _now(),
+                    now,
                     reason,
                 ),
             )
@@ -650,7 +667,6 @@ class Scheduler:
                 for language in LANGUAGES
                 for unit in ("controller_slot", "active_claim")
             )
-            now = _now()
             for unit, kind, key, limit in limits:
                 current = db.execute(
                     "SELECT used_count FROM capacity_rows WHERE capacity_unit=? "
@@ -714,7 +730,7 @@ class Scheduler:
 
     @staticmethod
     def _seal_cutover_barrier(
-        db: sqlite3.Connection, effect_kind: str, task_id: str, moment: str
+        db: sqlite3.Connection, effect_kind: str, task_id: str | None, moment: str
     ) -> None:
         barrier = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
         if barrier is None or barrier["state"] == "sealed":
@@ -2595,6 +2611,66 @@ class Scheduler:
             )
             if cur.rowcount != 1:
                 raise ConflictError("unknown receipt")
+
+    def apply_cleanup_and_complete(
+        self,
+        receipt_id: str,
+        *,
+        actor: ActorFence,
+        evidence_path: str,
+        evidence_sha256: str,
+        receipt_json: Mapping[str, Any],
+        reason: str,
+    ) -> None:
+        """Atomically apply cleanup evidence and complete its task."""
+        _id(receipt_id, "receipt_id")
+        path = Path(evidence_path)
+        if not evidence_path or path.is_absolute() or ".." in path.parts:
+            raise ValidationError("cleanup evidence_path must be relative")
+        digest = _digest(evidence_sha256, "evidence_sha256")
+        if not reason.strip():
+            raise ValidationError("completion reason is required")
+        with self._db() as db, _transaction(db):
+            receipt = db.execute(
+                "SELECT * FROM operation_receipts WHERE receipt_id=?", (receipt_id,)
+            ).fetchone()
+            if receipt is None or receipt["operation_kind"] != "cleanup":
+                raise ConflictError("unknown cleanup receipt")
+            task = db.execute(
+                "SELECT state FROM tasks WHERE task_id=?", (receipt["task_id"],)
+            ).fetchone()
+            if receipt["status"] == "applied" and task is not None and task["state"] == "complete":
+                return
+            self._fenced_actor(db, actor, "cleanup", _now())
+            if (
+                receipt["status"] != "started"
+                or task is None
+                or task["state"] != "cleaning"
+                or (
+                    receipt["actor_lease_id"],
+                    receipt["actor_generation"],
+                    receipt["actor_id"],
+                    receipt["actor_owner_uuid"],
+                )
+                != (actor.lease_id, actor.generation, actor.controller_id, actor.owner_uuid)
+            ):
+                raise ConflictError("cleanup receipt task or actor fence failed")
+            now = _now()
+            cur = db.execute(
+                "UPDATE operation_receipts SET status='applied',evidence_path=?,"
+                "evidence_sha256=?,receipt_json=?,finished_at=?,updated_at=? "
+                "WHERE receipt_id=? AND status='started'",
+                (evidence_path, digest, _json(receipt_json), now, now, receipt_id),
+            )
+            if cur.rowcount != 1:
+                raise ConflictError("cleanup receipt was concurrently changed")
+            cur = db.execute(
+                "UPDATE tasks SET state='complete',terminal_reason=?,updated_at=? "
+                "WHERE task_id=? AND state='cleaning'",
+                (reason, now, receipt["task_id"]),
+            )
+            if cur.rowcount != 1:
+                raise ConflictError("cleanup task was concurrently changed")
 
     def snapshot(
         self,

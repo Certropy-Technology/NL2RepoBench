@@ -242,7 +242,7 @@ def _mountinfo_conflicts(lines: list[str], worktree_root: Path) -> bool:
         if "-" not in fields or len(fields) < 6:
             continue
         separator = fields.index("-")
-        candidates = (fields[4], fields[separator + 2])
+        candidates = (fields[3], fields[4], fields[separator + 2])
         if any(
             value.startswith("/") and _under(str(_mount_path(value)), worktree_root)
             for value in candidates

@@ -19,6 +19,7 @@ import re
 import shlex
 import shutil
 import signal
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -40,7 +41,13 @@ from nl2repobench.authoring.runtime import (
     process_identity,
     scheduler_for,
 )
-from nl2repobench.authoring.scheduler import ConflictError, Scheduler
+from nl2repobench.authoring.scheduler import (
+    ConflictError,
+    CorruptionError,
+    Scheduler,
+    ValidationError,
+    readonly_status,
+)
 
 SAFE_PACKAGE = re.compile(
     r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
@@ -97,10 +104,39 @@ DEFAULT_FAILURE_BACKOFF_SECONDS = 1800
 DEFAULT_DIRECTOR_INTERVAL_SECONDS = 600
 DEFAULT_DIRECTOR_TIMEOUT_SECONDS = 300
 DIRECTOR_ACTIONS = frozenset({"continue", "discover", "integrate", "pause"})
+DB_FORBIDDEN_OPTIONS = frozenset(
+    {
+        "--queue-root",
+        "--workers",
+        "--max-total-controllers",
+        "--runtime-config",
+        "--max-integrations",
+        "--director-mode",
+        "--director-command",
+        "--director-provider",
+        "--director-model",
+        "--director-thinking",
+        "--director-interval-sec",
+        "--director-timeout-sec",
+        "--refresh-director",
+        "--discovery-pool",
+        "--failure-backoff-seconds",
+        "--min-free-bytes",
+        "--docker-min-free-bytes",
+        "--watcher-min-free-bytes",
+        "--replenish-language",
+        "--resume-stopped-controllers",
+    }
+)
 
 
 class SourceIntegrationError(ValueError):
     """Candidate source cannot be safely integrated."""
+
+
+def _db_legacy_options(argv: list[str]) -> list[str]:
+    supplied = {token.split("=", 1)[0] for token in argv if token.startswith("--")}
+    return sorted(supplied & DB_FORBIDDEN_OPTIONS)
 
 
 @dataclass(frozen=True)
@@ -1666,6 +1702,30 @@ def _integrate_db_task(
 def supervise_db(args: argparse.Namespace) -> int:
     root = Path(args.repository_root).resolve()
     live = (root / args.live_root).resolve()
+    if args.dry_run:
+        status = readonly_status(args.scheduler_db)
+        policy = status.get("resource_policy") or {}
+        free = _free_bytes(root)
+        docker_root, docker_free, docker_error = _docker_storage_status()
+        dry_report = {
+            "schema_version": "authoring-supervisor/v3",
+            "authority": "sqlite",
+            "dry_run": True,
+            "database": status.get("database"),
+            "runtime_config": status.get("config"),
+            "resource_policy": policy,
+            "task_counts": status.get("task_counts"),
+            "cutover_barrier": status.get("cutover_barrier"),
+            "resources": {
+                "repository_free_bytes": free,
+                "docker_root": str(docker_root),
+                "docker_free_bytes": docker_free,
+                "docker_error": _redact(docker_error) if docker_error else None,
+            },
+            "actions": [{"status": "would-supervise", "external_effects": False}],
+        }
+        print(json.dumps(dry_report, ensure_ascii=False, sort_keys=True), flush=True)
+        return 0
     scheduler = scheduler_for(args.scheduler_db)
     scheduler.init()
     with ExitStack() as stack:
@@ -2224,11 +2284,13 @@ def main() -> int:
     )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--resume-stopped-controllers", action="store_true")
-    args = parser.parse_args()
+    raw_argv = sys.argv[1:]
+    args = parser.parse_args(raw_argv)
     if args.scheduler_db is not None:
         args.scheduler_db = args.scheduler_db.resolve()
-        if args.replenish_language:
-            parser.error("DB mode does not consume legacy discovery authorities")
+        forbidden = _db_legacy_options(raw_argv)
+        if forbidden:
+            parser.error(f"DB mode forbids legacy-only options: {', '.join(forbidden)}")
     if args.replenish_language and not args.once:
         parser.error("--replenish-language requires --once")
     if (
@@ -2255,6 +2317,15 @@ def main() -> int:
     except ConflictError as exc:
         print(f"authoring supervisor singleton unavailable: {_redact(str(exc))}", file=sys.stderr)
         return 2
+    except (ValidationError, CorruptionError, sqlite3.DatabaseError) as exc:
+        if args.scheduler_db is not None:
+            print(
+                f"authoring supervisor corruption marker: {_redact(str(exc))}",
+                file=sys.stderr,
+            )
+            return 78
+        print(f"authoring supervisor failed: {_redact(str(exc))}", file=sys.stderr)
+        return 1
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:
         print(f"authoring supervisor failed: {_redact(str(exc))}", file=sys.stderr)
         return 1

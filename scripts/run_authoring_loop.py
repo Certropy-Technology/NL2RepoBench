@@ -606,28 +606,38 @@ def _launch_agent_db(
                 boot_id=boot_id,
             )
             raise
-        deadline = time.monotonic() + args.agent_timeout_sec
-        heartbeat = max(5, min(60, int(scheduler.runtime_config()["heartbeat_interval_seconds"])))
-        while True:
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
+        child_reaped = False
+        try:
+            deadline = time.monotonic() + args.agent_timeout_sec
+            heartbeat = max(
+                5,
+                min(60, int(scheduler.runtime_config()["heartbeat_interval_seconds"])),
+            )
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    _terminate_process(process)
+                    child_reaped = True
+                    returncode, status = 124, "timeout"
+                    break
+                try:
+                    returncode = process.wait(timeout=min(heartbeat, remaining))
+                    child_reaped = True
+                    status = "exited"
+                    break
+                except subprocess.TimeoutExpired:
+                    scheduler.heartbeat(
+                        claim.claim_id,
+                        claim.owner_uuid,
+                        claim.controller_id,
+                        claim.generation,
+                        pid=pid,
+                        process_starttime_ticks=starttime,
+                        boot_id=boot_id,
+                    )
+        finally:
+            if not child_reaped:
                 _terminate_process(process)
-                returncode, status = 124, "timeout"
-                break
-            try:
-                returncode = process.wait(timeout=min(heartbeat, remaining))
-                status = "exited"
-                break
-            except subprocess.TimeoutExpired:
-                scheduler.heartbeat(
-                    claim.claim_id,
-                    claim.owner_uuid,
-                    claim.controller_id,
-                    claim.generation,
-                    pid=pid,
-                    process_starttime_ticks=starttime,
-                    boot_id=boot_id,
-                )
     return {
         "status": status,
         "exit_code": returncode,

@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import sqlite3
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -262,6 +263,55 @@ def test_db_supervisor_honors_dynamic_disable_and_records_snapshot(
     assert scheduler.resource_policy()["docker_min_free_bytes"] == 20 * 1024**3
 
 
+def test_db_supervisor_dry_run_is_table_content_read_only(tmp_path: Path, monkeypatch) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    _finish_authoring(scheduler, owner, controller, tmp_path / "worktree")
+    actor = SingletonActor.acquire(scheduler, "integration")
+    receipt = scheduler.begin_operation(
+        "task", "integration", "dry-run-abandoned", actor=actor.fence
+    )
+    with scheduler.connect() as db:
+        db.execute(
+            "UPDATE scheduler_leases SET lease_expires_at='2000-01-01T00:00:00+00:00' "
+            "WHERE lease_id=?",
+            (actor.fence.lease_id,),
+        )
+
+    def content() -> dict[str, list[tuple[object, ...]]]:
+        uri = f"file:{scheduler.path.resolve().as_posix()}?mode=ro"
+        with sqlite3.connect(uri, uri=True) as db:
+            tables = [
+                row[0]
+                for row in db.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
+                )
+            ]
+            return {
+                table: [tuple(row) for row in db.execute(f'SELECT * FROM "{table}"')]
+                for table in tables
+            }
+
+    before = content()
+    monkeypatch.setattr(supervisor, "_free_bytes", lambda _path: 100 * 1024**3)
+    monkeypatch.setattr(
+        supervisor,
+        "_docker_storage_status",
+        lambda: (tmp_path, 100 * 1024**3, None),
+    )
+    args = SimpleNamespace(
+        repository_root=tmp_path,
+        live_root=Path("live"),
+        scheduler_db=scheduler.path,
+        dry_run=True,
+    )
+    assert supervisor.supervise_db(args) == 0
+    assert content() == before
+    with scheduler.connect() as db:
+        assert db.execute(
+            "SELECT status FROM operation_receipts WHERE receipt_id=?", (receipt,)
+        ).fetchone()[0] == "started"
+
+
 def test_zero_runtime_limits_skip_work_but_allow_maintenance(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -387,6 +437,52 @@ def test_scheduler_operator_exposes_runtime_and_resource_limits() -> None:
     assert resource.docker_min_free_bytes == 2
 
 
+@pytest.mark.parametrize("option", sorted(supervisor.DB_FORBIDDEN_OPTIONS))
+def test_db_supervisor_rejects_every_legacy_only_option(option: str) -> None:
+    assert supervisor._db_legacy_options([option]) == [option]
+
+
+def test_db_supervisor_parser_errors_on_legacy_authority(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "authoring_supervisor.py",
+            "--scheduler-db",
+            str(tmp_path / "scheduler.sqlite3"),
+            "--queue-root",
+            str(tmp_path / "legacy-queue"),
+            "--once",
+        ],
+    )
+    with pytest.raises(SystemExit) as exc:
+        supervisor.main()
+    assert exc.value.code == 2
+
+
+def test_malformed_scheduler_database_returns_restart_preventing_78(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    database = tmp_path / "malformed.sqlite3"
+    database.write_bytes(b"not sqlite")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "authoring_supervisor.py",
+            "--scheduler-db",
+            str(database),
+            "--repository-root",
+            str(tmp_path),
+            "--once",
+        ],
+    )
+    assert supervisor.main() == 78
+    assert "corruption marker" in capsys.readouterr().err
+
+
 class FakeBucket:
     def __init__(self) -> None:
         self.objects: dict[str, bytes] = {}
@@ -504,6 +600,74 @@ def test_shadow_e2e_receipt_chain_with_fake_external_adapters(tmp_path: Path, mo
     assert completed["status"] == "complete"
     assert not worktree.exists()
     assert scheduler.status()["task_counts"] == {"complete": 1}
+
+
+def test_cleanup_apply_and_complete_is_atomic_on_completion_failure(tmp_path: Path) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    _finish_authoring(scheduler, owner, controller, tmp_path / "worktree")
+    integration = SingletonActor.acquire(scheduler, "integration")
+    integration_receipt = scheduler.begin_operation(
+        "task", "integration", "atomic-integration", actor=integration.fence
+    )
+    scheduler.update_receipt(
+        integration_receipt,
+        "pushed",
+        actor=integration.fence,
+        commit_sha="f" * 40,
+        external_ref="refs/heads/main",
+    )
+    integration.release()
+    archive_actor = SingletonActor.acquire(scheduler, "archive")
+    archive_receipt = scheduler.begin_operation(
+        "task", "archive", "atomic-archive", actor=archive_actor.fence
+    )
+    scheduler.update_receipt(
+        archive_receipt,
+        "verified",
+        actor=archive_actor.fence,
+        manifest_key="archive/manifest.json",
+        manifest_sha256="1" * 64,
+        source_snapshot_sha256="2" * 64,
+        object_count=1,
+        byte_count=1,
+        evidence_sha256="3" * 64,
+    )
+    cleanup_receipt = scheduler.begin_operation(
+        "task", "cleanup", "atomic-cleanup", actor=archive_actor.fence
+    )
+    with scheduler.connect() as db:
+        db.execute(
+            "CREATE TRIGGER fail_atomic_complete BEFORE UPDATE OF state ON tasks "
+            "WHEN NEW.state='complete' BEGIN SELECT RAISE(ABORT,'injected completion failure'); END"
+        )
+    with pytest.raises(sqlite3.IntegrityError, match="injected completion failure"):
+        scheduler.apply_cleanup_and_complete(
+            cleanup_receipt,
+            actor=archive_actor.fence,
+            evidence_path="cleanup/evidence.json",
+            evidence_sha256="4" * 64,
+            receipt_json={"removed": True},
+            reason="complete",
+        )
+    with scheduler.connect() as db:
+        assert tuple(
+            db.execute(
+                "SELECT r.status,t.state FROM operation_receipts r "
+                "JOIN tasks t ON t.task_id=r.task_id WHERE r.receipt_id=?",
+                (cleanup_receipt,),
+            ).fetchone()
+        ) == ("started", "cleaning")
+        db.execute("DROP TRIGGER fail_atomic_complete")
+    scheduler.apply_cleanup_and_complete(
+        cleanup_receipt,
+        actor=archive_actor.fence,
+        evidence_path="cleanup/evidence.json",
+        evidence_sha256="4" * 64,
+        receipt_json={"removed": True},
+        reason="complete",
+    )
+    assert scheduler.status()["task_counts"] == {"complete": 1}
+    archive_actor.release()
 
 
 def test_abandoned_operation_is_reconciled_under_new_actor(tmp_path: Path) -> None:
@@ -826,6 +990,59 @@ def test_worker_start_failure_kills_child_and_releases_claim(tmp_path: Path, mon
     assert events == ["prepared", "terminated", "released"]
 
 
+def test_worker_heartbeat_failure_kills_running_child(tmp_path: Path, monkeypatch) -> None:
+    events: list[str] = []
+
+    class Process:
+        pid = 12347
+
+        def wait(self, timeout=None):
+            raise loop.subprocess.TimeoutExpired(["pi"], timeout)
+
+    class FailingScheduler:
+        def prepare(self, *args, **kwargs):
+            events.append("prepared")
+
+        def start(self, *args, **kwargs):
+            events.append("started")
+
+        def runtime_config(self):
+            return {"heartbeat_interval_seconds": 5}
+
+        def heartbeat(self, *args, **kwargs):
+            events.append("heartbeat-failed")
+            raise RuntimeError("heartbeat failed")
+
+    monkeypatch.setattr(loop, "_agent_prompt", lambda **kwargs: "prompt")
+    monkeypatch.setattr(loop, "_pi_command", lambda *args, **kwargs: ["pi"])
+    monkeypatch.setattr(loop, "_agent_environment", lambda _args: {})
+    monkeypatch.setattr(loop.subprocess, "Popen", lambda *args, **kwargs: Process())
+    monkeypatch.setattr(loop, "process_identity", lambda _pid: (_pid, 2, "boot"))
+    monkeypatch.setattr(loop, "_terminate_process", lambda _process: events.append("terminated"))
+    claim = SimpleNamespace(
+        claim_id="claim",
+        owner_uuid="owner",
+        controller_id="controller",
+        generation=1,
+        attempt_no=1,
+    )
+    with pytest.raises(RuntimeError, match="heartbeat failed"):
+        loop._launch_agent_db(
+            SimpleNamespace(agent_timeout_sec=10),
+            FailingScheduler(),
+            claim,
+            (os.getpid(), 1, "boot"),
+            plan={"batch_id": "batch"},
+            task={"package": "demo"},
+            brief_path=tmp_path / "brief",
+            worktree=tmp_path,
+            session_dir=tmp_path / "sessions",
+            log_path=tmp_path / "child.log",
+            handoff_path=tmp_path / "handoff",
+        )
+    assert events == ["prepared", "started", "heartbeat-failed", "terminated"]
+
+
 def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypatch) -> None:
     record = cutover.ProcessRecord(
         123,
@@ -870,6 +1087,10 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
         f"36 25 0:32 / {worktrees} rw,relatime - bind {worktrees} rw"
     )
     assert cutover._mountinfo_conflicts([mount_line], worktrees)
+    bind_root_line = (
+        f"37 25 0:33 {worktrees / 'task'} /outside rw,relatime - ext4 /dev/sda1 rw"
+    )
+    assert cutover._mountinfo_conflicts([bind_root_line], worktrees)
 
     calls: list[tuple[str, ...]] = []
 
@@ -1023,15 +1244,8 @@ def test_preclaim_rollback_and_first_claim_seals_barrier(tmp_path: Path) -> None
         executable_digest="d" * 64,
         argv_digest="e" * 64,
     )
-    assert scheduler.claim_next(
-        controller,
-        owner,
-        pid=pid,
-        process_starttime_ticks=starttime,
-        boot_id=boot_id,
-    )
-    assert scheduler.status()["cutover_barrier"]["state"] == "sealed"
-
+    live_supervisor = SingletonActor.acquire(scheduler, "supervisor")
+    assert scheduler.status()["cutover_barrier"]["first_effect_kind"] == "first-enable"
     config = tmp_path / "runtime.json"
     config.write_text(json.dumps(disabled), encoding="utf-8")
     journal = tmp_path / "journal.json"
@@ -1045,6 +1259,15 @@ def test_preclaim_rollback_and_first_claim_seals_barrier(tmp_path: Path) -> None
             runtime_config=config,
             database=database,
         )
+    live_supervisor.release()
+    assert scheduler.claim_next(
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )
+    assert scheduler.status()["cutover_barrier"]["state"] == "sealed"
 
     operation_scheduler, operation_owner, operation_controller = _scheduler(
         tmp_path / "operation-root"

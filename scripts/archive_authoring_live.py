@@ -616,16 +616,13 @@ def _db_cleanup_one(
         remove_verified_worktree(Path(worktree_value))
         evidence.parent.mkdir(parents=True, exist_ok=True)
         evidence.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
-        scheduler.update_receipt(
+        scheduler.apply_cleanup_and_complete(
             receipt_id,
-            "applied",
             actor=actor.fence,
             evidence_path=evidence.relative_to(receipt_root).as_posix(),
             evidence_sha256=_sha256(evidence),
             receipt_json=payload,
-        )
-        scheduler.complete(
-            str(task["task_id"]), "integration, archive, and cleanup receipts verified"
+            reason="integration, archive, and cleanup receipts verified",
         )
         return {"task_id": task["task_id"], "status": "complete", "bytes_removed": removed}
     except Exception as exc:

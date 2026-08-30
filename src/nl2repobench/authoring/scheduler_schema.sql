@@ -189,7 +189,7 @@ CREATE TABLE cutover_barrier (
   state TEXT NOT NULL CHECK(state IN ('prepared','sealed')),
   rollback_allowed INTEGER NOT NULL CHECK(rollback_allowed IN (0,1)),
   prepared_at TEXT NOT NULL, sealed_at TEXT,
-  first_effect_kind TEXT CHECK(first_effect_kind IS NULL OR first_effect_kind IN ('claim','integration','archive','cleanup')),
+  first_effect_kind TEXT CHECK(first_effect_kind IS NULL OR first_effect_kind IN ('first-enable','claim','integration','archive','cleanup')),
   first_effect_task_id TEXT REFERENCES tasks(task_id),
   CHECK((state='prepared' AND rollback_allowed=1 AND sealed_at IS NULL AND first_effect_kind IS NULL)
      OR (state='sealed' AND rollback_allowed=0 AND sealed_at IS NOT NULL AND first_effect_kind IS NOT NULL))
