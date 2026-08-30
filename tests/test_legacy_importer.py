@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
+from nl2repobench.analysis.archive.legacy.importer import LegacyImporter, LegacyImportError
 from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.state import StateStore
 

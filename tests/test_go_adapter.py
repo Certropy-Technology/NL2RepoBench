@@ -17,7 +17,11 @@ from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.canonical_models import Visibility
 from nl2repobench.domain.runtime import RuntimeDiscriminator
-from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
+from nl2repobench.harbor.go_compiler import (
+    GoHarborCompileError,
+    GoHarborCompiler,
+    go_network_failure_reason,
+)
 from nl2repobench.harbor.private_artifacts import PrivateArtifactsManifest
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.runtimes.go import GoRuntimeAdapter
@@ -421,3 +425,16 @@ def test_go_network_script_distinguishes_network_and_internal_exit_codes() -> No
     assert network_branch < internal_branch
     assert "grade --reason verifier-network-available" in script[network_branch:internal_branch]
     assert "grade --reason verifier-internal-error" in script[internal_branch:]
+
+
+@pytest.mark.parametrize(
+    ("exit_code", "reason"),
+    [
+        (0, None),
+        (1, "verifier-network-available"),
+        (70, "verifier-internal-error"),
+        (2, "verifier-internal-error"),
+    ],
+)
+def test_go_network_failure_reason_contract(exit_code: int, reason: str | None) -> None:
+    assert go_network_failure_reason(exit_code) == reason

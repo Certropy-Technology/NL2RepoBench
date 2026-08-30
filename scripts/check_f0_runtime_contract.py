@@ -39,8 +39,6 @@ def scan_runtime(repository_root: Path) -> tuple[Violation, ...]:
         relative = path.relative_to(repository_root)
         if "analysis" in relative.parts and "archive" in relative.parts:
             continue
-        if "legacy" in relative.parts:
-            continue
         text = path.read_text(encoding="utf-8")
         for line_number, line in enumerate(text.splitlines(), start=1):
             for token, pattern in FORBIDDEN.items():

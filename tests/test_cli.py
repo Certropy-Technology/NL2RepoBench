@@ -58,3 +58,10 @@ def test_author_scan_rejects_unregistered_language(tmp_path) -> None:
     )
     assert result.exit_code == 2
     assert "no local scanner" in result.stderr
+
+
+def test_public_cli_does_not_expose_legacy_import() -> None:
+    result = CliRunner().invoke(app, ["task", "import-legacy"])
+
+    assert result.exit_code != 0
+    assert "No such command" in result.output

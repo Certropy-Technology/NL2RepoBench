@@ -118,31 +118,11 @@ legacy 四文件不能证明上游 URL、完整 commit、license、base image di
 
 `start.md` 是公开 instruction，作为 public artifact 保存。`test_commands.json` 和 `test_files.json` 可能暴露 verifier 细节，作为 private artifact 保存；manifest 只保存 opaque ref、digest、size 和 visibility。当前 `LocalArtifactResolver` 默认拒绝 private ref，只有显式 `allow_private=True` 才能物化。
 
-## 导入 104 道 legacy 题
+## 历史输入
 
-```bash
-uv run nl2repo task import-legacy \
-  --legacy-root test_files \
-  --output authoring \
-  --artifact-root .nl2repo/artifacts \
-  --state-db .nl2repo/state.db \
-  --difficulty-file test_files/task_difficulty.csv \
-  --report .nl2repo/metadata-gap-report.json
-```
-
-导入过程：
-
-1. 按 task ID 排序读取四个 legacy 文件；
-2. 严格验证测试数量、命令列表和 protected paths；
-3. 以原始 bytes 写入内容寻址 artifact store；
-4. 生成 `authoring/<task-id>/manifest.json`；
-5. 以 SQLite upsert 记录 task/version/status/digest；
-6. 用 Polars 聚合缺失字段，写出 gap report；
-7. 生成 `authoring/dataset.manifest.json`。
-
-Importer 是幂等的：相同文件内容得到相同 artifact 和 manifest digest。它不会自动把 task 推进到 `frozen` 或 `published`；导入后的状态仍是 `discovered`，需要后续 freeze、inventory、review 和控制阶段。
-
-迁移完成后，新的 task 只允许从 declarative catalog 编译；`import-legacy` 仅用于一次性 backfill 和历史复现。生成的 `authoring/` JSON 是机器索引，不是 Human 的编辑入口。
+legacy 四文件只由 `src/nl2repobench/analysis/archive/legacy/` 下的离线归档工具读取，不能通过
+public CLI 调用，也不能作为新的 task authoring 入口。迁移完成后，新的 task 只允许从
+declarative catalog 编译；历史 archive bytes 不参与当前 runtime 或发布流程。
 
 当前 104 题的首次基线位于 [`reports/legacy-metadata-gap.v1.md`](../reports/legacy-metadata-gap.v1.md)，逐题机器记录位于同目录 JSON。报告确认 104 题都缺失 source revision/license、环境 digest、离线依赖闭包、test bundle provenance 和冻结 collection 证据，因此不能直接标记为 production-publishable。
 

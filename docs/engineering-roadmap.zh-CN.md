@@ -316,7 +316,6 @@ canonical authoring manifests -> Harbor bundle
 
 ```text
 nl2repo doctor
-nl2repo task import-legacy
 nl2repo task validate
 nl2repo task show
 nl2repo task build-harbor

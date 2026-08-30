@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.legacy.metric_contract import convert_legacy_metric
-from nl2repobench.legacy.models import LegacyMetricContract
+from nl2repobench.analysis.archive.legacy.metric_contract import convert_legacy_metric
+from nl2repobench.analysis.archive.legacy.models import LegacyMetricContract
 from nl2repobench.verification.evaluator import evaluate_leaf_report
 from nl2repobench.verification.leaf_report import (
     LeafCase,

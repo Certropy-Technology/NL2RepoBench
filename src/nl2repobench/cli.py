@@ -443,54 +443,6 @@ def compile_catalog_task(
     )
 
 
-@task_app.command("import-legacy")
-def import_legacy(
-    legacy_root: Annotated[
-        Path,
-        typer.Option("--legacy-root", help="Historical test_files directory."),
-    ] = Path("test_files"),
-    output_root: Annotated[
-        Path,
-        typer.Option("--output", help="Directory for canonical task manifests."),
-    ] = Path("authoring"),
-    artifact_root: Annotated[
-        Path,
-        typer.Option("--artifact-root", help="Content-addressed artifact directory."),
-    ] = Path(".nl2repo/artifacts"),
-    state_db: Annotated[
-        Path,
-        typer.Option("--state-db", help="SQLite state index path."),
-    ] = Path(".nl2repo/state.db"),
-    difficulty_file: Annotated[
-        Path | None,
-        typer.Option("--difficulty-file", help="Optional task difficulty CSV."),
-    ] = Path("test_files/task_difficulty.csv"),
-    report: Annotated[
-        Path | None,
-        typer.Option("--report", help="Optional metadata gap report path."),
-    ] = None,
-) -> None:
-    """Import legacy task directories without embedding private test bytes."""
-
-    from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
-
-    if difficulty_file is not None and not difficulty_file.is_file():
-        difficulty_file = None
-    try:
-        with StateStore(state_db) as state:
-            summary = LegacyImporter(
-                legacy_root=legacy_root,
-                output_root=output_root,
-                artifact_store=FileArtifactStore(artifact_root),
-                difficulty_file=difficulty_file,
-                state_store=state,
-            ).run(gap_report_path=report)
-    except (LegacyImportError, OSError, ValueError) as exc:
-        typer.echo(f"import failed: {exc}", err=True)
-        raise typer.Exit(code=1) from exc
-    _json_print(summary.as_dict())
-
-
 @task_app.command("validate")
 def validate_task(
     manifest: Annotated[Path, typer.Argument(help="Path to a canonical manifest.json.")],

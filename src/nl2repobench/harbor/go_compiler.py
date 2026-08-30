@@ -43,6 +43,16 @@ class GoHarborCompileError(ValueError):
     """Raised when a Go task cannot satisfy the first production profile."""
 
 
+def go_network_failure_reason(exit_code: int) -> str | None:
+    """Map the trusted network-check exit contract to a verifier reason."""
+
+    if exit_code == 0:
+        return None
+    if exit_code == 1:
+        return "verifier-network-available"
+    return "verifier-internal-error"
+
+
 GO_RUNTIME_LOCK_FILES = (
     "src/nl2repobench/verification/go_bridge.py",
     "src/nl2repobench/verification/go_bridge_proxy.py",
@@ -592,4 +602,4 @@ exit 0
 """.replace("__GO_VERSION__", self.go_version)
 
 
-__all__ = ["GoHarborCompileError", "GoHarborCompiler"]
+__all__ = ["GoHarborCompileError", "GoHarborCompiler", "go_network_failure_reason"]

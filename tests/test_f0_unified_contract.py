@@ -641,6 +641,7 @@ def test_migration_recovery_restores_input_after_exchange_crash(tmp_path: Path) 
         "transaction_id": "a" * 32,
         "state": "exchanged-unverified",
         "plan_path": str(plan_path.resolve()),
+        "allowed_root": str(tmp_path.resolve()),
         "plan_digest": "sha256:" + "a" * 64,
         "current_path": str(current.resolve()),
         "staged_path": str(staged.resolve()),
@@ -692,6 +693,7 @@ def _retention_transaction(tmp_path: Path, state: str) -> tuple[object, Path, Pa
                 "transaction_id": "c" * 32,
                 "state": state,
                 "plan_path": str(plan_path.resolve()),
+                "allowed_root": str(tmp_path.resolve()),
                 "plan_digest": "sha256:" + "a" * 64,
                 "current_path": str(current.resolve()),
                 "staged_path": str(staged.resolve()),
@@ -721,6 +723,20 @@ def test_migration_recovery_completes_retention_crash_windows(tmp_path: Path, st
     assert module.digest_tree(current) == recovered["output_tree_digest"]
     assert module.digest_tree(previous) == recovered["input_tree_digest"]
     assert not staged.exists()
+
+
+def test_migration_recovery_rejects_current_tree_outside_allowed_root(tmp_path: Path) -> None:
+    module, transaction_path, current, staged, previous = _retention_transaction(
+        tmp_path, "verified"
+    )
+    del current, staged, previous
+    transaction = json.loads(transaction_path.read_text(encoding="utf-8"))
+    external = tmp_path.parent / "external-current"
+    transaction["current_path"] = str(external.resolve())
+    transaction_path.write_text(json.dumps(transaction), encoding="utf-8")
+
+    with pytest.raises(module.MigrationError, match="allowed root"):
+        module.recover(transaction_path)
 
 
 def test_migration_retention_fsync_failure_preserves_both_trees(

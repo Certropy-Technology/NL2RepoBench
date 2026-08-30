@@ -1322,12 +1322,22 @@ def _validate_staged(plan: dict[str, Any], staged: Path) -> None:
             )
 
 
+def _allowed_root_for_source(source_root: Path) -> Path:
+    """Return the repository/catalog root that bounds one migration record."""
+
+    source_root = source_root.resolve()
+    if source_root.parent.name == "catalog":
+        return source_root.parent.parent
+    return source_root.parent
+
+
 def _validate_transaction(transaction: dict[str, Any], transaction_path: Path) -> None:
     required = {
         "schema_version",
         "transaction_id",
         "state",
         "plan_path",
+        "allowed_root",
         "plan_digest",
         "current_path",
         "staged_path",
@@ -1374,13 +1384,46 @@ def _validate_transaction(transaction: dict[str, Any], transaction_path: Path) -
             transaction["plan_path"],
         ),
     )
-    root = transaction_path.parent.resolve()
+    allowed_root = Path(transaction["allowed_root"])
     if (
-        any(not path.is_absolute() for path in (current, staged, previous, plan))
-        or current.parent.resolve() != staged.parent.resolve()
-        or not previous.resolve().is_relative_to(root)
-        or not plan.resolve().is_relative_to(root)
-        or transaction_path.is_symlink()
+        not allowed_root.is_absolute()
+        or allowed_root.is_symlink()
+        or not allowed_root.is_dir()
+        or allowed_root.resolve() != _allowed_root_for_source(current)
+    ):
+        raise MigrationError("plan-invalid", "recovery", "transaction allowed root is unsafe")
+    root = allowed_root.resolve()
+
+    def validate_path(path: Path, *, required: bool) -> Path:
+        if not path.is_absolute() or path.is_symlink():
+            raise MigrationError("plan-invalid", "recovery", "transaction path is unsafe")
+        resolved = path.resolve()
+        if not resolved.is_relative_to(root):
+            raise MigrationError(
+                "plan-invalid", "recovery", "transaction path escapes allowed root"
+            )
+        cursor = path
+        while cursor != root and cursor != cursor.parent:
+            if cursor.is_symlink():
+                raise MigrationError(
+                    "plan-invalid", "recovery", "transaction path contains symlink"
+                )
+            cursor = cursor.parent
+        if required and not path.exists():
+            raise MigrationError("plan-invalid", "recovery", "required transaction path is missing")
+        if path.exists() and not path.is_dir() and path in {current, staged, previous}:
+            raise MigrationError(
+                "ambiguous-tree", "recovery", "transaction tree is not a directory"
+            )
+        return resolved
+
+    validate_path(transaction_path, required=True)
+    validate_path(plan, required=True)
+    validate_path(current, required=True)
+    validate_path(staged, required=False)
+    validate_path(previous, required=False)
+    if (
+        current.parent.resolve() != staged.parent.resolve()
     ):
         raise MigrationError("plan-invalid", "recovery", "transaction paths are unsafe")
     expected_owner = (transaction["owner_uid"], transaction["owner_gid"])
@@ -1471,6 +1514,7 @@ def _apply_plan_unlocked(plan_path: Path) -> dict[str, Any]:
         "transaction_id": plan["plan_digest"][7:39],
         "state": "planned",
         "plan_path": str(plan_path.resolve()),
+        "allowed_root": str(_allowed_root_for_source(current)),
         "plan_digest": plan["plan_digest"],
         "current_path": str(current),
         "staged_path": str(staged),
