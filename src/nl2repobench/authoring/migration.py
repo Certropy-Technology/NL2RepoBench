@@ -324,6 +324,11 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
                                 or not state_source.startswith("queues/")
                                 or not plan_source.startswith("plans/")):
             raise MigrationError("base lane authority relationship is invalid")
+        if kind == "base":
+            plan_path = root / plan_source
+            plan_payload = json.loads(plan_path.read_text(encoding="utf-8"))
+            if not isinstance(plan_payload, dict) or str(plan_payload.get("candidate_input")) != queue_source:
+                raise MigrationError("base plan candidate_input does not match queue source")
         if kind == "generated" and (not queue_source.startswith("supervisor/queues/")
                                      or not state_source.startswith("queues/")
                                      or not plan_source.startswith("plans/")):
@@ -426,6 +431,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
     scheduler.init()
     conn = scheduler.connect()
     counts: dict[str, int] = {}
+    complete_candidates: list[str] = []
     committed = False
     try:
         conn.execute("BEGIN IMMEDIATE")
@@ -513,15 +519,10 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         fields.pop("operation_kind", None)
                         idempotency = "legacy:" + hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
                         conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
-                db_chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
+                if legacy_status == "complete":
+                    complete_candidates.append(task_id)
                 final_state = initial_state
-                if legacy_status == "complete" and {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= db_chain:
-                    conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
-                    conn.execute("UPDATE tasks SET state='archiving' WHERE task_id=?", (task_id,))
-                    conn.execute("UPDATE tasks SET state='cleaning' WHERE task_id=?", (task_id,))
-                    conn.execute("UPDATE tasks SET state='complete',terminal_reason=? WHERE task_id=?", (reason, task_id))
-                    final_state = "complete"
-                elif state in {"blocked", "excluded", "cancelled"}:
+                if state in {"blocked", "excluded", "cancelled"}:
                     conn.execute("UPDATE tasks SET state=?,terminal_reason=? WHERE task_id=?", (state, reason, task_id))
                     final_state = state
                 counts[final_state] = counts.get(final_state, 0) + 1
@@ -573,6 +574,16 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             objects = archive.get("objects", [])
             idempotency = "legacy:" + hashlib.sha256(receipt_path.read_bytes()).hexdigest()
             conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
+        for task_id in complete_candidates:
+            chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
+            collision = conn.execute("SELECT 1 FROM operation_receipts WHERE task_id=? AND status='collision'", (task_id,)).fetchone()
+            if collision is not None:
+                conn.execute("UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?", (task_id,))
+            elif {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= chain:
+                conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
+                conn.execute("UPDATE tasks SET state='archiving' WHERE task_id=?", (task_id,))
+                conn.execute("UPDATE tasks SET state='cleaning' WHERE task_id=?", (task_id,))
+                conn.execute("UPDATE tasks SET state='complete',terminal_reason='historical receipt chain verified' WHERE task_id=?", (task_id,))
         # Actors remain live during observation; bind the imported rows to the
         # same frozen bytes one last time before the staging transaction commits.
         validate_manifest(manifest, live_root)

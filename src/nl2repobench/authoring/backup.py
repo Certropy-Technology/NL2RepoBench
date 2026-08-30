@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import fcntl
 import hashlib
+import hmac
 import json
 import os
+import secrets
 import shutil
 import sqlite3
 import stat
@@ -69,6 +71,76 @@ def _exclusive_copy(source: Path, target: Path, label: str) -> None:
     finally:
         if fd != -1:
             os.close(fd)
+
+
+def _safe_ancestors(path: Path, label: str) -> None:
+    cursor = path.parent
+    while True:
+        if cursor.is_symlink() or not cursor.is_dir():
+            raise MigrationError(f"{label} ancestor is unsafe")
+        if cursor == cursor.parent:
+            return
+        cursor = cursor.parent
+
+
+def _canonical_receipt(receipt: dict[str, Any]) -> bytes:
+    unsigned = {key: value for key, value in receipt.items() if key != "hmac_sha256"}
+    return json.dumps(unsigned, sort_keys=True, separators=(",", ":")).encode()
+
+
+def _authority_key(authority_root: Path) -> bytes:
+    _safe_ancestors(authority_root, "receipt authority")
+    if authority_root.exists() and authority_root.is_symlink():
+        raise MigrationError("receipt authority must not be a symlink")
+    authority_root.mkdir(mode=0o700, exist_ok=False)
+    key_path = authority_root / "hmac.key"
+    fd = os.open(key_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    key = secrets.token_bytes(32)
+    try:
+        os.write(fd, key)
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    _sync_dir(authority_root)
+    return key
+
+
+def issue_quiescence_receipt(backup_directory: Path | str, target: Path | str,
+                             authority_root: Path | str | None = None,
+                             *, generation: int = 1, ttl_seconds: int = 300) -> Path:
+    """Issue an authenticated one-use restore receipt under a new authority root."""
+    backup_dir = Path(backup_directory)
+    target_path = Path(target)
+    verified = verify_backup(backup_dir)
+    summary = cast(dict[str, Any], verified["manifest"])["database_summary"]
+    authority = Path(authority_root) if authority_root is not None else backup_dir.parent / ".restore-authority"
+    current_generation = 0
+    target_db = Path(target)
+    if target_db.is_file() and not target_db.is_symlink():
+        with sqlite3.connect(f"file:{target_db.resolve().as_posix()}?mode=ro", uri=True) as db:
+            current_generation = int(db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0])
+    if generation == 1:
+        generation = current_generation
+    key = _authority_key(authority)
+    now = datetime.now(UTC)
+    receipt: dict[str, Any] = {
+        "schema_version": "restore-receipt/v1", "receipt_id": secrets.token_hex(16),
+        "nonce": secrets.token_hex(16), "issuer": str(authority), "generation": generation,
+        "database": target_path.name, "database_digest": summary["digest"],
+        "backup_digest": hashlib.sha256(json.dumps(summary, sort_keys=True).encode()).hexdigest(),
+        "observed_at": now.isoformat(), "expires_at": (now + timedelta(seconds=ttl_seconds)).isoformat(),
+        "lock_observed": True, "quiesced": True,
+    }
+    receipt["hmac_sha256"] = hmac.new(key, _canonical_receipt(receipt), hashlib.sha256).hexdigest()
+    path = authority / f"receipt-{receipt['receipt_id']}.json"
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        os.write(fd, (json.dumps(receipt, sort_keys=True) + "\n").encode())
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    _sync_dir(authority)
+    return path
 
 
 def _consumed_receipts(path: Path) -> set[str]:
@@ -139,6 +211,7 @@ def _manifest(directory: Path) -> dict[str, object]:
 def backup_database(source: Path | str, destination: Path | str) -> dict[str, object]:
     """Create an online SQLite backup and a checksum manifest."""
     source_path, destination_path = Path(source).resolve(), Path(destination)
+    _safe_ancestors(destination_path, "backup destination")
     _regular(Path(source), "source database")
     if destination_path.exists() or destination_path.is_symlink():
         raise MigrationError("backup destination must be a new directory")
@@ -147,20 +220,27 @@ def backup_database(source: Path | str, destination: Path | str) -> dict[str, ob
     target = dest / "database.sqlite3"
     if target.exists() or target.is_symlink():
         raise MigrationError("backup target must be exclusively created")
-    _exclusive_empty(target, "backup target")
+    temporary = dest / f".database-{secrets.token_hex(12)}.sqlite3"
+    _exclusive_empty(temporary, "backup temporary target")
     src = sqlite3.connect(source_path)
-    dst = sqlite3.connect(target)
+    dst = sqlite3.connect(temporary)
     try:
         src.backup(dst)
         dst.commit()
     finally:
         dst.close()
         src.close()
-    _sync(target)
+    _sync(temporary)
+    os.replace(temporary, target)
+    _sync_dir(dest)
     manifest = _manifest(dest)
-    manifest_path = dest / "backup-manifest.json"
-    manifest_path.write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
-    _sync(manifest_path)
+    manifest_bytes = (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode()
+    manifest_fd = os.open(dest / "backup-manifest.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        os.write(manifest_fd, manifest_bytes)
+        os.fsync(manifest_fd)
+    finally:
+        os.close(manifest_fd)
     _sync_dir(dest)
     return manifest
 
@@ -231,10 +311,13 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
                      quiescence_marker: Path | str | None = None,
                      quiesced: Callable[[], dict[str, Any] | bool] | None = None) -> dict[str, object]:
     """Validate and (only with activation) restore a backup with sidecar quarantine."""
+    if quiesced is not None:
+        raise MigrationError("restore callback receipts are not accepted; issue a trusted receipt")
     backup_raw, target_raw = Path(backup_directory), Path(target)
     if backup_raw.is_symlink() or target_raw.is_symlink():
         raise MigrationError("restore source and target must not be symlinks")
     backup_dir, target_path = backup_raw.resolve(), target_raw.resolve()
+    _safe_ancestors(target_path, "restore target")
     lock_path = target_path.parent / f".{target_path.name}.lock"
     if lock_path.is_symlink():
         raise MigrationError("restore lock must not be a symlink")
@@ -256,12 +339,14 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
             marker_ok = isinstance(receipt, dict) and receipt.get("quiesced") is True
             if quiescence_marker is not None:
                 try:
-                    receipt = json.loads(Path(quiescence_marker).read_text(encoding="utf-8"))
+                    receipt_path = Path(quiescence_marker)
+                    _regular(receipt_path, "quiescence receipt")
+                    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
                     marker_ok = isinstance(receipt, dict) and receipt.get("quiesced") is True
                 except (OSError, json.JSONDecodeError):
                     marker_ok = False
             if (not marker_ok or not isinstance(receipt, dict) or not receipt.get("receipt_id")
-                    or not receipt.get("generation") or receipt.get("database") != target_path.name
+                    or receipt.get("generation") is None or receipt.get("database") != target_path.name
                     or not receipt.get("nonce") or not receipt.get("observed_at")):
                 raise MigrationError("restore requires a fresh generation-bound quiescence receipt")
             try:
@@ -270,10 +355,33 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
                 raise MigrationError("restore quiescence timestamp is invalid") from exc
             if observed.tzinfo is None or datetime.now(UTC) - observed > timedelta(hours=1):
                 raise MigrationError("restore quiescence receipt is stale")
+            try:
+                expires = datetime.fromisoformat(str(receipt["expires_at"]).replace("Z", "+00:00"))
+            except (KeyError, ValueError) as exc:
+                raise MigrationError("restore quiescence expiry is invalid") from exc
+            if expires.tzinfo is None or datetime.now(UTC) > expires or expires - datetime.now(UTC) > timedelta(hours=24):
+                raise MigrationError("restore quiescence receipt is expired or unsafe")
             receipt_key = f"{receipt['receipt_id']}:{receipt['nonce']}"
             backup_manifest = cast(dict[str, Any], verification["manifest"])
             if receipt.get("database_digest") != backup_manifest.get("database_summary", {}).get("digest"):
                 raise MigrationError("restore receipt database digest does not match backup")
+            authority = Path(str(receipt.get("issuer", "")))
+            key_path = authority / "hmac.key"
+            _regular(key_path, "receipt HMAC key")
+            if authority.stat().st_mode & 0o777 != 0o700 or key_path.stat().st_mode & 0o777 != 0o600:
+                raise MigrationError("receipt authority permissions are unsafe")
+            key = key_path.read_bytes()
+            supplied_hmac = str(receipt.get("hmac_sha256", ""))
+            if not hmac.compare_digest(supplied_hmac, hmac.new(key, _canonical_receipt(receipt), hashlib.sha256).hexdigest()):
+                raise MigrationError("restore receipt HMAC is invalid")
+            if receipt.get("backup_digest") != hashlib.sha256(json.dumps(backup_manifest.get("database_summary", {}), sort_keys=True).encode()).hexdigest():
+                raise MigrationError("restore receipt backup digest does not match backup")
+            current_generation = 0
+            if target_path.is_file() and not target_path.is_symlink():
+                with sqlite3.connect(f"file:{target_path.resolve().as_posix()}?mode=ro", uri=True) as current_db:
+                    current_generation = int(current_db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0])
+            if int(receipt["generation"]) != current_generation:
+                raise MigrationError("restore receipt generation is not current")
             consumed_path = target_path.parent / f".{target_path.name}.restore-consumed.json"
             if activate and receipt_key in _consumed_receipts(consumed_path):
                 raise MigrationError("restore quiescence receipt was already used")

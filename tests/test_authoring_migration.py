@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -12,6 +11,7 @@ import nl2repobench.authoring.migration as migration
 from nl2repobench.authoring.backup import (
     activate_database,
     backup_database,
+    issue_quiescence_receipt,
     restore_database,
     verify_backup,
 )
@@ -90,8 +90,7 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
     backup_database(scheduler.path, backup_dir)
     assert verify_backup(backup_dir)["verified"] is True
     target = tmp_path / "restored.sqlite3"
-    marker = tmp_path / "quiesced.json"
-    marker.write_text(json.dumps({"quiesced": True, "receipt_id": "r1", "generation": 1, "nonce": "n1", "database": "restored.sqlite3", "database_digest": backup_database(scheduler.path, tmp_path / "backup2")["database_summary"]["digest"], "observed_at": datetime.now(UTC).isoformat()}), encoding="utf-8")
+    marker = issue_quiescence_receipt(backup_dir, target, tmp_path / "authority")
     dry = restore_database(backup_dir, target, quiescence_marker=marker)
     assert dry["dry_run"] is True and not target.exists()
     with pytest.raises(MigrationError, match="explicit"):
@@ -146,3 +145,23 @@ def test_static_quiescence_marker_is_not_a_restore_receipt(tmp_path: Path) -> No
     marker.write_text('{"quiesced": true}', encoding="utf-8")
     with pytest.raises(MigrationError, match="generation-bound"):
         restore_database(backup_dir, tmp_path / "target.sqlite3", quiescence_marker=marker)
+
+
+def test_quiescence_receipt_hmac_and_backup_destination_safety(tmp_path: Path) -> None:
+    scheduler = Scheduler(tmp_path / "source.sqlite3", supplied_root=tmp_path)
+    scheduler.init()
+    backup_dir = tmp_path / "backup"
+    backup_database(scheduler.path, backup_dir)
+    target = tmp_path / "target.sqlite3"
+    receipt = issue_quiescence_receipt(backup_dir, target, tmp_path / "authority")
+    payload = json.loads(receipt.read_text(encoding="utf-8"))
+    payload["generation"] = 1
+    receipt.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(MigrationError, match="HMAC"):
+        restore_database(backup_dir, target, quiescence_marker=receipt)
+    outside = tmp_path / "outside"
+    outside.write_text("outside", encoding="utf-8")
+    destination = tmp_path / "backup-link"
+    destination.symlink_to(outside)
+    with pytest.raises(MigrationError, match="new directory"):
+        backup_database(scheduler.path, destination)

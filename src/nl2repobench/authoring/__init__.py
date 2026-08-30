@@ -1,6 +1,12 @@
 """Human-facing declarative authoring sources and compilers."""
 
-from .backup import activate_database, backup_database, restore_database, verify_backup
+from .backup import (
+    activate_database,
+    backup_database,
+    issue_quiescence_receipt,
+    restore_database,
+    verify_backup,
+)
 from .catalog import (
     CatalogCompiler,
     CatalogError,
@@ -52,6 +58,7 @@ __all__ = [
     "barrier_check",
     "classify_integration_failure",
     "backup_database",
+    "issue_quiescence_receipt",
     "verify_backup",
     "restore_database",
     "activate_database",
