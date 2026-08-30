@@ -107,6 +107,62 @@ F0 merge 前必须同时证明：
 - source validation、network lint、private artifact resolution 和 Agent boundary 通过；
 - full tests、Ruff、Mypy、schema check 通过。
 
+### 3.3 One-shot migration transaction
+
+迁移工具固定为：
+
+```bash
+uv run python tools/migrations/unified_runtime_contract_20260830.py plan \
+  --source-root catalog/sources \
+  --artifact-root .nl2repo/artifacts \
+  --output .nl2repo/migrations/unified-runtime-20260830/plan.json
+
+uv run python tools/migrations/unified_runtime_contract_20260830.py apply \
+  --plan .nl2repo/migrations/unified-runtime-20260830/plan.json
+```
+
+该工具位于 `tools/migrations/`，可以包含冻结的旧字段 decoder，但不能被 `src/`、CLI、runtime
+compiler 或 verifier import。`plan` 阶段完全只读，顺序如下：
+
+1. 只把 catalog 中真正的 source root 纳入输入。`harbor/task.toml` 等嵌套 schema 1.4 asset
+   不是 canonical source，不重写。
+2. 读取所有 source、artifact refs 和 lifecycle，解析为显式 `OldSourceRecord`，并记录原始
+   path/bytes/SHA-256/task ID/schema/runtime identity。
+3. 对需要新 offline store 的 Python task 运行独立的 controlled closure-preparation stage；该
+   stage 允许受控 build network，但只写 private CAS，不改 catalog。Node/Go bundle 拆分同样只写
+   CAS。任何 closure 缺失或 hash/inventory 不一致都会令整个 plan 失败。
+4. 为全部 task 生成 `NewSourceRecord` 和逐字段 mapping report，在 sibling temporary root
+   `catalog/.sources.unified-<plan-digest>` 构建完整 source tree mirror。
+5. 用新 model、schema、source validator、artifact resolver、network lint 和 task-ID uniqueness
+   校验 temporary tree；对 selected Python/npm/pnpm/Go task 编译两次并比较。
+6. 生成 plan JSON，包含 input tree digest、output tree digest、task/path 一一映射、new artifact
+   refs、migration warnings 和 expected Git diff。plan 中任一 error 时不生成可 apply plan。
+
+`apply` 必须验证 current source tree digest 与 plan input 完全一致，然后在 exclusive authoring/
+integration lock 下操作。temporary tree 与 `catalog/sources` 必须在同一 filesystem；Linux
+`renameat2(RENAME_EXCHANGE)` 是唯一允许的 tree switch。若 syscall/filesystem 不支持，apply 在
+任何 mutation 前失败，不做逐文件 fallback。exchange 后立刻重跑 task count、output digest 和
+source validation；失败则 exchange 回旧 tree并返回 non-zero。成功后旧 tree 移到
+`.nl2repo/migrations/.../previous-sources` 作为本地 rollback artifact，不提交 Git，并输出
+post-migration hash inventory。
+
+F0 branch 随后从新 source 生成 schema/projections，删除 runtime old readers 并提交一个完整
+Git diff。merge 只接受该完整 branch；不允许把 intermediate mixed-schema commit 推入 main。
+
+### 3.4 v1/v2 到 canonical 字段映射
+
+| old source | precondition | canonical mapping | failure behavior |
+| --- | --- | --- | --- |
+| Python v1 known | installer 为 `uv|pip`，`lock_artifact` valid | runtime=`python+installer`；lock=`lock_artifact`；store/inventory 来自 prepared CAS | closure 未准备或 legacy `artifact` 存在则整个 plan 失败 |
+| Python v1 unknown | blocked/incomplete | valid installer 保留；否则 `python+none`；三个 refs 为 null | 不提升 lifecycle，不伪造 known closure |
+| Go v1 known | `module_bundle` 可安全解包且含 go.mod/go.sum/store/inventory | runtime=`go+go-modules`；拆成 lock/store/inventory 三个新 refs | bundle layout/hash 不一致则整个 plan 失败 |
+| Go v1 unknown | blocked/incomplete | runtime=`go+go-modules`；refs 可为 null | 不提升 lifecycle |
+| Node v2 npm/pnpm known | runtime identity、lock metadata 和 bundle artifact 一致 | runtime 保持；bundle 拆成 lock/store/inventory；旧 lifecycle/install metadata 进入 adapter inventory | 任一字段冲突或 bundle 不完整则整个 plan 失败 |
+| Node v2 unknown with runtime | package manager 为 npm/pnpm | runtime 保持；refs 为 null | 保持 blocked/incomplete |
+| Node v2 unknown without runtime | 当前 7 个 blocked descriptors | 显式 `node+none`；refs 为 null | 只能保持 blocked；不能进入 compiler/publish |
+
+`schema_version=1.4` 的嵌套 Harbor task asset、历史 reports 和 OSS/archive bytes 不属于迁移输入。
+
 ## 4. 目标架构
 
 ```text
@@ -181,36 +237,106 @@ DependencyBundle
 - 同一 migration branch 重生成 JSON schema、canonical manifest fixtures 和 compiler golden trees。
 - 新 parser 不接受旧字段；历史 archive reader 留在 analysis/archive 边界。
 
-当前 package-manager 迁移矩阵固定为：
+F0 当前 package-manager 迁移矩阵固定为 language-qualified identity：
 
 | identity | lock | offline_store | inventory/build behavior |
 | --- | --- | --- | --- |
-| `uv`/`pip` | hash-locked requirements | exact wheel/sdist closure | trusted image staging 安装；candidate source `--no-deps` |
-| `npm` | `package-lock.json` | npm cache/content closure | `npm ci --offline` smoke |
-| `pnpm` | `pnpm-lock.yaml` | reviewed pnpm store | `pnpm install --offline --frozen-lockfile` smoke |
-| `go-modules` | `go.mod` + `go.sum` archive | vendor/module-cache | `GOPROXY=off GOSUMDB=off` smoke |
-| `none` | canonical empty lock | canonical empty store | inventory 显式记录 empty closure |
+| `python+uv` | hash-locked requirements | exact wheel/sdist closure | trusted image staging；candidate source `--no-deps` |
+| `python+pip` | hash-locked requirements | exact wheel/sdist closure | trusted image staging；candidate source `--no-deps` |
+| `python+none` | canonical empty lock | canonical empty store | 仅 empty/incomplete profile；inventory 记录 empty closure |
+| `node+npm` | `package-lock.json` | npm cache/content closure | `npm ci --offline` smoke |
+| `node+pnpm` | `pnpm-lock.yaml` | reviewed pnpm store | `pnpm install --offline --frozen-lockfile` smoke |
+| `node+none` | null for current blocked descriptors | null | 永久 publication gap；无 Harbor compiler factory |
+| `go+go-modules` | deterministic tar containing `go.mod` + `go.sum` | vendor/module-cache | `GOPROXY=off GOSUMDB=off` smoke |
 
-F0 必须让 registry 覆盖上述每个当前 production identity；不能只有 pnpm/go-modules adapter，
-同时让 Python/npm compiler 绕过 protocol。
+F0 package-manager registry 必须能 resolve 上表每个 identity；`node+none` adapter 只验证 blocked
+empty state并拒绝 build command，Harbor registry 不注册其 compiler。J0 添加 `java+maven`，R0
+添加 `rust+cargo`，不属于 F0 current-runtime migration。
 
 ### 5.3 PackageManagerAdapter protocol
 
 ```text
-identity
-lockfile_name
-validate_lock(lock, expected_toolchain) -> LockSummary
-validate_offline_store(store, lock, inventory, expected_toolchain) -> StoreSummary
-build_commands(profile) -> allowlisted argv sequences
-offline_environment(profile) -> exact environment map
+ResolvedPackage
+  name: str
+  version: str
+  kind: str
+  artifact_digest: sha256 | null
+
+LockSummary
+  identity: RuntimeDiscriminator
+  toolchain_version: str
+  lockfile_names: tuple[str, ...]
+  lock_digest: sha256
+  resolved: tuple[ResolvedPackage, ...]
+
+StoreSummary
+  identity: RuntimeDiscriminator
+  store_digest: sha256
+  inventory_digest: sha256
+  file_count: int >= 0
+  total_bytes: int >= 0
+  offline_smoke: bool
+
+CommandSpec
+  argv: tuple[str, ...] non-empty
+  cwd: safe relative path
+  environment: validated exact map[str, str]
+  timeout_sec: positive int
+
+PackageManagerAdapter
+  identity: RuntimeDiscriminator
+  lockfile_names: tuple[str, ...]
+  validate_lock(lock_root, expected_toolchain) -> LockSummary
+  validate_offline_store(store_root, lock_summary, inventory, expected_toolchain) -> StoreSummary
+  build_commands(profile) -> tuple[CommandSpec, ...]
+  offline_environment(profile) -> map[str, str]
 ```
 
 返回值必须是 typed record，不能返回自由 shell 字符串。
 
-`LockSummary` 至少包含 identity、toolchain version、lock digest 和 resolved package identities；
-`StoreSummary` 至少包含 store digest、file count、total bytes、inventory digest 和 offline smoke
-结果。所有 install/build command 是 allowlisted argv tuple；environment 是名称和值都受校验的
-精确 map。
+所有 records 使用 strict/frozen model，禁止 extra fields。adapter validation 失败只能抛
+`PackageManagerError(code, identity, stage, message, details)`；`code` 固定为
+`lock-missing|lock-malformed|toolchain-mismatch|store-malformed|inventory-mismatch|offline-smoke-failed|unsupported-profile`。
+compiler 捕获该 typed error 并产生结构化 stage failure，不 fallback 到其他 adapter、网络或自由
+shell。`offline_smoke=false` 永远不能进入 known/published source。
+
+### 5.4 Artifact URI 与 CAS materialization
+
+F0 后 runtime `ArtifactRef.uri` 只接受：
+
+```text
+artifact://public/sha256:<64 lowercase hex>
+artifact://private/sha256:<64 lowercase hex>
+```
+
+URI digest 必须与 `digest`、visibility 一致；其他 scheme/path/query/fragment 全部拒绝。lock 和
+offline store 统一使用 deterministic POSIX ustar archive：sorted UTF-8 relative paths、mtime=0、
+uid/gid=0、空 owner/group、normalized mode、regular file/directory only。media types固定为：
+
+```text
+application/vnd.nl2repobench.package-lock.tar
+application/vnd.nl2repobench.offline-store.tar
+application/vnd.nl2repobench.inventory+json
+```
+
+新增 `storage/materialize.py`：
+
+```text
+MaterializationLimits(max_members, max_member_bytes, max_total_bytes, max_path_bytes)
+MaterializationResult(destination, file_count, total_bytes, tree_digest, inventory_digest)
+materialize_private_store(ref, inventory_ref, destination, limits, authorization)
+```
+
+materializer 在读取前验证 CAS blob digest/size/media type/private authorization；用 `openat`/
+`O_NOFOLLOW` 风格的安全 extractor 拒绝 absolute/`..`/duplicate/symlink/hardlink/device/FIFO，解包到
+destination sibling temp，按 inventory 逐文件校验 path/size/SHA-256 和 aggregate tree digest，
+设置 root-owned read-only mode，再 atomic rename 到 destination。任一失败清理 temp 并保持既有
+destination 不变。
+
+destination 固定为 `.nl2repo/compiled/<task-id>/private/<artifact-digest>/`；每个 compile/run 使用
+独立 task staging root。compiler/source tree 只提交 refs/inventory，不提交 store bytes。
+materializer 不允许从 URI 下载，不接受网络 URL，也不写 catalog。run 结束后只清理本次 staging；
+private CAS 原始 blob 由 archive/retention policy 管理。
 
 ## 6. 通用 Bounded Subprocess Supervisor
 
@@ -219,6 +345,24 @@ lifecycle primitive。`observability.run_process()` 只执行 trusted host/orche
 保持独立并不得用于 candidate；F1 不重写 trusted observability API。Python candidate install/call、
 Node candidate install/call 和 Go bridge 必须组合该 primitive，语言 wrapper 只负责 argv、协议和
 failure taxonomy 映射。
+
+唯一允许的 candidate spawn 入口是：
+
+```text
+verification.subprocess_supervisor.run_candidate_process(command, limits, policy)
+```
+
+Python/Node/Go install、call、bridge 和 verifier-generated runtime shell 都必须调用一个 trusted
+Python CLI wrapper `python -m nl2repobench.verification.candidate_process_cli`，该 CLI 只反序列化
+allowlisted `CommandSpec`/limits/policy 后调用上述函数。generated shell 禁止直接出现
+`runuser`、`su`、`sudo`、`prlimit` 或 candidate command interpolation。
+
+新增 `scripts/check_candidate_spawn_boundary.py`，用 Python AST 检查
+`src/nl2repobench/verification` 中的 `subprocess.Popen/run/call/check_*`、`os.system/popen/spawn*`
+和 shell invocation；candidate path allowlist 只能包含 `subprocess_supervisor.py`。它还扫描 Harbor
+compiler 生成的 script literals，拒绝上述直接 spawn token。`observability.py` 是 trusted command
+allowlist，但不得被 verification candidate modules import。该 gate 在 focused/full tests 中运行，
+并通过一个故意新增 direct `Popen` fixture 的负向测试证明会失败。
 
 ```text
 SubprocessLimits
@@ -238,7 +382,24 @@ SubprocessResult
   output_limit_exceeded
   cleanup_complete
   spawn_error
+  cleanup_error
 ```
+
+`spawn_error` 和 `cleanup_error` 是 bounded typed records：
+
+```text
+ProcessError
+  code: spawn-failed | preexec-failed | exec-failed | cleanup-timeout | cleanup-residue
+  stage: spawn | privilege-transition | exec | cleanup
+  message: <= 4096 chars
+  pids: tuple[int, ...] bounded
+```
+
+spawn/pre-exec/exec failure 返回 `returncode=127`、`cleanup_complete` 取实际清理结果，并由语言
+wrapper 映射 candidate setup/build failure。`cleanup_complete=false` 或非空 `cleanup_error` 使本次
+grading `valid=false`、failure class=`verifier`，立即终止/destroy 当前 verifier container，不能
+继续运行其他 leaf/task，也不能归为普通 model 0。cleanup API 自身不得把 untyped exception
+越过 verifier CLI。
 
 必须保持并测试：
 
@@ -260,6 +421,46 @@ SubprocessResult
 - 不设置通用 RLIMIT_AS。JVM 使用 cgroup、`-Xmx`、Metaspace 和 PID 限制；
 - parent-side spawn、child pre-exec/setuid/setrlimit 和 exec 失败都产生结构化 `spawn_error`，
   不抛出到 grader 外层。
+
+### 6.1 Privilege transition 与 workspace scan
+
+candidate staging 由 root 创建，完成复制后禁止 candidate 写 source/store；可写输出只位于单独
+UID-owned temp/output root。执行前递归 `lstat` source、store、bridge 和 executable roots，拒绝
+symlink/hardlink、非 regular/directory、任一 `S_ISUID|S_ISGID` mode。scan 后这些 roots 以
+read-only mount 或 root-owned non-writable tree 固定，消除 scan/exec race。
+
+child privilege transition 顺序固定：
+
+1. 创建 CLOEXEC error pipe，关闭非 allowlisted FD。
+2. `prctl(PR_SET_NO_NEW_PRIVS, 1)`，失败写 error pipe 并 `_exit(127)`。
+3. 清空 ambient capabilities，并对 bounding set 中每个 capability 执行
+   `prctl(PR_CAPBSET_DROP, cap)`；effective/permitted/inheritable 最终必须全零。
+4. `setgroups([])`，再 `setresgid(gid, gid, gid)`、`setresuid(uid, uid, uid)`。
+5. 只降低并设置 CPU/FSIZE/NOFILE/NPROC 等 allowlisted rlimit。
+6. 从 `/proc/self/status` 验证 Uid/Gid 四元组均为目标值，`CapInh/CapPrm/CapEff/CapAmb=0`，
+   `NoNewPrivs=1`；不满足即通过 error pipe 返回 `preexec-failed`。
+7. `execve` 精确 argv/environment；exec errno 通过 error pipe 返回 `exec-failed`。
+
+实现可以使用小型 reviewed native helper 或 fork/exec wrapper，不能依赖 Python `preexec_fn` 的
+opaque exception。测试必须覆盖 no_new_privs/capability/setresuid 任一步失败的 typed result。
+
+### 6.2 Cleanup 与 memory policy
+
+supervisor 在 start 前扫描 candidate UID，非 quiescent 直接返回 cleanup-residue。结束时：
+
+1. SIGTERM process group，bounded grace；
+2. SIGKILL process group；
+3. 扫描 `/proc/*/status` 四个 UID 字段，SIGKILL 任一匹配进程；
+4. bounded wait/re-scan，直到 zero process 或 cleanup timeout；
+5. zero process 才设置 `cleanup_complete=true`。
+
+`setsid`、double-fork、new process group 仍保留 UID，必须被第 3 步捕获。每个 separate verifier
+container 只允许一个 candidate UID execution；并发只发生在不同 container，因此 UID scan 不
+跨 task。测试在 disposable container/namespace 中运行，不能扫描 host 真实 UID 10001。
+
+F1 删除 Python `candidate_runner.py` 的 `RLIMIT_AS`。通用 supervisor 不提供 address-space
+rlimit；Python/Node/Go 依赖 Harbor/Docker cgroup memory，Java 另外传 `-Xmx`/Metaspace。F1 gate
+必须有 zero-reference assertion，证明 candidate runtime 不再设置 `RLIMIT_AS`。
 
 Python/Node/Go wrapper 必须映射 generic result 到各自已有 failure taxonomy。Go
 `run_go_bridge()` 必须变成薄 wrapper，并保持 timeout=124、output-limit=125、stdout/stderr、
