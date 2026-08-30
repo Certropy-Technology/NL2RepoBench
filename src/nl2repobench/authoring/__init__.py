@@ -1,11 +1,21 @@
 """Human-facing declarative authoring sources and compilers."""
 
+from .backup import activate_database, backup_database, restore_database, verify_backup
 from .catalog import (
     CatalogCompiler,
     CatalogError,
     DeclarativeDatasetSource,
     DeclarativeTaskSource,
     validate_compiled_dataset,
+)
+from .migration import (
+    MANIFEST_SCHEMA,
+    MigrationError,
+    barrier_check,
+    classify_integration_failure,
+    generate_manifest,
+    import_manifest,
+    validate_manifest,
 )
 from .scheduler import (
     BusyError,
@@ -32,4 +42,15 @@ __all__ = [
     "Scheduler",
     "SchedulerError",
     "ValidationError",
+    "MANIFEST_SCHEMA",
+    "MigrationError",
+    "generate_manifest",
+    "validate_manifest",
+    "import_manifest",
+    "barrier_check",
+    "classify_integration_failure",
+    "backup_database",
+    "verify_backup",
+    "restore_database",
+    "activate_database",
 ]

@@ -1707,3 +1707,29 @@ class Scheduler:
             if cur.lastrowid is None:
                 raise CorruptionError("snapshot insert did not return an id")
             return int(cur.lastrowid)
+
+    def status(self) -> dict[str, Any]:
+        """Return a redacted, scheduler-owned observability snapshot."""
+        with self.connect() as db:
+            config = db.execute("SELECT * FROM current_runtime_config").fetchone()
+            counts = {
+                str(row["state"]): int(row["count"])
+                for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
+            }
+            leases = [
+                {"scope": row["scope"], "generation": row["generation"], "active": bool(row["active"]),
+                 "expires_at": row["lease_expires_at"]}
+                for row in db.execute("SELECT scope,generation,active,lease_expires_at FROM scheduler_leases ORDER BY scope,generation")
+            ]
+            capacities = [dict(row) for row in db.execute("SELECT * FROM capacity_rows ORDER BY capacity_unit,capacity_kind,capacity_key")]
+            wal = db.execute("PRAGMA wal_checkpoint(PASSIVE)").fetchone()
+            safe_config = dict(config) if config is not None else None
+            if safe_config is not None:
+                safe_config.pop("changed_by", None)
+            return {
+                "schema_version": "authoring-scheduler/v2", "database": str(self.path.name),
+                "event_id": int(db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]),
+                "task_counts": counts, "wal": {"busy": int(wal[0]), "log": int(wal[1]), "checkpointed": int(wal[2])},
+                "config": safe_config, "leases": leases,
+                "capacities": capacities,
+            }

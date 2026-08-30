@@ -16,6 +16,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from nl2repobench.authoring.backup import backup_database, restore_database, verify_backup
+from nl2repobench.authoring.migration import validate_manifest
 from nl2repobench.authoring.scheduler import (
     BusyError,
     ConflictError,
@@ -71,6 +73,18 @@ def parser() -> argparse.ArgumentParser:
     config.add_argument("--lease-seconds", type=int, default=7200)
     config.add_argument("--heartbeat-seconds", type=int, default=600)
     sub.add_parser("status")
+    verify = sub.add_parser("verify")
+    verify.add_argument("--manifest", type=Path, required=True)
+    verify.add_argument("--live-root", type=Path, required=True)
+    backup = sub.add_parser("backup")
+    backup.add_argument("--destination", type=Path, required=True)
+    vb = sub.add_parser("verify-backup")
+    vb.add_argument("--directory", type=Path, required=True)
+    restore = sub.add_parser("restore")
+    restore.add_argument("--directory", type=Path, required=True)
+    restore.add_argument("--target", type=Path, required=True)
+    restore.add_argument("--quiescence-marker", type=Path, required=True)
+    restore.add_argument("--activate", action="store_true")
     claim = sub.add_parser("claim")
     claim.add_argument("--controller", required=True)
     claim.add_argument("--owner", required=True)
@@ -148,20 +162,29 @@ def main(argv: list[str] | None = None) -> int:
                              process_starttime_ticks=starttime, boot_id=boot_id)
             _output("finish", {"claim_id": args.claim})
             return 0
+        if args.command == "verify":
+            manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+            validate_manifest(manifest, args.live_root)
+            _output("verify", {"valid": True, "manifest": str(args.manifest)})
+            return 0
+        if args.command == "backup":
+            _output("backup", backup_database(args.db, args.destination))
+            return 0
+        if args.command == "verify-backup":
+            _output("verify-backup", verify_backup(args.directory))
+            return 0
+        if args.command == "restore":
+            _output("restore", restore_database(args.directory, args.target, activate=args.activate,
+                                                  quiescence_marker=args.quiescence_marker))
+            return 0
         with scheduler.connect() as db:
             counts = {
                 str(row["state"]): int(row["count"])
                 for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
             }
-            _output(
-                "status",
-                {
-                    "task_counts": counts,
-                    "last_event_id": int(
-                        db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]
-                    ),
-                },
-            )
+            data = scheduler.status()
+            data["task_counts"] = counts
+            _output("status", data)
         return 0
     except ValidationError as exc:
         _output(args.command, {}, str(exc))
