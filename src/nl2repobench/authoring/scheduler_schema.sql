@@ -182,6 +182,19 @@ CREATE TABLE resource_policy (
 CREATE VIEW current_resource_policy AS SELECT * FROM resource_policy
   WHERE policy_version = (SELECT max(policy_version) FROM resource_policy);
 
+CREATE TABLE cutover_barrier (
+  barrier_id INTEGER PRIMARY KEY CHECK(barrier_id = 1),
+  cutover_id TEXT NOT NULL UNIQUE,
+  manifest_sha256 TEXT NOT NULL CHECK(length(manifest_sha256) = 64 AND manifest_sha256 NOT GLOB '*[^0-9a-f]*'),
+  state TEXT NOT NULL CHECK(state IN ('prepared','sealed')),
+  rollback_allowed INTEGER NOT NULL CHECK(rollback_allowed IN (0,1)),
+  prepared_at TEXT NOT NULL, sealed_at TEXT,
+  first_effect_kind TEXT CHECK(first_effect_kind IS NULL OR first_effect_kind IN ('claim','integration','archive','cleanup')),
+  first_effect_task_id TEXT REFERENCES tasks(task_id),
+  CHECK((state='prepared' AND rollback_allowed=1 AND sealed_at IS NULL AND first_effect_kind IS NULL)
+     OR (state='sealed' AND rollback_allowed=0 AND sealed_at IS NOT NULL AND first_effect_kind IS NOT NULL))
+);
+
 CREATE TABLE operation_receipts (
   receipt_id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(task_id),
   operation_kind TEXT NOT NULL CHECK(operation_kind IN ('integration','archive','cleanup')),

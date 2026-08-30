@@ -62,7 +62,7 @@ def _process_identity(
 
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
-    result.add_argument("--root", type=Path, required=True, help="explicit temporary Phase 1 root")
+    result.add_argument("--root", type=Path, required=True, help="explicit scheduler root")
     result.add_argument("--db", type=Path, required=True, help="database contained by --root")
     result.add_argument("--pid", type=int)
     result.add_argument("--starttime-ticks", type=int)
@@ -73,6 +73,15 @@ def parser() -> argparse.ArgumentParser:
     config.add_argument("--enabled", choices=("true", "false"), required=True)
     config.add_argument("--lease-seconds", type=int, default=7200)
     config.add_argument("--heartbeat-seconds", type=int, default=600)
+    config.add_argument("--max-total-controllers", type=int, required=True)
+    config.add_argument("--controller-concurrency", type=int, required=True)
+    config.add_argument("--max-integrations", type=int, required=True)
+    config.add_argument("--agent-limit", type=int, required=True)
+    sub.add_parser("first-enable")
+    resource = sub.add_parser("resource-set")
+    resource.add_argument("--repository-min-free-bytes", type=int, required=True)
+    resource.add_argument("--docker-min-free-bytes", type=int, required=True)
+    resource.add_argument("--watcher-min-free-bytes", type=int, required=True)
     sub.add_parser("status")
     verify = sub.add_parser("verify")
     verify.add_argument("--manifest", type=Path, required=True)
@@ -127,8 +136,24 @@ def main(argv: list[str] | None = None) -> int:
                 enabled=args.enabled == "true",
                 lease_seconds=args.lease_seconds,
                 heartbeat_interval_seconds=args.heartbeat_seconds,
+                max_total_controllers=args.max_total_controllers,
+                controller_concurrency=args.controller_concurrency,
+                max_integrations=args.max_integrations,
+                agent_limit=args.agent_limit,
             )
             _output("config-set", {"config_version": version})
+            return 0
+        if args.command == "first-enable":
+            version = scheduler.first_enable()
+            _output("first-enable", {"config_version": version})
+            return 0
+        if args.command == "resource-set":
+            version = scheduler.configure_resource_policy(
+                repository_min_free_bytes=args.repository_min_free_bytes,
+                docker_min_free_bytes=args.docker_min_free_bytes,
+                watcher_min_free_bytes=args.watcher_min_free_bytes,
+            )
+            _output("resource-set", {"policy_version": version})
             return 0
         if args.command == "claim":
             pid, starttime, boot_id = _process_identity(

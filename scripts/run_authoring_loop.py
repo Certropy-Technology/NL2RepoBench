@@ -569,7 +569,7 @@ def _launch_agent_db(
                 start_new_session=True,
             )
         except Exception:
-            scheduler.release(
+            scheduler.abort_claim(
                 claim.claim_id,
                 claim.owner_uuid,
                 claim.controller_id,
@@ -580,18 +580,32 @@ def _launch_agent_db(
                 boot_id=boot_id,
             )
             raise
-        child_pid, child_starttime, _ = process_identity(process.pid)
-        scheduler.start(
-            claim.claim_id,
-            claim.owner_uuid,
-            claim.controller_id,
-            claim.generation,
-            pid=pid,
-            process_starttime_ticks=starttime,
-            boot_id=boot_id,
-            child_pid=child_pid,
-            child_starttime_ticks=child_starttime,
-        )
+        try:
+            child_pid, child_starttime, _ = process_identity(process.pid)
+            scheduler.start(
+                claim.claim_id,
+                claim.owner_uuid,
+                claim.controller_id,
+                claim.generation,
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+                child_pid=child_pid,
+                child_starttime_ticks=child_starttime,
+            )
+        except BaseException:
+            _terminate_process(process)
+            scheduler.abort_claim(
+                claim.claim_id,
+                claim.owner_uuid,
+                claim.controller_id,
+                claim.generation,
+                reason="child start activation failed",
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+            )
+            raise
         deadline = time.monotonic() + args.agent_timeout_sec
         heartbeat = max(5, min(60, int(scheduler.runtime_config()["heartbeat_interval_seconds"])))
         while True:
@@ -1148,6 +1162,38 @@ def _run_db_claim(
     }
 
 
+def _recover_db_claim(
+    scheduler: Scheduler,
+    claim: Claim,
+    identity: tuple[int, int, str],
+    reason: str,
+) -> None:
+    try:
+        scheduler.finish(
+            claim.claim_id,
+            claim.owner_uuid,
+            claim.controller_id,
+            claim.generation,
+            success=False,
+            reason=reason,
+            failure_class="infrastructure",
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        )
+    except Exception:
+        scheduler.abort_claim(
+            claim.claim_id,
+            claim.owner_uuid,
+            claim.controller_id,
+            claim.generation,
+            reason=reason,
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        )
+
+
 def run_db(args: argparse.Namespace) -> dict[str, Any]:
     scheduler = scheduler_for(args.scheduler_db)
     scheduler.init()
@@ -1181,25 +1227,19 @@ def run_db(args: argparse.Namespace) -> dict[str, Any]:
             )
             if not claims:
                 break
-            context = _prepare_db_claim(
-                args, scheduler, claims[0], state_root=state_root, worktree_root=worktree_root
-            )
             try:
+                context = _prepare_db_claim(
+                    args, scheduler, claims[0], state_root=state_root, worktree_root=worktree_root
+                )
                 results.append(_run_db_claim(args, scheduler, identity, context))
             except BaseException as exc:
                 claim = claims[0]
                 try:
-                    scheduler.finish(
-                        claim.claim_id,
-                        claim.owner_uuid,
-                        claim.controller_id,
-                        claim.generation,
-                        success=False,
-                        reason=f"controller exception: {type(exc).__name__}",
-                        failure_class="infrastructure",
-                        pid=identity[0],
-                        process_starttime_ticks=identity[1],
-                        boot_id=identity[2],
+                    _recover_db_claim(
+                        scheduler,
+                        claim,
+                        identity,
+                        f"controller exception: {type(exc).__name__}",
                     )
                 except Exception:
                     pass

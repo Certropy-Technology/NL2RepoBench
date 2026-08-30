@@ -33,6 +33,10 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--legacy-runtime-config", type=Path)
     p.add_argument("--service-unit", default="nl2repobench-authoring-supervisor.service")
     p.add_argument("--drain-timeout", type=int, default=7200)
+    p.add_argument("--backup-directory", type=Path)
+    p.add_argument("--repository-min-free-bytes", type=int)
+    p.add_argument("--docker-min-free-bytes", type=int)
+    p.add_argument("--watcher-min-free-bytes", type=int)
     return p
 
 
@@ -45,21 +49,29 @@ def main(argv: list[str] | None = None) -> int:
             args.repository_root,
             args.journal,
             args.external_side_effect_barrier,
+            args.backup_directory,
+            args.repository_min_free_bytes,
+            args.docker_min_free_bytes,
+            args.watcher_min_free_bytes,
         )
         if any(value is None for value in required):
             raise SystemExit(
-                "cutover requires --cutover-id, --db, --repository-root, --journal, and --external-side-effect-barrier"
+                "cutover requires identifiers/paths plus explicit backup and resource limits"
             )
         cutover_result = execute_cutover(
             repository=args.repository_root.resolve(),
             live_root=args.live_root.resolve(),
             manifest_path=args.manifest.resolve(),
             database=args.db.resolve(),
+            backup_directory=args.backup_directory.resolve(),
             journal_path=args.journal.resolve(),
             barrier_path=args.external_side_effect_barrier.resolve(),
             cutover_id=args.cutover_id,
             service_unit=args.service_unit,
             drain_timeout=args.drain_timeout,
+            repository_min_free_bytes=args.repository_min_free_bytes,
+            docker_min_free_bytes=args.docker_min_free_bytes,
+            watcher_min_free_bytes=args.watcher_min_free_bytes,
         )
         print(json.dumps(cutover_result, sort_keys=True))
         return 0
@@ -68,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
             args.journal is None
             or args.external_side_effect_barrier is None
             or args.legacy_runtime_config is None
+            or args.db is None
         ):
             raise SystemExit(
                 "rollback requires --journal, --external-side-effect-barrier, and --legacy-runtime-config"
@@ -76,6 +89,7 @@ def main(argv: list[str] | None = None) -> int:
             journal_path=args.journal.resolve(),
             barrier_path=args.external_side_effect_barrier.resolve(),
             runtime_config=args.legacy_runtime_config.resolve(),
+            database=args.db.resolve(),
         )
         print(json.dumps({"status": "rolled-back"}, sort_keys=True))
         return 0

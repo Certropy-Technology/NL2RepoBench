@@ -582,10 +582,23 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             objects = archive.get("objects", [])
             idempotency = "legacy:" + hashlib.sha256(receipt_path.read_bytes()).hexdigest()
             conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
+        conn.execute(
+            "UPDATE operation_receipts SET status='failed',failure_class='infrastructure',"
+            "failure_reason='legacy operation intent was abandoned at cutover',"
+            "finished_at=updated_at WHERE status IN ('started','committed')"
+        )
+        conn.execute(
+            "UPDATE operation_receipts SET finished_at=COALESCE(finished_at,updated_at) "
+            "WHERE status IN ('pushed','verified','applied','failed','collision')"
+        )
         for task_id in complete_candidates:
             chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
-            collision = conn.execute("SELECT 1 FROM operation_receipts WHERE task_id=? AND status='collision'", (task_id,)).fetchone()
-            if collision is not None:
+            latest_archive = conn.execute(
+                "SELECT status FROM operation_receipts WHERE task_id=? AND operation_kind='archive' "
+                "ORDER BY operation_attempt DESC,retry_no DESC,rowid DESC LIMIT 1",
+                (task_id,),
+            ).fetchone()
+            if latest_archive is not None and latest_archive["status"] == "collision":
                 conn.execute("UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?", (task_id,))
             elif {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= chain:
                 conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
@@ -595,6 +608,10 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
         # Actors remain live during observation; bind the imported rows to the
         # same frozen bytes one last time before the staging transaction commits.
         validate_manifest(manifest, live_root)
+        counts = {
+            str(row["state"]): int(row["count"])
+            for row in conn.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
+        }
         conn.commit()
         committed = True
     finally:

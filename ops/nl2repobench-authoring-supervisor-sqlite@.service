@@ -17,7 +17,7 @@ Restart=always
 RestartSec=30
 RestartPreventExitStatus=2 64 78
 TimeoutStopSec=45
-KillMode=process
+KillMode=control-group
 LimitNOFILE=8192
 
 # Phase 3 template only. Installation and enablement are cutover operations.

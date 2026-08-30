@@ -26,7 +26,7 @@ import time
 import tomllib
 import uuid
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
@@ -97,6 +97,10 @@ DEFAULT_FAILURE_BACKOFF_SECONDS = 1800
 DEFAULT_DIRECTOR_INTERVAL_SECONDS = 600
 DEFAULT_DIRECTOR_TIMEOUT_SECONDS = 300
 DIRECTOR_ACTIONS = frozenset({"continue", "discover", "integrate", "pause"})
+
+
+class SourceIntegrationError(ValueError):
+    """Candidate source cannot be safely integrated."""
 
 
 @dataclass(frozen=True)
@@ -882,10 +886,10 @@ def _copy_if_new(source: Path, target: Path) -> bool:
         raise ValueError(f"source directory is missing or unsafe: {source}")
     findings = _secret_paths(source)
     if findings:
-        raise ValueError(f"secret-shaped source content: {findings[0]}")
+        raise SourceIntegrationError(f"secret-shaped source content: {findings[0]}")
     if target.exists() or target.is_symlink():
         if target.is_symlink() or _tree_digest(source) != _tree_digest(target):
-            raise ValueError(f"integration source collision: {target}")
+            raise SourceIntegrationError(f"integration source collision: {target}")
         return False
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, target, symlinks=False)
@@ -1503,6 +1507,7 @@ def _start_db_controller(
         str(live / "sessions"),
     ]
     log.parent.mkdir(parents=True, exist_ok=True)
+    process: subprocess.Popen[Any] | None = None
     try:
         with log.open("a", encoding="utf-8") as stream:
             process = subprocess.Popen(
@@ -1526,6 +1531,16 @@ def _start_db_controller(
             argv_digest=command_digest(command),
         )
     except Exception:
+        if process is not None:
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except (ProcessLookupError, PermissionError):
+                process.terminate()
+            try:
+                process.wait(timeout=15)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
         try:
             scheduler.release_controller_reservation(token, owner, reason="Popen activation failed")
         except ConflictError:
@@ -1574,6 +1589,8 @@ def _integrate_db_task(
     task: dict[str, Any],
     procs: list[Proc],
 ) -> dict[str, Any]:
+    if args.dry_run:
+        raise ValueError("DB dry-run must not begin an integration operation")
     receipt = scheduler.begin_operation(
         str(task["task_id"]),
         "integration",
@@ -1603,7 +1620,19 @@ def _integrate_db_task(
             timeout=args.command_timeout,
             archive_after_push=False,
         )
-        if action["status"] == "integrated" and not args.dry_run:
+        if action["status"] != "integrated":
+            status = str(action.get("status", "unknown"))
+            failure_class = (
+                "infrastructure" if status in {"active", "oss-unavailable"} else "environment"
+            )
+            scheduler.fail_operation(
+                receipt,
+                failure_class,
+                f"integration did not progress: {status}",
+                actor=actor.fence,
+            )
+            return {"task_id": task["task_id"], **action, "receipt_disposition": "failed"}
+        if not args.dry_run:
             commit = _command_output(
                 _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)
             ).strip()
@@ -1617,11 +1646,17 @@ def _integrate_db_task(
             )
         return {"task_id": task["task_id"], **action}
     except Exception as exc:
+        failure_class = (
+            "source"
+            if isinstance(exc, SourceIntegrationError)
+            or any(word in str(exc).lower() for word in ("source collision", "secret-shaped"))
+            else "infrastructure"
+            if any(word in str(exc).lower() for word in ("git", "docker", "disk", "network"))
+            else "verifier"
+        )
         scheduler.fail_operation(
             receipt,
-            "infrastructure"
-            if any(word in str(exc).lower() for word in ("git", "docker", "disk", "network"))
-            else "verifier",
+            failure_class,
             str(exc),
             actor=actor.fence,
         )
@@ -1633,9 +1668,9 @@ def supervise_db(args: argparse.Namespace) -> int:
     live = (root / args.live_root).resolve()
     scheduler = scheduler_for(args.scheduler_db)
     scheduler.init()
-    supervisor_actor = SingletonActor.acquire(scheduler, "supervisor")
-    integration_actor = SingletonActor.acquire(scheduler, "integration")
-    try:
+    with ExitStack() as stack:
+        supervisor_actor = stack.enter_context(SingletonActor.acquire(scheduler, "supervisor"))
+        integration_actor = stack.enter_context(SingletonActor.acquire(scheduler, "integration"))
         config = scheduler.runtime_config()
         policy = scheduler.resource_policy()
         reconciled = {
@@ -1644,6 +1679,7 @@ def supervise_db(args: argparse.Namespace) -> int:
             "launch_intents": scheduler.reconcile_launch_intents(),
             "singletons": scheduler.reconcile_singletons(),
             "controllers": scheduler.reconcile_controllers(),
+            "operations": scheduler.reconcile_operations(integration_actor.fence),
         }
         free = _free_bytes(root)
         docker_root, docker_free, docker_error = _docker_storage_status()
@@ -1674,29 +1710,36 @@ def supervise_db(args: argparse.Namespace) -> int:
             "errors": [],
         }
         integration_clean = not _git_status(root)
-        if bool(config["enabled"]) and resources_ok and integration_clean:
-            for task in scheduler.operation_candidates(
-                "integration", limit=int(config["max_integrations"])
-            ):
+        enabled = bool(config["enabled"])
+        integration_limit = int(config["max_integrations"])
+        if enabled and resources_ok and integration_clean and integration_limit > 0:
+            for task in scheduler.operation_candidates("integration", limit=integration_limit):
                 try:
-                    report["actions"].append(
-                        _integrate_db_task(
-                            args, scheduler, integration_actor, root, task, _proc_table()
+                    if args.dry_run:
+                        report["actions"].append(
+                            {"task_id": task["task_id"], "status": "ready", "dry_run": True}
                         )
-                    )
+                    else:
+                        report["actions"].append(
+                            _integrate_db_task(
+                                args, scheduler, integration_actor, root, task, _proc_table()
+                            )
+                        )
                 except Exception as exc:  # noqa: BLE001
                     report["errors"].append(
                         {"task_id": task["task_id"], "error": _redact(str(exc))}
                     )
-            status = scheduler.status()
-            watcher_live = any(
-                lease["scope"] == "watcher" and lease["active"] for lease in status["leases"]
+        if enabled and resources_ok and integration_clean and not args.dry_run:
+            agent_limit = config["agent_limit"]
+            controller_limit = min(
+                int(config["max_total_controllers"]),
+                (
+                    int(agent_limit)
+                    if agent_limit is not None
+                    else int(config["max_total_controllers"])
+                ),
             )
-            if not watcher_live and free >= int(policy["watcher_min_free_bytes"]):
-                report["actions"].append(
-                    {"status": "watcher-started", "pid": _start_db_watcher(args, root, live)}
-                )
-            for _ in range(int(config["max_total_controllers"])):
+            for _ in range(controller_limit):
                 lane_id = scheduler.dispatch_next_lane()
                 if lane_id is None:
                     break
@@ -1707,6 +1750,19 @@ def supervise_db(args: argparse.Namespace) -> int:
                     )
                 except ConflictError:
                     break
+        status = scheduler.status()
+        watcher_live = any(
+            lease["scope"] == "watcher" and lease["active"] for lease in status["leases"]
+        )
+        if (
+            enabled
+            and not args.dry_run
+            and not watcher_live
+            and free >= int(policy["watcher_min_free_bytes"])
+        ):
+            report["actions"].append(
+                {"status": "watcher-started", "pid": _start_db_watcher(args, root, live)}
+            )
         supervisor_actor.heartbeat()
         integration_actor.heartbeat()
         scheduler.snapshot(
@@ -1718,9 +1774,6 @@ def supervise_db(args: argparse.Namespace) -> int:
         )
         print(json.dumps(report, ensure_ascii=False, sort_keys=True), flush=True)
         return 1 if report["errors"] else 0
-    finally:
-        integration_actor.release()
-        supervisor_actor.release()
 
 
 def supervise(args: argparse.Namespace) -> int:

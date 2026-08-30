@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .scheduler import ActorFence, Scheduler
+from .scheduler import ActorFence, LostLeaseError, Scheduler
 
 
 def process_identity(pid: int | None = None) -> tuple[int, int, str]:
@@ -62,15 +62,25 @@ class SingletonActor:
             process_starttime_ticks=starttime,
             boot_id=boot_id,
         )
-        lease_id, generation = scheduler.acquire_singleton(
-            scope,
-            controller,
-            owner,
-            lease_seconds=lease_seconds,
-            pid=pid,
-            process_starttime_ticks=starttime,
-            boot_id=boot_id,
-        )
+        try:
+            lease_id, generation = scheduler.acquire_singleton(
+                scope,
+                controller,
+                owner,
+                lease_seconds=lease_seconds,
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+            )
+        except Exception:
+            scheduler.stop_controller(
+                controller,
+                owner,
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+            )
+            raise
         return cls(
             scheduler,
             scope,
@@ -93,25 +103,36 @@ class SingletonActor:
             boot_id=fence.boot_id,
         )
 
+    def __enter__(self) -> SingletonActor:
+        return self
+
+    def __exit__(self, *_exc: object) -> None:
+        self.release()
+
     def release(self) -> None:
         fence = self.fence
-        self.scheduler.release_singleton(
-            fence.lease_id,
-            fence.scope,
-            fence.controller_id,
-            fence.owner_uuid,
-            fence.generation,
-            pid=fence.pid,
-            process_starttime_ticks=fence.process_starttime_ticks,
-            boot_id=fence.boot_id,
-        )
-        self.scheduler.stop_controller(
-            fence.controller_id,
-            fence.owner_uuid,
-            pid=fence.pid,
-            process_starttime_ticks=fence.process_starttime_ticks,
-            boot_id=fence.boot_id,
-        )
+        try:
+            self.scheduler.release_singleton(
+                fence.lease_id,
+                fence.scope,
+                fence.controller_id,
+                fence.owner_uuid,
+                fence.generation,
+                pid=fence.pid,
+                process_starttime_ticks=fence.process_starttime_ticks,
+                boot_id=fence.boot_id,
+            )
+        finally:
+            try:
+                self.scheduler.stop_controller(
+                    fence.controller_id,
+                    fence.owner_uuid,
+                    pid=fence.pid,
+                    process_starttime_ticks=fence.process_starttime_ticks,
+                    boot_id=fence.boot_id,
+                )
+            except LostLeaseError:
+                pass
 
 
 def db_root(database: Path) -> Path:

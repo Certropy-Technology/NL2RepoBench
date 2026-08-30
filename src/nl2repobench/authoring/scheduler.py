@@ -426,6 +426,7 @@ class Scheduler:
                         "events",
                         "runtime_config",
                         "resource_policy",
+                        "cutover_barrier",
                     }
                     actual = {
                         str(r[0])
@@ -601,6 +602,25 @@ class Scheduler:
         ):
             raise ValidationError("operation limits out of bounds")
         with self._db() as db, _transaction(db):
+            barrier = db.execute(
+                "SELECT state FROM cutover_barrier WHERE barrier_id=1"
+            ).fetchone()
+            current = db.execute("SELECT * FROM current_runtime_config").fetchone()
+            if (
+                enabled
+                and barrier is not None
+                and barrier["state"] == "prepared"
+                and current is not None
+                and not bool(current["enabled"])
+                and (
+                    max_total_controllers,
+                    controller_concurrency,
+                    max_integrations,
+                    agent_limit,
+                )
+                != (1, 1, 0, 1)
+            ):
+                raise ConflictError("prepared cutover requires bounded first enable")
             cur = db.execute(
                 "INSERT INTO runtime_config(enabled,max_total_controllers,controller_concurrency,max_integrations,agent_limit,lease_seconds,heartbeat_interval_seconds,changed_by,changed_at,reason) VALUES(?,?,?,?,?,?,?,?,?,?)",
                 (
@@ -618,7 +638,94 @@ class Scheduler:
             )
             if cur.lastrowid is None:
                 raise CorruptionError("configuration insert did not return an id")
-            return int(cur.lastrowid)
+            version = int(cur.lastrowid)
+            effective_agent_limit = max_total_controllers if agent_limit is None else agent_limit
+            limits = [
+                ("controller_slot", "global", "controllers", max_total_controllers),
+                ("active_claim", "global", "claims", effective_agent_limit),
+                ("active_claim", "agent", "authoring", effective_agent_limit),
+            ]
+            limits.extend(
+                (unit, "language", language, controller_concurrency)
+                for language in LANGUAGES
+                for unit in ("controller_slot", "active_claim")
+            )
+            now = _now()
+            for unit, kind, key, limit in limits:
+                current = db.execute(
+                    "SELECT used_count FROM capacity_rows WHERE capacity_unit=? "
+                    "AND capacity_kind=? AND capacity_key=?",
+                    (unit, kind, key),
+                ).fetchone()
+                used = int(current[0]) if current is not None else 0
+                if used > limit:
+                    raise ConflictError("runtime limit is below live capacity usage")
+                db.execute(
+                    "INSERT INTO capacity_rows VALUES(?,?,?,?,?,?,?,?) "
+                    "ON CONFLICT(capacity_unit,capacity_kind,capacity_key) DO UPDATE SET "
+                    "limit_count=excluded.limit_count,remaining_count=excluded.limit_count-"
+                    "capacity_rows.used_count,config_version=excluded.config_version,"
+                    "updated_at=excluded.updated_at",
+                    (unit, kind, key, limit, used, limit - used, version, now),
+                )
+            return version
+
+    def prepare_cutover_barrier(self, cutover_id: str, manifest_sha256: str) -> None:
+        _id(cutover_id, "cutover_id")
+        digest = _digest(manifest_sha256, "manifest_sha256")
+        with self._db() as db, _transaction(db):
+            if db.execute("SELECT 1 FROM cutover_barrier").fetchone() is not None:
+                raise ConflictError("cutover barrier already exists")
+            db.execute(
+                "INSERT INTO cutover_barrier VALUES(1,?,?,'prepared',1,?,NULL,NULL,NULL)",
+                (cutover_id, digest, _now()),
+            )
+
+    def first_enable(self, *, changed_by: str = "operator") -> int:
+        """Perform the bounded one-controller activation after cutover preparation."""
+        with self._db() as db:
+            config = db.execute("SELECT * FROM current_runtime_config").fetchone()
+            barrier = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
+            if (
+                config is None
+                or bool(config["enabled"])
+                or any(
+                    int(config[key]) != 0
+                    for key in ("max_total_controllers", "controller_concurrency", "max_integrations")
+                )
+                or config["agent_limit"] != 0
+                or barrier is None
+                or barrier["state"] != "prepared"
+            ):
+                raise ConflictError("database is not ready for first enable")
+            lease = int(config["lease_seconds"])
+            heartbeat = int(config["heartbeat_interval_seconds"])
+        return self.configure(
+            enabled=True,
+            lease_seconds=lease,
+            heartbeat_interval_seconds=heartbeat,
+            max_total_controllers=1,
+            controller_concurrency=1,
+            max_integrations=0,
+            agent_limit=1,
+            changed_by=changed_by,
+            reason="bounded first enable",
+        )
+
+    @staticmethod
+    def _seal_cutover_barrier(
+        db: sqlite3.Connection, effect_kind: str, task_id: str, moment: str
+    ) -> None:
+        barrier = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
+        if barrier is None or barrier["state"] == "sealed":
+            return
+        cur = db.execute(
+            "UPDATE cutover_barrier SET state='sealed',rollback_allowed=0,sealed_at=?,"
+            "first_effect_kind=?,first_effect_task_id=? WHERE barrier_id=1 AND state='prepared'",
+            (moment, effect_kind, task_id),
+        )
+        if cur.rowcount != 1:
+            raise ConflictError("cutover barrier seal raced")
 
     def add_lane(
         self,
@@ -1322,6 +1429,7 @@ class Scheduler:
             ).fetchall()
             result: list[Claim] = []
             for task in selected:
+                self._seal_cutover_barrier(db, "claim", str(task["task_id"]), now)
                 db.execute(
                     "UPDATE tasks SET state='claimed',authoring_attempts=authoring_attempts+1,updated_at=? WHERE task_id=? AND state='pending'",
                     (now, task["task_id"]),
@@ -1700,6 +1808,65 @@ class Scheduler:
             )
             self._decrement(db, row["controller_id"], row["task_id"], now)
 
+    def abort_claim(
+        self,
+        claim_id: str,
+        owner_uuid: str,
+        controller_id: str,
+        generation: int = 1,
+        *,
+        reason: str,
+        failure_class: str = "infrastructure",
+        pid: int = 1,
+        process_starttime_ticks: int = 0,
+        boot_id: str = "test",
+    ) -> None:
+        """Close a claim that failed before a child reached running state."""
+        if failure_class not in {
+            "source",
+            "spec",
+            "environment",
+            "verifier",
+            "model",
+            "infrastructure",
+        } or not reason:
+            raise ValidationError("abort requires a classified reason")
+        with self._db() as db, _transaction(db):
+            row = self._fenced_claim(
+                db,
+                claim_id,
+                owner_uuid,
+                controller_id,
+                generation,
+                pid,
+                process_starttime_ticks,
+                boot_id,
+                _now(),
+            )
+            trial = db.execute(
+                "SELECT state FROM trials WHERE trial_id=?", (row["trial_id"],)
+            ).fetchone()
+            if trial is None or trial["state"] != "created":
+                raise ConflictError("abort accepts only a pre-start claim")
+            now = _now()
+            self._close_claim(db, row, now, reason)
+            task = db.execute(
+                "SELECT retry_count,retry_limit FROM tasks WHERE task_id=?", (row["task_id"],)
+            ).fetchone()
+            retryable = failure_class == "infrastructure" and task["retry_count"] < task["retry_limit"]
+            if retryable:
+                db.execute(
+                    "UPDATE tasks SET state='pending',retry_count=retry_count+1,"
+                    "last_failure_class=?,last_failure_reason=?,updated_at=? WHERE task_id=?",
+                    (failure_class, reason, now, row["task_id"]),
+                )
+            else:
+                db.execute(
+                    "UPDATE tasks SET state='blocked',terminal_reason=?,last_failure_class=?,"
+                    "last_failure_reason=?,updated_at=? WHERE task_id=?",
+                    (reason, failure_class, reason, now, row["task_id"]),
+                )
+
     @staticmethod
     def _decrement(db: sqlite3.Connection, controller_id: str, task_id: str, now: str) -> None:
         language = db.execute(
@@ -1916,6 +2083,7 @@ class Scheduler:
                 raise ConflictError("operation attempt does not match task")
             if retry_no is not None and retry_no != retry:
                 raise ConflictError("operation retry does not match task")
+            self._seal_cutover_barrier(db, kind, task_id, now)
             db.execute(
                 f"UPDATE tasks SET state=?,{attempt_col}=?,updated_at=? WHERE task_id=?",
                 (next_state, attempt, now, task_id),
@@ -2243,6 +2411,77 @@ class Scheduler:
                 )
             return len(rows)
 
+    def reconcile_operations(self, actor: ActorFence, *, now: str | None = None) -> int:
+        """Retry or block abandoned external-operation intents under a new actor fence."""
+        moment = now or _now()
+        operation_kinds = ("integration",) if actor.scope == "integration" else ("archive", "cleanup")
+        if actor.scope not in {"integration", "archive"}:
+            raise ValidationError("operation reconciliation requires integration or archive actor")
+        with self._db() as db, _transaction(db):
+            self._fenced_actor(db, actor, operation_kinds[0], moment)
+            placeholders = ",".join("?" for _ in operation_kinds)
+            rows = db.execute(
+                f"SELECT r.*,t.state task_state FROM operation_receipts r "
+                "JOIN tasks t ON t.task_id=r.task_id "
+                f"WHERE r.operation_kind IN ({placeholders}) AND r.status IN ('started','committed') "
+                "AND NOT EXISTS (SELECT 1 FROM scheduler_leases l JOIN controllers c "
+                "ON c.controller_id=l.controller_id AND c.owner_uuid=l.owner_uuid "
+                "WHERE l.lease_id=r.actor_lease_id AND l.generation=r.actor_generation "
+                "AND l.active=1 AND l.lease_expires_at>? AND c.state='running' AND c.desired=1)",
+                (*operation_kinds, moment),
+            ).fetchall()
+            changed = 0
+            for receipt in rows:
+                kind = str(receipt["operation_kind"])
+                retry_col, limit_col, retry_state, expected_state = {
+                    "integration": (
+                        "integration_retry_count",
+                        "integration_retry_limit",
+                        "integration_retry",
+                        "integrating",
+                    ),
+                    "archive": (
+                        "archive_retry_count",
+                        "archive_retry_limit",
+                        "archive_retry",
+                        "archiving",
+                    ),
+                    "cleanup": (
+                        "cleanup_retry_count",
+                        "cleanup_retry_limit",
+                        "cleanup_retry",
+                        "cleaning",
+                    ),
+                }[kind]
+                task = db.execute("SELECT * FROM tasks WHERE task_id=?", (receipt["task_id"],)).fetchone()
+                if task is None or task["state"] != expected_state:
+                    raise CorruptionError("abandoned receipt task-state mismatch")
+                reason = "operation actor lease expired before terminal receipt"
+                cur = db.execute(
+                    "UPDATE operation_receipts SET status='failed',failure_class='infrastructure',"
+                    "failure_reason=?,finished_at=?,updated_at=? WHERE receipt_id=? "
+                    "AND status IN ('started','committed')",
+                    (reason, moment, moment, receipt["receipt_id"]),
+                )
+                if cur.rowcount != 1:
+                    continue
+                if int(task[retry_col]) < int(task[limit_col]):
+                    db.execute(
+                        f"UPDATE tasks SET state=?,{retry_col}={retry_col}+1,"
+                        "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                        "WHERE task_id=?",
+                        (retry_state, reason, moment, task["task_id"]),
+                    )
+                else:
+                    db.execute(
+                        "UPDATE tasks SET state='blocked',terminal_reason=?,"
+                        "last_failure_class='infrastructure',last_failure_reason=?,updated_at=? "
+                        "WHERE task_id=?",
+                        (reason, reason, moment, task["task_id"]),
+                    )
+                changed += 1
+            return changed
+
     def update_receipt(
         self, receipt_id: str, status: str, *, actor: ActorFence | None = None, **fields: Any
     ) -> None:
@@ -2385,6 +2624,7 @@ class Scheduler:
     def _status_from(db: sqlite3.Connection, path: Path) -> dict[str, Any]:
         config = db.execute("SELECT * FROM current_runtime_config").fetchone()
         resource_policy = db.execute("SELECT * FROM current_resource_policy").fetchone()
+        cutover = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()
         counts = {
             str(row["state"]): int(row["count"])
             for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
@@ -2429,6 +2669,7 @@ class Scheduler:
             },
             "config": safe_config,
             "resource_policy": safe_policy,
+            "cutover_barrier": dict(cutover) if cutover is not None else None,
             "leases": leases,
             "capacities": capacities,
         }

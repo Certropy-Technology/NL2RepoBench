@@ -14,6 +14,7 @@ import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -40,6 +41,16 @@ REBUILDABLE_PATHS = (
     ".mypy_cache",
     ".ruff_cache",
 )
+
+
+class ArchiveCollisionError(RuntimeError):
+    def __init__(self, key: str) -> None:
+        super().__init__(f"remote object collision: {key}")
+        self.key = key
+
+
+class ArchiveSourceError(ValueError):
+    """Source snapshot is unsafe to archive."""
 
 
 @dataclass(frozen=True)
@@ -267,7 +278,7 @@ def _upload_and_verify(bucket: Any, key: str, file: ArchiveFile) -> None:
     if bucket.object_exists(key):
         size, digest = _remote_bytes(bucket, key)
         if size != file.size or digest != file.sha256:
-            raise RuntimeError(f"remote object collision: {key}")
+            raise ArchiveCollisionError(key)
         return
     bucket.put_object_from_file(key, str(file.local), headers={"x-oss-meta-sha256": file.sha256})
     size, digest = _remote_bytes(bucket, key)
@@ -327,6 +338,25 @@ def cleanup_verified_task(worktree: Path) -> int:
         else:
             path.unlink()
     return removed
+
+
+def remove_verified_worktree(worktree: Path) -> None:
+    """Remove the archived Git worktree before terminal completion."""
+    if not worktree.exists():
+        return
+    if (worktree / ".git").exists():
+        removed = subprocess.run(
+            ["git", "-C", str(worktree), "worktree", "remove", "--force", str(worktree)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if removed.returncode != 0:
+            raise RuntimeError(f"verified worktree removal failed: {removed.stderr[-1000:]}")
+    else:
+        shutil.rmtree(worktree)
+    if worktree.exists():
+        raise RuntimeError("verified worktree still exists after removal")
 
 
 def archive_task(
@@ -478,9 +508,6 @@ def _db_archive_one(
     workers: int,
 ) -> dict[str, Any]:
     worktree_value = task.get("worktree_path")
-    if not isinstance(worktree_value, str) or not worktree_value:
-        raise ValueError("scheduler task has no worktree_path")
-    worktree = Path(worktree_value)
     receipt_id = scheduler.begin_operation(
         str(task["task_id"]),
         "archive",
@@ -489,18 +516,26 @@ def _db_archive_one(
     )
     lane = Lane(str(task["language"]), str(task["batch_id"]), Path("scheduler-db-only"))
     try:
-        result = archive_task(
-            bucket,
-            lane=lane,
-            package=str(task["package"]),
-            worktree=worktree,
-            receipt_root=receipt_root,
-            workers=workers,
-            cleanup=False,
-            queue_status="handoff_ready",
-            owner=None,
-            attempts=int(task["authoring_attempts"]),
-        )
+        if not isinstance(worktree_value, str) or not worktree_value:
+            raise ArchiveSourceError("scheduler task has no worktree_path")
+        worktree = Path(worktree_value)
+        try:
+            result = archive_task(
+                bucket,
+                lane=lane,
+                package=str(task["package"]),
+                worktree=worktree,
+                receipt_root=receipt_root,
+                workers=workers,
+                cleanup=False,
+                queue_status="handoff_ready",
+                owner=None,
+                attempts=int(task["authoring_attempts"]),
+            )
+        except ValueError as exc:
+            raise ArchiveSourceError(str(exc)) from exc
+        if result.get("status") not in {"archived", "already-archived"}:
+            raise RuntimeError(f"archive did not progress: {result.get('status')}")
         receipt = Path(str(result["receipt"]))
         manifest = json.loads(receipt.read_text(encoding="utf-8"))
         objects = manifest.get("objects", [])
@@ -521,10 +556,31 @@ def _db_archive_one(
             receipt_json=manifest,
         )
         return {"task_id": task["task_id"], **result}
+    except ArchiveCollisionError as exc:
+        evidence = receipt_root / "collisions" / f"{task['task_id']}.json"
+        evidence.parent.mkdir(parents=True, exist_ok=True)
+        evidence.write_text(
+            json.dumps(
+                {"task_id": task["task_id"], "remote_key": exc.key, "reason": str(exc)},
+                sort_keys=True,
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        scheduler.collide_operation(
+            receipt_id,
+            "infrastructure",
+            str(exc),
+            evidence_path=evidence.relative_to(receipt_root).as_posix(),
+            evidence_sha256=_sha256(evidence),
+            actor=actor.fence,
+        )
+        raise
     except Exception as exc:
         scheduler.fail_operation(
             receipt_id,
-            "source" if "secret-shaped" in str(exc) else "infrastructure",
+            "source" if isinstance(exc, ArchiveSourceError) else "infrastructure",
             str(exc),
             actor=actor.fence,
         )
@@ -539,8 +595,6 @@ def _db_cleanup_one(
     receipt_root: Path,
 ) -> dict[str, Any]:
     worktree_value = task.get("worktree_path")
-    if not isinstance(worktree_value, str) or not worktree_value:
-        raise ValueError("scheduler task has no worktree_path")
     receipt_id = scheduler.begin_operation(
         str(task["task_id"]),
         "cleanup",
@@ -549,13 +603,17 @@ def _db_cleanup_one(
     )
     evidence = receipt_root / "cleanup" / f"{task['task_id']}.json"
     try:
+        if not isinstance(worktree_value, str) or not worktree_value:
+            raise RuntimeError("scheduler task has no worktree_path")
         removed = cleanup_verified_task(Path(worktree_value))
         payload = {
             "schema_version": "authoring-cleanup/v1",
             "task_id": task["task_id"],
             "worktree_path": worktree_value,
             "bytes_removed": removed,
+            "worktree_removed": True,
         }
+        remove_verified_worktree(Path(worktree_value))
         evidence.parent.mkdir(parents=True, exist_ok=True)
         evidence.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
         scheduler.update_receipt(
@@ -583,6 +641,11 @@ def _run_db_cycle(
     archive_actor: SingletonActor,
 ) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
+    archive_actor.heartbeat()
+    watcher.heartbeat()
+    scheduler.reconcile_operations(archive_actor.fence)
+    if not bool(scheduler.runtime_config()["enabled"]):
+        return [{"status": "disabled", "authority": "sqlite"}]
     for task in scheduler.operation_candidates("archive", limit=args.workers):
         try:
             results.append(
@@ -597,8 +660,6 @@ def _run_db_cycle(
             )
         except Exception as exc:  # noqa: BLE001
             results.append({"task_id": task["task_id"], "status": "error", "error": str(exc)})
-    archive_actor.heartbeat()
-    watcher.heartbeat()
     for task in scheduler.operation_candidates("cleanup", limit=args.workers):
         try:
             results.append(
@@ -612,13 +673,10 @@ def _run_db_cycle(
 def run_db_once(args: argparse.Namespace, bucket: Any) -> list[dict[str, Any]]:
     scheduler = scheduler_for(args.scheduler_db)
     scheduler.init()
-    watcher = SingletonActor.acquire(scheduler, "watcher")
-    archive_actor = SingletonActor.acquire(scheduler, "archive")
-    try:
+    with ExitStack() as stack:
+        watcher = stack.enter_context(SingletonActor.acquire(scheduler, "watcher"))
+        archive_actor = stack.enter_context(SingletonActor.acquire(scheduler, "archive"))
         return _run_db_cycle(args, bucket, scheduler, watcher, archive_actor)
-    finally:
-        archive_actor.release()
-        watcher.release()
 
 
 def main() -> int:
@@ -658,9 +716,9 @@ def main() -> int:
     if args.scheduler_db is not None:
         scheduler = scheduler_for(args.scheduler_db)
         scheduler.init()
-        watcher = SingletonActor.acquire(scheduler, "watcher")
-        archive_actor = SingletonActor.acquire(scheduler, "archive")
-        try:
+        with ExitStack() as stack:
+            watcher = stack.enter_context(SingletonActor.acquire(scheduler, "watcher"))
+            archive_actor = stack.enter_context(SingletonActor.acquire(scheduler, "archive"))
             while True:
                 results = _run_db_cycle(args, bucket, scheduler, watcher, archive_actor)
                 print(
@@ -670,9 +728,6 @@ def main() -> int:
                 if args.once:
                     return 1 if any(result.get("status") == "error" for result in results) else 0
                 time.sleep(args.interval_sec)
-        finally:
-            archive_actor.release()
-            watcher.release()
     assert args.lock_file is not None
     with args.lock_file.open("a+", encoding="utf-8") as lock:
         while True:
