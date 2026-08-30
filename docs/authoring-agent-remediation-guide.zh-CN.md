@@ -18,15 +18,18 @@ Oracle artifact 必须放在项目磁盘（推荐 `.nl2repo/authoring-work/<batc
 
 - 没有 immutable verifier image、base-image digest 或完整 environment lock；
 - runtime/dev dependency 没有 exact pin、hash lock 或 build-stage install contract；
-- 没有 build backend、Dockerfile、package lock、submodule materialization 或测试闭包；
+- 没有 build backend、Dockerfile、canonical dependency bundle 或测试闭包；
 - native、network、database、browser、TTY、interactive 等 risk flag；
 - 上游测试 runner、Python/Node 版本和当前镜像不兼容。
 
-Worker 应先固定 revision 和 license，再选择兼容 runtime，补 requirements lock、系统包、
-Dockerfile、build backend、candidate boundary 和 verifier。每次尝试必须写入 task-local
+Worker 应先固定 revision 和 license，再选择兼容 runtime，补 canonical
+`dependency_bundle.lock`/`offline_store`/`inventory`、系统包、Dockerfile、build backend、
+candidate boundary 和 verifier。当前 F0.5 private staging contract 尚未安装，production
+compile 必须保持 blocked，不能 fallback 到 online index 或 wheelhouse。每次尝试必须写入 task-local
 `provenance/` 或 `evidence/`：命令、版本、exit code、stdout/stderr 路径、digest、
-下一步动作。Python verifier 依赖必须在 Docker build 阶段按 hash lock 联网安装；禁止
-把 wheelhouse vendor 到 task，也禁止用 `--no-index` 伪造 offline verifier 安装。
+下一步动作。Python verifier 依赖必须先形成 canonical `lock`、`offline_store`、
+`inventory` 三元组；在 F0.5 staging contract 安装前不得进行 production compile，禁止
+online fallback、wheelhouse vendor 或用 `--no-index` 伪造 offline verifier 安装。
 
 只有以下情况，在 remediation attempts 已经有证据后才可以 `blocked`/`excluded`：
 
@@ -92,8 +95,14 @@ python -m py_compile <verifier-python-files>
 bash -n <solution-and-test-scripts>
 uv run nl2repo task validate-source catalog/sources/<task>
 uv run nl2repo harbor compile catalog/sources/<task> \
-  --toolchain toolchain.lock.toml --allow-private
+  --toolchain toolchain.lock.toml \
+  --artifact-root .nl2repo/artifacts \
+  --authorize-task-private-artifacts
 ```
+
+当前 F0 canonical migration 尚未安装 private staging contract；因此 live production
+compile 仍会 fail closed with `private-staging-contract-missing`，不能把该命令的预期
+结果写成 production passed。
 
 然后在最终 compiled bundle 中运行一次 Oracle，要求 `valid=true`、collection 等于
 frozen denominator、reward `>=0.80`。再运行 empty/stub/forgery/timeout/offline controls。

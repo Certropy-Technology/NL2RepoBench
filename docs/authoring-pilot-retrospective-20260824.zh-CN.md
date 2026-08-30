@@ -1,5 +1,8 @@
 # Package -> Harbor 出题 Pilot 复盘
 
+> 历史复盘记录，不是当前 production 操作指南。下列 pilot 命令和结果不能绕过当前
+> canonical migration 或缺失的 private staging contract。
+
 本文记录 2026-08-24 pilot 中真实遇到的失败、修复方式和 QA 门禁，供后续
 Python/Node 出题 Worker 直接执行。它不是发布报告，也不把中间失败计为 Block。
 
@@ -86,8 +89,13 @@ python -m py_compile <verifier-and-adapter-files>
 bash -n <solution-and-verifier-scripts>
 uv run nl2repo task validate-source catalog/sources/<task>
 uv run nl2repo harbor compile catalog/sources/<task> \
-  --toolchain <locked-toolchain> --allow-private
+  --toolchain <locked-toolchain> \
+  --artifact-root .nl2repo/artifacts \
+  --authorize-task-private-artifacts
 ```
+
+该命令仅记录当时的 pilot 形态；当前 source 若仍处于 pre-migration 状态，必须保持
+blocked，不得据此声称 production compile 已通过。
 
 最终 compiled bundle 中执行：
 

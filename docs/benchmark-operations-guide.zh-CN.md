@@ -27,8 +27,8 @@ NL2RepoBench 测量 Agent 从自然语言规格和空 `/workspace` 出发，生�
 
 | 路线 | 语言 | 状态 |
 | --- | --- | --- |
-| Legacy conversion | Python | 104 题状态文件当前为 74 complete、30 pending；catalog lifecycle 另由 reconciler 审计 |
-| Node/npm lane | Node 24/npm 11 production lock；Node 22 synthetic dev fixture | `canonicalize` production compile + one Oracle + control matrix passed |
+| Historical conversion | Python | archive-only，不能作为当前 authoring 或 production 操作 |
+| F0 canonical runtime | Python/Node/Go adapters | live source migration and private staging contract remain blocked |
 
 `complete` 表示 task-local Harbor 包通过静态来源和结构校验，不代表通过 Oracle、
 empty/stub/forgery/offline controls。`blocked` 必须有证据，不能作为模型得分。
@@ -76,24 +76,20 @@ discovered -> frozen -> inventoried -> specified -> packaged
 失败要归入且只归入一个主分类：`source`、`spec`、`environment`、`verifier`、
 `model` 或 `infrastructure`。只有 infrastructure 可以有限重试。
 
-Legacy writer 只写自己的 task worktree，父线程串行集成：
-
-```bash
-python3 scripts/convert_testfiles_loop.py claim --owner <owner> --limit 1 --tasks <task>
-python3 scripts/convert_testfiles_loop.py validate <task>
-python3 scripts/convert_testfiles_loop.py record <task> --owner <owner> \
-  --status complete --reason '<evidence>' --artifact <handoff>
-python3 scripts/convert_testfiles_loop.py block <task> --owner <owner> \
-  --reason '<precise blocker>' --artifact <audit>
-```
+Historical conversion is archive-only. Current authoring writes only canonical
+`catalog/sources/<task-id>/task.toml` and `instruction.md`; it does not use the
+former legacy conversion loop.
 
 不能证明 commit、license、denominator、overlay provenance、offline closure 或
 candidate boundary 时，写 blocked audit；不要复制 hidden tests 或伪造 bundle。
 
-Python 与 Node 使用不同 dataset/version、schema、grader、依赖闭包和 metric：
+Python、Node 与 Go 使用同一 canonical dataset contract、schema、evaluator、依赖闭包和 metric：
 
-- Python v1：pytest/JUnit，`fixed-test-pass-rate-v1`；
-- Node v2：`node:test`、`node-test-json-v1`、`node-test-leaf-pass-rate-v1`、npm v3。
+- Python：pytest/JUnit，`fixed-test-pass-rate-v1`；
+- Node：`node:test`、`node-test-json-v1`、`fixed-test-pass-rate-v1`；
+- Go：go bridge、`go-test-json-v1`、`fixed-test-pass-rate-v1`。
+
+历史 v1/v2 schema、grader 和 metric 只用于 archive 结果解释，不是当前 runtime API。
 
 对于复杂 JSON/回调/状态边界，Python v1 还支持受限的
 `verifier.protocol = "custom-json-v1"`。task TOML 只保存 private verifier bundle
@@ -101,7 +97,9 @@ Python 与 Node 使用不同 dataset/version、schema、grader、依赖闭包和
 dependency lock 不进入 public `catalog/sources`。`HarborCompiler` 只 materialize private
 bundle 到 separate no-network verifier，并用固定 wrapper 校验 leaf IDs、状态集合、
 固定分母和 JUnit/collection；Python verifier 的依赖只在 Docker build 阶段按
-`lock_artifact` 联网安装，禁止 wheelhouse vendor。禁止把 custom `test.sh` 当作公开
+canonical `dependency_bundle.lock`、`offline_store`、`inventory` 三元组必须通过 scoped
+private authorization 和 offline smoke 校验；当前 F0.5 staging contract 缺失时 production
+compile 必须 blocked，禁止在线 fallback 或 wheelhouse vendor。禁止把 custom `test.sh` 当作公开
 task source。候选依赖安装到隔离的 candidate site，不能污染 trusted verifier 的
 pydantic/pytest runtime。
 
@@ -256,7 +254,7 @@ project cleanup。2026-08-22 曾因 Harbor 0.21.0/Python 3.14 的跨 asyncio con
 | Fable 连续 `TerminalAction.command` 缺失、workspace 为空 | Anthropic relay 的 `thinking=enabled` 丢失 tool input；旧 run 的 grader 安装/collection 错误只是后果 | Fable 只通过 `run_model_from_pi.py` 启用 model-scoped `thinking=adaptive`；旧空 workspace run 分类为 infrastructure，不静默当模型失败 |
 | Fable 长 Python instruction 仍返回空 tool/content | 受控 direct LiteLLM 与 OpenHands 两层均复现于约 15.6K system + 7.4K instruction；native tool 和 text-tool fallback 都未稳定解决 | 将该 provider/task 组合记录为 infrastructure blocker，停止无效重试；短 Node task 的 adaptive run 单独计入证据，不能外推到长 prompt |
 | verifier build 的 fixture checksum mismatch | 派生 Dockerfile 的硬编码 manifest 与 pinned base image 漂移 | 在 pinned image 内重算 manifest，更新 task-local Dockerfile，再跑 Oracle；不要删掉 integrity check |
-| candidate install 因 `--require-hashes` 拒绝 source directory | pip hash 校验适用于 wheel/requirements，不适用于本地 source path | build 阶段从网络按 `lock_artifact` 安装 hash-locked requirements，candidate 仍用受限 `--target --no-deps` 安装 |
+| candidate install 因 `--require-hashes` 拒绝 source directory | pip hash 校验适用于 wheel/requirements，不适用于本地 source path | 等待 canonical offline dependency staging；candidate source 仍用受限 `--target --no-deps` 安装，不能 fallback 到 online index |
 | pytest 把 `request` 报为 reserved parametrize name | fixture contract 参数名与 pytest 保留名冲突 | 改为 `payload` 等非保留名并重跑 collection |
 
 ## 9. 顶层出题 Supervisor

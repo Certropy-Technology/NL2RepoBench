@@ -116,7 +116,7 @@ JSON Schema 表达 known provenance、environment、dependency、test command so
 
 legacy 四文件不能证明上游 URL、完整 commit、license、base image digest 或冻结 collection。Importer 将这些字段标记为 `unknown`，不根据 `start.md` 猜测；发布 validator 后续必须拒绝仍为 unknown 的 required field。
 
-`start.md` 是公开 instruction，作为 public artifact 保存。`test_commands.json` 和 `test_files.json` 可能暴露 verifier 细节，作为 private artifact 保存；manifest 只保存 opaque ref、digest、size 和 visibility。当前 `LocalArtifactResolver` 默认拒绝 private ref，只有显式 `allow_private=True` 才能物化。
+`start.md` 是公开 instruction，作为 public artifact 保存。`test_commands.json` 和 `test_files.json` 可能暴露 verifier 细节，作为 private artifact 保存；manifest 只保存 opaque ref、digest、size 和 visibility。当前 `LocalArtifactResolver` 默认拒绝 private ref；compiler 必须为当前 task 构造 scoped authorization，并使用 `--authorize-task-private-artifacts`。
 
 ## 历史输入
 
