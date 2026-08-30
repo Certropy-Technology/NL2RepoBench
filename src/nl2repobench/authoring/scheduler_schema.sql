@@ -179,13 +179,23 @@ CREATE TABLE operation_receipts (
   source_digest TEXT, generated_digest TEXT, commit_sha TEXT, external_ref TEXT,
   manifest_key TEXT, manifest_sha256 TEXT, source_snapshot_sha256 TEXT,
   object_count INTEGER, byte_count INTEGER, evidence_path TEXT, evidence_sha256 TEXT,
+  actor_scope TEXT, actor_lease_id TEXT, actor_generation INTEGER,
+  actor_id TEXT, actor_owner_uuid TEXT, actor_pid INTEGER,
+  actor_starttime_ticks INTEGER, actor_boot_id TEXT,
   failure_class TEXT, failure_reason TEXT, receipt_json TEXT NOT NULL DEFAULT '{}',
   started_at TEXT NOT NULL, finished_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
   UNIQUE(task_id, operation_kind, operation_attempt, retry_no),
   CHECK(status <> 'verified' OR (operation_kind = 'archive' AND manifest_key IS NOT NULL AND manifest_sha256 IS NOT NULL
     AND source_snapshot_sha256 IS NOT NULL AND object_count > 0 AND byte_count > 0 AND evidence_sha256 IS NOT NULL)),
   CHECK(status <> 'applied' OR (operation_kind = 'cleanup' AND evidence_path IS NOT NULL AND evidence_sha256 IS NOT NULL)),
-  CHECK(status <> 'pushed' OR operation_kind = 'integration')
+  CHECK(status <> 'pushed' OR (operation_kind = 'integration' AND length(commit_sha)=40 AND commit_sha NOT GLOB '*[^0-9a-f]*' AND external_ref IS NOT NULL)),
+  CHECK(manifest_sha256 IS NULL OR (length(manifest_sha256)=64 AND manifest_sha256 NOT GLOB '*[^0-9a-f]*')),
+  CHECK(source_snapshot_sha256 IS NULL OR (length(source_snapshot_sha256)=64 AND source_snapshot_sha256 NOT GLOB '*[^0-9a-f]*')),
+  CHECK(evidence_sha256 IS NULL OR (length(evidence_sha256)=64 AND evidence_sha256 NOT GLOB '*[^0-9a-f]*')),
+  CHECK(source_digest IS NULL OR (length(source_digest)=64 AND source_digest NOT GLOB '*[^0-9a-f]*')),
+  CHECK(generated_digest IS NULL OR (length(generated_digest)=64 AND generated_digest NOT GLOB '*[^0-9a-f]*'))
+  ,CHECK(actor_scope IS NULL OR actor_scope IN ('integration','archive'))
+  ,CHECK(status NOT IN ('pushed','verified','applied') OR actor_lease_id IS NOT NULL)
 );
 
 CREATE TABLE events (

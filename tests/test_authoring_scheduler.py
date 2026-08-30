@@ -1,7 +1,9 @@
 # ruff: noqa: E501
 from __future__ import annotations
 
+import importlib.util
 import multiprocessing
+import os
 import sqlite3
 import time
 from datetime import UTC, datetime, timedelta
@@ -11,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from nl2repobench.authoring.scheduler import (
+    ActorFence,
     BusyError,
     ConflictError,
     Identity,
@@ -49,7 +52,20 @@ def _scheduler(tmp_path: Path) -> Scheduler:
     scheduler.register_controller(
         "controller", "owner", "lane", "python", 0, reservation_token=reservation
     )
+    scheduler.register_actor("integration", "integration-owner", "integration", pid=3, process_starttime_ticks=3, boot_id="boot")
+    scheduler.register_actor("archive", "archive-owner", "archive", pid=4, process_starttime_ticks=4, boot_id="boot")
+    scheduler.register_actor("supervisor", "supervisor-owner", "supervisor", pid=5, process_starttime_ticks=5, boot_id="boot")
+    scheduler.acquire_singleton("integration", "integration", "integration-owner", pid=3, process_starttime_ticks=3, boot_id="boot")
+    scheduler.acquire_singleton("archive", "archive", "archive-owner", pid=4, process_starttime_ticks=4, boot_id="boot")
+    scheduler.acquire_singleton("supervisor", "supervisor", "supervisor-owner", pid=5, process_starttime_ticks=5, boot_id="boot")
     return scheduler
+
+
+def _actor(scheduler: Scheduler, scope: str) -> ActorFence:
+    with scheduler.connect() as db:
+        row = db.execute("SELECT * FROM scheduler_leases WHERE scope=? AND active=1", (scope,)).fetchone()
+    pid = {"integration": 3, "archive": 4, "supervisor": 5}[scope]
+    return ActorFence(scope, row["lease_id"], row["generation"], scope, f"{scope}-owner", pid, pid, "boot")
 
 
 def _task(
@@ -94,7 +110,7 @@ def test_schema_executes_and_guards_terminal_insert(tmp_path: Path) -> None:
 def test_release_identity_allows_new_terminal_release(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
     first = _task(scheduler, "same", "r1")
-    scheduler.transition(first, "blocked", reason="operator decision")
+    scheduler.transition(first, "blocked", reason="operator decision", operator_actor=_actor(scheduler, "supervisor"))
     second = _task(scheduler, "same", "r2")
     assert second != first
 
@@ -186,11 +202,11 @@ def test_reservation_capacity_and_lane_only_event(tmp_path: Path) -> None:
 
 def test_singleton_history_and_reservation_expiry(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
-    scheduler.register_actor("supervisor", "supervisor-owner", "supervisor")
-    first, generation = scheduler.acquire_singleton("supervisor", "supervisor", "supervisor-owner")
+    scheduler.register_actor("watcher-test", "watcher-owner", "watcher", pid=6, process_starttime_ticks=6, boot_id="boot")
+    first, generation = scheduler.acquire_singleton("watcher", "watcher-test", "watcher-owner", pid=6, process_starttime_ticks=6, boot_id="boot")
     assert generation == 1
     with pytest.raises(ConflictError):
-        scheduler.acquire_singleton("supervisor", "supervisor", "supervisor-owner")
+        scheduler.acquire_singleton("watcher", "watcher-test", "watcher-owner", pid=6, process_starttime_ticks=6, boot_id="boot")
     token = scheduler.reserve_controller("lane", "reserver", 2, ttl_seconds=5)
     del token
     assert scheduler.reconcile_reservations(now="2999-01-01T00:00:00+00:00") == 1
@@ -239,16 +255,17 @@ def test_operation_retry_never_returns_to_authoring_and_completion_guards(tmp_pa
     scheduler.prepare(claim.claim_id, "owner", "controller")
     scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
     scheduler.finish(claim.claim_id, "owner", "controller", success=True)
-    receipt = scheduler.begin_operation(task_id, "integration", "integration-key")
-    scheduler.fail_operation(receipt, "infrastructure", "network reset")
+    integration_actor = _actor(scheduler, "integration")
+    receipt = scheduler.begin_operation(task_id, "integration", "integration-key", actor=integration_actor)
+    scheduler.fail_operation(receipt, "infrastructure", "network reset", actor=integration_actor)
     assert scheduler.claim_next("controller", "owner") == []
     with scheduler.connect() as db:
         assert (
             db.execute("SELECT state FROM tasks WHERE task_id=?", (task_id,)).fetchone()[0]
             == "integration_retry"
         )
-    with pytest.raises(sqlite3.IntegrityError, match="pushed integration required"):
-        scheduler.transition(task_id, "complete", reason="not yet")
+    with pytest.raises(ConflictError, match="not ready"):
+        scheduler.complete(task_id, "not yet")
 
 
 def test_archive_cleanup_are_receipt_fenced_and_completion_chain(tmp_path: Path) -> None:
@@ -258,22 +275,117 @@ def test_archive_cleanup_are_receipt_fenced_and_completion_chain(tmp_path: Path)
     scheduler.prepare(claim.claim_id, "owner", "controller")
     scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
     scheduler.finish(claim.claim_id, "owner", "controller", success=True)
-    integration = scheduler.begin_operation(task_id, "integration", "chain-integration")
+    integration_actor = _actor(scheduler, "integration")
+    archive_actor = _actor(scheduler, "archive")
+    integration = scheduler.begin_operation(task_id, "integration", "chain-integration", actor=integration_actor)
     with pytest.raises(ConflictError, match="pushed integration"):
-        scheduler.begin_operation(task_id, "archive", "chain-archive")
-    scheduler.update_receipt(integration, "pushed", commit_sha="c" * 40)
-    archive = scheduler.begin_operation(task_id, "archive", "chain-archive")
+        scheduler.begin_operation(task_id, "archive", "chain-archive", actor=archive_actor)
+    scheduler.update_receipt(integration, "pushed", actor=integration_actor, commit_sha="c" * 40, external_ref="refs/heads/main")
+    archive = scheduler.begin_operation(task_id, "archive", "chain-archive", actor=archive_actor)
     with pytest.raises(ConflictError, match="verified archive"):
-        scheduler.begin_operation(task_id, "cleanup", "chain-cleanup")
+        scheduler.begin_operation(task_id, "cleanup", "chain-cleanup", actor=archive_actor)
     scheduler.update_receipt(
-        archive, "verified", manifest_key="m", manifest_sha256="a" * 64,
+        archive, "verified", actor=archive_actor, manifest_key="m", manifest_sha256="a" * 64,
         source_snapshot_sha256="b" * 64, object_count=1, byte_count=1, evidence_sha256="d" * 64,
     )
-    cleanup = scheduler.begin_operation(task_id, "cleanup", "chain-cleanup")
-    scheduler.update_receipt(cleanup, "applied", evidence_path="cleanup.json", evidence_sha256="e" * 64)
-    scheduler.transition(task_id, "complete", reason="published")
+    cleanup = scheduler.begin_operation(task_id, "cleanup", "chain-cleanup", actor=archive_actor)
+    scheduler.update_receipt(cleanup, "applied", actor=archive_actor, evidence_path="cleanup.json", evidence_sha256="e" * 64)
+    scheduler.complete(task_id, "published")
     with scheduler.connect() as db:
         assert db.execute("SELECT state FROM tasks WHERE task_id=?", (task_id,)).fetchone()[0] == "complete"
+
+
+def test_authoring_infrastructure_finish_retries_and_noninfra_blocks(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    retry_task = _task(scheduler, "authoring-infra", retry_limit=2)
+    claim = scheduler.claim_next("controller", "owner")[0]
+    scheduler.prepare(claim.claim_id, "owner", "controller")
+    scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
+    scheduler.finish(claim.claim_id, "owner", "controller", success=False,
+                     failure_class="infrastructure", reason="worker crashed")
+    with scheduler.connect() as db:
+        row = db.execute("SELECT state,retry_count,next_retry_at FROM tasks WHERE task_id=?", (retry_task,)).fetchone()
+    assert row[0] == "pending" and row[1] == 1 and row[2] is not None
+    blocked_task = _task(scheduler, "authoring-source", retry_limit=2)
+    claim2 = scheduler.claim_next("controller", "owner")[0]
+    scheduler.prepare(claim2.claim_id, "owner", "controller")
+    scheduler.start(claim2.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
+    scheduler.finish(claim2.claim_id, "owner", "controller", success=False,
+                     failure_class="source", reason="invalid source")
+    with scheduler.connect() as db:
+        assert db.execute("SELECT state FROM tasks WHERE task_id=?", (blocked_task,)).fetchone()[0] == "blocked"
+
+
+def test_malformed_receipt_metadata_is_rejected(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    task_id = _task(scheduler, "metadata")
+    claim = scheduler.claim_next("controller", "owner")[0]
+    scheduler.prepare(claim.claim_id, "owner", "controller")
+    scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
+    scheduler.finish(claim.claim_id, "owner", "controller", success=True)
+    actor = _actor(scheduler, "integration")
+    receipt = scheduler.begin_operation(task_id, "integration", "metadata-integration", actor=actor)
+    with pytest.raises(ValidationError, match="commit_sha"):
+        scheduler.update_receipt(receipt, "pushed", actor=actor, commit_sha="bad", external_ref="refs/heads/main")
+    with scheduler.connect() as db:
+        with pytest.raises(sqlite3.IntegrityError):
+            db.execute(
+                "UPDATE operation_receipts SET status='pushed',commit_sha='x',external_ref='refs/main' WHERE receipt_id=?",
+                (receipt,),
+            )
+
+
+def test_generic_transition_cannot_bypass_claim_lifecycle(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    task_id = _task(scheduler, "transition")
+    with pytest.raises(ValidationError, match="invalid task state"):
+        scheduler.transition(task_id, "claimed")
+    claim = scheduler.claim_next("controller", "owner")[0]
+    with pytest.raises(ValidationError, match="invalid task state"):
+        scheduler.transition(task_id, "handoff_ready")
+    scheduler.transition(task_id, "blocked", reason="operator", operator_actor=_actor(scheduler, "supervisor"), owner_uuid="owner", controller_id="controller", generation=claim.generation, pid=1, process_starttime_ticks=0, boot_id="test")
+
+
+def test_spawn_failure_releases_reservation_immediately(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    token = scheduler.reserve_controller("lane", "spawn-owner", 1)
+    with pytest.raises(ConflictError, match="not releasable"):
+        scheduler.release_controller_reservation(token, "other-owner")
+    scheduler.release_controller_reservation(token, "spawn-owner", reason="Popen failed")
+    with pytest.raises(ConflictError):
+        scheduler.release_controller_reservation(token, "spawn-owner")
+    with scheduler.connect() as db:
+        assert db.execute("SELECT state FROM controller_slot_reservations WHERE reservation_token=?", (token,)).fetchone()[0] == "released"
+        assert db.execute("SELECT used_count FROM capacity_rows WHERE capacity_unit='controller_slot' AND capacity_kind='global'").fetchone()[0] == 1
+
+
+def test_fairness_dispatch_advances_language_and_lane_sequence(tmp_path: Path) -> None:
+    scheduler = _scheduler(tmp_path)
+    _task(scheduler, "python-task")
+    scheduler.add_lane("node-lane", "node-batch", "node")
+    identity = _identity("node-task", "node")
+    scheduler.add_identity(identity)
+    scheduler.add_candidate("node-task", "node-lane", identity.digest)
+    scheduler.add_task("task-node-task-r1", "node-task", "node-lane", "r1")
+    assert scheduler.dispatch_next_lane() == "lane"
+    assert scheduler.dispatch_next_lane() == "node-lane"
+    with scheduler.connect() as db:
+        rows = db.execute("SELECT lane_id,last_dispatch_seq FROM lanes ORDER BY last_dispatch_seq").fetchall()
+        fairness = db.execute("SELECT next_language_index,dispatch_sequence FROM fairness_state WHERE fairness_id=1").fetchone()
+    assert [tuple(row) for row in rows] == [("lane", 1), ("node-lane", 2)]
+    assert tuple(fairness) == (2, 2)
+
+
+def test_cli_derives_current_process_identity_and_exposes_generation() -> None:
+    path = Path(__file__).parents[1] / "scripts/authoring_scheduler.py"
+    spec = importlib.util.spec_from_file_location("authoring_scheduler_cli", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    pid, starttime, boot_id = module._process_identity(None, None, None)
+    assert pid == os.getpid() and starttime > 0 and boot_id
+    args = module.parser().parse_args(["--root", "/tmp", "--db", "/tmp/scheduler.sqlite3", "heartbeat", "--claim", "c", "--controller", "x", "--owner", "o", "--generation", "4"])
+    assert args.generation == 4
 
 
 def test_receipt_idempotency_checks_context_and_failure_is_conditional(tmp_path: Path) -> None:
@@ -283,14 +395,17 @@ def test_receipt_idempotency_checks_context_and_failure_is_conditional(tmp_path:
     scheduler.prepare(claim.claim_id, "owner", "controller")
     scheduler.start(claim.claim_id, "owner", "controller", child_pid=2, child_starttime_ticks=2)
     scheduler.finish(claim.claim_id, "owner", "controller", success=True)
-    receipt = scheduler.begin_operation(task_id, "integration", "same-key", operation_attempt=1, retry_no=0)
-    assert scheduler.begin_operation(task_id, "integration", "same-key", operation_attempt=1, retry_no=0) == receipt
+    integration_actor = _actor(scheduler, "integration")
+    receipt = scheduler.begin_operation(task_id, "integration", "same-key", operation_attempt=1, retry_no=0, actor=integration_actor)
+    assert scheduler.begin_operation(task_id, "integration", "same-key", operation_attempt=1, retry_no=0, actor=integration_actor) == receipt
     with pytest.raises(ConflictError, match="context mismatch"):
-        scheduler.begin_operation(task_id, "archive", "same-key", operation_attempt=1, retry_no=0)
-    scheduler.fail_operation(receipt, "infrastructure", "temporary")
+        scheduler.begin_operation(task_id, "archive", "same-key", operation_attempt=1, retry_no=0, actor=_actor(scheduler, "archive"))
+    with pytest.raises(LostLeaseError, match="scope"):
+        scheduler.fail_operation(receipt, "infrastructure", "wrong actor", actor=_actor(scheduler, "archive"))
+    scheduler.fail_operation(receipt, "infrastructure", "temporary", actor=integration_actor)
     with scheduler.connect() as db:
         before = tuple(db.execute("SELECT status,integration_retry_count FROM operation_receipts JOIN tasks USING(task_id) WHERE receipt_id=?", (receipt,)).fetchone())
-    scheduler.fail_operation(receipt, "infrastructure", "replayed")
+    scheduler.fail_operation(receipt, "infrastructure", "replayed", actor=integration_actor)
     with scheduler.connect() as db:
         after = tuple(db.execute("SELECT status,integration_retry_count FROM operation_receipts JOIN tasks USING(task_id) WHERE receipt_id=?", (receipt,)).fetchone())
     assert before == after
@@ -345,13 +460,13 @@ def test_full_claim_and_singleton_identity_fences(tmp_path: Path) -> None:
         scheduler.prepare(claim.claim_id, "owner", "controller", claim.generation, pid=99)
     with pytest.raises(LostLeaseError):
         scheduler.transition(task_id, "blocked", reason="operator", owner_uuid="owner", controller_id="controller", generation=claim.generation, pid=99, process_starttime_ticks=0, boot_id="test")
-    scheduler.transition(task_id, "blocked", reason="operator", owner_uuid="owner", controller_id="controller", generation=claim.generation, pid=1, process_starttime_ticks=0, boot_id="test")
-    scheduler.register_actor("supervisor", "supervisor-owner", "supervisor", pid=3, process_starttime_ticks=7, boot_id="boot")
-    lease, generation = scheduler.acquire_singleton("supervisor", "supervisor", "supervisor-owner", pid=3, process_starttime_ticks=7, boot_id="boot")
+    scheduler.transition(task_id, "blocked", reason="operator", operator_actor=_actor(scheduler, "supervisor"), owner_uuid="owner", controller_id="controller", generation=claim.generation, pid=1, process_starttime_ticks=0, boot_id="test")
+    operator = _actor(scheduler, "supervisor")
+    lease, generation = operator.lease_id, operator.generation
     with pytest.raises(LostLeaseError):
-        scheduler.heartbeat_singleton(lease, "supervisor", "supervisor", "supervisor-owner", generation, pid=3, process_starttime_ticks=8, boot_id="boot")
-    scheduler.heartbeat_singleton(lease, "supervisor", "supervisor", "supervisor-owner", generation, pid=3, process_starttime_ticks=7, boot_id="boot")
-    scheduler.release_singleton(lease, "supervisor", "supervisor", "supervisor-owner", generation, pid=3, process_starttime_ticks=7, boot_id="boot")
+        scheduler.heartbeat_singleton(lease, "supervisor", "supervisor", "supervisor-owner", generation, pid=5, process_starttime_ticks=8, boot_id="boot")
+    scheduler.heartbeat_singleton(lease, "supervisor", "supervisor", "supervisor-owner", generation, pid=5, process_starttime_ticks=5, boot_id="boot")
+    scheduler.release_singleton(lease, "supervisor", "supervisor", "supervisor-owner", generation, pid=5, process_starttime_ticks=5, boot_id="boot")
     assert task_id.startswith("task-fenced")
 
 
