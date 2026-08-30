@@ -6,8 +6,6 @@ For the full operator guide see
 [`docs/benchmark-operations-guide.zh-CN.md`](docs/benchmark-operations-guide.zh-CN.md).
 For high-throughput Python/Node authoring see the current
 [`docs/authoring-pipeline-ast.zh-CN.md`](docs/authoring-pipeline-ast.zh-CN.md).
-The older [`docs/authoring-at-scale-plan.v1.md`](docs/authoring-at-scale-plan.v1.md)
-is retained as historical background only.
 For trajectory retention see
 [`docs/trajectory-artifacts.zh-CN.md`](docs/trajectory-artifacts.zh-CN.md).
 
@@ -55,14 +53,14 @@ uv run --frozen --project harbor-runner harbor --version
 catalog/
 ├── datasets/<dataset-id>/
 │   └── dataset.toml     # authoritative task set for that version
-└── tasks/<task-id>/
-    ├── task.toml        # catalog metadata: upstream revision, digest, denominator
-    ├── instruction.md   # the ONLY input the agent sees
-    └── harbor/          # runnable Harbor task
-        ├── task.toml
-        ├── environment/Dockerfile   # agent container
-        ├── solution/solve.sh        # Oracle (clones frozen upstream)
-        └── tests/                   # hidden verifier + frozen tests
+├── sources/<task-id>/
+│   ├── task.toml        # human-maintained source lock, contract and artifact refs
+│   └── instruction.md   # the ONLY input the agent sees
+└── tasks/<task-id>/     # compiler-generated Harbor projection; never hand-edit
+    ├── task.toml
+    ├── environment/Dockerfile
+    ├── solution/solve.sh
+    └── tests/
 ```
 
 List the active tasks:
