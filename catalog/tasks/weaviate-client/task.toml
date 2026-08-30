@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/weaviate-client"
+version = "4.23.1.dev26+g9f59a367f"
+description = "Build the pinned Weaviate Python client from an empty workspace and reproduce its deterministic offline authentication, connection configuration, utility, filter/query builder, collection configuration, and HFresh update contracts without contacting a Weaviate service."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "weaviate",
+    "vector-database",
+    "sdk",
+    "query-builders",
+    "pydantic",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "database-sdk"
+tags = [
+    "python",
+    "weaviate",
+    "vector-database",
+    "sdk",
+    "query-builders",
+    "pydantic",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 94
+canonical_manifest_digest = "sha256:08d21f6ba480e7e77f0bbaf7fc5ca11bc2b441f5fae1b1563d37e26ce55d8ef0"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

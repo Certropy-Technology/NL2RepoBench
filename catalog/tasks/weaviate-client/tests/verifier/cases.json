@@ -1,0 +1,1809 @@
+[
+  {
+    "id": "exports",
+    "request": {
+      "operation": "exports",
+      "names": [
+        "WeaviateClient",
+        "WeaviateAsyncClient",
+        "connect_to_local",
+        "connect_to_custom",
+        "use_async_with_local",
+        "auth",
+        "classes",
+        "collections",
+        "exceptions"
+      ]
+    },
+    "expected": {
+      "class_namespaces": {
+        "config": true,
+        "init": true,
+        "query": true
+      },
+      "root_exports": {
+        "WeaviateAsyncClient": true,
+        "WeaviateClient": true,
+        "auth": true,
+        "classes": true,
+        "collections": true,
+        "connect_to_custom": true,
+        "connect_to_local": true,
+        "exceptions": true,
+        "use_async_with_local": true
+      },
+      "version": "4.23.1.dev26+g9f59a367f"
+    }
+  },
+  {
+    "id": "metadata",
+    "request": {
+      "operation": "metadata"
+    },
+    "expected": {
+      "name": "weaviate-client",
+      "requires": [
+        "authlib<2.0.0,>=1.6.7",
+        "grpcio<1.80.0,>=1.59.5",
+        "httpx<0.29.0,>=0.26.0",
+        "packaging>=21.0",
+        "protobuf<7.0.0,>=4.21.6",
+        "pydantic<3.0.0,>=2.12.0",
+        "validators<1.0.0,>=0.34.0",
+        "weaviate-agents<2.0.0,>=1.0.0; extra == \"agents\""
+      ],
+      "requires_python": ">=3.10",
+      "version": "4.23.1.dev26+g9f59a367f"
+    }
+  },
+  {
+    "id": "auth-api-key",
+    "request": {
+      "operation": "auth",
+      "kind": "api-key",
+      "api_key": "test-key"
+    },
+    "expected": {
+      "value": {
+        "fields": {
+          "api_key": "test-key"
+        },
+        "type": "_APIKey"
+      },
+      "warnings": []
+    }
+  },
+  {
+    "id": "auth-client-credentials-default",
+    "request": {
+      "operation": "auth",
+      "kind": "client-credentials",
+      "secret": "secret"
+    },
+    "expected": {
+      "value": {
+        "fields": {
+          "client_secret": "secret",
+          "scope": null
+        },
+        "type": "_ClientCredentials"
+      },
+      "warnings": []
+    }
+  },
+  {
+    "id": "auth-client-credentials-string",
+    "request": {
+      "operation": "auth",
+      "kind": "client-credentials",
+      "secret": "secret",
+      "scope": "openid profile"
+    },
+    "expected": {
+      "value": {
+        "fields": {
+          "client_secret": "secret",
+          "scope": "openid profile"
+        },
+        "type": "_ClientCredentials"
+      },
+      "warnings": []
+    }
+  },
+  {
+    "id": "auth-client-credentials-list",
+    "request": {
+      "operation": "auth",
+      "kind": "client-credentials",
+      "secret": "secret",
+      "scope": [
+        "openid",
+        "profile"
+      ]
+    },
+    "expected": {
+      "value": {
+        "fields": {
+          "client_secret": "secret",
+          "scope": [
+            "openid",
+            "profile"
+          ]
+        },
+        "type": "_ClientCredentials"
+      },
+      "warnings": []
+    }
+  },
+  {
+    "id": "auth-client-password",
+    "request": {
+      "operation": "auth",
+      "kind": "client-password",
+      "username": "user",
+      "password": "pass",
+      "scope": "openid offline_access"
+    },
+    "expected": {
+      "value": {
+        "fields": {
+          "password": "pass",
+          "scope": "openid offline_access",
+          "username": "user"
+        },
+        "type": "_ClientPassword"
+      },
+      "warnings": []
+    }
+  },
+  {
+    "id": "auth-bearer-warning",
+    "request": {
+      "operation": "auth",
+      "kind": "bearer",
+      "access_token": "access",
+      "refresh_token": "refresh",
+      "expires_in": -1
+    },
+    "expected": {
+      "value": {
+        "fields": {
+          "access_token": "access",
+          "expires_in": -1,
+          "refresh_token": "refresh"
+        },
+        "type": "_BearerToken"
+      },
+      "warnings": [
+        {
+          "category": "UserWarning",
+          "message": "Auth003: Access token expiration time is negative: -1."
+        }
+      ]
+    }
+  },
+  {
+    "id": "protocol-basic",
+    "request": {
+      "operation": "connection",
+      "kind": "protocol",
+      "params": {
+        "host": "localhost",
+        "port": 8080,
+        "secure": false
+      }
+    },
+    "expected": {
+      "is_gcp": false,
+      "model": {
+        "fields": {
+          "host": "localhost",
+          "port": 8080,
+          "secure": false
+        },
+        "type": "ProtocolParams"
+      }
+    }
+  },
+  {
+    "id": "protocol-gcp",
+    "request": {
+      "operation": "connection",
+      "kind": "protocol",
+      "params": {
+        "host": "cluster.gcp.weaviate.cloud",
+        "port": 443,
+        "secure": true
+      }
+    },
+    "expected": {
+      "is_gcp": true,
+      "model": {
+        "fields": {
+          "host": "cluster.gcp.weaviate.cloud",
+          "port": 443,
+          "secure": true
+        },
+        "type": "ProtocolParams"
+      }
+    }
+  },
+  {
+    "id": "protocol-empty-host",
+    "request": {
+      "operation": "connection",
+      "kind": "protocol",
+      "params": {
+        "host": "",
+        "port": 8080,
+        "secure": false
+      }
+    },
+    "expected": {
+      "error": "ValidationError",
+      "message": "1 validation error for ProtocolParams\nhost\n  Value error, host must not be empty [type=value_error, input_value='', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+    }
+  },
+  {
+    "id": "protocol-invalid-port",
+    "request": {
+      "operation": "connection",
+      "kind": "protocol",
+      "params": {
+        "host": "localhost",
+        "port": 70000,
+        "secure": false
+      }
+    },
+    "expected": {
+      "error": "ValidationError",
+      "message": "1 validation error for ProtocolParams\nport\n  Value error, port must be between 0 and 65535 [type=value_error, input_value=70000, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+    }
+  },
+  {
+    "id": "connection-http-default",
+    "request": {
+      "operation": "connection",
+      "kind": "from-url",
+      "url": "http://localhost",
+      "grpc_port": 50051
+    },
+    "expected": {
+      "gcp_on_wcd": false,
+      "grpc_target": "localhost:50051",
+      "http_url": "http://localhost:80",
+      "model": {
+        "fields": {
+          "grpc": {
+            "host": "localhost",
+            "port": 50051,
+            "secure": false
+          },
+          "http": {
+            "host": "localhost",
+            "port": 80,
+            "secure": false
+          }
+        },
+        "type": "ConnectionParams"
+      }
+    }
+  },
+  {
+    "id": "connection-https-default",
+    "request": {
+      "operation": "connection",
+      "kind": "from-url",
+      "url": "https://demo.weaviate.cloud",
+      "grpc_port": 443
+    },
+    "expected": {
+      "error": "ValidationError",
+      "message": "1 validation error for ConnectionParams\n  Value error, http.port and grpc.port must be different if using the same host [type=value_error, input_value={'http': ProtocolParams(h... port=443, secure=True)}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+    }
+  },
+  {
+    "id": "connection-explicit",
+    "request": {
+      "operation": "connection",
+      "kind": "from-url",
+      "url": "https://example.com:8443",
+      "grpc_port": 50052,
+      "grpc_secure": false
+    },
+    "expected": {
+      "gcp_on_wcd": false,
+      "grpc_target": "example.com:50052",
+      "http_url": "https://example.com:8443",
+      "model": {
+        "fields": {
+          "grpc": {
+            "host": "example.com",
+            "port": 50052,
+            "secure": true
+          },
+          "http": {
+            "host": "example.com",
+            "port": 8443,
+            "secure": true
+          }
+        },
+        "type": "ConnectionParams"
+      }
+    }
+  },
+  {
+    "id": "connection-unsupported-scheme",
+    "request": {
+      "operation": "connection",
+      "kind": "from-url",
+      "url": "ftp://example.com",
+      "grpc_port": 50051
+    },
+    "expected": {
+      "error": "ValueError",
+      "message": "Unsupported scheme: ftp"
+    }
+  },
+  {
+    "id": "connection-collision",
+    "request": {
+      "operation": "connection",
+      "kind": "from-params",
+      "params": {
+        "http_host": "same",
+        "http_port": 443,
+        "http_secure": true,
+        "grpc_host": "same",
+        "grpc_port": 443,
+        "grpc_secure": true
+      }
+    },
+    "expected": {
+      "error": "ValidationError",
+      "message": "1 validation error for ConnectionParams\n  Value error, http.port and grpc.port must be different if using the same host [type=value_error, input_value={'http': ProtocolParams(h... port=443, secure=True)}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+    }
+  },
+  {
+    "id": "additional-config-default",
+    "request": {
+      "operation": "connection",
+      "kind": "additional-default"
+    },
+    "expected": {
+      "model": {
+        "fields": {
+          "connection": {
+            "session_pool_connections": 20,
+            "session_pool_max_retries": 3,
+            "session_pool_maxsize": 100,
+            "session_pool_timeout": 5
+          },
+          "timeout": {
+            "init": 2,
+            "insert": 90,
+            "query": 30
+          },
+          "trust_env": false
+        },
+        "type": "AdditionalConfig"
+      },
+      "timeout": {
+        "fields": {
+          "init": 2,
+          "insert": 90,
+          "query": 30
+        },
+        "type": "Timeout"
+      }
+    }
+  },
+  {
+    "id": "additional-config-tuple",
+    "request": {
+      "operation": "connection",
+      "kind": "additional-tuple",
+      "timeout": [
+        4,
+        9
+      ],
+      "trust_env": true
+    },
+    "expected": {
+      "model": {
+        "fields": {
+          "connection": {
+            "session_pool_connections": 20,
+            "session_pool_max_retries": 3,
+            "session_pool_maxsize": 100,
+            "session_pool_timeout": 5
+          },
+          "timeout": [
+            4,
+            9
+          ],
+          "trust_env": true
+        },
+        "type": "AdditionalConfig"
+      },
+      "timeout": {
+        "fields": {
+          "init": 2,
+          "insert": 9,
+          "query": 4
+        },
+        "type": "Timeout"
+      }
+    }
+  },
+  {
+    "id": "proxies-string",
+    "request": {
+      "operation": "connection",
+      "kind": "proxies",
+      "value": "http://proxy:8080"
+    },
+    "expected": {
+      "grpc": "http://proxy:8080",
+      "http": "http://proxy:8080",
+      "https": "http://proxy:8080"
+    }
+  },
+  {
+    "id": "proxies-model",
+    "request": {
+      "operation": "connection",
+      "kind": "proxies",
+      "value": {
+        "http": "http://a",
+        "grpc": "http://g"
+      },
+      "as_model": true
+    },
+    "expected": {
+      "grpc": "http://g",
+      "http": "http://a"
+    }
+  },
+  {
+    "id": "timeout-invalid",
+    "request": {
+      "operation": "connection",
+      "kind": "timeout",
+      "params": {
+        "query": -1
+      }
+    },
+    "expected": {
+      "error": "ValidationError",
+      "message": "1 validation error for Timeout\nquery\n  Input should be greater than or equal to 0 [type=greater_than_equal, input_value=-1, input_type=int]\n    For further information visit https://errors.pydantic.dev/2.13/v/greater_than_equal"
+    }
+  },
+  {
+    "id": "uuid-canonical",
+    "request": {
+      "operation": "util",
+      "kind": "uuid",
+      "value": "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+    },
+    "expected": "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+  },
+  {
+    "id": "uuid-compact",
+    "request": {
+      "operation": "util",
+      "kind": "uuid",
+      "value": "1c9cd58488fe501083d0017cb3fcb446"
+    },
+    "expected": "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+  },
+  {
+    "id": "uuid-object",
+    "request": {
+      "operation": "util",
+      "kind": "uuid",
+      "value": "1c9cd58488fe501083d0017cb3fcb446",
+      "as_uuid": true
+    },
+    "expected": "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+  },
+  {
+    "id": "uuid-beacon",
+    "request": {
+      "operation": "util",
+      "kind": "uuid",
+      "value": "weaviate://localhost/28f3f61b-b524-45e0-9bbe-2c1550bf73d2"
+    },
+    "expected": "28f3f61b-b524-45e0-9bbe-2c1550bf73d2"
+  },
+  {
+    "id": "uuid-invalid",
+    "request": {
+      "operation": "util",
+      "kind": "uuid",
+      "value": "not-a-uuid"
+    },
+    "expected": {
+      "error": "ValueError",
+      "message": "Not valid 'uuid' or 'uuid' can not be extracted from value"
+    }
+  },
+  {
+    "id": "beacon-local",
+    "request": {
+      "operation": "util",
+      "kind": "beacon-valid",
+      "value": "weaviate://localhost/28f3f61b-b524-45e0-9bbe-2c1550bf73d2"
+    },
+    "expected": true
+  },
+  {
+    "id": "beacon-domain",
+    "request": {
+      "operation": "util",
+      "kind": "beacon-valid",
+      "value": "weaviate://some-domain.com/28f3f61b-b524-45e0-9bbe-2c1550bf73d2"
+    },
+    "expected": true
+  },
+  {
+    "id": "beacon-invalid",
+    "request": {
+      "operation": "util",
+      "kind": "beacon-valid",
+      "value": "weaviate://bad_domain/UUID"
+    },
+    "expected": false
+  },
+  {
+    "id": "object-url-valid",
+    "request": {
+      "operation": "util",
+      "kind": "object-url-valid",
+      "value": "http://localhost:8080/v1/objects/1c9cd584-88fe-5010-83d0-017cb3fcb446"
+    },
+    "expected": true
+  },
+  {
+    "id": "object-url-v2",
+    "request": {
+      "operation": "util",
+      "kind": "object-url-valid",
+      "value": "http://localhost:8080/v2/objects/1c9cd584-88fe-5010-83d0-017cb3fcb446"
+    },
+    "expected": false
+  },
+  {
+    "id": "version-v-prefix",
+    "request": {
+      "operation": "util",
+      "kind": "version",
+      "value": "v1.18.3"
+    },
+    "expected": [
+      1,
+      18
+    ]
+  },
+  {
+    "id": "version-major-only",
+    "request": {
+      "operation": "util",
+      "kind": "version",
+      "value": "2"
+    },
+    "expected": [
+      2,
+      0
+    ]
+  },
+  {
+    "id": "version-invalid",
+    "request": {
+      "operation": "util",
+      "kind": "version",
+      "value": "release"
+    },
+    "expected": {
+      "error": "ValueError",
+      "message": "Unable to parse a version from the input string: release.0. Is it in the format '(v)x.y.z' (e.g. 'v1.18.2' or '1.18.0')?"
+    }
+  },
+  {
+    "id": "server-version-short",
+    "request": {
+      "operation": "util",
+      "kind": "server-version",
+      "value": "v1.2",
+      "minimum": [
+        1,
+        2,
+        0
+      ]
+    },
+    "expected": {
+      "at_least": true,
+      "parsed": "1.2.0"
+    }
+  },
+  {
+    "id": "server-version-branches",
+    "request": {
+      "operation": "util",
+      "kind": "server-version",
+      "value": "1.38.8",
+      "minimums": [
+        [
+          1,
+          37,
+          15
+        ],
+        [
+          1,
+          38,
+          8
+        ],
+        [
+          1,
+          39,
+          0
+        ]
+      ]
+    },
+    "expected": {
+      "at_least_any": true,
+      "parsed": "1.38.8"
+    }
+  },
+  {
+    "id": "uuid5",
+    "request": {
+      "operation": "util",
+      "kind": "uuid5",
+      "identifier": "item-42",
+      "namespace": "tenant-a"
+    },
+    "expected": "93c8fdb2-422f-5be7-b520-6a3e7b388a42"
+  },
+  {
+    "id": "sanitize",
+    "request": {
+      "operation": "util",
+      "kind": "sanitize",
+      "value": "line1\nline2 \"quoted\""
+    },
+    "expected": "\"line1 line2 \\\"quoted\\\"\""
+  },
+  {
+    "id": "beacons-class",
+    "request": {
+      "operation": "util",
+      "kind": "beacons",
+      "values": [
+        "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+      ],
+      "to_class": "Article"
+    },
+    "expected": [
+      {
+        "beacon": "weaviate://localhost/Article/1c9cd584-88fe-5010-83d0-017cb3fcb446"
+      }
+    ]
+  },
+  {
+    "id": "timeout-config-scalar",
+    "request": {
+      "operation": "util",
+      "kind": "timeout-config",
+      "value": 2.5
+    },
+    "expected": [
+      2.5,
+      2.5
+    ]
+  },
+  {
+    "id": "timeout-config-tuple",
+    "request": {
+      "operation": "util",
+      "kind": "timeout-config",
+      "value": [
+        1,
+        4
+      ]
+    },
+    "expected": [
+      1,
+      4
+    ]
+  },
+  {
+    "id": "timeout-config-invalid",
+    "request": {
+      "operation": "util",
+      "kind": "timeout-config",
+      "value": 0
+    },
+    "expected": {
+      "error": "ValueError",
+      "message": "'timeout_config' cannot be non-positive number/s!"
+    }
+  },
+  {
+    "id": "datetime-encode-naive",
+    "request": {
+      "operation": "util",
+      "kind": "datetime-encode",
+      "value": "2024-01-02T03:04:05.123456"
+    },
+    "expected": {
+      "value": "2024-01-02T03:04:05.123456+00:00",
+      "warnings": 1
+    }
+  },
+  {
+    "id": "datetime-decode-z",
+    "request": {
+      "operation": "util",
+      "kind": "datetime-decode",
+      "value": "2024-01-02T03:04:05.123456789Z"
+    },
+    "expected": "2024-01-02T03:04:05.123456+00:00"
+  },
+  {
+    "id": "vector-list",
+    "request": {
+      "operation": "util",
+      "kind": "vector",
+      "value": [
+        1,
+        2,
+        3
+      ]
+    },
+    "expected": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "id": "domain-extract",
+    "request": {
+      "operation": "util",
+      "kind": "domain",
+      "value": "weaviate://example.com/1c9cd584-88fe-5010-83d0-017cb3fcb446"
+    },
+    "expected": "example.com"
+  },
+  {
+    "id": "weaviate-domain",
+    "request": {
+      "operation": "util",
+      "kind": "weaviate-domain",
+      "value": "tenant.weaviate.cloud"
+    },
+    "expected": true
+  },
+  {
+    "id": "filter-property-equal",
+    "request": {
+      "operation": "filter",
+      "kind": "property",
+      "name": "title",
+      "operator": "equal",
+      "value": "hello"
+    },
+    "expected": {
+      "fields": {
+        "operator": "Equal",
+        "target": "title",
+        "value": "hello"
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-property-length",
+    "request": {
+      "operation": "filter",
+      "kind": "property",
+      "name": "tags",
+      "length": true,
+      "operator": "equal",
+      "value": 0
+    },
+    "expected": {
+      "fields": {
+        "operator": "Equal",
+        "target": "len(tags)",
+        "value": 0
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-property-contains-any",
+    "request": {
+      "operation": "filter",
+      "kind": "property",
+      "name": "tags",
+      "operator": "contains_any",
+      "value": [
+        "a",
+        "b"
+      ]
+    },
+    "expected": {
+      "fields": {
+        "operator": "ContainsAny",
+        "target": "tags",
+        "value": [
+          "a",
+          "b"
+        ]
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-property-empty",
+    "request": {
+      "operation": "filter",
+      "kind": "property",
+      "name": "tags",
+      "operator": "equal",
+      "value": []
+    },
+    "expected": {
+      "error": "WeaviateInvalidInputError",
+      "message": "Invalid input provided: Filtering on empty lists is not supported by Weaviate. To filter by property length, use Filter.by_property('prop', length=True).equal(0)."
+    }
+  },
+  {
+    "id": "filter-id-equal",
+    "request": {
+      "operation": "filter",
+      "kind": "id",
+      "operator": "equal",
+      "value": "1c9cd58488fe501083d0017cb3fcb446"
+    },
+    "expected": {
+      "fields": {
+        "operator": "Equal",
+        "target": "_id",
+        "value": "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-id-contains",
+    "request": {
+      "operation": "filter",
+      "kind": "id",
+      "operator": "contains_any",
+      "value": [
+        "1c9cd58488fe501083d0017cb3fcb446",
+        "28f3f61bb52445e09bbe2c1550bf73d2"
+      ]
+    },
+    "expected": {
+      "fields": {
+        "operator": "ContainsAny",
+        "target": "_id",
+        "value": [
+          "1c9cd584-88fe-5010-83d0-017cb3fcb446",
+          "28f3f61b-b524-45e0-9bbe-2c1550bf73d2"
+        ]
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-ref-multi",
+    "request": {
+      "operation": "filter",
+      "kind": "ref-property",
+      "link_on": "authors",
+      "target_collection": "person",
+      "name": "name",
+      "operator": "like",
+      "value": "Ada*"
+    },
+    "expected": {
+      "fields": {
+        "operator": "Like",
+        "target": {
+          "link_on": "authors",
+          "target_collection": "Person"
+        },
+        "value": "Ada*"
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-ref-count",
+    "request": {
+      "operation": "filter",
+      "kind": "ref-count",
+      "link_on": "authors",
+      "operator": "greater_or_equal",
+      "value": 2
+    },
+    "expected": {
+      "fields": {
+        "operator": "GreaterThanEqual",
+        "target": {
+          "link_on": "authors"
+        },
+        "value": 2
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-creation-time",
+    "request": {
+      "operation": "filter",
+      "kind": "time",
+      "factory": "by_creation_time",
+      "operator": "greater_than",
+      "value": "2024-01-02T03:04:05+00:00"
+    },
+    "expected": {
+      "fields": {
+        "operator": "GreaterThan",
+        "target": "_creationTimeUnix",
+        "value": "2024-01-02T03:04:05+00:00"
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-geo",
+    "request": {
+      "operation": "filter",
+      "kind": "geo",
+      "name": "location",
+      "latitude": 52.52,
+      "longitude": 13.405,
+      "distance": 1000
+    },
+    "expected": {
+      "fields": {
+        "operator": "WithinGeoRange",
+        "target": "location",
+        "value": {
+          "distance": 1000,
+          "latitude": 52.52,
+          "longitude": 13.405
+        }
+      },
+      "type": "_FilterValue"
+    }
+  },
+  {
+    "id": "filter-and",
+    "request": {
+      "operation": "filter",
+      "kind": "combine",
+      "operator": "and"
+    },
+    "expected": {
+      "fields": {
+        "filters": [
+          {
+            "fields": {
+              "operator": "GreaterThanEqual",
+              "target": "age",
+              "value": 18
+            },
+            "type": "_FilterValue"
+          },
+          {
+            "fields": {
+              "operator": "Equal",
+              "target": "active",
+              "value": true
+            },
+            "type": "_FilterValue"
+          }
+        ]
+      },
+      "type": "_FilterAnd"
+    }
+  },
+  {
+    "id": "filter-or",
+    "request": {
+      "operation": "filter",
+      "kind": "combine",
+      "operator": "or"
+    },
+    "expected": {
+      "fields": {
+        "filters": [
+          {
+            "fields": {
+              "operator": "GreaterThanEqual",
+              "target": "age",
+              "value": 18
+            },
+            "type": "_FilterValue"
+          },
+          {
+            "fields": {
+              "operator": "Equal",
+              "target": "active",
+              "value": true
+            },
+            "type": "_FilterValue"
+          }
+        ]
+      },
+      "type": "_FilterOr"
+    }
+  },
+  {
+    "id": "filter-not",
+    "request": {
+      "operation": "filter",
+      "kind": "combine",
+      "operator": "not"
+    },
+    "expected": {
+      "fields": {
+        "filters": [
+          {
+            "fields": {
+              "operator": "GreaterThanEqual",
+              "target": "age",
+              "value": 18
+            },
+            "type": "_FilterValue"
+          }
+        ]
+      },
+      "type": "_FilterNot"
+    }
+  },
+  {
+    "id": "filter-empty-all",
+    "request": {
+      "operation": "filter",
+      "kind": "empty-combine",
+      "method": "all_of"
+    },
+    "expected": {
+      "error": "WeaviateInvalidInputError",
+      "message": "Invalid input provided: Filter.all_of must have at least one filter."
+    }
+  },
+  {
+    "id": "filter-direct",
+    "request": {
+      "operation": "filter",
+      "kind": "direct"
+    },
+    "expected": {
+      "error": "TypeError",
+      "message": "Filter cannot be instantiated. Use the static methods to create a filter."
+    }
+  },
+  {
+    "id": "query-metadata-default",
+    "request": {
+      "operation": "query",
+      "kind": "metadata"
+    },
+    "expected": {
+      "fields": {
+        "certainty": false,
+        "creation_time": false,
+        "distance": false,
+        "explain_score": false,
+        "is_consistent": false,
+        "last_update_time": false,
+        "query_profile": false,
+        "score": false
+      },
+      "type": "MetadataQuery"
+    }
+  },
+  {
+    "id": "query-metadata-full",
+    "request": {
+      "operation": "query",
+      "kind": "metadata",
+      "method": "full"
+    },
+    "expected": {
+      "fields": {
+        "certainty": true,
+        "creation_time": true,
+        "distance": true,
+        "explain_score": true,
+        "is_consistent": true,
+        "last_update_time": true,
+        "query_profile": false,
+        "score": true
+      },
+      "type": "MetadataQuery"
+    }
+  },
+  {
+    "id": "query-metadata-profile",
+    "request": {
+      "operation": "query",
+      "kind": "metadata",
+      "method": "full_with_profile"
+    },
+    "expected": {
+      "fields": {
+        "certainty": true,
+        "creation_time": true,
+        "distance": true,
+        "explain_score": true,
+        "is_consistent": true,
+        "last_update_time": true,
+        "query_profile": true,
+        "score": true
+      },
+      "type": "MetadataQuery"
+    }
+  },
+  {
+    "id": "query-sort-chain",
+    "request": {
+      "operation": "query",
+      "kind": "sort",
+      "name": "title",
+      "ascending": false,
+      "then_id": true,
+      "id_ascending": true
+    },
+    "expected": {
+      "fields": {
+        "sorts": [
+          {
+            "fields": {
+              "ascending": false,
+              "prop": "title"
+            },
+            "type": "_Sort"
+          },
+          {
+            "fields": {
+              "ascending": true,
+              "prop": "_id"
+            },
+            "type": "_Sort"
+          }
+        ]
+      },
+      "type": "_Sorting"
+    }
+  },
+  {
+    "id": "query-group",
+    "request": {
+      "operation": "query",
+      "kind": "group",
+      "params": {
+        "prop": "category",
+        "objects_per_group": 3,
+        "number_of_groups": 5
+      }
+    },
+    "expected": {
+      "fields": {
+        "number_of_groups": 5,
+        "objects_per_group": 3,
+        "prop": "category"
+      },
+      "type": "GroupBy"
+    }
+  },
+  {
+    "id": "query-rerank",
+    "request": {
+      "operation": "query",
+      "kind": "rerank",
+      "params": {
+        "prop": "summary",
+        "query": "semantic databases"
+      }
+    },
+    "expected": {
+      "fields": {
+        "prop": "summary",
+        "query": "semantic databases"
+      },
+      "type": "Rerank"
+    }
+  },
+  {
+    "id": "query-move",
+    "request": {
+      "operation": "query",
+      "kind": "move",
+      "force": 0.7,
+      "objects": "1c9cd584-88fe-5010-83d0-017cb3fcb446",
+      "concepts": [
+        "database",
+        "vector"
+      ]
+    },
+    "expected": {
+      "concepts": [
+        "database",
+        "vector"
+      ],
+      "force": 0.7,
+      "objects": [
+        {
+          "id": "1c9cd584-88fe-5010-83d0-017cb3fcb446"
+        }
+      ]
+    }
+  },
+  {
+    "id": "query-diversity",
+    "request": {
+      "operation": "query",
+      "kind": "diversity",
+      "params": {
+        "limit": 5,
+        "balance": 0.3
+      }
+    },
+    "expected": {
+      "fields": {
+        "balance": 0.3,
+        "limit": 5
+      },
+      "type": "MMR"
+    }
+  },
+  {
+    "id": "query-bm25-or",
+    "request": {
+      "operation": "query",
+      "kind": "bm25",
+      "operator": "or",
+      "minimum_match": 2
+    },
+    "expected": {
+      "fields": {
+        "minimum_should_match": 2
+      },
+      "operator": 1,
+      "type": "BM25OperatorOr"
+    }
+  },
+  {
+    "id": "query-bm25-and",
+    "request": {
+      "operation": "query",
+      "kind": "bm25",
+      "operator": "and"
+    },
+    "expected": {
+      "fields": {},
+      "operator": 2,
+      "type": "BM25OperatorAnd"
+    }
+  },
+  {
+    "id": "query-bm25-and-cross",
+    "request": {
+      "operation": "query",
+      "kind": "bm25",
+      "operator": "and-cross"
+    },
+    "expected": {
+      "fields": {},
+      "operator": 3,
+      "type": "BM25OperatorAndCross"
+    }
+  },
+  {
+    "id": "query-boost-time",
+    "request": {
+      "operation": "query",
+      "kind": "boost-time",
+      "property": "published",
+      "origin": "2024-01-02T03:04:05+00:00",
+      "scale_seconds": 604800,
+      "offset_seconds": 3600,
+      "decay": 0.4,
+      "weight": 0.6,
+      "depth": 200
+    },
+    "expected": {
+      "fields": {
+        "conditions": [
+          {
+            "fields": {
+              "filter": null,
+              "numeric_decay": null,
+              "property_value": null,
+              "time_decay": {
+                "fields": {
+                  "curve": "gauss",
+                  "decay_value": 0.4,
+                  "offset": "1h",
+                  "origin": "2024-01-02T03:04:05+00:00",
+                  "property": "published",
+                  "scale": "7d"
+                },
+                "type": "_TimeDecayFunction"
+              },
+              "weight": null
+            },
+            "type": "_BoostCondition"
+          }
+        ],
+        "depth": 200,
+        "weight": 0.6
+      },
+      "type": "_Boost"
+    }
+  },
+  {
+    "id": "query-boost-numeric",
+    "request": {
+      "operation": "query",
+      "kind": "boost-numeric",
+      "property": "price",
+      "origin": 50,
+      "scale": 20,
+      "offset": 5,
+      "decay": 0.5
+    },
+    "expected": {
+      "fields": {
+        "conditions": [
+          {
+            "fields": {
+              "filter": null,
+              "numeric_decay": {
+                "fields": {
+                  "curve": "linear",
+                  "decay_value": 0.5,
+                  "offset": 5,
+                  "origin": 50,
+                  "property": "price",
+                  "scale": 20
+                },
+                "type": "_NumericDecayFunction"
+              },
+              "property_value": null,
+              "time_decay": null,
+              "weight": null
+            },
+            "type": "_BoostCondition"
+          }
+        ],
+        "depth": null,
+        "weight": null
+      },
+      "type": "_Boost"
+    }
+  },
+  {
+    "id": "query-boost-property",
+    "request": {
+      "operation": "query",
+      "kind": "boost-property",
+      "name": "popularity",
+      "weight": 0.3
+    },
+    "expected": {
+      "fields": {
+        "conditions": [
+          {
+            "fields": {
+              "filter": null,
+              "numeric_decay": null,
+              "property_value": {
+                "fields": {
+                  "modifier": "log1p",
+                  "property": "popularity"
+                },
+                "type": "_PropertyValueFunction"
+              },
+              "time_decay": null,
+              "weight": null
+            },
+            "type": "_BoostCondition"
+          }
+        ],
+        "depth": null,
+        "weight": 0.3
+      },
+      "type": "_Boost"
+    }
+  },
+  {
+    "id": "query-boost-blend",
+    "request": {
+      "operation": "query",
+      "kind": "boost-blend"
+    },
+    "expected": {
+      "fields": {
+        "conditions": [
+          {
+            "fields": {
+              "filter": {
+                "fields": {
+                  "operator": "Equal",
+                  "target": "featured",
+                  "value": true
+                },
+                "type": "_FilterValue"
+              },
+              "numeric_decay": null,
+              "property_value": null,
+              "time_decay": null,
+              "weight": 2
+            },
+            "type": "_BoostCondition"
+          },
+          {
+            "fields": {
+              "filter": null,
+              "numeric_decay": null,
+              "property_value": {
+                "fields": {
+                  "modifier": null,
+                  "property": "rating"
+                },
+                "type": "_PropertyValueFunction"
+              },
+              "time_decay": null,
+              "weight": 1
+            },
+            "type": "_BoostCondition"
+          }
+        ],
+        "depth": 150,
+        "weight": 0.4
+      },
+      "type": "_Boost"
+    }
+  },
+  {
+    "id": "query-direct-sort",
+    "request": {
+      "operation": "query",
+      "kind": "direct-sort"
+    },
+    "expected": {
+      "error": "TypeError",
+      "message": "Sort cannot be instantiated. Use the static methods to create a sorter."
+    }
+  },
+  {
+    "id": "config-property",
+    "request": {
+      "operation": "config",
+      "kind": "property",
+      "name": "title",
+      "data_type": "TEXT",
+      "description": "Article title",
+      "index_filterable": true,
+      "index_searchable": true,
+      "index_range_filters": false,
+      "skip_vectorization": false,
+      "tokenization": "WORD"
+    },
+    "expected": {
+      "dataType": [
+        "text"
+      ],
+      "description": "Article title",
+      "indexFilterable": true,
+      "indexRangeFilters": false,
+      "indexSearchable": true,
+      "name": "title",
+      "skip_vectorization": false,
+      "tokenization": "word",
+      "vectorize_property_name": true
+    }
+  },
+  {
+    "id": "config-property-reserved",
+    "request": {
+      "operation": "config",
+      "kind": "property",
+      "name": "vector",
+      "data_type": "TEXT"
+    },
+    "expected": {
+      "error": "ValidationError",
+      "message": "1 validation error for Property\nname\n  Value error, Property name 'vector' is reserved and cannot be used [type=value_error, input_value='vector', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/value_error"
+    }
+  },
+  {
+    "id": "config-nested-property",
+    "request": {
+      "operation": "config",
+      "kind": "nested-property"
+    },
+    "expected": {
+      "dataType": [
+        "object"
+      ],
+      "name": "details",
+      "nestedProperties": [
+        {
+          "dataType": [
+            "text"
+          ],
+          "name": "title",
+          "skip_vectorization": false,
+          "vectorize_property_name": true
+        }
+      ],
+      "skip_vectorization": false,
+      "vectorize_property_name": true
+    }
+  },
+  {
+    "id": "config-reference",
+    "request": {
+      "operation": "config",
+      "kind": "reference",
+      "name": "author",
+      "target_collection": "person",
+      "description": "Written by"
+    },
+    "expected": {
+      "dataType": [
+        "Person"
+      ],
+      "description": "Written by",
+      "name": "author"
+    }
+  },
+  {
+    "id": "config-reference-multi",
+    "request": {
+      "operation": "config",
+      "kind": "reference-multi",
+      "name": "related",
+      "target_collections": [
+        "article",
+        "video"
+      ]
+    },
+    "expected": {
+      "dataType": [
+        "Article",
+        "Video"
+      ],
+      "name": "related"
+    }
+  },
+  {
+    "id": "config-text-analyzer",
+    "request": {
+      "operation": "config",
+      "kind": "text-analyzer",
+      "params": {
+        "ascii_fold": true,
+        "ascii_fold_ignore": [
+          "é"
+        ],
+        "stopword_preset": "fr"
+      }
+    },
+    "expected": {
+      "asciiFold": true,
+      "asciiFoldIgnore": [
+        "é"
+      ],
+      "stopwordPreset": "fr"
+    }
+  },
+  {
+    "id": "config-inverted",
+    "request": {
+      "operation": "config",
+      "kind": "inverted",
+      "params": {
+        "bm25_b": 0.75,
+        "bm25_k1": 1.2,
+        "cleanup_interval_seconds": 60,
+        "index_timestamps": true,
+        "stopwords_additions": [
+          "custom"
+        ],
+        "stopword_presets": {
+          "fr": [
+            "le",
+            "la"
+          ]
+        }
+      }
+    },
+    "expected": {
+      "bm25": {
+        "b": 0.75,
+        "k1": 1.2
+      },
+      "cleanupIntervalSeconds": 60,
+      "indexTimestamps": true,
+      "stopwordPresets": {
+        "fr": [
+          "le",
+          "la"
+        ]
+      },
+      "stopwords": {
+        "additions": [
+          "custom"
+        ]
+      }
+    }
+  },
+  {
+    "id": "config-multi-tenancy",
+    "request": {
+      "operation": "config",
+      "kind": "multi-tenancy",
+      "params": {
+        "enabled": true,
+        "auto_tenant_creation": true,
+        "auto_tenant_activation": false
+      }
+    },
+    "expected": {
+      "autoTenantActivation": false,
+      "autoTenantCreation": true,
+      "enabled": true
+    }
+  },
+  {
+    "id": "config-replication",
+    "request": {
+      "operation": "config",
+      "kind": "replication",
+      "params": {
+        "factor": 3,
+        "async_enabled": true
+      }
+    },
+    "expected": {
+      "asyncEnabled": true,
+      "factor": 3
+    }
+  },
+  {
+    "id": "config-hnsw-pq",
+    "request": {
+      "operation": "config",
+      "kind": "hnsw-pq",
+      "quantizer": {
+        "centroids": 256,
+        "segments": 4,
+        "training_limit": 100000
+      },
+      "ef_construction": 128,
+      "max_connections": 64
+    },
+    "expected": {
+      "distance": "cosine",
+      "efConstruction": 128,
+      "maxConnections": 64,
+      "pq": {
+        "centroids": 256,
+        "enabled": true,
+        "encoder": {},
+        "segments": 4,
+        "trainingLimit": 100000
+      }
+    }
+  },
+  {
+    "id": "config-flat-bq",
+    "request": {
+      "operation": "config",
+      "kind": "flat-bq",
+      "quantizer": {
+        "cache": true,
+        "rescore_limit": 200
+      }
+    },
+    "expected": {
+      "bq": {
+        "cache": true,
+        "enabled": true,
+        "rescoreLimit": 200
+      }
+    }
+  },
+  {
+    "id": "config-hfresh-rq",
+    "request": {
+      "operation": "config",
+      "kind": "hfresh-rq",
+      "quantizer": {
+        "cache": true,
+        "bits": 1,
+        "rescore_limit": 100
+      },
+      "max_posting_size_kb": 1024,
+      "replicas": 2,
+      "search_probe": 8
+    },
+    "expected": {
+      "distance": "dot",
+      "maxPostingSizeKB": 1024,
+      "replicas": 2,
+      "rq": {
+        "bits": 1,
+        "cache": true,
+        "enabled": true,
+        "rescoreLimit": 100
+      },
+      "searchProbe": 8
+    }
+  },
+  {
+    "id": "config-dynamic",
+    "request": {
+      "operation": "config",
+      "kind": "dynamic",
+      "threshold": 10000
+    },
+    "expected": {
+      "distance": "l2-squared",
+      "flat": {},
+      "hnsw": {
+        "ef": 100
+      },
+      "threshold": 10000
+    }
+  },
+  {
+    "id": "config-reconfigure-hfresh",
+    "request": {
+      "operation": "config",
+      "kind": "reconfigure-hfresh",
+      "quantizer": {
+        "rescore_limit": 500,
+        "enabled": true,
+        "bits": 1
+      },
+      "max_posting_size_kb": 2048,
+      "search_probe": 12
+    },
+    "expected": {
+      "maxPostingSizeKB": 2048,
+      "searchProbe": 12
+    }
+  },
+  {
+    "id": "config-hfresh-merge",
+    "request": {
+      "operation": "config",
+      "kind": "hfresh-merge",
+      "rescore_limit": 500
+    },
+    "expected": {
+      "distance": "cosine",
+      "maxPostingSizeKB": 1024,
+      "rq": {
+        "bits": 1,
+        "enabled": true,
+        "rescoreLimit": 500
+      },
+      "searchProbe": 8
+    }
+  }
+]

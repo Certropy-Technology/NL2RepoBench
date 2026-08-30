@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "task_id": "weaviate-client",
+  "terminal_kind": "valid",
+  "handoff_status": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/weaviate/weaviate-python-client",
+    "revision": "9f59a367f09a433826fbb045065bfcc958ff69a5",
+    "archive_sha256": "sha256:4f8ef5b9b30a22a4503895fea6cc77fa7280d4fcf2378a92650abb0d75315152",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:02bd288ff6ef7ff7f970fa9c6ce56f253d71ecf4a713110e20200fa5f58c0680"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "network_policy": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:d91def8f511391c301c8fbd131dca5316bdd9f599d61d91be074eab8c3839257",
+      "size_bytes": 35024,
+      "uri": "artifact://private/sha256:d91def8f511391c301c8fbd131dca5316bdd9f599d61d91be074eab8c3839257"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:2e198ee35543b43ff8b9d0879a8f1a1a03f11663ca167eb04b982438d9519cda",
+      "size_bytes": 71680,
+      "uri": "artifact://private/sha256:2e198ee35543b43ff8b9d0879a8f1a1a03f11663ca167eb04b982438d9519cda"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:ec57097f2db3dfcfb544dfb98a74edd1559e8b15987a056a01eeebb4c8df6e1c",
+      "size_bytes": 5550080,
+      "uri": "artifact://private/sha256:ec57097f2db3dfcfb544dfb98a74edd1559e8b15987a056a01eeebb4c8df6e1c"
+    }
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/weaviate-client --output .nl2repo/compiled/weaviate-client-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/compiled/weaviate-client-production/weaviate-client/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:77d5cd318ac86f60864b054445e6d1ee7a6c6abc2ce7337d1983fa7cdac94b09",
+    "canonical_manifest_digest": "sha256:08d21f6ba480e7e77f0bbaf7fc5ca11bc2b441f5fae1b1563d37e26ce55d8ef0"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 94,
+    "case_inventory_sha256": "sha256:61ab51f0c94b2fc692caeb1b417879384f3a5b745691805ce6554510f5dad802",
+    "collection": "frozen 94 unique leaf IDs; current Oracle collected 94"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/weaviate-client-production/weaviate-client -a oracle --job-name weaviate-client-final-oracle-20260830 -o .nl2repo/runs/weaviate-client/final-20260830/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 94,
+    "collected": 94,
+    "passed": 94,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/weaviate-client/final-20260830/oracle/weaviate-client-final-oracle-20260830/weaviate-client__TPcApMj/verifier/grading.json",
+      "sha256": "sha256:5107c5e9cfd37c5dc8a1186bbcdde179236b1879f576254edc6feb5f4e3204f6"
+    },
+    "network": {
+      "path": ".nl2repo/runs/weaviate-client/final-20260830/oracle/weaviate-client-final-oracle-20260830/weaviate-client__TPcApMj/verifier/network.json",
+      "sha256": "sha256:72ee0c45cfd05efd7cb356f98dabcf2e9307fa7688f784d037f53f556420e198"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/weaviate-client-production/weaviate-client -a nop --job-name weaviate-client-final-empty-20260830 -o .nl2repo/runs/weaviate-client/final-20260830/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/empty/weaviate-client-final-empty-20260830/weaviate-client__xKwYeRD/verifier/grading.json",
+        "sha256": "sha256:8a0be56babb2ef02f509a6b4bda486128878029014495d755c18c7b6c5c08a3f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/empty/weaviate-client-final-empty-20260830/weaviate-client__xKwYeRD/verifier/network.json",
+        "sha256": "sha256:dc53bb496c68b8d286d575f658a0503295b87313f5183d6d7e2e609390515499"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/weaviate-client-authoring-20260830/weaviate-client-stub -a oracle --job-name weaviate-client-final-stub-20260830 -o .nl2repo/runs/weaviate-client/final-20260830/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 94,
+      "passed": 1,
+      "reward": 0.010638297872340425,
+      "grading": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/stub/weaviate-client-final-stub-20260830/weaviate-client-stub__DCJToLw/verifier/grading.json",
+        "sha256": "sha256:895fcb619e70300cf7ce7e4dcb97b8bd2aed3e1d0cbe81ae9888aaa05972a698"
+      },
+      "network": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/stub/weaviate-client-final-stub-20260830/weaviate-client-stub__DCJToLw/verifier/network.json",
+        "sha256": "sha256:9350b4d021fa3abcf6209c7a0159637deed5cbfed2d6e76004c9355901cd7218"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/weaviate-client-authoring-20260830/weaviate-client-forgery -a oracle --job-name weaviate-client-final-forgery-20260830 -o .nl2repo/runs/weaviate-client/final-20260830/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 94,
+      "passed": 1,
+      "reward": 0.010638297872340425,
+      "verifier_owned_reward": true,
+      "workspace_forged_reports_present_but_untrusted": true,
+      "grading": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/forgery/weaviate-client-final-forgery-20260830/weaviate-client-forgery__XUfhPY6/verifier/grading.json",
+        "sha256": "sha256:895fcb619e70300cf7ce7e4dcb97b8bd2aed3e1d0cbe81ae9888aaa05972a698"
+      },
+      "network": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/forgery/weaviate-client-final-forgery-20260830/weaviate-client-forgery__XUfhPY6/verifier/network.json",
+        "sha256": "sha256:ab6e00fd9d734da65d42689d7e4420175410f9f95f79ea3247c761007e4aa728"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/weaviate-client-final/weaviate-client-install-hang -a oracle --job-name weaviate-client-final-install-hang-20260830 -o .nl2repo/runs/weaviate-client/final-20260830/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/install-hang/weaviate-client-final-install-hang-20260830/weaviate-client-install-hang__tooHRND/verifier/grading.json",
+        "sha256": "sha256:8a0be56babb2ef02f509a6b4bda486128878029014495d755c18c7b6c5c08a3f"
+      },
+      "network": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/install-hang/weaviate-client-final-install-hang-20260830/weaviate-client-install-hang__tooHRND/verifier/network.json",
+        "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/weaviate-client-final/weaviate-client-call-hang -a oracle --job-name weaviate-client-final-call-hang-20260830 -o .nl2repo/runs/weaviate-client/final-20260830/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 94,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/call-hang/weaviate-client-final-call-hang-20260830/weaviate-client-call-hang__SMM4u3V/verifier/grading.json",
+        "sha256": "sha256:841856a135a082314e5be68b51d8e1520a3d6c5acd647cfee6a72e0fc39cb759"
+      },
+      "network": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/call-hang/weaviate-client-final-call-hang-20260830/weaviate-client-call-hang__SMM4u3V/verifier/network.json",
+        "sha256": "sha256:a16df705c177152f3e30f2dee7b1d0f3c44cd2492d777da182b86996fdc5fd96"
+      }
+    },
+    "offline": {
+      "command": "Oracle verifier network probe from the run above",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/runs/weaviate-client/final-20260830/oracle/weaviate-client-final-oracle-20260830/weaviate-client__TPcApMj/verifier/network.json",
+        "sha256": "sha256:72ee0c45cfd05efd7cb356f98dabcf2e9307fa7688f784d037f53f556420e198"
+      }
+    }
+  },
+  "residual_risks": [
+    "The fixed production denominator is a focused 94-leaf public API contract rather than all upstream unit leaves.",
+    "This authoring lane performed no independent blind review or model-agent pilot.",
+    "The pinned OpenHands agent-runtime image is an integrator infrastructure precondition and was not used by this lane."
+  ]
+}
