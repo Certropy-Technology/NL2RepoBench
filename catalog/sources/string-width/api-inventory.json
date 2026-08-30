@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "package": "string-width",
+  "version": "8.2.2",
+  "runtime_entry": "index.js",
+  "declaration_entry": "index.d.ts",
+  "module_type": "module",
+  "public_exports": ["default"],
+  "runtime_signature": "stringWidth(string: string, options?: Options): number",
+  "options": {
+    "ambiguousIsNarrow": "boolean, default true",
+    "countAnsiEscapeCodes": "boolean, default false"
+  },
+  "dependencies": ["get-east-asian-width@1.5.0", "strip-ansi@7.1.2"],
+  "behavior": [
+    "non-string and empty inputs return zero",
+    "ANSI CSI/OSC sequences are stripped by default",
+    "grapheme clusters determine emoji and combining behavior",
+    "East Asian width controls CJK, ambiguous, and halfwidth characters",
+    "modern Hangul jamo composition is width-aware",
+    "function is synchronous, deterministic, and input-preserving"
+  ],
+  "scored_boundary": "bounded JSON request/response through a UID-separated candidate subprocess",
+  "excluded_surfaces": ["filesystem", "callbacks", "symbols", "custom prototypes", "cyclic graphs", "locale", "TTY"]
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_path": "test.js",
+  "upstream_framework": "ava",
+  "upstream_test_declarations": 229,
+  "upstream_collection_status": "inventoried from the frozen source; upstream dev tools are not part of the production verifier",
+  "collection_method": "independent node:test contract over a bounded JSON child adapter",
+  "frozen_private_collection": 53,
+  "groups": {
+    "package shape": 3,
+    "basic and East Asian width": 10,
+    "controls and ANSI": 7,
+    "combining and Hangul": 8,
+    "emoji and variation": 12,
+    "boundaries and determinism": 13
+  },
+  "notes": "The private contract is authored from the public API and observed frozen behavior. It does not import candidate code in the trusted verifier process."
+}

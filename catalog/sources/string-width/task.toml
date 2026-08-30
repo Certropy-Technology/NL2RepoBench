@@ -1,0 +1,111 @@
+schema_version = "2.0"
+task_id = "string-width"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "unicode-terminal-width"
+tags = ["node", "npm", "esm", "unicode", "ansi", "emoji", "east-asian-width"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/string-width"
+revision = "64dc20cddd374df0ff43ba3469491ae98cf0cdfc"
+license_spdx = "MIT"
+source_digest = "sha256:6ae9442b3cfdcbe991f61655f1683636a45aff00869eaf05bd9335215faf4171"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier runs are offline. The exact npm closure is installed from a private integrity-checked cache; the frozen source archive is available only to the trusted Oracle bundle."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["get-east-asian-width@1.5.0", "strip-ansi@7.1.2", "ansi-regex@6.3.0"]
+
+[dependencies.artifact]
+digest = "sha256:f4c21f91cbfd6288219c149fbf3753082649d8fe152c1377a3ab57fc03f02c11"
+size_bytes = 204800
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:f4c21f91cbfd6288219c149fbf3753082649d8fe152c1377a3ab57fc03f02c11"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 53
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:c71d4eb593aad0792c24513be6ae277b5e7ee1bf4c61caa56bd3e51a256d0e72"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:c71d4eb593aad0792c24513be6ae277b5e7ee1bf4c61caa56bd3e51a256d0e72"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:ce477bc32aa4385145032cf594eadaa7f79f6da482cdea8c9911d618779106c8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:ce477bc32aa4385145032cf594eadaa7f79f6da482cdea8c9911d618779106c8"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the string-width ESM package with deterministic ANSI-aware Unicode column width calculation."
+keywords = ["node", "npm", "esm", "unicode", "ansi", "emoji", "east-asian-width"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1536
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-string-width"
+reason = "Production Harbor Oracle passed 53/53 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned results and no public verifier network."
+
+[oracle_bundle]
+digest = "sha256:5bb69b27f51cfca7e34dc6a8bf05bfb3730e13dbbe9e913e83db97d0bcd0d251"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:5bb69b27f51cfca7e34dc6a8bf05bfb3730e13dbbe9e913e83db97d0bcd0d251"
+visibility = "private"

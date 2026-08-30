@@ -1,0 +1,238 @@
+{
+  "schema_version": "1.0",
+  "task_id": "string-width",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/string-width",
+    "revision": "64dc20cddd374df0ff43ba3469491ae98cf0cdfc",
+    "source_digest": "sha256:6ae9442b3cfdcbe991f61655f1683636a45aff00869eaf05bd9335215faf4171",
+    "archive_verification_log": {
+      "path": ".nl2repo/authoring-work/string-width/runs/oracle-final/string-width-authoring-oracle-final/string-width__yoD8Jij/agent/oracle.txt",
+      "sha256": "sha256:18abe0d9a42f82379573f83e30930bb88a2b9a55e70417017fa120ed2ce0b05b"
+    },
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependencies": {
+      "digest": "sha256:f4c21f91cbfd6288219c149fbf3753082649d8fe152c1377a3ab57fc03f02c11",
+      "size_bytes": 204800
+    },
+    "commands": {
+      "digest": "sha256:c71d4eb593aad0792c24513be6ae277b5e7ee1bf4c61caa56bd3e51a256d0e72",
+      "size_bytes": 10240
+    },
+    "tests": {
+      "digest": "sha256:ce477bc32aa4385145032cf594eadaa7f79f6da482cdea8c9911d618779106c8",
+      "size_bytes": 10240
+    },
+    "oracle": {
+      "digest": "sha256:5bb69b27f51cfca7e34dc6a8bf05bfb3730e13dbbe9e913e83db97d0bcd0d251",
+      "size_bytes": 10240
+    }
+  },
+  "production_bundle": {
+    "path": ".nl2repo/authoring-work/string-width/compiled/final/string-width/bundle.manifest.json",
+    "sha256": "sha256:16f3bb61615948b57e77b790cc8859c7fd53a2e7123bf45374ed3047e7ce0837",
+    "canonical_manifest_digest": "sha256:0f6c117b8e937c1a88538a1dc85c8545aace74f5564c4a38f713c8c60f54c416",
+    "mode": "production",
+    "file_count": 116,
+    "integrity_errors": 0,
+    "deterministic_repeat": true
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "expected_total": 53,
+    "observed_total": 53,
+    "report_format": "node-test-json-v1",
+    "metric_contract": "node-test-leaf-pass-rate-v1"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/string-width",
+      "exit_code": 0,
+      "source_manifest_digest": "sha256:c77d37b9bae29f4b93b1ffcc3d457225b1d0a96ac964f4d6ad9fa741e6837675"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_error_count": 0,
+      "task_warning_count": 0,
+      "note": "Repository-wide warnings belong to unrelated sources; string-width has no findings."
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/string-width --output .nl2repo/authoring-work/string-width/compiled/final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "bash -n solution/control scripts; node --check private verifier modules; parse task TOML and JSON inventories",
+      "exit_code": 0
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/compiled/final/string-width -a oracle --allow-agent-host codeload.github.com --job-name string-width-authoring-oracle-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/oracle-final",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "grading": {
+      "path": ".nl2repo/authoring-work/string-width/runs/oracle-final/string-width-authoring-oracle-final/string-width__yoD8Jij/verifier/grading.json",
+      "sha256": "sha256:230ba7c7ace9c3ab15d4fa32c89d3b0765bdce2bff3342a315b401ae20d39ea9"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/string-width/runs/oracle-final/string-width-authoring-oracle-final/string-width__yoD8Jij/verifier/network.json",
+      "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399"
+    },
+    "valid": true,
+    "expected_total": 53,
+    "collected": 53,
+    "passed": 53,
+    "reward": 1,
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-empty -a oracle --job-name string-width-control-empty-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/empty",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0,
+      "collected": 0,
+      "passed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/empty/string-width-control-empty-final/string-width-empty__LHaZg6N/verifier/grading.json",
+        "sha256": "sha256:525ffd06d8d72bb52352b4b18d96a7237ef0ed793cca3560a607739fc64990e5"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/empty/string-width-control-empty-final/string-width-empty__LHaZg6N/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      },
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-stub -a oracle --job-name string-width-control-stub-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/stub",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0,
+      "collected": 53,
+      "passed": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/stub/string-width-control-stub-final/string-width-stub__ebNbVLw/verifier/grading.json",
+        "sha256": "sha256:0d143f2722445b636e77adc3aae4b898b64fec1b1d971e8008eba2098b12c16c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/stub/string-width-control-stub-final/string-width-stub__ebNbVLw/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      },
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-forgery -a oracle --job-name string-width-control-forgery-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/forgery",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.24528301886792453,
+      "collected": 53,
+      "passed": 13,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/forgery/string-width-control-forgery-final/string-width-forgery__kqC22P5/verifier/grading.json",
+        "sha256": "sha256:2b2958b7527219e556f660fc27cbca9a45478749fe0d513ecc25ae503564ffcc"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/forgery/string-width-control-forgery-final/string-width-forgery__kqC22P5/verifier/network.json",
+        "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+      },
+      "public_network_available": false
+    },
+    "install_script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-install-script -a oracle --job-name string-width-control-install-script-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/install-script",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0,
+      "collected": 0,
+      "passed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/install-script/string-width-control-install-script-final/string-width-install-script__KcZ7VNX/verifier/grading.json",
+        "sha256": "sha256:525ffd06d8d72bb52352b4b18d96a7237ef0ed793cca3560a607739fc64990e5"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/install-script/string-width-control-install-script-final/string-width-install-script__KcZ7VNX/verifier/network.json",
+        "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"
+      },
+      "public_network_available": false
+    },
+    "loader_hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-loader-hook -a oracle --job-name string-width-control-loader-hook-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/loader-hook",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0,
+      "collected": 53,
+      "passed": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/loader-hook/string-width-control-loader-hook-final/string-width-loader-hook__RSwdMzr/verifier/grading.json",
+        "sha256": "sha256:0d143f2722445b636e77adc3aae4b898b64fec1b1d971e8008eba2098b12c16c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/loader-hook/string-width-control-loader-hook-final/string-width-loader-hook__RSwdMzr/verifier/network.json",
+        "sha256": "sha256:4ba120874e6fba192df0c18271a2b1825d1ab0160e977eda581188e7a1c191dc"
+      },
+      "public_network_available": false
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-hang -a oracle --job-name string-width-control-hang-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/hang",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0,
+      "collected": 0,
+      "passed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/hang/string-width-control-hang-final/string-width-hang__TxowzBJ/verifier/grading.json",
+        "sha256": "sha256:7ea705893b8e25bb57cd3744e268d533162f82e404f0639f41ef6bdbe92c0c81"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/hang/string-width-control-hang-final/string-width-hang__TxowzBJ/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      },
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/string-width/controls/final/string-width-offline -a oracle --job-name string-width-control-offline-final --n-concurrent 1 --yes -o .nl2repo/authoring-work/string-width/runs/controls-final/offline",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0,
+      "collected": 53,
+      "passed": 0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/offline/string-width-control-offline-final/string-width-offline__ZCd4iLu/verifier/grading.json",
+        "sha256": "sha256:0d143f2722445b636e77adc3aae4b898b64fec1b1d971e8008eba2098b12c16c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/string-width/runs/controls-final/offline/string-width-control-offline-final/string-width-offline__ZCd4iLu/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      },
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane by contract.",
+    "Blind review, traceability approval, pilot, dataset integration, and publication remain integrator stages.",
+    "The local OpenHands runtime tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, not the toolchain lock sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; the integrator must restore or explicitly relock it before a model run.",
+    "The 53-leaf verifier is an independent bounded JSON adaptation of the frozen package API, not full parity with upstream AVA, XO, and tsd development surfaces."
+  ],
+  "blocker": null
+}
