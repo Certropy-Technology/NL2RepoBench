@@ -138,12 +138,13 @@ def _manifest(directory: Path) -> dict[str, object]:
 
 def backup_database(source: Path | str, destination: Path | str) -> dict[str, object]:
     """Create an online SQLite backup and a checksum manifest."""
-    source_path, dest = Path(source).resolve(), Path(destination).resolve()
+    source_path, destination_path = Path(source).resolve(), Path(destination)
     _regular(Path(source), "source database")
-    if dest.exists() and dest.is_symlink():
-        raise MigrationError("backup destination must not be a symlink")
-    dest.mkdir(parents=True, exist_ok=True)
-    target = dest / source_path.name
+    if destination_path.exists() or destination_path.is_symlink():
+        raise MigrationError("backup destination must be a new directory")
+    destination_path.mkdir(mode=0o700)
+    dest = destination_path
+    target = dest / "database.sqlite3"
     if target.exists() or target.is_symlink():
         raise MigrationError("backup target must be exclusively created")
     _exclusive_empty(target, "backup target")
@@ -276,7 +277,7 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
             consumed_path = target_path.parent / f".{target_path.name}.restore-consumed.json"
             if activate and receipt_key in _consumed_receipts(consumed_path):
                 raise MigrationError("restore quiescence receipt was already used")
-            source = next(backup_dir / str(item["name"]) for item in backup_manifest["files"] if str(item["name"]).endswith(".sqlite3"))
+            source = next(backup_dir / str(item["name"]) for item in backup_manifest["files"] if str(item["name"]) == "database.sqlite3")
             if not activate:
                 return {"dry_run": True, "verified": True, "target": str(target_path), "quiesced": True}
             quarantine = target_path.parent / f".restore-quarantine-{int(time.time())}"
@@ -286,11 +287,18 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
                 if sidecar.exists():
                     os.replace(sidecar, quarantine / sidecar.name)
             _sync_dir(quarantine)
-            staged = target_path.parent / f".{target_path.name}.restore-staged"
-            if staged.exists() or staged.is_symlink():
-                raise MigrationError("restore staging path must be exclusively created")
+            stage_dir = target_path.parent / f".restore-stage-{receipt['nonce']}"
+            if stage_dir.exists() or stage_dir.is_symlink():
+                raise MigrationError("restore staging directory must be exclusively created")
+            stage_dir.mkdir(mode=0o700)
+            staged = stage_dir / target_path.name
             _exclusive_copy(source, staged, "restore staging path")
             activate_database(staged, target_path, activate=True)
+            for suffix in ("-wal", "-shm"):
+                sidecar = Path(str(staged) + suffix)
+                if sidecar.exists():
+                    sidecar.unlink()
+            stage_dir.rmdir()
             _sync_dir(target_path.parent)
             with sqlite3.connect(target_path) as db:
                 if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok" or db.execute("PRAGMA foreign_key_check").fetchall():

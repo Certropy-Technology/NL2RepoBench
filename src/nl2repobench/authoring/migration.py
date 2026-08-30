@@ -424,17 +424,20 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
     db.parent.mkdir(parents=True, exist_ok=True)
     scheduler = Scheduler(db, supplied_root=db.parent)
     scheduler.init()
-    conn = scheduler._import_connection()
+    conn = scheduler.connect()
     counts: dict[str, int] = {}
     committed = False
     try:
         conn.execute("BEGIN IMMEDIATE")
-        conn.execute("INSERT OR REPLACE INTO schema_meta(key,value) VALUES('import_mode','1')")
         for lane in manifest["lanes"]:
             lane_id = str(lane["lane_id"])
             kind, language = str(lane["kind"]), str(lane["language"])
-            conn.execute("INSERT OR IGNORE INTO lanes(lane_id,batch_id,language,kind,status,queue_path,queue_sha256,plan_path,plan_sha256,state_path,state_sha256,source_reports_json,fairness_rank,last_dispatch_seq,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
-                         (lane_id, lane["batch_id"], language, kind, "active", lane["queue_source"], lane["queue"]["sha256"], lane.get("plan_source", "plan.json"), (lane.get("plan") or {}).get("sha256", "0"*64), lane["state_authority"], None, "[]", 0, 0))
+            state_hash = hashlib.sha256(json.dumps(lane["state"]["files"], sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+            plan_path = root / str(lane["plan_source"])
+            plan_payload = json.loads(plan_path.read_text(encoding="utf-8")) if plan_path.is_file() else {}
+            source_reports = plan_payload.get("source_reports", []) if isinstance(plan_payload, dict) else []
+            conn.execute("INSERT INTO lanes(lane_id,batch_id,language,kind,status,queue_path,queue_sha256,plan_path,plan_sha256,state_path,state_sha256,source_reports_json,fairness_rank,last_dispatch_seq,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
+                         (lane_id, lane["batch_id"], language, kind, "active", lane["queue_source"], lane["queue"]["sha256"], lane.get("plan_source", "plan.json"), (lane.get("plan") or {}).get("sha256", "0"*64), lane["state_authority"], state_hash, json.dumps(source_reports, sort_keys=True), 0, 0))
             queue_path = Path(str(lane["queue_source"]))
             queue_data = json.loads((queue_path if queue_path.is_absolute() else root / queue_path).read_text(encoding="utf-8"))
             state_path = Path(str(lane["state_authority"]))
@@ -463,8 +466,8 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     revision = "0" * 40
                 upstream = str(selection.get("upstream_url") or item.get("upstream_url") or "unknown")
                 digest = hashlib.sha256(json.dumps({"package": package, "revision": revision, "upstream": upstream}, sort_keys=True).encode()).hexdigest()
-                conn.execute("INSERT OR IGNORE INTO candidate_identities VALUES(?,?,?,?,?,?,?,datetime('now'))", (digest, language, package, upstream, str(selection.get("source_kind", "legacy")), revision, json.dumps(selection, sort_keys=True)))
-                conn.execute("INSERT OR IGNORE INTO candidates VALUES(?,?,?,?,?,?,datetime('now'),datetime('now'))", (candidate_id, lane_id, digest, int(item.get("ordinal", 0) or 0), "existing" if item.get("status") == "complete" else "candidate", json.dumps({"legacy_status": item.get("status"), "legacy": item}, sort_keys=True)))
+                conn.execute("INSERT INTO candidate_identities VALUES(?,?,?,?,?,?,?,datetime('now'))", (digest, language, package, upstream, str(selection.get("source_kind", "legacy")), revision, json.dumps(selection, sort_keys=True)))
+                conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,datetime('now'),datetime('now'))", (candidate_id, lane_id, digest, int(item.get("ordinal", 0) or 0), "existing" if item.get("status") == "complete" else "candidate", json.dumps({"legacy_status": item.get("status"), "legacy": item}, sort_keys=True)))
                 task_id = f"{lane_id}:{candidate_id}:legacy"
                 legacy_status = str(item.get("status", "pending"))
                 state = _STATUS.get(legacy_status, "blocked")
@@ -472,15 +475,17 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     state = "handoff_ready"
                 failure = _classify_failure(item)
                 reason = str(item.get("reason") or item.get("release_reason") or "legacy import")
-                terminal = reason if state in {"complete", "blocked", "excluded", "cancelled"} else None
+                initial_state = "handoff_ready" if legacy_status == "complete" else (
+                    "handoff_ready" if state == "handoff_ready" else "pending"
+                )
                 attempt_limit = max(1, int(item.get("attempt_limit", 3) or 3))
                 attempts = min(attempt_limit, max(0, int(item.get("attempts", item.get("authoring_attempts", 0)) or 0)))
                 retry_limit = max(0, int(item.get("retry_limit", 3) or 0))
                 retry_count = min(retry_limit, max(0, int(item.get("retry_count", item.get("retries", 0)) or 0)))
                 release_limit = max(0, int(item.get("release_limit", 3) or 0))
                 release_count = min(release_limit, max(0, int(item.get("release_count", item.get("releases", 0)) or 0)))
-                conn.execute("INSERT OR IGNORE INTO tasks(task_id,candidate_id,lane_id,task_release,state,attempt_limit,authoring_attempts,retry_limit,retry_count,release_count,release_limit,integration_attempts,integration_retry_count,integration_retry_limit,archive_attempts,archive_retry_count,archive_retry_limit,cleanup_attempts,cleanup_retry_count,cleanup_retry_limit,input_ordinal,last_failure_class,last_failure_reason,terminal_reason,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
-                             (task_id, candidate_id, lane_id, "legacy", state, attempt_limit, attempts, retry_limit, retry_count, release_count, release_limit, int(item.get("integration_attempts", 0) or 0), int(item.get("integration_retry_count", 0) or 0), max(0, int(item.get("integration_retry_limit", 3) or 0)), int(item.get("archive_attempts", 0) or 0), int(item.get("archive_retry_count", 0) or 0), max(0, int(item.get("archive_retry_limit", 3) or 0)), int(item.get("cleanup_attempts", 0) or 0), int(item.get("cleanup_retry_count", 0) or 0), max(0, int(item.get("cleanup_retry_limit", 3) or 0)), int(item.get("ordinal", 0) or 0), failure, reason if failure else None, terminal))
+                conn.execute("INSERT INTO tasks(task_id,candidate_id,lane_id,task_release,state,attempt_limit,authoring_attempts,retry_limit,retry_count,release_count,release_limit,integration_attempts,integration_retry_count,integration_retry_limit,archive_attempts,archive_retry_count,archive_retry_limit,cleanup_attempts,cleanup_retry_count,cleanup_retry_limit,input_ordinal,last_failure_class,last_failure_reason,terminal_reason,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
+                             (task_id, candidate_id, lane_id, "legacy", initial_state, attempt_limit, attempts, retry_limit, retry_count, release_count, release_limit, int(item.get("integration_attempts", 0) or 0), int(item.get("integration_retry_count", 0) or 0), max(0, int(item.get("integration_retry_limit", 3) or 0)), int(item.get("archive_attempts", 0) or 0), int(item.get("archive_retry_count", 0) or 0), max(0, int(item.get("archive_retry_limit", 3) or 0)), int(item.get("cleanup_attempts", 0) or 0), int(item.get("cleanup_retry_count", 0) or 0), max(0, int(item.get("cleanup_retry_limit", 3) or 0)), int(item.get("ordinal", 0) or 0), failure, reason if failure else None, None))
                 for artifact in item.get("artifacts", []) if isinstance(item.get("artifacts"), list) else []:
                     artifact_path = str(artifact.get("path", "")) if isinstance(artifact, dict) else str(artifact)
                     artifact_digest = str(artifact.get("sha256", "")) if isinstance(artifact, dict) else ""
@@ -493,7 +498,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         artifact_size = int(artifact.get("size_bytes", 0)) if isinstance(artifact, dict) else 0
                         scan = "not-run"
                     if _SHA.fullmatch(artifact_digest):
-                        conn.execute("INSERT OR IGNORE INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,secret_scan_status,created_at) VALUES(?,?,?,?,?,?,? ,?,datetime('now'))", (f"legacy:{artifact_digest}:{task_id}", task_id, None, "legacy-reference", artifact_path, artifact_digest, artifact_size, scan))
+                        conn.execute("INSERT INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,secret_scan_status,created_at) VALUES(?,?,?,?,?,?,? ,?,datetime('now'))", (f"legacy:{artifact_digest}:{task_id}", task_id, None, "legacy-reference", artifact_path, artifact_digest, artifact_size, scan))
                 receipts = item.get("receipts", item.get("operation_receipts", []))
                 if isinstance(receipts, list):
                     for index, receipt in enumerate(receipts):
@@ -507,8 +512,19 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         fields = dict(receipt)
                         fields.pop("operation_kind", None)
                         idempotency = "legacy:" + hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-                        conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
-                counts[state] = counts.get(state, 0) + 1
+                        conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
+                db_chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
+                final_state = initial_state
+                if legacy_status == "complete" and {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= db_chain:
+                    conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
+                    conn.execute("UPDATE tasks SET state='archiving' WHERE task_id=?", (task_id,))
+                    conn.execute("UPDATE tasks SET state='cleaning' WHERE task_id=?", (task_id,))
+                    conn.execute("UPDATE tasks SET state='complete',terminal_reason=? WHERE task_id=?", (reason, task_id))
+                    final_state = "complete"
+                elif state in {"blocked", "excluded", "cancelled"}:
+                    conn.execute("UPDATE tasks SET state=?,terminal_reason=? WHERE task_id=?", (state, reason, task_id))
+                    final_state = state
+                counts[final_state] = counts.get(final_state, 0) + 1
         # Claim files are evidence only.  Importing owner/controller rows would fabricate live actors.
         for lane in manifest["lanes"]:
             for record in lane["state"].get("files", []):
@@ -520,9 +536,9 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 claim = payload.get("claim", payload) if isinstance(payload, dict) else {}
                 owner = str(claim.get("owner") or claim.get("owner_uuid") or "")
                 if owner:
-                    conn.execute("INSERT OR IGNORE INTO legacy_actor_evidence VALUES(?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], owner, str(claim.get("pid") or ""), str(claim.get("starttime") or ""), str(claim.get("boot_id") or ""), str(lane["batch_id"]), record["sha256"], "historical-owner"))
+                    conn.execute("INSERT INTO legacy_actor_evidence VALUES(?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], owner, str(claim.get("pid") or ""), str(claim.get("starttime") or ""), str(claim.get("boot_id") or ""), str(lane["batch_id"]), record["sha256"], "historical-owner"))
                 else:
-                    conn.execute("INSERT OR IGNORE INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], str(claim.get("candidate_id") or ""), str(claim.get("package") or ""), owner, str(claim.get("status") or ""), str(claim.get("lease_expires_at") or ""), str(claim.get("attempts") or ""), record["sha256"], "orphan-claim", "legacy claim evidence; no live controller imported"))
+                    conn.execute("INSERT INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], str(claim.get("candidate_id") or ""), str(claim.get("package") or ""), owner, str(claim.get("status") or ""), str(claim.get("lease_expires_at") or ""), str(claim.get("attempts") or ""), record["sha256"], "orphan-claim", "legacy claim evidence; no live controller imported"))
         failures = root / "supervisor" / "integration-failures.json"
         if failures.is_file():
             try:
@@ -534,11 +550,11 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     classification = classify_integration_failure(failure if isinstance(failure, dict) else str(failure))
                     reason = json.dumps(failure, sort_keys=True)
                     raw_digest = hashlib.sha256(reason.encode()).hexdigest()
-                    conn.execute("INSERT OR IGNORE INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"integration-failure:{package}", "supervisor/integration-failures.json", "", str(package), "", "", "", "", raw_digest, "unmapped-claim", f"legacy integration failure classification={classification}; collision cleanup forbidden"))
+                    conn.execute("INSERT INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"integration-failure:{package}", "supervisor/integration-failures.json", "", str(package), "", "", "", "", raw_digest, "unmapped-claim", f"legacy integration failure classification={classification}; collision cleanup forbidden"))
                     if "collision" in reason.lower() or "remote object" in reason.lower():
                         task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (package,)).fetchone()
                         if task is not None:
-                            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "legacy-collision:" + raw_digest, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason))
+                            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "legacy-collision:" + raw_digest, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason))
         for record in manifest.get("inventory", []):
             path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
             if not path_name.startswith("archive-receipts/") or not path_name.endswith(".json"):
@@ -556,11 +572,10 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             raw_digest = _sha(receipt_path)
             objects = archive.get("objects", [])
             idempotency = "legacy:" + hashlib.sha256(receipt_path.read_bytes()).hexdigest()
-            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
+            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
         # Actors remain live during observation; bind the imported rows to the
         # same frozen bytes one last time before the staging transaction commits.
         validate_manifest(manifest, live_root)
-        conn.execute("DELETE FROM schema_meta WHERE key='import_mode'")
         conn.commit()
         committed = True
     finally:

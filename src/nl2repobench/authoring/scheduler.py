@@ -56,20 +56,9 @@ class CorruptionError(SchedulerError):
 class _LockedConnection(sqlite3.Connection):
     """Hold the scheduler lock for exactly the lifetime of a DB connection."""
 
-    def __init__(self, *args: Any, lock_fd: int, allow_import: bool = False, **kwargs: Any) -> None:
+    def __init__(self, *args: Any, lock_fd: int, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._scheduler_lock_fd = lock_fd
-        self._allow_import = allow_import
-
-    def set_authorizer(self, *args: Any, **kwargs: Any) -> None:
-        if not self._allow_import:
-            raise PermissionError("ordinary scheduler connections cannot replace authorizer")
-        super().set_authorizer(*args, **kwargs)
-
-    def create_function(self, *args: Any, **kwargs: Any) -> None:
-        if not self._allow_import:
-            raise PermissionError("ordinary scheduler connections cannot create functions")
-        super().create_function(*args, **kwargs)
 
     def close(self) -> None:
         try:
@@ -204,7 +193,7 @@ class Scheduler:
             raise ValidationError("database must be under supplied root")
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def _connect(self, *, import_mode: bool = False) -> sqlite3.Connection:
+    def _connect(self) -> sqlite3.Connection:
         deadline = time.monotonic() + 5.0
         try:
             lock_path = self.path.parent / f".{self.path.name}.lock"
@@ -219,17 +208,7 @@ class Scheduler:
                         raise BusyError("scheduler lock is busy") from exc
                     time.sleep(0.02)
             db = sqlite3.connect(self.path, timeout=0.0, isolation_level=None,
-                                 factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, allow_import=import_mode, **kw)))
-            sqlite3.Connection.create_function(db, "authoring_import_mode", 0, lambda: 1 if import_mode else 0, deterministic=True)
-            sqlite3.Connection.set_authorizer(db,
-                lambda action, arg1, _arg2, _db_name, _trigger: (
-                    sqlite3.SQLITE_OK
-                    if import_mode or not (
-                        action in {sqlite3.SQLITE_INSERT, sqlite3.SQLITE_UPDATE, sqlite3.SQLITE_DELETE}
-                        and arg1 == "schema_meta"
-                    ) else sqlite3.SQLITE_DENY
-                )
-            )
+                                 factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, **kw)))
         except sqlite3.OperationalError as exc:
             if "busy" in str(exc).lower() or "locked" in str(exc).lower():
                 raise BusyError("sqlite connection is busy") from exc
@@ -238,7 +217,7 @@ class Scheduler:
         pragmas = ("PRAGMA journal_mode=WAL", "PRAGMA synchronous=FULL",
                    "PRAGMA busy_timeout=0", "PRAGMA foreign_keys=ON",
                    "PRAGMA temp_store=MEMORY", "PRAGMA wal_autocheckpoint=1000",
-                   "PRAGMA journal_size_limit=67108864", "PRAGMA trusted_schema=" + ("ON" if import_mode else "OFF"))
+                   "PRAGMA journal_size_limit=67108864", "PRAGMA trusted_schema=OFF")
         try:
             for pragma in pragmas:
                 while True:
@@ -259,9 +238,6 @@ class Scheduler:
     def connect(self) -> sqlite3.Connection:
         return self._connect()
 
-    def _import_connection(self) -> sqlite3.Connection:
-        return self._connect(import_mode=True)
-
     def init(self) -> None:
         schema = Path(__file__).with_name("scheduler_schema.sql").read_text(encoding="utf-8")
         if self.path.exists() and self.path.stat().st_size:
@@ -281,7 +257,7 @@ class Scheduler:
                     return
             except sqlite3.DatabaseError as exc:
                 raise ValidationError("incompatible scheduler database") from exc
-        with self._import_connection() as db:
+        with self.connect() as db:
             db.executescript(schema)
             with _transaction(db):
                 now = _now()

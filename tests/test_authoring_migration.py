@@ -95,12 +95,12 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
     dry = restore_database(backup_dir, target, quiescence_marker=marker)
     assert dry["dry_run"] is True and not target.exists()
     with pytest.raises(MigrationError, match="explicit"):
-        activate_database(backup_dir / "source.sqlite3", target)
+        activate_database(backup_dir / "database.sqlite3", target)
     restore_database(backup_dir, target, quiescence_marker=marker, activate=True)
     with pytest.raises(MigrationError, match="already used"):
         restore_database(backup_dir, target, quiescence_marker=marker, activate=True)
     assert verify_backup(backup_dir)["verified"] is True
-    (backup_dir / "source.sqlite3").write_bytes(b"tampered")
+    (backup_dir / "database.sqlite3").write_bytes(b"tampered")
     with pytest.raises(MigrationError, match="checksum"):
         verify_backup(backup_dir)
 
@@ -108,11 +108,11 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
 def test_uncheckpointed_wal_is_included_in_online_backup(tmp_path: Path) -> None:
     source = Scheduler(tmp_path / "wal.sqlite3", supplied_root=tmp_path)
     source.init()
-    with source._import_connection() as db:
+    with source.connect() as db:
         db.execute("INSERT INTO schema_meta(key,value) VALUES('wal_test','present')")
     backup_dir = tmp_path / "wal-backup"
     backup_database(source.path, backup_dir)
-    with sqlite3.connect(backup_dir / "wal.sqlite3") as db:
+    with sqlite3.connect(backup_dir / "database.sqlite3") as db:
         assert db.execute("SELECT value FROM schema_meta WHERE key='wal_test'").fetchone()[0] == "present"
 
 
@@ -146,18 +146,3 @@ def test_static_quiescence_marker_is_not_a_restore_receipt(tmp_path: Path) -> No
     marker.write_text('{"quiesced": true}', encoding="utf-8")
     with pytest.raises(MigrationError, match="generation-bound"):
         restore_database(backup_dir, tmp_path / "target.sqlite3", quiescence_marker=marker)
-
-
-def test_import_authorization_is_connection_local(tmp_path: Path) -> None:
-    scheduler = Scheduler(tmp_path / "auth.sqlite3", supplied_root=tmp_path)
-    scheduler.init()
-    with scheduler.connect() as ordinary:
-        assert ordinary.execute("SELECT authoring_import_mode()").fetchone()[0] == 0
-        with pytest.raises(PermissionError):
-            ordinary.set_authorizer(None)
-        with pytest.raises(PermissionError):
-            ordinary.create_function("authoring_import_mode", 0, lambda: 1)
-        with pytest.raises(sqlite3.DatabaseError):
-            ordinary.execute("INSERT INTO schema_meta(key,value) VALUES('import_mode','1')")
-    with scheduler._import_connection() as importer:
-        assert importer.execute("SELECT authoring_import_mode()").fetchone()[0] == 1
