@@ -11,10 +11,14 @@ import sqlite3
 import stat
 import time
 from collections.abc import Callable
+from contextlib import nullcontext
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, cast
 
 from .migration import MigrationError
+
+_USED_RECEIPTS: set[str] = set()
 
 
 def _digest(path: Path) -> str:
@@ -170,8 +174,18 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
     lock_path = target_path.parent / f".{target_path.name}.lock"
     if lock_path.is_symlink():
         raise MigrationError("restore lock must not be a symlink")
-    with lock_path.open("a+") as lock:
-        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+    lock = None
+    if activate:
+        try:
+            lock_fd = os.open(lock_path, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        except FileExistsError:
+            lock_fd = os.open(lock_path, os.O_RDWR | os.O_NOFOLLOW)
+        lock = os.fdopen(lock_fd, "a+")
+    elif lock_path.exists():
+        lock = lock_path.open("r")
+    with (lock if lock is not None else nullcontext()) as held_lock:
+        if held_lock is not None:
+            fcntl.flock(held_lock.fileno(), fcntl.LOCK_EX)
         try:
             verification = verify_backup(backup_dir)
             receipt = quiesced() if quiesced is not None else None
@@ -184,8 +198,17 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
                     marker_ok = False
             if (not marker_ok or not isinstance(receipt, dict) or not receipt.get("receipt_id")
                     or not receipt.get("generation") or receipt.get("database") != target_path.name
-                    or not receipt.get("observed_at")):
+                    or not receipt.get("nonce") or not receipt.get("observed_at")):
                 raise MigrationError("restore requires a fresh generation-bound quiescence receipt")
+            try:
+                observed = datetime.fromisoformat(str(receipt["observed_at"]).replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise MigrationError("restore quiescence timestamp is invalid") from exc
+            if observed.tzinfo is None or datetime.now(UTC) - observed > timedelta(hours=1):
+                raise MigrationError("restore quiescence receipt is stale")
+            receipt_key = f"{receipt['receipt_id']}:{receipt['nonce']}"
+            if activate and receipt_key in _USED_RECEIPTS:
+                raise MigrationError("restore quiescence receipt was already used")
             backup_manifest = cast(dict[str, Any], verification["manifest"])
             source = next(backup_dir / str(item["name"]) for item in backup_manifest["files"] if str(item["name"]).endswith(".sqlite3"))
             if not activate:
@@ -207,6 +230,8 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
             with sqlite3.connect(target_path) as db:
                 if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok" or db.execute("PRAGMA foreign_key_check").fetchall():
                     raise MigrationError("restored database integrity check failed")
+            _USED_RECEIPTS.add(receipt_key)
             return {"dry_run": False, "verified": True, "target": str(target_path), "quarantine": str(quarantine), "quiesced": True}
         finally:
-            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+            if held_lock is not None:
+                fcntl.flock(held_lock.fileno(), fcntl.LOCK_UN)

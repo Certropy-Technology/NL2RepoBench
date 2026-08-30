@@ -25,6 +25,7 @@ from nl2repobench.authoring.scheduler import (
     Scheduler,
     SchedulerError,
     ValidationError,
+    readonly_status,
 )
 
 
@@ -113,6 +114,9 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "status":
+            _output("status", readonly_status(args.db))
+            return 0
         scheduler = Scheduler(args.db, supplied_root=args.root)
         if args.command == "init":
             scheduler.init()
@@ -182,9 +186,9 @@ def main(argv: list[str] | None = None) -> int:
                 str(row["state"]): int(row["count"])
                 for row in db.execute("SELECT state,count(*) count FROM tasks GROUP BY state")
             }
-            data = scheduler.status()
-            data["task_counts"] = counts
-            _output("status", data)
+            _output("status", {"task_counts": counts, "last_event_id": int(
+                db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]
+            )})
         return 0
     except ValidationError as exc:
         _output(args.command, {}, str(exc))

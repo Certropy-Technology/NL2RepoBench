@@ -209,8 +209,16 @@ class Scheduler:
                     time.sleep(0.02)
             db = sqlite3.connect(self.path, timeout=0.0, isolation_level=None,
                                  factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, **kw)))
-            if import_mode:
-                db.create_function("authoring_import_mode", 0, lambda: 1)
+            db.create_function("authoring_import_mode", 0, lambda: 1 if import_mode else 0, deterministic=True)
+            db.set_authorizer(
+                lambda action, arg1, _arg2, _db_name, _trigger: (
+                    sqlite3.SQLITE_OK
+                    if import_mode or not (
+                        action in {sqlite3.SQLITE_INSERT, sqlite3.SQLITE_UPDATE, sqlite3.SQLITE_DELETE}
+                        and arg1 == "schema_meta"
+                    ) else sqlite3.SQLITE_DENY
+                )
+            )
         except sqlite3.OperationalError as exc:
             if "busy" in str(exc).lower() or "locked" in str(exc).lower():
                 raise BusyError("sqlite connection is busy") from exc
@@ -262,7 +270,7 @@ class Scheduler:
                     return
             except sqlite3.DatabaseError as exc:
                 raise ValidationError("incompatible scheduler database") from exc
-        with self.connect() as db:
+        with self._import_connection() as db:
             db.executescript(schema)
             with _transaction(db):
                 now = _now()
@@ -1772,19 +1780,7 @@ class Scheduler:
 
     def status(self) -> dict[str, Any]:
         """Return a redacted, scheduler-owned observability snapshot."""
-        lock_path = self.path.parent / f".{self.path.name}.lock"
-        lock_fd = os.open(lock_path, os.O_RDONLY | os.O_NOFOLLOW) if lock_path.exists() else None
-        if lock_fd is not None:
-            fcntl.flock(lock_fd, fcntl.LOCK_SH)
-        uri = f"file:{self.path.as_posix()}?mode=ro"
-        try:
-            with sqlite3.connect(uri, uri=True, isolation_level=None) as db:
-                db.row_factory = sqlite3.Row
-                return self._status_from(db, self.path)
-        finally:
-            if lock_fd is not None:
-                fcntl.flock(lock_fd, fcntl.LOCK_UN)
-                os.close(lock_fd)
+        return readonly_status(self.path)
 
     @staticmethod
     def _status_from(db: sqlite3.Connection, path: Path) -> dict[str, Any]:
@@ -1814,3 +1810,21 @@ class Scheduler:
                 "config": safe_config, "leases": leases,
                 "capacities": capacities,
             }
+
+
+def readonly_status(path: Path | str) -> dict[str, Any]:
+    """Observe one scheduler DB without constructing a write-capable facade."""
+    database = Path(path)
+    lock_path = database.parent / f".{database.name}.lock"
+    lock_fd = os.open(lock_path, os.O_RDONLY | os.O_NOFOLLOW) if lock_path.exists() else None
+    if lock_fd is not None:
+        fcntl.flock(lock_fd, fcntl.LOCK_SH)
+    uri = f"file:{database.resolve().as_posix()}?mode=ro"
+    try:
+        with sqlite3.connect(uri, uri=True, isolation_level=None) as db:
+            db.row_factory = sqlite3.Row
+            return Scheduler._status_from(db, database)
+    finally:
+        if lock_fd is not None:
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
+            os.close(lock_fd)

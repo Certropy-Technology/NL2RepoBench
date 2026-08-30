@@ -247,10 +247,10 @@ WHEN NOT (
  (OLD.state='archive_retry' AND NEW.state IN ('archiving','blocked','excluded','cancelled')) OR
  (OLD.state='cleaning' AND NEW.state IN ('complete','cleanup_retry','blocked','excluded','cancelled')) OR
  (OLD.state='cleanup_retry' AND NEW.state IN ('cleaning','blocked','excluded','cancelled')) OR OLD.state=NEW.state
-) AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
+ ) AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
 BEGIN SELECT RAISE(ABORT, 'invalid task transition'); END;
 CREATE TRIGGER task_complete_guard BEFORE UPDATE OF state ON tasks
-WHEN NEW.state='complete' AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
+ WHEN NEW.state='complete' AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
 BEGIN
  SELECT CASE WHEN NEW.terminal_reason IS NULL OR length(trim(NEW.terminal_reason))=0 THEN RAISE(ABORT,'terminal reason required') END;
  SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='integration' AND status='pushed') THEN RAISE(ABORT,'pushed integration required') END;
@@ -258,7 +258,7 @@ BEGIN
  SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='cleanup' AND status='applied') THEN RAISE(ABORT,'cleanup evidence required') END;
 END;
 CREATE TRIGGER operation_stage_guard BEFORE UPDATE OF state ON tasks
-WHEN (NEW.state='archiving' OR NEW.state='cleaning') AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
+ WHEN (NEW.state='archiving' OR NEW.state='cleaning') AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
 BEGIN
  SELECT CASE WHEN NEW.state='archiving' AND NOT EXISTS(
    SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='integration' AND status='pushed'

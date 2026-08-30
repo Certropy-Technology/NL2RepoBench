@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -73,10 +74,10 @@ def test_import_preserves_status_attempts_and_orphan_evidence_without_controller
     manifest = generate_manifest(tmp_path, cutover_id="cutover-2")
     db = tmp_path.parent / "import.sqlite3"
     result = import_manifest(manifest, tmp_path, db_path=db, dry_run=False)
-    assert result["counts"]["complete"] == 3
+    assert result["counts"]["handoff_ready"] == 3
     with sqlite3.connect(db) as connection:
         assert connection.execute("SELECT count(*) FROM controllers").fetchone()[0] == 0
-        assert connection.execute("SELECT authoring_attempts FROM tasks WHERE state='complete'").fetchone()[0] == 2
+        assert connection.execute("SELECT authoring_attempts FROM tasks WHERE state='handoff_ready'").fetchone()[0] == 2
         assert connection.execute("SELECT count(*) FROM orphan_claim_evidence").fetchone()[0] >= 3
     with pytest.raises(MigrationError, match="fresh"):
         import_manifest(manifest, tmp_path, db_path=db, dry_run=False)
@@ -90,7 +91,7 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
     assert verify_backup(backup_dir)["verified"] is True
     target = tmp_path / "restored.sqlite3"
     marker = tmp_path / "quiesced.json"
-    marker.write_text('{"quiesced": true, "receipt_id": "r1", "generation": 1, "database": "restored.sqlite3", "observed_at": "2026-08-30T00:00:00Z"}', encoding="utf-8")
+    marker.write_text(json.dumps({"quiesced": True, "receipt_id": "r1", "generation": 1, "nonce": "n1", "database": "restored.sqlite3", "observed_at": datetime.now(UTC).isoformat()}), encoding="utf-8")
     dry = restore_database(backup_dir, target, quiescence_marker=marker)
     assert dry["dry_run"] is True and not target.exists()
     with pytest.raises(MigrationError, match="explicit"):
@@ -105,7 +106,7 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
 def test_uncheckpointed_wal_is_included_in_online_backup(tmp_path: Path) -> None:
     source = Scheduler(tmp_path / "wal.sqlite3", supplied_root=tmp_path)
     source.init()
-    with source.connect() as db:
+    with source._import_connection() as db:
         db.execute("INSERT INTO schema_meta(key,value) VALUES('wal_test','present')")
     backup_dir = tmp_path / "wal-backup"
     backup_database(source.path, backup_dir)
@@ -143,3 +144,14 @@ def test_static_quiescence_marker_is_not_a_restore_receipt(tmp_path: Path) -> No
     marker.write_text('{"quiesced": true}', encoding="utf-8")
     with pytest.raises(MigrationError, match="generation-bound"):
         restore_database(backup_dir, tmp_path / "target.sqlite3", quiescence_marker=marker)
+
+
+def test_import_authorization_is_connection_local(tmp_path: Path) -> None:
+    scheduler = Scheduler(tmp_path / "auth.sqlite3", supplied_root=tmp_path)
+    scheduler.init()
+    with scheduler.connect() as ordinary:
+        assert ordinary.execute("SELECT authoring_import_mode()").fetchone()[0] == 0
+        with pytest.raises(sqlite3.DatabaseError):
+            ordinary.execute("INSERT INTO schema_meta(key,value) VALUES('import_mode','1')")
+    with scheduler._import_connection() as importer:
+        assert importer.execute("SELECT authoring_import_mode()").fetchone()[0] == 1

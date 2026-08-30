@@ -26,6 +26,7 @@ from .scheduler import (
     Scheduler,
     SchedulerError,
     ValidationError,
+    readonly_status,
 )
 
 __all__ = [
@@ -42,6 +43,7 @@ __all__ = [
     "Scheduler",
     "SchedulerError",
     "ValidationError",
+    "readonly_status",
     "MANIFEST_SCHEMA",
     "MigrationError",
     "generate_manifest",

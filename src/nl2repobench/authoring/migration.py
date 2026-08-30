@@ -118,7 +118,9 @@ def _check_file(root: Path, relative: str, *, max_size: int = 64 * 1024 * 1024,
 def _json_file(root: Path, relative: str, *, allow_external: bool = False) -> dict[str, Any]:
     record = _check_file(root, relative, allow_external=allow_external)
     try:
-        json.loads((root / relative).read_text(encoding="utf-8"))
+        location = Path(relative)
+        path = location if location.is_absolute() else root / location
+        json.loads(path.read_text(encoding="utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise MigrationError(f"invalid JSON authority: {relative}") from exc
     return record
@@ -189,6 +191,13 @@ def generate_manifest(live_root: Path | str, *, cutover_id: str) -> dict[str, An
             state_files = []
             for state_file in sorted(state_dir.glob("claims/*.json")):
                 state_files.append(_json_file(root, _relative(root, state_file)))
+        claim_dir = root / "state" / lane.batch_id / "claims"
+        if claim_dir.is_dir():
+            known = {record["path"] for record in state_files}
+            for claim_file in sorted(claim_dir.glob("*.json")):
+                relative = _relative(root, claim_file)
+                if relative not in known:
+                    state_files.append(_json_file(root, relative))
         item["state"] = {"path": lane.state_authority, "files": state_files}
         if lane.plan_source:
             item["plan"] = _json_file(root, lane.plan_source, allow_external=lane.kind == "generated")
@@ -197,9 +206,24 @@ def generate_manifest(live_root: Path | str, *, cutover_id: str) -> dict[str, An
     manifest: dict[str, Any] = {
         "schema_version": MANIFEST_SCHEMA, "cutover_id": cutover_id,
         "root_name": root.name, "lanes": records,
-        "generated_at": __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
+        "generated_at": None,
         "registry": registry,
     }
+    inventory: list[dict[str, Any]] = []
+    inventory_roots = ["plans", "queues", "state", "supervisor", "archive-receipts", "logs", "pids"]
+    for directory in inventory_roots:
+        base = root / directory
+        if base.is_dir():
+            for path in sorted(p for p in base.rglob("*") if p.is_file()):
+                inventory.append(_check_file(root, _relative(root, path)))
+    for filename in ("supervisor.pid", "supervisor.lock", "archive.lock"):
+        path = root / filename
+        if path.exists():
+            inventory.append(_check_file(root, filename))
+    for record in records:
+        if Path(record["queue_source"]).is_absolute():
+            inventory.append(_check_file(root, record["queue_source"], allow_external=True))
+    manifest["inventory"] = inventory
     encoded = json.dumps(manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
     manifest["manifest_sha256"] = hashlib.sha256(encoded).hexdigest()
     return manifest
@@ -214,7 +238,7 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
     if not isinstance(lanes, list) or len(lanes) != 7:
         raise MigrationError("manifest must contain exactly seven lanes")
     required_top = {"schema_version", "cutover_id", "root_name", "lanes", "generated_at",
-                    "registry", "manifest_sha256"}
+                    "registry", "inventory", "manifest_sha256"}
     if set(manifest) != required_top:
         raise MigrationError("manifest schema has missing or extra fields")
     supplied_digest = manifest["manifest_sha256"]
@@ -222,12 +246,35 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
     recomputed = hashlib.sha256(json.dumps(unsigned, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()).hexdigest()
     if supplied_digest != recomputed:
         raise MigrationError("manifest digest mismatch")
+    if manifest.get("generated_at") is not None:
+        raise MigrationError("generated_at must be null in a frozen manifest")
     root = Path(live_root).resolve()
     registry = _json_file(root, "supervisor/generated-lanes.json")
     if not isinstance(manifest.get("registry"), dict):
         raise MigrationError("manifest registry inventory is malformed")
     if manifest["registry"].get("sha256") != registry["sha256"]:
         raise MigrationError("generated-lanes registry hash drift")
+    inventory = manifest.get("inventory")
+    if not isinstance(inventory, list) or not inventory:
+        raise MigrationError("manifest file inventory is required")
+    declared_paths: set[str] = set()
+    for record in inventory:
+        if not isinstance(record, dict) or not isinstance(record.get("path"), str):
+            raise MigrationError("malformed inventory record")
+        location = str(record["path"])
+        actual = _check_file(root, location, allow_external=Path(location).is_absolute())
+        if record.get("sha256") != actual["sha256"] or record.get("size") != actual["size"] or record.get("mode") != actual["mode"]:
+            raise MigrationError(f"inventory drift: {location}")
+        declared_paths.add(location)
+    expected_paths: set[str] = set()
+    for directory in ("plans", "queues", "state", "supervisor", "archive-receipts", "logs", "pids"):
+        base = root / directory
+        if base.is_dir():
+            expected_paths.update(_relative(root, path) for path in base.rglob("*") if path.is_file())
+    expected_paths.update(filename for filename in ("supervisor.pid", "supervisor.lock", "archive.lock") if (root / filename).is_file())
+    expected_paths.update(str(lane["queue_source"]) for lane in lanes if Path(str(lane["queue_source"])).is_absolute())
+    if declared_paths != expected_paths:
+        raise MigrationError("manifest file inventory set drift")
     seen: set[str] = set()
     kinds: dict[str, int] = {"base": 0, "generated": 0}
     batches: set[str] = set()
@@ -283,14 +330,19 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
 
 def _classify_failure(item: dict[str, Any]) -> str | None:
     value = item.get("failure_class")
-    if value:
+    allowed = {"source", "spec", "environment", "verifier", "model", "infrastructure"}
+    if value in allowed:
         return str(value)
-    reason = str(item.get("reason") or "").lower()
+    reason = str(item.get("reason") or item.get("error") or "").lower()
+    if any(word in reason for word in ("collision", "already exists", "remote object")):
+        return "infrastructure"
     if any(word in reason for word in ("timeout", "disk", "docker", "network", "process")):
         return "infrastructure"
-    if any(word in reason for word in ("collision", "already exists", "remote object")):
-        return "integration-collision"
-    return None
+    if any(word in reason for word in ("license", "revision", "source")):
+        return "source"
+    if any(word in reason for word in ("verifier", "test", "manifest")):
+        return "verifier"
+    return "infrastructure" if value else None
 
 
 def classify_integration_failure(value: str | dict[str, Any]) -> str:
@@ -304,7 +356,16 @@ def classify_integration_failure(value: str | dict[str, Any]) -> str:
         return "source"
     if any(word in reason for word in ("verifier", "test", "manifest")):
         return "verifier"
-    return "unknown"
+    return "infrastructure"
+
+
+def _has_final_receipt_chain(item: dict[str, Any]) -> bool:
+    receipts = item.get("receipts", item.get("operation_receipts", []))
+    if not isinstance(receipts, list):
+        return False
+    completed = {(str(r.get("operation_kind", r.get("kind", ""))), str(r.get("status", "")))
+                for r in receipts if isinstance(r, dict)}
+    return {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= completed
 
 
 def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path: Path | str | None = None,
@@ -370,7 +431,10 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 conn.execute("INSERT OR IGNORE INTO candidate_identities VALUES(?,?,?,?,?,?,?,datetime('now'))", (digest, language, package, upstream, str(selection.get("source_kind", "legacy")), revision, json.dumps(selection, sort_keys=True)))
                 conn.execute("INSERT OR IGNORE INTO candidates VALUES(?,?,?,?,?,?,datetime('now'),datetime('now'))", (candidate_id, lane_id, digest, int(item.get("ordinal", 0) or 0), "existing" if item.get("status") == "complete" else "candidate", json.dumps({"legacy_status": item.get("status"), "legacy": item}, sort_keys=True)))
                 task_id = f"{lane_id}:{candidate_id}:legacy"
-                state = _STATUS.get(str(item.get("status", "pending")), "blocked")
+                legacy_status = str(item.get("status", "pending"))
+                state = _STATUS.get(legacy_status, "blocked")
+                if legacy_status == "complete" and not _has_final_receipt_chain(item):
+                    state = "handoff_ready"
                 failure = _classify_failure(item)
                 reason = str(item.get("reason") or item.get("release_reason") or "legacy import")
                 terminal = reason if state in {"complete", "blocked", "excluded", "cancelled"} else None
@@ -435,6 +499,27 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     reason = json.dumps(failure, sort_keys=True)
                     raw_digest = hashlib.sha256(reason.encode()).hexdigest()
                     conn.execute("INSERT OR IGNORE INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"integration-failure:{package}", "supervisor/integration-failures.json", "", str(package), "", "", "", "", raw_digest, "unmapped-claim", f"legacy integration failure classification={classification}; collision cleanup forbidden"))
+                    if "collision" in reason.lower() or "remote object" in reason.lower():
+                        task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (package,)).fetchone()
+                        if task is not None:
+                            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason))
+        for record in manifest.get("inventory", []):
+            path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
+            if not path_name.startswith("archive-receipts/") or not path_name.endswith(".json"):
+                continue
+            receipt_path = root / path_name
+            try:
+                archive = json.loads(receipt_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(archive, dict) or not archive.get("package"):
+                continue
+            task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (archive["package"],)).fetchone()
+            if task is None or not archive.get("handoff_sha256"):
+                continue
+            raw_digest = _sha(receipt_path)
+            objects = archive.get("objects", [])
+            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
         conn.execute("DELETE FROM schema_meta WHERE key='import_mode'")
         conn.commit()
         committed = True
