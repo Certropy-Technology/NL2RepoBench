@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "virtualenv",
+  "upstream_revision": "2a645aece0241e6dc02bf3d67acd88aa0770b601",
+  "package_version": "21.7.5",
+  "runtime_scope": "CPython 3.12 Linux/POSIX, deterministic no-seed creation",
+  "entry_points": [
+    {
+      "path": "python -m virtualenv",
+      "callable": "virtualenv.__main__:run_with_catch",
+      "contract": "local CLI creation, help/version, deterministic error status"
+    },
+    {
+      "path": "virtualenv.run",
+      "callables": ["cli_run", "session_via_cli"],
+      "contract": "create or parse a session from CLI arguments"
+    },
+    {
+      "path": "virtualenv.create.pyenv_cfg.PyEnvCfg",
+      "callables": ["from_file", "from_folder", "write", "refresh", "update"],
+      "contract": "ordered UTF-8 pyvenv.cfg read/write adapter"
+    }
+  ],
+  "excluded_risk_surface": [
+    "embedded-wheel updates and PyPI download", "non-CPython interpreters",
+    "Windows and macOS activation", "zipapp generation", "plugin entry-point discovery"
+  ]
+}

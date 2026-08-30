@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "virtualenv",
+  "upstream_test_probe": {
+    "command": "python -m pytest -q tests/unit/test_run.py tests/unit/config/test___main__.py",
+    "result": "12 passed",
+    "framework": "pytest",
+    "dependency_remediation": "Added declared flaky, pytest-mock, and pytest-randomly plugins to the isolated probe environment."
+  },
+  "frozen_collection_source": "private deterministic custom-json-v1 child adapter",
+  "frozen_total": 36,
+  "groups": {
+    "package_and_cli": 6,
+    "creation_shape": 12,
+    "options_and_errors": 12,
+    "python_api_and_config": 6
+  },
+  "risk_adaptation": "All candidate behavior is invoked in a UID-separated Python child. The cases use --no-seed and temporary directories, and never exercise download/update behavior."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "virtualenv",
+  "frozen_total": 36,
+  "public_sections": {
+    "Project Description": ["package_and_cli", "creation_shape"],
+    "Supports": ["package_and_cli", "creation_shape", "options_and_errors"],
+    "API Usage Guide": ["package_and_cli", "creation_shape", "options_and_errors", "python_api_and_config"],
+    "Implementation Notes": ["all groups"]
+  },
+  "private_groups": {
+    "package_and_cli": "module import, exact version, help, version, entry point, session parsing",
+    "creation_shape": "no-seed environment executable, prefix isolation, pyvenv.cfg, site-packages, activation and VCS-ignore artifacts",
+    "options_and_errors": "prompt, clear, system site packages, interpreter selection, copies/symlinks, app-data, creator, and bounded invalid input",
+    "python_api_and_config": "cli_run/session_via_cli plus PyEnvCfg ordered read/write and quote behavior"
+  },
+  "non_leakage": "Private identifiers and exact assertions remain only in the CAS verifier bundle. Public instructions describe every supported behavior and boundary without reproducing test implementation."
+}

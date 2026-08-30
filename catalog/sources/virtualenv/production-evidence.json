@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "task_id": "virtualenv",
+  "terminal_kind": "valid",
+  "source_revision": "2a645aece0241e6dc02bf3d67acd88aa0770b601",
+  "bundle_manifest": {
+    "path": ".nl2repo/final-compile/virtualenv/bundle.manifest.json",
+    "sha256": "sha256:a6647e3cbac03905037d811f91a3c1018d244831ecd82446be1f38d2b685fc2a",
+    "size_bytes": 11324
+  },
+  "runtime_identity": {
+    "harbor_version": "0.21.0",
+    "python_version": "3.12.14",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "local_verifier_image": "nl2repo-virtualenv-verifier:local",
+    "network_policy": "no-network"
+  },
+  "oracle": {
+    "command": "docker run --rm --network host --user 0 -v .nl2repo/final-compile/virtualenv/solution:/solution:ro -v .nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/oracle-workspace:/workspace:rw nl2repo-virtualenv-verifier:local bash /solution/solve.sh; docker run --rm --network none -v .nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/oracle-workspace:/workspace:rw -v .nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/oracle-logs:/logs:rw nl2repo-virtualenv-verifier:local bash /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 36,
+    "passed": 36,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/oracle-logs/verifier/grading.json", "sha256": "sha256:38562eb85b6fdbf50614d11453445c207b8a89953ad4be114eb7dd02b43d32bf", "size_bytes": 1051},
+    "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/oracle-logs/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "size_bytes": 342}
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none -v .../empty-workspace:/workspace:rw -v .../empty-logs:/logs:rw nl2repo-virtualenv-verifier:local bash /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 36,
+      "passed": 0,
+      "reward": 0.0,
+      "exception": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/empty-logs/verifier/grading.json", "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2", "size_bytes": 294},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/empty-logs/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "size_bytes": 342}
+    },
+    "stub": {
+      "command": "bash virtualenv-stub/solution/solve.sh; docker verifier bash /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 36,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/stub-logs/verifier/grading.json", "sha256": "sha256:ee2e39c20bf3df3069d281800b3a62e3478ad7276fdb5857614205eb8db3a7f9", "size_bytes": 1051},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/stub-logs/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "size_bytes": 342}
+    },
+    "forgery": {
+      "command": "bash virtualenv-forgery/solution/solve.sh; docker verifier bash /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "verifier_owned_reward": true,
+      "expected_total": 36,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/forgery-logs/verifier/grading.json", "sha256": "sha256:ee2e39c20bf3df3069d281800b3a62e3478ad7276fdb5857614205eb8db3a7f9", "size_bytes": 1051},
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/forgery-logs/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "size_bytes": 342}
+    },
+    "offline": {
+      "command": "docker verifier bash /tests/test.sh --network none",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/oracle-logs/verifier/network.json", "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe", "size_bytes": 342}
+    }
+  },
+  "additional_controls": {
+    "install-hang": {"expected": "bounded candidate installation failure", "reward": 0.0, "path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/install-hang-logs/verifier/grading.json"},
+    "workspace-invalid": {"expected": "candidate-workspace-rejected", "reward": 0.0, "path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/workspace-invalid-logs/verifier/grading.json"},
+    "call-hang": {"expected": "36 collected, 36 failed within per-call 5 second bound", "reward": 0.0, "path": ".nl2repo/authoring-work/python-author-wave2-20260828/virtualenv/local/controls/call-hang-logs/verifier/grading.json"}
+  },
+  "residual_risks": [
+    "No Harbor Agent Run was started by this lane.",
+    "The contract intentionally excludes non-POSIX platforms, non-CPython interpreters, embedded wheel updates, and dynamic external plugin behavior.",
+    "Blind review, dataset integration, image identity review, and publication remain integrator-owned."
+  ]
+}

@@ -1,0 +1,98 @@
+schema_version = "1.0"
+task_id = "virtualenv"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-environment-builder"
+tags = ["python", "virtualenv", "cli", "filesystem", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pypa/virtualenv"
+revision = "2a645aece0241e6dc02bf3d67acd88aa0770b601"
+license_spdx = "MIT"
+source_digest = "sha256:362a56eab724517cdcc3d8206bc36a562d4a51231256fd47f71dd9c6dabebe7a"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "install the hash-locked candidate and verifier dependencies during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier dependencies are installed during image build from a private hash lock. Agent and verifier execution is network-isolated; only the trusted Oracle receives the exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["distlib==0.4.3", "filelock==3.32.4", "hatch-vcs==0.5.0", "hatchling==1.32.0", "packaging==26.3", "pathspec==1.1.1", "platformdirs==4.11.5", "pluggy==1.6.0", "python-discovery==1.6.0", "setuptools==84.0.0", "setuptools-scm==10.2.1", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19", "vcs-versioning==2.3.1"]
+
+[dependencies.lock_artifact]
+digest = "sha256:dbb1d8ef1652f52e6f974af4db034d2333fd4414702ff793d69803e8bea36966"
+size_bytes = 3145
+media_type = "text/plain; charset=utf-8"
+uri = "artifact://private/sha256:dbb1d8ef1652f52e6f974af4db034d2333fd4414702ff793d69803e8bea36966"
+visibility = "private"
+
+[tests]
+framework = "pytest"
+expected_total = 36
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+environment = { SETUPTOOLS_SCM_PRETEND_VERSION = "21.7.5", SETUPTOOLS_SCM_PRETEND_VERSION_FOR_VIRTUALENV = "21.7.5" }
+
+[verifier.bundle]
+digest = "sha256:5e1c15fa6f31fc5f6ffce8c900e75d03aa127a12c74f8278a264eedd0e418065"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:5e1c15fa6f31fc5f6ffce8c900e75d03aa127a12c74f8278a264eedd0e418065"
+visibility = "private"
+
+[harbor]
+description = "Build the POSIX virtualenv 21.7.5 subset from an empty workspace and satisfy a bounded local environment-builder contract through a separate child verifier."
+keywords = ["python", "virtualenv", "cli", "filesystem", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:a3fcfca43269c7a94051f0eb4e878aff04916ca35bb7441c24dee6075dfd26ca"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:a3fcfca43269c7a94051f0eb4e878aff04916ca35bb7441c24dee6075dfd26ca"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Current production bundle, separate verifier, digest-checked Oracle, and task-local controls passed. Harbor Agent Run, blind review, dataset integration, and publication remain integrator-owned."
