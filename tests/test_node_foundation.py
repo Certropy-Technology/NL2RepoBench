@@ -303,6 +303,7 @@ def test_canonical_development_compiler_is_deterministic_and_hides_private_fixtu
     assert not (first / "environment/docker-compose.yaml").exists()
     assert "network_mode: none" in (first / "tests/docker-compose.yaml").read_text()
     bundle_manifest = json.loads((first / "bundle.manifest.json").read_text())
+    assert bundle_manifest["schema_version"] == "2.0"
     declared_paths = {entry["path"] for entry in bundle_manifest["files"]}
     assert "bundle.manifest.json" not in declared_paths
     assert "tests/dependencies/bundle.manifest.json" in declared_paths
@@ -353,7 +354,7 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
         control / "solution/solve.sh"
     ).read_bytes()
     manifest = json.loads((control / "bundle.manifest.json").read_text(encoding="utf-8"))
-    assert manifest["schema_version"] == "1.0"
+    assert manifest["schema_version"] == "2.0"
     assert manifest["mode"] == "control-stub"
     assert "controls/stub.sh" in {entry["path"] for entry in manifest["files"]}
     for entry in manifest["files"]:
