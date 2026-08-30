@@ -1,0 +1,200 @@
+if (process.env.NODE_TEST_CONTEXT) process.exit(0);
+
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {createRequire} from 'node:module';
+
+const PACKAGE = 'process-warning';
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+const MAX_DEPTH = 16;
+
+function emit(id, payload, code = 0) {
+  const encoded = JSON.stringify({id, ...payload});
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stdout.write(`${JSON.stringify({id, ok: false, error_type: 'response-too-large', message: 'response is too large'})}\n`);
+    process.exit(70);
+  }
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function fail(id, errorType, message, code = 64) {
+  emit(id, {ok: false, error_type: errorType, message: String(message).slice(0, 512)}, code);
+}
+
+function isJsonValue(value, depth = 0) {
+  if (depth > MAX_DEPTH) return false;
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return true;
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.length <= 64 && value.every(item => isJsonValue(item, depth + 1));
+  if (typeof value === 'object') {
+    return Object.keys(value).length <= 64
+      && Object.entries(value).every(([key, item]) => key.length <= 128 && isJsonValue(item, depth + 1));
+  }
+  return false;
+}
+
+function readRequest() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) fail('', 'request-too-large', 'request is too large');
+  let value;
+  try {
+    value = JSON.parse(data.toString('utf8'));
+  } catch {
+    fail('', 'malformed-json', 'request is malformed');
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) fail('', 'malformed-request', 'request must be an object');
+  if (typeof value.id !== 'string' || value.id.length < 1 || value.id.length > 128) fail('', 'invalid-id', 'id is not bounded');
+  const operations = new Set(['inventory', 'warning', 'isolation', 'validation', 'spy']);
+  if (!operations.has(value.operation)) fail(value.id, 'operation-not-allowlisted', 'operation is not allowlisted');
+  if (!value.payload || typeof value.payload !== 'object' || Array.isArray(value.payload) || !isJsonValue(value.payload)) {
+    fail(value.id, 'malformed-payload', 'payload must be bounded JSON');
+  }
+  return value;
+}
+
+function loadPackage() {
+  const root = join(process.cwd(), 'node_modules', PACKAGE);
+  const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  if (packageJson.name !== PACKAGE || packageJson.version !== '5.1.0' || packageJson.type !== 'commonjs') {
+    throw new Error('package identity is invalid');
+  }
+  for (const entry of [packageJson.main, packageJson.types]) {
+    if (typeof entry !== 'string' || entry.startsWith('/') || entry.includes('..') || entry.includes('\\')) {
+      throw new Error('package entry is unsafe');
+    }
+    readFileSync(join(root, entry));
+  }
+  const require = createRequire(join(root, 'package.json'));
+  return {api: require(root), packageJson, root};
+}
+
+function captureReturn(value) {
+  return {type: typeof value, value: value === undefined ? null : value};
+}
+
+function withWarningCapture(run) {
+  const original = process.emitWarning;
+  const emitted = [];
+  process.emitWarning = (...args) => emitted.push(args);
+  try {
+    return {value: run(), emitted};
+  } finally {
+    process.emitWarning = original;
+  }
+}
+
+function inventory(api, packageJson, root) {
+  const declaration = readFileSync(join(root, packageJson.types), 'utf8');
+  return {
+    packageName: packageJson.name,
+    packageVersion: packageJson.version,
+    type: packageJson.type,
+    main: packageJson.main,
+    types: packageJson.types,
+    lockfileVersion: JSON.parse(readFileSync(join(process.cwd(), 'package-lock.json'), 'utf8')).lockfileVersion,
+    exportNames: Object.keys(api).sort(),
+    defaultSame: api.default === api,
+    processWarningSame: api.processWarning === api,
+    declarationUsesExportEquals: /export\s*=\s*processWarning/.test(declaration),
+  };
+}
+
+function warningOperation(api, payload) {
+  const warning = api.createWarning(payload.options);
+  const initial = {
+    name: warning.name,
+    code: warning.code,
+    message: warning.message,
+    unlimited: warning.unlimited,
+    emitted: warning.emitted,
+  };
+  return withWarningCapture(() => {
+    const actions = [];
+    for (const action of payload.actions ?? []) {
+      if (action.kind === 'format') {
+        actions.push({kind: 'format', result: warning.format(...(action.args ?? [])), emitted: warning.emitted});
+      } else if (action.kind === 'call') {
+        actions.push({kind: 'call', result: captureReturn(warning(...(action.args ?? []))), emitted: warning.emitted});
+      } else if (action.kind === 'reset') {
+        warning.emitted = false;
+        actions.push({kind: 'reset', emitted: warning.emitted});
+      } else {
+        throw new Error('warning action is not allowlisted');
+      }
+    }
+    return {initial, actions, finalEmitted: warning.emitted};
+  });
+}
+
+function isolationOperation(api) {
+  return withWarningCapture(() => {
+    const first = api.createWarning({name: 'FirstWarning', code: 'first', message: 'first'});
+    const second = api.createWarning({name: 'SecondWarning', code: 'second', message: 'second'});
+    return {
+      first: [first(), first()],
+      second: [second(), second()],
+      state: {first: first.emitted, second: second.emitted},
+    };
+  });
+}
+
+function validationOperation(api, payload) {
+  try {
+    const factory = payload.factory === 'deprecation' ? api.createDeprecation : api.createWarning;
+    const warning = factory(payload.options);
+    return {threw: false, name: warning.name, code: warning.code, message: warning.message, unlimited: warning.unlimited};
+  } catch (error) {
+    return {threw: true, name: error?.constructor?.name ?? error?.name ?? 'Error', message: String(error?.message ?? error)};
+  }
+}
+
+function spyOperation(api, payload) {
+  const warning = api.createWarning(payload.options);
+  return withWarningCapture(() => {
+    const spy = api.spyWarning(warning);
+    const duplicateSame = api.spyWarning(warning) === spy;
+    const activeReturns = [];
+    for (const args of payload.calls ?? []) activeReturns.push(captureReturn(warning(...args)));
+    const beforeReset = {calls: structuredClone(spy.calls), callCount: spy.callCount(), emitted: warning.emitted};
+    spy.reset();
+    const afterReset = {calls: structuredClone(spy.calls), callCount: spy.callCount(), emitted: warning.emitted};
+    const afterResetReturn = captureReturn(warning(...(payload.afterResetArgs ?? [])));
+    const afterResetCall = {calls: structuredClone(spy.calls), callCount: spy.callCount(), emitted: warning.emitted};
+    spy.restore();
+    const afterRestoreReturn = captureReturn(warning(...(payload.afterRestoreArgs ?? [])));
+    const afterRestore = {calls: structuredClone(spy.calls), callCount: spy.callCount(), emitted: warning.emitted};
+    const fresh = api.spyWarning(warning);
+    const freshSpy = fresh !== spy;
+    const respiedReturn = captureReturn(warning(...(payload.respiedArgs ?? [])));
+    const afterRespied = {calls: structuredClone(fresh.calls), callCount: fresh.callCount(), emitted: warning.emitted};
+    return {
+      duplicateSame,
+      activeReturns,
+      beforeReset,
+      afterReset,
+      afterResetReturn,
+      afterResetCall,
+      afterRestoreReturn,
+      afterRestore,
+      freshSpy,
+      respiedReturn,
+      afterRespied,
+    };
+  });
+}
+
+async function main() {
+  const request = readRequest();
+  const {api, packageJson, root} = loadPackage();
+  let value;
+  if (request.operation === 'inventory') value = inventory(api, packageJson, root);
+  else if (request.operation === 'warning') value = warningOperation(api, request.payload);
+  else if (request.operation === 'isolation') value = isolationOperation(api);
+  else if (request.operation === 'validation') value = validationOperation(api, request.payload);
+  else if (request.operation === 'spy') value = spyOperation(api, request.payload);
+  emit(request.id, {ok: true, value});
+}
+
+main().catch(error => fail('', error?.constructor?.name ?? 'Error', error?.message ?? error, 1));

@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0",
+  "task_id": "process-warning",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 24,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/fastify/process-warning",
+    "revision": "d55637b341e21fef9dc7222590b36b14d030a839",
+    "tree": "d14791ab6d74c6976fa5272f822212752e50e313",
+    "source_archive_sha256": "sha256:6ea9bf54d357fb67d7024510e082e37b59fea0516c32f3e0fdabc897fa9344a4",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/source/LICENSE",
+    "license_sha256": "sha256:8d3c1dd501e056405ab56f4ad87b987070d55d1fe814616584ec2360045f9017",
+    "submodules": [],
+    "source_worktree_clean": true,
+    "freeze_log": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/source-freeze.log", "sha256": "sha256:7a9db39f5e3e1a9089ccb1de249f8efb369e31fba88793a6738b0ae48b474cd4"}
+  },
+  "environment": {
+    "os_name": "debian-bookworm-amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "network_policy": {"mode": "no-network", "agent_allowed_hosts": [], "offline_dependencies": "private-artifact", "reference_source_fetch": "forbidden", "oracle_run_scoped_host": "github.com"},
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "locked_agent_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "local_agent_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "harbor_version": "0.21.0"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {"digest": "sha256:f6d15162f97a0c7bdb5732cb10efa8c3ec7ede7f9dc4fbbdb36a84aa137d02ed", "size_bytes": 10240, "media_type": "application/vnd.nl2repobench.npm-bundle+tar", "uri": "artifact://private/sha256:f6d15162f97a0c7bdb5732cb10efa8c3ec7ede7f9dc4fbbdb36a84aa137d02ed", "visibility": "private"}
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 24,
+    "commands_artifact": {"digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", "size_bytes": 10240},
+    "test_bundle": {"digest": "sha256:960f0f62821d0137af020fac1affda83c00cde029d60b570edd732de789de13a", "size_bytes": 30720},
+    "oracle_bundle": {"digest": "sha256:18e6ef212c352477f48f63185c7e796a9c9e6c3bd64c10907e789b88f48c5c0d", "size_bytes": 10240},
+    "collection": "24 node:test leaves; no collection errors",
+    "candidate_boundary": "UID-10001 child adapter with bounded JSON request/response; candidate cannot read assertions or write trusted reports"
+  },
+  "metric": {"contract_id": "node-test-leaf-pass-rate-v1", "formula": "clamp(passed / frozen_total, 0, 1)", "collection_mismatch": "fail"},
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/compile-final/process-warning",
+    "oracle_tested_path": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/compile-fixed/process-warning",
+    "byte_identical_to_oracle_tested_path": true,
+    "bundle_manifest_sha256": "sha256:93a04db2265aa91d04b6cdc338f2592410ab1efdd5c77dc5e9adb6c91ddf1a2d",
+    "canonical_manifest_digest": "sha256:11a474e8cfc33bab96dae2b10f0459158e7d2a5691674cc6d38b27739a97b895",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 81,
+    "allow_incomplete": false,
+    "repeat_compile_byte_identical": true
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-wave2-20260828/process-warning/compile-fixed/process-warning -a oracle --allow-agent-host github.com --job-name process-warning-oracle-fixed -o .nl2repo/runs/process-warning-oracle-fixed --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "final_bundle_attempts": 1,
+    "started_at": "2026-08-30T09:56:24.382734Z",
+    "finished_at": "2026-08-30T09:57:25.934103Z",
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/runs/process-warning-oracle-fixed/process-warning-oracle-fixed/process-warning__vR9dKyJ/verifier/grading.json", "sha256": "sha256:806b58604731d79f6e675050573147cca97ff9f4a1ec25813aef7bb471248949"},
+    "network": {"path": ".nl2repo/runs/process-warning-oracle-fixed/process-warning-oracle-fixed/process-warning__vR9dKyJ/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe", "public_network_available": false}
+  },
+  "controls": {
+    "summary": {"path": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/evidence/control-summary.json", "sha256": "sha256:3113880ef35f32c479f1fb3b0145b478c0040f107de99447fb498ffd3f75be70"},
+    "empty": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/runs/process-warning-controls/empty/process-warning-empty-current/process-warning-empty__pYHSo96/verifier/grading.json", "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b", "public_network_available": false},
+    "stub": {"exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "grading": ".nl2repo/runs/process-warning-controls/stub/process-warning-stub-current/process-warning-stub__t6RzYpW/verifier/grading.json", "grading_sha256": "sha256:215a33c377b6856b461ecb96c6f69e1618c0fabefe6c0659db6bea3ec60023bb", "public_network_available": false},
+    "forgery": {"exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": ".nl2repo/runs/process-warning-controls/forgery/process-warning-forgery-current/process-warning-forgery__cNNKDke/verifier/grading.json", "grading_sha256": "sha256:215a33c377b6856b461ecb96c6f69e1618c0fabefe6c0659db6bea3ec60023bb", "public_network_available": false},
+    "offline": {"exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "grading": ".nl2repo/runs/process-warning-controls/offline/process-warning-offline-current/process-warning-offline__4XXjfm9/verifier/grading.json", "grading_sha256": "sha256:215a33c377b6856b461ecb96c6f69e1618c0fabefe6c0659db6bea3ec60023bb", "public_network_available": false},
+    "install-script": {"exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/runs/process-warning-controls/install-script/process-warning-install-script-current/process-warning-install-script__M8X4P9R/verifier/grading.json", "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b", "public_network_available": false},
+    "call-hang": {"exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "bounded": true, "grading": ".nl2repo/runs/process-warning-controls/call-hang/process-warning-call-hang-current/process-warning-call-hang__UZD6fSJ/verifier/grading.json", "grading_sha256": "sha256:215a33c377b6856b461ecb96c6f69e1618c0fabefe6c0659db6bea3ec60023bb", "public_network_available": false},
+    "loader-hook": {"exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0, "bounded": true, "grading": ".nl2repo/runs/process-warning-controls/loader-hook/process-warning-loader-hook-current/process-warning-loader-hook__X7RVCKJ/verifier/grading.json", "grading_sha256": "sha256:215a33c377b6856b461ecb96c6f69e1618c0fabefe6c0659db6bea3ec60023bb", "public_network_available": false}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git fetch --depth=1 origin d55637b341e21fef9dc7222590b36b14d030a839; git checkout --detach d55637b341e21fef9dc7222590b36b14d030a839", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/source-freeze.log", "log_sha256": "sha256:7a9db39f5e3e1a9089ccb1de249f8efb369e31fba88793a6738b0ae48b474cd4"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/process-warning", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/source-validation.log", "log_sha256": "sha256:f97a9db6fb9222c29d1d661120f5311a31debaa5490fc96508ab493e912bb828"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "outcome": "0 errors; 0 process-warning findings", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/network-lint.log", "log_sha256": "sha256:280f9179749c86023e9bce066118c7192729501fee898b4f02116fc1e117eef3"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/process-warning --output .nl2repo/authoring-work/node-author-wave2-20260828/process-warning/compile-fixed --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/production-compile.log", "log_sha256": "sha256:1fd39aa659b75b802d77203220d0dc6b43b0908e9540767321745a5433483c5c"},
+    {"stage": "oracle", "command": "uv run --frozen --project harbor-runner harbor run ... -a oracle --allow-agent-host github.com", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/oracle.log", "log_sha256": "sha256:1b709cbf4dcca861c260937e1b323016bda95fae18b29e40edc64d4e313788c1"},
+    {"stage": "controls", "command": "Harbor 0.21.0 generated-control Oracle runs", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/controls.log", "log_sha256": "sha256:744fab3ed570a61a41ba4569927e3853b02d67bb14c76d5788cb3e5e6de901cf"},
+    {"stage": "quality-gates", "command": "pytest; ruff; mypy; no-vendor test", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/quality-gates.log", "log_sha256": "sha256:1ffff841da5d3af397b4e2892223f24ea6c6dd0e81cb0bec965b007248d4e6e5"},
+    {"stage": "agent-image-remediation", "command": "docker pull nl2repobench/openhands-sdk-fork:930e9b1da-bookworm", "exit_code": 1, "failure_class": "infrastructure", "log": ".nl2repo/authoring-work/node-author-wave2-20260828/process-warning/provenance/image-remediation.log", "log_sha256": "sha256:59f96b0370db3c459c53d3c0e16e914f002a005334cd48ede4e2696bbcd34b19"}
+  ],
+  "remediation_history": [
+    {"issue": "The first Oracle script fetched the revision but asserted HEAD before checking out FETCH_HEAD.", "classification": "task-authoring", "superseded_bundle_run": ".nl2repo/runs/process-warning-oracle-current", "resolution": "Added checkout --detach FETCH_HEAD, rebuilt the Oracle CAS artifact, recompiled, and ran a fresh final-bundle Oracle gate."}
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this lane by instruction.",
+    "The full upstream dependency-backed Jest and TypeScript suites are not the denominator; the frozen deterministic contract is 24 node:test leaves.",
+    "Host Node is 22.23.1/npm 10.9.8; production execution is pinned to Node 24.19.0/npm 11.17.0.",
+    "The local OpenHands image ID differs from the locked toolchain image ID; restore or relock the immutable image before a model Agent Run.",
+    "The configured ty LSP binary is missing; Ruff, Mypy, and the full pytest suite passed.",
+    "Independent review, generated catalog/tasks integration, pilot, and publication remain integrator-stage gates."
+  ]
+}

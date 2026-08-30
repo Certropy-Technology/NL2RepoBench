@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "schema_shape": "api-inventory",
+  "task_id": "process-warning",
+  "package": "process-warning",
+  "source_revision": "d55637b341e21fef9dc7222590b36b14d030a839",
+  "source_digest": "sha256:6ea9bf54d357fb67d7024510e082e37b59fea0516c32f3e0fdabc897fa9344a4",
+  "package_version": "5.1.0",
+  "source_files": 2,
+  "implementation_loc": 192,
+  "public_exports": ["createWarning", "createDeprecation", "spyWarning", "default", "processWarning"],
+  "warning_item_properties": ["name", "code", "message", "unlimited", "emitted", "format"],
+  "runtime_dependency_count": 0,
+  "dynamic_risks": ["process-warning-event", "closure-state", "commonjs-export-alias", "truthy-positional-arity", "spy-lifecycle"]
+}

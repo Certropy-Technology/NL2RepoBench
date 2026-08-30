@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "schema_shape": "test-inventory",
+  "task_id": "process-warning",
+  "source_revision": "d55637b341e21fef9dc7222590b36b14d030a839",
+  "upstream": {
+    "framework": "node:test plus Jest-specific smoke file",
+    "command": "node --test test/emit-*.test.js test/index.test.js test/issue-88.test.js test/no-warnings.test.js test/spy-warning.test.js",
+    "node_version": "22.23.1 authoring host; production lock is Node 24.19.0",
+    "selected_files": 9,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "excluded": ["test/jest.test.js requires Jest 30 and is not part of the zero-dependency production runtime contract"]
+  },
+  "verifier": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 24,
+    "boundary": "UID-10001 child adapter with one bounded JSON request per leaf",
+    "groups": {
+      "exports-and-metadata": 3,
+      "formatting-and-emission": 9,
+      "validation-and-isolation": 5,
+      "spy-lifecycle": 7
+    }
+  }
+}

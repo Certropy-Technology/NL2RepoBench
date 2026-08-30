@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "schema_shape": "test-to-spec-traceability",
+  "task_id": "process-warning",
+  "source_revision": "d55637b341e21fef9dc7222590b36b14d030a839",
+  "frozen_total": 24,
+  "groups": [
+    {"id": "exports", "leaves": 2, "spec": "Supports and package exports", "upstream": "package.json and index.js"},
+    {"id": "metadata", "leaves": 2, "spec": "package/declaration metadata plus createWarning metadata and uppercase code", "upstream": "package.json, types/index.d.ts, and test/index.test.js"},
+    {"id": "format", "leaves": 3, "spec": "WarningItem.format interpolation and positional truthiness", "upstream": "index.js, test/index.test.js, and test/emit-interpolated-string.test.js"},
+    {"id": "emission", "leaves": 4, "spec": "once-only, unlimited, emitted reset, process.emitWarning arguments", "upstream": "test/emit-once-only.test.js, emit-unlimited.test.js, emit-reset.test.js, and emit-set.test.js"},
+    {"id": "deprecation", "leaves": 1, "spec": "createDeprecation fixed name", "upstream": "test/index.test.js"},
+    {"id": "validation", "leaves": 4, "spec": "constructor validation errors", "upstream": "test/index.test.js"},
+    {"id": "isolation", "leaves": 1, "spec": "independent warning configurations", "upstream": "test/issue-88.test.js"},
+    {"id": "spy", "leaves": 7, "spec": "spy records underlying results, returns undefined while active, trims arguments, resets, restores, and can be recreated", "upstream": "index.js and test/spy-warning.test.js"}
+  ],
+  "coverage_statement": "Every frozen leaf asserts behavior described in instruction.md. Private tests use only the documented root API and do not depend on private helper names or hidden source files."
+}
