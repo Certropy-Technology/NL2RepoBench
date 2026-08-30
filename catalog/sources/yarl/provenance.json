@@ -1,0 +1,119 @@
+{
+  "authoring": {
+    "batch_id": "python-author-wave2-20260828",
+    "mode": "author-one",
+    "task_id": "yarl"
+  },
+  "dependency_lock": {
+    "digest": "sha256:54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe",
+    "packages": 10,
+    "path": "catalog/sources/yarl/provenance/requirements.lock.txt",
+    "size_bytes": 35078
+  },
+  "environment": {
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "docker_version": "29.7.2",
+    "harbor_version": "0.21.0",
+    "python_version": "3.12.14",
+    "system_packages": ["ca-certificates", "git"],
+    "uv_version": "0.11.32"
+  },
+  "license": {
+    "file": "LICENSE",
+    "notice_file": "NOTICE",
+    "notice_sha256": "sha256:56d6ac6c8105c0a51304c21db060e361af9a8ea0af9a75c239c28b5d13693838",
+    "sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "spdx": "Apache-2.0"
+  },
+  "private_artifacts": {
+    "oracle": {
+      "digest": "sha256:e25195524e1cf9e987a29ca763aa56fc198cfbee042223ce7564d4cd84dcc7eb",
+      "size_bytes": 10240
+    },
+    "verifier": {
+      "digest": "sha256:bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d",
+      "expected_values_sha256": "sha256:8a16951c4b66c7ea47aa08ed7e99dbefc07355cd7b8103120fb65b49c5c159ce",
+      "size_bytes": 40960
+    }
+  },
+  "probes": [
+    {
+      "command": "git clone/fetch/checkout the claimed full revision and git archive HEAD",
+      "exit_code": 0,
+      "logs": [
+        ".nl2repo/authoring-work/yarl/clone.stderr.log",
+        ".nl2repo/authoring-work/yarl/fetch.stderr.log",
+        ".nl2repo/authoring-work/yarl/checkout.stderr.log"
+      ],
+      "result": "HEAD and FETCH_HEAD matched the claimed revision; archive digest frozen"
+    },
+    {
+      "command": "hash-locked dependency install and YARL_NO_EXTENSIONS=1 source install in the immutable Python image",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/docker-install.stdout.log",
+      "log_sha256": "sha256:62561f0d67cacb03f1e2dd76e26afe2b947412c57c08860d1a8f4e8f2d132d75",
+      "result": "built and installed yarl-1.24.5-py3-none-any.whl"
+    },
+    {
+      "command": "python -m pytest --collect-only -q",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/upstream-collect.stdout.log",
+      "log_sha256": "sha256:3edaf3fa976d72643547116b1614f35bdb508ac46998792d2d42217713c14748",
+      "result": "1351 tests collected"
+    },
+    {
+      "command": "python -m pytest -q",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/upstream-test.stdout.log",
+      "log_sha256": "sha256:9e35602c1d094f384953d9df0a508c1c15609af169c9494995892db3c6bd73ab",
+      "result": "1348 passed, 1 skipped, 2 xfailed"
+    },
+    {
+      "command": "generate 44 reference observations from the frozen installation",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/generate-expected.stdout.log",
+      "log_sha256": "sha256:2cc4ac8c14b6afd4edcf4d7e152ccd3274a7fcad719c3b97e8c09c160bb398e8",
+      "result": "44 JSON-safe expected values; cache compatibility call emitted one documented deprecation warning"
+    },
+    {
+      "command": "task-local Oracle smoke initially run without git in the pinned slim image",
+      "exit_code": 127,
+      "logs": [".nl2repo/authoring-work/yarl/oracle-solution.log"],
+      "result": "remediated by declaring ca-certificates and git in task.toml; rebuilt image and reran successfully"
+    },
+    {
+      "command": "PYTHONPATH=/opt/candidate-dependencies/site YARL_NO_EXTENSIONS=1 python -m pytest --collect-only -q -c /dev/null tests",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/upstream-collect-noconfig.stdout.log",
+      "log_sha256": "sha256:b6eaa177b7456b2a513a84bb98bf41f3c4ac57d4c09058247f9583631478342e",
+      "result": "1346 tests collected; pytest.ini was intentionally bypassed because pytest_cov is not in the production candidate closure"
+    },
+    {
+      "command": "PYTHONPATH=/opt/candidate-dependencies/site YARL_NO_EXTENSIONS=1 python -m pytest -q -c /dev/null tests",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/upstream-test-noconfig.stdout.log",
+      "log_sha256": "sha256:ccde3e7e2a9faa30216b4f9a29398d97dbed3da1c5b35d033ebbc4a79c1e39eb",
+      "result": "1242 passed, 103 skipped, 2 xfailed; skips are optional/native/bootstrap cases outside the deterministic task projection"
+    }
+  ],
+  "schema_version": "1.0",
+  "source": {
+    "archive_members": 120,
+    "archive_sha256": "sha256:6fd74fd871f05a4e41223934380e224f9f3b8383f153cdf9a468dfe55c21948f",
+    "archive_size_bytes": 798720,
+    "revision": "f4314a0f11539162ea8655c591b659a9260f8e21",
+    "tree": "6be6a76449c6249828f17aef2e6f54db63621c3c",
+    "upstream_url": "https://github.com/aio-libs/yarl"
+  },
+  "tests": {
+    "frozen_verifier_total": 44,
+    "upstream": {
+      "collected": 1351,
+      "failed": 0,
+      "passed": 1348,
+      "skipped": 1,
+      "xfailed": 2
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "completeness": {
+    "dynamic_imports_reviewed": true,
+    "external_service_reviewed": true,
+    "generated_code_reviewed": true,
+    "native_extension_reviewed": true,
+    "syntax_complete": true
+  },
+  "external_runtime_imports": [
+    "idna",
+    "multidict",
+    "propcache",
+    "pydantic (optional integration)",
+    "pydantic_core (optional integration)"
+  ],
+  "language": "python",
+  "metrics": {
+    "package_python_files": 8,
+    "static_test_functions": 808,
+    "upstream_collected_tests": 1351,
+    "upstream_test_files": 16
+  },
+  "public_exports": [
+    "URL",
+    "SimpleQuery",
+    "QueryVariable",
+    "Query",
+    "cache_clear",
+    "cache_configure",
+    "cache_info"
+  ],
+  "public_functions": [
+    "cache_clear() -> None",
+    "cache_info() -> dict[str, CacheInfo]",
+    "cache_configure(*, idna_encode_size=256, idna_decode_size=256, ip_address_size=512, host_validate_size=512, encode_host_size=512) -> None"
+  ],
+  "public_url_members": [
+    "URL(val='', *, encoded=False, strict=None)",
+    "URL.build(*, scheme='', authority='', user=None, password=None, host='', port=None, path='', query=None, query_string='', fragment='', encoded=False)",
+    "is_absolute()",
+    "is_default_port()",
+    "origin()",
+    "relative()",
+    "absolute",
+    "scheme",
+    "raw_authority",
+    "authority",
+    "raw_user",
+    "user",
+    "raw_password",
+    "password",
+    "raw_host",
+    "host",
+    "host_subcomponent",
+    "host_port_subcomponent",
+    "port",
+    "explicit_port",
+    "raw_path",
+    "path",
+    "path_safe",
+    "query",
+    "raw_query_string",
+    "query_string",
+    "path_qs",
+    "raw_path_qs",
+    "raw_fragment",
+    "fragment",
+    "raw_parts",
+    "parts",
+    "parent",
+    "raw_name",
+    "name",
+    "raw_suffix",
+    "suffix",
+    "raw_suffixes",
+    "suffixes",
+    "with_scheme(scheme)",
+    "with_user(user)",
+    "with_password(password)",
+    "with_host(host)",
+    "with_port(port)",
+    "with_path(path, *, encoded=False, keep_query=False, keep_fragment=False)",
+    "with_query(*args, **kwargs)",
+    "extend_query(*args, **kwargs)",
+    "update_query(*args, **kwargs)",
+    "without_query_params(*query_params)",
+    "with_fragment(fragment)",
+    "with_name(name, *, keep_query=False, keep_fragment=False)",
+    "with_suffix(suffix, *, keep_query=False, keep_fragment=False)",
+    "join(url)",
+    "joinpath(*other, encoded=False)",
+    "human_repr()"
+  ],
+  "risk_flags": [
+    {
+      "adaptation": "YARL_NO_EXTENSIONS=1 selects the upstream-supported pure-Python build; public behavior is checked against the exact revision.",
+      "kind": "optional-native-extension",
+      "status": "bounded"
+    },
+    {
+      "adaptation": "Pydantic behavior is exercised only when the hash-locked local dependency is present; no external service is used.",
+      "kind": "optional-runtime-integration",
+      "status": "bounded"
+    }
+  ],
+  "schema_version": "1.0",
+  "source_archive_digest": "sha256:6fd74fd871f05a4e41223934380e224f9f3b8383f153cdf9a468dfe55c21948f",
+  "source_revision": "f4314a0f11539162ea8655c591b659a9260f8e21",
+  "task_id": "yarl"
+}

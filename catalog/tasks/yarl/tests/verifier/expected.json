@@ -1,0 +1,474 @@
+{
+  "absolute-auth-properties": {
+    "absolute": true,
+    "authority": "user:p@ss@example.com:8443",
+    "explicit_port": 8443,
+    "host": "example.com",
+    "is_absolute": true,
+    "password": "p@ss",
+    "port": 8443,
+    "raw_authority": "user:p%40ss@example.com:8443",
+    "raw_password": "p%40ss",
+    "raw_user": "user",
+    "scheme": "https",
+    "user": "user"
+  },
+  "build-authority": {
+    "authority": "http://user:pass@example.com:8080/a",
+    "empty": "",
+    "encoded": "http://example.com/%30"
+  },
+  "build-components": {
+    "human": "https://u s:p%40ss@пример.рф:9443/a b?x=1&x=2#f g",
+    "query": [
+      [
+        "x",
+        "1"
+      ],
+      [
+        "x",
+        "2"
+      ]
+    ],
+    "string": "https://u%20s:p%40ss@xn--e1afmkfd.xn--p1ai:9443/a%20b?x=1&x=2#f%20g"
+  },
+  "build-mutual-exclusion-errors": {
+    "authority_host": {
+      "message": "Can't mix \"authority\" with \"user\", \"password\", \"host\" or \"port\".",
+      "type": "builtins.ValueError"
+    },
+    "query_both": {
+      "message": "Only one of \"query\" or \"query_string\" should be passed",
+      "type": "builtins.ValueError"
+    },
+    "user_without_host": {
+      "message": null,
+      "type": null
+    }
+  },
+  "cache-control": {
+    "keys": [
+      "idna_encode",
+      "idna_decode",
+      "ip_address",
+      "host_validate",
+      "encode_host"
+    ],
+    "sizes": {
+      "encode_host": {
+        "currsize": 0,
+        "maxsize": 6
+      },
+      "host_validate": {
+        "currsize": 0,
+        "maxsize": 6
+      },
+      "idna_decode": {
+        "currsize": 0,
+        "maxsize": 3
+      },
+      "idna_encode": {
+        "currsize": 0,
+        "maxsize": 2
+      },
+      "ip_address": {
+        "currsize": 0,
+        "maxsize": 6
+      }
+    }
+  },
+  "comparison-ordering": {
+    "eq": true,
+    "ge": true,
+    "gt": true,
+    "le": true,
+    "lt": true,
+    "ne_other": true,
+    "other_order": {
+      "message": "'<' not supported between instances of 'URL' and 'str'",
+      "type": "builtins.TypeError"
+    }
+  },
+  "constructor-empty-copy-split": {
+    "copy_equal": true,
+    "copy_identity": true,
+    "empty": [
+      "",
+      false
+    ],
+    "split_default": {
+      "message": "Cannot apply decoding to SplitResult",
+      "type": "builtins.ValueError"
+    },
+    "split_encoded": "https://user:pass@example.com:8443/a?q=1#f"
+  },
+  "constructor-encoded-preservation": {
+    "fragment": "2",
+    "path": "/0",
+    "query": "a=1",
+    "raw": "http://example.com/%30?a=%31#%32"
+  },
+  "constructor-unicode-canonical": {
+    "human": "https://user:пароль@εμπορικόσήμα.eu/шлях/這裡?ключ=знач#якір",
+    "raw": "https://user:%D0%BF%D0%B0%D1%80%D0%BE%D0%BB%D1%8C@xn--jxagkqfkduily1i.eu/%D1%88%D0%BB%D1%8F%D1%85/%E9%80%99%E8%A3%A1?%D0%BA%D0%BB%D1%8E%D1%87=%D0%B7%D0%BD%D0%B0%D1%87#%D1%8F%D0%BA%D1%96%D1%80",
+    "repr": "URL('https://user:%D0%BF%D0%B0%D1%80%D0%BE%D0%BB%D1%8C@xn--jxagkqfkduily1i.eu/%D1%88%D0%BB%D1%8F%D1%85/%E9%80%99%E8%A3%A1?%D0%BA%D0%BB%D1%8E%D1%87=%D0%B7%D0%BD%D0%B0%D1%87#%D1%8F%D0%BA%D1%96%D1%80')"
+  },
+  "default-and-explicit-ports": [
+    [
+      80,
+      null,
+      true,
+      "http://example.com"
+    ],
+    [
+      80,
+      80,
+      true,
+      "http://example.com"
+    ],
+    [
+      81,
+      81,
+      false,
+      "http://example.com:81"
+    ],
+    [
+      null,
+      null,
+      true,
+      "custom://example.com"
+    ]
+  ],
+  "deterministic-repetition": {
+    "all_equal": true,
+    "hashes_equal": true,
+    "strings": [
+      "https://xn--e1afmkfd.xn--p1ai/a%20b?x=1&x=2#%D1%8F",
+      "https://xn--e1afmkfd.xn--p1ai/a%20b?x=1&x=2#%D1%8F",
+      "https://xn--e1afmkfd.xn--p1ai/a%20b?x=1&x=2#%D1%8F",
+      "https://xn--e1afmkfd.xn--p1ai/a%20b?x=1&x=2#%D1%8F",
+      "https://xn--e1afmkfd.xn--p1ai/a%20b?x=1&x=2#%D1%8F"
+    ]
+  },
+  "dot-segment-normalization": [
+    [
+      "http://example.com/a/./b",
+      "http://example.com/a/b"
+    ],
+    [
+      "http://example.com/a/../b",
+      "http://example.com/b"
+    ],
+    [
+      "/a//b/../c",
+      "/a//b/../c"
+    ],
+    [
+      "a/../../b",
+      "a/../../b"
+    ]
+  ],
+  "exports-version-metadata": {
+    "all": [
+      "URL",
+      "SimpleQuery",
+      "QueryVariable",
+      "Query",
+      "cache_clear",
+      "cache_configure",
+      "cache_info"
+    ],
+    "distribution": "1.24.5",
+    "types_present": true,
+    "url_module": "yarl",
+    "version": "1.24.5"
+  },
+  "extend-query": {
+    "none_identity": true,
+    "pairs": "http://example.com/a?x=0&x=1&y=2",
+    "string": "http://example.com/a?x=0&x=1&y=2"
+  },
+  "fragment-properties": {
+    "fragment": "якір тут",
+    "raw_fragment": "%D1%8F%D0%BA%D1%96%D1%80%20%D1%82%D1%83%D1%82",
+    "string": "https://example.com/a#%D1%8F%D0%BA%D1%96%D1%80%20%D1%82%D1%83%D1%82"
+  },
+  "idna-human-roundtrip": {
+    "equal": true,
+    "host": "münich.example",
+    "human": "https://münich.example/путь?q=雪#片",
+    "raw_host": "xn--mnich-kva.example",
+    "string": "https://xn--mnich-kva.example/%D0%BF%D1%83%D1%82%D1%8C?q=%E9%9B%AA#%E7%89%87"
+  },
+  "invalid-authority-errors": {
+    "bad_ipv6": {
+      "message": "Invalid IPv6 URL",
+      "type": "builtins.ValueError"
+    },
+    "bad_port": {
+      "message": "Invalid URL: port can't be converted to integer",
+      "type": "builtins.ValueError"
+    },
+    "host_colon": {
+      "message": "Host 'a:b' cannot contain ':' (at position 1)",
+      "type": "builtins.ValueError"
+    },
+    "port_range": {
+      "message": "Port out of range 0-65535",
+      "type": "builtins.ValueError"
+    }
+  },
+  "ipv6-host-properties": {
+    "host": "2001:db8::1",
+    "host_port_subcomponent": "[2001:db8::1]:8080",
+    "host_subcomponent": "[2001:db8::1]",
+    "port": 8080,
+    "raw_host": "2001:db8::1",
+    "string": "http://[2001:db8::1]:8080/p"
+  },
+  "join-rfc-cases": {
+    "#s": "http://a/b/c/d;p?q#s",
+    "../../g": "http://a/g",
+    "../g": "http://a/b/g",
+    "./g": "http://a/b/c/g",
+    "//g": "http://g",
+    "/g": "http://a/g",
+    "?y": "http://a/b/c/d;p?y",
+    "g": "http://a/b/c/g",
+    "g?y#s": "http://a/b/c/g?y#s"
+  },
+  "joinpath": {
+    "absolute_error": {
+      "message": "Appending path '/root' starting from slash is forbidden",
+      "type": "builtins.ValueError"
+    },
+    "empty": "http://example.com/a/b",
+    "segments": "http://example.com/a/b/c/d%20e"
+  },
+  "operators-path-division": {
+    "chain": "https://example.com/root/a%20b/c",
+    "encoded": "https://example.com/root/%30",
+    "slash_error": {
+      "message": "Appending path '/absolute' starting from slash is forbidden",
+      "type": "builtins.ValueError"
+    }
+  },
+  "operators-query-modulo": {
+    "mapping": "https://example.com/a?x=1&unicode=%D0%B7%D0%BD%D0%B0%D1%87",
+    "pairs": "https://example.com/a?x=1&x=2"
+  },
+  "origin-and-relative": {
+    "origin": "https://example.com:8443",
+    "relative": "/a/b?q=1#f",
+    "relative_origin_error": {
+      "message": "URL should be absolute",
+      "type": "builtins.ValueError"
+    }
+  },
+  "path-parts-name-suffix-parent": {
+    "name": "файл.tar.gz",
+    "parent": "https://example.com/a",
+    "parts": [
+      "/",
+      "a",
+      "файл.tar.gz"
+    ],
+    "raw_name": "%D1%84%D0%B0%D0%B9%D0%BB.tar.gz",
+    "raw_parts": [
+      "/",
+      "a",
+      "%D1%84%D0%B0%D0%B9%D0%BB.tar.gz"
+    ],
+    "raw_suffix": ".gz",
+    "raw_suffixes": [
+      ".tar",
+      ".gz"
+    ],
+    "suffix": ".gz",
+    "suffixes": [
+      ".tar",
+      ".gz"
+    ]
+  },
+  "path-properties": {
+    "path": "/a b/c/d",
+    "path_qs": "/a b/c/d?q=1",
+    "path_safe": "/a b/c%2Fd",
+    "raw_path": "/a%20b/c%2Fd",
+    "raw_path_qs": "/a%20b/c%2Fd?q=1"
+  },
+  "percent-and-malformed-input": [
+    [
+      "http://example.com/%",
+      "http://example.com/%25",
+      "/%"
+    ],
+    [
+      "http://example.com/%2",
+      "http://example.com/%252",
+      "/%2"
+    ],
+    [
+      "http://example.com/%2f",
+      "http://example.com/%2F",
+      "//"
+    ],
+    [
+      "http://example.com/a b",
+      "http://example.com/a%20b",
+      "/a b"
+    ]
+  ],
+  "pickle-copy-roundtrip": {
+    "deep_equal": true,
+    "deep_identity": false,
+    "pickle_equal": true,
+    "pickle_string": "https://xn--e1afmkfd.xn--p1ai/a?q=1#f",
+    "shallow_equal": true,
+    "shallow_identity": false
+  },
+  "pydantic-integration": {
+    "adapter": "http://example.com/b",
+    "dump_json": "{\"url\":\"https://xn--e1afmkfd.xn--p1ai/a\"}",
+    "invalid_type": "pydantic_core._pydantic_core.ValidationError",
+    "model_type": "URL",
+    "string": "https://xn--e1afmkfd.xn--p1ai/a"
+  },
+  "query-properties-duplicates": {
+    "items": [
+      [
+        "x",
+        "1"
+      ],
+      [
+        "x",
+        "2"
+      ],
+      [
+        "ключ",
+        "знач"
+      ]
+    ],
+    "query_string": "x=1&x=2&ключ=знач",
+    "raw_query_string": "x=1&x=2&%D0%BA%D0%BB%D1%8E%D1%87=%D0%B7%D0%BD%D0%B0%D1%87",
+    "x_all": [
+      "1",
+      "2"
+    ]
+  },
+  "query-value-errors": {
+    "bool": {
+      "message": "Invalid variable type: value should be str, int or float, got True of type <class 'bool'>",
+      "type": "builtins.TypeError"
+    },
+    "nested": {
+      "message": "Invalid variable type: value should be str, int or float, got [1] of type <class 'list'>",
+      "type": "builtins.TypeError"
+    },
+    "object": {
+      "message": "Invalid variable type: value should be str, int or float, got <object object at 0x<address>> of type <class 'object'>",
+      "type": "builtins.TypeError"
+    },
+    "too_many_args": {
+      "message": "Either kwargs or single query parameter must be present",
+      "type": "builtins.ValueError"
+    }
+  },
+  "relative-properties": {
+    "absolute": false,
+    "authority": "",
+    "host": null,
+    "is_absolute": false,
+    "path": "folder/file.txt",
+    "port": null,
+    "scheme": ""
+  },
+  "string-bytes-data-model": {
+    "bool_empty": false,
+    "bool_value": true,
+    "bytes": "https://example.com/a?b=c#d",
+    "hash_stable": true,
+    "repr": "URL('https://example.com/a?b=c#d')",
+    "str": "https://example.com/a?b=c#d"
+  },
+  "update-query": {
+    "mapping": "http://example.com/a?x=1&x=2&z=9&y=3",
+    "none_identity": false,
+    "pairs": "http://example.com/a?x=new&x=again&z=9"
+  },
+  "with-fragment": {
+    "changed": "http://example.com/a#%D1%8F%D0%BA%D1%96%D1%80",
+    "cleared": "http://example.com/a"
+  },
+  "with-host": {
+    "colon_error": {
+      "message": "Host 'bad:host' cannot contain ':' (at position 3)",
+      "type": "builtins.ValueError"
+    },
+    "idna": "http://xn--e1afmkfd.xn--p1ai/a",
+    "relative_error": {
+      "message": "host replacement is not allowed for relative URLs",
+      "type": "builtins.ValueError"
+    }
+  },
+  "with-name": {
+    "default": "http://example.com/a/%D0%BD%D0%BE%D0%B2%D1%8B%D0%B9.md",
+    "keep": "http://example.com/a/new.md?q=1#f",
+    "slash_error": {
+      "message": "Slash in name is not allowed",
+      "type": "builtins.ValueError"
+    }
+  },
+  "with-path": {
+    "default": "http://example.com/%D0%BD%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D1%83%D1%82%D1%8C",
+    "encoded": "http://example.com/%30",
+    "keep": "http://example.com/new?q=1#f"
+  },
+  "with-port": {
+    "changed": "http://example.com:9090/a",
+    "cleared": "http://example.com/a",
+    "range_error": {
+      "message": "port must be between 0 and 65535, got 70000",
+      "type": "builtins.ValueError"
+    },
+    "type_error": {
+      "message": "port should be int or None, got <class 'str'>",
+      "type": "builtins.TypeError"
+    }
+  },
+  "with-query-mapping": {
+    "clear": "http://example.com/a",
+    "kwargs": "http://example.com/a?a=1&b=%D0%B7%D0%BD%D0%B0%D1%87",
+    "mapping": "http://example.com/a?a=1&a=2&b=3.5"
+  },
+  "with-query-pairs-and-string": {
+    "pairs": "http://example.com/a?x=1&x=2",
+    "string": "http://example.com/a?x=1&x=2"
+  },
+  "with-scheme": {
+    "changed": "https://example.com:80/a",
+    "relative_error": {
+      "message": "scheme replacement is not allowed for relative URLs for the https scheme",
+      "type": "builtins.ValueError"
+    }
+  },
+  "with-suffix": {
+    "changed": "http://example.com/a/file.tar.zip",
+    "cleared": "http://example.com/a/file.tar",
+    "invalid": {
+      "message": "Invalid suffix 'txt'",
+      "type": "builtins.ValueError"
+    },
+    "keep": "http://example.com/a/file.tar.txt?q=1#f"
+  },
+  "with-user-password": {
+    "clear_password": "http://user@example.com/a",
+    "clear_user": "http://example.com/a",
+    "password": "http://user:%D0%BF%D0%B0%D1%80%D0%BE%D0%BB%D1%8C@example.com/a",
+    "user": "http://%D0%BD%D0%BE%D0%B2%D1%8B%D0%B9:pass@example.com/a"
+  },
+  "without-query-params": {
+    "missing_identity": true,
+    "remove": "http://example.com/a?y=2"
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "schema_version": "1.0",
+  "task_id": "yarl",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 44,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/aio-libs/yarl",
+    "revision": "f4314a0f11539162ea8655c591b659a9260f8e21",
+    "source_archive_sha256": "sha256:6fd74fd871f05a4e41223934380e224f9f3b8383f153cdf9a468dfe55c21948f",
+    "source_content_sha256": "sha256:42a9a5d9be8346021f1d65b2d67313da8238ea681ab03db7718073a0ee3ec622",
+    "license_spdx": "Apache-2.0",
+    "license_path": "LICENSE",
+    "license_sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "notice_path": "NOTICE",
+    "notice_sha256": "sha256:56d6ac6c8105c0a51304c21db060e361af9a8ea0af9a75c239c28b5d13693838",
+    "submodules": [],
+    "source_worktree_clean": false,
+    "source_worktree_note": "This authoring worktree intentionally contains the uncommitted yarl source; integrator must re-run the frozen-input gate after integration."
+  },
+  "environment": {
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "verifier_image": "nl2repobench-yarl-verifier:authoring-final",
+    "verifier_image_id": "sha256:566b61b0ac2b1b220bfcd54606f97c6c153703c46bb43eb3114bd48a93b04c07",
+    "runtime": "CPython 3.12.14 in verifier image",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.lock.toml",
+    "toolchain_lock_sha256": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "harbor_version": "0.21.0"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "python",
+    "installer": "pip",
+    "install_mode": "hash-locked build-stage install",
+    "packages": [
+      "annotated-types==0.8.0",
+      "expandvars==1.1.2",
+      "idna==3.18",
+      "multidict==6.7.1",
+      "propcache==0.4.1",
+      "pydantic==2.13.4",
+      "pydantic-core==2.46.4",
+      "setuptools==84.0.0",
+      "typing-extensions==4.16.0",
+      "typing-inspection==0.4.4"
+    ],
+    "lock_artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/54/54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe",
+      "sha256": "sha256:54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe",
+      "size_bytes": 35078
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "deterministic scenario runner",
+    "frozen_total": 44,
+    "private_bundle": {
+      "path": ".nl2repo/artifacts/private/sha256/bd/bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d",
+      "sha256": "sha256:bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d",
+      "size_bytes": 40960
+    },
+    "collection": "44 unique JSON-safe leaves; no collection errors",
+    "candidate_boundary": "UID 10001 subprocess with bounded install, per-call, cumulative wall, output, process-group, and workspace limits"
+  },
+  "metric": {
+    "contract_id": "fixed-test-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-gate/yarl-final/yarl",
+    "mode": "production",
+    "file_count": 60,
+    "bundle_manifest_sha256": "sha256:8050f91e3d40c0bfd47d6737ebf3c57314848eaa7f9b186794b4cbb107b256fa",
+    "canonical_manifest_digest": "sha256:87c6ffffb16db37c3bc521c0f6c11c16a9771f16a40aba2c4fa5f7a0bba71c68",
+    "repeat_bundle_path": ".nl2repo/authoring-gate/yarl-repeat/yarl",
+    "repeat_manifest_sha256": "sha256:8050f91e3d40c0bfd47d6737ebf3c57314848eaa7f9b186794b4cbb107b256fa",
+    "byte_identical": true,
+    "allow_incomplete": false
+  },
+  "execution_boundary": {
+    "mode": "task-local-docker-verifier-smoke",
+    "harbor_agent_run_started": false,
+    "reason": "The authoring lane explicitly forbids starting a Harbor Agent Run; direct Docker execution proves the compiled verifier and controls without claiming downstream model evaluation."
+  },
+  "oracle": {
+    "command": "timeout 300s docker run --rm --network none -v .nl2repo/authoring-work/yarl/oracle-workspace:/workspace -v .nl2repo/authoring-work/yarl/oracle-evidence:/logs/verifier nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "receipt_kind": "direct-task-local-docker-smoke",
+    "valid": true,
+    "expected_total": 44,
+    "collected": 44,
+    "passed": 44,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/yarl/oracle-evidence/grading.json",
+      "sha256": "sha256:a9b1ca5a362d88d9b58a78d75f4b6348f72bb504e982e1b754d246f61f8a818f"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/yarl/oracle-evidence/network.json",
+      "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f",
+      "public_network_available": false
+    },
+    "solution": {
+      "command": "docker run --rm --network bridge ... bash /opt/yarl-solve.sh",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/yarl/oracle-solution.log",
+      "log_sha256": "sha256:2e3663f62035a5e9abffcf4f0651cd291c32c5ab5fb5efee987f48d78854dda5"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none ... nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/yarl/control-empty/evidence/grading.json", "sha256": "sha256:376f529d02f6e9b2d0f5a9a5c22892c249720ec7dab9cda4608352e6b810b939"},
+      "network": {"path": ".nl2repo/authoring-work/yarl/control-empty/evidence/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7", "public_network_available": false}
+    },
+    "stub": {
+      "command": "docker run --rm --network none ... nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "failed": 44,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/yarl/control-stub/evidence/grading.json", "sha256": "sha256:2260fada0e34b0288e8bea84cfa221320cb99e5202e12b9527c0fd610fae980b"},
+      "network": {"path": ".nl2repo/authoring-work/yarl/control-stub/evidence/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "docker run --rm --network none ... nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "failed": 44,
+      "reward": 0.0,
+      "candidate_written_reward": 1.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/yarl/control-forgery/evidence/grading.json", "sha256": "sha256:2260fada0e34b0288e8bea84cfa221320cb99e5202e12b9527c0fd610fae980b"},
+      "network": {"path": ".nl2repo/authoring-work/yarl/control-forgery/evidence/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7", "public_network_available": false}
+    },
+    "install-hang": {
+      "command": "timeout 220s docker run --rm --network none ... nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "bounded": true,
+      "candidate_install": {"outcome": "timeout", "returncode": -9},
+      "grading": {"path": ".nl2repo/authoring-work/yarl/control-install-hang/evidence/grading.json", "sha256": "sha256:376f529d02f6e9b2d0f5a9a5c22892c249720ec7dab9cda4608352e6b810b939"},
+      "network": {"path": ".nl2repo/authoring-work/yarl/control-install-hang/evidence/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7", "public_network_available": false}
+    },
+    "call-hang": {
+      "command": "timeout 260s docker run --rm --network none ... nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "failed": 44,
+      "reward": 0.0,
+      "bounded": true,
+      "grading": {"path": ".nl2repo/authoring-work/yarl/control-call-hang/evidence/grading.json", "sha256": "sha256:2260fada0e34b0288e8bea84cfa221320cb99e5202e12b9527c0fd610fae980b"},
+      "network": {"path": ".nl2repo/authoring-work/yarl/control-call-hang/evidence/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5", "public_network_available": false}
+    },
+    "offline": {
+      "command": "docker run --rm --network none ... nl2repobench-yarl-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "failed": 44,
+      "reward": 0.0,
+      "completed": true,
+      "grading": {"path": ".nl2repo/authoring-work/yarl/control-offline/evidence/grading.json", "sha256": "sha256:2260fada0e34b0288e8bea84cfa221320cb99e5202e12b9527c0fd610fae980b"},
+      "network": {"path": ".nl2repo/authoring-work/yarl/control-offline/evidence/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5", "public_network_available": false}
+    }
+  },
+  "commands": [
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/yarl", "exit_code": 0, "log": ".nl2repo/authoring-work/yarl/final/source-validation.json"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "outcome": "0 errors; one expected Oracle host-authorization warning"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/yarl --output .nl2repo/authoring-gate/yarl-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "bundle_manifest_sha256": "sha256:9191915ab81564843a3ea02f880bb76475605131beee61467f52a83e9e91525b"},
+    {"stage": "repeat-compile", "command": "uv run nl2repo harbor compile catalog/sources/yarl --output .nl2repo/authoring-gate/yarl-repeat --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "byte_identical": true},
+    {"stage": "syntax-integrity", "command": "python3 -m py_compile verifier run.py/scenarios.py; bash -n harbor solution and controls; git diff --check", "exit_code": 0},
+    {"stage": "verifier-image-build", "command": "docker build --platform linux/amd64 -t nl2repobench-yarl-verifier:authoring-final .nl2repo/authoring-gate/yarl-final/yarl/tests", "exit_code": 0, "image_id": "sha256:ab8c4247b96940a6407832791f967ae580094c176501813a379ffb9dcfe661d6", "log": ".nl2repo/authoring-work/yarl/verifier-image-build.log"}
+  ],
+  "residual_risks": [
+    "No Harbor Agent Run was started in this lane by explicit instruction; independent model evaluation remains awaiting-agent-run.",
+    "The local OpenHands runtime image ID is sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123 while toolchain.lock.toml records sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5; integrator must reconcile this before any Harbor Agent Run.",
+    "Full catalog network lint contains unrelated warnings; the isolated yarl lint has zero errors and only the expected source-host warning.",
+    "The source is intentionally uncommitted in this authoring worktree; integrator must regenerate frozen production input and generated catalog/tasks after integration."
+  ]
+}
