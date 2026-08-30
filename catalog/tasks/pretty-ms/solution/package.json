@@ -1,0 +1,12 @@
+{
+	"name": "pretty-ms",
+	"version": "9.3.0",
+	"type": "module",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
+	"dependencies": {
+		"parse-ms": "4.0.0"
+	}
+}

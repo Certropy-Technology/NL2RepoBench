@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pretty-ms",
+  "source_revision": "93666b389e1ed07912b6c2466468da21d9f834ce",
+  "upstream": {
+    "framework": "ava",
+    "behavior_test_file": "test.js",
+    "type_test_file": "index.test-d.ts",
+    "upstream_behavior_count": 27,
+    "verification": "The pinned Node 24.19.0/npm 11.17.0 image passed npm test (xo, 27 AVA tests, and tsd)."
+  },
+  "harbor": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 30,
+    "collection_source": "frozen private contract"
+  },
+  "coverage_groups": {
+    "packaging_and_errors": 4,
+    "default_units_and_sign": 6,
+    "precision_and_milliseconds": 7,
+    "display_options": 9,
+    "colon_and_hidden_units": 4
+  }
+}

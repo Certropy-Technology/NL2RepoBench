@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pretty-ms",
+  "source_revision": "93666b389e1ed07912b6c2466468da21d9f834ce",
+  "source_files": ["index.js", "index.d.ts", "package.json"],
+  "public_exports": [
+    {
+      "import_path": "pretty-ms",
+      "export": "default",
+      "signature": "prettyMilliseconds(milliseconds: number | bigint, options?: Options): string",
+      "runtime_kind": "function",
+      "side_effects": "none",
+      "errors": [{"condition": "non-finite number", "type": "TypeError", "message": "Expected a finite number or bigint"}]
+    },
+    {
+      "import_path": "pretty-ms",
+      "export": "Options",
+      "runtime_kind": "TypeScript type",
+      "shape": "readonly formatting option properties documented in instruction.md"
+    }
+  ],
+  "package_contract": {
+    "name": "pretty-ms",
+    "version": "9.3.0",
+    "type": "module",
+    "root_export": "./index.js",
+    "types": "./index.d.ts",
+    "runtime_dependencies": ["parse-ms@4.0.0"]
+  },
+  "adapter_boundary": "Private node:test files invoke the default export through the fixed candidate_runner JSON subprocess. Trusted tests never import candidate code; scored arguments are finite JSON numbers and option objects, and candidate errors are returned as type/message data. BigInt is an explicitly documented non-JSON upstream capability outside the denominator."
+}

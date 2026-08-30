@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pretty-ms",
+  "instruction": "catalog/sources/pretty-ms/instruction.md",
+  "expected_total": 30,
+  "mappings": [
+    {"instruction_section": "Supports", "behaviors": ["ESM package metadata", "offline npm v3 installation", "parse-ms runtime closure"], "leaf_ids": ["package metadata and install", "runtime dependency install"]},
+    {"instruction_section": "API Usage Guide", "behaviors": ["default export", "finite-number error", "default units", "sign and zero", "precision options", "verbose/compact/unitCount", "colon notation", "hidden units"], "leaf_ids": ["default duration formatting", "negative duration", "zero duration", "non-finite input", "compact output", "verbose pluralization", "colon notation", "hide-year conversion"]},
+    {"instruction_section": "Implementation Notes", "behaviors": ["deterministic output", "option precedence", "separate sub-milliseconds", "sub-second decimals", "synchronous pure function"], "leaf_ids": ["milliseconds precision", "sub-millisecond output", "sub-second decimal", "colon overrides options", "options object is not mutated"]}
+  ],
+  "review": {
+    "hidden_assertions_without_public_contract": 0,
+    "core_public_promises_without_test_group": 0,
+    "source_body_copied_to_instruction": false,
+    "private_fixture_bytes_in_public_source": false
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pretty-ms",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 30,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/pretty-ms",
+    "revision": "93666b389e1ed07912b6c2466468da21d9f834ce",
+    "tree": "9cb09c676dd9192336300e0f52a1db47233ccf0a",
+    "source_archive_sha256": "sha256:e2a108dc70512373b94d959c2084d44eef117e32091a43659705375986408dd4",
+    "source_archive_size_bytes": 51200,
+    "license_spdx": "MIT",
+    "license_path": "license",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "package_name": "pretty-ms",
+    "package_version": "9.3.0",
+    "package_json_sha256": "sha256:f31f46c44617f02ce9c5535c18646dc61e50cc668060420f0d654edfa1e4c871",
+    "submodules": [],
+    "source_worktree_clean": true
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["parse-ms@4.0.0"],
+    "artifact": {
+      "digest": "sha256:fc8df9226bacdd04ae3fb969befb3d24cc63aec9d26ea12d3a483bcbff73acf8",
+      "size_bytes": 11250,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:fc8df9226bacdd04ae3fb969befb3d24cc63aec9d26ea12d3a483bcbff73acf8",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 30,
+    "commands_artifact": "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f",
+    "test_bundle": "sha256:086f2a56063eec10d873105ac49705aa463144807b46cc9fc5b7db0a85e8ded9",
+    "oracle_bundle": "sha256:567d800c5272f7f9bbfe347980ae9688156eebc09783922ed648e77245e674dc",
+    "collection": "30 node:test leaves; no collection errors",
+    "candidate_boundary": "candidate_runner JSON subprocess under UID isolation",
+    "upstream_suite": "Pinned Node 24.19.0/npm 11.17.0 passed xo, 27 AVA tests, and tsd"
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compile": {
+    "mode": "production",
+    "bundle": ".nl2repo/authoring-work/pretty-ms/compiled-current/pretty-ms",
+    "bundle_manifest_sha256": "sha256:7789a138a548102a238a8f5e616a7716a6d234ace36a511b61c6756bfabd7a16",
+    "canonical_manifest_digest": "sha256:48ec6d69983200b782d6d333b44fe1d52a24df7f2425797d5c1c37d629687348",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 87,
+    "command": "uv run nl2repo harbor compile catalog/sources/pretty-ms --output .nl2repo/authoring-work/pretty-ms/compiled-current --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false
+  },
+  "commands": [
+    {
+      "command": "git clone --filter=blob:none --no-checkout https://github.com/sindresorhus/pretty-ms .nl2repo/authoring-work/pretty-ms/source && git checkout --detach 93666b389e1ed07912b6c2466468da21d9f834ce",
+      "exit_code": 0,
+      "result": "revision, tree, clean worktree, source archive, license, and package metadata independently matched the frozen receipt"
+    },
+    {
+      "command": "docker run <pinned-node-image> sh -lc 'npm install --ignore-scripts --no-audit --no-fund && npm test'",
+      "exit_code": 0,
+      "result": "xo completed with one warning; AVA passed 27 tests; tsd passed"
+    },
+    {
+      "command": "docker run --network none <pinned-node-image> sh -lc 'npm ci --offline --ignore-scripts --no-audit --no-fund --cache=/npm-cache && node --test /tests/private/pretty-ms.test.mjs'",
+      "exit_code": 0,
+      "result": "private closure installed offline and reference subprocess passed 30/30"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/pretty-ms",
+      "exit_code": 0,
+      "result": "source digest sha256:29ace9e50cca75e857a371f7b2c2645d5410d0ae9c070860f4cde2f0c6232c32"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; repository warnings are unrelated to pretty-ms"
+    },
+    {
+      "command": "bash -n controls and Oracle solution; node --check private verifier files; parse task TOML and source JSON",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control <compiled-bundle> <kind> --output .nl2repo/authoring-work/pretty-ms/controls-current --toolchain toolchain.node.lock.toml",
+      "exit_code": 0,
+      "result": "stub, forgery, install-script, loader-hook, hang, and offline bundles were generated from task-local compiler controls"
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/compiled-current/pretty-ms -a oracle --allow-agent-host github.com --job-name pretty-ms-oracle-current -o .nl2repo/authoring-work/pretty-ms/runs-current/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 30,
+    "passed": 30,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/pretty-ms/runs-current/oracle/pretty-ms-oracle-current/pretty-ms__tF8huLR/verifier/grading.json",
+      "sha256": "sha256:8b1c20023ab765746313a0eb7be2323dcd54d0a64ba9e40d637de80b81574d08"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/pretty-ms/runs-current/oracle/pretty-ms-oracle-current/pretty-ms__tF8huLR/verifier/network.json",
+      "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/compiled-current/pretty-ms -a nop --job-name pretty-ms-empty-current -o .nl2repo/authoring-work/pretty-ms/runs-current/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/empty/pretty-ms-empty-current/pretty-ms__vyVZdZg/verifier/grading.json",
+        "sha256": "sha256:5c69bd6cf119e1c1f31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/empty/pretty-ms-empty-current/pretty-ms__vyVZdZg/verifier/network.json",
+        "sha256": "sha256:985b4ecc2212b90c4516c24cd491da6769ddbe70839ebcc5a9145d984ed97f60",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/controls-current/pretty-ms-stub -a oracle --job-name pretty-ms-stub-current -o .nl2repo/authoring-work/pretty-ms/runs-current/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/stub/pretty-ms-stub-current/pretty-ms-stub__H4JkJBG/verifier/grading.json",
+        "sha256": "sha256:41f7a4e972c4db351aa38904035ce2fb9a92f187df16ff6985ebf3cdb835f8fe"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/stub/pretty-ms-stub-current/pretty-ms-stub__H4JkJBG/verifier/network.json",
+        "sha256": "sha256:9161a66d725d2850505c74dc6f832977a0c1ae3f359ff99a9d1bf941b451e1d5",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/controls-current/pretty-ms-forgery -a oracle --job-name pretty-ms-forgery-current -o .nl2repo/authoring-work/pretty-ms/runs-current/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/forgery/pretty-ms-forgery-current/pretty-ms-forgery__ADUfCYU/verifier/grading.json",
+        "sha256": "sha256:41f7a4e972c4db351aa38904035ce2fb9a92f187df16ff6985ebf3cdb835f8fe"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/forgery/pretty-ms-forgery-current/pretty-ms-forgery__ADUfCYU/verifier/network.json",
+        "sha256": "sha256:1517eabc67c8c23c917decb2e1054a6edbb9f7dfe2f3aa218a443f6bdaf6060c",
+        "public_network_available": false
+      }
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/controls-current/pretty-ms-install-script -a oracle --job-name pretty-ms-install-script-current -o .nl2repo/authoring-work/pretty-ms/runs-current/install-script --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/install-script/pretty-ms-install-script-current/pretty-ms-install-script__m3nvCj5/verifier/grading.json",
+        "sha256": "sha256:5c69bd6cf119e1c1f31a2e98aad1e56c0390eff10bb28dbbaca2e99be246cc98"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/install-script/pretty-ms-install-script-current/pretty-ms-install-script__m3nvCj5/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+        "public_network_available": false
+      }
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/controls-current/pretty-ms-loader-hook -a oracle --job-name pretty-ms-loader-hook-current -o .nl2repo/authoring-work/pretty-ms/runs-current/loader-hook --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/loader-hook/pretty-ms-loader-hook-current/pretty-ms-loader-hook__ar6A7aD/verifier/grading.json",
+        "sha256": "sha256:41f7a4e972c4db351aa38904035ce2fb9a92f187df16ff6985ebf3cdb835f8fe"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/loader-hook/pretty-ms-loader-hook-current/pretty-ms-loader-hook__ar6A7aD/verifier/network.json",
+        "sha256": "sha256:e0bfae6ddc0af146f22a6d0b80f016a9efd23fae9f14ec90661b427524aa01ef",
+        "public_network_available": false
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/controls-current/pretty-ms-hang -a oracle --job-name pretty-ms-hang-current -o .nl2repo/authoring-work/pretty-ms/runs-current/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "duration_seconds": 204,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/hang/pretty-ms-hang-current/pretty-ms-hang__TVjjYSd/verifier/grading.json",
+        "sha256": "sha256:c994f8d4ef5f4b677648285976b11f5b89c3f5ead61222642e7094bd77772fbf"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/hang/pretty-ms-hang-current/pretty-ms-hang__TVjjYSd/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/pretty-ms/controls-current/pretty-ms-offline -a oracle --job-name pretty-ms-offline-current -o .nl2repo/authoring-work/pretty-ms/runs-current/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 30,
+      "passed": 1,
+      "reward": 0.03333333333333333,
+      "grading": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/offline/pretty-ms-offline-current/pretty-ms-offline__bYLEMyb/verifier/grading.json",
+        "sha256": "sha256:d8b5db46a18c4332ba751e98d95db403977637735d5cfb40d62be4ee6a76c042"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/pretty-ms/runs-current/offline/pretty-ms-offline-current/pretty-ms-offline__bYLEMyb/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124",
+        "public_network_available": false
+      }
+    }
+  },
+  "residual_risks": [
+    "This records one production Oracle run and deterministic controls, not a cross-run stability experiment.",
+    "BigInt is an upstream capability outside the fixed JSON scoring boundary; the pinned upstream AVA/tsd suite passed independently.",
+    "No Harbor model Agent Run, review, pilot, dataset projection, or publication was performed in this lane."
+  ]
+}
