@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "upstream_test_paths": [
+    "test/index.js",
+    "test/types.ts"
+  ],
+  "upstream_framework": "node:test",
+  "upstream_behavioral_leaves": 24,
+  "upstream_type_expressions": 780,
+  "upstream_behavioral_result": "24/24 passed",
+  "upstream_type_result": "780/780 passed",
+  "frozen_private_collection": 50,
+  "collection_method": "independent node:test contract over bounded JSON child adapter",
+  "excluded": [
+    "upstream development-tool and formatting checks",
+    "unbounded or non-JSON values",
+    "arbitrary callback source execution",
+    "native, filesystem, network, clock, and process-global behavior"
+  ],
+  "notes": "The production denominator is an independently authored contract derived from the public behavior and frozen source baseline; trusted tests never import candidate code."
+}

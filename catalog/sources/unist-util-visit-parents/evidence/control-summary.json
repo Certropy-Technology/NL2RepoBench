@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit-parents",
+  "bundle_manifest_sha256": "sha256:4ef0bbdabe855a694f1575343c515a5e2415788312f27471001b2f910e4c2fce",
+  "controls": {
+    "empty": {
+      "passed": true,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false
+    },
+    "stub": {
+      "passed": true,
+      "valid": true,
+      "collected": 50,
+      "passed_leaves": 8,
+      "reward": 0.16,
+      "public_network_available": false
+    },
+    "forgery": {
+      "passed": true,
+      "valid": true,
+      "collected": 50,
+      "passed_leaves": 8,
+      "reward": 0.16,
+      "verifier_owned_reward": true,
+      "public_network_available": false
+    },
+    "install-script": {
+      "passed": true,
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false
+    },
+    "loader-hook": {
+      "passed": true,
+      "valid": true,
+      "collected": 50,
+      "passed_leaves": 8,
+      "reward": 0.16,
+      "public_network_available": false
+    },
+    "hang": {
+      "passed": true,
+      "valid": true,
+      "collected": 50,
+      "passed_leaves": 6,
+      "reward": 0.12,
+      "bounded": true,
+      "public_network_available": false
+    },
+    "offline": {
+      "passed": true,
+      "valid": true,
+      "collected": 50,
+      "passed_leaves": 8,
+      "reward": 0.16,
+      "completed": true,
+      "public_network_available": false
+    }
+  }
+}

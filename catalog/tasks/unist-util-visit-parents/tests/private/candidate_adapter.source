@@ -1,0 +1,302 @@
+import {readFileSync} from 'node:fs'
+import {createRequire} from 'node:module'
+import {join} from 'node:path'
+import {pathToFileURL} from 'node:url'
+
+const MAX_REQUEST_BYTES = 64 * 1024
+const MAX_RESPONSE_BYTES = 512 * 1024
+const PACKAGE = 'unist-util-visit-parents'
+const UID = 10001
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload)
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) {
+    process.stderr.write('candidate response exceeds bound\n')
+    process.exit(70)
+  }
+  process.stdout.write(`${encoded}\n`)
+  process.exit(code)
+}
+
+function fail(message, code = 64) {
+  emit({ok: false, error: message}, code)
+}
+
+function readRequest() {
+  const bytes = readFileSync(0)
+  if (bytes.byteLength > MAX_REQUEST_BYTES) fail('request-too-large')
+  let value
+  try {
+    value = JSON.parse(bytes.toString('utf8'))
+  } catch {
+    fail('malformed-json')
+  }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    fail('request-must-be-object')
+  }
+  return value
+}
+
+function dropPrivileges() {
+  if (typeof process.setgroups === 'function') process.setgroups([])
+  if (typeof process.setgid === 'function') process.setgid(UID)
+  if (typeof process.setuid === 'function') process.setuid(UID)
+  if (process.getuid?.() !== UID || process.getgid?.() !== UID) {
+    throw new Error('candidate uid isolation failed')
+  }
+}
+
+async function loadCandidate() {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`))
+  const packageRoot = join(process.cwd(), 'node_modules', PACKAGE)
+  const packagePath = join(packageRoot, 'package.json')
+  const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'))
+  const rootExport = packageJson.exports
+  const entry =
+    typeof rootExport === 'string'
+      ? rootExport
+      : rootExport?.['.']?.import ??
+        rootExport?.['.']?.default ??
+        rootExport?.['.'] ??
+        packageJson.module ??
+        packageJson.main
+  if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) {
+    throw new Error('package has no safe ESM root export')
+  }
+  let module
+  try {
+    module = require(PACKAGE)
+  } catch (error) {
+    if (error?.code !== 'ERR_REQUIRE_ESM' && error?.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
+      throw error
+    }
+    module = await import(pathToFileURL(join(packageRoot, entry)).href)
+  }
+  return {module, packageJson, packageRoot}
+}
+
+function boundedTree(value) {
+  let nodes = 0
+  let maxDepth = 0
+  const seen = new Set()
+  const stack = [{value, depth: 0}]
+  while (stack.length) {
+    const item = stack.pop()
+    if (!item.value || typeof item.value !== 'object' || Array.isArray(item.value)) {
+      throw new TypeError('tree nodes must be plain objects')
+    }
+    if (seen.has(item.value)) throw new TypeError('tree must not contain cycles')
+    seen.add(item.value)
+    nodes += 1
+    maxDepth = Math.max(maxDepth, item.depth)
+    if (nodes > 2048 || maxDepth > 1024) throw new RangeError('tree exceeds bound')
+    if ('children' in item.value) {
+      if (!Array.isArray(item.value.children)) throw new TypeError('children must be an array')
+      for (let index = item.value.children.length - 1; index >= 0; index -= 1) {
+        stack.push({value: item.value.children[index], depth: item.depth + 1})
+      }
+    }
+  }
+  return {nodes, maxDepth}
+}
+
+function makeTest(descriptor) {
+  if (descriptor === undefined || descriptor === null) return descriptor
+  if (typeof descriptor === 'string') return descriptor
+  if (!descriptor || typeof descriptor !== 'object' || Array.isArray(descriptor)) {
+    throw new TypeError('invalid test descriptor')
+  }
+  if (descriptor.kind === 'partial') return descriptor.value
+  if (descriptor.kind === 'array') return descriptor.values.map(makeTest)
+  if (descriptor.kind === 'index-greater-than') {
+    return (_node, index) => typeof index === 'number' && index > descriptor.value
+  }
+  if (descriptor.kind === 'parent-type') {
+    return (_node, _index, parent) => parent?.type === descriptor.value
+  }
+  if (descriptor.kind === 'data-flag') {
+    return (node) => node?.data?.flag === descriptor.value
+  }
+  throw new TypeError('unsupported test descriptor')
+}
+
+function matches(action, node, occurrence) {
+  const when = action?.when ?? {}
+  return (
+    (when.id === undefined || node.id === when.id) &&
+    (when.type === undefined || node.type === when.type) &&
+    (when.occurrence === undefined || occurrence === when.occurrence)
+  )
+}
+
+function mutate(mutation, node, parents) {
+  if (!mutation) return
+  const parent = parents.at(-1)
+  const index = parent?.children?.indexOf(node) ?? -1
+  if (mutation.kind === 'append-child') {
+    if (!Array.isArray(node.children)) node.children = []
+    node.children.push(mutation.node)
+  } else if (mutation.kind === 'append-sibling') {
+    parent.children.splice(index + 1, 0, mutation.node)
+  } else if (mutation.kind === 'remove-next') {
+    parent.children.splice(index + 1, 1)
+  } else if (mutation.kind === 'remove-current') {
+    parent.children.splice(index, 1)
+  } else if (mutation.kind === 'remove-previous') {
+    parent.children.splice(index - 1, 1)
+  } else if (mutation.kind === 'replace-current') {
+    parent.children[index] = mutation.node
+  } else if (mutation.kind === 'set-parent-data') {
+    parent.data = {...parent.data, [mutation.key]: mutation.value}
+  } else {
+    throw new TypeError('unsupported mutation descriptor')
+  }
+}
+
+function visitorResult(descriptor) {
+  if (!descriptor || descriptor.kind === 'undefined') return undefined
+  if (descriptor.kind === 'null') return null
+  if (descriptor.kind === 'continue') return true
+  if (descriptor.kind === 'exit') return false
+  if (descriptor.kind === 'skip') return 'skip'
+  if (descriptor.kind === 'index') return descriptor.index
+  if (descriptor.kind === 'tuple') {
+    const action =
+      descriptor.action === 'continue'
+        ? true
+        : descriptor.action === 'exit'
+          ? false
+          : descriptor.action === 'skip'
+            ? 'skip'
+            : undefined
+    return descriptor.index === undefined ? [action] : [action, descriptor.index]
+  }
+  throw new TypeError('unsupported visitor result')
+}
+
+function walk(module, request) {
+  boundedTree(request.tree)
+  const events = []
+  const occurrences = new Map()
+  const visitor = (node, parents) => {
+    const key = `${node.id ?? ''}\u0000${node.type ?? ''}`
+    const occurrence = (occurrences.get(key) ?? 0) + 1
+    occurrences.set(key, occurrence)
+    const parent = parents.at(-1)
+    events.push({
+      id: node.id ?? null,
+      type: node.type ?? null,
+      value: node.value ?? null,
+      index: parent?.children?.indexOf(node) ?? null,
+      ancestors: parents.map((value) => value.id ?? value.type ?? null)
+    })
+    const action = request.actions?.find((value) => matches(value, node, occurrence))
+    if (action) {
+      mutate(action.mutation, node, parents)
+      return visitorResult(action.result)
+    }
+    return visitorResult(request.defaultResult)
+  }
+  let returned
+  if (!Object.hasOwn(request, 'test')) {
+    returned = module.visitParents(request.tree, visitor, request.reverse)
+  } else {
+    returned = module.visitParents(
+      request.tree,
+      makeTest(request.test),
+      visitor,
+      request.reverse
+    )
+  }
+  return {returnedUndefined: returned === undefined, events, tree: request.tree}
+}
+
+function makeDeepTree(depth) {
+  if (!Number.isSafeInteger(depth) || depth < 1 || depth > 1000) {
+    throw new RangeError('invalid deep-tree depth')
+  }
+  const root = {type: 'node', id: '0', children: []}
+  let current = root
+  for (let index = 1; index < depth; index += 1) {
+    const child = {type: 'node', id: String(index), children: []}
+    current.children.push(child)
+    current = child
+  }
+  return root
+}
+
+async function main() {
+  const request = readRequest()
+  dropPrivileges()
+  const {module, packageJson, packageRoot} = await loadCandidate()
+  if (request.operation === 'inventory') {
+    const types = packageJson.types
+    let declaration = ''
+    if (
+      typeof types === 'string' &&
+      !types.startsWith('/') &&
+      !types.split('/').includes('..')
+    ) {
+      declaration = readFileSync(join(packageRoot, types), 'utf8')
+    }
+    return {
+      exports: Object.keys(module).sort(),
+      constants: {CONTINUE: module.CONTINUE, EXIT: module.EXIT, SKIP: module.SKIP},
+      visitParentsType: typeof module.visitParents,
+      package: {
+        name: packageJson.name,
+        version: packageJson.version,
+        type: packageJson.type,
+        dependencies: packageJson.dependencies,
+        devDependencies: packageJson.devDependencies ?? null,
+        workspaces: packageJson.workspaces ?? null,
+        scripts: packageJson.scripts ?? null
+      },
+      hasDeclaration: declaration.length > 0,
+      declarationExportsVisitParents: /export[^\n]*visitParents|export\s*\{[^}]*visitParents/s.test(
+        declaration
+      ),
+      declarationExportsActions: ['CONTINUE', 'EXIT', 'SKIP'].every((name) =>
+        declaration.includes(name)
+      )
+    }
+  }
+  if (request.operation === 'walk') return walk(module, request)
+  if (request.operation === 'invalid') {
+    if (request.variant === 'missing-tree') module.visitParents()
+    else if (request.variant === 'missing-visitor') module.visitParents(request.tree)
+    else throw new TypeError('unsupported invalid variant')
+    return {threw: false}
+  }
+  if (request.operation === 'throw') {
+    module.visitParents(request.tree, (node) => {
+      if (node.id === request.id) throw new Error(request.message)
+    })
+    return {threw: false}
+  }
+  if (request.operation === 'deep') {
+    const tree = makeDeepTree(request.depth)
+    let count = 0
+    let deepest = 0
+    module.visitParents(tree, (_node, parents) => {
+      count += 1
+      deepest = Math.max(deepest, parents.length)
+    })
+    return {count, deepest}
+  }
+  throw new TypeError('unsupported operation')
+}
+
+try {
+  emit({ok: true, value: await main()})
+} catch (error) {
+  emit(
+    {
+      ok: false,
+      error: 'candidate-call-failed',
+      exceptionType: error?.constructor?.name ?? 'Error',
+      message: String(error?.message ?? error)
+    },
+    1
+  )
+}

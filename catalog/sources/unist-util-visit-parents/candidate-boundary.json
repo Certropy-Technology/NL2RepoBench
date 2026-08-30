@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit-parents",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript, callbacks, object identity, and mutable unist nodes out of the trusted node:test process.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 524288,
+    "candidate_uid": 10001,
+    "per_call_timeout_seconds": 6,
+    "cumulative_failure_mode": "cache first fatal process failure so all frozen leaves complete",
+    "max_nodes": 2048,
+    "max_depth": 1000,
+    "network": "none"
+  },
+  "operations": {
+    "inventory": "Return bounded package metadata, exact export kinds and action values, and declaration-presence flags.",
+    "walk": "Construct allowlisted unist-util-is tests and visitor actions inside the candidate child, call visitParents, and return visit projections plus the mutated JSON tree.",
+    "deep": "Construct a bounded deep tree inside the child and return only visit count and maximum ancestor depth.",
+    "error": "Exercise missing arguments and a fixed throwing visitor, returning a bounded exception record."
+  },
+  "forbidden_boundary_values": [
+    "source text",
+    "arbitrary executable callback bodies",
+    "functions, symbols, BigInts, accessors, custom prototypes, cycles, and native objects"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom loaders",
+    "lifecycle scripts",
+    "unbounded process or output",
+    "trusted-process import or report writes"
+  ]
+}

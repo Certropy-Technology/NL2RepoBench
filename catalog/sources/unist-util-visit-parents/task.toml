@@ -1,0 +1,96 @@
+schema_version = "2.0"
+task_id = "unist-util-visit-parents"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "syntax-tree-traversal"
+tags = ["node", "npm", "esm", "unist", "syntax-tree", "traversal", "visitor", "tree-mutation"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/unist-util-visit-parents"
+revision = "f06035e9161f25119fb68d178167c30003d32dfb"
+license_spdx = "MIT"
+source_digest = "sha256:39843fba2b73f69a59ca59e06cf646ad20c2999f4c3e2ac75b427e80f8e5d066"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+system_packages = ["git=1:2.39.5-0+deb12u3"]
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The model Agent and separate verifier have no egress and use an integrity-checked private npm v3 cache. Only the trusted Oracle may receive a run-scoped github.com authorization to fetch and verify the exact source revision; that source host is never available to a model Agent."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/unist==3.0.3", "unist-util-is==6.0.1"]
+artifact = { digest = "sha256:0309d9df7a84fc955ad0985406796c99a3b1412c546d8daf99aaed27442d23d0", size_bytes = 194560, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:0309d9df7a84fc955ad0985406796c99a3b1412c546d8daf99aaed27442d23d0", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 50
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
+test_bundle = { digest = "sha256:9fdf5fa48036e31027c054c101f54855ccec6d79200fd5bfba46925233535627", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:9fdf5fa48036e31027c054c101f54855ccec6d79200fd5bfba46925233535627", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+passed_statuses = ["passed"]
+denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the ESM unist tree visitor with ancestor stacks, filters, traversal controls, and mutation-aware sibling indexes."
+keywords = ["node", "npm", "esm", "unist", "syntax-tree", "visitor", "tree-traversal", "node-test"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828/unist-util-visit-parents"
+reason = "The exact source, environment, offline npm closure, UID-separated 50-leaf verifier, current production Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Integrator review and model Agent Run remain outside this lane."
+
+[oracle_bundle]
+digest = "sha256:5fe42af2fa5e2ab635c00dabf0bf8698ac4825b9a44e3691b7fb262911c78a8f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:5fe42af2fa5e2ab635c00dabf0bf8698ac4825b9a44e3691b7fb262911c78a8f"
+visibility = "private"

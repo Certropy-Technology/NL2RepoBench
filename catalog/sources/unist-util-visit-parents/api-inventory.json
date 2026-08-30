@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit-parents",
+  "package_version": "6.0.2",
+  "module_format": "esm-only",
+  "runtime_exports": {
+    "CONTINUE": true,
+    "EXIT": false,
+    "SKIP": "skip",
+    "visitParents": {
+      "kind": "function",
+      "overloads": [
+        "visitParents(tree, visitor, reverse?) -> undefined",
+        "visitParents(tree, test, visitor, reverse?) -> undefined"
+      ]
+    }
+  },
+  "type_exports": [
+    "Action",
+    "ActionTuple",
+    "BuildVisitor",
+    "Index",
+    "Test",
+    "Visitor",
+    "VisitorResult"
+  ],
+  "runtime_dependencies": {
+    "@types/unist": "3.0.3",
+    "unist-util-is": "6.0.1"
+  },
+  "upstream_tests": {
+    "behavioral_node_test_leaves": 24,
+    "type_expressions": 780,
+    "behavioral_result": "24/24 passed",
+    "type_coverage": "780/780 (100%)"
+  }
+}
