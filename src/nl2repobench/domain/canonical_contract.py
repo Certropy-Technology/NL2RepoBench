@@ -19,10 +19,16 @@ from .models import (
     NetworkPolicy,
     SourceLock,
     TaskLifecycleRecord,
+    TaskVerifierSpec,
 )
 
 SHA256 = r"^sha256:[0-9a-f]{64}$"
-TaskId = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")]
+TaskId = Annotated[
+    str,
+    Field(
+        pattern=r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
+    ),
+]
 
 
 class CanonicalRecord(BaseModel):
@@ -166,7 +172,7 @@ class TaskSource(CanonicalRecord):
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
     harbor: HarborExecutionProfile | None = None
     oracle_bundle: ArtifactRef | None = None
-    verifier: object | None = None
+    verifier: TaskVerifierSpec | None = None
 
     @model_validator(mode="after")
     def validate_instruction(self) -> TaskSource:
@@ -176,10 +182,48 @@ class TaskSource(CanonicalRecord):
             or ".." in self.instruction.split("/")
         ):
             raise ValueError("instruction must be a safe relative path")
+        if self.environment.runtime is not None:
+            if self.environment.runtime.language != self.metadata.language:
+                raise ValueError("metadata language must match environment runtime")
+            if self.environment.runtime.package_manager != self.dependencies.package_manager:
+                raise ValueError("dependency package manager must match environment runtime")
+        if self.tests.framework == "custom" and self.verifier is None:
+            raise ValueError("custom tests require a typed verifier specification")
         return self
 
 
-TaskManifest = TaskSource
+class TaskManifest(CanonicalRecord):
+    """Canonical compiled manifest with public instruction artifact."""
+
+    task_id: TaskId
+    version: str = "1.0.0"
+    metadata: TaskMetadata
+    instruction: ArtifactRef
+    source_lock: SourceLock = Field(default_factory=SourceLock)
+    environment_lock: EnvironmentLock
+    dependency_bundle: DependencyBundle
+    tests: TestManifest
+    metric: MetricContract = Field(default_factory=MetricContract)
+    lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
+    harbor: HarborExecutionProfile | None = None
+    oracle_bundle: ArtifactRef | None = None
+    verifier: TaskVerifierSpec | None = None
+
+    @model_validator(mode="after")
+    def validate_runtime_contract(self) -> TaskManifest:
+        runtime = self.environment_lock.runtime
+        if runtime is None:
+            return self
+        if runtime.language.value != self.metadata.language.value:
+            raise ValueError("metadata language must match environment runtime")
+        if runtime.package_manager != self.dependency_bundle.package_manager:
+            raise ValueError("dependency package manager must match environment runtime")
+        if self.tests.framework == "custom" and self.verifier is None:
+            raise ValueError("custom tests require a typed verifier specification")
+        if self.tests.framework != "custom" and self.verifier is not None:
+            raise ValueError("typed verifier is only valid for custom tests")
+        return self
+
 
 __all__ = [
     "DependencyBundle",

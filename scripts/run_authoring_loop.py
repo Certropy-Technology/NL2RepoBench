@@ -341,7 +341,7 @@ finding:
 - `uv run nl2repo task validate-source catalog/sources/{package}`
 - `uv run nl2repo task lint-network --tasks-root catalog/sources`
 - a production `uv run nl2repo harbor compile` using the language toolchain,
-  `.nl2repo/artifacts`, `--allow-private`, and a task-local output directory
+  `.nl2repo/artifacts`, `--authorize-task-private-artifacts`, and a task-local output directory
 The Loop repeats source validation, network lint, and a production compile
 before it records the claim as complete. Git source acquisition is allowed only
 inside the Oracle solution, which is uploaded exclusively to the trusted Oracle
@@ -612,7 +612,7 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
                 str(toolchain),
                 "--artifact-root",
                 str(worktree / ".nl2repo/artifacts"),
-                "--allow-private",
+                "--authorize-task-private-artifacts",
             ],
             cwd=worktree,
             capture_output=True,

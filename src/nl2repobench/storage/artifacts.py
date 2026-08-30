@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import stat
 import tempfile
 from dataclasses import dataclass
@@ -36,14 +37,33 @@ class PrivateArtifactAuthorization:
     allowed_digests: frozenset[str]
     staging_root: Path
 
+    def __post_init__(self) -> None:
+        if not re.fullmatch(
+            r"(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)",
+            self.task_id,
+        ):
+            raise ArtifactStoreError("authorization task_id is unsafe")
+        if not re.fullmatch(r"sha256:[0-9a-f]{64}", self.manifest_digest):
+            raise ArtifactStoreError("authorization manifest digest is invalid")
+        if self.purpose not in {"compile", "verify"}:
+            raise ArtifactStoreError("authorization purpose is invalid")
+        if not self.allowed_digests:
+            raise ArtifactStoreError("authorization must declare private digests")
+        if not self.staging_root.is_absolute() or self.staging_root.is_symlink():
+            raise ArtifactStoreError(
+                "authorization staging root must be an absolute non-symlink path"
+            )
+        if any(not re.fullmatch(r"sha256:[0-9a-f]{64}", digest) for digest in self.allowed_digests):
+            raise ArtifactStoreError("authorization contains an invalid digest")
+
     def permits(
         self, reference: ArtifactRef, *, task_id: str | None = None, purpose: str | None = None
     ) -> bool:
         return (
             reference.visibility is Visibility.PRIVATE
             and reference.digest in self.allowed_digests
-            and (task_id is None or task_id == self.task_id)
-            and (purpose is None or purpose == self.purpose)
+            and task_id in {None, self.task_id}
+            and purpose in {None, self.purpose}
         )
 
 
@@ -181,12 +201,15 @@ class FileArtifactStore:
         self,
         reference: ArtifactRef,
         authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        max_bytes: int | None = None,
     ) -> bytes:
         path = self.path_for(reference, authorization)
         flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
         descriptor = os.open(path, flags)
         with os.fdopen(descriptor, "rb") as handle:
-            data = handle.read()
+            data = handle.read(None if max_bytes is None else max_bytes + 1)
+        if max_bytes is not None and len(data) > max_bytes:
+            raise ArtifactStoreError("artifact exceeds requested read limit")
         if len(data) != reference.size_bytes or bytes_digest(data) != reference.digest:
             raise ArtifactStoreError(f"artifact failed integrity check: {reference.digest}")
         return data
@@ -214,8 +237,9 @@ class LocalArtifactResolver:
         self,
         reference: ArtifactRef,
         authorization: PrivateArtifactAuthorization | PublicArtifactAuthorization | None = None,
+        max_bytes: int | None = None,
     ) -> bytes:
-        return self.store.read_bytes(reference, authorization or self.authorization)
+        return self.store.read_bytes(reference, authorization or self.authorization, max_bytes)
 
 
 __all__ = [

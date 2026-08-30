@@ -11,6 +11,7 @@ import hashlib
 import io
 import os
 import stat
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -35,6 +36,8 @@ class TreeEntry:
 def _path(path: str) -> PurePosixPath:
     if not isinstance(path, str) or not path or "\\" in path:
         raise CanonicalArchiveError(f"invalid archive path: {path!r}")
+    if unicodedata.normalize("NFC", path) != path:
+        raise CanonicalArchiveError(f"archive path is not NFC normalized: {path!r}")
     encoded = path.encode("utf-8")
     if len(encoded) > 255:
         raise CanonicalArchiveError("archive path exceeds 255 UTF-8 bytes")
@@ -107,22 +110,24 @@ def _octal(value: int, width: int) -> bytes:
     return b"0" * (width - len(text) - 1) + text + b"\0"
 
 
-def _split_path(path: str) -> tuple[bytes, bytes]:
+def _split_path(path: str, *, directory: bool = False) -> tuple[bytes, bytes]:
     value = _path(path)
     encoded = value.as_posix().encode("utf-8")
-    if len(encoded) <= 100:
-        return b"", encoded
+    suffix = b"/" if directory else b""
+    if len(encoded) + len(suffix) <= 100:
+        return b"", encoded + suffix
     components = value.parts
     for index in range(1, len(components)):
         prefix = "/".join(components[:index]).encode("utf-8")
-        name = "/".join(components[index:]).encode("utf-8")
+        name = "/".join(components[index:]).encode("utf-8") + suffix
         if len(prefix) <= 155 and len(name) <= 100:
             return prefix, name
     raise CanonicalArchiveError(f"path cannot be represented in ustar header: {path}")
 
 
 def _header(entry: TreeEntry) -> bytes:
-    prefix, name = _split_path(entry.path.rstrip("/"))
+    header_path = entry.path.rstrip("/")
+    prefix, name = _split_path(header_path, directory=entry.type == "directory")
     header = bytearray(512)
     header[0:100] = name.ljust(100, b"\0")
     header[100:108] = _octal(entry.mode, 8)

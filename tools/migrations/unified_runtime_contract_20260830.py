@@ -10,20 +10,26 @@ from __future__ import annotations
 import argparse
 import ctypes
 import hashlib
+import io
 import json
 import os
 import shlex
 import shutil
 import sys
+import tarfile
 import tempfile
 import tomllib
-from pathlib import Path
-from typing import Any
+from pathlib import Path, PurePosixPath
+from typing import Any, cast
 
 import tomli_w
 
-from nl2repobench.domain.models import Visibility
-from nl2repobench.storage.artifacts import FileArtifactStore
+from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.storage.artifacts import (
+    ArtifactStoreError,
+    FileArtifactStore,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.storage.canonical_ustar import encode_files, tree_digest, tree_entries
 
 ROOT_NAME = "unified-runtime-20260830"
@@ -92,6 +98,7 @@ def transform_lock_artifact(
     identity: str,
     toolchain_digest: str,
     store_files: dict[str, bytes] | None = None,
+    lock_files: dict[str, bytes] | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Repackage legacy lock/closure bytes into the three canonical CAS refs.
 
@@ -115,7 +122,10 @@ def transform_lock_artifact(
     if lock_name is None:
         raise MigrationError("plan-invalid", "plan", f"unsupported dependency identity: {identity}")
     store_files = store_files or {}
-    lock_archive = encode_files({lock_name: lock_bytes})
+    lock_files = lock_files or {lock_name: lock_bytes}
+    if lock_name not in lock_files:
+        lock_files[lock_name] = lock_bytes
+    lock_archive = encode_files(lock_files)
     store_archive = encode_files(store_files)
     store = FileArtifactStore(artifact_root)
     lock_ref = store.put_bytes(
@@ -130,9 +140,13 @@ def transform_lock_artifact(
     )
     with tempfile.TemporaryDirectory(prefix="nl2repo-inventory-") as temporary:
         root = Path(temporary)
-        (root / lock_name).write_bytes(lock_bytes)
+        for name, data in lock_files.items():
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
         lock_entries = tree_entries(root)
-        (root / lock_name).unlink()
+        shutil.rmtree(root)
+        root.mkdir()
         for name, data in store_files.items():
             target = root / name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -280,10 +294,17 @@ def migrate_record(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _source_dirs(root: Path) -> list[Path]:
-    result = []
-    for path in sorted(root.iterdir()):
-        if path.is_dir() and not path.is_symlink() and (path / "task.toml").is_file():
-            result.append(path)
+    result: list[Path] = []
+    for task_file in sorted(
+        (path for path in root.rglob("task.toml") if path.is_file() and not path.is_symlink()),
+        key=lambda path: path.relative_to(root).as_posix().encode(),
+    ):
+        candidate = task_file.parent
+        # A Harbor task asset is nested below a canonical source.  Only the
+        # nearest source root owns a task.toml migration record.
+        if any((parent / "task.toml").is_file() for parent in candidate.parents if parent != root):
+            continue
+        result.append(candidate)
     return result
 
 
@@ -297,12 +318,102 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
         raise MigrationError(
             "plan-invalid", "plan", f"selected migration tasks are missing: {', '.join(missing)}"
         )
-    records = []
+    records: list[dict[str, Any]] = []
+    task_ids: set[str] = set()
     for directory in dirs:
         try:
             raw = (directory / "task.toml").read_bytes()
             old = tomllib.loads(raw.decode("utf-8"))
+            task_id = old.get("task_id")
+            if not isinstance(task_id, str) or not task_id:
+                raise MigrationError("plan-invalid", "plan", f"missing task_id for {directory}")
+            if task_id in task_ids:
+                raise MigrationError("plan-invalid", "plan", f"duplicate task_id: {task_id}")
+            task_ids.add(task_id)
             new = migrate_record(old)
+            dependencies = old.get("dependencies", {})
+            old_dependency_ref = (
+                dependencies.get("lock_artifact")
+                or dependencies.get("module_bundle")
+                or dependencies.get("artifact")
+            )
+            if old_dependency_ref is not None:
+                try:
+                    reference = ArtifactRef.model_validate(old_dependency_ref)
+                    authorization = PrivateArtifactAuthorization(
+                        task_id=task_id,
+                        manifest_digest=digest_bytes(raw),
+                        purpose="compile",
+                        allowed_digests=frozenset({reference.digest}),
+                        staging_root=source_root,
+                    )
+                    legacy_bytes = artifact_store.read_bytes(reference, authorization)
+                except (ArtifactStoreError, OSError, ValueError) as exc:
+                    raise MigrationError(
+                        "plan-invalid",
+                        "plan",
+                        f"dependency closure unavailable for {task_id}: {exc}",
+                    ) from exc
+                identity = f"{_runtime(old)[0]}+{_runtime(old)[3] or 'none'}"
+                lock_files: dict[str, bytes] | None = None
+                store_files: dict[str, bytes] | None = None
+                manager = identity.split("+", 1)[1]
+                if manager in {"npm", "pnpm", "go-modules"}:
+                    lock_files = {}
+                    store_files = {}
+                    try:
+                        with tarfile.open(fileobj=io.BytesIO(legacy_bytes), mode="r:*") as archive:
+                            for member in archive:
+                                if member.issym() or member.islnk() or member.isdev():
+                                    raise ValueError(
+                                        "legacy dependency archive contains unsafe member"
+                                    )
+                                name = PurePosixPath(member.name)
+                                if name.is_absolute() or ".." in name.parts or not member.isfile():
+                                    continue
+                                payload = archive.extractfile(member)
+                                if payload is None:
+                                    continue
+                                data = payload.read()
+                                clean = name.as_posix()
+                                if clean in {
+                                    "package-lock.json",
+                                    "pnpm-lock.yaml",
+                                    "go.mod",
+                                    "go.sum",
+                                }:
+                                    lock_files[clean] = data
+                                else:
+                                    store_files[clean] = data
+                    except (OSError, tarfile.TarError, ValueError) as exc:
+                        raise MigrationError(
+                            "plan-invalid",
+                            "plan",
+                            f"dependency archive conversion failed for {task_id}: {exc}",
+                        ) from exc
+                    lock_name = {
+                        "npm": "package-lock.json",
+                        "pnpm": "pnpm-lock.yaml",
+                        "go-modules": "go.mod",
+                    }[manager]
+                    if lock_name not in lock_files:
+                        raise MigrationError(
+                            "plan-invalid",
+                            "plan",
+                            f"dependency lock is missing for {task_id}: {lock_name}",
+                        )
+                    lock_bytes = lock_files[lock_name]
+                else:
+                    lock_bytes = legacy_bytes
+                transformed = transform_lock_artifact(
+                    artifact_root,
+                    lock_bytes,
+                    identity=identity,
+                    toolchain_digest=digest_bytes(raw),
+                    store_files=store_files,
+                    lock_files=lock_files,
+                )
+                new["dependencies"].update(transformed)
             test_data = new["tests"]
             old_tests = old.get("tests", {})
             commands = old_tests.get("commands", [])
@@ -313,7 +424,7 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     raise MigrationError(
                         "plan-invalid", "plan", f"cannot convert test commands for {directory.name}"
                     )
-                language, _, _, manager = _runtime(old)
+                language, _, _, command_manager = _runtime(old)
                 steps = []
                 for index, command in enumerate(commands):
                     argv = tuple(shlex.split(command, posix=True))
@@ -332,7 +443,7 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     )
                 command_plan = {
                     "schema_version": "1.0",
-                    "identity": f"{language}+{manager or 'none'}",
+                    "identity": f"{language}+{command_manager or 'none'}",
                     "runner": "migrated-command-plan-v1",
                     "candidate_install": "adapter-owned",
                     "report_format": test_data["report_format"],
@@ -347,6 +458,27 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                 )
                 test_data["commands_artifact"] = command_ref.model_dump(mode="json")
             test_data.pop("commands", None)
+            protected_paths = old_tests.get("protected_paths", [])
+            if protected_paths:
+                if not isinstance(protected_paths, list) or any(
+                    not isinstance(item, str) for item in protected_paths
+                ):
+                    raise MigrationError(
+                        "plan-invalid",
+                        "plan",
+                        f"cannot convert protected paths for {directory.name}",
+                    )
+                protected_ref = artifact_store.put_bytes(
+                    json.dumps(
+                        {"schema_version": "1.0", "paths": sorted(set(protected_paths))},
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    ).encode()
+                    + b"\n",
+                    media_type="application/vnd.nl2repobench.protected-paths+json",
+                    visibility=Visibility.PRIVATE,
+                )
+                test_data["protected_paths_artifact"] = protected_ref.model_dump(mode="json")
             test_data.pop("protected_paths", None)
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
             raise MigrationError(
@@ -354,8 +486,9 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
             ) from exc
         records.append(
             {
-                "task_id": directory.name,
+                "task_id": task_id,
                 "source_path": str(directory),
+                "relative_path": directory.relative_to(source_root).as_posix(),
                 "old_digest": digest_bytes(raw),
                 "new_toml": tomli_w.dumps(_toml_safe(new)),
             }
@@ -363,10 +496,14 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
     input_digest = digest_tree(source_root)
     mirror = Path(tempfile.mkdtemp(prefix=f".{source_root.name}.unified-", dir=source_root.parent))
     try:
+        shutil.copytree(source_root, mirror, dirs_exist_ok=True, symlinks=True)
         for directory in dirs:
-            destination = mirror / directory.name
-            shutil.copytree(directory, destination, symlinks=True)
-            record = next(item for item in records if item["task_id"] == directory.name)
+            destination = mirror / directory.relative_to(source_root)
+            record = next(
+                item
+                for item in records
+                if item["relative_path"] == directory.relative_to(source_root).as_posix()
+            )
             (destination / "task.toml").write_text(record["new_toml"], encoding="utf-8")
         output_digest = digest_tree(mirror)
     finally:
@@ -431,15 +568,20 @@ def apply_plan(plan_path: Path) -> dict[str, Any]:
         raise MigrationError("staged-changed", "preflight", "staged path already exists")
     previous = Path(plan["previous_path"])
     staged.mkdir(parents=True)
+    state_path = plan_path.parent / "transaction.json"
+    transaction: dict[str, Any] | None = None
     try:
+        shutil.copytree(current, staged, dirs_exist_ok=True, symlinks=True)
         for directory in _source_dirs(current):
-            destination = staged / directory.name
-            shutil.copytree(directory, destination, symlinks=True)
-            record = next(item for item in plan["records"] if item["task_id"] == directory.name)
+            destination = staged / directory.relative_to(current)
+            record = next(
+                item
+                for item in plan["records"]
+                if item["relative_path"] == directory.relative_to(current).as_posix()
+            )
             (destination / "task.toml").write_text(record["new_toml"], encoding="utf-8")
         if digest_tree(staged) != plan["output_tree_digest"]:
             raise MigrationError("staged-changed", "preflight", "staged tree digest mismatch")
-        state_path = plan_path.parent / "transaction.json"
         transaction = {
             "schema_version": "1.0",
             "transaction_id": plan["plan_digest"][7:39],
@@ -481,14 +623,65 @@ def apply_plan(plan_path: Path) -> dict[str, Any]:
         transaction["state"] = "complete"
         _write_record(state_path, transaction)
         return transaction
-    except Exception:
-        if staged.exists() and current.exists():
+    except Exception as exc:
+        # Before exchange the staged tree is disposable.  Once intent is
+        # durable, both trees are rollback evidence and must never be deleted
+        # by a generic exception handler.
+        if transaction is not None and transaction["state"] in {
+            "exchange-intent",
+            "exchanged-unverified",
+            "verified",
+            "rollback-intent",
+        }:
+            transaction["last_error"] = {
+                "code": "verify-failed",
+                "stage": "rollback",
+                "message": str(exc)[:4096],
+                "observed_digests": tuple(
+                    digest
+                    for digest in (
+                        digest_tree(current) if current.exists() else None,
+                        digest_tree(staged) if staged.exists() else None,
+                    )
+                    if digest is not None
+                )[:4],
+            }
+            transaction["state"] = "rollback-intent"
+            _write_record(state_path, transaction)
+            try:
+                if current.exists() and staged.exists():
+                    current_digest = digest_tree(current)
+                    staged_digest = digest_tree(staged)
+                    if (
+                        current_digest == plan["output_tree_digest"]
+                        and staged_digest == plan["input_tree_digest"]
+                    ):
+                        _exchange(current, staged)
+                    if digest_tree(current) == plan["input_tree_digest"]:
+                        transaction["state"] = "rolled-back"
+                        transaction["retention_status"] = "removed"
+                        _write_record(state_path, transaction)
+                        shutil.rmtree(staged, ignore_errors=True)
+                    else:
+                        transaction["state"] = "recovery-required"
+                        _write_record(state_path, transaction)
+            except Exception as rollback_error:
+                transaction["state"] = "recovery-required"
+                transaction["last_error"] = {
+                    "code": "rollback-failed",
+                    "stage": "rollback",
+                    "message": str(rollback_error)[:4096],
+                    "observed_digests": (),
+                }
+                _write_record(state_path, transaction)
+            raise
+        if staged.exists():
             shutil.rmtree(staged, ignore_errors=True)
         raise
 
 
 def recover(transaction_path: Path, force: bool = False) -> dict[str, Any]:
-    transaction = json.loads(transaction_path.read_text(encoding="utf-8"))
+    transaction = cast(dict[str, Any], json.loads(transaction_path.read_text(encoding="utf-8")))
     if force:
         print(
             json.dumps(

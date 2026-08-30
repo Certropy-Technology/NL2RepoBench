@@ -35,6 +35,32 @@ def test_empty_ustar_and_tree_digest_are_canonical() -> None:
     assert tree_digest([]) == EMPTY_TREE_DIGEST
 
 
+@pytest.mark.parametrize(
+    ("files", "executable", "digest"),
+    [
+        (
+            {"a": b"x"},
+            frozenset(),
+            "30e1785c730dbfd5f9dd429402876d85278f55a41f6837bce1f8fe5ab0c94ade",
+        ),
+        (
+            {"bin/run": b"#!/bin/sh\n"},
+            frozenset({"bin/run"}),
+            "6b16641492e9e8863bb416093216ecbdbed09f2e5d10f73fa21788dd94ad4dee",
+        ),
+        (
+            {"a" * 99 + "/b": b"z"},
+            frozenset(),
+            "9be3294b9fa45040b07b5694c604ac86bc59c990009bc20598b019ab02c8b1da",
+        ),
+    ],
+)
+def test_ustar_golden_shapes(
+    files: dict[str, bytes], executable: frozenset[str], digest: str
+) -> None:
+    assert hashlib.sha256(encode_files(files, executable)).hexdigest() == digest
+
+
 def test_private_resolution_requires_matching_task_capability(tmp_path: Path) -> None:
     store = FileArtifactStore(tmp_path / "cas")
     reference = store.put_bytes(b"private", visibility=Visibility.PRIVATE)
@@ -52,7 +78,7 @@ def test_private_resolution_requires_matching_task_capability(tmp_path: Path) ->
         task_id="task-b",
         manifest_digest=authorization.manifest_digest,
         purpose="compile",
-        allowed_digests=frozenset(),
+        allowed_digests=frozenset({"sha256:" + "b" * 64}),
         staging_root=tmp_path / "compiled" / "task-b",
     )
     with pytest.raises(ArtifactStoreError, match="not authorized"):
@@ -85,6 +111,18 @@ def test_migration_transaction_is_idempotent(tmp_path: Path) -> None:
             '[tests]\nframework="pytest"\nexpected_total=0\n'
         )
         (task / "instruction.md").write_text("instruction")
+        harbor = task / "harbor"
+        harbor.mkdir()
+        (harbor / "task.toml").write_text('schema_version="1.4"\n')
+    scoped = root / "@scope" / "package"
+    scoped.mkdir(parents=True)
+    (scoped / "task.toml").write_text(
+        'schema_version="1.0"\ntask_id="@scope/package"\n'
+        '[metadata]\nlanguage="python"\n'
+        '[dependencies]\ninstaller="uv"\n'
+        '[tests]\nframework="pytest"\nexpected_total=0\n'
+    )
+    (scoped / "instruction.md").write_text("scoped instruction")
     plan_path = tmp_path / "migration" / "plan.json"
     module.make_plan(root, tmp_path / "artifacts", plan_path)
     transaction = module.apply_plan(plan_path)

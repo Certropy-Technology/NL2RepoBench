@@ -959,7 +959,7 @@ def _validate_and_compile(root: Path, source: Path, language: str) -> tuple[dict
             str(toolchain),
             "--artifact-root",
             str(root / ".nl2repo/artifacts"),
-            "--allow-private",
+            "--authorize-task-private-artifacts",
         ],
         cwd=root,
         timeout=1800,
