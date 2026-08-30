@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from typing import Literal
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from .canonical_models import CanonicalRecord
 
@@ -13,7 +13,7 @@ from .canonical_models import CanonicalRecord
 class CommandStep(CanonicalRecord):
     """One bounded, argv-based verifier step."""
 
-    step_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    step_id: str = Field(max_length=128, pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
     argv: tuple[str, ...] = Field(min_length=1)
     cwd: str = "."
     environment: dict[str, str] = Field(default_factory=dict)
@@ -57,6 +57,15 @@ class CommandPlan(CanonicalRecord):
     ]
     test_root: Literal["/tests/private"] = "/tests/private"
     steps: tuple[CommandStep, ...] = ()
+
+    @model_validator(mode="after")
+    def validate_steps(self) -> CommandPlan:
+        if len(self.steps) > 4096:
+            raise ValueError("command plan cannot contain more than 4096 steps")
+        step_ids = [step.step_id for step in self.steps]
+        if len(step_ids) != len(set(step_ids)):
+            raise ValueError("command plan step_id values must be unique")
+        return self
 
 
 __all__ = ["CommandPlan", "CommandStep"]

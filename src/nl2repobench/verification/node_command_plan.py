@@ -39,6 +39,28 @@ def expected_node_command_plan(
     )
 
 
+def _validate_node_plan_semantics(
+    payload: object, *, candidate_install: str
+) -> NodeVerifierCommandPlan:
+    if not isinstance(payload, dict):
+        raise ValueError("Node command plan does not match the allowlisted verifier protocol")
+    plan = NodeVerifierCommandPlan.model_validate(payload)
+    expected = expected_node_command_plan(candidate_install)
+    expected_values = expected.model_dump(mode="json")
+    actual_values = plan.model_dump(mode="json")
+    for field in (
+        "schema_version",
+        "identity",
+        "runner",
+        "candidate_install",
+        "report_format",
+        "test_root",
+    ):
+        if actual_values[field] != expected_values[field]:
+            raise ValueError("Node command plan does not match the allowlisted verifier protocol")
+    return plan
+
+
 def validate_node_command_plan(path: Path) -> None:
     """Validate a bounded regular file against the exact Node allowlist."""
 
@@ -59,11 +81,7 @@ def validate_node_command_plan(path: Path) -> None:
         "pnpm-pack-offline-v1",
     }:
         raise ValueError("Node command plan does not match the allowlisted verifier protocol")
-    expected = expected_node_command_plan(str(payload["candidate_install"])).model_dump(
-        mode="json"
-    )
-    if payload != expected:
-        raise ValueError("Node command plan does not match the allowlisted verifier protocol")
+    _validate_node_plan_semantics(payload, candidate_install=str(payload["candidate_install"]))
 
 
 def load_node_command_plan(
@@ -79,10 +97,7 @@ def load_node_command_plan(
         payload = json.loads(data)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f"invalid Node command plan JSON: {exc}") from exc
-    plan = NodeVerifierCommandPlan.model_validate(payload)
-    expected = expected_node_command_plan(candidate_install)
-    if plan != expected:
-        raise ValueError("Node command plan package manager does not match runtime")
+    plan = _validate_node_plan_semantics(payload, candidate_install=candidate_install)
     if data != json.dumps(
         plan.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
     ).encode() + b"\n":

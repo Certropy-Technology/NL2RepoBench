@@ -393,13 +393,8 @@ WORKDIR /tests
     def _resolve_command_plan(self, reference: ArtifactRef) -> VerifierCommandPlan:
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required")
-        if reference.media_type in {
-            "application/gzip",
-            "application/x-tar",
-            "application/vnd.nl2repobench.node-commands+tar",
-            "application/vnd.nl2repobench.node-commands+json",
-        }:
-            raise HarborCompileError("canonical runtime rejects legacy command-plan media types")
+        if reference.media_type != "application/vnd.nl2repobench.command-plan+json":
+            raise HarborCompileError("canonical runtime requires command-plan media type")
         try:
             return load_command_plan(
                 self.artifact_resolver.read_bytes(reference, max_bytes=4 * 1024 * 1024)

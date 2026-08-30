@@ -416,15 +416,8 @@ WORKDIR /tests
         reference = manifest.tests.commands_artifact
         if reference is None or self.artifact_resolver is None:
             raise NodeHarborCompileError("production Node task requires commands_artifact")
-        if reference.media_type in {
-            "application/gzip",
-            "application/x-tar",
-            "application/vnd.nl2repobench.node-commands+tar",
-            "application/vnd.nl2repobench.node-commands+json",
-        }:
-            raise NodeHarborCompileError(
-                "canonical runtime rejects legacy command-plan media types"
-            )
+        if reference.media_type != "application/vnd.nl2repobench.command-plan+json":
+            raise NodeHarborCompileError("canonical runtime requires command-plan media type")
         try:
             data = self.artifact_resolver.read_bytes(reference, max_bytes=4 * 1024 * 1024)
             return load_node_command_plan(

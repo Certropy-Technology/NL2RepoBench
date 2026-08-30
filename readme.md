@@ -35,8 +35,13 @@ uv sync
 uv run nl2repo doctor
 uv run nl2repo task validate-source catalog/sources/<task-id>
 uv run nl2repo dataset validate authoring
-uv run nl2repo harbor compile catalog/sources/ministats --allow-incomplete
 ```
+
+No checked-in canonical development source is currently available for a
+runnable compile example. Use the compile command in the production section
+below after selecting a source that passes `validate-source`; the historical
+`catalog/sources/ministats` source is intentionally not presented as runnable
+until its migration is complete.
 
 The current Harbor pipeline is catalog-backed. Human-maintained task sources
 live under `catalog/sources/<task-id>/`; generated Harbor projections live under

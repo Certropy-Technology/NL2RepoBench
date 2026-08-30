@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -113,6 +114,7 @@ def _manifest(
             separators=(",", ":"),
         ).encode()
         + b"\n",
+        media_type="application/vnd.nl2repobench.command-plan+json",
         visibility=Visibility.PRIVATE,
     )
     dependency_payload: dict[str, object] = {
@@ -228,6 +230,28 @@ def test_node_adapters_consume_canonical_dependencies_and_command_plan(
     assert '[[ "$network_exit" -eq 1 ]]' in script
     assert '[[ "$network_exit" -ne 0 ]]' in script
     assert "verifier-internal-error" in script
+
+    emitted = tmp_path / "command-plan.json"
+    emitted.write_text(
+        json.dumps(plan.model_dump(mode="json"), sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    validator = ROOT / "src/nl2repobench/verification/node/validate-"
+    validator = validator.with_name(
+        "validate-pnpm-command-plan.mjs" if manager == "pnpm" else "validate-command-plan.mjs"
+    )
+    subprocess.run(["node", str(validator), "--path", str(emitted)], check=True)
+    reordered = emitted.with_name("command-plan-reordered.json")
+    values = plan.model_dump(mode="json")
+    reordered.write_text(
+        json.dumps(
+            {key: values[key] for key in reversed(list(values))},
+            separators=(",", ":"),
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    subprocess.run(["node", str(validator), "--path", str(reordered)], check=True)
 
 
 def test_dependency_inventory_tampering_fails_closed(tmp_path: Path) -> None:

@@ -26,11 +26,11 @@ from nl2repobench.domain.canonical_contract import (
     TaskMetadata,
     TaskSource,
 )
-from nl2repobench.domain.canonical_contract import (
-    TestManifest as CanonicalTestManifest,
-)
+from nl2repobench.domain.canonical_contract import TestManifest as CanonicalTestManifest
 from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
+from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.harbor.bundle_io import BundleLimits
+from nl2repobench.harbor.models import load_command_plan
 from nl2repobench.harbor.private_artifacts import (
     categorized_private_artifacts,
     compile_authorization,
@@ -51,6 +51,7 @@ from nl2repobench.storage.canonical_ustar import (
     tree_digest,
 )
 from nl2repobench.storage.materialize import ArchiveKind, MaterializationLimits, materialize_archive
+from nl2repobench.verification.node_command_plan import load_node_command_plan
 
 
 def _migration_module():
@@ -340,6 +341,105 @@ def test_migration_converts_legacy_artifact_backed_command_and_paths(tmp_path: P
     command_payload = json.loads(store.read_bytes(converted_ref, converted_auth))
     assert command_payload["identity"] == "node+npm"
     assert command_payload["steps"] == []
+
+
+@pytest.mark.parametrize(
+    ("identity", "runner", "candidate_install"),
+    [
+        ("python+uv", "pytest-subprocess-boundary-v1", "pip-target-no-deps-v1"),
+        ("node+npm", "node-test-subprocess-boundary-v1", "npm-pack-offline-v1"),
+        ("node+pnpm", "node-test-subprocess-boundary-v1", "pnpm-pack-offline-v1"),
+        ("go+go-modules", "go-test-subprocess-boundary-v1", "go-modules-offline-v1"),
+    ],
+)
+def test_migrated_command_plan_uses_adapter_contract(
+    identity: str, runner: str, candidate_install: str
+) -> None:
+    module = _migration_module()
+    report_format = (
+        "node-test-json-v1"
+        if identity.startswith("node+")
+        else "pytest-junit-xml-v1"
+        if identity.startswith("python+")
+        else "go-test-json-v1"
+    )
+    plan_data = module._canonical_command_plan(  # noqa: SLF001
+        [], identity=identity, report_format=report_format
+    )
+    assert plan_data["runner"] == runner
+    assert plan_data["candidate_install"] == candidate_install
+    data = json.dumps(plan_data, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+    CommandPlan.model_validate(plan_data)
+    if identity.startswith("node+"):
+        load_node_command_plan(data, candidate_install=candidate_install)  # type: ignore[arg-type]
+    else:
+        load_command_plan(data)
+
+
+def test_command_plan_bounds_and_deduplicates_step_ids() -> None:
+    step = {
+        "step_id": "same",
+        "argv": ["pytest"],
+        "cwd": ".",
+        "environment": {},
+        "timeout_sec": 600,
+    }
+    with pytest.raises(PydanticValidationError, match="unique"):
+        CommandPlan.model_validate(
+            {
+                "identity": "python+uv",
+                "runner": "pytest-subprocess-boundary-v1",
+                "candidate_install": "pip-target-no-deps-v1",
+                "report_format": "pytest-junit-xml-v1",
+                "steps": [step, step],
+            }
+        )
+    with pytest.raises(PydanticValidationError, match="4096"):
+        CommandPlan.model_validate(
+            {
+                "identity": "python+uv",
+                "runner": "pytest-subprocess-boundary-v1",
+                "candidate_install": "pip-target-no-deps-v1",
+                "report_format": "pytest-junit-xml-v1",
+                "steps": [
+                    {**step, "step_id": f"step-{index}"} for index in range(4097)
+                ],
+            }
+        )
+
+
+def _legacy_json_tar(*members: tuple[str, bytes, str | None]) -> bytes:
+    payload = BytesIO()
+    with tarfile.open(fileobj=payload, mode="w:gz") as archive:
+        for name, data, member_type in members:
+            member = tarfile.TarInfo(name)
+            member.size = len(data)
+            if member_type == "symlink":
+                member.type = tarfile.SYMTYPE
+                member.linkname = "payload.json"
+                member.size = 0
+            archive.addfile(member, BytesIO(data) if member_type is None else None)
+    return payload.getvalue()
+
+
+def test_legacy_json_archive_rejects_ambiguous_payloads() -> None:
+    module = _migration_module()
+    archive = _legacy_json_tar(
+        ("first.json", b'{"paths":["one"]}', None),
+        ("second.json", b'{"paths":["two"]}', None),
+    )
+    with pytest.raises(module.MigrationError, match="ambiguous"):
+        module._legacy_json_payload(archive)  # noqa: SLF001
+
+
+def test_legacy_json_archive_rejects_compression_bombs_and_unsafe_types() -> None:
+    module = _migration_module()
+    bomb = _legacy_json_tar(("bomb.json", b"0" * (module.MAX_LEGACY_JSON_MEMBER_BYTES + 1), None))
+    with pytest.raises(module.MigrationError, match="unsupported member|size limit"):
+        module._legacy_json_payload(bomb)  # noqa: SLF001
+    symlink = _legacy_json_tar(("link.json", b"", "symlink"))
+    with pytest.raises(module.MigrationError, match="unsafe member"):
+        module._legacy_json_payload(symlink)  # noqa: SLF001
 
 
 def test_private_artifact_manifest_is_strict_and_excludes_oracle_from_verify(

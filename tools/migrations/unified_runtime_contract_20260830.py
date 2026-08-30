@@ -33,6 +33,7 @@ from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 from nl2repobench.authoring.network_lint import lint_catalog
 from nl2repobench.domain.canonical_contract import TaskSource
 from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
+from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.domain.runtime import (
     PackageManager as RuntimePackageManager,
 )
@@ -75,6 +76,10 @@ SELECTED = ("ministats", "canonicalize", "node-pnpm-synthetic", "go-google-uuid"
 MAX_LEGACY_ARCHIVE_BYTES = 2 * 1024 * 1024 * 1024
 MAX_LEGACY_MEMBERS = 100_000
 MAX_LEGACY_MEMBER_BYTES = 512 * 1024 * 1024
+MAX_LEGACY_JSON_MEMBERS = 1024
+MAX_LEGACY_JSON_MEMBER_BYTES = 4 * 1024 * 1024
+MAX_LEGACY_JSON_TOTAL_BYTES = 8 * 1024 * 1024
+MAX_LEGACY_PROTECTED_PATHS = 10_000
 PRIVATE_STAGING_CONTRACT = Path(__file__).parents[2] / "harbor-runner/private-staging-contract.json"
 
 
@@ -660,32 +665,61 @@ def _legacy_bundle_payload(data: bytes) -> tuple[dict[str, bytes], frozenset[str
 
 
 def _legacy_json_payload(data: bytes) -> Any:
-    """Decode a legacy JSON artifact, or one JSON member from a legacy tar."""
+    """Decode exactly one bounded JSON payload from a legacy artifact archive."""
 
-    candidates = [data]
+    if len(data) > MAX_LEGACY_JSON_TOTAL_BYTES:
+        raise MigrationError("plan-invalid", "plan", "legacy JSON artifact is too large")
+    try:
+        return json.loads(data)
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        pass
+
+    candidates: list[bytes] = []
+    total = 0
+    paths: set[str] = set()
     try:
         with tarfile.open(fileobj=io.BytesIO(data), mode="r:*") as archive:
-            for member in archive:
-                if member.isfile() and member.size <= 4 * 1024 * 1024:
-                    stream = archive.extractfile(member)
-                    if stream is not None:
-                        candidates.append(stream.read(member.size + 1))
-    except (OSError, tarfile.TarError):
-        pass
-    for candidate in candidates:
-        try:
-            value = json.loads(candidate)
-        except (UnicodeDecodeError, json.JSONDecodeError):
-            continue
-        return value
-    for candidate in candidates:
-        try:
-            lines = [line.strip() for line in candidate.decode().splitlines() if line.strip()]
-        except UnicodeDecodeError:
-            continue
-        if lines:
-            return lines
-    raise MigrationError("plan-invalid", "plan", "legacy JSON artifact is not decodable")
+            for index, member in enumerate(archive, start=1):
+                if index > MAX_LEGACY_JSON_MEMBERS:
+                    raise ValueError("legacy JSON artifact has too many members")
+                if member.issym() or member.islnk() or member.isdev():
+                    raise ValueError("legacy JSON artifact contains an unsafe member")
+                path = PurePosixPath(member.name.rstrip("/"))
+                if path.is_absolute() or not path.parts or ".." in path.parts or "" in path.parts:
+                    raise ValueError("legacy JSON artifact contains an unsafe path")
+                if member.isdir():
+                    continue
+                if not member.isfile() or member.size > MAX_LEGACY_JSON_MEMBER_BYTES:
+                    raise ValueError("legacy JSON artifact contains an unsupported member")
+                total += member.size
+                if total > MAX_LEGACY_JSON_TOTAL_BYTES:
+                    raise ValueError("legacy JSON artifact payload exceeds size limit")
+                name = path.as_posix()
+                if name in paths:
+                    raise ValueError("legacy JSON artifact contains a duplicate path")
+                paths.add(name)
+                stream = archive.extractfile(member)
+                if stream is None:
+                    raise ValueError("legacy JSON artifact member cannot be read")
+                member_data = stream.read(member.size + 1)
+                if len(member_data) != member.size:
+                    raise ValueError("legacy JSON artifact member size does not match")
+                try:
+                    json.loads(member_data)
+                except (UnicodeDecodeError, json.JSONDecodeError):
+                    continue
+                candidates.append(member_data)
+    except (OSError, tarfile.TarError) as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", "legacy JSON artifact is not decodable"
+        ) from exc
+    except ValueError as exc:
+        raise MigrationError("plan-invalid", "plan", str(exc)) from exc
+    if len(candidates) != 1:
+        if len(candidates) > 1:
+            raise MigrationError("plan-invalid", "plan", "legacy JSON artifact is ambiguous")
+        raise MigrationError("plan-invalid", "plan", "legacy JSON artifact is not decodable")
+    return json.loads(candidates[0])
 
 
 def _canonical_command_plan(
@@ -693,16 +727,24 @@ def _canonical_command_plan(
 ) -> dict[str, Any]:
     """Convert old command arrays/records to the one current plan shape."""
 
-    legacy_runner = "migrated-command-plan-v1"
-    legacy_install = "migrated-candidate-install-v1"
+    adapter_fields = {
+        "python": ("pytest-subprocess-boundary-v1", "pip-target-no-deps-v1"),
+        "node+npm": ("node-test-subprocess-boundary-v1", "npm-pack-offline-v1"),
+        "node+pnpm": ("node-test-subprocess-boundary-v1", "pnpm-pack-offline-v1"),
+        "go+go-modules": ("go-test-subprocess-boundary-v1", "go-modules-offline-v1"),
+    }
+    language = identity.split("+", 1)[0]
+    adapter_identity = language if language == "python" else identity
+    try:
+        runner, candidate_install = adapter_fields[adapter_identity]
+    except KeyError as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"no command-plan adapter for runtime identity {identity}"
+        ) from exc
     raw_steps = payload.get("steps") if isinstance(payload, dict) else payload
     if isinstance(payload, dict) and "commands" in payload:
         raw_steps = payload["commands"]
     elif isinstance(payload, dict) and "steps" not in payload:
-        if payload.get("runner") is not None:
-            legacy_runner = str(payload["runner"])
-        if payload.get("candidate_install") is not None:
-            legacy_install = str(payload["candidate_install"])
         raw_steps = []
     if not isinstance(raw_steps, list):
         raise MigrationError("plan-invalid", "plan", "legacy command artifact has no command list")
@@ -742,15 +784,21 @@ def _canonical_command_plan(
                 "timeout_sec": timeout,
             }
         )
-    return {
+    plan = {
         "schema_version": "1.0",
         "identity": identity,
-        "runner": legacy_runner,
-        "candidate_install": legacy_install,
+        "runner": runner,
+        "candidate_install": candidate_install,
         "report_format": report_format,
         "test_root": "/tests/private",
         "steps": steps,
     }
+    try:
+        return CommandPlan.model_validate(plan).model_dump(mode="json")
+    except ValueError as exc:
+        raise MigrationError(
+            "plan-invalid", "plan", f"canonical command plan is invalid: {exc}"
+        ) from exc
 
 
 def _migrate_command_reference(
@@ -805,7 +853,11 @@ def _migrate_protected_reference(
         data = artifact_store.read_bytes(reference, authorization, max_bytes=1024 * 1024)
         payload = _legacy_json_payload(data)
         paths = payload.get("paths") if isinstance(payload, dict) else payload
-        if not isinstance(paths, list) or not all(isinstance(item, str) for item in paths):
+        if (
+            not isinstance(paths, list)
+            or len(paths) > MAX_LEGACY_PROTECTED_PATHS
+            or not all(isinstance(item, str) for item in paths)
+        ):
             raise MigrationError(
                 "plan-invalid", "plan", "legacy protected-path artifact is invalid"
             )
@@ -1207,31 +1259,19 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
                     raise MigrationError(
                         "plan-invalid", "plan", f"cannot convert test commands for {directory.name}"
                     )
-                steps = []
-                for index, command in enumerate(commands):
-                    argv = tuple(shlex.split(command, posix=True))
-                    if not argv or any(item in {"$PATH", "${PATH}"} for item in argv):
-                        raise MigrationError(
-                            "plan-invalid", "plan", f"unsafe test command for {directory.name}"
-                        )
-                    steps.append(
-                        {
-                            "step_id": f"step-{index:04d}",
-                            "argv": list(argv),
-                            "cwd": ".",
-                            "environment": {},
-                            "timeout_sec": 600,
-                        }
+                command_identity = f"{language}+{command_manager or 'none'}"
+                try:
+                    command_plan = _canonical_command_plan(
+                        commands,
+                        identity=command_identity,
+                        report_format=test_data["report_format"],
                     )
-                command_plan = {
-                    "schema_version": "1.0",
-                    "identity": f"{language}+{command_manager or 'none'}",
-                    "runner": "migrated-command-plan-v1",
-                    "candidate_install": "adapter-owned",
-                    "report_format": test_data["report_format"],
-                    "test_root": "/tests/private",
-                    "steps": steps,
-                }
+                except (TypeError, ValueError) as exc:
+                    raise MigrationError(
+                        "plan-invalid",
+                        "plan",
+                        f"cannot convert test commands for {directory.name}: {exc}",
+                    ) from exc
                 command_ref = artifact_store.put_bytes(
                     json.dumps(command_plan, sort_keys=True, separators=(",", ":")).encode()
                     + b"\n",
@@ -1251,8 +1291,10 @@ def make_plan(source_root: Path, artifact_root: Path, output: Path) -> dict[str,
             test_data.pop("commands", None)
             protected_paths = old_tests.get("protected_paths", [])
             if protected_paths:
-                if not isinstance(protected_paths, list) or any(
-                    not isinstance(item, str) for item in protected_paths
+                if (
+                    not isinstance(protected_paths, list)
+                    or len(protected_paths) > MAX_LEGACY_PROTECTED_PATHS
+                    or any(not isinstance(item, str) for item in protected_paths)
                 ):
                     raise MigrationError(
                         "plan-invalid",
