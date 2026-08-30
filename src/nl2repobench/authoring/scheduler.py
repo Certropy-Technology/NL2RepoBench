@@ -7,8 +7,10 @@ the Phase 2 workers; all methods here are short ``BEGIN IMMEDIATE`` changes.
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import time
@@ -18,7 +20,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, cast
+from types import TracebackType
+from typing import Any, Literal, cast
 
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,199}$")
 HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -48,6 +51,28 @@ class BusyError(SchedulerError):
 
 class CorruptionError(SchedulerError):
     pass
+
+
+class _LockedConnection(sqlite3.Connection):
+    """Hold the scheduler lock for exactly the lifetime of a DB connection."""
+
+    def __init__(self, *args: Any, lock_fd: int, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self._scheduler_lock_fd = lock_fd
+
+    def close(self) -> None:
+        try:
+            super().close()
+        finally:
+            os.close(self._scheduler_lock_fd)
+
+    def __exit__(self, exc_type: type[BaseException] | None, exc: BaseException | None,
+                 traceback: TracebackType | None) -> Literal[False]:
+        try:
+            super().__exit__(exc_type, exc, traceback)
+        finally:
+            self.close()
+        return False
 
 
 @dataclass(frozen=True)
@@ -168,10 +193,24 @@ class Scheduler:
             raise ValidationError("database must be under supplied root")
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def connect(self) -> sqlite3.Connection:
+    def _connect(self, *, import_mode: bool = False) -> sqlite3.Connection:
         deadline = time.monotonic() + 5.0
         try:
-            db = sqlite3.connect(self.path, timeout=0.0, isolation_level=None)
+            lock_path = self.path.parent / f".{self.path.name}.lock"
+            lock_fd = os.open(lock_path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+            while True:
+                try:
+                    fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError as exc:
+                    if time.monotonic() >= deadline:
+                        os.close(lock_fd)
+                        raise BusyError("scheduler lock is busy") from exc
+                    time.sleep(0.02)
+            db = sqlite3.connect(self.path, timeout=0.0, isolation_level=None,
+                                 factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, **kw)))
+            if import_mode:
+                db.create_function("authoring_import_mode", 0, lambda: 1)
         except sqlite3.OperationalError as exc:
             if "busy" in str(exc).lower() or "locked" in str(exc).lower():
                 raise BusyError("sqlite connection is busy") from exc
@@ -196,10 +235,33 @@ class Scheduler:
         except Exception:
             db.close()
             raise
-        return db
+        return cast(sqlite3.Connection, db)
+
+    def connect(self) -> sqlite3.Connection:
+        return self._connect()
+
+    def _import_connection(self) -> sqlite3.Connection:
+        return self._connect(import_mode=True)
 
     def init(self) -> None:
         schema = Path(__file__).with_name("scheduler_schema.sql").read_text(encoding="utf-8")
+        if self.path.exists() and self.path.stat().st_size:
+            try:
+                with self.connect() as existing:
+                    row = existing.execute(
+                        "SELECT value FROM schema_meta WHERE key='schema_version'"
+                    ).fetchone()
+                    if row is None or row[0] != "2":
+                        raise ValidationError("incompatible scheduler schema version")
+                    required = {"lanes", "tasks", "controllers", "events", "runtime_config"}
+                    actual = {str(r[0]) for r in existing.execute(
+                        "SELECT name FROM sqlite_master WHERE type='table'"
+                    )}
+                    if not required <= actual:
+                        raise ValidationError("incomplete scheduler schema")
+                    return
+            except sqlite3.DatabaseError as exc:
+                raise ValidationError("incompatible scheduler database") from exc
         with self.connect() as db:
             db.executescript(schema)
             with _transaction(db):
@@ -1710,7 +1772,22 @@ class Scheduler:
 
     def status(self) -> dict[str, Any]:
         """Return a redacted, scheduler-owned observability snapshot."""
-        with self.connect() as db:
+        lock_path = self.path.parent / f".{self.path.name}.lock"
+        lock_fd = os.open(lock_path, os.O_RDONLY | os.O_NOFOLLOW) if lock_path.exists() else None
+        if lock_fd is not None:
+            fcntl.flock(lock_fd, fcntl.LOCK_SH)
+        uri = f"file:{self.path.as_posix()}?mode=ro"
+        try:
+            with sqlite3.connect(uri, uri=True, isolation_level=None) as db:
+                db.row_factory = sqlite3.Row
+                return self._status_from(db, self.path)
+        finally:
+            if lock_fd is not None:
+                fcntl.flock(lock_fd, fcntl.LOCK_UN)
+                os.close(lock_fd)
+
+    @staticmethod
+    def _status_from(db: sqlite3.Connection, path: Path) -> dict[str, Any]:
             config = db.execute("SELECT * FROM current_runtime_config").fetchone()
             counts = {
                 str(row["state"]): int(row["count"])
@@ -1722,14 +1799,18 @@ class Scheduler:
                 for row in db.execute("SELECT scope,generation,active,lease_expires_at FROM scheduler_leases ORDER BY scope,generation")
             ]
             capacities = [dict(row) for row in db.execute("SELECT * FROM capacity_rows ORDER BY capacity_unit,capacity_kind,capacity_key")]
-            wal = db.execute("PRAGMA wal_checkpoint(PASSIVE)").fetchone()
             safe_config = dict(config) if config is not None else None
             if safe_config is not None:
                 safe_config.pop("changed_by", None)
+                safe_config.pop("reason", None)
             return {
-                "schema_version": "authoring-scheduler/v2", "database": str(self.path.name),
+                "schema_version": "authoring-scheduler/v2", "database": str(path.name),
                 "event_id": int(db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]),
-                "task_counts": counts, "wal": {"busy": int(wal[0]), "log": int(wal[1]), "checkpointed": int(wal[2])},
+                "task_counts": counts, "wal": {
+                    "present": Path(str(path) + "-wal").is_file(),
+                    "size_bytes": Path(str(path) + "-wal").stat().st_size
+                    if Path(str(path) + "-wal").is_file() else 0,
+                },
                 "config": safe_config, "leases": leases,
                 "capacities": capacities,
             }

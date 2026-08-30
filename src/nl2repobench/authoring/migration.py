@@ -31,6 +31,7 @@ _STATUS = {
     "archiving": "archiving", "archive_retry": "archive_retry", "cleaning": "cleaning",
     "cleanup_retry": "cleanup_retry", "complete": "complete", "blocked": "blocked",
     "excluded": "excluded", "cancelled": "cancelled",
+    "running": "authoring", "released": "stale",
 }
 
 
@@ -74,16 +75,30 @@ def _relative(root: Path, path: Path) -> str:
         raise MigrationError(f"path escapes authoring root: {path}") from exc
 
 
-def _check_file(root: Path, relative: str, *, max_size: int = 64 * 1024 * 1024) -> dict[str, Any]:
-    path = root / relative
-    if Path(relative).is_absolute() or ".." in Path(relative).parts:
+def _check_file(root: Path, relative: str, *, max_size: int = 64 * 1024 * 1024,
+                allow_external: bool = False) -> dict[str, Any]:
+    location = Path(relative)
+    if location.is_absolute() and not allow_external:
+        raise MigrationError(f"non-contained manifest path: {relative}")
+    raw_path = location if location.is_absolute() else root / location
+    if raw_path.is_symlink():
+        raise MigrationError(f"symlink authority is forbidden: {relative}")
+    path = location.resolve() if location.is_absolute() else raw_path
+    if not location.is_absolute() and ".." in location.parts:
         raise MigrationError(f"non-contained manifest path: {relative}")
     # lstat every component: resolving a symlink is not an acceptable authority.
-    cursor = root
-    for part in Path(relative).parts:
-        cursor /= part
-        if cursor.is_symlink():
-            raise MigrationError(f"symlink authority is forbidden: {relative}")
+    if location.is_absolute():
+        cursor = path
+        while cursor != cursor.parent:
+            if cursor.is_symlink():
+                raise MigrationError(f"symlink authority is forbidden: {relative}")
+            cursor = cursor.parent
+    else:
+        cursor = root
+        for part in location.parts:
+            cursor /= part
+            if cursor.is_symlink():
+                raise MigrationError(f"symlink authority is forbidden: {relative}")
     try:
         stat = path.stat()
     except FileNotFoundError as exc:
@@ -100,8 +115,8 @@ def _check_file(root: Path, relative: str, *, max_size: int = 64 * 1024 * 1024) 
     return {"path": relative, "mode": stat.st_mode & 0o777, "size": stat.st_size, "sha256": _sha(path)}
 
 
-def _json_file(root: Path, relative: str) -> dict[str, Any]:
-    record = _check_file(root, relative)
+def _json_file(root: Path, relative: str, *, allow_external: bool = False) -> dict[str, Any]:
+    record = _check_file(root, relative, allow_external=allow_external)
     try:
         json.loads((root / relative).read_text(encoding="utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -127,12 +142,17 @@ def generate_manifest(live_root: Path | str, *, cutover_id: str) -> dict[str, An
     for plan in sorted(plans.glob("*-wave2-*.json")):
         batch = plan.stem
         queue_batch = batch.replace("-author-wave2-", "-wave2-")
-        queue = queues / f"{queue_batch}.json"
+        state = queues / f"{queue_batch}.json"
         language = batch.split("-", 1)[0]
-        if language not in {"python", "node", "go"} or not queue.exists():
+        if language not in {"python", "node", "go"} or not state.exists():
             continue
+        descriptor = json.loads(plan.read_text(encoding="utf-8"))
+        source = str(descriptor.get("candidate_input", ""))
+        if not source:
+            raise MigrationError(f"base plan has no external queue: {plan.name}")
         lanes.append(_lane_from_path(root, plan, kind="base", language=language,
-                                     source=_relative(root, queue), plan=_relative(root, plan)))
+                                     source=source, plan=_relative(root, plan),
+                                     state=_relative(root, state)))
     generated = root / "supervisor" / "generated-lanes.json"
     if generated.exists():
         try:
@@ -148,14 +168,18 @@ def generate_manifest(live_root: Path | str, *, cutover_id: str) -> dict[str, An
             state_path = Path(str(descriptor.get("queue_state", f"state/{batch}")))
             if state_path.is_absolute():
                 state_path = Path(_relative(root, state_path))
+            plan_source = str(descriptor.get("plan", "")) or None
+            if plan_source is not None and Path(plan_source).is_absolute():
+                plan_source = _relative(root, Path(plan_source))
             lanes.append(ManifestLane(f"generated-{language}-{batch}", batch, language, "generated",
-                                      source_path.as_posix(), state_path.as_posix()))
+                                      source_path.as_posix(), state_path.as_posix(),
+                                      plan_source))
     if len(lanes) != 7:
         raise MigrationError(f"expected exactly seven lane authorities, found {len(lanes)}")
     records: list[dict[str, Any]] = []
     for lane in lanes:
         item = lane.as_dict()
-        item["queue"] = _json_file(root, lane.queue_source)
+        item["queue"] = _json_file(root, lane.queue_source, allow_external=lane.kind == "base")
         state_dir = root / lane.state_authority
         if state_dir.is_file():
             state_files = [_json_file(root, lane.state_authority)]
@@ -167,12 +191,14 @@ def generate_manifest(live_root: Path | str, *, cutover_id: str) -> dict[str, An
                 state_files.append(_json_file(root, _relative(root, state_file)))
         item["state"] = {"path": lane.state_authority, "files": state_files}
         if lane.plan_source:
-            item["plan"] = _json_file(root, lane.plan_source)
+            item["plan"] = _json_file(root, lane.plan_source, allow_external=lane.kind == "generated")
         records.append(item)
+    registry = _json_file(root, "supervisor/generated-lanes.json")
     manifest: dict[str, Any] = {
         "schema_version": MANIFEST_SCHEMA, "cutover_id": cutover_id,
         "root_name": root.name, "lanes": records,
         "generated_at": __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
+        "registry": registry,
     }
     encoded = json.dumps(manifest, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
     manifest["manifest_sha256"] = hashlib.sha256(encoded).hexdigest()
@@ -187,32 +213,72 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
     lanes = manifest.get("lanes")
     if not isinstance(lanes, list) or len(lanes) != 7:
         raise MigrationError("manifest must contain exactly seven lanes")
+    required_top = {"schema_version", "cutover_id", "root_name", "lanes", "generated_at",
+                    "registry", "manifest_sha256"}
+    if set(manifest) != required_top:
+        raise MigrationError("manifest schema has missing or extra fields")
+    supplied_digest = manifest["manifest_sha256"]
+    unsigned = {key: value for key, value in manifest.items() if key != "manifest_sha256"}
+    recomputed = hashlib.sha256(json.dumps(unsigned, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()).hexdigest()
+    if supplied_digest != recomputed:
+        raise MigrationError("manifest digest mismatch")
     root = Path(live_root).resolve()
+    registry = _json_file(root, "supervisor/generated-lanes.json")
+    if not isinstance(manifest.get("registry"), dict):
+        raise MigrationError("manifest registry inventory is malformed")
+    if manifest["registry"].get("sha256") != registry["sha256"]:
+        raise MigrationError("generated-lanes registry hash drift")
     seen: set[str] = set()
+    kinds: dict[str, int] = {"base": 0, "generated": 0}
+    batches: set[str] = set()
     for lane in lanes:
         if not isinstance(lane, dict) or lane.get("lane_id") in seen:
             raise MigrationError("duplicate or malformed lane")
+        if set(lane) != {"lane_id", "batch_id", "language", "kind", "queue_source",
+                         "state_authority", "queue", "state"} | ({"plan_source", "plan"} if lane.get("kind") == "base" else {"plan_source", "plan"}):
+            raise MigrationError("lane schema has missing or extra fields")
         seen.add(str(lane.get("lane_id")))
+        language, kind, batch = lane.get("language"), lane.get("kind"), lane.get("batch_id")
+        if language not in {"python", "node", "go"} or kind not in kinds or not isinstance(batch, str) or batch in batches:
+            raise MigrationError("invalid lane topology")
+        batches.add(batch)
+        kinds[str(kind)] += 1
         for key in ("queue_source", "state_authority"):
             value = lane.get(key)
-            if not isinstance(value, str) or Path(value).is_absolute() or ".." in Path(value).parts:
+            external = key == "queue_source" and kind == "base"
+            if not isinstance(value, str) or (Path(value).is_absolute() and not external) or (not Path(value).is_absolute() and ".." in Path(value).parts):
                 raise MigrationError(f"invalid {key}")
-        queue = _json_file(root, str(lane["queue_source"]))
+        queue = _json_file(root, str(lane["queue_source"]), allow_external=kind == "base")
         declared = lane.get("queue")
-        if isinstance(declared, dict) and declared.get("sha256") != queue["sha256"]:
+        if not isinstance(declared, dict) or declared.get("sha256") != queue["sha256"]:
             raise MigrationError(f"hash drift: {lane['queue_source']}")
         if lane.get("plan_source"):
-            plan = _json_file(root, str(lane["plan_source"]))
+            plan = _json_file(root, str(lane["plan_source"]), allow_external=kind == "generated")
             declared_plan = lane.get("plan")
-            if isinstance(declared_plan, dict) and declared_plan.get("sha256") != plan["sha256"]:
+            if not isinstance(declared_plan, dict) or declared_plan.get("sha256") != plan["sha256"]:
                 raise MigrationError(f"hash drift: {lane['plan_source']}")
+        queue_source = str(lane["queue_source"])
+        state_source = str(lane["state_authority"])
+        plan_source = str(lane["plan_source"])
+        if kind == "base" and (not Path(queue_source).is_absolute()
+                                or not state_source.startswith("queues/")
+                                or not plan_source.startswith("plans/")):
+            raise MigrationError("base lane authority relationship is invalid")
+        if kind == "generated" and (not queue_source.startswith("supervisor/queues/")
+                                     or not state_source.startswith("queues/")
+                                     or not plan_source.startswith("plans/")):
+            raise MigrationError("generated lane authority relationship is invalid")
         state = lane.get("state", {})
+        if not isinstance(state, dict) or state.get("path") != lane["state_authority"] or not isinstance(state.get("files"), list):
+            raise MigrationError("state inventory is incomplete")
         for record in state.get("files", []):
             if not isinstance(record, dict) or record.get("path") is None:
                 raise MigrationError("malformed state record")
             actual = _json_file(root, str(record["path"]))
             if record.get("sha256") != actual["sha256"]:
                 raise MigrationError(f"hash drift: {record['path']}")
+    if kinds != {"base": 3, "generated": 4}:
+        raise MigrationError("manifest must contain three base and four generated lanes")
 
 
 def _classify_failure(item: dict[str, Any]) -> str | None:
@@ -250,28 +316,47 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
     if not isinstance(observed_barrier, dict) or observed_barrier.get("stopped") is not False:
         raise MigrationError("mandatory migration barrier did not complete as observe-only")
     temp_dir: tempfile.TemporaryDirectory[str] | None = None
-    if db_path is None:
+    if dry_run or db_path is None:
         temp_dir = tempfile.TemporaryDirectory(prefix="authoring-import-")
         db = Path(temp_dir.name) / "scheduler.sqlite3"
     else:
         db = Path(db_path).resolve()
         if root == db or root in db.parents:
             raise MigrationError("import DB must not be the live authoring tree")
+        if db.exists() or Path(str(db) + "-wal").exists() or Path(str(db) + "-shm").exists():
+            raise MigrationError("import staging database must be fresh")
     db.parent.mkdir(parents=True, exist_ok=True)
     scheduler = Scheduler(db, supplied_root=db.parent)
-    if not db.exists() or db.stat().st_size == 0:
-        scheduler.init()
-    conn = scheduler.connect()
+    scheduler.init()
+    conn = scheduler._import_connection()
     counts: dict[str, int] = {}
+    committed = False
     try:
+        conn.execute("BEGIN IMMEDIATE")
         conn.execute("INSERT OR REPLACE INTO schema_meta(key,value) VALUES('import_mode','1')")
         for lane in manifest["lanes"]:
             lane_id = str(lane["lane_id"])
             kind, language = str(lane["kind"]), str(lane["language"])
             conn.execute("INSERT OR IGNORE INTO lanes(lane_id,batch_id,language,kind,status,queue_path,queue_sha256,plan_path,plan_sha256,state_path,state_sha256,source_reports_json,fairness_rank,last_dispatch_seq,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
                          (lane_id, lane["batch_id"], language, kind, "active", lane["queue_source"], lane["queue"]["sha256"], lane.get("plan_source", "plan.json"), (lane.get("plan") or {}).get("sha256", "0"*64), lane["state_authority"], None, "[]", 0, 0))
-            queue_data = json.loads((root / lane["queue_source"]).read_text(encoding="utf-8"))
-            items = queue_data.get("items", {}) if isinstance(queue_data, dict) else {}
+            queue_path = Path(str(lane["queue_source"]))
+            queue_data = json.loads((queue_path if queue_path.is_absolute() else root / queue_path).read_text(encoding="utf-8"))
+            state_path = Path(str(lane["state_authority"]))
+            state_data: dict[str, Any] = {}
+            if (root / state_path).is_file():
+                state_data = json.loads((root / state_path).read_text(encoding="utf-8"))
+            state_items = state_data.get("items", {}) if isinstance(state_data, dict) else {}
+            queue_items = queue_data.get("queue", []) if isinstance(queue_data, dict) else []
+            if not isinstance(queue_items, list):
+                raise MigrationError("immutable queue authority must contain top-level queue list")
+            items = {}
+            for candidate in queue_items:
+                if isinstance(candidate, dict) and candidate.get("candidate_id"):
+                    candidate_key = str(candidate["candidate_id"])
+                    merged = dict(candidate)
+                    if isinstance(state_items, dict) and isinstance(state_items.get(candidate_key), dict):
+                        merged.update(state_items[candidate_key])
+                    items[candidate_key] = merged
             for candidate_id, item in items.items():
                 if not isinstance(item, dict):
                     continue
@@ -289,12 +374,40 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 failure = _classify_failure(item)
                 reason = str(item.get("reason") or item.get("release_reason") or "legacy import")
                 terminal = reason if state in {"complete", "blocked", "excluded", "cancelled"} else None
+                attempt_limit = max(1, int(item.get("attempt_limit", 3) or 3))
+                attempts = min(attempt_limit, max(0, int(item.get("attempts", item.get("authoring_attempts", 0)) or 0)))
+                retry_limit = max(0, int(item.get("retry_limit", 3) or 0))
+                retry_count = min(retry_limit, max(0, int(item.get("retry_count", item.get("retries", 0)) or 0)))
+                release_limit = max(0, int(item.get("release_limit", 3) or 0))
+                release_count = min(release_limit, max(0, int(item.get("release_count", item.get("releases", 0)) or 0)))
                 conn.execute("INSERT OR IGNORE INTO tasks(task_id,candidate_id,lane_id,task_release,state,attempt_limit,authoring_attempts,retry_limit,retry_count,release_count,release_limit,integration_attempts,integration_retry_count,integration_retry_limit,archive_attempts,archive_retry_count,archive_retry_limit,cleanup_attempts,cleanup_retry_count,cleanup_retry_limit,input_ordinal,last_failure_class,last_failure_reason,terminal_reason,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'))",
-                             (task_id, candidate_id, lane_id, "legacy", state, max(1, int(item.get("attempt_limit", 3) or 3)), int(item.get("attempts", 0) or 0), 3, 0, 0, 3, 0, 0, 3, 0, 0, 3, 0, 0, 3, int(item.get("ordinal", 0) or 0), failure, reason if failure else None, terminal))
+                             (task_id, candidate_id, lane_id, "legacy", state, attempt_limit, attempts, retry_limit, retry_count, release_count, release_limit, int(item.get("integration_attempts", 0) or 0), int(item.get("integration_retry_count", 0) or 0), max(0, int(item.get("integration_retry_limit", 3) or 0)), int(item.get("archive_attempts", 0) or 0), int(item.get("archive_retry_count", 0) or 0), max(0, int(item.get("archive_retry_limit", 3) or 0)), int(item.get("cleanup_attempts", 0) or 0), int(item.get("cleanup_retry_count", 0) or 0), max(0, int(item.get("cleanup_retry_limit", 3) or 0)), int(item.get("ordinal", 0) or 0), failure, reason if failure else None, terminal))
                 for artifact in item.get("artifacts", []) if isinstance(item.get("artifacts"), list) else []:
-                    artifact_path = str(artifact)
-                    artifact_digest = hashlib.sha256(artifact_path.encode()).hexdigest()
-                    conn.execute("INSERT OR IGNORE INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,secret_scan_status,created_at) VALUES(?,?,?,?,?,?,?,'not-run',datetime('now'))", (f"legacy:{artifact_digest}", task_id, None, "legacy-reference", artifact_path, artifact_digest, len(artifact_path)))
+                    artifact_path = str(artifact.get("path", "")) if isinstance(artifact, dict) else str(artifact)
+                    artifact_digest = str(artifact.get("sha256", "")) if isinstance(artifact, dict) else ""
+                    candidate_path = Path(artifact_path)
+                    if candidate_path.is_file() and not candidate_path.is_symlink():
+                        artifact_digest = _sha(candidate_path)
+                        artifact_size = candidate_path.stat().st_size
+                        scan = "passed"
+                    else:
+                        artifact_size = int(artifact.get("size_bytes", 0)) if isinstance(artifact, dict) else 0
+                        scan = "not-run"
+                    if _SHA.fullmatch(artifact_digest):
+                        conn.execute("INSERT OR IGNORE INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,secret_scan_status,created_at) VALUES(?,?,?,?,?,?,? ,?,datetime('now'))", (f"legacy:{artifact_digest}:{task_id}", task_id, None, "legacy-reference", artifact_path, artifact_digest, artifact_size, scan))
+                receipts = item.get("receipts", item.get("operation_receipts", []))
+                if isinstance(receipts, list):
+                    for index, receipt in enumerate(receipts):
+                        if not isinstance(receipt, dict):
+                            continue
+                        operation = str(receipt.get("operation_kind", receipt.get("kind", "")))
+                        status = str(receipt.get("status", "failed"))
+                        if operation not in {"integration", "archive", "cleanup"} or status not in {"started", "committed", "pushed", "verified", "applied", "failed", "collision"}:
+                            continue
+                        receipt_id = f"legacy:{task_id}:{operation}:{index}"
+                        fields = dict(receipt)
+                        fields.pop("operation_kind", None)
+                        conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
                 counts[state] = counts.get(state, 0) + 1
         # Claim files are evidence only.  Importing owner/controller rows would fabricate live actors.
         for lane in manifest["lanes"]:
@@ -306,8 +419,10 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     payload = {}
                 claim = payload.get("claim", payload) if isinstance(payload, dict) else {}
                 owner = str(claim.get("owner") or claim.get("owner_uuid") or "")
-                classification = "historical-owner" if owner else "orphan-claim"
-                conn.execute("INSERT OR IGNORE INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], str(claim.get("candidate_id") or ""), str(claim.get("package") or ""), owner, str(claim.get("status") or ""), str(claim.get("lease_expires_at") or ""), str(claim.get("attempts") or ""), record["sha256"], classification, "legacy claim evidence; no live controller imported"))
+                if owner:
+                    conn.execute("INSERT OR IGNORE INTO legacy_actor_evidence VALUES(?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], owner, str(claim.get("pid") or ""), str(claim.get("starttime") or ""), str(claim.get("boot_id") or ""), str(lane["batch_id"]), record["sha256"], "historical-owner"))
+                else:
+                    conn.execute("INSERT OR IGNORE INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], str(claim.get("candidate_id") or ""), str(claim.get("package") or ""), owner, str(claim.get("status") or ""), str(claim.get("lease_expires_at") or ""), str(claim.get("attempts") or ""), record["sha256"], "orphan-claim", "legacy claim evidence; no live controller imported"))
         failures = root / "supervisor" / "integration-failures.json"
         if failures.is_file():
             try:
@@ -320,13 +435,18 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     reason = json.dumps(failure, sort_keys=True)
                     raw_digest = hashlib.sha256(reason.encode()).hexdigest()
                     conn.execute("INSERT OR IGNORE INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"integration-failure:{package}", "supervisor/integration-failures.json", "", str(package), "", "", "", "", raw_digest, "unmapped-claim", f"legacy integration failure classification={classification}; collision cleanup forbidden"))
-        conn.execute("INSERT OR REPLACE INTO schema_meta(key,value) VALUES('import_mode','0')")
+        conn.execute("DELETE FROM schema_meta WHERE key='import_mode'")
         conn.commit()
+        committed = True
     finally:
+        if not committed and conn.in_transaction:
+            conn.rollback()
         conn.close()
-        if temp_dir is not None:
-            # The result is intentionally a digest/count receipt, not a persistent live database.
-            pass
+        if not committed:
+            for suffix in ("", "-wal", "-shm"):
+                candidate = Path(str(db) + suffix)
+                if candidate.exists() and candidate.is_file():
+                    candidate.unlink()
     result = {"schema_version": MANIFEST_SCHEMA, "cutover_id": manifest["cutover_id"], "dry_run": dry_run, "db_path": str(db), "counts": counts, "digest": _sha(db), "barrier": observed_barrier}
     if temp_dir is not None:
         result["temporary"] = True

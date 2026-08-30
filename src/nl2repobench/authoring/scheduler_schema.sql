@@ -258,8 +258,7 @@ BEGIN
  SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='cleanup' AND status='applied') THEN RAISE(ABORT,'cleanup evidence required') END;
 END;
 CREATE TRIGGER operation_stage_guard BEFORE UPDATE OF state ON tasks
-WHEN NEW.state='archiving' OR NEW.state='cleaning'
- AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
+WHEN (NEW.state='archiving' OR NEW.state='cleaning') AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
 BEGIN
  SELECT CASE WHEN NEW.state='archiving' AND NOT EXISTS(
    SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='integration' AND status='pushed'
