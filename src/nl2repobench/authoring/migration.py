@@ -254,6 +254,19 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
         raise MigrationError("manifest registry inventory is malformed")
     if manifest["registry"].get("sha256") != registry["sha256"]:
         raise MigrationError("generated-lanes registry hash drift")
+    try:
+        registry_payload = json.loads((root / "supervisor/generated-lanes.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise MigrationError("generated-lanes registry is invalid") from exc
+    registry_lanes: set[tuple[str, str, str, str, str]] = set()
+    for descriptor in registry_payload:
+        queue = Path(str(descriptor["queue"]))
+        state = Path(str(descriptor["queue_state"]))
+        plan = Path(str(descriptor["plan"]))
+        registry_lanes.add((str(descriptor["batch_id"]), str(descriptor["language"]),
+                            _relative(root, queue) if queue.is_absolute() else queue.as_posix(),
+                            _relative(root, state) if state.is_absolute() else state.as_posix(),
+                            _relative(root, plan) if plan.is_absolute() else plan.as_posix()))
     inventory = manifest.get("inventory")
     if not isinstance(inventory, list) or not inventory:
         raise MigrationError("manifest file inventory is required")
@@ -295,14 +308,14 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
             external = key == "queue_source" and kind == "base"
             if not isinstance(value, str) or (Path(value).is_absolute() and not external) or (not Path(value).is_absolute() and ".." in Path(value).parts):
                 raise MigrationError(f"invalid {key}")
-        queue = _json_file(root, str(lane["queue_source"]), allow_external=kind == "base")
+        queue_record = _json_file(root, str(lane["queue_source"]), allow_external=kind == "base")
         declared = lane.get("queue")
-        if not isinstance(declared, dict) or declared.get("sha256") != queue["sha256"]:
+        if not isinstance(declared, dict) or declared.get("sha256") != queue_record["sha256"]:
             raise MigrationError(f"hash drift: {lane['queue_source']}")
         if lane.get("plan_source"):
-            plan = _json_file(root, str(lane["plan_source"]), allow_external=kind == "generated")
+            plan_record = _json_file(root, str(lane["plan_source"]), allow_external=kind == "generated")
             declared_plan = lane.get("plan")
-            if not isinstance(declared_plan, dict) or declared_plan.get("sha256") != plan["sha256"]:
+            if not isinstance(declared_plan, dict) or declared_plan.get("sha256") != plan_record["sha256"]:
                 raise MigrationError(f"hash drift: {lane['plan_source']}")
         queue_source = str(lane["queue_source"])
         state_source = str(lane["state_authority"])
@@ -318,6 +331,13 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
         state = lane.get("state", {})
         if not isinstance(state, dict) or state.get("path") != lane["state_authority"] or not isinstance(state.get("files"), list):
             raise MigrationError("state inventory is incomplete")
+        actual_state_paths = {str(record.get("path")) for record in state["files"] if isinstance(record, dict)}
+        expected_state_paths = {str(lane["state_authority"])}
+        claim_dir = root / "state" / str(lane["batch_id"]) / "claims"
+        if claim_dir.is_dir():
+            expected_state_paths.update(_relative(root, path) for path in claim_dir.glob("*.json"))
+        if actual_state_paths != expected_state_paths:
+            raise MigrationError(f"state file set drift: {lane['batch_id']}")
         for record in state.get("files", []):
             if not isinstance(record, dict) or record.get("path") is None:
                 raise MigrationError("malformed state record")
@@ -326,6 +346,9 @@ def validate_manifest(manifest: dict[str, Any], live_root: Path | str) -> None:
                 raise MigrationError(f"hash drift: {record['path']}")
     if kinds != {"base": 3, "generated": 4}:
         raise MigrationError("manifest must contain three base and four generated lanes")
+    actual_generated = {(str(lane["batch_id"]), str(lane["language"]), str(lane["queue_source"]), str(lane["state_authority"]), str(lane["plan_source"])) for lane in lanes if lane["kind"] == "generated"}
+    if actual_generated != registry_lanes:
+        raise MigrationError("generated lane descriptors do not match frozen registry")
 
 
 def _classify_failure(item: dict[str, Any]) -> str | None:
@@ -364,8 +387,20 @@ def _has_final_receipt_chain(item: dict[str, Any]) -> bool:
     if not isinstance(receipts, list):
         return False
     completed = {(str(r.get("operation_kind", r.get("kind", ""))), str(r.get("status", "")))
-                for r in receipts if isinstance(r, dict)}
+                for r in receipts if isinstance(r, dict) and _receipt_contract_valid(r)}
     return {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= completed
+
+
+def _receipt_contract_valid(receipt: dict[str, Any]) -> bool:
+    operation = str(receipt.get("operation_kind", receipt.get("kind", "")))
+    status = str(receipt.get("status", ""))
+    if status == "pushed":
+        return operation == "integration" and bool(receipt.get("external_ref")) and bool(re.fullmatch(r"[0-9a-f]{40}", str(receipt.get("commit_sha", ""))))
+    if status == "verified":
+        return operation == "archive" and bool(receipt.get("manifest_key")) and all(_SHA.fullmatch(str(receipt.get(key, ""))) for key in ("manifest_sha256", "source_snapshot_sha256", "evidence_sha256")) and int(receipt.get("object_count", 0) or 0) > 0 and int(receipt.get("byte_count", 0) or 0) > 0
+    if status == "applied":
+        return operation == "cleanup" and bool(receipt.get("evidence_path")) and bool(_SHA.fullmatch(str(receipt.get("evidence_sha256", ""))))
+    return False
 
 
 def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path: Path | str | None = None,
@@ -471,7 +506,8 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         receipt_id = f"legacy:{task_id}:{operation}:{index}"
                         fields = dict(receipt)
                         fields.pop("operation_kind", None)
-                        conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
+                        idempotency = "legacy:" + hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+                        conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True)))
                 counts[state] = counts.get(state, 0) + 1
         # Claim files are evidence only.  Importing owner/controller rows would fabricate live actors.
         for lane in manifest["lanes"]:
@@ -502,7 +538,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     if "collision" in reason.lower() or "remote object" in reason.lower():
                         task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (package,)).fetchone()
                         if task is not None:
-                            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason))
+                            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "legacy-collision:" + raw_digest, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason))
         for record in manifest.get("inventory", []):
             path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
             if not path_name.startswith("archive-receipts/") or not path_name.endswith(".json"):
@@ -519,7 +555,11 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 continue
             raw_digest = _sha(receipt_path)
             objects = archive.get("objects", [])
-            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
+            idempotency = "legacy:" + hashlib.sha256(receipt_path.read_bytes()).hexdigest()
+            conn.execute("INSERT OR IGNORE INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'),datetime('now'),datetime('now'))", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True)))
+        # Actors remain live during observation; bind the imported rows to the
+        # same frozen bytes one last time before the staging transaction commits.
+        validate_manifest(manifest, live_root)
         conn.execute("DELETE FROM schema_meta WHERE key='import_mode'")
         conn.commit()
         committed = True

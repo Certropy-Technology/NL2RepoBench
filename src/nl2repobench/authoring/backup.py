@@ -51,6 +51,28 @@ def _regular(path: Path, label: str) -> None:
         raise MigrationError(f"{label} must be a regular non-symlink file")
 
 
+def _exclusive_empty(path: Path, label: str) -> None:
+    if path.parent.is_symlink() or path.exists() or path.is_symlink():
+        raise MigrationError(f"{label} must be exclusively created")
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    os.close(fd)
+
+
+def _exclusive_copy(source: Path, target: Path, label: str) -> None:
+    if target.exists() or target.is_symlink() or target.parent.is_symlink():
+        raise MigrationError(f"{label} must be exclusively created")
+    fd = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        with source.open("rb") as input_file, os.fdopen(fd, "wb") as output_file:
+            shutil.copyfileobj(input_file, output_file)
+            output_file.flush()
+            os.fsync(output_file.fileno())
+        fd = -1
+    finally:
+        if fd != -1:
+            os.close(fd)
+
+
 def _database_summary(path: Path) -> dict[str, object]:
     with sqlite3.connect(path) as db:
         tables = [str(row[0]) for row in db.execute(
@@ -72,9 +94,9 @@ def _manifest(directory: Path) -> dict[str, object]:
     summary = _database_summary(database)
     files = []
     for path in sorted(directory.iterdir()):
-        if (path.name == "backup-manifest.json" or not path.is_file()
-                or path.name.endswith(("-wal", "-shm"))):
+        if path.name == "backup-manifest.json" or path.name.endswith(("-wal", "-shm")):
             continue
+        _regular(path, f"backup entry {path.name}")
         files.append({"name": path.name, "size": path.stat().st_size, "sha256": _digest(path)})
     return {"schema_version": "authoring-backup/v2", "files": files,
             "database_summary": summary}
@@ -90,6 +112,7 @@ def backup_database(source: Path | str, destination: Path | str) -> dict[str, ob
     target = dest / source_path.name
     if target.exists() or target.is_symlink():
         raise MigrationError("backup target must be exclusively created")
+    _exclusive_empty(target, "backup target")
     src = sqlite3.connect(source_path)
     dst = sqlite3.connect(target)
     try:
@@ -119,14 +142,20 @@ def verify_backup(directory: Path | str) -> dict[str, object]:
     expected = {str(item["name"]): item for item in manifest.get("files", [])}
     actual_files = {
         path.name for path in directory.iterdir()
-        if path.is_file() and path.name != "backup-manifest.json"
+        if path.name != "backup-manifest.json"
         and not path.name.endswith(("-wal", "-shm"))
     }
     if actual_files != set(expected):
         raise MigrationError("backup file set mismatch")
+    for entry in directory.iterdir():
+        if entry.name.endswith(("-wal", "-shm")) and (entry.is_symlink() or not entry.is_file()):
+            raise MigrationError("backup sidecar must be a regular non-symlink file")
+        if entry.name != "backup-manifest.json" and entry.name not in expected and not entry.name.endswith(("-wal", "-shm")):
+            raise MigrationError("backup contains undeclared entry")
     for name, item in expected.items():
         path = directory / name
-        if not path.is_file() or path.stat().st_size != int(item["size"]) or _digest(path) != item["sha256"]:
+        _regular(path, f"backup entry {name}")
+        if path.stat().st_size != int(item["size"]) or _digest(path) != item["sha256"]:
             raise MigrationError(f"backup checksum mismatch: {name}")
     database = next((directory / name for name in expected if name.endswith(".sqlite3")), None)
     if database is None:
@@ -223,8 +252,7 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
             staged = target_path.parent / f".{target_path.name}.restore-staged"
             if staged.exists() or staged.is_symlink():
                 raise MigrationError("restore staging path must be exclusively created")
-            shutil.copy2(source, staged)
-            _sync(staged)
+            _exclusive_copy(source, staged, "restore staging path")
             activate_database(staged, target_path, activate=True)
             _sync_dir(target_path.parent)
             with sqlite3.connect(target_path) as db:

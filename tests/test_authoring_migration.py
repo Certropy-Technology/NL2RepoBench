@@ -151,6 +151,10 @@ def test_import_authorization_is_connection_local(tmp_path: Path) -> None:
     scheduler.init()
     with scheduler.connect() as ordinary:
         assert ordinary.execute("SELECT authoring_import_mode()").fetchone()[0] == 0
+        with pytest.raises(PermissionError):
+            ordinary.set_authorizer(None)
+        with pytest.raises(PermissionError):
+            ordinary.create_function("authoring_import_mode", 0, lambda: 1)
         with pytest.raises(sqlite3.DatabaseError):
             ordinary.execute("INSERT INTO schema_meta(key,value) VALUES('import_mode','1')")
     with scheduler._import_connection() as importer:

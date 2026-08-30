@@ -56,9 +56,20 @@ class CorruptionError(SchedulerError):
 class _LockedConnection(sqlite3.Connection):
     """Hold the scheduler lock for exactly the lifetime of a DB connection."""
 
-    def __init__(self, *args: Any, lock_fd: int, **kwargs: Any) -> None:
+    def __init__(self, *args: Any, lock_fd: int, allow_import: bool = False, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._scheduler_lock_fd = lock_fd
+        self._allow_import = allow_import
+
+    def set_authorizer(self, *args: Any, **kwargs: Any) -> None:
+        if not self._allow_import:
+            raise PermissionError("ordinary scheduler connections cannot replace authorizer")
+        super().set_authorizer(*args, **kwargs)
+
+    def create_function(self, *args: Any, **kwargs: Any) -> None:
+        if not self._allow_import:
+            raise PermissionError("ordinary scheduler connections cannot create functions")
+        super().create_function(*args, **kwargs)
 
     def close(self) -> None:
         try:
@@ -208,9 +219,9 @@ class Scheduler:
                         raise BusyError("scheduler lock is busy") from exc
                     time.sleep(0.02)
             db = sqlite3.connect(self.path, timeout=0.0, isolation_level=None,
-                                 factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, **kw)))
-            db.create_function("authoring_import_mode", 0, lambda: 1 if import_mode else 0, deterministic=True)
-            db.set_authorizer(
+                                 factory=cast(Any, lambda *a, **kw: _LockedConnection(*a, lock_fd=lock_fd, allow_import=import_mode, **kw)))
+            sqlite3.Connection.create_function(db, "authoring_import_mode", 0, lambda: 1 if import_mode else 0, deterministic=True)
+            sqlite3.Connection.set_authorizer(db,
                 lambda action, arg1, _arg2, _db_name, _trigger: (
                     sqlite3.SQLITE_OK
                     if import_mode or not (
@@ -227,7 +238,7 @@ class Scheduler:
         pragmas = ("PRAGMA journal_mode=WAL", "PRAGMA synchronous=FULL",
                    "PRAGMA busy_timeout=0", "PRAGMA foreign_keys=ON",
                    "PRAGMA temp_store=MEMORY", "PRAGMA wal_autocheckpoint=1000",
-                   "PRAGMA journal_size_limit=67108864", "PRAGMA trusted_schema=OFF")
+                   "PRAGMA journal_size_limit=67108864", "PRAGMA trusted_schema=" + ("ON" if import_mode else "OFF"))
         try:
             for pragma in pragmas:
                 while True:

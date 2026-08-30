@@ -229,6 +229,13 @@ CREATE TABLE orphan_claim_evidence (
   reason TEXT NOT NULL, imported_at TEXT NOT NULL
 );
 
+CREATE TRIGGER import_mode_guard BEFORE INSERT ON schema_meta
+WHEN NEW.key = 'import_mode'
+BEGIN SELECT CASE WHEN authoring_import_mode() <> 1 THEN RAISE(ABORT, 'import authorization required') END; END;
+CREATE TRIGGER import_mode_update_guard BEFORE UPDATE OF value ON schema_meta
+WHEN OLD.key = 'import_mode' OR NEW.key = 'import_mode'
+BEGIN SELECT CASE WHEN authoring_import_mode() <> 1 THEN RAISE(ABORT, 'import authorization required') END; END;
+
 CREATE TRIGGER task_terminal_insert_guard BEFORE INSERT ON tasks
 WHEN NEW.state IN ('complete','blocked','excluded','cancelled')
  AND COALESCE((SELECT value FROM schema_meta WHERE key='import_mode'),'') <> '1'
