@@ -6,7 +6,7 @@ from .domain.canonical_contract import (
     TaskManifest,
     TestManifest,
 )
-from .domain.models import (
+from .domain.canonical_models import (
     ArtifactRef,
     DatasetManifest,
     MetricContract,

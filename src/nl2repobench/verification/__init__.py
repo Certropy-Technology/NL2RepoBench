@@ -4,8 +4,8 @@ from .evaluator import (
     CURRENT_CONTRACT_ID,
     EvaluationResult,
     LeafCounts,
+    canonical_metric_contract,
     evaluate_leaf_report,
-    metric_contract_from_legacy,
 )
 from .go_grader import grade_go_report, write_go_grading_outputs
 from .grader import grade_verification, write_grading_outputs
@@ -36,7 +36,7 @@ __all__ = [
     "evaluate_leaf_report",
     "grade_verification",
     "grade_go_report",
-    "metric_contract_from_legacy",
+    "canonical_metric_contract",
     "write_grading_outputs",
     "write_go_grading_outputs",
 ]

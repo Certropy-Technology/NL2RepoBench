@@ -11,14 +11,15 @@ import re
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from typing import Literal
 
 from pydantic import Field, model_validator
 
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.canonical_contract import TaskManifest, TaskSource
-from nl2repobench.domain.models import (
+from nl2repobench.domain.canonical_models import (
+    CanonicalRecord,
     DatasetManifest,
-    RecordModel,
     TaskRef,
     Visibility,
 )
@@ -42,13 +43,13 @@ def _validate_relative_path(value: str, field_name: str) -> str:
     return value
 
 
-class DeclarativeDatasetSource(RecordModel):
+class DeclarativeDatasetSource(CanonicalRecord):
     """Human-maintained dataset definition loaded from ``dataset.toml``."""
 
     dataset_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
     version: str = "0.1.0"
     description: str
-    metric_contract: str = "fixed-test-pass-rate-v1"
+    metric_contract: Literal["fixed-test-pass-rate-v1"] = "fixed-test-pass-rate-v1"
     tasks: tuple[str, ...]
 
     @model_validator(mode="after")

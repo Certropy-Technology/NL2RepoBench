@@ -14,9 +14,10 @@ import pytest
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
-from nl2repobench.domain.models import Visibility
+from nl2repobench.domain.canonical_models import Visibility
 from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
+from nl2repobench.harbor.private_artifacts import PrivateArtifactsManifest
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.runtimes.go import GoRuntimeAdapter
 from nl2repobench.storage.artifacts import (
@@ -326,6 +327,9 @@ def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     assert '"status":"failed"' in test_script
     assert "--runner-exit-code 1" in test_script
     assert "cp -a /opt/go-module-bundle/vendor" in test_script
+    bundle = json.loads((output / "bundle.manifest.json").read_text(encoding="utf-8"))
+    private = PrivateArtifactsManifest.model_validate(bundle["private_artifacts"])
+    assert private.task_id == "go-synthetic"
 
 
 def test_go_compiler_rejects_missing_control_script(tmp_path: Path) -> None:

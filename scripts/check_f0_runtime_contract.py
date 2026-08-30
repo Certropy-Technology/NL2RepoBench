@@ -23,6 +23,7 @@ class Violation:
 
 
 FORBIDDEN = {
+    "legacy-domain-model": re.compile(r"\bdomain\.models\b"),
     "models_v2": re.compile(r"(?:domain|harbor|verification)\.models_v2|models_v2\.py"),
     "v2-model": re.compile(r"\b(?:TaskManifestV2|DeclarativeTaskSourceV2|V2RecordModel)\b"),
     "legacy-lock": re.compile(r"\b(?:lock_artifact|module_bundle)\b"),

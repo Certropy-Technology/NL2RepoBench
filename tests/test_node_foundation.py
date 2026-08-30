@@ -23,7 +23,7 @@ from nl2repobench.domain.canonical_contract import (
 from nl2repobench.domain.canonical_contract import (
     TestManifest as NodeTestsManifest,
 )
-from nl2repobench.domain.models import Visibility
+from nl2repobench.domain.canonical_models import Visibility
 from nl2repobench.harbor.node_compiler import NodeHarborCompileError, NodeHarborCompiler
 from nl2repobench.harbor.node_dependencies import (
     NodeDependencyError,
@@ -37,6 +37,7 @@ from nl2repobench.storage.artifacts import (
     LocalArtifactResolver,
     PrivateArtifactAuthorization,
 )
+from nl2repobench.storage.materialize import ArchiveKind
 from nl2repobench.verification import cli as verifier_cli
 from nl2repobench.verification import node_candidate_install
 from nl2repobench.verification.node_candidate_client import run_candidate
@@ -293,6 +294,9 @@ def test_canonical_development_compiler_is_deterministic_and_hides_private_fixtu
     assert "candidate-installation-failed" in generated_test_script
     assert "nl2repobench.verification.network_check" in generated_test_script
     assert "network.json" in generated_test_script
+    assert '[[ "$network_exit" -eq 1 ]]' in generated_test_script
+    assert '[[ "$network_exit" -ne 0 ]]' in generated_test_script
+    assert "--reason verifier-internal-error" in generated_test_script
     assert "candidate-call-failed" in generated_test_script
     assert 'schema_version = "1.4"' in (first / "task.toml").read_text()
     assert 'language = "node"' in (first / "task.toml").read_text()
@@ -442,6 +446,7 @@ def test_node_report_grades_leaf_statuses_and_todo_denominator() -> None:
     )
     assert result.valid is True
     assert result.reward == 0.2
+    assert result.metric_contract == "fixed-test-pass-rate-v1"
     assert result.counts.model_dump(mode="json") | {} == {
         "schema_version": "1.0",
         "collected": 5,
@@ -914,11 +919,13 @@ def test_node_compiler_extracts_private_bundle_and_rejects_missing_resolver(tmp_
     )
     compiler = NodeHarborCompiler(NODE_TOOLCHAIN, artifact_resolver=resolver)
     destination = tmp_path / "extracted"
-    compiler._extract_private_bundle(reference, destination)  # noqa: SLF001
-    assert (destination / "nested/test.mjs").read_text() == "test\n"
+    with pytest.raises(NodeHarborCompileError, match="media type"):
+        compiler._extract_private_bundle(  # noqa: SLF001
+            reference, destination, ArchiveKind.TEST_BUNDLE
+        )
     with pytest.raises(NodeHarborCompileError, match="private artifact resolver"):
         NodeHarborCompiler(NODE_TOOLCHAIN)._extract_private_bundle(  # noqa: SLF001
-            reference, tmp_path / "missing"
+            reference, tmp_path / "missing", ArchiveKind.TEST_BUNDLE
         )
 
 
@@ -1141,3 +1148,4 @@ def test_node_runtime_grader_preserves_collected_count(tmp_path: Path) -> None:
     assert completed.returncode == 0, completed.stdout + completed.stderr
     grading = json.loads((output / "grading.json").read_text())
     assert grading["counts"]["collected"] == 2
+    assert grading["metric_contract"] == "fixed-test-pass-rate-v1"

@@ -16,17 +16,18 @@ import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
-from nl2repobench.domain.canonical_contract import TaskManifest
-from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile
+from nl2repobench.domain.canonical_contract import PackageManager, TaskManifest
+from nl2repobench.domain.canonical_models import ArtifactRef, HarborExecutionProfile
 from nl2repobench.storage.artifacts import ArtifactStoreError, LocalArtifactResolver
-from nl2repobench.storage.canonical_ustar import decode_archive
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
 
 from .bundle_io import (
     BundleLimits,
 )
+from .dependency_contract import DependencyContractError, validate_dependency_artifacts
 from .models import VerifierCommandPlan, load_command_plan, load_toolchain_lock
+from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
     TaskWriterError,
     copy_python_verifier_runtime,
@@ -39,16 +40,6 @@ from .task_writer import (
 
 class HarborCompileError(ValueError):
     """Raised when a task cannot safely become a Harbor bundle."""
-
-
-def _private_digest_payload(value: object) -> object:
-    """Project ArtifactRef values to the strict categorized digest object."""
-
-    if isinstance(value, dict):
-        return {key: _private_digest_payload(item) for key, item in value.items()}
-    if isinstance(value, ArtifactRef):
-        return value.digest if value.visibility.value == "private" else None
-    return value
 
 
 class HarborCompiler:
@@ -220,7 +211,10 @@ class HarborCompiler:
             task_root / "environment/candidate-requirements.lock.txt",
             dependency_lock,
         )
-        install += """COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
+        dependency_build = "none-v1"
+        if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
+            dependency_build = "pip-index-hash-locked-v1"
+            install += """COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes \\
   --index-url https://pypi.org/simple \\
   -r /tmp/candidate-requirements.lock.txt
@@ -230,7 +224,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
             f"FROM --platform=linux/amd64 {image}\n\n"
             f'LABEL org.nl2repobench.agent-runtime-image="{image}" '
             f'org.nl2repobench.agent-runtime-image-id="{self.toolchain.agent_runtime.image_id}" '
-            'org.nl2repobench.agent-dependency-build="pip-index-hash-locked-v1"\n\n'
+            f'org.nl2repobench.agent-dependency-build="{dependency_build}"\n\n'
             + install
             + "RUN test -x /opt/openhands-sdk-venv/bin/python "
             "&& test -x /usr/bin/curl\n\n" + "WORKDIR /workspace\n"
@@ -292,14 +286,8 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
             )
         else:
             command_artifact = manifest.tests.commands_artifact
-            if custom_verifier:
-                command_plan = VerifierCommandPlan(
-                    runner="pytest-subprocess-boundary-v1",
-                    candidate_install="pip-target-no-deps-v1",
-                )
-            else:
-                assert command_artifact is not None
-                command_plan = self._resolve_command_plan(command_artifact)
+            assert command_artifact is not None
+            command_plan = self._resolve_command_plan(command_artifact)
         atomic_write(
             tests_root / "command-plan.json",
             canonical_json(command_plan) + b"\n",
@@ -326,6 +314,17 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 
         image = self._verifier_image(manifest, allow_incomplete)
         python_minor = self._site_packages_minor(manifest, allow_incomplete)
+        candidate_dependency_install = "RUN mkdir -p /opt/candidate-dependencies/site\n"
+        if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
+            candidate_dependency_install = """\
+COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
+RUN python -m pip install \\
+  --no-cache-dir \\
+  --index-url https://pypi.org/simple \\
+  --target /opt/candidate-dependencies/site \\
+  --require-hashes \\
+  -r /tmp/candidate-requirements.lock.txt
+"""
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
 {self._system_packages_install(manifest)}\
@@ -334,13 +333,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
   --index-url https://pypi.org/simple \\
   -r /tmp/requirements.lock.txt
 
-COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
-RUN python -m pip install \
-  --no-cache-dir \
-  --index-url https://pypi.org/simple \
-  --target /opt/candidate-dependencies/site \
-  --require-hashes \
-  -r /tmp/candidate-requirements.lock.txt
+{candidate_dependency_install}
 
 COPY runtime/nl2repobench /usr/local/lib/python{python_minor}/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json
@@ -383,37 +376,38 @@ WORKDIR /tests
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required")
         try:
-            return load_command_plan(self.artifact_resolver.resolve(reference).read_bytes())
-        except (OSError, ValueError) as exc:
+            return load_command_plan(
+                self.artifact_resolver.read_bytes(reference, max_bytes=4096)
+            )
+        except (ArtifactStoreError, OSError, ValueError) as exc:
             raise HarborCompileError(str(exc)) from exc
 
     def _resolve_dependency_lock(self, manifest: TaskManifest, allow_incomplete: bool) -> bytes:
-        """Resolve a hash lock without materializing vendor dependency bytes."""
+        """Validate the canonical dependency triple and return the Python lock bytes."""
 
-        reference = manifest.dependency_bundle.lock
-        if reference is None:
-            if allow_incomplete:
-                return b""
-            raise HarborCompileError("production task requires dependency_bundle.lock")
+        if allow_incomplete:
+            return b""
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required for dependency lock")
         try:
-            archive = self.artifact_resolver.resolve(reference).read_bytes()
-            members = decode_archive(archive)
-        except (OSError, ValueError) as exc:
-            raise HarborCompileError(f"cannot resolve dependency lock: {exc}") from exc
-        files = {
-            member.entry.path: member.data
-            for member in members
-            if member.entry.type == "file"
-        }
+            validated = validate_dependency_artifacts(
+                manifest.dependency_bundle,
+                identity=f"python+{manifest.dependency_bundle.package_manager.value}",
+                toolchain_digest=(
+                    f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
+                ),
+                resolver=self.artifact_resolver,
+            )
+        except DependencyContractError as exc:
+            raise HarborCompileError(str(exc)) from exc
+        if manifest.dependency_bundle.package_manager is PackageManager.NONE:
+            return b""
+        files = validated.lock_files
         if set(files) != {"requirements.lock.txt"}:
             raise HarborCompileError(
                 "Python dependency lock must contain only requirements.lock.txt"
             )
         data = files["requirements.lock.txt"]
-        if data is None:
-            raise HarborCompileError("Python dependency lock is not a regular file")
         self._validate_dependency_lock(data)
         return data
 
@@ -558,13 +552,22 @@ export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 mkdir -p /tmp/trusted-results
 chmod 0700 /tmp/trusted-results
 
-if ! python -m nl2repobench.verification.network_check \
-  --output /logs/verifier/network.json; then
+python -m nl2repobench.verification.network_check \
+  --output /logs/verifier/network.json
+network_exit=$?
+if [[ "$network_exit" -eq 1 ]]; then
   python -m nl2repobench.verification.cli \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
     --reason verifier-network-available
+  exit 0
+elif [[ "$network_exit" -ne 0 ]]; then
+  python -m nl2repobench.verification.cli \
+    --expected {expected} \
+    --runtime python \
+    --metric-contract {metric} \
+    --reason verifier-internal-error
   exit 0
 fi
 
@@ -702,10 +705,16 @@ chmod 0700 /logs/verifier /tmp/trusted-results
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 python -I -m nl2repobench.verification.network_check \
   --output /logs/verifier/network.json
-if [[ "$?" -ne 0 ]]; then
+network_exit=$?
+if [[ "$network_exit" -eq 1 ]]; then
   python -I -m nl2repobench.verification.cli \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-network-available
+  exit 0
+elif [[ "$network_exit" -ne 0 ]]; then
+  python -I -m nl2repobench.verification.cli \
+    --expected {expected} --runtime python --metric-contract {metric} \
+    --reason verifier-internal-error
   exit 0
 fi
 python -I -B -m nl2repobench.verification.workspace_copy \
@@ -758,7 +767,7 @@ exit 0
             raise HarborCompileError(str(exc)) from exc
 
     def _extract_private_bundle(
-        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind | None = None
+        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind
     ) -> None:
         try:
             extract_private_bundle(
@@ -822,26 +831,8 @@ Run with Harbor {self.toolchain.harbor.version}:
             "mode": "development" if allow_incomplete else "production",
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
-            "private_artifacts": {
-                "task_id": manifest.task_id,
-                "canonical_manifest_digest": manifest.content_digest(),
-                "dependencies": {
-                    "lock": manifest.dependency_bundle.lock,
-                    "store": manifest.dependency_bundle.offline_store,
-                    "inventory": manifest.dependency_bundle.inventory,
-                },
-                "tests": {
-                    "commands": manifest.tests.commands_artifact,
-                    "protected_paths": manifest.tests.protected_paths_artifact,
-                    "bundle": manifest.tests.test_bundle,
-                },
-                "verifier": {
-                    "bundle": manifest.verifier.bundle if manifest.verifier is not None else None,
-                },
-                "oracle": {"bundle": manifest.oracle_bundle},
-            },
+            "private_artifacts": categorized_private_artifacts(manifest).model_dump(mode="json"),
         }
-        payload["private_artifacts"] = _private_digest_payload(payload["private_artifacts"])
         write_file_manifest(task_root, payload=payload, schema_version="1.0")
 
     def _refresh_bundle_manifest(self, task_root: Path, kind: str) -> None:

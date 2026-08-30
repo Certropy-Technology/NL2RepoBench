@@ -132,6 +132,14 @@ def _validate_lockfile(
     native_packages: dict[str, dict[str, str]],
 ) -> dict[str, Any]:
     payload = _validate_json_file(path, max_bytes=MAX_NPM_LOCK_BYTES)
+    return _validate_lock_payload(payload, expected_npm_version, native_packages)
+
+
+def _validate_lock_payload(
+    payload: dict[str, Any],
+    expected_npm_version: str | None,
+    native_packages: dict[str, dict[str, str]],
+) -> dict[str, Any]:
     if payload.get("lockfileVersion") != 3:
         raise NodeDependencyError("npm dependency lockfile must use lockfileVersion 3")
     packages = payload.get("packages")
@@ -191,6 +199,20 @@ def _validate_lockfile(
             + ", ".join(sorted(missing_native_packages))
         )
     return payload
+
+
+def validate_npm_lock_data(data: bytes, *, expected_npm_version: str | None = None) -> None:
+    """Validate canonical npm lock bytes without materializing the offline store."""
+
+    if len(data) > MAX_NPM_LOCK_BYTES:
+        raise NodeDependencyError("npm dependency lockfile exceeds size limit")
+    try:
+        payload = json.loads(data)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise NodeDependencyError(f"invalid npm dependency lockfile JSON: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise NodeDependencyError("npm dependency lockfile must be an object")
+    _validate_lock_payload(payload, expected_npm_version, {})
 
 
 def _validate_manifest(

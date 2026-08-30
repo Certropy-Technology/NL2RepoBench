@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.domain.models import ArtifactRef, TaskVerifierSpec, Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, TaskVerifierSpec, Visibility
 from nl2repobench.verification.custom_verifier import run
 
 

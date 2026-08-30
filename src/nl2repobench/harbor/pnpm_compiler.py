@@ -16,7 +16,6 @@ from nl2repobench.package_managers.pnpm import PnpmPackageManager
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
-from nl2repobench.verification.node_pnpm_command_plan import EXPECTED_PNPM_PLAN
 
 from .node_compiler import NodeHarborCompileError, NodeHarborCompiler
 
@@ -26,6 +25,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
 
     package_manager = PnpmPackageManager()
     runtime_package_manager = PackageManager.PNPM
+    candidate_install_id = "pnpm-pack-offline-v1"
 
     def __init__(
         self,
@@ -55,9 +55,15 @@ class PnpmHarborCompiler(NodeHarborCompiler):
         node_runtime = Path(__file__).parents[1] / "verification/node"
         self._copy_tree(node_runtime, runtime_root / "node")
         self._write_python_verifier_runtime(tests_root)
+        command_plan = self._resolve_node_command_plan(manifest, allow_incomplete)
         atomic_write(
             tests_root / "command-plan.json",
-            json.dumps(EXPECTED_PNPM_PLAN, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+            json.dumps(
+                command_plan.model_dump(mode="json"),
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+            + b"\n",
         )
 
         dependencies_root = tests_root / "dependencies"
@@ -66,6 +72,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
             self._write_empty_pnpm_bundle(dependencies_root)
         try:
             if not allow_incomplete:
+                self._validate_canonical_dependencies(manifest)
                 raise NodeHarborCompileError(
                     "private-staging-contract-missing: production pnpm closure "
                     "staging requires F0.5"
@@ -180,10 +187,15 @@ rm -f /logs/verifier/reward.json /logs/verifier/grading.json /logs/verifier/repo
 rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/pnpm-store
 NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
 NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
-if ! python3 -I -c "$NETWORK_CHECK" \\
-  --output /logs/verifier/network.json; then
+python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json
+network_exit=$?
+if [[ "$network_exit" -eq 1 ]]; then
   node /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason verifier-network-available --output /logs/verifier
+  exit 0
+elif [[ "$network_exit" -ne 0 ]]; then
+  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+    --reason verifier-internal-error --output /logs/verifier
   exit 0
 fi
 install -d -o candidate -g candidate -m 0700 /tmp/pnpm-store

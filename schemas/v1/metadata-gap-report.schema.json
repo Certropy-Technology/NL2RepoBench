@@ -2,7 +2,6 @@
   "$defs": {
     "MetadataGapTask": {
       "additionalProperties": false,
-      "description": "One task's explicit migration gaps, suitable for tabular reporting.",
       "properties": {
         "missing_fields": {
           "default": [],
@@ -42,7 +41,6 @@
     }
   },
   "additionalProperties": false,
-  "description": "Deterministic summary of information absent from a legacy task.",
   "properties": {
     "complete_task_count": {
       "minimum": 0,

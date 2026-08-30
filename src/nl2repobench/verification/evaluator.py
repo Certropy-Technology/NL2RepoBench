@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Any, Self
+from typing import Self
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import FailureClass, RecordModel
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
+from nl2repobench.domain.canonical_models import FailureClass
 
 from .leaf_report import LeafReport
 from .metric_contract import MetricContract
@@ -58,44 +59,14 @@ class EvaluationResult(RecordModel):
     details: tuple[str, ...] = ()
 
 
-def metric_contract_from_legacy(value: MetricContract | str | Any) -> MetricContract:
-    """Convert old string or Node-v2 contracts into the current object.
-
-    This is an input migration boundary only. The evaluator itself receives a
-    ``MetricContract`` instance and never dispatches on report framework names.
-    The old Node contract ID is deliberately mapped to the current metric ID;
-    it is not emitted as a new score family.
-    """
+def canonical_metric_contract(value: MetricContract | str) -> MetricContract:
+    """Require the sole active metric contract at a CLI/adapter boundary."""
 
     if isinstance(value, MetricContract):
         return value
-    if isinstance(value, str):
-        if value in {CURRENT_CONTRACT_ID, "node-test-leaf-pass-rate-v1"}:
-            return MetricContract()
-        raise ValueError(f"unsupported metric contract: {value}")
-
-    try:
-        contract_id = value.contract_id
-        if contract_id not in {CURRENT_CONTRACT_ID, "node-test-leaf-pass-rate-v1"}:
-            raise ValueError(f"unsupported metric contract: {contract_id}")
-        excluded = tuple(getattr(value, "excluded_statuses", ()))
-        if excluded:
-            raise ValueError(
-                "legacy excluded_statuses cannot enter the current fixed-denominator evaluator"
-            )
-        return MetricContract(
-            passed_statuses=tuple(value.passed_statuses),
-            denominator_statuses=tuple(
-                getattr(
-                    value,
-                    "denominator_statuses",
-                    ("passed", "failed", "error", "skipped", "todo", "xfail"),
-                )
-            ),
-            collection_mismatch=value.collection_mismatch,
-        )
-    except (AttributeError, TypeError, ValueError) as exc:
-        raise TypeError("metric contract must be a MetricContract object") from exc
+    if value == CURRENT_CONTRACT_ID:
+        return MetricContract()
+    raise ValueError(f"unsupported metric contract: {value}")
 
 
 def _counts(report: LeafReport) -> LeafCounts:
@@ -262,5 +233,5 @@ __all__ = [
     "MODEL_FAILURES",
     "evaluate_leaf_report",
     "failure_result_for_reason",
-    "metric_contract_from_legacy",
+    "canonical_metric_contract",
 ]

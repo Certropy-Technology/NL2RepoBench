@@ -7,7 +7,8 @@ from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import FailureClass, RecordModel
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
+from nl2repobench.domain.canonical_models import FailureClass
 
 NodeTestStatus = Literal["passed", "failed", "error", "skipped", "todo"]
 
@@ -97,7 +98,7 @@ class NodeTestCounts(RecordModel):
 class NodeGradingResult(RecordModel):
     """Canonical reward and verifier classification for a Node run."""
 
-    metric_contract: str = "node-test-leaf-pass-rate-v1"
+    metric_contract: Literal["fixed-test-pass-rate-v1"] = "fixed-test-pass-rate-v1"
     valid: bool
     reward: Annotated[float, Field(ge=0.0, le=1.0)]
     expected_total: Annotated[int, Field(gt=0)]

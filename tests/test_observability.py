@@ -13,7 +13,7 @@ from urllib.parse import parse_qs, urlsplit
 import pytest
 from pydantic import ValidationError
 
-from nl2repobench.domain.models import FailureClass
+from nl2repobench.domain.canonical_models import FailureClass
 from nl2repobench.observability import (
     MAX_ARTIFACT_REFS,
     MAX_CONTEXT_ITEMS,

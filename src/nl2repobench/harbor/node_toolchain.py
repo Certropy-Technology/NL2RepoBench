@@ -9,7 +9,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import RecordModel
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
 
 from .models import PINNED_IMAGE, AgentRuntimeImageLock, HarborVersionLock
 

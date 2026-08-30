@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from nl2repobench.domain.canonical_contract import TaskManifest
-from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,

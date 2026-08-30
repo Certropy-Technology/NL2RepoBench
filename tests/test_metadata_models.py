@@ -5,21 +5,22 @@ from jsonschema import ValidationError as JsonSchemaValidationError
 from jsonschema import validate as validate_json_schema
 from pydantic import ValidationError
 
-from nl2repobench.domain.canonical_contract import DependencyBundle as CanonicalDependencies
-from nl2repobench.domain.models import (
-    ArtifactRef,
+from nl2repobench.domain.canonical_contract import (
     DependencyBundle,
     EnvironmentLock,
+    TaskManifest,
+)
+from nl2repobench.domain.canonical_contract import (
+    TestManifest as ManifestTests,
+)
+from nl2repobench.domain.canonical_models import (
+    ArtifactRef,
     HarborExecutionProfile,
     ProvenanceStatus,
     SourceLock,
     TaskLifecycleRecord,
-    TaskManifest,
     TaskStatus,
     Visibility,
-)
-from nl2repobench.domain.models import (
-    TestManifest as ManifestTests,
 )
 
 
@@ -51,8 +52,14 @@ def test_artifact_uri_cannot_downgrade_visibility() -> None:
 def test_known_environment_requires_image_digest() -> None:
     with pytest.raises(ValidationError, match="known environment"):
         EnvironmentLock(
-            status=ProvenanceStatus.KNOWN,
-            python_version="3.12",
+            status="known",
+            runtime={
+                "language": "python",
+                "runtime": "cpython",
+                "version": "3.12",
+                "package_manager": "uv",
+                "package_manager_version": "0.8.15",
+            },
             os_name="linux",
             base_image="python:3.12-slim",
         )
@@ -67,9 +74,9 @@ def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
     )
 
     with pytest.raises(ValidationError, match="requires lock, offline_store, and inventory"):
-        CanonicalDependencies(status="known", package_manager="pip", lock=artifact)
+        DependencyBundle(status="known", package_manager="pip", lock=artifact)
 
-    bundle = CanonicalDependencies(
+    bundle = DependencyBundle(
         status="known",
         package_manager="pip",
         lock=artifact,
@@ -94,7 +101,7 @@ def test_known_go_dependencies_require_private_canonical_artifacts() -> None:
         }
     )
 
-    bundle = CanonicalDependencies(
+    bundle = DependencyBundle(
         status="known",
         package_manager="go-modules",
         lock=private,
@@ -103,7 +110,7 @@ def test_known_go_dependencies_require_private_canonical_artifacts() -> None:
     )
     assert bundle.offline_store == private
     with pytest.raises(ValidationError, match="must be private"):
-        CanonicalDependencies(
+        DependencyBundle(
             status="known",
             package_manager="go-modules",
             lock=private,
@@ -114,15 +121,25 @@ def test_known_go_dependencies_require_private_canonical_artifacts() -> None:
 
 def test_known_go_environment_accepts_runtime_version() -> None:
     environment = EnvironmentLock(
-        status=ProvenanceStatus.KNOWN,
-        runtime_version="1.26.5",
+        status="known",
+        runtime={
+            "language": "go",
+            "runtime": "go",
+            "version": "1.26.5",
+            "package_manager": "go-modules",
+            "package_manager_version": "1.26.5",
+        },
         os_name="debian-bookworm",
         base_image="docker.io/library/golang@sha256:" + "a" * 64,
         base_image_digest="sha256:" + "a" * 64,
+        network_policy={
+            "mode": "no-network",
+            "offline_dependencies": "preinstalled-image",
+        },
     )
 
-    assert environment.python_version is None
-    assert environment.runtime_version == "1.26.5"
+    assert environment.runtime is not None
+    assert environment.runtime.version == "1.26.5"
 
 
 def test_blocked_task_requires_reason() -> None:
@@ -131,9 +148,13 @@ def test_blocked_task_requires_reason() -> None:
 
 
 def test_blocked_task_can_record_unfrozen_collection() -> None:
-    tests = ManifestTests(expected_total=0, expected_total_source="unknown")
+    tests = ManifestTests(
+        framework="pytest",
+        report_format="pytest-junit-xml-v1",
+        expected_total=0,
+        expected_total_source="unknown",
+    )
 
-    assert tests.commands == ()
     assert tests.expected_total == 0
 
     instruction = ArtifactRef(
@@ -144,7 +165,10 @@ def test_blocked_task_can_record_unfrozen_collection() -> None:
     )
     manifest = TaskManifest(
         task_id="blocked-unfrozen",
+        metadata={"language": "python"},
         instruction=instruction,
+        environment_lock={"status": "unknown"},
+        dependency_bundle={"status": "unknown", "package_manager": "uv"},
         tests=tests,
         lifecycle=TaskLifecycleRecord(status=TaskStatus.BLOCKED, reason="source freeze failed"),
     )
@@ -166,8 +190,15 @@ def test_manifest_explains_publication_gaps() -> None:
     manifest = TaskManifest.model_validate(
         {
             "task_id": "incomplete",
+            "metadata": {"language": "python"},
             "instruction": instruction.model_dump(mode="json"),
-            "tests": {"expected_total": 1, "commands": ["pytest"]},
+            "environment_lock": {"status": "unknown"},
+            "dependency_bundle": {"status": "unknown", "package_manager": "uv"},
+            "tests": {
+                "framework": "pytest",
+                "report_format": "pytest-junit-xml-v1",
+                "expected_total": 1,
+            },
         }
     )
 
@@ -188,9 +219,14 @@ def test_source_json_schema_enforces_known_provenance_fields() -> None:
 
 
 def test_conditional_schemas_accept_runtime_defaults() -> None:
-    for model in (SourceLock, EnvironmentLock, DependencyBundle, TaskLifecycleRecord):
-        validate_json_schema({}, model.model_json_schema())
-        model.model_validate({})
+    for model, payload in (
+        (SourceLock, {}),
+        (EnvironmentLock, {}),
+        (DependencyBundle, {"package_manager": "none"}),
+        (TaskLifecycleRecord, {}),
+    ):
+        validate_json_schema(payload, model.model_json_schema())
+        model.model_validate(payload)
 
 
 def test_harbor_profile_reserves_time_for_verifier_cleanup() -> None:

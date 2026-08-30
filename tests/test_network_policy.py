@@ -7,7 +7,8 @@ from pathlib import Path
 import pytest
 
 from nl2repobench.authoring.network_lint import lint_catalog, lint_catalog_roots, lint_task
-from nl2repobench.domain.models import EnvironmentLock, HarborExecutionProfile, NetworkPolicy
+from nl2repobench.domain.canonical_contract import EnvironmentLock
+from nl2repobench.domain.canonical_models import HarborExecutionProfile, NetworkPolicy
 from nl2repobench.domain.network_policy import (
     NetworkPolicyViolation,
     host_category,
@@ -116,13 +117,11 @@ class TestPolicyModel:
         assert host_category("api.anthropic.com") == "model-provider"
         assert host_category("example.com") is None
 
-    def test_environment_lock_rejects_contradiction(self) -> None:
+    def test_environment_lock_uses_only_typed_network_policy(self) -> None:
         baked = NetworkPolicy(mode="no-network", offline_dependencies="preinstalled-image")
         with pytest.raises(ValueError):
             EnvironmentLock(network_mode="public", network_policy=baked)
-        assert (
-            EnvironmentLock(network_mode="no-network", network_policy=baked).network_policy is baked
-        )
+        assert EnvironmentLock(network_policy=baked).network_policy is baked
 
     def test_harbor_profile_allowlist_requires_hosts(self) -> None:
         with pytest.raises(ValueError):
@@ -140,10 +139,8 @@ class TestPolicyModel:
         assert resolved.agent_allowed_hosts == ()
 
     def test_canonical_environment_accepts_network_policy(self) -> None:
-        from nl2repobench.domain.canonical_contract import EnvironmentLock as CanonicalEnvironment
-
         policy = NetworkPolicy(mode="no-network", offline_dependencies="preinstalled-image")
-        env = CanonicalEnvironment(network_policy=policy)
+        env = EnvironmentLock(network_policy=policy)
         assert env.network_policy is policy
 
 

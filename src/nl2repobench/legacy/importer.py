@@ -16,24 +16,17 @@ from typing import Any, cast
 import polars as pl
 
 from nl2repobench.domain.canonical import canonical_json
-from nl2repobench.domain.models import (
+from nl2repobench.domain.canonical_models import (
     ArtifactRef,
     DatasetManifest,
-    DependencyBundle,
     Difficulty,
-    EnvironmentLock,
-    LegacyProjection,
     MetadataGapReport,
     MetadataGapTask,
-    MetricContract,
     ProvenanceStatus,
     SourceLock,
     TaskLifecycleRecord,
-    TaskManifest,
-    TaskMetadata,
     TaskRef,
     TaskStatus,
-    TestManifest,
     Visibility,
 )
 from nl2repobench.storage.artifacts import FileArtifactStore
@@ -44,6 +37,16 @@ from nl2repobench.storage.files import (
     safe_child_directory,
 )
 from nl2repobench.storage.state import StateStore
+
+from .models import (
+    LegacyDependencyBundle,
+    LegacyEnvironmentLock,
+    LegacyMetricContract,
+    LegacyProjection,
+    LegacyTaskManifest,
+    LegacyTaskMetadata,
+    LegacyTestManifest,
+)
 
 
 class LegacyImportError(ValueError):
@@ -122,7 +125,7 @@ class LegacyImporter:
         except OSError as exc:
             raise LegacyImportError(f"cannot ingest artifact {path}: {exc}") from exc
 
-    def _import_task(self, task_dir: Path) -> tuple[TaskManifest, MetadataGapTask]:
+    def _import_task(self, task_dir: Path) -> tuple[LegacyTaskManifest, MetadataGapTask]:
         task_id = task_dir.name
         resolved_root = self.legacy_root.resolve()
         resolved_task = task_dir.resolve()
@@ -186,20 +189,20 @@ class LegacyImporter:
             raw_difficulty = "unknown"
         difficulty = cast(Difficulty, raw_difficulty)
 
-        manifest = TaskManifest(
+        manifest = LegacyTaskManifest(
             task_id=task_id,
-            metadata=TaskMetadata(difficulty=difficulty),
+            metadata=LegacyTaskMetadata(difficulty=difficulty),
             instruction=instruction_ref,
             source_lock=SourceLock(status=ProvenanceStatus.UNKNOWN),
-            environment_lock=EnvironmentLock(status=ProvenanceStatus.UNKNOWN),
-            dependency_bundle=DependencyBundle(status=ProvenanceStatus.UNKNOWN),
-            tests=TestManifest(
+            environment_lock=LegacyEnvironmentLock(status="unknown"),
+            dependency_bundle=LegacyDependencyBundle(status="unknown"),
+            tests=LegacyTestManifest(
                 expected_total=expected_total,
                 expected_total_source="legacy-file",
                 commands_artifact=commands_ref,
                 protected_paths_artifact=protected_ref,
             ),
-            metric=MetricContract(),
+            metric=LegacyMetricContract(),
             lifecycle=TaskLifecycleRecord(status=TaskStatus.DISCOVERED),
             legacy_projection=LegacyProjection(
                 source_root=task_id,

@@ -11,9 +11,9 @@ from nl2repobench.domain.canonical import canonical_json
 
 from .evaluator import (
     EvaluationResult,
+    canonical_metric_contract,
     evaluate_leaf_report,
     failure_result_for_reason,
-    metric_contract_from_legacy,
 )
 from .leaf_report import ReportNormalizationError
 from .metric_contract import MetricContract
@@ -57,11 +57,9 @@ def _node_report(report: EvaluationResult) -> NodeTestReport | None:
     )
 
 
-def _as_node_result(
-    result: EvaluationResult, *, metric_contract_id: str | None = None
-) -> NodeGradingResult:
+def _as_node_result(result: EvaluationResult) -> NodeGradingResult:
     return NodeGradingResult(
-        metric_contract=metric_contract_id or result.metric_contract,
+        metric_contract="fixed-test-pass-rate-v1",
         valid=result.valid,
         reward=result.reward,
         expected_total=result.frozen_total,
@@ -90,18 +88,17 @@ def grade_node_test_report(
     expected_total: int,
     report_data: bytes | Mapping[str, Any] | None,
     runner_exit_code: int | None = None,
-    metric_contract: MetricContract | str = "node-test-leaf-pass-rate-v1",
+    metric_contract: MetricContract | str = "fixed-test-pass-rate-v1",
     explicit_reason: NodeVerificationReason | None = None,
 ) -> NodeGradingResult:
     """Grade Node JSON through the same evaluator used by pytest."""
 
     if expected_total <= 0:
         raise ValueError("expected_total must be positive")
-    contract = metric_contract_from_legacy(metric_contract)
+    contract = canonical_metric_contract(metric_contract)
 
     def as_node_result(result: EvaluationResult) -> NodeGradingResult:
-        requested_id = metric_contract if isinstance(metric_contract, str) else None
-        return _as_node_result(result, metric_contract_id=requested_id)
+        return _as_node_result(result)
     if explicit_reason is not None:
         canonical_explicit_reason = canonical_reason(explicit_reason)
         return as_node_result(

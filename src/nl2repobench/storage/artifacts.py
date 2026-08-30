@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from nl2repobench.domain.canonical import bytes_digest
-from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 
 
 class ArtifactStoreError(RuntimeError):

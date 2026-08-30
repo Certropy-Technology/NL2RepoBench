@@ -13,7 +13,7 @@ from enum import StrEnum
 from pathlib import Path, PurePosixPath
 from typing import cast
 
-from nl2repobench.domain.models import ArtifactRef
+from nl2repobench.domain.canonical_models import ArtifactRef
 
 from .artifacts import (
     LocalArtifactResolver,

@@ -7,7 +7,7 @@ from typing import Literal, Self
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import RecordModel
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
 
 GoValueType = Literal["string", "bool", "int64", "float64"]
 _IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")

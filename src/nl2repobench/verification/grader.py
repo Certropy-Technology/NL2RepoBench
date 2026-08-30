@@ -9,9 +9,9 @@ from nl2repobench.domain.canonical import canonical_json
 
 from .evaluator import (
     EvaluationResult,
+    canonical_metric_contract,
     evaluate_leaf_report,
     failure_result_for_reason,
-    metric_contract_from_legacy,
 )
 from .leaf_report import ReportNormalizationError
 from .metric_contract import MetricContract
@@ -106,7 +106,7 @@ def grade_verification(
 
     if expected_total <= 0:
         raise ValueError("expected_total must be positive")
-    contract = metric_contract_from_legacy(metric_contract)
+    contract = canonical_metric_contract(metric_contract)
     if explicit_reason is not None:
         explicit_reason = canonical_reason(explicit_reason)
         return _failure_result(

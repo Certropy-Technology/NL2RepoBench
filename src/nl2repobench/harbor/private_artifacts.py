@@ -9,7 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 from nl2repobench.domain.canonical_contract import TaskManifest
-from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.storage.artifacts import (
     FileArtifactStore,
     LocalArtifactResolver,

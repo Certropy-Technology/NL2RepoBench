@@ -4,18 +4,52 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from nl2repobench.domain.models import FailureClass
+from nl2repobench.domain.canonical_models import FailureClass
 from nl2repobench.verification import cli as verifier_cli
-from nl2repobench.verification import pytest_plugin
+from nl2repobench.verification import network_check, pytest_plugin
 from nl2repobench.verification.grader import grade_verification, write_grading_outputs
 from nl2repobench.verification.integrity import hash_paths
 from nl2repobench.verification.junit import JUnitError, parse_junit
 from nl2repobench.verification.models import VerificationReason
 from nl2repobench.verification.network_check import public_network_available
+
+
+def test_network_receipt_rejects_oversized_route_table(tmp_path: Path) -> None:
+    namespace = tmp_path / "namespace"
+    namespace.symlink_to("net:[1]")
+    route = tmp_path / "route"
+    route.write_bytes(b"x" * (network_check.MAX_ROUTE_TABLE_BYTES + 1))
+
+    with pytest.raises(ValueError, match="exceeds"):
+        network_check.build_receipt(
+            {"pypi.org:443": False},
+            namespace_path=namespace,
+            route_path=route,
+        )
+
+
+def test_network_check_internal_failure_exits_70(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output = tmp_path / "network.json"
+    monkeypatch.setattr(network_check, "probe_public_network", lambda: {})
+    monkeypatch.setattr(
+        network_check,
+        "build_receipt",
+        lambda probes: (_ for _ in ()).throw(ValueError("receipt failed")),
+    )
+    monkeypatch.setattr(sys, "argv", ["network-check", "--output", str(output)])
+
+    with pytest.raises(SystemExit) as exc:
+        network_check.main()
+
+    assert exc.value.code == 70
+    assert not output.exists()
 
 
 def _collection(count: int, *, errors: list[dict[str, str]] | None = None) -> bytes:

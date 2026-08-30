@@ -239,7 +239,7 @@ tasks = ["demo"]
         encoding="utf-8",
     )
 
-    with pytest.raises(CatalogError, match="metric contract mismatch"):
+    with pytest.raises(CatalogError, match="fixed-test-pass-rate-v1"):
         CatalogCompiler(FileArtifactStore(tmp_path / "artifacts")).compile_dataset(
             dataset_path, tmp_path / "build"
         )

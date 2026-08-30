@@ -7,7 +7,8 @@ from typing import Annotated
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import FailureClass, RecordModel
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
+from nl2repobench.domain.canonical_models import FailureClass
 
 
 class VerificationReason(StrEnum):

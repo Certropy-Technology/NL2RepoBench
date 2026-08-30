@@ -2,7 +2,6 @@
   "$defs": {
     "TaskRef": {
       "additionalProperties": false,
-      "description": "Stable reference to a task manifest in a dataset.",
       "properties": {
         "manifest_digest": {
           "pattern": "^sha256:[0-9a-f]{64}$",
@@ -42,7 +41,6 @@
     }
   },
   "additionalProperties": false,
-  "description": "Dataset index compiled from immutable task manifest references.",
   "properties": {
     "dataset_id": {
       "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$",
@@ -54,6 +52,7 @@
       "type": "string"
     },
     "metric_contract": {
+      "const": "fixed-test-pass-rate-v1",
       "default": "fixed-test-pass-rate-v1",
       "title": "Metric Contract",
       "type": "string"

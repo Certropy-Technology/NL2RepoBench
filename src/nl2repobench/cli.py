@@ -34,7 +34,7 @@ from nl2repobench.domain.canonical_contract import (
 from nl2repobench.domain.canonical_contract import (
     TaskSource as CanonicalTaskSource,
 )
-from nl2repobench.domain.models import (
+from nl2repobench.domain.canonical_models import (
     DatasetManifest,
     MetadataGapReport,
 )
@@ -45,7 +45,6 @@ from nl2repobench.harbor.registry import (
     HarborCompilerRegistry,
     UnknownRuntimeAdapterError,
 )
-from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
 from nl2repobench.storage.artifacts import (
     FileArtifactStore,
     LocalArtifactResolver,
@@ -471,6 +470,8 @@ def import_legacy(
     ] = None,
 ) -> None:
     """Import legacy task directories without embedding private test bytes."""
+
+    from nl2repobench.legacy.importer import LegacyImporter, LegacyImportError
 
     if difficulty_file is not None and not difficulty_file.is_file():
         difficulty_file = None

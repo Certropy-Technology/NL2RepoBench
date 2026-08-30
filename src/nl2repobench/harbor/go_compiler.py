@@ -15,7 +15,7 @@ import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical_contract import RuntimeLanguage, TaskManifest, TaskSource
-from nl2repobench.domain.models import ArtifactRef
+from nl2repobench.domain.canonical_models import ArtifactRef
 from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.storage.artifacts import (
@@ -28,6 +28,7 @@ from nl2repobench.storage.materialize import ArchiveKind
 
 from .bundle_io import BundleLimits
 from .models import AgentRuntimeImageLock
+from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
     TaskWriterError,
     copy_python_verifier_runtime,
@@ -225,6 +226,9 @@ class GoHarborCompiler:
                     "toolchain_version": self.go_version,
                     "canonical_manifest_digest": manifest.content_digest(),
                     "toolchain_lock_digest": self._toolchain_digest(),
+                    "private_artifacts": categorized_private_artifacts(manifest).model_dump(
+                        mode="json"
+                    ),
                 },
                 schema_version="1.0",
             )
@@ -465,7 +469,7 @@ WORKDIR /tests
         atomic_write(task_root / "task.toml", tomli_w.dumps(data).encode())
 
     def _extract_private_bundle(
-        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind | None = None
+        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind
     ) -> None:
         try:
             extract_private_bundle(

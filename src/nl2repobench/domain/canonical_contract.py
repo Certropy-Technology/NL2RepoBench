@@ -10,12 +10,12 @@ import re
 from enum import StrEnum
 from typing import Annotated, Literal, cast
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import ConfigDict, Field, model_validator
 from pydantic.json_schema import JsonSchemaValue
 
-from .canonical import content_digest
-from .models import (
+from .canonical_models import (
     ArtifactRef,
+    CanonicalRecord,
     HarborExecutionProfile,
     MetricContract,
     NetworkPolicy,
@@ -33,14 +33,6 @@ TaskId = Annotated[
         pattern=r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
     ),
 ]
-
-
-class CanonicalRecord(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
-    schema_version: Literal["1.0"] = "1.0"
-
-    def content_digest(self) -> str:
-        return content_digest(self)
 
 
 class RuntimeLanguage(StrEnum):
@@ -191,7 +183,10 @@ class DependencyBundle(CanonicalRecord):
                 {
                     "if": {
                         "required": ["status"],
-                        "properties": {"status": {"const": "known"}},
+                        "properties": {
+                            "status": {"const": "known"},
+                            "package_manager": {"not": {"const": "none"}},
+                        },
                     },
                     "then": {
                         "required": ["lock", "offline_store", "inventory"],
@@ -235,21 +230,18 @@ class DependencyBundle(CanonicalRecord):
     @model_validator(mode="after")
     def validate_refs(self) -> DependencyBundle:
         refs = (self.lock, self.offline_store, self.inventory)
-        if self.status == "known" and any(ref is None for ref in refs):
+        requires_closure = (
+            self.status == "known" and self.package_manager is not PackageManager.NONE
+        )
+        if requires_closure and any(ref is None for ref in refs):
             raise ValueError("known dependency bundle requires lock, offline_store, and inventory")
-        if self.status == "unknown" and any(ref is not None for ref in refs):
-            raise ValueError("unknown dependency bundle must not claim artifact references")
+        if not requires_closure and any(ref is not None for ref in refs):
+            raise ValueError(
+                "dependency bundle without a closure must not claim artifact references"
+            )
         for name, ref in zip(("lock", "offline_store", "inventory"), refs, strict=True):
             if ref is not None and ref.visibility.value != "private":
                 raise ValueError(f"dependencies.{name} must be private")
-        if (
-            self.package_manager is PackageManager.NONE
-            and self.status == "known"
-            and any(ref is None for ref in refs)
-        ):
-            raise ValueError(
-                "known none dependency bundle still requires canonical empty artifacts"
-            )
         if self.package_manager is PackageManager.NONE and self.status == "known":
             # node+none is rejected at the TaskSource runtime-pair boundary.
             if self.packages:
@@ -679,15 +671,16 @@ class TaskManifest(CanonicalRecord):
             gaps.append("environment_lock.runtime")
         if self.dependency_bundle.status != "known":
             gaps.append("dependency_bundle.status=known")
-        for field_name, reference in (
-            ("dependency_bundle.lock", self.dependency_bundle.lock),
-            ("dependency_bundle.offline_store", self.dependency_bundle.offline_store),
-            ("dependency_bundle.inventory", self.dependency_bundle.inventory),
-        ):
-            if reference is None:
-                gaps.append(field_name)
-            elif reference.visibility is not Visibility.PRIVATE:
-                gaps.append(f"{field_name}.visibility=private")
+        if self.dependency_bundle.package_manager is not PackageManager.NONE:
+            for field_name, reference in (
+                ("dependency_bundle.lock", self.dependency_bundle.lock),
+                ("dependency_bundle.offline_store", self.dependency_bundle.offline_store),
+                ("dependency_bundle.inventory", self.dependency_bundle.inventory),
+            ):
+                if reference is None:
+                    gaps.append(field_name)
+                elif reference.visibility is not Visibility.PRIVATE:
+                    gaps.append(f"{field_name}.visibility=private")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.tests.expected_total <= 0:

@@ -29,7 +29,7 @@ from nl2repobench.domain.canonical_contract import (
 from nl2repobench.domain.canonical_contract import (
     TestManifest as CanonicalTestManifest,
 )
-from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.harbor.bundle_io import BundleLimits
 from nl2repobench.harbor.private_artifacts import (
     categorized_private_artifacts,

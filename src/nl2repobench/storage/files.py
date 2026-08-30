@@ -9,7 +9,7 @@ from typing import IO
 
 from nl2repobench.domain.canonical import canonical_file_payload
 from nl2repobench.domain.canonical_contract import TaskManifest
-from nl2repobench.domain.models import TaskStatus
+from nl2repobench.domain.canonical_models import TaskStatus
 
 
 class UnsafePathError(ValueError):

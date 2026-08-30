@@ -10,7 +10,8 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import RecordModel
+from nl2repobench.domain.canonical import canonical_json
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
 
 PINNED_IMAGE = r"^[A-Za-z0-9._/-]+@sha256:[0-9a-f]{64}$"
 LOCAL_IMAGE_TAG = r"^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9._-]+$"
@@ -97,10 +98,15 @@ class VerifierCommandPlan(RecordModel):
 
 
 def load_command_plan(data: bytes) -> VerifierCommandPlan:
+    if len(data) > 4096:
+        raise ValueError("invalid verifier command plan: exceeds size limit")
     try:
-        return VerifierCommandPlan.model_validate(json.loads(data))
+        plan = VerifierCommandPlan.model_validate(json.loads(data))
     except (json.JSONDecodeError, ValueError) as exc:
         raise ValueError(f"invalid verifier command plan: {exc}") from exc
+    if data != canonical_json(plan) + b"\n":
+        raise ValueError("invalid verifier command plan: JSON is not canonical")
+    return plan
 
 
 def load_toolchain_lock(path: Path) -> HarborToolchainLock:

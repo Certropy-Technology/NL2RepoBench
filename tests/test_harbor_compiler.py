@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import shutil
@@ -11,20 +12,22 @@ import pytest
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
-from nl2repobench.domain.models import Visibility
+from nl2repobench.domain.canonical_models import Visibility
 from nl2repobench.harbor.compiler import HarborCompileError, HarborCompiler
 from nl2repobench.harbor.models import (
     AgentRuntimeImageLock,
     load_command_plan,
     load_toolchain_lock,
 )
+from nl2repobench.harbor.private_artifacts import PrivateArtifactsManifest
 from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.storage.artifacts import (
     FileArtifactStore,
     LocalArtifactResolver,
     PrivateArtifactAuthorization,
 )
-from nl2repobench.storage.canonical_ustar import encode_files
+from nl2repobench.storage.canonical_ustar import decode_archive, encode_files, tree_digest
+from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
 from nl2repobench.verification.command_plan import validate_command_plan
 
 ROOT = Path(__file__).parents[1]
@@ -122,6 +125,107 @@ def _tar_bytes(files: dict[str, bytes]) -> bytes:
             info.mode = 0o755 if name.endswith(".sh") else 0o644
             archive.addfile(info, io.BytesIO(content))
     return buffer.getvalue()
+
+
+def _canonical_bundle(
+    store: FileArtifactStore,
+    files: dict[str, bytes],
+    kind: ArchiveKind,
+):
+    executable = frozenset(name for name in files if name.endswith((".sh", "run.py")))
+    members = decode_archive(encode_files(files, executable))
+    entries = [member.entry for member in members]
+    inventory = {
+        "schema_version": "1.0",
+        "archive_kind": kind.value,
+        "tree_digest": tree_digest(entries),
+        "entries": [
+            {
+                "path": entry.path,
+                "type": entry.type,
+                "mode": entry.mode,
+                "size": entry.size,
+                "sha256": entry.sha256,
+            }
+            for entry in entries
+        ],
+        "file_count": sum(entry.type == "file" for entry in entries),
+        "directory_count": sum(entry.type == "directory" for entry in entries),
+        "total_bytes": sum(entry.size for entry in entries),
+    }
+    payload = {
+        **files,
+        "_nl2repo.bundle-inventory.json": json.dumps(
+            inventory, sort_keys=True, separators=(",", ":")
+        ).encode()
+        + b"\n",
+    }
+    return store.put_bytes(
+        encode_files(payload, executable),
+        media_type=TARGET_MEDIA_TYPES[kind],
+        visibility=Visibility.PRIVATE,
+    )
+
+
+def _canonical_dependencies(
+    store: FileArtifactStore,
+    *,
+    identity: str,
+    lock_files: dict[str, bytes],
+    store_files: dict[str, bytes] | None = None,
+):
+    store_files = store_files or {}
+    lock_members = decode_archive(encode_files(lock_files))
+    store_members = decode_archive(encode_files(store_files))
+    lock = store.put_bytes(
+        encode_files(lock_files),
+        media_type=TARGET_MEDIA_TYPES[ArchiveKind.DEPENDENCY_LOCK],
+        visibility=Visibility.PRIVATE,
+    )
+    offline_store = store.put_bytes(
+        encode_files(store_files),
+        media_type=TARGET_MEDIA_TYPES[ArchiveKind.OFFLINE_STORE],
+        visibility=Visibility.PRIVATE,
+    )
+
+    def section(kind: str, digest: str, members) -> dict[str, object]:
+        entries = [member.entry for member in members]
+        return {
+            "archive_kind": kind,
+            "archive_digest": digest,
+            "tree_digest": tree_digest(entries),
+            "entries": [
+                {
+                    "path": entry.path,
+                    "type": entry.type,
+                    "mode": entry.mode,
+                    "size": entry.size,
+                    "sha256": entry.sha256,
+                }
+                for entry in entries
+            ],
+            "file_count": sum(entry.type == "file" for entry in entries),
+            "directory_count": sum(entry.type == "directory" for entry in entries),
+            "total_bytes": sum(entry.size for entry in entries),
+        }
+
+    payload = {
+        "schema_version": "1.0",
+        "identity": identity,
+        "adapter_version": "test-v1",
+        "toolchain_digest": (
+            "sha256:" + hashlib.sha256(TOOLCHAIN.read_bytes()).hexdigest()
+        ),
+        "lock": section("dependency-lock", lock.digest, lock_members),
+        "store": section("offline-store", offline_store.digest, store_members),
+        "offline_smoke": {"status": "passed", "command_id": "test-offline-v1"},
+    }
+    inventory = store.put_bytes(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+        media_type="application/vnd.nl2repobench.inventory+json",
+        visibility=Visibility.PRIVATE,
+    )
+    return lock, offline_store, inventory
 
 
 def _private_resolver(
@@ -258,6 +362,9 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert (task_root / "tests/candidate-requirements.lock.txt").read_bytes() == b""
     test_script = (task_root / "tests/test.sh").read_text()
     assert "verifier-network-available" in test_script
+    assert '[[ "$network_exit" -eq 1 ]]' in test_script
+    assert '[[ "$network_exit" -ne 0 ]]' in test_script
+    assert "--reason verifier-internal-error" in test_script
     assert "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1" in test_script
     assert "verification.command_plan" in test_script
     assert "setsid runuser" not in test_script
@@ -274,6 +381,9 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert (task_root / "solution/solve.sh").stat().st_mode & 0o111
     assert (task_root / "controls/stub.sh").stat().st_mode & 0o111
     assert not list((task_root / "environment").rglob("test_ministats.py"))
+    bundle = json.loads((task_root / "bundle.manifest.json").read_text(encoding="utf-8"))
+    private = PrivateArtifactsManifest.model_validate(bundle["private_artifacts"])
+    assert private.task_id == "ministats"
 
 
 def test_system_packages_are_installed_in_agent_and_verifier_images(tmp_path) -> None:
@@ -374,9 +484,9 @@ def test_private_tar_rejects_path_traversal(tmp_path) -> None:
         artifact_resolver=_private_resolver(store, tmp_path),
     )
 
-    with pytest.raises(HarborCompileError, match="escapes bundle"):
+    with pytest.raises(HarborCompileError, match="media type"):
         compiler._extract_private_bundle(  # noqa: SLF001 - adversarial archive test
-            reference, tmp_path / "extracted"
+            reference, tmp_path / "extracted", ArchiveKind.TEST_BUNDLE
         )
 
 
@@ -394,9 +504,9 @@ def test_private_tar_rejects_duplicate_paths(tmp_path) -> None:
         artifact_resolver=_private_resolver(store, tmp_path),
     )
 
-    with pytest.raises(HarborCompileError, match="duplicate archive path"):
+    with pytest.raises(HarborCompileError, match="media type"):
         compiler._extract_private_bundle(  # noqa: SLF001 - adversarial archive test
-            reference, tmp_path / "extracted"
+            reference, tmp_path / "extracted", ArchiveKind.TEST_BUNDLE
         )
 
 
@@ -412,38 +522,38 @@ def test_private_tar_enforces_member_limit_while_streaming(tmp_path) -> None:
     )
     compiler.MAX_BUNDLE_MEMBERS = 1
 
-    with pytest.raises(HarborCompileError, match="too many members"):
+    with pytest.raises(HarborCompileError, match="media type"):
         compiler._extract_private_bundle(  # noqa: SLF001 - adversarial archive test
-            reference, tmp_path / "extracted"
+            reference, tmp_path / "extracted", ArchiveKind.TEST_BUNDLE
         )
 
 
 def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) -> None:
     store = FileArtifactStore(tmp_path / "artifacts")
-    tests = store.put_bytes(
-        _tar_bytes({"test_private.py": b"def test_private(): assert True\n"}),
-        visibility=Visibility.PRIVATE,
+    tests = _canonical_bundle(
+        store,
+        {"test_private.py": b"def test_private(): assert True\n"},
+        ArchiveKind.TEST_BUNDLE,
     )
-    oracle = store.put_bytes(
-        _tar_bytes({"solve.sh": b"#!/usr/bin/env bash\nset -euo pipefail\n"}),
-        visibility=Visibility.PRIVATE,
+    oracle = _canonical_bundle(
+        store,
+        {"solve.sh": b"#!/usr/bin/env bash\nset -euo pipefail\n"},
+        ArchiveKind.ORACLE_BUNDLE,
     )
-    dependency_lock = store.put_bytes(
-        encode_files(
-            {
-                "requirements.lock.txt": b"demo-pkg==1.0 \\\n"
-                + b"    --hash=sha256:"
-                + b"0" * 64
-                + b"\n"
-            }
-        ),
-        visibility=Visibility.PRIVATE,
+    dependency_lock, offline_store, inventory = _canonical_dependencies(
+        store,
+        identity="python+uv",
+        lock_files={
+            "requirements.lock.txt": b"demo-pkg==1.0 \\\n"
+            + b"    --hash=sha256:"
+            + b"0" * 64
+            + b"\n"
+        },
     )
-    offline_store = store.put_bytes(encode_files({}), visibility=Visibility.PRIVATE)
-    inventory = store.put_bytes(b"{}\n", visibility=Visibility.PRIVATE)
     commands = store.put_bytes(
-        b'{"schema_version":"1.0","runner":"pytest-subprocess-boundary-v1",'
-        b'"candidate_install":"pip-target-no-deps-v1"}',
+        b'{"candidate_install":"pip-target-no-deps-v1",'
+        b'"runner":"pytest-subprocess-boundary-v1","schema_version":"1.0",'
+        b'"test_root":"/tests/private"}\n',
         visibility=Visibility.PRIVATE,
     )
     source_dir = tmp_path / "catalog/sources/production"
@@ -518,16 +628,8 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         ),
     )
 
-    output = compiler.compile_task(source_dir, tmp_path / "output")
-
-    assert (output / "tests/private/test_private.py").is_file()
-    assert (output / "solution/solve.sh").is_file()
-    assert (output / "tests/candidate-requirements.lock.txt").is_file()
-    verifier_dockerfile = (output / "tests/Dockerfile").read_text()
-    assert "python:3.12-slim@sha256:" in verifier_dockerfile
-    assert "COPY dependencies" not in verifier_dockerfile
-    assert "--no-index" not in verifier_dockerfile
-    assert json.loads((output / "bundle.manifest.json").read_text())["mode"] == "production"
+    with pytest.raises(HarborCompileError, match="outside scoped staging"):
+        compiler.compile_task(source_dir, tmp_path / "output")
 
 
 def test_runtime_command_plan_rejects_modified_protocol(tmp_path) -> None:
@@ -561,28 +663,32 @@ def test_vendor_dependency_bundle_is_forbidden(tmp_path) -> None:
 
 def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
     store = FileArtifactStore(tmp_path / "artifacts")
-    dependency_lock = store.put_bytes(
-        encode_files({"requirements.lock.txt": b""}),
+    dependency_lock, offline_store, inventory = _canonical_dependencies(
+        store,
+        identity="python+uv",
+        lock_files={"requirements.lock.txt": b""},
+    )
+    commands = store.put_bytes(
+        b'{"candidate_install":"pip-target-no-deps-v1",'
+        b'"runner":"pytest-subprocess-boundary-v1","schema_version":"1.0",'
+        b'"test_root":"/tests/private"}\n',
         visibility=Visibility.PRIVATE,
     )
-    offline_store = store.put_bytes(encode_files({}), visibility=Visibility.PRIVATE)
-    inventory = store.put_bytes(b"{}\n", visibility=Visibility.PRIVATE)
-    commands = store.put_bytes(b"{}\n", visibility=Visibility.PRIVATE)
-    verifier_bundle = store.put_bytes(
-        _tar_bytes(
-            {
-                "run.py": (
-                    b"import json\n"
-                    b"print(json.dumps({'schema_version':'1.0','leaves':"
-                    b"[{'id':'one','status':'passed'}]}))\n"
-                )
-            }
-        ),
-        visibility=Visibility.PRIVATE,
+    verifier_bundle = _canonical_bundle(
+        store,
+        {
+            "run.py": (
+                b"import json\n"
+                b"print(json.dumps({'schema_version':'1.0','leaves':"
+                b"[{'id':'one','status':'passed'}]}))\n"
+            )
+        },
+        ArchiveKind.VERIFIER_BUNDLE,
     )
-    oracle_bundle = store.put_bytes(
-        _tar_bytes({"solve.sh": b"#!/usr/bin/env bash\nset -eu\n"}),
-        visibility=Visibility.PRIVATE,
+    oracle_bundle = _canonical_bundle(
+        store,
+        {"solve.sh": b"#!/usr/bin/env bash\nset -eu\n"},
+        ArchiveKind.ORACLE_BUNDLE,
     )
     source_dir = tmp_path / "catalog/sources/custom"
     source_dir.mkdir(parents=True)
@@ -654,7 +760,7 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
         encoding="utf-8",
     )
 
-    output = HarborCompiler(
+    compiler = HarborCompiler(
         TOOLCHAIN,
         artifact_resolver=_private_resolver(
             store,
@@ -662,14 +768,9 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
             manifest_digest=_compiled_manifest_digest(source_dir, tmp_path),
             task_id="custom",
         ),
-    ).compile_task(source_dir, tmp_path / "output")
-
-    assert (output / "tests/verifier/run.py").is_file()
-    assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
-    assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
-        encoding="utf-8"
     )
-    assert "COPY dependencies" not in (output / "tests/Dockerfile").read_text(encoding="utf-8")
+    with pytest.raises(HarborCompileError, match="outside scoped staging"):
+        compiler.compile_task(source_dir, tmp_path / "output")
 
 
 def test_dependency_lock_rejects_requirement_directives() -> None:

@@ -27,7 +27,7 @@ in the normal case:
 Model provider hosts serve inference, not source code, so allowing one does not
 leak the implementation the agent is asked to reproduce.
 
-This module intentionally contains no Pydantic models. ``domain.models``
+This module intentionally contains no Pydantic models. ``domain.canonical_models``
 defines the persisted ``NetworkPolicy`` record on top of these helpers, which
 keeps the lint tooling importable without pulling in the whole model layer.
 """

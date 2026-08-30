@@ -40,7 +40,7 @@ from pydantic import (
     model_validator,
 )
 
-from nl2repobench.domain.models import FailureClass
+from nl2repobench.domain.canonical_models import FailureClass
 
 OBSERVABILITY_SCHEMA: Literal["1.0"] = "1.0"
 REDACTED = "[REDACTED]"

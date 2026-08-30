@@ -20,7 +20,8 @@ from nl2repobench.domain.canonical_contract import (
     RuntimeLanguage,
     TaskManifest,
 )
-from nl2repobench.domain.models import ArtifactRef
+from nl2repobench.domain.canonical_models import ArtifactRef
+from nl2repobench.package_managers.pnpm import validate_pnpm_lock_data
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
@@ -28,13 +29,23 @@ from nl2repobench.storage.artifacts import (
 )
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
-from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
+from nl2repobench.verification.node_command_plan import (
+    EXPECTED_NODE_PLAN,
+    NodeVerifierCommandPlan,
+    load_node_command_plan,
+)
 
 from .bundle_io import (
     BundleLimits,
 )
-from .node_dependencies import NodeDependencyError, validate_npm_dependency_bundle
+from .dependency_contract import DependencyContractError, validate_dependency_artifacts
+from .node_dependencies import (
+    NodeDependencyError,
+    validate_npm_dependency_bundle,
+    validate_npm_lock_data,
+)
 from .node_toolchain import load_node_toolchain_lock
+from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
     TaskWriterError,
     copy_python_verifier_runtime,
@@ -49,12 +60,6 @@ class NodeHarborCompileError(ValueError):
     """Raised when a canonical Node task cannot be safely compiled."""
 
 
-def _private_digest(reference: ArtifactRef | None) -> str | None:
-    if reference is None:
-        return None
-    return reference.digest if reference.visibility.value == "private" else None
-
-
 class NodeHarborCompiler:
     """Generate a schema 1.4 development bundle without Docker execution."""
 
@@ -62,6 +67,7 @@ class NodeHarborCompiler:
     MAX_BUNDLE_MEMBER_BYTES = 512 * 1024 * 1024
     MAX_BUNDLE_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
     runtime_package_manager = PackageManager.NPM
+    candidate_install_id = "npm-pack-offline-v1"
 
     def __init__(
         self,
@@ -328,14 +334,21 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
         node_runtime = Path(__file__).parents[1] / "verification/node"
         self._copy_tree(node_runtime, runtime_root / "node")
         self._write_python_verifier_runtime(tests_root)
+        command_plan = self._resolve_node_command_plan(manifest, allow_incomplete)
         atomic_write(
             tests_root / "command-plan.json",
-            json.dumps(EXPECTED_NODE_PLAN, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+            json.dumps(
+                command_plan.model_dump(mode="json"),
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+            + b"\n",
         )
 
         dependencies_root = tests_root / "dependencies"
         dependencies_root.mkdir()
         if not allow_incomplete:
+            self._validate_canonical_dependencies(manifest)
             raise NodeHarborCompileError(
                 "private-staging-contract-missing: production npm closure staging requires F0.5"
             )
@@ -392,6 +405,66 @@ WORKDIR /tests
         )
         atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
         os.chmod(tests_root / "test.sh", 0o755)
+
+    def _resolve_node_command_plan(
+        self,
+        manifest: TaskManifest,
+        allow_incomplete: bool,
+    ) -> NodeVerifierCommandPlan:
+        if allow_incomplete:
+            return NodeVerifierCommandPlan.model_validate(
+                {**EXPECTED_NODE_PLAN, "candidate_install": self.candidate_install_id}
+            )
+        reference = manifest.tests.commands_artifact
+        if reference is None or self.artifact_resolver is None:
+            raise NodeHarborCompileError("production Node task requires commands_artifact")
+        try:
+            data = self.artifact_resolver.read_bytes(reference, max_bytes=4096)
+            return load_node_command_plan(
+                data,
+                candidate_install=self.candidate_install_id,  # type: ignore[arg-type]
+            )
+        except (ArtifactStoreError, OSError, ValueError) as exc:
+            raise NodeHarborCompileError(f"invalid Node command plan: {exc}") from exc
+
+    def _validate_canonical_dependencies(self, manifest: TaskManifest) -> None:
+        if self.artifact_resolver is None:
+            raise NodeHarborCompileError("private artifact resolver is required")
+        try:
+            validated = validate_dependency_artifacts(
+                manifest.dependency_bundle,
+                identity=f"node+{self.runtime_package_manager.value}",
+                toolchain_digest=(
+                    f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
+                ),
+                resolver=self.artifact_resolver,
+            )
+        except DependencyContractError as exc:
+            raise NodeHarborCompileError(str(exc)) from exc
+        expected_lock = (
+            "package-lock.json"
+            if self.runtime_package_manager is PackageManager.NPM
+            else "pnpm-lock.yaml"
+        )
+        if set(validated.lock_files) != {expected_lock}:
+            raise NodeHarborCompileError(
+                f"canonical Node dependency lock must contain only {expected_lock}"
+            )
+        runtime = manifest.environment_lock.runtime
+        assert runtime is not None and runtime.package_manager_version is not None
+        try:
+            if self.runtime_package_manager is PackageManager.NPM:
+                validate_npm_lock_data(
+                    validated.lock_files[expected_lock],
+                    expected_npm_version=runtime.package_manager_version,
+                )
+            else:
+                validate_pnpm_lock_data(
+                    validated.lock_files[expected_lock],
+                    expected_toolchain=runtime.package_manager_version,
+                )
+        except (NodeDependencyError, ValueError) as exc:
+            raise NodeHarborCompileError(f"invalid canonical Node lock: {exc}") from exc
 
     def _write_python_verifier_runtime(self, tests_root: Path) -> None:
         try:
@@ -526,10 +599,18 @@ rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/npm-cache
 
 NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
 NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
-if ! python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json; then
+python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json
+network_exit=$?
+if [[ "$network_exit" -eq 1 ]]; then
   node /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason verifier-network-available \\
+    --output /logs/verifier
+  exit 0
+elif [[ "$network_exit" -ne 0 ]]; then
+  node /tests/runtime/node/grade-report.mjs \\
+    --expected {expected} \\
+    --reason verifier-internal-error \\
     --output /logs/verifier
   exit 0
 fi
@@ -602,7 +683,7 @@ exit 0
 """
 
     def _extract_private_bundle(
-        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind | None = None
+        self, reference: ArtifactRef, destination: Path, kind: ArchiveKind
     ) -> None:
         try:
             extract_private_bundle(
@@ -653,21 +734,7 @@ Generated by the additive Node/npm compiler.
             "mode": "development" if allow_incomplete else "production",
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
-            "private_artifacts": {
-                "dependencies": {
-                    "lock": _private_digest(manifest.dependency_bundle.lock),
-                    "store": _private_digest(manifest.dependency_bundle.offline_store),
-                    "inventory": _private_digest(manifest.dependency_bundle.inventory),
-                },
-                "tests": {
-                    "commands": _private_digest(manifest.tests.commands_artifact),
-                    "protected_paths": _private_digest(
-                        manifest.tests.protected_paths_artifact
-                    ),
-                    "bundle": _private_digest(manifest.tests.test_bundle),
-                },
-                "oracle": {"bundle": _private_digest(manifest.oracle_bundle)},
-            },
+            "private_artifacts": categorized_private_artifacts(manifest).model_dump(mode="json"),
         }
         write_file_manifest(task_root, payload=payload, schema_version="1.0")
 

@@ -32,7 +32,7 @@ from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
 from nl2repobench.authoring.network_lint import lint_catalog
 from nl2repobench.domain.canonical_contract import TaskSource
-from nl2repobench.domain.models import ArtifactRef, Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.domain.runtime import (
     PackageManager as RuntimePackageManager,
 )

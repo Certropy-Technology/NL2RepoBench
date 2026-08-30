@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import RecordModel
+from nl2repobench.domain.canonical_models import CanonicalRecord as RecordModel
 
 from .taxonomy import VerificationReason
 

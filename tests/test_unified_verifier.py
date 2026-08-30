@@ -5,7 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.domain.models import MetricContract as LegacyMetricContract
+from nl2repobench.legacy.metric_contract import convert_legacy_metric
+from nl2repobench.legacy.models import LegacyMetricContract
 from nl2repobench.verification.evaluator import evaluate_leaf_report
 from nl2repobench.verification.leaf_report import (
     LeafCase,
@@ -13,6 +14,7 @@ from nl2repobench.verification.leaf_report import (
     ReportNormalizationError,
 )
 from nl2repobench.verification.metric_contract import MetricContract
+from nl2repobench.verification.node_grader import grade_node_test_report
 from nl2repobench.verification.normalize.node_test_json import normalize_node_test_json
 from nl2repobench.verification.normalize.pytest_junit import normalize_pytest_junit
 from nl2repobench.verification.provenance import slice_provenance
@@ -99,10 +101,17 @@ def test_metric_contract_fields_change_evaluation() -> None:
 
 
 def test_legacy_excluded_statuses_cannot_silently_change_current_scoring() -> None:
-    from nl2repobench.verification.evaluator import metric_contract_from_legacy
+    with pytest.raises(ValueError, match="excluded"):
+        convert_legacy_metric(LegacyMetricContract(excluded_statuses=("skipped",)))
 
-    with pytest.raises(TypeError, match="metric contract"):
-        metric_contract_from_legacy(LegacyMetricContract(excluded_statuses=("skipped",)))
+
+def test_active_node_grader_rejects_archived_metric_id() -> None:
+    with pytest.raises(ValueError, match="unsupported metric contract"):
+        grade_node_test_report(
+            expected_total=1,
+            report_data=None,
+            metric_contract="node-test-leaf-pass-rate-v1",
+        )
 
 
 def test_evaluator_rejects_runner_status_mismatch() -> None:

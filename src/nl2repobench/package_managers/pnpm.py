@@ -78,6 +78,43 @@ def _yaml_documents(path: Path) -> list[dict[str, Any]]:
     return result
 
 
+def validate_pnpm_lock_data(data: bytes, *, expected_toolchain: str) -> None:
+    """Validate canonical pnpm lock bytes without materializing the store."""
+
+    if len(data) > MAX_LOCK_BYTES or not SEMVER.fullmatch(expected_toolchain):
+        raise _error("pnpm lockfile or toolchain is not bounded and exact")
+    try:
+        import yaml
+
+        documents = list(yaml.safe_load_all(data.decode("utf-8")))
+    except (ImportError, UnicodeDecodeError, ValueError) as exc:
+        raise _error(f"cannot parse pnpm lockfile: {exc}") from exc
+    documents = [document for document in documents if document is not None]
+    if not documents or any(not isinstance(document, dict) for document in documents):
+        raise _error("pnpm lockfile documents must be objects")
+    root = documents[0]
+    if not str(root.get("lockfileVersion", "")).startswith("9"):
+        raise _error("pnpm lockfile must use lockfile version 9")
+    _scan(documents)
+    importers = root.get("importers", {})
+    packages = root.get("packages", {})
+    snapshots = root.get("snapshots", {})
+    if not all(isinstance(value, Mapping) for value in (importers, packages, snapshots)):
+        raise _error("pnpm lockfile requires importer, package, and snapshot maps")
+    for name, entry in packages.items():
+        if not isinstance(name, str) or not isinstance(entry, Mapping):
+            raise _error("pnpm packages entries are malformed")
+        resolution = entry.get("resolution")
+        if name and (
+            not isinstance(resolution, Mapping)
+            or not isinstance(resolution.get("integrity"), str)
+            or not resolution["integrity"].startswith("sha512-")
+        ):
+            raise _error(f"package integrity is missing: {name}")
+        if entry.get("hasInstallScript") or entry.get("requiresBuild"):
+            raise _error(f"lifecycle/native package is forbidden: {name}")
+
+
 class PnpmPackageManager:
     identity = PNPM_IDENTITY
     lockfile_names = ("pnpm-lock.yaml",)
@@ -178,4 +215,4 @@ class PnpmPackageManager:
         return {"PNPM_HOME": "/opt/pnpm"}
 
 
-__all__ = ["PnpmPackageManager"]
+__all__ = ["PnpmPackageManager", "validate_pnpm_lock_data"]
