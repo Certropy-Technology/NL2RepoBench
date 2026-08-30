@@ -14,7 +14,9 @@ uv run nl2repo doctor
 uv run nl2repo schema export
 ```
 
-现代 core 的依赖来源只有根目录 `pyproject.toml` 和提交的 `uv.lock`。旧 OpenHands/Docker runner 使用独立的 `legacy/pyproject.toml` 与 `legacy/uv.lock`；新代码不得向 legacy 环境添加依赖。
+现代 core 的依赖来源只有根目录 `pyproject.toml` 和提交的 `uv.lock`。旧
+OpenHands 0.56/Docker runner 及其独立 legacy 环境已经删除；历史依赖身份只保存在 archive
+和 Git history 中。根目录 `openhands/` 是当前 pinned SDK fork submodule。
 
 核心技术选择：
 

@@ -39,7 +39,6 @@ packages = ["src/nl2repobench"]
 [tool.pytest.ini_options]
 addopts = "-ra --cov=nl2repobench --cov-report=term-missing:skip-covered --cov-fail-under=80"
 testpaths = ["tests"]
-norecursedirs = ["legacy"]
 
 [tool.coverage.run]
 omit = [
@@ -51,14 +50,9 @@ omit = [
 line-length = 100
 target-version = "py311"
 extend-exclude = [
-  "docker_self",
   "examples/harbor",
-  "logging_config.py",
-  "main.py",
-  "only_test.py",
+  # The pinned SDK fork has its own project configuration and test suite.
   "openhands",
-  "test_data_service.py",
-  "tests/legacy",
 ]
 
 [tool.ruff.lint]

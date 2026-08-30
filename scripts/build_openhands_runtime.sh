@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IMAGE="nl2repobench/openhands-sdk-fork:930e9b1da"
 BOOKWORM_IMAGE="nl2repobench/openhands-sdk-fork:930e9b1da-bookworm"
 BOOKWORM_BASE="python@sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
-CONTEXT="$ROOT/vendor/openhands-software-agent-sdk"
+CONTEXT="$ROOT/openhands"
 LOG_DIR="$ROOT/.nl2repo/runtime/logs"
 LOG_FILE="$LOG_DIR/openhands-fork-runtime-build.log"
 

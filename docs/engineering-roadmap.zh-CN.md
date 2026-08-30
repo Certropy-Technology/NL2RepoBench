@@ -482,11 +482,11 @@ metadata backfill
 
 ### Phase 7：Legacy Retirement（迁移达标后）
 
-- `main.py`、`only_test.py`、`test_data_service.py` 和旧 post-processor 标记 deprecated；
+- `main.py`、`only_test.py`、`test_data_service.py` 和旧 post-processor 已从当前 tree 删除；
 - 禁止新题直接编辑四文件发布视图；
-- legacy exporter 仅用于历史复现；
-- `docker_self/` 不再位于正式 benchmark 执行路径；
-- parity 和迁移达到门禁后，从默认文档移除旧运行入口；
+- legacy importer/exporter 仅处理冻结历史输入，不提供旧运行入口；
+- `docker_self/`、旧 template/config/workspaces runner 已删除；
+- 默认文档只描述 Harbor/OpenHands SDK 当前入口；
 - 保留固定版本 legacy runner 镜像和历史复现说明。
 
 ## 9. 测试与 CI 策略
@@ -532,7 +532,6 @@ metadata backfill
 - 不做任意 DAG 平台，只实现固定 authoring stage protocol；
 - 不允许 LLM 自动批准 license、测试覆盖、traceability 或发布；
 - 不长期维护 legacy 和 Harbor 双向同步；
-- 不先重写整个 `docker_self/docker_service.py`；
 - 不把日志、JUnit、workspace 和镜像 blob 塞进数据库；
 - 不在没有 parity 数据前一次性迁移 104 题；
 - 不把 Harbor main、Git branch 或 mutable image tag 当发布依赖；

@@ -30,8 +30,8 @@ catalog/sources/<task-id>/task.toml + instruction.md
   不得保留对应 runtime。
 - `catalog/sources/<task-id>/harbor/` 可以是 compiler 的 source asset 或 legacy
   兼容输入。不能仅凭是否存在 `harbor/` 判断题目是否满足当前 production gate。
-- `test_files/`、`main.py`、`only_test.py` 和旧 OpenHands harness 仅是 legacy 兼容
-  路径，不是当前 catalog 或 Harbor production 的事实来源。
+- `test_files/` 只是 104 题的 legacy 输入视图，不是当前 catalog 或 Harbor production
+  的事实来源。旧 `main.py`/`only_test.py`/OpenHands 0.56 runner 已从 checkout 删除。
 
 不要把当前 source 数量、valid 数量或 task 数量写死在脚本、报告或回答中。需要计数时
 使用 Git：
@@ -370,9 +370,9 @@ benchmark 期间：
 - 不把缺失 token/cost 当成 0；不把 timeout/crash 直接归为 model failure；
 - 不在同一份结果中混合不同 task version、runtime、source revision 或 metric contract。
 
-旧 OpenHands 批量入口只有在用户明确要求 legacy experiment 时使用。它不替代当前
-Harbor production verifier，不能用 `only_test.py` 作为通用批量入口，也不能根据旧
-`config.json`、`workspaces/` 或 `result/` 快照宣称当前 task 已通过 production gate。
+旧 OpenHands 0.56 批量入口已经删除。历史 experiment 只能从已冻结 archive 读取，不能
+根据旧 `config.json`、`workspaces/` 或 `result/` 快照宣称当前 task 已通过 production
+gate。根目录 `openhands/` 现在只表示 pinned SDK fork submodule，不是 legacy runner。
 
 Docker 资源异常时，先停止启动新任务并记录影响范围。可以按用户约定清理未连接网络
 和无用缓存，例如：

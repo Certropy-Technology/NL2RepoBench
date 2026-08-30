@@ -29,9 +29,9 @@ NL2Repo is a benchmark designed to evaluate the performance of Large Language Mo
 ## Modern Core
 
 The authoring core is managed with `uv` and `pyproject.toml`; `uv.lock` is the
-reproducible dependency lock. The historical OpenHands/Docker runner has a
-separate `legacy/pyproject.toml` and `legacy/uv.lock`, so its host dependencies
-cannot pollute the metadata core.
+reproducible dependency lock. The historical OpenHands 0.56/Docker runner has
+been removed from the current tree; its source and lock identity remain in Git
+history and immutable archives. The current SDK fork is the `openhands/` submodule.
 
 ```bash
 uv sync
@@ -41,11 +41,10 @@ uv run nl2repo dataset validate authoring
 uv run nl2repo harbor compile catalog/tasks/ministats --allow-incomplete
 ```
 
-The current development Harbor pilot is catalog-backed at
-`catalog/datasets/nl2repobench-harbor-pilot/`. Task sources live under
-`catalog/tasks/<task-id>/`; Harbor assets are under each task's `harbor/`
-directory. `examples/harbor/` is reserved for the `ministats` infrastructure
-example. Run outputs belong under `.nl2repo/runs/` and are not dataset assets.
+The current Harbor pipeline is catalog-backed. Human-maintained task sources
+live under `catalog/sources/<task-id>/`; generated Harbor projections live under
+`catalog/tasks/<task-id>/`. `examples/harbor/` is reserved for infrastructure
+examples. Run outputs belong under `.nl2repo/runs/` and are not dataset assets.
 
 The importer writes canonical task manifests, a SQLite state index, and
 content-addressed artifacts. Private command/test-path JSON is referenced by
@@ -55,54 +54,33 @@ and migration contract.
 
 ## Running the Code
 
-The current setup runs OpenHands in **headless batch mode**. Model behavior is controlled via the `config.toml` file. If you need to change the model configuration, please modify `config.toml` **before** starting the run.
+The production authoring machine runs the systemd supervisor, isolated top-level
+Pi authoring sessions, Harbor 0.21 and the pinned OpenHands SDK fork:
 
-The system currently uses a **file-to-file** execution workflow and manages Docker containers via **python-on-whales**. At the moment, **only local execution is supported**.
+```bash
+systemctl status nl2repobench-authoring-supervisor.service
+scripts/authoring_runtime_config.py show
+uv run nl2repo task validate-source catalog/sources/<task-id>
+uv run nl2repo harbor compile catalog/sources/<task-id> \
+  --output .nl2repo/compiled/<task-id> \
+  --toolchain toolchain.lock.toml \
+  --artifact-root .nl2repo/artifacts \
+  --allow-private
+```
 
-> **Note:** When running in headless mode across multiple machines, you must set up shared file management (e.g., NFS) or manually transfer files to the target machines in advance.
-
-### Prerequisites
-
-Before starting, ensure that Docker is installed locally and that the following images are available:
-
-- `docker.all-hands.dev/all-hands-ai/openhands:0.56`
-- `docker.all-hands.dev/all-hands-ai/runtime:0.56-nikolaik`
-
-The runtime image can be customized. The default image is sufficient for running Python-based tasks and comes with **Python 3.12** preinstalled. If you need to support other languages, you can build your own runtime image and update the corresponding configuration in `openhands/openhands_app.py` (line 176).
+The pinned SDK fork is the `openhands/` submodule. Build and verify its runtime
+image with `scripts/build_openhands_runtime.sh`. Agent and verifier runtime phases
+are offline; dependencies and source locks are prepared by controlled build stages.
+See `docs/benchmark-operations-guide.zh-CN.md` for queue and recovery procedures.
 
 ## Data Layout
 
-1. The `test_files` directory contains all repository-related task data, including:
-   - A `.txt` file specifying the number of test cases
-   - The repository documentation in `.md` format
-   - Two `.json` files used for testing
+1. `catalog/sources/`: human-maintained authoring truth.
+2. `catalog/tasks/`: compiler-generated Harbor projections.
+3. `.nl2repo/artifacts/private/sha256/`: local private CAS.
+4. `.nl2repo/authoring-live/`: queues, claims, worktrees, sessions and archive receipts.
+5. `.nl2repo/runs/`: Harbor jobs, Agent workspaces, trajectories and verifier results.
+6. `test_files/`: immutable legacy input projection retained for historical conversion only.
 
-2. All Docker volume mounts used for headless execution are stored in the `workspaces` directory. Each task is assigned a **unique UUID directory**. The task-specific configuration file is copied from a template and modified accordingly (mainly to mount the workspace directory into the runtime container).
-
-3. Final results are saved in the `result` directory. Each task produces a single aggregated `.json` file, named using the task’s randomly generated UUID.
-
-4. The project is launched using a `config.json` file. A sample configuration is shown below:
-
-```json
-{
-  "startPro": [
-    {
-      "moduleName": "",
-      "baseUrl": "",
-      "sk": "",
-      "proNameList": [
-        "math-verify"
-      ]
-    }
-  ],
-  "max_pool_size": 20
-}
-```
-
-### Configuration Fields
-
-- **startPro**: A list of task nodes.
-  - Each node corresponds to a single model configuration.
-  - **proNameList**: A list of task names, which must match the subdirectory names under `test_files`.
-
-- **max_pool_size**: The maximum number of concurrent threads. Once this limit is reached, additional tasks will be queued until resources become available.
+Agent workspaces are runtime artifacts, not tracked source. Completed workspaces,
+trajectories and grading evidence are uploaded and verified in OSS before local cleanup.

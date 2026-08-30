@@ -40,31 +40,27 @@ NL2RepoBench 测的是从 0 到 1 的完整仓库生成，不是已有仓库修�
 
 | 层次 | 当前实现 | 职责 |
 | --- | --- | --- |
-| Agent harness | OpenHands 0.56，默认 CodeActAgent，headless batch | 接收任务、调用模型和工具、写工作区 |
-| Run harness | 本仓库的 `main.py`、`test_data_service.py`、`openhands/openhands_app.py` 和 `python-on-whales` | 读任务、分配端口、启动容器、并发执行、保存结果 |
-| Eval harness | `openhands/post_processor.py` 加每题 `ghcr.io/multimodal-art-projection/nl2repobench/<task>:1.0` 镜像 | 注入生成仓库、运行上游 pytest、解析通过数 |
+| Agent harness | 根 `openhands/` pinned SDK fork + OpenHands Agent runtime image | 接收 instruction、调用模型和工具、写隔离 workspace |
+| Run harness | Harbor 0.21、`run_harbor_model.sh`、authoring supervisor/systemd | 启动 task/Agent、限制网络和资源、保存 trajectory/workspace/result |
+| Eval harness | Harbor separate verifier + runtime-specific subprocess bridge + unified `LeafReport` evaluator | 隔离 hidden tests、固定分母、写 verifier-owned grading/reward |
 
 当前执行链路如下：
 
 ```text
-config.json
-  -> main.py
-  -> test_data_service.py 读取 test_files/<task>/{start.md,count,commands,files}
-  -> ThreadPoolExecutor
-  -> OpenHands 0.56 app container
-  -> OpenHands 0.56 runtime container 挂载 host workspace
-  -> Agent 根据 start.md 从空目录生成仓库
-  -> post_processor.py 打包 workspace
-  -> 删除 Agent 生成的 packaging 文件和已知 test paths
-  -> FROM 每题隐藏测试镜像并 COPY workspace
-  -> 执行 test_commands.json
-  -> 从 pytest 文本摘要提取 passed/failed/errors
-  -> result/<task>_bo1.json
+catalog/sources/<task-id>
+  -> canonical compiler + content-addressed private artifacts
+  -> Harbor task projection
+  -> pinned OpenHands SDK Agent in no-network workspace
+  -> separate verifier / candidate subprocess boundary
+  -> structured LeafReport + fixed denominator evaluator
+  -> verifier-owned grading/reward + OSS archive receipt
 ```
 
-论文主实验主要使用 OpenHands-CodeAct；Cursor CLI 和 Claude Code 是额外的 agent framework 对照。因而严谨表述应是：**这份 checkout 的默认 agent harness 是 OpenHands CodeAct，完整 benchmark harness 是仓库自带的 Python + Docker + pytest runner。它当前不是 Harbor。**
+论文主实验使用的 OpenHands 0.56 Python/Docker runner 已从当前 checkout 删除；对应代码和
+结果只能从 Git history/历史 archive 读取。`test_files/` 继续作为 104 题 legacy conversion
+输入，但不是当前 production runtime。当前根 `openhands/` 仅表示 pinned SDK fork submodule。
 
-### 当前实现需要先修正的评分风险
+### 历史 OpenHands 0.56 runner 的评分风险
 
 大规模正式运行前应先处理这些问题：
 
