@@ -18,8 +18,6 @@ from typing import Any, cast
 
 from .migration import MigrationError
 
-_USED_RECEIPTS: set[str] = set()
-
 
 def _digest(path: Path) -> str:
     h = hashlib.sha256()
@@ -71,6 +69,42 @@ def _exclusive_copy(source: Path, target: Path, label: str) -> None:
     finally:
         if fd != -1:
             os.close(fd)
+
+
+def _consumed_receipts(path: Path) -> set[str]:
+    if path.is_symlink():
+        raise MigrationError("consumed-receipt ledger must not be a symlink")
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise MigrationError("consumed-receipt ledger is invalid") from exc
+    return {str(value) for value in payload.get("receipts", [])} if isinstance(payload, dict) else set()
+
+
+def _consume_receipt(path: Path, key: str) -> None:
+    receipts = _consumed_receipts(path)
+    if key in receipts:
+        raise MigrationError("restore quiescence receipt was already used")
+    receipts.add(key)
+    temporary = path.with_name(f".{path.name}.tmp")
+    if temporary.exists() or temporary.is_symlink():
+        raise MigrationError("consumed-receipt staging path is occupied")
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as output:
+            json.dump({"schema_version": "restore-receipts/v1", "receipts": sorted(receipts)}, output)
+            output.flush()
+            os.fsync(output.fileno())
+        fd = -1
+        os.replace(temporary, path)
+        _sync_dir(path.parent)
+    finally:
+        if fd != -1:
+            os.close(fd)
+        if temporary.exists():
+            temporary.unlink()
 
 
 def _database_summary(path: Path) -> dict[str, object]:
@@ -236,9 +270,12 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
             if observed.tzinfo is None or datetime.now(UTC) - observed > timedelta(hours=1):
                 raise MigrationError("restore quiescence receipt is stale")
             receipt_key = f"{receipt['receipt_id']}:{receipt['nonce']}"
-            if activate and receipt_key in _USED_RECEIPTS:
-                raise MigrationError("restore quiescence receipt was already used")
             backup_manifest = cast(dict[str, Any], verification["manifest"])
+            if receipt.get("database_digest") != backup_manifest.get("database_summary", {}).get("digest"):
+                raise MigrationError("restore receipt database digest does not match backup")
+            consumed_path = target_path.parent / f".{target_path.name}.restore-consumed.json"
+            if activate and receipt_key in _consumed_receipts(consumed_path):
+                raise MigrationError("restore quiescence receipt was already used")
             source = next(backup_dir / str(item["name"]) for item in backup_manifest["files"] if str(item["name"]).endswith(".sqlite3"))
             if not activate:
                 return {"dry_run": True, "verified": True, "target": str(target_path), "quiesced": True}
@@ -258,7 +295,7 @@ def restore_database(backup_directory: Path | str, target: Path | str, *, activa
             with sqlite3.connect(target_path) as db:
                 if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok" or db.execute("PRAGMA foreign_key_check").fetchall():
                     raise MigrationError("restored database integrity check failed")
-            _USED_RECEIPTS.add(receipt_key)
+            _consume_receipt(consumed_path, receipt_key)
             return {"dry_run": False, "verified": True, "target": str(target_path), "quarantine": str(quarantine), "quiesced": True}
         finally:
             if held_lock is not None:

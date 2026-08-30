@@ -91,12 +91,14 @@ def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Pat
     assert verify_backup(backup_dir)["verified"] is True
     target = tmp_path / "restored.sqlite3"
     marker = tmp_path / "quiesced.json"
-    marker.write_text(json.dumps({"quiesced": True, "receipt_id": "r1", "generation": 1, "nonce": "n1", "database": "restored.sqlite3", "observed_at": datetime.now(UTC).isoformat()}), encoding="utf-8")
+    marker.write_text(json.dumps({"quiesced": True, "receipt_id": "r1", "generation": 1, "nonce": "n1", "database": "restored.sqlite3", "database_digest": backup_database(scheduler.path, tmp_path / "backup2")["database_summary"]["digest"], "observed_at": datetime.now(UTC).isoformat()}), encoding="utf-8")
     dry = restore_database(backup_dir, target, quiescence_marker=marker)
     assert dry["dry_run"] is True and not target.exists()
     with pytest.raises(MigrationError, match="explicit"):
         activate_database(backup_dir / "source.sqlite3", target)
     restore_database(backup_dir, target, quiescence_marker=marker, activate=True)
+    with pytest.raises(MigrationError, match="already used"):
+        restore_database(backup_dir, target, quiescence_marker=marker, activate=True)
     assert verify_backup(backup_dir)["verified"] is True
     (backup_dir / "source.sqlite3").write_bytes(b"tampered")
     with pytest.raises(MigrationError, match="checksum"):
