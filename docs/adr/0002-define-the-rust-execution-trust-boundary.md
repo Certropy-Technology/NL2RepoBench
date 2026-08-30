@@ -1,0 +1,3 @@
+# Define the Rust execution trust boundary
+
+Each Rust release uses one exact toolchain profile and verifier-owned subprocess harnesses. Frozen dependencies may run hash-bound build scripts or procedural macros offline, but candidate-owned build-time code is rejected in the first production lane. Unsafe public functions are supported only when their values fit the serializable bridge, and every unsafe assertion runs in a fresh candidate process; the benchmark measures behavior rather than claiming memory-safety verification. This preserves normal ecosystem compatibility without granting generated repositories an unfenced build-time or shared-memory execution path.
