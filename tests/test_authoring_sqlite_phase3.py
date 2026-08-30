@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import fcntl
 import hashlib
 import importlib.util
@@ -7,6 +8,7 @@ import io
 import json
 import os
 import sqlite3
+import subprocess
 import sys
 import threading
 import time
@@ -408,6 +410,46 @@ def test_db_supervisor_dry_run_is_table_content_read_only(tmp_path: Path, monkey
         assert db.execute(
             "SELECT status FROM operation_receipts WHERE receipt_id=?", (receipt,)
         ).fetchone()[0] == "started"
+
+
+def test_prepared_disabled_supervisor_cycle_is_read_only(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    database = tmp_path / "prepared.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    scheduler.configure(
+        enabled=False,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+    )
+    scheduler.prepare_cutover_barrier("prepared", "a" * 64)
+    before_digest = hashlib.sha256(database.read_bytes()).hexdigest()
+    monkeypatch.setattr(supervisor, "_free_bytes", lambda _path: 100 * 1024**3)
+    monkeypatch.setattr(
+        supervisor,
+        "_docker_storage_status",
+        lambda: (tmp_path, 100 * 1024**3, None),
+    )
+    result = supervisor.supervise_db(
+        SimpleNamespace(
+            repository_root=tmp_path,
+            live_root=Path("live"),
+            scheduler_db=database,
+            dry_run=False,
+        )
+    )
+    assert result == 0
+    assert hashlib.sha256(database.read_bytes()).hexdigest() == before_digest
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "awaiting-first-enable"
+    assert report["dry_run"] is False
+    with sqlite3.connect(f"file:{database.as_posix()}?mode=ro", uri=True) as db:
+        assert db.execute("SELECT count(*) FROM controllers").fetchone()[0] == 0
+        assert db.execute("SELECT count(*) FROM scheduler_leases").fetchone()[0] == 0
+        assert db.execute("SELECT count(*) FROM status_snapshots").fetchone()[0] == 0
 
 
 def test_zero_runtime_limits_skip_work_but_allow_maintenance(
@@ -1009,6 +1051,68 @@ def test_private_cas_collision_has_digest_bound_source_evidence(
     assert payload["actual_digest"] == "b" * 64
     assert hashlib.sha256(evidence.read_bytes()).hexdigest() == receipt[2]
     actor.release()
+
+
+def test_private_cas_eexist_race_never_replaces_winner(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "root"
+    worktree = tmp_path / "worktree"
+    source = worktree / "catalog/sources/demo"
+    source.mkdir(parents=True)
+    payload = b"expected"
+    digest = hashlib.sha256(payload).hexdigest()
+    (source / "task.toml").write_text(
+        f"artifact = 'sha256:{digest}'\n", encoding="utf-8"
+    )
+    source_artifact = supervisor._cas_file(worktree, digest)
+    source_artifact.parent.mkdir(parents=True)
+    source_artifact.write_bytes(payload)
+    target = supervisor._cas_file(root, digest)
+    winner = b"racing mismatch"
+
+    def racing_link(_source: Path, destination: Path) -> None:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(winner)
+        raise FileExistsError(destination)
+
+    monkeypatch.setattr(supervisor.os, "link", racing_link)
+    with pytest.raises(supervisor.PrivateArtifactCollision) as collision:
+        supervisor._sync_private_cas(root, worktree, source)
+    assert collision.value.actual_digest == hashlib.sha256(winner).hexdigest()
+    assert target.read_bytes() == winner
+
+
+def test_private_cas_fallback_preserves_bad_temp_digest(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "root"
+    worktree = tmp_path / "worktree"
+    source = worktree / "catalog/sources/demo"
+    source.mkdir(parents=True)
+    payload = b"expected"
+    digest = hashlib.sha256(payload).hexdigest()
+    (source / "task.toml").write_text(
+        f"artifact = 'sha256:{digest}'\n", encoding="utf-8"
+    )
+    source_artifact = supervisor._cas_file(worktree, digest)
+    source_artifact.parent.mkdir(parents=True)
+    source_artifact.write_bytes(payload)
+    monkeypatch.setattr(
+        supervisor.os,
+        "link",
+        lambda *_args: (_ for _ in ()).throw(OSError(errno.EXDEV, "cross-device")),
+    )
+    bad = b"bad copied bytes"
+    monkeypatch.setattr(
+        supervisor.shutil,
+        "copyfile",
+        lambda _source, destination: Path(destination).write_bytes(bad),
+    )
+    with pytest.raises(supervisor.PrivateArtifactCollision) as collision:
+        supervisor._sync_private_cas(root, worktree, source)
+    assert collision.value.actual_digest == hashlib.sha256(bad).hexdigest()
+    assert not supervisor._cas_file(root, digest).exists()
 
 
 def test_archive_watcher_disable_and_partial_singleton_rollback(
@@ -1960,5 +2064,24 @@ def test_sqlite_service_template_has_singleton_failure_contract() -> None:
     assert "KillMode=control-group" in service
     assert "ExecStartPre=" in service
     assert "install_authoring_sqlite_service.py" in service
+    assert (
+        "ExecStartPre=/data/NL2RepoBench-integration-20260827/.venv/bin/python3 "
+        "/data/NL2RepoBench-integration-20260827/scripts/install_authoring_sqlite_service.py"
+        in service
+    )
     assert "OnFailure=nl2repobench-authoring-failure-marker@%i.service" in service
     assert "StateDirectory=nl2repobench-authoring-failures" in marker
+    environment = {key: value for key, value in os.environ.items() if key != "PYTHONPATH"}
+    completed = subprocess.run(
+        [
+            str(root / ".venv/bin/python3"),
+            str(root / "scripts/install_authoring_sqlite_service.py"),
+            "--help",
+        ],
+        cwd=root,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr

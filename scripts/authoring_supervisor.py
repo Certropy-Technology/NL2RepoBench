@@ -10,6 +10,7 @@ complete worktree payload has been verified in OSS.
 from __future__ import annotations
 
 import argparse
+import errno
 import fcntl
 import hashlib
 import importlib.util
@@ -271,6 +272,18 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
     """Copy only this task's missing private artifacts into the central CAS."""
 
     copied: list[str] = []
+
+    def validate_winner(target: Path, expected: str) -> None:
+        actual = (
+            "symlink"
+            if target.is_symlink()
+            else _sha256(target)
+            if target.is_file()
+            else "non-regular"
+        )
+        if actual != expected:
+            raise PrivateArtifactCollision(target, expected, actual)
+
     for digest in sorted(_referenced_digests(source)):
         source_file = _cas_file(worktree, digest)
         if not source_file.is_file() or source_file.is_symlink():
@@ -281,32 +294,67 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
             raise PrivateArtifactCollision(source_file, expected, source_digest)
         target = _cas_file(root, digest)
         if target.exists() or target.is_symlink():
-            if (
-                target.is_symlink()
-                or not target.is_file()
-                or _sha256(target) != digest.removeprefix("sha256:")
-            ):
-                actual = (
-                    "symlink"
-                    if target.is_symlink()
-                    else _sha256(target)
-                    if target.is_file()
-                    else "non-regular"
-                )
-                raise PrivateArtifactCollision(target, expected, actual)
+            validate_winner(target, expected)
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         try:
             os.link(source_file, target)
-        except OSError:
-            temporary = target.with_name(f".{target.name}.supervisor.tmp")
-            shutil.copyfile(source_file, temporary)
-            if _sha256(temporary) != digest.removeprefix("sha256:"):
+        except FileExistsError:
+            validate_winner(target, expected)
+            continue
+        except OSError as exc:
+            if exc.errno not in {
+                errno.EXDEV,
+                errno.EOPNOTSUPP,
+                errno.ENOTSUP,
+                errno.EPERM,
+            }:
+                raise
+            fd, temporary_name = tempfile.mkstemp(
+                prefix=f".{target.name}.supervisor-", dir=target.parent
+            )
+            os.close(fd)
+            temporary = Path(temporary_name)
+            try:
+                shutil.copyfile(source_file, temporary)
+                temporary_digest = _sha256(temporary)
+                if temporary_digest != expected:
+                    raise PrivateArtifactCollision(
+                        temporary, expected, temporary_digest
+                    )
+                try:
+                    os.link(temporary, target)
+                except FileExistsError:
+                    validate_winner(target, expected)
+                    continue
+                except OSError as publish_exc:
+                    if publish_exc.errno not in {
+                        errno.EOPNOTSUPP,
+                        errno.ENOTSUP,
+                        errno.EPERM,
+                    }:
+                        raise
+                    try:
+                        output_fd = os.open(
+                            target,
+                            os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                            0o600,
+                        )
+                    except FileExistsError:
+                        validate_winner(target, expected)
+                        continue
+                    try:
+                        with temporary.open("rb") as input_file, os.fdopen(
+                            output_fd, "wb"
+                        ) as output_file:
+                            shutil.copyfileobj(input_file, output_file)
+                            output_file.flush()
+                            os.fsync(output_file.fileno())
+                    except BaseException:
+                        target.unlink(missing_ok=True)
+                        raise
+            finally:
                 temporary.unlink(missing_ok=True)
-                raise PrivateArtifactCollision(
-                    temporary, expected, _sha256(temporary)
-                ) from None
-            os.replace(temporary, target)
         copied.append(digest)
     return copied
 
@@ -1759,15 +1807,25 @@ def _integrate_db_task(
 def supervise_db(args: argparse.Namespace) -> int:
     root = Path(args.repository_root).resolve()
     live = (root / args.live_root).resolve()
-    if args.dry_run:
-        status = readonly_status(args.scheduler_db)
+    preflight = readonly_status(args.scheduler_db)
+    preflight_config = preflight.get("config") or {}
+    preflight_barrier = preflight.get("cutover_barrier") or {}
+    prepared_disabled = (
+        preflight_barrier.get("state") == "prepared"
+        and not bool(preflight_config.get("enabled"))
+    )
+    if args.dry_run or prepared_disabled:
+        status = preflight
         policy = status.get("resource_policy") or {}
         free = _free_bytes(root)
         docker_root, docker_free, docker_error = _docker_storage_status()
         dry_report = {
             "schema_version": "authoring-supervisor/v3",
             "authority": "sqlite",
-            "dry_run": True,
+            "dry_run": bool(args.dry_run),
+            "status": (
+                "awaiting-first-enable" if prepared_disabled else "dry-run"
+            ),
             "database": status.get("database"),
             "runtime_config": status.get("config"),
             "resource_policy": policy,
