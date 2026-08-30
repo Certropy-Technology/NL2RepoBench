@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "wrapt"
+version = "2.4.0rc5"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-library"
+tags = ["python", "decorators", "object-proxy", "monkey-patching", "c-extension", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/GrahamDumpleton/wrapt"
+revision = "537612871898f46b394477d701d26dbb78240064"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:aa3892a27dfae6781dc98bf9a70d2cba3eb2954f6fcf8ca2d5582ae5df4c670f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["gcc", "libc6-dev"]
+network_mode = "no-network"
+build_command = "pip installs the hash-locked build closure during image construction; the candidate builds wrapt with CFLAGS='-O0 -g0'"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked setuptools and wheel build closure is installed during image build. Candidate and verifier execution have no egress; only the trusted Oracle receives a run-scoped exact GitHub authorization to fetch the pinned revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["packaging==26.3", "setuptools==84.0.0", "wheel==0.48.0"]
+lock_artifact = { digest = "sha256:47fe38b7bdb55f56a709d325f15e7b4944a64d72b53f3df191225cbc4afdd965", size_bytes = 559, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:47fe38b7bdb55f56a709d325f15e7b4944a64d72b53f3df191225cbc4afdd965", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 40
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:9965c6e58792711942d5f0c7aa42cdbaba02a0b1752a13d4d7e484bafc53f74f", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9965c6e58792711942d5f0c7aa42cdbaba02a0b1752a13d4d7e484bafc53f74f", visibility = "private" }
+
+[harbor]
+description = "Build wrapt from an empty workspace and implement deterministic object proxies, function wrappers, decorators, patching helpers, caching, and synchronization behavior."
+keywords = ["python", "decorators", "object-proxy", "monkey-patching", "c-extension", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Frozen source, hash-locked build closure, custom verifier, direct Docker Oracle smoke, and empty/stub/forgery/timeout/offline controls passed. No model Harbor Agent Run was started; review, pilot, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:1daf2df9eeff597ff45cf04a33aa810036b8661be6bee9a28677f7d14e1bd1b0"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:1daf2df9eeff597ff45cf04a33aa810036b8661be6bee9a28677f7d14e1bd1b0"
+visibility = "private"

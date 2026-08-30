@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "task_id": "wrapt",
+  "task_version": "2.4.0rc5",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "execution_mode": "direct-docker-authoring-smoke",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/GrahamDumpleton/wrapt",
+    "revision": "537612871898f46b394477d701d26dbb78240064",
+    "source_digest": "sha256:aa3892a27dfae6781dc98bf9a70d2cba3eb2954f6fcf8ca2d5582ae5df4c670f",
+    "license_spdx": "BSD-2-Clause"
+  },
+  "environment": {
+    "runtime": "CPython 3.12.14",
+    "platform": "linux/amd64 glibc",
+    "base_image": "python:3.12-slim-bookworm@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "toolchain_lock": "toolchain.lock.toml",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "status": "known",
+    "packages": ["packaging==26.3", "setuptools==84.0.0", "wheel==0.48.0"],
+    "lock_artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/47/47fe38b7bdb55f56a709d325f15e7b4944a64d72b53f3df191225cbc4afdd965",
+      "sha256": "sha256:47fe38b7bdb55f56a709d325f15e7b4944a64d72b53f3df191225cbc4afdd965",
+      "size_bytes": 559
+    }
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/wrapt/compiled-production/wrapt",
+    "bundle_manifest_sha256": "sha256:fb6173de2cf50fd4497857fbb183a23a63d590314e6ffac8196462e0189b1ffe",
+    "canonical_manifest_digest": "sha256:65535754ec0d7b863fa1e8f025e707af6d92ce2c45627623944ad555ef3f9c89",
+    "file_count": 58
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "frozen_total": 40,
+    "private_verifier_artifact": "sha256:9965c6e58792711942d5f0c7aa42cdbaba02a0b1752a13d4d7e484bafc53f74f",
+    "local_boundary": {"command": "custom verifier run.py through candidate_client", "exit_code": 0, "passed": 40, "collected": 40}
+  },
+  "oracle": {
+    "command": "docker run --network bridge wrapt-agent /bin/bash /oracle/solve.sh; docker run --network none wrapt-verifier /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "reward": 1.0,
+    "passed": 40,
+    "collected": 40,
+    "grading": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/wrapt/oracle-logs-final2/grading.json", "sha256": "sha256:3b1237e3625e9245c8cd8dcb9d65a4f467eed98782ede60f937fab692a99d25b"},
+    "reward_file": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/wrapt/oracle-logs-final2/reward.json", "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"},
+    "network": {"path": ".nl2repo/authoring-work/python-author-wave2-20260828/wrapt/oracle-logs-final2/network.json", "sha256": "sha256:4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {"command": "docker run --network none wrapt-verifier /tests/test.sh with empty workspace", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 0, "failure_reason": "candidate-installation-failed", "grading_sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43", "network_sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"},
+    "stub": {"command": "docker control bundle wrapt-stub then verifier", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 40, "grading_sha256": "sha256:4d00d336372c97b8fc2faacc47abd0b66031146633f306a4b164325fd7bc55f7", "network_sha256": "sha256:471839ee5319d50a930070fa8f5cbe35d833712cb4e9d841c25bdf2342d80347"},
+    "forgery": {"command": "docker control bundle wrapt-forgery then verifier", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 40, "verifier_owned_reward": true, "grading_sha256": "sha256:4d00d336372c97b8fc2faacc47abd0b66031146633f306a4b164325fd7bc55f7", "network_sha256": "sha256:f68f0fda7fb7712ad269ef0b0c7a5ae7f0e327426ffb2680ad5d41f2db7539bc"},
+    "install-hang": {"command": "docker control bundle wrapt-install-hang then verifier", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 0, "failure_reason": "candidate-installation-failed", "grading_sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43", "network_sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e"},
+    "call-hang": {"command": "docker control bundle wrapt-call-hang then verifier", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "failed": 40, "collected": 40, "bounded": true, "grading_sha256": "sha256:4d00d336372c97b8fc2faacc47abd0b66031146633f306a4b164325fd7bc55f7", "network_sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"},
+    "offline": {"command": "docker run --network none wrapt-verifier /tests/test.sh", "exit_code": 0, "completed": true, "public_network_available": false, "grading_sha256": "sha256:3b1237e3625e9245c8cd8dcb9d65a4f467eed98782ede60f937fab692a99d25b", "network_sha256": "sha256:4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb"}
+  },
+  "residual_risks": [
+    "The local authoring smoke used direct Docker invocation; the official Harbor Agent Run was intentionally not started in this lane.",
+    "The fixed 40-leaf adapter does not claim full upstream mypy, stress, platform, or native-only parity.",
+    "Integrator review, dataset integration, model pilot, and publication remain outstanding."
+  ]
+}

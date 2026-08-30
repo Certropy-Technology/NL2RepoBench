@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "wrapt",
+  "source_revision": "537612871898f46b394477d701d26dbb78240064",
+  "frozen_total": 40,
+  "groups": [
+    {"id": "exports", "leaves": 2, "spec": "package version and root exports", "upstream": "src/wrapt/__init__.py"},
+    {"id": "object-proxy", "leaves": 10, "spec": "ObjectProxy transparent operations and self state", "upstream": "tests/core/test_object_proxy.py; tests/core/test_object_proxy_self_dict.py"},
+    {"id": "callable-wrapper", "leaves": 6, "spec": "CallableObjectProxy, FunctionWrapper, binding, and partial", "upstream": "tests/core/test_callable_object_proxy.py; tests/core/test_function_wrapper.py; tests/core/test_instancemethod.py"},
+    {"id": "decorators", "leaves": 5, "spec": "decorator and signature preservation", "upstream": "tests/core/test_decorators.py; tests/core/test_with_signature.py"},
+    {"id": "patching", "leaves": 7, "spec": "patch helpers, wrapper chains, and restoration", "upstream": "tests/core/test_monkey_patching.py; tests/core/test_wrapper_chain.py; tests/core/test_unwrap_object.py"},
+    {"id": "cache-sync", "leaves": 7, "spec": "lru_cache and sync/async wrappers", "upstream": "tests/core/test_lru_cache.py; tests/core/test_synchronized_lock.py; tests/core/test_synchronized_async.py"},
+    {"id": "imports-errors", "leaves": 3, "spec": "lazy imports and typed path errors", "upstream": "tests/core/test_resolve_path.py; tests/core/test_post_import_hooks.py"}
+  ],
+  "excluded_upstream_behaviors": {
+    "mypy": "Requires a separately pinned type-checker and compares tool output rather than runtime behavior.",
+    "stress": "Probabilistic free-threading programs are not a deterministic fixed denominator.",
+    "native-only": "The fixed adapter accepts either the C accelerator or pure-Python fallback.",
+    "platform": "Windows and interpreter-specific cases are outside the Linux CPython contract."
+  },
+  "coverage_statement": "Every fixed leaf maps to a named behavior in instruction.md; no scored leaf imports trusted candidate code or depends on a private helper name."
+}
