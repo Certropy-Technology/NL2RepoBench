@@ -9,6 +9,11 @@ subagent-artifacts/
 **/__pycache__/
 *.py[cod]
 .DS_Store
+# Runtime workspaces and hosted CI are not repository source. Production
+# orchestration is owned by the local systemd supervisor and explicit gates.
+/workspace/
+/workspaces/
+/.github/workflows/
 build/
 dist/
 htmlcov/
