@@ -145,8 +145,9 @@ compiler 或 verifier import。`plan` 阶段完全只读，顺序如下：
 `apply` 必须验证 current source tree digest 与 plan input 完全一致，然后在 exclusive authoring/
 integration lock 下操作。持锁后必须再次验证 staged path 不是 symlink、owner/mode、完整 output
 tree digest、task/path mapping、所有 artifact refs、新 model/source validation，以及 staged/current
-位于同一 `st_dev`；任一不一致在 mutation 前失败。temporary tree 与 `catalog/sources` 必须在同一
-filesystem；Linux `renameat2(RENAME_EXCHANGE)` 是唯一允许的 tree switch。若 syscall/filesystem
+及 previous_path 的既有 parent directory 位于同一 `st_dev`，且 owner UID/GID 与 transaction
+record 一致；任一不一致在 mutation 前失败。temporary tree、`catalog/sources` 与 retention
+destination 必须在同一 filesystem；Linux `renameat2(RENAME_EXCHANGE)` 是唯一允许的 tree switch。若 syscall/filesystem
 不支持，apply 在任何 mutation 前失败，不做逐文件 fallback。
 
 transaction state 位于 `.nl2repo/migrations/unified-runtime-20260830/transaction.json`，每次状态变化
@@ -180,7 +181,14 @@ filesystem_device: int
 owner_uid: int
 owner_gid: int
 retention_status: not-started | moving | retained | removed
-last_error: bounded ProcessError-like record | null
+last_error: MigrationError | null
+
+MigrationError
+  code: plan-invalid | staged-changed | exchange-failed | verify-failed |
+        rollback-failed | retention-failed | ambiguous-tree
+  stage: plan | preflight | exchange | verify | rollback | retention | recovery
+  message: non-empty <= 4096 chars
+  observed_digests: sorted tuple[sha256, ...] <= 4
 ```
 
 path 必须 resolved、non-symlink、位于允许 root，record 每次写入都带完整字段；不使用 timestamp
@@ -189,7 +197,7 @@ path 必须 resolved、non-symlink、位于允许 root，record 每次写入都�
 | state/crash window | required observed digests | recover action |
 | --- | --- | --- |
 | `planned` | current=input，staged 可不存在 | 删除不完整 staged，保留 current，终态 rolled-back |
-| `staged-validated` | current=input，staged=output | 不 exchange；可安全重新 apply 或显式 rollback 删除 staged |
+| `staged-validated` | current=input，staged=output | recover 唯一默认动作：删除 staged，验证 current，进入 rolled-back；重新迁移必须再次 plan/apply |
 | `exchange-intent` | current=input/staged=output 或 current=output/staged=input | 前者退回 staged-validated；后者立即 exchange 回 input 并 rolled-back |
 | `exchanged-unverified` | current=output，staged=input | exchange 回 input，验证后 rolled-back |
 | `verified` | current=output，staged=input 或 previous=input | 保持 new active；将 input tree move/确认到 previous，进入 old-tree-retained |
@@ -198,6 +206,11 @@ path 必须 resolved、non-symlink、位于允许 root，record 每次写入都�
 | `rolled-back` | current=input | idempotent no-op；可删除 output staged only with explicit cleanup |
 | `complete` | current=output，previous=input retained | idempotent no-op |
 | `recovery-required` | 任意 | 自动 no-op/non-zero，只允许 human-audited `recover --force`，默认禁止 |
+
+CLI 只有 `plan`、`apply`、`recover`，没有未定义的 rollback selector。`apply` 只接受 planned/
+staged-validated plan并执行 exchange；`recover` 对所有 pre-verified state 默认恢复旧 input，对 verified
+state完成 retention。`recover` 重复运行必须得到同一终态。`recover --force` 不自动执行 tree 操作，
+只输出诊断/人工命令草案并仍返回 non-zero，直到 operator 提交修复后的 transaction record/evidence。
 
 crash 发生在 retention rename 前/中/后时，recover 同时检查 staged 和 previous：恰有一处 input
 digest 才可继续；两处、零处或其他 digest 进入 recovery-required。任何 rollback/exchange/fsync
@@ -419,7 +432,8 @@ empty state并拒绝 build command，Harbor registry 不注册其 compiler。J0 
 
 zero-member ustar 是恰好 10240 个 `0x00` bytes。empty inventory canonical JSON 在结尾带一个
 LF，字段固定为 `schema_version=1.0`、language-qualified identity、lock/store digest、
-`entries=[]`、`file_count=0`、`total_bytes=0`、empty tree digest、adapter/toolchain identity 和
+`lock.entries=[]`、`store.entries=[]`、两个 subrecord 的 `file_count=0`/`total_bytes=0`/empty tree
+digest、adapter/toolchain identity 和
 `offline_smoke={status:"passed",command_id:"none-noop-v1"}`；禁止额外字段。unknown bundle 不创建
 假 empty artifact。generic `status=known` 因此仍统一要求三 refs，无 validator 隐式豁免。
 empty tree digest 固定为
@@ -500,6 +514,7 @@ private resolution 不再接受 broad `allow_private: bool`。trusted compiler/v
 ```text
 PrivateArtifactAuthorization
   task_id: safe task ID
+  manifest_digest: sha256
   purpose: compile | verify
   allowed_digests: non-empty frozenset[sha256]
   staging_root: resolved path under .nl2repo/compiled or verifier temp
@@ -516,8 +531,17 @@ compiler 为当前 source 建立 scoped authorization，不等价于 broad read�
 loader 读取 task ID 和允许持有 private ref 的固定字段（dependency lock/store/inventory、tests
 commands/protected/bundle、verifier bundle、oracle bundle），收集 exact digest set，验证 refs 均属于
 该 task 后构造 `PrivateArtifactAuthorization(purpose="compile")`。用户不能通过 argv 提供额外 digest、
-path、purpose 或 staging root。verify path 从 compiled manifest 的固定字段独立构造
-purpose=`verify` authorization。旧 flag 在 CLI/parser/scripts/docs 中零引用；遇到旧 flag直接 usage
+path、purpose 或 staging root。compile authorization 绑定 canonical manifest digest，staging root
+固定为 `.nl2repo/compiled/<task-id>/private/<manifest-digest-prefix>/`。
+
+generated `bundle.manifest.json` 增加 strict `private_artifacts` object，仅允许以下 categorized digest
+fields：`dependencies.lock`、`dependencies.store`、`dependencies.inventory`、`tests.commands`、
+`tests.protected_paths`、`tests.bundle`、`verifier.bundle`、`oracle.bundle`；每项为 sha256 或 null，
+同时记录 task_id/canonical_manifest_digest。verify authorization 只从已验证 compiled manifest 取
+dependencies 三项、tests 三项和 verifier.bundle；明确排除 oracle.bundle。它绑定 task_id 和
+canonical_manifest_digest，staging root 固定为 separate verifier container 中
+`/opt/nl2repobench-private/<task-id>/<manifest-digest-prefix>/`。字段外 arbitrary payload/ref 不进入
+authorization。旧 flag 在 CLI/parser/scripts/docs 中零引用；遇到旧 flag直接 usage
 error，不提供 alias。
 
 resolver/materializer 调用固定为：
@@ -525,7 +549,10 @@ resolver/materializer 调用固定为：
 ```text
 resolver.resolve(reference, authorization)
 resolver.read_bytes(reference, authorization, max_bytes)
-materialize_archive(reference, kind, destination, limits, authorization, inventory_ref)
+materialize_archive(
+  reference, kind, destination, limits, authorization,
+  inventory_ref=null, inventory_section=null
+)
 ```
 
 public reference 可以用 `PublicArtifactAuthorization` 或 public-only resolver；private reference 缺少
@@ -537,37 +564,90 @@ matching scoped authorization 永远拒绝。
 MaterializationLimits(max_members, max_member_bytes, max_total_bytes, max_path_bytes)
 MaterializationResult(destination, file_count, total_bytes, tree_digest, inventory_digest)
 ArchiveKind = dependency-lock | offline-store | test-bundle | verifier-bundle | oracle-bundle
-materialize_archive(ref, kind, destination, limits, authorization, inventory_ref=null)
+materialize_archive(
+  ref, kind, destination, limits, authorization,
+  inventory_ref=null, inventory_section=null
+)
 ```
 
 per-kind target media/inventory contract：
 
 | kind | accepted target media_type | inventory |
 | --- | --- | --- |
-| dependency-lock | `application/vnd.nl2repobench.package-lock.tar` | external `inventory_ref` required |
-| offline-store | `application/vnd.nl2repobench.offline-store.tar` | external `inventory_ref` required |
+| dependency-lock | `application/vnd.nl2repobench.package-lock.tar` | bundle-level external inventory 的 `lock` section required |
+| offline-store | `application/vnd.nl2repobench.offline-store.tar` | 同一 external inventory 的 `store` section required |
 | test-bundle | `application/vnd.nl2repobench.test-bundle.tar` | internal `_nl2repo.bundle-inventory.json` required；external forbidden |
-| verifier-bundle | `application/vnd.nl2repobench.verifier-bundle.tar` | internal manifest required；external forbidden |
-| oracle-bundle | `application/vnd.nl2repobench.oracle-bundle.tar` | internal manifest required；external forbidden |
+| verifier-bundle | `application/vnd.nl2repobench.verifier-bundle.tar` | internal `_nl2repo.bundle-inventory.json` required；external forbidden |
+| oracle-bundle | `application/vnd.nl2repobench.oracle-bundle.tar` | internal `_nl2repo.bundle-inventory.json` required；external forbidden |
+
+hard ceilings：
+
+| kind | max members | max member bytes | max total bytes | max path bytes |
+| --- | ---: | ---: | ---: | ---: |
+| dependency-lock | 64 | 4 MiB | 16 MiB | 255 |
+| offline-store | 100000 | 512 MiB | 2 GiB | 255 |
+| test-bundle | 10000 | 512 MiB | 2 GiB | 255 |
+| verifier-bundle | 10000 | 512 MiB | 2 GiB | 255 |
+| oracle-bundle | 10000 | 512 MiB | 2 GiB | 255 |
+
+caller limits 必须小于等于对应 hard ceiling；缺失时使用该行值，不可上调。member count 包含
+internal manifest 和 directories；total bytes 只计 regular payload bytes。超过任一值在 extraction
+前/过程中 fail closed并清理 temp。
 
 旧 `application/gzip`、`application/x-tar`、Node/Go/Python 专属 media types 只作为 migration input；
 plan 必须安全解包并重新封装为 target deterministic ustar/new ref。target runtime 不接受旧 media。
 
-inventory JSON strict schema：
+`commands_artifact` 和 `protected_paths_artifact` 不是 archive，target 统一为 bounded canonical JSON：
+
+```text
+commands media_type = application/vnd.nl2repobench.command-plan+json
+CommandPlan
+  schema_version: "1.0"
+  identity: language+package-manager
+  runner: exact adapter-owned identifier
+  candidate_install: exact adapter-owned identifier
+  report_format: exact TestManifest.report_format
+  test_root: "/tests/private"
+  steps: tuple[CommandStep, ...]
+
+CommandStep
+  step_id: safe unique identifier
+  argv: tuple[str, ...] non-empty
+  cwd: safe relative path
+  environment: validated exact map
+  timeout_sec: positive int
+
+protected media_type = application/vnd.nl2repobench.protected-paths+json
+ProtectedPaths
+  schema_version: "1.0"
+  paths: sorted unique tuple[safe relative POSIX path, ...]
+```
+
+commands JSON 上限=4 MiB/4096 steps；protected JSON 上限=1 MiB/10000 paths。禁止 shell string、
+absolute/`..` path、PATH/loader environment override 和 extra fields。旧 JSON/gzip/tar/Node command
+artifact 由 runtime-specific migration decoder 转换为该 JSON/new ref；无法无歧义转换的 task 使
+整个 migration plan 失败。runtime 只 bounded-read/validate JSON，不调用 archive materializer。
+
+dependency external inventory 是一个 bundle-level strict record，唯一 `DependencyBundle.inventory`
+同时验证 lock/store，不复用 singular archive schema：
 
 ```text
 schema_version: "1.0"
-archive_kind: ArchiveKind
-archive_digest: sha256
-tree_digest: sha256
-identity: language+package-manager | null   # dependency kinds required, other kinds null
-adapter_version: exact str | null
-toolchain_digest: sha256 | null
-entries: sorted tuple[InventoryEntry, ...]
-file_count: int
-directory_count: int
-total_bytes: int
-offline_smoke: {status: passed, command_id: str} | null
+identity: language+package-manager
+adapter_version: exact str
+toolchain_digest: sha256
+lock: ArchiveInventory(kind=dependency-lock)
+store: ArchiveInventory(kind=offline-store)
+offline_smoke: {status: passed, command_id: str}
+
+ArchiveInventory
+  archive_kind: dependency-lock | offline-store
+  archive_digest: sha256
+  tree_digest: sha256
+  entries: sorted tuple[InventoryEntry, ...]
+  file_count: int
+  directory_count: int
+  total_bytes: int
 
 InventoryEntry
   path: normalized UTF-8 POSIX relative path
@@ -577,9 +657,26 @@ InventoryEntry
   sha256: sha256 | null             # file required, directory=null
 ```
 
-bundle internal manifest 不列出自身；archive 中除 manifest 和 entries 外不能有其他 member。
-dependency external inventory entries覆盖 archive 全部 payload。file_count/directory_count/total_bytes
-必须由 entries 精确重算。
+materialize dependency archive 时传同一 inventory_ref 和 `inventory_section=lock|store`，section kind、
+archive digest/tree 必须与 ref/kind 一致。
+
+test/verifier/Oracle internal `BundleInventory` 固定路径均为
+`_nl2repo.bundle-inventory.json`，schema 不含 archive_digest，避免自引用：
+
+```text
+schema_version: "1.0"
+archive_kind: test-bundle | verifier-bundle | oracle-bundle
+tree_digest: sha256
+entries: sorted tuple[InventoryEntry, ...]   # 不包含 manifest 自身
+file_count: int
+directory_count: int
+total_bytes: int
+```
+
+external ArtifactRef 验证整个 archive digest；internal manifest 验证除自身外的 closed-world payload。
+archive 中除 internal manifest 和 entries 外不能有其他 member。dependency external inventory
+entries 覆盖对应 archive 全部 payload。所有 counts/bytes 必须由 entries 精确重算。legacy payload
+若已占用 reserved internal manifest path，migration hard error，不覆盖。
 
 tree digest 算法固定为 SHA-256，初始 bytes 为 `nl2repobench-tree-v1\0`。按 UTF-8 path byte
 lexicographic 顺序，对每项追加：1 byte type (`F`/`D`)；8-byte unsigned big-endian path length；path
@@ -591,14 +688,23 @@ entrypoint（`test.sh`、`solve.sh`、verifier entrypoint）可=`0555`。USTAR �
 或可无损 split 为 prefix<=155/name<=100；总 UTF-8 path<=255 bytes，各 component 非空且不是
 `.`/`..`。不使用 PAX/GNU longname；不可表示路径 hard error。
 
+唯一 encoder 为 checked-in `storage/canonical_ustar.py`；不允许 adapter 自选 tar library/options。
+header 固定 POSIX ustar 512 bytes：ASCII octal numeric fields 左侧 `0` padding并以 NUL 结束；checksum
+字段计算时视为 8 个空格，编码为 6 个 octal digits + NUL + space；typeflag file=`0`、directory=`5`；
+magic=`ustar\0`、version=`00`；uname/gname 为空；devmajor/devminor=0；mtime=0。directory path 以
+`/` 结束。file content 以 zero pad 到 512 boundary；末尾两个 zero blocks，再 zero pad 到 10240
+byte record boundary。entries 按 UTF-8 path bytes、type 排序。仓库必须提交 empty、single file、
+directory+executable、prefix-split path 的 byte-for-byte golden fixtures及 SHA-256；migration 和每个
+adapter 只能调用该 encoder。
+
 materializer 在读取前验证 CAS blob digest/size/media type/private authorization；用 `openat`/
 `O_NOFOLLOW` 风格的安全 extractor 拒绝 absolute/`..`/duplicate/symlink/hardlink/device/FIFO，解包到
 destination sibling temp，按 inventory 逐文件校验 path/size/SHA-256 和 aggregate tree digest，
 设置 root-owned read-only mode，再 atomic rename 到 destination。任一失败清理 temp 并保持既有
 destination 不变。
 
-dependency-lock/offline-store 必须提供 inventory_ref，且 inventory 的 archive kind/digest/tree
-必须匹配。test/verifier/Oracle bundle 保持 payload file 内容、relative layout、entrypoint 语义和
+dependency-lock/offline-store 必须提供同一个 inventory_ref 和对应 lock/store section，且 section
+的 kind/digest/tree 必须匹配。test/verifier/Oracle bundle 保持 payload file 内容、relative layout、entrypoint 语义和
 bundle limits，但 migration 以 canonical ustar/internal inventory 重新封装，因此新 release 的
 archive bytes/ref 会改变；不使用 dependency external inventory。`harbor/task_writer.extract_private_bundle()`
 改为调用同一个 safe extractor core 和 scoped authorization，但仍按原目的地/entrypoint 语义
@@ -728,6 +834,13 @@ pre-start UID residue 产生 `cleanup_error(code=cleanup-residue, stage=cleanup)
 valid error combinations由 model validator 固定：spawn/preexec/exec code 只能在 spawn_error；
 cleanup-timeout/residue 只能在 cleanup_error；cleanup_complete=true 时 cleanup_error 必须 null；
 timed_out/output_limit 不能同时为 true；result request_id 必须匹配。
+
+wrapper precedence 固定：CLI exit 0 但 stdout 缺失、空行、多于一条 non-empty result line、JSON/
+schema invalid、base64 invalid、request_id mismatch、error/stage combination invalid 或 decoded output
+超过 request cap，一律忽略 candidate returncode/leaf data并映射
+`verifier-internal-error, valid=false, FailureClass.VERIFIER`。CLI 64/70/75 优先于任何可解析 candidate
+result；CLI 75 即使 result 声称 cleanup_complete=true 仍按 cleanup invalid。Python/Node/Go wrapper
+必须共享一组 malformed transport parameterized tests，不能各自定义 precedence。
 
 F1 checked-in hard constants：candidate UID=10001、GID=10001；timeout/cpu 上限=600s；stdin
 上限=1 MiB；aggregate stdout+stderr 上限=8 MiB；file 上限=512 MiB；open files 上限=256；
