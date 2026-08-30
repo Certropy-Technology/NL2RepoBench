@@ -725,6 +725,54 @@ def test_migration_recovery_completes_retention_crash_windows(tmp_path: Path, st
     assert not staged.exists()
 
 
+def test_migration_recovery_records_rollback_exchange_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module, transaction_path, current, staged, previous = _retention_transaction(
+        tmp_path, "verified"
+    )
+    transaction = json.loads(transaction_path.read_text(encoding="utf-8"))
+    transaction["state"] = "exchange-intent"
+    transaction_path.write_text(json.dumps(transaction), encoding="utf-8")
+
+    def fail_exchange(_current: Path, _staged: Path) -> None:
+        raise OSError("injected rollback exchange failure")
+
+    monkeypatch.setattr(module, "_exchange", fail_exchange)
+    with pytest.raises(module.MigrationError, match="injected rollback exchange failure"):
+        module.recover(transaction_path)
+    record = json.loads(transaction_path.read_text(encoding="utf-8"))
+    assert record["state"] == "recovery-required"
+    assert record["last_error"]["code"] == "rollback-failed"
+    assert module.digest_tree(current) == record["output_tree_digest"]
+    assert module.digest_tree(staged) == record["input_tree_digest"]
+    assert not previous.exists()
+
+
+def test_migration_recovery_records_rollback_fsync_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module, transaction_path, current, staged, previous = _retention_transaction(
+        tmp_path, "verified"
+    )
+    transaction = json.loads(transaction_path.read_text(encoding="utf-8"))
+    transaction["state"] = "exchange-intent"
+    transaction_path.write_text(json.dumps(transaction), encoding="utf-8")
+
+    def fail_fsync(_path: Path) -> None:
+        raise OSError("injected rollback fsync failure")
+
+    monkeypatch.setattr(module, "_fsync_directory", fail_fsync)
+    with pytest.raises(module.MigrationError, match="injected rollback fsync failure"):
+        module.recover(transaction_path)
+    record = json.loads(transaction_path.read_text(encoding="utf-8"))
+    assert record["state"] == "recovery-required"
+    assert record["last_error"]["code"] == "rollback-failed"
+    assert module.digest_tree(current) == record["input_tree_digest"]
+    assert module.digest_tree(staged) == record["output_tree_digest"]
+    assert not previous.exists()
+
+
 def test_migration_recovery_rejects_current_tree_outside_allowed_root(tmp_path: Path) -> None:
     module, transaction_path, current, staged, previous = _retention_transaction(
         tmp_path, "verified"

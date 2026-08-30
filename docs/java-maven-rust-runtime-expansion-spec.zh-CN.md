@@ -42,7 +42,7 @@ Rust/Cargo 只能在 Java pilot 稳定后启动。它的作用不仅是增加题
 
 ### 2.2 非目标
 
-- 不读取或兼容新的 Python v1、Node v2、Java v3 等运行时 schema。
+- 不新增第二套 runtime schema，也不读取或兼容 historical schema families。
 - 不把 Maven、JUnit、Cargo 名称写进 generic evaluator。
 - 不直接让 trusted verifier JVM import/load candidate class。
 - 不执行 candidate 提供的 `pom.xml` plugin、Gradle plugin、annotation processor 或脚本。
@@ -58,18 +58,30 @@ Rust/Cargo 只能在 Java pilot 稳定后启动。它的作用不仅是增加题
 
 - `RuntimeLanguage` 只包含 `python|node|go`；
 - `PackageManager` 只包含 `uv|pip|npm|pnpm|go-modules|none`；
-- `DependencyBundle` 使用 Python `lock_artifact` 和 Go `module_bundle` 专属字段；
+- 迁移前 `DependencyBundle` 曾使用 Python/Go 专属依赖字段；这些字段仅属于 historical
+  input mapping，不属于 current `DependencyBundle`；
 - `TestManifest.framework` 固定为 `pytest`；
 - Go compiler 和 verifier 仍包含 profile-specific bridge/supervisor；
 - catalog compiler 仍有 schema/runtime 分支，不能再为 Java 增加一套平行 model；
 - production toolchain 没有 JDK/Maven image lock；
 - authoring/discovery/supervisor 尚无 Java lane。
 
+### 3.0 历史迁移输入词汇（非运行时）
+
+本规格中的旧字段、v1/v2 标识和 broad authorization flag 只表示迁移工具可读取的
+历史输入或必须拒绝的旧形状。它们不是当前 parser、compiler、verifier、CLI 或 task
+authoring 的 API；当前 runtime contract 只能使用后文定义的 canonical 字段和 scoped
+`--authorize-task-private-artifacts`。
+
+历史输入 token 包括：`lock_artifact`、`module_bundle`、`models_v2.py`、`schema_version =
+2.0`、Node v2 metric，以及旧的 `--allow-private`/`allow_private=True` 形式。迁移映射中
+出现这些 token 是为了记录 source-to-canonical 转换和拒绝规则，不表示它们仍可操作。
+
 本迁移直接修改当前 canonical contract。旧字段只存在于不可变历史 archive，不由新 parser、
 compiler 或 verifier 读取。迁移提交必须原子更新 catalog source、schema、fixtures、compiler
 和 tests；不能保留 public compatibility shim。
 
-### 3.1 F0 原子退出 v1/v2 的边界
+### 3.1 F0 原子退出历史 schema split 的边界
 
 F0 是一次有意的 release-breaking canonical migration，不是 additive model change。它必须在
 同一个 migration branch 中完成以下全部动作，多个本地 commit 可以用于 review，但只能整体
@@ -81,14 +93,14 @@ merge：
    只读 `(language, package_manager)`，不再读 `schema_version` 选择 compiler。
 3. 用 one-shot migration 命令重写全部 `catalog/sources/*/task.toml`。迁移命令是离线、
    deterministic、可重复执行的开发工具，不是 runtime compatibility reader。
-4. 同步迁移 Python v1、Node v2 和 Go source/compiler/package-manager adapter；不得先让一个
+4. 同步迁移旧 Python、Node 和 Go source/compiler/package-manager adapter；不得先让一个
    runtime 读取新字段、另一个 runtime 保留旧字段。
 5. 切换 `CatalogCompiler`、dataset compiler、Harbor registry、source validator、network lint 和
    analyzer 到唯一 model。
 6. 从迁移后的 source 重生成 schema、canonical manifests 和 Harbor projections；禁止手工编辑
    generated `catalog/tasks`。
-7. 删除 runtime 对 `models_v2.py`、`schema_version == 2.0` dispatch、`lock_artifact`、
-   `module_bundle` 和 Node 专属 dependency model 的引用。历史 archive reader 只能位于
+7. 删除 runtime 对旧 model、schema dispatch、旧 dependency 字段和 Node 专属 dependency
+   model 的引用。历史 archive reader 只能位于
    `analysis/archive` 边界。
 8. 将迁移后数据集发布为新的 dataset/release identity；历史结果不重算、不合并。
 
@@ -230,7 +242,10 @@ Git，并输出 post-migration hash inventory。
 F0 branch 随后从新 source 生成 schema/projections，删除 runtime old readers 并提交一个完整
 Git diff。merge 只接受该完整 branch；不允许把 intermediate mixed-schema commit 推入 main。
 
-### 3.4 v1/v2 到 canonical 字段映射
+### 3.4 历史 v1/v2 输入到 canonical 字段映射（仅 migration tool）
+
+表中的旧字段名只由 one-shot migration decoder 读取；新 source parser、compiler 和
+verifier 不接受这些字段。
 
 | old source | precondition | canonical mapping | failure behavior |
 | --- | --- | --- | --- |
@@ -281,7 +296,7 @@ adapter 可以认识语言和 package manager。
 
 ### 4.1 唯一 canonical source/manifest records
 
-F0 target 使用 strict/frozen `schema_version="1.0"` records，不保留 V2 前缀或 alias reader：
+F0 target 使用 strict/frozen `schema_version="1.0"` records，不保留旧 schema 前缀或 alias reader：
 
 ```text
 RuntimeProfile
@@ -341,7 +356,9 @@ TaskManifest
 environment 必须有 runtime/os/image/digest/network policy；unknown environment 的 runtime 可为 null，
 但 lifecycle 只能保持 blocked/discovered，不能 publish。
 
-### 4.2 Test/source mapping 与拒绝规则
+### 4.2 历史 source schema mapping 与拒绝规则（仅 migration tool）
+
+本节记录 historical source schema 的输入映射，不是当前 source parser 或 runtime contract。
 
 | old shape | target mapping |
 | --- | --- |
@@ -385,7 +402,7 @@ DependencyBundle
 - `status=known` 必须同时提供 `lock`、`offline_store` 和 `inventory`；`none` profile 可由
   validator 明确豁免空依赖，但仍须有 inventory 记录空 closure。
 - 三个 artifact 必须是 content-addressed URI；offline store 和 inventory 必须 private。
-- generic model 不包含 `module_bundle`、`maven_bundle`、`cargo_vendor` 等语言专属字段。
+- generic model 不包含 language-specific dependency bundle fields。
 - package-manager adapter 拥有 lock 语义、store 目录结构和 install/build command。
 - inventory 是 verifier-owned JSON，至少包含 schema、package manager、lock digest、store
   digest、逐文件相对路径、size、SHA-256、生成命令/adapter/toolchain identity 和 offline smoke
@@ -393,11 +410,14 @@ DependencyBundle
   时间和耗时只写非 content-addressed execution evidence。
 - 拒绝 symlink、device、FIFO、absolute path、`..`、重复 path、超限 member 和 hash mismatch。
 
-### 5.2 迁移
+### 5.2 历史依赖输入迁移（仅 migration tool）
 
-- Python `lock_artifact` 迁移到 `lock`；wheel/sdist closure 进入 private `offline_store`，并生成
+本小节描述 historical dependency input 的重封装，不是 runtime 安装 contract。target
+runtime 只接受 canonical dependency triple。
+
+- Python historical lock field 迁移到 `lock`；wheel/sdist closure 进入 private `offline_store`，并生成
   inventory。candidate 自身源码仍由受限 source install 处理，不混入 dependency closure。
-- Go `module_bundle` 拆为 `go.mod/go.sum` lock、vendor/module-cache store 和 inventory。
+- Go historical module bundle 拆为 `go.mod/go.sum` lock、vendor/module-cache store 和 inventory。
 - Node npm/pnpm 迁移 lockfile、offline store 和 inventory 到同一模型。
 - `catalog/tasks` 只保留 artifact reference 和 manifest。private store 在受控 execution staging
   下从 CAS materialize 到 `.nl2repo/compiled`/Harbor build context，不把 wheelhouse、npm store、
@@ -505,11 +525,11 @@ application/vnd.nl2repobench.offline-store.tar
 application/vnd.nl2repobench.inventory+json
 ```
 
-迁移不复用 raw Python requirements `lock_artifact` 作为新 lock ref；它把 raw bytes 放入规定
+迁移不复用 raw Python requirements historical lock field 作为新 lock ref；它把 raw bytes 放入规定
 relative name 后生成新的 deterministic lock archive 和新 ArtifactRef。Go/Node lock 同样从旧
 bundle 提取后重新封装，因此 target `lock` 永远是上表 lock archive，不存在 raw/archived 双形态。
 
-private resolution 不再接受 broad `allow_private: bool`。trusted compiler/verifier 为单题构造：
+private resolution 只接受 trusted compiler/verifier 为单题构造的 scoped authorization：
 
 ```text
 PrivateArtifactAuthorization
@@ -524,9 +544,9 @@ authorization 不是从 candidate/manifest JSON 反序列化的 capability；调
 在 allowed_digests，task/purpose/staging root 必须匹配当前 operation。其他 private digest、root
 escape 或 reuse 到另一 task 均拒绝。`FileArtifactStore.path_for/read_bytes` 和
 `LocalArtifactResolver` 的 runtime consumers 改为要求该 typed authorization；migration/archive
-tool 可以有独立、显式的 authority type，不保留 public `allow_private=True` escape hatch。
+tool 可以有独立、显式的 migration authority type；runtime 只使用 scoped authorization。
 
-F0 删除 CLI `--allow-private`。替代选项固定为 `--authorize-task-private-artifacts`，它只是要求
+F0 删除旧 broad private flag。替代选项固定为 `--authorize-task-private-artifacts`，它只是要求
 compiler 为当前 source 建立 scoped authorization，不等价于 broad read：CLI 先用 public catalog
 loader 读取 task ID 和允许持有 private ref 的固定字段（dependency lock/store/inventory、tests
 commands/protected/bundle、verifier bundle、oracle bundle），收集 exact digest set，验证 refs 均属于
@@ -541,7 +561,7 @@ fields：`dependencies.lock`、`dependencies.store`、`dependencies.inventory`�
 dependencies 三项、tests 三项和 verifier.bundle；明确排除 oracle.bundle。它绑定 task_id 和
 canonical_manifest_digest，staging root 固定为 separate verifier container 中
 `/opt/nl2repobench-private/<task-id>/<manifest-digest-prefix>/`。字段外 arbitrary payload/ref 不进入
-authorization。旧 flag 在 CLI/parser/scripts/docs 中零引用；遇到旧 flag直接 usage
+authorization。旧 broad private flag 在 CLI/parser/scripts/docs 中零引用；遇到旧 flag 直接 usage
 error，不提供 alias。
 
 resolver/materializer 调用固定为：
@@ -1224,7 +1244,7 @@ Rust 验收的关键伪证指标：
       runtime discriminator。
 - [ ] one-shot plan/apply/recover transaction 与 durable state-machine tests。
 - [ ] deterministic migration 按 mapping table 重写全部 Python/Node/Go canonical source。
-- [ ] 删除 Node v2 runtime parser/compiler dispatch 和旧 dependency fields。
+- [ ] 删除旧 Node runtime parser/compiler dispatch 和旧 dependency fields。
 - [ ] uv/pip/npm/pnpm/go-modules/none adapters 全部使用统一 typed protocol。
 - [ ] strict URI/scoped private authorization/deterministic archive/bounded materializer/CAS staging，
       不提交 dependency store bytes 到 generated Git tree。
@@ -1344,7 +1364,7 @@ network evidence、image identity、manifest digest 和 artifact path。不得�
 1. 第一轮只实现 F0 + F1，不启动 Java adapter。
 2. worker 可编辑、添加 tests、运行本地 gates 和提交到其 topic branch；不得 push、merge、
    删除其他 worktree、修改 `catalog/tasks` generated output 或启动 benchmark campaign。
-3. F0 已授权原子删除 v1/v2 runtime split、迁移全部 current source，并为新 release 改变
+3. F0 已授权原子删除旧 runtime split、迁移全部 current source，并为新 release 改变
    canonical/task digest。遇到 metric 数值语义变化、旧 archive bytes 修改、隐藏断言变化、无法
    保持 Python/Node/Go behavior，或必须增加 compatibility reader 时，停止并向 parent 请求决定。
 4. worker handoff 必须列 changed files、migration、commands/exit codes、失败、残余风险、commit。

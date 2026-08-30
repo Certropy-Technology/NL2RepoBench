@@ -1703,6 +1703,30 @@ def _recover_unlocked(transaction_path: Path, force: bool = False) -> dict[str, 
         _write_record(transaction_path, transaction)
         raise MigrationError("ambiguous-tree", "recovery", message)
 
+    def rollback_failed(error: Exception) -> None:
+        """Durably record rollback failure before surfacing the typed error."""
+
+        message = str(error)[:4096] or "rollback exchange or fsync failed"
+        transaction["state"] = "recovery-required"
+        transaction["last_error"] = {
+            "code": "rollback-failed",
+            "stage": "rollback",
+            "message": message,
+            "observed_digests": tuple(
+                sorted(
+                    digest
+                    for digest in (
+                        observed(current),
+                        observed(staged),
+                        observed(previous),
+                    )
+                    if digest is not None
+                )
+            )[:4],
+        }
+        _write_record(transaction_path, transaction)
+        raise MigrationError("rollback-failed", "rollback", message) from error
+
     current_digest = observed(current)
     staged_digest = observed(staged)
     previous_digest = observed(previous)
@@ -1746,8 +1770,11 @@ def _recover_unlocked(transaction_path: Path, force: bool = False) -> dict[str, 
         return transaction
     if state in {"exchange-intent", "exchanged-unverified", "rollback-intent"}:
         if current_digest == output_digest and staged_digest == input_digest:
-            _exchange(current, staged)
-            _fsync_directory(current.parent)
+            try:
+                _exchange(current, staged)
+                _fsync_directory(current.parent)
+            except Exception as error:
+                rollback_failed(error)
             current_digest, staged_digest = input_digest, output_digest
         elif not (current_digest == input_digest and staged_digest == output_digest):
             recovery_required("pre-verified transaction trees are ambiguous")

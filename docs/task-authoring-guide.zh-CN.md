@@ -105,9 +105,12 @@ catalog source
 - `TaskManifest`：task ID/version、difficulty/category/tags、公开 instruction ref、运行约束和 artifact refs；
 - `SourceLock`：upstream URL、完整 commit、submodules、license evidence 和 source hash；
 - `EnvironmentLock`：OS、Python、系统包、基础镜像 digest、build/runtime/test dependency locks；
-- `DependencyBundle`：Python build 阶段联网安装所需的 hash-locked
-  `requirements.lock.txt` artifact；Python verifier 禁止 vendor wheelhouse。Node/npm
-  依赖闭包仍走独立 v2 lock/cache contract；
+- `DependencyBundle`：统一的 private `lock`、`offline_store`、`inventory` 三元组；
+  每一项都必须与 language-qualified package-manager identity、digest 和 offline smoke
+  绑定。Python/Node/Go 都使用这一 canonical contract，不能 fallback 到 online index 或
+  wheelhouse。当前 F0.5 private staging contract 尚未安装，production compile 必须保持
+  `private-staging-contract-missing` blocked；授权编译使用
+  `--authorize-task-private-artifacts`；
 - `TestManifest`：测试 bundle、命令、冻结 collection 数、测试框架和 test hash；
 - `MetricContract`：passed/failed/error/skipped/xfail/collection mismatch 的精确定义；
 - `ReviewRecord`、`ControlRecord` 和 `TaskLifecycleRecord`。
