@@ -16,7 +16,7 @@ from nl2repobench.verification.leaf_report import (
 )
 from nl2repobench.verification.taxonomy import VerificationReason
 
-from ..node_models import NodeTestReportV2
+from ..node_models import NodeTestReport
 
 MAX_NODE_REPORT_BYTES = 8 * 1024 * 1024
 
@@ -77,7 +77,7 @@ def normalize_node_test_json(
                 f"report has {len(tests)} tests, collected says {collected}",
             )
     try:
-        report = NodeTestReportV2.model_validate(payload)
+        report = NodeTestReport.model_validate(payload)
     except (ValidationError, ValueError) as exc:
         raise ReportNormalizationError(VerificationReason.REPORT_MALFORMED, str(exc)) from exc
     effective_exit = report.runner_exit_code

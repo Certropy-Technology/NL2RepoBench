@@ -15,24 +15,13 @@ from pathlib import Path, PurePosixPath
 from pydantic import Field, model_validator
 
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
+from nl2repobench.domain.canonical_contract import TaskManifest, TaskSource
 from nl2repobench.domain.models import (
-    ArtifactRef,
     DatasetManifest,
-    DependencyBundle,
-    EnvironmentLock,
-    HarborExecutionProfile,
-    MetricContract,
     RecordModel,
-    SourceLock,
-    TaskLifecycleRecord,
-    TaskManifest,
-    TaskMetadata,
     TaskRef,
-    TaskVerifierSpec,
-    TestManifest,
     Visibility,
 )
-from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.files import (
     assert_manifest_writable,
@@ -51,29 +40,6 @@ def _validate_relative_path(value: str, field_name: str) -> str:
     if path.is_absolute() or ".." in path.parts or value in {"", "."}:
         raise ValueError(f"{field_name} must be a non-empty relative path without '..'")
     return value
-
-
-class DeclarativeTaskSource(RecordModel):
-    """Human-maintained task definition loaded from ``task.toml``."""
-
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
-    version: str = "1.0.0"
-    instruction: str = "instruction.md"
-    metadata: TaskMetadata = Field(default_factory=TaskMetadata)
-    source: SourceLock = Field(default_factory=SourceLock)
-    environment: EnvironmentLock = Field(default_factory=EnvironmentLock)
-    dependencies: DependencyBundle = Field(default_factory=DependencyBundle)
-    tests: TestManifest
-    metric: MetricContract = Field(default_factory=MetricContract)
-    lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
-    harbor: HarborExecutionProfile | None = None
-    oracle_bundle: ArtifactRef | None = None
-    verifier: TaskVerifierSpec | None = None
-
-    @model_validator(mode="after")
-    def validate_paths(self) -> DeclarativeTaskSource:
-        _validate_relative_path(self.instruction, "instruction")
-        return self
 
 
 class DeclarativeDatasetSource(RecordModel):
@@ -117,7 +83,7 @@ class CatalogCompiler:
         self.state_store = state_store
 
     @staticmethod
-    def load_task(source_dir: Path) -> DeclarativeTaskSource:
+    def load_task(source_dir: Path) -> TaskSource:
         resolved_source = source_dir.resolve()
         path = source_dir / "task.toml"
         if path.is_symlink():
@@ -129,7 +95,7 @@ class CatalogCompiler:
             schema_version = data.get("schema_version", "1.0")
             if schema_version != "1.0":
                 raise ValueError(f"unsupported task source schema version: {schema_version}")
-            source = DeclarativeTaskSource.model_validate(data)
+            source = TaskSource.model_validate(data)
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
             raise CatalogError(f"invalid task source {path}: {exc}") from exc
         instruction = source_dir / source.instruction
@@ -151,33 +117,13 @@ class CatalogCompiler:
 
     def compile_task(self, source_dir: Path, output_root: Path) -> CompiledTask:
         source = self.load_task(source_dir)
-        RuntimeDiscriminator.from_catalog_source(source.model_dump(mode="python"))
-        python_source = source
-        instruction_path = source_dir / python_source.instruction
+        instruction_path = source_dir / source.instruction
         instruction_ref = self.artifact_store.put_file(
             instruction_path,
             media_type="text/markdown; charset=utf-8",
             visibility=Visibility.PUBLIC,
         )
-        manifest = TaskManifest(
-            task_id=python_source.task_id,
-            version=python_source.version,
-            metadata=python_source.metadata,
-            instruction=instruction_ref,
-            source_lock=python_source.source,
-            environment_lock=python_source.environment,
-            dependency_bundle=python_source.dependencies,
-            tests=python_source.tests,
-            metric=python_source.metric,
-            lifecycle=python_source.lifecycle,
-            harbor=(
-                python_source.harbor.apply_network_policy(python_source.environment.network_policy)
-                if python_source.harbor is not None
-                else None
-            ),
-            oracle_bundle=python_source.oracle_bundle,
-            verifier=python_source.verifier,
-        )
+        manifest = source.to_manifest(instruction_ref)
         payload = canonical_json(manifest)
         output_dir = safe_child_directory(output_root, source.task_id)
         if self.state_store is not None:
@@ -336,15 +282,22 @@ status = "unknown"
 [environment]
 status = "unknown"
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12"
+package_manager = "uv"
+package_manager_version = "0.8.15"
+
 [dependencies]
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 
 [tests]
 framework = "pytest"
-expected_total = 1
+report_format = "pytest-junit-xml-v1"
+expected_total = 0
 expected_total_source = "unknown"
-commands = ["uv run pytest -q"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"

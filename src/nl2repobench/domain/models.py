@@ -36,7 +36,10 @@ from .network_policy import (
 
 SCHEMA_VERSION: Literal["1.0"] = "1.0"
 SHA256_PATTERN = r"^sha256:[0-9a-f]{64}$"
-TASK_ID_PATTERN = r"^[A-Za-z0-9][A-Za-z0-9._-]*$"
+TASK_ID_PATTERN = (
+    r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/"
+    r"[A-Za-z0-9][A-Za-z0-9._-]*)$"
+)
 Difficulty = Literal["easy", "medium", "hard", "unknown"]
 
 
@@ -348,13 +351,11 @@ class EnvironmentLock(RecordModel):
 
 
 class DependencyBundle(RecordModel):
-    """Hash-locked build-time dependencies for Python task images.
+    """Compatibility view of the canonical dependency artifact triple.
 
-    Python Harbor images install candidate dependencies from the package index
-    during the Docker build.  The final task never carries a wheelhouse and
-    the verifier never uses ``--no-index``.  ``lock_artifact`` contains only a
-    requirements lock file with hashes; ``artifact`` is retained solely so
-    older catalog records can be diagnosed and rejected during publication.
+    Runtime compilers consume :mod:`nl2repobench.domain.canonical_contract`.
+    This copy remains only for historical importer records and shared metadata
+    APIs; it deliberately accepts no historical dependency field spellings.
     """
 
     model_config = ConfigDict(
@@ -366,16 +367,11 @@ class DependencyBundle(RecordModel):
                         "properties": {"status": {"const": "known"}},
                     },
                     "then": {
-                        "oneOf": [
-                            {
-                                "required": ["lock_artifact"],
-                                "properties": {"lock_artifact": {"not": {"type": "null"}}},
-                            },
-                            {
-                                "required": ["module_bundle"],
-                                "properties": {"module_bundle": {"not": {"type": "null"}}},
-                            },
-                        ]
+                        "required": ["lock", "offline_store", "inventory"],
+                        "properties": {
+                            name: {"not": {"type": "null"}}
+                            for name in ("lock", "offline_store", "inventory")
+                        },
                     },
                 }
             ]
@@ -383,32 +379,24 @@ class DependencyBundle(RecordModel):
     )
 
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
-    lock_artifact: ArtifactRef | None = None
-    """Private raw ``requirements.lock.txt`` used for network installation."""
-
-    module_bundle: ArtifactRef | None = None
-    """Private hash-inventoried Go module closure used by the Go compiler."""
-
-    # Legacy field.  It points to a wheelhouse and is intentionally not used
-    # by the Python Harbor compiler anymore.  Keeping it in the model lets us
-    # produce a precise publication gap for stale catalog records instead of
-    # silently treating vendor installation as valid.
-    artifact: ArtifactRef | None = None
-    installer: Literal["uv", "pip", "system", "unknown"] = "unknown"
+    package_manager: Literal["uv", "pip", "npm", "pnpm", "go-modules", "none"] = "none"
+    lock: ArtifactRef | None = None
+    offline_store: ArtifactRef | None = None
+    inventory: ArtifactRef | None = None
     packages: tuple[str, ...] = ()
 
     @model_validator(mode="after")
     def validate_known_bundle(self) -> DependencyBundle:
-        references = (self.lock_artifact, self.module_bundle)
-        if self.status is ProvenanceStatus.KNOWN and all(item is None for item in references):
-            raise ValueError("known dependency bundle requires lock_artifact or module_bundle")
-        if self.lock_artifact is not None and self.module_bundle is not None:
-            raise ValueError("dependency bundle cannot mix Python and Go locks")
-        if (
-            self.module_bundle is not None
-            and self.module_bundle.visibility is not Visibility.PRIVATE
+        references = (self.lock, self.offline_store, self.inventory)
+        if self.status is ProvenanceStatus.KNOWN and any(item is None for item in references):
+            raise ValueError("known dependency bundle requires the canonical artifact triple")
+        if self.status is ProvenanceStatus.UNKNOWN and any(item is not None for item in references):
+            raise ValueError("unknown dependency bundle cannot claim artifact references")
+        if any(
+            item is not None and item.visibility is not Visibility.PRIVATE
+            for item in references
         ):
-            raise ValueError("module_bundle must be private")
+            raise ValueError("dependency artifacts must be private")
         return self
 
 
@@ -678,15 +666,15 @@ class TaskManifest(RecordModel):
             gaps.append("environment_lock.status=known")
         if self.dependency_bundle.status is not ProvenanceStatus.KNOWN:
             gaps.append("dependency_bundle.status=known")
-        if self.metadata.language == "go":
-            if self.dependency_bundle.module_bundle is None:
-                gaps.append("dependency_bundle.module_bundle")
-            elif self.dependency_bundle.module_bundle.visibility is not Visibility.PRIVATE:
-                gaps.append("dependency_bundle.module_bundle.visibility=private")
-        elif self.dependency_bundle.lock_artifact is None:
-            gaps.append("dependency_bundle.lock_artifact")
-        if self.dependency_bundle.artifact is not None:
-            gaps.append("dependency_bundle.artifact=forbidden")
+        for field_name, reference in (
+            ("dependency_bundle.lock", self.dependency_bundle.lock),
+            ("dependency_bundle.offline_store", self.dependency_bundle.offline_store),
+            ("dependency_bundle.inventory", self.dependency_bundle.inventory),
+        ):
+            if reference is None:
+                gaps.append(field_name)
+            elif reference.visibility is not Visibility.PRIVATE:
+                gaps.append(f"{field_name}.visibility=private")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.tests.expected_total <= 0:

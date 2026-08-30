@@ -258,18 +258,18 @@ class LegacyImporter:
             manifest_bytes = canonical_json(manifest)
             manifest_path = task_output / "manifest.json"
             try:
-                assert_manifest_writable(manifest_path, manifest)
+                assert_manifest_writable(manifest_path, cast(Any, manifest))
             except UnsafePathError as exc:
                 raise LegacyImportError(str(exc)) from exc
             if self.state_store is not None:
-                self.state_store.assert_task_writable(manifest)
+                self.state_store.assert_task_writable(cast(Any, manifest))
             manifest_ref = self.artifact_store.put_bytes(
                 manifest_bytes,
                 media_type="application/json",
                 visibility=Visibility.PUBLIC,
             )
             if self.state_store is not None:
-                self.state_store.upsert_task(manifest)
+                self.state_store.upsert_task(cast(Any, manifest))
             atomic_write(manifest_path, manifest_bytes + b"\n")
             task_refs.append(
                 TaskRef(

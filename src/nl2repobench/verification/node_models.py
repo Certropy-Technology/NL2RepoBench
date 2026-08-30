@@ -1,4 +1,4 @@
-"""v2 verifier contracts for verifier-owned Node test reports."""
+"""Canonical verifier contracts for verifier-owned Node test reports."""
 
 from __future__ import annotations
 
@@ -7,8 +7,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
-from nl2repobench.domain.models import FailureClass
-from nl2repobench.domain.models_v2 import V2RecordModel
+from nl2repobench.domain.models import FailureClass, RecordModel
 
 NodeTestStatus = Literal["passed", "failed", "error", "skipped", "todo"]
 
@@ -41,7 +40,7 @@ class NodeVerificationReason(StrEnum):
     NODE_REPORT_EXIT_MISMATCH = REPORT_EXIT_MISMATCH
 
 
-class NodeTestCaseV2(V2RecordModel):
+class NodeTestCase(RecordModel):
     """One frozen leaf test result; aggregate reporter fields are ignored."""
 
     test_id: Annotated[str, Field(min_length=1, max_length=512)]
@@ -50,25 +49,25 @@ class NodeTestCaseV2(V2RecordModel):
     details: str | None = None
 
 
-class NodeCollectionErrorV2(V2RecordModel):
+class NodeCollectionError(RecordModel):
     """A trusted runner collection failure that invalidates the result."""
 
     message: Annotated[str, Field(min_length=1, max_length=4096)]
     test_id: str | None = None
 
 
-class NodeTestReportV2(V2RecordModel):
+class NodeTestReport(RecordModel):
     """Verifier-owned JSON report for a ``node:test`` run."""
 
     framework: Literal["node:test"] = "node:test"
     report_format: Literal["node-test-json-v1"] = "node-test-json-v1"
     collected: Annotated[int, Field(ge=0)]
-    tests: tuple[NodeTestCaseV2, ...] = ()
-    collection_errors: tuple[NodeCollectionErrorV2, ...] = ()
+    tests: tuple[NodeTestCase, ...] = ()
+    collection_errors: tuple[NodeCollectionError, ...] = ()
     runner_exit_code: int
 
     @model_validator(mode="after")
-    def validate_leaf_collection(self) -> NodeTestReportV2:
+    def validate_leaf_collection(self) -> NodeTestReport:
         if len(self.tests) != self.collected:
             raise ValueError("node report test count does not match collected")
         test_ids = [case.test_id for case in self.tests]
@@ -77,7 +76,7 @@ class NodeTestReportV2(V2RecordModel):
         return self
 
 
-class NodeTestCountsV2(V2RecordModel):
+class NodeTestCounts(RecordModel):
     """Counts derived solely from individual leaf cases."""
 
     collected: Annotated[int, Field(ge=0)] = 0
@@ -88,22 +87,22 @@ class NodeTestCountsV2(V2RecordModel):
     todo: Annotated[int, Field(ge=0)] = 0
 
     @model_validator(mode="after")
-    def validate_total(self) -> NodeTestCountsV2:
+    def validate_total(self) -> NodeTestCounts:
         total = self.passed + self.failed + self.errors + self.skipped + self.todo
         if total != self.collected:
             raise ValueError(f"node status total {total} != collected {self.collected}")
         return self
 
 
-class NodeGradingResultV2(V2RecordModel):
+class NodeGradingResult(RecordModel):
     """Canonical reward and verifier classification for a Node run."""
 
     metric_contract: str = "node-test-leaf-pass-rate-v1"
     valid: bool
     reward: Annotated[float, Field(ge=0.0, le=1.0)]
     expected_total: Annotated[int, Field(gt=0)]
-    counts: NodeTestCountsV2
-    report: NodeTestReportV2 | None = None
+    counts: NodeTestCounts
+    report: NodeTestReport | None = None
     runner_exit_code: int | None = None
     failure_class: FailureClass | None = None
     failure_reason: NodeVerificationReason | None = None

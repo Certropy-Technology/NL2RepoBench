@@ -6,6 +6,7 @@ historical v1/v2 records; decoding belongs exclusively to the migration tool.
 
 from __future__ import annotations
 
+import re
 from enum import StrEnum
 from typing import Annotated, Literal, cast
 
@@ -115,6 +116,15 @@ class RuntimeProfile(CanonicalRecord):
         }
         if self.package_manager not in allowed[self.language.value]:
             raise ValueError("package manager is not valid for runtime")
+        if self.language is RuntimeLanguage.NODE and not re.fullmatch(
+            r"(?:22|24)\.[0-9]+\.[0-9]+", self.version
+        ):
+            raise ValueError("Node runtime version must be an exact supported 22.x.y or 24.x.y")
+        if self.package_manager in {PackageManager.NPM, PackageManager.PNPM} and not re.fullmatch(
+            r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?",
+            self.package_manager_version or "",
+        ):
+            raise ValueError("Node package managers require an exact semantic version")
         return self
 
 
@@ -403,12 +413,27 @@ def _task_contract_schema(environment_field: str, dependency_field: str) -> Json
     rules.extend(
         [
             {
-                "if": {"properties": {"tests": {"properties": {"framework": {"const": "custom"}}}}},
+                "if": {
+                    "properties": {
+                        "tests": {
+                            "properties": {"framework": {"const": "custom"}}
+                        }
+                    }
+                },
                 "then": {
                     "required": ["verifier"],
                     "properties": {"verifier": {"not": {"type": "null"}}},
                 },
-                "else": {"properties": {"verifier": {"type": "null"}}},
+            },
+            {
+                "if": {
+                    "properties": {
+                        "tests": {
+                            "properties": {"framework": {"enum": ["pytest", "node:test"]}}
+                        }
+                    }
+                },
+                "then": {"properties": {"verifier": {"type": "null"}}},
             },
             {
                 "if": {
@@ -550,8 +575,8 @@ class TaskSource(CanonicalRecord):
                 raise ValueError("dependency package manager must match environment runtime")
         if self.tests.framework == "custom" and self.verifier is None:
             raise ValueError("custom tests require a typed verifier specification")
-        if self.tests.framework != "custom" and self.verifier is not None:
-            raise ValueError("typed verifier is only valid for custom tests")
+        if self.tests.framework not in {"custom", "go-bridge"} and self.verifier is not None:
+            raise ValueError("typed verifier is only valid for custom and go-bridge tests")
         if self.environment.runtime is not None:
             expected_tests = {
                 RuntimeLanguage.PYTHON: ("pytest", "custom"),
@@ -597,6 +622,9 @@ class TaskSource(CanonicalRecord):
 
         if instruction.visibility is not Visibility.PUBLIC:
             raise ValueError("compiled instruction artifact must be public")
+        harbor = self.harbor
+        if harbor is not None:
+            harbor = harbor.apply_network_policy(self.environment.network_policy)
         return TaskManifest(
             task_id=self.task_id,
             version=self.version,
@@ -608,7 +636,7 @@ class TaskSource(CanonicalRecord):
             tests=self.tests,
             metric=self.metric,
             lifecycle=self.lifecycle,
-            harbor=self.harbor,
+            harbor=harbor,
             oracle_bundle=self.oracle_bundle,
             verifier=self.verifier,
         )
@@ -633,6 +661,51 @@ class TaskManifest(CanonicalRecord):
     oracle_bundle: ArtifactRef | None = None
     verifier: TaskVerifierSpec | None = None
 
+    def publication_gaps(self) -> tuple[str, ...]:
+        """Return stable canonical field paths that block production output."""
+
+        gaps: list[str] = []
+        if self.metadata.difficulty == "unknown":
+            gaps.append("metadata.difficulty")
+        if self.metadata.category == "unknown":
+            gaps.append("metadata.category")
+        if self.instruction.visibility is not Visibility.PUBLIC:
+            gaps.append("instruction.visibility=public")
+        if self.source_lock.status.value != "known":
+            gaps.append("source_lock.status=known")
+        if self.environment_lock.status != "known":
+            gaps.append("environment_lock.status=known")
+        if self.environment_lock.runtime is None:
+            gaps.append("environment_lock.runtime")
+        if self.dependency_bundle.status != "known":
+            gaps.append("dependency_bundle.status=known")
+        for field_name, reference in (
+            ("dependency_bundle.lock", self.dependency_bundle.lock),
+            ("dependency_bundle.offline_store", self.dependency_bundle.offline_store),
+            ("dependency_bundle.inventory", self.dependency_bundle.inventory),
+        ):
+            if reference is None:
+                gaps.append(field_name)
+            elif reference.visibility is not Visibility.PRIVATE:
+                gaps.append(f"{field_name}.visibility=private")
+        if self.tests.expected_total_source != "frozen-collection":
+            gaps.append("tests.expected_total_source=frozen-collection")
+        if self.tests.expected_total <= 0:
+            gaps.append("tests.expected_total>0")
+        if self.tests.commands_artifact is None:
+            gaps.append("tests.commands_artifact")
+        if self.verifier is None and self.tests.test_bundle is None:
+            gaps.append("tests.test_bundle")
+        if self.metric.contract_id != "fixed-test-pass-rate-v1":
+            gaps.append("metric.contract_id=fixed-test-pass-rate-v1")
+        if self.harbor is None:
+            gaps.append("harbor")
+        if self.oracle_bundle is None:
+            gaps.append("oracle_bundle")
+        elif self.oracle_bundle.visibility is not Visibility.PRIVATE:
+            gaps.append("oracle_bundle.visibility=private")
+        return tuple(gaps)
+
     @model_validator(mode="after")
     def validate_runtime_contract(self) -> TaskManifest:
         if self.instruction.visibility is not Visibility.PUBLIC:
@@ -640,8 +713,8 @@ class TaskManifest(CanonicalRecord):
         runtime = self.environment_lock.runtime
         if self.tests.framework == "custom" and self.verifier is None:
             raise ValueError("custom tests require a typed verifier specification")
-        if self.tests.framework != "custom" and self.verifier is not None:
-            raise ValueError("typed verifier is only valid for custom tests")
+        if self.tests.framework not in {"custom", "go-bridge"} and self.verifier is not None:
+            raise ValueError("typed verifier is only valid for custom and go-bridge tests")
         if runtime is not None:
             if runtime.language.value != self.metadata.language.value:
                 raise ValueError("metadata language must match environment runtime")

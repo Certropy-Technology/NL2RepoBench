@@ -11,7 +11,9 @@ import tarfile
 from pathlib import Path
 
 import pytest
+import tomli_w
 
+from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.models import Visibility
 from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
@@ -69,6 +71,113 @@ def _artifact_toml(reference) -> str:
         f'{{ digest = "{reference.digest}", size_bytes = {reference.size_bytes}, '
         f'uri = "{reference.uri}", visibility = "private" }}'
     )
+
+
+def _canonical_go_source(
+    root: Path,
+    destination: Path,
+    *,
+    module=None,
+    verifier=None,
+    oracle=None,
+    expected_total: int = 1,
+) -> Path:
+    shutil.copytree(root / "catalog/sources/go-synthetic", destination)
+    production = module is not None and verifier is not None and oracle is not None
+    dependencies: dict[str, object] = {
+        "status": "known" if production else "unknown",
+        "package_manager": "go-modules",
+        "packages": [],
+    }
+    tests: dict[str, object] = {
+        "framework": "go-bridge",
+        "report_format": "go-test-json-v1",
+        "expected_total": expected_total,
+        "expected_total_source": "frozen-collection",
+    }
+    task: dict[str, object] = {
+        "schema_version": "1.0",
+        "task_id": "go-synthetic",
+        "version": "0.1.0",
+        "instruction": "instruction.md",
+        "metadata": {
+            "difficulty": "easy",
+            "category": "go-foundation",
+            "tags": ["go", "go-modules", "typed-bridge"],
+            "language": "go",
+        },
+        "source": {"status": "unknown"},
+        "environment": {
+            "status": "unknown",
+            "runtime": {
+                "language": "go",
+                "runtime": "go",
+                "version": "1.26.5",
+                "package_manager": "go-modules",
+                "package_manager_version": "1.26.5",
+            },
+            "network_policy": {
+                "mode": "no-network",
+                "offline_dependencies": "missing",
+                "reference_source_fetch": "forbidden",
+                "reason": "Development fixture closure is intentionally absent.",
+            },
+        },
+        "dependencies": dependencies,
+        "tests": tests,
+        "metric": {"contract_id": "fixed-test-pass-rate-v1", "collection_mismatch": "fail"},
+        "lifecycle": {"status": "discovered"},
+        "harbor": {
+            "description": "Synthetic typed Go bridge fixture.",
+            "keywords": ["go", "go-modules", "typed-bridge"],
+            "agent_timeout_sec": 900.0,
+            "verifier_timeout_sec": 600.0,
+            "candidate_install_timeout_sec": 90.0,
+            "candidate_total_timeout_sec": 300.0,
+            "agent_network_mode": "no-network",
+            "verifier_network_mode": "no-network",
+            "cpus": 1,
+            "memory_mb": 1024,
+            "storage_mb": 4096,
+            "workspace_artifact": "/workspace",
+        },
+    }
+    if production:
+        assert module is not None and verifier is not None and oracle is not None
+        task["source"] = {
+            "status": "known",
+            "upstream_url": "https://example.invalid/go-source",
+            "revision": "1" * 40,
+            "license_spdx": "BSD-3-Clause",
+            "source_digest": "sha256:" + "2" * 64,
+        }
+        environment = task["environment"]
+        assert isinstance(environment, dict)
+        environment.update(
+            status="known",
+            os_name="linux",
+            base_image="golang",
+            base_image_digest="sha256:" + "3" * 64,
+        )
+        network_policy = environment["network_policy"]
+        assert isinstance(network_policy, dict)
+        network_policy["offline_dependencies"] = "private-artifact"
+        network_policy["reason"] = "Canonical private Go closure is staged before execution."
+        reference = module.model_dump(mode="json")
+        dependencies.update(
+            lock=reference,
+            offline_store=reference,
+            inventory=reference,
+        )
+        tests["commands_artifact"] = verifier.model_dump(mode="json")
+        task["verifier"] = {
+            "protocol": "custom-json-v1",
+            "bundle": verifier.model_dump(mode="json"),
+            "entrypoint": "contract.sh",
+        }
+        task["oracle_bundle"] = oracle.model_dump(mode="json")
+    (destination / "task.toml").write_text(tomli_w.dumps(task), encoding="utf-8")
+    return destination
 
 
 def test_go_modules_validates_offline_vendor_closure(tmp_path) -> None:
@@ -180,8 +289,9 @@ def test_go_supervisor_caps_stdout_and_stderr_together() -> None:
 
 def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
     root = Path(__file__).parents[1]
+    source = _canonical_go_source(root, tmp_path / "source")
     output = GoHarborCompiler(root / "toolchain.go.dev.lock.toml").compile_task(
-        root / "catalog/sources/go-synthetic",
+        source,
         tmp_path,
         allow_incomplete=True,
     )
@@ -229,14 +339,14 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
     root = Path(__file__).parents[1]
     development = GoHarborCompiler(root / "toolchain.go.dev.lock.toml")
     locked = GoHarborCompiler(root / "toolchain.go.lock.toml")
+    development_source = _canonical_go_source(root, tmp_path / "development-source")
 
     with pytest.raises(GoHarborCompileError, match="toolchain.go.lock.toml"):
-        development.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
-    with pytest.raises(GoHarborCompileError, match="private-staging-contract-missing"):
-        locked.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
+        development.compile_task(development_source, tmp_path / "development-output")
+    with pytest.raises(GoHarborCompileError, match="incomplete"):
+        locked.compile_task(development_source, tmp_path / "locked-output")
 
     source = tmp_path / "source"
-    shutil.copytree(root / "catalog/sources/go-google-uuid", source)
     store = FileArtifactStore(tmp_path / "artifacts")
     module = tmp_path / "module"
     module.mkdir()
@@ -257,31 +367,20 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         store,
         {"solve.sh": b"#!/bin/sh\nexit 0\n"},
     )
-    descriptor = source / "task.toml"
-    data = descriptor.read_text(encoding="utf-8")
-    data = re.sub(
-        r"module_bundle = \{[^\n]+\}",
-        "module_bundle = " + _artifact_toml(module_bundle),
-        data,
+    _canonical_go_source(
+        root,
+        source,
+        module=module_bundle,
+        verifier=verifier_bundle,
+        oracle=oracle_bundle,
     )
-    data = re.sub(
-        r"^bundle = \{[^\n]+\}",
-        "bundle = " + _artifact_toml(verifier_bundle),
-        data,
-        count=1,
-        flags=re.MULTILINE,
-    )
-    data = re.sub(
-        r"oracle_bundle = \{[^\n]+\}",
-        "oracle_bundle = " + _artifact_toml(oracle_bundle),
-        data,
-        count=1,
-    )
-    descriptor.write_text(data, encoding="utf-8")
+    manifest_digest = CatalogCompiler(
+        FileArtifactStore(tmp_path / "manifest-artifacts")
+    ).compile_task(source, tmp_path / "manifest-output").manifest.content_digest()
 
     authorization = PrivateArtifactAuthorization(
-        task_id="go-google-uuid",
-        manifest_digest="sha256:" + "a" * 64,
+        task_id="go-synthetic",
+        manifest_digest=manifest_digest,
         purpose="compile",
         allowed_digests=frozenset(
             {module_bundle.digest, verifier_bundle.digest, oracle_bundle.digest}
@@ -304,11 +403,6 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         production.compile_task(source, tmp_path / "production")
 
     multi_leaf = tmp_path / "multi-leaf"
-    shutil.copytree(root / "catalog/sources/go-google-uuid", multi_leaf)
-    descriptor = multi_leaf / "task.toml"
-    descriptor.write_text(
-        descriptor.read_text().replace("expected_total = 1", "expected_total = 2"),
-        encoding="utf-8",
-    )
+    _canonical_go_source(root, multi_leaf, expected_total=2)
     with pytest.raises(GoHarborCompileError, match="exactly one verifier-owned leaf"):
         development.compile_task(multi_leaf, tmp_path / "multi-output", allow_incomplete=True)

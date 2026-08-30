@@ -1,9 +1,4 @@
-"""Development-only Node/npm Harbor compiler.
-
-The v1 ``HarborCompiler`` remains Python-only. This compiler is selected by the
-CLI for a v2 Node source and refuses production output from an unlocked Node
-image/toolchain.
-"""
+"""Node/npm Harbor compiler for canonical task sources."""
 
 from __future__ import annotations
 
@@ -20,9 +15,17 @@ from typing import Any
 import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.domain.canonical_contract import (
+    PackageManager,
+    RuntimeLanguage,
+    TaskManifest,
+)
 from nl2repobench.domain.models import ArtifactRef
-from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2, TaskManifestV2
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    ArtifactStoreError,
+    FileArtifactStore,
+    LocalArtifactResolver,
+)
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
 from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
@@ -30,8 +33,8 @@ from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
 from .bundle_io import (
     BundleLimits,
 )
-from .models_v2 import load_node_toolchain_lock
 from .node_dependencies import NodeDependencyError, validate_npm_dependency_bundle
+from .node_toolchain import load_node_toolchain_lock
 from .task_writer import (
     TaskWriterError,
     copy_python_verifier_runtime,
@@ -43,7 +46,13 @@ from .task_writer import (
 
 
 class NodeHarborCompileError(ValueError):
-    """Raised when a v2 Node task cannot be safely compiled."""
+    """Raised when a canonical Node task cannot be safely compiled."""
+
+
+def _private_digest(reference: ArtifactRef | None) -> str | None:
+    if reference is None:
+        return None
+    return reference.digest if reference.visibility.value == "private" else None
 
 
 class NodeHarborCompiler:
@@ -52,6 +61,7 @@ class NodeHarborCompiler:
     MAX_BUNDLE_MEMBERS = 10_000
     MAX_BUNDLE_MEMBER_BYTES = 512 * 1024 * 1024
     MAX_BUNDLE_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
+    runtime_package_manager = PackageManager.NPM
 
     def __init__(
         self,
@@ -107,8 +117,14 @@ class NodeHarborCompiler:
         allow_incomplete: bool = False,
     ) -> Path:
         source = CatalogCompiler.load_task(source_dir)
-        if not isinstance(source, DeclarativeTaskSourceV2):
-            raise NodeHarborCompileError("Node compiler accepts only schema_version=2.0 sources")
+        runtime = source.environment.runtime
+        if runtime is None or runtime.language is not RuntimeLanguage.NODE:
+            raise NodeHarborCompileError("Node compiler requires a canonical Node runtime")
+        if runtime.package_manager is not self.runtime_package_manager:
+            raise NodeHarborCompileError(
+                "Node compiler requires package_manager="
+                f"{self.runtime_package_manager.value}"
+            )
         if source.harbor is None:
             raise NodeHarborCompileError("Node task source is missing [harbor] settings")
         if self.toolchain.status != "development-only" and allow_incomplete:
@@ -122,8 +138,6 @@ class NodeHarborCompiler:
                 source_dir, root / "canonical"
             )
             manifest = compiled.manifest
-        if not isinstance(manifest, TaskManifestV2):
-            raise NodeHarborCompileError("Node source did not produce a v2 manifest")
         gaps = manifest.publication_gaps()
         if gaps and not allow_incomplete:
             raise NodeHarborCompileError(
@@ -142,6 +156,19 @@ class NodeHarborCompiler:
             raise NodeHarborCompileError(
                 "Node toolchain is development-only; pass allow_incomplete for a fixture bundle"
             )
+        if not allow_incomplete:
+            if self.artifact_resolver is None:
+                raise NodeHarborCompileError("private artifact resolver is required")
+            try:
+                self.artifact_resolver.assert_scope(
+                    task_id=manifest.task_id,
+                    manifest_digest=manifest.content_digest(),
+                    purpose="compile",
+                )
+            except ArtifactStoreError as exc:
+                raise NodeHarborCompileError(
+                    f"private artifact authorization mismatch: {exc}"
+                ) from exc
 
         final_root = output_root / manifest.task_id
         if final_root.exists() or final_root.is_symlink():
@@ -223,7 +250,7 @@ class NodeHarborCompiler:
                 str(exc).replace("instruction", "Node instruction", 1)
             ) from exc
 
-    def _write_environment(self, manifest: TaskManifestV2, task_root: Path) -> None:
+    def _write_environment(self, manifest: TaskManifest, task_root: Path) -> None:
         node_image = self._runtime_image(manifest)
         agent_image = self.toolchain.agent_runtime.image
         system_checks = self._system_packages_check(manifest)
@@ -259,7 +286,7 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
     npm_config_fund=false
 """
 
-    def _runtime_image(self, manifest: TaskManifestV2) -> str:
+    def _runtime_image(self, manifest: TaskManifest) -> str:
         """Return the task-pinned Node image for production bundles."""
 
         if self.toolchain.status != "locked":
@@ -271,7 +298,7 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
         return f"{image_name}@{environment.base_image_digest}"
 
     @staticmethod
-    def _system_packages_check(manifest: TaskManifestV2) -> str:
+    def _system_packages_check(manifest: TaskManifest) -> str:
         checks: list[str] = []
         for requirement in manifest.environment_lock.system_packages:
             package, separator, version = requirement.partition("=")
@@ -290,7 +317,7 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
     def _write_verifier(
         self,
         source_dir: Path,
-        manifest: TaskManifestV2,
+        manifest: TaskManifest,
         task_root: Path,
         allow_incomplete: bool,
     ) -> None:
@@ -308,8 +335,10 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
 
         dependencies_root = tests_root / "dependencies"
         dependencies_root.mkdir()
-        if manifest.dependency_bundle.artifact is not None and not allow_incomplete:
-            self._extract_private_bundle(manifest.dependency_bundle.artifact, dependencies_root)
+        if not allow_incomplete:
+            raise NodeHarborCompileError(
+                "private-staging-contract-missing: production npm closure staging requires F0.5"
+            )
         else:
             self._write_empty_npm_bundle(dependencies_root)
         try:
@@ -415,7 +444,7 @@ WORKDIR /tests
             raise NodeHarborCompileError("Node Oracle bundle must contain solve.sh")
         os.chmod(solve, 0o755)
 
-    def _write_task_toml(self, manifest: TaskManifestV2, task_root: Path) -> None:
+    def _write_task_toml(self, manifest: TaskManifest, task_root: Path) -> None:
         assert manifest.harbor is not None
         runtime = manifest.environment_lock.runtime
         metadata = {
@@ -427,7 +456,10 @@ WORKDIR /tests
             "runtime_version": runtime.version
             if runtime is not None
             else self.toolchain.runtime.runtime_version,
-            "package_manager": "npm",
+            "package_manager": self.runtime_package_manager.value,
+            "package_manager_version": runtime.package_manager_version
+            if runtime is not None
+            else self.toolchain.runtime.npm_version,
             "test_framework": "node:test",
             "metric_contract": manifest.metric.contract_id,
             "expected_test_count": manifest.tests.expected_total,
@@ -481,7 +513,7 @@ WORKDIR /tests
             return f"nl2repobench/{scope}-{package}"
         return f"nl2repobench/{task_id}"
 
-    def _test_script(self, manifest: TaskManifestV2) -> str:
+    def _test_script(self, manifest: TaskManifest) -> str:
         assert manifest.harbor is not None
         expected = manifest.tests.expected_total
         return f"""#!/usr/bin/env bash
@@ -594,7 +626,7 @@ exit 0
             raise NodeHarborCompileError(str(exc)) from exc
 
     def _write_readme(
-        self, manifest: TaskManifestV2, task_root: Path, allow_incomplete: bool
+        self, manifest: TaskManifest, task_root: Path, allow_incomplete: bool
     ) -> None:
         mode = "development-only fixture" if allow_incomplete else "production"
         text = f"""# `{manifest.task_id}` Harbor Bundle
@@ -609,12 +641,11 @@ Generated by the additive Node/npm compiler.
 - Expected leaf tests: `{manifest.tests.expected_total}`
 - Verifier: separate environment, no network
 
-This task is excluded from the Python dataset.
 """
         atomic_write(task_root / "README.md", text.encode())
 
     def _write_bundle_manifest(
-        self, manifest: TaskManifestV2, task_root: Path, allow_incomplete: bool
+        self, manifest: TaskManifest, task_root: Path, allow_incomplete: bool
     ) -> None:
         payload = {
             "task_id": manifest.task_id,
@@ -622,8 +653,23 @@ This task is excluded from the Python dataset.
             "mode": "development" if allow_incomplete else "production",
             "canonical_manifest_digest": manifest.content_digest(),
             "toolchain_lock_digest": self.toolchain.content_digest(),
+            "private_artifacts": {
+                "dependencies": {
+                    "lock": _private_digest(manifest.dependency_bundle.lock),
+                    "store": _private_digest(manifest.dependency_bundle.offline_store),
+                    "inventory": _private_digest(manifest.dependency_bundle.inventory),
+                },
+                "tests": {
+                    "commands": _private_digest(manifest.tests.commands_artifact),
+                    "protected_paths": _private_digest(
+                        manifest.tests.protected_paths_artifact
+                    ),
+                    "bundle": _private_digest(manifest.tests.test_bundle),
+                },
+                "oracle": {"bundle": _private_digest(manifest.oracle_bundle)},
+            },
         }
-        write_file_manifest(task_root, payload=payload, schema_version="2.0")
+        write_file_manifest(task_root, payload=payload, schema_version="1.0")
 
     def _refresh_bundle_manifest(self, task_root: Path, kind: str) -> None:
         path = task_root / "bundle.manifest.json"
@@ -634,4 +680,4 @@ This task is excluded from the Python dataset.
         payload["mode"] = f"control-{kind}"
         payload.pop("files", None)
         payload.pop("schema_version", None)
-        write_file_manifest(task_root, payload=payload, schema_version="2.0")
+        write_file_manifest(task_root, payload=payload, schema_version="1.0")

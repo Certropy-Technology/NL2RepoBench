@@ -37,7 +37,6 @@ from nl2repobench.domain.canonical_contract import (
 from nl2repobench.domain.models import (
     DatasetManifest,
     MetadataGapReport,
-    TaskManifest,
 )
 from nl2repobench.harbor.compiler import HarborCompileError
 from nl2repobench.harbor.models import HarborToolchainLock
@@ -498,7 +497,7 @@ def validate_task(
 
     try:
         raw = canonical_file_payload(manifest.read_bytes())
-        parsed = TaskManifest.model_validate_json(raw)
+        parsed = CanonicalTaskManifest.model_validate_json(raw)
         canonical = canonical_json(parsed)
         canonical_match = raw == canonical
     except (OSError, ValueError) as exc:
@@ -620,7 +619,7 @@ def show_task(
     """Print a canonical task manifest for human or machine inspection."""
 
     try:
-        parsed = TaskManifest.model_validate_json(manifest.read_bytes())
+        parsed = CanonicalTaskManifest.model_validate_json(manifest.read_bytes())
     except (OSError, ValueError) as exc:
         typer.echo(f"invalid manifest: {exc}", err=True)
         raise typer.Exit(code=1) from exc

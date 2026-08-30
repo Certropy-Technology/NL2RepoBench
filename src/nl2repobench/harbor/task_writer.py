@@ -165,7 +165,6 @@ _PYTHON_VERIFIER_FILES = (
     "domain/__init__.py",
     "domain/canonical.py",
     "domain/models.py",
-    "domain/models_v2.py",
     "domain/network_policy.py",
     "domain/runtime.py",
     "package_managers/__init__.py",

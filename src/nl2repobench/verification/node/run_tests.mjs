@@ -46,7 +46,7 @@ function parseTap(text, file) {
     const occurrence = (seen.get(base) ?? 0) + 1;
     seen.set(base, occurrence);
     const suffix = occurrence === 1 ? "" : `#${occurrence}`;
-    cases.push({ schema_version: "2.0", test_id: `${file}::${base}${suffix}`, status, duration_ms: 0 });
+    cases.push({ schema_version: "1.0", test_id: `${file}::${base}${suffix}`, status, duration_ms: 0 });
   }
   return cases;
 }
@@ -77,7 +77,7 @@ for (const file of filesUnder(testsRoot)) {
   cases.push(...fileCases);
   if (result.error || (!fileCases.length && (result.stderr ?? "").trim())) {
     collectionErrors.push({
-      schema_version: "2.0",
+      schema_version: "1.0",
       test_id: relativeFile,
       message: String(result.error?.message ?? result.stderr ?? "test file failed to load").slice(0, 4096),
     });
@@ -86,7 +86,7 @@ for (const file of filesUnder(testsRoot)) {
   else if (result.status !== 0 && runnerExitCode === 0) runnerExitCode = 1;
 }
 const report = {
-  schema_version: "2.0",
+  schema_version: "1.0",
   framework: "node:test",
   report_format: "node-test-json-v1",
   collected: cases.length,

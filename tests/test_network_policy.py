@@ -139,11 +139,11 @@ class TestPolicyModel:
         assert resolved.agent_network_mode == "no-network"
         assert resolved.agent_allowed_hosts == ()
 
-    def test_v2_environment_accepts_network_policy(self) -> None:
-        from nl2repobench.domain.models_v2 import EnvironmentLockV2
+    def test_canonical_environment_accepts_network_policy(self) -> None:
+        from nl2repobench.domain.canonical_contract import EnvironmentLock as CanonicalEnvironment
 
         policy = NetworkPolicy(mode="no-network", offline_dependencies="preinstalled-image")
-        env = EnvironmentLockV2(network_mode="no-network", network_policy=policy)
+        env = CanonicalEnvironment(network_policy=policy)
         assert env.network_policy is policy
 
 

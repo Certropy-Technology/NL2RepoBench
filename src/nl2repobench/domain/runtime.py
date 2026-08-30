@@ -1,19 +1,14 @@
-"""Neutral runtime selection for the unified task contract.
-
-The catalog compiler must choose a runtime adapter from an explicit task
-identity, not from the shape version of a record. This module owns the small
-shared discriminator used for that decision. Runtime-specific models may
-still carry additional lock, installer, and report fields while migration is
-in progress, but they must not redefine this language/package-manager pair.
-"""
+"""Neutral runtime selection for the canonical task contract."""
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from enum import StrEnum
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 from pydantic import BaseModel, ConfigDict, ValidationError, model_validator
+
+if TYPE_CHECKING:
+    from .canonical_contract import TaskSource
 
 
 class RuntimeContractError(ValueError):
@@ -79,12 +74,7 @@ class RuntimeDiscriminator(BaseModel):
     ``none``; Node accepts ``npm``, ``pnpm`` or ``none``. Any other pairing is
     rejected so a caller cannot silently route a task to the wrong adapter.
 
-    ``from_catalog_source`` reads the current human-facing source locations:
-    Python sources declare their installer in ``dependencies.installer``;
-    Node sources declare their language and package manager in
-    ``environment.runtime``. This is an explicit transitional mapping, not a
-    fallback parser. The canonical ``environment_lock.runtime`` field remains
-    a later migration step documented by the caller.
+    Runtime selection is derived only from the typed canonical runtime profile.
     """
 
     model_config = ConfigDict(extra="forbid", frozen=True)
@@ -115,84 +105,18 @@ class RuntimeDiscriminator(BaseModel):
         return self
 
     @classmethod
-    def from_catalog_source(cls, source: Mapping[str, object]) -> Self:
-        """Build a discriminator from the current explicit catalog fields.
+    def from_task_source(cls, source: TaskSource) -> Self:
+        """Build a discriminator from one validated canonical source."""
 
-        The language field is required and determines which package-manager
-        field is required. Missing objects, missing fields, unknown values,
-        and contradictory Node language declarations all fail closed with
-        :class:`RuntimeContractError`.
-        """
-
-        metadata = _required_mapping(source, "metadata")
-        language = metadata.get("language")
-        if not isinstance(language, str):
-            raise RuntimeContractError("metadata.language must be a string")
-        package_manager: str | None
-        environment = source.get("environment")
-        if isinstance(environment, Mapping):
-            runtime = environment.get("runtime")
-            if isinstance(runtime, Mapping):
-                canonical_language = runtime.get("language")
-                canonical_manager = runtime.get("package_manager")
-                if canonical_language != language:
-                    raise RuntimeContractError(
-                        "environment.runtime.language must explicitly match metadata.language"
-                    )
-                if isinstance(canonical_manager, str) and canonical_manager:
-                    if not isinstance(canonical_language, str):
-                        raise RuntimeContractError("environment.runtime.language must be a string")
-                    language = canonical_language
-                    package_manager = canonical_manager
-                else:
-                    package_manager = None
-            else:
-                package_manager = None
-        else:
-            package_manager = None
-        if package_manager is not None:
-            pass
-        elif language == RuntimeLanguage.PYTHON.value:
-            dependencies = _required_mapping(source, "dependencies")
-            candidate = dependencies.get("package_manager", dependencies.get("installer"))
-            package_manager = candidate if isinstance(candidate, str) else None
-        elif language == RuntimeLanguage.NODE.value:
-            environment = _required_mapping(source, "environment")
-            runtime = _required_mapping(environment, "runtime")
-            if runtime.get("language") != language:
-                raise RuntimeContractError(
-                    "environment.runtime.language must explicitly match metadata.language"
-                )
-            candidate = runtime.get("package_manager")
-            package_manager = candidate if isinstance(candidate, str) else None
-        elif language == RuntimeLanguage.GO.value:
-            package_manager = PackageManager.GO_MODULES.value
-        else:
+        runtime = source.environment.runtime
+        if runtime is None:
             raise RuntimeContractError(
-                "metadata.language must explicitly be one of: python, node, go"
+                "environment.runtime is required for runtime dispatch"
             )
-
-        if not isinstance(package_manager, str) or not package_manager:
-            location = (
-                "dependencies.installer"
-                if language == RuntimeLanguage.PYTHON.value
-                else "environment.runtime.package_manager"
-            )
-            raise RuntimeContractError(f"{location} is required for runtime dispatch")
-
         try:
             return cls(
-                language=RuntimeLanguage(language),
-                package_manager=PackageManager(package_manager),
+                language=RuntimeLanguage(runtime.language.value),
+                package_manager=PackageManager(runtime.package_manager.value),
             )
         except (ValidationError, ValueError) as exc:
             raise RuntimeContractError(f"invalid runtime discriminator: {exc}") from exc
-
-
-def _required_mapping(source: Mapping[str, object], field_name: str) -> Mapping[str, object]:
-    """Return a required object field without accepting alternate spellings."""
-
-    value = source.get(field_name)
-    if not isinstance(value, Mapping):
-        raise RuntimeContractError(f"{field_name} must be an explicit object")
-    return value

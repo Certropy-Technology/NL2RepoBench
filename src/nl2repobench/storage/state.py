@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from nl2repobench.domain.canonical import canonical_json
-from nl2repobench.domain.models import TaskManifest
+from nl2repobench.domain.canonical_contract import TaskManifest
 
 
 def utc_now() -> str:

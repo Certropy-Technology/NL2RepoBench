@@ -13,24 +13,24 @@ from types import SimpleNamespace
 import pytest
 from typer.testing import CliRunner
 
-from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.authoring.catalog import CatalogCompiler, scaffold_task
 from nl2repobench.cli import app
+from nl2repobench.domain.canonical_contract import (
+    DependencyBundle,
+    EnvironmentLock,
+    RuntimeProfile,
+)
+from nl2repobench.domain.canonical_contract import (
+    TestManifest as NodeTestsManifest,
+)
 from nl2repobench.domain.models import Visibility
-from nl2repobench.domain.models_v2 import (
-    DependencyBundleV2,
-    EnvironmentLockV2,
-    RuntimeProfileV2,
-)
-from nl2repobench.domain.models_v2 import (
-    TestManifestV2 as NodeTestsManifest,
-)
-from nl2repobench.harbor.models_v2 import load_node_toolchain_lock
 from nl2repobench.harbor.node_compiler import NodeHarborCompileError, NodeHarborCompiler
 from nl2repobench.harbor.node_dependencies import (
     NodeDependencyError,
     validate_npm_dependency_bundle,
     validate_npm_package_tarball,
 )
+from nl2repobench.harbor.node_toolchain import load_node_toolchain_lock
 from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.storage.artifacts import (
     FileArtifactStore,
@@ -53,6 +53,81 @@ NODE_TOOLCHAIN = ROOT / "toolchain.node.dev.lock.toml"
 NODE_PRODUCTION_TOOLCHAIN = ROOT / "toolchain.node.lock.toml"
 
 
+def _node_source(tmp_path: Path) -> Path:
+    source = tmp_path / "canonical-node-source"
+    if source.exists():
+        return source
+    shutil.copytree(NODE_TASK, source)
+    (source / "task.toml").write_text(
+        '''schema_version = "1.0"
+task_id = "node-synthetic"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "node-foundation"
+tags = ["node", "npm", "node-test"]
+language = "node"
+
+[source]
+status = "unknown"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+base_image = "node:22.23.1-bookworm-slim"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "22.23.1"
+package_manager = "npm"
+package_manager_version = "10.9.8"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Development fixture closure is intentionally absent."
+
+[dependencies]
+status = "unknown"
+package_manager = "npm"
+packages = []
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 8
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "discovered"
+
+[harbor]
+description = "Development-only zero-dependency node:test foundation fixture."
+keywords = ["node", "npm", "node-test"]
+agent_timeout_sec = 600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+''',
+        encoding="utf-8",
+    )
+    return source
+
+
 def _report(
     cases: list[tuple[str, str]],
     *,
@@ -61,7 +136,7 @@ def _report(
     collected: int | None = None,
 ) -> dict[str, object]:
     return {
-        "schema_version": "2.0",
+        "schema_version": "1.0",
         "framework": "node:test",
         "report_format": "node-test-json-v1",
         "collected": len(cases) if collected is None else collected,
@@ -81,16 +156,15 @@ def _tar_bytes(members: list[tuple[str, bytes]]) -> bytes:
     return output.getvalue()
 
 
-def test_v2_runtime_and_npm_versions_are_exact() -> None:
-    profile = RuntimeProfileV2(
+def test_canonical_runtime_and_npm_versions_are_exact() -> None:
+    profile = RuntimeProfile(
         language="node",
         runtime="node",
         version="22.23.1",
         package_manager="npm",
         package_manager_version="10.9.8",
-        libc="glibc",
     )
-    assert profile.schema_version == "2.0"
+    assert profile.schema_version == "1.0"
     assert load_node_toolchain_lock(NODE_TOOLCHAIN).runtime.runtime_version == "22.23.1"
     production = load_node_toolchain_lock(NODE_PRODUCTION_TOOLCHAIN)
     assert production.status == "locked"
@@ -99,46 +173,40 @@ def test_v2_runtime_and_npm_versions_are_exact() -> None:
     assert production.runtime.runtime_version == "24.19.0"
     assert production.runtime.npm_version == "11.17.0"
     with pytest.raises(ValueError, match="supported 22.x.y or 24.x.y"):
-        RuntimeProfileV2(
+        RuntimeProfile(
             language="node",
             runtime="node",
             version="22",
             package_manager="npm",
             package_manager_version="10.9.8",
-            libc="glibc",
         )
-    with pytest.raises(ValueError, match="lockfile version 3"):
-        DependencyBundleV2(
-            ecosystem="npm",
-            consumer="candidate-runtime",
-            lockfile_name="package-lock.json",
-            lockfile_version="2",
-            package_manager="npm",
-            package_manager_version="10.9.8",
-        )
-
-
-def test_v2_environment_rejects_runtime_language_mismatch() -> None:
-    with pytest.raises(ValueError, match="Node language requires"):
-        EnvironmentLockV2(
+    with pytest.raises(ValueError, match="requires lock, offline_store, and inventory"):
+        DependencyBundle(
             status="known",
-            os_name="linux",
-            base_image="node:22",
-            base_image_digest="sha256:" + "a" * 64,
+            package_manager="npm",
+        )
+
+
+def test_canonical_environment_rejects_runtime_language_mismatch() -> None:
+    with pytest.raises(ValueError, match="runtime does not match language"):
+        EnvironmentLock(
             runtime={
                 "language": "node",
                 "runtime": "cpython",
                 "version": "22.23.1",
                 "package_manager": "npm",
                 "package_manager_version": "10.9.8",
-                "libc": "glibc",
             },
-            network_mode="no-network",
         )
 
 
-def test_v2_blocked_task_can_record_unfrozen_collection() -> None:
-    tests = NodeTestsManifest(expected_total=0, expected_total_source="unknown")
+def test_canonical_blocked_task_can_record_unfrozen_collection() -> None:
+    tests = NodeTestsManifest(
+        framework="node:test",
+        report_format="node-test-json-v1",
+        expected_total=0,
+        expected_total_source="unknown",
+    )
 
     assert tests.expected_total == 0
     assert tests.expected_total_source == "unknown"
@@ -148,7 +216,7 @@ def test_node_agent_checks_declared_system_packages_without_runtime_install(
     tmp_path: Path,
 ) -> None:
     source = tmp_path / "source"
-    shutil.copytree(NODE_TASK, source)
+    shutil.copytree(_node_source(tmp_path), source)
     task_toml = source / "task.toml"
     task_toml.write_text(
         task_toml.read_text(encoding="utf-8").replace(
@@ -170,25 +238,27 @@ def test_node_agent_checks_declared_system_packages_without_runtime_install(
     assert "COPY npm-bundle /opt/npm-bundle" in dockerfile
 
 
-def test_v2_catalog_dispatch_and_determinism(tmp_path: Path) -> None:
+def test_canonical_catalog_dispatch_and_determinism(tmp_path: Path) -> None:
+    source = _node_source(tmp_path)
     first = CatalogCompiler(FileArtifactStore(tmp_path / "artifacts")).compile_task(
-        NODE_TASK, tmp_path / "first"
+        source, tmp_path / "first"
     )
     second = CatalogCompiler(FileArtifactStore(tmp_path / "artifacts")).compile_task(
-        NODE_TASK, tmp_path / "second"
+        source, tmp_path / "second"
     )
-    assert first.manifest.schema_version == "2.0"
+    assert first.manifest.schema_version == "1.0"
     assert first.reference.manifest_digest == second.reference.manifest_digest
     assert first.path.read_bytes() == second.path.read_bytes()
     assert json.loads(first.path.read_text())["metadata"]["language"] == "node"
 
 
-def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from_agent(
+def test_canonical_development_compiler_is_deterministic_and_hides_private_fixture_from_agent(
     tmp_path: Path,
 ) -> None:
     compiler = NodeHarborCompiler(NODE_TOOLCHAIN)
-    first = compiler.compile_task(NODE_TASK, tmp_path / "first", allow_incomplete=True)
-    second = compiler.compile_task(NODE_TASK, tmp_path / "second", allow_incomplete=True)
+    source = _node_source(tmp_path)
+    first = compiler.compile_task(source, tmp_path / "first", allow_incomplete=True)
+    second = compiler.compile_task(source, tmp_path / "second", allow_incomplete=True)
     first_files = {
         path.relative_to(first).as_posix(): path.read_bytes()
         for path in first.rglob("*")
@@ -236,7 +306,7 @@ def test_v2_development_compiler_is_deterministic_and_hides_private_fixture_from
 
 def test_node_compiler_supports_scoped_task_output(tmp_path: Path) -> None:
     source = tmp_path / "source"
-    shutil.copytree(NODE_TASK, source)
+    shutil.copytree(_node_source(tmp_path), source)
     task_toml = source / "task.toml"
     task_toml.write_text(
         task_toml.read_text(encoding="utf-8").replace(
@@ -262,7 +332,7 @@ def test_node_compiler_uses_valid_harbor_name_for_scoped_task() -> None:
 
 def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
     source = tmp_path / "source"
-    shutil.copytree(NODE_TASK, source)
+    shutil.copytree(_node_source(tmp_path), source)
     controls = source / "harbor/controls"
     controls.mkdir()
     (controls / "stub.sh").write_text("#!/usr/bin/env bash\nexit 0\n", encoding="utf-8")
@@ -279,7 +349,7 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
         control / "solution/solve.sh"
     ).read_bytes()
     manifest = json.loads((control / "bundle.manifest.json").read_text(encoding="utf-8"))
-    assert manifest["schema_version"] == "2.0"
+    assert manifest["schema_version"] == "1.0"
     assert manifest["mode"] == "control-stub"
     assert "controls/stub.sh" in {entry["path"] for entry in manifest["files"]}
     for entry in manifest["files"]:
@@ -291,7 +361,7 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
 
 def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:
     source = tmp_path / "source"
-    shutil.copytree(NODE_TASK, source)
+    shutil.copytree(_node_source(tmp_path), source)
     controls = source / "harbor/controls"
     controls.mkdir()
     (controls / "workspace-invalid.sh").write_text(
@@ -335,9 +405,9 @@ def test_node_network_runtime_writes_bounded_receipt(tmp_path: Path) -> None:
     assert len(payload["route_table"].encode()) <= 64 * 1024
 
 
-def test_v2_production_compilation_fails_closed(tmp_path: Path) -> None:
+def test_canonical_production_compilation_fails_closed(tmp_path: Path) -> None:
     with pytest.raises(NodeHarborCompileError, match="development-only|unsupported"):
-        NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(NODE_TASK, tmp_path / "output")
+        NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(_node_source(tmp_path), tmp_path / "output")
 
 
 def test_locked_node_toolchain_rejects_runtime_helper_drift(tmp_path: Path) -> None:
@@ -373,7 +443,7 @@ def test_node_report_grades_leaf_statuses_and_todo_denominator() -> None:
     assert result.valid is True
     assert result.reward == 0.2
     assert result.counts.model_dump(mode="json") | {} == {
-        "schema_version": "2.0",
+        "schema_version": "1.0",
         "collected": 5,
         "passed": 1,
         "failed": 1,
@@ -613,22 +683,11 @@ def test_v1_schema_export_is_byte_compatible(tmp_path: Path) -> None:
         assert path.read_bytes() == (tracked / path.name).read_bytes()
 
 
-def test_v1_verifier_cli_imports_without_v2_runtime_files(tmp_path: Path) -> None:
+def test_verifier_cli_imports_without_retired_runtime_models(tmp_path: Path) -> None:
     package = tmp_path / "nl2repobench"
     shutil.copytree(ROOT / "src/nl2repobench", package)
-    for relative in (
-        "domain/models_v2.py",
-        "harbor/models_v2.py",
-        "harbor/node_compiler.py",
-        "harbor/node_dependencies.py",
-        "verification/models_v2.py",
-        "verification/node_command_plan.py",
-        "verification/node_grader.py",
-        "verification/node_candidate_client.py",
-        "verification/node_candidate_install.py",
-    ):
-        (package / relative).unlink(missing_ok=True)
-    shutil.rmtree(package / "verification/node", ignore_errors=True)
+    assert not (package / "domain/models_v2.py").exists()
+    assert not (package / "harbor/models_v2.py").exists()
     probe = subprocess.run(
         [
             sys.executable,
@@ -644,14 +703,13 @@ def test_v1_verifier_cli_imports_without_v2_runtime_files(tmp_path: Path) -> Non
     assert probe.returncode == 0, probe.stderr
 
 
-def test_v2_schema_export_is_additive(tmp_path: Path) -> None:
-    output = tmp_path / "v2"
+def test_schema_export_rejects_retired_node_schema_family(tmp_path: Path) -> None:
+    output = tmp_path / "retired"
     result = CliRunner().invoke(
         app, ["schema", "export", "--version", "2.0", "--output", str(output)]
     )
-    assert result.exit_code == 0, result.stdout
-    assert (output / "test-report.schema.json").is_file()
-    assert json.loads((output / "test-report.schema.json").read_text())["$defs"]["NodeTestCaseV2"]
+    assert result.exit_code == 2
+    assert not output.exists()
 
 
 def test_npm_dependency_bundle_accepts_integrity_and_cache_closure(tmp_path: Path) -> None:
@@ -865,15 +923,16 @@ def test_node_compiler_extracts_private_bundle_and_rejects_missing_resolver(tmp_
 
 
 def test_node_compiler_rejects_python_source_and_existing_output(tmp_path: Path) -> None:
-    with pytest.raises(NodeHarborCompileError, match="schema_version=2.0"):
+    python_source = scaffold_task(tmp_path / "python-sources", "python-task")
+    with pytest.raises(NodeHarborCompileError, match="canonical Node runtime"):
         NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
-            ROOT / "catalog/sources/ministats", tmp_path / "out", allow_incomplete=True
+            python_source, tmp_path / "out", allow_incomplete=True
         )
     compiler = NodeHarborCompiler(NODE_TOOLCHAIN)
     existing = tmp_path / "out/node-synthetic"
     existing.mkdir(parents=True)
     with pytest.raises(NodeHarborCompileError, match="already exists"):
-        compiler.compile_task(NODE_TASK, tmp_path / "out", allow_incomplete=True)
+        compiler.compile_task(_node_source(tmp_path), tmp_path / "out", allow_incomplete=True)
 
 
 def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -970,7 +1029,7 @@ def test_node_candidate_install_timeout_and_status_cli(
     assert json.loads(status.read_text())["outcome"] == "success"
 
 
-def test_node_verifier_cli_writes_v2_outputs(
+def test_node_verifier_cli_writes_canonical_outputs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     report = tmp_path / "report.json"
@@ -995,7 +1054,7 @@ def test_node_verifier_cli_writes_v2_outputs(
     )
     verifier_cli.main()
     assert json.loads((output / "reward.json").read_text())["reward"] == 1.0
-    assert json.loads((output / "grading.json").read_text())["schema_version"] == "2.0"
+    assert json.loads((output / "grading.json").read_text())["schema_version"] == "1.0"
 
 
 def test_node_runtime_report_normalizes_skip_todo_and_failure(tmp_path: Path) -> None:
@@ -1047,13 +1106,13 @@ def test_node_runtime_grader_preserves_collected_count(tmp_path: Path) -> None:
     report.write_text(
         json.dumps(
             {
-                "schema_version": "2.0",
+                "schema_version": "1.0",
                 "framework": "node:test",
                 "report_format": "node-test-json-v1",
                 "collected": 2,
                 "tests": [
-                    {"schema_version": "2.0", "test_id": "a", "status": "passed", "duration_ms": 0},
-                    {"schema_version": "2.0", "test_id": "b", "status": "failed", "duration_ms": 0},
+                    {"schema_version": "1.0", "test_id": "a", "status": "passed", "duration_ms": 0},
+                    {"schema_version": "1.0", "test_id": "b", "status": "failed", "duration_ms": 0},
                 ],
                 "collection_errors": [],
                 "runner_exit_code": 1,

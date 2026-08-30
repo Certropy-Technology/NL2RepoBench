@@ -5,6 +5,7 @@ from jsonschema import ValidationError as JsonSchemaValidationError
 from jsonschema import validate as validate_json_schema
 from pydantic import ValidationError
 
+from nl2repobench.domain.canonical_contract import DependencyBundle as CanonicalDependencies
 from nl2repobench.domain.models import (
     ArtifactRef,
     DependencyBundle,
@@ -65,23 +66,21 @@ def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
         visibility=Visibility.PRIVATE,
     )
 
-    with pytest.raises(ValidationError, match="requires lock_artifact"):
-        DependencyBundle(
-            status=ProvenanceStatus.KNOWN,
-            artifact=artifact,
-            installer="pip",
-        )
+    with pytest.raises(ValidationError, match="requires lock, offline_store, and inventory"):
+        CanonicalDependencies(status="known", package_manager="pip", lock=artifact)
 
-    bundle = DependencyBundle(
-        status=ProvenanceStatus.KNOWN,
-        lock_artifact=artifact,
-        installer="pip",
+    bundle = CanonicalDependencies(
+        status="known",
+        package_manager="pip",
+        lock=artifact,
+        offline_store=artifact,
+        inventory=artifact,
     )
-    assert bundle.lock_artifact == artifact
-    assert bundle.artifact is None
+    assert bundle.lock == artifact
+    assert bundle.offline_store == artifact
 
 
-def test_known_go_dependencies_require_a_private_module_bundle() -> None:
+def test_known_go_dependencies_require_private_canonical_artifacts() -> None:
     private = ArtifactRef(
         digest="sha256:" + "f" * 64,
         size_bytes=1,
@@ -95,17 +94,21 @@ def test_known_go_dependencies_require_a_private_module_bundle() -> None:
         }
     )
 
-    bundle = DependencyBundle(
-        status=ProvenanceStatus.KNOWN,
-        module_bundle=private,
-        installer="system",
+    bundle = CanonicalDependencies(
+        status="known",
+        package_manager="go-modules",
+        lock=private,
+        offline_store=private,
+        inventory=private,
     )
-    assert bundle.module_bundle == private
-    with pytest.raises(ValidationError, match="module_bundle must be private"):
-        DependencyBundle(
-            status=ProvenanceStatus.KNOWN,
-            module_bundle=public,
-            installer="system",
+    assert bundle.offline_store == private
+    with pytest.raises(ValidationError, match="must be private"):
+        CanonicalDependencies(
+            status="known",
+            package_manager="go-modules",
+            lock=private,
+            offline_store=public,
+            inventory=private,
         )
 
 

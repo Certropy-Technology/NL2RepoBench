@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from nl2repobench.domain.models import ArtifactRef, TaskManifest, Visibility
+from nl2repobench.domain.canonical_contract import TaskManifest
+from nl2repobench.domain.models import ArtifactRef, Visibility
 from nl2repobench.storage.artifacts import (
     ArtifactStoreError,
     FileArtifactStore,
@@ -158,10 +159,14 @@ def sample_manifest(tmp_path) -> TaskManifest:
     return TaskManifest.model_validate(
         {
             "task_id": "sample-task",
+            "metadata": {"language": "python"},
             "instruction": instruction.model_dump(mode="json"),
+            "environment_lock": {"status": "unknown"},
+            "dependency_bundle": {"status": "unknown", "package_manager": "uv"},
             "tests": {
+                "framework": "pytest",
+                "report_format": "pytest-junit-xml-v1",
                 "expected_total": 1,
-                "commands": ["pytest -q"],
             },
         }
     )

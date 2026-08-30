@@ -1763,13 +1763,6 @@
       }
     },
     {
-      "else": {
-        "properties": {
-          "verifier": {
-            "type": "null"
-          }
-        }
-      },
       "if": {
         "properties": {
           "tests": {
@@ -1792,6 +1785,29 @@
         "required": [
           "verifier"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tests": {
+            "properties": {
+              "framework": {
+                "enum": [
+                  "pytest",
+                  "node:test"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "verifier": {
+            "type": "null"
+          }
+        }
       }
     },
     {

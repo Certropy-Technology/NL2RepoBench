@@ -11,7 +11,7 @@ from nl2repobench.authoring.catalog import (
     validate_compiled_dataset,
 )
 from nl2repobench.domain.canonical import canonical_json
-from nl2repobench.domain.models import TaskManifest
+from nl2repobench.domain.canonical_contract import TaskManifest
 from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.files import UnsafePathError
 from nl2repobench.storage.state import StateStore
@@ -32,7 +32,7 @@ def _published_manifest(task_id: str) -> TaskManifest:
     return TaskManifest.model_validate(
         {
             "task_id": task_id,
-            "metadata": {"difficulty": "easy", "category": "example"},
+            "metadata": {"difficulty": "easy", "category": "example", "language": "python"},
             "instruction": _artifact("1", "public"),
             "source_lock": {
                 "status": "known",
@@ -43,17 +43,33 @@ def _published_manifest(task_id: str) -> TaskManifest:
             },
             "environment_lock": {
                 "status": "known",
-                "python_version": "3.12",
                 "os_name": "linux",
-                "base_image": "example@sha256:digest",
+                "base_image": "example",
                 "base_image_digest": "sha256:" + "4" * 64,
+                "runtime": {
+                    "language": "python",
+                    "runtime": "cpython",
+                    "version": "3.12",
+                    "package_manager": "uv",
+                    "package_manager_version": "0.8.15",
+                },
+                "network_policy": {
+                    "mode": "no-network",
+                    "offline_dependencies": "preinstalled-image",
+                    "reference_source_fetch": "forbidden",
+                    "reason": "Dependencies are installed during the Docker build phase.",
+                },
             },
             "dependency_bundle": {
                 "status": "known",
-                "lock_artifact": _artifact("5"),
-                "installer": "uv",
+                "package_manager": "uv",
+                "lock": _artifact("5"),
+                "offline_store": _artifact("a"),
+                "inventory": _artifact("b"),
             },
             "tests": {
+                "framework": "pytest",
+                "report_format": "pytest-junit-xml-v1",
                 "expected_total": 1,
                 "expected_total_source": "frozen-collection",
                 "commands_artifact": _artifact("6"),
@@ -74,16 +90,13 @@ def _published_manifest(task_id: str) -> TaskManifest:
     )
 
 
-def test_repository_example_is_valid_human_source() -> None:
-    source = CatalogCompiler.load_task(ROOT / "catalog/sources/ministats")
-
-    assert source.task_id == "ministats"
-    assert source.metadata.difficulty == "easy"
-    assert source.tests.expected_total == 18
+def test_repository_example_remains_pending_live_migration() -> None:
+    with pytest.raises(CatalogError, match="invalid task source"):
+        CatalogCompiler.load_task(ROOT / "catalog/sources/ministats")
 
 
 def test_task_compiler_is_deterministic(tmp_path) -> None:
-    source_dir = ROOT / "catalog/sources/ministats"
+    source_dir = scaffold_task(tmp_path / "sources", "demo")
     first_output = tmp_path / "first"
     second_output = tmp_path / "second"
     first_store = FileArtifactStore(tmp_path / "artifacts")
@@ -93,8 +106,8 @@ def test_task_compiler_is_deterministic(tmp_path) -> None:
     second = CatalogCompiler(second_store).compile_task(source_dir, second_output)
 
     assert first.reference.manifest_digest == second.reference.manifest_digest
-    assert (first_output / "ministats/manifest.json").read_bytes() == (
-        second_output / "ministats/manifest.json"
+    assert (first_output / "demo/manifest.json").read_bytes() == (
+        second_output / "demo/manifest.json"
     ).read_bytes()
 
 
@@ -234,20 +247,17 @@ tasks = ["demo"]
 
 
 def test_source_rejects_path_traversal(tmp_path) -> None:
-    source_dir = tmp_path / "task"
-    source_dir.mkdir()
-    (source_dir / "task.toml").write_text(
-        """task_id = "unsafe"
-instruction = "../secret.md"
-[tests]
-expected_total = 1
-commands = ["pytest"]
-""",
+    source_dir = scaffold_task(tmp_path / "tasks", "unsafe")
+    task_toml = source_dir / "task.toml"
+    task_toml.write_text(
+        task_toml.read_text(encoding="utf-8").replace(
+            'instruction = "instruction.md"', 'instruction = "../secret.md"'
+        ),
         encoding="utf-8",
     )
     (tmp_path / "secret.md").write_text("secret", encoding="utf-8")
 
-    with pytest.raises(CatalogError, match="relative path"):
+    with pytest.raises(CatalogError, match="safe relative path"):
         CatalogCompiler.load_task(source_dir)
 
 

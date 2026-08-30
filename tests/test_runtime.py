@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from nl2repobench.domain.canonical_contract import TaskSource
 from nl2repobench.domain.runtime import (
     PackageManager,
     RuntimeContractError,
@@ -30,12 +31,24 @@ def test_runtime_discriminator_rejects_cross_ecosystem_manager() -> None:
 
 
 def test_runtime_discriminator_reads_explicit_python_source() -> None:
-    result = RuntimeDiscriminator.from_catalog_source(
+    source = TaskSource.model_validate(
         {
+            "task_id": "python-runtime",
             "metadata": {"language": "python"},
-            "dependencies": {"installer": "pip"},
+            "environment": {
+                "runtime": {
+                    "language": "python",
+                    "runtime": "cpython",
+                    "version": "3.12",
+                    "package_manager": "pip",
+                    "package_manager_version": "24.0",
+                }
+            },
+            "dependencies": {"status": "unknown", "package_manager": "pip"},
+            "tests": {"framework": "pytest", "report_format": "pytest-junit-xml-v1"},
         }
     )
+    result = RuntimeDiscriminator.from_task_source(source)
     assert result == RuntimeDiscriminator(
         language=RuntimeLanguage.PYTHON,
         package_manager=PackageManager.PIP,
@@ -43,40 +56,39 @@ def test_runtime_discriminator_reads_explicit_python_source() -> None:
 
 
 def test_runtime_discriminator_reads_explicit_node_source() -> None:
-    result = RuntimeDiscriminator.from_catalog_source(
+    source = TaskSource.model_validate(
         {
+            "task_id": "node-runtime",
             "metadata": {"language": "node"},
             "environment": {
                 "runtime": {
                     "language": "node",
+                    "runtime": "node",
+                    "version": "22.23.1",
                     "package_manager": "pnpm",
+                    "package_manager_version": "9.15.0",
                 }
             },
+            "dependencies": {"status": "unknown", "package_manager": "pnpm"},
+            "tests": {"framework": "node:test", "report_format": "node-test-json-v1"},
         }
     )
+    result = RuntimeDiscriminator.from_task_source(source)
     assert result == RuntimeDiscriminator(
         language=RuntimeLanguage.NODE,
         package_manager=PackageManager.PNPM,
     )
 
 
-@pytest.mark.parametrize(
-    ("source", "message"),
-    [
-        (
-            {"metadata": {"language": "python"}, "dependencies": {}},
-            "dependencies.installer",
-        ),
-        (
-            {
-                "metadata": {"language": "node"},
-                "environment": {"runtime": {"language": "python", "package_manager": "npm"}},
-            },
-            "must explicitly match",
-        ),
-        ({"metadata": {"language": "ruby"}}, "metadata.language"),
-    ],
-)
-def test_runtime_discriminator_fails_closed(source: dict[str, object], message: str) -> None:
-    with pytest.raises(RuntimeContractError, match=message):
-        RuntimeDiscriminator.from_catalog_source(source)
+def test_runtime_discriminator_fails_closed_without_canonical_runtime() -> None:
+    source = TaskSource.model_validate(
+        {
+            "task_id": "missing-runtime",
+            "metadata": {"language": "python"},
+            "environment": {"status": "unknown"},
+            "dependencies": {"status": "unknown", "package_manager": "uv"},
+            "tests": {"framework": "pytest", "report_format": "pytest-junit-xml-v1"},
+        }
+    )
+    with pytest.raises(RuntimeContractError, match="environment.runtime"):
+        RuntimeDiscriminator.from_task_source(source)

@@ -18,11 +18,11 @@ from .evaluator import (
 from .leaf_report import ReportNormalizationError
 from .metric_contract import MetricContract
 from .node_models import (
-    NodeCollectionErrorV2,
-    NodeGradingResultV2,
-    NodeTestCaseV2,
-    NodeTestCountsV2,
-    NodeTestReportV2,
+    NodeCollectionError,
+    NodeGradingResult,
+    NodeTestCase,
+    NodeTestCounts,
+    NodeTestReport,
     NodeVerificationReason,
 )
 from .normalize.node_test_json import MAX_NODE_REPORT_BYTES, normalize_node_test_json
@@ -35,13 +35,13 @@ NODE_MODEL_FAILURES = {
 }
 
 
-def _node_report(report: EvaluationResult) -> NodeTestReportV2 | None:
+def _node_report(report: EvaluationResult) -> NodeTestReport | None:
     if report.report is None:
         return None
-    return NodeTestReportV2(
+    return NodeTestReport(
         collected=report.report.collected,
         tests=tuple(
-            NodeTestCaseV2(
+            NodeTestCase(
                 test_id=leaf.leaf_id,
                 status=leaf.status,  # type: ignore[arg-type]
                 duration_ms=leaf.duration_ms,
@@ -50,7 +50,7 @@ def _node_report(report: EvaluationResult) -> NodeTestReportV2 | None:
             for leaf in report.report.leaves
         ),
         collection_errors=tuple(
-            NodeCollectionErrorV2(message=error.message, test_id=error.leaf_id)
+            NodeCollectionError(message=error.message, test_id=error.leaf_id)
             for error in report.report.collection_errors
         ),
         runner_exit_code=report.report.trusted_runner_exit_code or 0,
@@ -59,13 +59,13 @@ def _node_report(report: EvaluationResult) -> NodeTestReportV2 | None:
 
 def _as_node_result(
     result: EvaluationResult, *, metric_contract_id: str | None = None
-) -> NodeGradingResultV2:
-    return NodeGradingResultV2(
+) -> NodeGradingResult:
+    return NodeGradingResult(
         metric_contract=metric_contract_id or result.metric_contract,
         valid=result.valid,
         reward=result.reward,
         expected_total=result.frozen_total,
-        counts=NodeTestCountsV2(
+        counts=NodeTestCounts(
             collected=result.counts.collected,
             passed=result.counts.passed,
             failed=result.counts.failed,
@@ -92,14 +92,14 @@ def grade_node_test_report(
     runner_exit_code: int | None = None,
     metric_contract: MetricContract | str = "node-test-leaf-pass-rate-v1",
     explicit_reason: NodeVerificationReason | None = None,
-) -> NodeGradingResultV2:
+) -> NodeGradingResult:
     """Grade Node JSON through the same evaluator used by pytest."""
 
     if expected_total <= 0:
         raise ValueError("expected_total must be positive")
     contract = metric_contract_from_legacy(metric_contract)
 
-    def as_node_result(result: EvaluationResult) -> NodeGradingResultV2:
+    def as_node_result(result: EvaluationResult) -> NodeGradingResult:
         requested_id = metric_contract if isinstance(metric_contract, str) else None
         return _as_node_result(result, metric_contract_id=requested_id)
     if explicit_reason is not None:
@@ -140,8 +140,8 @@ def grade_node_test_report(
     return as_node_result(evaluate_leaf_report(report, contract))
 
 
-def write_node_grading_outputs(result: NodeGradingResultV2, output_dir: Path) -> None:
-    """Write the numeric reward and canonical v2-shaped compatibility record."""
+def write_node_grading_outputs(result: NodeGradingResult, output_dir: Path) -> None:
+    """Write the numeric reward and canonical Node grading record."""
 
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "reward.json").write_text(

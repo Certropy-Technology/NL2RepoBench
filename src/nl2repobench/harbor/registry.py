@@ -134,7 +134,7 @@ class HarborCompilerRegistry:
         """Load a source, resolve its identity, and construct its compiler."""
 
         source = CatalogCompiler.load_task(source_dir)
-        identity = RuntimeDiscriminator.from_catalog_source(source.model_dump(mode="python"))
+        identity = RuntimeDiscriminator.from_task_source(source)
         return self.resolve(identity)(toolchain_path, artifact_resolver)
 
     def compile_task(

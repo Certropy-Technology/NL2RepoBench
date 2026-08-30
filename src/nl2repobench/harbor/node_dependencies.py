@@ -10,8 +10,6 @@ import tarfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from nl2repobench.domain.models_v2 import SEMVER_PATTERN
-
 MAX_NPM_MEMBERS = 10_000
 MAX_NPM_MEMBER_BYTES = 512 * 1024 * 1024
 MAX_NPM_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
@@ -23,6 +21,7 @@ NPM_PACKAGE_PATTERN = re.compile(
     r"^(?:@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$",
     re.IGNORECASE,
 )
+SEMVER_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
 
 
 class NodeDependencyError(ValueError):

@@ -16,8 +16,10 @@ import tomli_w
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
-from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile, TaskManifest
+from nl2repobench.domain.canonical_contract import TaskManifest
+from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile
 from nl2repobench.storage.artifacts import ArtifactStoreError, LocalArtifactResolver
+from nl2repobench.storage.canonical_ustar import decode_archive
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
 
@@ -64,7 +66,8 @@ class HarborCompiler:
         profile = manifest.harbor
         assert profile is not None
         if (
-            manifest.environment_lock.network_mode == "no-network"
+            manifest.environment_lock.network_policy is not None
+            and manifest.environment_lock.network_policy.mode == "no-network"
             and profile.agent_network_mode == "public"
         ):
             return profile.model_copy(update={"agent_network_mode": "no-network"})
@@ -104,11 +107,6 @@ class HarborCompiler:
                 FileArtifactStore(temporary_root / "artifacts")
             ).compile_task(source_dir, temporary_root / "canonical")
             manifest = compiled.manifest
-            if not isinstance(manifest, TaskManifest):
-                raise HarborCompileError(
-                    "schema_version=2.0 Node tasks require toolchain.node.lock.toml"
-                )
-
         gaps = manifest.publication_gaps()
         if gaps and not allow_incomplete:
             raise HarborCompileError(f"task is not publishable: {', '.join(gaps)}")
@@ -245,7 +243,8 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 
         if allow_incomplete:
             return "3.12"
-        version = manifest.environment_lock.python_version
+        runtime = manifest.environment_lock.runtime
+        version = runtime.version if runtime is not None else None
         match = re.fullmatch(r"(\d+\.\d+)(?:\.\d+)?", version or "")
         if match is None:
             raise HarborCompileError("production environment has an invalid python_version")
@@ -391,21 +390,30 @@ WORKDIR /tests
     def _resolve_dependency_lock(self, manifest: TaskManifest, allow_incomplete: bool) -> bytes:
         """Resolve a hash lock without materializing vendor dependency bytes."""
 
-        bundle = manifest.dependency_bundle
-        if bundle.artifact is not None:
-            raise HarborCompileError(
-                "vendor dependency artifacts are forbidden; use dependency_bundle.lock_artifact"
-            )
-        if bundle.lock_artifact is None:
+        reference = manifest.dependency_bundle.lock
+        if reference is None:
             if allow_incomplete:
                 return b""
-            raise HarborCompileError("production task requires dependency_bundle.lock_artifact")
+            raise HarborCompileError("production task requires dependency_bundle.lock")
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required for dependency lock")
         try:
-            data = self.artifact_resolver.resolve(bundle.lock_artifact).read_bytes()
+            archive = self.artifact_resolver.resolve(reference).read_bytes()
+            members = decode_archive(archive)
         except (OSError, ValueError) as exc:
             raise HarborCompileError(f"cannot resolve dependency lock: {exc}") from exc
+        files = {
+            member.entry.path: member.data
+            for member in members
+            if member.entry.type == "file"
+        }
+        if set(files) != {"requirements.lock.txt"}:
+            raise HarborCompileError(
+                "Python dependency lock must contain only requirements.lock.txt"
+            )
+        data = files["requirements.lock.txt"]
+        if data is None:
+            raise HarborCompileError("Python dependency lock is not a regular file")
         self._validate_dependency_lock(data)
         return data
 
@@ -492,7 +500,7 @@ WORKDIR /tests
                 "package_manager": (
                     "go-modules"
                     if manifest.metadata.language == "go"
-                    else manifest.dependency_bundle.installer
+                    else manifest.dependency_bundle.package_manager.value
                 ),
                 "difficulty": manifest.metadata.difficulty,
                 "category": manifest.metadata.category,
@@ -818,9 +826,9 @@ Run with Harbor {self.toolchain.harbor.version}:
                 "task_id": manifest.task_id,
                 "canonical_manifest_digest": manifest.content_digest(),
                 "dependencies": {
-                    "lock": getattr(manifest.dependency_bundle, "lock_artifact", None),
-                    "store": getattr(manifest.dependency_bundle, "offline_store", None),
-                    "inventory": getattr(manifest.dependency_bundle, "inventory", None),
+                    "lock": manifest.dependency_bundle.lock,
+                    "store": manifest.dependency_bundle.offline_store,
+                    "inventory": manifest.dependency_bundle.inventory,
                 },
                 "tests": {
                     "commands": manifest.tests.commands_artifact,

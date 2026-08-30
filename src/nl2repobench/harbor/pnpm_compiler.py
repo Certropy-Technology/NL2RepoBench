@@ -10,7 +10,7 @@ from pathlib import Path
 
 import tomli_w
 
-from nl2repobench.domain.models_v2 import TaskManifestV2
+from nl2repobench.domain.canonical_contract import PackageManager, TaskManifest
 from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.pnpm import PnpmPackageManager
 from nl2repobench.storage.artifacts import LocalArtifactResolver
@@ -25,6 +25,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
     """Generate a Node task whose dependency lifecycle is owned by pnpm."""
 
     package_manager = PnpmPackageManager()
+    runtime_package_manager = PackageManager.PNPM
 
     def __init__(
         self,
@@ -43,7 +44,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
     def _write_verifier(
         self,
         source_dir: Path,
-        manifest: TaskManifestV2,
+        manifest: TaskManifest,
         task_root: Path,
         allow_incomplete: bool,
     ) -> None:
@@ -61,9 +62,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
 
         dependencies_root = tests_root / "dependencies"
         dependencies_root.mkdir()
-        if manifest.dependency_bundle.artifact is not None and not allow_incomplete:
-            self._extract_private_bundle(manifest.dependency_bundle.artifact, dependencies_root)
-        else:
+        if allow_incomplete:
             self._write_empty_pnpm_bundle(dependencies_root)
         try:
             if not allow_incomplete:
@@ -162,7 +161,7 @@ snapshots: {}
             json.dumps(payload, sort_keys=True, indent=2).encode() + b"\n",
         )
 
-    def _write_task_toml(self, manifest: TaskManifestV2, task_root: Path) -> None:
+    def _write_task_toml(self, manifest: TaskManifest, task_root: Path) -> None:
         super()._write_task_toml(manifest, task_root)
         path = task_root / "task.toml"
         data = tomllib.loads(path.read_text(encoding="utf-8"))
@@ -171,7 +170,7 @@ snapshots: {}
         data["metadata"]["metric_contract"] = "fixed-test-pass-rate-v1"
         atomic_write(path, tomli_w.dumps(data).encode())
 
-    def _test_script(self, manifest: TaskManifestV2) -> str:
+    def _test_script(self, manifest: TaskManifest) -> str:
         expected = manifest.tests.expected_total
         return f"""#!/usr/bin/env bash
 set -uo pipefail
@@ -228,7 +227,7 @@ exit 0
 """
 
     def _write_readme(
-        self, manifest: TaskManifestV2, task_root: Path, allow_incomplete: bool
+        self, manifest: TaskManifest, task_root: Path, allow_incomplete: bool
     ) -> None:
         mode = "development-only fixture" if allow_incomplete else "production"
         text = f"""# `{manifest.task_id}` Harbor Bundle

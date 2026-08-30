@@ -13,11 +13,16 @@ from typing import Any
 
 import tomli_w
 
-from nl2repobench.authoring.catalog import CatalogCompiler, DeclarativeTaskSource
-from nl2repobench.domain.models import ArtifactRef, TaskManifest
+from nl2repobench.authoring.catalog import CatalogCompiler
+from nl2repobench.domain.canonical_contract import RuntimeLanguage, TaskManifest, TaskSource
+from nl2repobench.domain.models import ArtifactRef
 from nl2repobench.package_managers.base import PackageManagerError
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
-from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.artifacts import (
+    ArtifactStoreError,
+    FileArtifactStore,
+    LocalArtifactResolver,
+)
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
 
@@ -143,8 +148,9 @@ class GoHarborCompiler:
         allow_incomplete: bool = False,
     ) -> Path:
         source = CatalogCompiler.load_task(source_dir)
-        if not isinstance(source, DeclarativeTaskSource) or source.metadata.language != "go":
-            raise GoHarborCompileError("Go compiler accepts only an explicit language=go source")
+        runtime = source.environment.runtime
+        if runtime is None or runtime.language is not RuntimeLanguage.GO:
+            raise GoHarborCompileError("Go compiler requires a canonical Go runtime")
         if source.harbor is None:
             raise GoHarborCompileError("Go task source is missing [harbor] settings")
         if not allow_incomplete and (
@@ -165,11 +171,22 @@ class GoHarborCompiler:
                 source_dir, root / "canonical"
             )
             manifest = compiled.manifest
-        if not isinstance(manifest, TaskManifest):
-            raise GoHarborCompileError("Go source did not produce a v1 manifest")
         gaps = manifest.publication_gaps()
         if gaps and not allow_incomplete:
             raise GoHarborCompileError("Go production source is incomplete: " + ", ".join(gaps))
+        if not allow_incomplete:
+            if self.artifact_resolver is None:
+                raise GoHarborCompileError("private artifact resolver is required")
+            try:
+                self.artifact_resolver.assert_scope(
+                    task_id=manifest.task_id,
+                    manifest_digest=manifest.content_digest(),
+                    purpose="compile",
+                )
+            except ArtifactStoreError as exc:
+                raise GoHarborCompileError(
+                    f"private artifact authorization mismatch: {exc}"
+                ) from exc
         if source.tests.expected_total != 1:
             raise GoHarborCompileError(
                 "the first Go bridge profile supports exactly one verifier-owned leaf"
@@ -326,7 +343,7 @@ WORKDIR /tests
 
     def _write_dependencies(
         self,
-        source: DeclarativeTaskSource,
+        source: TaskSource,
         fixture: Path,
         task_root: Path,
         allow_incomplete: bool,
@@ -349,7 +366,7 @@ WORKDIR /tests
 
     def _write_verifier(
         self,
-        source: DeclarativeTaskSource,
+        source: TaskSource,
         fixture: Path,
         task_root: Path,
         allow_incomplete: bool,
@@ -381,7 +398,7 @@ WORKDIR /tests
 
     def _write_solution(
         self,
-        source: DeclarativeTaskSource,
+        source: TaskSource,
         fixture: Path,
         task_root: Path,
         allow_incomplete: bool,
@@ -483,7 +500,7 @@ WORKDIR /tests
         return payload
 
     def _write_readme(
-        self, source: DeclarativeTaskSource, task_root: Path, allow_incomplete: bool
+        self, source: TaskSource, task_root: Path, allow_incomplete: bool
     ) -> None:
         mode = "development-only fixture" if allow_incomplete else "production"
         atomic_write(

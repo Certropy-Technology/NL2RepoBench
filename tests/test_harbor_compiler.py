@@ -24,11 +24,85 @@ from nl2repobench.storage.artifacts import (
     LocalArtifactResolver,
     PrivateArtifactAuthorization,
 )
+from nl2repobench.storage.canonical_ustar import encode_files
 from nl2repobench.verification.command_plan import validate_command_plan
 
 ROOT = Path(__file__).parents[1]
 SOURCE = ROOT / "catalog/sources/ministats"
 TOOLCHAIN = ROOT / "toolchain.lock.toml"
+
+
+def _python_source(tmp_path: Path) -> Path:
+    source = tmp_path / "canonical-python-source"
+    if source.exists():
+        return source
+    shutil.copytree(SOURCE, source)
+    (source / "task.toml").write_text(
+        '''schema_version = "1.0"
+task_id = "ministats"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "utility-library"
+tags = ["python", "packaging", "unicode", "cli"]
+language = "python"
+
+[source]
+status = "unknown"
+
+[environment]
+status = "unknown"
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12"
+package_manager = "uv"
+package_manager_version = "0.8.15"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Synthetic development fixture closure is intentionally absent."
+
+[dependencies]
+status = "unknown"
+package_manager = "uv"
+packages = []
+
+[tests]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+expected_total = 18
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build a small Unicode-aware text statistics package."
+keywords = ["python", "repository-generation", "nl2repobench", "pytest"]
+agent_timeout_sec = 600.0
+verifier_timeout_sec = 180.0
+candidate_install_timeout_sec = 15.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "discovered"
+''',
+        encoding="utf-8",
+    )
+    return source
 
 
 def _files(root: Path) -> dict[str, bytes]:
@@ -138,12 +212,12 @@ def test_arbitrary_legacy_command_lists_are_not_execution_plans() -> None:
 
 def test_compiler_requires_publishable_task_by_default(tmp_path) -> None:
     with pytest.raises(HarborCompileError, match="not publishable"):
-        HarborCompiler(TOOLCHAIN).compile_task(SOURCE, tmp_path / "output")
+        HarborCompiler(TOOLCHAIN).compile_task(_python_source(tmp_path), tmp_path / "output")
 
 
 def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> None:
     task_root = HarborCompiler(TOOLCHAIN).compile_task(
-        SOURCE,
+        _python_source(tmp_path),
         tmp_path / "output",
         allow_incomplete=True,
     )
@@ -204,7 +278,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
 
 def test_system_packages_are_installed_in_agent_and_verifier_images(tmp_path) -> None:
     source = tmp_path / "source"
-    shutil.copytree(SOURCE, source)
+    shutil.copytree(_python_source(tmp_path), source)
     task_toml = source / "task.toml"
     task_text = task_toml.read_text(encoding="utf-8").replace(
         '[environment]\nstatus = "unknown"',
@@ -228,7 +302,7 @@ def test_system_packages_are_installed_in_agent_and_verifier_images(tmp_path) ->
 
 def test_empty_system_packages_emit_no_apt_stanza(tmp_path) -> None:
     task_root = HarborCompiler(TOOLCHAIN).compile_task(
-        SOURCE,
+        _python_source(tmp_path),
         tmp_path / "output",
         allow_incomplete=True,
     )
@@ -239,7 +313,7 @@ def test_empty_system_packages_emit_no_apt_stanza(tmp_path) -> None:
 
 def test_catalog_network_policy_controls_generated_agent_runtime(tmp_path) -> None:
     source = tmp_path / "source"
-    shutil.copytree(SOURCE, source)
+    shutil.copytree(_python_source(tmp_path), source)
     task_toml = source / "task.toml"
     task_text = task_toml.read_text()
     if "[environment.network_policy]" not in task_text:
@@ -267,10 +341,10 @@ reason = "Synthetic compiler policy projection fixture."
 
 def test_compiler_output_is_byte_identical_across_roots(tmp_path) -> None:
     first = HarborCompiler(TOOLCHAIN).compile_task(
-        SOURCE, tmp_path / "first", allow_incomplete=True
+        _python_source(tmp_path), tmp_path / "first", allow_incomplete=True
     )
     second = HarborCompiler(TOOLCHAIN).compile_task(
-        SOURCE, tmp_path / "second", allow_incomplete=True
+        _python_source(tmp_path), tmp_path / "second", allow_incomplete=True
     )
 
     assert _files(first) == _files(second)
@@ -281,7 +355,9 @@ def test_compiler_rejects_existing_output(tmp_path) -> None:
     (output / "ministats").mkdir(parents=True)
 
     with pytest.raises(HarborCompileError, match="already exists"):
-        HarborCompiler(TOOLCHAIN).compile_task(SOURCE, output, allow_incomplete=True)
+        HarborCompiler(TOOLCHAIN).compile_task(
+            _python_source(tmp_path), output, allow_incomplete=True
+        )
 
 
 def test_private_tar_rejects_path_traversal(tmp_path) -> None:
@@ -353,10 +429,18 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         visibility=Visibility.PRIVATE,
     )
     dependency_lock = store.put_bytes(
-        b"demo-pkg==1.0 \\\n" + b"    --hash=sha256:" + b"0" * 64 + b"\n",
-        media_type="text/plain; charset=utf-8",
+        encode_files(
+            {
+                "requirements.lock.txt": b"demo-pkg==1.0 \\\n"
+                + b"    --hash=sha256:"
+                + b"0" * 64
+                + b"\n"
+            }
+        ),
         visibility=Visibility.PRIVATE,
     )
+    offline_store = store.put_bytes(encode_files({}), visibility=Visibility.PRIVATE)
+    inventory = store.put_bytes(b"{}\n", visibility=Visibility.PRIVATE)
     commands = store.put_bytes(
         b'{"schema_version":"1.0","runner":"pytest-subprocess-boundary-v1",'
         b'"candidate_install":"pip-target-no-deps-v1"}',
@@ -385,18 +469,33 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         },
         "environment": {
             "status": "known",
-            "python_version": "3.12",
             "os_name": "linux",
             "base_image": "python:3.12-slim",
             "base_image_digest": "sha256:" + "3" * 64,
-            "network_mode": "no-network",
+            "runtime": {
+                "language": "python",
+                "runtime": "cpython",
+                "version": "3.12",
+                "package_manager": "uv",
+                "package_manager_version": "0.8.15",
+            },
+            "network_policy": {
+                "mode": "no-network",
+                "offline_dependencies": "preinstalled-image",
+                "reference_source_fetch": "forbidden",
+                "reason": "Dependencies are installed during the Docker build phase.",
+            },
         },
         "dependencies": {
             "status": "known",
-            "lock_artifact": dependency_lock.model_dump(mode="json"),
-            "installer": "uv",
+            "package_manager": "uv",
+            "lock": dependency_lock.model_dump(mode="json"),
+            "offline_store": offline_store.model_dump(mode="json"),
+            "inventory": inventory.model_dump(mode="json"),
         },
         "tests": {
+            "framework": "pytest",
+            "report_format": "pytest-junit-xml-v1",
             "expected_total": 1,
             "expected_total_source": "frozen-collection",
             "commands_artifact": commands.model_dump(mode="json"),
@@ -463,10 +562,12 @@ def test_vendor_dependency_bundle_is_forbidden(tmp_path) -> None:
 def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
     store = FileArtifactStore(tmp_path / "artifacts")
     dependency_lock = store.put_bytes(
-        b"",
-        media_type="text/plain; charset=utf-8",
+        encode_files({"requirements.lock.txt": b""}),
         visibility=Visibility.PRIVATE,
     )
+    offline_store = store.put_bytes(encode_files({}), visibility=Visibility.PRIVATE)
+    inventory = store.put_bytes(b"{}\n", visibility=Visibility.PRIVATE)
+    commands = store.put_bytes(b"{}\n", visibility=Visibility.PRIVATE)
     verifier_bundle = store.put_bytes(
         _tar_bytes(
             {
@@ -505,23 +606,38 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
                     "license_spdx": "MIT",
                     "source_digest": "sha256:" + "2" * 64,
                 },
-                "environment": {
-                    "status": "known",
-                    "python_version": "3.12",
-                    "os_name": "linux",
-                    "base_image": "python:3.12-slim",
-                    "base_image_digest": "sha256:" + "3" * 64,
-                    "network_mode": "no-network",
-                },
-                "dependencies": {
-                    "status": "known",
-                    "lock_artifact": dependency_lock.model_dump(mode="json"),
-                    "installer": "uv",
-                },
-                "tests": {
-                    "expected_total": 1,
-                    "expected_total_source": "frozen-collection",
-                    "commands": ["custom-json-v1"],
+                    "environment": {
+                        "status": "known",
+                        "os_name": "linux",
+                        "base_image": "python:3.12-slim",
+                        "base_image_digest": "sha256:" + "3" * 64,
+                        "runtime": {
+                            "language": "python",
+                            "runtime": "cpython",
+                            "version": "3.12",
+                            "package_manager": "uv",
+                            "package_manager_version": "0.8.15",
+                        },
+                        "network_policy": {
+                            "mode": "no-network",
+                            "offline_dependencies": "preinstalled-image",
+                            "reference_source_fetch": "forbidden",
+                            "reason": "Dependencies are installed during the Docker build phase.",
+                        },
+                    },
+                    "dependencies": {
+                        "status": "known",
+                        "package_manager": "uv",
+                        "lock": dependency_lock.model_dump(mode="json"),
+                        "offline_store": offline_store.model_dump(mode="json"),
+                        "inventory": inventory.model_dump(mode="json"),
+                    },
+                    "tests": {
+                        "framework": "custom",
+                        "report_format": "custom-json-v1",
+                        "expected_total": 1,
+                        "expected_total_source": "frozen-collection",
+                        "commands_artifact": commands.model_dump(mode="json"),
                 },
                 "verifier": {
                     "protocol": "custom-json-v1",
@@ -565,7 +681,9 @@ def test_dependency_lock_rejects_requirement_directives() -> None:
 
 def test_prepare_stub_control_replaces_only_control_solution(tmp_path) -> None:
     compiler = HarborCompiler(TOOLCHAIN)
-    task_root = compiler.compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True)
+    task_root = compiler.compile_task(
+        _python_source(tmp_path), tmp_path / "tasks", allow_incomplete=True
+    )
     original_solution = (task_root / "solution/solve.sh").read_bytes()
 
     control = compiler.prepare_control_bundle(task_root, "stub", tmp_path / "controls")
@@ -579,7 +697,9 @@ def test_prepare_stub_control_replaces_only_control_solution(tmp_path) -> None:
 
 def test_prepare_control_rejects_unknown_kind(tmp_path) -> None:
     compiler = HarborCompiler(TOOLCHAIN)
-    task_root = compiler.compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True)
+    task_root = compiler.compile_task(
+        _python_source(tmp_path), tmp_path / "tasks", allow_incomplete=True
+    )
 
     with pytest.raises(HarborCompileError, match="unsupported control kind"):
         compiler.prepare_control_bundle(task_root, "unknown", tmp_path / "controls")
@@ -587,7 +707,9 @@ def test_prepare_control_rejects_unknown_kind(tmp_path) -> None:
 
 def test_prepare_control_via_registry_preserves_python_dispatch(tmp_path) -> None:
     output = HarborCompilerRegistry.default().prepare_control_bundle(
-        HarborCompiler(TOOLCHAIN).compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True),
+        HarborCompiler(TOOLCHAIN).compile_task(
+            _python_source(tmp_path), tmp_path / "tasks", allow_incomplete=True
+        ),
         "stub",
         tmp_path / "controls",
         TOOLCHAIN,

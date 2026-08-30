@@ -9,19 +9,19 @@ import stat
 from pathlib import Path
 from typing import Any, Literal
 
-from nl2repobench.domain.models_v2 import V2RecordModel
+from nl2repobench.domain.models import RecordModel
 
 MAX_NODE_PLAN_BYTES = 4096
 EXPECTED_NODE_PLAN: dict[str, Any] = {
     "candidate_install": "npm-pack-offline-v1",
     "report_format": "node-test-json-v1",
     "runner": "node-test-subprocess-boundary-v1",
-    "schema_version": "2.0",
+    "schema_version": "1.0",
     "test_root": "/tests/private",
 }
 
 
-class NodeVerifierCommandPlan(V2RecordModel):
+class NodeVerifierCommandPlan(RecordModel):
     """Allowlisted Node verifier behavior; arbitrary shell is never accepted."""
 
     runner: Literal["node-test-subprocess-boundary-v1"] = "node-test-subprocess-boundary-v1"
