@@ -7,6 +7,16 @@ from .catalog import (
     DeclarativeTaskSource,
     validate_compiled_dataset,
 )
+from .scheduler import (
+    BusyError,
+    ConflictError,
+    CorruptionError,
+    Identity,
+    LostLeaseError,
+    Scheduler,
+    SchedulerError,
+    ValidationError,
+)
 
 __all__ = [
     "CatalogCompiler",
@@ -14,4 +24,12 @@ __all__ = [
     "DeclarativeDatasetSource",
     "DeclarativeTaskSource",
     "validate_compiled_dataset",
+    "BusyError",
+    "ConflictError",
+    "CorruptionError",
+    "Identity",
+    "LostLeaseError",
+    "Scheduler",
+    "SchedulerError",
+    "ValidationError",
 ]
