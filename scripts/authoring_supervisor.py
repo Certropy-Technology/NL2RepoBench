@@ -110,9 +110,15 @@ def _controller_counts(lanes: list[Lane], procs: list[Proc]) -> dict[str, int]:
     return counts
 
 
-def _controller_owner(lane: Lane, slot: int) -> str:
+def _controller_owner(
+    lane: Lane,
+    slot: int,
+    *,
+    launch_nonce: str | None = None,
+) -> str:
     batch = re.sub(r"[^A-Za-z0-9._-]+", "-", lane.batch_id).strip("-")
-    return f"supervisor-{lane.language}-{batch}-{slot + 1}"
+    nonce = launch_nonce or f"{time.time_ns():x}"
+    return f"supervisor-{lane.language}-{batch}-{slot + 1}-{nonce}"
 
 
 @dataclass(frozen=True)
@@ -834,12 +840,16 @@ def _controller_processes(lane: Lane, procs: list[Proc]) -> list[Proc]:
 
 
 def _controller_slots(lane: Lane, procs: list[Proc]) -> set[str]:
-    owners: set[str] = set()
+    instances: set[str] = set()
     for proc in _controller_processes(lane, procs):
         match = re.search(r"(?:^|\s)--owner\s+(\S+)", proc.command)
         if match:
-            owners.add(match.group(1))
-    return owners
+            try:
+                process_group = os.getpgid(proc.pid)
+            except OSError:
+                process_group = proc.pid
+            instances.add(f"{match.group(1)}@{process_group}")
+    return instances
 
 
 def _watcher_processes(procs: list[Proc]) -> list[Proc]:

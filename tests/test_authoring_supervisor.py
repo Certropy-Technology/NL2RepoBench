@@ -326,7 +326,7 @@ def test_go_discovery_pool_has_explicit_repository_mappings() -> None:
     assert supervisor.GO_DISCOVERY_REPOSITORIES["go-xxhash"] == "cespare/xxhash"
 
 
-def test_controller_slots_count_unique_owner_not_uv_child_processes() -> None:
+def test_controller_slots_count_process_groups_not_shared_owner(monkeypatch) -> None:
     lane = supervisor.Lane(
         "go", "batch", Path("/queue"), Path("/plan"), Path("/state")
     )
@@ -350,8 +350,13 @@ def test_controller_slots_count_unique_owner_not_uv_child_processes() -> None:
             "uv run python run_authoring_loop.py --queue-state /state --owner slot-2",
         ),
     ]
+    process_groups = {10: 100, 11: 100, 12: 120}
+    monkeypatch.setattr(supervisor.os, "getpgid", process_groups.__getitem__)
 
-    assert supervisor._controller_slots(lane, procs) == {"slot-1", "slot-2"}
+    assert supervisor._controller_slots(lane, procs) == {
+        "slot-1@100",
+        "slot-2@120",
+    }
 
 
 def test_controller_counts_and_owners_do_not_collide_between_lanes() -> None:
@@ -377,9 +382,21 @@ def test_controller_counts_and_owners_do_not_collide_between_lanes() -> None:
     ]
 
     assert supervisor._controller_counts([base, generated], procs) == {"go": 2}
-    assert supervisor._controller_owner(base, 0) != supervisor._controller_owner(
-        generated, 0
+    assert supervisor._controller_owner(
+        base, 0, launch_nonce="same"
+    ) != supervisor._controller_owner(
+        generated, 0, launch_nonce="same"
     )
+
+
+def test_controller_owner_is_unique_across_restarts() -> None:
+    lane = supervisor.Lane(
+        "python", "batch", Path("/queue"), Path("/plan"), Path("/state")
+    )
+
+    assert supervisor._controller_owner(
+        lane, 0, launch_nonce="first"
+    ) != supervisor._controller_owner(lane, 0, launch_nonce="second")
 
 
 def test_integrate_task_does_not_mutate_without_oss(tmp_path: Path) -> None:
