@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from datetime import UTC, datetime
@@ -41,10 +42,28 @@ def _output(command: str, data: dict[str, Any], error: str | None = None) -> Non
     )
 
 
+def _process_identity(
+    pid: int | None, starttime: int | None, boot_id: str | None
+) -> tuple[int, int, str]:
+    actual_pid = pid if pid is not None else os.getpid()
+    if starttime is None:
+        stat = Path(f"/proc/{actual_pid}/stat").read_text(encoding="utf-8")
+        starttime = int(stat.rsplit(")", 1)[1].split()[19])
+    actual_boot = boot_id or Path("/proc/sys/kernel/random/boot_id").read_text(
+        encoding="utf-8"
+    ).strip()
+    if not actual_boot:
+        raise ValidationError("boot id is empty")
+    return actual_pid, starttime, actual_boot
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(description=__doc__)
     result.add_argument("--root", type=Path, required=True, help="explicit temporary Phase 1 root")
     result.add_argument("--db", type=Path, required=True, help="database contained by --root")
+    result.add_argument("--pid", type=int)
+    result.add_argument("--starttime-ticks", type=int)
+    result.add_argument("--boot-id")
     sub = result.add_subparsers(dest="command", required=True)
     sub.add_parser("init")
     config = sub.add_parser("config-set")
@@ -60,15 +79,18 @@ def parser() -> argparse.ArgumentParser:
     heartbeat.add_argument("--claim", required=True)
     heartbeat.add_argument("--controller", required=True)
     heartbeat.add_argument("--owner", required=True)
+    heartbeat.add_argument("--generation", type=int, default=1)
     release = sub.add_parser("release")
     release.add_argument("--claim", required=True)
     release.add_argument("--controller", required=True)
     release.add_argument("--owner", required=True)
+    release.add_argument("--generation", type=int, default=1)
     release.add_argument("--reason", default="released")
     finish = sub.add_parser("finish")
     finish.add_argument("--claim", required=True)
     finish.add_argument("--controller", required=True)
     finish.add_argument("--owner", required=True)
+    finish.add_argument("--generation", type=int, default=1)
     finish.add_argument("--success", choices=("true", "false"), required=True)
     finish.add_argument("--reason", default="finished")
     return result
@@ -91,20 +113,39 @@ def main(argv: list[str] | None = None) -> int:
             _output("config-set", {"config_version": version})
             return 0
         if args.command == "claim":
-            claims = scheduler.claim_next(args.controller, args.owner, requested_limit=args.limit)
+            pid, starttime, boot_id = _process_identity(
+                args.pid, args.starttime_ticks, args.boot_id
+            )
+            claims = scheduler.claim_next(
+                args.controller, args.owner, requested_limit=args.limit,
+                pid=pid, process_starttime_ticks=starttime, boot_id=boot_id
+            )
             _output("claim", {"claims": [claim.__dict__ for claim in claims]})
             return 0 if claims else 2
         if args.command == "heartbeat":
-            scheduler.heartbeat(args.claim, args.owner, args.controller)
+            pid, starttime, boot_id = _process_identity(
+                args.pid, args.starttime_ticks, args.boot_id
+            )
+            scheduler.heartbeat(args.claim, args.owner, args.controller, args.generation,
+                                pid=pid, process_starttime_ticks=starttime, boot_id=boot_id)
             _output("heartbeat", {"claim_id": args.claim})
             return 0
         if args.command == "release":
-            scheduler.release(args.claim, args.owner, args.controller, reason=args.reason)
+            pid, starttime, boot_id = _process_identity(
+                args.pid, args.starttime_ticks, args.boot_id
+            )
+            scheduler.release(args.claim, args.owner, args.controller, args.generation,
+                              reason=args.reason, pid=pid, process_starttime_ticks=starttime,
+                              boot_id=boot_id)
             _output("release", {"claim_id": args.claim})
             return 0
         if args.command == "finish":
-            scheduler.finish(args.claim, args.owner, args.controller,
-                             success=args.success == "true", reason=args.reason)
+            pid, starttime, boot_id = _process_identity(
+                args.pid, args.starttime_ticks, args.boot_id
+            )
+            scheduler.finish(args.claim, args.owner, args.controller, args.generation,
+                             success=args.success == "true", reason=args.reason, pid=pid,
+                             process_starttime_ticks=starttime, boot_id=boot_id)
             _output("finish", {"claim_id": args.claim})
             return 0
         with scheduler.connect() as db:

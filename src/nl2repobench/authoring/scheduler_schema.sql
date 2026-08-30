@@ -123,7 +123,8 @@ CREATE TABLE trials (
   task_id TEXT NOT NULL REFERENCES tasks(task_id), attempt_no INTEGER NOT NULL CHECK(attempt_no >= 1),
   retry_no INTEGER NOT NULL CHECK(retry_no >= 0), kind TEXT NOT NULL CHECK(kind IN ('authoring','discovery','integration','archive','cleanup','reconcile')),
   state TEXT NOT NULL CHECK(state IN ('created','running','succeeded','failed','released','timed_out','cancelled','stale')),
-  owner_uuid TEXT, controller_id TEXT, launch_intent_at TEXT, started_at TEXT, finished_at TEXT,
+  owner_uuid TEXT, controller_id TEXT, launch_intent_at TEXT, child_pid INTEGER,
+  child_starttime_ticks INTEGER, child_boot_id TEXT, started_at TEXT, finished_at TEXT,
   exit_code INTEGER, failure_class TEXT, failure_reason TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
   UNIQUE(task_id, attempt_no, retry_no, kind),
   CHECK((state = 'running' AND started_at IS NOT NULL) OR state <> 'running'),
@@ -241,6 +242,16 @@ CREATE TRIGGER task_complete_guard BEFORE UPDATE OF state ON tasks WHEN NEW.stat
  SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='integration' AND status='pushed') THEN RAISE(ABORT,'pushed integration required') END;
  SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='archive' AND status='verified') THEN RAISE(ABORT,'verified archive required') END;
  SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='cleanup' AND status='applied') THEN RAISE(ABORT,'cleanup evidence required') END;
+END;
+CREATE TRIGGER operation_stage_guard BEFORE UPDATE OF state ON tasks
+WHEN NEW.state='archiving' OR NEW.state='cleaning'
+BEGIN
+ SELECT CASE WHEN NEW.state='archiving' AND NOT EXISTS(
+   SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='integration' AND status='pushed'
+ ) THEN RAISE(ABORT,'pushed integration required before archive') END;
+ SELECT CASE WHEN NEW.state='cleaning' AND NOT EXISTS(
+   SELECT 1 FROM operation_receipts WHERE task_id=NEW.task_id AND operation_kind='archive' AND status='verified'
+ ) THEN RAISE(ABORT,'verified archive required before cleanup') END;
 END;
 CREATE TRIGGER event_context_guard BEFORE INSERT ON events
 WHEN (NEW.trial_id IS NOT NULL AND (NEW.task_id IS NULL OR NOT EXISTS(SELECT 1 FROM trials WHERE trial_id=NEW.trial_id AND task_id=NEW.task_id)))
