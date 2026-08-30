@@ -248,9 +248,14 @@ SubprocessResult
 - wall clock、CPU、FD、输出和文件大小限制；
 - stdout/stderr 合并计入 aggregate output cap；
 - success、failure、timeout、output flood 全路径 kill process group；
-- 启动前确认 dedicated candidate UID quiescent；结束时先 kill process group，再扫描并终止该 UID
-  的残留进程，最后记录 `cleanup_complete`。每个 separate verifier container 同时只运行一个
+- 启动前确认 dedicated candidate UID quiescent；结束时先 kill process group，再扫描
+  `/proc/*/status` 的 real/effective/saved/fs UID 四元组并终止任一字段匹配 candidate UID 的
+  残留进程，最后记录 `cleanup_complete`。每个 separate verifier container 同时只运行一个
   candidate UID，因此 UID cleanup 不得跨 task 误杀；
+- candidate exec 前 drop `CAP_SETUID`、`CAP_SETGID` 和其他不需要的 capability，设置
+  `no_new_privs`，并拒绝 candidate workspace/store 中的 setuid/setgid file。candidate 以 UID
+  10001 启动后不能切换到其他 UID；`setsid`、double-fork 或新 process group 仍由 UID scan
+  捕获；
 - bounded stderr/details 进入 grading，原始大输出只进入受控 artifact；
 - 不设置通用 RLIMIT_AS。JVM 使用 cgroup、`-Xmx`、Metaspace 和 PID 限制；
 - parent-side spawn、child pre-exec/setuid/setrlimit 和 exec 失败都产生结构化 `spawn_error`，
@@ -261,7 +266,8 @@ Python/Node/Go wrapper 必须映射 generic result 到各自已有 failure taxon
 timeout 和 output cap 行为兼容；不允许为了重构修改 metric 或已冻结 task。
 
 F1 必须覆盖：spawn/pre-exec failure、success、non-zero、timeout、aggregate output flood、forked
-background child、escaped session/setid child、UID residue、cleanup failure 和 concurrent-container
+background child、escaped session/`setsid`/double-fork child、UID residue、capability/setuid-file
+rejection、cleanup failure 和 concurrent-container
 isolation。只验证 Go output cap 不足以通过 F1。
 
 ## 7. Java/Maven Runtime
