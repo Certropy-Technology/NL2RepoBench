@@ -1,0 +1,81 @@
+schema_version = "2.0"
+task_id = "uint8array-extras"
+version = "2.0.0"
+instruction = "instruction.md"
+[metadata]
+language = "node"
+difficulty = "easy"
+category = "binary-data-utility"
+tags = ["node","npm","esm","uint8array","base64","hex","encoding"]
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/uint8array-extras"
+revision = "1ba291a510461ebed324d8ccf612368a83168357"
+license_spdx = "MIT"
+source_digest = "sha256:75e87d3a15806c0544c1182af3822fe18b9965a7d2b8ccdcad9d2564e1524886"
+submodules = []
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier run offline with an integrity-checked root-only npm v3 lock and empty cache; only trusted Oracle receives a run-scoped github.com source authorization."
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = {digest="sha256:d87fd0b0765aea323d02b89df9127b475ec234dd3c401ebd471733054d565e58",size_bytes=10240,media_type="application/vnd.nl2repobench.npm-bundle+tar",uri="artifact://private/sha256:d87fd0b0765aea323d02b89df9127b475ec234dd3c401ebd471733054d565e58",visibility="private"}
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 29
+expected_total_source = "frozen-collection"
+commands_artifact = {digest="sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040",size_bytes=10240,media_type="application/vnd.nl2repobench.node-commands+tar",uri="artifact://private/sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040",visibility="private"}
+test_bundle = {digest="sha256:6063921da5191eb952fda4fc7ccfe3b59a61f427a1d7306d3f1615deb1dce952",size_bytes=10240,media_type="application/vnd.nl2repobench.node-tests+tar",uri="artifact://private/sha256:6063921da5191eb952fda4fc7ccfe3b59a61f427a1d7306d3f1615deb1dce952",visibility="private"}
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+[harbor]
+description = "Build an offline ESM package of deterministic Uint8Array, encoding, and byte-sequence utilities."
+keywords = ["node","npm","esm","uint8array","base64","hex","encoding"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-uint8array-extras"
+reason = "Frozen source, API/test inventory, private npm closure, production compile, separate offline verifier, Oracle-like correct run, and all task-local controls passed. Independent review, Agent Run, dataset integration, and publication remain outside this lane."
+[oracle_bundle]
+digest = "sha256:22cb724aac8b640b56340a062a2a17cd8c30e06b9695b0be54c1e4a0610a3231"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:22cb724aac8b640b56340a062a2a17cd8c30e06b9695b0be54c1e4a0610a3231"
+visibility = "private"

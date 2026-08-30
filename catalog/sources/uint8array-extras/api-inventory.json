@@ -1,0 +1,2005 @@
+{
+  "schema_shape": "api-inventory",
+  "language": "node",
+  "source_root": "/data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/worktrees/node-author-wave2-20260828/uint8array-extras/.nl2repo/authoring-work/node-author-wave2-20260828/uint8array-extras/source",
+  "source_digest": "sha256:26ed55a8b03c4b1dc4bff087d99d6dee8b83747043a78badc9b3b9ca112ea72a",
+  "scanner_identity": "node-typescript-compiler-api",
+  "scanner_digest": "sha256:8fd59259135f05911302fe7f2c3e1fd83b7c1cb148e2cb373786a604161b99e1",
+  "modules": [
+    {
+      "module": "index",
+      "name": "uint8ArrayToString",
+      "export_name": "uint8ArrayToString",
+      "qualified_name": "index.uint8ArrayToString",
+      "kind": "function",
+      "signature": "export function uint8ArrayToString(array, encoding = 'utf8')",
+      "source_location": {
+        "file": "index.js",
+        "line": 116,
+        "column": 1,
+        "endLine": 120,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "areUint8ArraysEqual",
+      "export_name": "areUint8ArraysEqual",
+      "qualified_name": "index.areUint8ArraysEqual",
+      "kind": "function",
+      "signature": "export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 117,
+        "column": 1,
+        "endLine": 117,
+        "endColumn": 76
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertString",
+      "export_name": null,
+      "qualified_name": "index.assertString",
+      "kind": "function",
+      "signature": "function assertString(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 122,
+        "column": 1,
+        "endLine": 126,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToUint8Array",
+      "export_name": "stringToUint8Array",
+      "qualified_name": "index.stringToUint8Array",
+      "kind": "function",
+      "signature": "export function stringToUint8Array(string)",
+      "source_location": {
+        "file": "index.js",
+        "line": 130,
+        "column": 1,
+        "endLine": 133,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToBase64Url",
+      "export_name": null,
+      "qualified_name": "index.base64ToBase64Url",
+      "kind": "function",
+      "signature": "function base64ToBase64Url(base64)",
+      "source_location": {
+        "file": "index.js",
+        "line": 135,
+        "column": 1,
+        "endLine": 137,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "compareUint8Arrays",
+      "export_name": "compareUint8Arrays",
+      "qualified_name": "index.compareUint8Arrays",
+      "kind": "function",
+      "signature": "export function compareUint8Arrays(a: Uint8Array, b: Uint8Array): 0 | 1 | -1;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 136,
+        "column": 1,
+        "endLine": 136,
+        "endColumn": 78
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64UrlToBase64",
+      "export_name": null,
+      "qualified_name": "index.base64UrlToBase64",
+      "kind": "function",
+      "signature": "function base64UrlToBase64(base64url)",
+      "source_location": {
+        "file": "index.js",
+        "line": 139,
+        "column": 1,
+        "endLine": 143,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToBase64",
+      "export_name": "uint8ArrayToBase64",
+      "qualified_name": "index.uint8ArrayToBase64",
+      "kind": "function",
+      "signature": "export function uint8ArrayToBase64(array,",
+      "source_location": {
+        "file": "index.js",
+        "line": 149,
+        "column": 1,
+        "endLine": 161,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToString",
+      "export_name": "uint8ArrayToString",
+      "qualified_name": "index.uint8ArrayToString",
+      "kind": "function",
+      "signature": "export function uint8ArrayToString(array: Uint8Array | ArrayBuffer, encoding?: string): string;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 162,
+        "column": 1,
+        "endLine": 162,
+        "endColumn": 96
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToUint8Array",
+      "export_name": "base64ToUint8Array",
+      "qualified_name": "index.base64ToUint8Array",
+      "kind": "function",
+      "signature": "export function base64ToUint8Array(base64String)",
+      "source_location": {
+        "file": "index.js",
+        "line": 163,
+        "column": 1,
+        "endLine": 166,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToBase64",
+      "export_name": "stringToBase64",
+      "qualified_name": "index.stringToBase64",
+      "kind": "function",
+      "signature": "export function stringToBase64(string,",
+      "source_location": {
+        "file": "index.js",
+        "line": 168,
+        "column": 1,
+        "endLine": 171,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isUint8Array",
+      "export_name": "isUint8Array",
+      "qualified_name": "index.isUint8Array",
+      "kind": "function",
+      "signature": "export function isUint8Array(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 17,
+        "column": 1,
+        "endLine": 19,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToString",
+      "export_name": "base64ToString",
+      "qualified_name": "index.base64ToString",
+      "kind": "function",
+      "signature": "export function base64ToString(base64String)",
+      "source_location": {
+        "file": "index.js",
+        "line": 173,
+        "column": 1,
+        "endLine": 176,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToUint8Array",
+      "export_name": "stringToUint8Array",
+      "qualified_name": "index.stringToUint8Array",
+      "kind": "function",
+      "signature": "export function stringToUint8Array(string: string): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 177,
+        "column": 1,
+        "endLine": 177,
+        "endColumn": 77
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToHex",
+      "export_name": "uint8ArrayToHex",
+      "qualified_name": "index.uint8ArrayToHex",
+      "kind": "function",
+      "signature": "export function uint8ArrayToHex(array)",
+      "source_location": {
+        "file": "index.js",
+        "line": 180,
+        "column": 1,
+        "endLine": 192,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToBase64",
+      "export_name": "uint8ArrayToBase64",
+      "qualified_name": "index.uint8ArrayToBase64",
+      "kind": "function",
+      "signature": "export function uint8ArrayToBase64(array: Uint8Array, options?:",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 196,
+        "column": 1,
+        "endLine": 196,
+        "endColumn": 93
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isArrayBuffer",
+      "export_name": null,
+      "qualified_name": "index.isArrayBuffer",
+      "kind": "function",
+      "signature": "function isArrayBuffer(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 21,
+        "column": 1,
+        "endLine": 23,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToUint8Array",
+      "export_name": "base64ToUint8Array",
+      "qualified_name": "index.base64ToUint8Array",
+      "kind": "function",
+      "signature": "export function base64ToUint8Array(string: string): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 213,
+        "column": 1,
+        "endLine": 213,
+        "endColumn": 77
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "hexToUint8Array",
+      "export_name": "hexToUint8Array",
+      "qualified_name": "index.hexToUint8Array",
+      "kind": "function",
+      "signature": "export function hexToUint8Array(hexString)",
+      "source_location": {
+        "file": "index.js",
+        "line": 219,
+        "column": 1,
+        "endLine": 241,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToBase64",
+      "export_name": "stringToBase64",
+      "qualified_name": "index.stringToBase64",
+      "kind": "function",
+      "signature": "export function stringToBase64(string: string, options?:",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 230,
+        "column": 1,
+        "endLine": 230,
+        "endColumn": 86
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToString",
+      "export_name": "base64ToString",
+      "qualified_name": "index.base64ToString",
+      "kind": "function",
+      "signature": "export function base64ToString(base64String: string): string;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 247,
+        "column": 1,
+        "endLine": 247,
+        "endColumn": 62
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "getUintBE",
+      "export_name": "getUintBE",
+      "qualified_name": "index.getUintBE",
+      "kind": "function",
+      "signature": "export function getUintBE(view)",
+      "source_location": {
+        "file": "index.js",
+        "line": 247,
+        "column": 1,
+        "endLine": 273,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isUint8ArrayOrArrayBuffer",
+      "export_name": null,
+      "qualified_name": "index.isUint8ArrayOrArrayBuffer",
+      "kind": "function",
+      "signature": "function isUint8ArrayOrArrayBuffer(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 25,
+        "column": 1,
+        "endLine": 27,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToHex",
+      "export_name": "uint8ArrayToHex",
+      "qualified_name": "index.uint8ArrayToHex",
+      "kind": "function",
+      "signature": "export function uint8ArrayToHex(array: Uint8Array): string;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 264,
+        "column": 1,
+        "endLine": 264,
+        "endColumn": 60
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "hexToUint8Array",
+      "export_name": "hexToUint8Array",
+      "qualified_name": "index.hexToUint8Array",
+      "kind": "function",
+      "signature": "export function hexToUint8Array(hexString: string): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 279,
+        "column": 1,
+        "endLine": 279,
+        "endColumn": 77
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "indexOf",
+      "export_name": "indexOf",
+      "qualified_name": "index.indexOf",
+      "kind": "function",
+      "signature": "export function indexOf(array, value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 280,
+        "column": 1,
+        "endLine": 309,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8Array",
+      "export_name": "assertUint8Array",
+      "qualified_name": "index.assertUint8Array",
+      "kind": "function",
+      "signature": "export function assertUint8Array(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 29,
+        "column": 1,
+        "endLine": 33,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "getUintBE",
+      "export_name": "getUintBE",
+      "qualified_name": "index.getUintBE",
+      "kind": "function",
+      "signature": "export function getUintBE(view: DataView): number;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 296,
+        "column": 1,
+        "endLine": 296,
+        "endColumn": 51
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "indexOf",
+      "export_name": "indexOf",
+      "qualified_name": "index.indexOf",
+      "kind": "function",
+      "signature": "export function indexOf(array: Uint8Array, value: Uint8Array): number;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 313,
+        "column": 1,
+        "endLine": 313,
+        "endColumn": 71
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "includes",
+      "export_name": "includes",
+      "qualified_name": "index.includes",
+      "kind": "function",
+      "signature": "export function includes(array, value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 316,
+        "column": 1,
+        "endLine": 318,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isUint8Array",
+      "export_name": "isUint8Array",
+      "qualified_name": "index.isUint8Array",
+      "kind": "function",
+      "signature": "export function isUint8Array(value: unknown): value is Uint8Array;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 33,
+        "column": 1,
+        "endLine": 33,
+        "endColumn": 67
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "includes",
+      "export_name": "includes",
+      "qualified_name": "index.includes",
+      "kind": "function",
+      "signature": "export function includes(array: Uint8Array, value: Uint8Array): boolean;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 331,
+        "column": 1,
+        "endLine": 331,
+        "endColumn": 73
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8ArrayOrArrayBuffer",
+      "export_name": "assertUint8ArrayOrArrayBuffer",
+      "qualified_name": "index.assertUint8ArrayOrArrayBuffer",
+      "kind": "function",
+      "signature": "export function assertUint8ArrayOrArrayBuffer(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 35,
+        "column": 1,
+        "endLine": 39,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "toUint8Array",
+      "export_name": "toUint8Array",
+      "qualified_name": "index.toUint8Array",
+      "kind": "function",
+      "signature": "export function toUint8Array(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 41,
+        "column": 1,
+        "endLine": 51,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8Array",
+      "export_name": "assertUint8Array",
+      "qualified_name": "index.assertUint8Array",
+      "kind": "function",
+      "signature": "export function assertUint8Array(value: unknown): asserts value is Uint8Array;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 49,
+        "column": 1,
+        "endLine": 49,
+        "endColumn": 79
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isType",
+      "export_name": null,
+      "qualified_name": "index.isType",
+      "kind": "function",
+      "signature": "function isType(value, typeConstructor, typeStringified)",
+      "source_location": {
+        "file": "index.js",
+        "line": 5,
+        "column": 1,
+        "endLine": 15,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "concatUint8Arrays",
+      "export_name": "concatUint8Arrays",
+      "qualified_name": "index.concatUint8Arrays",
+      "kind": "function",
+      "signature": "export function concatUint8Arrays(arrays, totalLength)",
+      "source_location": {
+        "file": "index.js",
+        "line": 53,
+        "column": 1,
+        "endLine": 70,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8ArrayOrArrayBuffer",
+      "export_name": "assertUint8ArrayOrArrayBuffer",
+      "qualified_name": "index.assertUint8ArrayOrArrayBuffer",
+      "kind": "function",
+      "signature": "export function assertUint8ArrayOrArrayBuffer(value: unknown): asserts value is Uint8Array | ArrayBuffer;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 64,
+        "column": 1,
+        "endLine": 64,
+        "endColumn": 106
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "areUint8ArraysEqual",
+      "export_name": "areUint8ArraysEqual",
+      "qualified_name": "index.areUint8ArraysEqual",
+      "kind": "function",
+      "signature": "export function areUint8ArraysEqual(a, b)",
+      "source_location": {
+        "file": "index.js",
+        "line": 72,
+        "column": 1,
+        "endLine": 92,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "toUint8Array",
+      "export_name": "toUint8Array",
+      "qualified_name": "index.toUint8Array",
+      "kind": "function",
+      "signature": "export function toUint8Array(value: TypedArray | ArrayBuffer | DataView): Uint8Array;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 73,
+        "column": 1,
+        "endLine": 73,
+        "endColumn": 86
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "compareUint8Arrays",
+      "export_name": "compareUint8Arrays",
+      "qualified_name": "index.compareUint8Arrays",
+      "kind": "function",
+      "signature": "export function compareUint8Arrays(a, b)",
+      "source_location": {
+        "file": "index.js",
+        "line": 94,
+        "column": 1,
+        "endLine": 110,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "concatUint8Arrays",
+      "export_name": "concatUint8Arrays",
+      "qualified_name": "index.concatUint8Arrays",
+      "kind": "function",
+      "signature": "export function concatUint8Arrays(arrays: Uint8Array[], totalLength?: number): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 95,
+        "column": 1,
+        "endLine": 95,
+        "endColumn": 104
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "test",
+      "name": "make",
+      "export_name": null,
+      "qualified_name": "test.make",
+      "kind": "function",
+      "signature": "length => new Uint8Array(Array.from(",
+      "source_location": {
+        "file": "test.js",
+        "line": 286,
+        "column": 15,
+        "endLine": 286,
+        "endColumn": 73
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "test",
+      "name": "isUint8ArrayStrict",
+      "export_name": null,
+      "qualified_name": "test.isUint8ArrayStrict",
+      "kind": "function",
+      "signature": "value => Object.getPrototypeOf(value) === Uint8Array.prototype",
+      "source_location": {
+        "file": "test.js",
+        "line": 36,
+        "column": 28,
+        "endLine": 36,
+        "endColumn": 90
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    }
+  ],
+  "symbols": [
+    {
+      "module": "index",
+      "name": "uint8ArrayToString",
+      "export_name": "uint8ArrayToString",
+      "qualified_name": "index.uint8ArrayToString",
+      "kind": "function",
+      "signature": "export function uint8ArrayToString(array, encoding = 'utf8')",
+      "source_location": {
+        "file": "index.js",
+        "line": 116,
+        "column": 1,
+        "endLine": 120,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "areUint8ArraysEqual",
+      "export_name": "areUint8ArraysEqual",
+      "qualified_name": "index.areUint8ArraysEqual",
+      "kind": "function",
+      "signature": "export function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 117,
+        "column": 1,
+        "endLine": 117,
+        "endColumn": 76
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertString",
+      "export_name": null,
+      "qualified_name": "index.assertString",
+      "kind": "function",
+      "signature": "function assertString(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 122,
+        "column": 1,
+        "endLine": 126,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToUint8Array",
+      "export_name": "stringToUint8Array",
+      "qualified_name": "index.stringToUint8Array",
+      "kind": "function",
+      "signature": "export function stringToUint8Array(string)",
+      "source_location": {
+        "file": "index.js",
+        "line": 130,
+        "column": 1,
+        "endLine": 133,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToBase64Url",
+      "export_name": null,
+      "qualified_name": "index.base64ToBase64Url",
+      "kind": "function",
+      "signature": "function base64ToBase64Url(base64)",
+      "source_location": {
+        "file": "index.js",
+        "line": 135,
+        "column": 1,
+        "endLine": 137,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "compareUint8Arrays",
+      "export_name": "compareUint8Arrays",
+      "qualified_name": "index.compareUint8Arrays",
+      "kind": "function",
+      "signature": "export function compareUint8Arrays(a: Uint8Array, b: Uint8Array): 0 | 1 | -1;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 136,
+        "column": 1,
+        "endLine": 136,
+        "endColumn": 78
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64UrlToBase64",
+      "export_name": null,
+      "qualified_name": "index.base64UrlToBase64",
+      "kind": "function",
+      "signature": "function base64UrlToBase64(base64url)",
+      "source_location": {
+        "file": "index.js",
+        "line": 139,
+        "column": 1,
+        "endLine": 143,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToBase64",
+      "export_name": "uint8ArrayToBase64",
+      "qualified_name": "index.uint8ArrayToBase64",
+      "kind": "function",
+      "signature": "export function uint8ArrayToBase64(array,",
+      "source_location": {
+        "file": "index.js",
+        "line": 149,
+        "column": 1,
+        "endLine": 161,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToString",
+      "export_name": "uint8ArrayToString",
+      "qualified_name": "index.uint8ArrayToString",
+      "kind": "function",
+      "signature": "export function uint8ArrayToString(array: Uint8Array | ArrayBuffer, encoding?: string): string;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 162,
+        "column": 1,
+        "endLine": 162,
+        "endColumn": 96
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToUint8Array",
+      "export_name": "base64ToUint8Array",
+      "qualified_name": "index.base64ToUint8Array",
+      "kind": "function",
+      "signature": "export function base64ToUint8Array(base64String)",
+      "source_location": {
+        "file": "index.js",
+        "line": 163,
+        "column": 1,
+        "endLine": 166,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToBase64",
+      "export_name": "stringToBase64",
+      "qualified_name": "index.stringToBase64",
+      "kind": "function",
+      "signature": "export function stringToBase64(string,",
+      "source_location": {
+        "file": "index.js",
+        "line": 168,
+        "column": 1,
+        "endLine": 171,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isUint8Array",
+      "export_name": "isUint8Array",
+      "qualified_name": "index.isUint8Array",
+      "kind": "function",
+      "signature": "export function isUint8Array(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 17,
+        "column": 1,
+        "endLine": 19,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToString",
+      "export_name": "base64ToString",
+      "qualified_name": "index.base64ToString",
+      "kind": "function",
+      "signature": "export function base64ToString(base64String)",
+      "source_location": {
+        "file": "index.js",
+        "line": 173,
+        "column": 1,
+        "endLine": 176,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToUint8Array",
+      "export_name": "stringToUint8Array",
+      "qualified_name": "index.stringToUint8Array",
+      "kind": "function",
+      "signature": "export function stringToUint8Array(string: string): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 177,
+        "column": 1,
+        "endLine": 177,
+        "endColumn": 77
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToHex",
+      "export_name": "uint8ArrayToHex",
+      "qualified_name": "index.uint8ArrayToHex",
+      "kind": "function",
+      "signature": "export function uint8ArrayToHex(array)",
+      "source_location": {
+        "file": "index.js",
+        "line": 180,
+        "column": 1,
+        "endLine": 192,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToBase64",
+      "export_name": "uint8ArrayToBase64",
+      "qualified_name": "index.uint8ArrayToBase64",
+      "kind": "function",
+      "signature": "export function uint8ArrayToBase64(array: Uint8Array, options?:",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 196,
+        "column": 1,
+        "endLine": 196,
+        "endColumn": 93
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isArrayBuffer",
+      "export_name": null,
+      "qualified_name": "index.isArrayBuffer",
+      "kind": "function",
+      "signature": "function isArrayBuffer(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 21,
+        "column": 1,
+        "endLine": 23,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToUint8Array",
+      "export_name": "base64ToUint8Array",
+      "qualified_name": "index.base64ToUint8Array",
+      "kind": "function",
+      "signature": "export function base64ToUint8Array(string: string): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 213,
+        "column": 1,
+        "endLine": 213,
+        "endColumn": 77
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "hexToUint8Array",
+      "export_name": "hexToUint8Array",
+      "qualified_name": "index.hexToUint8Array",
+      "kind": "function",
+      "signature": "export function hexToUint8Array(hexString)",
+      "source_location": {
+        "file": "index.js",
+        "line": 219,
+        "column": 1,
+        "endLine": 241,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "stringToBase64",
+      "export_name": "stringToBase64",
+      "qualified_name": "index.stringToBase64",
+      "kind": "function",
+      "signature": "export function stringToBase64(string: string, options?:",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 230,
+        "column": 1,
+        "endLine": 230,
+        "endColumn": 86
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "base64ToString",
+      "export_name": "base64ToString",
+      "qualified_name": "index.base64ToString",
+      "kind": "function",
+      "signature": "export function base64ToString(base64String: string): string;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 247,
+        "column": 1,
+        "endLine": 247,
+        "endColumn": 62
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "getUintBE",
+      "export_name": "getUintBE",
+      "qualified_name": "index.getUintBE",
+      "kind": "function",
+      "signature": "export function getUintBE(view)",
+      "source_location": {
+        "file": "index.js",
+        "line": 247,
+        "column": 1,
+        "endLine": 273,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isUint8ArrayOrArrayBuffer",
+      "export_name": null,
+      "qualified_name": "index.isUint8ArrayOrArrayBuffer",
+      "kind": "function",
+      "signature": "function isUint8ArrayOrArrayBuffer(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 25,
+        "column": 1,
+        "endLine": 27,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "uint8ArrayToHex",
+      "export_name": "uint8ArrayToHex",
+      "qualified_name": "index.uint8ArrayToHex",
+      "kind": "function",
+      "signature": "export function uint8ArrayToHex(array: Uint8Array): string;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 264,
+        "column": 1,
+        "endLine": 264,
+        "endColumn": 60
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "hexToUint8Array",
+      "export_name": "hexToUint8Array",
+      "qualified_name": "index.hexToUint8Array",
+      "kind": "function",
+      "signature": "export function hexToUint8Array(hexString: string): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 279,
+        "column": 1,
+        "endLine": 279,
+        "endColumn": 77
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "indexOf",
+      "export_name": "indexOf",
+      "qualified_name": "index.indexOf",
+      "kind": "function",
+      "signature": "export function indexOf(array, value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 280,
+        "column": 1,
+        "endLine": 309,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8Array",
+      "export_name": "assertUint8Array",
+      "qualified_name": "index.assertUint8Array",
+      "kind": "function",
+      "signature": "export function assertUint8Array(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 29,
+        "column": 1,
+        "endLine": 33,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "getUintBE",
+      "export_name": "getUintBE",
+      "qualified_name": "index.getUintBE",
+      "kind": "function",
+      "signature": "export function getUintBE(view: DataView): number;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 296,
+        "column": 1,
+        "endLine": 296,
+        "endColumn": 51
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "indexOf",
+      "export_name": "indexOf",
+      "qualified_name": "index.indexOf",
+      "kind": "function",
+      "signature": "export function indexOf(array: Uint8Array, value: Uint8Array): number;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 313,
+        "column": 1,
+        "endLine": 313,
+        "endColumn": 71
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "includes",
+      "export_name": "includes",
+      "qualified_name": "index.includes",
+      "kind": "function",
+      "signature": "export function includes(array, value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 316,
+        "column": 1,
+        "endLine": 318,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isUint8Array",
+      "export_name": "isUint8Array",
+      "qualified_name": "index.isUint8Array",
+      "kind": "function",
+      "signature": "export function isUint8Array(value: unknown): value is Uint8Array;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 33,
+        "column": 1,
+        "endLine": 33,
+        "endColumn": 67
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "includes",
+      "export_name": "includes",
+      "qualified_name": "index.includes",
+      "kind": "function",
+      "signature": "export function includes(array: Uint8Array, value: Uint8Array): boolean;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 331,
+        "column": 1,
+        "endLine": 331,
+        "endColumn": 73
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8ArrayOrArrayBuffer",
+      "export_name": "assertUint8ArrayOrArrayBuffer",
+      "qualified_name": "index.assertUint8ArrayOrArrayBuffer",
+      "kind": "function",
+      "signature": "export function assertUint8ArrayOrArrayBuffer(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 35,
+        "column": 1,
+        "endLine": 39,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "toUint8Array",
+      "export_name": "toUint8Array",
+      "qualified_name": "index.toUint8Array",
+      "kind": "function",
+      "signature": "export function toUint8Array(value)",
+      "source_location": {
+        "file": "index.js",
+        "line": 41,
+        "column": 1,
+        "endLine": 51,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8Array",
+      "export_name": "assertUint8Array",
+      "qualified_name": "index.assertUint8Array",
+      "kind": "function",
+      "signature": "export function assertUint8Array(value: unknown): asserts value is Uint8Array;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 49,
+        "column": 1,
+        "endLine": 49,
+        "endColumn": 79
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "isType",
+      "export_name": null,
+      "qualified_name": "index.isType",
+      "kind": "function",
+      "signature": "function isType(value, typeConstructor, typeStringified)",
+      "source_location": {
+        "file": "index.js",
+        "line": 5,
+        "column": 1,
+        "endLine": 15,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "concatUint8Arrays",
+      "export_name": "concatUint8Arrays",
+      "qualified_name": "index.concatUint8Arrays",
+      "kind": "function",
+      "signature": "export function concatUint8Arrays(arrays, totalLength)",
+      "source_location": {
+        "file": "index.js",
+        "line": 53,
+        "column": 1,
+        "endLine": 70,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "assertUint8ArrayOrArrayBuffer",
+      "export_name": "assertUint8ArrayOrArrayBuffer",
+      "qualified_name": "index.assertUint8ArrayOrArrayBuffer",
+      "kind": "function",
+      "signature": "export function assertUint8ArrayOrArrayBuffer(value: unknown): asserts value is Uint8Array | ArrayBuffer;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 64,
+        "column": 1,
+        "endLine": 64,
+        "endColumn": 106
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "areUint8ArraysEqual",
+      "export_name": "areUint8ArraysEqual",
+      "qualified_name": "index.areUint8ArraysEqual",
+      "kind": "function",
+      "signature": "export function areUint8ArraysEqual(a, b)",
+      "source_location": {
+        "file": "index.js",
+        "line": 72,
+        "column": 1,
+        "endLine": 92,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "toUint8Array",
+      "export_name": "toUint8Array",
+      "qualified_name": "index.toUint8Array",
+      "kind": "function",
+      "signature": "export function toUint8Array(value: TypedArray | ArrayBuffer | DataView): Uint8Array;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 73,
+        "column": 1,
+        "endLine": 73,
+        "endColumn": 86
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "compareUint8Arrays",
+      "export_name": "compareUint8Arrays",
+      "qualified_name": "index.compareUint8Arrays",
+      "kind": "function",
+      "signature": "export function compareUint8Arrays(a, b)",
+      "source_location": {
+        "file": "index.js",
+        "line": 94,
+        "column": 1,
+        "endLine": 110,
+        "endColumn": 2
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "index",
+      "name": "concatUint8Arrays",
+      "export_name": "concatUint8Arrays",
+      "qualified_name": "index.concatUint8Arrays",
+      "kind": "function",
+      "signature": "export function concatUint8Arrays(arrays: Uint8Array[], totalLength?: number): Uint8Array<ArrayBuffer>;",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 95,
+        "column": 1,
+        "endLine": 95,
+        "endColumn": 104
+      },
+      "public": true,
+      "exported": true,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "test",
+      "name": "make",
+      "export_name": null,
+      "qualified_name": "test.make",
+      "kind": "function",
+      "signature": "length => new Uint8Array(Array.from(",
+      "source_location": {
+        "file": "test.js",
+        "line": 286,
+        "column": 15,
+        "endLine": 286,
+        "endColumn": 73
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    },
+    {
+      "module": "test",
+      "name": "isUint8ArrayStrict",
+      "export_name": null,
+      "qualified_name": "test.isUint8ArrayStrict",
+      "kind": "function",
+      "signature": "value => Object.getPrototypeOf(value) === Uint8Array.prototype",
+      "source_location": {
+        "file": "test.js",
+        "line": 36,
+        "column": 28,
+        "endLine": 36,
+        "endColumn": 90
+      },
+      "public": true,
+      "exported": false,
+      "re_exported": false,
+      "async": false,
+      "generator": false,
+      "dynamic_risk": []
+    }
+  ],
+  "imports": [
+    {
+      "module": "benchmark",
+      "imported": "node:buffer",
+      "line": 3
+    },
+    {
+      "module": "benchmark",
+      "imported": "node:crypto",
+      "line": 4
+    },
+    {
+      "module": "benchmark",
+      "imported": "benchmark",
+      "line": 5
+    },
+    {
+      "module": "benchmark",
+      "imported": "./index.js",
+      "line": 6
+    },
+    {
+      "module": "test",
+      "imported": "ava",
+      "line": 1
+    },
+    {
+      "module": "test",
+      "imported": "./index.js",
+      "line": 2
+    }
+  ],
+  "tests": [],
+  "cli_entries": [],
+  "data_contracts": [
+    {
+      "module": "index",
+      "name": "TypedArray",
+      "kind": "type",
+      "source_location": {
+        "file": "index.d.ts",
+        "line": 1,
+        "column": 1,
+        "endLine": 12,
+        "endColumn": 19
+      }
+    }
+  ],
+  "dependency_edges": [
+    {
+      "module": "benchmark",
+      "imported": "node:buffer",
+      "line": 3,
+      "external": true
+    },
+    {
+      "module": "benchmark",
+      "imported": "node:crypto",
+      "line": 4,
+      "external": true
+    },
+    {
+      "module": "benchmark",
+      "imported": "benchmark",
+      "line": 5,
+      "external": true
+    },
+    {
+      "module": "benchmark",
+      "imported": "./index.js",
+      "line": 6,
+      "external": false
+    },
+    {
+      "module": "test",
+      "imported": "ava",
+      "line": 1,
+      "external": true
+    },
+    {
+      "module": "test",
+      "imported": "./index.js",
+      "line": 2,
+      "external": false
+    }
+  ],
+  "risk_flags": [],
+  "syntax_diagnostics": [],
+  "package": {
+    "name": "uint8array-extras",
+    "version": "1.5.0",
+    "type": "module",
+    "exports": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "bin": null,
+    "main": null,
+    "module": null,
+    "types": null,
+    "files": [
+      "index.js",
+      "index.d.ts"
+    ],
+    "workspaces": null,
+    "scripts": {
+      "test": "xo && ava && tsc --lib es2023 index.d.ts"
+    },
+    "package_manager": null,
+    "package_manager_version": null,
+    "lockfile": null
+  },
+  "details": {
+    "node": {
+      "module_systems": [
+        "esm"
+      ],
+      "source_files": [
+        "benchmark.mjs",
+        "index.d.ts",
+        "index.js",
+        "test.js"
+      ],
+      "test_files": []
+    }
+  },
+  "implementation_loc": 734,
+  "test_loc": 0,
+  "metrics": {
+    "implementation_loc": 734,
+    "test_loc": 0,
+    "source_files": 4,
+    "test_files": 0,
+    "public_symbol_count": 44,
+    "test_count": 0,
+    "import_count": 6
+  },
+  "completeness": {
+    "dynamic": true,
+    "generated": true,
+    "native": true,
+    "external_service": true,
+    "unresolved": false,
+    "syntax": true
+  }
+}
