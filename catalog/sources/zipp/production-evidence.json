@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "task_id": "zipp",
+  "terminal_kind": "valid",
+  "handoff_status": "awaiting-agent-run",
+  "bundle": {
+    "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current/zipp/bundle.manifest.json",
+    "sha256": "sha256:5ad2bcfbd3af5e3a6dde630f27188f1786d20a4a644c05f99f86748e546058a5"
+  },
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/jaraco/zipp",
+    "revision": "29a7a55c6bac1a6f705b54135dbea82d03e997c3",
+    "source_digest": "sha256:64c592a33b2a8e3cdd190b6bba014888aca0fe094f345c42a4c52a7fdd7e92f6",
+    "license_spdx": "MIT"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current/zipp -a oracle --allow-agent-host github.com --job-name zipp-authoring-current-oracle --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "collected": 38,
+    "passed": 38,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-oracle/zipp__vWMQgfm/verifier/grading.json",
+      "sha256": "sha256:29a8a225d669c2d47aa338713b788750b9bd640c61a1262de85c56ce54bc129d"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-oracle/zipp__vWMQgfm/verifier/network.json",
+      "sha256": "sha256:e3fee389a2b33000d52264269ad71dfe44867bff47ad120a38ad43de505bde1a",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current/zipp -a nop --job-name zipp-authoring-current-empty --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-empty/zipp__Edk38yi/verifier/grading.json",
+        "sha256": "sha256:3ce8dbb7ff32816348442ba1064dad194a23486bc051145c92927c37c25fa86b"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-empty/zipp__Edk38yi/verifier/network.json",
+        "sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current/zipp stub --output .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-controls/stub && uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-controls/stub/zipp-stub -a oracle --job-name zipp-authoring-current-stub --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 38,
+      "passed": 2,
+      "reward": 0.05263157894736842,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-stub/zipp-stub__BnA5jt9/verifier/grading.json",
+        "sha256": "sha256:8eb6731fab89a3de5a4cdf457c550e1315cbc018390e8235ab84bb8a4498a95c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-stub/zipp-stub__BnA5jt9/verifier/network.json",
+        "sha256": "sha256:616edbdba5ce532c164fbe95fda924ea1c3aae9f5220620c245442928a1f5b57",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current/zipp forgery --output .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-controls/forgery && uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-controls/forgery/zipp-forgery -a oracle --job-name zipp-authoring-current-forgery --jobs-dir .nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 38,
+      "passed": 2,
+      "reward": 0.05263157894736842,
+      "verifier_owned_reward": true,
+      "candidate_fake_report_ignored": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-forgery/zipp-forgery__7mTWrHo/verifier/grading.json",
+        "sha256": "sha256:8eb6731fab89a3de5a4cdf457c550e1315cbc018390e8235ab84bb8a4498a95c"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-forgery/zipp-forgery__7mTWrHo/verifier/network.json",
+        "sha256": "sha256:4957d84fc281dc9efba65aa91944cdbfd22e0d047846d30843ff52d5d48c9ecb",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "Network probes from the current Oracle verifier run",
+      "completed": true,
+      "exit_code": 0,
+      "public_network_available": false,
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/zipp/compiled/current-runs/zipp-authoring-current-oracle/zipp__vWMQgfm/verifier/network.json",
+        "sha256": "sha256:e3fee389a2b33000d52264269ad71dfe44867bff47ad120a38ad43de505bde1a"
+      }
+    }
+  },
+  "supplemental_controls": {
+    "call_hang": {
+      "status": "passed",
+      "note": "A prior authoring control run bounded candidate calls at 160 seconds; its receipt used the preceding equivalent bundle before the final lifecycle-only source metadata update and is retained only as supplemental evidence."
+    },
+    "install_hang": {
+      "status": "passed",
+      "note": "A prior authoring control run bounded candidate installation; its receipt used the preceding equivalent bundle before the final lifecycle-only source metadata update and is retained only as supplemental evidence."
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this lane; awaiting-agent-run is the handoff boundary, not publication approval.",
+    "The package contract intentionally excludes the upstream empirical timing classifier and CPython test.support-dependent harness details.",
+    "The full-catalog strict network lint reports warnings for unrelated source tasks; zipp has no task-local network error and agent_allowed_hosts is empty."
+  ]
+}
