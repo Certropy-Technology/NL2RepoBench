@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0",
+  "task_id": "smmap",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/gitpython-developers/smmap",
+    "revision": "1ca8ee3f8a0fe17b68ee20d21fa71eedb75c60fe",
+    "source_archive_sha256": "sha256:ade73659d62214ea02e04591c5838a37e6c878aafcbc5866026489ed9e404299",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:88e9d93f708d110b328a834302dd1d5c6afbda530e7721d15d80b3511d86f235",
+    "inventory": "catalog/sources/smmap/provenance/source-inventory.json"
+  },
+  "environment": {
+    "python_version": "3.12.11",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image": "sha256:ea208166918f7f73f84f45237341d9d8f9941e0b11d8381a560ddefdd2ba3a8a",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["setuptools==80.10.2", "wheel==0.45.1"],
+    "lock_artifact": {
+      "path": "catalog/sources/smmap/provenance/requirements.lock.txt",
+      "digest": "sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae",
+      "size_bytes": 374,
+      "uri": "artifact://private/sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae",
+      "visibility": "private",
+      "vendor_wheelhouse": false
+    }
+  },
+  "inventory": {
+    "api": "catalog/sources/smmap/provenance/api-inventory.json",
+    "tests": "catalog/sources/smmap/provenance/test-inventory.json",
+    "traceability": "catalog/sources/smmap/traceability.json",
+    "upstream_collected": 9,
+    "upstream_passed": 9,
+    "upstream_skipped": 0,
+    "frozen_total": 16,
+    "leaf_ids": [
+      "api_surface", "alignment", "window_arithmetic", "region_path",
+      "region_fd", "cursor_association", "static_manager", "sliding_manager",
+      "buffer_access", "buffer_lifecycle", "cursor_copy_assign",
+      "region_refcounts", "manager_options", "error_contract",
+      "deterministic_reads", "tutorial_flow"
+    ]
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final/smmap/bundle.manifest.json",
+    "manifest_sha256": "sha256:60987a3317862c7b1db3c473064e9da19b563246c815db9e54fd15364edd8425",
+    "canonical_manifest_digest": "sha256:57c281e940599b9bbafbb887c26204e70acdb30bc0758432d66fdd2ba4802dd9",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "file_count": 58,
+    "verifier_bundle": "artifact://private/sha256:16d987e5819e0e803da57278475dce296f9f05da91e5c0e7856029d36f181880",
+    "oracle_bundle": "artifact://private/sha256:2fc259bb63d4ffd3b081183baa75a3d196f6870369fce9294fa85318f2aba76a"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final/smmap -a oracle --job-name smmap-final-oracle-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/oracle --allow-agent-host github.com --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 16,
+    "total": 16,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/oracle/smmap-final-oracle-20260830/smmap__HEabXjj/verifier/grading.json",
+      "sha256": "sha256:bf0b2f21f9c5c5edbbad983f092e7fb55784365103dcb3faa7b845c67ea04871"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/oracle/smmap-final-oracle-20260830/smmap__HEabXjj/verifier/network.json",
+      "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final/smmap -a nop --job-name smmap-final-empty-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/empty/smmap-final-empty-20260830/smmap__qxCS8tD/verifier/grading.json",
+        "sha256": "sha256:3725efe3bd17b437b0ab747a908bbb40b3bb485913a9451ddfb9348c3142ccf3"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/empty/smmap-final-empty-20260830/smmap__qxCS8tD/verifier/network.json",
+        "sha256": "sha256:93cbaecd5e7032ecc4dd933e74f5d55444f88273d42590134755dfaad89db26c"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/smmap/controls-final/smmap-stub -a oracle --job-name smmap-final-stub-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 16,
+      "reward": 0.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/stub/smmap-final-stub-20260830/smmap-stub__huKjGcj/verifier/grading.json",
+        "sha256": "sha256:2583028e68dac54562218ca86cf7027b0062c8d6a6031d49d65bbf7e5fec73fe"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/stub/smmap-final-stub-20260830/smmap-stub__huKjGcj/verifier/network.json",
+        "sha256": "sha256:945ca4a6df7a2b16eb56c60e3f6203d0000a80f4c38658dcc160b4b4b7ae1d45"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/smmap/controls-final/smmap-forgery -a oracle --job-name smmap-final-forgery-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 16,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "candidate_fake_report_ignored": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/forgery/smmap-final-forgery-20260830/smmap-forgery__EcyKi3M/verifier/grading.json",
+        "sha256": "sha256:2583028e68dac54562218ca86cf7027b0062c8d6a6031d49d65bbf7e5fec73fe"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/forgery/smmap-final-forgery-20260830/smmap-forgery__EcyKi3M/verifier/network.json",
+        "sha256": "sha256:569e5ac10fcdc11e6f57edc2ec2478ad6112c255970fb9fd243bb0c9bfa342d2"
+      }
+    },
+    "install_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/smmap/controls-final/smmap-install-hang -a oracle --job-name smmap-final-install-hang-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/install-hang/smmap-final-install-hang-20260830/smmap-install-hang__YVYj2oS/verifier/grading.json",
+        "sha256": "sha256:3725efe3bd17b437b0ab747a908bbb40b3bb485913a9451ddfb9348c3142ccf3"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/install-hang/smmap-final-install-hang-20260830/smmap-install-hang__YVYj2oS/verifier/network.json",
+        "sha256": "sha256:be5c9b151442773f1b569b5b63d0d645d14785669e1d17848e1965258cb4e541"
+      }
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-wave2-20260828/smmap/controls-final/smmap-call-hang -a oracle --job-name smmap-final-call-hang-20260830 -o .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "total": 16,
+      "reward": 0.0,
+      "all_calls_bounded": true,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/call-hang/smmap-final-call-hang-20260830/smmap-call-hang__EzkqGKN/verifier/grading.json",
+        "sha256": "sha256:2583028e68dac54562218ca86cf7027b0062c8d6a6031d49d65bbf7e5fec73fe"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/call-hang/smmap-final-call-hang-20260830/smmap-call-hang__EzkqGKN/verifier/network.json",
+        "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b"
+      }
+    },
+    "offline": {
+      "command": "docker run --rm --network none -v .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/offline/workspace:/workspace -v .nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/offline/logs:/logs sha256:1a03d339831f3a030d25058d9613686d813242d6ed9684e0d350b2194073b61c /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 16,
+      "total": 16,
+      "reward": 1.0,
+      "public_network_available": false,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/offline/logs/verifier/grading.json",
+        "sha256": "sha256:bf0b2f21f9c5c5edbbad983f092e7fb55784365103dcb3faa7b845c67ea04871"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/runs/final-current/offline/logs/verifier/network.json",
+        "sha256": "sha256:747cf54f395a3d83074a266a8d73495109e1df09b04120c08058c5a93e72fcbe"
+      }
+    }
+  },
+  "commands": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/smmap",
+      "exit_code": 0
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_error_count": 0,
+      "task_warning_count": 0,
+      "catalog_warning_count": 162
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/smmap --output .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "used_allow_incomplete": false,
+      "manifest_sha256": "sha256:60987a3317862c7b1db3c473064e9da19b563246c815db9e54fd15364edd8425"
+    },
+    "verifier_image_build": {
+      "command": "docker build --platform linux/amd64 -t nl2repobench/smmap-verifier:authoring-current .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-current/smmap/tests",
+      "exit_code": 0,
+      "image": "sha256:1a03d339831f3a030d25058d9613686d813242d6ed9684e0d350b2194073b61c"
+    },
+    "syntax": {
+      "command": "python3 -m py_compile .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final/smmap/tests/verifier/run.py && bash -n .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final/smmap/solution/solve.sh .nl2repo/authoring-work/python-author-wave2-20260828/smmap/compiled-final/smmap/controls/*.sh",
+      "exit_code": 0,
+      "scope": "compiled-current bundle"
+    }
+  },
+  "versions": {
+    "python_host": "3.14.6",
+    "uv": "0.11.32",
+    "harbor": "0.21.0",
+    "docker": "29.7.2"
+  },
+  "residual_risks": [
+    {
+      "classification": "integrator-stage",
+      "reason": "No Harbor model Agent Run was started from this lane by instruction.",
+      "next_step": "Integrator reviews this source and runs the assigned model campaign after compiling the canonical catalog/tasks projection."
+    },
+    {
+      "classification": "environment",
+      "reason": "The locked OpenHands agent image digest is declared in the generated environment but is not available in this lane's local Docker image list.",
+      "next_step": "Integrator restores or verifies the declared agent image before any model Agent Run."
+    }
+  ]
+}

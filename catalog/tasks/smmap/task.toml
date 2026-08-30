@@ -1,0 +1,57 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/smmap"
+version = "1.0.0"
+description = "Build the frozen smmap memory-mapped buffer library from an empty workspace and satisfy deterministic local file, window, cursor, buffer, and resource-lifecycle contracts through a separate verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "mmap",
+    "filesystem",
+    "buffers",
+    "resource-management",
+]
+
+[metadata]
+difficulty = "medium"
+category = "memory-mapped-buffer-library"
+tags = [
+    "python",
+    "mmap",
+    "filesystem",
+    "buffers",
+    "resource-management",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 16
+canonical_manifest_digest = "sha256:57c281e940599b9bbafbb887c26204e70acdb30bc0758432d66fdd2ba4802dd9"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

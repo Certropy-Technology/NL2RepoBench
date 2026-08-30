@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "smmap",
+  "source_revision": "1ca8ee3f8a0fe17b68ee20d21fa71eedb75c60fe",
+  "package_version": "5.0.3",
+  "modules": ["smmap", "smmap.buf", "smmap.mman", "smmap.util"],
+  "classes": {
+    "smmap.buf": ["SlidingWindowMapBuffer"],
+    "smmap.mman": ["WindowCursor", "StaticWindowMapManager", "SlidingWindowMapManager"],
+    "smmap.util": ["MapWindow", "MapRegion", "MapRegionList"]
+  },
+  "functions": {
+    "smmap.mman": ["make_cursor", "collect", "num_file_handles", "num_open_files", "window_size", "mapped_memory_size", "max_file_handles", "max_mapped_memory_size", "force_map_handle_removal_win"],
+    "smmap.util": ["align_to_mmap", "is_64_bit"]
+  },
+  "constants": ["smmap.util.ALLOCATIONGRANULARITY"],
+  "root_exports": ["SlidingWindowMapBuffer", "WindowCursor", "StaticWindowMapManager", "SlidingWindowMapManager"],
+  "adapter_boundary": {
+    "protocol": "custom-json-v1",
+    "candidate_execution": "Each leaf executes a bounded scenario in a UID-10001 child through candidate_client.execute_script.",
+    "serialization": "Only a boolean result or a bounded exception message crosses into the trusted grader.",
+    "filesystem": "Scenarios create child-owned temporary files and close/release mappings before cleanup; trusted code never imports smmap."
+  },
+  "risk_adaptation": "The native mmap state is exercised inside the candidate child; no native extension, network, subprocess, or external service is required."
+}

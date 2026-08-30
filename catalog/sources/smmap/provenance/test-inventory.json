@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "smmap",
+  "source_revision": "1ca8ee3f8a0fe17b68ee20d21fa71eedb75c60fe",
+  "upstream": {
+    "command": "uv run --with pytest --no-project python -m pytest -c /dev/null -q",
+    "python": "3.12.11",
+    "collected": 9,
+    "passed": 9,
+    "skipped": 0,
+    "exit_code": 0,
+    "collection_log": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/pytest-collect.log",
+    "run_log": ".nl2repo/authoring-work/python-author-wave2-20260828/smmap/pytest-upstream.log"
+  },
+  "production": {
+    "framework": "custom-json-v1",
+    "frozen_total": 16,
+    "traceability": "catalog/sources/smmap/traceability.json",
+    "leaf_ids": [
+      "api_surface", "alignment", "window_arithmetic", "region_path", "region_fd",
+      "cursor_association", "static_manager", "sliding_manager", "buffer_access",
+      "buffer_lifecycle", "cursor_copy_assign", "region_refcounts", "manager_options",
+      "error_contract", "deterministic_reads", "tutorial_flow"
+    ]
+  }
+}

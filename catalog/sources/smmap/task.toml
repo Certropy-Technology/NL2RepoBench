@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "smmap"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "memory-mapped-buffer-library"
+tags = ["python", "mmap", "filesystem", "buffers", "resource-management", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/gitpython-developers/smmap"
+revision = "1ca8ee3f8a0fe17b68ee20d21fa71eedb75c60fe"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:ade73659d62214ea02e04591c5838a37e6c878aafcbc5866026489ed9e404299"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "Install the hash-locked setuptools and wheel build closure during image build; candidate installation uses pip --no-deps --no-build-isolation."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The build backend and test closure are installed from a private hash lock during Docker build. Agent and verifier execution are network-isolated; only the trusted Oracle receives the exact upstream source-host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 16
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:16d987e5819e0e803da57278475dce296f9f05da91e5c0e7856029d36f181880", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:16d987e5819e0e803da57278475dce296f9f05da91e5c0e7856029d36f181880", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the frozen smmap memory-mapped buffer library from an empty workspace and satisfy deterministic local file, window, cursor, buffer, and resource-lifecycle contracts through a separate verifier."
+keywords = ["python", "mmap", "filesystem", "buffers", "resource-management"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:2fc259bb63d4ffd3b081183baa75a3d196f6870369fce9294fa85318f2aba76a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2fc259bb63d4ffd3b081183baa75a3d196f6870369fce9294fa85318f2aba76a"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave2-20260828"
+reason = "Current production compile, Harbor Oracle, empty, stub, forgery, install-hang, call-hang, and direct offline verifier controls passed against the current bundle; Oracle and offline replay passed 16/16 with reward 1.0, while negative controls were verifier-owned zero-score outcomes. Model Agent Run, review, pilot, and publication remain separate integrator stages."

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "smmap",
+  "source_revision": "1ca8ee3f8a0fe17b68ee20d21fa71eedb75c60fe",
+  "leaves": [
+    {"id": "api_surface", "instruction_sections": ["Supports", "API Usage Guide: smmap.util", "API Usage Guide: smmap.mman", "API Usage Guide: smmap.buf"], "behaviors": ["package version, modules, root re-exports and identity"]},
+    {"id": "alignment", "instruction_sections": ["API Usage Guide: smmap.util"], "behaviors": ["allocation granularity, round-down/up alignment and bool architecture probe"]},
+    {"id": "window_arithmetic", "instruction_sections": ["API Usage Guide: smmap.util"], "behaviors": ["window end, alignment, left/right extension and max-size idempotence"]},
+    {"id": "region_path", "instruction_sections": ["API Usage Guide: smmap.util"], "behaviors": ["read-only path mapping, region bounds, buffer and client count"]},
+    {"id": "region_fd", "instruction_sections": ["API Usage Guide: smmap.util", "Implementation Notes"], "behaviors": ["FD ownership, MapRegionList path/fd preservation and lazy file size"]},
+    {"id": "cursor_association", "instruction_sections": ["API Usage Guide: smmap.mman"], "behaviors": ["invalid/associated states, use_region return, bounds and path/fd error contract"]},
+    {"id": "static_manager", "instruction_sections": ["API Usage Guide: smmap.mman"], "behaviors": ["static manager mapping and statistics"]},
+    {"id": "sliding_manager", "instruction_sections": ["API Usage Guide: smmap.mman"], "behaviors": ["sliding windows, cross-window bytes and collect"]},
+    {"id": "buffer_access", "instruction_sections": ["API Usage Guide: smmap.buf"], "behaviors": ["relative indexing, negative indices and cross-window slices"]},
+    {"id": "buffer_lifecycle", "instruction_sections": ["API Usage Guide: smmap.buf"], "behaviors": ["uninitialized buffer, begin/end access and context lifecycle"]},
+    {"id": "cursor_copy_assign", "instruction_sections": ["API Usage Guide: smmap.mman"], "behaviors": ["copy and assign preserve association without leaking a mapping"]},
+    {"id": "region_refcounts", "instruction_sections": ["API Usage Guide: smmap.util"], "behaviors": ["increment/decrement usage count and automatic release"]},
+    {"id": "manager_options", "instruction_sections": ["API Usage Guide: smmap.mman"], "behaviors": ["configured limits and non-Windows force-removal no-op"]},
+    {"id": "error_contract", "instruction_sections": ["API Usage Guide: smmap.mman", "Implementation Notes"], "behaviors": ["invalid cursor/buffer and missing path ordinary exceptions"]},
+    {"id": "deterministic_reads", "instruction_sections": ["Implementation Notes"], "behaviors": ["fresh managers read identical fixed bytes"]},
+    {"id": "tutorial_flow", "instruction_sections": ["API Usage Guide: smmap.mman", "API Usage Guide: smmap.buf"], "behaviors": ["end-to-end manager, cursor and buffer local workflow"]}
+  ]
+}

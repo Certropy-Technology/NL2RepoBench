@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "smmap",
+  "source": {
+    "upstream_url": "https://github.com/gitpython-developers/smmap",
+    "revision": "1ca8ee3f8a0fe17b68ee20d21fa71eedb75c60fe",
+    "archive_sha256": "ade73659d62214ea02e04591c5838a37e6c878aafcbc5866026489ed9e404299",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "88e9d93f708d110b328a834302dd1d5c6afbda530e7721d15d80b3511d86f235",
+    "submodules": []
+  },
+  "package": {
+    "version": "5.0.3",
+    "python_requires": ">=3.7",
+    "runtime_dependencies": []
+  },
+  "upstream_tests": {
+    "command": "uv run --with pytest --no-project python -m pytest -c /dev/null -q",
+    "collected": 9,
+    "passed": 9,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "task_contract": {
+    "frozen_total": 16,
+    "protocol": "custom-json-v1",
+    "excluded": ["throughput benchmarks", "platform-specific Windows handle forcing", "undocumented private helpers"]
+  }
+}
