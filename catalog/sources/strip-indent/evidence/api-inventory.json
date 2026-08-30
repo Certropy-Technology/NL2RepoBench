@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-indent",
+  "source_revision": "102b553f9efaec1c2451cd9ac2385269768f1fed",
+  "source_files": ["index.js", "index.d.ts"],
+  "public_exports": [
+    {
+      "import_path": "strip-indent",
+      "export": "default",
+      "signature": "stripIndent(string: string): string",
+      "runtime_kind": "function",
+      "side_effects": "none",
+      "errors": [{"condition": "input is not a primitive string", "type": "TypeError"}]
+    },
+    {
+      "import_path": "strip-indent",
+      "export": "dedent",
+      "signature": "dedent(string: string): string",
+      "runtime_kind": "function",
+      "side_effects": "none",
+      "errors": [{"condition": "input is not a primitive string", "type": "TypeError"}]
+    }
+  ],
+  "package_contract": {
+    "name": "strip-indent",
+    "version": "4.1.1",
+    "type": "module",
+    "root_export": "./index.js",
+    "types": "./index.d.ts",
+    "cli": null,
+    "runtime_dependencies": []
+  },
+  "adapter_boundary": "Private node:test files call the installed candidate as UID 10001 through the fixed one-shot JSON runner. Trusted tests never import candidate code, and only the default and dedent root exports are selected."
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-indent",
+  "source_revision": "102b553f9efaec1c2451cd9ac2385269768f1fed",
+  "upstream": {
+    "framework": "ava",
+    "files": ["test.js"],
+    "test_blocks": 2,
+    "assertions": 18,
+    "types_file": "index.test-d.ts"
+  },
+  "production": {
+    "framework": "node:test",
+    "expected_total": 32,
+    "report_format": "node-test-json-v1",
+    "collection_source": "Independent contract tests over public package-root exports",
+    "test_bundle_visibility": "private"
+  },
+  "coverage_families": [
+    "package and export shape",
+    "minimum common indentation",
+    "mixed spaces and tabs",
+    "empty and whitespace-only lines",
+    "LF and CRLF preservation",
+    "dedent boundary trimming",
+    "internal whitespace preservation",
+    "Unicode and non-ASCII whitespace",
+    "non-string TypeError behavior",
+    "determinism and statelessness"
+  ]
+}

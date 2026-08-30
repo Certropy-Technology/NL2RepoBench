@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-indent",
+  "status": "implemented",
+  "purpose": "Keep candidate JavaScript out of the trusted node:test process while exercising both package-root exports through a bounded JSON request/response boundary.",
+  "transport": {
+    "mode": "one-shot-json",
+    "encoding": "utf-8",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "timeout_seconds": 30,
+    "network": "none"
+  },
+  "operations": {
+    "call": "Import the package root, select only default or dedent, and call it once with one JSON-compatible value. Return a string result or a bounded exception record.",
+    "inventory": "Package name, version, ESM export, declarations, dependency closure, and lifecycle restrictions are validated by the candidate installer and package checks."
+  },
+  "in_scope_values": [
+    "primitive strings containing LF or CRLF line endings",
+    "ASCII spaces and tabs",
+    "Unicode content and non-ASCII whitespace",
+    "JSON-compatible non-string values for the TypeError contract"
+  ],
+  "forbidden_candidate_capabilities": [
+    "network",
+    "native addons",
+    "custom Node loaders",
+    "unbounded output",
+    "trusted-process import"
+  ]
+}

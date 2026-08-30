@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "strip-indent",
+  "upstream_url": "https://github.com/sindresorhus/strip-indent",
+  "revision": "102b553f9efaec1c2451cd9ac2385269768f1fed",
+  "tree": "13969e0fa709bc29c2a32b66c748c1c6b5c4c834",
+  "archive": {
+    "format": "git-archive-tar",
+    "sha256": "9a3784a247647b173270b316dbd024f6a267e8eea6cb23dcaf5fb0339ba6e4dd",
+    "size_bytes": 30720
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "license",
+    "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "package": {
+    "name": "strip-indent",
+    "version": "4.1.1",
+    "type": "module",
+    "node_engine": ">=12",
+    "runtime_dependencies": []
+  },
+  "submodules": [],
+  "frozen_at": "2026-08-30T01:11:24Z"
+}
