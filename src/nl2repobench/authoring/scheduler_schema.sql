@@ -246,6 +246,39 @@ CREATE TABLE artifacts (
 -- a task keep the original global (path, sha256) binding so a shared identity
 -- can never be attached twice outside task association.
 CREATE UNIQUE INDEX artifacts_unbound_identity ON artifacts(path, sha256) WHERE task_id IS NULL;
+-- Frozen Phase 1 archive receipts are task-scoped evidence, not operation
+-- attempts.  One package legitimately carries several heterogeneous receipts
+-- (pre-snapshot and source-snapshot schemas, retry churn), and none of them
+-- hold an actor lease, so they can never satisfy the operation_receipts
+-- attempt/idempotency contract.  Only the audited migration importer writes
+-- these rows; the scheduler runtime reads them and must never mutate them, and
+-- ``canonical_evidence`` is an evidence-quality marker with no terminal
+-- authority.  ``source_sha256`` binds the original file bytes, so no claim about
+-- a remote object is made or needed here.
+CREATE TABLE legacy_archive_evidence (
+  task_id TEXT NOT NULL REFERENCES tasks(task_id),
+  archive_identity TEXT NOT NULL CHECK(length(archive_identity) = 64 AND archive_identity NOT GLOB '*[^0-9a-f]*'),
+  source_path TEXT NOT NULL,
+  source_sha256 TEXT NOT NULL CHECK(length(source_sha256) = 64 AND source_sha256 NOT GLOB '*[^0-9a-f]*'),
+  package TEXT NOT NULL,
+  language TEXT NOT NULL CHECK(language IN ('python','node','go')),
+  legacy_attempts INTEGER CHECK(legacy_attempts IS NULL OR legacy_attempts >= 0),
+  queue_status TEXT CHECK(queue_status IS NULL OR length(queue_status) BETWEEN 1 AND 64),
+  handoff_sha256 TEXT CHECK(handoff_sha256 IS NULL OR (length(handoff_sha256) = 64 AND handoff_sha256 NOT GLOB '*[^0-9a-f]*')),
+  source_snapshot_sha256 TEXT CHECK(source_snapshot_sha256 IS NULL OR (length(source_snapshot_sha256) = 64 AND source_snapshot_sha256 NOT GLOB '*[^0-9a-f]*')),
+  object_count INTEGER NOT NULL CHECK(object_count >= 0),
+  byte_count INTEGER NOT NULL CHECK(byte_count >= 0),
+  workspace_policy TEXT NOT NULL CHECK(length(workspace_policy) BETWEEN 1 AND 512),
+  canonical_evidence INTEGER NOT NULL DEFAULT 0 CHECK(canonical_evidence IN (0,1)),
+  receipt_json TEXT NOT NULL,
+  recorded_at TEXT NOT NULL,
+  PRIMARY KEY(task_id, archive_identity)
+);
+CREATE UNIQUE INDEX legacy_archive_one_canonical ON legacy_archive_evidence(task_id) WHERE canonical_evidence = 1;
+CREATE TRIGGER legacy_archive_evidence_immutable UPDATE ON legacy_archive_evidence
+BEGIN SELECT RAISE(ABORT, 'legacy archive evidence is immutable'); END;
+CREATE TRIGGER legacy_archive_evidence_no_delete DELETE ON legacy_archive_evidence
+BEGIN SELECT RAISE(ABORT, 'legacy archive evidence is immutable'); END;
 CREATE TABLE legacy_actor_evidence (
   legacy_actor_id TEXT PRIMARY KEY, source_path TEXT NOT NULL, owner_text TEXT NOT NULL, pid_text TEXT,
   starttime_text TEXT, boot_id_text TEXT, batch_id TEXT, raw_sha256 TEXT NOT NULL,

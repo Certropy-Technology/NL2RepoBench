@@ -27,6 +27,10 @@ ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,199}$")
 HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
 HEX40_RE = re.compile(r"^[0-9a-f]{40}$")
 LANGUAGES = ("python", "node", "go")
+# Schema v4 adds ``legacy_archive_evidence``.  No pre-v4 database is deployed, so
+# v4 is the only accepted version and there is no in-place upgrade path.
+SCHEMA_VERSION = "4"
+STATUS_SCHEMA_VERSION = "authoring-scheduler/v4"
 
 
 class SchedulerError(Exception):
@@ -421,7 +425,7 @@ class Scheduler:
                     row = existing.execute(
                         "SELECT value FROM schema_meta WHERE key='schema_version'"
                     ).fetchone()
-                    if row is None or row[0] != "3":
+                    if row is None or row[0] != SCHEMA_VERSION:
                         raise ValidationError("incompatible scheduler schema version")
                     required = {
                         "lanes",
@@ -431,6 +435,7 @@ class Scheduler:
                         "runtime_config",
                         "resource_policy",
                         "cutover_barrier",
+                        "legacy_archive_evidence",
                     }
                     actual = {
                         str(r[0])
@@ -448,7 +453,10 @@ class Scheduler:
             with _transaction(db):
                 now = _now()
                 db.execute("INSERT OR IGNORE INTO fairness_state VALUES (1,0,0,?)", (now,))
-                db.execute("INSERT OR IGNORE INTO schema_meta VALUES ('schema_version','3')")
+                db.execute(
+                    "INSERT OR IGNORE INTO schema_meta VALUES ('schema_version',?)",
+                    (SCHEMA_VERSION,),
+                )
                 db.execute(
                     "INSERT OR IGNORE INTO resource_policy(policy_version,repository_min_free_bytes,"
                     "docker_min_free_bytes,watcher_min_free_bytes,changed_by,changed_at,reason) "
@@ -2839,7 +2847,7 @@ class Scheduler:
             safe_policy.pop("changed_by", None)
             safe_policy.pop("reason", None)
         return {
-            "schema_version": "authoring-scheduler/v3",
+            "schema_version": STATUS_SCHEMA_VERSION,
             "database": str(path.name),
             "event_id": int(
                 db.execute("SELECT COALESCE(MAX(event_id),0) FROM events").fetchone()[0]

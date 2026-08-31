@@ -11,12 +11,14 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import stat as statmod
 import tempfile
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
+from urllib.parse import quote
 
 from .scheduler import Scheduler
 
@@ -26,6 +28,18 @@ _SECRET = re.compile(
     r"(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|(?:api[_-]?key|secret|password|token)\s*[:=])",
     re.I,
 )
+# One frozen archive receipt per file: ``archive-receipts/<language>/<slug>-<id16>.json``
+# holding the object keys ``<root>/<language>/<slug>/<identity64>/<relative>``.
+ARCHIVE_RECEIPT_ROOT = "archive-receipts/"
+ARCHIVE_RECEIPT_SCHEMA = "1.0"
+_ARCHIVE_OBJECT_KEY = re.compile(
+    r"^nl2repobench/authoring-live/archive/(?P<language>python|node|go)/(?P<slug>[^/]+)/"
+    r"(?P<identity>[0-9a-f]{64})/(?P<relative>[^/].*)$"
+)
+_ARCHIVE_RECEIPT_NAME = re.compile(r"^(?P<slug>.+)-(?P<prefix>[0-9a-f]{16})\.json$")
+_SOURCE_SNAPSHOT_PREFIX = "catalog/sources/"
+_WORKSPACE_MARKER = "artifacts/workspace/"
+_RECEIPT_REPORT_PATH_LIMIT = 20
 _STATUS = {
     "pending": "pending", "claimed": "claimed", "preparing": "preparing",
     "authoring": "authoring", "handoff_ready": "handoff_ready", "stale": "stale",
@@ -45,6 +59,10 @@ def _receipt_times(
     receipt: dict[str, Any], *, fallback: str
 ) -> tuple[str, str | None]:
     def parse(value: Any, label: str) -> str:
+        if value is None or value == "":
+            raise MigrationError(
+                f"legacy receipt {label} has no frozen updated_at upper bound"
+            )
         try:
             parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
         except ValueError as exc:
@@ -143,6 +161,413 @@ def _artifact_identity(task_id: str, path: str, digest: str) -> str:
         ensure_ascii=True,
     ).encode("utf-8")
     return "legacy:" + hashlib.sha256(canonical).hexdigest()
+
+
+@dataclass(frozen=True)
+class ArchiveReceipt:
+    """One strictly validated frozen archive receipt, before task association.
+
+    ``source_snapshot_sha256`` is always recomputed from the receipt's own
+    ``catalog/sources/`` object entries; a declared digest must agree with it.
+    ``handoff_sha256`` stays a separate fact and is never used as a snapshot
+    digest.
+    """
+
+    package: str
+    language: str
+    archive_identity: str
+    object_count: int
+    byte_count: int
+    workspace_policy: str
+    handoff_sha256: str | None
+    source_snapshot_sha256: str | None
+    source_file_count: int
+    source_bytes: int
+    legacy_attempts: int | None
+    queue_status: str | None
+    source_snapshot_included: bool
+    receipt_json: str
+
+    def canonical_score(self) -> tuple[int, int, int, int, str]:
+        """Deterministic total ordering used to pick one canonical row."""
+        return (
+            self.source_bytes,
+            self.source_file_count,
+            self.object_count,
+            self.byte_count,
+            self.archive_identity,
+        )
+
+
+def _require_mapping(value: Any, where: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise MigrationError(f"{where} is not a JSON object")
+    return value
+
+
+def _require_int(value: object, label: str, where: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        raise MigrationError(f"{where} has invalid {label}: {value!r}")
+    return value
+
+
+def _require_text(value: Any, label: str, where: str, *, limit: int) -> str:
+    if (
+        not isinstance(value, str)
+        or not value.strip()
+        or len(value) > limit
+        or "\x00" in value
+    ):
+        raise MigrationError(f"{where} has invalid {label}")
+    return value
+
+
+def _require_digest(value: Any, label: str, where: str) -> str:
+    if not isinstance(value, str) or not _SHA.fullmatch(value):
+        raise MigrationError(f"{where} has invalid {label}")
+    return value
+
+
+def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
+    """Strictly parse one frozen archive receipt; anything else fails closed.
+
+    These blobs are a heterogeneous legacy record of what an OSS watcher saw.
+    They are never an operation attempt, so an entry that cannot be bound to one
+    task-scoped archive identity is a source defect, not something to average or
+    pick a winner from.
+    """
+    where = f"legacy archive receipt {relative_path}"
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise MigrationError(f"{where} is not valid UTF-8 JSON: {exc}") from exc
+    body = _require_mapping(payload, where)
+    parts = relative_path.split("/")
+    if len(parts) != 3 or parts[0] != ARCHIVE_RECEIPT_ROOT.removesuffix("/"):
+        raise MigrationError(f"{where} is not an archive-receipts path")
+    if str(body.get("schema_version")) != ARCHIVE_RECEIPT_SCHEMA:
+        raise MigrationError(f"{where} has unsupported schema_version")
+    language = _require_text(body.get("language"), "language", where, limit=16)
+    if language not in {"python", "node", "go"}:
+        raise MigrationError(f"{where} has unsupported language: {language}")
+    if parts[1] != language:
+        raise MigrationError(f"{where} is not under archive-receipts/{language}/")
+    package = _require_text(body.get("package"), "package", where, limit=200)
+    if package.strip() != package or package.startswith("-"):
+        raise MigrationError(f"{where} has an unusable package name")
+    slug = quote(package, safe="")
+    name_match = _ARCHIVE_RECEIPT_NAME.match(parts[2])
+    if name_match is None or name_match.group("slug") != slug:
+        raise MigrationError(f"{where} filename does not match its package slug")
+    handoff_value = body.get("handoff_sha256")
+    handoff_sha256: str | None = (
+        None if handoff_value is None else _require_digest(handoff_value, "handoff_sha256", where)
+    )
+    attempts_value = body.get("attempts")
+    legacy_attempts = None if attempts_value is None else _require_int(attempts_value, "attempts", where)
+    queue_value = body.get("queue_status")
+    queue_status = None if queue_value is None else _require_text(queue_value, "queue_status", where, limit=64)
+    workspace_policy = _require_text(body.get("workspace_policy"), "workspace_policy", where, limit=512)
+    objects = body.get("objects")
+    if not isinstance(objects, list) or not objects:
+        raise MigrationError(f"{where} has no verified objects")
+    if _require_int(body.get("object_count"), "object_count", where) != len(objects):
+        raise MigrationError(f"{where} object_count does not match its objects")
+    identities: set[str] = set()
+    seen_keys: set[str] = set()
+    total_bytes = 0
+    source_digest = hashlib.sha256()
+    source_count = 0
+    source_bytes = 0
+    workspace_count = 0
+    workspace_bytes = 0
+    for entry in objects:
+        item = _require_mapping(entry, f"{where} object entry")
+        if set(item) != {"key", "size", "sha256"}:
+            raise MigrationError(f"{where} object entry has missing or extra fields")
+        key = _require_text(item["key"], "object key", where, limit=4096)
+        if key in seen_keys:
+            raise MigrationError(f"{where} repeats an object key: {key}")
+        seen_keys.add(key)
+        match = _ARCHIVE_OBJECT_KEY.match(key)
+        if match is None or any(part == ".." for part in match.group("relative").split("/")):
+            raise MigrationError(f"{where} has an out-of-contract object key: {key}")
+        if match.group("language") != language or match.group("slug") != slug:
+            raise MigrationError(f"{where} object key disagrees with its package or language")
+        identities.add(match.group("identity"))
+        size = _require_int(item["size"], "object size", where)
+        digest = _require_digest(item["sha256"], "object sha256", where)
+        total_bytes += size
+        relative = match.group("relative")
+        if relative.startswith(_SOURCE_SNAPSHOT_PREFIX):
+            source_count += 1
+            source_bytes += size
+            source_digest.update(relative.encode("utf-8") + b"\0" + bytes.fromhex(digest))
+        if _WORKSPACE_MARKER in relative:
+            workspace_count += 1
+            workspace_bytes += size
+    if len(identities) != 1:
+        raise MigrationError(f"{where} carries {len(identities)} archive identities")
+    archive_identity = identities.pop()
+    if name_match.group("prefix") != archive_identity[:16]:
+        raise MigrationError(f"{where} filename prefix is not its archive identity")
+    if _require_int(body.get("bytes_verified"), "bytes_verified", where) != total_bytes:
+        raise MigrationError(f"{where} bytes_verified does not match its objects")
+    # One (label, declared, computed) triple per derived counter: the declared
+    # value is always read by name from the receipt and the computed value always
+    # comes from the object entries, so the unpack shape cannot drift away from
+    # the data it walks.
+    for label, declared, computed in (
+        ("source_file_count", body.get("source_file_count"), source_count),
+        ("source_bytes", body.get("source_bytes"), source_bytes),
+        ("workspace_file_count", body.get("workspace_file_count"), workspace_count),
+        ("workspace_bytes", body.get("workspace_bytes"), workspace_bytes),
+    ):
+        if declared is None:
+            continue
+        _require_int(declared, label, where)
+        if declared != computed:
+            raise MigrationError(
+                f"{where} {label} disagrees with its object entries: {computed}"
+            )
+    declared_snapshot = body.get("source_snapshot_sha256")
+    included = body.get("source_snapshot_included")
+    if included is not None and included is not True:
+        raise MigrationError(f"{where} declares source_snapshot_included without a snapshot")
+    if source_count == 0:
+        if declared_snapshot is not None or included is True:
+            raise MigrationError(f"{where} claims a source snapshot with no catalog/sources objects")
+        snapshot_sha256: str | None = None
+    else:
+        snapshot_sha256 = source_digest.hexdigest()
+        if declared_snapshot is not None and _require_digest(declared_snapshot, "source_snapshot_sha256", where) != snapshot_sha256:
+            raise MigrationError(f"{where} declared source_snapshot_sha256 does not match its objects")
+    receipt_json = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return ArchiveReceipt(
+        package=package,
+        language=language,
+        archive_identity=archive_identity,
+        object_count=len(objects),
+        byte_count=total_bytes,
+        workspace_policy=workspace_policy,
+        handoff_sha256=handoff_sha256,
+        source_snapshot_sha256=snapshot_sha256,
+        source_file_count=source_count,
+        source_bytes=source_bytes,
+        legacy_attempts=legacy_attempts,
+        queue_status=queue_status,
+        source_snapshot_included=included is True,
+        receipt_json=receipt_json,
+    )
+
+
+def frozen_updated_at(item: dict[str, Any]) -> str | None:
+    """Return one legacy item's frozen ``updated_at`` as a normalized bound.
+
+    Historical evidence is dated from the frozen legacy authority that produced
+    it.  The import wall clock is never an acceptable substitute for retained
+    archive evidence: it would move a re-run of the same frozen manifest to a
+    different digest and would claim a receipt existed "as of now".
+    """
+    declared = item.get("updated_at")
+    if not isinstance(declared, str) or not declared.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(declared.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise MigrationError("legacy item has an invalid frozen updated_at") from exc
+    if parsed.tzinfo is None:
+        raise MigrationError("legacy item frozen updated_at must be timezone-aware")
+    return parsed.astimezone(UTC).isoformat(timespec="microseconds")
+
+
+EvidenceRow = tuple[str, ArchiveReceipt, str, str, str]
+
+
+def _is_archive_manifest(body: dict[str, Any]) -> bool:
+    """True when one JSON object carries the archive-manifest shape.
+
+    Anything else under ``archive-receipts/`` is a different legacy record (for
+    example a watcher's collision or cleanup note).  It is reported, never
+    retained as archive evidence, and never promoted to anything.
+    """
+    return isinstance(body.get("package"), str) and isinstance(body.get("objects"), list)
+
+
+def collect_archive_evidence(
+    conn: sqlite3.Connection, root: Path, manifest: dict[str, Any], bounds: dict[str, str]
+) -> tuple[list[EvidenceRow], list[dict[str, str]]]:
+    """Validate and associate every frozen archive receipt, failing closed.
+
+    Association is deliberately strict: a package must resolve to exactly one
+    imported task, that task must agree on language, and it must carry a frozen
+    ``updated_at`` bound.  A receipt file whose bytes drifted from the manifest
+    inventory is a contradiction, not a warning.
+    """
+    collected: list[EvidenceRow] = []
+    malformed: list[dict[str, str]] = []
+    identities: dict[str, list[tuple[str, str]]] = {}
+    for row in conn.execute(
+        "SELECT t.task_id, i.package, i.language "
+        "FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id "
+        "JOIN candidate_identities i ON i.identity_digest=c.identity_digest "
+        "ORDER BY t.task_id"
+    ):
+        identities.setdefault(str(row["package"]), []).append(
+            (str(row["task_id"]), str(row["language"]))
+        )
+    seen_identities: set[tuple[str, str]] = set()
+    for record in manifest.get("inventory", []):
+        path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
+        if not path_name.startswith(ARCHIVE_RECEIPT_ROOT) or not path_name.endswith(".json"):
+            continue
+        declared_sha = str(record.get("sha256", "")) if isinstance(record, dict) else ""
+        raw = (root / path_name).read_bytes()
+        actual_sha = hashlib.sha256(raw).hexdigest()
+        if actual_sha != declared_sha:
+            raise MigrationError(f"legacy archive receipt digest drift: {path_name}")
+        try:
+            parsed = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            parsed = None
+        if not isinstance(parsed, dict) or not _is_archive_manifest(parsed):
+            malformed.append({"path": path_name, "reason": "not an archive manifest"})
+            continue
+        receipt = validate_archive_receipt(path_name, raw)
+        matches = identities.get(receipt.package, [])
+        if len(matches) != 1:
+            raise MigrationError(
+                f"legacy archive receipt package is not unique to one task: {receipt.package} "
+                f"({path_name}) matched {len(matches)}"
+            )
+        task_id, lane_language = matches[0]
+        if lane_language != receipt.language:
+            raise MigrationError(
+                f"legacy archive receipt language disagrees with its lane: {path_name}"
+            )
+        if task_id not in bounds:
+            raise MigrationError(
+                f"legacy archive receipt has no frozen updated_at upper bound: {path_name}"
+            )
+        key = (task_id, receipt.archive_identity)
+        if key in seen_identities:
+            raise MigrationError(
+                f"legacy archive identity is bound to two files: {task_id}/{receipt.archive_identity}"
+            )
+        seen_identities.add(key)
+        collected.append((task_id, receipt, path_name, actual_sha, bounds[task_id]))
+    return sorted(
+        collected, key=lambda row: (row[0], row[1].archive_identity, row[2])
+    ), malformed
+
+
+def record_archive_evidence(
+    conn: sqlite3.Connection,
+    collected: list[EvidenceRow],
+    malformed: list[dict[str, str]],
+) -> dict[str, Any]:
+    """Insert retained archive evidence and return the report counts.
+
+    ``canonical_evidence`` marks the single best-quality receipt for a task that
+    is already ``complete`` on its own embedded receipt chain.  It carries no
+    scheduling or terminal authority: a complete task without qualifying evidence
+    stays complete and is reported instead.
+    """
+    complete = {
+        str(row["task_id"])
+        for row in conn.execute("SELECT task_id FROM tasks WHERE state='complete'")
+    }
+    recorded_handoffs = {
+        str(row["task_id"]): row["handoff_sha256"]
+        for row in conn.execute("SELECT task_id, handoff_sha256 FROM tasks")
+    }
+    best: dict[str, ArchiveReceipt] = {}
+    for task_id, receipt, _path, _sha, _bound in collected:
+        eligible = (
+            task_id in complete
+            and receipt.source_snapshot_included
+            and receipt.source_snapshot_sha256 is not None
+            and receipt.handoff_sha256 is not None
+            and (
+                recorded_handoffs.get(task_id) is None
+                or recorded_handoffs.get(task_id) == receipt.handoff_sha256
+            )
+        )
+        if not eligible:
+            continue
+        current = best.get(task_id)
+        if current is None or receipt.canonical_score() > current.canonical_score():
+            best[task_id] = receipt
+    canonical_keys = {
+        (task_id, receipt.archive_identity) for task_id, receipt in best.items()
+    }
+    for task_id, receipt, path_name, source_sha, recorded_at in collected:
+        conn.execute(
+            "INSERT INTO legacy_archive_evidence(task_id,archive_identity,source_path,source_sha256,"
+            "package,language,legacy_attempts,queue_status,handoff_sha256,source_snapshot_sha256,"
+            "object_count,byte_count,workspace_policy,canonical_evidence,receipt_json,recorded_at) "
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                task_id,
+                receipt.archive_identity,
+                path_name,
+                source_sha,
+                receipt.package,
+                receipt.language,
+                receipt.legacy_attempts,
+                receipt.queue_status,
+                receipt.handoff_sha256,
+                receipt.source_snapshot_sha256,
+                receipt.object_count,
+                receipt.byte_count,
+                receipt.workspace_policy,
+                1 if (task_id, receipt.archive_identity) in canonical_keys else 0,
+                receipt.receipt_json,
+                recorded_at,
+            ),
+        )
+    canonical_tasks = set(best)
+    complete_without_evidence = sum(1 for task_id in complete if task_id not in canonical_tasks)
+    return {
+        "retained": len(collected),
+        "canonical": len(canonical_keys),
+        "historical": len(collected) - len(canonical_keys),
+        "malformed": len(malformed),
+        "malformed_paths": malformed[:_RECEIPT_REPORT_PATH_LIMIT],
+        "complete_without_evidence": complete_without_evidence,
+    }
+
+
+def archive_evidence_digest(collected: list[EvidenceRow]) -> str:
+    """Deterministic digest over retained evidence, independent of wall clock."""
+    digest = hashlib.sha256()
+    for task_id, receipt, path_name, source_sha, recorded_at in collected:
+        digest.update(
+            json.dumps(
+                [
+                    task_id,
+                    receipt.archive_identity,
+                    path_name,
+                    source_sha,
+                    receipt.package,
+                    receipt.language,
+                    receipt.object_count,
+                    receipt.byte_count,
+                    receipt.source_snapshot_sha256,
+                    receipt.handoff_sha256,
+                    receipt.legacy_attempts,
+                    receipt.queue_status,
+                    receipt.workspace_policy,
+                    recorded_at,
+                    receipt.receipt_json,
+                ],
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=True,
+            ).encode("utf-8")
+            + b"\0"
+        )
+    return digest.hexdigest()
 
 
 def _check_file(root: Path, relative: str, *, max_size: int = 64 * 1024 * 1024,
@@ -502,6 +927,9 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
     conn = scheduler.connect()
     counts: dict[str, int] = {}
     complete_candidates: list[str] = []
+    # Frozen ``updated_at`` per imported task: the only honest date for retained
+    # historical evidence, and the fallback for legacy embedded receipts.
+    frozen_bounds: dict[str, str] = {}
     committed = False
     try:
         conn.execute("BEGIN IMMEDIATE")
@@ -546,6 +974,9 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 conn.execute("INSERT INTO candidate_identities VALUES(?,?,?,?,?,?,?,datetime('now'))", (digest, language, package, upstream, str(selection.get("source_kind", "legacy")), revision, json.dumps(selection, sort_keys=True)))
                 conn.execute("INSERT INTO candidates VALUES(?,?,?,?,?,?,datetime('now'),datetime('now'))", (candidate_id, lane_id, digest, int(item.get("ordinal", 0) or 0), "existing" if item.get("status") == "complete" else "candidate", json.dumps({"legacy_status": item.get("status"), "legacy": item}, sort_keys=True)))
                 task_id = f"{lane_id}:{candidate_id}:legacy"
+                bound = frozen_updated_at(item)
+                if bound is not None:
+                    frozen_bounds[task_id] = bound
                 legacy_status = str(item.get("status", "pending"))
                 state = _STATUS.get(legacy_status, "blocked")
                 if legacy_status == "complete" and not _has_final_receipt_chain(item):
@@ -613,7 +1044,9 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         fields = dict(receipt)
                         fields.pop("operation_kind", None)
                         idempotency = "legacy:" + hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-                        started_at, finished_at = _receipt_times(receipt, fallback=import_time)
+                        started_at, finished_at = _receipt_times(
+                            receipt, fallback=frozen_bounds.get(task_id, import_time)
+                        )
                         conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,source_digest,generated_digest,commit_sha,external_ref,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,failure_class,failure_reason,receipt_json,started_at,finished_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (receipt_id, task_id, operation, int(receipt.get("operation_attempt", 1) or 1), int(receipt.get("retry_no", 0) or 0), idempotency, status, receipt.get("source_digest"), receipt.get("generated_digest"), receipt.get("commit_sha"), receipt.get("external_ref"), receipt.get("manifest_key"), receipt.get("manifest_sha256"), receipt.get("source_snapshot_sha256"), receipt.get("object_count"), receipt.get("byte_count"), receipt.get("evidence_path"), receipt.get("evidence_sha256"), receipt.get("actor_scope", "archive" if operation == "archive" else "integration"), "legacy-import", receipt.get("failure_class"), receipt.get("failure_reason"), json.dumps(fields, sort_keys=True), started_at, finished_at, started_at, finished_at or started_at))
                 if legacy_status == "complete":
                     complete_candidates.append(task_id)
@@ -637,6 +1070,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 else:
                     conn.execute("INSERT INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"{lane['batch_id']}:{path.stem}", record["path"], str(claim.get("candidate_id") or ""), str(claim.get("package") or ""), owner, str(claim.get("status") or ""), str(claim.get("lease_expires_at") or ""), str(claim.get("attempts") or ""), record["sha256"], "orphan-claim", "legacy claim evidence; no live controller imported"))
         failures = root / "supervisor" / "integration-failures.json"
+        collision_tasks: set[str] = set()
         if failures.is_file():
             try:
                 payload = json.loads(failures.read_text(encoding="utf-8"))
@@ -649,28 +1083,21 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     raw_digest = hashlib.sha256(reason.encode()).hexdigest()
                     conn.execute("INSERT INTO orphan_claim_evidence VALUES(?,?,?,?,?,?,?,?,?,?,?,datetime('now'))", (f"integration-failure:{package}", "supervisor/integration-failures.json", "", str(package), "", "", "", "", raw_digest, "unmapped-claim", f"legacy integration failure classification={classification}; collision cleanup forbidden"))
                     if "collision" in reason.lower() or "remote object" in reason.lower():
-                        task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (package,)).fetchone()
+                        # A collision stays retained blocker evidence.  Minting an
+                        # archive operation receipt here would claim an attempt the
+                        # legacy tree never proved, so the blocker is applied to task
+                        # state below instead.
+                        task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=?", (package,)).fetchone()
                         if task is not None:
-                            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,failure_class,failure_reason,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,finished_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (f"legacy-collision:{package}", task["task_id"], "archive", 1, 0, "legacy-collision:" + raw_digest, "collision", "infrastructure", reason, "supervisor/integration-failures.json", raw_digest, "archive", "legacy-import", reason, import_time, import_time, import_time, import_time))
-        for record in manifest.get("inventory", []):
-            path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
-            if not path_name.startswith("archive-receipts/") or not path_name.endswith(".json"):
-                continue
-            receipt_path = root / path_name
-            try:
-                archive = json.loads(receipt_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                continue
-            if not isinstance(archive, dict) or not archive.get("package"):
-                continue
-            task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=? LIMIT 1", (archive["package"],)).fetchone()
-            if task is None or not archive.get("handoff_sha256"):
-                continue
-            raw_digest = _sha(receipt_path)
-            objects = archive.get("objects", [])
-            idempotency = "legacy:" + hashlib.sha256(receipt_path.read_bytes()).hexdigest()
-            archive_started, archive_finished = _receipt_times({**archive, "status": "verified"}, fallback=import_time)
-            conn.execute("INSERT INTO operation_receipts(receipt_id,task_id,operation_kind,operation_attempt,retry_no,idempotency_key,status,manifest_key,manifest_sha256,source_snapshot_sha256,object_count,byte_count,evidence_path,evidence_sha256,actor_scope,actor_lease_id,receipt_json,started_at,finished_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (f"legacy-archive:{path_name}", task["task_id"], "archive", 1, 0, idempotency, "verified", path_name, raw_digest, archive["handoff_sha256"], int(archive.get("object_count", len(objects)) or 0), int(archive.get("bytes_verified", 0) or 0), path_name, raw_digest, "archive", "legacy-import", json.dumps(archive, sort_keys=True), archive_started, archive_finished, archive_started, archive_finished or archive_started))
+                            collision_tasks.add(str(task["task_id"]))
+        # Frozen archive receipts are task-scoped evidence, never operation
+        # attempts: one package legitimately carries several heterogeneous blobs
+        # and none of them holds an actor lease or attempt ordinal.  Validation
+        # happens here, before any terminal decision, so a contradiction cannot
+        # be half-imported.
+        archive_evidence, archive_malformed = collect_archive_evidence(
+            conn, root, manifest, frozen_bounds
+        )
         conn.execute(
             "UPDATE operation_receipts SET status='failed',failure_class='infrastructure',"
             "failure_reason='legacy operation intent was abandoned at cutover',"
@@ -681,19 +1108,24 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             "WHERE status IN ('pushed','verified','applied','failed','collision')"
         )
         for task_id in complete_candidates:
+            # Only a genuine embedded pushed+verified+applied chain recorded as
+            # real operation receipts may close a legacy task.  Retained archive
+            # evidence has no terminal authority, and a collision blocker applies
+            # only when no such chain exists.
             chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
-            latest_archive = conn.execute(
-                "SELECT status FROM operation_receipts WHERE task_id=? AND operation_kind='archive' "
-                "ORDER BY operation_attempt DESC,retry_no DESC,rowid DESC LIMIT 1",
-                (task_id,),
-            ).fetchone()
-            if latest_archive is not None and latest_archive["status"] == "collision":
-                conn.execute("UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?", (task_id,))
-            elif {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= chain:
+            if {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= chain:
                 conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='archiving' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='cleaning' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='complete',terminal_reason='historical receipt chain verified' WHERE task_id=?", (task_id,))
+            elif task_id in collision_tasks:
+                conn.execute(
+                    "UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?",
+                    (task_id,),
+                )
+        # Canonical marking is computed after the terminal decision so it can only
+        # describe evidence quality for an already-complete task, never cause it.
+        archive_counts = record_archive_evidence(conn, archive_evidence, archive_malformed)
         # Actors remain live during observation; bind the imported rows to the
         # same frozen bytes one last time before the staging transaction commits.
         validate_manifest(manifest, live_root)
@@ -712,7 +1144,8 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 candidate = Path(str(db) + suffix)
                 if candidate.exists() and candidate.is_file():
                     candidate.unlink()
-    result = {"schema_version": MANIFEST_SCHEMA, "cutover_id": manifest["cutover_id"], "dry_run": dry_run, "db_path": str(db), "counts": counts, "digest": _sha(db), "barrier": observed_barrier}
+    result = {"schema_version": MANIFEST_SCHEMA, "cutover_id": manifest["cutover_id"], "dry_run": dry_run, "db_path": str(db), "counts": counts, "digest": _sha(db), "barrier": observed_barrier,
+              "archive_evidence": {**archive_counts, "digest": archive_evidence_digest(archive_evidence)}}
     if temp_dir is not None:
         result["temporary"] = True
         temp_dir.cleanup()

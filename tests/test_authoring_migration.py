@@ -5,6 +5,7 @@ import hashlib
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
 
@@ -178,6 +179,14 @@ def _import_case(root: Path, name: str) -> sqlite3.Connection:
     return sqlite3.connect(database)
 
 
+def _import_archive_case(root: Path, name: str) -> tuple[dict[str, Any], sqlite3.Connection]:
+    """Import one case and return its archive-evidence report alongside a read connection."""
+    database = root.parent / f"{name}.sqlite3"
+    result = import_manifest(generate_manifest(root, cutover_id=name), root, db_path=database, dry_run=False)
+    report = cast(dict[str, Any], result["archive_evidence"])
+    return report, sqlite3.connect(database)
+
+
 def _artifact_rows(db: sqlite3.Connection, candidate_id: str) -> list[tuple[str, ...]]:
     return list(db.execute(
         "SELECT a.artifact_id, a.path, a.sha256, a.size_bytes, a.secret_scan_status, "
@@ -188,6 +197,7 @@ def _artifact_rows(db: sqlite3.Connection, candidate_id: str) -> list[tuple[str,
 
 
 PYTHON_TASK = "base-python-python-author-wave2-20260828:python-candidate:legacy"
+NODE_TASK = "base-node-node-author-wave2-20260828:node-candidate:legacy"
 PYTHON_BATCH = "python-author-wave2-20260828"
 
 
@@ -348,6 +358,301 @@ def test_taskless_artifact_identity_stays_globally_unique(tmp_path: Path) -> Non
         assert sorted(str(row[0]) for row in db.execute("SELECT artifact_id FROM artifacts")) == [
             "legacy-unbound-1", "legacy-unbound-3", "legacy-unbound-4",
         ]
+
+
+ARCHIVE_PACKAGE = "python-pkg"
+ARCHIVE_LANGUAGE = "python"
+ARCHIVE_IDENTITY = hashlib.sha256(b"archive-identity").hexdigest()
+
+
+def _archive_objects(identity: str = ARCHIVE_IDENTITY, *, source_size: int = 120,
+                     language: str = ARCHIVE_LANGUAGE, package: str = ARCHIVE_PACKAGE) -> list[dict[str, object]]:
+    """One source-snapshot object and one workspace object under a single identity."""
+    base = f"nl2repobench/authoring-live/archive/{language}/{package}/{identity}/"
+    return [
+        {"key": base + "catalog/sources/x/y.txt", "size": source_size, "sha256": "a" * 64},
+        {"key": base + "artifacts/workspace/handoff.tar", "size": 4096, "sha256": "b" * 64},
+    ]
+
+
+def _source_snapshot_digest(objects: list[dict[str, object]], identity: str = ARCHIVE_IDENTITY) -> str:
+    """Independent copy of the pinned snapshot contract: relative path plus raw digest bytes."""
+    digest = hashlib.sha256()
+    for entry in objects:
+        relative = str(entry["key"]).split(f"{identity}/", 1)[1]
+        if relative.startswith("catalog/sources/"):
+            digest.update(relative.encode("utf-8") + b"\0" + bytes.fromhex(str(entry["sha256"])))
+    return digest.hexdigest()
+
+
+def _archive_receipt_body(identity: str = ARCHIVE_IDENTITY, *, source_size: int = 120,
+                          language: str = ARCHIVE_LANGUAGE, package: str = ARCHIVE_PACKAGE,
+                          **overrides: object) -> dict[str, object]:
+    objects = _archive_objects(identity, source_size=source_size, language=language, package=package)
+    source = [o for o in objects if str(o["key"]).split(f"{identity}/", 1)[1].startswith("catalog/sources/")]
+    body: dict[str, object] = {
+        "schema_version": "1.0",
+        "language": language,
+        "package": package,
+        "workspace_policy": "artifacts/workspace included",
+        "attempts": 2,
+        "queue_status": "complete",
+        "handoff_sha256": "c" * 64,
+        "objects": objects,
+        "object_count": len(objects),
+        "bytes_verified": sum(int(o["size"]) for o in objects),
+        "source_file_count": len(source),
+        "source_bytes": sum(int(o["size"]) for o in source),
+        "workspace_file_count": len(objects) - len(source),
+        "workspace_bytes": sum(int(o["size"]) for o in objects) - sum(int(o["size"]) for o in source),
+        "source_snapshot_included": True,
+        "source_snapshot_sha256": _source_snapshot_digest(objects, identity),
+    }
+    body.update(overrides)
+    return body
+
+
+def _archive_receipt_path(identity: str = ARCHIVE_IDENTITY, *, package: str = ARCHIVE_PACKAGE,
+                          language: str = ARCHIVE_LANGUAGE) -> str:
+    return f"archive-receipts/{language}/{package}-{identity[:16]}.json"
+
+
+def _write_archive_receipt(root: Path, body: dict[str, object], identity: str = ARCHIVE_IDENTITY, *,
+                           package: str = ARCHIVE_PACKAGE, language: str = ARCHIVE_LANGUAGE) -> Path:
+    location = root / _archive_receipt_path(identity, package=package, language=language)
+    location.parent.mkdir(parents=True, exist_ok=True)
+    location.write_text(json.dumps(body, sort_keys=True), encoding="utf-8")
+    return location
+
+
+def _frozen_state(root: Path, language: str, **item_fields: object) -> None:
+    """Give one base-lane candidate the frozen fields the archive path requires."""
+    state_path = root / "queues" / f"{language}-wave2-20260828.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["items"][f"{language}-candidate"].update(item_fields)
+    state_path.write_text(json.dumps(state), encoding="utf-8")
+
+
+def _final_chain(salt: str = "python") -> list[dict[str, object]]:
+    """The only legacy record that may close a task: a real embedded operation chain.
+
+    ``salt`` keeps two fixtures distinct because ``operation_receipts.idempotency_key``
+    is globally unique, exactly as it is for real legacy candidates.
+    """
+    return [
+        {"operation_kind": "integration", "status": "pushed", "operation_attempt": 1, "retry_no": 0,
+         "commit_sha": hashlib.sha256(f"{salt}-commit".encode()).hexdigest()[:40],
+         "external_ref": f"refs/heads/{salt}",
+         "started_at": "2026-08-01T00:00:00+00:00", "finished_at": "2026-08-01T00:00:01+00:00"},
+        {"operation_kind": "archive", "status": "verified", "operation_attempt": 1, "retry_no": 0,
+         "manifest_key": f"archive/{salt}/manifest.json",
+         "manifest_sha256": hashlib.sha256(f"{salt}-manifest".encode()).hexdigest(),
+         "source_snapshot_sha256": hashlib.sha256(f"{salt}-snapshot".encode()).hexdigest(),
+         "object_count": 1, "byte_count": 1,
+         "evidence_sha256": hashlib.sha256(f"{salt}-evidence".encode()).hexdigest(),
+         "started_at": "2026-08-01T00:00:02+00:00", "finished_at": "2026-08-01T00:00:03+00:00"},
+        {"operation_kind": "cleanup", "status": "applied", "operation_attempt": 1, "retry_no": 0,
+         "evidence_path": f"cleanup/{salt}.json",
+         "evidence_sha256": hashlib.sha256(f"{salt}-cleanup".encode()).hexdigest(),
+         "started_at": "2026-08-01T00:00:04+00:00", "finished_at": "2026-08-01T00:00:05+00:00"},
+    ]
+
+
+def _workspace_only_receipt(identity: str = ARCHIVE_IDENTITY, *, language: str = ARCHIVE_LANGUAGE,
+                            package: str = ARCHIVE_PACKAGE) -> dict[str, object]:
+    """The 192-file frozen shape: a receipt that carries no ``catalog/sources/`` object."""
+    objects = [o for o in _archive_objects(identity, language=language, package=package)
+               if "catalog/sources/" not in str(o["key"])]
+    body = _archive_receipt_body(identity, language=language, package=package)
+    body.update(
+        objects=objects,
+        object_count=len(objects),
+        bytes_verified=sum(int(o["size"]) for o in objects),
+        source_file_count=0,
+        source_bytes=0,
+        workspace_file_count=len(objects),
+        workspace_bytes=sum(int(o["size"]) for o in objects),
+    )
+    body.pop("source_snapshot_included")
+    body.pop("source_snapshot_sha256")
+    return body
+
+
+def _validate(body: dict[str, object], path: str | None = None) -> migration.ArchiveReceipt:
+    return migration.validate_archive_receipt(
+        path or _archive_receipt_path(), json.dumps(body, sort_keys=True).encode("utf-8")
+    )
+
+
+def test_archive_receipt_derived_counters_validate_against_objects() -> None:
+    """Regression for the counter/source validation unpack: (label, declared, computed).
+
+    Every frozen receipt walks this loop, so a shape mismatch between the loop
+    targets and the tuples it iterates is a ``ValueError`` on all 413 receipts,
+    and a mispaired tuple silently accepts a contradicting count.
+    """
+    receipt = _validate(_archive_receipt_body())
+    assert (receipt.source_file_count, receipt.source_bytes) == (1, 120)
+    assert (receipt.object_count, receipt.byte_count) == (2, 4216)
+    assert receipt.archive_identity == ARCHIVE_IDENTITY
+    assert receipt.source_snapshot_sha256 == _source_snapshot_digest(_archive_objects())
+
+
+@pytest.mark.parametrize(
+    ("label", "wrong"),
+    [
+        ("source_file_count", 2),
+        ("source_bytes", 4096),
+        ("workspace_file_count", 2),
+        ("workspace_bytes", 120),
+    ],
+)
+def test_archive_receipt_rejects_declared_counters_that_disagree(label: str, wrong: int) -> None:
+    """Each of the four counters is checked on its own, never skipped by pairing error."""
+    with pytest.raises(MigrationError, match=f"{label} disagrees with its object entries"):
+        _validate(_archive_receipt_body(**{label: wrong}))
+
+
+def test_archive_receipt_source_snapshot_is_recomputed_and_declared_must_agree() -> None:
+    """The snapshot digest is derived from ``catalog/sources/`` entries only."""
+    with pytest.raises(MigrationError, match="declared source_snapshot_sha256 does not match"):
+        _validate(_archive_receipt_body(source_snapshot_sha256="d" * 64))
+    assert _validate(_workspace_only_receipt()).source_snapshot_sha256 is None
+
+
+def test_import_retains_archive_receipts_as_evidence_not_operation_attempts(tmp_path: Path) -> None:
+    """A frozen receipt becomes task-scoped evidence and keeps the legacy handoff state."""
+    root = _live_case(tmp_path, "archive-evidence")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    receipt_file = _write_archive_receipt(root, _archive_receipt_body())
+
+    counts, db = _import_archive_case(root, "archive-evidence")
+
+    rows = list(db.execute(
+        "SELECT task_id, archive_identity, source_sha256, object_count, byte_count,"
+        " canonical_evidence, recorded_at, source_snapshot_sha256 FROM legacy_archive_evidence",
+    ))
+    assert rows == [
+        (
+            PYTHON_TASK,
+            ARCHIVE_IDENTITY,
+            hashlib.sha256(receipt_file.read_bytes()).hexdigest(),
+            2,
+            4216,
+            0,
+            "2026-08-30T00:00:00.000000+00:00",
+            _source_snapshot_digest(_archive_objects()),
+        )
+    ]
+    assert counts["retained"] == 1 and counts["canonical"] == 0
+    assert list(db.execute("SELECT count(*) FROM operation_receipts"))[0][0] == 0
+    assert list(db.execute("SELECT state FROM tasks WHERE task_id=?", (PYTHON_TASK,)))[0][0] == "handoff_ready"
+    assert list(db.execute("SELECT count(*) FROM controllers"))[0][0] == 0
+
+
+def test_import_requires_a_frozen_updated_at_bound_for_archive_evidence(tmp_path: Path) -> None:
+    """Without a frozen date the importer fails closed instead of using wall clock."""
+    root = _live_case(tmp_path, "archive-unbound")
+    _write_archive_receipt(root, _archive_receipt_body())
+    with pytest.raises(MigrationError, match="no frozen updated_at upper bound"):
+        _import_case(root, "archive-unbound")
+
+
+def test_archive_evidence_canonical_marker_follows_terminal_state(tmp_path: Path) -> None:
+    """Only a closed task with snapshot-grade evidence gets one canonical row.
+
+    A complete task whose receipts are all workspace-only stays complete and is
+    reported instead, so the marker never becomes hidden terminal authority.
+    """
+    root = _live_case(tmp_path, "archive-canonical")
+    _frozen_state(root, "python", updated_at="2026-08-30T00:00:00+00:00", receipts=_final_chain("python"))
+    _frozen_state(root, "node", updated_at="2026-08-30T00:00:00+00:00", receipts=_final_chain("node"))
+    _write_archive_receipt(root, _archive_receipt_body())
+    _write_archive_receipt(root, _archive_receipt_body("e" * 64, source_size=10), "e" * 64)
+    _write_archive_receipt(
+        root,
+        _workspace_only_receipt("e" * 64, language="node", package="node-pkg"),
+        "e" * 64,
+        package="node-pkg",
+        language="node",
+    )
+
+    report, db = _import_archive_case(root, "archive-canonical")
+
+    states = dict(db.execute("SELECT task_id, state FROM tasks"))
+    assert states[PYTHON_TASK] == "complete"
+    assert states[NODE_TASK] == "complete"
+    marked = list(db.execute(
+        "SELECT task_id, archive_identity FROM legacy_archive_evidence"
+        " WHERE canonical_evidence=1 ORDER BY task_id, archive_identity",
+    ))
+    assert marked == [(PYTHON_TASK, ARCHIVE_IDENTITY)]
+    assert report["retained"] == 3 and report["canonical"] == 1
+    assert report["historical"] == 2
+    assert report["complete_without_evidence"] == 1
+
+
+def test_archive_receipt_contradictions_and_notes_fail_closed(tmp_path: Path) -> None:
+    """A count contradiction, a split identity, and a non-manifest note stay distinct."""
+    path = _archive_receipt_path()
+    drifted = json.dumps({**_archive_receipt_body(), "object_count": 9}, sort_keys=True).encode("utf-8")
+    with pytest.raises(MigrationError, match="object_count does not match its objects"):
+        migration.validate_archive_receipt(path, drifted)
+    second = dict(_archive_objects()[0])
+    second["key"] = second["key"].replace(ARCHIVE_IDENTITY, "f" * 64)
+    with pytest.raises(MigrationError, match="carries 2 archive identities"):
+        _validate(_archive_receipt_body(objects=[second, *_archive_objects()[1:]]))
+    root = _live_case(tmp_path, "archive-malformed")
+    note = root / "archive-receipts" / "python" / "watcher-collision-note.json"
+    note.parent.mkdir(parents=True, exist_ok=True)
+    note.write_text(json.dumps({"note": "watcher cleanup note"}), encoding="utf-8")
+    report, db = _import_archive_case(root, "archive-malformed")
+    assert report["retained"] == 0
+    assert report["malformed"] == 1
+    assert [item["path"] for item in report["malformed_paths"]] == [str(note.relative_to(root))]
+    assert list(db.execute("SELECT count(*) FROM legacy_archive_evidence"))[0][0] == 0
+
+
+def test_import_rejects_archive_receipt_bytes_that_drift_after_freeze(tmp_path: Path) -> None:
+    """Receipt bytes are bound to the frozen inventory digest, not trusted in place."""
+    root = _live_case(tmp_path, "archive-drift")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    receipt_file = _write_archive_receipt(root, _archive_receipt_body())
+    manifest = generate_manifest(root, cutover_id="archive-drift")
+    receipt_file.write_text(json.dumps(_archive_receipt_body(attempts=99), sort_keys=True), encoding="utf-8")
+    with pytest.raises(MigrationError, match="drift"):
+        import_manifest(manifest, root, db_path=root.parent / "archive-drift.sqlite3", dry_run=False)
+
+
+def test_archive_evidence_rows_are_immutable_and_one_canonical_per_task(tmp_path: Path) -> None:
+    """The audited importer is the only writer, and one task gets one canonical row."""
+    root = _live_case(tmp_path, "archive-guard")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _write_archive_receipt(root, _archive_receipt_body())
+    db = _import_case(root, "archive-guard")
+    task_id, receipt_json, recorded_at = db.execute(
+        "SELECT task_id, receipt_json, recorded_at FROM legacy_archive_evidence",
+    ).fetchone()
+
+    def add(identity: str, canonical: int) -> None:
+        db.execute(
+            "INSERT INTO legacy_archive_evidence(task_id,archive_identity,source_path,source_sha256,"
+            "package,language,object_count,byte_count,workspace_policy,canonical_evidence,receipt_json,"
+            "recorded_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+            (task_id, identity, f"archive-receipts/python/guard-{identity[:16]}.json", "0" * 64,
+             ARCHIVE_PACKAGE, ARCHIVE_LANGUAGE, 1, 1, "artifacts/workspace included", canonical,
+             receipt_json, recorded_at),
+        )
+
+    add("f" * 64, 1)
+    # Only the partial one-canonical index names task_id alone; the primary key
+    # would report both "task_id" and "archive_identity".
+    with pytest.raises(sqlite3.IntegrityError, match=r"legacy_archive_evidence\.task_id$"):
+        add("d" * 64, 1)
+    with pytest.raises(sqlite3.IntegrityError, match="immutable"):
+        db.execute("UPDATE legacy_archive_evidence SET object_count=object_count+1")
+    with pytest.raises(sqlite3.IntegrityError, match="immutable"):
+        db.execute("DELETE FROM legacy_archive_evidence WHERE archive_identity=?", ("f" * 64,))
 
 
 def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Path) -> None:
