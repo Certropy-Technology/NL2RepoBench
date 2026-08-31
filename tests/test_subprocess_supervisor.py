@@ -5,6 +5,7 @@ import io
 import json
 import os
 import signal
+import stat
 import sys
 import time
 from pathlib import Path
@@ -122,6 +123,57 @@ def test_hardlinks_are_rejected_before_spawn(tmp_path: Path) -> None:
             policy,
             request_id="1" * 32,
         )
+
+
+@pytest.mark.parametrize("set_id_bit", [stat.S_ISUID, stat.S_ISGID])
+def test_setuid_and_setgid_files_are_rejected_before_spawn(
+    tmp_path: Path, set_id_bit: int
+) -> None:
+    policy = _policy(tmp_path)
+    marked = policy.staging_root / "bin/marked"
+    marked.write_bytes(b"#!/bin/sh\nexit 0\n")
+    marked.chmod(0o755 | set_id_bit)
+    with pytest.raises(ProcessContractError, match="setuid/setgid"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+            SubprocessLimits(timeout_sec=1, cpu_sec=1),
+            policy,
+            request_id="a" * 32,
+        )
+
+
+def test_special_files_are_rejected_before_spawn(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    fifo = policy.staging_root / "bin/fifo"
+    os.mkfifo(fifo)
+    with pytest.raises(ProcessContractError, match="special"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+            SubprocessLimits(timeout_sec=1, cpu_sec=1),
+            policy,
+            request_id="b" * 32,
+        )
+
+
+def test_parent_fork_failure_is_typed_without_child_cleanup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+
+    def fail_fork() -> int:
+        raise OSError(11, "resource temporarily unavailable")
+
+    monkeypatch.setattr(subprocess_supervisor.os, "fork", fail_fork)
+    result = run_candidate_process(
+        CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+        SubprocessLimits(timeout_sec=1, cpu_sec=1),
+        policy,
+        request_id="c" * 32,
+    )
+    assert result.returncode == 127
+    assert result.spawn_error is not None
+    assert result.spawn_error.code == "spawn-failed"
+    assert result.cleanup_error is None
 
 
 @pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
@@ -445,6 +497,49 @@ def test_cleanup_kills_uid_residue_after_group_term_and_kill(
     assert closed == [True]
 
 
+@pytest.mark.parametrize("failed_signal", [signal.SIGTERM, signal.SIGKILL])
+def test_cleanup_signal_failure_still_runs_uid_kill_reap_and_rescan(
+    monkeypatch: pytest.MonkeyPatch, failed_signal: int
+) -> None:
+    events: list[str] = []
+    signals: list[int] = []
+    scans: list[int] = []
+
+    def fail_one_signal(pid: int, signum: int = signal.SIGKILL) -> None:
+        del pid
+        signals.append(signum)
+        if signum == failed_signal:
+            raise OSError(3, "injected group signal failure")
+
+    monkeypatch.setattr(subprocess_supervisor, "_kill_group", fail_one_signal)
+    monkeypatch.setattr(
+        subprocess_supervisor,
+        "terminate_uid_processes",
+        lambda uid: events.append(f"uid-kill:{uid}"),
+    )
+    def record_scan(uid: int) -> list[int]:
+        scans.append(uid)
+        return []
+
+    monkeypatch.setattr(subprocess_supervisor, "candidate_pids", record_scan)
+    process = SimpleNamespace(
+        pid=123,
+        wait=lambda deadline=None: events.append(f"wait:{deadline is not None}"),
+        close_all=lambda: events.append("close"),
+    )
+    complete, error = subprocess_supervisor._cleanup(
+        CANDIDATE_UID,
+        process=process,
+        deadline=time.monotonic() + 1,
+    )
+    assert not complete
+    assert error is not None
+    assert error.code == "cleanup-timeout"
+    assert signals == [signal.SIGTERM, signal.SIGKILL]
+    assert events == [f"uid-kill:{CANDIDATE_UID}", "wait:True", "close"]
+    assert scans == [CANDIDATE_UID]
+
+
 def test_cleanup_timeout_is_bounded_and_closes_process() -> None:
     events: list[str] = []
 
@@ -475,6 +570,75 @@ def test_cleanup_timeout_is_bounded_and_closes_process() -> None:
     assert error.code == "cleanup-timeout"
     assert events[:3] == ["group:15", "group:9", "wait:True"]
     assert events[-1] == "close"
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_read_streams_failure_still_runs_postfork_cleanup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+    monkeypatch.setattr(
+        subprocess_supervisor,
+        "_read_streams",
+        lambda *args, **kwargs: (_ for _ in ()).throw(OSError("injected stream read failure")),
+    )
+    with pytest.raises(OSError, match="injected stream read failure"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/sleep"), "30"), "."),
+            SubprocessLimits(timeout_sec=2, cpu_sec=2),
+            policy,
+            request_id="d" * 32,
+        )
+    assert candidate_pids(CANDIDATE_UID) == []
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_postfork_selector_register_failure_still_cleans_child(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+
+    class FailingSelector:
+        def register(self, fileobj: object, events: int, data: object = None) -> None:
+            del fileobj, events, data
+            raise OSError(24, "injected selector registration failure")
+
+        def get_map(self) -> dict[object, object]:
+            return {}
+
+        def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(subprocess_supervisor.selectors, "DefaultSelector", FailingSelector)
+    with pytest.raises(OSError, match="injected selector registration failure"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/sleep"), "30"), "."),
+            SubprocessLimits(timeout_sec=2, cpu_sec=2),
+            policy,
+            request_id="e" * 32,
+        )
+    assert candidate_pids(CANDIDATE_UID) == []
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_postfork_stream_read_failure_still_cleans_child(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+
+    def fail_read(fd: int, size: int) -> bytes:
+        del fd, size
+        raise OSError(5, "injected stream read failure")
+
+    monkeypatch.setattr(subprocess_supervisor.os, "read", fail_read)
+    with pytest.raises(OSError, match="injected stream read failure"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/sleep"), "30"), "."),
+            SubprocessLimits(timeout_sec=2, cpu_sec=2),
+            policy,
+            request_id="f" * 32,
+        )
+    assert candidate_pids(CANDIDATE_UID) == []
 
 
 @pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")

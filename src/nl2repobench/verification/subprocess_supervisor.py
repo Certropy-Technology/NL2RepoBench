@@ -588,51 +588,56 @@ def _cleanup(
 ) -> tuple[bool, ProcessError | None]:
     cleanup_deadline = deadline or time.monotonic() + CLEANUP_TIMEOUT_SEC
     cleanup_error: ProcessError | None = None
+
+    def record_failure(exc: BaseException, *, include_pids: bool = False) -> None:
+        nonlocal cleanup_error
+        if cleanup_error is not None:
+            return
+        pids = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS]) if include_pids else ()
+        cleanup_error = ProcessError(
+            "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE], pids
+        )
+
     if process is not None:
         try:
-            _kill_group(process.pid, signal.SIGTERM)
+            try:
+                _kill_group(process.pid, signal.SIGTERM)
+            except OSError as exc:
+                record_failure(exc)
             grace = min(0.1, max(0.0, cleanup_deadline - time.monotonic()))
             if grace:
                 time.sleep(grace)
-            _kill_group(process.pid)
+            try:
+                _kill_group(process.pid)
+            except OSError as exc:
+                record_failure(exc)
             try:
                 terminate_uid_processes(uid)
             except (OSError, RuntimeError) as exc:
-                pids = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
-                cleanup_error = ProcessError(
-                    "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE], pids
-                )
+                record_failure(exc, include_pids=True)
             try:
                 process.wait(cleanup_deadline)
             except TimeoutError as exc:
-                cleanup_error = ProcessError(
-                    "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE]
-                )
+                record_failure(exc)
             except (ChildProcessError, OSError) as exc:
-                cleanup_error = ProcessError(
-                    "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE]
-                )
-        except OSError as exc:
-            cleanup_error = ProcessError(
-                "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE]
-            )
+                record_failure(exc)
         finally:
             process.close_all()
     else:
         try:
             terminate_uid_processes(uid)
-        except RuntimeError as exc:
-            pids = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
-            cleanup_error = ProcessError(
-                "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE], pids
-            )
-    if cleanup_error is not None:
-        return False, cleanup_error
+        except (OSError, RuntimeError) as exc:
+            record_failure(exc, include_pids=True)
     remaining = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
     if remaining:
-        return False, ProcessError(
-            "cleanup-residue", "cleanup", "candidate processes remain", remaining
-        )
+        if cleanup_error is None:
+            cleanup_error = ProcessError(
+                "cleanup-residue", "cleanup", "candidate processes remain", remaining
+            )
+        elif not cleanup_error.pids:
+            cleanup_error = replace(cleanup_error, pids=remaining)
+    if cleanup_error is not None:
+        return False, cleanup_error
     return True, None
 
 
