@@ -1561,17 +1561,37 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
 
     def systemctl(*arguments: str) -> str:
         calls.append(arguments)
+        if arguments[:2] == ("show", "--property=Id"):
+            return "legacy.service"
+        if arguments[:2] == ("show", "--property=ControlGroup"):
+            return "/service"
         return ""
 
     monkeypatch.setattr(cutover, "_systemctl", systemctl)
-    cutover._disable_and_mask_service("legacy.service")
+    original_verify = cutover._verify_empty_cgroup
+    monkeypatch.setattr(
+        cutover,
+        "_verify_empty_cgroup",
+        lambda *_args, **_kwargs: pytest.fail("cgroup checked before watcher stop"),
+    )
+    assert cutover._disable_and_mask_service("legacy.service") == "/service"
     assert ("disable", "--now", "legacy.service") in calls
     assert ("mask", "--runtime", "legacy.service") in calls
+    monkeypatch.setattr(cutover, "_verify_empty_cgroup", original_verify)
     cgroup = tmp_path / "cgroup/service"
     cgroup.mkdir(parents=True)
     (cgroup / "cgroup.procs").write_text("123\n", encoding="utf-8")
     with pytest.raises(MigrationError, match="not empty"):
         cutover._verify_empty_cgroup("/service", cgroup_root=tmp_path / "cgroup")
+
+    def changed_cgroup(*arguments: str) -> str:
+        if arguments[:2] == ("show", "--property=Id"):
+            return "legacy.service"
+        return "/replacement"
+
+    monkeypatch.setattr(cutover, "_systemctl", changed_cgroup)
+    with pytest.raises(MigrationError, match="identity changed"):
+        cutover._verify_captured_cgroup_empty("legacy.service", "/service")
 
 
 def test_predrain_inventory_excludes_volatile_runtime_roots(tmp_path: Path) -> None:
@@ -1934,6 +1954,63 @@ def test_activation_rechecks_late_target_sidecars(tmp_path: Path) -> None:
     assert Path(str(target) + "-wal").is_file()
 
 
+def test_cutover_blocks_non_watcher_residual_before_cgroup_verification(
+    tmp_path: Path, monkeypatch
+) -> None:
+    live = tmp_path / "live"
+    config = live / "supervisor/runtime-config.json"
+    config.parent.mkdir(parents=True)
+    config.write_text("{}", encoding="utf-8")
+    watcher = _cutover_process(201, tmp_path, "watcher")
+    residual = _cutover_process(202, tmp_path, "controller")
+    scans = iter(([watcher], [residual]))
+    events: list[str] = []
+    monkeypatch.setattr(cutover, "_capture_operator_ancestors", tuple)
+    monkeypatch.setattr(cutover, "_wait_for_controllers", lambda *_args: None)
+    monkeypatch.setattr(
+        cutover, "_disable_and_mask_service", lambda *_args: "/legacy.service"
+    )
+    monkeypatch.setattr(
+        cutover,
+        "_acquire_lock",
+        lambda _stack, path: events.append(f"lock:{path.name}"),
+    )
+    monkeypatch.setattr(cutover, "_quiescence_processes", lambda *_args: next(scans))
+    monkeypatch.setattr(
+        cutover,
+        "_stop_watcher",
+        lambda records, _timeout: events.append(f"watcher:{records[0].pid}"),
+    )
+    monkeypatch.setattr(
+        cutover,
+        "_verify_captured_cgroup_empty",
+        lambda *_args: events.append("cgroup-verified"),
+    )
+
+    with pytest.raises(MigrationError, match="actors remain after stop:.*202"):
+        cutover.execute_cutover(
+            repository=tmp_path,
+            live_root=live,
+            manifest_path=tmp_path / "manifest.json",
+            database=tmp_path / "scheduler.sqlite3",
+            backup_directory=tmp_path / "backup",
+            journal_path=tmp_path / "journal.json",
+            barrier_path=tmp_path / "barrier.json",
+            cutover_id="cutover-residual",
+            service_unit=cutover.LEGACY_SERVICE_UNIT,
+            sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@phase3.service",
+            sqlite_env_file=Path(
+                "/etc/nl2repobench/authoring-scheduler-phase3.env"
+            ),
+            drain_timeout=1,
+            repository_min_free_bytes=1,
+            docker_min_free_bytes=1,
+            watcher_min_free_bytes=1,
+        )
+
+    assert events == ["lock:archive.lock", "watcher:201", "lock:supervisor.lock"]
+
+
 def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monkeypatch) -> None:
     live = tmp_path / "live"
     config = live / "supervisor/runtime-config.json"
@@ -1952,10 +2029,24 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
     events: list[str] = []
     monkeypatch.setattr(cutover, "_wait_for_controllers", lambda *args: events.append("drained"))
     monkeypatch.setattr(
-        cutover, "_disable_and_mask_service", lambda *args: events.append("service-masked")
+        cutover,
+        "_disable_and_mask_service",
+        lambda *args: events.append("service-masked") or "/legacy.service",
     )
     monkeypatch.setattr(cutover, "_stop_watcher", lambda *args: events.append("watcher-stopped"))
     monkeypatch.setattr(cutover, "_authoring_processes", lambda *args: [])
+    monkeypatch.setattr(
+        cutover,
+        "_acquire_lock",
+        lambda _stack, path: events.append(f"lock:{path.name}"),
+    )
+    monkeypatch.setattr(
+        cutover,
+        "_verify_captured_cgroup_empty",
+        lambda unit, control_group: events.append(
+            f"cgroup-verified:{unit}:{control_group}"
+        ),
+    )
     monkeypatch.setattr(cutover, "_verify_docker", lambda *args: events.append("docker-verified"))
 
     def manifest(root, *, cutover_id):
@@ -1995,6 +2086,14 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
         watcher_min_free_bytes=1,
     )
 
+    assert events.index("lock:archive.lock") < events.index("watcher-stopped")
+    assert events.index("watcher-stopped") < events.index("lock:supervisor.lock")
+    assert events.index("lock:supervisor.lock") < events.index(
+        f"cgroup-verified:{cutover.LEGACY_SERVICE_UNIT}:/legacy.service"
+    )
+    assert events.index(
+        f"cgroup-verified:{cutover.LEGACY_SERVICE_UNIT}:/legacy.service"
+    ) < events.index("docker-verified")
     assert events.index("manifest-frozen") > events.index("docker-verified")
     assert barrier.is_file()
     assert result["backup"]["verified"] is True

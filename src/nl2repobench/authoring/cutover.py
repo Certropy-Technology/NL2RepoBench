@@ -507,24 +507,51 @@ def _systemctl(*arguments: str) -> str:
     return completed.stdout.strip()
 
 
-def _disable_and_mask_service(unit: str) -> None:
+def _disable_and_mask_service(unit: str) -> str:
     _systemctl("disable", "--now", unit)
     _systemctl("mask", "--runtime", unit)
-    control_group = _systemctl("show", "--property=ControlGroup", "--value", unit)
-    _verify_empty_cgroup(control_group)
+    control_group = _unit_control_group(unit)
+    _cgroup_procs_path(control_group)
+    return control_group
+
+
+def _unit_control_group(unit: str) -> str:
+    identity = _systemctl("show", "--property=Id", "--value", unit)
+    if identity != unit:
+        raise MigrationError("legacy systemd unit identity changed")
+    return _systemctl("show", "--property=ControlGroup", "--value", unit)
+
+
+def _cgroup_procs_path(
+    control_group: str, *, cgroup_root: Path = Path("/sys/fs/cgroup")
+) -> Path | None:
+    if not control_group:
+        return None
+    if not control_group.startswith("/"):
+        raise MigrationError("systemd returned an unsafe control group")
+    relative = Path(control_group.lstrip("/"))
+    if ".." in relative.parts:
+        raise MigrationError("systemd returned an unsafe control group")
+    return cgroup_root / relative / "cgroup.procs"
 
 
 def _verify_empty_cgroup(
     control_group: str, *, cgroup_root: Path = Path("/sys/fs/cgroup")
 ) -> None:
-    if not control_group:
-        return
-    relative = Path(control_group.lstrip("/"))
-    if ".." in relative.parts:
-        raise MigrationError("systemd returned an unsafe control group")
-    procs = cgroup_root / relative / "cgroup.procs"
-    if procs.is_file() and procs.read_text(encoding="utf-8").strip():
+    procs = _cgroup_procs_path(control_group, cgroup_root=cgroup_root)
+    if (
+        procs is not None
+        and procs.is_file()
+        and procs.read_text(encoding="utf-8").strip()
+    ):
         raise MigrationError("legacy systemd cgroup is not empty")
+
+
+def _verify_captured_cgroup_empty(unit: str, control_group: str) -> None:
+    current = _unit_control_group(unit)
+    if current != control_group:
+        raise MigrationError("legacy systemd control group identity changed")
+    _verify_empty_cgroup(control_group)
 
 
 def _stop_watcher(records: list[ProcessRecord], timeout: int) -> None:
@@ -886,7 +913,7 @@ def execute_cutover(
         _wait_for_controllers(
             repository, live_root, drain_timeout, operator_ancestors
         )
-        _disable_and_mask_service(service_unit)
+        legacy_control_group = _disable_and_mask_service(service_unit)
         with ExitStack() as stack:
             _acquire_lock(stack, live_root / "archive.lock")
             watcher_snapshot = _quiescence_processes(
@@ -902,6 +929,7 @@ def execute_cutover(
                     "repository authoring actors remain after stop: "
                     f"{[item.pid for item in remaining]}"
                 )
+            _verify_captured_cgroup_empty(service_unit, legacy_control_group)
             _verify_docker(live_root / "worktrees")
             manifest = generate_manifest(live_root, cutover_id=cutover_id)
             validate_manifest(manifest, live_root)
