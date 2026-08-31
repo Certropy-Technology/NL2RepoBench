@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import hashlib
 import json
@@ -9,6 +10,7 @@ import os
 import re
 import signal
 import sqlite3
+import stat
 import subprocess
 import tempfile
 import time
@@ -34,6 +36,17 @@ LEGACY_SERVICE_UNIT = "nl2repobench-authoring-supervisor.service"
 SQLITE_SERVICE_UNIT = re.compile(
     r"^nl2repobench-authoring-supervisor-sqlite@([A-Za-z0-9._-]+)\.service$"
 )
+
+# The pre-drain digest is a bounded audit signal, not migration authority. These
+# roots contain stable control/evidence; tmp, logs, worktrees, sessions, results,
+# and pids are watcher/controller-owned runtime roots and are deliberately omitted.
+_INVENTORY_AUDIT_ROOTS = frozenset(
+    {"archive-receipts", "plans", "queues", "state", "supervisor"}
+)
+_INVENTORY_VOLATILE_ROOTS = frozenset(
+    {"logs", "pids", "results", "sessions", "tmp", "worktrees"}
+)
+_INVENTORY_MISSING_MARKER = b"missing\0"
 
 
 @dataclass(frozen=True)
@@ -79,14 +92,125 @@ def _atomic_text(path: Path, value: str) -> None:
             os.unlink(temporary)
 
 
+def _inventory_missing(exc: OSError) -> bool:
+    return isinstance(exc, FileNotFoundError) or exc.errno == errno.ENOENT
+
+
+def _inventory_error(relative: str, exc: OSError) -> MigrationError:
+    return MigrationError(f"cannot audit pre-drain inventory entry {relative}: {exc}")
+
+
+def _scan_inventory_directory(
+    directory_fd: int, prefix: str = "", *, top_level: bool = False
+) -> list[tuple[str, bool]]:
+    records: list[tuple[str, bool]] = []
+    try:
+        with os.scandir(directory_fd) as iterator:
+            entries = sorted(iterator, key=lambda entry: entry.name)
+    except OSError as exc:
+        if prefix and _inventory_missing(exc):
+            return [(prefix, True)]
+        raise _inventory_error(prefix or ".", exc) from exc
+
+    for entry in entries:
+        relative = f"{prefix}/{entry.name}" if prefix else entry.name
+        if top_level and entry.name in _INVENTORY_VOLATILE_ROOTS:
+            continue
+        try:
+            info = entry.stat(follow_symlinks=False)
+        except OSError as exc:
+            if _inventory_missing(exc):
+                records.append((relative, True))
+                continue
+            raise _inventory_error(relative, exc) from exc
+        if stat.S_ISREG(info.st_mode):
+            records.append((relative, False))
+            continue
+        if stat.S_ISDIR(info.st_mode):
+            if top_level and entry.name not in _INVENTORY_AUDIT_ROOTS:
+                continue
+            try:
+                child_fd = os.open(
+                    entry.name,
+                    os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC,
+                    dir_fd=directory_fd,
+                )
+            except OSError as exc:
+                if _inventory_missing(exc):
+                    records.append((relative, True))
+                    continue
+                raise _inventory_error(relative, exc) from exc
+            try:
+                records.extend(_scan_inventory_directory(child_fd, relative))
+            finally:
+                os.close(child_fd)
+            continue
+        raise MigrationError(
+            f"pre-drain inventory entry is not a regular file or directory: {relative}"
+        )
+    return records
+
+
+def _inventory_file_hash(root_fd: int, relative: str) -> bytes:
+    components = relative.split("/")
+    directory_fd = os.dup(root_fd)
+    try:
+        for component in components[:-1]:
+            child_fd = os.open(
+                component,
+                os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC,
+                dir_fd=directory_fd,
+            )
+            os.close(directory_fd)
+            directory_fd = child_fd
+        file_fd = os.open(
+            components[-1],
+            os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+            dir_fd=directory_fd,
+        )
+        try:
+            info = os.fstat(file_fd)
+            if not stat.S_ISREG(info.st_mode):
+                raise MigrationError(
+                    f"pre-drain inventory entry is not a regular file: {relative}"
+                )
+            digest = hashlib.sha256()
+            while chunk := os.read(file_fd, 1024 * 1024):
+                digest.update(chunk)
+            return digest.digest()
+        finally:
+            os.close(file_fd)
+    finally:
+        os.close(directory_fd)
+
+
 def inventory_digest(root: Path) -> str:
-    digest = hashlib.sha256()
-    for path in sorted(
-        item for item in root.rglob("*") if item.is_file() and not item.is_symlink()
-    ):
-        relative = path.relative_to(root).as_posix().encode()
-        digest.update(relative + b"\0" + hashlib.sha256(path.read_bytes()).digest())
-    return digest.hexdigest()
+    """Hash bounded pre-drain evidence while active runtime roots may still churn."""
+    try:
+        root_fd = os.open(
+            root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+        )
+    except OSError as exc:
+        raise _inventory_error(".", exc) from exc
+    try:
+        records = _scan_inventory_directory(root_fd, top_level=True)
+        digest = hashlib.sha256()
+        for relative, missing in sorted(records):
+            encoded = relative.encode("utf-8")
+            if missing:
+                digest.update(_INVENTORY_MISSING_MARKER + encoded + b"\0")
+                continue
+            try:
+                content_hash = _inventory_file_hash(root_fd, relative)
+            except OSError as exc:
+                if _inventory_missing(exc):
+                    digest.update(_INVENTORY_MISSING_MARKER + encoded + b"\0")
+                    continue
+                raise _inventory_error(relative, exc) from exc
+            digest.update(b"file\0" + encoded + b"\0" + content_hash)
+        return digest.hexdigest()
+    finally:
+        os.close(root_fd)
 
 
 def disable_legacy_config(path: Path) -> dict[str, Any]:

@@ -1574,6 +1574,100 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
         cutover._verify_empty_cgroup("/service", cgroup_root=tmp_path / "cgroup")
 
 
+def test_predrain_inventory_excludes_volatile_runtime_roots(tmp_path: Path) -> None:
+    stable = tmp_path / "supervisor/runtime-config.json"
+    stable.parent.mkdir()
+    stable.write_text('{"enabled":true}', encoding="utf-8")
+    volatile = tmp_path / "tmp/controller/resources.json"
+    volatile.parent.mkdir(parents=True)
+    volatile.write_text('{"cpu":1}', encoding="utf-8")
+
+    before = cutover.inventory_digest(tmp_path)
+    volatile.unlink()
+    after = cutover.inventory_digest(tmp_path)
+
+    assert before == after
+    assert cutover._INVENTORY_VOLATILE_ROOTS == {
+        "logs",
+        "pids",
+        "results",
+        "sessions",
+        "tmp",
+        "worktrees",
+    }
+
+
+def test_predrain_inventory_stable_control_content_changes_digest(tmp_path: Path) -> None:
+    control = tmp_path / "supervisor/runtime-config.json"
+    control.parent.mkdir()
+    control.write_text('{"enabled":true}', encoding="utf-8")
+    before = cutover.inventory_digest(tmp_path)
+
+    control.write_text('{"enabled":false}', encoding="utf-8")
+
+    assert cutover.inventory_digest(tmp_path) != before
+
+
+@pytest.mark.parametrize("kind", ["symlink", "special"])
+def test_predrain_inventory_rejects_stable_non_regular_entries(
+    tmp_path: Path, kind: str
+) -> None:
+    supervisor = tmp_path / "supervisor"
+    supervisor.mkdir()
+    entry = supervisor / "control"
+    if kind == "symlink":
+        target = tmp_path / "target"
+        target.write_text("control", encoding="utf-8")
+        entry.symlink_to(target)
+    else:
+        os.mkfifo(entry)
+
+    with pytest.raises(MigrationError, match="not a regular file or directory"):
+        cutover.inventory_digest(tmp_path)
+
+
+def test_predrain_inventory_rejects_stable_open_error(
+    tmp_path: Path, monkeypatch
+) -> None:
+    control = tmp_path / "supervisor/runtime-config.json"
+    control.parent.mkdir()
+    control.write_text("control", encoding="utf-8")
+    original_open = cutover.os.open
+
+    def denied(path, flags, mode=0o777, *, dir_fd=None):
+        if path == control.name:
+            raise PermissionError(errno.EACCES, "denied", path)
+        return original_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cutover.os, "open", denied)
+    with pytest.raises(MigrationError, match="cannot audit.*runtime-config.json"):
+        cutover.inventory_digest(tmp_path)
+
+
+def test_predrain_inventory_marks_stable_scan_read_disappearance(
+    tmp_path: Path, monkeypatch
+) -> None:
+    control = tmp_path / "supervisor/runtime-config.json"
+    control.parent.mkdir()
+    control.write_text("control", encoding="utf-8")
+    original_scan = cutover._scan_inventory_directory
+
+    def scan_then_delete(
+        directory_fd: int, prefix: str = "", *, top_level: bool = False
+    ) -> list[tuple[str, bool]]:
+        records = original_scan(directory_fd, prefix, top_level=top_level)
+        if top_level:
+            control.unlink()
+        return records
+
+    monkeypatch.setattr(cutover, "_scan_inventory_directory", scan_then_delete)
+    expected = hashlib.sha256(
+        b"missing\0supervisor/runtime-config.json\0"
+    ).hexdigest()
+
+    assert cutover.inventory_digest(tmp_path) == expected
+
+
 def _cutover_process(
     pid: int, root: Path, role: str, *, starttime_ticks: int = 10
 ) -> cutover.ProcessRecord:
