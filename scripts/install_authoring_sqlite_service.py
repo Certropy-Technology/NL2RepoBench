@@ -19,17 +19,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--journal", type=Path, required=True)
     parser.add_argument("--barrier", type=Path, required=True)
     parser.add_argument("--db", type=Path, required=True)
+    parser.add_argument("--repository-root", type=Path, required=True)
     parser.add_argument("--sqlite-service-unit", required=True)
     parser.add_argument("--sqlite-env-file", type=Path, required=True)
+    parser.add_argument("--installed-unit", type=Path, required=True)
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args(argv)
     try:
         result = install_service_binding(
+            repository=args.repository_root.resolve(),
             journal_path=args.journal.resolve(),
             barrier_path=args.barrier.resolve(),
             database=args.db.resolve(),
             sqlite_service_unit=args.sqlite_service_unit,
             sqlite_env_file=args.sqlite_env_file,
+            installed_unit=args.installed_unit.resolve(),
             write=args.write,
         )
     except (

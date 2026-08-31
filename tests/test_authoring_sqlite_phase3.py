@@ -43,6 +43,7 @@ loop = _script("run_authoring_loop.py")
 supervisor = _script("authoring_supervisor.py")
 archive = _script("archive_authoring_live.py")
 installer = _script("install_authoring_sqlite_service.py")
+REAL_DEPLOYMENT_IDENTITY = cutover._deployment_identity
 
 
 def _scheduler(tmp_path: Path) -> tuple[Scheduler, str, str]:
@@ -152,6 +153,8 @@ def _write_rollback_authorities(
     database_digest = hashlib.sha256(database.read_bytes()).hexdigest()
     unit = "nl2repobench-authoring-supervisor-sqlite@phase3.service"
     env_file = "/etc/nl2repobench/authoring-scheduler-phase3.env"
+    deployment_root = Path(__file__).parents[1]
+    deployment_identity = cutover._deployment_identity(deployment_root, unit)
     journal.write_text(
         json.dumps(
             {
@@ -161,15 +164,17 @@ def _write_rollback_authorities(
                 "manifest_sha256": manifest_sha256,
                 "database": str(database.resolve()),
                 "database_sha256": database_digest,
-                "repository": str(repository.resolve()),
+                "repository": str(deployment_root.resolve()),
                 "live_root": str(live_root.resolve()),
                 "legacy_runtime_config": disabled,
                 "sqlite_service_unit": unit,
                 "sqlite_env_file": env_file,
+                "deployment_identity": deployment_identity,
             }
         ),
         encoding="utf-8",
     )
+
     barrier.write_text(
         json.dumps(
             {
@@ -183,10 +188,15 @@ def _write_rollback_authorities(
                 "authority": "database.cutover_barrier",
                 "sqlite_service_unit": unit,
                 "sqlite_env_file": env_file,
+                "deployment_identity": deployment_identity,
             }
         ),
         encoding="utf-8",
     )
+
+
+def _test_deployment_identity(unit: str) -> dict[str, object]:
+    return REAL_DEPLOYMENT_IDENTITY(Path(__file__).parents[1], unit)
 
 
 def test_db_loop_never_reads_legacy_json_authorities(tmp_path: Path, monkeypatch) -> None:
@@ -751,10 +761,17 @@ def test_binding_installer_maps_corruption_to_78(
             str(barrier),
             "--db",
             str(database),
+            "--repository-root",
+            str(Path(__file__).parents[1]),
             "--sqlite-service-unit",
             "nl2repobench-authoring-supervisor-sqlite@phase3.service",
             "--sqlite-env-file",
             "/etc/nl2repobench/authoring-scheduler-phase3.env",
+            "--installed-unit",
+            str(
+                Path(__file__).parents[1]
+                / "ops/nl2repobench-authoring-supervisor-sqlite@.service"
+            ),
         ]
     )
     assert result == 78
@@ -2062,6 +2079,11 @@ def test_cutover_blocks_non_watcher_residual_before_cgroup_verification(
     residual = _cutover_process(202, tmp_path, "controller")
     scans = iter(([watcher], [residual]))
     events: list[str] = []
+    monkeypatch.setattr(
+        cutover,
+        "_deployment_identity",
+        lambda _repository, unit: _test_deployment_identity(unit),
+    )
     monkeypatch.setattr(cutover, "_capture_operator_ancestors", tuple)
     monkeypatch.setattr(cutover, "_wait_for_controllers", lambda *_args: None)
     monkeypatch.setattr(
@@ -2164,6 +2186,11 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
 
     monkeypatch.setattr(cutover, "import_manifest", imported)
     monkeypatch.setattr(cutover, "_manifest_task_count", lambda *args: 0)
+    monkeypatch.setattr(
+        cutover,
+        "_deployment_identity",
+        lambda _repository, unit: _test_deployment_identity(unit),
+    )
     barrier = tmp_path / "barrier.json"
     result = cutover.execute_cutover(
         repository=tmp_path,
@@ -2200,22 +2227,32 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
     assert json.loads(config.read_text())["enabled"] is False
     journal_payload = json.loads((tmp_path / "journal.json").read_text())
     assert "trusted_operator_ancestors" in journal_payload
+    assert journal_payload["deployment_identity"]["commit_sha"] == REAL_DEPLOYMENT_IDENTITY(
+        Path(__file__).parents[1], "nl2repobench-authoring-supervisor-sqlite@phase3.service"
+    )["commit_sha"]
     binding = cutover.install_service_binding(
+        repository=Path(__file__).parents[1],
         journal_path=tmp_path / "journal.json",
         barrier_path=barrier,
         database=tmp_path / "scheduler.sqlite3",
         sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@phase3.service",
         sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-phase3.env"),
+        installed_unit=Path(__file__).parents[1]
+        / "ops/nl2repobench-authoring-supervisor-sqlite@.service",
     )
     assert binding["scheduler_db"] == str((tmp_path / "scheduler.sqlite3").resolve())
     with pytest.raises(MigrationError, match="do not match"):
         cutover.install_service_binding(
+            repository=Path(__file__).parents[1],
             journal_path=tmp_path / "journal.json",
             barrier_path=barrier,
             database=tmp_path / "scheduler.sqlite3",
             sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@other.service",
             sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-other.env"),
+            installed_unit=Path(__file__).parents[1]
+            / "ops/nl2repobench-authoring-supervisor-sqlite@.service",
         )
+
     monkeypatch.setattr(cutover, "_verify_sqlite_service_stopped", lambda _unit: None)
     restored = cutover.restore_cutover_database(
         backup_directory=tmp_path / "backup",
@@ -2273,6 +2310,95 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
             receipt_authority=tmp_path / "restore-authority",
         )
     assert not (tmp_path / "restore-authority").exists()
+
+
+def test_service_binding_rejects_missing_or_tampered_deployment_identity(
+    tmp_path: Path,
+) -> None:
+    database = tmp_path / "scheduler.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    journal = tmp_path / "journal.json"
+    barrier = tmp_path / "barrier.json"
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "ignored",
+        live_root=tmp_path / "live",
+        disabled={"enabled": False},
+        cutover_id="identity-test",
+        manifest_sha256="a" * 64,
+    )
+    repository = Path(__file__).parents[1]
+    unit = "nl2repobench-authoring-supervisor-sqlite@phase3.service"
+    installed_unit = repository / "ops/nl2repobench-authoring-supervisor-sqlite@.service"
+    arguments = {
+        "repository": repository,
+        "journal_path": journal,
+        "barrier_path": barrier,
+        "database": database,
+        "sqlite_service_unit": unit,
+        "sqlite_env_file": Path("/etc/nl2repobench/authoring-scheduler-phase3.env"),
+        "installed_unit": installed_unit,
+    }
+    payload = json.loads(journal.read_text())
+    payload.pop("deployment_identity")
+    journal.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(MigrationError, match="barrier identity does not match"):
+        cutover.install_service_binding(**arguments)
+
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "ignored",
+        live_root=tmp_path / "live",
+        disabled={"enabled": False},
+        cutover_id="identity-test",
+        manifest_sha256="a" * 64,
+    )
+    payload = json.loads(journal.read_text())
+    payload["deployment_identity"]["commit_sha"] = "0" * 40
+    journal.write_text(json.dumps(payload), encoding="utf-8")
+    barrier_payload = json.loads(barrier.read_text())
+    barrier_payload["deployment_identity"]["commit_sha"] = "0" * 40
+    barrier.write_text(json.dumps(barrier_payload), encoding="utf-8")
+    with pytest.raises(MigrationError, match="code identity does not match"):
+        cutover.install_service_binding(**arguments)
+
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "ignored",
+        live_root=tmp_path / "live",
+        disabled={"enabled": False},
+        cutover_id="identity-test",
+        manifest_sha256="a" * 64,
+    )
+    tampered_unit = tmp_path / "tampered.service"
+    tampered_unit.write_text("[Unit]\nDescription=tampered\n", encoding="utf-8")
+    arguments["installed_unit"] = tampered_unit
+    with pytest.raises(MigrationError, match="installed SQLite service unit does not match"):
+        cutover.install_service_binding(**arguments)
+
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "ignored",
+        live_root=tmp_path / "live",
+        disabled={"enabled": False},
+        cutover_id="identity-test",
+        manifest_sha256="a" * 64,
+    )
+    barrier_payload = json.loads(barrier.read_text())
+    barrier_payload["deployment_identity"]["commit_sha"] = "0" * 40
+    barrier.write_text(json.dumps(barrier_payload), encoding="utf-8")
+    arguments["installed_unit"] = installed_unit
+    with pytest.raises(MigrationError, match="barrier identity does not match"):
+        cutover.install_service_binding(**arguments)
 
 
 def test_import_receipt_times_are_preserved_and_reverse_chronology_rejected() -> None:

@@ -36,6 +36,21 @@ LEGACY_SERVICE_UNIT = "nl2repobench-authoring-supervisor.service"
 SQLITE_SERVICE_UNIT = re.compile(
     r"^nl2repobench-authoring-supervisor-sqlite@([A-Za-z0-9._-]+)\.service$"
 )
+DEPLOYMENT_IDENTITY_SCHEMA = "authoring-deployment/v1"
+DEPLOYMENT_RUNTIME_FILES = (
+    "pyproject.toml",
+    "uv.lock",
+    "toolchain.lock.toml",
+    "scripts/authoring_supervisor.py",
+    "scripts/install_authoring_sqlite_service.py",
+    "scripts/run_authoring_supervisor.sh",
+    "src/nl2repobench/authoring/backup.py",
+    "src/nl2repobench/authoring/cutover.py",
+    "src/nl2repobench/authoring/migration.py",
+    "src/nl2repobench/authoring/runtime.py",
+    "src/nl2repobench/authoring/scheduler.py",
+)
+DEPLOYMENT_PYTHON = ".venv/bin/python3"
 
 # The pre-drain digest is a bounded audit signal, not migration authority. These
 # roots contain stable control/evidence; tmp, logs, worktrees, sessions, results,
@@ -70,6 +85,105 @@ class _ProcStat:
     state: str
     flags: int
     starttime_ticks: int
+
+
+def _deployment_file_digest(repository: Path, relative: str) -> str:
+    path = repository / relative
+    if path.is_symlink() or not path.is_file():
+        raise MigrationError(f"deployment identity file is missing or unsafe: {relative}")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _deployment_executable_digest(repository: Path) -> tuple[str, str]:
+    path = repository / DEPLOYMENT_PYTHON
+    if not path.exists() or path.is_dir():
+        raise MigrationError("deployment Python executable is missing or unsafe")
+    resolved = path.resolve()
+    if not resolved.is_file():
+        raise MigrationError("deployment Python executable is missing or unsafe")
+    return str(path), hashlib.sha256(resolved.read_bytes()).hexdigest()
+
+
+def _deployment_runtime_manifest_digest(repository: Path) -> str:
+    digest = hashlib.sha256()
+    for relative in DEPLOYMENT_RUNTIME_FILES:
+        name = relative.encode("utf-8")
+        path = repository / relative
+        if path.is_symlink() or not path.is_file():
+            raise MigrationError(f"deployment identity file is missing or unsafe: {relative}")
+        data = path.read_bytes()
+        digest.update(len(name).to_bytes(8, "big"))
+        digest.update(name)
+        digest.update(len(data).to_bytes(8, "big"))
+        digest.update(data)
+    return digest.hexdigest()
+
+
+def _deployment_commit(repository: Path) -> str:
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(repository), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise MigrationError(f"cannot inspect deployment commit: {exc}") from exc
+    commit = completed.stdout.strip()
+    if completed.returncode != 0 or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise MigrationError("deployment checkout does not expose an exact commit")
+    return commit
+
+
+def _deployment_identity(repository: Path, sqlite_service_unit: str) -> dict[str, Any]:
+    repository = repository.resolve()
+    unit_match = SQLITE_SERVICE_UNIT.fullmatch(sqlite_service_unit)
+    if unit_match is None:
+        raise MigrationError("SQLite service unit is not the tracked template instance")
+    unit_relative = "ops/nl2repobench-authoring-supervisor-sqlite@.service"
+    python_path, python_digest = _deployment_executable_digest(repository)
+    return {
+        "schema_version": DEPLOYMENT_IDENTITY_SCHEMA,
+        "repository": str(repository),
+        "commit_sha": _deployment_commit(repository),
+        "runtime_files": list(DEPLOYMENT_RUNTIME_FILES),
+        "runtime_manifest_sha256": _deployment_runtime_manifest_digest(repository),
+        "entrypoint_path": "scripts/run_authoring_supervisor.sh",
+        "entrypoint_sha256": _deployment_file_digest(
+            repository, "scripts/run_authoring_supervisor.sh"
+        ),
+        "unit_template_path": unit_relative,
+        "unit_template_sha256": _deployment_file_digest(repository, unit_relative),
+        "service_unit": sqlite_service_unit,
+        "python_executable": python_path,
+        "python_executable_sha256": python_digest,
+        "lock_path": "uv.lock",
+        "lock_sha256": _deployment_file_digest(repository, "uv.lock"),
+    }
+
+
+def _validate_deployment_identity(
+    repository: Path,
+    sqlite_service_unit: str,
+    expected: object,
+    *,
+    installed_unit: Path | None = None,
+) -> dict[str, Any]:
+    if not isinstance(expected, dict):
+        raise MigrationError("cutover deployment identity is missing")
+    actual = _deployment_identity(repository, sqlite_service_unit)
+    if expected != actual:
+        raise MigrationError("deployment code identity does not match cutover binding")
+    if installed_unit is not None:
+        if installed_unit.is_symlink() or not installed_unit.is_file():
+            raise MigrationError("installed SQLite service unit is missing or unsafe")
+        if (
+            hashlib.sha256(installed_unit.read_bytes()).hexdigest()
+            != actual["unit_template_sha256"]
+        ):
+            raise MigrationError("installed SQLite service unit does not match cutover binding")
+    return actual
 
 
 def _atomic_json(path: Path, value: Any) -> None:
@@ -896,9 +1010,11 @@ def execute_cutover(
         raise MigrationError("cutover target or preclaim record already exists")
     runtime_config = live_root / "supervisor/runtime-config.json"
     operator_ancestors = _capture_operator_ancestors()
+    deployment_identity = _deployment_identity(repository, sqlite_service_unit)
     audit = {
         "pre_drain_inventory_sha256": inventory_digest(live_root),
         "cutover_id": cutover_id,
+        "deployment_identity": deployment_identity,
         "trusted_operator_ancestors": _operator_ancestor_audit(
             operator_ancestors, repository, live_root
         ),
@@ -970,6 +1086,7 @@ def execute_cutover(
                 "authority": "database.cutover_barrier",
                 "sqlite_service_unit": sqlite_service_unit,
                 "sqlite_env_file": str(sqlite_env_file),
+                "deployment_identity": deployment_identity,
             }
             _atomic_json(barrier_path, preclaim)
             _atomic_json(
@@ -1068,6 +1185,7 @@ def _rollback_identity(
         "authority": "database.cutover_barrier",
         "sqlite_service_unit": journal.get("sqlite_service_unit"),
         "sqlite_env_file": journal.get("sqlite_env_file"),
+        "deployment_identity": journal.get("deployment_identity"),
     }
     if any(record.get(key) != value for key, value in record_required.items()):
         raise MigrationError("cutover barrier identity does not match journal")
@@ -1141,11 +1259,13 @@ def _verify_sqlite_service_stopped(unit: str) -> None:
 
 def install_service_binding(
     *,
+    repository: Path,
     journal_path: Path,
     barrier_path: Path,
     database: Path,
     sqlite_service_unit: str,
     sqlite_env_file: Path,
+    installed_unit: Path,
     write: bool = False,
 ) -> dict[str, str]:
     """Validate and optionally install the exact cutover DB environment binding."""
@@ -1156,6 +1276,12 @@ def install_service_binding(
             or journal.get("sqlite_env_file") != str(sqlite_env_file)
         ):
             raise MigrationError("installer arguments do not match cutover deployment binding")
+        _validate_deployment_identity(
+            repository,
+            sqlite_service_unit,
+            journal.get("deployment_identity"),
+            installed_unit=installed_unit,
+        )
         _validate_service_database(database, journal)
         content = (
             f"SCHEDULER_DB={database.resolve()}\n"
