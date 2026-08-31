@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 
@@ -79,9 +82,14 @@ def test_sync_private_cas_copies_only_referenced_verified_objects(tmp_path: Path
     assert not (root / ".nl2repo/artifacts/private/sha256/ff/unreferenced").exists()
 
 
-def test_integrate_task_pushes_before_archive_and_removes_worktree(
-    tmp_path: Path, monkeypatch
-) -> None:
+def _integration_checkout(
+    tmp_path: Path, monkeypatch, status_output: str = ""
+) -> tuple[Callable[[], dict[str, Any]], list[str]]:
+    """Build a fake integration checkout reporting `status_output` from git status.
+
+    Returns the integration callable and the ordered list of git events it emits, so
+    a caller can assert how far execution got. Only git plumbing is faked.
+    """
     root = tmp_path / "repo"
     worktree = root / ".nl2repo/authoring-live/worktrees/batch/demo"
     source = worktree / "catalog/sources/demo"
@@ -94,20 +102,13 @@ def test_integrate_task_pushes_before_archive_and_removes_worktree(
     compiled = tmp_path / "compiled/demo"
     compiled.mkdir(parents=True)
     (compiled / "task.toml").write_text("task_id = 'demo'", encoding="utf-8")
-
-    lane = supervisor.Lane(
-        "python",
-        "batch",
-        tmp_path / "queue.json",
-        tmp_path / "plan.json",
-        tmp_path / "state.json",
-    )
     events: list[str] = []
 
     def fake_run(command, *, cwd, timeout):
         del cwd, timeout
         if command[:3] == ["git", "status", "--porcelain=v1"]:
-            return {"command": command, "exit_code": 0, "output": "", "timeout": False}
+            events.append("status")
+            return {"command": command, "exit_code": 0, "output": status_output, "timeout": False}
         if command[:2] == ["git", "add"]:
             events.append("add")
             return {"command": command, "exit_code": 0, "output": "", "timeout": False}
@@ -153,23 +154,193 @@ def test_integrate_task_pushes_before_archive_and_removes_worktree(
         lambda root, source, language: ({"status": "passed"}, compiled),
     )
 
-    result = supervisor._integrate_task(
-        root,
-        lane,
-        "demo",
-        {"status": "complete", "attempts": 1},
-        [],
-        remote="origin",
-        branch="main",
-        archive_bucket=object(),
-        archive_module=FakeArchive,
-        receipt_root=tmp_path / "receipts",
-        dry_run=False,
-        timeout=60,
+    lane = supervisor.Lane(
+        "python",
+        "batch",
+        tmp_path / "queue.json",
+        tmp_path / "plan.json",
+        tmp_path / "state.json",
     )
 
+    def integrate() -> dict[str, Any]:
+        return supervisor._integrate_task(
+            root,
+            lane,
+            "demo",
+            {"status": "complete", "attempts": 1},
+            [],
+            remote="origin",
+            branch="main",
+            archive_bucket=object(),
+            archive_module=FakeArchive,
+            receipt_root=tmp_path / "receipts",
+            dry_run=False,
+            timeout=60,
+        )
+
+    return integrate, events
+
+
+def test_integrate_task_pushes_before_archive_and_removes_worktree(
+    tmp_path: Path, monkeypatch
+) -> None:
+    integrate, events = _integration_checkout(tmp_path, monkeypatch)
+
+    result = integrate()
+
     assert result["status"] == "integrated"
-    assert events == ["add", "commit", "push", "archive", "remove"]
+    assert events == ["status", "add", "commit", "push", "archive", "remove"]
+
+
+def test_integrate_task_ignores_only_protected_root_scratch(tmp_path: Path, monkeypatch) -> None:
+    integrate, events = _integration_checkout(
+        tmp_path,
+        monkeypatch,
+        status_output="?? .scratch/rust-cargo-harbor/issues/01-scope.md\n",
+    )
+
+    result = integrate()
+
+    assert result["status"] == "integrated"
+    assert events[0] == "status"
+
+
+@pytest.mark.parametrize(
+    "status_output",
+    [
+        pytest.param("?? other.txt\n", id="untracked-other"),
+        pytest.param(" M catalog/sources/demo/task.toml\n", id="tracked-modification"),
+        pytest.param("?? .scratchfoo\n", id="scratch-name-prefix"),
+        pytest.param("?? .scratch\n", id="scratch-is-file-or-symlink"),
+        pytest.param("?? docs/.scratch/nested.md\n", id="nested-scratch-outside-root"),
+        pytest.param(
+            "?? .scratch/issue.md\n?? .nl2repo/authoring-live/stray\n", id="scratch-plus-stray"
+        ),
+    ],
+)
+def test_integrate_task_refuses_dirty_checkout(
+    tmp_path: Path, monkeypatch, status_output: str
+) -> None:
+    integrate, events = _integration_checkout(tmp_path, monkeypatch, status_output)
+
+    with pytest.raises(RuntimeError, match="integration checkout is dirty"):
+        integrate()
+
+    assert "add" not in events
+
+
+PROTECTED_SCRATCH_LINES = [
+    pytest.param("?? .scratch/rust-cargo-harbor/issues/01-scope.md\n", [], id="root-scratch-file"),
+    pytest.param('?? ".scratch/issue with space.md"\n', [], id="root-scratch-spaces"),
+    pytest.param('?? ".scratch/\\346\\226\\207.md"\n', [], id="root-scratch-escaped-name"),
+    pytest.param("\n\n", [], id="blank-lines-only"),
+]
+
+DIRTY_STATUS_CASES = PROTECTED_SCRATCH_LINES + [
+    pytest.param("?? other.txt\n", ["?? other.txt"], id="untracked-other"),
+    pytest.param("?? .scratchfoo\n", ["?? .scratchfoo"], id="scratch-name-prefix"),
+    pytest.param("?? .scratch\n", ["?? .scratch"], id="scratch-is-file-or-symlink"),
+    pytest.param("?? .scratch-root-file\n", ["?? .scratch-root-file"], id="sibling-of-scratch"),
+    pytest.param(
+        "?? docs/.scratch/nested.md\n",
+        ["?? docs/.scratch/nested.md"],
+        id="nested-scratch-outside-root",
+    ),
+    pytest.param(
+        " M catalog/sources/demo/task.toml\n",
+        [" M catalog/sources/demo/task.toml"],
+        id="tracked-modification",
+    ),
+    pytest.param(
+        "A  catalog/tasks/demo/task.toml\n",
+        ["A  catalog/tasks/demo/task.toml"],
+        id="staged-add",
+    ),
+    pytest.param("D  readme.md\n", ["D  readme.md"], id="staged-delete"),
+    pytest.param("R  a.md -> b.md\n", ["R  a.md -> b.md"], id="rename"),
+    pytest.param("?? .scratch/x\n?? stray\n", ["?? stray"], id="scratch-plus-stray"),
+]
+
+
+@pytest.mark.parametrize("porcelain,expected", DIRTY_STATUS_CASES)
+def test_dirty_status_lines_allows_only_root_scratch(porcelain: str, expected: list[str]) -> None:
+    assert supervisor._dirty_status_lines(porcelain) == expected
+
+
+def test_git_status_accepts_scratch_only_checkout(tmp_path: Path, monkeypatch) -> None:
+    seen: list[list[str]] = []
+
+    def fake_run(command, *, cwd, timeout):
+        del cwd, timeout
+        seen.append(command)
+        return {
+            "command": command,
+            "exit_code": 0,
+            "output": "?? .scratch/rust-cargo-harbor/issues/01-scope.md\n",
+            "timeout": False,
+        }
+
+    monkeypatch.setattr(supervisor, "_run", fake_run)
+
+    assert supervisor._git_status(tmp_path) == []
+    assert seen == [["git", "status", "--porcelain=v1", "--untracked-files=all"]]
+
+
+def test_git_status_keeps_dirty_lines_and_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    exit_code = {"value": 0}
+    output = {"value": "?? .scratch/x\n?? other.txt\n"}
+
+    def fake_run(command, *, cwd, timeout):
+        del cwd, timeout
+        return {
+            "command": command,
+            "exit_code": exit_code["value"],
+            "output": output["value"],
+            "timeout": False,
+        }
+
+    monkeypatch.setattr(supervisor, "_run", fake_run)
+
+    assert supervisor._git_status(tmp_path) == ["?? other.txt"]
+
+    exit_code["value"] = 128
+    with pytest.raises(RuntimeError, match="git status failed"):
+        supervisor._git_status(tmp_path)
+
+
+def test_git_status_matches_real_porcelain_output(tmp_path: Path) -> None:
+    """Pin the exemption prefixes against real `git status` formatting."""
+    root = tmp_path / "repo"
+    root.mkdir()
+
+    def git(*args: str) -> str:
+        completed = subprocess.run(
+            ["git", *args],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return completed.stdout
+
+    git("init", "-q", "-b", "main")
+    git("config", "user.email", "supervisor@example.invalid")
+    git("config", "user.name", "supervisor")
+    (root / "tracked.txt").write_text("committed\n", encoding="utf-8")
+    git("add", "tracked.txt")
+    git("commit", "-q", "-m", "seed")
+    scratch = root / ".scratch" / "rust-cargo-harbor"
+    scratch.mkdir(parents=True)
+    (scratch / "issue.md").write_text("scratch\n", encoding="utf-8")
+    (scratch / "issue with space.md").write_text("scratch\n", encoding="utf-8")
+
+    assert supervisor._git_status(root) == []
+
+    (root / "other.txt").write_text("stray\n", encoding="utf-8")
+    assert supervisor._git_status(root) == ["?? other.txt"]
+
+    (root / "tracked.txt").write_text("dirty\n", encoding="utf-8")
+    assert supervisor._git_status(root) == [" M tracked.txt", "?? other.txt"]
 
 
 def test_queue_summary_counts_states(tmp_path: Path) -> None:

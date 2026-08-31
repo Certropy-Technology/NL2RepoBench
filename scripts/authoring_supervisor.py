@@ -1097,6 +1097,34 @@ def _copy_generated(compiled: Path, target: Path) -> bool:
     return True
 
 
+# The integration checkout deliberately preserves an untracked repository-root
+# `.scratch/` directory for lane scratch artifacts, so its untracked entries must
+# not be read as dirty work. Supervisor commits stage explicit catalog pathspecs
+# only (see `_integrate_task`), so scratch bytes can never enter a commit; every
+# other status line keeps the checkout dirty. The second prefix is git's
+# `core.quotepath` form of the same root `.scratch/` paths.
+PROTECTED_SCRATCH_UNTRACKED_PREFIXES = (
+    "?? .scratch/",
+    '?? ".scratch/',
+)
+
+
+def _dirty_status_lines(porcelain: str) -> list[str]:
+    """Return the `git status --porcelain=v1` lines that block integration.
+
+    Only untracked entries inside the repository-root `.scratch/` directory are
+    exempt. Everything else fails closed: `.scratch` itself when it is a file or
+    symlink (`?? .scratch`), `.scratch-root-file`, `.scratchfoo`, a nested
+    `docs/.scratch/` copy, and any tracked, staged, renamed, or conflicted entry,
+    whose porcelain column prefix can never be `??`.
+    """
+    return [
+        line
+        for line in porcelain.splitlines()
+        if line and not line.startswith(PROTECTED_SCRATCH_UNTRACKED_PREFIXES)
+    ]
+
+
 def _git_status(root: Path) -> list[str]:
     result = _run(
         ["git", "status", "--porcelain=v1", "--untracked-files=all"],
@@ -1105,7 +1133,7 @@ def _git_status(root: Path) -> list[str]:
     )
     if result["exit_code"] != 0:
         raise RuntimeError(f"git status failed: {result['output']}")
-    return [line for line in _command_output(result).splitlines() if line]
+    return _dirty_status_lines(_command_output(result))
 
 
 def _remote_sync(root: Path, remote: str, branch: str) -> None:
@@ -1153,6 +1181,8 @@ def _integrate_task(
     if dry_run:
         return {"package": package, "status": "ready", "dry_run": True}
     if _git_status(root):
+        # Only the protected root `.scratch/` untracked entries are exempt; any
+        # other work in the integration checkout still blocks mixing changes here.
         raise RuntimeError("integration checkout is dirty; supervisor refuses to mix changes")
     source_target = root / "catalog/sources" / package
     source_changed = False
