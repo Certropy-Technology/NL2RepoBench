@@ -444,6 +444,20 @@ push 使用已配置的 `fork` remote 和当前分支，禁止 force-push。若�
 - 必须运行的命令、预期 exit/result、artifact 与 evidence 格式；
 - stop/ask 条件、剩余 blocker 和 handoff 内容。
 
+subagent 临时数据必须写入项目磁盘或 `/data/pi-tmp/root`，不得写入 `/tmp` tmpfs。
+默认环境为：
+
+```text
+TMPDIR=/data/pi-tmp/root/tmp
+PI_SUBAGENTS_TEMP_ROOT=/data/pi-tmp/root/pi-subagents
+PI_SUBAGENTS_WORKTREE_DIR=/data/pi-tmp/root/worktrees
+```
+
+大型 SQLite/pytest/Cargo target、source snapshot、probe 输出和 async artifact 必须使用 lane
+专属目录。清理只能删除该 lane 明确创建并拥有的精确路径；禁止删除 scratch 的 parent、
+共享 temp root、其他 run 目录或按宽泛 glob 清理。任务完成前记录 scratch 路径，完成后先
+确认没有活跃进程引用再删除。
+
 简单模型不能接收“实现整个功能”“修完所有问题”这类宽泛任务。先把工作拆成可独立
 验证的模块、迁移、运行时、测试、review 和运维 lane，再并行派发。没有独立写入边界的
 工作保持一个 writer，但同时启动多个只读 scout/test/review lane 提供证据。
