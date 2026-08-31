@@ -1,5 +1,7 @@
 """Deterministic verifier contracts and grading helpers."""
 
+from typing import Any
+
 from .evaluator import (
     CURRENT_CONTRACT_ID,
     EvaluationResult,
@@ -9,7 +11,6 @@ from .evaluator import (
 )
 from .go_grader import grade_go_report, write_go_grading_outputs
 from .grader import grade_verification, write_grading_outputs
-from .java_grader import grade_java_report
 from .leaf_report import (
     CollectionError,
     CollectionReport,
@@ -42,3 +43,14 @@ __all__ = [
     "write_grading_outputs",
     "write_go_grading_outputs",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    """Load language-specific graders only when their public export is used."""
+
+    if name == "grade_java_report":
+        from .java_grader import grade_java_report
+
+        globals()[name] = grade_java_report
+        return grade_java_report
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import subprocess
+import sys
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
@@ -17,6 +21,7 @@ from nl2repobench.domain.canonical_contract import TestManifest as CanonicalTest
 from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.registry import HarborCompilerRegistry, UnknownRuntimeAdapterError
+from nl2repobench.harbor.task_writer import copy_python_verifier_runtime
 from nl2repobench.runtimes.java import JavaRuntimeAdapter
 from nl2repobench.verification.leaf_report import LeafCase
 
@@ -104,6 +109,62 @@ def test_java_junit_pair_and_command_report_are_canonical() -> None:
 def test_java_harbor_compiler_remains_typed_unavailable() -> None:
     with pytest.raises(UnknownRuntimeAdapterError, match=r"no Harbor compiler for java\+maven"):
         HarborCompilerRegistry.default().resolve(JavaRuntimeAdapter.identity)
+
+
+def test_java_grader_export_is_lazy_and_strict() -> None:
+    source_root = Path(__file__).parents[1] / "src"
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            (
+                "import sys\n"
+                f"sys.path.insert(0, {str(source_root)!r})\n"
+                "import nl2repobench.verification as verification\n"
+                "print('java_grader' in sys.modules)\n"
+                "print('grade_java_report' in verification.__all__)\n"
+                "from nl2repobench.verification import grade_java_report\n"
+                "print(callable(grade_java_report))\n"
+                "try:\n"
+                "    verification.not_a_public_export\n"
+                "except AttributeError:\n"
+                "    print('strict')\n"
+            ),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.splitlines() == ["False", "True", "True", "strict"]
+
+
+def test_copied_verifier_runtime_imports_without_java_modules(tmp_path: Path) -> None:
+    destination = tmp_path / "runtime"
+    copy_python_verifier_runtime(destination)
+    assert not (destination / "nl2repobench/verification/java_grader.py").exists()
+    assert not (
+        destination / "nl2repobench/verification/normalize/junit_open_test_report.py"
+    ).exists()
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-c",
+            (
+                "import sys\n"
+                f"sys.path.insert(0, {str(destination)!r})\n"
+                "import nl2repobench.verification.cli\n"
+                "print('imported')\n"
+            ),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert probe.returncode == 0, probe.stderr
+    assert probe.stdout.strip() == "imported"
 
 
 def test_leaf_display_name_is_optional_and_null_serialization_is_unchanged() -> None:
