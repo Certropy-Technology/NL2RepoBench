@@ -32,6 +32,27 @@ _SECRET = re.compile(
 # holding the object keys ``<root>/<language>/<slug>/<identity64>/<relative>``.
 ARCHIVE_RECEIPT_ROOT = "archive-receipts/"
 ARCHIVE_RECEIPT_SCHEMA = "1.0"
+# The closed top-level key set shared by every archived receipt generation.  A
+# key outside it means the file is a different legacy record, so nothing under
+# ``archive-receipts/`` is ever skipped and averaged: it validates or the import
+# fails closed.
+ARCHIVE_RECEIPT_REQUIRED_KEYS = frozenset(
+    {
+        "schema_version", "language", "package", "handoff_sha256",
+        "object_count", "bytes_verified", "workspace_policy", "objects",
+    }
+)
+ARCHIVE_RECEIPT_OPTIONAL_KEYS = frozenset(
+    {
+        "attempts", "queue_status", "source_snapshot_included",
+        "source_snapshot_sha256", "source_file_count", "source_bytes",
+        "workspace_file_count", "workspace_bytes",
+    }
+)
+# ``legacy_archive_evidence.receipt_json`` repeats this bound as a table CHECK.
+# The stored blob is compact with ``ensure_ascii=True``, so one character is one
+# byte and ``len()`` and SQLite ``length()`` cannot disagree about it.
+ARCHIVE_RECEIPT_JSON_LIMIT = 4 * 1024 * 1024
 _ARCHIVE_OBJECT_KEY = re.compile(
     r"^nl2repobench/authoring-live/archive/(?P<language>python|node|go)/(?P<slug>[^/]+)/"
     r"(?P<identity>[0-9a-f]{64})/(?P<relative>[^/].*)$"
@@ -39,7 +60,14 @@ _ARCHIVE_OBJECT_KEY = re.compile(
 _ARCHIVE_RECEIPT_NAME = re.compile(r"^(?P<slug>.+)-(?P<prefix>[0-9a-f]{16})\.json$")
 _SOURCE_SNAPSHOT_PREFIX = "catalog/sources/"
 _WORKSPACE_MARKER = "artifacts/workspace/"
-_RECEIPT_REPORT_PATH_LIMIT = 20
+# The only legacy record that proves a task finished: its own embedded operation
+# receipts, one per terminal stage.  A stored row needs no re-derivation of the
+# per-stage field contract because the ``operation_receipts`` CHECKs already
+# refuse a ``pushed``/``verified``/``applied`` row without its commit, manifest
+# or cleanup evidence and an actor lease.
+FINAL_RECEIPT_CHAIN = frozenset(
+    {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")}
+)
 _STATUS = {
     "pending": "pending", "claimed": "claimed", "preparing": "preparing",
     "authoring": "authoring", "handoff_ready": "handoff_ready", "stale": "stale",
@@ -234,7 +262,9 @@ def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
     These blobs are a heterogeneous legacy record of what an OSS watcher saw.
     They are never an operation attempt, so an entry that cannot be bound to one
     task-scoped archive identity is a source defect, not something to average or
-    pick a winner from.
+    pick a winner from.  The top-level key set is closed: three legacy generations
+    exist and each is admitted by name, so an unknown key is a record this
+    importer cannot describe and therefore must not retain.
     """
     where = f"legacy archive receipt {relative_path}"
     try:
@@ -242,6 +272,13 @@ def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise MigrationError(f"{where} is not valid UTF-8 JSON: {exc}") from exc
     body = _require_mapping(payload, where)
+    present = set(body)
+    missing = ARCHIVE_RECEIPT_REQUIRED_KEYS - present
+    if missing:
+        raise MigrationError(f"{where} is missing required keys: {sorted(missing)}")
+    unknown = present - ARCHIVE_RECEIPT_REQUIRED_KEYS - ARCHIVE_RECEIPT_OPTIONAL_KEYS
+    if unknown:
+        raise MigrationError(f"{where} carries unknown keys: {sorted(unknown)}")
     parts = relative_path.split("/")
     if len(parts) != 3 or parts[0] != ARCHIVE_RECEIPT_ROOT.removesuffix("/"):
         raise MigrationError(f"{where} is not an archive-receipts path")
@@ -272,7 +309,11 @@ def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
     queue_status = None if queue_value is None else _require_text(queue_value, "queue_status", where, limit=64)
     workspace_policy = _require_text(body.get("workspace_policy"), "workspace_policy", where, limit=512)
     objects = body.get("objects")
-    if not isinstance(objects, list) or not objects:
+    if not isinstance(objects, list):
+        raise MigrationError(
+            f"{where} has objects of the wrong type: {type(objects).__name__}"
+        )
+    if not objects:
         raise MigrationError(f"{where} has no verified objects")
     if _require_int(body.get("object_count"), "object_count", where) != len(objects):
         raise MigrationError(f"{where} object_count does not match its objects")
@@ -351,6 +392,14 @@ def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
         if declared_snapshot is not None and _require_digest(declared_snapshot, "source_snapshot_sha256", where) != snapshot_sha256:
             raise MigrationError(f"{where} declared source_snapshot_sha256 does not match its objects")
     receipt_json = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    if len(receipt_json) > ARCHIVE_RECEIPT_JSON_LIMIT:
+        # The bounded projection is what the table CHECK and every backup/content
+        # walk must tolerate, so an over-length receipt is refused here rather
+        # than failing later as an opaque SQLite constraint.
+        raise MigrationError(
+            f"{where} compact receipt JSON is {len(receipt_json)} bytes, over the "
+            f"{ARCHIVE_RECEIPT_JSON_LIMIT} byte bound"
+        )
     return ArchiveReceipt(
         package=package,
         language=language,
@@ -392,38 +441,63 @@ def frozen_updated_at(item: dict[str, Any]) -> str | None:
 EvidenceRow = tuple[str, ArchiveReceipt, str, str, str]
 
 
-def _is_archive_manifest(body: dict[str, Any]) -> bool:
-    """True when one JSON object carries the archive-manifest shape.
+def _package_task_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str]]]:
+    """Index every imported task by the package name its candidate declared.
 
-    Anything else under ``archive-receipts/`` is a different legacy record (for
-    example a watcher's collision or cleanup note).  It is reported, never
-    retained as archive evidence, and never promoted to anything.
+    One package may legitimately reach more than one lane, so the index is a list
+    per package and every consumer must resolve it to exactly one task before
+    binding evidence or blocker state to it.
     """
-    return isinstance(body.get("package"), str) and isinstance(body.get("objects"), list)
-
-
-def collect_archive_evidence(
-    conn: sqlite3.Connection, root: Path, manifest: dict[str, Any], bounds: dict[str, str]
-) -> tuple[list[EvidenceRow], list[dict[str, str]]]:
-    """Validate and associate every frozen archive receipt, failing closed.
-
-    Association is deliberately strict: a package must resolve to exactly one
-    imported task, that task must agree on language, and it must carry a frozen
-    ``updated_at`` bound.  A receipt file whose bytes drifted from the manifest
-    inventory is a contradiction, not a warning.
-    """
-    collected: list[EvidenceRow] = []
-    malformed: list[dict[str, str]] = []
-    identities: dict[str, list[tuple[str, str]]] = {}
+    index: dict[str, list[tuple[str, str]]] = {}
     for row in conn.execute(
         "SELECT t.task_id, i.package, i.language "
         "FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id "
         "JOIN candidate_identities i ON i.identity_digest=c.identity_digest "
         "ORDER BY t.task_id"
     ):
-        identities.setdefault(str(row["package"]), []).append(
+        index.setdefault(str(row["package"]), []).append(
             (str(row["task_id"]), str(row["language"]))
         )
+    return index
+
+
+def _sole_task_for_package(
+    index: dict[str, list[tuple[str, str]]], package: str, *, where: str
+) -> tuple[str, str]:
+    """Return the exactly-one task that owns ``package``, or fail closed.
+
+    A package owned by two tasks is a contradiction: which task the evidence or
+    the blocker describes cannot be chosen without inventing an association, so
+    both zero and many matches are refused.  A collision record nobody can be
+    bound to is just as unusable as a receipt with no owner.
+    """
+    matches = index.get(package, [])
+    if not matches:
+        raise MigrationError(
+            f"legacy package matches no imported task: {package} ({where})"
+        )
+    if len(matches) > 1:
+        raise MigrationError(
+            f"legacy package maps to {len(matches)} tasks, expected one: {package} ({where})"
+        )
+    return matches[0]
+
+
+def collect_archive_evidence(
+    conn: sqlite3.Connection, root: Path, manifest: dict[str, Any], bounds: dict[str, str]
+) -> list[EvidenceRow]:
+    """Validate and associate every frozen archive receipt, failing closed.
+
+    Every ``.json`` member of the manifest inventory under ``archive-receipts/`` is
+    a receipt: an unreadable, non-object, or differently shaped record there is a
+    source defect that aborts the import, never a skipped and averaged entry.
+    Association is equally strict: a package must resolve to exactly one imported
+    task, that task must agree on language, and it must carry a frozen
+    ``updated_at`` bound.  A receipt file whose bytes drifted from the manifest
+    inventory is a contradiction, not a warning.
+    """
+    collected: list[EvidenceRow] = []
+    identities = _package_task_index(conn)
     seen_identities: set[tuple[str, str]] = set()
     for record in manifest.get("inventory", []):
         path_name = str(record.get("path", "")) if isinstance(record, dict) else ""
@@ -434,21 +508,10 @@ def collect_archive_evidence(
         actual_sha = hashlib.sha256(raw).hexdigest()
         if actual_sha != declared_sha:
             raise MigrationError(f"legacy archive receipt digest drift: {path_name}")
-        try:
-            parsed = json.loads(raw.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError):
-            parsed = None
-        if not isinstance(parsed, dict) or not _is_archive_manifest(parsed):
-            malformed.append({"path": path_name, "reason": "not an archive manifest"})
-            continue
         receipt = validate_archive_receipt(path_name, raw)
-        matches = identities.get(receipt.package, [])
-        if len(matches) != 1:
-            raise MigrationError(
-                f"legacy archive receipt package is not unique to one task: {receipt.package} "
-                f"({path_name}) matched {len(matches)}"
-            )
-        task_id, lane_language = matches[0]
+        task_id, lane_language = _sole_task_for_package(
+            identities, receipt.package, where=path_name
+        )
         if lane_language != receipt.language:
             raise MigrationError(
                 f"legacy archive receipt language disagrees with its lane: {path_name}"
@@ -466,20 +529,21 @@ def collect_archive_evidence(
         collected.append((task_id, receipt, path_name, actual_sha, bounds[task_id]))
     return sorted(
         collected, key=lambda row: (row[0], row[1].archive_identity, row[2])
-    ), malformed
+    )
 
 
 def record_archive_evidence(
     conn: sqlite3.Connection,
     collected: list[EvidenceRow],
-    malformed: list[dict[str, str]],
 ) -> dict[str, Any]:
     """Insert retained archive evidence and return the report counts.
 
     ``canonical_evidence`` marks the single best-quality receipt for a task that
     is already ``complete`` on its own embedded receipt chain.  It carries no
     scheduling or terminal authority: a complete task without qualifying evidence
-    stays complete and is reported instead.
+    stays complete and is reported instead.  ``malformed`` stays in the report as
+    the fail-closed assertion the frozen 413-receipt corpus is read against: any
+    malformed receipt aborts the import, so a completed import always reports zero.
     """
     complete = {
         str(row["task_id"])
@@ -540,8 +604,7 @@ def record_archive_evidence(
         "retained": len(collected),
         "canonical": len(canonical_keys),
         "historical": len(collected) - len(canonical_keys),
-        "malformed": len(malformed),
-        "malformed_paths": malformed[:_RECEIPT_REPORT_PATH_LIMIT],
+        "malformed": 0,
         "complete_without_evidence": complete_without_evidence,
     }
 
@@ -896,7 +959,7 @@ def _has_final_receipt_chain(item: dict[str, Any]) -> bool:
         return False
     completed = {(str(r.get("operation_kind", r.get("kind", ""))), str(r.get("status", "")))
                 for r in receipts if isinstance(r, dict) and _receipt_contract_valid(r)}
-    return {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= completed
+    return FINAL_RECEIPT_CHAIN <= completed
 
 
 def _receipt_contract_valid(receipt: dict[str, Any]) -> bool:
@@ -1085,6 +1148,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             except (OSError, json.JSONDecodeError):
                 payload = {}
             if isinstance(payload, dict):
+                packages = _package_task_index(conn)
                 for package, failure in payload.items():
                     classification = classify_integration_failure(failure if isinstance(failure, dict) else str(failure))
                     reason = json.dumps(failure, sort_keys=True)
@@ -1094,19 +1158,21 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         # A collision stays retained blocker evidence.  Minting an
                         # archive operation receipt here would claim an attempt the
                         # legacy tree never proved, so the blocker is applied to task
-                        # state below instead.
-                        task = conn.execute("SELECT t.task_id FROM tasks t JOIN candidates c ON c.candidate_id=t.candidate_id AND c.lane_id=t.lane_id JOIN candidate_identities i ON i.identity_digest=c.identity_digest WHERE i.package=?", (package,)).fetchone()
-                        if task is not None:
-                            collision_tasks.add(str(task["task_id"]))
+                        # state below instead.  It is collected for every task the
+                        # package resolves to, whatever its legacy status was, and
+                        # the same exact-one rule that binds archive evidence binds
+                        # it: an unordered or empty match would block an arbitrary
+                        # task or none at all.
+                        task_id, _language = _sole_task_for_package(
+                            packages, str(package), where="legacy integration collision"
+                        )
+                        collision_tasks.add(task_id)
         # Frozen archive receipts are task-scoped evidence, never operation
         # attempts: one package legitimately carries several heterogeneous blobs
         # and none of them holds an actor lease or attempt ordinal.  Validation
         # happens here, before any terminal decision, so a contradiction cannot
-        # be half-imported, and a collision blocker already outranks any
-        # complete-chain closure above.
-        archive_evidence, archive_malformed = collect_archive_evidence(
-            conn, root, manifest, frozen_bounds
-        )
+        # be half-imported.
+        archive_evidence = collect_archive_evidence(conn, root, manifest, frozen_bounds)
         conn.execute(
             "UPDATE operation_receipts SET status='failed',failure_class='infrastructure',"
             "failure_reason='legacy operation intent was abandoned at cutover',"
@@ -1116,28 +1182,41 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             "UPDATE operation_receipts SET finished_at=COALESCE(finished_at,updated_at) "
             "WHERE status IN ('pushed','verified','applied','failed','collision')"
         )
+        # One legacy record can close a task: its own embedded operation receipts.
+        # The chain is therefore decided first, and it outranks a historical
+        # collision note, which records only that a watcher saw a conflict while
+        # the chain records that integration, archive and cleanup actually
+        # finished.  The collision bytes stay retained as raw orphan evidence
+        # either way, and retained archive evidence has no terminal authority.
         for task_id in complete_candidates:
-            # Frozen collision evidence blocks before any terminal decision: a
-            # legacy task carrying both a valid embedded chain and a collision
-            # record was never resolved by the legacy tree, so the collision
-            # wins.  Only without a collision may a genuine embedded
-            # pushed+verified+applied chain close a task; retained archive
-            # evidence has no terminal authority.
-            if task_id in collision_tasks:
-                conn.execute(
-                    "UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?",
-                    (task_id,),
-                )
-                continue
             chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
-            if {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= chain:
+            if FINAL_RECEIPT_CHAIN <= chain:
                 conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='archiving' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='cleaning' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='complete',terminal_reason='historical receipt chain verified' WHERE task_id=?", (task_id,))
+        # Every other task a collision maps to was left unresolved by the legacy
+        # tree, so it blocks -- including tasks legacy left pending, not only
+        # complete candidates.  A record that is already terminal keeps its own
+        # terminal state and reason: a blocked task is already blocked, and the
+        # stored transition guard forbids rewriting an excluded or cancelled
+        # decision.  Closure above reached only tasks with a genuine chain, so
+        # those are already 'complete' and drop out of this set.
+        unresolved = {
+            str(row["task_id"])
+            for row in conn.execute(
+                "SELECT task_id FROM tasks "
+                "WHERE state NOT IN ('complete','blocked','excluded','cancelled')"
+            )
+        }
+        for task_id in sorted(collision_tasks & unresolved):
+            conn.execute(
+                "UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?",
+                (task_id,),
+            )
         # Canonical marking is computed after the terminal decision so it can only
         # describe evidence quality for an already-complete task, never cause it.
-        archive_counts = record_archive_evidence(conn, archive_evidence, archive_malformed)
+        archive_counts = record_archive_evidence(conn, archive_evidence)
         # Actors remain live during observation; bind the imported rows to the
         # same frozen bytes one last time before the staging transaction commits.
         validate_manifest(manifest, live_root)

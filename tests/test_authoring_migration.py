@@ -199,6 +199,10 @@ def _artifact_rows(db: sqlite3.Connection, candidate_id: str) -> list[tuple[str,
 PYTHON_TASK = "base-python-python-author-wave2-20260828:python-candidate:legacy"
 NODE_TASK = "base-node-node-author-wave2-20260828:node-candidate:legacy"
 PYTHON_BATCH = "python-author-wave2-20260828"
+# One generated discovery candidate: the fixture's only task whose legacy status
+# is still ``pending``, so it is the case a collision blocker must also reach.
+PENDING_PACKAGE = "pkg-0"
+PENDING_TASK = "generated-python-python-author-discover-20260829T173500Z:python-0:legacy"
 
 
 def _legacy_artifact_id(task_id: str, path: str, digest: str) -> str:
@@ -478,10 +482,91 @@ def _workspace_only_receipt(identity: str = ARCHIVE_IDENTITY, *, language: str =
     return body
 
 
+def _compact_len(body: dict[str, object]) -> int:
+    """Length of one receipt in the exact compact spelling the importer stores."""
+    return len(json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True))
+
+
+def _receipt_json_sized(target: int, *, language: str = ARCHIVE_LANGUAGE,
+                        package: str = ARCHIVE_PACKAGE,
+                        identity: str = ARCHIVE_IDENTITY) -> dict[str, object]:
+    """Build one minimal valid receipt whose compact JSON is exactly ``target`` bytes.
+
+    Only the eight required top-level keys are used: the closed schema makes
+    every other key optional.  A long filler object key is the only schema-legal
+    way to move the serialized size, so one measured adjustment on the final key
+    lands the blob on the stored-size bound instead of iterating a 4 MiB dump.
+    """
+    prefix = f"nl2repobench/authoring-live/archive/{language}/{package}/{identity}/"
+    relative = "artifacts/workspace/filler-"
+    ordinal_width = 5
+    # ``objects[].key`` is capped at 4096 characters, which is the room one
+    # schema-legal entry gives the serialized size.
+    max_padding = 4096 - len(prefix) - len(relative) - ordinal_width
+    filler_padding = max_padding - 900
+
+    def build(count: int, final_padding: int) -> dict[str, object]:
+        objects = [
+            {
+                "key": f"{prefix}{relative}{index:0{ordinal_width}d}"
+                + "p" * (filler_padding if index < count - 1 else final_padding),
+                "size": 0,
+                "sha256": "a" * 64,
+            }
+            for index in range(count)
+        ]
+        return {
+            "schema_version": "1.0",
+            "language": language,
+            "package": package,
+            "handoff_sha256": None,
+            "workspace_policy": "artifacts/workspace included",
+            "objects": objects,
+            "object_count": count,
+            "bytes_verified": 0,
+        }
+
+    base_len = _compact_len(build(1, 0))
+    entry_len = _compact_len(build(2, 0)) - base_len
+    count = 1 + max(0, (target - base_len) // entry_len)
+    body = build(count, 0)
+    residual = target - _compact_len(body)
+    # Each added entry costs a whole measured step and one entry can be shortened
+    # for free, so at most one correction lands the last key inside its own room.
+    while residual < 0 or residual > max_padding:
+        count += 1 if residual > max_padding else -1
+        body = build(count, 0)
+        residual = target - _compact_len(body)
+    body = build(count, residual)
+    assert _compact_len(body) == target
+    return body
+
+
 def _validate(body: dict[str, object], path: str | None = None) -> migration.ArchiveReceipt:
     return migration.validate_archive_receipt(
         path or _archive_receipt_path(), json.dumps(body, sort_keys=True).encode("utf-8")
     )
+
+
+def _integration_failures(root: Path, reasons: dict[str, str]) -> None:
+    """Write the frozen supervisor collision authority for named packages."""
+    failures = root / "supervisor" / "integration-failures.json"
+    failures.write_text(
+        json.dumps({package: {"reason": reason} for package, reason in reasons.items()}),
+        encoding="utf-8",
+    )
+
+
+def _set_generated_package(root: Path, index: int, language: str, package: str) -> None:
+    """Repoint one generated discovery lane at ``package`` so two lanes share it."""
+    batch = f"{language}-author-discover-20260829T17350{index}Z"
+    source = root / "supervisor" / "queues" / f"{batch}.json"
+    queue = json.loads(source.read_text(encoding="utf-8"))
+    cast(list[dict[str, object]], queue["queue"])[0]["package"] = package
+    source.write_text(json.dumps(queue), encoding="utf-8")
+
+
+COLLISION_REASON = "remote object collision, cleanup forbidden"
 
 
 def test_archive_receipt_derived_counters_validate_against_objects() -> None:
@@ -584,6 +669,7 @@ def test_import_retains_archive_receipts_as_evidence_not_operation_attempts(tmp_
         )
     ]
     assert counts["retained"] == 1 and counts["canonical"] == 0
+    assert counts["malformed"] == 0
     assert list(db.execute("SELECT count(*) FROM operation_receipts"))[0][0] == 0
     assert list(db.execute("SELECT state FROM tasks WHERE task_id=?", (PYTHON_TASK,)))[0][0] == "handoff_ready"
     assert list(db.execute("SELECT count(*) FROM controllers"))[0][0] == 0
@@ -631,8 +717,8 @@ def test_archive_evidence_canonical_marker_follows_terminal_state(tmp_path: Path
     assert report["complete_without_evidence"] == 1
 
 
-def test_archive_receipt_contradictions_and_notes_fail_closed(tmp_path: Path) -> None:
-    """A count contradiction, a split identity, and a non-manifest note stay distinct."""
+def test_archive_receipt_contradictions_fail_closed() -> None:
+    """A count contradiction and a split identity are source defects, not warnings."""
     path = _archive_receipt_path()
     drifted = json.dumps({**_archive_receipt_body(), "object_count": 9}, sort_keys=True).encode("utf-8")
     with pytest.raises(MigrationError, match="object_count does not match its objects"):
@@ -641,15 +727,123 @@ def test_archive_receipt_contradictions_and_notes_fail_closed(tmp_path: Path) ->
     second["key"] = second["key"].replace(ARCHIVE_IDENTITY, "f" * 64)
     with pytest.raises(MigrationError, match="carries 2 archive identities"):
         _validate(_archive_receipt_body(objects=[second, *_archive_objects()[1:]]))
-    root = _live_case(tmp_path, "archive-malformed")
+
+
+@pytest.mark.parametrize(
+    ("label", "raw", "message"),
+    [
+        ("invalid-utf8", b"\xff\xfe not text", "not valid UTF-8 JSON"),
+        ("invalid-json", b'{"schema_version": ', "not valid UTF-8 JSON"),
+        ("not-an-object", b"[1, 2]", "is not a JSON object"),
+        ("unknown-key", None, "carries unknown keys"),
+        ("missing-key", None, "is missing required keys"),
+        ("objects-not-a-list", None, "has objects of the wrong type"),
+    ],
+)
+def test_archive_receipt_inventory_json_fails_closed(label: str, raw: bytes | None, message: str) -> None:
+    """Every ``.json`` under ``archive-receipts/`` is a receipt or the import is void.
+
+    Three legacy receipt generations exist and each is admitted by name, so a
+    file that is not one of them -- a watcher note, a truncated write, a record
+    with a field no writer ever emitted -- cannot be averaged, downgraded or
+    counted and skipped.  It is a contradiction inside a frozen authority.
+    """
+    if raw is None:
+        if label == "unknown-key":
+            body: dict[str, object] = {**_archive_receipt_body(), "watcher_note": "cleanup deferred"}
+        elif label == "missing-key":
+            body = dict(_archive_receipt_body())
+            del body["handoff_sha256"]
+        else:
+            body = _archive_receipt_body(objects="not-a-list")
+        raw = json.dumps(body, sort_keys=True).encode("utf-8")
+    with pytest.raises(MigrationError, match=message):
+        migration.validate_archive_receipt(_archive_receipt_path(), raw)
+
+
+def test_import_fails_closed_on_a_non_receipt_json_under_archive_receipts(tmp_path: Path) -> None:
+    """The frozen inventory is closed world: a note there is not ignorable bytes."""
+    root = _live_case(tmp_path, "archive-note")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _write_archive_receipt(root, _archive_receipt_body())
     note = root / "archive-receipts" / "python" / "watcher-collision-note.json"
     note.parent.mkdir(parents=True, exist_ok=True)
     note.write_text(json.dumps({"note": "watcher cleanup note"}), encoding="utf-8")
-    report, db = _import_archive_case(root, "archive-malformed")
-    assert report["retained"] == 0
-    assert report["malformed"] == 1
-    assert [item["path"] for item in report["malformed_paths"]] == [str(note.relative_to(root))]
-    assert list(db.execute("SELECT count(*) FROM legacy_archive_evidence"))[0][0] == 0
+    with pytest.raises(MigrationError, match="missing required keys"):
+        _import_case(root, "archive-note")
+
+
+def test_archive_receipt_package_must_match_exactly_one_task(tmp_path: Path) -> None:
+    """Receipt association shares the collision rule, so neither zero nor many binds."""
+    root = _live_case(tmp_path, "archive-package-zero")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _write_archive_receipt(root, _archive_receipt_body(package="unimported-pkg"), package="unimported-pkg")
+    with pytest.raises(MigrationError, match="matches no imported task"):
+        _import_case(root, "archive-package-zero")
+
+    root = _live_case(tmp_path, "archive-package-two")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _set_generated_package(root, 2, "go", ARCHIVE_PACKAGE)
+    _write_archive_receipt(root, _archive_receipt_body())
+    with pytest.raises(MigrationError, match="maps to 2 tasks, expected one"):
+        _import_case(root, "archive-package-two")
+
+
+def test_archive_receipt_json_is_bounded_at_the_stored_limit() -> None:
+    """The importer refuses what the ``receipt_json`` CHECK would refuse.
+
+    The bound is checked on the exact bytes that are stored, so the accepted case
+    is the boundary itself and one more byte is already a rejected authority.
+    """
+    at_limit = _receipt_json_sized(migration.ARCHIVE_RECEIPT_JSON_LIMIT)
+    assert _compact_len(at_limit) == migration.ARCHIVE_RECEIPT_JSON_LIMIT
+    assert _validate(at_limit).object_count == at_limit["object_count"]
+    with pytest.raises(MigrationError, match="over the 4194304 byte bound"):
+        _validate(_receipt_json_sized(migration.ARCHIVE_RECEIPT_JSON_LIMIT + 1))
+
+
+def test_import_rejects_an_over_bound_archive_receipt(tmp_path: Path) -> None:
+    """The size bound is enforced while the frozen authority is being read.
+
+    An over-bound receipt must abort the import instead of surfacing later as a
+    SQLite constraint inside the staging transaction.
+    """
+    root = _live_case(tmp_path, "archive-over-bound")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _write_archive_receipt(
+        root, _receipt_json_sized(migration.ARCHIVE_RECEIPT_JSON_LIMIT + 1)
+    )
+    with pytest.raises(MigrationError, match="over the 4194304 byte bound"):
+        _import_case(root, "archive-over-bound")
+
+
+def test_stored_archive_receipt_json_respects_the_size_check(tmp_path: Path) -> None:
+    """One oversized receipt cannot be written around the importer."""
+    root = _live_case(tmp_path, "archive-size")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _write_archive_receipt(root, _archive_receipt_body())
+    db = _import_case(root, "archive-size")
+    task_id, identity, source_path, source_sha, recorded_at = db.execute(
+        "SELECT task_id, archive_identity, source_path, source_sha256, recorded_at"
+        " FROM legacy_archive_evidence",
+    ).fetchone()
+    assert (identity, source_sha) == (ARCHIVE_IDENTITY, hashlib.sha256(
+        (root / source_path).read_bytes()).hexdigest())
+    insert = (
+        "INSERT INTO legacy_archive_evidence(task_id,archive_identity,source_path,source_sha256,"
+        "package,language,object_count,byte_count,workspace_policy,receipt_json,recorded_at)"
+        " VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+    )
+
+    def add(receipt_json: str, other: str) -> None:
+        db.execute(insert, (task_id, other, source_path, source_sha, ARCHIVE_PACKAGE,
+                            ARCHIVE_LANGUAGE, 1, 1, "artifacts/workspace included",
+                            receipt_json, recorded_at))
+
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK constraint failed"):
+        add("x" * (migration.ARCHIVE_RECEIPT_JSON_LIMIT + 1), "e" * 64)
+    add("x" * migration.ARCHIVE_RECEIPT_JSON_LIMIT, "f" * 64)
+    assert db.execute("SELECT count(*) FROM legacy_archive_evidence").fetchone()[0] == 2
 
 
 def test_import_rejects_archive_receipt_bytes_that_drift_after_freeze(tmp_path: Path) -> None:
@@ -711,11 +905,7 @@ def test_import_keeps_a_historical_collision_as_blocker_not_archive_attempt(tmp_
     root = _live_case(tmp_path, "archive-collision")
     _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
     _write_archive_receipt(root, _archive_receipt_body())
-    failures = root / "supervisor" / "integration-failures.json"
-    failures.write_text(
-        json.dumps({ARCHIVE_PACKAGE: {"reason": "remote object collision, cleanup forbidden"}}),
-        encoding="utf-8",
-    )
+    _integration_failures(root, {ARCHIVE_PACKAGE: COLLISION_REASON})
 
     db = _import_case(root, "archive-collision")
 
@@ -732,35 +922,98 @@ def test_import_keeps_a_historical_collision_as_blocker_not_archive_attempt(tmp_
     ))[0][0] == 1
 
 
-def test_import_collision_blocks_even_a_full_embedded_receipt_chain(tmp_path: Path) -> None:
-    """Precedence: frozen collision evidence outranks an otherwise closable chain.
+def test_import_genuine_chain_closes_a_task_that_also_carries_collision_evidence(tmp_path: Path) -> None:
+    """Precedence: the embedded chain closes the task and collision evidence stays history.
 
-    The chain is still retained as operation receipts, but a task that carries
-    both the full embedded chain and a collision record was never resolved by
-    the legacy tree, so it blocks instead of completing, and no canonical
-    evidence marker can be attached to a non-complete task.
+    The collision is still retained as raw orphan history, but the task's own
+    pushed+verified+applied receipts prove the integration, archive and cleanup
+    finished, so the terminal decision comes from the chain and the canonical
+    evidence marker may follow that already-complete state.
     """
     root = _live_case(tmp_path, "collision-chain")
     _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00",
                   receipts=_final_chain("collision-chain-python"))
     _write_archive_receipt(root, _archive_receipt_body())
-    failures = root / "supervisor" / "integration-failures.json"
-    failures.write_text(
-        json.dumps({ARCHIVE_PACKAGE: {"reason": "remote object collision, cleanup forbidden"}}),
-        encoding="utf-8",
-    )
+    _integration_failures(root, {ARCHIVE_PACKAGE: COLLISION_REASON})
 
     report, db = _import_archive_case(root, "collision-chain")
 
     state, reason = db.execute(
         "SELECT state, terminal_reason FROM tasks WHERE task_id=?", (PYTHON_TASK,),
     ).fetchone()
-    assert (state, reason) == ("blocked", "historical integration collision")
+    assert (state, reason) == ("complete", "historical receipt chain verified")
     assert {tuple(row) for row in db.execute(
         "SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (PYTHON_TASK,),
-    )} == {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")}
+    )} == set(migration.FINAL_RECEIPT_CHAIN)
+    assert list(db.execute(
+        "SELECT count(*) FROM orphan_claim_evidence WHERE classification='unmapped-claim'",
+    ))[0][0] == 1
     assert report["retained"] == 1
-    assert report["canonical"] == 0 and report["complete_without_evidence"] == 0
+    assert report["canonical"] == 1 and report["complete_without_evidence"] == 0
+
+
+def test_import_collision_blocks_a_pending_task_too(tmp_path: Path) -> None:
+    """A collision is a blocker for any task it maps to, not only a complete candidate.
+
+    The legacy tree left this discovery candidate pending and its remote object in
+    conflict, which is exactly the unresolved history a fresh controller must not
+    inherit as free capacity, so the imported task blocks with the collision as
+    its terminal reason instead of staying claimable.
+    """
+    root = _live_case(tmp_path, "collision-pending")
+    _integration_failures(root, {PENDING_PACKAGE: COLLISION_REASON})
+
+    db = _import_case(root, "collision-pending")
+
+    state, reason = db.execute(
+        "SELECT state, terminal_reason FROM tasks WHERE task_id=?", (PENDING_TASK,),
+    ).fetchone()
+    assert (state, reason) == ("blocked", "historical integration collision")
+    # Only the mapped task blocks; the other lanes keep the status legacy recorded.
+    assert dict(db.execute("SELECT state, count(*) FROM tasks GROUP BY state")) == {
+        "blocked": 1, "handoff_ready": 3, "pending": 3,
+    }
+
+
+def test_import_collision_package_must_match_exactly_one_task(tmp_path: Path) -> None:
+    """Collision association reuses the exact-one rule: zero and many both fail.
+
+    An unmatched collision would leave only orphan evidence and a silently
+    unblocked task, and a package claimed by two lanes would let the importer
+    block whichever row an unordered query happened to return first.
+    """
+    root = _live_case(tmp_path, "collision-zero")
+    _integration_failures(root, {"unimported-pkg": COLLISION_REASON})
+    with pytest.raises(MigrationError, match="matches no imported task"):
+        _import_case(root, "collision-zero")
+
+    root = _live_case(tmp_path, "collision-two")
+    _set_generated_package(root, 2, "go", ARCHIVE_PACKAGE)
+    _integration_failures(root, {ARCHIVE_PACKAGE: COLLISION_REASON})
+    with pytest.raises(MigrationError, match="maps to 2 tasks, expected one"):
+        _import_case(root, "collision-two")
+
+
+def test_import_keeps_a_terminal_legacy_record_when_its_package_collided(tmp_path: Path) -> None:
+    """Collision evidence never rewrites a decision the legacy tree already made.
+
+    The stored transition guard forbids leaving ``excluded``, so the frozen
+    terminal record stands and the collision remains only as retained orphan
+    history instead of aborting an import of otherwise valid authorities.
+    """
+    root = _live_case(tmp_path, "collision-excluded")
+    _frozen_state(root, "node", status="excluded", reason="license unacceptable")
+    _integration_failures(root, {"node-pkg": COLLISION_REASON})
+
+    db = _import_case(root, "collision-excluded")
+
+    state, reason = db.execute(
+        "SELECT state, terminal_reason FROM tasks WHERE task_id=?", (NODE_TASK,)
+    ).fetchone()
+    assert (state, reason) == ("excluded", "license unacceptable")
+    assert list(db.execute(
+        "SELECT count(*) FROM orphan_claim_evidence WHERE classification='unmapped-claim'",
+    ))[0][0] == 1
 
 
 def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Path) -> None:

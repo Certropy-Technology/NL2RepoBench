@@ -270,7 +270,13 @@ CREATE TABLE legacy_archive_evidence (
   byte_count INTEGER NOT NULL CHECK(byte_count >= 0),
   workspace_policy TEXT NOT NULL CHECK(length(workspace_policy) BETWEEN 1 AND 512),
   canonical_evidence INTEGER NOT NULL DEFAULT 0 CHECK(canonical_evidence IN (0,1)),
-  receipt_json TEXT NOT NULL,
+  -- The stored projection is a bounded copy of one frozen receipt, and backup
+  -- content verification walks every full row, so an unbounded object list could
+  -- make one legacy package decide the size of the trusted database.  4 MiB is
+  -- above the largest receipt in the frozen corpus (1,872,164 bytes) and is
+  -- enforced by the importer before any row is written, so this CHECK is the
+  -- database-side twin of that bound rather than a runtime rejection path.
+  receipt_json TEXT NOT NULL CHECK(length(receipt_json) <= 4194304),
   recorded_at TEXT NOT NULL,
   PRIMARY KEY(task_id, archive_identity),
   -- The importer's own eligibility rule is a table invariant: a canonical row
