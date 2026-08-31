@@ -16,6 +16,7 @@ import math
 import subprocess
 import tempfile
 import tomllib
+from collections.abc import Iterable
 from pathlib import Path, PurePosixPath
 from typing import Any, Literal
 
@@ -47,6 +48,93 @@ REQUIRED_CONTROLS = frozenset({"empty", "stub", "forgery", "offline"})
 
 class ProductionGateError(ValueError):
     """Raised for a malformed production-gate input or evidence record."""
+
+
+def _tree_line(line: str, *, label: str) -> tuple[str, str, str]:
+    try:
+        metadata, path = line.split("\t", 1)
+        mode, kind, object_id = metadata.split()
+    except ValueError as exc:
+        raise ProductionGateError(f"malformed {label} entry: {line!r}") from exc
+    raw_parts = path.split("/")
+    if (
+        not path
+        or path.startswith("/")
+        or any(part in {"", ".", ".."} for part in raw_parts)
+    ):
+        raise ProductionGateError(f"unsafe {label} path: {path!r}")
+    if "\\" in path:
+        raise ProductionGateError(f"unsafe {label} path: {path!r}")
+    return kind, object_id, path
+
+
+def classify_source_tree(
+    task_lines: Iterable[str], directory_lines: Iterable[str]
+) -> tuple[list[JsonObject], JsonObject]:
+    """Return source leaves while excluding nested legacy Harbor task assets.
+
+    A source leaf is ``<task>/task.toml`` or ``<scope>/<task>/task.toml``.
+    ``<task>/harbor/task.toml`` is a nested legacy asset, not another source.
+    The tree object for each source row comes from the corresponding directory
+    entry, so the frozen record remains bound to the complete source directory.
+    """
+
+    directories: dict[str, str] = {}
+    task_paths: list[str] = []
+    for raw in directory_lines:
+        if not raw:
+            continue
+        kind, object_id, path = _tree_line(raw, label="source directory")
+        if kind == "tree":
+            directories[path] = object_id
+    for raw in task_lines:
+        if not raw:
+            continue
+        kind, _object_id, path = _tree_line(raw, label="source file")
+        if kind == "blob" and path.endswith("/task.toml"):
+            task_paths.append(path)
+
+    rows: list[JsonObject] = []
+    direct: list[str] = []
+    scoped: list[str] = []
+    nested_harbor_assets: list[str] = []
+    seen: set[str] = set()
+    for task_path in sorted(task_paths):
+        parts = PurePosixPath(task_path).parts
+        if len(parts) == 3 and not parts[0].startswith("@") and parts[-2] == "harbor":
+            nested_harbor_assets.append(task_path)
+            continue
+        if len(parts) == 4 and parts[0].startswith("@") and parts[-2] == "harbor":
+            nested_harbor_assets.append(task_path)
+            continue
+        if len(parts) not in {2, 3}:
+            raise ProductionGateError(
+                "source task.toml must be a direct or scoped leaf: " + task_path
+            )
+        if len(parts) == 3 and not parts[0].startswith("@"):
+            raise ProductionGateError(
+                "source task.toml must be a direct or scoped leaf: " + task_path
+            )
+        task_id = "/".join(parts[:-1])
+        source_dir = "/".join(parts[:-1])
+        if task_id in seen:
+            raise ProductionGateError(f"duplicate source task_id: {task_id}")
+        tree_sha1 = directories.get(source_dir)
+        if tree_sha1 is None:
+            raise ProductionGateError(f"missing source directory tree for: {task_path}")
+        if len(parts) == 2:
+            direct.append(task_id)
+        else:
+            scoped.append(task_id)
+        seen.add(task_id)
+        rows.append({"task_id": task_id, "source_tree_sha1": tree_sha1})
+    rows.sort(key=lambda item: str(item["task_id"]))
+    layout: JsonObject = {
+        "direct": sorted(direct),
+        "scoped": sorted(scoped),
+        "nested_harbor_assets": sorted(nested_harbor_assets),
+    }
+    return rows, layout
 
 
 def read_json_object(path: Path) -> JsonObject:
@@ -119,21 +207,23 @@ def validate_current_source_freeze(
     *,
     repository_root: Path,
     sources_root: Path,
+    frozen_layout: JsonObject | None = None,
 ) -> None:
     source_path = repository_relative(sources_root, repository_root, "source root")
-    expected = {str(row["task_id"]): str(row["source_tree_sha1"]) for row in frozen_rows}
-    lines = _git_output(repository_root, "ls-tree", f"HEAD:{source_path}").splitlines()
-    actual: dict[str, str] = {}
-    for line in lines:
-        metadata, task_id = line.split("\t", 1)
-        _mode, kind, object_id = metadata.split()
-        if kind == "tree":
-            actual[task_id] = object_id
-    if actual != expected:
+    task_lines = _git_output(
+        repository_root, "ls-tree", "-r", "-t", f"HEAD:{source_path}"
+    ).splitlines()
+    directory_lines = _git_output(
+        repository_root, "ls-tree", "-d", "-r", f"HEAD:{source_path}"
+    ).splitlines()
+    actual_rows, actual_layout = classify_source_tree(task_lines, directory_lines)
+    if actual_rows != frozen_rows:
         raise ProductionGateError(
             "current HEAD source trees differ from the frozen input; regenerate the input "
             "after all source changes are committed"
         )
+    if frozen_layout is not None and actual_layout != frozen_layout:
+        raise ProductionGateError("current source topology differs from the frozen input")
     dirty = _git_output(
         repository_root,
         "status",
@@ -153,7 +243,7 @@ def validate_frozen_input(
     input_path: Path,
     *,
     repository_root: Path,
-    expected_sources: int,
+    expected_sources: int | None = None,
     verify_git: bool = True,
 ) -> tuple[JsonObject, list[JsonObject]]:
     payload = read_json_object(input_path)
@@ -164,13 +254,18 @@ def validate_frozen_input(
     digest_payload.pop("content_sha256", None)
     if expected_digest != canonical_sha256(digest_payload):
         raise ProductionGateError("production input content_sha256 does not match its payload")
-    if payload.get("source_count") != expected_sources:
-        raise ProductionGateError(
-            f"expected {expected_sources} frozen sources, got {payload.get('source_count')}"
-        )
     raw_sources = payload.get("sources")
-    if not isinstance(raw_sources, list) or len(raw_sources) != expected_sources:
-        raise ProductionGateError("production input sources do not match source_count")
+    if not isinstance(raw_sources, list):
+        raise ProductionGateError("production input sources must be a list")
+    derived_count = len(raw_sources)
+    if payload.get("source_count") != derived_count:
+        raise ProductionGateError(
+            "production input source_count does not match its source list"
+        )
+    if expected_sources is not None and derived_count != expected_sources:
+        raise ProductionGateError(
+            f"expected {expected_sources} frozen sources, got {derived_count}"
+        )
     sources: list[JsonObject] = []
     seen: set[str] = set()
     for index, raw in enumerate(raw_sources):
@@ -190,6 +285,42 @@ def validate_frozen_input(
         sources.append({"task_id": task_id, "source_tree_sha1": tree})
     if sources != sorted(sources, key=lambda item: str(item["task_id"])):
         raise ProductionGateError("production input sources must be sorted by task_id")
+    layout = payload.get("source_layout")
+    if layout is not None:
+        if not isinstance(layout, dict) or set(layout) != {
+            "direct",
+            "scoped",
+            "nested_harbor_assets",
+        }:
+            raise ProductionGateError("production input source_layout must be an object")
+        expected_layout = {
+            "direct": sorted(task_id for task_id in seen if "/" not in task_id),
+            "scoped": sorted(task_id for task_id in seen if "/" in task_id),
+            "nested_harbor_assets": layout.get("nested_harbor_assets"),
+        }
+        for key in ("direct", "scoped", "nested_harbor_assets"):
+            values = layout.get(key)
+            if not isinstance(values, list) or any(
+                not isinstance(value, str) or not value for value in values
+            ) or values != sorted(set(values)):
+                raise ProductionGateError(f"production input source_layout.{key} is invalid")
+        if layout["direct"] != expected_layout["direct"]:
+            raise ProductionGateError("production input direct source layout is inconsistent")
+        if layout["scoped"] != expected_layout["scoped"]:
+            raise ProductionGateError("production input scoped source layout is inconsistent")
+        for value in layout["nested_harbor_assets"]:
+            parts = value.split("/")
+            if (
+                len(parts) < 3
+                or any(part in {"", ".", ".."} for part in parts)
+                or parts[-2:] != ["harbor", "task.toml"]
+                or value in {task_id + "/task.toml" for task_id in seen}
+            ):
+                raise ProductionGateError(
+                    "production input nested Harbor asset path is invalid"
+                )
+        if set(expected_layout["direct"]) | set(expected_layout["scoped"]) != seen:
+            raise ProductionGateError("production input source_layout does not cover sources")
     if verify_git:
         base = payload.get("base_commit")
         source_root = payload.get("source_root")
@@ -197,23 +328,85 @@ def validate_frozen_input(
             raise ProductionGateError("production input base_commit is missing")
         if not isinstance(source_root, str) or not source_root:
             raise ProductionGateError("production input source_root is missing")
-        lines = _git_output(repository_root, "ls-tree", f"{base}:{source_root}").splitlines()
-        actual: list[JsonObject] = []
-        for line in lines:
-            metadata, task_id = line.split("\t", 1)
-            _mode, kind, object_id = metadata.split()
-            if kind == "tree":
-                actual.append({"task_id": task_id, "source_tree_sha1": object_id})
-        actual.sort(key=lambda item: str(item["task_id"]))
+        task_lines = _git_output(
+            repository_root, "ls-tree", "-r", "-t", f"{base}:{source_root}"
+        ).splitlines()
+        directory_lines = _git_output(
+            repository_root, "ls-tree", "-d", "-r", f"{base}:{source_root}"
+        ).splitlines()
+        actual, actual_layout = classify_source_tree(task_lines, directory_lines)
         if actual != sources:
             raise ProductionGateError("frozen source list differs from the base commit tree")
+        if layout is not None and actual_layout != layout:
+            raise ProductionGateError("frozen source topology differs from the base commit tree")
     return payload, sources
 
 
 def _visible_directories(root: Path) -> set[str]:
-    if not root.is_dir():
+    """Enumerate direct and scoped Harbor runtime leaves beneath ``root``.
+
+    Runtime IDs are represented by the directory containing a root-level
+    ``task.toml``.  A scoped ID therefore uses two path components, such as
+    ``@scope/name``; treating the first directory as the ID would silently
+    truncate the package and make the projection comparison unsound.
+    """
+
+    if not root.is_dir() or root.is_symlink():
         raise ProductionGateError(f"directory does not exist: {root}")
-    return {path.name for path in root.iterdir() if path.is_dir() and not path.name.startswith(".")}
+    result: set[str] = set()
+    leaves: list[tuple[str, tuple[str, ...]]] = []
+    for task_file in sorted(root.rglob("task.toml")):
+        if task_file.is_symlink():
+            raise ProductionGateError(f"runtime task.toml is symlinked: {task_file}")
+        relative = task_file.relative_to(root)
+        parts = relative.parts
+        if len(parts) == 2:
+            task_id = parts[0]
+        elif len(parts) == 3 and parts[0].startswith("@"):
+            task_id = PurePosixPath(*parts[:-1]).as_posix()
+        else:
+            raise ProductionGateError(
+                "runtime task.toml must be a direct or scoped leaf: " + relative.as_posix()
+            )
+        leaves.append((task_id, parts[:-1]))
+    for task_id, parts in leaves:
+        if task_id in result:
+            raise ProductionGateError(f"duplicate runtime task_id: {task_id}")
+        if any(other != parts and len(other) < len(parts) and parts[: len(other)] == other
+               for _other_id, other in leaves):
+            raise ProductionGateError(f"ambiguous runtime task layout: {task_id}")
+        result.add(task_id)
+    return result
+
+
+def _source_leaf_ids(root: Path) -> set[str]:
+    """Enumerate direct and scoped source leaves from a checked-out tree."""
+
+    if not root.is_dir() or root.is_symlink():
+        raise ProductionGateError(f"source root is missing or symlinked: {root}")
+    result: set[str] = set()
+    for task_file in sorted(root.rglob("task.toml")):
+        if task_file.is_symlink():
+            raise ProductionGateError(f"source task.toml is symlinked: {task_file}")
+        relative = task_file.relative_to(root)
+        parts = relative.parts
+        if len(parts) == 3 and not parts[0].startswith("@") and parts[-2] == "harbor":
+            continue
+        if len(parts) == 4 and parts[0].startswith("@") and parts[-2] == "harbor":
+            continue
+        if len(parts) not in {2, 3}:
+            raise ProductionGateError(
+                "source task.toml must be a direct or scoped leaf: " + relative.as_posix()
+            )
+        if len(parts) == 3 and not parts[0].startswith("@"):
+            raise ProductionGateError(
+                "source task.toml must be a direct or scoped leaf: " + relative.as_posix()
+            )
+        task_id = PurePosixPath(*parts[:-1]).as_posix()
+        if task_id in result:
+            raise ProductionGateError(f"duplicate source task_id: {task_id}")
+        result.add(task_id)
+    return result
 
 
 def _file_inventory(root: Path, *, exclude_manifest: bool = False) -> dict[str, tuple[str, int]]:
@@ -414,7 +607,7 @@ def validate_catalog(
     sources_root: Path,
     tasks_root: Path,
     input_path: Path,
-    expected_sources: int,
+    expected_sources: int | None = None,
     repository_root: Path,
     artifact_root: Path,
     python_toolchain: Path,
@@ -436,8 +629,9 @@ def validate_catalog(
             frozen_rows,
             repository_root=repository_root,
             sources_root=sources_root,
+            frozen_layout=frozen.get("source_layout"),
         )
-    current_ids = _visible_directories(sources_root)
+    current_ids = _source_leaf_ids(sources_root)
     errors: list[JsonObject] = []
     if current_ids != frozen_ids:
         errors.append(
@@ -579,7 +773,7 @@ def validate_catalog(
         "incomplete_or_invalid": len(frozen_ids) - len(valid_ids | blocked_ids | excluded_ids),
         "runtime_tasks": len(runtime_ids),
     }
-    if counts["valid"] + counts["blocked"] + counts["excluded"] != expected_sources:
+    if counts["valid"] + counts["blocked"] + counts["excluded"] != len(frozen_ids):
         errors.append(
             _task_issue("<catalog>", "terminal category counts do not equal source count")
         )

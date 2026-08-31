@@ -21,6 +21,136 @@ def _load_script():
 gate = _load_script()
 
 
+def _load_freeze_script():
+    path = Path(__file__).parents[1] / "scripts/freeze_harbor_sources.py"
+    spec = importlib.util.spec_from_file_location("freeze_harbor_sources", path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+freeze_sources = _load_freeze_script()
+
+
+def test_source_tree_classifier_separates_scoped_and_nested_harbor_assets() -> None:
+    task_lines = [
+        "100644 blob " + "a" * 40 + "\talpha/task.toml",
+        "100644 blob " + "b" * 40 + "\t@scope/pkg/task.toml",
+        "100644 blob " + "e" * 40 + "\t@scope/harbor/task.toml",
+        "100644 blob " + "d" * 40 + "\tharbor/task.toml",
+        "100644 blob " + "c" * 40 + "\tlegacy/harbor/task.toml",
+        "100644 blob " + "f" * 40 + "\t@scope/pkg/harbor/task.toml",
+    ]
+    directory_lines = [
+        "040000 tree " + "1" * 40 + "\talpha",
+        "040000 tree " + "2" * 40 + "\t@scope/pkg",
+        "040000 tree " + "6" * 40 + "\t@scope/harbor",
+        "040000 tree " + "5" * 40 + "\tharbor",
+        "040000 tree " + "3" * 40 + "\tlegacy",
+        "040000 tree " + "4" * 40 + "\tlegacy/harbor",
+        "040000 tree " + "7" * 40 + "\t@scope/pkg/harbor",
+    ]
+
+    rows, layout = gate.classify_source_tree(task_lines, directory_lines)
+
+    assert rows == [
+        {
+            "task_id": "@scope/harbor",
+            "source_tree_sha1": "6666666666666666666666666666666666666666",
+        },
+        {
+            "task_id": "@scope/pkg",
+            "source_tree_sha1": "2222222222222222222222222222222222222222",
+        },
+        {"task_id": "alpha", "source_tree_sha1": "1111111111111111111111111111111111111111"},
+        {"task_id": "harbor", "source_tree_sha1": "5555555555555555555555555555555555555555"},
+    ]
+    assert layout == {
+        "direct": ["alpha", "harbor"],
+        "scoped": ["@scope/harbor", "@scope/pkg"],
+        "nested_harbor_assets": ["@scope/pkg/harbor/task.toml", "legacy/harbor/task.toml"],
+    }
+
+
+@pytest.mark.parametrize("unsafe", ["alpha//task.toml", "alpha/./task.toml", "../task.toml"])
+def test_source_tree_classifier_rejects_unsafe_git_paths(unsafe: str) -> None:
+    with pytest.raises(gate.ProductionGateError, match="unsafe source file path"):
+        gate.classify_source_tree(
+            ["100644 blob " + "a" * 40 + "\t" + unsafe],
+            [],
+        )
+
+
+@pytest.mark.parametrize("task", ["owner/package/task.toml", "@scope/pkg/name/task.toml"])
+def test_source_tree_classifier_rejects_ambiguous_depths(task: str) -> None:
+    with pytest.raises(gate.ProductionGateError, match="direct or scoped leaf"):
+        gate.classify_source_tree(
+            ["100644 blob " + "a" * 40 + "\t" + task],
+            [],
+        )
+
+
+def test_source_leaf_ids_include_scoped_sources_but_skip_nested_harbor(tmp_path: Path) -> None:
+    sources = tmp_path / "sources"
+    (sources / "alpha").mkdir(parents=True)
+    (sources / "alpha/task.toml").write_text("", encoding="utf-8")
+    (sources / "harbor").mkdir(parents=True)
+    (sources / "harbor/task.toml").write_text("", encoding="utf-8")
+    (sources / "@scope/pkg").mkdir(parents=True)
+    (sources / "@scope/pkg/task.toml").write_text("", encoding="utf-8")
+    (sources / "@scope/harbor").mkdir(parents=True)
+    (sources / "@scope/harbor/task.toml").write_text("", encoding="utf-8")
+    (sources / "legacy/harbor").mkdir(parents=True)
+    (sources / "legacy/harbor/task.toml").write_text("", encoding="utf-8")
+    (sources / "@scope/pkg/harbor").mkdir(parents=True)
+    (sources / "@scope/pkg/harbor/task.toml").write_text("", encoding="utf-8")
+
+    assert gate._source_leaf_ids(sources) == {"alpha", "@scope/harbor", "@scope/pkg", "harbor"}
+
+
+def test_runtime_leaf_ids_preserve_scoped_names_and_reject_ambiguous_shapes(
+    tmp_path: Path,
+) -> None:
+    tasks = tmp_path / "tasks"
+    (tasks / "alpha").mkdir(parents=True)
+    (tasks / "alpha/task.toml").write_text("", encoding="utf-8")
+    (tasks / "@scope/json-ext").mkdir(parents=True)
+    (tasks / "@scope/json-ext/task.toml").write_text("", encoding="utf-8")
+
+    assert gate._visible_directories(tasks) == {"alpha", "@scope/json-ext"}
+
+    (tasks / "@scope/other").mkdir(parents=True)
+    (tasks / "@scope/other/task.toml").write_text("", encoding="utf-8")
+    (tasks / "@scope/task.toml").write_text("", encoding="utf-8")
+    with pytest.raises(gate.ProductionGateError, match="ambiguous runtime task layout"):
+        gate._visible_directories(tasks)
+
+
+def test_runtime_leaf_ids_reject_unscoped_nested_runtime(tmp_path: Path) -> None:
+    tasks = tmp_path / "tasks"
+    (tasks / "owner/package").mkdir(parents=True)
+    (tasks / "owner/package/task.toml").write_text("", encoding="utf-8")
+
+    with pytest.raises(gate.ProductionGateError, match="direct or scoped leaf"):
+        gate._visible_directories(tasks)
+
+
+@pytest.mark.parametrize("task", ["../alpha", "alpha/other", "alpha/harbor", "@scope/pkg/extra"])
+def test_legacy_source_freeze_rejects_non_leaf_task_paths(tmp_path: Path, task: str) -> None:
+    with pytest.raises(ValueError, match="invalid source task path"):
+        freeze_sources.source_task_directory(tmp_path, task)
+
+
+def test_legacy_source_freeze_accepts_direct_and_scoped_leaves(tmp_path: Path) -> None:
+    assert freeze_sources.source_task_directory(tmp_path, "alpha") == tmp_path / "alpha"
+    assert freeze_sources.source_task_directory(tmp_path, "harbor") == tmp_path / "harbor"
+    assert freeze_sources.source_task_directory(tmp_path, "@scope/pkg") == (
+        tmp_path / "@scope/pkg"
+    )
+
+
 def _write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, sort_keys=True, indent=2) + "\n", encoding="utf-8")
@@ -113,6 +243,8 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
 
     def clean_git(_root: Path, *args: str) -> str:
         if args[0] == "ls-tree":
+            if args[1] == "-r":
+                return f"100644 blob {'c' * 40}\talpha/task.toml"
             return f"040000 tree {'a' * 40}\talpha"
         return ""
 
@@ -123,6 +255,8 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
 
     def changed_git(_root: Path, *args: str) -> str:
         if args[0] == "ls-tree":
+            if args[1] == "-r":
+                return f"100644 blob {'c' * 40}\talpha/task.toml"
             return f"040000 tree {'b' * 40}\talpha"
         return ""
 
@@ -134,6 +268,8 @@ def test_current_source_freeze_rejects_head_or_worktree_drift(
 
     def dirty_git(_root: Path, *args: str) -> str:
         if args[0] == "ls-tree":
+            if args[1] == "-r":
+                return f"100644 blob {'c' * 40}\talpha/task.toml"
             return f"040000 tree {'a' * 40}\talpha"
         return " M catalog/sources/alpha/task.toml"
 
