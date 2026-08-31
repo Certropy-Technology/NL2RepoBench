@@ -11,7 +11,11 @@ import unicodedata
 from pathlib import Path, PurePosixPath
 from typing import IO
 
-from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
+from nl2repobench.domain.canonical_contract import (
+    PackageManager,
+    RuntimeLanguage,
+    RuntimeProfile,
+)
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.runtimes.rust import SELECTED_TARGET, cargo_feature_args
 from nl2repobench.storage.canonical_ustar import encode_tree, tree_digest, tree_entries
@@ -134,8 +138,6 @@ def _parse_lock(data: bytes) -> tuple[ResolvedPackage, ...]:
             raise _error(f"Cargo.lock package {index} has invalid fields")
         name = package["name"]
         version = package["version"]
-        source = package.get("source")
-        checksum = package.get("checksum")
         dependencies = package.get("dependencies", [])
         if not isinstance(name, str) or not _PACKAGE_NAME.fullmatch(name):
             raise _error(f"Cargo.lock package {index} has an invalid name")
@@ -150,7 +152,25 @@ def _parse_lock(data: bytes) -> tuple[ResolvedPackage, ...]:
             set(dependencies)
         ):
             raise _error(f"Cargo.lock package {name} dependencies must be sorted and unique")
-        identity = (name, version, source if isinstance(source, str) else None)
+        # Only an omitted `source` key marks the workspace root. A present value must
+        # be a string so a malformed source can never be conflated with the root.
+        if "source" in package:
+            source = package["source"]
+            if not isinstance(source, str):
+                raise _error(
+                    f"Cargo.lock package {name} has a malformed source: expected a string"
+                )
+        else:
+            source = None
+        if "checksum" in package:
+            checksum = package["checksum"]
+            if not isinstance(checksum, str):
+                raise _error(
+                    f"Cargo.lock package {name} has a malformed checksum: expected a string"
+                )
+        else:
+            checksum = None
+        identity = (name, version, source)
         if identity in identities:
             raise _error(f"Cargo.lock contains duplicate package {name} {version}")
         identities.add(identity)
@@ -158,7 +178,7 @@ def _parse_lock(data: bytes) -> tuple[ResolvedPackage, ...]:
             (
                 name.encode("utf-8"),
                 version.encode("utf-8"),
-                (source or "").encode("utf-8") if isinstance(source, str) else b"",
+                (source or "").encode("utf-8"),
             )
         )
         if source is None:
@@ -169,7 +189,7 @@ def _parse_lock(data: bytes) -> tuple[ResolvedPackage, ...]:
             continue
         if source != CRATES_IO_SOURCE:
             raise _error(f"Cargo package {name} uses a forbidden registry source")
-        if not isinstance(checksum, str) or not _CHECKSUM.fullmatch(checksum):
+        if checksum is None or not _CHECKSUM.fullmatch(checksum):
             raise _error(f"Cargo package {name} requires a lowercase SHA-256 checksum")
         result.append(
             ResolvedPackage(name, version, "cargo-registry", f"sha256:{checksum}")
@@ -216,6 +236,27 @@ def _profile_features(profile: object) -> tuple[str, tuple[str, ...], tuple[str,
         raise _error(
             str(exc), PackageManagerErrorCode.UNSUPPORTED_PROFILE, stage="build"
         ) from exc
+
+
+def _validate_runtime_profile(runtime_profile: RuntimeProfile | None, *, stage: str) -> None:
+    """Accept only the pinned rust+cargo profile the canonical materializer passes."""
+
+    if runtime_profile is None:
+        return
+    if (
+        not isinstance(runtime_profile, RuntimeProfile)
+        or runtime_profile.language is not RuntimeLanguage.RUST
+        or runtime_profile.runtime != "rust"
+        or runtime_profile.package_manager is not PackageManager.CARGO
+        or runtime_profile.version != CARGO_TOOLCHAIN_VERSION
+        or runtime_profile.package_manager_version != CARGO_TOOLCHAIN_VERSION
+    ):
+        raise _error(
+            "Cargo validation requires a rust+cargo runtime profile pinned to "
+            f"{CARGO_TOOLCHAIN_VERSION}",
+            PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+            stage=stage,
+        )
 
 
 def _validate_cargo_store(store_root: Path, lock_summary: LockSummary) -> None:
@@ -576,7 +617,14 @@ class CargoPackageManager:
     identity = CARGO_IDENTITY
     lockfile_names = ("Cargo.lock",)
 
-    def validate_lock(self, lock_root: Path, expected_toolchain: str) -> LockSummary:
+    def validate_lock(
+        self,
+        lock_root: Path,
+        expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
+    ) -> LockSummary:
+        _validate_runtime_profile(runtime_profile, stage="lock")
         if expected_toolchain != CARGO_TOOLCHAIN_VERSION:
             raise _error(
                 f"Cargo toolchain must be exactly {CARGO_TOOLCHAIN_VERSION}",
@@ -598,8 +646,11 @@ class CargoPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary:
         del store_root, lock_summary, inventory, expected_toolchain
+        _validate_runtime_profile(runtime_profile, stage="store")
         raise _error(
             "Cargo locked-toolchain staging requires a Rust-local adapter boundary",
             PackageManagerErrorCode.UNSUPPORTED_PROFILE,
