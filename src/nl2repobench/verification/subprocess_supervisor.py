@@ -250,6 +250,24 @@ def _validate_tree(root: Path, *, reject_symlinks: bool = True) -> None:
         _reject_special(path, reject_symlink=reject_symlinks)
 
 
+def _validate_executable_root(root: Path, uid: int, gid: int) -> None:
+    """Require an immutable executable tree from the candidate's perspective."""
+    _validate_tree(root)
+    for path in (root, *root.rglob("*")):
+        try:
+            metadata = path.lstat()
+        except OSError as exc:
+            raise ProcessContractError(f"cannot inspect executable root: {path}") from exc
+        mode = metadata.st_mode
+        candidate_writable = (
+            (metadata.st_uid == uid and bool(mode & stat.S_IWUSR))
+            or (metadata.st_gid == gid and bool(mode & stat.S_IWGRP))
+            or bool(mode & stat.S_IWOTH)
+        )
+        if candidate_writable:
+            raise ProcessContractError(f"executable root is writable by candidate: {path}")
+
+
 def _prctl(option: int, arg2: int = 0, arg3: int = 0, arg4: int = 0, arg5: int = 0) -> None:
     libc = ctypes.CDLL(None, use_errno=True)
     result = libc.prctl(option, arg2, arg3, arg4, arg5)
@@ -260,20 +278,40 @@ def _prctl(option: int, arg2: int = 0, arg3: int = 0, arg4: int = 0, arg5: int =
 
 def _child_status_ok(uid: int, gid: int) -> None:
     fields: dict[str, list[int]] = {}
+    capabilities: dict[str, int] = {}
+    no_new_privs: str | None = None
     for line in Path("/proc/self/status").read_text(encoding="ascii").splitlines():
         key, separator, raw = line.partition(":")
-        if separator and key in {"Uid", "Gid"}:
+        if not separator:
+            continue
+        if key in {"Uid", "Gid"}:
             fields[key] = [int(value) for value in raw.split()]
+        elif key in {"CapInh", "CapPrm", "CapEff", "CapAmb", "CapBnd"}:
+            capabilities[key] = int(raw.strip(), 16)
+        elif key == "NoNewPrivs":
+            no_new_privs = raw.strip()
     if fields.get("Uid") != [uid] * 4 or fields.get("Gid") != [gid] * 4:
         raise OSError(errno.EPERM, "child UID/GID verification failed")
-    capabilities = {"CapInh", "CapPrm", "CapEff", "CapAmb", "CapBnd"}
-    for line in Path("/proc/self/status").read_text(encoding="ascii").splitlines():
-        key, separator, raw = line.partition(":")
-        if separator and key in capabilities and int(raw.strip(), 16) != 0:
-            raise OSError(errno.EPERM, "child capability verification failed")
-    for line in Path("/proc/self/status").read_text(encoding="ascii").splitlines():
-        if line.startswith("NoNewPrivs:") and line.split()[1] != "1":
-            raise OSError(errno.EPERM, "no_new_privs verification failed")
+    required_capabilities = {"CapInh", "CapPrm", "CapEff", "CapAmb", "CapBnd"}
+    if set(capabilities) != required_capabilities or any(capabilities.values()):
+        raise OSError(errno.EPERM, "child capability verification failed")
+    if no_new_privs != "1":
+        raise OSError(errno.EPERM, "no_new_privs verification failed")
+
+
+def _close_inherited_fds(keep: set[int]) -> None:
+    """Close every inherited descriptor except the stdio and error pipe FDs."""
+    try:
+        with os.scandir("/proc/self/fd") as entries:
+            inherited = [int(entry.name) for entry in entries]
+    except OSError as exc:
+        raise ProcessContractError("cannot enumerate inherited file descriptors") from exc
+    for fd in inherited:
+        if fd > 2 and fd not in keep:
+            try:
+                os.close(fd)
+            except OSError:
+                pass
 
 
 def _privilege_setup(uid: int, gid: int, limits: SubprocessLimits) -> None:
@@ -372,6 +410,8 @@ def _fork_exec(
             for fd in (stdin_read, stdout_write, stderr_write):
                 if fd not in {0, 1, 2}:
                     os.close(fd)
+            os.chdir(cwd)
+            _close_inherited_fds({0, 1, 2, error_write})
             try:
                 _privilege_setup(limits.uid, limits.gid, limits)
             except BaseException as exc:
@@ -404,7 +444,6 @@ def _read_streams(
     }
     captured = len(initial_stdout) + len(initial_stderr)
     if captured > limits.max_output_bytes:
-        _kill_group(process.pid)
         return initial_stdout[: limits.max_output_bytes], initial_stderr[:0], False, True
     buffers_fds = tuple(buffers)
     for fd in buffers_fds:
@@ -422,7 +461,6 @@ def _read_streams(
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             timed_out = True
-            _kill_group(process.pid)
             break
         for key, _ in selector.select(min(remaining, 0.1)):
             selected_fd = key.fd
@@ -451,7 +489,6 @@ def _read_streams(
                 buffers[selected_fd].extend(data[:allowed])
                 captured += allowed
                 output_limit = True
-                _kill_group(process.pid)
                 break
             buffers[selected_fd].extend(data)
             captured += len(data)
@@ -468,11 +505,6 @@ def _read_streams(
         except (OSError, ValueError):
             pass
     selector.close()
-    try:
-        process.wait(deadline)
-    except TimeoutError:
-        _kill_group(process.pid)
-        process.wait()
     return (
         bytes(buffers.get(process.stdout_fd, b"")),
         bytes(buffers.get(process.stderr_fd, b"")),
@@ -526,7 +558,7 @@ def run_candidate_process(
     for root in (*policy.read_only_roots, policy.write_root):
         _validate_tree(root)
     for root in policy.allowed_executable_roots:
-        _validate_tree(root, reject_symlinks=False)
+        _validate_executable_root(root, limits.uid, limits.gid)
     before = tuple(candidate_pids(limits.uid))
     if before:
         return SubprocessResult(
@@ -623,17 +655,6 @@ def run_candidate_process(
             startup_error = ProcessError(
                 "preexec-failed", "privilege-transition", "privilege transition exceeded deadline"
             )
-        if startup_output_limit:
-            _kill_group(process.pid)
-        else:
-            _kill_group(process.pid, signal.SIGTERM)
-            time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
-            _kill_group(process.pid)
-        try:
-            process.wait(deadline)
-        except TimeoutError:
-            _kill_group(process.pid)
-            process.wait()
         complete, cleanup_error = _cleanup(limits.uid, process, deadline)
         return SubprocessResult(
             request_id,
@@ -654,15 +675,11 @@ def run_candidate_process(
         bytes(startup_stdout),
         bytes(startup_stderr),
     )
-    if timed_out or output_limit:
-        _kill_group(process.pid, signal.SIGTERM)
-        time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
-        _kill_group(process.pid)
-    try:
-        process.wait(deadline)
-    except TimeoutError:
-        _kill_group(process.pid)
-        process.wait()
+    if not timed_out and not output_limit:
+        try:
+            process.wait(deadline)
+        except TimeoutError:
+            timed_out = True
     complete, cleanup_error = _cleanup(limits.uid, process, deadline)
     return SubprocessResult(
         request_id,

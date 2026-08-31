@@ -95,13 +95,18 @@ def _request(
         "timeout_sec", "cpu_sec", "max_stdin_bytes", "max_output_bytes", "max_file_bytes",
         "max_open_files", "uid", "gid", "max_processes",
     ) if key in limits_data})
+    allowed_environment_names = policy_data.get("allowed_environment_names", [])
+    if not isinstance(allowed_environment_names, list) or not all(
+        isinstance(name, str) for name in allowed_environment_names
+    ):
+        raise ProcessContractError("allowed_environment_names must be a string array")
     policy = CandidateProcessPolicy(
         task_id=policy_data["task_id"],
         staging_root=Path(policy_data["staging_root"]),
         read_only_roots=_path_tuple(policy_data["read_only_roots"]),
         write_root=Path(policy_data["write_root"]),
         allowed_executable_roots=_path_tuple(policy_data["allowed_executable_roots"]),
-        allowed_environment_names=frozenset(policy_data.get("allowed_environment_names", [])),
+        allowed_environment_names=frozenset(allowed_environment_names),
         require_no_new_privs=policy_data.get("require_no_new_privs", True),
         require_empty_capabilities=policy_data.get("require_empty_capabilities", True),
     )

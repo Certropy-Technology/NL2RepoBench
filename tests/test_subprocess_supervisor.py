@@ -4,8 +4,11 @@ import base64
 import io
 import json
 import os
+import signal
 import sys
+import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -118,6 +121,63 @@ def test_hardlinks_are_rejected_before_spawn(tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_candidate_process_changes_to_validated_cwd_and_closes_inherited_fds(
+    tmp_path: Path,
+) -> None:
+    policy = _policy(tmp_path, environment=frozenset({"CHECK_FD"}))
+    script = policy.staging_root / "bin/check-boundary"
+    script.write_text(
+        "#!/bin/sh\n"
+        "test \"$PWD\" = \""
+        + str(policy.staging_root / "write")
+        + "\" || exit 11\n"
+        "test -e \"/proc/self/fd/$CHECK_FD\" && exit 12\n"
+        "exit 0\n",
+        encoding="utf-8",
+    )
+    script.chmod(0o755)
+    inherited = os.open(script, os.O_RDONLY)
+    os.set_inheritable(inherited, True)
+    try:
+        result = run_candidate_process(
+            CandidateCommand(
+                (str(script),),
+                "write",
+                (("CHECK_FD", str(inherited)),),
+            ),
+            SubprocessLimits(timeout_sec=3, cpu_sec=3, max_output_bytes=1024),
+            policy,
+            request_id="4" * 32,
+        )
+    finally:
+        os.close(inherited)
+    assert result.returncode == 0
+    assert result.cleanup_complete
+
+
+def test_executable_root_rejects_symlink_and_candidate_writable_tree(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    link = policy.staging_root / "bin/link"
+    link.symlink_to(policy.staging_root / "bin/true")
+    with pytest.raises(ProcessContractError, match="symlink"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+            SubprocessLimits(timeout_sec=1, cpu_sec=1),
+            policy,
+            request_id="5" * 32,
+        )
+    link.unlink()
+    policy.allowed_executable_roots[0].chmod(0o777)
+    with pytest.raises(ProcessContractError, match="writable"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+            SubprocessLimits(timeout_sec=1, cpu_sec=1),
+            policy,
+            request_id="6" * 32,
+        )
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
 def test_candidate_process_success_and_nonzero(tmp_path: Path) -> None:
     policy = _policy(tmp_path)
     limits = SubprocessLimits(timeout_sec=3, cpu_sec=3, max_output_bytes=1024)
@@ -222,6 +282,73 @@ def test_capability_drop_eperm_fails_closed(
     assert result.cleanup_complete
 
 
+@pytest.mark.parametrize(
+    "missing", ["CapBnd", "CapInh", "CapPrm", "CapEff", "CapAmb", "NoNewPrivs"]
+)
+def test_child_status_requires_all_security_fields(
+    monkeypatch: pytest.MonkeyPatch, missing: str
+) -> None:
+    fields = {
+        "Uid": "10001 10001 10001 10001",
+        "Gid": "10001 10001 10001 10001",
+        "CapBnd": "0000000000000000",
+        "CapInh": "0000000000000000",
+        "CapPrm": "0000000000000000",
+        "CapEff": "0000000000000000",
+        "CapAmb": "0000000000000000",
+        "NoNewPrivs": "1",
+    }
+    fields.pop(missing)
+
+    class FakeStatus:
+        def read_text(self, **kwargs: object) -> str:
+            del kwargs
+            return "\n".join(f"{key}: {value}" for key, value in fields.items())
+
+    monkeypatch.setattr(subprocess_supervisor, "Path", lambda _: FakeStatus())
+    with pytest.raises(OSError, match="verification"):
+        subprocess_supervisor._child_status_ok(CANDIDATE_UID, CANDIDATE_GID)
+
+
+def test_cleanup_kills_uid_residue_after_group_term_and_kill(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    signals: list[int] = []
+    monkeypatch.setattr(
+        subprocess_supervisor,
+        "_kill_group",
+        lambda pid, signum=signal.SIGKILL: signals.append(signum),
+    )
+    monkeypatch.setattr(subprocess_supervisor, "terminate_uid_processes", lambda uid: None)
+    monkeypatch.setattr(subprocess_supervisor, "candidate_pids", lambda uid: [])
+    complete, error = subprocess_supervisor._cleanup(
+        CANDIDATE_UID,
+        process=SimpleNamespace(pid=123),
+        deadline=time.monotonic() + 1,
+    )
+    assert complete
+    assert error is None
+    assert signals == [signal.SIGTERM, signal.SIGKILL]
+
+
+def test_uid_cleanup_always_uses_sigkill(monkeypatch: pytest.MonkeyPatch) -> None:
+    sent: list[tuple[int, int]] = []
+    rounds = iter([[123], [], []])
+    monkeypatch.setattr(
+        "nl2repobench.verification.process_cleanup.candidate_pids",
+        lambda uid: next(rounds),
+    )
+    monkeypatch.setattr(
+        "nl2repobench.verification.process_cleanup.os.kill",
+        lambda pid, signum: sent.append((pid, signum)),
+    )
+    monkeypatch.setattr("nl2repobench.verification.process_cleanup.time.sleep", lambda _: None)
+    from nl2repobench.verification.process_cleanup import terminate_uid_processes
+
+    terminate_uid_processes(CANDIDATE_UID, attempts=2, term_attempts=1)
+    assert sent == [(123, signal.SIGKILL)]
+
+
 def test_cli_rejects_duplicate_and_malformed_requests(monkeypatch: pytest.MonkeyPatch) -> None:
     duplicate = b'{"schema_version":"1.0","schema_version":"1.0"}'
     monkeypatch.setattr(sys, "stdin", io.TextIOWrapper(io.BytesIO(duplicate)))
@@ -256,6 +383,70 @@ def test_cli_request_decodes_canonical_stdin(tmp_path: Path) -> None:
     assert limits.timeout_sec == 1
     assert parsed_policy.task_id == policy.task_id
     assert data == b""
+
+
+def test_cli_rejects_non_string_allowed_environment_names(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    request = {
+        "schema_version": "1.0",
+        "request_id": "1" * 32,
+        "context": "call",
+        "command": {"argv": ["/usr/bin/true"], "cwd": ".", "environment": []},
+        "limits": {"timeout_sec": 1, "cpu_sec": 1},
+        "policy": {
+            "task_id": policy.task_id,
+            "staging_root": str(policy.staging_root),
+            "read_only_roots": [str(policy.staging_root)],
+            "write_root": str(policy.write_root),
+            "allowed_executable_roots": [str(policy.staging_root / "bin")],
+            "allowed_environment_names": [1],
+        },
+        "stdin_base64": "",
+    }
+    with pytest.raises(ProcessContractError, match="string array"):
+        candidate_process_cli._request(request)
+    monkeypatch = pytest.MonkeyPatch()
+    try:
+        monkeypatch.setattr(
+            sys,
+            "stdin",
+            io.TextIOWrapper(io.BytesIO((json.dumps(request) + "\n").encode())),
+        )
+        assert candidate_process_cli.main() == candidate_process_cli.EXIT_MALFORMED
+    finally:
+        monkeypatch.undo()
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_fork_setsid_escape_is_cleaned(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    script = policy.staging_root / "bin/fork-setsid"
+    script.write_text(
+        "#!/usr/bin/python3\n"
+        "import os\n"
+        "pid = os.fork()\n"
+        "if pid == 0:\n"
+        "    os.setsid()\n"
+        "    grandchild = os.fork()\n"
+        "    if grandchild == 0:\n"
+        "        with open(os.devnull, 'wb') as stream:\n"
+        "            os.dup2(stream.fileno(), 1)\n"
+        "            os.dup2(stream.fileno(), 2)\n"
+        "        os.execl('/usr/bin/sleep', 'sleep', '30')\n"
+        "    os._exit(0)\n"
+        "os.waitpid(pid, 0)\n",
+        encoding="utf-8",
+    )
+    script.chmod(0o755)
+    result = run_candidate_process(
+        CandidateCommand((str(script),), "."),
+        SubprocessLimits(timeout_sec=3, cpu_sec=3, max_output_bytes=1024),
+        policy,
+        request_id="7" * 32,
+    )
+    assert result.returncode == 0
+    assert result.cleanup_complete
+    assert candidate_pids(CANDIDATE_UID) == []
 
 
 def test_cli_maps_internal_oserror_to_exit_70(monkeypatch: pytest.MonkeyPatch) -> None:
