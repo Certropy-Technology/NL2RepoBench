@@ -5,10 +5,12 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import tarfile
 import tomllib
 import unicodedata
 from collections.abc import Mapping
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+from typing import IO
 
 from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.runtime import RuntimeDiscriminator
@@ -31,6 +33,7 @@ CARGO_IDENTITY = RuntimeDiscriminator(
 )
 CARGO_ADAPTER_VERSION = "cargo-package-manager-v1"
 CARGO_TOOLCHAIN_VERSION = "1.100.0-nightly"
+CARGO_OFFLINE_SMOKE_COMMAND_ID = "cargo-metadata-frozen-offline-v1"
 CRATES_IO_SOURCE = "registry+https://github.com/rust-lang/crates.io-index"
 MAX_LOCK_BYTES = 16 * 1024 * 1024
 _SEMVER = re.compile(
@@ -38,6 +41,11 @@ _SEMVER = re.compile(
 )
 _CHECKSUM = re.compile(r"^[0-9a-f]{64}$")
 _PACKAGE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
+_DEPENDENCY_REFERENCE = re.compile(
+    r"^(?P<name>[A-Za-z0-9][A-Za-z0-9_-]*)"
+    r"(?: (?P<version>[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?))?"
+    r"(?: \((?P<source>[^()]+)\))?$"
+)
 
 _OFFLINE_ENVIRONMENT = (
     ("PATH", "/opt/rust/bin:/usr/local/bin:/usr/bin:/bin"),
@@ -163,11 +171,24 @@ def _parse_lock(data: bytes) -> tuple[ResolvedPackage, ...]:
         raise _error("single-package Cargo.lock must contain exactly one source-less root")
     if package_order != sorted(package_order):
         raise _error("Cargo.lock packages must be sorted by name, version, and source")
-    names = {package.name for package in result}
+    lock_identities = tuple(identities)
     for package in packages:
         for dependency in package.get("dependencies", []):
-            if dependency.split(" ", 1)[0] not in names:
+            match = _DEPENDENCY_REFERENCE.fullmatch(dependency)
+            if match is None:
                 raise _error(f"Cargo.lock dependency does not resolve: {dependency}")
+            name = match.group("name")
+            version = match.group("version")
+            source = match.group("source")
+            matches = tuple(
+                identity
+                for identity in lock_identities
+                if identity[0] == name
+                and (version is None or identity[1] == version)
+                and (source is None or identity[2] == source)
+            )
+            if len(matches) != 1:
+                raise _error(f"Cargo.lock dependency does not resolve exactly: {dependency}")
     return tuple(result)
 
 
@@ -273,13 +294,16 @@ def _validate_cargo_store(store_root: Path, lock_summary: LockSummary) -> None:
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )
-        actual = hashlib.sha256(archives[0].read_bytes()).hexdigest()
+        actual = _sha256_file(archives[0])
         if actual != checksum:
             raise _error(
                 f"Cargo crate archive checksum does not match lock: {archive_name}",
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )
+        archive_files = _read_crate_archive(
+            archives[0], expected_root=f"{package.name}-{package.version}"
+        )
         vendor = vendor_root / f"{package.name}-{package.version}"
         checksum_path = vendor / ".cargo-checksum.json"
         if checksum_path.is_symlink() or not checksum_path.is_file():
@@ -318,6 +342,12 @@ def _validate_cargo_store(store_root: Path, lock_summary: LockSummary) -> None:
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )
+        if set(archive_files) != expected_vendor_files:
+            raise _error(
+                f"Cargo vendor tree does not match crate archive: {package.name}-{package.version}",
+                PackageManagerErrorCode.INVENTORY_MISMATCH,
+                stage="store",
+            )
         for relative, expected in checksum_data["files"].items():
             if not isinstance(relative, str) or not isinstance(expected, str):
                 raise _error(
@@ -330,13 +360,75 @@ def _validate_cargo_store(store_root: Path, lock_summary: LockSummary) -> None:
                 path.is_symlink()
                 or not path.is_file()
                 or not path.resolve().is_relative_to(vendor.resolve())
-                or hashlib.sha256(path.read_bytes()).hexdigest() != expected
+                or _sha256_file(path) != expected
             ):
                 raise _error(
                     f"Cargo vendor file checksum mismatch: {relative}",
                     PackageManagerErrorCode.INVENTORY_MISMATCH,
                     stage="store",
                 )
+            if archive_files[relative] != _sha256_file(path):
+                raise _error(
+                    f"Cargo vendor file differs from crate archive: {relative}",
+                    PackageManagerErrorCode.INVENTORY_MISMATCH,
+                    stage="store",
+                )
+
+
+def _read_crate_archive(path: Path, *, expected_root: str) -> dict[str, str]:
+    """Read one checksum-verified .crate without extracting it to the host."""
+
+    try:
+        with tarfile.open(path, mode="r:gz") as archive:
+            files: dict[str, str] = {}
+            seen: set[str] = set()
+            for member in archive.getmembers():
+                raw = member.name.removesuffix("/")
+                member_path = PurePosixPath(raw)
+                if (
+                    not raw
+                    or member_path.is_absolute()
+                    or ".." in member_path.parts
+                    or not member_path.parts
+                    or member_path.parts[0] != expected_root
+                    or unicodedata.normalize("NFC", raw) != raw
+                ):
+                    raise ValueError(f"unsafe archive member: {member.name}")
+                relative = PurePosixPath(*member_path.parts[1:]).as_posix()
+                if not relative or relative in seen:
+                    if relative in seen:
+                        raise ValueError(f"duplicate archive member: {relative}")
+                    if not member.isdir():
+                        raise ValueError("crate archive root must be a directory")
+                    continue
+                seen.add(relative)
+                if member.isdir():
+                    continue
+                if not member.isreg():
+                    raise ValueError(f"crate archive member is not regular: {relative}")
+                extracted = archive.extractfile(member)
+                if extracted is None:
+                    raise ValueError(f"cannot read crate archive member: {relative}")
+                files[relative] = _sha256_stream(extracted)
+    except (OSError, tarfile.TarError, ValueError) as exc:
+        raise _error(
+            f"Cargo crate archive is malformed: {path.name}: {exc}",
+            PackageManagerErrorCode.STORE_MALFORMED,
+            stage="store",
+        ) from exc
+    return files
+
+
+def _sha256_file(path: Path) -> str:
+    with path.open("rb") as stream:
+        return _sha256_stream(stream)
+
+
+def _sha256_stream(stream: IO[bytes]) -> str:
+    digest = hashlib.sha256()
+    while chunk := stream.read(1024 * 1024):
+        digest.update(chunk)
+    return digest.hexdigest()
 
 
 class CargoPackageManager:
@@ -388,6 +480,8 @@ class CargoPackageManager:
         if (
             inventory.get("adapter_version") != CARGO_ADAPTER_VERSION
             or inventory.get("lock") != {"digest": lock_summary.lock_digest}
+            or inventory.get("offline_smoke")
+            != {"status": "passed", "command_id": CARGO_OFFLINE_SMOKE_COMMAND_ID}
             or not isinstance(toolchain_digest, str)
             or not re.fullmatch(r"sha256:[0-9a-f]{64}", toolchain_digest)
         ):
@@ -435,4 +529,4 @@ class CargoPackageManager:
         return dict(_OFFLINE_ENVIRONMENT)
 
 
-__all__ = ["CargoPackageManager"]
+__all__ = ["CARGO_OFFLINE_SMOKE_COMMAND_ID", "CargoPackageManager"]

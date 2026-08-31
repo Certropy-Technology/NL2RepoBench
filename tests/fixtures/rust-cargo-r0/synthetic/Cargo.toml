@@ -1,0 +1,23 @@
+[package]
+name = "nl2repo-rust-synthetic"
+version = "0.0.0"
+edition = "2021"
+build = false
+autolib = false
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "nl2repo-rust-synthetic"
+path = "src/bin/main.rs"
+
+[features]
+default = []
+std = []
+
+[dependencies]

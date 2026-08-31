@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,12 +12,32 @@ from nl2repobench.domain.canonical_contract import (
     RuntimeLanguage,
     TaskSource,
 )
-from nl2repobench.domain.canonical_models import Visibility
+from nl2repobench.domain.canonical_models import TaskStatus, Visibility
 from nl2repobench.domain.runtime import RuntimeDiscriminator
-from nl2repobench.verification.rust_profile import load_rust_profile
+from nl2repobench.verification.rust_bridge import load_rust_api_plan
+from nl2repobench.verification.rust_profile import (
+    load_rust_profile,
+    validate_rust_profile_api_plan,
+)
 
 RUST_VERSION = "1.100.0-nightly"
-MAX_API_PLAN_BYTES = 4 * 1024 * 1024
+_PRODUCTION_STATUSES = {
+    TaskStatus.PACKAGED,
+    TaskStatus.ORACLE_PASSED,
+    TaskStatus.CONTROLS_PASSED,
+    TaskStatus.REVIEWED,
+    TaskStatus.PILOTED,
+    TaskStatus.PUBLISHED,
+}
+_PRIVATE_MEDIA_TYPES = {
+    "dependencies.lock": "application/vnd.nl2repobench.package-lock.tar",
+    "dependencies.offline_store": "application/vnd.nl2repobench.offline-store.tar",
+    "dependencies.inventory": "application/vnd.nl2repobench.inventory+json",
+    "tests.commands_artifact": "application/vnd.nl2repobench.command-plan+json",
+    "tests.test_bundle": "application/vnd.nl2repobench.test-bundle.tar",
+    "verifier.bundle": "application/vnd.nl2repobench.verifier-bundle.tar",
+    "oracle_bundle": "application/vnd.nl2repobench.oracle-bundle.tar",
+}
 
 
 class RuntimeSourceAssetError(ValueError):
@@ -44,7 +63,12 @@ class RustSourceAssetValidator:
 
     def validate_source_assets(self, source_dir: Path, source: TaskSource) -> None:
         runtime = source.environment.runtime
-        if runtime is None or (
+        production = source.lifecycle.status in _PRODUCTION_STATUSES
+        if runtime is None and production:
+            raise RuntimeSourceAssetError(
+                "production Rust sources require an explicit rust+cargo runtime profile"
+            )
+        if runtime is not None and (
             runtime.runtime,
             runtime.version,
             runtime.package_manager_version,
@@ -63,24 +87,19 @@ class RustSourceAssetValidator:
             raise RuntimeSourceAssetError(
                 "Rust authoring sources must not contain rust-profile.json"
             )
+        api_plan_path = source_dir / "rust-api-plan.json"
+        if not profile_assets and not api_plan_path.exists() and not production:
+            return
         if profile_assets != ("rust-profile.toml",):
             raise RuntimeSourceAssetError(
                 "Rust authoring sources require exactly one root rust-profile.toml"
             )
-        profile = load_rust_profile(source_dir / "rust-profile.toml")
-
-        api_plan = source_dir / "rust-api-plan.json"
-        if (
-            api_plan.is_symlink()
-            or not api_plan.is_file()
-            or api_plan.stat().st_size > MAX_API_PLAN_BYTES
-        ):
-            raise RuntimeSourceAssetError(
-                "Rust sources require one bounded regular rust-api-plan.json"
-            )
-        actual_digest = f"sha256:{hashlib.sha256(api_plan.read_bytes()).hexdigest()}"
-        if actual_digest != profile.bridge.api_plan_digest:
-            raise RuntimeSourceAssetError("Rust API plan digest does not match rust-profile.toml")
+        try:
+            profile = load_rust_profile(source_dir / "rust-profile.toml")
+            plan, exact_plan_bytes = load_rust_api_plan(api_plan_path)
+            validate_rust_profile_api_plan(profile, plan, exact_plan_bytes)
+        except ValueError as exc:
+            raise RuntimeSourceAssetError(str(exc)) from exc
 
         closure_refs = {
             "dependencies.lock": source.dependencies.lock,
@@ -92,13 +111,22 @@ class RustSourceAssetValidator:
             "oracle_bundle": source.oracle_bundle,
         }
         missing = [name for name, reference in closure_refs.items() if reference is None]
-        non_private = [
+        invalid_refs = [
             name
             for name, reference in closure_refs.items()
-            if reference is not None and reference.visibility is not Visibility.PRIVATE
+            if reference is not None
+            and (
+                reference.visibility is not Visibility.PRIVATE
+                or reference.media_type != _PRIVATE_MEDIA_TYPES[name]
+            )
         ]
-        if source.dependencies.status != "known" or missing or non_private:
-            details = ", ".join((*missing, *non_private)) or "dependencies.status=known"
+        if invalid_refs:
+            raise RuntimeSourceAssetError(
+                "Rust private closure refs have invalid visibility or media type: "
+                + ", ".join(invalid_refs)
+            )
+        if production and (source.dependencies.status != "known" or missing):
+            details = ", ".join(missing) or "dependencies.status=known"
             raise RuntimeSourceAssetError(
                 f"Rust sources require the complete private closure: {details}"
             )
@@ -135,9 +163,7 @@ class RuntimeSourceAssetRegistry:
     def validate_source_assets(self, source_dir: Path, source: TaskSource) -> None:
         if source.environment.runtime is None:
             if source.metadata.language is RuntimeLanguage.RUST:
-                raise RuntimeSourceAssetError(
-                    "Rust sources require an explicit rust+cargo runtime profile"
-                )
+                RustSourceAssetValidator().validate_source_assets(source_dir, source)
             return
         identity = RuntimeDiscriminator.from_task_source(source)
         validator = self.validators.get(identity)

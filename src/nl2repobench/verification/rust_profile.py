@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 import tomllib
 from pathlib import Path
@@ -13,6 +14,10 @@ from nl2repobench.runtimes.rust import (
     SELECTED_TARGET,
     evaluate_target_selector,
     normalize_target_selector,
+)
+from nl2repobench.verification.rust_bridge import (
+    RustApiPlan,
+    canonical_json_bytes,
 )
 
 _PACKAGE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
@@ -207,6 +212,12 @@ class RustProfile(RustProfileRecord):
             raise ValueError("Rust target does not match selected target")
         return self
 
+    @property
+    def selected_candidate_dependencies(self) -> tuple[CandidateDependency, ...]:
+        """Return only dependencies selected by the frozen target evaluator."""
+
+        return tuple(item for item in self.candidate_dependencies if item.selected)
+
 
 def load_rust_profile(path: Path) -> RustProfile:
     """Read one bounded, regular TOML source into the frozen profile model."""
@@ -220,6 +231,37 @@ def load_rust_profile(path: Path) -> RustProfile:
         return RustProfile.model_validate(data)
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise ValueError(f"invalid rust-profile.toml: {exc}") from exc
+
+
+def canonical_rust_profile_bytes(profile: RustProfile) -> bytes:
+    """Serialize the lossless compiler-owned JSON projection."""
+
+    return canonical_json_bytes(profile.model_dump(mode="json"))
+
+
+def rust_profile_projection_digest(profile: RustProfile) -> str:
+    return f"sha256:{hashlib.sha256(canonical_rust_profile_bytes(profile)).hexdigest()}"
+
+
+def validate_rust_profile_api_plan(
+    profile: RustProfile,
+    plan: RustApiPlan,
+    exact_plan_bytes: bytes,
+) -> None:
+    """Bind the profile to both API-plan digests and public cross-references."""
+
+    exact_digest = f"sha256:{hashlib.sha256(exact_plan_bytes).hexdigest()}"
+    if profile.bridge.api_plan_digest != exact_digest:
+        raise ValueError("Rust API plan exact-file digest does not match rust-profile.toml")
+    if plan.package_name != profile.package.name:
+        raise ValueError("Rust API plan package_name does not match rust-profile.toml")
+    expected_cli = tuple((item.profile_id, item.binary_name) for item in profile.cli)
+    actual_cli = tuple((item.profile_id, item.binary_name) for item in plan.cli_profiles)
+    if actual_cli != expected_cli:
+        raise ValueError("Rust API plan CLI profiles do not match rust-profile.toml")
+    unsafe_api_ids = tuple(item.api_id for item in plan.functions if item.unsafe)
+    if unsafe_api_ids != profile.bridge.unsafe_api_ids:
+        raise ValueError("Rust API plan unsafe APIs do not match rust-profile.toml")
 
 
 def _freeze_arrays(value: object) -> object:
@@ -239,5 +281,8 @@ __all__ = [
     "RustPackageProfile",
     "RustProfile",
     "RustTargetProfile",
+    "canonical_rust_profile_bytes",
     "load_rust_profile",
+    "rust_profile_projection_digest",
+    "validate_rust_profile_api_plan",
 ]

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
+import tarfile
 from pathlib import Path
 
 import pytest
@@ -30,6 +32,21 @@ version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 '''
+
+
+def _crate_archive(root: str, files: dict[str, bytes]) -> bytes:
+    output = io.BytesIO()
+    with tarfile.open(fileobj=output, mode="w:gz") as archive:
+        directory = tarfile.TarInfo(f"{root}/")
+        directory.type = tarfile.DIRTYPE
+        directory.mode = 0o755
+        archive.addfile(directory)
+        for relative, content in sorted(files.items()):
+            info = tarfile.TarInfo(f"{root}/{relative}")
+            info.size = len(content)
+            info.mode = 0o644
+            archive.addfile(info, io.BytesIO(content))
+    return output.getvalue()
 
 
 def _identity() -> RuntimeDiscriminator:
@@ -106,6 +123,25 @@ def test_cargo_lock_rejects_unfrozen_sources(
     assert raised.value.code is code
 
 
+@pytest.mark.parametrize(
+    "dependency",
+    [
+        "itoa 9.9.9",
+        "itoa 1.0.15 (registry+https://example.invalid/index)",
+        "itoa not-a-version",
+    ],
+)
+def test_cargo_lock_resolves_dependency_edges_by_exact_identity(
+    tmp_path: Path, dependency: str
+) -> None:
+    (tmp_path / "Cargo.lock").write_text(
+        CARGO_LOCK.replace(' "itoa",', f' "{dependency}",'), encoding="utf-8"
+    )
+
+    with pytest.raises(PackageManagerError, match="resolve"):
+        CargoPackageManager().validate_lock(tmp_path, "1.100.0-nightly")
+
+
 def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> None:
     lock_root = tmp_path / "lock"
     lock_root.mkdir()
@@ -119,7 +155,8 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
     cache.mkdir(parents=True)
     index.mkdir(parents=True)
     crate = cache / "itoa-1.0.15.crate"
-    crate.write_bytes(b"crate archive")
+    vendor_files = {"Cargo.toml": b"[package]\nname = \"itoa\"\nversion = \"1.0.15\"\n"}
+    crate.write_bytes(_crate_archive("itoa-1.0.15", vendor_files))
     checksum = hashlib.sha256(crate.read_bytes()).hexdigest()
     lock_text = CARGO_LOCK.replace(
         "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c",
@@ -127,8 +164,16 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
     )
     (lock_root / "Cargo.lock").write_text(lock_text, encoding="utf-8")
     summary = adapter.validate_lock(lock_root, "1.100.0-nightly")
+    for relative, content in vendor_files.items():
+        (vendor / relative).write_bytes(content)
+    file_checksums = {
+        relative: hashlib.sha256(content).hexdigest()
+        for relative, content in vendor_files.items()
+    }
     (vendor / ".cargo-checksum.json").write_text(
-        json.dumps({"files": {}, "package": checksum}, separators=(",", ":")),
+        json.dumps(
+            {"files": file_checksums, "package": checksum}, separators=(",", ":")
+        ),
         encoding="utf-8",
     )
     (index / "snapshot").write_text("frozen\n", encoding="utf-8")
@@ -159,7 +204,10 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
             "directory_count": sum(item.type == "directory" for item in entries),
             "total_bytes": sum(item.size for item in entries),
         },
-        "offline_smoke": {"status": "passed", "command_id": "cargo-metadata"},
+        "offline_smoke": {
+            "status": "passed",
+            "command_id": "cargo-metadata-frozen-offline-v1",
+        },
     }
 
     result = adapter.validate_offline_store(
@@ -190,3 +238,78 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
     with pytest.raises(PackageManagerError, match="crate archive checksum") as raised:
         adapter.validate_offline_store(store, summary, inventory, "1.100.0-nightly")
     assert raised.value.code is PackageManagerErrorCode.INVENTORY_MISMATCH
+
+
+def test_cargo_store_rejects_rehashed_vendor_tampering(tmp_path: Path) -> None:
+    lock_root = tmp_path / "lock"
+    lock_root.mkdir()
+    store = tmp_path / "store"
+    vendor = store / "vendor" / "itoa-1.0.15"
+    cache = store / "registry" / "cache"
+    index = store / "registry" / "index"
+    vendor.mkdir(parents=True)
+    cache.mkdir(parents=True)
+    index.mkdir(parents=True)
+    original = b"original\n"
+    archive = _crate_archive("itoa-1.0.15", {"src/lib.rs": original})
+    crate = cache / "itoa-1.0.15.crate"
+    crate.write_bytes(archive)
+    checksum = hashlib.sha256(archive).hexdigest()
+    (lock_root / "Cargo.lock").write_text(
+        CARGO_LOCK.replace(
+            "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c",
+            checksum,
+        ),
+        encoding="utf-8",
+    )
+    (vendor / "src").mkdir()
+    tampered = b"tampered\n"
+    (vendor / "src/lib.rs").write_bytes(tampered)
+    (vendor / ".cargo-checksum.json").write_text(
+        json.dumps(
+            {
+                "files": {"src/lib.rs": hashlib.sha256(tampered).hexdigest()},
+                "package": checksum,
+            },
+            separators=(",", ":"),
+        ),
+        encoding="utf-8",
+    )
+    (index / "snapshot").write_text("frozen\n", encoding="utf-8")
+    adapter = CargoPackageManager()
+    summary = adapter.validate_lock(lock_root, "1.100.0-nightly")
+
+    from nl2repobench.storage.canonical_ustar import tree_digest, tree_entries
+
+    entries = tree_entries(store)
+    inventory = {
+        "schema_version": "1.0",
+        "identity": "rust+cargo",
+        "adapter_version": "cargo-package-manager-v1",
+        "toolchain_digest": "sha256:" + "1" * 64,
+        "lock": {"digest": summary.lock_digest},
+        "store": {
+            "entries": [
+                {
+                    "path": item.path,
+                    "type": item.type,
+                    "mode": item.mode,
+                    "size": item.size,
+                    "sha256": item.sha256,
+                }
+                for item in entries
+            ],
+            "tree_digest": tree_digest(entries),
+            "archive_digest": "sha256:" + "2" * 64,
+            "file_count": sum(item.type == "file" for item in entries),
+            "directory_count": sum(item.type == "directory" for item in entries),
+            "total_bytes": sum(item.size for item in entries),
+        },
+        "offline_smoke": {
+            "status": "passed",
+            "command_id": "cargo-metadata-frozen-offline-v1",
+        },
+    }
+
+    with pytest.raises(PackageManagerError, match="differs from crate archive"):
+        adapter.validate_offline_store(store, summary, inventory, "1.100.0-nightly")

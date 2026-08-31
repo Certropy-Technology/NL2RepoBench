@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
 
 from nl2repobench.authoring.catalog import CatalogCompiler, CatalogError
-from nl2repobench.verification.rust_profile import load_rust_profile
+from nl2repobench.verification.rust_bridge import canonical_json_bytes
+from nl2repobench.verification.rust_profile import (
+    canonical_rust_profile_bytes,
+    load_rust_profile,
+    rust_profile_projection_digest,
+)
 
 PROFILE = '''schema_version = "1.0"
 
@@ -112,18 +118,47 @@ def test_rust_profile_rejects_json_and_symlink_sources(tmp_path: Path) -> None:
         load_rust_profile(alias)
 
 
-def _private_ref(digit: str) -> str:
+def _private_ref(digit: str, media_type: str) -> str:
     return f'''digest = "sha256:{digit * 64}"
 size_bytes = 1
+media_type = "{media_type}"
 uri = "artifact://private/sha256:{digit * 64}"
 visibility = "private"
 '''
 
 
+def _api_plan() -> bytes:
+    payload = {
+        "schema_version": "1.0",
+        "package_name": "demo",
+        "types": [],
+        "functions": [
+            {
+                "api_id": "echo",
+                "rust_path": "crate::echo",
+                "kind": "sync",
+                "receiver": None,
+                "state_type": None,
+                "args": [{"name": "value", "type": "string"}],
+                "returns": "string",
+                "error": None,
+                "unsafe": False,
+                "leaf_ids": ["echo.basic"],
+            }
+        ],
+        "state_types": [],
+        "cli_profiles": [{"profile_id": "demo-cli", "binary_name": "demo"}],
+        "unsafe_leaf_ids": [],
+    }
+    digest = hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
+    payload["api_plan_digest"] = f"sha256:{digest}"
+    return canonical_json_bytes(payload)
+
+
 def test_catalog_source_hook_validates_rust_profile_and_api_plan_digest(
     tmp_path: Path,
 ) -> None:
-    api_plan = b'{"schema_version":"1.0"}\n'
+    api_plan = _api_plan()
     digest = hashlib.sha256(api_plan).hexdigest()
     (tmp_path / "instruction.md").write_text("# Rust task\n", encoding="utf-8")
     (tmp_path / "rust-api-plan.json").write_bytes(api_plan)
@@ -152,28 +187,28 @@ status = "known"
 package_manager = "cargo"
 
 [dependencies.lock]
-{_private_ref("1")}
+{_private_ref("1", "application/vnd.nl2repobench.package-lock.tar")}
 [dependencies.offline_store]
-{_private_ref("2")}
+{_private_ref("2", "application/vnd.nl2repobench.offline-store.tar")}
 [dependencies.inventory]
-{_private_ref("3")}
+{_private_ref("3", "application/vnd.nl2repobench.inventory+json")}
 
 [tests]
 framework = "rust-harness"
 report_format = "rust-bridge-json-v1"
 
 [tests.commands_artifact]
-{_private_ref("4")}
+{_private_ref("4", "application/vnd.nl2repobench.command-plan+json")}
 [tests.test_bundle]
-{_private_ref("5")}
+{_private_ref("5", "application/vnd.nl2repobench.test-bundle.tar")}
 
 [verifier]
 entrypoint = "run.py"
 
 [verifier.bundle]
-{_private_ref("6")}
+{_private_ref("6", "application/vnd.nl2repobench.verifier-bundle.tar")}
 [oracle_bundle]
-{_private_ref("7")}
+{_private_ref("7", "application/vnd.nl2repobench.oracle-bundle.tar")}
 ''',
         encoding="utf-8",
     )
@@ -181,14 +216,82 @@ entrypoint = "run.py"
     source = CatalogCompiler.load_task(tmp_path)
     assert source.metadata.language.value == "rust"
 
+    task_path = tmp_path / "task.toml"
+    task_text = task_path.read_text(encoding="utf-8")
+    task_path.write_text(
+        task_text.replace(
+            "application/vnd.nl2repobench.package-lock.tar",
+            "application/octet-stream",
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(CatalogError, match="media type"):
+        CatalogCompiler.load_task(tmp_path)
+    task_path.write_text(task_text, encoding="utf-8")
+
     (tmp_path / "rust-profile.json").write_text("{}\n", encoding="utf-8")
     with pytest.raises(CatalogError, match="rust-profile.json"):
         CatalogCompiler.load_task(tmp_path)
     (tmp_path / "rust-profile.json").unlink()
 
-    (tmp_path / "rust-api-plan.json").write_bytes(b"tampered\n")
-    with pytest.raises(CatalogError, match="API plan digest"):
+    changed_plan = json.loads(api_plan)
+    changed_plan["functions"][0]["leaf_ids"] = ["echo.changed"]
+    del changed_plan["api_plan_digest"]
+    changed_plan["api_plan_digest"] = "sha256:" + hashlib.sha256(
+        canonical_json_bytes(changed_plan)
+    ).hexdigest()
+    (tmp_path / "rust-api-plan.json").write_bytes(canonical_json_bytes(changed_plan))
+    with pytest.raises(CatalogError, match="exact-file digest"):
         CatalogCompiler.load_task(tmp_path)
+
+
+def test_rust_profile_projection_is_canonical_and_digest_bound(tmp_path: Path) -> None:
+    path = tmp_path / "rust-profile.toml"
+    path.write_text(PROFILE, encoding="utf-8")
+    profile = load_rust_profile(path)
+
+    projection = canonical_rust_profile_bytes(profile)
+
+    assert projection.endswith(b"\n") and not projection.endswith(b"\n\n")
+    assert projection == (
+        json.dumps(
+            profile.model_dump(mode="json"),
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode()
+        + b"\n"
+    )
+    assert rust_profile_projection_digest(profile) == (
+        f"sha256:{hashlib.sha256(projection).hexdigest()}"
+    )
+
+
+def test_discovered_rust_source_can_defer_runtime_and_private_assets(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "instruction.md").write_text("# Rust discovery\n", encoding="utf-8")
+    (tmp_path / "task.toml").write_text(
+        '''task_id = "rust-discovered"
+
+[metadata]
+language = "rust"
+
+[environment]
+status = "unknown"
+
+[dependencies]
+status = "unknown"
+package_manager = "cargo"
+
+[tests]
+framework = "rust-harness"
+report_format = "rust-bridge-json-v1"
+''',
+        encoding="utf-8",
+    )
+
+    assert CatalogCompiler.load_task(tmp_path).task_id == "rust-discovered"
 
 
 def test_source_asset_hook_preserves_runtime_optional_non_rust_sources(

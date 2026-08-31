@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Never
 
@@ -18,6 +19,7 @@ _TARGET_VALUES = {
     "target_family": "unix",
     "target_pointer_width": "64",
 }
+_FEATURE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_+.-]*$")
 
 
 def _utf8_key(value: str) -> bytes:
@@ -31,8 +33,11 @@ def cargo_feature_args(
 
     if not isinstance(default_features, bool):
         raise ValueError("default_features must be a boolean")
-    if any(not isinstance(item, str) or not item for item in enabled_sorted):
-        raise ValueError("Cargo features must be non-empty strings")
+    if any(
+        not isinstance(item, str) or not _FEATURE_NAME.fullmatch(item)
+        for item in enabled_sorted
+    ):
+        raise ValueError("Cargo features must use the frozen feature-name grammar")
     if tuple(sorted(enabled_sorted, key=_utf8_key)) != enabled_sorted or len(
         set(enabled_sorted)
     ) != len(enabled_sorted):
