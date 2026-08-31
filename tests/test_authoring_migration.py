@@ -655,6 +655,32 @@ def test_archive_evidence_rows_are_immutable_and_one_canonical_per_task(tmp_path
         db.execute("DELETE FROM legacy_archive_evidence WHERE archive_identity=?", ("f" * 64,))
 
 
+def test_import_keeps_a_historical_collision_as_blocker_not_archive_attempt(tmp_path: Path) -> None:
+    """A legacy collision blocks the task instead of inventing a collision archive receipt."""
+    root = _live_case(tmp_path, "archive-collision")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00")
+    _write_archive_receipt(root, _archive_receipt_body())
+    failures = root / "supervisor" / "integration-failures.json"
+    failures.write_text(
+        json.dumps({ARCHIVE_PACKAGE: {"reason": "remote object collision, cleanup forbidden"}}),
+        encoding="utf-8",
+    )
+
+    db = _import_case(root, "archive-collision")
+
+    state, reason = db.execute(
+        "SELECT state, terminal_reason FROM tasks WHERE task_id=?", (PYTHON_TASK,),
+    ).fetchone()
+    assert (state, reason) == ("blocked", "historical integration collision")
+    assert list(db.execute("SELECT count(*) FROM operation_receipts"))[0][0] == 0
+    assert list(db.execute(
+        "SELECT count(*) FROM legacy_archive_evidence WHERE canonical_evidence=1",
+    ))[0][0] == 0
+    assert list(db.execute(
+        "SELECT count(*) FROM orphan_claim_evidence WHERE classification='unmapped-claim'",
+    ))[0][0] == 1
+
+
 def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Path) -> None:
     scheduler = Scheduler(tmp_path / "source.sqlite3", supplied_root=tmp_path)
     scheduler.init()
