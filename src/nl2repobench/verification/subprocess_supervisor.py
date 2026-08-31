@@ -8,15 +8,13 @@ import errno
 import json
 import os
 import resource
-import select
 import selectors
 import signal
 import stat
-import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, BinaryIO, cast
+from typing import Any, cast
 
 from .process_cleanup import candidate_pids, terminate_uid_processes
 
@@ -166,7 +164,9 @@ class CandidateProcessPolicy:
             raise ProcessContractError("write_root escapes staging_root")
         for root in self.read_only_roots:
             _absolute_root(root, "policy root")
-        if not self.require_no_new_privs or not self.require_empty_capabilities:
+        for root in self.allowed_executable_roots:
+            _absolute_root(root, "allowed executable root")
+        if self.require_no_new_privs is not True or self.require_empty_capabilities is not True:
             raise ProcessContractError("candidate security requirements cannot be disabled")
         if any(
             not name.isidentifier()
@@ -223,24 +223,31 @@ class SubprocessResult:
         }
 
 
-def _reject_special(path: Path) -> None:
+def _reject_special(path: Path, *, reject_symlink: bool = True) -> None:
     try:
         mode = path.lstat().st_mode
     except OSError as exc:
         raise ProcessContractError(f"cannot inspect policy path: {path}") from exc
-    if any(
+    if reject_symlink and any(
         checker(mode)
         for checker in (stat.S_ISLNK, stat.S_ISSOCK, stat.S_ISFIFO, stat.S_ISBLK, stat.S_ISCHR)
     ):
         raise ProcessContractError(f"special or symlink path is forbidden: {path}")
-    if stat.S_ISREG(mode) and mode & (stat.S_ISUID | stat.S_ISGID):
-        raise ProcessContractError(f"setuid/setgid file is forbidden: {path}")
+    if not reject_symlink and any(
+        checker(mode) for checker in (stat.S_ISSOCK, stat.S_ISFIFO, stat.S_ISBLK, stat.S_ISCHR)
+    ):
+        raise ProcessContractError(f"special path is forbidden: {path}")
+    if stat.S_ISREG(mode):
+        if mode & (stat.S_ISUID | stat.S_ISGID):
+            raise ProcessContractError(f"setuid/setgid file is forbidden: {path}")
+        if path.stat().st_nlink != 1:
+            raise ProcessContractError(f"hardlink file is forbidden: {path}")
 
 
-def _validate_tree(root: Path) -> None:
-    _reject_special(root)
+def _validate_tree(root: Path, *, reject_symlinks: bool = True) -> None:
+    _reject_special(root, reject_symlink=reject_symlinks)
     for path in root.rglob("*"):
-        _reject_special(path)
+        _reject_special(path, reject_symlink=reject_symlinks)
 
 
 def _prctl(option: int, arg2: int = 0, arg3: int = 0, arg4: int = 0, arg5: int = 0) -> None:
@@ -259,7 +266,7 @@ def _child_status_ok(uid: int, gid: int) -> None:
             fields[key] = [int(value) for value in raw.split()]
     if fields.get("Uid") != [uid] * 4 or fields.get("Gid") != [gid] * 4:
         raise OSError(errno.EPERM, "child UID/GID verification failed")
-    capabilities = {"CapInh", "CapPrm", "CapEff", "CapAmb"}
+    capabilities = {"CapInh", "CapPrm", "CapEff", "CapAmb", "CapBnd"}
     for line in Path("/proc/self/status").read_text(encoding="ascii").splitlines():
         key, separator, raw = line.partition(":")
         if separator and key in capabilities and int(raw.strip(), 16) != 0:
@@ -269,118 +276,220 @@ def _child_status_ok(uid: int, gid: int) -> None:
             raise OSError(errno.EPERM, "no_new_privs verification failed")
 
 
-def _privilege_setup(uid: int, gid: int, error_fd: int, limits: SubprocessLimits) -> None:
-    try:
-        _prctl(_PR_SET_NO_NEW_PRIVS, 1)
-        _prctl(_PR_CAP_AMBIENT, _PR_CAP_AMBIENT_CLEAR_ALL)
-        for capability in range(_CAP_LAST_CAP + 1):
-            try:
-                _prctl(_PR_CAPBSET_DROP, capability)
-            except OSError as exc:
-                if exc.errno not in {errno.EINVAL, errno.EPERM}:
-                    raise
-        os.setgroups([])
-        os.setresgid(gid, gid, gid)
-        os.setresuid(uid, uid, uid)
-        resource.setrlimit(resource.RLIMIT_CPU, (int(limits.cpu_sec), int(limits.cpu_sec)))
-        resource.setrlimit(resource.RLIMIT_FSIZE, (limits.max_file_bytes, limits.max_file_bytes))
-        resource.setrlimit(resource.RLIMIT_NOFILE, (limits.max_open_files, limits.max_open_files))
-        resource.setrlimit(resource.RLIMIT_NPROC, (limits.max_processes, limits.max_processes))
-        _child_status_ok(uid, gid)
-    except BaseException as exc:  # child must report typed failure without traceback
-        payload = json.dumps(
-            {
-                "code": "preexec-failed",
-                "stage": "privilege-transition",
-                "message": str(exc)[:MAX_ERROR_MESSAGE],
-            }
-        ).encode()
+def _privilege_setup(uid: int, gid: int, limits: SubprocessLimits) -> None:
+    _prctl(_PR_SET_NO_NEW_PRIVS, 1)
+    _prctl(_PR_CAP_AMBIENT, _PR_CAP_AMBIENT_CLEAR_ALL)
+    for capability in range(_CAP_LAST_CAP + 1):
         try:
-            os.write(error_fd, payload)
-        finally:
-            os._exit(127)
-    os.close(error_fd)
+            _prctl(_PR_CAPBSET_DROP, capability)
+        except OSError as exc:
+            if exc.errno != errno.EINVAL:
+                raise
+    os.setgroups([])
+    os.setresgid(gid, gid, gid)
+    os.setresuid(uid, uid, uid)
+    resource.setrlimit(resource.RLIMIT_CPU, (int(limits.cpu_sec), int(limits.cpu_sec)))
+    resource.setrlimit(resource.RLIMIT_FSIZE, (limits.max_file_bytes, limits.max_file_bytes))
+    resource.setrlimit(resource.RLIMIT_NOFILE, (limits.max_open_files, limits.max_open_files))
+    resource.setrlimit(resource.RLIMIT_NPROC, (limits.max_processes, limits.max_processes))
+    _child_status_ok(uid, gid)
 
 
-def _kill_group(process: subprocess.Popen[bytes]) -> None:
+def _write_child_error(error_fd: int, code: str, stage: str, message: str) -> None:
+    payload = json.dumps(
+        {"code": code, "stage": stage, "message": message[:MAX_ERROR_MESSAGE]},
+        separators=(",", ":"),
+    ).encode("utf-8")
     try:
-        os.killpg(process.pid, signal.SIGKILL)
+        os.write(error_fd, payload)
+    finally:
+        os._exit(127)
+
+
+def _kill_group(pid: int, signum: int = signal.SIGKILL) -> None:
+    try:
+        os.killpg(pid, signum)
     except ProcessLookupError:
         pass
 
 
+class _ForkedProcess:
+    def __init__(self, pid: int, stdin_fd: int, stdout_fd: int, stderr_fd: int) -> None:
+        self.pid = pid
+        self.stdin_fd = stdin_fd
+        self.stdout_fd = stdout_fd
+        self.stderr_fd = stderr_fd
+        self.returncode: int | None = None
+
+    def poll(self) -> int | None:
+        if self.returncode is not None:
+            return self.returncode
+        waited, status = os.waitpid(self.pid, os.WNOHANG)
+        if waited == 0:
+            return None
+        self.returncode = os.waitstatus_to_exitcode(status)
+        return self.returncode
+
+    def wait(self, deadline: float | None = None) -> int:
+        while self.returncode is None:
+            if deadline is not None and time.monotonic() >= deadline:
+                raise TimeoutError("candidate process wait exceeded deadline")
+            self.poll()
+            if self.returncode is None:
+                time.sleep(0.01)
+        return self.returncode
+
+    def close_stdin(self) -> None:
+        if self.stdin_fd >= 0:
+            os.close(self.stdin_fd)
+            self.stdin_fd = -1
+
+
+def _fork_exec(
+    command: CandidateCommand,
+    cwd: Path,
+    environment: dict[str, str],
+    limits: SubprocessLimits,
+) -> tuple[_ForkedProcess, int]:
+    stdin_read, stdin_write = os.pipe()
+    stdout_read, stdout_write = os.pipe()
+    stderr_read, stderr_write = os.pipe()
+    error_read, error_write = os.pipe()
+    for fd in (stdin_write, stdout_read, stderr_read, error_read):
+        os.set_inheritable(fd, False)
+    os.set_inheritable(error_write, False)
+    pid = os.fork()
+    if pid == 0:
+        try:
+            os.close(stdin_write)
+            os.close(stdout_read)
+            os.close(stderr_read)
+            os.close(error_read)
+            os.setsid()
+            os.dup2(stdin_read, 0)
+            os.dup2(stdout_write, 1)
+            os.dup2(stderr_write, 2)
+            for fd in (stdin_read, stdout_write, stderr_write):
+                if fd not in {0, 1, 2}:
+                    os.close(fd)
+            try:
+                _privilege_setup(limits.uid, limits.gid, limits)
+            except BaseException as exc:
+                _write_child_error(error_write, "preexec-failed", "privilege-transition", str(exc))
+            try:
+                os.execve(command.argv[0], list(command.argv), environment)
+            except OSError as exc:
+                _write_child_error(error_write, "exec-failed", "exec", str(exc))
+        except BaseException as exc:
+            _write_child_error(error_write, "preexec-failed", "privilege-transition", str(exc))
+    os.close(stdin_read)
+    os.close(stdout_write)
+    os.close(stderr_write)
+    os.close(error_write)
+    return _ForkedProcess(pid, stdin_write, stdout_read, stderr_read), error_read
+
+
 def _read_streams(
-    process: subprocess.Popen[bytes], request: bytes, limits: SubprocessLimits
+    process: _ForkedProcess,
+    request: bytes,
+    limits: SubprocessLimits,
+    deadline: float,
+    initial_stdout: bytes = b"",
+    initial_stderr: bytes = b"",
 ) -> tuple[bytes, bytes, bool, bool]:
-    assert process.stdin is not None and process.stdout is not None and process.stderr is not None
     selector = selectors.DefaultSelector()
-    buffers = {process.stdout: bytearray(), process.stderr: bytearray()}
-    for stream in buffers:
-        os.set_blocking(stream.fileno(), False)
-        selector.register(stream, selectors.EVENT_READ)
-    os.set_blocking(process.stdin.fileno(), False)
-    selector.register(process.stdin, selectors.EVENT_WRITE)
+    buffers = {
+        process.stdout_fd: bytearray(initial_stdout),
+        process.stderr_fd: bytearray(initial_stderr),
+    }
+    captured = len(initial_stdout) + len(initial_stderr)
+    if captured > limits.max_output_bytes:
+        _kill_group(process.pid)
+        return initial_stdout[: limits.max_output_bytes], initial_stderr[:0], False, True
+    buffers_fds = tuple(buffers)
+    for fd in buffers_fds:
+        if fd < 0:
+            continue
+        os.set_blocking(fd, False)
+        selector.register(fd, selectors.EVENT_READ)
+    if process.stdin_fd >= 0:
+        os.set_blocking(process.stdin_fd, False)
+        selector.register(process.stdin_fd, selectors.EVENT_WRITE)
     offset = 0
-    captured = 0
-    deadline = time.monotonic() + limits.timeout_sec
     timed_out = False
     output_limit = False
     while selector.get_map():
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             timed_out = True
-            _kill_group(process)
+            _kill_group(process.pid)
             break
         for key, _ in selector.select(min(remaining, 0.1)):
-            selected_file: Any = key.fileobj
-            if selected_file is process.stdin:
+            selected_fd = key.fd
+            if selected_fd == process.stdin_fd:
                 try:
-                    written = os.write(process.stdin.fileno(), request[offset:])
+                    written = os.write(process.stdin_fd, request[offset:])
                 except (BrokenPipeError, ConnectionResetError):
                     written = len(request) - offset
                 except BlockingIOError:
                     continue
                 offset += written
                 if offset == len(request):
-                    selector.unregister(process.stdin)
-                    process.stdin.close()
+                    selector.unregister(process.stdin_fd)
+                    process.close_stdin()
                 continue
-            selected = cast(BinaryIO, selected_file)
             try:
-                data = os.read(selected.fileno(), 65536)
+                data = os.read(selected_fd, 65536)
             except OSError:
                 data = b""
             if not data:
-                selector.unregister(selected)
-                selected.close()
+                selector.unregister(selected_fd)
+                os.close(selected_fd)
                 continue
             if captured + len(data) > limits.max_output_bytes:
                 allowed = max(0, limits.max_output_bytes - captured)
-                buffers[selected].extend(data[:allowed])
+                buffers[selected_fd].extend(data[:allowed])
                 captured += allowed
                 output_limit = True
-                _kill_group(process)
+                _kill_group(process.pid)
                 break
-            buffers[selected].extend(data)
+            buffers[selected_fd].extend(data)
             captured += len(data)
         if timed_out or output_limit:
             break
     for key in list(selector.get_map().values()):
         try:
             selector.unregister(key.fileobj)
-            cast(Any, key.fileobj).close()
+            fd = key.fd
+            try:
+                os.close(fd)
+            except OSError:
+                pass
         except (OSError, ValueError):
             pass
     selector.close()
     try:
-        process.wait(timeout=5)
-    except subprocess.TimeoutExpired:
-        _kill_group(process)
+        process.wait(deadline)
+    except TimeoutError:
+        _kill_group(process.pid)
         process.wait()
-    return bytes(buffers[process.stdout]), bytes(buffers[process.stderr]), timed_out, output_limit
+    return (
+        bytes(buffers.get(process.stdout_fd, b"")),
+        bytes(buffers.get(process.stderr_fd, b"")),
+        timed_out,
+        output_limit,
+    )
 
 
-def _cleanup(uid: int) -> tuple[bool, ProcessError | None]:
+def _cleanup(
+    uid: int, process: _ForkedProcess | None = None, deadline: float | None = None
+) -> tuple[bool, ProcessError | None]:
+    if process is not None:
+        _kill_group(process.pid, signal.SIGTERM)
+        grace = min(0.1, max(0.0, (deadline or time.monotonic() + 0.1) - time.monotonic()))
+        if grace:
+            time.sleep(grace)
+        _kill_group(process.pid)
     try:
         terminate_uid_processes(uid)
     except RuntimeError as exc:
@@ -414,9 +523,10 @@ def run_candidate_process(
     if len(stdin_data) > limits.max_stdin_bytes:
         raise ProcessContractError("candidate stdin exceeds limit")
     cwd = policy.validate_command(command)
-    roots: tuple[Path, ...] = (*policy.read_only_roots, policy.write_root)
-    for root in roots:
+    for root in (*policy.read_only_roots, policy.write_root):
         _validate_tree(root)
+    for root in policy.allowed_executable_roots:
+        _validate_tree(root, reject_symlinks=False)
     before = tuple(candidate_pids(limits.uid))
     if before:
         return SubprocessResult(
@@ -430,57 +540,130 @@ def run_candidate_process(
                 before[:MAX_ERROR_PIDS],
             ),
         )
-    error_read, error_write = os.pipe()
-    os.set_inheritable(error_write, True)
     environment = {
         "HOME": "/nonexistent",
         "PYTHONDONTWRITEBYTECODE": "1",
         **dict(command.environment),
     }
+    deadline = time.monotonic() + limits.timeout_sec
     try:
-        process = subprocess.Popen(
-            command.argv,
-            cwd=cwd,
-            env=environment,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            start_new_session=True,
-            pass_fds=(error_write,),
-            preexec_fn=lambda: _privilege_setup(limits.uid, limits.gid, error_write, limits),
-        )
+        process, error_read = _fork_exec(command, cwd, environment, limits)
     except OSError as exc:
-        os.close(error_read)
-        os.close(error_write)
         return SubprocessResult(
             request_id,
             127,
             spawn_error=ProcessError("spawn-failed", "spawn", str(exc)[:MAX_ERROR_MESSAGE]),
         )
-    os.close(error_write)
-    ready, _, _ = select.select([error_read], [], [], limits.timeout_sec)
-    child_error = os.read(error_read, MAX_ERROR_MESSAGE + 1) if ready else b""
-    os.close(error_read)
-    if child_error:
+
+    os.set_blocking(error_read, False)
+    startup_buffer = bytearray()
+    startup_stdout = bytearray()
+    startup_stderr = bytearray()
+    startup_done = False
+    startup_error: ProcessError | None = None
+    startup_output_limit = False
+    startup_timed_out = False
+    selector = selectors.DefaultSelector()
+    selector.register(error_read, selectors.EVENT_READ)
+    for fd, buffer in ((process.stdout_fd, startup_stdout), (process.stderr_fd, startup_stderr)):
+        os.set_blocking(fd, False)
+        selector.register(fd, selectors.EVENT_READ, buffer)
+    while not startup_done and selector.get_map():
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            startup_timed_out = True
+            break
+        for key, _ in selector.select(min(remaining, 0.1)):
+            fd = key.fd
+            if fd == error_read:
+                data = os.read(error_read, MAX_ERROR_MESSAGE + 1)
+                if data:
+                    startup_buffer.extend(data)
+                    try:
+                        payload = json.loads(data.decode("utf-8"))
+                        startup_error = ProcessError(
+                            payload["code"], payload["stage"], payload["message"]
+                        )
+                    except (ValueError, KeyError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+                        startup_error = ProcessError(
+                            "preexec-failed", "privilege-transition", str(exc)[:MAX_ERROR_MESSAGE]
+                        )
+                    startup_done = True
+                else:
+                    startup_done = True
+                selector.unregister(error_read)
+                os.close(error_read)
+                continue
+            buffer = cast(bytearray, key.data)
+            data = os.read(fd, 65536)
+            if not data:
+                selector.unregister(fd)
+                os.close(fd)
+                if fd == process.stdout_fd:
+                    process.stdout_fd = -1
+                elif fd == process.stderr_fd:
+                    process.stderr_fd = -1
+                continue
+            if len(startup_stdout) + len(startup_stderr) + len(data) > limits.max_output_bytes:
+                startup_output_limit = True
+                startup_done = True
+                break
+            buffer.extend(data)
+    for key in list(selector.get_map().values()):
+        fd = key.fd
         try:
-            payload = json.loads(child_error.decode("utf-8"))
-            spawn_error = ProcessError(payload["code"], payload["stage"], payload["message"])
-        except (ValueError, KeyError, json.JSONDecodeError, UnicodeDecodeError) as exc:
-            spawn_error = ProcessError(
-                "preexec-failed", "privilege-transition", str(exc)[:MAX_ERROR_MESSAGE]
+            selector.unregister(fd)
+            if fd not in {process.stdout_fd, process.stderr_fd}:
+                os.close(fd)
+        except (OSError, ValueError):
+            pass
+    selector.close()
+    if startup_error or startup_timed_out or startup_output_limit:
+        if startup_timed_out:
+            startup_error = ProcessError(
+                "preexec-failed", "privilege-transition", "privilege transition exceeded deadline"
             )
-        _kill_group(process)
-        process.wait()
-        complete, cleanup_error = _cleanup(limits.uid)
+        if startup_output_limit:
+            _kill_group(process.pid)
+        else:
+            _kill_group(process.pid, signal.SIGTERM)
+            time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
+            _kill_group(process.pid)
+        try:
+            process.wait(deadline)
+        except TimeoutError:
+            _kill_group(process.pid)
+            process.wait()
+        complete, cleanup_error = _cleanup(limits.uid, process, deadline)
         return SubprocessResult(
             request_id,
             127,
-            cleanup_complete=complete,
-            spawn_error=spawn_error,
+            bytes(startup_stdout),
+            bytes(startup_stderr),
+            startup_timed_out,
+            startup_output_limit,
+            complete,
+            spawn_error=startup_error,
             cleanup_error=cleanup_error,
         )
-    stdout, stderr, timed_out, output_limit = _read_streams(process, stdin_data, limits)
-    complete, cleanup_error = _cleanup(limits.uid)
+    stdout, stderr, timed_out, output_limit = _read_streams(
+        process,
+        stdin_data,
+        limits,
+        deadline,
+        bytes(startup_stdout),
+        bytes(startup_stderr),
+    )
+    if timed_out or output_limit:
+        _kill_group(process.pid, signal.SIGTERM)
+        time.sleep(min(0.1, max(0.0, deadline - time.monotonic())))
+        _kill_group(process.pid)
+    try:
+        process.wait(deadline)
+    except TimeoutError:
+        _kill_group(process.pid)
+        process.wait()
+    complete, cleanup_error = _cleanup(limits.uid, process, deadline)
     return SubprocessResult(
         request_id,
         124 if timed_out else (125 if output_limit else int(process.returncode or 0)),

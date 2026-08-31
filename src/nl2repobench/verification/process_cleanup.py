@@ -26,16 +26,16 @@ def candidate_pids(uid: int) -> list[int]:
     return pids
 
 
-def terminate_uid_processes(uid: int, *, attempts: int = 20) -> None:
-    """Kill and rescan until no process owned by *uid* remains."""
+def terminate_uid_processes(uid: int, *, attempts: int = 20, term_attempts: int = 5) -> None:
+    """Gracefully stop, then kill, and rescan UID-owned processes."""
 
-    for _ in range(attempts):
+    for attempt in range(attempts):
         pids = [pid for pid in candidate_pids(uid) if pid != os.getpid()]
         if not pids:
             return
         for pid in pids:
             try:
-                os.kill(pid, signal.SIGKILL)
+                os.kill(pid, signal.SIGTERM if attempt < term_attempts else signal.SIGKILL)
             except ProcessLookupError:
                 pass
         time.sleep(0.01)

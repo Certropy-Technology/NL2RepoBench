@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.verification import candidate_process_cli
+from nl2repobench.verification import candidate_process_cli, subprocess_supervisor
 from nl2repobench.verification.process_cleanup import candidate_pids
 from nl2repobench.verification.subprocess_supervisor import (
     CANDIDATE_GID,
@@ -25,16 +25,27 @@ from nl2repobench.verification.subprocess_supervisor import (
 
 
 def _policy(tmp_path: Path, *, environment: frozenset[str] = frozenset()) -> CandidateProcessPolicy:
+    for parent in (tmp_path, tmp_path.parent, tmp_path.parent.parent):
+        parent.chmod(0o755)
     staging = tmp_path / "staging"
     write = staging / "write"
+    executable_root = staging / "bin"
     staging.mkdir()
     write.mkdir()
+    executable_root.mkdir()
+    staging.chmod(0o755)
+    write.chmod(0o755)
+    executable_root.chmod(0o755)
+    for name in ("true", "false", "printenv", "sleep", "yes"):
+        target = executable_root / name
+        target.write_bytes(Path("/usr/bin").joinpath(name).read_bytes())
+        target.chmod(0o755)
     return CandidateProcessPolicy(
         task_id="test-task",
         staging_root=staging,
         read_only_roots=(staging,),
         write_root=write,
-        allowed_executable_roots=(Path("/usr/bin"),),
+        allowed_executable_roots=(executable_root,),
         allowed_environment_names=environment,
     )
 
@@ -53,7 +64,7 @@ def test_residual_result_uses_cleanup_error_only(
         lambda uid: [123] if uid == CANDIDATE_UID else [],
     )
     result = run_candidate_process(
-        CandidateCommand(("/usr/bin/true",), "."),
+        CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
         SubprocessLimits(timeout_sec=1, cpu_sec=1),
         policy,
         request_id="0" * 32,
@@ -79,12 +90,39 @@ def test_limits_are_lower_only() -> None:
         SubprocessLimits(max_output_bytes=HARD_OUTPUT_BYTES + 1)
 
 
+def test_policy_requires_literal_security_flags(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    with pytest.raises(ProcessContractError):
+        CandidateProcessPolicy(
+            task_id=policy.task_id,
+            staging_root=policy.staging_root,
+            read_only_roots=policy.read_only_roots,
+            write_root=policy.write_root,
+            allowed_executable_roots=policy.allowed_executable_roots,
+            allowed_environment_names=frozenset(),
+            require_no_new_privs=1,
+        )
+
+
+def test_hardlinks_are_rejected_before_spawn(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    hardlink = policy.staging_root / "hardlink"
+    hardlink.hardlink_to(policy.staging_root / "bin/true")
+    with pytest.raises(ProcessContractError, match="hardlink"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+            SubprocessLimits(timeout_sec=1, cpu_sec=1),
+            policy,
+            request_id="1" * 32,
+        )
+
+
 @pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
 def test_candidate_process_success_and_nonzero(tmp_path: Path) -> None:
     policy = _policy(tmp_path)
     limits = SubprocessLimits(timeout_sec=3, cpu_sec=3, max_output_bytes=1024)
     success = run_candidate_process(
-        CandidateCommand(("/usr/bin/true",), "."),
+        CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
         limits,
         policy,
         request_id="a" * 32,
@@ -92,7 +130,7 @@ def test_candidate_process_success_and_nonzero(tmp_path: Path) -> None:
     assert success.returncode == 0
     assert success.cleanup_complete
     failure = run_candidate_process(
-        CandidateCommand(("/usr/bin/false",), "."),
+        CandidateCommand((str(policy.staging_root / "bin/false"),), "."),
         limits,
         policy,
         request_id="b" * 32,
@@ -107,7 +145,7 @@ def test_candidate_process_passes_bounded_stdin_and_environment(tmp_path: Path) 
     policy = _policy(tmp_path, environment=frozenset({"TEST_VALUE"}))
     result = run_candidate_process(
         CandidateCommand(
-            ("/usr/bin/printenv", "TEST_VALUE"), ".", (("TEST_VALUE", "ok"),)
+            (str(policy.staging_root / "bin/printenv"), "TEST_VALUE"), ".", (("TEST_VALUE", "ok"),)
         ),
         SubprocessLimits(timeout_sec=3, cpu_sec=3, max_output_bytes=1024),
         policy,
@@ -121,7 +159,7 @@ def test_candidate_process_passes_bounded_stdin_and_environment(tmp_path: Path) 
 def test_candidate_process_timeout_and_output_limit(tmp_path: Path) -> None:
     policy = _policy(tmp_path)
     timeout = run_candidate_process(
-        CandidateCommand(("/usr/bin/sleep", "10"), "."),
+        CandidateCommand((str(policy.staging_root / "bin/sleep"), "10"), "."),
         SubprocessLimits(timeout_sec=0.1, cpu_sec=1, max_output_bytes=1024),
         policy,
         request_id="d" * 32,
@@ -130,7 +168,7 @@ def test_candidate_process_timeout_and_output_limit(tmp_path: Path) -> None:
     assert timeout.returncode == 124
     assert timeout.cleanup_complete
     flood = run_candidate_process(
-        CandidateCommand(("/usr/bin/yes", "x"), "."),
+        CandidateCommand((str(policy.staging_root / "bin/yes"), "x"), "."),
         SubprocessLimits(timeout_sec=3, cpu_sec=3, max_output_bytes=1024),
         policy,
         request_id="e" * 32,
@@ -139,6 +177,49 @@ def test_candidate_process_timeout_and_output_limit(tmp_path: Path) -> None:
     assert flood.returncode == 125
     assert len(flood.stdout) + len(flood.stderr) <= 1024
     assert flood.cleanup_complete
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_exec_failure_is_distinct_from_spawn_failure(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    script = policy.staging_root / "bin/bad-script"
+    script.write_text("#!/missing/interpreter\n", encoding="utf-8")
+    script.chmod(0o755)
+    result = run_candidate_process(
+        CandidateCommand((str(script),), "."),
+        SubprocessLimits(timeout_sec=1, cpu_sec=1),
+        policy,
+        request_id="2" * 32,
+    )
+    assert result.returncode == 127
+    assert result.spawn_error is not None
+    assert result.spawn_error.code == "exec-failed"
+    assert result.spawn_error.stage == "exec"
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_capability_drop_eperm_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+    original = subprocess_supervisor._prctl
+
+    def fail_capability(option: int, *args: int) -> None:
+        if option == subprocess_supervisor._PR_CAPBSET_DROP:
+            raise OSError(1, "operation not permitted")
+        original(option, *args)
+
+    monkeypatch.setattr(subprocess_supervisor, "_prctl", fail_capability)
+    result = run_candidate_process(
+        CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+        SubprocessLimits(timeout_sec=1, cpu_sec=1),
+        policy,
+        request_id="3" * 32,
+    )
+    assert result.returncode == 127
+    assert result.spawn_error is not None
+    assert result.spawn_error.code == "preexec-failed"
+    assert result.cleanup_complete
 
 
 def test_cli_rejects_duplicate_and_malformed_requests(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -164,7 +245,7 @@ def test_cli_request_decodes_canonical_stdin(tmp_path: Path) -> None:
             "staging_root": str(policy.staging_root),
             "read_only_roots": [str(policy.staging_root)],
             "write_root": str(policy.write_root),
-            "allowed_executable_roots": ["/usr/bin"],
+            "allowed_executable_roots": [str(policy.staging_root / "bin")],
             "allowed_environment_names": [],
         },
         "stdin_base64": base64.b64encode(b"").decode(),
@@ -175,6 +256,20 @@ def test_cli_request_decodes_canonical_stdin(tmp_path: Path) -> None:
     assert limits.timeout_sec == 1
     assert parsed_policy.task_id == policy.task_id
     assert data == b""
+
+
+def test_cli_maps_internal_oserror_to_exit_70(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fail_request(value: object) -> object:
+        del value
+        raise OSError("internal")
+
+    monkeypatch.setattr(candidate_process_cli, "_request", fail_request)
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.TextIOWrapper(io.BytesIO(b'{"schema_version":"1.0"}')),
+    )
+    assert candidate_process_cli.main() == candidate_process_cli.EXIT_INTERNAL
 
 
 def test_candidate_pids_matches_any_uid_tuple(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -130,8 +130,10 @@ def main() -> int:
         sys.stdout.write(encoded + "\n")
         sys.stdout.flush()
         return EXIT_CLEANUP if not result.cleanup_complete else EXIT_OK
-    except (ProcessContractError, KeyError, TypeError, ValueError, OSError):
+    except (ProcessContractError, KeyError, TypeError, ValueError):
         return EXIT_MALFORMED
+    except OSError:
+        return EXIT_INTERNAL
     except Exception:
         return EXIT_INTERNAL
 
