@@ -1574,6 +1574,95 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
         cutover._verify_empty_cgroup("/service", cgroup_root=tmp_path / "cgroup")
 
 
+def _cutover_process(
+    pid: int, root: Path, role: str, *, starttime_ticks: int = 10
+) -> cutover.ProcessRecord:
+    return cutover.ProcessRecord(
+        pid,
+        starttime_ticks,
+        "boot-id",
+        "/usr/bin/pi",
+        hashlib.sha256(f"executable-{pid}".encode()).hexdigest(),
+        hashlib.sha256(f"argv-{pid}".encode()).hexdigest(),
+        "pi --mode rpc",
+        str(root),
+        "0::/user.slice",
+        role,
+    )
+
+
+def test_cutover_allows_parent_pi_ancestor(tmp_path: Path, monkeypatch) -> None:
+    parent = _cutover_process(200, tmp_path, "pi")
+    monkeypatch.setattr(cutover.os, "getpid", lambda: 100)
+    monkeypatch.setattr(cutover, "_read_parent_pid", lambda pid: {100: 200, 200: 0}[pid])
+    monkeypatch.setattr(cutover, "_read_process", lambda pid: parent if pid == 200 else None)
+    monkeypatch.setattr(cutover, "_authoring_processes", lambda *_args: [parent])
+
+    snapshot = cutover._capture_operator_ancestors()
+
+    assert snapshot == (parent,)
+    assert cutover._quiescence_processes(tmp_path, tmp_path / "live", snapshot) == []
+    assert cutover._operator_ancestor_audit(snapshot, tmp_path, tmp_path / "live") == [
+        {
+            "pid": 200,
+            "starttime_ticks": 10,
+            "boot_id": "boot-id",
+            "role": "pi",
+            "executable_digest": parent.executable_digest,
+            "argv_digest": parent.argv_digest,
+        }
+    ]
+
+
+def test_cutover_blocks_unrelated_repository_pi(tmp_path: Path, monkeypatch) -> None:
+    parent = _cutover_process(200, tmp_path, "pi")
+    unrelated = _cutover_process(300, tmp_path, "pi")
+    monkeypatch.setattr(cutover.os, "getpid", lambda: 100)
+    monkeypatch.setattr(cutover, "_read_parent_pid", lambda pid: {100: 200, 200: 0}[pid])
+    monkeypatch.setattr(cutover, "_read_process", lambda pid: parent if pid == 200 else None)
+    monkeypatch.setattr(
+        cutover, "_authoring_processes", lambda *_args: [parent, unrelated]
+    )
+
+    snapshot = cutover._capture_operator_ancestors()
+
+    assert cutover._quiescence_processes(
+        tmp_path, tmp_path / "live", snapshot
+    ) == [unrelated]
+
+
+def test_cutover_does_not_exempt_watcher_ancestor(tmp_path: Path, monkeypatch) -> None:
+    watcher = _cutover_process(200, tmp_path, "watcher")
+    monkeypatch.setattr(cutover.os, "getpid", lambda: 100)
+    monkeypatch.setattr(cutover, "_read_parent_pid", lambda pid: {100: 200, 200: 0}[pid])
+    monkeypatch.setattr(cutover, "_read_process", lambda pid: watcher if pid == 200 else None)
+    monkeypatch.setattr(cutover, "_authoring_processes", lambda *_args: [watcher])
+
+    snapshot = cutover._capture_operator_ancestors()
+
+    assert cutover._quiescence_processes(
+        tmp_path, tmp_path / "live", snapshot
+    ) == [watcher]
+    assert cutover._operator_ancestor_audit(snapshot, tmp_path, tmp_path / "live") == []
+
+
+def test_cutover_rejects_operator_ancestor_identity_change(
+    tmp_path: Path, monkeypatch
+) -> None:
+    original = _cutover_process(200, tmp_path, "pi")
+    changed = _cutover_process(200, tmp_path, "pi", starttime_ticks=11)
+    current = original
+    monkeypatch.setattr(cutover.os, "getpid", lambda: 100)
+    monkeypatch.setattr(cutover, "_read_parent_pid", lambda pid: {100: 200, 200: 0}[pid])
+    monkeypatch.setattr(cutover, "_read_process", lambda pid: current if pid == 200 else None)
+    monkeypatch.setattr(cutover, "_authoring_processes", lambda *_args: [changed])
+    snapshot = cutover._capture_operator_ancestors()
+    current = changed
+
+    with pytest.raises(MigrationError, match="ancestor identity changed"):
+        cutover._quiescence_processes(tmp_path, tmp_path / "live", snapshot)
+
+
 def test_activation_rechecks_late_target_sidecars(tmp_path: Path) -> None:
     staging = tmp_path / "staging.sqlite3"
     target = tmp_path / "target.sqlite3"
@@ -1654,6 +1743,8 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
     assert activated.runtime_config()["enabled"] == 0
     assert activated.status()["cutover_barrier"]["state"] == "prepared"
     assert json.loads(config.read_text())["enabled"] is False
+    journal_payload = json.loads((tmp_path / "journal.json").read_text())
+    assert "trusted_operator_ancestors" in journal_payload
     binding = cutover.install_service_binding(
         journal_path=tmp_path / "journal.json",
         barrier_path=barrier,
@@ -1680,6 +1771,8 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
         receipt_authority=tmp_path / "restore-authority-success",
     )
     assert restored["restore"]["verified"] is True
+    journal_payload = json.loads((tmp_path / "journal.json").read_text())
+    assert "restore_trusted_operator_ancestors" in journal_payload
     assert (tmp_path / ".scheduler.sqlite3.restore-consumed.json").is_file()
     activated.first_enable()
     activated.add_lane("restore-lane", "restore-batch", "python")

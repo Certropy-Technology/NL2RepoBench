@@ -141,6 +141,22 @@ def _read_process(pid: int) -> ProcessRecord | None:
     )
 
 
+def _read_parent_pid(pid: int) -> int:
+    try:
+        stat_fields = (
+            Path(f"/proc/{pid}/stat")
+            .read_text(encoding="utf-8")
+            .rsplit(")", 1)[1]
+            .split()
+        )
+        parent_pid = int(stat_fields[1])
+    except (OSError, ValueError, IndexError) as exc:
+        raise MigrationError(f"cannot inspect process ancestry: {pid}") from exc
+    if parent_pid < 0:
+        raise MigrationError(f"invalid process ancestry: {pid}")
+    return parent_pid
+
+
 def _under(path: str, root: Path) -> bool:
     value = Path(path).resolve()
     expected = root.resolve()
@@ -183,12 +199,90 @@ def _same_process(record: ProcessRecord) -> bool:
     return current == record
 
 
-def _wait_for_controllers(repository: Path, live_root: Path, timeout: int) -> None:
+def _capture_operator_ancestors() -> tuple[ProcessRecord, ...]:
+    ancestors: list[ProcessRecord] = []
+    child_pid = os.getpid()
+    visited = {child_pid}
+    while True:
+        parent_pid = _read_parent_pid(child_pid)
+        if parent_pid == 0:
+            break
+        if parent_pid in visited:
+            raise MigrationError("process ancestry contains a cycle")
+        visited.add(parent_pid)
+        record = _read_process(parent_pid)
+        if record is None:
+            raise MigrationError(f"cannot capture operator ancestor identity: {parent_pid}")
+        ancestors.append(record)
+        child_pid = parent_pid
+    return tuple(ancestors)
+
+
+def _revalidate_operator_ancestors(
+    snapshot: tuple[ProcessRecord, ...],
+) -> None:
+    if _capture_operator_ancestors() != snapshot:
+        raise MigrationError("trusted operator ancestor identity changed")
+
+
+def _operator_ancestor_audit(
+    snapshot: tuple[ProcessRecord, ...],
+    repository: Path,
+    live_root: Path,
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "pid": record.pid,
+            "starttime_ticks": record.starttime_ticks,
+            "boot_id": record.boot_id,
+            "role": record.role,
+            "executable_digest": record.executable_digest,
+            "argv_digest": record.argv_digest,
+        }
+        for ancestor in snapshot
+        if (record := _scope_process(ancestor, repository, live_root)) is not None
+        and record.role in {"pi", "generic"}
+    ]
+
+
+def _quiescence_processes(
+    repository: Path,
+    live_root: Path,
+    operator_ancestors: tuple[ProcessRecord, ...],
+) -> list[ProcessRecord]:
+    _revalidate_operator_ancestors(operator_ancestors)
+    trusted = tuple(
+        scoped
+        for ancestor in operator_ancestors
+        if (scoped := _scope_process(ancestor, repository, live_root)) is not None
+        and scoped.role in {"pi", "generic"}
+    )
+    return [
+        record
+        for record in _authoring_processes(repository, live_root)
+        if not (
+            record.role in {"pi", "generic"}
+            and any(
+                record.pid == ancestor.pid and record == ancestor
+                for ancestor in trusted
+            )
+        )
+    ]
+
+
+def _wait_for_controllers(
+    repository: Path,
+    live_root: Path,
+    timeout: int,
+    operator_ancestors: tuple[ProcessRecord, ...],
+) -> None:
     deadline = time.monotonic() + timeout
     while True:
         controllers = [
             record
-            for record in _authoring_processes(repository, live_root)
+            for record in _quiescence_processes(
+                repository, live_root, operator_ancestors
+            )
             if record.role in {"controller", "pi"}
         ]
         if not controllers:
@@ -573,7 +667,14 @@ def execute_cutover(
     ) or (database.parent / f".{database.name}.rolled-back.json").exists():
         raise MigrationError("cutover target or preclaim record already exists")
     runtime_config = live_root / "supervisor/runtime-config.json"
-    audit = {"pre_drain_inventory_sha256": inventory_digest(live_root), "cutover_id": cutover_id}
+    operator_ancestors = _capture_operator_ancestors()
+    audit = {
+        "pre_drain_inventory_sha256": inventory_digest(live_root),
+        "cutover_id": cutover_id,
+        "trusted_operator_ancestors": _operator_ancestor_audit(
+            operator_ancestors, repository, live_root
+        ),
+    }
     disabled = disable_legacy_config(runtime_config)
     _atomic_json(
         journal_path,
@@ -581,14 +682,20 @@ def execute_cutover(
     )
     staging = database.with_name(f".{database.name}.{cutover_id}.staging")
     try:
-        _wait_for_controllers(repository, live_root, drain_timeout)
+        _wait_for_controllers(
+            repository, live_root, drain_timeout, operator_ancestors
+        )
         _disable_and_mask_service(service_unit)
         with ExitStack() as stack:
             _acquire_lock(stack, live_root / "archive.lock")
-            watcher_snapshot = _authoring_processes(repository, live_root)
+            watcher_snapshot = _quiescence_processes(
+                repository, live_root, operator_ancestors
+            )
             _stop_watcher(watcher_snapshot, drain_timeout)
             _acquire_lock(stack, live_root / "supervisor.lock")
-            remaining = _authoring_processes(repository, live_root)
+            remaining = _quiescence_processes(
+                repository, live_root, operator_ancestors
+            )
             if remaining:
                 raise MigrationError(
                     "repository authoring actors remain after stop: "
@@ -942,6 +1049,10 @@ def restore_cutover_database(
         journal, _record = _rollback_identity(journal_path, barrier_path, database)
         repository = Path(str(journal.get("repository", "")))
         live_root = Path(str(journal.get("live_root", "")))
+        operator_ancestors = _capture_operator_ancestors()
+        operator_audit = _operator_ancestor_audit(
+            operator_ancestors, repository, live_root
+        )
         disabled = _read_json_object(runtime_config, "legacy runtime config")
         if (
             runtime_config.resolve()
@@ -958,7 +1069,11 @@ def restore_cutover_database(
             )
         ):
             raise MigrationError("legacy admissions are not disabled for restore")
-        if _authoring_processes(repository, live_root):
+        _atomic_json(
+            journal_path,
+            {**journal, "restore_trusted_operator_ancestors": operator_audit},
+        )
+        if _quiescence_processes(repository, live_root, operator_ancestors):
             raise MigrationError("repository actors remain during restore")
         _verify_sqlite_service_stopped(str(journal["sqlite_service_unit"]))
         _verify_docker(live_root / "worktrees")
@@ -982,7 +1097,7 @@ def restore_cutover_database(
             cutover_evidence=evidence,
             generation=int(observed["generation"]),
         )
-        if _authoring_processes(repository, live_root):
+        if _quiescence_processes(repository, live_root, operator_ancestors):
             raise MigrationError("repository actors appeared before restore activation")
         _verify_sqlite_service_stopped(str(journal["sqlite_service_unit"]))
         _verify_docker(live_root / "worktrees")
