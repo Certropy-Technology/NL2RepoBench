@@ -22,6 +22,7 @@ __all__ = [
     "GoModulesPackageManager",
     "PnpmPackageManager",
     "MavenPackageManager",
+    "MavenLockSummary",
     "ResolvedPackage",
     "StoreSummary",
     "UnknownPackageManagerError",
@@ -41,6 +42,10 @@ def __getattr__(name: str) -> Any:
         from .maven import MavenPackageManager
 
         return MavenPackageManager
+    if name == "MavenLockSummary":
+        from .maven import MavenLockSummary
+
+        return MavenLockSummary
     if name in {"PackageManagerRegistry", "UnknownPackageManagerError"}:
         from .registry import PackageManagerRegistry, UnknownPackageManagerError
 

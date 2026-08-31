@@ -9,6 +9,7 @@ from .evaluator import (
 )
 from .go_grader import grade_go_report, write_go_grading_outputs
 from .grader import grade_verification, write_grading_outputs
+from .java_grader import grade_java_report
 from .leaf_report import (
     CollectionError,
     CollectionReport,
@@ -36,6 +37,7 @@ __all__ = [
     "evaluate_leaf_report",
     "grade_verification",
     "grade_go_report",
+    "grade_java_report",
     "canonical_metric_contract",
     "write_grading_outputs",
     "write_go_grading_outputs",

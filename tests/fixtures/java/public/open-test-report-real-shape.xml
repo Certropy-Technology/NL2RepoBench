@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.1.0"
+          xmlns:e="https://schemas.opentest4j.org/reporting/events/0.1.0"
+          xmlns:java="https://schemas.opentest4j.org/reporting/java/0.1.0"
+          xmlns:junit="https://schemas.junit.org/open-test-reporting"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="https://schemas.junit.org/open-test-reporting https://junit.org/junit5/schemas/open-test-reporting/junit-1.9.xsd">
+  <infrastructure>
+    <hostName>synthetic-host</hostName>
+    <userName>synthetic-user</userName>
+    <operatingSystem>Linux</operatingSystem>
+    <cpuCores>4</cpuCores>
+    <java:javaVersion>21.0.5</java:javaVersion>
+    <java:fileEncoding>UTF-8</java:fileEncoding>
+    <java:heapSize max="1073741824"/>
+  </infrastructure>
+  <e:started id="1" name="JUnit Jupiter" time="2026-01-01T00:00:00.000000Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]</junit:uniqueId>
+      <junit:legacyReportingName>JUnit Jupiter</junit:legacyReportingName>
+      <junit:type>CONTAINER</junit:type>
+    </metadata>
+  </e:started>
+  <e:started id="2" name="display&lt;--&gt;Name" parentId="1" time="2026-01-01T00:00:00.001000Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[test:display]</junit:uniqueId>
+      <junit:legacyReportingName>display&lt;--&gt;Name</junit:legacyReportingName>
+      <junit:type>TEST</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="example.SyntheticTests" methodName="display" methodParameterTypes=""/>
+    </sources>
+  </e:started>
+  <e:reported id="2" time="2026-01-01T00:00:00.002000Z">
+    <attachments>
+      <data time="2026-01-01T00:00:00.002000Z">
+        <entry key="stdout">synthetic attachment</entry>
+      </data>
+    </attachments>
+  </e:reported>
+  <e:finished id="2" time="2026-01-01T00:00:00.003000Z">
+    <result status="FAILED">
+      <java:throwable assertionError="true" type="org.opentest4j.AssertionFailedError"><![CDATA[synthetic failure]]></java:throwable>
+    </result>
+  </e:finished>
+  <e:finished id="1" time="2026-01-01T00:00:00.004000Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+</e:events>

@@ -1,4 +1,4 @@
-"""Normalize bounded JUnit Open Test Reporting events into canonical leaves."""
+"""Normalize JUnit Platform Open Test Reporting 0.1.0 events into canonical leaves."""
 
 from __future__ import annotations
 
@@ -20,7 +20,9 @@ from nl2repobench.verification.taxonomy import VerificationReason
 
 EVENT_NS = "https://schemas.opentest4j.org/reporting/events/0.1.0"
 CORE_NS = "https://schemas.opentest4j.org/reporting/core/0.1.0"
+JAVA_NS = "https://schemas.opentest4j.org/reporting/java/0.1.0"
 JUNIT_NS = "https://schemas.junit.org/open-test-reporting"
+XSI_NS = "http://www.w3.org/2001/XMLSchema-instance"
 MAX_REPORT_BYTES = 8 * 1024 * 1024
 MAX_NODES = 100_000
 MAX_DEPTH = 128
@@ -53,40 +55,199 @@ def _qname(tag: str) -> tuple[str, str]:
 
 
 def _timestamp(value: str, description: str) -> datetime:
-    if len(value) > MAX_ATTRIBUTE_CHARS:
-        raise _fail(VerificationReason.REPORT_MALFORMED, f"{description} exceeds the size limit")
+    if not value or len(value) > MAX_ATTRIBUTE_CHARS:
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED,
+            f"{description} is missing or exceeds the size limit",
+        )
     try:
         return datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError as exc:
         raise _fail(VerificationReason.REPORT_MALFORMED, f"{description} is not RFC3339") from exc
 
 
-def _metadata(element: Element) -> dict[str, str]:
-    result: dict[str, str] = {}
-    for child in element.iter():
-        namespace, local = _qname(child.tag)
-        if namespace == CORE_NS and local == "entry":
-            key = child.attrib.get("key")
-            if not key or len(key) > MAX_ATTRIBUTE_CHARS or key in result:
+def _single_text(parent: Element, qname: tuple[str, str], description: str) -> str:
+    matches = [child for child in list(parent) if _qname(child.tag) == qname]
+    if len(matches) != 1 or matches[0].attrib or list(matches[0]):
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED,
+            f"Open Test metadata requires one scalar {description}",
+        )
+    value = (matches[0].text or "").strip()
+    if not value or len(value) > MAX_TEXT_CHARS:
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED,
+            f"Open Test metadata {description} is empty or oversized",
+        )
+    return value
+
+
+def _metadata(element: Element) -> tuple[str, str]:
+    metadata_nodes = [
+        child for child in list(element) if _qname(child.tag) == (CORE_NS, "metadata")
+    ]
+    if len(metadata_nodes) != 1 or metadata_nodes[0].attrib:
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED,
+            "Open Test started event requires one core metadata element",
+        )
+    metadata = metadata_nodes[0]
+    allowed = {
+        (CORE_NS, "tags"),
+        (JUNIT_NS, "uniqueId"),
+        (JUNIT_NS, "legacyReportingName"),
+        (JUNIT_NS, "type"),
+    }
+    if any(_qname(child.tag) not in allowed for child in list(metadata)):
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test metadata is invalid")
+    tags = [child for child in list(metadata) if _qname(child.tag) == (CORE_NS, "tags")]
+    if len(tags) > 1:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test tags are duplicated")
+    if tags:
+        if tags[0].attrib or any(
+            _qname(child.tag) != (CORE_NS, "tag") or child.attrib or list(child)
+            for child in list(tags[0])
+        ):
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test tags are invalid")
+    unique_id = _single_text(metadata, (JUNIT_NS, "uniqueId"), "junit:uniqueId")
+    _single_text(metadata, (JUNIT_NS, "legacyReportingName"), "junit:legacyReportingName")
+    item_type = _single_text(metadata, (JUNIT_NS, "type"), "junit:type")
+    if len(unique_id) > MAX_ID_CHARS or item_type not in {
+        "TEST",
+        "CONTAINER",
+        "CONTAINER_AND_TEST",
+    }:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test JUnit metadata is invalid")
+    return unique_id, item_type
+
+
+def _validate_file_position(element: Element) -> None:
+    if _qname(element.tag) != (CORE_NS, "filePosition") or list(element):
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test file position is invalid")
+    if not set(element.attrib).issubset({"line", "column"}) or "line" not in element.attrib:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test file position is invalid")
+    try:
+        line = int(element.attrib["line"])
+        column = int(element.attrib["column"]) if "column" in element.attrib else None
+    except ValueError as exc:
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED, "Open Test file position is invalid"
+        ) from exc
+    if line < 0 or (column is not None and column < 0):
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test file position is negative")
+
+
+def _validate_sources(element: Element) -> None:
+    source_nodes = [
+        child for child in list(element) if _qname(child.tag) == (CORE_NS, "sources")
+    ]
+    if len(source_nodes) > 1:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test sources are duplicated")
+    if not source_nodes:
+        return
+    sources = source_nodes[0]
+    if sources.attrib:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test sources have attributes")
+    allowed_attributes = {
+        (CORE_NS, "directorySource"): {"path"},
+        (CORE_NS, "fileSource"): {"path"},
+        (JAVA_NS, "classSource"): {"className"},
+        (JAVA_NS, "methodSource"): {
+            "className",
+            "methodName",
+            "methodParameterTypes",
+        },
+        (JAVA_NS, "classpathResourceSource"): {"resourceName"},
+        (JAVA_NS, "packageSource"): {"name"},
+    }
+    required_attributes = {
+        (CORE_NS, "directorySource"): {"path"},
+        (CORE_NS, "fileSource"): {"path"},
+        (JAVA_NS, "classSource"): {"className"},
+        (JAVA_NS, "methodSource"): {"className", "methodName"},
+        (JAVA_NS, "classpathResourceSource"): {"resourceName"},
+        (JAVA_NS, "packageSource"): {"name"},
+    }
+    position_sources = {
+        (CORE_NS, "fileSource"),
+        (JAVA_NS, "classSource"),
+        (JAVA_NS, "classpathResourceSource"),
+    }
+    for source in list(sources):
+        name = _qname(source.tag)
+        if name not in allowed_attributes or not set(source.attrib).issubset(
+            allowed_attributes[name]
+        ) or not required_attributes[name].issubset(source.attrib):
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test source is invalid")
+        required = required_attributes[name]
+        if any(
+            not value or len(value) > MAX_ATTRIBUTE_CHARS
+            for key, value in source.attrib.items()
+            if key in required
+        ):
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test source is invalid")
+        children = list(source)
+        if name in position_sources:
+            if len(children) > 1:
+                raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test source is invalid")
+            if children:
+                _validate_file_position(children[0])
+        elif children:
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test source is invalid")
+
+
+def _validate_attachments(element: Element) -> None:
+    attachment_nodes = [
+        child for child in list(element) if _qname(child.tag) == (CORE_NS, "attachments")
+    ]
+    if len(attachment_nodes) > 1:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test attachments are duplicated")
+    if not attachment_nodes:
+        return
+    attachments = attachment_nodes[0]
+    if attachments.attrib:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test attachments are invalid")
+    for data in list(attachments):
+        if _qname(data.tag) != (CORE_NS, "data") or set(data.attrib) != {"time"}:
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test attachment data is invalid")
+        _timestamp(data.attrib["time"], "attachment time")
+        for entry in list(data):
+            if (
+                _qname(entry.tag) != (CORE_NS, "entry")
+                or set(entry.attrib) != {"key"}
+                or not entry.attrib["key"]
+                or len(entry.attrib["key"]) > MAX_ATTRIBUTE_CHARS
+                or list(entry)
+            ):
                 raise _fail(
                     VerificationReason.REPORT_MALFORMED,
-                    "Open Test metadata key is missing, duplicated, or oversized",
+                    "Open Test attachment entry is invalid",
                 )
-            values = [
-                (nested.text or "").strip()
-                for nested in list(child)
-                if _qname(nested.tag) == (CORE_NS, "string")
-            ]
-            if not values:
-                direct = (child.text or "").strip()
-                values = [direct] if direct else []
-            if len(values) != 1 or len(values[0]) > MAX_TEXT_CHARS:
-                raise _fail(
-                    VerificationReason.REPORT_MALFORMED,
-                    "Open Test metadata value is missing or oversized",
-                )
-            result[key] = values[0]
-    return result
+
+
+def _validate_infrastructure(element: Element) -> None:
+    if element.attrib:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test infrastructure is invalid")
+    allowed = {
+        (CORE_NS, "hostName"): set(),
+        (CORE_NS, "userName"): set(),
+        (CORE_NS, "operatingSystem"): set(),
+        (CORE_NS, "cpuCores"): set(),
+        (JAVA_NS, "javaVersion"): set(),
+        (JAVA_NS, "fileEncoding"): set(),
+        (JAVA_NS, "heapSize"): {"max"},
+    }
+    seen: set[tuple[str, str]] = set()
+    for child in list(element):
+        name = _qname(child.tag)
+        if name not in allowed or name in seen or set(child.attrib) != allowed[name] or list(child):
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test infrastructure is invalid")
+        seen.add(name)
+        if child.text is not None and len(child.text) > MAX_TEXT_CHARS:
+            raise _fail(
+                VerificationReason.REPORT_MALFORMED,
+                "Open Test infrastructure is oversized",
+            )
 
 
 def _check_structure(data: bytes) -> Element:
@@ -100,21 +261,6 @@ def _check_structure(data: bytes) -> Element:
             VerificationReason.REPORT_MALFORMED,
             "Open Test report DTD/entities are forbidden",
         )
-    allowed = {
-        EVENT_NS: {"events", "started", "finished"},
-        JUNIT_NS: {"metadata", "result", "throwable"},
-        CORE_NS: {"entry", "string"},
-    }
-    allowed_attributes = {
-        (EVENT_NS, "events"): set(),
-        (EVENT_NS, "started"): {"id", "name", "time", "parentId", "uniqueId", "type"},
-        (EVENT_NS, "finished"): {"id", "time"},
-        (JUNIT_NS, "metadata"): set(),
-        (JUNIT_NS, "result"): {"status"},
-        (JUNIT_NS, "throwable"): set(),
-        (CORE_NS, "entry"): {"key"},
-        (CORE_NS, "string"): set(),
-    }
     depth = 0
     nodes = 0
     root: Element | None = None
@@ -129,12 +275,7 @@ def _check_structure(data: bytes) -> Element:
                         VerificationReason.REPORT_MALFORMED,
                         "Open Test report exceeds structural bounds",
                     )
-                namespace, local = _qname(element.tag)
-                if local not in allowed.get(namespace, set()):
-                    raise _fail(
-                        VerificationReason.REPORT_MALFORMED,
-                        f"unsupported Open Test element: {namespace}#{local}",
-                    )
+                _qname(element.tag)
                 if len(element.attrib) > MAX_ATTRIBUTES or any(
                     len(name) > MAX_ATTRIBUTE_CHARS or len(value) > MAX_ATTRIBUTE_CHARS
                     for name, value in element.attrib.items()
@@ -142,18 +283,6 @@ def _check_structure(data: bytes) -> Element:
                     raise _fail(
                         VerificationReason.REPORT_MALFORMED,
                         "Open Test report attributes exceed bounds",
-                    )
-                if any(name.startswith("{") for name in element.attrib):
-                    raise _fail(
-                        VerificationReason.REPORT_MALFORMED,
-                        "namespaced Open Test attributes are unsupported",
-                    )
-                if not set(element.attrib).issubset(
-                    allowed_attributes[(namespace, local)]
-                ):
-                    raise _fail(
-                        VerificationReason.REPORT_MALFORMED,
-                        f"unsupported attributes on Open Test element {local}",
                     )
                 if root is None:
                     root = element
@@ -172,9 +301,51 @@ def _check_structure(data: bytes) -> Element:
         ) from exc
     if root is None or _qname(root.tag) != (EVENT_NS, "events"):
         raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test report root is invalid")
-    if root.attrib:
-        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test report root has attributes")
+    schema_location = f"{{{XSI_NS}}}schemaLocation"
+    if not set(root.attrib).issubset({schema_location}):
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED,
+            "Open Test report root attributes are invalid",
+        )
+    if schema_location in root.attrib and not root.attrib[schema_location].strip():
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test schemaLocation is empty")
     return root
+
+
+def _result(event: Element) -> tuple[str, str | None]:
+    results = [child for child in list(event) if _qname(child.tag) == (CORE_NS, "result")]
+    if len(results) != 1:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test finish requires one result")
+    result = results[0]
+    if set(result.attrib) != {"status"}:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test result attributes are invalid")
+    status = result.attrib["status"]
+    if status not in {"SUCCESSFUL", "SKIPPED", "ABORTED", "FAILED"}:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test result status is invalid")
+    details: list[str] = []
+    seen_reason = False
+    seen_throwable = False
+    for child in list(result):
+        name = _qname(child.tag)
+        if name == (CORE_NS, "reason") and not seen_reason:
+            if child.attrib or list(child):
+                raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test reason is invalid")
+            seen_reason = True
+        elif name == (JAVA_NS, "throwable") and not seen_throwable:
+            if set(child.attrib) != {"type", "assertionError"} or list(child):
+                raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test throwable is invalid")
+            if child.attrib["assertionError"] not in {"true", "false"} or not child.attrib["type"]:
+                raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test throwable is invalid")
+            seen_throwable = True
+        else:
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test result content is invalid")
+        value = (child.text or "").strip()
+        if value:
+            details.append(value)
+    detail = "\n".join(details) or None
+    if detail is not None and len(detail) > MAX_DETAILS_CHARS:
+        raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test details exceed the size limit")
+    return status, detail
 
 
 def normalize_junit_open_test_report(
@@ -190,58 +361,66 @@ def normalize_junit_open_test_report(
     if report_data is None:
         raise _fail(VerificationReason.REPORT_MISSING, "Open Test report is missing")
     root = _check_structure(report_data)
+    children = list(root)
+    infrastructure = [
+        child for child in children if _qname(child.tag) == (CORE_NS, "infrastructure")
+    ]
+    if len(infrastructure) > 1 or (infrastructure and children[0] is not infrastructure[0]):
+        raise _fail(
+            VerificationReason.REPORT_MALFORMED,
+            "Open Test infrastructure position is invalid",
+        )
+    if infrastructure:
+        _validate_infrastructure(infrastructure[0])
     started: dict[str, _Started] = {}
     finished: set[str] = set()
+    unique_ids: set[str] = set()
     leaves: list[LeafCase] = []
     errors: list[LeafCollectionError] = []
-    for event in list(root):
+    for event in children[len(infrastructure) :]:
         namespace, local = _qname(event.tag)
-        if namespace != EVENT_NS:
-            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test root child is not an event")
+        if namespace != EVENT_NS or local not in {"started", "reported", "finished"}:
+            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test root child is invalid")
         if local == "started":
-            allowed_attributes = {"id", "name", "time", "parentId", "uniqueId", "type"}
-            if not set(event.attrib).issubset(allowed_attributes):
+            if set(event.attrib) not in (
+                {"id", "name", "time"},
+                {"id", "name", "time", "parentId"},
+            ):
                 raise _fail(
                     VerificationReason.REPORT_MALFORMED,
                     "Open Test started attributes are invalid",
                 )
-            event_id = event.attrib.get("id", "")
-            name = event.attrib.get("name", "")
-            metadata = _metadata(event)
-            parent_id = event.attrib.get("parentId") or metadata.get("parentId")
-            unique_id = event.attrib.get("uniqueId") or metadata.get("uniqueId") or ""
-            item_type = event.attrib.get("type") or metadata.get("type") or ""
+            event_id = event.attrib["id"]
+            name = event.attrib["name"]
+            parent_id = event.attrib.get("parentId")
+            unique_id, item_type = _metadata(event)
+            _validate_sources(event)
+            if any(
+                _qname(child.tag) not in {(CORE_NS, "metadata"), (CORE_NS, "sources")}
+                for child in list(event)
+            ):
+                raise _fail(
+                    VerificationReason.REPORT_MALFORMED,
+                    "Open Test started content is invalid",
+                )
             if (
                 not event_id
                 or len(event_id) > MAX_ID_CHARS
                 or event_id in started
                 or not name
                 or len(name) > MAX_ID_CHARS
-                or not unique_id
-                or len(unique_id) > MAX_ID_CHARS
-                or item_type not in {"TEST", "CONTAINER", "CONTAINER_AND_TEST"}
+                or unique_id in unique_ids
             ):
                 raise _fail(
                     VerificationReason.REPORT_MALFORMED,
                     "Open Test started event is invalid",
                 )
-            if parent_id is not None and (parent_id == event_id or parent_id not in started):
+            if parent_id is not None and (
+                parent_id == event_id or parent_id not in started or parent_id in finished
+            ):
                 raise _fail(
                     VerificationReason.REPORT_MALFORMED,
                     "Open Test parent hierarchy is invalid",
-                )
-            if parent_id is not None and parent_id in finished:
-                raise _fail(
-                    VerificationReason.REPORT_MALFORMED,
-                    "Open Test child starts after its parent finished",
-                )
-            direct_children = [_qname(child.tag) for child in list(event)]
-            if any(child != (JUNIT_NS, "metadata") for child in direct_children) or len(
-                direct_children
-            ) > 1:
-                raise _fail(
-                    VerificationReason.REPORT_MALFORMED,
-                    "Open Test started event content is invalid",
                 )
             started[event_id] = _Started(
                 event_id=event_id,
@@ -249,47 +428,44 @@ def normalize_junit_open_test_report(
                 unique_id=unique_id,
                 name=name,
                 item_type=item_type,
-                time=_timestamp(event.attrib.get("time", ""), "started time"),
+                time=_timestamp(event.attrib["time"], "started time"),
             )
+            unique_ids.add(unique_id)
             continue
-        if local != "finished":
-            raise _fail(VerificationReason.REPORT_MALFORMED, "unknown Open Test event")
-        if not set(event.attrib).issubset({"id", "time"}):
+        if set(event.attrib) != {"id", "time"}:
             raise _fail(
                 VerificationReason.REPORT_MALFORMED,
-                "Open Test finished attributes are invalid",
+                f"Open Test {local} attributes are invalid",
             )
-        event_id = event.attrib.get("id", "")
+        event_id = event.attrib["id"]
         if event_id not in started or event_id in finished:
+            raise _fail(VerificationReason.REPORT_MALFORMED, f"Open Test {local} ID is invalid")
+        _timestamp(event.attrib["time"], f"{local} time")
+        if local == "reported":
+            _validate_attachments(event)
+            if any(_qname(child.tag) != (CORE_NS, "attachments") for child in list(event)):
+                raise _fail(
+                    VerificationReason.REPORT_MALFORMED,
+                    "Open Test reported content is invalid",
+                )
+            continue
+        if any(
+            record.parent_id == event_id
+            for record in started.values()
+            if record.event_id not in finished
+        ):
             raise _fail(
                 VerificationReason.REPORT_MALFORMED,
-                "Open Test finish ID is missing or duplicated",
+                "Open Test parent finished before a child",
             )
-        result_nodes = [child for child in list(event) if _qname(child.tag) == (JUNIT_NS, "result")]
-        if len(result_nodes) != 1:
-            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test finish requires one result")
-        result = result_nodes[0]
+        status, details = _result(event)
         if len(list(event)) != 1:
             raise _fail(
                 VerificationReason.REPORT_MALFORMED,
-                "Open Test finished event content is invalid",
+                "Open Test finished content is invalid",
             )
-        if set(result.attrib) != {"status"}:
-            raise _fail(
-                VerificationReason.REPORT_MALFORMED,
-                "Open Test result attributes are invalid",
-            )
-        status = result.attrib["status"]
-        status_map = {
-            "SUCCESSFUL": "passed",
-            "SKIPPED": "skipped",
-            "ABORTED": "skipped",
-            "FAILED": "failed",
-        }
-        if status not in status_map:
-            raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test result status is invalid")
         record = started[event_id]
-        ended = _timestamp(event.attrib.get("time", ""), "finished time")
+        ended = _timestamp(event.attrib["time"], "finished time")
         try:
             duration_ms = (ended - record.time).total_seconds() * 1000.0
         except TypeError as exc:
@@ -298,17 +474,12 @@ def normalize_junit_open_test_report(
             ) from exc
         if duration_ms < 0:
             raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test duration is negative")
-        details_parts = [
-            (node.text or "").strip()
-            for node in result.iter()
-            if _qname(node.tag) == (JUNIT_NS, "throwable") and (node.text or "").strip()
-        ]
-        details = "\n".join(details_parts) or None
-        if details is not None and len(details) > MAX_DETAILS_CHARS:
-            raise _fail(
-                VerificationReason.REPORT_MALFORMED,
-                "Open Test details exceed the size limit",
-            )
+        status_map = {
+            "SUCCESSFUL": "passed",
+            "SKIPPED": "skipped",
+            "ABORTED": "skipped",
+            "FAILED": "failed",
+        }
         if record.item_type == "CONTAINER":
             if status in {"FAILED", "ABORTED"}:
                 errors.append(
@@ -364,6 +535,7 @@ def normalize_junit_open_test_report(
 __all__ = [
     "CORE_NS",
     "EVENT_NS",
+    "JAVA_NS",
     "JUNIT_NS",
     "MAX_REPORT_BYTES",
     "normalize_junit_open_test_report",

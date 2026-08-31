@@ -67,6 +67,7 @@ def _inventory(store: Path) -> dict[str, object]:
         "toolchain_digest": "sha256:" + "1" * 64,
         "lock": {
             "archive_digest": "sha256:" + "0" * 64,
+            "jdk_version": "temurin-21.0.5+11",
         },
         "store": {
             "archive_digest": "sha256:" + "2" * 64,
@@ -98,7 +99,11 @@ def test_maven_lock_and_repository_path_are_strict(tmp_path: Path) -> None:
     data = _lock_bytes()
     (lock_root / "maven-lock-v1.json").write_bytes(data)
     lock = load_maven_lock(data)
-    summary = MavenPackageManager().validate_lock(lock_root, "3.9.9")
+    summary = MavenPackageManager().validate_lock(
+        lock_root,
+        "3.9.9",
+        expected_jdk_version="temurin-21.0.5+11",
+    )
     assert summary.resolved[0].name == "example.fake:tiny:1.2.3:jar"
     assert str(maven_repository_path(lock.artifacts[0])) == (
         "example/fake/tiny/1.2.3/tiny-1.2.3.jar"
@@ -126,13 +131,21 @@ def test_maven_store_requires_exact_locked_inventory(tmp_path: Path) -> None:
     payload.parent.mkdir(parents=True)
     payload.write_bytes(b"jar")
     adapter = MavenPackageManager()
-    summary = adapter.validate_lock(lock_root, "3.9.9")
+    summary = adapter.validate_lock(
+        lock_root,
+        "3.9.9",
+        expected_jdk_version="temurin-21.0.5+11",
+    )
     inventory = _inventory(store)
     lock_inventory = inventory["lock"]
     assert isinstance(lock_inventory, dict)
     lock_inventory["archive_digest"] = summary.lock_digest
     store_summary = adapter.validate_offline_store(
-        store, summary, inventory, "3.9.9"
+        store,
+        summary,
+        inventory,
+        "3.9.9",
+        expected_jdk_version="temurin-21.0.5+11",
     )
     assert store_summary.offline_smoke is True
     (store / "unexpected.txt").write_text("forged", encoding="utf-8")
@@ -141,7 +154,34 @@ def test_maven_store_requires_exact_locked_inventory(tmp_path: Path) -> None:
     assert isinstance(forged_lock, dict)
     forged_lock["archive_digest"] = summary.lock_digest
     with pytest.raises(PackageManagerError, match="paths do not match"):
-        adapter.validate_offline_store(store, summary, forged_inventory, "3.9.9")
+        adapter.validate_offline_store(
+            store,
+            summary,
+            forged_inventory,
+            "3.9.9",
+            expected_jdk_version="temurin-21.0.5+11",
+        )
+
+
+def test_maven_lock_rejects_a_different_valid_jdk_identity(tmp_path: Path) -> None:
+    lock_root = tmp_path / "lock"
+    lock_root.mkdir()
+    (lock_root / "maven-lock-v1.json").write_bytes(_lock_bytes())
+    with pytest.raises(PackageManagerError, match="JDK identity") as raised:
+        MavenPackageManager().validate_lock(
+            lock_root,
+            "3.9.9",
+            expected_jdk_version="zulu-21.0.5+11",
+        )
+    assert raised.value.code is PackageManagerErrorCode.TOOLCHAIN_MISMATCH
+
+
+def test_maven_lock_requires_selected_jdk_identity(tmp_path: Path) -> None:
+    lock_root = tmp_path / "lock"
+    lock_root.mkdir()
+    (lock_root / "maven-lock-v1.json").write_bytes(_lock_bytes())
+    with pytest.raises(PackageManagerError, match="requires the selected exact JDK"):
+        MavenPackageManager().validate_lock(lock_root, "3.9.9")
 
 
 def test_candidate_pom_is_metadata_only() -> None:

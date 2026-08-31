@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import stat
+from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Annotated, Literal, Self, cast
 from xml.etree.ElementTree import Element
@@ -168,6 +169,14 @@ class MavenCandidateMetadata(_StrictModel):
     version: str | None = None
     packaging: Literal["jar"] = "jar"
     release: Literal[8, 11, 17, 21] | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class MavenLockSummary(LockSummary):
+    """Validated Maven closure details retained for subsequent store checks."""
+
+    jdk_version: str = ""
+    artifacts: tuple[MavenArtifact, ...] = ()
 
 
 def _error(
@@ -359,7 +368,13 @@ class MavenPackageManager:
     identity = JAVA_MAVEN_IDENTITY
     lockfile_names = ("maven-lock-v1.json",)
 
-    def validate_lock(self, lock_root: Path, expected_toolchain: str) -> LockSummary:
+    def validate_lock(
+        self,
+        lock_root: Path,
+        expected_toolchain: str,
+        *,
+        expected_jdk_version: str | None = None,
+    ) -> LockSummary:
         if lock_root.is_symlink() or not lock_root.is_dir():
             raise _error("Maven lock root is missing", PackageManagerErrorCode.LOCK_MISSING)
         entries = list(lock_root.iterdir())
@@ -382,11 +397,28 @@ class MavenPackageManager:
                 "Maven lock toolchain does not match the expected Maven version",
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
             )
-        return LockSummary(
+        if expected_jdk_version is None:
+            raise _error(
+                "Java/Maven lock validation requires the selected exact JDK identity",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+            )
+        if not JDK_VERSION.fullmatch(expected_jdk_version):
+            raise _error(
+                "selected JDK identity is not an exact JDK 21 distribution and build",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+            )
+        if lock.jdk_version != expected_jdk_version:
+            raise _error(
+                "Maven lock JDK identity does not match the selected JDK",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+            )
+        return MavenLockSummary(
             identity=self.identity,
             toolchain_version=lock.maven_version,
             lockfile_names=self.lockfile_names,
             lock_digest=f"sha256:{hashlib.sha256(encode_tree(lock_root)).hexdigest()}",
+            jdk_version=lock.jdk_version,
+            artifacts=lock.artifacts,
             resolved=tuple(
                 ResolvedPackage(
                     name=_artifact_key(artifact),
@@ -404,6 +436,8 @@ class MavenPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        expected_jdk_version: str | None = None,
     ) -> StoreSummary:
         if (
             lock_summary.identity != self.identity
@@ -414,32 +448,22 @@ class MavenPackageManager:
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
                 stage="store",
             )
-        lock_path = store_root.parent / "lock" / self.lockfile_names[0]
-        if lock_path.is_symlink() or not lock_path.is_file():
+        if not isinstance(lock_summary, MavenLockSummary):
             raise _error(
-                "Maven store requires its adjacent canonical lock",
+                "Maven store requires a Maven lock summary",
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )
-        try:
-            lock = load_maven_lock(lock_path.read_bytes())
-        except (OSError, PackageManagerError) as exc:
+        if expected_jdk_version is None:
             raise _error(
-                f"cannot validate Maven store lock: {exc}",
-                PackageManagerErrorCode.INVENTORY_MISMATCH,
-                stage="store",
-            ) from exc
-        if lock.maven_version != expected_toolchain:
-            raise _error(
-                "Maven store lock has the wrong toolchain",
+                "Java/Maven store validation requires the selected exact JDK identity",
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
                 stage="store",
             )
-        adjacent_summary = self.validate_lock(lock_path.parent, expected_toolchain)
-        if adjacent_summary.lock_digest != lock_summary.lock_digest:
+        if lock_summary.jdk_version != expected_jdk_version:
             raise _error(
-                "Maven store lock digest does not match the validated lock summary",
-                PackageManagerErrorCode.INVENTORY_MISMATCH,
+                "Maven lock JDK identity does not match the selected JDK",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
                 stage="store",
             )
         summary = inventory_store_summary(
@@ -457,6 +481,7 @@ class MavenPackageManager:
         if (
             not isinstance(lock_inventory, dict)
             or lock_inventory.get("archive_digest") != lock_summary.lock_digest
+            or lock_inventory.get("jdk_version") != expected_jdk_version
         ):
             raise _error(
                 "Maven inventory lock digest does not match the validated lock",
@@ -472,7 +497,9 @@ class MavenPackageManager:
                 PackageManagerErrorCode.OFFLINE_SMOKE_FAILED,
                 stage="store",
             )
-        expected_paths = {maven_repository_path(artifact): artifact for artifact in lock.artifacts}
+        expected_paths = {
+            maven_repository_path(artifact): artifact for artifact in lock_summary.artifacts
+        }
         actual_paths: set[PurePosixPath] = set()
         for path in store_root.rglob("*"):
             relative = PurePosixPath(path.relative_to(store_root).as_posix())
@@ -535,6 +562,7 @@ __all__ = [
     "MavenArtifact",
     "MavenCandidateMetadata",
     "MavenLock",
+    "MavenLockSummary",
     "MavenPackageManager",
     "load_maven_lock",
     "maven_repository_path",
