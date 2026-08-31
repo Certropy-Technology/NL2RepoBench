@@ -110,6 +110,92 @@ def test_schema_executes_and_guards_terminal_insert(tmp_path: Path) -> None:
         )
 
 
+def _prepared_cutover_scheduler(tmp_path: Path) -> Scheduler:
+    scheduler = Scheduler(tmp_path / "state/scheduler.sqlite3", supplied_root=tmp_path)
+    scheduler.init()
+    scheduler.configure(
+        enabled=False,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+        reason="prepared disabled configuration",
+    )
+    scheduler.prepare_cutover_barrier("cutover", "a" * 64)
+    return scheduler
+
+
+def test_prepared_cutover_first_enable_uses_exact_bounded_configuration(
+    tmp_path: Path,
+) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+
+    version = scheduler.first_enable()
+
+    config = scheduler.runtime_config()
+    assert version == config["config_version"]
+    assert (
+        config["enabled"],
+        config["max_total_controllers"],
+        config["controller_concurrency"],
+        config["max_integrations"],
+        config["agent_limit"],
+    ) == (1, 1, 1, 0, 1)
+    with scheduler.connect() as db:
+        barrier = db.execute("SELECT state,first_effect_kind FROM cutover_barrier").fetchone()
+    assert tuple(barrier) == ("sealed", "first-enable")
+
+
+def test_sealed_enabled_configuration_can_change_bounded_limits(tmp_path: Path) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+    scheduler.first_enable()
+
+    version = scheduler.configure(
+        enabled=True,
+        max_total_controllers=2,
+        controller_concurrency=2,
+        max_integrations=0,
+        agent_limit=2,
+        reason="bounded expansion",
+    )
+
+    config = scheduler.runtime_config()
+    assert config["config_version"] == version
+    assert (
+        config["enabled"],
+        config["max_total_controllers"],
+        config["controller_concurrency"],
+        config["max_integrations"],
+        config["agent_limit"],
+    ) == (1, 2, 2, 0, 2)
+
+
+def test_sealed_disabled_configuration_rejects_reenable_without_file_mutation(
+    tmp_path: Path,
+) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+    scheduler.first_enable()
+    scheduler.configure(
+        enabled=False,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+        reason="bounded shutdown",
+    )
+    before_bytes = scheduler.path.read_bytes()
+    before_config = scheduler.runtime_config()
+
+    with pytest.raises(
+        ConflictError,
+        match="sealed cutover cannot be re-enabled; a fresh cutover is required",
+    ):
+        scheduler.configure(enabled=True)
+
+    assert scheduler.path.read_bytes() == before_bytes
+    assert scheduler.runtime_config() == before_config
+
+
 def test_release_identity_allows_new_terminal_release(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
     first = _task(scheduler, "same", "r1")
