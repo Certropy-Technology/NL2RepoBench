@@ -46,7 +46,7 @@ def _policy(tmp_path: Path, *, environment: frozenset[str] = frozenset()) -> Can
     return CandidateProcessPolicy(
         task_id="test-task",
         staging_root=staging,
-        read_only_roots=(staging,),
+        read_only_roots=(executable_root,),
         write_root=write,
         allowed_executable_roots=(executable_root,),
         allowed_environment_names=environment,
@@ -91,6 +91,10 @@ def test_limits_are_lower_only() -> None:
     assert limits.gid == CANDIDATE_GID
     with pytest.raises(ProcessContractError):
         SubprocessLimits(max_output_bytes=HARD_OUTPUT_BYTES + 1)
+    with pytest.raises(ProcessContractError, match="10001/10001"):
+        SubprocessLimits(uid=10000)
+    with pytest.raises(ProcessContractError, match="10001/10001"):
+        SubprocessLimits(gid=10000)
 
 
 def test_policy_requires_literal_security_flags(tmp_path: Path) -> None:
@@ -175,6 +179,39 @@ def test_executable_root_rejects_symlink_and_candidate_writable_tree(tmp_path: P
             policy,
             request_id="6" * 32,
         )
+
+
+def test_executable_root_rejects_candidate_owned_file_and_writable_ancestor(
+    tmp_path: Path,
+) -> None:
+    policy = _policy(tmp_path)
+    candidate_file = policy.staging_root / "bin/candidate-owned"
+    candidate_file.write_bytes(b"#!/bin/sh\nexit 0\n")
+    candidate_file.chmod(0o555)
+    os.chown(candidate_file, CANDIDATE_UID, CANDIDATE_GID)
+    try:
+        with pytest.raises(ProcessContractError, match="trusted-owned"):
+            run_candidate_process(
+                CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+                SubprocessLimits(timeout_sec=1, cpu_sec=1),
+                policy,
+                request_id="8" * 32,
+            )
+    finally:
+        os.chown(candidate_file, 0, 0)
+        candidate_file.unlink()
+
+    policy.staging_root.chmod(0o777)
+    try:
+        with pytest.raises(ProcessContractError, match="ancestor"):
+            run_candidate_process(
+                CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+                SubprocessLimits(timeout_sec=1, cpu_sec=1),
+                policy,
+                request_id="9" * 32,
+            )
+    finally:
+        policy.staging_root.chmod(0o755)
 
 
 @pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
@@ -282,6 +319,66 @@ def test_capability_drop_eperm_fails_closed(
     assert result.cleanup_complete
 
 
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_no_new_privs_failure_is_typed_and_cleaned(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+    original = subprocess_supervisor._prctl
+
+    def fail_no_new_privs(option: int, *args: int) -> None:
+        if option == subprocess_supervisor._PR_SET_NO_NEW_PRIVS:
+            raise OSError(1, "operation not permitted")
+        original(option, *args)
+
+    monkeypatch.setattr(subprocess_supervisor, "_prctl", fail_no_new_privs)
+    result = run_candidate_process(
+        CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+        SubprocessLimits(timeout_sec=1, cpu_sec=1),
+        policy,
+        request_id="0" * 32,
+    )
+    assert result.returncode == 127
+    assert result.spawn_error is not None
+    assert result.spawn_error.code == "preexec-failed"
+    assert result.cleanup_complete
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_setresuid_failure_is_typed_and_cleaned(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+
+    def fail_setresuid(uid: int, effective: int, saved: int) -> None:
+        del uid, effective, saved
+        raise OSError(1, "operation not permitted")
+
+    monkeypatch.setattr(subprocess_supervisor.os, "setresuid", fail_setresuid)
+    result = run_candidate_process(
+        CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+        SubprocessLimits(timeout_sec=1, cpu_sec=1),
+        policy,
+        request_id="1" * 32,
+    )
+    assert result.returncode == 127
+    assert result.spawn_error is not None
+    assert result.spawn_error.code == "preexec-failed"
+    assert result.cleanup_complete
+
+
+def test_read_only_roots_are_trusted_and_separate_from_write_root(tmp_path: Path) -> None:
+    policy = _policy(tmp_path)
+    policy.read_only_roots[0].chmod(0o777)
+    with pytest.raises(ProcessContractError, match="read-only root"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/true"),), "."),
+            SubprocessLimits(timeout_sec=1, cpu_sec=1),
+            policy,
+            request_id="2" * 32,
+        )
+
+
 @pytest.mark.parametrize(
     "missing", ["CapBnd", "CapInh", "CapPrm", "CapEff", "CapAmb", "NoNewPrivs"]
 )
@@ -321,14 +418,83 @@ def test_cleanup_kills_uid_residue_after_group_term_and_kill(
     )
     monkeypatch.setattr(subprocess_supervisor, "terminate_uid_processes", lambda uid: None)
     monkeypatch.setattr(subprocess_supervisor, "candidate_pids", lambda uid: [])
+    events: list[str] = []
+    waited: list[float | None] = []
+    closed: list[bool] = []
+    process = SimpleNamespace(
+        pid=123,
+        wait=lambda deadline=None: (events.append("wait"), waited.append(deadline))[1],
+        close_all=lambda: closed.append(True),
+    )
+    monkeypatch.setattr(
+        subprocess_supervisor,
+        "terminate_uid_processes",
+        lambda uid: events.append("uid-kill"),
+    )
     complete, error = subprocess_supervisor._cleanup(
         CANDIDATE_UID,
-        process=SimpleNamespace(pid=123),
+        process=process,
         deadline=time.monotonic() + 1,
     )
     assert complete
     assert error is None
     assert signals == [signal.SIGTERM, signal.SIGKILL]
+    assert waited
+    assert waited[0] is not None
+    assert events == ["uid-kill", "wait"]
+    assert closed == [True]
+
+
+def test_cleanup_timeout_is_bounded_and_closes_process() -> None:
+    events: list[str] = []
+
+    class StuckProcess:
+        pid = 123
+
+        def wait(self, deadline=None) -> int:
+            events.append(f"wait:{deadline is not None}")
+            raise TimeoutError("stuck child")
+
+        def close_all(self) -> None:
+            events.append("close")
+
+    original_kill = subprocess_supervisor._kill_group
+    subprocess_supervisor._kill_group = lambda pid, signum=signal.SIGKILL: events.append(
+        f"group:{signum}"
+    )
+    try:
+        complete, error = subprocess_supervisor._cleanup(
+            CANDIDATE_UID,
+            process=StuckProcess(),
+            deadline=time.monotonic() + 0.5,
+        )
+    finally:
+        subprocess_supervisor._kill_group = original_kill
+    assert not complete
+    assert error is not None
+    assert error.code == "cleanup-timeout"
+    assert events[:3] == ["group:15", "group:9", "wait:True"]
+    assert events[-1] == "close"
+
+
+@pytest.mark.skipif(os.geteuid() != 0, reason="requires root to enter candidate UID")
+def test_postfork_selector_failure_still_cleans_child(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    policy = _policy(tmp_path)
+
+    def fail_selector() -> object:
+        raise OSError(24, "too many open files")
+
+    monkeypatch.setattr(subprocess_supervisor.selectors, "DefaultSelector", fail_selector)
+    with pytest.raises(OSError, match="too many open files"):
+        run_candidate_process(
+            CandidateCommand((str(policy.staging_root / "bin/sleep"), "30"), "."),
+            SubprocessLimits(timeout_sec=2, cpu_sec=2),
+            policy,
+            request_id="3" * 32,
+        )
+    assert candidate_pids(CANDIDATE_UID) == []
 
 
 def test_uid_cleanup_always_uses_sigkill(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -370,7 +536,7 @@ def test_cli_request_decodes_canonical_stdin(tmp_path: Path) -> None:
         "policy": {
             "task_id": policy.task_id,
             "staging_root": str(policy.staging_root),
-            "read_only_roots": [str(policy.staging_root)],
+            "read_only_roots": [str(root) for root in policy.read_only_roots],
             "write_root": str(policy.write_root),
             "allowed_executable_roots": [str(policy.staging_root / "bin")],
             "allowed_environment_names": [],
@@ -396,7 +562,7 @@ def test_cli_rejects_non_string_allowed_environment_names(tmp_path: Path) -> Non
         "policy": {
             "task_id": policy.task_id,
             "staging_root": str(policy.staging_root),
-            "read_only_roots": [str(policy.staging_root)],
+            "read_only_roots": [str(root) for root in policy.read_only_roots],
             "write_root": str(policy.write_root),
             "allowed_executable_roots": [str(policy.staging_root / "bin")],
             "allowed_environment_names": [1],

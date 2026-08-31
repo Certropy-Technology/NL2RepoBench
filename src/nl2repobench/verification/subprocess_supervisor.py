@@ -12,7 +12,7 @@ import selectors
 import signal
 import stat
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, cast
 
@@ -32,6 +32,7 @@ MAX_ERROR_MESSAGE = 4096
 MAX_ERROR_PIDS = 64
 MAX_REQUEST_JSON_BYTES = 1 * 1024 * 1024
 MAX_RESULT_JSON_BYTES = 20 * 1024 * 1024
+CLEANUP_TIMEOUT_SEC = 1.0
 
 _PR_SET_NO_NEW_PRIVS = 38
 _PR_CAPBSET_DROP = 24
@@ -117,14 +118,30 @@ class SubprocessLimits:
             raise ProcessContractError("process resource limit exceeds hard limit")
         if self.max_processes > HARD_PROCESSES:
             raise ProcessContractError("process count exceeds hard limit")
-        if not 1 <= self.uid <= 65535 or not 1 <= self.gid <= 65535:
-            raise ProcessContractError("invalid process UID or GID")
+        if self.uid != CANDIDATE_UID or self.gid != CANDIDATE_GID:
+            raise ProcessContractError(
+                f"candidate process UID/GID must be {CANDIDATE_UID}/{CANDIDATE_GID}"
+            )
 
 
 def _absolute_root(value: Path, name: str) -> Path:
     if not value.is_absolute() or value.is_symlink() or not value.is_dir():
         raise ProcessContractError(f"{name} must be an absolute directory")
-    return value.resolve()
+    try:
+        current = Path(value.anchor)
+        for part in value.parts[1:]:
+            if part in {"", ".", ".."}:
+                raise ProcessContractError(f"{name} must use a canonical path")
+            current /= part
+            metadata = current.lstat()
+            if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISDIR(metadata.st_mode):
+                raise ProcessContractError(f"{name} contains a symlink or non-directory component")
+        canonical = value.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise ProcessContractError(f"{name} cannot be resolved safely") from exc
+    if canonical != value:
+        raise ProcessContractError(f"{name} must use a canonical path")
+    return canonical
 
 
 @dataclass(frozen=True)
@@ -162,8 +179,12 @@ class CandidateProcessPolicy:
         write = _absolute_root(self.write_root, "write_root")
         if staging not in write.parents and write != staging:
             raise ProcessContractError("write_root escapes staging_root")
-        for root in self.read_only_roots:
-            _absolute_root(root, "policy root")
+        readonly = tuple(_absolute_root(root, "read-only root") for root in self.read_only_roots)
+        if any(
+            root == write or root in write.parents or write in root.parents
+            for root in readonly
+        ):
+            raise ProcessContractError("read-only roots must be separate from write_root")
         for root in self.allowed_executable_roots:
             _absolute_root(root, "allowed executable root")
         if self.require_no_new_privs is not True or self.require_empty_capabilities is not True:
@@ -250,22 +271,43 @@ def _validate_tree(root: Path, *, reject_symlinks: bool = True) -> None:
         _reject_special(path, reject_symlink=reject_symlinks)
 
 
-def _validate_executable_root(root: Path, uid: int, gid: int) -> None:
-    """Require an immutable executable tree from the candidate's perspective."""
+def _validate_trusted_root(root: Path, uid: int, gid: int, *, label: str) -> None:
+    """Require a root-owned, candidate-nonwritable tree and ancestor chain."""
     _validate_tree(root)
-    for path in (root, *root.rglob("*")):
+    paths = (root, *root.rglob("*"))
+    for path in paths:
         try:
             metadata = path.lstat()
         except OSError as exc:
-            raise ProcessContractError(f"cannot inspect executable root: {path}") from exc
+            raise ProcessContractError(f"cannot inspect {label}: {path}") from exc
         mode = metadata.st_mode
+        if metadata.st_uid != 0:
+            raise ProcessContractError(f"{label} is not trusted-owned: {path}")
         candidate_writable = (
             (metadata.st_uid == uid and bool(mode & stat.S_IWUSR))
             or (metadata.st_gid == gid and bool(mode & stat.S_IWGRP))
             or bool(mode & stat.S_IWOTH)
         )
         if candidate_writable:
-            raise ProcessContractError(f"executable root is writable by candidate: {path}")
+            raise ProcessContractError(f"{label} is writable by candidate: {path}")
+    # A candidate-writable ancestor can replace a validated executable root
+    # between this scan and execve, so validate the complete directory chain.
+    ancestor = root
+    while True:
+        try:
+            metadata = ancestor.lstat()
+        except OSError as exc:
+            raise ProcessContractError(f"cannot inspect {label} ancestor: {ancestor}") from exc
+        if not stat.S_ISDIR(metadata.st_mode) or stat.S_ISLNK(metadata.st_mode):
+            raise ProcessContractError(f"{label} ancestor is not a directory: {ancestor}")
+        if metadata.st_uid != 0:
+            raise ProcessContractError(f"{label} ancestor is not trusted-owned: {ancestor}")
+        mode = metadata.st_mode
+        if (metadata.st_gid == gid and mode & stat.S_IWGRP) or mode & stat.S_IWOTH:
+            raise ProcessContractError(f"{label} ancestor is writable by candidate: {ancestor}")
+        if ancestor == Path(ancestor.anchor):
+            break
+        ancestor = ancestor.parent
 
 
 def _prctl(option: int, arg2: int = 0, arg3: int = 0, arg4: int = 0, arg5: int = 0) -> None:
@@ -379,8 +421,22 @@ class _ForkedProcess:
 
     def close_stdin(self) -> None:
         if self.stdin_fd >= 0:
-            os.close(self.stdin_fd)
+            try:
+                os.close(self.stdin_fd)
+            except OSError:
+                pass
             self.stdin_fd = -1
+
+    def close_all(self) -> None:
+        self.close_stdin()
+        for attribute in ("stdout_fd", "stderr_fd"):
+            fd = getattr(self, attribute)
+            if fd >= 0:
+                try:
+                    os.close(fd)
+                except OSError:
+                    pass
+                setattr(self, attribute, -1)
 
 
 def _fork_exec(
@@ -389,14 +445,27 @@ def _fork_exec(
     environment: dict[str, str],
     limits: SubprocessLimits,
 ) -> tuple[_ForkedProcess, int]:
-    stdin_read, stdin_write = os.pipe()
-    stdout_read, stdout_write = os.pipe()
-    stderr_read, stderr_write = os.pipe()
-    error_read, error_write = os.pipe()
-    for fd in (stdin_write, stdout_read, stderr_read, error_read):
-        os.set_inheritable(fd, False)
-    os.set_inheritable(error_write, False)
-    pid = os.fork()
+    allocated: list[int] = []
+    try:
+        stdin_read, stdin_write = os.pipe()
+        allocated.extend((stdin_read, stdin_write))
+        stdout_read, stdout_write = os.pipe()
+        allocated.extend((stdout_read, stdout_write))
+        stderr_read, stderr_write = os.pipe()
+        allocated.extend((stderr_read, stderr_write))
+        error_read, error_write = os.pipe()
+        allocated.extend((error_read, error_write))
+        for fd in (stdin_write, stdout_read, stderr_read, error_read):
+            os.set_inheritable(fd, False)
+        os.set_inheritable(error_write, False)
+        pid = os.fork()
+    except BaseException:
+        for fd in allocated:
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+        raise
     if pid == 0:
         try:
             os.close(stdin_write)
@@ -444,6 +513,7 @@ def _read_streams(
     }
     captured = len(initial_stdout) + len(initial_stderr)
     if captured > limits.max_output_bytes:
+        selector.close()
         return initial_stdout[: limits.max_output_bytes], initial_stderr[:0], False, True
     buffers_fds = tuple(buffers)
     for fd in buffers_fds:
@@ -516,19 +586,48 @@ def _read_streams(
 def _cleanup(
     uid: int, process: _ForkedProcess | None = None, deadline: float | None = None
 ) -> tuple[bool, ProcessError | None]:
+    cleanup_deadline = deadline or time.monotonic() + CLEANUP_TIMEOUT_SEC
+    cleanup_error: ProcessError | None = None
     if process is not None:
-        _kill_group(process.pid, signal.SIGTERM)
-        grace = min(0.1, max(0.0, (deadline or time.monotonic() + 0.1) - time.monotonic()))
-        if grace:
-            time.sleep(grace)
-        _kill_group(process.pid)
-    try:
-        terminate_uid_processes(uid)
-    except RuntimeError as exc:
-        pids = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
-        return False, ProcessError(
-            "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE], pids
-        )
+        try:
+            _kill_group(process.pid, signal.SIGTERM)
+            grace = min(0.1, max(0.0, cleanup_deadline - time.monotonic()))
+            if grace:
+                time.sleep(grace)
+            _kill_group(process.pid)
+            try:
+                terminate_uid_processes(uid)
+            except (OSError, RuntimeError) as exc:
+                pids = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
+                cleanup_error = ProcessError(
+                    "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE], pids
+                )
+            try:
+                process.wait(cleanup_deadline)
+            except TimeoutError as exc:
+                cleanup_error = ProcessError(
+                    "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE]
+                )
+            except (ChildProcessError, OSError) as exc:
+                cleanup_error = ProcessError(
+                    "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE]
+                )
+        except OSError as exc:
+            cleanup_error = ProcessError(
+                "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE]
+            )
+        finally:
+            process.close_all()
+    else:
+        try:
+            terminate_uid_processes(uid)
+        except RuntimeError as exc:
+            pids = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
+            cleanup_error = ProcessError(
+                "cleanup-timeout", "cleanup", str(exc)[:MAX_ERROR_MESSAGE], pids
+            )
+    if cleanup_error is not None:
+        return False, cleanup_error
     remaining = tuple(candidate_pids(uid)[:MAX_ERROR_PIDS])
     if remaining:
         return False, ProcessError(
@@ -555,10 +654,11 @@ def run_candidate_process(
     if len(stdin_data) > limits.max_stdin_bytes:
         raise ProcessContractError("candidate stdin exceeds limit")
     cwd = policy.validate_command(command)
-    for root in (*policy.read_only_roots, policy.write_root):
-        _validate_tree(root)
+    for root in policy.read_only_roots:
+        _validate_trusted_root(root, limits.uid, limits.gid, label="read-only root")
+    _validate_tree(policy.write_root)
     for root in policy.allowed_executable_roots:
-        _validate_executable_root(root, limits.uid, limits.gid)
+        _validate_trusted_root(root, limits.uid, limits.gid, label="executable root")
     before = tuple(candidate_pids(limits.uid))
     if before:
         return SubprocessResult(
@@ -587,110 +687,144 @@ def run_candidate_process(
             spawn_error=ProcessError("spawn-failed", "spawn", str(exc)[:MAX_ERROR_MESSAGE]),
         )
 
-    os.set_blocking(error_read, False)
-    startup_buffer = bytearray()
     startup_stdout = bytearray()
     startup_stderr = bytearray()
     startup_done = False
     startup_error: ProcessError | None = None
     startup_output_limit = False
     startup_timed_out = False
-    selector = selectors.DefaultSelector()
-    selector.register(error_read, selectors.EVENT_READ)
-    for fd, buffer in ((process.stdout_fd, startup_stdout), (process.stderr_fd, startup_stderr)):
-        os.set_blocking(fd, False)
-        selector.register(fd, selectors.EVENT_READ, buffer)
-    while not startup_done and selector.get_map():
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            startup_timed_out = True
-            break
-        for key, _ in selector.select(min(remaining, 0.1)):
-            fd = key.fd
-            if fd == error_read:
-                data = os.read(error_read, MAX_ERROR_MESSAGE + 1)
-                if data:
-                    startup_buffer.extend(data)
-                    try:
-                        payload = json.loads(data.decode("utf-8"))
-                        startup_error = ProcessError(
-                            payload["code"], payload["stage"], payload["message"]
-                        )
-                    except (ValueError, KeyError, json.JSONDecodeError, UnicodeDecodeError) as exc:
-                        startup_error = ProcessError(
-                            "preexec-failed", "privilege-transition", str(exc)[:MAX_ERROR_MESSAGE]
-                        )
-                    startup_done = True
-                else:
-                    startup_done = True
-                selector.unregister(error_read)
-                os.close(error_read)
-                continue
-            buffer = cast(bytearray, key.data)
-            data = os.read(fd, 65536)
-            if not data:
-                selector.unregister(fd)
-                os.close(fd)
-                if fd == process.stdout_fd:
-                    process.stdout_fd = -1
-                elif fd == process.stderr_fd:
-                    process.stderr_fd = -1
-                continue
-            if len(startup_stdout) + len(startup_stderr) + len(data) > limits.max_output_bytes:
-                startup_output_limit = True
-                startup_done = True
+    selector: selectors.BaseSelector | None = None
+    result: SubprocessResult | None = None
+    deferred_error: BaseException | None = None
+    try:
+        os.set_blocking(error_read, False)
+        selector = selectors.DefaultSelector()
+        selector.register(error_read, selectors.EVENT_READ)
+        for fd, buffer in (
+            (process.stdout_fd, startup_stdout),
+            (process.stderr_fd, startup_stderr),
+        ):
+            os.set_blocking(fd, False)
+            selector.register(fd, selectors.EVENT_READ, buffer)
+        while not startup_done and selector.get_map():
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                startup_timed_out = True
                 break
-            buffer.extend(data)
-    for key in list(selector.get_map().values()):
-        fd = key.fd
-        try:
-            selector.unregister(fd)
-            if fd not in {process.stdout_fd, process.stderr_fd}:
-                os.close(fd)
-        except (OSError, ValueError):
-            pass
-    selector.close()
-    if startup_error or startup_timed_out or startup_output_limit:
-        if startup_timed_out:
-            startup_error = ProcessError(
-                "preexec-failed", "privilege-transition", "privilege transition exceeded deadline"
+            for key, _ in selector.select(min(remaining, 0.1)):
+                fd = key.fd
+                if fd == error_read:
+                    data = os.read(error_read, MAX_ERROR_MESSAGE + 1)
+                    if data:
+                        try:
+                            payload = json.loads(data.decode("utf-8"))
+                            startup_error = ProcessError(
+                                payload["code"], payload["stage"], payload["message"]
+                            )
+                        except (
+                            ValueError,
+                            KeyError,
+                            json.JSONDecodeError,
+                            UnicodeDecodeError,
+                        ) as exc:
+                            startup_error = ProcessError(
+                                "preexec-failed",
+                                "privilege-transition",
+                                str(exc)[:MAX_ERROR_MESSAGE],
+                            )
+                        startup_done = True
+                    else:
+                        startup_done = True
+                    selector.unregister(error_read)
+                    os.close(error_read)
+                    error_read = -1
+                    continue
+                buffer = cast(bytearray, key.data)
+                data = os.read(fd, 65536)
+                if not data:
+                    selector.unregister(fd)
+                    os.close(fd)
+                    if fd == process.stdout_fd:
+                        process.stdout_fd = -1
+                    elif fd == process.stderr_fd:
+                        process.stderr_fd = -1
+                    continue
+                if len(startup_stdout) + len(startup_stderr) + len(data) > limits.max_output_bytes:
+                    startup_output_limit = True
+                    startup_done = True
+                    break
+                buffer.extend(data)
+        if startup_error or startup_timed_out or startup_output_limit:
+            if startup_timed_out:
+                startup_error = ProcessError(
+                    "preexec-failed",
+                    "privilege-transition",
+                    "privilege transition exceeded deadline",
+                )
+            result = SubprocessResult(
+                request_id,
+                127,
+                bytes(startup_stdout),
+                bytes(startup_stderr),
+                startup_timed_out,
+                startup_output_limit,
+                False,
+                spawn_error=startup_error,
             )
-        complete, cleanup_error = _cleanup(limits.uid, process, deadline)
-        return SubprocessResult(
-            request_id,
-            127,
-            bytes(startup_stdout),
-            bytes(startup_stderr),
-            startup_timed_out,
-            startup_output_limit,
-            complete,
-            spawn_error=startup_error,
-            cleanup_error=cleanup_error,
+        else:
+            stdout, stderr, timed_out, output_limit = _read_streams(
+                process,
+                stdin_data,
+                limits,
+                deadline,
+                bytes(startup_stdout),
+                bytes(startup_stderr),
+            )
+            if not timed_out and not output_limit:
+                try:
+                    process.wait(deadline)
+                except TimeoutError:
+                    timed_out = True
+            result = SubprocessResult(
+                request_id,
+                124 if timed_out else (125 if output_limit else int(process.returncode or 0)),
+                stdout,
+                stderr,
+                timed_out,
+                output_limit,
+                False,
+            )
+    except BaseException as exc:
+        deferred_error = exc
+    finally:
+        if selector is not None:
+            for key in list(selector.get_map().values()):
+                try:
+                    selector.unregister(key.fileobj)
+                except (OSError, ValueError):
+                    pass
+            selector.close()
+        if error_read >= 0:
+            try:
+                os.close(error_read)
+            except OSError:
+                pass
+        complete, cleanup_error = _cleanup(
+            limits.uid,
+            process,
+            time.monotonic() + CLEANUP_TIMEOUT_SEC,
         )
-    stdout, stderr, timed_out, output_limit = _read_streams(
-        process,
-        stdin_data,
-        limits,
-        deadline,
-        bytes(startup_stdout),
-        bytes(startup_stderr),
-    )
-    if not timed_out and not output_limit:
-        try:
-            process.wait(deadline)
-        except TimeoutError:
-            timed_out = True
-    complete, cleanup_error = _cleanup(limits.uid, process, deadline)
-    return SubprocessResult(
-        request_id,
-        124 if timed_out else (125 if output_limit else int(process.returncode or 0)),
-        stdout,
-        stderr,
-        timed_out,
-        output_limit,
-        complete,
-        cleanup_error=cleanup_error,
-    )
+        if result is not None:
+            result = replace(
+                result,
+                cleanup_complete=complete,
+                cleanup_error=cleanup_error,
+            )
+    if deferred_error is not None:
+        raise deferred_error
+    if result is None:
+        raise RuntimeError("candidate process produced no result")
+    return result
 
 
 __all__ = [
