@@ -409,7 +409,55 @@ push 使用已配置的 `fork` remote 和当前分支，禁止 force-push。若�
 并在干净的 integration worktree 合并、重跑受影响的 compiler/runtime/evidence gate，
 再推送；不要在大量用户 dirty change 上盲目 rebase 或 reset。
 
-## 11. 验证清单与汇报
+## 11. LLM orchestration 与 subagent fleet
+
+复杂工作默认采用 **Sol control plane + Qwen fleet**。主 Model 只负责规划、切分、
+调度、裁决和最终集成，不作为常规实现 writer：
+
+1. **Sol 规划**：先读取权威文档和当前代码，写出目标、非目标、依赖 DAG、风险、
+   worktree 计划、停止条件和整体验收门禁。计划必须覆盖用户要求，不能把未决定的
+   架构选择留给实现 worker 临场猜测。
+2. **Qwen 侦察**：复杂任务先并行启动 4 到 8 个
+   `aliyun-qwen-openai-responses/qwen3.8-flash` scout/reviewer lane，分别核对不同
+   source seam、schema、runtime、测试、运维或安全边界。各 lane 的证据必须互补，
+   不允许只换编号的重复任务。
+3. **Sol 裁决**：主 Model 汇总侦察结果，消除冲突，冻结接口、状态机、失败分类和
+   acceptance contract，再启动实现。架构、security boundary、production gate 和最终
+   review 由 Sol 负责。
+4. **Qwen 实现**：把实现拆成尽可能多的独立窄 lane。每个 mutation lane 使用独立
+   branch/worktree；同一 worktree 同时只能有一个 writer。worker 只提交本 lane 的本地
+   commit，不直接 push、安装 service、执行 cutover 或修改共享 integration checkout。
+5. **Qwen 验证**：实现后并行运行独立 test、fault-injection、negative-control、diff
+   audit 和 regression lane。review 必须针对固定 commit SHA；不要审阅 writer 正在变化的
+   working tree。
+6. **Sol 签收**：主 Model 依据 commit、测试、review、artifact 和 residual risk 做最终
+   裁决。共享 integration checkout 由单一 integrator 串行合并，重跑跨 seam gate 后才
+   push、部署或启用 production lane。
+
+每个 subagent 任务说明必须完整包含：
+
+- objective、模式和准确的 done 条件；
+- repository、cwd、base/ref、输入文档和必须读取的 source；
+- 允许修改的精确路径、输出路径和 lane ownership；
+- 禁止修改或禁止执行的 production/private/live 操作；
+- 接口、schema、状态机、failure taxonomy、资源和并发约束；
+- 必须运行的命令、预期 exit/result、artifact 与 evidence 格式；
+- stop/ask 条件、剩余 blocker 和 handoff 内容。
+
+简单模型不能接收“实现整个功能”“修完所有问题”这类宽泛任务。先把工作拆成可独立
+验证的模块、迁移、运行时、测试、review 和运维 lane，再并行派发。没有独立写入边界的
+工作保持一个 writer，但同时启动多个只读 scout/test/review lane 提供证据。
+
+主 Model 可以执行控制面动作：建立/检查 worktree、维护 task board、回复 subagent 决策、
+运行最终验收、解决已审 merge conflict、串行集成、push 和按批准合同执行 cutover。常规
+功能代码、测试起草和局部修复交给 subagents。模型/provider fallback 必须在 handoff 中
+显式记录；fallback 运行不能冒充首选模型成功。
+
+fleet 完成条件：所有 writer 都已停止并返回固定 commit，所有 lane 均有结构化 handoff，
+测试/review 对应同一 commit，integration worktree 干净，未解决 blocker 已进入 task board，
+且最终声明没有越过 F0.5、F1、Oracle、controls、pilot 或 publication 门禁。
+
+## 12. 验证清单与汇报
 
 窄改动至少运行对应的 source validation、runtime/evidence gate 和 `git diff --check`。
 跨 compiler/verifier/network 改动应运行：
@@ -437,7 +485,7 @@ uv run nl2repo task lint-network --include-generated
 能力，也不要把 Harbor 结果描述成论文或旧 harness 的 parity，除非已经完成同版本、
 同环境、同 metric contract 的显式 parity validation。
 
-## 12. Definition of Done
+## 13. Definition of Done
 
 单题 production-valid 必须同时满足：
 
