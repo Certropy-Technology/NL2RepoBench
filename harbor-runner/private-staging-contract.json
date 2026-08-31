@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "contract_id": "nl2repobench-private-staging-f0.5",
+  "purpose": "ephemeral-private-artifact-staging",
+    "staging_roots": {
+        "dependency": {"ephemeral": true, "mode": "0700", "uid": 0, "gid": 0, "path": ".nl2repo/staging/private/dependency"},
+        "oracle": {"ephemeral": true, "mode": "0700", "uid": 0, "gid": 0, "path": ".nl2repo/staging/private/oracle"},
+        "test": {"ephemeral": true, "mode": "0700", "uid": 0, "gid": 0, "path": ".nl2repo/staging/private/test"},
+        "verifier": {"ephemeral": true, "mode": "0700", "uid": 0, "gid": 0, "path": ".nl2repo/staging/private/verifier"}
+    },
+    "allowed_artifact_kinds": ["dependency-lock", "offline-store", "oracle-bundle", "test-bundle", "verifier-bundle"],
+    "artifact_kind_roots": {"dependency-lock": "dependency", "offline-store": "dependency", "oracle-bundle": "oracle", "test-bundle": "test", "verifier-bundle": "verifier"},
+  "authorization": {
+    "digest_algorithm": "sha256",
+    "requires_private_visibility": true,
+    "resolver_scope": "task-and-manifest",
+    "scope_fields": ["task_id", "manifest_digest", "purpose", "staging_root", "allowed_digests"]
+  },
+  "limits": {
+    "dependency-lock": {"max_member_bytes": 4194304, "max_members": 64, "max_path_bytes": 255, "max_total_bytes": 16777216},
+    "offline-store": {"max_member_bytes": 536870912, "max_members": 100000, "max_path_bytes": 255, "max_total_bytes": 2147483648},
+    "oracle-bundle": {"max_member_bytes": 536870912, "max_members": 10000, "max_path_bytes": 255, "max_total_bytes": 2147483648},
+    "test-bundle": {"max_member_bytes": 536870912, "max_members": 10000, "max_path_bytes": 255, "max_total_bytes": 2147483648},
+    "verifier-bundle": {"max_member_bytes": 536870912, "max_members": 10000, "max_path_bytes": 255, "max_total_bytes": 2147483648}
+  },
+  "lanes": {
+        "go+go-modules": {"allowed_artifact_kinds": ["dependency-lock", "offline-store", "oracle-bundle", "test-bundle", "verifier-bundle"], "artifact_kind_roots": {"dependency-lock": "dependency", "offline-store": "dependency", "oracle-bundle": "oracle", "test-bundle": "test", "verifier-bundle": "verifier"}, "offline_smoke_command_id": "go-modules-offline-build-v1", "toolchain_binding": {"digest_format": "sha256:<64 lowercase hex>", "required": true, "source": "expected_toolchain_digest"}},
+        "node+npm": {"allowed_artifact_kinds": ["dependency-lock", "offline-store", "oracle-bundle", "test-bundle", "verifier-bundle"], "artifact_kind_roots": {"dependency-lock": "dependency", "offline-store": "dependency", "oracle-bundle": "oracle", "test-bundle": "test", "verifier-bundle": "verifier"}, "offline_smoke_command_id": "node-npm-offline-install-v1", "toolchain_binding": {"digest_format": "sha256:<64 lowercase hex>", "required": true, "source": "expected_toolchain_digest"}},
+        "node+pnpm": {"allowed_artifact_kinds": ["dependency-lock", "offline-store", "oracle-bundle", "test-bundle", "verifier-bundle"], "artifact_kind_roots": {"dependency-lock": "dependency", "offline-store": "dependency", "oracle-bundle": "oracle", "test-bundle": "test", "verifier-bundle": "verifier"}, "offline_smoke_command_id": "node-pnpm-offline-install-v1", "toolchain_binding": {"digest_format": "sha256:<64 lowercase hex>", "required": true, "source": "expected_toolchain_digest"}},
+        "python+pip": {"allowed_artifact_kinds": ["dependency-lock", "offline-store", "oracle-bundle", "test-bundle", "verifier-bundle"], "artifact_kind_roots": {"dependency-lock": "dependency", "offline-store": "dependency", "oracle-bundle": "oracle", "test-bundle": "test", "verifier-bundle": "verifier"}, "offline_smoke_command_id": "python-pip-offline-install-v1", "toolchain_binding": {"digest_format": "sha256:<64 lowercase hex>", "required": true, "source": "expected_toolchain_digest"}},
+        "python+uv": {"allowed_artifact_kinds": ["dependency-lock", "offline-store", "oracle-bundle", "test-bundle", "verifier-bundle"], "artifact_kind_roots": {"dependency-lock": "dependency", "offline-store": "dependency", "oracle-bundle": "oracle", "test-bundle": "test", "verifier-bundle": "verifier"}, "offline_smoke_command_id": "python-uv-offline-install-v1", "toolchain_binding": {"digest_format": "sha256:<64 lowercase hex>", "required": true, "source": "expected_toolchain_digest"}}
+  },
+  "lifetime": {"cleanup_deadline_seconds": 60, "delete_on_failure": true, "max_seconds": 7200, "retain_audit_receipt": true},
+  "audit_receipt": {"path_policy": "source-local-hash-bound", "required_fields": ["operation_id", "task_id", "manifest_digest", "artifact_digest", "staging_root", "started_at", "finished_at", "cleanup_complete"], "requires_sha256": true, "schema_version": "1.0"}
+}
