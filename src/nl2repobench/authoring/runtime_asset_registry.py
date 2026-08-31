@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import os
 import re
+import stat
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -56,6 +58,9 @@ _JAVA_FORBIDDEN_FILES = frozenset(
 _JAVA_NATIVE_SUFFIXES = frozenset(
     {".so", ".dll", ".dylib", ".jnilib", ".a", ".o", ".exe", ".bat", ".cmd", ".sh"}
 )
+_JAVA_SOURCE_MAX_FILE_BYTES = 512 * 1024 * 1024
+_JAVA_RESOURCE_MAX_FILE_BYTES = 512 * 1024 * 1024
+_JAVA_METADATA_MAX_FILE_BYTES = 4 * 1024 * 1024
 _PRODUCTION_STATUSES = {
     TaskStatus.PACKAGED,
     TaskStatus.ORACLE_PASSED,
@@ -201,12 +206,28 @@ class JavaSourceAssetValidator:
         for path in source_dir.rglob("*"):
             relative = path.relative_to(source_dir)
             parts = relative.parts
-            if path.is_symlink():
+            try:
+                path_stat = os.lstat(path)
+            except OSError as exc:
+                raise RuntimeSourceAssetError(
+                    f"Java source asset cannot be inspected: {relative}"
+                ) from exc
+            if stat.S_ISLNK(path_stat.st_mode):
                 raise RuntimeSourceAssetError(
                     f"Java source assets must not contain symlinks: {relative}"
                 )
-            if not path.is_file():
+            if stat.S_ISDIR(path_stat.st_mode):
+                if any(part in _JAVA_FORBIDDEN_PARTS for part in parts):
+                    raise RuntimeSourceAssetError(f"Java source asset is forbidden: {relative}")
                 continue
+            if not stat.S_ISREG(path_stat.st_mode):
+                raise RuntimeSourceAssetError(
+                    f"Java source assets must be regular files or directories: {relative}"
+                )
+            if path_stat.st_nlink != 1:
+                raise RuntimeSourceAssetError(
+                    f"Java source assets must not contain hardlinks: {relative}"
+                )
             name = path.name
             if name in _JAVA_FORBIDDEN_FILES or any(
                 part in _JAVA_FORBIDDEN_PARTS for part in parts
@@ -217,6 +238,16 @@ class JavaSourceAssetValidator:
                     f"Java source asset has a native or executable suffix: {relative}"
                 )
             relative_text = relative.as_posix()
+            if relative_text.startswith("src/main/java/"):
+                max_bytes = _JAVA_SOURCE_MAX_FILE_BYTES
+            elif relative_text.startswith("src/main/resources/"):
+                max_bytes = _JAVA_RESOURCE_MAX_FILE_BYTES
+            else:
+                max_bytes = _JAVA_METADATA_MAX_FILE_BYTES
+            if path_stat.st_size > max_bytes:
+                raise RuntimeSourceAssetError(
+                    f"Java source asset exceeds {max_bytes} byte limit: {relative}"
+                )
             if relative_text == "pom.xml":
                 try:
                     from nl2repobench.package_managers.maven import validate_candidate_pom

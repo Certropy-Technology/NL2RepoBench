@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
 
+import nl2repobench.authoring.runtime_asset_registry as runtime_asset_registry
 from nl2repobench.authoring.runtime_asset_registry import (
     JavaSourceAssetValidator,
     RuntimeSourceAssetError,
@@ -104,6 +106,50 @@ def test_java_source_validator_rejects_symlink(tmp_path: Path) -> None:
     (source_dir / "src/main/java/example/Link.java").symlink_to(target)
 
     with pytest.raises(RuntimeSourceAssetError, match="symlinks"):
+        JavaSourceAssetValidator().validate_source_assets(source_dir, _source())
+
+
+@pytest.mark.parametrize("kind", ["fifo", "hardlink"])
+def test_java_source_validator_rejects_non_regular_or_hardlinked_assets(
+    tmp_path: Path, kind: str
+) -> None:
+    source_dir = tmp_path / "source"
+    java_dir = source_dir / "src/main/java/example"
+    java_dir.mkdir(parents=True)
+    (java_dir / "App.java").write_text("package example;\n", encoding="utf-8")
+    if kind == "fifo":
+        os.mkfifo(java_dir / "input")
+    else:
+        original = tmp_path / "original.java"
+        original.write_text("package example;\n", encoding="utf-8")
+        os.link(original, java_dir / "Linked.java")
+
+    with pytest.raises(RuntimeSourceAssetError, match="regular files|hardlinks"):
+        JavaSourceAssetValidator().validate_source_assets(source_dir, _source())
+
+
+@pytest.mark.parametrize(
+    ("relative", "limit_name"),
+    [
+        ("src/main/java/example/App.java", "_JAVA_SOURCE_MAX_FILE_BYTES"),
+        ("src/main/resources/config/app.properties", "_JAVA_RESOURCE_MAX_FILE_BYTES"),
+    ],
+)
+def test_java_source_validator_rejects_oversized_source_assets(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, relative: str, limit_name: str
+) -> None:
+    source_dir = tmp_path / "source"
+    (source_dir / "src/main/java/example").mkdir(parents=True)
+    (source_dir / "src/main/resources/config").mkdir(parents=True)
+    (source_dir / "src/main/java/example/App.java").write_text(
+        "package example;\n", encoding="utf-8"
+    )
+    path = source_dir / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"oversized")
+    monkeypatch.setattr(runtime_asset_registry, limit_name, 4)
+
+    with pytest.raises(RuntimeSourceAssetError, match="exceeds 4 byte limit"):
         JavaSourceAssetValidator().validate_source_assets(source_dir, _source())
 
 
