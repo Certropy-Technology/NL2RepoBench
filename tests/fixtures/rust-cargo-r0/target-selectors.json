@@ -1,0 +1,12 @@
+{
+  "accepted": [
+    {"selector": "x86_64-unknown-linux-gnu", "selected": true},
+    {"selector": "cfg(target_os=\"linux\")", "selected": true},
+    {"selector": "cfg(not(target_os=\"linux\"))", "selected": false}
+  ],
+  "rejected": [
+    "cfg(target_os = \"linux\")",
+    "cfg(feature=\"std\")",
+    "aarch64-unknown-linux-gnu"
+  ]
+}

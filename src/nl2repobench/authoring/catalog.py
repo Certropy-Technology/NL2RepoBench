@@ -15,6 +15,7 @@ from typing import Literal
 
 from pydantic import Field, model_validator
 
+from nl2repobench.authoring.runtime_asset_registry import RuntimeSourceAssetRegistry
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.canonical_contract import TaskManifest, TaskSource
 from nl2repobench.domain.canonical_models import (
@@ -97,6 +98,7 @@ class CatalogCompiler:
             if schema_version != "1.0":
                 raise ValueError(f"unsupported task source schema version: {schema_version}")
             source = TaskSource.model_validate(data)
+            RuntimeSourceAssetRegistry.default().validate_source_assets(source_dir, source)
         except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError, ValueError) as exc:
             raise CatalogError(f"invalid task source {path}: {exc}") from exc
         instruction = source_dir / source.instruction

@@ -24,6 +24,7 @@ from .base import (
     StoreSummary,
     inventory_store_summary,
 )
+from .cargo import CargoPackageManager
 from .go_modules import GoModulesPackageManager
 from .maven import MavenPackageManager
 from .pnpm import PnpmPackageManager
@@ -180,6 +181,7 @@ class PackageManagerRegistry:
                 CanonicalPackageManager(node_none, (), (), (), False),
                 GoModulesPackageManager(),
                 MavenPackageManager(),
+                CargoPackageManager(),
             ),
         )
         return cls({adapter.identity: adapter for adapter in adapters})

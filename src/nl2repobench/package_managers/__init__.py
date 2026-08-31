@@ -19,6 +19,7 @@ __all__ = [
     "PackageManagerError",
     "PackageManagerErrorCode",
     "PackageManagerRegistry",
+    "CargoPackageManager",
     "GoModulesPackageManager",
     "PnpmPackageManager",
     "MavenPackageManager",
@@ -30,6 +31,10 @@ __all__ = [
 
 
 def __getattr__(name: str) -> Any:
+    if name == "CargoPackageManager":
+        from .cargo import CargoPackageManager
+
+        return CargoPackageManager
     if name == "GoModulesPackageManager":
         from .go_modules import GoModulesPackageManager
 
