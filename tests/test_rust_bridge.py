@@ -3,12 +3,15 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
 from nl2repobench.verification.rust_bridge import (
+    MAX_API_PLAN_BYTES,
     MAX_BRIDGE_JSON_BYTES,
     MAX_BRIDGE_RESULTS,
     RustApiPlan,
@@ -189,6 +192,17 @@ def test_api_plan_rejects_duplicate_unknown_and_missing_fields(
         load_rust_api_plan(path)
 
 
+def test_api_plan_deep_json_fails_as_bounded_protocol_error(tmp_path: Path) -> None:
+    depth = sys.getrecursionlimit() + 100
+    raw = b'{"types":' + b"[" * depth + b"null" + b"]" * depth + b"}\n"
+    assert len(raw) < MAX_API_PLAN_BYTES
+    path = tmp_path / "rust-api-plan.json"
+    path.write_bytes(raw)
+
+    with pytest.raises(ValueError, match="invalid rust-api-plan.json"):
+        load_rust_api_plan(path)
+
+
 @pytest.mark.parametrize(
     "value",
     [
@@ -271,6 +285,21 @@ def test_bridge_raw_json_rejects_duplicates_nonfinite_and_noncanonical_bytes() -
 
     with pytest.raises(ValueError, match="size limit"):
         load_rust_bridge_request(b" " * (MAX_BRIDGE_JSON_BYTES + 1))
+
+
+@pytest.mark.parametrize(
+    "loader",
+    [load_rust_bridge_request, load_rust_bridge_response],
+)
+def test_bridge_deep_value_json_fails_as_bounded_protocol_error(
+    loader: Callable[[bytes], object],
+) -> None:
+    depth = sys.getrecursionlimit() + 100
+    raw = b'{"value":' + b"[" * depth + b"null" + b"]" * depth + b"}\n"
+    assert len(raw) < MAX_BRIDGE_JSON_BYTES
+
+    with pytest.raises(ValueError, match="invalid Rust bridge JSON"):
+        loader(raw)
 
 
 def test_bridge_request_and_response_bind_ids_and_aggregate_value_budget() -> None:
@@ -439,6 +468,17 @@ def test_state_create_requires_exact_safe_associated_role(create_kind: str) -> N
     create["unsafe"] = True
     payload["unsafe_leaf_ids"] = ["state.create"]
     with pytest.raises(ValidationError, match="safe associated"):
+        RustApiPlan.model_validate(_freeze_json(payload))
+
+
+def test_state_create_rejects_declared_error() -> None:
+    payload = _state_plan_payload()
+    create = next(
+        item for item in payload["functions"] if item["api_id"] == "create"  # type: ignore[union-attr]
+    )
+    create["error"] = "string"
+
+    with pytest.raises(ValidationError, match="infallible API"):
         RustApiPlan.model_validate(_freeze_json(payload))
 
 

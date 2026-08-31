@@ -375,10 +375,11 @@ class RustApiPlan(RustBridgeRecord):
                 create.kind != "associated"
                 or create.receiver is not None
                 or create.state_type is not None
+                or create.error is not None
                 or create.unsafe
             ):
                 raise ValueError(
-                    "state create API must be a safe associated, receiver-free API"
+                    "state create API must be a safe associated, receiver-free, infallible API"
                 )
             method_ids = {method.api_id for method in state.methods}
             role_ids = {state.create_api_id, *method_ids}
@@ -472,7 +473,7 @@ def load_rust_api_plan(path: Path) -> tuple[RustApiPlan, bytes]:
         raw = path.read_bytes()
         parsed = json.loads(raw, object_pairs_hook=_no_duplicate_object)
         plan = RustApiPlan.model_validate(_freeze_json(parsed))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, RecursionError) as exc:
         raise ValueError(f"invalid rust-api-plan.json: {exc}") from exc
     if canonical_api_plan_bytes(plan) != raw:
         raise ValueError("rust-api-plan.json must use canonical JSON bytes and one final LF")
@@ -755,7 +756,13 @@ def _load_bridge_json(raw: bytes, model: type[RustBridgeRecord]) -> RustBridgeRe
         )
         value = _freeze_json(parsed)
         result = model.model_validate(value)
-    except (UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+    except (
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+        RecursionError,
+        TypeError,
+        ValueError,
+    ) as exc:
         raise ValueError(f"invalid Rust bridge JSON: {exc}") from exc
     if canonical_json_bytes(result.model_dump(mode="json")) != raw:
         raise ValueError("Rust bridge JSON must use canonical bytes and one final LF")

@@ -507,11 +507,13 @@ def _read_crate_archive(path: Path, *, expected_root: str) -> dict[str, str]:
                 if expanded_total + member_size > MAX_CRATE_TOTAL_BYTES:
                     raise ValueError("crate archive expanded size exceeds total limit")
                 raw = _tar_member_path(header).removesuffix("/")
+                raw_parts = raw.split("/")
+                if any(part in {"", ".", ".."} for part in raw_parts):
+                    raise ValueError(f"unsafe archive member: {raw}")
                 member_path = PurePosixPath(raw)
                 if (
                     not raw
                     or member_path.is_absolute()
-                    or ".." in member_path.parts
                     or not member_path.parts
                     or member_path.parts[0] != expected_root
                     or unicodedata.normalize("NFC", raw) != raw

@@ -496,6 +496,17 @@ def test_crate_archive_rejects_truncated_compressed_stream(tmp_path: Path) -> No
         cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")
 
 
+@pytest.mark.parametrize("relative", ["./src/lib.rs", "/src/lib.rs"])
+def test_crate_archive_rejects_noncanonical_raw_path_components(
+    tmp_path: Path, relative: str
+) -> None:
+    archive = tmp_path / "demo-1.0.0.crate"
+    archive.write_bytes(_crate_archive("demo-1.0.0", {relative: b"content"}))
+
+    with pytest.raises(PackageManagerError, match="unsafe archive member"):
+        cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")
+
+
 def test_generic_cargo_store_staging_fails_closed(tmp_path: Path) -> None:
     adapter = CargoPackageManager()
     lock_root = tmp_path / "lock"
