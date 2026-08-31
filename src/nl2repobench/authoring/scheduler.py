@@ -643,8 +643,7 @@ class Scheduler:
                 enabled
                 and barrier is not None
                 and barrier["state"] == "sealed"
-                and current is not None
-                and not bool(current["enabled"])
+                and (current is None or not bool(current["enabled"]))
             ):
                 raise ConflictError(
                     "sealed cutover cannot be re-enabled; a fresh cutover is required"

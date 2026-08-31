@@ -196,6 +196,30 @@ def test_sealed_disabled_configuration_rejects_reenable_without_file_mutation(
     assert scheduler.runtime_config() == before_config
 
 
+def test_sealed_missing_configuration_rejects_reenable_without_inserting_config(
+    tmp_path: Path,
+) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+    scheduler.first_enable()
+    with scheduler.connect() as db:
+        db.execute("DELETE FROM runtime_config")
+
+    before_bytes = scheduler.path.read_bytes()
+    with scheduler.connect() as db:
+        before_count = db.execute("SELECT count(*) FROM runtime_config").fetchone()[0]
+    assert before_count == 0
+
+    with pytest.raises(
+        ConflictError,
+        match="sealed cutover cannot be re-enabled; a fresh cutover is required",
+    ):
+        scheduler.configure(enabled=True)
+
+    assert scheduler.path.read_bytes() == before_bytes
+    with scheduler.connect() as db:
+        assert db.execute("SELECT count(*) FROM runtime_config").fetchone()[0] == 0
+
+
 def test_release_identity_allows_new_terminal_release(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
     first = _task(scheduler, "same", "r1")
