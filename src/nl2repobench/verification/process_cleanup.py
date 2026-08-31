@@ -18,8 +18,8 @@ def candidate_pids(uid: int) -> list[int]:
                 for line in status.read_text(encoding="utf-8").splitlines()
                 if line.startswith("Uid:")
             )
-            real_uid = int(uid_line.split()[1])
-            if real_uid == uid:
+            uid_values = tuple(int(value) for value in uid_line.split()[1:5])
+            if len(uid_values) == 4 and uid in uid_values:
                 pids.append(int(status.parent.name))
         except (OSError, StopIteration, ValueError):
             continue
