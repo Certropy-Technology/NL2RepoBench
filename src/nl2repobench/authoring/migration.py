@@ -112,9 +112,26 @@ def _canonical_artifact_path(raw: str) -> str:
     if "\x00" in raw:
         raise MigrationError("legacy artifact evidence path contains NUL")
     normalized = os.path.normpath(raw)
-    if normalized in {".", "..", "/"}:
+    # ``.``, ``..`` and any root anchor (``/``, POSIX-preserved ``//``, and the
+    # forms normpath folds to them) name a tree, not one evidence file.
+    if normalized in {".", ".."} or not normalized.strip("/"):
         raise MigrationError(f"legacy artifact evidence path is not file-scoped: {raw}")
     return normalized
+
+
+def _artifact_evidence_path(artifact: Any) -> str:
+    """Read one declared evidence path without coercing a malformed value.
+
+    A JSON ``null``, number, bool, list or object is not a path.  Turning it
+    into ``"None"`` or ``"123"`` would mint a usable identity for a file nobody
+    named, so the declared value must already be a string.
+    """
+    declared = artifact.get("path") if isinstance(artifact, dict) else artifact
+    if not isinstance(declared, str):
+        raise MigrationError(
+            f"legacy artifact evidence path is not a string: {type(declared).__name__}"
+        )
+    return _canonical_artifact_path(declared)
 
 
 def _artifact_identity(task_id: str, path: str, digest: str) -> str:
@@ -561,9 +578,7 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                 # manifest contradiction, not something to silently pick from.
                 artifact_digests: dict[str, str] = {}
                 for artifact in item.get("artifacts", []) if isinstance(item.get("artifacts"), list) else []:
-                    artifact_path = _canonical_artifact_path(
-                        str(artifact.get("path", "")) if isinstance(artifact, dict) else str(artifact)
-                    )
+                    artifact_path = _artifact_evidence_path(artifact)
                     artifact_digest = str(artifact.get("sha256", "")) if isinstance(artifact, dict) else ""
                     candidate_path = Path(artifact_path)
                     if candidate_path.is_file() and not candidate_path.is_symlink():

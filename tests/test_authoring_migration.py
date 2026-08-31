@@ -246,20 +246,63 @@ def test_import_rejects_one_artifact_path_carrying_two_digests(tmp_path: Path) -
 
 
 def test_import_rejects_artifact_paths_without_a_usable_identity(tmp_path: Path) -> None:
-    """Evidence identity needs a non-empty, NUL-free, file-scoped path."""
+    """Evidence identity needs a string, non-empty, NUL-free, file-scoped path."""
     declared = "c" * 64
-    cases = (
+    cases: list[tuple[object, str]] = [
+        # Wrong shape: the declared value is never coerced into a path.
+        (None, "not a string"),
+        (123, "not a string"),
+        (True, "not a string"),
+        (["/tmp/claim.json"], "not a string"),
+        ({"path": None, "sha256": declared}, "not a string"),
+        ({"sha256": declared}, "not a string"),
+        ({"path": 7, "sha256": declared}, "not a string"),
+        ({"path": False, "sha256": declared}, "not a string"),
+        ({"path": ["claim.json"], "sha256": declared}, "not a string"),
+        ({"path": {"name": "claim.json"}, "sha256": declared}, "not a string"),
+        # Blank or NUL-bearing.
         ({"path": "", "sha256": declared, "size_bytes": 1}, "empty"),
-        ({"path": "   ", "sha256": declared, "size_bytes": 1}, "empty"),
+        ({"path": "   \t", "sha256": declared, "size_bytes": 1}, "empty"),
         ({"path": "/tmp/nul\x00claim.json", "sha256": declared, "size_bytes": 1}, "NUL"),
+        # Every normalized root anchor, plus relative tree anchors.
         ("/", "file-scoped"),
-    )
+        ({"path": "/", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": "//", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": "///", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": "//claim.json/..", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": "/./", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": "/..", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": ".", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+        ({"path": "..", "sha256": declared, "size_bytes": 1}, "file-scoped"),
+    ]
     for index, (artifact, message) in enumerate(cases):
         name = f"bad-path-{index}"
         root = _live_case(tmp_path, name)
         _attach_artifacts(root, "python", [artifact])
         with pytest.raises(MigrationError, match=message):
             _import_case(root, name)
+
+
+def test_import_keeps_a_symlinked_component_as_its_own_lexical_identity(tmp_path: Path) -> None:
+    """Normalization must not resolve a symlinked directory into its target's id."""
+    root = _live_case(tmp_path, "symlink")
+    authority = root / "evidence" / "authority"
+    authority.mkdir(parents=True)
+    real_claim = authority / "claim.json"
+    real_claim.write_text(json.dumps({"claim": {"candidate_id": "python-candidate"}}), encoding="utf-8")
+    (root / "evidence" / "mirror").symlink_to(authority, target_is_directory=True)
+    via_link = str(root / "evidence" / "mirror" / "claim.json")
+    assert Path(via_link).resolve() == real_claim.resolve()
+    _attach_artifacts(root, "python", [str(real_claim), via_link])
+    rows = _artifact_rows(_import_case(root, "symlink"), "python-candidate")
+
+    assert [row[1] for row in rows] == sorted([str(real_claim), via_link])
+    assert len({row[2] for row in rows}) == 1
+    digest = hashlib.sha256(real_claim.read_bytes()).hexdigest()
+    assert {row[0] for row in rows} == {
+        _legacy_artifact_id(PYTHON_TASK, str(real_claim), digest),
+        _legacy_artifact_id(PYTHON_TASK, via_link, digest),
+    }
 
 
 def test_import_keeps_shared_evidence_bound_to_every_task_that_references_it(tmp_path: Path) -> None:
