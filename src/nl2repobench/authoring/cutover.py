@@ -51,6 +51,8 @@ DEPLOYMENT_RUNTIME_FILES = (
     "src/nl2repobench/authoring/scheduler.py",
 )
 DEPLOYMENT_PYTHON = ".venv/bin/python3"
+DEPLOYMENT_GIT = "/usr/bin/git"
+_DEPLOYMENT_DIGEST_CACHE: dict[str, tuple[tuple[tuple[str, int, int, int, int], ...], str]] = {}
 
 # The pre-drain digest is a bounded audit signal, not migration authority. These
 # roots contain stable control/evidence; tmp, logs, worktrees, sessions, results,
@@ -104,6 +106,80 @@ def _deployment_executable_digest(repository: Path) -> tuple[str, str]:
     return str(path), hashlib.sha256(resolved.read_bytes()).hexdigest()
 
 
+def _deployment_python_runtime_digest(repository: Path) -> str:
+    """Hash ignored virtual-environment bytes that can alter Python imports."""
+    root = repository / ".venv"
+    if root.is_symlink() or not root.is_dir():
+        raise MigrationError("deployment Python virtual environment is missing or unsafe")
+    paths = [root / "pyvenv.cfg"]
+    paths.extend(sorted(root.glob("lib/python*/site-packages")))
+    site_roots = [path for path in paths[1:] if path.is_dir() and not path.is_symlink()]
+    if not paths[0].is_file() or len(site_roots) != 1:
+        raise MigrationError("deployment Python site-packages layout is missing or unsafe")
+    files: list[Path] = [paths[0]]
+    for site_root in site_roots:
+        for path in sorted(site_root.rglob("*")):
+            if path.is_symlink() or not path.is_file():
+                if path.is_symlink() or not path.is_dir():
+                    raise MigrationError(
+                        "deployment Python site-packages entry is unsafe: "
+                        f"{path.relative_to(repository)}"
+                    )
+                continue
+            files.append(path)
+    signature = tuple(
+        (
+            path.relative_to(repository).as_posix(),
+            path.stat().st_size,
+            path.stat().st_mtime_ns,
+            path.stat().st_ino,
+            path.stat().st_mode,
+        )
+        for path in files
+    )
+    cache_key = str(repository)
+    cached = _DEPLOYMENT_DIGEST_CACHE.get(cache_key)
+    if cached is not None and cached[0] == signature:
+        return cached[1]
+    digest = hashlib.sha256()
+    for path in files:
+        name = path.relative_to(repository).as_posix().encode("utf-8")
+        data = path.read_bytes()
+        digest.update(len(name).to_bytes(8, "big"))
+        digest.update(name)
+        digest.update(len(data).to_bytes(8, "big"))
+        digest.update(data)
+    result = digest.hexdigest()
+    _DEPLOYMENT_DIGEST_CACHE[cache_key] = (signature, result)
+    return result
+
+
+def _trusted_git_environment() -> dict[str, str]:
+    env = dict(os.environ)
+    for key in tuple(env):
+        if key == "GIT_DIR" or key == "GIT_WORK_TREE" or key.startswith("GIT_CONFIG"):
+            env.pop(key, None)
+    env.update(
+        {
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_SYSTEM": os.devnull,
+        }
+    )
+    return env
+
+
+def _trusted_git(repository: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [DEPLOYMENT_GIT, "-C", str(repository), *arguments],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=_trusted_git_environment(),
+    )
+
+
 def _deployment_runtime_manifest_digest(repository: Path) -> str:
     digest = hashlib.sha256()
     for relative in DEPLOYMENT_RUNTIME_FILES:
@@ -121,17 +197,17 @@ def _deployment_runtime_manifest_digest(repository: Path) -> str:
 
 def _deployment_commit(repository: Path) -> str:
     try:
-        completed = subprocess.run(
-            ["git", "-C", str(repository), "rev-parse", "HEAD"],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
-        )
+        completed = _trusted_git(repository, "rev-parse", "HEAD", "--show-toplevel")
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise MigrationError(f"cannot inspect deployment commit: {exc}") from exc
-    commit = completed.stdout.strip()
-    if completed.returncode != 0 or not re.fullmatch(r"[0-9a-f]{40}", commit):
+    lines = completed.stdout.splitlines()
+    commit = lines[0].strip() if lines else ""
+    top_level = lines[1].strip() if len(lines) > 1 else ""
+    if (
+        completed.returncode != 0
+        or not re.fullmatch(r"[0-9a-f]{40}", commit)
+        or top_level != str(repository.resolve())
+    ):
         raise MigrationError("deployment checkout does not expose an exact commit")
     return commit
 
@@ -140,19 +216,8 @@ def _deployment_checkout_dirty(repository: Path) -> list[str]:
     """Return deployment checkout status entries outside protected scratch."""
 
     try:
-        completed = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(repository),
-                "status",
-                "--porcelain=v1",
-                "--untracked-files=all",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
+        completed = _trusted_git(
+            repository, "status", "--porcelain=v1", "--untracked-files=all"
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise MigrationError(f"cannot inspect deployment checkout: {exc}") from exc
@@ -198,6 +263,7 @@ def _deployment_identity(repository: Path, sqlite_service_unit: str) -> dict[str
         "service_unit": sqlite_service_unit,
         "python_executable": python_path,
         "python_executable_sha256": python_digest,
+        "python_runtime_manifest_sha256": _deployment_python_runtime_digest(repository),
         "lock_path": "uv.lock",
         "lock_sha256": _deployment_file_digest(repository, "uv.lock"),
     }
@@ -1304,6 +1370,13 @@ def _verify_sqlite_service_stopped(unit: str) -> None:
     _verify_empty_cgroup(control_group)
 
 
+def _validate_scheduler_environment_file(path: Path, content: bytes) -> None:
+    if path.is_symlink() or not path.is_file():
+        raise MigrationError("scheduler environment file is missing or unsafe")
+    if path.read_bytes() != content:
+        raise MigrationError("scheduler environment file does not match cutover binding")
+
+
 def install_service_binding(
     *,
     repository: Path,
@@ -1338,6 +1411,8 @@ def install_service_binding(
         )
         if write:
             _atomic_text(sqlite_env_file, content)
+        else:
+            _validate_scheduler_environment_file(sqlite_env_file, content.encode("utf-8"))
         return {
             "sqlite_service_unit": sqlite_service_unit,
             "sqlite_env_file": str(sqlite_env_file),

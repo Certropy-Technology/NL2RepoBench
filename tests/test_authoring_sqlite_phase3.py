@@ -149,10 +149,11 @@ def _write_rollback_authorities(
     disabled: dict[str, object],
     cutover_id: str,
     manifest_sha256: str,
+    sqlite_env_file: str = "/etc/nl2repobench/authoring-scheduler-phase3.env",
 ) -> None:
     database_digest = hashlib.sha256(database.read_bytes()).hexdigest()
     unit = "nl2repobench-authoring-supervisor-sqlite@phase3.service"
-    env_file = "/etc/nl2repobench/authoring-scheduler-phase3.env"
+    env_file = sqlite_env_file
     deployment_root = Path(__file__).parents[1]
     deployment_identity = cutover._deployment_identity(deployment_root, unit)
     journal.write_text(
@@ -2193,6 +2194,7 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
         lambda _repository, unit: _test_deployment_identity(unit),
     )
     monkeypatch.setattr(cutover, "_require_clean_deployment_checkout", lambda _repository: None)
+    monkeypatch.setattr(cutover, "_validate_scheduler_environment_file", lambda *args: None)
     barrier = tmp_path / "barrier.json"
     result = cutover.execute_cutover(
         repository=tmp_path,
@@ -2401,6 +2403,79 @@ def test_service_binding_rejects_missing_or_tampered_deployment_identity(
     arguments["installed_unit"] = installed_unit
     with pytest.raises(MigrationError, match="deployment identity does not match journal"):
         cutover.install_service_binding(**arguments)
+
+
+def test_deployment_git_probes_ignore_hostile_environment(tmp_path: Path, monkeypatch) -> None:
+    repository = Path(__file__).parents[1]
+    fake_git_dir = tmp_path / "fake-git"
+    fake_git_dir.mkdir()
+    monkeypatch.setenv("PATH", str(tmp_path))
+    monkeypatch.setenv("GIT_DIR", str(fake_git_dir))
+    monkeypatch.setenv("GIT_WORK_TREE", str(tmp_path))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "global-config"))
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(tmp_path / "system-config"))
+
+    expected = subprocess.run(
+        ["/usr/bin/git", "-C", str(repository), "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True,
+        env={
+            "PATH": "/usr/bin:/bin",
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_SYSTEM": os.devnull,
+        },
+    ).stdout.strip()
+    assert cutover._deployment_commit(repository) == expected
+    trusted_status = subprocess.run(
+        [
+            "/usr/bin/git",
+            "-C",
+            str(repository),
+            "status",
+            "--porcelain=v1",
+            "--untracked-files=all",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+        env={
+            "PATH": "/usr/bin:/bin",
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_SYSTEM": os.devnull,
+        },
+    ).stdout.splitlines()
+    assert cutover._deployment_checkout_dirty(repository) == trusted_status
+
+
+def test_scheduler_environment_validation_requires_exact_existing_bytes(tmp_path: Path) -> None:
+    environment = tmp_path / "scheduler.env"
+    with pytest.raises(MigrationError, match="missing or unsafe"):
+        cutover._validate_scheduler_environment_file(environment, b"expected\n")
+    environment.write_bytes(b"wrong\n")
+    with pytest.raises(MigrationError, match="does not match"):
+        cutover._validate_scheduler_environment_file(environment, b"expected\n")
+    environment.write_bytes(b"expected\n")
+    cutover._validate_scheduler_environment_file(environment, b"expected\n")
+
+
+def test_deployment_identity_binds_ignored_virtual_environment_bytes(tmp_path: Path) -> None:
+    repository = Path(__file__).parents[1]
+    site_roots = sorted((repository / ".venv/lib").glob("python*/site-packages"))
+    if len(site_roots) != 1:
+        pytest.skip("isolated test environment has no single site-packages root")
+    marker = site_roots[0] / "nl2repo_codepin_identity_test.pth"
+    try:
+        marker.write_text("# initial\n", encoding="utf-8")
+        unit = "nl2repobench-authoring-supervisor-sqlite@phase3.service"
+        expected = cutover._deployment_identity(repository, unit)
+        marker.write_text("# tampered\n", encoding="utf-8")
+        with pytest.raises(MigrationError, match="code identity does not match"):
+            cutover._validate_deployment_identity(repository, unit, expected)
+    finally:
+        marker.unlink(missing_ok=True)
 
 
 def test_rollback_and_restore_require_deployment_identity_in_both_records(

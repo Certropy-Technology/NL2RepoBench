@@ -12,6 +12,7 @@ Environment=PYTHONUNBUFFERED=1
 Environment=TMPDIR=/data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/tmp
 EnvironmentFile=-/root/.config/itbench/bootstrap-secrets.env
 EnvironmentFile=/etc/nl2repobench/authoring-scheduler-%i.env
+UnsetEnvironment=PYTHONPATH PYTHONHOME PYTHON_BIN GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_CONFIG GIT_CONFIG_GLOBAL GIT_CONFIG_SYSTEM GIT_CONFIG_NOSYSTEM
 ExecStartPre=/data/NL2RepoBench-integration-20260827/.venv/bin/python3 /data/NL2RepoBench-integration-20260827/scripts/install_authoring_sqlite_service.py --repository-root /data/NL2RepoBench-integration-20260827 --journal ${CUTOVER_JOURNAL} --barrier ${CUTOVER_BARRIER} --db ${SCHEDULER_DB} --sqlite-service-unit nl2repobench-authoring-supervisor-sqlite@%i.service --sqlite-env-file /etc/nl2repobench/authoring-scheduler-%i.env --installed-unit /etc/systemd/system/nl2repobench-authoring-supervisor-sqlite@.service
 ExecStart=/data/NL2RepoBench-integration-20260827/scripts/run_authoring_supervisor.sh --scheduler-db ${SCHEDULER_DB} --branch main --interval-sec 60
 Restart=always
