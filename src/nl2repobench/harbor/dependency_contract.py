@@ -7,7 +7,12 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from nl2repobench.domain.canonical_contract import DependencyBundle, PackageManager
+from nl2repobench.domain.canonical_contract import (
+    DependencyBundle,
+    PackageManager,
+    RuntimeLanguage,
+    RuntimeProfile,
+)
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.package_managers.base import LockSummary, StoreSummary
 from nl2repobench.package_managers.registry import PackageManagerRegistry
@@ -202,6 +207,7 @@ def materialize_dependency_bundle(
     expected_toolchain: str,
     resolver: LocalArtifactResolver,
     destination: Path,
+    runtime_profile: RuntimeProfile | None = None,
 ) -> tuple[LockSummary, StoreSummary]:
     """Materialize and validate the canonical triple through its adapter.
 
@@ -213,6 +219,17 @@ def materialize_dependency_bundle(
         raise DependencyContractError("canonical dependency artifact triple is incomplete")
     if identity.package_manager.value != bundle.package_manager.value:
         raise DependencyContractError("dependency identity does not match the bundle")
+    if identity.language is RuntimeLanguage.JAVA and runtime_profile is None:
+        raise DependencyContractError(
+            "Java dependency staging requires the selected runtime profile"
+        )
+    if runtime_profile is not None and (
+        runtime_profile.language is not identity.language
+        or runtime_profile.package_manager is not identity.package_manager
+    ):
+        raise DependencyContractError(
+            "selected runtime profile does not match dependency identity"
+        )
     authorization = resolver.authorization
     if not isinstance(authorization, PrivateArtifactAuthorization):
         raise DependencyContractError("private artifact authorization is required")
@@ -244,9 +261,17 @@ def materialize_dependency_bundle(
         inventory_bytes = resolver.read_bytes(bundle.inventory, max_bytes=4 * 1024 * 1024)
         inventory = json.loads(inventory_bytes)
         adapter = PackageManagerRegistry.default().resolve(identity)
-        lock_summary = adapter.validate_lock(lock_root, expected_toolchain)
+        lock_summary = adapter.validate_lock(
+            lock_root,
+            expected_toolchain,
+            runtime_profile=runtime_profile,
+        )
         store_summary = adapter.validate_offline_store(
-            store_root, lock_summary, inventory, expected_toolchain
+            store_root,
+            lock_summary,
+            inventory,
+            expected_toolchain,
+            runtime_profile=runtime_profile,
         )
     except (ArtifactStoreError, OSError, ValueError) as exc:
         raise DependencyContractError(f"cannot stage dependency closure: {exc}") from exc

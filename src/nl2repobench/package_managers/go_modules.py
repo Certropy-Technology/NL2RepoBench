@@ -6,7 +6,7 @@ import hashlib
 import re
 from pathlib import Path
 
-from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
+from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage, RuntimeProfile
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
 
@@ -95,7 +95,14 @@ class GoModulesPackageManager:
     identity = GO_IDENTITY
     lockfile_names = ("go.mod", "go.sum")
 
-    def validate_lock(self, lock_root: Path, expected_toolchain: str) -> LockSummary:
+    def validate_lock(
+        self,
+        lock_root: Path,
+        expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
+    ) -> LockSummary:
+        del runtime_profile
         lockfile = lock_root / "go.mod"
         data = _regular(lockfile, MAX_GO_MOD_BYTES, "go.mod")
         module_path, go_version = _module_directives(data.decode("utf-8"))
@@ -123,7 +130,10 @@ class GoModulesPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary:
+        del runtime_profile
         if (
             lock_summary.identity != self.identity
             or lock_summary.toolchain_version != expected_toolchain

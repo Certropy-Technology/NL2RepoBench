@@ -12,7 +12,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
+from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage, RuntimeProfile
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
 
@@ -120,7 +120,14 @@ class PnpmPackageManager:
     identity = PNPM_IDENTITY
     lockfile_names = ("pnpm-lock.yaml",)
 
-    def validate_lock(self, lock_root: Path, expected_toolchain: str) -> LockSummary:
+    def validate_lock(
+        self,
+        lock_root: Path,
+        expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
+    ) -> LockSummary:
+        del runtime_profile
         if not SEMVER.fullmatch(expected_toolchain):
             raise PackageManagerError(
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
@@ -177,7 +184,10 @@ class PnpmPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary:
+        del runtime_profile
         if (
             lock_summary.identity != self.identity
             or lock_summary.toolchain_version != expected_toolchain

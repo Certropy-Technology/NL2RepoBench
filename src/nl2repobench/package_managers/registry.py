@@ -10,6 +10,7 @@ from typing import cast
 from nl2repobench.domain.canonical_contract import (
     PackageManager,
     RuntimeLanguage,
+    RuntimeProfile,
 )
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
@@ -45,7 +46,14 @@ class CanonicalPackageManager:
     ) -> PackageManagerError:
         return PackageManagerError(code, self.identity, stage, message)
 
-    def validate_lock(self, lock_root: Path, expected_toolchain: str) -> LockSummary:
+    def validate_lock(
+        self,
+        lock_root: Path,
+        expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
+    ) -> LockSummary:
+        del runtime_profile
         if lock_root.is_symlink() or not lock_root.is_dir():
             raise self._error(
                 PackageManagerErrorCode.LOCK_MISSING,
@@ -93,7 +101,10 @@ class CanonicalPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary:
+        del runtime_profile
         if lock_summary.identity != self.identity:
             raise self._error(
                 PackageManagerErrorCode.INVENTORY_MISMATCH,

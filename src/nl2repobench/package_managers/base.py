@@ -7,6 +7,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Protocol
 
+from nl2repobench.domain.canonical_contract import RuntimeProfile
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 
 
@@ -216,7 +217,13 @@ class PackageManagerAdapter(Protocol):
     identity: RuntimeDiscriminator
     lockfile_names: tuple[str, ...]
 
-    def validate_lock(self, lock_root: Path, expected_toolchain: str) -> LockSummary: ...
+    def validate_lock(
+        self,
+        lock_root: Path,
+        expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
+    ) -> LockSummary: ...
 
     def validate_offline_store(
         self,
@@ -224,6 +231,8 @@ class PackageManagerAdapter(Protocol):
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary: ...
 
     def build_commands(self, profile: object) -> tuple[CommandSpec, ...]: ...

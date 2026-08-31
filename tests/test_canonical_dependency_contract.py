@@ -8,11 +8,18 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from nl2repobench.domain.canonical_contract import DependencyBundle, TaskManifest
+from nl2repobench.domain.canonical_contract import (
+    DependencyBundle,
+    PackageManager,
+    RuntimeLanguage,
+    TaskManifest,
+)
 from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
+from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.compiler import HarborCompiler
 from nl2repobench.harbor.dependency_contract import (
     DependencyContractError,
+    materialize_dependency_bundle,
     validate_dependency_artifacts,
 )
 from nl2repobench.harbor.node_compiler import NodeHarborCompiler
@@ -190,6 +197,55 @@ def _resolver(
         purpose=authorization.purpose,
         staging_root=authorization.staging_root,
     )
+
+
+def test_java_materialization_requires_selected_runtime_before_staging(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    reference = ArtifactRef(
+        digest="sha256:" + "1" * 64,
+        size_bytes=1,
+        uri="artifact://private/sha256:" + "1" * 64,
+        visibility=Visibility.PRIVATE,
+    )
+    bundle = DependencyBundle(
+        status="known",
+        package_manager=PackageManager.MAVEN,
+        lock=reference,
+        offline_store=reference,
+        inventory=reference,
+    )
+    authorization = PrivateArtifactAuthorization(
+        task_id="java-runtime",
+        manifest_digest="sha256:" + "2" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({reference.digest}),
+        staging_root=(tmp_path / "staging").resolve(),
+    )
+
+    class Resolver:
+        def __init__(self) -> None:
+            self.authorization = authorization
+
+    monkeypatch.setattr(
+        "nl2repobench.harbor.dependency_contract.materialize_archive",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            AssertionError("Java staging was reached without a runtime profile")
+        ),
+    )
+    with pytest.raises(DependencyContractError, match="selected runtime profile"):
+        materialize_dependency_bundle(
+            bundle,
+            identity=RuntimeDiscriminator(
+                language=RuntimeLanguage.JAVA,
+                package_manager=PackageManager.MAVEN,
+            ),
+            expected_toolchain="3.9.9",
+            resolver=Resolver(),  # type: ignore[arg-type]
+            destination=tmp_path / "destination",
+        )
+    assert not (tmp_path / "destination").exists()
 
 
 @pytest.mark.parametrize(

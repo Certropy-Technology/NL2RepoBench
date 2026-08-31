@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
+from nl2repobench.domain.canonical_contract import RuntimeProfile
 from nl2repobench.package_managers import PackageManagerError, PackageManagerErrorCode
 from nl2repobench.package_managers.maven import (
     MavenPackageManager,
@@ -182,6 +184,71 @@ def test_maven_lock_requires_selected_jdk_identity(tmp_path: Path) -> None:
     (lock_root / "maven-lock-v1.json").write_bytes(_lock_bytes())
     with pytest.raises(PackageManagerError, match="requires the selected exact JDK"):
         MavenPackageManager().validate_lock(lock_root, "3.9.9")
+
+
+def test_maven_runtime_profile_is_propagated_and_rejects_wrong_identity(tmp_path: Path) -> None:
+    lock_root = tmp_path / "lock"
+    lock_root.mkdir()
+    (lock_root / "maven-lock-v1.json").write_bytes(_lock_bytes())
+    adapter = MavenPackageManager()
+    profile = RuntimeProfile(
+        language="java",
+        runtime="jdk",
+        version="temurin-21.0.5+11",
+        package_manager="maven",
+        package_manager_version="3.9.9",
+    )
+    summary = adapter.validate_lock(lock_root, "3.9.9", runtime_profile=profile)
+    assert summary.jdk_version == profile.version
+    with pytest.raises(PackageManagerError, match="selected JDK"):
+        adapter.validate_lock(
+            lock_root,
+            "3.9.9",
+            runtime_profile=RuntimeProfile(
+                language="java",
+                runtime="jdk",
+                version="zulu-21.0.5+11",
+                package_manager="maven",
+                package_manager_version="3.9.9",
+            ),
+        )
+
+
+def test_maven_store_rejects_malformed_jdk_identity_values(tmp_path: Path) -> None:
+    lock_root = tmp_path / "lock"
+    store = tmp_path / "store"
+    lock_root.mkdir()
+    store.mkdir()
+    data = _lock_bytes()
+    (lock_root / "maven-lock-v1.json").write_bytes(data)
+    adapter = MavenPackageManager()
+    summary = adapter.validate_lock(
+        lock_root,
+        "3.9.9",
+        expected_jdk_version="temurin-21.0.5+11",
+    )
+    malformed_summary = replace(summary, jdk_version="not-a-jdk")
+    with pytest.raises(PackageManagerError, match="JDK identity"):
+        adapter.validate_offline_store(
+            store,
+            malformed_summary,
+            {},
+            "3.9.9",
+            expected_jdk_version="not-a-jdk",
+        )
+    inventory = _inventory(store)
+    lock_inventory = inventory["lock"]
+    assert isinstance(lock_inventory, dict)
+    lock_inventory["archive_digest"] = summary.lock_digest
+    lock_inventory["jdk_version"] = "not-a-jdk"
+    with pytest.raises(PackageManagerError, match="inventory JDK identity is malformed"):
+        adapter.validate_offline_store(
+            store,
+            summary,
+            inventory,
+            "3.9.9",
+            expected_jdk_version="temurin-21.0.5+11",
+        )
 
 
 def test_candidate_pom_is_metadata_only() -> None:

@@ -14,7 +14,11 @@ from xml.etree.ElementTree import Element
 from defusedxml import ElementTree
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
+from nl2repobench.domain.canonical_contract import (
+    PackageManager,
+    RuntimeLanguage,
+    RuntimeProfile,
+)
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
 
@@ -374,6 +378,7 @@ class MavenPackageManager:
         expected_toolchain: str,
         *,
         expected_jdk_version: str | None = None,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> LockSummary:
         if lock_root.is_symlink() or not lock_root.is_dir():
             raise _error("Maven lock root is missing", PackageManagerErrorCode.LOCK_MISSING)
@@ -397,6 +402,27 @@ class MavenPackageManager:
                 "Maven lock toolchain does not match the expected Maven version",
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
             )
+        if runtime_profile is not None:
+            if (
+                runtime_profile.language is not RuntimeLanguage.JAVA
+                or runtime_profile.runtime != "jdk"
+                or runtime_profile.package_manager is not PackageManager.MAVEN
+            ):
+                raise _error(
+                    "Java/Maven lock requires a java+jdk+maven runtime profile",
+                    PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                )
+            if runtime_profile.package_manager_version != expected_toolchain:
+                raise _error(
+                    "selected Maven version does not match expected toolchain",
+                    PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                )
+            if expected_jdk_version is not None and expected_jdk_version != runtime_profile.version:
+                raise _error(
+                    "selected JDK identity disagrees with runtime profile",
+                    PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                )
+            expected_jdk_version = runtime_profile.version
         if expected_jdk_version is None:
             raise _error(
                 "Java/Maven lock validation requires the selected exact JDK identity",
@@ -438,6 +464,7 @@ class MavenPackageManager:
         expected_toolchain: str,
         *,
         expected_jdk_version: str | None = None,
+        runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary:
         if (
             lock_summary.identity != self.identity
@@ -460,9 +487,34 @@ class MavenPackageManager:
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
                 stage="store",
             )
+        if runtime_profile is not None:
+            if (
+                runtime_profile.language is not RuntimeLanguage.JAVA
+                or runtime_profile.runtime != "jdk"
+                or runtime_profile.package_manager is not PackageManager.MAVEN
+                or runtime_profile.package_manager_version != expected_toolchain
+                or runtime_profile.version != expected_jdk_version
+            ):
+                raise _error(
+                    "selected Java runtime profile does not match Maven store validation",
+                    PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                stage="store",
+            )
+        if not JDK_VERSION.fullmatch(expected_jdk_version):
+            raise _error(
+                "selected JDK identity is not an exact JDK 21 distribution and build",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                stage="store",
+            )
         if lock_summary.jdk_version != expected_jdk_version:
             raise _error(
                 "Maven lock JDK identity does not match the selected JDK",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                stage="store",
+            )
+        if not JDK_VERSION.fullmatch(lock_summary.jdk_version):
+            raise _error(
+                "Maven lock summary JDK identity is malformed",
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
                 stage="store",
             )
@@ -478,6 +530,15 @@ class MavenPackageManager:
                 stage="store",
             )
         lock_inventory = inventory.get("lock")
+        if (
+            isinstance(lock_inventory, dict)
+            and not JDK_VERSION.fullmatch(str(lock_inventory.get("jdk_version", "")))
+        ):
+            raise _error(
+                "Maven inventory JDK identity is malformed",
+                PackageManagerErrorCode.INVENTORY_MISMATCH,
+                stage="store",
+            )
         if (
             not isinstance(lock_inventory, dict)
             or lock_inventory.get("archive_digest") != lock_summary.lock_digest

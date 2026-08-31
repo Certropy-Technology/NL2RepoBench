@@ -475,6 +475,7 @@ WORKDIR /tests
                 expected_toolchain=runtime.package_manager_version or "none",
                 resolver=self.artifact_resolver,
                 destination=staging,
+                runtime_profile=runtime,
             )
         except (DependencyContractError, OSError, ValueError) as exc:
             raise HarborCompileError(str(exc)) from exc
