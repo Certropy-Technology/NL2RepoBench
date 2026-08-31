@@ -14,10 +14,14 @@ import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+
+from nl2repobench.authoring.runtime import SingletonActor, idempotency_key, scheduler_for
+from nl2repobench.authoring.scheduler import Scheduler
 
 ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
 BUCKET = "dingshang-sg"
@@ -37,6 +41,16 @@ REBUILDABLE_PATHS = (
     ".mypy_cache",
     ".ruff_cache",
 )
+
+
+class ArchiveCollisionError(RuntimeError):
+    def __init__(self, key: str) -> None:
+        super().__init__(f"remote object collision: {key}")
+        self.key = key
+
+
+class ArchiveSourceError(ValueError):
+    """Source snapshot is unsafe to archive."""
 
 
 @dataclass(frozen=True)
@@ -153,8 +167,7 @@ def worktrees_with_runs(
             continue
         worktree = worktree_root / lane.batch_id / package
         has_runs = any(
-            (worktree / relative).is_dir()
-            and any((worktree / relative).rglob("*"))
+            (worktree / relative).is_dir() and any((worktree / relative).rglob("*"))
             for relative in (".nl2repo/runs", ".nl2repo/authoring-work", "jobs")
         )
         if worktree.is_dir() and (worktree / ".git").exists() and has_runs:
@@ -185,9 +198,7 @@ def _process_uses(worktree: Path) -> bool:
 
 
 def _docker_uses(worktree: Path) -> bool:
-    completed = subprocess.run(
-        ["docker", "ps", "-q"], capture_output=True, text=True, check=False
-    )
+    completed = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, check=False)
     if completed.returncode != 0:
         return True
     ids = completed.stdout.split()
@@ -224,9 +235,7 @@ def cleanup_orphan_containers(lanes: list[Lane], worktree_root: Path) -> list[st
             worktree = (worktree_root / lane.batch_id / package).resolve()
             if worktree.is_dir() and not _process_uses(worktree):
                 tasks.append((str(worktree), worktree, str(status)))
-    completed = subprocess.run(
-        ["docker", "ps", "-q"], capture_output=True, text=True, check=False
-    )
+    completed = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, check=False)
     if completed.returncode != 0 or not completed.stdout.split():
         return []
     ids = completed.stdout.split()
@@ -269,11 +278,9 @@ def _upload_and_verify(bucket: Any, key: str, file: ArchiveFile) -> None:
     if bucket.object_exists(key):
         size, digest = _remote_bytes(bucket, key)
         if size != file.size or digest != file.sha256:
-            raise RuntimeError(f"remote object collision: {key}")
+            raise ArchiveCollisionError(key)
         return
-    bucket.put_object_from_file(
-        key, str(file.local), headers={"x-oss-meta-sha256": file.sha256}
-    )
+    bucket.put_object_from_file(key, str(file.local), headers={"x-oss-meta-sha256": file.sha256})
     size, digest = _remote_bytes(bucket, key)
     if size != file.size or digest != file.sha256:
         raise RuntimeError(f"remote verification failed: {key}")
@@ -285,19 +292,24 @@ def _tree_size(path: Path) -> int:
     if path.is_file():
         return path.stat().st_size
     return sum(
-        item.stat().st_size
-        for item in path.rglob("*")
-        if item.is_file() and not item.is_symlink()
+        item.stat().st_size for item in path.rglob("*") if item.is_file() and not item.is_symlink()
     )
+
+
+def _source_snapshot_digest(files: list[ArchiveFile]) -> str:
+    digest = hashlib.sha256()
+    for file in files:
+        if not file.relative.startswith("catalog/sources/"):
+            continue
+        digest.update(file.relative.encode() + b"\0" + bytes.fromhex(file.sha256))
+    return digest.hexdigest()
 
 
 def cleanup_verified_task(worktree: Path) -> int:
     """Delete only run payloads and reproducible caches after OSS verification."""
 
     targets = [worktree / relative for relative in REBUILDABLE_PATHS]
-    targets.extend(
-        (worktree / ".nl2repo" / name) for name in ("runs", "authoring-work")
-    )
+    targets.extend((worktree / ".nl2repo" / name) for name in ("runs", "authoring-work"))
     targets.append(worktree / "jobs")
     nl2repo = worktree / ".nl2repo"
     if nl2repo.is_dir():
@@ -326,6 +338,25 @@ def cleanup_verified_task(worktree: Path) -> int:
         else:
             path.unlink()
     return removed
+
+
+def remove_verified_worktree(worktree: Path) -> None:
+    """Remove the archived Git worktree before terminal completion."""
+    if not worktree.exists():
+        return
+    if (worktree / ".git").exists():
+        removed = subprocess.run(
+            ["git", "-C", str(worktree), "worktree", "remove", "--force", str(worktree)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if removed.returncode != 0:
+            raise RuntimeError(f"verified worktree removal failed: {removed.stderr[-1000:]}")
+    else:
+        shutil.rmtree(worktree)
+    if worktree.exists():
+        raise RuntimeError("verified worktree still exists after removal")
 
 
 def archive_task(
@@ -386,15 +417,14 @@ def archive_task(
         "object_count": len(files),
         "bytes_verified": sum(file.size for file in files),
         "source_snapshot_included": True,
+        "source_snapshot_sha256": _source_snapshot_digest(files),
         "source_file_count": sum(
             1 for file in files if file.relative.startswith("catalog/sources/")
         ),
         "source_bytes": sum(
             file.size for file in files if file.relative.startswith("catalog/sources/")
         ),
-        "workspace_file_count": sum(
-            1 for file in files if "artifacts/workspace/" in file.relative
-        ),
+        "workspace_file_count": sum(1 for file in files if "artifacts/workspace/" in file.relative),
         "workspace_bytes": sum(
             file.size for file in files if "artifacts/workspace/" in file.relative
         ),
@@ -419,9 +449,7 @@ def archive_task(
             manifest_temp, "manifest.json", manifest_temp.stat().st_size, _sha256(manifest_temp)
         )
         _upload_and_verify(bucket, manifest_key, manifest_file)
-        receipt.write_text(
-            json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8"
-        )
+        receipt.write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     finally:
         manifest_temp.unlink(missing_ok=True)
     removed = cleanup_verified_task(worktree) if cleanup else 0
@@ -470,21 +498,207 @@ def run_once(args: argparse.Namespace, bucket: Any) -> list[dict[str, Any]]:
     return results
 
 
+def _db_archive_one(
+    scheduler: Scheduler,
+    actor: SingletonActor,
+    bucket: Any,
+    task: dict[str, Any],
+    *,
+    receipt_root: Path,
+    workers: int,
+) -> dict[str, Any]:
+    worktree_value = task.get("worktree_path")
+    receipt_id = scheduler.begin_operation(
+        str(task["task_id"]),
+        "archive",
+        idempotency_key(task, "archive"),
+        actor=actor.fence,
+    )
+    lane = Lane(str(task["language"]), str(task["batch_id"]), Path("scheduler-db-only"))
+    try:
+        if not isinstance(worktree_value, str) or not worktree_value:
+            raise ArchiveSourceError("scheduler task has no worktree_path")
+        worktree = Path(worktree_value)
+        try:
+            result = archive_task(
+                bucket,
+                lane=lane,
+                package=str(task["package"]),
+                worktree=worktree,
+                receipt_root=receipt_root,
+                workers=workers,
+                cleanup=False,
+                queue_status="handoff_ready",
+                owner=None,
+                attempts=int(task["authoring_attempts"]),
+            )
+        except ValueError as exc:
+            raise ArchiveSourceError(str(exc)) from exc
+        if result.get("status") not in {"archived", "already-archived"}:
+            raise RuntimeError(f"archive did not progress: {result.get('status')}")
+        receipt = Path(str(result["receipt"]))
+        manifest = json.loads(receipt.read_text(encoding="utf-8"))
+        objects = manifest.get("objects", [])
+        if not isinstance(objects, list) or not objects:
+            raise RuntimeError("archive manifest contains no verified objects")
+        first_key = str(objects[0]["key"])
+        prefix = first_key.rsplit("/", 1)[0]
+        scheduler.update_receipt(
+            receipt_id,
+            "verified",
+            actor=actor.fence,
+            manifest_key=f"{prefix}/manifest.json",
+            manifest_sha256=_sha256(receipt),
+            source_snapshot_sha256=str(manifest["source_snapshot_sha256"]),
+            object_count=int(manifest["object_count"]),
+            byte_count=int(manifest["bytes_verified"]),
+            evidence_sha256=_sha256(receipt),
+            receipt_json=manifest,
+        )
+        return {"task_id": task["task_id"], **result}
+    except ArchiveCollisionError as exc:
+        evidence = receipt_root / "collisions" / f"{task['task_id']}.json"
+        evidence.parent.mkdir(parents=True, exist_ok=True)
+        evidence.write_text(
+            json.dumps(
+                {"task_id": task["task_id"], "remote_key": exc.key, "reason": str(exc)},
+                sort_keys=True,
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        scheduler.collide_operation(
+            receipt_id,
+            "infrastructure",
+            str(exc),
+            evidence_path=evidence.relative_to(receipt_root).as_posix(),
+            evidence_sha256=_sha256(evidence),
+            actor=actor.fence,
+        )
+        raise
+    except Exception as exc:
+        scheduler.fail_operation(
+            receipt_id,
+            "source" if isinstance(exc, ArchiveSourceError) else "infrastructure",
+            str(exc),
+            actor=actor.fence,
+        )
+        raise
+
+
+def _db_cleanup_one(
+    scheduler: Scheduler,
+    actor: SingletonActor,
+    task: dict[str, Any],
+    *,
+    receipt_root: Path,
+) -> dict[str, Any]:
+    worktree_value = task.get("worktree_path")
+    receipt_id = scheduler.begin_operation(
+        str(task["task_id"]),
+        "cleanup",
+        idempotency_key(task, "cleanup"),
+        actor=actor.fence,
+    )
+    evidence = receipt_root / "cleanup" / f"{task['task_id']}.json"
+    try:
+        if not isinstance(worktree_value, str) or not worktree_value:
+            raise RuntimeError("scheduler task has no worktree_path")
+        removed = cleanup_verified_task(Path(worktree_value))
+        payload = {
+            "schema_version": "authoring-cleanup/v1",
+            "task_id": task["task_id"],
+            "worktree_path": worktree_value,
+            "bytes_removed": removed,
+            "worktree_removed": True,
+        }
+        remove_verified_worktree(Path(worktree_value))
+        evidence.parent.mkdir(parents=True, exist_ok=True)
+        evidence.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        scheduler.apply_cleanup_and_complete(
+            receipt_id,
+            actor=actor.fence,
+            evidence_path=evidence.relative_to(receipt_root).as_posix(),
+            evidence_sha256=_sha256(evidence),
+            receipt_json=payload,
+            reason="integration, archive, and cleanup receipts verified",
+        )
+        return {"task_id": task["task_id"], "status": "complete", "bytes_removed": removed}
+    except Exception as exc:
+        scheduler.fail_operation(receipt_id, "infrastructure", str(exc), actor=actor.fence)
+        raise
+
+
+def _run_db_cycle(
+    args: argparse.Namespace,
+    bucket: Any,
+    scheduler: Scheduler,
+    watcher: SingletonActor,
+    archive_actor: SingletonActor,
+) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
+    archive_actor.heartbeat()
+    watcher.heartbeat()
+    scheduler.reconcile_operations(archive_actor.fence)
+    if not bool(scheduler.runtime_config()["enabled"]):
+        return [{"status": "disabled", "authority": "sqlite"}]
+    for task in scheduler.operation_candidates("archive", limit=args.workers):
+        try:
+            results.append(
+                _db_archive_one(
+                    scheduler,
+                    archive_actor,
+                    bucket,
+                    task,
+                    receipt_root=args.receipt_root,
+                    workers=args.workers,
+                )
+            )
+        except Exception as exc:  # noqa: BLE001
+            results.append({"task_id": task["task_id"], "status": "error", "error": str(exc)})
+    for task in scheduler.operation_candidates("cleanup", limit=args.workers):
+        try:
+            results.append(
+                _db_cleanup_one(scheduler, archive_actor, task, receipt_root=args.receipt_root)
+            )
+        except Exception as exc:  # noqa: BLE001
+            results.append({"task_id": task["task_id"], "status": "error", "error": str(exc)})
+    return results
+
+
+def run_db_once(args: argparse.Namespace, bucket: Any) -> list[dict[str, Any]]:
+    scheduler = scheduler_for(args.scheduler_db)
+    scheduler.init()
+    with ExitStack() as stack:
+        watcher = stack.enter_context(SingletonActor.acquire(scheduler, "watcher"))
+        archive_actor = stack.enter_context(SingletonActor.acquire(scheduler, "archive"))
+        return _run_db_cycle(args, bucket, scheduler, watcher, archive_actor)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--lane", action="append", type=_parse_lane, required=True)
-    parser.add_argument("--worktree-root", type=Path, required=True)
+    parser.add_argument("--scheduler-db", type=Path)
+    parser.add_argument("--lane", action="append", type=_parse_lane)
+    parser.add_argument("--worktree-root", type=Path)
     parser.add_argument("--receipt-root", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--interval-sec", type=int, default=60)
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--cleanup", action="store_true")
     parser.add_argument("--cleanup-orphan-containers", action="store_true")
-    parser.add_argument("--lock-file", type=Path, required=True)
+    parser.add_argument("--lock-file", type=Path)
     args = parser.parse_args()
-    args.worktree_root = args.worktree_root.resolve()
+    if args.scheduler_db is not None:
+        if args.lane or args.worktree_root or args.lock_file:
+            parser.error("DB mode forbids --lane, --worktree-root, and --lock-file")
+    elif not args.lane or args.worktree_root is None or args.lock_file is None:
+        parser.error("legacy mode requires --lane, --worktree-root, and --lock-file")
+    if args.worktree_root is not None:
+        args.worktree_root = args.worktree_root.resolve()
     args.receipt_root = args.receipt_root.resolve()
-    args.lock_file.parent.mkdir(parents=True, exist_ok=True)
+    if args.lock_file is not None:
+        args.lock_file.parent.mkdir(parents=True, exist_ok=True)
     try:
         import oss2  # type: ignore[import-untyped]
     except ImportError:
@@ -496,6 +710,22 @@ def main() -> int:
         print("OSS credentials are missing", file=sys.stderr)
         return 2
     bucket = oss2.Bucket(oss2.Auth(key_id, key_secret), ENDPOINT, BUCKET)
+    if args.scheduler_db is not None:
+        scheduler = scheduler_for(args.scheduler_db)
+        scheduler.init()
+        with ExitStack() as stack:
+            watcher = stack.enter_context(SingletonActor.acquire(scheduler, "watcher"))
+            archive_actor = stack.enter_context(SingletonActor.acquire(scheduler, "archive"))
+            while True:
+                results = _run_db_cycle(args, bucket, scheduler, watcher, archive_actor)
+                print(
+                    json.dumps({"authority": "sqlite", "results": results}, sort_keys=True),
+                    flush=True,
+                )
+                if args.once:
+                    return 1 if any(result.get("status") == "error" for result in results) else 0
+                time.sleep(args.interval_sec)
+    assert args.lock_file is not None
     with args.lock_file.open("a+", encoding="utf-8") as lock:
         while True:
             try:

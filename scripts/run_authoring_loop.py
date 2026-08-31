@@ -11,6 +11,7 @@ future policy explicitly enables it.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -21,6 +22,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import tomllib
 from collections.abc import Iterator
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
@@ -28,6 +30,9 @@ from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
 from typing import Any, cast
+
+from nl2repobench.authoring.runtime import process_identity, scheduler_for
+from nl2repobench.authoring.scheduler import Claim, Scheduler
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 SAFE_PACKAGE = re.compile(
@@ -218,9 +223,7 @@ def _worktree(path: Path) -> str:
         check=False,
     )
     if sparse.returncode != 0:
-        subprocess.run(
-            ["git", "worktree", "remove", "--force", str(path)], check=False
-        )
+        subprocess.run(["git", "worktree", "remove", "--force", str(path)], check=False)
         raise RuntimeError(f"git sparse-checkout failed: {sparse.stderr[-1000:]}")
     return "created"
 
@@ -290,11 +293,11 @@ Work only in this existing detached worktree:
 
 Read these files first:
 - AGENTS.md
-- {worktree / '.nl2repo/authoring-claim.json'}
+- {worktree / ".nl2repo/authoring-claim.json"}
 - {brief_path}
-- {worktree / 'docs/authoring-agent-remediation-guide.zh-CN.md'}
+- {worktree / "docs/authoring-agent-remediation-guide.zh-CN.md"}
 
-Your package is {package!r}, language is {plan['language']!r}, and your only
+Your package is {package!r}, language is {plan["language"]!r}, and your only
 authoring source target is catalog/sources/{package}/ plus task-local private
 artifacts and evidence under .nl2repo/. `catalog/tasks/{package}/` is generated
 compiler output: do not hand-edit it. You are the sole writer for this worktree.
@@ -425,10 +428,7 @@ def _write_authoring_settings(worktree: Path) -> Path:
         for package in packages
         if not (
             package == "npm:pi-lark-notify"
-            or (
-                isinstance(package, dict)
-                and package.get("source") == "npm:pi-lark-notify"
-            )
+            or (isinstance(package, dict) and package.get("source") == "npm:pi-lark-notify")
         )
     ]
     authoring_settings = {
@@ -519,6 +519,137 @@ def _launch_agent(
     }
 
 
+def _launch_agent_db(
+    args: argparse.Namespace,
+    scheduler: Scheduler,
+    claim: Claim,
+    identity: tuple[int, int, str],
+    *,
+    plan: dict[str, Any],
+    task: dict[str, Any],
+    brief_path: Path,
+    worktree: Path,
+    session_dir: Path,
+    log_path: Path,
+    handoff_path: Path,
+) -> dict[str, Any]:
+    """Launch and heartbeat one child under the scheduler claim fence."""
+    session_dir.mkdir(parents=True, exist_ok=True)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    package = re.sub(r"[^A-Za-z0-9._-]+", "_", str(task["package"]))
+    session_id = f"{plan['batch_id']}-{package}-attempt-{claim.attempt_no}"
+    prompt = _agent_prompt(
+        plan=plan,
+        task=task,
+        brief_path=brief_path,
+        worktree=worktree,
+        handoff_path=handoff_path,
+        allow_internal_subagent=getattr(args, "allow_internal_subagent", False),
+    )
+    command = _pi_command(args, prompt=prompt, session_dir=session_dir, session_id=session_id)
+    environment = _agent_environment(args)
+    pid, starttime, boot_id = identity
+    scheduler.prepare(
+        claim.claim_id,
+        claim.owner_uuid,
+        claim.controller_id,
+        claim.generation,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )
+    with log_path.open("w", encoding="utf-8") as log:
+        try:
+            process = subprocess.Popen(
+                command,
+                cwd=worktree,
+                env=environment,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+        except Exception:
+            scheduler.abort_claim(
+                claim.claim_id,
+                claim.owner_uuid,
+                claim.controller_id,
+                claim.generation,
+                reason="Popen failed",
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+            )
+            raise
+        try:
+            child_pid, child_starttime, _ = process_identity(process.pid)
+            scheduler.start(
+                claim.claim_id,
+                claim.owner_uuid,
+                claim.controller_id,
+                claim.generation,
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+                child_pid=child_pid,
+                child_starttime_ticks=child_starttime,
+            )
+        except BaseException:
+            _terminate_process(process)
+            scheduler.abort_claim(
+                claim.claim_id,
+                claim.owner_uuid,
+                claim.controller_id,
+                claim.generation,
+                reason="child start activation failed",
+                pid=pid,
+                process_starttime_ticks=starttime,
+                boot_id=boot_id,
+            )
+            raise
+        child_reaped = False
+        try:
+            deadline = time.monotonic() + args.agent_timeout_sec
+            heartbeat = max(
+                5,
+                min(60, int(scheduler.runtime_config()["heartbeat_interval_seconds"])),
+            )
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    _terminate_process(process)
+                    child_reaped = True
+                    returncode, status = 124, "timeout"
+                    break
+                try:
+                    returncode = process.wait(timeout=min(heartbeat, remaining))
+                    child_reaped = True
+                    status = "exited"
+                    break
+                except subprocess.TimeoutExpired:
+                    scheduler.heartbeat(
+                        claim.claim_id,
+                        claim.owner_uuid,
+                        claim.controller_id,
+                        claim.generation,
+                        pid=pid,
+                        process_starttime_ticks=starttime,
+                        boot_id=boot_id,
+                    )
+        finally:
+            if not child_reaped:
+                _terminate_process(process)
+    return {
+        "status": status,
+        "exit_code": returncode,
+        "command": command,
+        "session_id": session_id,
+        "session_dir": str(session_dir),
+        "log": str(log_path),
+        "handoff": str(handoff_path),
+    }
+
+
 def _run_network_policy_check(worktree: Path, task_root: Path) -> dict[str, Any]:
     report = worktree / ".nl2repo/evidence/network-policy.json"
     report.parent.mkdir(parents=True, exist_ok=True)
@@ -596,9 +727,7 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
         )
         compile_parent = worktree / ".nl2repo/authoring-gate"
         compile_parent.mkdir(parents=True, exist_ok=True)
-        compile_output = Path(
-            tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent)
-        )
+        compile_output = Path(tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent))
         compile_result = subprocess.run(
             [
                 "uv",
@@ -711,11 +840,7 @@ def _prepare_task(
         "agent_run_boundary": "direct top-level pi CLI session; no pi-subagents",
         "must_not": [
             "start a Harbor Agent Run",
-            *(
-                []
-                if getattr(args, "allow_internal_subagent", False)
-                else ["invoke subagent tools"]
-            ),
+            *([] if getattr(args, "allow_internal_subagent", False) else ["invoke subagent tools"]),
             "edit shared datasets/reports or the parent checkout",
             "publish without integrator",
         ],
@@ -897,6 +1022,267 @@ def _task_stream(
         )
 
 
+def _prepare_db_claim(
+    args: argparse.Namespace,
+    scheduler: Scheduler,
+    claim: Claim,
+    *,
+    state_root: Path,
+    worktree_root: Path,
+) -> dict[str, Any]:
+    context = scheduler.task_context(claim.task_id)
+    package = context["package"]
+    if not isinstance(package, str) or not SAFE_PACKAGE.fullmatch(package):
+        raise ValueError(f"unsafe package name: {package!r}")
+    plan = {
+        "batch_id": context["batch_id"],
+        "language": context["language"],
+        "stages": [],
+        "remediation_policy": {},
+    }
+    task = {"package": package, "candidate_id": context["candidate_id"]}
+    worktree = worktree_root / str(context["batch_id"]) / package
+    worktree_status = _worktree(worktree)
+    authoring_settings = _write_authoring_settings(worktree)
+    package_filename = re.sub(r"[^A-Za-z0-9._-]+", "_", package)
+    brief_path = state_root / str(context["batch_id"]) / "claims" / f"{package_filename}.json"
+    brief_path.parent.mkdir(parents=True, exist_ok=True)
+    brief = {
+        "schema_version": "authoring-scheduler/v3",
+        "task_id": claim.task_id,
+        "trial_id": claim.trial_id,
+        "claim_id": claim.claim_id,
+        "generation": claim.generation,
+        "package": package,
+        "candidate_id": context["candidate_id"],
+        "language": context["language"],
+        "batch_id": context["batch_id"],
+    }
+    brief_path.write_text(json.dumps(brief, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    worktree_claim = worktree / ".nl2repo/authoring-claim.json"
+    worktree_claim.parent.mkdir(parents=True, exist_ok=True)
+    worktree_claim.write_text(json.dumps(brief, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    session_root = _ensure_disk_root(args.session_root) / str(context["batch_id"]) / package
+    log_path = (
+        state_root
+        / str(context["batch_id"])
+        / "agent-logs"
+        / (f"{package_filename}.attempt-{claim.attempt_no}.log")
+    )
+    return {
+        "claim": claim,
+        "plan": plan,
+        "task": task,
+        "package": package,
+        "candidate_id": context["candidate_id"],
+        "worktree": worktree,
+        "worktree_status": worktree_status,
+        "authoring_settings": authoring_settings,
+        "brief": brief_path,
+        "worktree_claim": worktree_claim,
+        "session_root": session_root,
+        "log": log_path,
+        "handoff": worktree / ".nl2repo/authoring-handoff.json",
+        "task_root": worktree / "catalog/sources" / package,
+    }
+
+
+def _run_db_claim(
+    args: argparse.Namespace,
+    scheduler: Scheduler,
+    identity: tuple[int, int, str],
+    context: dict[str, Any],
+) -> dict[str, Any]:
+    claim = cast(Claim, context["claim"])
+    agent = _launch_agent_db(
+        args,
+        scheduler,
+        claim,
+        identity,
+        plan=context["plan"],
+        task=context["task"],
+        brief_path=context["brief"],
+        worktree=context["worktree"],
+        session_dir=context["session_root"],
+        log_path=context["log"],
+        handoff_path=context["handoff"],
+    )
+    task_root = cast(Path, context["task_root"])
+    handoff = cast(Path, context["handoff"])
+    ready = (task_root / "task.toml").is_file() and (task_root / "instruction.md").is_file()
+    network = _run_network_policy_check(context["worktree"], task_root)
+    lint = _run_authoring_task_lint(context["worktree"], task_root)
+    success = (
+        agent["exit_code"] == 0
+        and ready
+        and handoff.is_file()
+        and network["status"] == "passed"
+        and lint["status"] == "passed"
+    )
+    pid, starttime, boot_id = identity
+    if success:
+        head = subprocess.run(
+            ["git", "-C", str(context["worktree"]), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        scheduler.record_handoff(
+            claim.claim_id,
+            claim.owner_uuid,
+            claim.controller_id,
+            claim.generation,
+            worktree_path=str(context["worktree"]),
+            worktree_git_head=head,
+            handoff_path=str(handoff),
+            handoff_sha256=hashlib.sha256(handoff.read_bytes()).hexdigest(),
+            pid=pid,
+            process_starttime_ticks=starttime,
+            boot_id=boot_id,
+        )
+        reason, failure_class = "authoring handoff validated", None
+    else:
+        reason = (
+            f"Pi child exit_code={agent['exit_code']}"
+            if agent["exit_code"] != 0
+            else "network policy validation failed"
+            if network["status"] != "passed"
+            else "source validation or compile failed"
+            if lint["status"] != "passed"
+            else "authoring handoff is incomplete"
+        )
+        failure_class = "infrastructure" if agent["exit_code"] in {124, 137} else "verifier"
+    scheduler.finish(
+        claim.claim_id,
+        claim.owner_uuid,
+        claim.controller_id,
+        claim.generation,
+        success=success,
+        reason=reason,
+        failure_class=failure_class,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )
+    return {
+        "task_id": claim.task_id,
+        "package": context["package"],
+        "status": "complete" if success else "released",
+        "reason": reason,
+        **agent,
+    }
+
+
+def _recover_db_claim(
+    scheduler: Scheduler,
+    claim: Claim,
+    identity: tuple[int, int, str],
+    reason: str,
+) -> None:
+    try:
+        scheduler.finish(
+            claim.claim_id,
+            claim.owner_uuid,
+            claim.controller_id,
+            claim.generation,
+            success=False,
+            reason=reason,
+            failure_class="infrastructure",
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        )
+    except Exception:
+        scheduler.recover_controller(
+            claim.claim_id,
+            claim.generation,
+            claim.controller_id,
+            claim.owner_uuid,
+            reason=reason,
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        )
+
+
+def run_db(args: argparse.Namespace) -> dict[str, Any]:
+    scheduler = scheduler_for(args.scheduler_db)
+    scheduler.init()
+    identity = process_identity()
+    activation_deadline = time.monotonic() + 30
+    while not scheduler.controller_active(
+        args.controller_id,
+        args.owner,
+        pid=identity[0],
+        process_starttime_ticks=identity[1],
+        boot_id=identity[2],
+    ):
+        if time.monotonic() >= activation_deadline:
+            raise RuntimeError("controller was not activated after Popen")
+        time.sleep(0.05)
+    state_root = _ensure_disk_root(args.state_root)
+    worktree_root = _ensure_disk_root(args.worktree_root)
+    results: list[dict[str, Any]] = []
+    try:
+        while True:
+            config = scheduler.runtime_config()
+            if not bool(config["enabled"]):
+                break
+            claims = scheduler.claim_next(
+                args.controller_id,
+                args.owner,
+                requested_limit=1,
+                pid=identity[0],
+                process_starttime_ticks=identity[1],
+                boot_id=identity[2],
+            )
+            if not claims:
+                break
+            try:
+                context = _prepare_db_claim(
+                    args, scheduler, claims[0], state_root=state_root, worktree_root=worktree_root
+                )
+                results.append(_run_db_claim(args, scheduler, identity, context))
+            except BaseException as exc:
+                claim = claims[0]
+                try:
+                    _recover_db_claim(
+                        scheduler,
+                        claim,
+                        identity,
+                        f"controller exception: {type(exc).__name__}",
+                    )
+                except Exception:
+                    pass
+                raise
+    finally:
+        if scheduler.controller_active(
+            args.controller_id,
+            args.owner,
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        ):
+            scheduler.stop_controller(
+                args.controller_id,
+                args.owner,
+                pid=identity[0],
+                process_starttime_ticks=identity[1],
+                boot_id=identity[2],
+            )
+    return {
+        "schema_version": "authoring-scheduler/v3",
+        "authority": "sqlite",
+        "database": args.scheduler_db.name,
+        "owner": args.owner,
+        "controller_id": args.controller_id,
+        "agent_mode": "top-level-pi-cli",
+        "agent_runs_started": bool(results),
+        "model_runs_started": False,
+        "results": results,
+    }
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     if not 1 <= args.max_concurrency <= MAX_CONCURRENCY:
         raise ValueError(f"max-concurrency must be between 1 and {MAX_CONCURRENCY}")
@@ -1017,9 +1403,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plan", type=Path, required=True)
-    parser.add_argument("--queue", type=Path, required=True)
-    parser.add_argument("--queue-state", type=Path, required=True)
+    parser.add_argument("--scheduler-db", type=Path)
+    parser.add_argument("--controller-id")
+    parser.add_argument("--plan", type=Path)
+    parser.add_argument("--queue", type=Path)
+    parser.add_argument("--queue-state", type=Path)
     parser.add_argument(
         "--catalog-root",
         type=Path,
@@ -1079,13 +1467,21 @@ def main() -> int:
     parser.add_argument(
         "--allow-internal-subagent",
         action="store_true",
-        help=(
-            "Allow a child Pi Agent to use subagent for bounded parallel probes."
-        ),
+        help=("Allow a child Pi Agent to use subagent for bounded parallel probes."),
     )
     args = parser.parse_args()
+    if args.scheduler_db is not None:
+        if not args.controller_id:
+            parser.error("--controller-id is required with --scheduler-db")
+        if any(
+            value is not None
+            for value in (args.plan, args.queue, args.queue_state, args.concurrency_file)
+        ):
+            parser.error("DB mode forbids --plan, --queue, --queue-state, and --concurrency-file")
+    elif any(value is None for value in (args.plan, args.queue, args.queue_state)):
+        parser.error("legacy mode requires --plan, --queue, and --queue-state")
     try:
-        result = run(args)
+        result = run_db(args) if args.scheduler_db is not None else run(args)
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:
         print(f"authoring loop execution failed: {exc}", file=sys.stderr)
         return 1

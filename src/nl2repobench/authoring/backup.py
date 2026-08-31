@@ -1,0 +1,523 @@
+# ruff: noqa: E501
+"""SQLite backup, verification, and guarded activation primitives."""
+from __future__ import annotations
+
+import fcntl
+import hashlib
+import hmac
+import json
+import os
+import secrets
+import shutil
+import sqlite3
+import stat
+import time
+from collections.abc import Callable, Mapping
+from contextlib import nullcontext
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any, cast
+
+from .migration import MigrationError
+
+
+def _digest(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _sync(path: Path) -> None:
+    fd = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _sync_dir(path: Path) -> None:
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _regular(path: Path, label: str) -> None:
+    info = path.lstat()
+    if path.is_symlink() or not stat.S_ISREG(info.st_mode):
+        raise MigrationError(f"{label} must be a regular non-symlink file")
+
+
+def _exclusive_empty(path: Path, label: str) -> None:
+    if path.parent.is_symlink() or path.exists() or path.is_symlink():
+        raise MigrationError(f"{label} must be exclusively created")
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    os.close(fd)
+
+
+def _exclusive_copy(source: Path, target: Path, label: str) -> None:
+    if target.exists() or target.is_symlink() or target.parent.is_symlink():
+        raise MigrationError(f"{label} must be exclusively created")
+    fd = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        with source.open("rb") as input_file, os.fdopen(fd, "wb") as output_file:
+            shutil.copyfileobj(input_file, output_file)
+            output_file.flush()
+            os.fsync(output_file.fileno())
+        fd = -1
+    finally:
+        if fd != -1:
+            os.close(fd)
+
+
+def _safe_ancestors(path: Path, label: str) -> None:
+    cursor = path.parent
+    while True:
+        if cursor.is_symlink() or not cursor.is_dir():
+            raise MigrationError(f"{label} ancestor is unsafe")
+        if cursor == cursor.parent:
+            return
+        cursor = cursor.parent
+
+
+def _canonical_receipt(receipt: dict[str, Any]) -> bytes:
+    unsigned = {key: value for key, value in receipt.items() if key != "hmac_sha256"}
+    return json.dumps(unsigned, sort_keys=True, separators=(",", ":")).encode()
+
+
+def _authority_key(authority_root: Path) -> bytes:
+    _safe_ancestors(authority_root, "receipt authority")
+    if authority_root.exists() and authority_root.is_symlink():
+        raise MigrationError("receipt authority must not be a symlink")
+    authority_root.mkdir(mode=0o700, exist_ok=False)
+    key_path = authority_root / "hmac.key"
+    fd = os.open(key_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    key = secrets.token_bytes(32)
+    try:
+        os.write(fd, key)
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    _sync_dir(authority_root)
+    return key
+
+
+def _issue_quiescence_receipt(backup_directory: Path | str, target: Path | str,
+                              authority_root: Path | str | None = None,
+                              *, generation: int = 1, ttl_seconds: int = 300,
+                              cutover_evidence: Mapping[str, Any] | None = None) -> Path:
+    backup_dir = Path(backup_directory)
+    target_path = Path(target)
+    verified = verify_backup(backup_dir)
+    summary = cast(dict[str, Any], verified["manifest"])["database_summary"]
+    authority = Path(authority_root) if authority_root is not None else backup_dir.parent / ".restore-authority"
+    current_generation = 0
+    target_db = Path(target)
+    if target_db.is_file() and not target_db.is_symlink():
+        with sqlite3.connect(f"file:{target_db.resolve().as_posix()}?mode=ro", uri=True) as db:
+            current_generation = int(db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0])
+    if generation == 1:
+        generation = current_generation
+    key = _authority_key(authority)
+    now = datetime.now(UTC)
+    receipt: dict[str, Any] = {
+        "schema_version": "restore-receipt/v1", "receipt_id": secrets.token_hex(16),
+        "nonce": secrets.token_hex(16), "issuer": str(authority), "generation": generation,
+        "database": target_path.name, "database_digest": summary["digest"],
+        "backup_digest": hashlib.sha256(json.dumps(summary, sort_keys=True).encode()).hexdigest(),
+        "observed_at": now.isoformat(), "expires_at": (now + timedelta(seconds=ttl_seconds)).isoformat(),
+        "lock_observed": True, "quiesced": True,
+        "cutover_evidence": dict(cutover_evidence or {}),
+    }
+    receipt["hmac_sha256"] = hmac.new(key, _canonical_receipt(receipt), hashlib.sha256).hexdigest()
+    path = authority / f"receipt-{receipt['receipt_id']}.json"
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        os.write(fd, (json.dumps(receipt, sort_keys=True) + "\n").encode())
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    _sync_dir(authority)
+    return path
+
+
+def issue_quiescence_receipt(
+    backup_directory: Path | str,
+    target: Path | str,
+    authority_root: Path | str | None = None,
+    *,
+    cutover_evidence: Mapping[str, Any] | None = None,
+    generation: int = 1,
+    ttl_seconds: int = 300,
+) -> Path:
+    """Issue a restore receipt only from observed cutover-grade evidence."""
+    required = {
+        "schema_version",
+        "cutover_id",
+        "database",
+        "target_file_sha256",
+        "target_content_digest",
+        "generation",
+        "observed_at",
+        "quiesced",
+    }
+    if (
+        not isinstance(cutover_evidence, Mapping)
+        or set(cutover_evidence) != required
+        or cutover_evidence.get("quiesced") is not True
+        or cutover_evidence.get("database") != str(Path(target).resolve())
+        or int(cutover_evidence.get("generation", -1)) != generation
+    ):
+        raise MigrationError("restore receipt requires exact cutover-grade evidence")
+    return _issue_quiescence_receipt(
+        backup_directory,
+        target,
+        authority_root,
+        generation=generation,
+        ttl_seconds=ttl_seconds,
+        cutover_evidence=cutover_evidence,
+    )
+
+
+def issue_development_quiescence_receipt(
+    backup_directory: Path | str,
+    target: Path | str,
+    authority_root: Path | str | None = None,
+    *,
+    generation: int = 1,
+    ttl_seconds: int = 300,
+) -> Path:
+    """Test-only compatibility helper; production callers use cutover evidence."""
+    target_path = Path(target).resolve()
+    current_generation = 0
+    if target_path.is_file():
+        with sqlite3.connect(f"file:{target_path.as_posix()}?mode=ro", uri=True) as db:
+            current_generation = int(
+                db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0]
+            )
+    evidence = {
+        "schema_version": "development-quiescence/v1",
+        "cutover_id": "development-only",
+        "database": str(target_path),
+        "target_file_sha256": _digest(target_path) if target_path.is_file() else "absent",
+        "target_content_digest": (
+            str(_database_summary(target_path)["digest"]) if target_path.is_file() else "absent"
+        ),
+        "generation": current_generation,
+        "observed_at": datetime.now(UTC).isoformat(),
+        "quiesced": True,
+    }
+    return _issue_quiescence_receipt(
+        backup_directory,
+        target,
+        authority_root,
+        generation=current_generation,
+        ttl_seconds=ttl_seconds,
+        cutover_evidence=evidence,
+    )
+
+
+def _consumed_receipts(path: Path) -> set[str]:
+    if path.is_symlink():
+        raise MigrationError("consumed-receipt ledger must not be a symlink")
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise MigrationError("consumed-receipt ledger is invalid") from exc
+    return {str(value) for value in payload.get("receipts", [])} if isinstance(payload, dict) else set()
+
+
+def _consume_receipt(path: Path, key: str) -> None:
+    receipts = _consumed_receipts(path)
+    if key in receipts:
+        raise MigrationError("restore quiescence receipt was already used")
+    receipts.add(key)
+    temporary = path.with_name(f".{path.name}.tmp")
+    if temporary.exists() or temporary.is_symlink():
+        raise MigrationError("consumed-receipt staging path is occupied")
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as output:
+            json.dump({"schema_version": "restore-receipts/v1", "receipts": sorted(receipts)}, output)
+            output.flush()
+            os.fsync(output.fileno())
+        fd = -1
+        os.replace(temporary, path)
+        _sync_dir(path.parent)
+    finally:
+        if fd != -1:
+            os.close(fd)
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _database_summary(path: Path) -> dict[str, object]:
+    with sqlite3.connect(path) as db:
+        tables = [str(row[0]) for row in db.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+        )]
+        counts = {name: int(db.execute(f'SELECT count(*) FROM "{name}"').fetchone()[0]) for name in tables}
+        digest = hashlib.sha256()
+        for name in tables:
+            digest.update(name.encode())
+            for row in db.execute(f'SELECT * FROM "{name}"'):
+                digest.update(repr(tuple(row)).encode())
+    return {"tables": counts, "digest": digest.hexdigest()}
+
+
+def database_content_digest(path: Path | str) -> str:
+    return str(_database_summary(Path(path))["digest"])
+
+
+def _manifest(directory: Path) -> dict[str, object]:
+    database = next((path for path in directory.iterdir() if path.name.endswith(".sqlite3")), None)
+    if database is None:
+        raise MigrationError("backup database is missing")
+    summary = _database_summary(database)
+    files = []
+    for path in sorted(directory.iterdir()):
+        if path.name == "backup-manifest.json" or path.name.endswith(("-wal", "-shm")):
+            continue
+        _regular(path, f"backup entry {path.name}")
+        files.append({"name": path.name, "size": path.stat().st_size, "sha256": _digest(path)})
+    return {"schema_version": "authoring-backup/v2", "files": files,
+            "database_summary": summary}
+
+
+def backup_database(source: Path | str, destination: Path | str) -> dict[str, object]:
+    """Create an online SQLite backup and a checksum manifest."""
+    source_path, destination_path = Path(source).resolve(), Path(destination)
+    _safe_ancestors(destination_path, "backup destination")
+    _regular(Path(source), "source database")
+    if destination_path.exists() or destination_path.is_symlink():
+        raise MigrationError("backup destination must be a new directory")
+    destination_path.mkdir(mode=0o700)
+    dest = destination_path
+    target = dest / "database.sqlite3"
+    if target.exists() or target.is_symlink():
+        raise MigrationError("backup target must be exclusively created")
+    temporary = dest / f".database-{secrets.token_hex(12)}.sqlite3"
+    _exclusive_empty(temporary, "backup temporary target")
+    src = sqlite3.connect(source_path)
+    dst = sqlite3.connect(temporary)
+    try:
+        src.backup(dst)
+        dst.commit()
+    finally:
+        dst.close()
+        src.close()
+    _sync(temporary)
+    os.replace(temporary, target)
+    _sync_dir(dest)
+    manifest = _manifest(dest)
+    manifest_bytes = (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode()
+    manifest_fd = os.open(dest / "backup-manifest.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        os.write(manifest_fd, manifest_bytes)
+        os.fsync(manifest_fd)
+    finally:
+        os.close(manifest_fd)
+    _sync_dir(dest)
+    return manifest
+
+
+def verify_backup(directory: Path | str) -> dict[str, object]:
+    directory = Path(directory).resolve()
+    manifest_path = directory / "backup-manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise MigrationError("backup manifest is missing or invalid") from exc
+    if manifest.get("schema_version") != "authoring-backup/v2":
+        raise MigrationError("unsupported backup manifest")
+    expected = {str(item["name"]): item for item in manifest.get("files", [])}
+    actual_files = {
+        path.name for path in directory.iterdir()
+        if path.name != "backup-manifest.json"
+        and not path.name.endswith(("-wal", "-shm"))
+    }
+    if actual_files != set(expected):
+        raise MigrationError("backup file set mismatch")
+    for entry in directory.iterdir():
+        if entry.name.endswith(("-wal", "-shm")) and (entry.is_symlink() or not entry.is_file()):
+            raise MigrationError("backup sidecar must be a regular non-symlink file")
+        if entry.name != "backup-manifest.json" and entry.name not in expected and not entry.name.endswith(("-wal", "-shm")):
+            raise MigrationError("backup contains undeclared entry")
+    for name, item in expected.items():
+        path = directory / name
+        _regular(path, f"backup entry {name}")
+        if path.stat().st_size != int(item["size"]) or _digest(path) != item["sha256"]:
+            raise MigrationError(f"backup checksum mismatch: {name}")
+    database = next((directory / name for name in expected if name.endswith(".sqlite3")), None)
+    if database is None:
+        raise MigrationError("backup database is missing")
+    with sqlite3.connect(database) as db:
+        integrity = db.execute("PRAGMA integrity_check").fetchone()[0]
+        foreign_keys = db.execute("PRAGMA foreign_key_check").fetchall()
+    if integrity != "ok" or foreign_keys:
+        raise MigrationError("backup database integrity check failed")
+    actual_summary = _database_summary(database)
+    if manifest.get("database_summary") != actual_summary:
+        raise MigrationError("backup database content digest mismatch")
+    return {"verified": True, "manifest": manifest, "integrity": integrity, "foreign_key_errors": len(foreign_keys)}
+
+
+def activate_database(staged: Path | str, target: Path | str, *, activate: bool = False) -> None:
+    """Checkpoint a staged DB and atomically replace the exact main file.
+
+    This function is intentionally unusable without ``activate=True`` and is
+    suitable for tests in temporary directories only.
+    """
+    if not activate:
+        raise MigrationError("database activation requires explicit --activate")
+    staged_path, target_path = Path(staged), Path(target)
+    _regular(staged_path, "staged database")
+    if target_path.parent.is_symlink():
+        raise MigrationError("activation target directory must not be a symlink")
+    with sqlite3.connect(staged_path) as db:
+        checkpoint = db.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+        db.commit()
+    if checkpoint is None or int(checkpoint[0]) != 0:
+        raise MigrationError("staged database WAL checkpoint did not quiesce")
+    for suffix in ("-wal", "-shm"):
+        sidecar = Path(str(staged_path) + suffix)
+        if sidecar.is_symlink() or (sidecar.exists() and not sidecar.is_file()):
+            raise MigrationError("staged database sidecar is unsafe")
+        sidecar.unlink(missing_ok=True)
+    _sync(staged_path)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    os.replace(staged_path, target_path)
+    _sync(target_path.parent)
+
+
+def restore_database(backup_directory: Path | str, target: Path | str, *, activate: bool = False,
+                     quiescence_marker: Path | str | None = None,
+                     quiesced: Callable[[], dict[str, Any] | bool] | None = None,
+                     _scheduler_lock_held: bool = False) -> dict[str, object]:
+    """Validate and (only with activation) restore a backup with sidecar quarantine."""
+    if quiesced is not None:
+        raise MigrationError("restore callback receipts are not accepted; issue a trusted receipt")
+    backup_raw, target_raw = Path(backup_directory), Path(target)
+    if backup_raw.is_symlink() or target_raw.is_symlink():
+        raise MigrationError("restore source and target must not be symlinks")
+    backup_dir, target_path = backup_raw.resolve(), target_raw.resolve()
+    _safe_ancestors(target_path, "restore target")
+    lock_path = target_path.parent / f".{target_path.name}.lock"
+    if lock_path.is_symlink():
+        raise MigrationError("restore lock must not be a symlink")
+    lock = None
+    if activate and not _scheduler_lock_held:
+        try:
+            lock_fd = os.open(lock_path, os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        except FileExistsError:
+            lock_fd = os.open(lock_path, os.O_RDWR | os.O_NOFOLLOW)
+        lock = os.fdopen(lock_fd, "a+")
+    elif not _scheduler_lock_held and lock_path.exists():
+        lock = lock_path.open("r")
+    with (lock if lock is not None else nullcontext()) as held_lock:
+        if held_lock is not None:
+            fcntl.flock(held_lock.fileno(), fcntl.LOCK_EX)
+        try:
+            verification = verify_backup(backup_dir)
+            receipt = quiesced() if quiesced is not None else None
+            marker_ok = isinstance(receipt, dict) and receipt.get("quiesced") is True
+            if quiescence_marker is not None:
+                try:
+                    receipt_path = Path(quiescence_marker)
+                    _regular(receipt_path, "quiescence receipt")
+                    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+                    marker_ok = isinstance(receipt, dict) and receipt.get("quiesced") is True
+                except (OSError, json.JSONDecodeError):
+                    marker_ok = False
+            if (not marker_ok or not isinstance(receipt, dict) or not receipt.get("receipt_id")
+                    or receipt.get("generation") is None or receipt.get("database") != target_path.name
+                    or not receipt.get("nonce") or not receipt.get("observed_at")):
+                raise MigrationError("restore requires a fresh generation-bound quiescence receipt")
+            try:
+                observed = datetime.fromisoformat(str(receipt["observed_at"]).replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise MigrationError("restore quiescence timestamp is invalid") from exc
+            if observed.tzinfo is None or datetime.now(UTC) - observed > timedelta(hours=1):
+                raise MigrationError("restore quiescence receipt is stale")
+            try:
+                expires = datetime.fromisoformat(str(receipt["expires_at"]).replace("Z", "+00:00"))
+            except (KeyError, ValueError) as exc:
+                raise MigrationError("restore quiescence expiry is invalid") from exc
+            if expires.tzinfo is None or datetime.now(UTC) > expires or expires - datetime.now(UTC) > timedelta(hours=24):
+                raise MigrationError("restore quiescence receipt is expired or unsafe")
+            receipt_key = f"{receipt['receipt_id']}:{receipt['nonce']}"
+            backup_manifest = cast(dict[str, Any], verification["manifest"])
+            if receipt.get("database_digest") != backup_manifest.get("database_summary", {}).get("digest"):
+                raise MigrationError("restore receipt database digest does not match backup")
+            authority = Path(str(receipt.get("issuer", "")))
+            key_path = authority / "hmac.key"
+            _regular(key_path, "receipt HMAC key")
+            if authority.stat().st_mode & 0o777 != 0o700 or key_path.stat().st_mode & 0o777 != 0o600:
+                raise MigrationError("receipt authority permissions are unsafe")
+            key = key_path.read_bytes()
+            supplied_hmac = str(receipt.get("hmac_sha256", ""))
+            if not hmac.compare_digest(supplied_hmac, hmac.new(key, _canonical_receipt(receipt), hashlib.sha256).hexdigest()):
+                raise MigrationError("restore receipt HMAC is invalid")
+            if receipt.get("backup_digest") != hashlib.sha256(json.dumps(backup_manifest.get("database_summary", {}), sort_keys=True).encode()).hexdigest():
+                raise MigrationError("restore receipt backup digest does not match backup")
+            consumed_path = target_path.parent / f".{target_path.name}.restore-consumed.json"
+            if activate and receipt_key in _consumed_receipts(consumed_path):
+                raise MigrationError("restore quiescence receipt was already used")
+            cutover_evidence = receipt.get("cutover_evidence")
+            if activate:
+                if not isinstance(cutover_evidence, dict) or cutover_evidence.get("quiesced") is not True:
+                    raise MigrationError("activation requires cutover-grade receipt evidence")
+                current_file_digest = _digest(target_path) if target_path.is_file() else "absent"
+                current_content_digest = (
+                    str(_database_summary(target_path)["digest"])
+                    if target_path.is_file()
+                    else "absent"
+                )
+                if (
+                    cutover_evidence.get("database") != str(target_path)
+                    or cutover_evidence.get("target_file_sha256") != current_file_digest
+                    or cutover_evidence.get("target_content_digest") != current_content_digest
+                ):
+                    raise MigrationError("restore target changed after quiescence observation")
+            current_generation = 0
+            if target_path.is_file() and not target_path.is_symlink():
+                with sqlite3.connect(f"file:{target_path.resolve().as_posix()}?mode=ro", uri=True) as current_db:
+                    current_generation = int(current_db.execute("SELECT COALESCE(MAX(generation),0) FROM scheduler_leases").fetchone()[0])
+            if int(receipt["generation"]) != current_generation:
+                raise MigrationError("restore receipt generation is not current")
+            source = next(backup_dir / str(item["name"]) for item in backup_manifest["files"] if str(item["name"]) == "database.sqlite3")
+            if not activate:
+                return {"dry_run": True, "verified": True, "target": str(target_path), "quiesced": True}
+            quarantine = target_path.parent / f".restore-quarantine-{int(time.time())}"
+            quarantine.mkdir(mode=0o700)
+            for suffix in ("", "-wal", "-shm"):
+                sidecar = Path(str(target_path) + suffix)
+                if sidecar.exists():
+                    os.replace(sidecar, quarantine / sidecar.name)
+            _sync_dir(quarantine)
+            stage_dir = target_path.parent / f".restore-stage-{receipt['nonce']}"
+            if stage_dir.exists() or stage_dir.is_symlink():
+                raise MigrationError("restore staging directory must be exclusively created")
+            stage_dir.mkdir(mode=0o700)
+            staged = stage_dir / target_path.name
+            _exclusive_copy(source, staged, "restore staging path")
+            activate_database(staged, target_path, activate=True)
+            for suffix in ("-wal", "-shm"):
+                sidecar = Path(str(staged) + suffix)
+                if sidecar.exists():
+                    sidecar.unlink()
+            stage_dir.rmdir()
+            _sync_dir(target_path.parent)
+            with sqlite3.connect(target_path) as db:
+                if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok" or db.execute("PRAGMA foreign_key_check").fetchall():
+                    raise MigrationError("restored database integrity check failed")
+            _consume_receipt(consumed_path, receipt_key)
+            return {"dry_run": False, "verified": True, "target": str(target_path), "quarantine": str(quarantine), "quiesced": True}
+        finally:
+            if held_lock is not None:
+                fcntl.flock(held_lock.fileno(), fcntl.LOCK_UN)
