@@ -417,7 +417,7 @@ push 使用已配置的 `fork` remote 和当前分支，禁止 force-push。若�
 1. **Sol 规划**：先读取权威文档和当前代码，写出目标、非目标、依赖 DAG、风险、
    worktree 计划、停止条件和整体验收门禁。计划必须覆盖用户要求，不能把未决定的
    架构选择留给实现 worker 临场猜测。
-2. **Luna 优先的侦察**：复杂任务先并行启动 4 到 8 个
+2. **Luna 优先的侦察**：复杂任务先并行启动 8 到 16 个（受机器资源和任务预算约束）
    `z-open-api-gpt-openai-responses/gpt-5.6-luna` scout/worker lane；如果 Luna
    返回 `model_disabled`、401、超时或其他 provider failure，才降级到
    `aliyun-qwen-openai-responses/qwen3.8-flash`。各 lane 分别核对不同 source seam、
@@ -436,6 +436,11 @@ push 使用已配置的 `fork` remote 和当前分支，禁止 force-push。若�
 6. **Sol 签收**：主 Model 依据 commit、测试、review、artifact 和 residual risk 做最终
    裁决。共享 integration checkout 由单一 integrator 串行合并，重跑跨 seam gate 后才
    push、部署或启用 production lane。
+
+fleet 默认上限为 24 个任务、8 路同时执行。只读 scout/review 可以使用完整并发；会启动
+Docker、Harbor、编译或大型测试的 mutation lane 必须由 Sol 按资源预算分波次，通常不超过
+4 个同时 writer。独立 worktree、单 writer、共享集成串行和 production side effect 串行规则
+优先于并发数；并发提高不能成为跨 lane 共写或跳过 gate 的理由。
 
 每个 subagent 任务说明必须完整包含：
 
