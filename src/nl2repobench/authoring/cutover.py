@@ -136,6 +136,46 @@ def _deployment_commit(repository: Path) -> str:
     return commit
 
 
+def _deployment_checkout_dirty(repository: Path) -> list[str]:
+    """Return deployment checkout status entries outside protected scratch."""
+
+    try:
+        completed = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repository),
+                "status",
+                "--porcelain=v1",
+                "--untracked-files=all",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise MigrationError(f"cannot inspect deployment checkout: {exc}") from exc
+    if completed.returncode != 0:
+        detail = completed.stderr.strip() or completed.stdout.strip()
+        raise MigrationError(f"cannot inspect deployment checkout: {detail}")
+    return [
+        line
+        for line in completed.stdout.splitlines()
+        if line
+        and not line.startswith(("?? .scratch/", '?? ".scratch/'))
+    ]
+
+
+def _require_clean_deployment_checkout(repository: Path) -> None:
+    dirty = _deployment_checkout_dirty(repository)
+    if dirty:
+        raise MigrationError(
+            "deployment checkout is dirty outside protected .scratch: "
+            + "; ".join(dirty)
+        )
+
+
 def _deployment_identity(repository: Path, sqlite_service_unit: str) -> dict[str, Any]:
     repository = repository.resolve()
     unit_match = SQLITE_SERVICE_UNIT.fullmatch(sqlite_service_unit)
@@ -1009,6 +1049,7 @@ def execute_cutover(
     ) or (database.parent / f".{database.name}.rolled-back.json").exists():
         raise MigrationError("cutover target or preclaim record already exists")
     runtime_config = live_root / "supervisor/runtime-config.json"
+    _require_clean_deployment_checkout(repository)
     operator_ancestors = _capture_operator_ancestors()
     deployment_identity = _deployment_identity(repository, sqlite_service_unit)
     audit = {
@@ -1174,6 +1215,12 @@ def _rollback_identity(
         != f"/etc/nl2repobench/authoring-scheduler-{unit_match.group(1)}.env"
     ):
         raise MigrationError("cutover deployment binding is incomplete")
+    journal_identity = journal.get("deployment_identity")
+    record_identity = record.get("deployment_identity")
+    if not isinstance(journal_identity, dict) or not isinstance(record_identity, dict):
+        raise MigrationError("cutover deployment identity is missing")
+    if journal_identity != record_identity:
+        raise MigrationError("cutover deployment identity does not match journal")
     record_required = {
         "schema_version": "authoring-cutover-barrier/v2",
         "cutover_id": cutover_id,
@@ -1185,7 +1232,7 @@ def _rollback_identity(
         "authority": "database.cutover_barrier",
         "sqlite_service_unit": journal.get("sqlite_service_unit"),
         "sqlite_env_file": journal.get("sqlite_env_file"),
-        "deployment_identity": journal.get("deployment_identity"),
+        "deployment_identity": journal_identity,
     }
     if any(record.get(key) != value for key, value in record_required.items()):
         raise MigrationError("cutover barrier identity does not match journal")
@@ -1404,6 +1451,13 @@ def restore_cutover_database(
         journal, _record = _rollback_identity(journal_path, barrier_path, database)
         repository = Path(str(journal.get("repository", "")))
         live_root = Path(str(journal.get("live_root", "")))
+        if not repository.is_absolute() or not live_root.is_absolute():
+            raise MigrationError("restore repository or live root identity is invalid")
+        _validate_deployment_identity(
+            repository,
+            str(journal["sqlite_service_unit"]),
+            journal["deployment_identity"],
+        )
         operator_ancestors = _capture_operator_ancestors()
         operator_audit = _operator_ancestor_audit(
             operator_ancestors, repository, live_root
@@ -1485,6 +1539,11 @@ def rollback_cutover(
             != (live_root / "supervisor/runtime-config.json").resolve()
         ):
             raise MigrationError("rollback repository or runtime config identity is invalid")
+        _validate_deployment_identity(
+            repository,
+            str(journal["sqlite_service_unit"]),
+            journal["deployment_identity"],
+        )
         actors = _authoring_processes(repository, live_root)
         if actors:
             raise MigrationError(

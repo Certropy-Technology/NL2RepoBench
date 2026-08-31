@@ -2084,6 +2084,7 @@ def test_cutover_blocks_non_watcher_residual_before_cgroup_verification(
         "_deployment_identity",
         lambda _repository, unit: _test_deployment_identity(unit),
     )
+    monkeypatch.setattr(cutover, "_require_clean_deployment_checkout", lambda _repository: None)
     monkeypatch.setattr(cutover, "_capture_operator_ancestors", tuple)
     monkeypatch.setattr(cutover, "_wait_for_controllers", lambda *_args: None)
     monkeypatch.setattr(
@@ -2191,6 +2192,7 @@ def test_cutover_stages_backup_activates_disabled_database(tmp_path: Path, monke
         "_deployment_identity",
         lambda _repository, unit: _test_deployment_identity(unit),
     )
+    monkeypatch.setattr(cutover, "_require_clean_deployment_checkout", lambda _repository: None)
     barrier = tmp_path / "barrier.json"
     result = cutover.execute_cutover(
         repository=tmp_path,
@@ -2345,7 +2347,7 @@ def test_service_binding_rejects_missing_or_tampered_deployment_identity(
     payload = json.loads(journal.read_text())
     payload.pop("deployment_identity")
     journal.write_text(json.dumps(payload), encoding="utf-8")
-    with pytest.raises(MigrationError, match="barrier identity does not match"):
+    with pytest.raises(MigrationError, match="deployment identity is missing"):
         cutover.install_service_binding(**arguments)
 
     _write_rollback_authorities(
@@ -2397,8 +2399,148 @@ def test_service_binding_rejects_missing_or_tampered_deployment_identity(
     barrier_payload["deployment_identity"]["commit_sha"] = "0" * 40
     barrier.write_text(json.dumps(barrier_payload), encoding="utf-8")
     arguments["installed_unit"] = installed_unit
-    with pytest.raises(MigrationError, match="barrier identity does not match"):
+    with pytest.raises(MigrationError, match="deployment identity does not match journal"):
         cutover.install_service_binding(**arguments)
+
+
+def test_rollback_and_restore_require_deployment_identity_in_both_records(
+    tmp_path: Path,
+):
+    database = tmp_path / "scheduler.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    journal = tmp_path / "journal.json"
+    barrier = tmp_path / "barrier.json"
+    _write_rollback_authorities(
+        database=database,
+        journal=journal,
+        barrier=barrier,
+        repository=tmp_path / "ignored",
+        live_root=tmp_path / "live",
+        disabled={"enabled": False},
+        cutover_id="identity-required",
+        manifest_sha256="a" * 64,
+    )
+    journal_payload = json.loads(journal.read_text())
+    journal_payload.pop("deployment_identity")
+    journal.write_text(json.dumps(journal_payload), encoding="utf-8")
+    barrier_payload = json.loads(barrier.read_text())
+    barrier_payload.pop("deployment_identity")
+    barrier.write_text(json.dumps(barrier_payload), encoding="utf-8")
+
+    with pytest.raises(MigrationError, match="deployment identity is missing"):
+        cutover.rollback_cutover(
+            journal_path=journal,
+            barrier_path=barrier,
+            runtime_config=tmp_path / "runtime-config.json",
+            database=database,
+        )
+    with pytest.raises(MigrationError, match="deployment identity is missing"):
+        cutover.restore_cutover_database(
+            backup_directory=tmp_path / "backup",
+            database=database,
+            journal_path=journal,
+            barrier_path=barrier,
+            runtime_config=tmp_path / "runtime-config.json",
+            receipt_authority=tmp_path / "restore-authority",
+        )
+
+
+def test_deployment_checkout_allows_only_protected_scratch(tmp_path: Path) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    subprocess.run(["git", "init", "-q", "-b", "main"], cwd=repository, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "cutover@example.invalid"],
+        cwd=repository,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "cutover"], cwd=repository, check=True
+    )
+    tracked = repository / "runtime.py"
+    tracked.write_text("runtime = 1\n", encoding="utf-8")
+    subprocess.run(["git", "add", "runtime.py"], cwd=repository, check=True)
+    subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=repository, check=True)
+    (repository / ".scratch").mkdir()
+    (repository / ".scratch" / "note.md").write_text("note\n", encoding="utf-8")
+
+    assert cutover._deployment_checkout_dirty(repository) == []
+    tracked.write_text("runtime = 2\n", encoding="utf-8")
+    with pytest.raises(MigrationError, match="deployment checkout is dirty"):
+        cutover._require_clean_deployment_checkout(repository)
+
+
+def test_execute_cutover_rejects_dirty_deployment_before_journal(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "repository"
+    repository.mkdir()
+    subprocess.run(["git", "init", "-q", "-b", "main"], cwd=repository, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "cutover@example.invalid"],
+        cwd=repository,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "cutover"], cwd=repository, check=True
+    )
+    tracked = repository / "runtime.py"
+    tracked.write_text("runtime = 1\n", encoding="utf-8")
+    subprocess.run(["git", "add", "runtime.py"], cwd=repository, check=True)
+    subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=repository, check=True)
+    tracked.write_text("runtime = 2\n", encoding="utf-8")
+    live = tmp_path / "live"
+    (live / "supervisor").mkdir(parents=True)
+    (live / "supervisor" / "runtime-config.json").write_text(
+        json.dumps({"enabled": True}), encoding="utf-8"
+    )
+    journal = tmp_path / "journal.json"
+
+    with pytest.raises(MigrationError, match="deployment checkout is dirty"):
+        cutover.execute_cutover(
+            repository=repository,
+            live_root=live,
+            manifest_path=tmp_path / "manifest.json",
+            database=tmp_path / "scheduler.sqlite3",
+            backup_directory=tmp_path / "backup",
+            journal_path=journal,
+            barrier_path=tmp_path / "barrier.json",
+            cutover_id="dirty-deployment",
+            service_unit=cutover.LEGACY_SERVICE_UNIT,
+            sqlite_service_unit="nl2repobench-authoring-supervisor-sqlite@phase3.service",
+            sqlite_env_file=Path("/etc/nl2repobench/authoring-scheduler-phase3.env"),
+            drain_timeout=1,
+            repository_min_free_bytes=1,
+            docker_min_free_bytes=1,
+            watcher_min_free_bytes=1,
+        )
+    assert not journal.exists()
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "pyproject.toml",
+        "scripts/run_authoring_supervisor.sh",
+        "uv.lock",
+        "src/nl2repobench/authoring/cutover.py",
+    ],
+)
+def test_deployment_identity_rejects_tampered_bound_files(
+    relative: str,
+) -> None:
+    repository = Path(__file__).parents[1]
+    unit = "nl2repobench-authoring-supervisor-sqlite@phase3.service"
+    expected = cutover._deployment_identity(repository, unit)
+    path = repository / relative
+    original = path.read_bytes()
+    try:
+        path.write_bytes(original + b"\n")
+        with pytest.raises(MigrationError, match="code identity does not match"):
+            cutover._validate_deployment_identity(repository, unit, expected)
+    finally:
+        path.write_bytes(original)
 
 
 def test_import_receipt_times_are_preserved_and_reverse_chronology_rejected() -> None:
