@@ -157,7 +157,7 @@ def _deployment_python_runtime_digest(repository: Path) -> str:
 def _trusted_git_environment() -> dict[str, str]:
     env = dict(os.environ)
     for key in tuple(env):
-        if key == "GIT_DIR" or key == "GIT_WORK_TREE" or key.startswith("GIT_CONFIG"):
+        if key.startswith("GIT_"):
             env.pop(key, None)
     env.update(
         {

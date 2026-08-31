@@ -2414,6 +2414,8 @@ def test_deployment_git_probes_ignore_hostile_environment(tmp_path: Path, monkey
     monkeypatch.setenv("GIT_WORK_TREE", str(tmp_path))
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "global-config"))
     monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(tmp_path / "system-config"))
+    monkeypatch.setenv("GIT_INDEX_FILE", str(tmp_path / "alternate-index"))
+    monkeypatch.setenv("GIT_OBJECT_DIRECTORY", str(tmp_path / "objects"))
 
     captured_environment: dict[str, str] = {}
     original_run = subprocess.run
@@ -2442,6 +2444,13 @@ def test_deployment_git_probes_ignore_hostile_environment(tmp_path: Path, monkey
     assert captured_environment["PATH"] == "/usr/bin:/bin"
     assert "GIT_DIR" not in captured_environment
     assert "GIT_WORK_TREE" not in captured_environment
+    assert "GIT_INDEX_FILE" not in captured_environment
+    assert "GIT_OBJECT_DIRECTORY" not in captured_environment
+    assert set(key for key in captured_environment if key.startswith("GIT_")) == {
+        "GIT_CONFIG_NOSYSTEM",
+        "GIT_CONFIG_GLOBAL",
+        "GIT_CONFIG_SYSTEM",
+    }
     assert captured_environment["GIT_CONFIG_NOSYSTEM"] == "1"
     assert captured_environment["GIT_CONFIG_GLOBAL"] == os.devnull
     assert captured_environment["GIT_CONFIG_SYSTEM"] == os.devnull
