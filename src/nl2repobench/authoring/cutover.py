@@ -165,7 +165,7 @@ def _inventory_file_hash(root_fd: int, relative: str) -> bytes:
             directory_fd = child_fd
         file_fd = os.open(
             components[-1],
-            os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+            os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC,
             dir_fd=directory_fd,
         )
         try:

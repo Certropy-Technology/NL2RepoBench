@@ -1668,6 +1668,41 @@ def test_predrain_inventory_marks_stable_scan_read_disappearance(
     assert cutover.inventory_digest(tmp_path) == expected
 
 
+def test_predrain_inventory_rejects_nonblocking_regular_to_fifo_race(
+    tmp_path: Path, monkeypatch
+) -> None:
+    control = tmp_path / "supervisor/runtime-config.json"
+    control.parent.mkdir()
+    control.write_text("control", encoding="utf-8")
+    original_scan = cutover._scan_inventory_directory
+    original_open = cutover.os.open
+    final_open_flags: list[int] = []
+
+    def scan_then_replace(
+        directory_fd: int, prefix: str = "", *, top_level: bool = False
+    ) -> list[tuple[str, bool]]:
+        records = original_scan(directory_fd, prefix, top_level=top_level)
+        if top_level:
+            control.unlink()
+            os.mkfifo(control)
+        return records
+
+    def checked_open(path, flags, mode=0o777, *, dir_fd=None):
+        if path == control.name:
+            final_open_flags.append(flags)
+            assert flags & os.O_NONBLOCK
+        return original_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(cutover, "_scan_inventory_directory", scan_then_replace)
+    monkeypatch.setattr(cutover.os, "open", checked_open)
+
+    with pytest.raises(MigrationError, match="not a regular file"):
+        cutover.inventory_digest(tmp_path)
+    assert final_open_flags == [
+        os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
+    ]
+
+
 def _cutover_process(
     pid: int, root: Path, role: str, *, starttime_ticks: int = 10
 ) -> cutover.ProcessRecord:
