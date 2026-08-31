@@ -42,6 +42,7 @@ class RuntimeDiscriminator(BaseModel):
                 {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE}
             ),
             RuntimeLanguage.GO: frozenset({PackageManager.GO_MODULES}),
+            RuntimeLanguage.JAVA: frozenset({PackageManager.MAVEN}),
         }
         if self.package_manager not in allowed[self.language]:
             accepted = ", ".join(

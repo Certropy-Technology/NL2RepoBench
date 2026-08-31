@@ -748,6 +748,12 @@ def _canonical_command_plan(
         raw_steps = []
     if not isinstance(raw_steps, list):
         raise MigrationError("plan-invalid", "plan", "legacy command artifact has no command list")
+    if raw_steps:
+        raise MigrationError(
+            "plan-invalid",
+            "setup-not-supported",
+            "legacy command steps require the candidate supervisor and cannot be migrated",
+        )
     steps: list[dict[str, Any]] = []
     for index, raw in enumerate(raw_steps):
         if isinstance(raw, str):

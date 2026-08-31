@@ -39,6 +39,7 @@ class RuntimeLanguage(StrEnum):
     PYTHON = "python"
     NODE = "node"
     GO = "go"
+    JAVA = "java"
 
 
 class PackageManager(StrEnum):
@@ -47,6 +48,7 @@ class PackageManager(StrEnum):
     NPM = "npm"
     PNPM = "pnpm"
     GO_MODULES = "go-modules"
+    MAVEN = "maven"
     NONE = "none"
 
 
@@ -69,6 +71,7 @@ class RuntimeProfile(CanonicalRecord):
                         ("python", "cpython", ["uv", "pip", "none"]),
                         ("node", "node", ["npm", "pnpm", "none"]),
                         ("go", "go", ["go-modules"]),
+                        ("java", "jdk", ["maven"]),
                     )
                 ]
                 + [
@@ -87,14 +90,16 @@ class RuntimeProfile(CanonicalRecord):
         )
     )
     language: RuntimeLanguage
-    runtime: Literal["cpython", "node", "go"]
+    runtime: Literal["cpython", "node", "go", "jdk"]
     version: str = Field(min_length=1)
     package_manager: PackageManager
     package_manager_version: str | None = None
 
     @model_validator(mode="after")
     def validate_identity(self) -> RuntimeProfile:
-        expected = {"python": "cpython", "node": "node", "go": "go"}[self.language.value]
+        expected = {"python": "cpython", "node": "node", "go": "go", "java": "jdk"}[
+            self.language.value
+        ]
         if self.runtime != expected:
             raise ValueError("runtime does not match language")
         if self.package_manager is PackageManager.NONE and self.package_manager_version is not None:
@@ -105,6 +110,7 @@ class RuntimeProfile(CanonicalRecord):
             "python": {PackageManager.UV, PackageManager.PIP, PackageManager.NONE},
             "node": {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE},
             "go": {PackageManager.GO_MODULES},
+            "java": {PackageManager.MAVEN},
         }
         if self.package_manager not in allowed[self.language.value]:
             raise ValueError("package manager is not valid for runtime")
@@ -117,6 +123,17 @@ class RuntimeProfile(CanonicalRecord):
             self.package_manager_version or "",
         ):
             raise ValueError("Node package managers require an exact semantic version")
+        if self.language is RuntimeLanguage.JAVA and not re.fullmatch(
+            r"[A-Za-z][A-Za-z0-9._-]*-21\.0\.[0-9]+\+[0-9]+(?:\.[0-9]+)?",
+            self.version,
+        ):
+            raise ValueError(
+                "Java runtime version must include a distribution and exact JDK 21 build"
+            )
+        if self.package_manager is PackageManager.MAVEN and not re.fullmatch(
+            r"3\.9\.[0-9]+", self.package_manager_version or ""
+        ):
+            raise ValueError("Maven version must be an exact supported 3.9.x version")
         return self
 
 
@@ -259,6 +276,7 @@ class TestManifest(CanonicalRecord):
                         ("node:test", "node-test-json-v1"),
                         ("go-bridge", "go-test-json-v1"),
                         ("custom", "custom-json-v1"),
+                        ("junit-platform", "junit-open-test-report-xml-v1"),
                     )
                 ]
                 + [
@@ -293,9 +311,13 @@ class TestManifest(CanonicalRecord):
             },
         )
     )
-    framework: Literal["pytest", "node:test", "go-bridge", "custom"]
+    framework: Literal["pytest", "node:test", "go-bridge", "custom", "junit-platform"]
     report_format: Literal[
-        "pytest-junit-xml-v1", "node-test-json-v1", "go-test-json-v1", "custom-json-v1"
+        "pytest-junit-xml-v1",
+        "node-test-json-v1",
+        "go-test-json-v1",
+        "custom-json-v1",
+        "junit-open-test-report-xml-v1",
     ]
     expected_total: Annotated[int, Field(ge=0)] = 0
     expected_total_source: Literal["frozen-collection", "unknown"] = "unknown"
@@ -313,6 +335,11 @@ class TestManifest(CanonicalRecord):
             raise ValueError("go-bridge requires go-test-json-v1")
         if self.framework == "custom" and self.report_format != "custom-json-v1":
             raise ValueError("custom requires custom-json-v1")
+        if (
+            self.framework == "junit-platform"
+            and self.report_format != "junit-open-test-report-xml-v1"
+        ):
+            raise ValueError("junit-platform requires junit-open-test-report-xml-v1")
         for name, ref in (
             ("commands_artifact", self.commands_artifact),
             ("protected_paths_artifact", self.protected_paths_artifact),
@@ -346,6 +373,7 @@ def _task_contract_schema(environment_field: str, dependency_field: str) -> Json
         ("python", ["pytest", "custom"]),
         ("node", ["node:test"]),
         ("go", ["go-bridge"]),
+        ("java", ["junit-platform"]),
     ):
         rules.append(
             {
@@ -416,7 +444,11 @@ def _task_contract_schema(environment_field: str, dependency_field: str) -> Json
                 "if": {
                     "properties": {
                         "tests": {
-                            "properties": {"framework": {"enum": ["pytest", "node:test"]}}
+                            "properties": {
+                                "framework": {
+                                    "enum": ["pytest", "node:test", "junit-platform"]
+                                }
+                            }
                         }
                     }
                 },
@@ -578,6 +610,7 @@ class TaskSource(CanonicalRecord):
                 RuntimeLanguage.PYTHON: ("pytest", "custom"),
                 RuntimeLanguage.NODE: ("node:test",),
                 RuntimeLanguage.GO: ("go-bridge",),
+                RuntimeLanguage.JAVA: ("junit-platform",),
             }[self.environment.runtime.language]
             if self.tests.framework not in expected_tests:
                 raise ValueError("test framework does not match runtime language")
@@ -730,6 +763,7 @@ class TaskManifest(CanonicalRecord):
                 RuntimeLanguage.PYTHON: ("pytest", "custom"),
                 RuntimeLanguage.NODE: ("node:test",),
                 RuntimeLanguage.GO: ("go-bridge",),
+                RuntimeLanguage.JAVA: ("junit-platform",),
             }[runtime.language]
             if self.tests.framework not in expected_tests:
                 raise ValueError("test framework does not match runtime language")

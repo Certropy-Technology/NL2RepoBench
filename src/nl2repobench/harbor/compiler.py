@@ -451,6 +451,11 @@ WORKDIR /tests
             )
         except DependencyContractError as exc:
             raise HarborCompileError(str(exc)) from exc
+        if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
+            raise HarborCompileError(
+                "private-staging-contract-missing: production Python dependency staging "
+                "requires F0.5"
+            )
         runtime = manifest.environment_lock.runtime
         if runtime is None:
             raise HarborCompileError("production Python dependency staging requires a runtime")
@@ -473,11 +478,6 @@ WORKDIR /tests
             )
         except (DependencyContractError, OSError, ValueError) as exc:
             raise HarborCompileError(str(exc)) from exc
-        if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
-            raise HarborCompileError(
-                "private-staging-contract-missing: production Python dependency staging "
-                "requires F0.5"
-            )
         if manifest.dependency_bundle.package_manager is PackageManager.NONE:
             return b""
         files = validated.lock_files

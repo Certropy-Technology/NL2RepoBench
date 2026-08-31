@@ -11,6 +11,7 @@ from nl2repobench.domain.canonical_contract import (
 )
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.package_managers import (
+    MavenPackageManager,
     PackageManagerError,
     PackageManagerErrorCode,
     PackageManagerRegistry,
@@ -68,11 +69,16 @@ def test_registry_resolves_all_f0_identities_exactly() -> None:
         _identity(RuntimeLanguage.NODE, PackageManager.PNPM),
         _identity(RuntimeLanguage.NODE, PackageManager.NONE),
         _identity(RuntimeLanguage.GO, PackageManager.GO_MODULES),
+        _identity(RuntimeLanguage.JAVA, PackageManager.MAVEN),
     }
     assert set(registry.adapters) == identities
     assert isinstance(
         registry.resolve(_identity(RuntimeLanguage.NODE, PackageManager.PNPM)),
         PnpmPackageManager,
+    )
+    assert isinstance(
+        registry.resolve(_identity(RuntimeLanguage.JAVA, PackageManager.MAVEN)),
+        MavenPackageManager,
     )
     with pytest.raises(UnknownPackageManagerError, match="validated RuntimeDiscriminator"):
         registry.resolve("pnpm")  # type: ignore[arg-type]

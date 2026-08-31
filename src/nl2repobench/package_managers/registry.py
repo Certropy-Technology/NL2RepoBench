@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import cast
 
 from nl2repobench.domain.canonical_contract import (
     PackageManager,
@@ -17,12 +17,14 @@ from nl2repobench.storage.canonical_ustar import encode_tree
 from .base import (
     CommandSpec,
     LockSummary,
+    PackageManagerAdapter,
     PackageManagerError,
     PackageManagerErrorCode,
     StoreSummary,
     inventory_store_summary,
 )
 from .go_modules import GoModulesPackageManager
+from .maven import MavenPackageManager
 from .pnpm import PnpmPackageManager
 
 
@@ -132,7 +134,7 @@ def _identity(language: RuntimeLanguage, manager: PackageManager) -> RuntimeDisc
 
 @dataclass(frozen=True, slots=True)
 class PackageManagerRegistry:
-    adapters: dict[RuntimeDiscriminator, Any]
+    adapters: dict[RuntimeDiscriminator, PackageManagerAdapter]
 
     @classmethod
     def default(cls) -> PackageManagerRegistry:
@@ -141,33 +143,37 @@ class PackageManagerRegistry:
         python_none = _identity(RuntimeLanguage.PYTHON, PackageManager.NONE)
         node_npm = _identity(RuntimeLanguage.NODE, PackageManager.NPM)
         node_none = _identity(RuntimeLanguage.NODE, PackageManager.NONE)
-        adapters: tuple[Any, ...] = (
-            CanonicalPackageManager(
-                python_uv,
-                ("requirements.lock.txt",),
-                ("/usr/local/bin/uv", "pip", "install", "--offline", "--require-hashes"),
-                (("UV_OFFLINE", "1"),),
+        adapters = cast(
+            tuple[PackageManagerAdapter, ...],
+            (
+                CanonicalPackageManager(
+                    python_uv,
+                    ("requirements.lock.txt",),
+                    ("/usr/local/bin/uv", "pip", "install", "--offline", "--require-hashes"),
+                    (("UV_OFFLINE", "1"),),
+                ),
+                CanonicalPackageManager(
+                    python_pip,
+                    ("requirements.lock.txt",),
+                    ("/usr/local/bin/python", "-m", "pip", "install", "--require-hashes"),
+                    (("PIP_NO_INDEX", "1"),),
+                ),
+                CanonicalPackageManager(python_none, (), ("/usr/bin/true",), (), True),
+                CanonicalPackageManager(
+                    node_npm,
+                    ("package-lock.json",),
+                    ("/usr/local/bin/npm", "ci", "--offline", "--ignore-scripts"),
+                    (("npm_config_offline", "true"), ("npm_config_ignore_scripts", "true")),
+                ),
+                PnpmPackageManager(),
+                CanonicalPackageManager(node_none, (), (), (), False),
+                GoModulesPackageManager(),
+                MavenPackageManager(),
             ),
-            CanonicalPackageManager(
-                python_pip,
-                ("requirements.lock.txt",),
-                ("/usr/local/bin/python", "-m", "pip", "install", "--require-hashes"),
-                (("PIP_NO_INDEX", "1"),),
-            ),
-            CanonicalPackageManager(python_none, (), ("/usr/bin/true",), (), True),
-            CanonicalPackageManager(
-                node_npm,
-                ("package-lock.json",),
-                ("/usr/local/bin/npm", "ci", "--offline", "--ignore-scripts"),
-                (("npm_config_offline", "true"), ("npm_config_ignore_scripts", "true")),
-            ),
-            PnpmPackageManager(),
-            CanonicalPackageManager(node_none, (), (), (), False),
-            GoModulesPackageManager(),
         )
         return cls({adapter.identity: adapter for adapter in adapters})
 
-    def resolve(self, identity: RuntimeDiscriminator) -> Any:
+    def resolve(self, identity: RuntimeDiscriminator) -> PackageManagerAdapter:
         if not isinstance(identity, RuntimeDiscriminator):
             raise UnknownPackageManagerError(
                 "package-manager resolution requires a validated RuntimeDiscriminator"

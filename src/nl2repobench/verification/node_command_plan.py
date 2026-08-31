@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from nl2repobench.domain.command_plan import CommandPlan
+from nl2repobench.verification.command_plan import CommandPlanValidationError
 
 MAX_NODE_PLAN_BYTES = 4 * 1024 * 1024
 EXPECTED_NODE_PLAN: dict[str, Any] = {
@@ -58,6 +59,11 @@ def _validate_node_plan_semantics(
     ):
         if actual_values[field] != expected_values[field]:
             raise ValueError("Node command plan does not match the allowlisted verifier protocol")
+    if plan.steps:
+        raise CommandPlanValidationError(
+            "Node command plan setup steps are not supported without the candidate supervisor",
+            stage="setup-not-supported",
+        )
     return plan
 
 

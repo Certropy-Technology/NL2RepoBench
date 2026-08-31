@@ -690,6 +690,7 @@
         "npm",
         "pnpm",
         "go-modules",
+        "maven",
         "none"
       ],
       "title": "PackageManager",
@@ -707,7 +708,8 @@
       "enum": [
         "python",
         "node",
-        "go"
+        "go",
+        "java"
       ],
       "title": "RuntimeLanguage",
       "type": "string"
@@ -783,6 +785,27 @@
           }
         },
         {
+          "if": {
+            "properties": {
+              "language": {
+                "const": "java"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager": {
+                "enum": [
+                  "maven"
+                ]
+              },
+              "runtime": {
+                "const": "jdk"
+              }
+            }
+          }
+        },
+        {
           "else": {
             "properties": {
               "package_manager_version": {
@@ -833,7 +856,8 @@
           "enum": [
             "cpython",
             "node",
-            "go"
+            "go",
+            "jdk"
           ],
           "title": "Runtime",
           "type": "string"
@@ -1190,6 +1214,22 @@
         {
           "if": {
             "properties": {
+              "framework": {
+                "const": "junit-platform"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "report_format": {
+                "const": "junit-open-test-report-xml-v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
               "expected_total_source": {
                 "const": "frozen-collection"
               }
@@ -1296,7 +1336,8 @@
             "pytest",
             "node:test",
             "go-bridge",
-            "custom"
+            "custom",
+            "junit-platform"
           ],
           "title": "Framework",
           "type": "string"
@@ -1317,7 +1358,8 @@
             "pytest-junit-xml-v1",
             "node-test-json-v1",
             "go-test-json-v1",
-            "custom-json-v1"
+            "custom-json-v1",
+            "junit-open-test-report-xml-v1"
           ],
           "title": "Report Format",
           "type": "string"
@@ -1486,6 +1528,50 @@
               "framework": {
                 "enum": [
                   "go-bridge"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "language": {
+                    "const": "java"
+                  }
+                },
+                "required": [
+                  "language"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "language": {
+                "const": "java"
+              }
+            }
+          },
+          "tests": {
+            "properties": {
+              "framework": {
+                "enum": [
+                  "junit-platform"
                 ]
               }
             }
@@ -1676,6 +1762,41 @@
               "runtime": {
                 "properties": {
                   "package_manager": {
+                    "const": "maven"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependencies": {
+            "properties": {
+              "package_manager": {
+                "const": "maven"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
                     "const": "none"
                   }
                 },
@@ -1736,7 +1857,8 @@
               "framework": {
                 "enum": [
                   "pytest",
-                  "node:test"
+                  "node:test",
+                  "junit-platform"
                 ]
               }
             }

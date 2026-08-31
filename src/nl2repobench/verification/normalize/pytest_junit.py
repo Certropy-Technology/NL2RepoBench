@@ -124,7 +124,7 @@ def normalize_pytest_junit(
     try:
         return LeafReport(
             framework="pytest",
-            report_format="pytest-junit-v1",
+            report_format="pytest-junit-xml-v1",
             collected=len(leaves),
             leaves=tuple(leaves),
             collection_errors=errors,

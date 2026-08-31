@@ -654,6 +654,7 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
 
     with pytest.raises(HarborCompileError, match="private-staging-contract-missing"):
         compiler.compile_task(source_dir, tmp_path / "output")
+    assert not compiler.artifact_resolver.authorization.staging_root.exists()
 
 
 @pytest.mark.parametrize(

@@ -154,6 +154,7 @@ def test_pytest_normalizer_maps_collection_ids_and_statuses() -> None:
     )
     assert [leaf.leaf_id for leaf in report.leaves] == ["test.py::test_a", "test.py::test_b"]
     assert [leaf.status for leaf in report.leaves] == ["passed", "xfail"]
+    assert report.report_format == "pytest-junit-xml-v1"
 
 
 def test_node_normalizer_rejects_duplicate_ids() -> None:

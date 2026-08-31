@@ -55,7 +55,11 @@ class CommandPlan(CanonicalRecord):
     runner: str = Field(min_length=1)
     candidate_install: str = Field(min_length=1)
     report_format: Literal[
-        "pytest-junit-xml-v1", "node-test-json-v1", "go-test-json-v1", "custom-json-v1"
+        "pytest-junit-xml-v1",
+        "node-test-json-v1",
+        "go-test-json-v1",
+        "custom-json-v1",
+        "junit-open-test-report-xml-v1",
     ]
     test_root: Literal["/tests/private"] = "/tests/private"
     steps: tuple[CommandStep, ...] = ()

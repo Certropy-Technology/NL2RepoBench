@@ -248,14 +248,14 @@ def compile_harbor_task(
         Path,
         typer.Argument(help="Declarative task source directory."),
     ],
+    toolchain: Annotated[
+        Path,
+        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
+    ],
     output_root: Annotated[
         Path,
         typer.Option("--output", help="Generated Harbor task root."),
     ] = Path("build/harbor"),
-    toolchain: Annotated[
-        Path,
-        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
-    ] = Path("toolchain.lock.toml"),
     artifact_root: Annotated[
         Path,
         typer.Option("--artifact-root", help="Content-addressed private artifact root."),
@@ -338,14 +338,14 @@ def compile_harbor_task(
 def prepare_harbor_control(
     task_root: Annotated[Path, typer.Argument(help="Compiled Harbor task directory.")],
     kind: Annotated[str, typer.Argument(help="Control kind: stub or forgery.")],
+    toolchain: Annotated[
+        Path,
+        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
+    ],
     output_root: Annotated[
         Path,
         typer.Option("--output", help="Directory for generated control bundles."),
     ] = Path("build/controls"),
-    toolchain: Annotated[
-        Path,
-        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
-    ] = Path("toolchain.lock.toml"),
 ) -> None:
     """Prepare a control bundle that Harbor executes with the Oracle agent."""
 

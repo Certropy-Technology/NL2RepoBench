@@ -20,6 +20,16 @@ EXPECTED_PLAN: dict[str, Any] = CommandPlan(
 ).model_dump(mode="json")
 
 
+class CommandPlanValidationError(ValueError):
+    """An executable adapter cannot safely consume a canonical command plan."""
+
+    code = "plan-invalid"
+
+    def __init__(self, message: str, *, stage: str = "plan") -> None:
+        self.stage = stage
+        super().__init__(message)
+
+
 def expected_python_command_plan(
     *,
     identity: str = "python+uv",
@@ -67,6 +77,11 @@ def _validate_python_plan_semantics(
             raise ValueError(
                 "Python command plan does not match the allowlisted verifier protocol"
             )
+    if plan.steps:
+        raise CommandPlanValidationError(
+            "Python command plan setup steps are not supported without the candidate supervisor",
+            stage="setup-not-supported",
+        )
     return plan
 
 
@@ -134,3 +149,11 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+__all__ = [
+    "CommandPlanValidationError",
+    "expected_python_command_plan",
+    "load_python_command_plan",
+    "validate_command_plan",
+]

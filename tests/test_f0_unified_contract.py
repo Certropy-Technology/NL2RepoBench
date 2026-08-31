@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 import shutil
+import subprocess
 import tarfile
 import tomllib
 import unicodedata
@@ -379,7 +380,7 @@ def test_migrated_command_plan_uses_adapter_contract(
         load_command_plan(data)
 
 
-def test_python_and_go_consumers_load_canonical_plan_larger_than_four_kib() -> None:
+def test_generic_plan_accepts_bounded_steps_but_executable_adapters_reject() -> None:
     steps = [
         {
             "step_id": f"step-{index:04d}",
@@ -417,7 +418,68 @@ def test_python_and_go_consumers_load_canonical_plan_larger_than_four_kib() -> N
         data = canonical_json(plan) + b"\n"
         assert 4096 < len(data) <= 4 * 1024 * 1024
         assert load_command_plan(data) == plan
-        assert loader(data) == plan
+        with pytest.raises(ValueError, match="setup steps are not supported") as raised:
+            loader(data)
+        assert raised.value.code == "plan-invalid"  # type: ignore[attr-defined]
+        assert raised.value.stage == "setup-not-supported"  # type: ignore[attr-defined]
+
+    node_payload = {
+        "identity": "node+npm",
+        "runner": "node-test-subprocess-boundary-v1",
+        "candidate_install": "npm-pack-offline-v1",
+        "report_format": "node-test-json-v1",
+        "steps": steps,
+    }
+    node_plan = CommandPlan.model_validate(node_payload)
+    node_data = canonical_json(node_plan) + b"\n"
+    assert load_command_plan(node_data) == node_plan
+    with pytest.raises(ValueError, match="setup steps are not supported"):
+        load_node_command_plan(node_data, candidate_install="npm-pack-offline-v1")
+
+
+def test_node_runtime_validators_reject_nonempty_steps(tmp_path: Path) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not installed")
+    root = Path(__file__).parents[1] / "src/nl2repobench/verification/node"
+    for manager, validator, install in (
+        ("npm", "validate-command-plan.mjs", "npm-pack-offline-v1"),
+        ("pnpm", "validate-pnpm-command-plan.mjs", "pnpm-pack-offline-v1"),
+    ):
+        plan = CommandPlan(
+            identity=f"node+{manager}",
+            runner="node-test-subprocess-boundary-v1",
+            candidate_install=install,
+            report_format="node-test-json-v1",
+            steps=(
+                {
+                    "step_id": "setup",
+                    "argv": ("runner",),
+                    "cwd": ".",
+                    "environment": {},
+                    "timeout_sec": 60,
+                },
+            ),
+        )
+        path = tmp_path / f"{manager}.json"
+        path.write_bytes(canonical_json(plan) + b"\n")
+        result = subprocess.run(
+            [node, str(root / validator), "--path", str(path)],
+            check=False,
+        )
+        assert result.returncode != 0
+
+
+def test_migration_rejects_legacy_nonempty_command_steps() -> None:
+    module = _migration_module()
+    with pytest.raises(module.MigrationError, match="candidate supervisor") as raised:
+        module._canonical_command_plan(  # noqa: SLF001
+            ["pytest -q"],
+            identity="python+uv",
+            report_format="pytest-junit-xml-v1",
+        )
+    assert raised.value.code == "plan-invalid"
+    assert raised.value.stage == "setup-not-supported"
 
 
 def test_shared_command_plan_loader_rejects_more_than_four_mib() -> None:

@@ -36,6 +36,7 @@ class LeafCase(RecordModel):
     """One verifier-owned test leaf after framework normalization."""
 
     leaf_id: Annotated[str, Field(min_length=1, max_length=512)]
+    display_name: Annotated[str | None, Field(min_length=1, max_length=512)] = None
     status: LeafStatus
     duration_ms: Annotated[float, Field(ge=0)] = 0.0
     details: Annotated[str | None, Field(max_length=4096)] = None

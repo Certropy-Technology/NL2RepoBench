@@ -11,6 +11,7 @@ from typing import Any
 
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.command_plan import MAX_COMMAND_PLAN_BYTES, CommandPlan
+from nl2repobench.verification.command_plan import CommandPlanValidationError
 
 EXPECTED_GO_PLAN: dict[str, Any] = CommandPlan(
     identity="go+go-modules",
@@ -45,6 +46,11 @@ def _validate_go_plan_semantics(payload: object) -> CommandPlan:
     ):
         if getattr(plan, field) != getattr(expected, field):
             raise ValueError("Go command plan does not match the allowlisted verifier protocol")
+    if plan.steps:
+        raise CommandPlanValidationError(
+            "Go command plan setup steps are not supported without the candidate supervisor",
+            stage="setup-not-supported",
+        )
     return plan
 
 

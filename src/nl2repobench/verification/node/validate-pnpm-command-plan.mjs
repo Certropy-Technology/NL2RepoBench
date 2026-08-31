@@ -21,7 +21,7 @@ try {
   const expectedKeys = [...Object.keys(expected), "steps"].sort();
   if (JSON.stringify(keys) !== JSON.stringify(expectedKeys)) process.exit(66);
   for (const key of Object.keys(expected)) if (actual[key] !== expected[key]) process.exit(66);
-  if (!Array.isArray(actual.steps) || actual.steps.length > 4096) process.exit(66);
+  if (!Array.isArray(actual.steps) || actual.steps.length !== 0) process.exit(66);
   const ids = new Set();
   for (const step of actual.steps) {
     if (!step || typeof step !== "object" || Array.isArray(step)) process.exit(66);

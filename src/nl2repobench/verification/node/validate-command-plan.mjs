@@ -24,7 +24,7 @@ if (JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) process.exit(66
 for (const key of Object.keys(expected)) {
   if (payload[key] !== expected[key]) process.exit(66);
 }
-if (!Array.isArray(payload.steps) || payload.steps.length > 4096) process.exit(66);
+if (!Array.isArray(payload.steps) || payload.steps.length !== 0) process.exit(66);
 const ids = new Set();
 for (const step of payload.steps) {
   if (!step || typeof step !== "object" || Array.isArray(step)) process.exit(66);
