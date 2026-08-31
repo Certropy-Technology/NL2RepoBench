@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -21,6 +22,40 @@ from nl2repobench.verification.rust_profile import (
 )
 
 RUST_VERSION = "1.100.0-nightly"
+_JAVA_JDK_VERSION = re.compile(
+    r"^[A-Za-z][A-Za-z0-9._-]*-21\.0\.[0-9]+\+[0-9]+(?:\.[0-9]+)?$"
+)
+_JAVA_MAVEN_VERSION = re.compile(r"^3\.9\.[0-9]+$")
+_JAVA_ALLOWED_ROOT_FILES = frozenset({"task.toml", "instruction.md"})
+_JAVA_ALLOWED_METADATA_FILES = frozenset(
+    {
+        "api-inventory.json",
+        "audit.md",
+        "production-evidence.json",
+        "provenance.json",
+        "test-inventory.json",
+    }
+)
+_JAVA_ALLOWED_METADATA_DIRECTORIES = frozenset({"evidence", "provenance"})
+_JAVA_FORBIDDEN_PARTS = frozenset(
+    {"target", ".mvn", "scripts", "script", "native", "plugins", "plugin"}
+)
+_JAVA_FORBIDDEN_FILES = frozenset(
+    {
+        "mvnw",
+        "mvnw.cmd",
+        "mvnw.ps1",
+        "gradlew",
+        "gradlew.bat",
+        "build.gradle",
+        "build.gradle.kts",
+        "settings.gradle",
+        "settings.gradle.kts",
+    }
+)
+_JAVA_NATIVE_SUFFIXES = frozenset(
+    {".so", ".dll", ".dylib", ".jnilib", ".a", ".o", ".exe", ".bat", ".cmd", ".sh"}
+)
 _PRODUCTION_STATUSES = {
     TaskStatus.PACKAGED,
     TaskStatus.ORACLE_PASSED,
@@ -135,13 +170,105 @@ class RustSourceAssetValidator:
 
 
 @dataclass(frozen=True, slots=True)
+class JavaSourceAssetValidator:
+    """Validate the source-only Java workspace without executing Maven input."""
+
+    identity = RuntimeDiscriminator(
+        language=RuntimeLanguage.JAVA,
+        package_manager=PackageManager.MAVEN,
+    )
+
+    def validate_source_assets(self, source_dir: Path, source: TaskSource) -> None:
+        runtime = source.environment.runtime
+        production = source.lifecycle.status in _PRODUCTION_STATUSES
+        if runtime is None:
+            if production:
+                raise RuntimeSourceAssetError(
+                    "production Java sources require an explicit java+maven runtime profile"
+                )
+        elif (
+            runtime.runtime != "jdk"
+            or not _JAVA_JDK_VERSION.fullmatch(runtime.version)
+            or runtime.package_manager is not PackageManager.MAVEN
+            or not _JAVA_MAVEN_VERSION.fullmatch(runtime.package_manager_version or "")
+        ):
+            raise RuntimeSourceAssetError(
+                "Java sources require an exact JDK 21 and Maven 3.9.x profile"
+            )
+
+        if not source_dir.is_dir() or source_dir.is_symlink():
+            raise RuntimeSourceAssetError("Java source directory must be a regular directory")
+        for path in source_dir.rglob("*"):
+            relative = path.relative_to(source_dir)
+            parts = relative.parts
+            if path.is_symlink():
+                raise RuntimeSourceAssetError(
+                    f"Java source assets must not contain symlinks: {relative}"
+                )
+            if not path.is_file():
+                continue
+            name = path.name
+            if name in _JAVA_FORBIDDEN_FILES or any(
+                part in _JAVA_FORBIDDEN_PARTS for part in parts
+            ):
+                raise RuntimeSourceAssetError(f"Java source asset is forbidden: {relative}")
+            if path.suffix.casefold() in _JAVA_NATIVE_SUFFIXES:
+                raise RuntimeSourceAssetError(
+                    f"Java source asset has a native or executable suffix: {relative}"
+                )
+            relative_text = relative.as_posix()
+            if relative_text == "pom.xml":
+                try:
+                    from nl2repobench.package_managers.maven import validate_candidate_pom
+
+                    validate_candidate_pom(path.read_bytes())
+                except (OSError, ValueError) as exc:
+                    raise RuntimeSourceAssetError(f"Java candidate POM is invalid: {exc}") from exc
+                continue
+            if relative_text in _JAVA_ALLOWED_ROOT_FILES:
+                continue
+            if (
+                len(parts) == 1 and name in _JAVA_ALLOWED_METADATA_FILES
+            ) or parts[0] in _JAVA_ALLOWED_METADATA_DIRECTORIES:
+                continue
+            if relative_text.startswith("src/main/java/"):
+                if path.suffix != ".java":
+                    raise RuntimeSourceAssetError(
+                        f"Java source path must contain only .java files: {relative}"
+                    )
+                continue
+            if relative_text == "src/main/java":
+                continue
+            if relative_text.startswith("src/main/resources/"):
+                continue
+            if relative_text == "src/main/resources":
+                continue
+            # Authoring metadata is permitted, but executable project inputs are not.
+            if relative.suffix in {".gradle", ".kts"}:
+                raise RuntimeSourceAssetError(f"Java build script is forbidden: {relative}")
+            raise RuntimeSourceAssetError(
+                f"Java source asset is outside the allowed roots: {relative}"
+            )
+
+        java_files = tuple(
+            path
+            for path in source_dir.rglob("*.java")
+            if path.is_file()
+            and path.relative_to(source_dir).as_posix().startswith("src/main/java/")
+        )
+        if production and not java_files:
+            raise RuntimeSourceAssetError("production Java sources require src/main/java/*.java")
+
+
+@dataclass(frozen=True, slots=True)
 class RuntimeSourceAssetRegistry:
     validators: Mapping[RuntimeDiscriminator, RuntimeSourceAssetValidator]
 
     @classmethod
     def default(cls) -> RuntimeSourceAssetRegistry:
         rust = RustSourceAssetValidator()
-        return cls({rust.identity: rust})
+        java = JavaSourceAssetValidator()
+        return cls({rust.identity: rust, java.identity: java})
 
     def resolve(self, identity: RuntimeDiscriminator) -> RuntimeSourceAssetValidator:
         if not isinstance(identity, RuntimeDiscriminator):
@@ -166,6 +293,8 @@ class RuntimeSourceAssetRegistry:
         if source.environment.runtime is None:
             if source.metadata.language is RuntimeLanguage.RUST:
                 RustSourceAssetValidator().validate_source_assets(source_dir, source)
+            elif source.metadata.language is RuntimeLanguage.JAVA:
+                JavaSourceAssetValidator().validate_source_assets(source_dir, source)
             return
         identity = RuntimeDiscriminator.from_task_source(source)
         validator = self.validators.get(identity)
@@ -178,5 +307,6 @@ __all__ = [
     "RuntimeSourceAssetRegistry",
     "RuntimeSourceAssetValidator",
     "RustSourceAssetValidator",
+    "JavaSourceAssetValidator",
     "UnknownRuntimeSourceAssetValidatorError",
 ]

@@ -21,6 +21,12 @@ from nl2repobench.domain.canonical_contract import (
 )
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.storage.canonical_ustar import encode_tree
+from nl2repobench.verification.java_command_plan import (
+    JavaMavenBuildProfile,
+    java_maven_command,
+    java_maven_environment,
+    validate_java_maven_command,
+)
 
 from .base import (
     CommandSpec,
@@ -589,22 +595,33 @@ class MavenPackageManager:
         return summary
 
     def build_commands(self, profile: object) -> tuple[CommandSpec, ...]:
-        del profile
-        raise _error(
-            "Java/Maven build commands require the future candidate supervisor profile",
-            PackageManagerErrorCode.UNSUPPORTED_PROFILE,
-            stage="build",
-        )
+        if not isinstance(profile, JavaMavenBuildProfile):
+            raise _error(
+                "Java/Maven build commands require a typed JavaMavenBuildProfile",
+                PackageManagerErrorCode.UNSUPPORTED_PROFILE,
+                stage="build",
+            )
+        try:
+            command = java_maven_command(profile)
+            validate_java_maven_command(command)
+        except (TypeError, ValueError) as exc:
+            raise _error(
+                str(exc), PackageManagerErrorCode.UNSUPPORTED_PROFILE, stage="build"
+            ) from exc
+        return (command,)
 
     def offline_environment(self, profile: object) -> dict[str, str]:
-        del profile
-        return {
-            "MAVEN_ARGS": "--offline --batch-mode --no-transfer-progress --strict-checksums",
-            "MAVEN_OPTS": "-Djava.awt.headless=true",
-        }
+        if not isinstance(profile, JavaMavenBuildProfile):
+            raise _error(
+                "Java/Maven offline environment requires a typed JavaMavenBuildProfile",
+                PackageManagerErrorCode.UNSUPPORTED_PROFILE,
+                stage="build",
+            )
+        return dict(java_maven_environment())
 
 
 __all__ = [
+    "JavaMavenBuildProfile",
     "JAVA_MAVEN_IDENTITY",
     "MavenArtifact",
     "MavenCandidateMetadata",

@@ -17,6 +17,7 @@ from nl2repobench.harbor.dependency_contract import (
 )
 from nl2repobench.package_managers import PackageManagerError, PackageManagerErrorCode
 from nl2repobench.package_managers.maven import (
+    JavaMavenBuildProfile,
     MavenPackageManager,
     load_maven_lock,
     maven_repository_path,
@@ -465,9 +466,45 @@ def test_candidate_pom_is_metadata_only() -> None:
         validate_candidate_pom(b'<!DOCTYPE project [<!ENTITY x "x">]><project>&x;</project>')
 
 
-def test_maven_build_activation_remains_typed_unsupported() -> None:
+def test_maven_build_commands_are_verifier_owned_and_typed() -> None:
     adapter = MavenPackageManager()
-    with pytest.raises(PackageManagerError, match="future candidate supervisor") as raised:
+    profile = JavaMavenBuildProfile(
+        jdk_version="temurin-21.0.5+11",
+        maven_version="3.9.9",
+        release=17,
+    )
+    command = adapter.build_commands(profile)[0]
+    assert command.argv == (
+        "/opt/maven/bin/mvn",
+        "--offline",
+        "--batch-mode",
+        "--no-transfer-progress",
+        "--strict-checksums",
+        "-Dmaven.repo.local=/opt/maven/repository",
+        "-Dmaven.compiler.release=17",
+        "--file",
+        "/tests/private/harness/pom.xml",
+        "test",
+    )
+    assert adapter.offline_environment(profile) == {
+        "MAVEN_ARGS": "--offline --batch-mode --no-transfer-progress --strict-checksums",
+        "MAVEN_OPTS": "-Djava.awt.headless=true",
+    }
+
+    with pytest.raises(PackageManagerError, match="typed JavaMavenBuildProfile") as raised:
         adapter.build_commands({})
     assert raised.value.code is PackageManagerErrorCode.UNSUPPORTED_PROFILE
-    assert adapter.offline_environment({})["MAVEN_ARGS"].startswith("--offline")
+
+
+def test_maven_build_profile_requires_exact_runtime_versions() -> None:
+    with pytest.raises(ValueError, match="exact JDK 21"):
+        JavaMavenBuildProfile(jdk_version="latest", maven_version="3.9.9")
+    with pytest.raises(ValueError, match="exact Maven 3.9.x"):
+        JavaMavenBuildProfile(jdk_version="temurin-21.0.5+11", maven_version="3.8.9")
+
+
+def test_maven_offline_environment_requires_typed_profile() -> None:
+    adapter = MavenPackageManager()
+    with pytest.raises(PackageManagerError, match="typed JavaMavenBuildProfile") as raised:
+        adapter.offline_environment({})
+    assert raised.value.code is PackageManagerErrorCode.UNSUPPORTED_PROFILE
