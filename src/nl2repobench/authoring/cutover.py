@@ -259,10 +259,11 @@ def _mount_path(raw: str) -> Path:
     return Path(raw).resolve()
 
 
-def _verify_mountinfo(worktree_root: Path) -> None:
-    for entry in Path("/proc").iterdir():
-        mountinfo = entry / "mountinfo"
-        if not entry.name.isdigit() or not mountinfo.is_file():
+def _verify_mountinfo(
+    worktree_root: Path, *, proc_root: Path = Path("/proc")
+) -> None:
+    for entry in proc_root.iterdir():
+        if not entry.name.isdigit():
             continue
         lines = _read_mountinfo(entry)
         if _mountinfo_conflicts(lines, worktree_root):

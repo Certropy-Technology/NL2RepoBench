@@ -1549,6 +1549,14 @@ def test_cutover_process_identity_lock_and_mount_guards(tmp_path: Path, monkeypa
     with pytest.raises(MigrationError, match="cannot inspect mountinfo"):
         cutover._read_mountinfo(ExtantProcess())
 
+    proc_root = tmp_path / "proc"
+    unreadable_process = proc_root / "456"
+    unreadable_process.mkdir(parents=True)
+    unreadable_mountinfo = unreadable_process / "mountinfo"
+    unreadable_mountinfo.mkdir()
+    with pytest.raises(MigrationError, match="live pid: 456"):
+        cutover._verify_mountinfo(worktrees, proc_root=proc_root)
+
     calls: list[tuple[str, ...]] = []
 
     def systemctl(*arguments: str) -> str:
