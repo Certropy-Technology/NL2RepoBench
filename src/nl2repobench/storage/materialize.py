@@ -387,6 +387,17 @@ def materialize_archive(
             section = payload[inventory_section]
             if not isinstance(section, dict):
                 raise ValueError("external inventory section is malformed")
+            expected_section_fields = {
+                "archive_kind",
+                "archive_digest",
+                "tree_digest",
+                "entries",
+                "file_count",
+                "directory_count",
+                "total_bytes",
+            }
+            if set(section) != expected_section_fields:
+                raise ValueError("external inventory section has unexpected fields")
             declared = _inventory_entries(
                 {
                     "schema_version": "1.0",

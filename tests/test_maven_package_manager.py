@@ -8,9 +8,13 @@ from pathlib import Path
 import pytest
 
 from nl2repobench.domain.canonical_contract import DependencyBundle, RuntimeProfile
-from nl2repobench.domain.canonical_models import Visibility
+from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.domain.runtime import RuntimeDiscriminator
-from nl2repobench.harbor.dependency_contract import materialize_dependency_bundle
+from nl2repobench.harbor.dependency_contract import (
+    DependencyContractError,
+    materialize_dependency_bundle,
+    validate_dependency_artifacts,
+)
 from nl2repobench.package_managers import PackageManagerError, PackageManagerErrorCode
 from nl2repobench.package_managers.maven import (
     MavenPackageManager,
@@ -76,12 +80,10 @@ def _inventory(store: Path) -> dict[str, object]:
         "adapter_version": "maven-lock-v1",
         "toolchain_digest": "sha256:" + "1" * 64,
         "lock": {
-            "schema_version": "1.0",
             "archive_kind": "dependency-lock",
             "archive_digest": "sha256:" + "0" * 64,
         },
         "store": {
-            "schema_version": "1.0",
             "archive_kind": "offline-store",
             "archive_digest": "sha256:" + "2" * 64,
             "tree_digest": tree_digest(entries),
@@ -198,7 +200,6 @@ def test_generic_java_materialization_validates_canonical_triple_with_profile(
     payload_path.write_bytes(b"jar")
     inventory_payload = _inventory(store_root)
     inventory_payload["lock"] = {
-        "schema_version": "1.0",
         "archive_kind": "dependency-lock",
         "archive_digest": lock_ref.digest,
         "tree_digest": tree_digest(tree_entries(lock_root)),
@@ -263,6 +264,115 @@ def test_generic_java_materialization_validates_canonical_triple_with_profile(
     )
     assert summary.jdk_version == profile.version
     assert store_summary.offline_smoke is True
+
+    malformed_payload = dict(inventory_payload)
+    malformed_payload["lock"] = {
+        **dict(inventory_payload["lock"]),
+        "schema_version": "1.0",
+    }
+    malformed_ref = backing.put_bytes(
+        json.dumps(malformed_payload, sort_keys=True, separators=(",", ":")).encode()
+        + b"\n",
+        media_type="application/vnd.nl2repobench.inventory+json",
+        visibility=Visibility.PRIVATE,
+    )
+    malformed_bundle = bundle.model_copy(update={"inventory": malformed_ref})
+    malformed_authorization = PrivateArtifactAuthorization(
+        task_id="java-maven-malformed",
+        manifest_digest="sha256:" + "3" * 64,
+        purpose="compile",
+        allowed_digests=frozenset(
+            {lock_ref.digest, store_ref.digest, malformed_ref.digest}
+        ),
+        staging_root=(tmp_path / "malformed-staging").resolve(),
+    )
+    malformed_resolver = LocalArtifactResolver.scoped_private(
+        backing,
+        malformed_authorization,
+        task_id=malformed_authorization.task_id,
+        manifest_digest=malformed_authorization.manifest_digest,
+        purpose=malformed_authorization.purpose,
+        staging_root=malformed_authorization.staging_root,
+    )
+    with pytest.raises(DependencyContractError, match="section is malformed"):
+        validate_dependency_artifacts(
+            malformed_bundle,
+            identity="java+maven",
+            toolchain_digest=str(inventory_payload["toolchain_digest"]),
+            resolver=malformed_resolver,
+        )
+    with pytest.raises(DependencyContractError, match="external inventory section"):
+        materialize_dependency_bundle(
+            malformed_bundle,
+            identity=RuntimeDiscriminator(language="java", package_manager="maven"),
+            expected_toolchain="3.9.9",
+            runtime_profile=profile,
+            resolver=malformed_resolver,
+            destination=tmp_path / "malformed-staging",
+        )
+    assert not (tmp_path / "malformed-staging").exists()
+
+
+@pytest.mark.parametrize(
+    "profile_overrides",
+    [
+        {"package_manager_version": "3.9.8"},
+        {"version": "zulu-21.0.5+11"},
+    ],
+)
+def test_generic_java_profile_mismatch_leaves_no_private_residue(
+    tmp_path: Path, profile_overrides: dict[str, str]
+) -> None:
+    lock_archive = encode_files({"maven-lock-v1.json": _lock_bytes()})
+    reference = ArtifactRef(
+        digest="sha256:" + "1" * 64,
+        size_bytes=len(lock_archive),
+        uri="artifact://private/sha256:" + "1" * 64,
+        visibility=Visibility.PRIVATE,
+    )
+    bundle = DependencyBundle(
+        status="known",
+        package_manager="maven",
+        lock=reference,
+        offline_store=reference,
+        inventory=reference,
+    )
+    authorization = PrivateArtifactAuthorization(
+        task_id="java-maven-mismatch",
+        manifest_digest="sha256:" + "2" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({reference.digest}),
+        staging_root=(tmp_path / "mismatch-staging").resolve(),
+    )
+
+    class Resolver:
+        def __init__(self) -> None:
+            self.authorization = authorization
+
+        def read_bytes(self, ref: ArtifactRef, max_bytes: int) -> bytes:
+            del ref, max_bytes
+            return lock_archive
+
+    profile_data = {
+        "language": "java",
+        "runtime": "jdk",
+        "version": "temurin-21.0.5+11",
+        "package_manager": "maven",
+        "package_manager_version": "3.9.9",
+    }
+    profile_data.update(profile_overrides)
+    profile = RuntimeProfile.model_validate(profile_data)
+    with pytest.raises(DependencyContractError, match="profile|toolchain|JDK"):
+        materialize_dependency_bundle(
+            bundle,
+            identity=RuntimeDiscriminator(language="java", package_manager="maven"),
+            expected_toolchain="3.9.9",
+            runtime_profile=profile,
+            resolver=Resolver(),  # type: ignore[arg-type]
+            destination=tmp_path / "mismatch-staging",
+        )
+    assert not (tmp_path / "mismatch-staging").exists()
+    assert not list(tmp_path.glob(".mismatch-staging-*"))
 
 
 def test_maven_lock_rejects_a_different_valid_jdk_identity(tmp_path: Path) -> None:

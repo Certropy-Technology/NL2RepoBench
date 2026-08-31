@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -230,14 +231,54 @@ def materialize_dependency_bundle(
         raise DependencyContractError(
             "selected runtime profile does not match dependency identity"
         )
+    if identity.language is RuntimeLanguage.JAVA:
+        if not isinstance(runtime_profile, RuntimeProfile):
+            raise DependencyContractError(
+                "Java dependency staging requires the selected runtime profile"
+            )
+        if (
+            runtime_profile.runtime != "jdk"
+            or runtime_profile.package_manager is not PackageManager.MAVEN
+            or runtime_profile.package_manager_version != expected_toolchain
+        ):
+            raise DependencyContractError(
+                "selected Java runtime profile does not match dependency toolchain"
+            )
+        try:
+            from nl2repobench.package_managers.maven import load_maven_lock
+
+            lock_members = decode_archive(
+                resolver.read_bytes(bundle.lock, max_bytes=16 * 1024 * 1024)
+            )
+            lock_files = {
+                member.entry.path: member.data
+                for member in lock_members
+                if member.entry.type == "file" and member.data is not None
+            }
+            if set(lock_files) != {"maven-lock-v1.json"}:
+                raise ValueError("Java dependency lock has an unexpected file set")
+            lock = load_maven_lock(lock_files["maven-lock-v1.json"])
+            if lock.maven_version != expected_toolchain:
+                raise ValueError("Maven lock version does not match selected toolchain")
+            if lock.jdk_version != runtime_profile.version:
+                raise ValueError("Maven lock JDK identity does not match selected profile")
+        except (ArtifactStoreError, OSError, ValueError) as exc:
+            raise DependencyContractError(
+                f"Java dependency runtime preflight failed: {exc}"
+            ) from exc
     authorization = resolver.authorization
     if not isinstance(authorization, PrivateArtifactAuthorization):
         raise DependencyContractError("private artifact authorization is required")
     destination = destination.resolve()
+    if destination.exists() or destination.is_symlink():
+        raise DependencyContractError(
+            f"dependency staging destination already exists: {destination}"
+        )
     destination.mkdir(parents=True, exist_ok=True)
-    lock_root = destination / "lock"
-    store_root = destination / "store"
+    created_destination = True
     try:
+        lock_root = destination / "lock"
+        store_root = destination / "store"
         materialize_archive(
             bundle.lock,
             ArchiveKind.DEPENDENCY_LOCK,
@@ -274,6 +315,8 @@ def materialize_dependency_bundle(
             runtime_profile=runtime_profile,
         )
     except (ArtifactStoreError, OSError, ValueError) as exc:
+        if created_destination:
+            shutil.rmtree(destination, ignore_errors=True)
         raise DependencyContractError(f"cannot stage dependency closure: {exc}") from exc
     return lock_summary, store_summary
 
