@@ -417,19 +417,22 @@ push 使用已配置的 `fork` remote 和当前分支，禁止 force-push。若�
 1. **Sol 规划**：先读取权威文档和当前代码，写出目标、非目标、依赖 DAG、风险、
    worktree 计划、停止条件和整体验收门禁。计划必须覆盖用户要求，不能把未决定的
    架构选择留给实现 worker 临场猜测。
-2. **Qwen 侦察**：复杂任务先并行启动 4 到 8 个
-   `aliyun-qwen-openai-responses/qwen3.8-flash` scout/reviewer lane，分别核对不同
-   source seam、schema、runtime、测试、运维或安全边界。各 lane 的证据必须互补，
-   不允许只换编号的重复任务。
+2. **Luna 优先的侦察**：复杂任务先并行启动 4 到 8 个
+   `z-open-api-gpt-openai-responses/gpt-5.6-luna` scout/worker lane；如果 Luna
+   返回 `model_disabled`、401、超时或其他 provider failure，才降级到
+   `aliyun-qwen-openai-responses/qwen3.8-flash`。各 lane 分别核对不同 source seam、
+   schema、runtime、测试、运维或安全边界，证据必须互补，不允许只换编号的重复任务。
 3. **Sol 裁决**：主 Model 汇总侦察结果，消除冲突，冻结接口、状态机、失败分类和
    acceptance contract，再启动实现。架构、security boundary、production gate 和最终
    review 由 Sol 负责。
-4. **Qwen 实现**：把实现拆成尽可能多的独立窄 lane。每个 mutation lane 使用独立
+4. **Luna/Qwen 实现**：把实现拆成尽可能多的独立窄 lane。每个 mutation lane 使用独立
    branch/worktree；同一 worktree 同时只能有一个 writer。worker 只提交本 lane 的本地
    commit，不直接 push、安装 service、执行 cutover 或修改共享 integration checkout。
-5. **Qwen 验证**：实现后并行运行独立 test、fault-injection、negative-control、diff
-   audit 和 regression lane。review 必须针对固定 commit SHA；不要审阅 writer 正在变化的
-   working tree。
+   普通 worker 默认使用 Luna，发生明确 provider failure 后使用 Qwen Flash；handoff
+   必须记录实际 provider/model、fallback 原因和是否使用了 fallback。
+5. **Luna/Qwen 验证**：实现后并行运行独立 test、fault-injection、negative-control、diff
+   audit 和 regression lane，默认仍按 Luna→Qwen 路由执行。review 必须针对固定 commit
+   SHA；不要审阅 writer 正在变化的 working tree。
 6. **Sol 签收**：主 Model 依据 commit、测试、review、artifact 和 residual risk 做最终
    裁决。共享 integration checkout 由单一 integrator 串行合并，重跑跨 seam gate 后才
    push、部署或启用 production lane。
