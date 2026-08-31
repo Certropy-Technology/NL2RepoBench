@@ -105,3 +105,17 @@ def test_rust_report_rejects_exit_count_and_extra_field_drift() -> None:
         normalize_rust_bridge_json(
             report_data=payload, frozen_total=1, trusted_runner_exit_code=0
         )
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        b'{"schema_version":"1.0","schema_version":"1.0"}\n',
+        b'{"schema_version":"1.0","framework":"rust-harness","report_format":"rust-bridge-json-v1","collected":1,"leaves":[{"leaf_id":"leaf.one","status":"passed","duration_ms":NaN,"details":"ok"}],"collection_errors":[],"runner_exit_code":0}\n',
+    ],
+)
+def test_rust_report_rejects_duplicate_keys_and_nonfinite_duration(raw: bytes) -> None:
+    with pytest.raises(ReportNormalizationError, match="duplicate|non-finite"):
+        normalize_rust_bridge_json(
+            report_data=raw, frozen_total=1, trusted_runner_exit_code=0
+        )

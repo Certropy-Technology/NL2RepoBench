@@ -8,14 +8,14 @@ import re
 import tarfile
 import tomllib
 import unicodedata
-from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 from typing import IO
 
 from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.runtimes.rust import SELECTED_TARGET, cargo_feature_args
-from nl2repobench.storage.canonical_ustar import encode_tree
+from nl2repobench.storage.canonical_ustar import encode_tree, tree_digest, tree_entries
+from nl2repobench.verification.rust_profile import RustProfile
 
 from .base import (
     CommandSpec,
@@ -36,6 +36,12 @@ CARGO_TOOLCHAIN_VERSION = "1.100.0-nightly"
 CARGO_OFFLINE_SMOKE_COMMAND_ID = "cargo-metadata-frozen-offline-v1"
 CRATES_IO_SOURCE = "registry+https://github.com/rust-lang/crates.io-index"
 MAX_LOCK_BYTES = 16 * 1024 * 1024
+MAX_CRATE_ARCHIVE_BYTES = 64 * 1024 * 1024
+MAX_CRATE_MEMBERS = 10_000
+MAX_CRATE_MEMBER_BYTES = 64 * 1024 * 1024
+MAX_CRATE_TOTAL_BYTES = 512 * 1024 * 1024
+MAX_CRATE_PATH_BYTES = 255
+MAX_CRATE_READ_BYTES = 1024 * 1024
 _SEMVER = re.compile(
     r"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
 )
@@ -192,27 +198,19 @@ def _parse_lock(data: bytes) -> tuple[ResolvedPackage, ...]:
     return tuple(result)
 
 
-def _profile_features(profile: object) -> tuple[bool, tuple[str, ...]]:
-    if isinstance(profile, Mapping):
-        if set(profile) != {"default_features", "enabled"}:
-            raise _error(
-                "Cargo build profile must contain default_features and enabled",
-                PackageManagerErrorCode.UNSUPPORTED_PROFILE,
-                stage="build",
-            )
-        default_features = profile["default_features"]
-        enabled = profile["enabled"]
-    else:
-        default_features = getattr(profile, "default_features", None)
-        enabled = getattr(profile, "enabled", None)
-    if not isinstance(default_features, bool) or not isinstance(enabled, tuple):
+def _profile_features(profile: object) -> tuple[str, tuple[str, ...], tuple[str, ...]]:
+    if not isinstance(profile, RustProfile):
         raise _error(
-            "Cargo build profile has invalid feature fields",
+            "Cargo build profile must be a validated RustProfile",
             PackageManagerErrorCode.UNSUPPORTED_PROFILE,
             stage="build",
         )
     try:
-        return default_features, cargo_feature_args(default_features, enabled)
+        return (
+            profile.target.triple,
+            profile.package.binaries,
+            cargo_feature_args(profile.features.default_features, profile.features.enabled),
+        )
     except ValueError as exc:
         raise _error(
             str(exc), PackageManagerErrorCode.UNSUPPORTED_PROFILE, stage="build"
@@ -375,14 +373,67 @@ def _validate_cargo_store(store_root: Path, lock_summary: LockSummary) -> None:
                 )
 
 
+def _validate_canonical_inventory_section(
+    inventory: object, name: str, root: Path, archive_digest: str
+) -> None:
+    """Check one section against the canonical dependency contract."""
+
+    if not isinstance(inventory, dict) or set(inventory) != {
+        "archive_kind",
+        "archive_digest",
+        "tree_digest",
+        "entries",
+        "file_count",
+        "directory_count",
+        "total_bytes",
+    }:
+        raise _error(
+            f"Cargo {name} inventory section is malformed",
+            PackageManagerErrorCode.INVENTORY_MISMATCH,
+            stage="store",
+        )
+    entries = tree_entries(root)
+    expected = [
+        {
+            "path": entry.path,
+            "type": entry.type,
+            "mode": entry.mode,
+            "size": entry.size,
+            "sha256": entry.sha256,
+        }
+        for entry in entries
+    ]
+    if (
+        inventory["archive_kind"] != name
+        or inventory["archive_digest"] != archive_digest
+        or inventory["entries"] != expected
+        or inventory["tree_digest"] != tree_digest(entries)
+        or inventory["file_count"] != sum(entry.type == "file" for entry in entries)
+        or inventory["directory_count"] != sum(entry.type == "directory" for entry in entries)
+        or inventory["total_bytes"] != sum(entry.size for entry in entries)
+    ):
+        raise _error(
+            f"Cargo {name} inventory does not match canonical dependency contract",
+            PackageManagerErrorCode.INVENTORY_MISMATCH,
+            stage="store",
+        )
+
+
 def _read_crate_archive(path: Path, *, expected_root: str) -> dict[str, str]:
     """Read one checksum-verified .crate without extracting it to the host."""
 
     try:
+        if path.stat().st_size > MAX_CRATE_ARCHIVE_BYTES:
+            raise ValueError("crate archive exceeds compressed size limit")
         with tarfile.open(path, mode="r:gz") as archive:
             files: dict[str, str] = {}
             seen: set[str] = set()
-            for member in archive.getmembers():
+            member_count = 0
+            expanded_total = 0
+            for member in archive:
+                member_count += 1
+                if member_count > MAX_CRATE_MEMBERS:
+                    raise ValueError("crate archive contains too many members")
                 raw = member.name.removesuffix("/")
                 member_path = PurePosixPath(raw)
                 if (
@@ -392,24 +443,42 @@ def _read_crate_archive(path: Path, *, expected_root: str) -> dict[str, str]:
                     or not member_path.parts
                     or member_path.parts[0] != expected_root
                     or unicodedata.normalize("NFC", raw) != raw
+                    or len(raw.encode("utf-8")) > MAX_CRATE_PATH_BYTES
                 ):
                     raise ValueError(f"unsafe archive member: {member.name}")
                 relative = PurePosixPath(*member_path.parts[1:]).as_posix()
-                if not relative or relative in seen:
-                    if relative in seen:
-                        raise ValueError(f"duplicate archive member: {relative}")
-                    if not member.isdir():
-                        raise ValueError("crate archive root must be a directory")
+                if not relative:
+                    if not member.isdir() or relative in seen:
+                        raise ValueError("duplicate or invalid crate archive root")
+                    seen.add(relative)
                     continue
+                if relative in seen:
+                    raise ValueError(f"duplicate archive member: {relative}")
                 seen.add(relative)
                 if member.isdir():
                     continue
                 if not member.isreg():
                     raise ValueError(f"crate archive member is not regular: {relative}")
+                if member.size < 0 or member.size > MAX_CRATE_MEMBER_BYTES:
+                    raise ValueError(f"crate archive member exceeds size limit: {relative}")
+                if expanded_total + member.size > MAX_CRATE_TOTAL_BYTES:
+                    raise ValueError("crate archive expanded size exceeds total limit")
                 extracted = archive.extractfile(member)
                 if extracted is None:
                     raise ValueError(f"cannot read crate archive member: {relative}")
-                files[relative] = _sha256_stream(extracted)
+                digest = hashlib.sha256()
+                read_total = 0
+                while chunk := extracted.read(MAX_CRATE_READ_BYTES):
+                    read_total += len(chunk)
+                    if read_total > member.size or read_total > MAX_CRATE_MEMBER_BYTES:
+                        raise ValueError(
+                            f"crate archive member read exceeds size limit: {relative}"
+                        )
+                    digest.update(chunk)
+                if read_total != member.size:
+                    raise ValueError(f"crate archive member is truncated: {relative}")
+                expanded_total += read_total
+                files[relative] = digest.hexdigest()
     except (OSError, tarfile.TarError, ValueError) as exc:
         raise _error(
             f"Cargo crate archive is malformed: {path.name}: {exc}",
@@ -459,6 +528,9 @@ class CargoPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+        *,
+        expected_toolchain_digest: str | None = None,
+        lock_root: Path | None = None,
     ) -> StoreSummary:
         if (
             lock_summary.identity != self.identity
@@ -478,19 +550,35 @@ class CargoPackageManager:
             )
         toolchain_digest = inventory.get("toolchain_digest")
         if (
-            inventory.get("adapter_version") != CARGO_ADAPTER_VERSION
-            or inventory.get("lock") != {"digest": lock_summary.lock_digest}
+            inventory.get("schema_version") != "1.0"
+            or inventory.get("identity") != "rust+cargo"
+            or inventory.get("adapter_version") != CARGO_ADAPTER_VERSION
             or inventory.get("offline_smoke")
             != {"status": "passed", "command_id": CARGO_OFFLINE_SMOKE_COMMAND_ID}
             or not isinstance(toolchain_digest, str)
             or not re.fullmatch(r"sha256:[0-9a-f]{64}", toolchain_digest)
+            or expected_toolchain_digest is None
+            or toolchain_digest != expected_toolchain_digest
         ):
             raise _error(
-                "Cargo inventory adapter or lock digest does not match",
+                "Cargo inventory identity or locked toolchain digest does not match",
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )
         try:
+            lock_inventory = inventory.get("lock")
+            if lock_root is None:
+                raise _error(
+                    "Cargo lock root is required for canonical inventory validation",
+                    PackageManagerErrorCode.INVENTORY_MISMATCH,
+                    stage="store",
+                )
+            _validate_canonical_inventory_section(
+                lock_inventory,
+                "dependency-lock",
+                lock_root,
+                f"sha256:{hashlib.sha256(encode_tree(lock_root)).hexdigest()}",
+            )
             result = inventory_store_summary(
                 identity=self.identity,
                 store_root=store_root,
@@ -503,6 +591,21 @@ class CargoPackageManager:
                     stage="store",
                 )
             _validate_cargo_store(store_root, lock_summary)
+            _validate_canonical_inventory_section(
+                inventory.get("store"),
+                "offline-store",
+                store_root,
+                f"sha256:{hashlib.sha256(encode_tree(store_root)).hexdigest()}",
+            )
+            expected_store_digest = (
+                f"sha256:{hashlib.sha256(encode_tree(store_root)).hexdigest()}"
+            )
+            if result.store_digest != expected_store_digest:
+                raise _error(
+                    "Cargo store archive digest does not match canonical archive bytes",
+                    PackageManagerErrorCode.INVENTORY_MISMATCH,
+                    stage="store",
+                )
         except PackageManagerError:
             raise
         except (OSError, ValueError) as exc:
@@ -514,10 +617,22 @@ class CargoPackageManager:
         return result
 
     def build_commands(self, profile: object) -> tuple[CommandSpec, ...]:
-        _, feature_args = _profile_features(profile)
+        target, binaries, feature_args = _profile_features(profile)
+        selectors = ("--lib",) + tuple(
+            item for name in binaries for item in ("--bin", name)
+        )
         return (
             CommandSpec(
-                ("/opt/rust/bin/cargo", "build", *_OFFLINE_ARGS, *feature_args),
+                (
+                    "/opt/rust/bin/cargo",
+                    "build",
+                    *_OFFLINE_ARGS[:3],
+                    "--target",
+                    target,
+                    *_OFFLINE_ARGS[5:],
+                    *selectors,
+                    *feature_args,
+                ),
                 ".",
                 _OFFLINE_ENVIRONMENT,
                 600,

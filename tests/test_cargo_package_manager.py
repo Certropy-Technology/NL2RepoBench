@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+import nl2repobench.package_managers.cargo as cargo_module
 from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.package_managers import (
@@ -16,6 +17,8 @@ from nl2repobench.package_managers import (
     PackageManagerErrorCode,
     PackageManagerRegistry,
 )
+from nl2repobench.storage.canonical_ustar import encode_tree, tree_digest, tree_entries
+from nl2repobench.verification.rust_profile import load_rust_profile
 
 CARGO_LOCK = '''version = 4
 
@@ -31,6 +34,54 @@ name = "itoa"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
+'''
+
+PROFILE = '''schema_version = "1.0"
+[package]
+name = "demo"
+version = "1.0.0"
+edition = "2021"
+library_path = "src/lib.rs"
+binaries = ["demo", "zeta"]
+[target]
+triple = "x86_64-unknown-linux-gnu"
+[features]
+default_features = false
+enabled = ["std"]
+[features.declarations]
+std = []
+[[candidate_dependencies]]
+name = "itoa"
+version = "1.0.15"
+default_features = false
+features = []
+[bridge]
+api_plan_digest = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+max_operations_per_request = 64
+max_state_handles = 32
+max_state_bytes = 8388608
+unsafe_api_ids = []
+[[cli]]
+profile_id = "demo-cli"
+binary_name = "demo"
+argv_max_items = 64
+stdin_max_bytes = 1048576
+max_output_bytes = 8388608
+tempdir_policy = "none"
+tempdir_max_entries = 0
+tempdir_max_bytes = 0
+tempdir_max_file_bytes = 0
+cli_timeout_sec = 120.0
+expected_exit_codes = [0]
+[limits]
+build_timeout_sec = 600
+leaf_timeout_sec = 120
+cpu_sec = 120
+max_stdin_bytes = 1048576
+max_output_bytes = 8388608
+max_file_bytes = 536870912
+max_open_files = 256
+max_processes = 64
 '''
 
 
@@ -56,6 +107,23 @@ def _identity() -> RuntimeDiscriminator:
     )
 
 
+def _inventory_section(name: str, root: Path, digest: str) -> dict[str, object]:
+    entries = tree_entries(root)
+    return {
+        "archive_kind": name,
+        "archive_digest": digest,
+        "tree_digest": tree_digest(entries),
+        "entries": [
+            {"path": item.path, "type": item.type, "mode": item.mode,
+             "size": item.size, "sha256": item.sha256}
+            for item in entries
+        ],
+        "file_count": sum(item.type == "file" for item in entries),
+        "directory_count": sum(item.type == "directory" for item in entries),
+        "total_bytes": sum(item.size for item in entries),
+    }
+
+
 def test_cargo_lock_and_build_commands_are_strict_and_offline(tmp_path: Path) -> None:
     (tmp_path / "Cargo.lock").write_text(CARGO_LOCK, encoding="utf-8")
     adapter = CargoPackageManager()
@@ -67,9 +135,9 @@ def test_cargo_lock_and_build_commands_are_strict_and_offline(tmp_path: Path) ->
         ("demo", "1.0.0"),
         ("itoa", "1.0.15"),
     ]
-    command = adapter.build_commands(
-        {"default_features": False, "enabled": ("std",)}
-    )[0]
+    profile_path = tmp_path / "rust-profile.toml"
+    profile_path.write_text(PROFILE, encoding="utf-8")
+    command = adapter.build_commands(load_rust_profile(profile_path))[0]
     assert command.argv == (
         "/opt/rust/bin/cargo",
         "build",
@@ -84,6 +152,11 @@ def test_cargo_lock_and_build_commands_are_strict_and_offline(tmp_path: Path) ->
         'source.crates-io.replace-with="vendored-sources"',
         "--config",
         'source.vendored-sources.directory="/opt/nl2repobench-cargo/vendor"',
+        "--lib",
+        "--bin",
+        "demo",
+        "--bin",
+        "zeta",
         "--no-default-features",
         "--features",
         "std",
@@ -178,32 +251,35 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
     )
     (index / "snapshot").write_text("frozen\n", encoding="utf-8")
 
-    from nl2repobench.storage.canonical_ustar import tree_digest, tree_entries
-
     entries = tree_entries(store)
+    def section(name: str, root: Path, digest: str) -> dict[str, object]:
+        entries = tree_entries(root)
+        return {
+            "archive_kind": name,
+            "archive_digest": digest,
+            "tree_digest": tree_digest(entries),
+            "entries": [
+                {"path": item.path, "type": item.type, "mode": item.mode,
+                 "size": item.size, "sha256": item.sha256}
+                for item in entries
+            ],
+            "file_count": sum(item.type == "file" for item in entries),
+            "directory_count": sum(item.type == "directory" for item in entries),
+            "total_bytes": sum(item.size for item in entries),
+        }
+
+    toolchain_digest = "sha256:" + "1" * 64
     inventory = {
         "schema_version": "1.0",
         "identity": "rust+cargo",
         "adapter_version": "cargo-package-manager-v1",
-        "toolchain_digest": "sha256:" + "1" * 64,
-        "lock": {"digest": summary.lock_digest},
-        "store": {
-            "entries": [
-                {
-                    "path": item.path,
-                    "type": item.type,
-                    "mode": item.mode,
-                    "size": item.size,
-                    "sha256": item.sha256,
-                }
-                for item in entries
-            ],
-            "tree_digest": tree_digest(entries),
-            "archive_digest": "sha256:" + "2" * 64,
-            "file_count": sum(item.type == "file" for item in entries),
-            "directory_count": sum(item.type == "directory" for item in entries),
-            "total_bytes": sum(item.size for item in entries),
-        },
+        "toolchain_digest": toolchain_digest,
+        "lock": section("dependency-lock", lock_root, summary.lock_digest),
+        "store": section(
+            "offline-store",
+            store,
+            f"sha256:{hashlib.sha256(encode_tree(store)).hexdigest()}",
+        ),
         "offline_smoke": {
             "status": "passed",
             "command_id": "cargo-metadata-frozen-offline-v1",
@@ -211,7 +287,9 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
     }
 
     result = adapter.validate_offline_store(
-        store, summary, inventory, "1.100.0-nightly"
+        store, summary, inventory, "1.100.0-nightly",
+        expected_toolchain_digest=toolchain_digest,
+        lock_root=lock_root,
     )
     assert result.offline_smoke is True
 
@@ -220,15 +298,11 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
     inventory["store"].update(
         {
             "entries": [
-                {
-                    "path": item.path,
-                    "type": item.type,
-                    "mode": item.mode,
-                    "size": item.size,
-                    "sha256": item.sha256,
-                }
+                {"path": item.path, "type": item.type, "mode": item.mode,
+                 "size": item.size, "sha256": item.sha256}
                 for item in entries
             ],
+            "archive_kind": "offline-store",
             "tree_digest": tree_digest(entries),
             "file_count": sum(item.type == "file" for item in entries),
             "directory_count": sum(item.type == "directory" for item in entries),
@@ -236,7 +310,14 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
         }
     )
     with pytest.raises(PackageManagerError, match="crate archive checksum") as raised:
-        adapter.validate_offline_store(store, summary, inventory, "1.100.0-nightly")
+        adapter.validate_offline_store(
+            store,
+            summary,
+            inventory,
+            "1.100.0-nightly",
+            expected_toolchain_digest=toolchain_digest,
+            lock_root=lock_root,
+        )
     assert raised.value.code is PackageManagerErrorCode.INVENTORY_MISMATCH
 
 
@@ -282,13 +363,15 @@ def test_cargo_store_rejects_rehashed_vendor_tampering(tmp_path: Path) -> None:
     from nl2repobench.storage.canonical_ustar import tree_digest, tree_entries
 
     entries = tree_entries(store)
+    toolchain_digest = "sha256:" + "1" * 64
     inventory = {
         "schema_version": "1.0",
         "identity": "rust+cargo",
         "adapter_version": "cargo-package-manager-v1",
-        "toolchain_digest": "sha256:" + "1" * 64,
-        "lock": {"digest": summary.lock_digest},
+        "toolchain_digest": toolchain_digest,
+        "lock": _inventory_section("dependency-lock", lock_root, summary.lock_digest),
         "store": {
+            "archive_kind": "offline-store",
             "entries": [
                 {
                     "path": item.path,
@@ -300,7 +383,7 @@ def test_cargo_store_rejects_rehashed_vendor_tampering(tmp_path: Path) -> None:
                 for item in entries
             ],
             "tree_digest": tree_digest(entries),
-            "archive_digest": "sha256:" + "2" * 64,
+            "archive_digest": f"sha256:{hashlib.sha256(encode_tree(store)).hexdigest()}",
             "file_count": sum(item.type == "file" for item in entries),
             "directory_count": sum(item.type == "directory" for item in entries),
             "total_bytes": sum(item.size for item in entries),
@@ -312,4 +395,36 @@ def test_cargo_store_rejects_rehashed_vendor_tampering(tmp_path: Path) -> None:
     }
 
     with pytest.raises(PackageManagerError, match="differs from crate archive"):
-        adapter.validate_offline_store(store, summary, inventory, "1.100.0-nightly")
+        adapter.validate_offline_store(
+            store,
+            summary,
+            inventory,
+            "1.100.0-nightly",
+            expected_toolchain_digest=toolchain_digest,
+            lock_root=lock_root,
+        )
+
+
+@pytest.mark.parametrize(
+    ("limit", "files", "message"),
+    [
+        ("members", {"a": b"a", "b": b"b"}, "too many members"),
+        ("member_bytes", {"a": b"oversized"}, "member exceeds size limit"),
+    ],
+)
+def test_crate_archive_expansion_limits_are_bounded(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    limit: str,
+    files: dict[str, bytes],
+    message: str,
+) -> None:
+    archive = tmp_path / "demo-1.0.0.crate"
+    archive.write_bytes(_crate_archive("demo-1.0.0", files))
+    if limit == "members":
+        monkeypatch.setattr(cargo_module, "MAX_CRATE_MEMBERS", 2)
+    else:
+        monkeypatch.setattr(cargo_module, "MAX_CRATE_MEMBER_BYTES", 1)
+
+    with pytest.raises(PackageManagerError, match=message):
+        cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")

@@ -9,9 +9,12 @@ from pydantic import ValidationError
 
 from nl2repobench.verification.rust_bridge import (
     RustBridgeRequest,
+    RustBridgeResponse,
     canonical_api_plan_digest,
     canonical_json_bytes,
     load_rust_api_plan,
+    load_rust_bridge_request,
+    load_rust_bridge_response,
     validate_rust_value,
 )
 
@@ -168,3 +171,134 @@ def test_bridge_request_separates_operation_and_leaf_identity() -> None:
     )
     with pytest.raises(ValidationError, match="distinct"):
         RustBridgeRequest.model_validate(payload)
+
+
+def test_bridge_raw_json_rejects_duplicates_nonfinite_and_noncanonical_bytes() -> None:
+    raw = b'{"operations":[],"request_id":"' + b"1" * 32 + b'","schema_version":"1.0"}\n'
+    with pytest.raises(ValueError, match="at least 1"):
+        load_rust_bridge_request(raw)
+    duplicate = (
+        b'{"operations":[],"request_id":"' + b"1" * 32
+        + b'","request_id":"' + b"2" * 32 + b'","schema_version":"1.0"}\n'
+    )
+    with pytest.raises(ValueError, match="duplicate"):
+        load_rust_bridge_request(duplicate)
+    nonfinite = b'{"duration":NaN}\n'
+    with pytest.raises(ValueError, match="non-finite"):
+        load_rust_bridge_request(nonfinite)
+
+
+def test_bridge_request_and_response_bind_ids_and_aggregate_value_budget() -> None:
+    operation = {
+        "operation_id": "op-1",
+        "api_id": "summarize",
+        "leaf_id": "leaf-1",
+        "kind": "call",
+        "state_handle": None,
+        "args": ({"type": "string", "value": "ok"},),
+    }
+    request = RustBridgeRequest.model_validate(
+        {"schema_version": "1.0", "request_id": "1" * 32, "operations": (operation,)}
+    )
+    response = RustBridgeResponse.model_validate(
+        {
+            "schema_version": "1.0",
+            "request_id": "1" * 32,
+            "results": (
+                {
+                    "operation_id": "op-1",
+                    "status": "ok",
+                    "value": {"type": "string", "value": "ok"},
+                    "error_type": None,
+                    "message": None,
+                    "state_handle": None,
+                },
+            ),
+        }
+    )
+    response_bytes = canonical_json_bytes(response.model_dump(mode="json"))
+    assert load_rust_bridge_response(response_bytes, request).request_id == request.request_id
+    with pytest.raises(ValueError, match="request_id"):
+        load_rust_bridge_response(
+            canonical_json_bytes(
+                {**response.model_dump(mode="json"), "request_id": "2" * 32}
+            ),
+            request,
+        )
+
+    many_args = tuple({"type": "unit"} for _ in range(2049))
+    with pytest.raises(ValidationError, match="argument limit"):
+        RustBridgeRequest.model_validate(
+            {"schema_version": "1.0", "request_id": "1" * 32,
+             "operations": ({**operation, "args": many_args},)}
+        )
+
+
+def test_state_plan_requires_exact_method_descriptor_and_roles() -> None:
+    payload = _plan_payload()
+    payload["types"] = [
+        {
+            "type_id": "State",
+            "kind": "struct",
+            "scalar": None,
+            "item": None,
+            "key": None,
+            "fields": [{"name": "value", "type": "string"}],
+            "variants": [],
+        }
+    ]
+    payload["functions"] = [
+        {
+            "api_id": "call",
+            "rust_path": "crate::State::value",
+            "kind": "instance",
+            "receiver": "State",
+            "state_type": "State",
+            "args": [{"name": "suffix", "type": "string"}],
+            "returns": "string",
+            "error": None,
+            "unsafe": False,
+            "leaf_ids": ["state.call"],
+        },
+        {
+            "api_id": "create",
+            "rust_path": "crate::State::new",
+            "kind": "associated",
+            "receiver": None,
+            "state_type": None,
+            "args": [{"name": "value", "type": "string"}],
+            "returns": "State",
+            "error": None,
+            "unsafe": False,
+            "leaf_ids": ["state.create"],
+        },
+    ]
+    payload["state_types"] = [
+        {
+            "state_id": "state",
+            "rust_type": "State",
+            "create_api_id": "create",
+            "methods": [
+                {
+                    "api_id": "call",
+                    "receiver": "&self",
+                    "args": [{"name": "suffix", "type": "string"}],
+                    "returns": "string",
+                    "error": None,
+                    "state_type": "State",
+                    "leaf_ids": ["state.call"],
+                }
+            ],
+            "drop_api_id": None,
+        }
+    ]
+    del payload["api_plan_digest"]
+    payload["api_plan_digest"] = "sha256:" + hashlib.sha256(
+        canonical_json_bytes(payload)
+    ).hexdigest()
+    from nl2repobench.verification.rust_bridge import RustApiPlan, _freeze_json
+
+    RustApiPlan.model_validate(_freeze_json(payload))
+    payload["state_types"][0]["methods"][0]["leaf_ids"] = ["state.other"]  # type: ignore[index]
+    with pytest.raises(ValidationError, match="exactly match"):
+        RustApiPlan.model_validate(_freeze_json(payload))

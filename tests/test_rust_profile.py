@@ -199,6 +199,8 @@ report_format = "rust-bridge-json-v1"
 
 [tests.commands_artifact]
 {_private_ref("4", "application/vnd.nl2repobench.command-plan+json")}
+[tests.protected_paths_artifact]
+{_private_ref("8", "application/vnd.nl2repobench.protected-paths+json")}
 [tests.test_bundle]
 {_private_ref("5", "application/vnd.nl2repobench.test-bundle.tar")}
 
@@ -221,6 +223,17 @@ entrypoint = "run.py"
     task_path.write_text(
         task_text.replace(
             "application/vnd.nl2repobench.package-lock.tar",
+            "application/octet-stream",
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(CatalogError, match="media type"):
+        CatalogCompiler.load_task(tmp_path)
+    task_path.write_text(task_text, encoding="utf-8")
+
+    task_path.write_text(
+        task_text.replace(
+            "application/vnd.nl2repobench.protected-paths+json",
             "application/octet-stream",
         ),
         encoding="utf-8",

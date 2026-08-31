@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Mapping
 from typing import Any, cast
 
@@ -32,6 +33,20 @@ _LEAF_FIELDS = {"leaf_id", "status", "duration_ms", "details"}
 _ERROR_FIELDS = {"message", "leaf_id"}
 
 
+def _no_duplicate_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+
+    return result
+
+
+def _reject_json_constant(value: str) -> None:
+    raise ValueError(f"non-finite JSON number is forbidden: {value}")
+
+
 def normalize_rust_bridge_json(
     *,
     report_data: bytes | Mapping[str, Any] | None,
@@ -54,8 +69,12 @@ def normalize_rust_bridge_json(
                 "Rust bridge report exceeds the size limit",
             )
         try:
-            payload = json.loads(report_data)
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            payload = json.loads(
+                report_data,
+                object_pairs_hook=_no_duplicate_object,
+                parse_constant=_reject_json_constant,
+            )
+        except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
             raise ReportNormalizationError(
                 VerificationReason.REPORT_MALFORMED, str(exc)
             ) from exc
@@ -103,6 +122,7 @@ def normalize_rust_bridge_json(
             if (
                 not isinstance(duration, (int, float))
                 or isinstance(duration, bool)
+                or not math.isfinite(duration)
                 or not isinstance(item["leaf_id"], str)
                 or status not in {"passed", "failed", "error", "skipped", "todo", "xfail"}
                 or (item["details"] is not None and not isinstance(item["details"], str))

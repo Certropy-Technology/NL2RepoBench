@@ -8,7 +8,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Annotated, Any, Literal, Self
+from typing import Annotated, Any, Literal, Never, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -17,6 +17,9 @@ MAX_BRIDGE_JSON_BYTES = 8 * 1024 * 1024
 MAX_VALUE_DEPTH = 16
 MAX_VALUE_NODES = 4096
 MAX_VALUE_BYTES = 256 * 1024
+MAX_BRIDGE_ARGUMENTS = 2048
+MAX_BRIDGE_RESULTS = 64
+MAX_BRIDGE_VALUE_BYTES = 4 * 1024 * 1024
 
 _SAFE_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,128}$")
 _RUST_PATH = re.compile(
@@ -358,11 +361,41 @@ class RustApiPlan(RustBridgeRecord):
                 raise ValueError("state descriptor references an unknown API")
             if api_map[state.create_api_id].returns != state.rust_type:
                 raise ValueError("state create API must return the state type")
+            create = api_map[state.create_api_id]
+            if (
+                create.kind == "instance"
+                or create.receiver is not None
+                or create.state_type is not None
+            ):
+                raise ValueError("state create API must be an associated, receiver-free API")
             for method in state.methods:
+                api = api_map[method.api_id]
                 require_type(method.returns)
                 require_type(method.error)
+                if (
+                    api.kind != "instance"
+                    or api.receiver != state.rust_type
+                    or api.state_type != method.state_type
+                    or api.args != method.args
+                    or api.returns != method.returns
+                    or api.error != method.error
+                    or api.leaf_ids != method.leaf_ids
+                ):
+                    raise ValueError(
+                        f"state method {method.api_id} does not exactly match its API descriptor"
+                    )
                 if method.state_type != state.rust_type:
                     raise ValueError("state method must bind its descriptor state type")
+            if state.drop_api_id is not None:
+                drop = api_map[state.drop_api_id]
+                if (
+                    drop.kind != "instance"
+                    or drop.receiver != state.rust_type
+                    or drop.state_type != state.rust_type
+                    or drop.returns != "unit"
+                    or drop.error is not None
+                ):
+                    raise ValueError("state drop API has an invalid descriptor role")
         return self
 
 
@@ -385,7 +418,14 @@ def _no_duplicate_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 def canonical_json_bytes(value: object) -> bytes:
     return (
-        json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n"
+        json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+        + "\n"
     ).encode("utf-8")
 
 
@@ -431,15 +471,22 @@ _INTEGER_RANGES = {
 }
 
 
-def validate_rust_value(value: object) -> dict[str, Any]:
+class _ValueBudget:
+    def __init__(self) -> None:
+        self.nodes = 0
+        self.bytes = 0
+
+
+def validate_rust_value(
+    value: object, *, _budget: _ValueBudget | None = None
+) -> dict[str, Any]:
     """Validate the bounded RustValue v1 grammar without coercion."""
 
-    nodes = 0
+    budget = _budget or _ValueBudget()
 
     def visit(item: object, depth: int) -> dict[str, Any]:
-        nonlocal nodes
-        nodes += 1
-        if nodes > MAX_VALUE_NODES or depth > MAX_VALUE_DEPTH:
+        budget.nodes += 1
+        if budget.nodes > MAX_VALUE_NODES or depth > MAX_VALUE_DEPTH:
             raise ValueError("RustValue exceeds depth or node limits")
         if not isinstance(item, dict) or not isinstance(item.get("type"), str):
             raise ValueError("RustValue must be a tagged object")
@@ -475,12 +522,14 @@ def validate_rust_value(value: object) -> dict[str, Any]:
             text = item.get("value")
             if not isinstance(text, str) or len(text.encode("utf-8")) > MAX_VALUE_BYTES:
                 raise ValueError("string RustValue is invalid or oversized")
+            budget.bytes += len(text.encode("utf-8"))
         elif kind == "bytes":
             expected = {"type", "base64"}
             encoded = item.get("base64")
             decoded = _decode_canonical_base64(encoded)
             if len(decoded) > MAX_VALUE_BYTES:
                 raise ValueError("bytes RustValue exceeds the size limit")
+            budget.bytes += len(decoded)
         elif kind == "list":
             expected = {"type", "items"}
             items = item.get("items")
@@ -600,6 +649,16 @@ class RustBridgeRequest(RustBridgeRecord):
             raise ValueError("operation IDs must be unique within a request")
         if len(set(leaf_ids)) != len(leaf_ids):
             raise ValueError("leaf IDs must be unique within a request")
+        argument_count = sum(len(operation.args) for operation in self.operations)
+        if argument_count > MAX_BRIDGE_ARGUMENTS:
+            raise ValueError("bridge request exceeds the aggregate argument limit")
+        budget = _ValueBudget()
+        for operation in self.operations:
+            for argument_value in operation.args:
+                validate_rust_value(argument_value, _budget=budget)
+                budget.bytes += len(canonical_json_bytes(argument_value))
+        if budget.bytes > MAX_BRIDGE_VALUE_BYTES:
+            raise ValueError("bridge request exceeds the aggregate value-byte limit")
         return self
 
 
@@ -645,12 +704,65 @@ class RustBridgeResponse(RustBridgeRecord):
         operation_ids = tuple(item.operation_id for item in self.results)
         if len(set(operation_ids)) != len(operation_ids):
             raise ValueError("response operation IDs must be unique")
+        if len(self.results) > MAX_BRIDGE_RESULTS:
+            raise ValueError("bridge response exceeds the result limit")
+        budget = _ValueBudget()
+        for result in self.results:
+            if result.value is not None:
+                validate_rust_value(result.value, _budget=budget)
+                budget.bytes += len(canonical_json_bytes(result.value))
+        if budget.bytes > MAX_BRIDGE_VALUE_BYTES:
+            raise ValueError("bridge response exceeds the aggregate value-byte limit")
         return self
+
+
+def _reject_json_constant(value: str) -> Never:
+    raise ValueError(f"non-finite JSON number is forbidden: {value}")
+
+
+def _load_bridge_json(raw: bytes, model: type[RustBridgeRecord]) -> RustBridgeRecord:
+    if len(raw) > MAX_BRIDGE_JSON_BYTES:
+        raise ValueError("Rust bridge JSON exceeds the size limit")
+    try:
+        parsed = json.loads(
+            raw,
+            object_pairs_hook=_no_duplicate_object,
+            parse_constant=_reject_json_constant,
+        )
+        value = _freeze_json(parsed)
+        result = model.model_validate(value)
+    except (UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        raise ValueError(f"invalid Rust bridge JSON: {exc}") from exc
+    if canonical_json_bytes(result.model_dump(mode="json")) != raw:
+        raise ValueError("Rust bridge JSON must use canonical bytes and one final LF")
+    return result
+
+
+def load_rust_bridge_request(raw: bytes) -> RustBridgeRequest:
+    return _load_bridge_json(raw, RustBridgeRequest)  # type: ignore[return-value]
+
+
+def load_rust_bridge_response(
+    raw: bytes, request: RustBridgeRequest | None = None
+) -> RustBridgeResponse:
+    response = _load_bridge_json(raw, RustBridgeResponse)
+    assert isinstance(response, RustBridgeResponse)
+    if request is not None:
+        if response.request_id != request.request_id:
+            raise ValueError("bridge response request_id does not match request")
+        expected = {operation.operation_id for operation in request.operations}
+        actual = {result.operation_id for result in response.results}
+        if actual != expected:
+            raise ValueError("bridge response operation IDs do not match request")
+    return response
 
 
 __all__ = [
     "MAX_API_PLAN_BYTES",
+    "MAX_BRIDGE_ARGUMENTS",
     "MAX_BRIDGE_JSON_BYTES",
+    "MAX_BRIDGE_RESULTS",
+    "MAX_BRIDGE_VALUE_BYTES",
     "RustApiPlan",
     "RustBridgeRequest",
     "RustBridgeResponse",
@@ -658,5 +770,7 @@ __all__ = [
     "canonical_api_plan_digest",
     "canonical_json_bytes",
     "load_rust_api_plan",
+    "load_rust_bridge_request",
+    "load_rust_bridge_response",
     "validate_rust_value",
 ]

@@ -200,6 +200,7 @@ def materialize_dependency_bundle(
     *,
     identity: RuntimeDiscriminator,
     expected_toolchain: str,
+    toolchain_digest: str | None = None,
     resolver: LocalArtifactResolver,
     destination: Path,
 ) -> tuple[LockSummary, StoreSummary]:
@@ -245,9 +246,19 @@ def materialize_dependency_bundle(
         inventory = json.loads(inventory_bytes)
         adapter = PackageManagerRegistry.default().resolve(identity)
         lock_summary = adapter.validate_lock(lock_root, expected_toolchain)
-        store_summary = adapter.validate_offline_store(
-            store_root, lock_summary, inventory, expected_toolchain
-        )
+        if identity.package_manager is PackageManager.CARGO:
+            store_summary = adapter.validate_offline_store(
+                store_root,
+                lock_summary,
+                inventory,
+                expected_toolchain,
+                expected_toolchain_digest=toolchain_digest,
+                lock_root=lock_root,
+            )
+        else:
+            store_summary = adapter.validate_offline_store(
+                store_root, lock_summary, inventory, expected_toolchain
+            )
     except (ArtifactStoreError, OSError, ValueError) as exc:
         raise DependencyContractError(f"cannot stage dependency closure: {exc}") from exc
     return lock_summary, store_summary
