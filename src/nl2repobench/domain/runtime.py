@@ -20,9 +20,10 @@ class RuntimeDiscriminator(BaseModel):
     """Explicit language and package-manager identity for one task.
 
     ``schema_version`` is deliberately absent: record shape and runtime
-    selection are independent concerns. Python accepts ``uv``, ``pip`` or
-    ``none``; Node accepts ``npm``, ``pnpm`` or ``none``. Any other pairing is
-    rejected so a caller cannot silently route a task to the wrong adapter.
+    selection are independent concerns. Each language accepts only its
+    registered package-manager set, including the exact ``rust+cargo`` pair.
+    Any other pairing is rejected so a caller cannot silently route a task to
+    the wrong adapter.
 
     Runtime selection is derived only from the typed canonical runtime profile.
     """
@@ -42,6 +43,7 @@ class RuntimeDiscriminator(BaseModel):
                 {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE}
             ),
             RuntimeLanguage.GO: frozenset({PackageManager.GO_MODULES}),
+            RuntimeLanguage.RUST: frozenset({PackageManager.CARGO}),
         }
         if self.package_manager not in allowed[self.language]:
             accepted = ", ".join(

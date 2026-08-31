@@ -39,6 +39,7 @@ class RuntimeLanguage(StrEnum):
     PYTHON = "python"
     NODE = "node"
     GO = "go"
+    RUST = "rust"
 
 
 class PackageManager(StrEnum):
@@ -47,6 +48,7 @@ class PackageManager(StrEnum):
     NPM = "npm"
     PNPM = "pnpm"
     GO_MODULES = "go-modules"
+    CARGO = "cargo"
     NONE = "none"
 
 
@@ -69,9 +71,21 @@ class RuntimeProfile(CanonicalRecord):
                         ("python", "cpython", ["uv", "pip", "none"]),
                         ("node", "node", ["npm", "pnpm", "none"]),
                         ("go", "go", ["go-modules"]),
+                        ("rust", "rust", ["cargo"]),
                     )
                 ]
                 + [
+                    {
+                        "if": {"properties": {"language": {"const": "rust"}}},
+                        "then": {
+                            "properties": {
+                                "version": {"const": "1.100.0-nightly"},
+                                "package_manager_version": {
+                                    "const": "1.100.0-nightly"
+                                },
+                            }
+                        },
+                    },
                     {
                         "if": {"properties": {"package_manager": {"const": "none"}}},
                         "then": {"properties": {"package_manager_version": {"type": "null"}}},
@@ -87,14 +101,16 @@ class RuntimeProfile(CanonicalRecord):
         )
     )
     language: RuntimeLanguage
-    runtime: Literal["cpython", "node", "go"]
+    runtime: Literal["cpython", "node", "go", "rust"]
     version: str = Field(min_length=1)
     package_manager: PackageManager
     package_manager_version: str | None = None
 
     @model_validator(mode="after")
     def validate_identity(self) -> RuntimeProfile:
-        expected = {"python": "cpython", "node": "node", "go": "go"}[self.language.value]
+        expected = {"python": "cpython", "node": "node", "go": "go", "rust": "rust"}[
+            self.language.value
+        ]
         if self.runtime != expected:
             raise ValueError("runtime does not match language")
         if self.package_manager is PackageManager.NONE and self.package_manager_version is not None:
@@ -105,6 +121,7 @@ class RuntimeProfile(CanonicalRecord):
             "python": {PackageManager.UV, PackageManager.PIP, PackageManager.NONE},
             "node": {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE},
             "go": {PackageManager.GO_MODULES},
+            "rust": {PackageManager.CARGO},
         }
         if self.package_manager not in allowed[self.language.value]:
             raise ValueError("package manager is not valid for runtime")
@@ -117,6 +134,11 @@ class RuntimeProfile(CanonicalRecord):
             self.package_manager_version or "",
         ):
             raise ValueError("Node package managers require an exact semantic version")
+        if self.language is RuntimeLanguage.RUST and (
+            self.version != "1.100.0-nightly"
+            or self.package_manager_version != "1.100.0-nightly"
+        ):
+            raise ValueError("Rust and Cargo versions must be exactly 1.100.0-nightly")
         return self
 
 
@@ -258,6 +280,7 @@ class TestManifest(CanonicalRecord):
                         ("pytest", "pytest-junit-xml-v1"),
                         ("node:test", "node-test-json-v1"),
                         ("go-bridge", "go-test-json-v1"),
+                        ("rust-harness", "rust-bridge-json-v1"),
                         ("custom", "custom-json-v1"),
                     )
                 ]
@@ -293,9 +316,13 @@ class TestManifest(CanonicalRecord):
             },
         )
     )
-    framework: Literal["pytest", "node:test", "go-bridge", "custom"]
+    framework: Literal["pytest", "node:test", "go-bridge", "rust-harness", "custom"]
     report_format: Literal[
-        "pytest-junit-xml-v1", "node-test-json-v1", "go-test-json-v1", "custom-json-v1"
+        "pytest-junit-xml-v1",
+        "node-test-json-v1",
+        "go-test-json-v1",
+        "rust-bridge-json-v1",
+        "custom-json-v1",
     ]
     expected_total: Annotated[int, Field(ge=0)] = 0
     expected_total_source: Literal["frozen-collection", "unknown"] = "unknown"
@@ -311,6 +338,8 @@ class TestManifest(CanonicalRecord):
             raise ValueError("node:test requires node-test-json-v1")
         if self.framework == "go-bridge" and self.report_format != "go-test-json-v1":
             raise ValueError("go-bridge requires go-test-json-v1")
+        if self.framework == "rust-harness" and self.report_format != "rust-bridge-json-v1":
+            raise ValueError("rust-harness requires rust-bridge-json-v1")
         if self.framework == "custom" and self.report_format != "custom-json-v1":
             raise ValueError("custom requires custom-json-v1")
         for name, ref in (
@@ -346,6 +375,7 @@ def _task_contract_schema(environment_field: str, dependency_field: str) -> Json
         ("python", ["pytest", "custom"]),
         ("node", ["node:test"]),
         ("go", ["go-bridge"]),
+        ("rust", ["rust-harness"]),
     ):
         rules.append(
             {
@@ -571,13 +601,19 @@ class TaskSource(CanonicalRecord):
                 raise ValueError("dependency package manager must match environment runtime")
         if self.tests.framework == "custom" and self.verifier is None:
             raise ValueError("custom tests require a typed verifier specification")
-        if self.tests.framework not in {"custom", "go-bridge"} and self.verifier is not None:
-            raise ValueError("typed verifier is only valid for custom and go-bridge tests")
+        if (
+            self.tests.framework not in {"custom", "go-bridge", "rust-harness"}
+            and self.verifier is not None
+        ):
+            raise ValueError(
+                "typed verifier is only valid for custom, go-bridge, and rust-harness tests"
+            )
         if self.environment.runtime is not None:
             expected_tests = {
                 RuntimeLanguage.PYTHON: ("pytest", "custom"),
                 RuntimeLanguage.NODE: ("node:test",),
                 RuntimeLanguage.GO: ("go-bridge",),
+                RuntimeLanguage.RUST: ("rust-harness",),
             }[self.environment.runtime.language]
             if self.tests.framework not in expected_tests:
                 raise ValueError("test framework does not match runtime language")
@@ -719,8 +755,13 @@ class TaskManifest(CanonicalRecord):
         runtime = self.environment_lock.runtime
         if self.tests.framework == "custom" and self.verifier is None:
             raise ValueError("custom tests require a typed verifier specification")
-        if self.tests.framework not in {"custom", "go-bridge"} and self.verifier is not None:
-            raise ValueError("typed verifier is only valid for custom and go-bridge tests")
+        if (
+            self.tests.framework not in {"custom", "go-bridge", "rust-harness"}
+            and self.verifier is not None
+        ):
+            raise ValueError(
+                "typed verifier is only valid for custom, go-bridge, and rust-harness tests"
+            )
         if runtime is not None:
             if runtime.language.value != self.metadata.language.value:
                 raise ValueError("metadata language must match environment runtime")
@@ -730,6 +771,7 @@ class TaskManifest(CanonicalRecord):
                 RuntimeLanguage.PYTHON: ("pytest", "custom"),
                 RuntimeLanguage.NODE: ("node:test",),
                 RuntimeLanguage.GO: ("go-bridge",),
+                RuntimeLanguage.RUST: ("rust-harness",),
             }[runtime.language]
             if self.tests.framework not in expected_tests:
                 raise ValueError("test framework does not match runtime language")

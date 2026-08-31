@@ -690,6 +690,7 @@
         "npm",
         "pnpm",
         "go-modules",
+        "cargo",
         "none"
       ],
       "title": "PackageManager",
@@ -707,7 +708,8 @@
       "enum": [
         "python",
         "node",
-        "go"
+        "go",
+        "rust"
       ],
       "title": "RuntimeLanguage",
       "type": "string"
@@ -783,6 +785,46 @@
           }
         },
         {
+          "if": {
+            "properties": {
+              "language": {
+                "const": "rust"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager": {
+                "enum": [
+                  "cargo"
+                ]
+              },
+              "runtime": {
+                "const": "rust"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "language": {
+                "const": "rust"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package_manager_version": {
+                "const": "1.100.0-nightly"
+              },
+              "version": {
+                "const": "1.100.0-nightly"
+              }
+            }
+          }
+        },
+        {
           "else": {
             "properties": {
               "package_manager_version": {
@@ -833,7 +875,8 @@
           "enum": [
             "cpython",
             "node",
-            "go"
+            "go",
+            "rust"
           ],
           "title": "Runtime",
           "type": "string"
@@ -1175,6 +1218,22 @@
           "if": {
             "properties": {
               "framework": {
+                "const": "rust-harness"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "report_format": {
+                "const": "rust-bridge-json-v1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "framework": {
                 "const": "custom"
               }
             }
@@ -1296,6 +1355,7 @@
             "pytest",
             "node:test",
             "go-bridge",
+            "rust-harness",
             "custom"
           ],
           "title": "Framework",
@@ -1317,6 +1377,7 @@
             "pytest-junit-xml-v1",
             "node-test-json-v1",
             "go-test-json-v1",
+            "rust-bridge-json-v1",
             "custom-json-v1"
           ],
           "title": "Report Format",
@@ -1500,6 +1561,50 @@
             "properties": {
               "runtime": {
                 "properties": {
+                  "language": {
+                    "const": "rust"
+                  }
+                },
+                "required": [
+                  "language"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "language": {
+                "const": "rust"
+              }
+            }
+          },
+          "tests": {
+            "properties": {
+              "framework": {
+                "enum": [
+                  "rust-harness"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment": {
+            "properties": {
+              "runtime": {
+                "properties": {
                   "package_manager": {
                     "const": "uv"
                   }
@@ -1662,6 +1767,41 @@
             "properties": {
               "package_manager": {
                 "const": "go-modules"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "environment": {
+            "properties": {
+              "runtime": {
+                "properties": {
+                  "package_manager": {
+                    "const": "cargo"
+                  }
+                },
+                "required": [
+                  "package_manager"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "runtime"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dependencies": {
+            "properties": {
+              "package_manager": {
+                "const": "cargo"
               }
             }
           }
