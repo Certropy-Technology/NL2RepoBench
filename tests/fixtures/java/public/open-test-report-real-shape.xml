@@ -29,6 +29,7 @@
     </metadata>
     <sources>
       <java:methodSource className="example.SyntheticTests" methodName="display" methodParameterTypes=""/>
+      <uriSource uri="https://example.invalid/synthetic-source"/>
     </sources>
   </e:started>
   <e:reported id="2" time="2026-01-01T00:00:00.002000Z">

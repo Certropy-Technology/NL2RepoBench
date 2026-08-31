@@ -481,23 +481,29 @@ class MavenPackageManager:
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )
-        if expected_jdk_version is None:
-            raise _error(
-                "Java/Maven store validation requires the selected exact JDK identity",
-                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
-                stage="store",
-            )
         if runtime_profile is not None:
             if (
                 runtime_profile.language is not RuntimeLanguage.JAVA
                 or runtime_profile.runtime != "jdk"
                 or runtime_profile.package_manager is not PackageManager.MAVEN
                 or runtime_profile.package_manager_version != expected_toolchain
-                or runtime_profile.version != expected_jdk_version
             ):
                 raise _error(
                     "selected Java runtime profile does not match Maven store validation",
                     PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                    stage="store",
+                )
+            if expected_jdk_version is not None and runtime_profile.version != expected_jdk_version:
+                raise _error(
+                    "selected JDK identity disagrees with runtime profile",
+                    PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
+                    stage="store",
+                )
+            expected_jdk_version = runtime_profile.version
+        if expected_jdk_version is None:
+            raise _error(
+                "Java/Maven store validation requires the selected exact JDK identity",
+                PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
                 stage="store",
             )
         if not JDK_VERSION.fullmatch(expected_jdk_version):
@@ -526,26 +532,6 @@ class MavenPackageManager:
         if not isinstance(inventory, dict) or inventory.get("adapter_version") != "maven-lock-v1":
             raise _error(
                 "Maven inventory adapter version is invalid",
-                PackageManagerErrorCode.INVENTORY_MISMATCH,
-                stage="store",
-            )
-        lock_inventory = inventory.get("lock")
-        if (
-            isinstance(lock_inventory, dict)
-            and not JDK_VERSION.fullmatch(str(lock_inventory.get("jdk_version", "")))
-        ):
-            raise _error(
-                "Maven inventory JDK identity is malformed",
-                PackageManagerErrorCode.INVENTORY_MISMATCH,
-                stage="store",
-            )
-        if (
-            not isinstance(lock_inventory, dict)
-            or lock_inventory.get("archive_digest") != lock_summary.lock_digest
-            or lock_inventory.get("jdk_version") != expected_jdk_version
-        ):
-            raise _error(
-                "Maven inventory lock digest does not match the validated lock",
                 PackageManagerErrorCode.INVENTORY_MISMATCH,
                 stage="store",
             )

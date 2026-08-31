@@ -151,6 +151,7 @@ def _validate_sources(element: Element) -> None:
     allowed_attributes = {
         (CORE_NS, "directorySource"): {"path"},
         (CORE_NS, "fileSource"): {"path"},
+        (CORE_NS, "uriSource"): {"uri"},
         (JAVA_NS, "classSource"): {"className"},
         (JAVA_NS, "methodSource"): {
             "className",
@@ -163,6 +164,7 @@ def _validate_sources(element: Element) -> None:
     required_attributes = {
         (CORE_NS, "directorySource"): {"path"},
         (CORE_NS, "fileSource"): {"path"},
+        (CORE_NS, "uriSource"): {"uri"},
         (JAVA_NS, "classSource"): {"className"},
         (JAVA_NS, "methodSource"): {"className", "methodName"},
         (JAVA_NS, "classpathResourceSource"): {"resourceName"},
@@ -187,7 +189,10 @@ def _validate_sources(element: Element) -> None:
         ):
             raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test source is invalid")
         children = list(source)
-        if name in position_sources:
+        if name == (CORE_NS, "uriSource"):
+            if list(source):
+                raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test URI source is invalid")
+        elif name in position_sources:
             if len(children) > 1:
                 raise _fail(VerificationReason.REPORT_MALFORMED, "Open Test source is invalid")
             if children:

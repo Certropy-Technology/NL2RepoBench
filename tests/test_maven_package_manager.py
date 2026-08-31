@@ -7,7 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from nl2repobench.domain.canonical_contract import RuntimeProfile
+from nl2repobench.domain.canonical_contract import DependencyBundle, RuntimeProfile
+from nl2repobench.domain.canonical_models import Visibility
+from nl2repobench.domain.runtime import RuntimeDiscriminator
+from nl2repobench.harbor.dependency_contract import materialize_dependency_bundle
 from nl2repobench.package_managers import PackageManagerError, PackageManagerErrorCode
 from nl2repobench.package_managers.maven import (
     MavenPackageManager,
@@ -15,7 +18,12 @@ from nl2repobench.package_managers.maven import (
     maven_repository_path,
     validate_candidate_pom,
 )
-from nl2repobench.storage.canonical_ustar import tree_digest, tree_entries
+from nl2repobench.storage.artifacts import (
+    FileArtifactStore,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
+from nl2repobench.storage.canonical_ustar import encode_files, tree_digest, tree_entries
 
 
 def _lock_bytes(payload_data: bytes = b"jar") -> bytes:
@@ -68,10 +76,13 @@ def _inventory(store: Path) -> dict[str, object]:
         "adapter_version": "maven-lock-v1",
         "toolchain_digest": "sha256:" + "1" * 64,
         "lock": {
+            "schema_version": "1.0",
+            "archive_kind": "dependency-lock",
             "archive_digest": "sha256:" + "0" * 64,
-            "jdk_version": "temurin-21.0.5+11",
         },
         "store": {
+            "schema_version": "1.0",
+            "archive_kind": "offline-store",
             "archive_digest": "sha256:" + "2" * 64,
             "tree_digest": tree_digest(entries),
             "file_count": sum(entry.type == "file" for entry in entries),
@@ -139,9 +150,6 @@ def test_maven_store_requires_exact_locked_inventory(tmp_path: Path) -> None:
         expected_jdk_version="temurin-21.0.5+11",
     )
     inventory = _inventory(store)
-    lock_inventory = inventory["lock"]
-    assert isinstance(lock_inventory, dict)
-    lock_inventory["archive_digest"] = summary.lock_digest
     store_summary = adapter.validate_offline_store(
         store,
         summary,
@@ -152,9 +160,6 @@ def test_maven_store_requires_exact_locked_inventory(tmp_path: Path) -> None:
     assert store_summary.offline_smoke is True
     (store / "unexpected.txt").write_text("forged", encoding="utf-8")
     forged_inventory = _inventory(store)
-    forged_lock = forged_inventory["lock"]
-    assert isinstance(forged_lock, dict)
-    forged_lock["archive_digest"] = summary.lock_digest
     with pytest.raises(PackageManagerError, match="paths do not match"):
         adapter.validate_offline_store(
             store,
@@ -163,6 +168,101 @@ def test_maven_store_requires_exact_locked_inventory(tmp_path: Path) -> None:
             "3.9.9",
             expected_jdk_version="temurin-21.0.5+11",
         )
+
+
+def test_generic_java_materialization_validates_canonical_triple_with_profile(
+    tmp_path: Path,
+) -> None:
+    data = _lock_bytes()
+    lock_archive = encode_files({"maven-lock-v1.json": data})
+    store_payload = {"example/fake/tiny/1.2.3/tiny-1.2.3.jar": b"jar"}
+    store_archive = encode_files(store_payload)
+    backing = FileArtifactStore(tmp_path / "cas")
+    lock_ref = backing.put_bytes(
+        lock_archive,
+        media_type="application/vnd.nl2repobench.package-lock.tar",
+        visibility=Visibility.PRIVATE,
+    )
+    store_ref = backing.put_bytes(
+        store_archive,
+        media_type="application/vnd.nl2repobench.offline-store.tar",
+        visibility=Visibility.PRIVATE,
+    )
+    lock_root = tmp_path / "lock-inspect"
+    lock_root.mkdir()
+    (lock_root / "maven-lock-v1.json").write_bytes(data)
+    store_root = tmp_path / "store-inspect"
+    store_root.mkdir()
+    payload_path = store_root / "example/fake/tiny/1.2.3/tiny-1.2.3.jar"
+    payload_path.parent.mkdir(parents=True)
+    payload_path.write_bytes(b"jar")
+    inventory_payload = _inventory(store_root)
+    inventory_payload["lock"] = {
+        "schema_version": "1.0",
+        "archive_kind": "dependency-lock",
+        "archive_digest": lock_ref.digest,
+        "tree_digest": tree_digest(tree_entries(lock_root)),
+        "file_count": 1,
+        "directory_count": 0,
+        "total_bytes": len(data),
+        "entries": [
+            {
+                "path": "maven-lock-v1.json",
+                "type": "file",
+                "mode": 0o444,
+                "size": len(data),
+                "sha256": hashlib.sha256(data).hexdigest(),
+            }
+        ],
+    }
+    store_section = inventory_payload["store"]
+    assert isinstance(store_section, dict)
+    store_section["archive_digest"] = store_ref.digest
+    assert "jdk_version" not in inventory_payload["lock"]
+    inventory_ref = backing.put_bytes(
+        json.dumps(inventory_payload, sort_keys=True, separators=(",", ":")).encode() + b"\n",
+        media_type="application/vnd.nl2repobench.inventory+json",
+        visibility=Visibility.PRIVATE,
+    )
+    authorization = PrivateArtifactAuthorization(
+        task_id="java-maven",
+        manifest_digest="sha256:" + "1" * 64,
+        purpose="compile",
+        allowed_digests=frozenset({lock_ref.digest, store_ref.digest, inventory_ref.digest}),
+        staging_root=(tmp_path / "staging").resolve(),
+    )
+    resolver = LocalArtifactResolver.scoped_private(
+        backing,
+        authorization,
+        task_id=authorization.task_id,
+        manifest_digest=authorization.manifest_digest,
+        purpose=authorization.purpose,
+        staging_root=authorization.staging_root,
+    )
+    profile = RuntimeProfile(
+        language="java",
+        runtime="jdk",
+        version="temurin-21.0.5+11",
+        package_manager="maven",
+        package_manager_version="3.9.9",
+    )
+    bundle = DependencyBundle(
+        status="known",
+        package_manager="maven",
+        lock=lock_ref,
+        offline_store=store_ref,
+        inventory=inventory_ref,
+    )
+    summary, store_summary = materialize_dependency_bundle(
+        bundle,
+        identity=RuntimeDiscriminator(language="java", package_manager="maven"),
+        expected_toolchain="3.9.9",
+        runtime_profile=profile,
+        resolver=resolver,
+        destination=tmp_path / "staging",
+    )
+    assert summary.jdk_version == profile.version
+    assert store_summary.offline_smoke is True
 
 
 def test_maven_lock_rejects_a_different_valid_jdk_identity(tmp_path: Path) -> None:
@@ -235,19 +335,6 @@ def test_maven_store_rejects_malformed_jdk_identity_values(tmp_path: Path) -> No
             {},
             "3.9.9",
             expected_jdk_version="not-a-jdk",
-        )
-    inventory = _inventory(store)
-    lock_inventory = inventory["lock"]
-    assert isinstance(lock_inventory, dict)
-    lock_inventory["archive_digest"] = summary.lock_digest
-    lock_inventory["jdk_version"] = "not-a-jdk"
-    with pytest.raises(PackageManagerError, match="inventory JDK identity is malformed"):
-        adapter.validate_offline_store(
-            store,
-            summary,
-            inventory,
-            "3.9.9",
-            expected_jdk_version="temurin-21.0.5+11",
         )
 
 
