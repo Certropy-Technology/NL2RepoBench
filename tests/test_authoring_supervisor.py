@@ -4,8 +4,11 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
+
+from nl2repobench.authoring.scheduler import STATUS_SCHEMA_VERSION, Scheduler
 
 
 def _load():
@@ -472,3 +475,92 @@ def test_release_stale_claims_only_releases_expired_inactive_claims(
 
     assert [action["package"] for action in actions] == ["expired"]
     assert calls and calls[0][1:3] == [str(tmp_path / "scripts/package_queue_loop.py"), "release"]
+
+
+def _prepare_db_supervisor_env(tmp_path: Path, monkeypatch) -> None:
+    """Make host-dependent supervisor probes deterministic in-process."""
+    monkeypatch.setattr(supervisor, "_free_bytes", lambda _path: 100 * 1024**3)
+    monkeypatch.setattr(supervisor, "_git_status", lambda _root: [])
+    monkeypatch.setattr(
+        supervisor,
+        "_start_db_controller",
+        lambda *args: pytest.fail("status-envelope test started a controller"),
+    )
+    monkeypatch.setattr(supervisor, "_start_db_watcher", lambda *args: 4321)
+
+
+def test_prepared_disabled_db_status_uses_scheduler_status_schema_version(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    _prepare_db_supervisor_env(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        supervisor, "_docker_storage_status", lambda: (tmp_path, 100 * 1024**3, None)
+    )
+    database = tmp_path / "prepared.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    scheduler.configure(
+        enabled=False,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+    )
+    scheduler.prepare_cutover_barrier("prepared", "a" * 64)
+
+    exit_code = supervisor.supervise_db(
+        SimpleNamespace(
+            repository_root=tmp_path,
+            live_root=Path("live"),
+            scheduler_db=database,
+            dry_run=False,
+        )
+    )
+
+    assert exit_code == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "awaiting-first-enable"
+    assert report["schema_version"] == STATUS_SCHEMA_VERSION == "authoring-scheduler/v4"
+
+
+def test_normal_db_status_report_uses_scheduler_status_schema_version(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    _prepare_db_supervisor_env(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        supervisor, "_docker_storage_status", lambda: (tmp_path, 0, "docker unavailable")
+    )
+    database = tmp_path / "normal.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    scheduler.configure(
+        enabled=True,
+        max_total_controllers=0,
+        controller_concurrency=0,
+        max_integrations=0,
+        agent_limit=0,
+    )
+
+    exit_code = supervisor.supervise_db(
+        SimpleNamespace(
+            repository_root=tmp_path,
+            live_root=Path("live"),
+            scheduler_db=database,
+            remote="fake",
+            branch="main",
+            interval_sec=1,
+            command_timeout=10,
+            dry_run=False,
+        )
+    )
+
+    assert exit_code == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["schema_version"] == STATUS_SCHEMA_VERSION == "authoring-scheduler/v4"
+    with scheduler.connect() as db:
+        stored = json.loads(
+            db.execute(
+                "SELECT payload_json FROM status_snapshots ORDER BY snapshot_id DESC"
+            ).fetchone()[0]
+        )
+    assert stored["schema_version"] == STATUS_SCHEMA_VERSION

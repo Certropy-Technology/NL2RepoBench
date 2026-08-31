@@ -43,6 +43,7 @@ from nl2repobench.authoring.runtime import (
     scheduler_for,
 )
 from nl2repobench.authoring.scheduler import (
+    STATUS_SCHEMA_VERSION,
     ConflictError,
     CorruptionError,
     Scheduler,
@@ -1820,7 +1821,7 @@ def supervise_db(args: argparse.Namespace) -> int:
         free = _free_bytes(root)
         docker_root, docker_free, docker_error = _docker_storage_status()
         dry_report = {
-            "schema_version": "authoring-supervisor/v3",
+            "schema_version": STATUS_SCHEMA_VERSION,
             "authority": "sqlite",
             "dry_run": bool(args.dry_run),
             "status": (
@@ -1864,7 +1865,7 @@ def supervise_db(args: argparse.Namespace) -> int:
             and docker_error is None
         )
         report: dict[str, Any] = {
-            "schema_version": "authoring-supervisor/v3",
+            "schema_version": STATUS_SCHEMA_VERSION,
             "authority": "sqlite",
             "observed_at": datetime.now(UTC).isoformat(),
             "runtime_config": {
