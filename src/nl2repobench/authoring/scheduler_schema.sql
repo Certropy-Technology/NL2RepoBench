@@ -239,8 +239,13 @@ CREATE TABLE artifacts (
   artifact_id TEXT PRIMARY KEY, task_id TEXT REFERENCES tasks(task_id), trial_id TEXT REFERENCES trials(trial_id),
   kind TEXT NOT NULL, path TEXT NOT NULL, sha256 TEXT NOT NULL, size_bytes INTEGER NOT NULL CHECK(size_bytes >= 0),
   secret_scan_status TEXT NOT NULL CHECK(secret_scan_status IN ('passed','blocked','not-run')),
-  created_at TEXT NOT NULL, UNIQUE(path, sha256)
+  created_at TEXT NOT NULL, UNIQUE(task_id, path, sha256)
 );
+-- Task-scoped identity lets byte-identical mirrors (a state claim plus its
+-- worktree copy) and genuinely shared paths coexist across tasks.  Rows without
+-- a task keep the original global (path, sha256) binding so a shared identity
+-- can never be attached twice outside task association.
+CREATE UNIQUE INDEX artifacts_unbound_identity ON artifacts(path, sha256) WHERE task_id IS NULL;
 CREATE TABLE legacy_actor_evidence (
   legacy_actor_id TEXT PRIMARY KEY, source_path TEXT NOT NULL, owner_text TEXT NOT NULL, pid_text TEXT,
   starttime_text TEXT, boot_id_text TEXT, batch_id TEXT, raw_sha256 TEXT NOT NULL,

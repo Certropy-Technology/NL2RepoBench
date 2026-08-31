@@ -1,6 +1,7 @@
 # ruff: noqa: E501
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -141,6 +142,169 @@ def test_import_preserves_legacy_receipt_chronology(tmp_path: Path) -> None:
         ("archive", "2026-01-01T00:00:02.000000+00:00", "2026-01-01T00:00:03.000000+00:00"),
         ("cleanup", "2026-01-01T00:00:04.000000+00:00", "2026-01-01T00:00:05.000000+00:00"),
     ]
+
+
+def _live_case(tmp_path: Path, name: str) -> Path:
+    """Build an isolated live tree so each evidence-identity case imports on its own."""
+    root = tmp_path / name
+    root.mkdir()
+    _live(root)
+    return root
+
+
+def _mirror_claim_files(root: Path, batch: str, package: str, claim_name: str) -> tuple[str, str]:
+    """Recreate the frozen live pattern: a state claim plus its byte-identical worktree mirror."""
+    state_claim = root / "state" / batch / "claims" / f"{claim_name}.json"
+    state_claim.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps({"claim": {"candidate_id": claim_name, "package": package,
+                                    "status": "handoff_ready", "attempts": 1}})
+    state_claim.write_text(payload, encoding="utf-8")
+    worktree_claim = root / "worktrees" / batch / package / ".nl2repo" / "authoring-claim.json"
+    worktree_claim.parent.mkdir(parents=True, exist_ok=True)
+    worktree_claim.write_text(payload, encoding="utf-8")
+    return str(state_claim), str(worktree_claim)
+
+
+def _attach_artifacts(root: Path, language: str, artifacts: list[object]) -> None:
+    state_path = root / "queues" / f"{language}-wave2-20260828.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["items"][f"{language}-candidate"]["artifacts"] = artifacts
+    state_path.write_text(json.dumps(state), encoding="utf-8")
+
+
+def _import_case(root: Path, name: str) -> sqlite3.Connection:
+    database = root.parent / f"{name}.sqlite3"
+    import_manifest(generate_manifest(root, cutover_id=name), root, db_path=database, dry_run=False)
+    return sqlite3.connect(database)
+
+
+def _artifact_rows(db: sqlite3.Connection, candidate_id: str) -> list[tuple[str, ...]]:
+    return list(db.execute(
+        "SELECT a.artifact_id, a.path, a.sha256, a.size_bytes, a.secret_scan_status, "
+        "a.task_id IS NOT NULL FROM artifacts a JOIN tasks t ON t.task_id=a.task_id "
+        "WHERE t.candidate_id=? ORDER BY a.path",
+        (candidate_id,),
+    ))
+
+
+PYTHON_TASK = "base-python-python-author-wave2-20260828:python-candidate:legacy"
+PYTHON_BATCH = "python-author-wave2-20260828"
+
+
+def _legacy_artifact_id(task_id: str, path: str, digest: str) -> str:
+    """Independent copy of the pinned contract: legacy:<sha256 of canonical JSON>."""
+    canonical = json.dumps(
+        {"path": path, "sha256": digest, "task_id": task_id},
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    return "legacy:" + hashlib.sha256(canonical).hexdigest()
+
+
+def test_import_keeps_mirror_claim_evidence_as_distinct_task_scoped_artifacts(tmp_path: Path) -> None:
+    """The frozen failure: two byte-identical claim mirrors in one task both persist."""
+    root = _live_case(tmp_path, "mirror")
+    state_claim, worktree_claim = _mirror_claim_files(root, PYTHON_BATCH, "python-pkg", "python-candidate")
+    _attach_artifacts(root, "python", [state_claim, worktree_claim])
+    rows = _artifact_rows(_import_case(root, "mirror"), "python-candidate")
+
+    assert [row[1] for row in rows] == sorted([worktree_claim, state_claim])
+    digest = hashlib.sha256(Path(state_claim).read_bytes()).hexdigest()
+    assert {row[0] for row in rows} == {
+        _legacy_artifact_id(PYTHON_TASK, state_claim, digest),
+        _legacy_artifact_id(PYTHON_TASK, worktree_claim, digest),
+    }
+    assert {row[2] for row in rows} == {digest}
+    for artifact_id, _, _, size_bytes, scan, bound in rows:
+        assert artifact_id.startswith("legacy:") and len(artifact_id) == 71
+        assert size_bytes == Path(state_claim).stat().st_size > 0
+        assert scan == "passed" and bound == 1
+
+
+def test_import_deduplicates_exact_duplicate_evidence_in_one_task(tmp_path: Path) -> None:
+    """A repeated (task, path, digest) binding is one artifact, even when spelled differently."""
+    root = _live_case(tmp_path, "duplicate")
+    state_claim, worktree_claim = _mirror_claim_files(root, PYTHON_BATCH, "python-pkg", "python-candidate")
+    misspelled = str(root / "state" / PYTHON_BATCH / "claims" / ".." / "claims" / "python-candidate.json")
+    _attach_artifacts(root, "python", [state_claim, state_claim, misspelled, worktree_claim])
+    rows = _artifact_rows(_import_case(root, "duplicate"), "python-candidate")
+
+    assert [row[1] for row in rows] == sorted([worktree_claim, state_claim])
+
+
+def test_import_rejects_one_artifact_path_carrying_two_digests(tmp_path: Path) -> None:
+    """Two different digests for one task path is a contradiction, not a dedupe."""
+    root = _live_case(tmp_path, "conflict")
+    retired = str(root / "state" / PYTHON_BATCH / "claims" / "python-candidate.json")
+    _attach_artifacts(root, "python", [
+        {"path": retired, "sha256": "a" * 64, "size_bytes": 4},
+        {"path": retired, "sha256": "b" * 64, "size_bytes": 4},
+    ])
+    with pytest.raises(MigrationError, match="carries two digests"):
+        _import_case(root, "conflict")
+
+
+def test_import_rejects_artifact_paths_without_a_usable_identity(tmp_path: Path) -> None:
+    """Evidence identity needs a non-empty, NUL-free, file-scoped path."""
+    declared = "c" * 64
+    cases = (
+        ({"path": "", "sha256": declared, "size_bytes": 1}, "empty"),
+        ({"path": "   ", "sha256": declared, "size_bytes": 1}, "empty"),
+        ({"path": "/tmp/nul\x00claim.json", "sha256": declared, "size_bytes": 1}, "NUL"),
+        ("/", "file-scoped"),
+    )
+    for index, (artifact, message) in enumerate(cases):
+        name = f"bad-path-{index}"
+        root = _live_case(tmp_path, name)
+        _attach_artifacts(root, "python", [artifact])
+        with pytest.raises(MigrationError, match=message):
+            _import_case(root, name)
+
+
+def test_import_keeps_shared_evidence_bound_to_every_task_that_references_it(tmp_path: Path) -> None:
+    """One physical path used by two tasks must not collapse task association."""
+    root = _live_case(tmp_path, "shared")
+    node_batch = "node-author-wave2-20260828"
+    shared = root / "state" / PYTHON_BATCH / "claims" / "python-candidate.json"
+    shared.parent.mkdir(parents=True, exist_ok=True)
+    shared.write_text(json.dumps({"claim": {"candidate_id": "shared"}}), encoding="utf-8")
+    mirror = root / "worktrees" / node_batch / "node-pkg" / ".nl2repo" / "authoring-claim.json"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    mirror.write_text(json.dumps({"claim": {"candidate_id": "other"}}), encoding="utf-8")
+    _attach_artifacts(root, "python", [str(shared)])
+    _attach_artifacts(root, "node", [str(shared), str(mirror)])
+    db = _import_case(root, "shared")
+    rows = list(db.execute(
+        "SELECT t.candidate_id, a.task_id, a.sha256 FROM artifacts a JOIN tasks t ON t.task_id=a.task_id "
+        "WHERE a.path=? ORDER BY t.candidate_id", (str(shared),),
+    ))
+
+    assert len(rows) == 2
+    assert {row[0] for row in rows} == {"node-candidate", "python-candidate"}
+    assert len({row[1] for row in rows}) == 2
+    assert len({row[2] for row in rows}) == 1
+
+
+def test_taskless_artifact_identity_stays_globally_unique(tmp_path: Path) -> None:
+    """Task-scoped uniqueness must not let an unbound evidence row be attached twice."""
+    scheduler = Scheduler(tmp_path / "artifacts.sqlite3", supplied_root=tmp_path)
+    scheduler.init()
+    insert = (
+        "INSERT INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,"
+        "secret_scan_status,created_at) VALUES(?,NULL,NULL,'legacy-reference',?,?,'0','passed',datetime('now'))"
+    )
+    with pytest.raises(sqlite3.IntegrityError, match="UNIQUE constraint failed: artifacts.path"):
+        with scheduler.connect() as db:
+            db.execute(insert, ("legacy-unbound-1", "/tmp/unbound.json", "d" * 64))
+            db.execute(insert, ("legacy-unbound-2", "/tmp/unbound.json", "d" * 64))
+    with scheduler.connect() as db:
+        db.execute(insert, ("legacy-unbound-3", "/tmp/other.json", "d" * 64))
+        db.execute(insert, ("legacy-unbound-4", "/tmp/unbound.json", "e" * 64))
+    with scheduler.connect() as db:
+        assert sorted(str(row[0]) for row in db.execute("SELECT artifact_id FROM artifacts")) == [
+            "legacy-unbound-1", "legacy-unbound-3", "legacy-unbound-4",
+        ]
 
 
 def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Path) -> None:

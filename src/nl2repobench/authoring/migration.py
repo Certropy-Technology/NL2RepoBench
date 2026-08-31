@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import stat as statmod
 import tempfile
@@ -96,6 +97,35 @@ def _relative(root: Path, path: Path) -> str:
         return path.resolve().relative_to(root.resolve()).as_posix()
     except ValueError as exc:
         raise MigrationError(f"path escapes authoring root: {path}") from exc
+
+
+def _canonical_artifact_path(raw: str) -> str:
+    """Canonicalize one evidence path lexically, never by following symlinks.
+
+    Artifact identity must be byte- and name-derived only.  ``os.path.normpath``
+    collapses ``.``, ``..`` and repeated separators without touching the
+    filesystem, so a symlinked component can never be folded into its target's
+    identity and one file cannot be recorded under two spellings.
+    """
+    if not raw.strip():
+        raise MigrationError("legacy artifact evidence path is empty")
+    if "\x00" in raw:
+        raise MigrationError("legacy artifact evidence path contains NUL")
+    normalized = os.path.normpath(raw)
+    if normalized in {".", "..", "/"}:
+        raise MigrationError(f"legacy artifact evidence path is not file-scoped: {raw}")
+    return normalized
+
+
+def _artifact_identity(task_id: str, path: str, digest: str) -> str:
+    """Stable task-scoped artifact id: SHA-256 over canonical identity JSON."""
+    canonical = json.dumps(
+        {"path": path, "sha256": digest, "task_id": task_id},
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    return "legacy:" + hashlib.sha256(canonical).hexdigest()
 
 
 def _check_file(root: Path, relative: str, *, max_size: int = 64 * 1024 * 1024,
@@ -524,8 +554,16 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                         (str(worktree), str(handoff) if handoff.is_file() else None,
                          _sha(handoff) if handoff.is_file() else None, task_id),
                     )
+                # One legacy item may mirror the same bytes into several paths
+                # (a state claim plus its worktree copy).  Evidence identity is
+                # therefore (task, normalized path, digest); a repeated exact
+                # binding is deduplicated and a path carrying two digests is a
+                # manifest contradiction, not something to silently pick from.
+                artifact_digests: dict[str, str] = {}
                 for artifact in item.get("artifacts", []) if isinstance(item.get("artifacts"), list) else []:
-                    artifact_path = str(artifact.get("path", "")) if isinstance(artifact, dict) else str(artifact)
+                    artifact_path = _canonical_artifact_path(
+                        str(artifact.get("path", "")) if isinstance(artifact, dict) else str(artifact)
+                    )
                     artifact_digest = str(artifact.get("sha256", "")) if isinstance(artifact, dict) else ""
                     candidate_path = Path(artifact_path)
                     if candidate_path.is_file() and not candidate_path.is_symlink():
@@ -535,8 +573,18 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
                     else:
                         artifact_size = int(artifact.get("size_bytes", 0)) if isinstance(artifact, dict) else 0
                         scan = "not-run"
-                    if _SHA.fullmatch(artifact_digest):
-                        conn.execute("INSERT INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,secret_scan_status,created_at) VALUES(?,?,?,?,?,?,? ,?,datetime('now'))", (f"legacy:{artifact_digest}:{task_id}", task_id, None, "legacy-reference", artifact_path, artifact_digest, artifact_size, scan))
+                    if not _SHA.fullmatch(artifact_digest):
+                        continue
+                    recorded = artifact_digests.get(artifact_path)
+                    if recorded is not None:
+                        if recorded != artifact_digest:
+                            raise MigrationError(f"legacy artifact path carries two digests: {artifact_path}")
+                        continue
+                    artifact_digests[artifact_path] = artifact_digest
+                    conn.execute(
+                        "INSERT INTO artifacts(artifact_id,task_id,trial_id,kind,path,sha256,size_bytes,secret_scan_status,created_at) VALUES(?,?,?,?,?,?,?,?,datetime('now'))",
+                        (_artifact_identity(task_id, artifact_path, artifact_digest), task_id, None, "legacy-reference", artifact_path, artifact_digest, artifact_size, scan),
+                    )
                 receipts = item.get("receipts", item.get("operation_receipts", []))
                 if isinstance(receipts, list):
                     for index, receipt in enumerate(receipts):
