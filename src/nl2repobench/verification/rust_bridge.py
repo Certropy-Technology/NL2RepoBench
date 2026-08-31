@@ -180,7 +180,7 @@ class RustApiDescriptor(RustBridgeRecord):
     kind: Literal["sync", "async", "associated", "instance"]
     receiver: str | None
     state_type: str | None
-    args: Annotated[tuple[RustArgumentDescriptor, ...], Field(min_length=1, max_length=32)]
+    args: Annotated[tuple[RustArgumentDescriptor, ...], Field(max_length=32)]
     returns: str
     error: str | None
     unsafe: bool
@@ -350,6 +350,15 @@ class RustApiPlan(RustBridgeRecord):
             raise ValueError("unsafe_leaf_ids must exactly name leaves of unsafe APIs")
         api_map = {item.api_id: item for item in self.functions}
         type_map = {item.type_id: item for item in self.types}
+        drop_role_ids = {
+            state.drop_api_id
+            for state in self.state_types
+            if state.drop_api_id is not None
+        }
+        for function in self.functions:
+            if not function.args and function.api_id not in drop_role_ids:
+                raise ValueError("only a custom state drop API may have zero arguments")
+        state_role_ids: set[str] = set()
         for state in self.state_types:
             state_type = type_map.get(state.rust_type)
             if state_type is None or state_type.kind not in {"struct", "enum"}:
@@ -363,11 +372,23 @@ class RustApiPlan(RustBridgeRecord):
                 raise ValueError("state create API must return the state type")
             create = api_map[state.create_api_id]
             if (
-                create.kind == "instance"
+                create.kind != "associated"
                 or create.receiver is not None
                 or create.state_type is not None
+                or create.unsafe
             ):
-                raise ValueError("state create API must be an associated, receiver-free API")
+                raise ValueError(
+                    "state create API must be a safe associated, receiver-free API"
+                )
+            method_ids = {method.api_id for method in state.methods}
+            role_ids = {state.create_api_id, *method_ids}
+            if state.drop_api_id is not None:
+                role_ids.add(state.drop_api_id)
+            if len(role_ids) != 1 + len(method_ids) + (state.drop_api_id is not None):
+                raise ValueError("state create, method, and drop API roles must be disjoint")
+            if state_role_ids.intersection(role_ids):
+                raise ValueError("state API roles cannot be reused across state descriptors")
+            state_role_ids.update(role_ids)
             for method in state.methods:
                 api = api_map[method.api_id]
                 require_type(method.returns)
@@ -380,6 +401,7 @@ class RustApiPlan(RustBridgeRecord):
                     or api.returns != method.returns
                     or api.error != method.error
                     or api.leaf_ids != method.leaf_ids
+                    or api.unsafe
                 ):
                     raise ValueError(
                         f"state method {method.api_id} does not exactly match its API descriptor"
@@ -392,8 +414,10 @@ class RustApiPlan(RustBridgeRecord):
                     drop.kind != "instance"
                     or drop.receiver != state.rust_type
                     or drop.state_type != state.rust_type
+                    or drop.args
                     or drop.returns != "unit"
                     or drop.error is not None
+                    or drop.unsafe
                 ):
                     raise ValueError("state drop API has an invalid descriptor role")
         return self
@@ -743,16 +767,24 @@ def load_rust_bridge_request(raw: bytes) -> RustBridgeRequest:
 
 
 def load_rust_bridge_response(
-    raw: bytes, request: RustBridgeRequest | None = None
+    raw: bytes,
+    request: RustBridgeRequest | None = None,
+    *,
+    allow_completed_prefix_on_abort: bool = False,
 ) -> RustBridgeResponse:
     response = _load_bridge_json(raw, RustBridgeResponse)
     assert isinstance(response, RustBridgeResponse)
     if request is not None:
         if response.request_id != request.request_id:
             raise ValueError("bridge response request_id does not match request")
-        expected = {operation.operation_id for operation in request.operations}
-        actual = {result.operation_id for result in response.results}
-        if actual != expected:
+        expected = tuple(operation.operation_id for operation in request.operations)
+        actual = tuple(result.operation_id for result in response.results)
+        is_ordered_prefix = actual == expected[: len(actual)]
+        is_completed_batch = len(actual) == len(expected)
+        is_aborted_prefix = (
+            allow_completed_prefix_on_abort and 0 < len(actual) < len(expected)
+        )
+        if not is_ordered_prefix or not (is_completed_batch or is_aborted_prefix):
             raise ValueError("bridge response operation IDs do not match request")
     return response
 

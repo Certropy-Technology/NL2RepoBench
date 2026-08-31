@@ -468,9 +468,6 @@ WORKDIR /tests
                     package_manager=runtime.package_manager,
                 ),
                 expected_toolchain=runtime.package_manager_version or "none",
-                toolchain_digest=(
-                    f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
-                ),
                 resolver=self.artifact_resolver,
                 destination=staging,
             )

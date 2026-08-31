@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import re
-import tarfile
 import tomllib
 import unicodedata
 from pathlib import Path, PurePosixPath
@@ -42,6 +42,7 @@ MAX_CRATE_MEMBER_BYTES = 64 * 1024 * 1024
 MAX_CRATE_TOTAL_BYTES = 512 * 1024 * 1024
 MAX_CRATE_PATH_BYTES = 255
 MAX_CRATE_READ_BYTES = 1024 * 1024
+MAX_CRATE_TRAILING_BYTES = 1024 * 1024
 _SEMVER = re.compile(
     r"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
 )
@@ -419,22 +420,93 @@ def _validate_canonical_inventory_section(
         )
 
 
+def _read_exact(stream: gzip.GzipFile, size: int, description: str) -> bytes:
+    chunks: list[bytes] = []
+    remaining = size
+    while remaining:
+        chunk = stream.read(min(remaining, MAX_CRATE_READ_BYTES))
+        if not chunk:
+            raise ValueError(f"crate archive is truncated while reading {description}")
+        if len(chunk) > MAX_CRATE_READ_BYTES:
+            raise ValueError("crate archive read exceeds the read ceiling")
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    return b"".join(chunks)
+
+
+def _tar_octal(field: bytes, description: str) -> int:
+    value = field.rstrip(b"\0 ").lstrip(b" ")
+    if not value:
+        return 0
+    if any(byte not in b"01234567" for byte in value):
+        raise ValueError(f"crate archive has invalid {description}")
+    return int(value, 8)
+
+
+def _tar_member_path(header: bytes) -> str:
+    name = header[:100].split(b"\0", 1)[0]
+    prefix = header[345:500].split(b"\0", 1)[0]
+    raw = prefix + (b"/" if prefix and name else b"") + name
+    if len(raw) > MAX_CRATE_PATH_BYTES:
+        raise ValueError("crate archive member path exceeds size limit")
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ValueError("crate archive member path is not UTF-8") from exc
+
+
 def _read_crate_archive(path: Path, *, expected_root: str) -> dict[str, str]:
-    """Read one checksum-verified .crate without extracting it to the host."""
+    """Read a bounded ustar-compatible .crate without tar metadata expansion."""
 
     try:
+        if path.is_symlink() or not path.is_file():
+            raise ValueError("crate archive is not a regular file")
         if path.stat().st_size > MAX_CRATE_ARCHIVE_BYTES:
             raise ValueError("crate archive exceeds compressed size limit")
-        with tarfile.open(path, mode="r:gz") as archive:
-            files: dict[str, str] = {}
-            seen: set[str] = set()
-            member_count = 0
-            expanded_total = 0
-            for member in archive:
+        files: dict[str, str] = {}
+        seen: set[str] = set()
+        member_count = 0
+        expanded_total = 0
+        with path.open("rb") as compressed, gzip.GzipFile(fileobj=compressed) as archive:
+            while True:
+                header = _read_exact(archive, 512, "member header")
+                if header == bytes(512):
+                    if _read_exact(archive, 512, "end marker") != bytes(512):
+                        raise ValueError("crate archive has an invalid end marker")
+                    trailing_total = 0
+                    while chunk := archive.read(MAX_CRATE_READ_BYTES):
+                        if len(chunk) > MAX_CRATE_READ_BYTES:
+                            raise ValueError("crate archive read exceeds the read ceiling")
+                        trailing_total += len(chunk)
+                        if (
+                            trailing_total > MAX_CRATE_TRAILING_BYTES
+                            or any(byte != 0 for byte in chunk)
+                        ):
+                            raise ValueError("crate archive has excessive or nonzero trailing data")
+                    break
+                recorded_checksum = _tar_octal(header[148:156], "header checksum")
+                checksum_header = header[:148] + b" " * 8 + header[156:]
+                if recorded_checksum != sum(checksum_header):
+                    raise ValueError("crate archive member checksum is invalid")
                 member_count += 1
                 if member_count > MAX_CRATE_MEMBERS:
                     raise ValueError("crate archive contains too many members")
-                raw = member.name.removesuffix("/")
+                type_flag = header[156:157]
+                if type_flag in {b"g", b"x", b"L", b"K"}:
+                    raise ValueError(
+                        "crate archive extension metadata is forbidden before expansion"
+                    )
+                if type_flag not in {b"\0", b"0", b"5"}:
+                    raise ValueError("crate archive member is not regular or a directory")
+                member_size = _tar_octal(header[124:136], "member size")
+                is_directory = type_flag == b"5"
+                if is_directory and member_size != 0:
+                    raise ValueError("crate archive directory has a nonzero size")
+                if member_size > MAX_CRATE_MEMBER_BYTES:
+                    raise ValueError("crate archive member exceeds size limit")
+                if expanded_total + member_size > MAX_CRATE_TOTAL_BYTES:
+                    raise ValueError("crate archive expanded size exceeds total limit")
+                raw = _tar_member_path(header).removesuffix("/")
                 member_path = PurePosixPath(raw)
                 if (
                     not raw
@@ -443,43 +515,39 @@ def _read_crate_archive(path: Path, *, expected_root: str) -> dict[str, str]:
                     or not member_path.parts
                     or member_path.parts[0] != expected_root
                     or unicodedata.normalize("NFC", raw) != raw
-                    or len(raw.encode("utf-8")) > MAX_CRATE_PATH_BYTES
                 ):
-                    raise ValueError(f"unsafe archive member: {member.name}")
+                    raise ValueError(f"unsafe archive member: {raw}")
                 relative = PurePosixPath(*member_path.parts[1:]).as_posix()
                 if not relative:
-                    if not member.isdir() or relative in seen:
+                    if not is_directory or relative in seen:
                         raise ValueError("duplicate or invalid crate archive root")
                     seen.add(relative)
-                    continue
-                if relative in seen:
+                elif relative in seen:
                     raise ValueError(f"duplicate archive member: {relative}")
-                seen.add(relative)
-                if member.isdir():
-                    continue
-                if not member.isreg():
-                    raise ValueError(f"crate archive member is not regular: {relative}")
-                if member.size < 0 or member.size > MAX_CRATE_MEMBER_BYTES:
-                    raise ValueError(f"crate archive member exceeds size limit: {relative}")
-                if expanded_total + member.size > MAX_CRATE_TOTAL_BYTES:
-                    raise ValueError("crate archive expanded size exceeds total limit")
-                extracted = archive.extractfile(member)
-                if extracted is None:
-                    raise ValueError(f"cannot read crate archive member: {relative}")
+                else:
+                    seen.add(relative)
+
                 digest = hashlib.sha256()
-                read_total = 0
-                while chunk := extracted.read(MAX_CRATE_READ_BYTES):
-                    read_total += len(chunk)
-                    if read_total > member.size or read_total > MAX_CRATE_MEMBER_BYTES:
+                remaining = member_size
+                while remaining:
+                    chunk = archive.read(min(remaining, MAX_CRATE_READ_BYTES))
+                    if not chunk:
+                        raise ValueError(f"crate archive member is truncated: {relative}")
+                    if len(chunk) > MAX_CRATE_READ_BYTES or len(chunk) > remaining:
                         raise ValueError(
                             f"crate archive member read exceeds size limit: {relative}"
                         )
                     digest.update(chunk)
-                if read_total != member.size:
-                    raise ValueError(f"crate archive member is truncated: {relative}")
-                expanded_total += read_total
-                files[relative] = digest.hexdigest()
-    except (OSError, tarfile.TarError, ValueError) as exc:
+                    remaining -= len(chunk)
+                padding_size = (-member_size) % 512
+                if padding_size and any(
+                    _read_exact(archive, padding_size, "member padding")
+                ):
+                    raise ValueError("crate archive member padding is nonzero")
+                expanded_total += member_size
+                if relative and not is_directory:
+                    files[relative] = digest.hexdigest()
+    except (EOFError, OSError, ValueError) as exc:
         raise _error(
             f"Cargo crate archive is malformed: {path.name}: {exc}",
             PackageManagerErrorCode.STORE_MALFORMED,
@@ -528,9 +596,23 @@ class CargoPackageManager:
         lock_summary: LockSummary,
         inventory: object,
         expected_toolchain: str,
+    ) -> StoreSummary:
+        del store_root, lock_summary, inventory, expected_toolchain
+        raise _error(
+            "Cargo locked-toolchain staging requires a Rust-local adapter boundary",
+            PackageManagerErrorCode.UNSUPPORTED_PROFILE,
+            stage="store",
+        )
+
+    def validate_frozen_offline_store(
+        self,
+        store_root: Path,
+        lock_summary: LockSummary,
+        inventory: object,
+        expected_toolchain: str,
         *,
-        expected_toolchain_digest: str | None = None,
-        lock_root: Path | None = None,
+        expected_toolchain_digest: str,
+        lock_root: Path,
     ) -> StoreSummary:
         if (
             lock_summary.identity != self.identity
@@ -557,7 +639,6 @@ class CargoPackageManager:
             != {"status": "passed", "command_id": CARGO_OFFLINE_SMOKE_COMMAND_ID}
             or not isinstance(toolchain_digest, str)
             or not re.fullmatch(r"sha256:[0-9a-f]{64}", toolchain_digest)
-            or expected_toolchain_digest is None
             or toolchain_digest != expected_toolchain_digest
         ):
             raise _error(
@@ -567,12 +648,6 @@ class CargoPackageManager:
             )
         try:
             lock_inventory = inventory.get("lock")
-            if lock_root is None:
-                raise _error(
-                    "Cargo lock root is required for canonical inventory validation",
-                    PackageManagerErrorCode.INVENTORY_MISMATCH,
-                    stage="store",
-                )
             _validate_canonical_inventory_section(
                 lock_inventory,
                 "dependency-lock",

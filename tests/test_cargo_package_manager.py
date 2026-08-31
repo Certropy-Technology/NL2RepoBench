@@ -286,7 +286,7 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
         },
     }
 
-    result = adapter.validate_offline_store(
+    result = adapter.validate_frozen_offline_store(
         store, summary, inventory, "1.100.0-nightly",
         expected_toolchain_digest=toolchain_digest,
         lock_root=lock_root,
@@ -310,7 +310,7 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
         }
     )
     with pytest.raises(PackageManagerError, match="crate archive checksum") as raised:
-        adapter.validate_offline_store(
+        adapter.validate_frozen_offline_store(
             store,
             summary,
             inventory,
@@ -395,7 +395,7 @@ def test_cargo_store_rejects_rehashed_vendor_tampering(tmp_path: Path) -> None:
     }
 
     with pytest.raises(PackageManagerError, match="differs from crate archive"):
-        adapter.validate_offline_store(
+        adapter.validate_frozen_offline_store(
             store,
             summary,
             inventory,
@@ -428,3 +428,83 @@ def test_crate_archive_expansion_limits_are_bounded(
 
     with pytest.raises(PackageManagerError, match=message):
         cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")
+
+
+@pytest.mark.parametrize("archive_format", [tarfile.GNU_FORMAT, tarfile.PAX_FORMAT])
+def test_crate_archive_rejects_extension_metadata_before_expansion(
+    tmp_path: Path, archive_format: int
+) -> None:
+    archive_path = tmp_path / "demo-1.0.0.crate"
+    output = io.BytesIO()
+    with tarfile.open(fileobj=output, mode="w:gz", format=archive_format) as archive:
+        info = tarfile.TarInfo("demo-1.0.0/" + "a" * 101)
+        info.size = 1
+        if archive_format == tarfile.PAX_FORMAT:
+            info.pax_headers = {"comment": "x" * 4096}
+        archive.addfile(info, io.BytesIO(b"x"))
+    archive_path.write_bytes(output.getvalue())
+
+    with pytest.raises(PackageManagerError, match="extension metadata is forbidden"):
+        cargo_module._read_crate_archive(archive_path, expected_root="demo-1.0.0")
+
+
+@pytest.mark.parametrize(
+    ("limit", "message"),
+    [
+        ("compressed", "compressed size limit"),
+        ("path", "path exceeds size limit"),
+        ("total", "expanded size exceeds total limit"),
+    ],
+)
+def test_crate_archive_direct_size_ceilings(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    limit: str,
+    message: str,
+) -> None:
+    archive = tmp_path / "demo-1.0.0.crate"
+    archive.write_bytes(_crate_archive("demo-1.0.0", {"a": b"ab"}))
+    if limit == "compressed":
+        monkeypatch.setattr(cargo_module, "MAX_CRATE_ARCHIVE_BYTES", archive.stat().st_size - 1)
+    elif limit == "path":
+        monkeypatch.setattr(cargo_module, "MAX_CRATE_PATH_BYTES", len("demo-1.0.0/a") - 1)
+    else:
+        monkeypatch.setattr(cargo_module, "MAX_CRATE_TOTAL_BYTES", 1)
+
+    with pytest.raises(PackageManagerError, match=message):
+        cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")
+
+
+def test_crate_archive_reads_members_in_bounded_chunks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    archive = tmp_path / "demo-1.0.0.crate"
+    archive.write_bytes(_crate_archive("demo-1.0.0", {"a": b"abc"}))
+    monkeypatch.setattr(cargo_module, "MAX_CRATE_READ_BYTES", 1)
+
+    assert cargo_module._read_crate_archive(
+        archive, expected_root="demo-1.0.0"
+    ) == {"a": hashlib.sha256(b"abc").hexdigest()}
+
+
+def test_crate_archive_rejects_truncated_compressed_stream(tmp_path: Path) -> None:
+    archive = tmp_path / "demo-1.0.0.crate"
+    raw = _crate_archive("demo-1.0.0", {"a": b"abc"})
+    archive.write_bytes(raw[:-8])
+
+    with pytest.raises(PackageManagerError, match="malformed"):
+        cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")
+
+
+def test_generic_cargo_store_staging_fails_closed(tmp_path: Path) -> None:
+    adapter = CargoPackageManager()
+    lock_root = tmp_path / "lock"
+    lock_root.mkdir()
+    (lock_root / "Cargo.lock").write_text(CARGO_LOCK, encoding="utf-8")
+    summary = adapter.validate_lock(lock_root, "1.100.0-nightly")
+
+    with pytest.raises(PackageManagerError, match="Rust-local adapter boundary") as raised:
+        adapter.validate_offline_store(
+            tmp_path / "store", summary, {}, "1.100.0-nightly"
+        )
+    assert raised.value.code is PackageManagerErrorCode.UNSUPPORTED_PROFILE
