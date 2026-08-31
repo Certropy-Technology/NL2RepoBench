@@ -2415,6 +2415,17 @@ def test_deployment_git_probes_ignore_hostile_environment(tmp_path: Path, monkey
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(tmp_path / "global-config"))
     monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(tmp_path / "system-config"))
 
+    captured_environment: dict[str, str] = {}
+    original_run = subprocess.run
+
+    def capture_git_environment(*args, **kwargs):
+        command = args[0] if args else kwargs.get("args")
+        if command and command[0] == cutover.DEPLOYMENT_GIT:
+            captured_environment.update(kwargs["env"])
+        return original_run(*args, **kwargs)
+
+    monkeypatch.setattr(cutover.subprocess, "run", capture_git_environment)
+
     expected = subprocess.run(
         ["/usr/bin/git", "-C", str(repository), "rev-parse", "HEAD"],
         capture_output=True,
@@ -2428,6 +2439,12 @@ def test_deployment_git_probes_ignore_hostile_environment(tmp_path: Path, monkey
         },
     ).stdout.strip()
     assert cutover._deployment_commit(repository) == expected
+    assert captured_environment["PATH"] == "/usr/bin:/bin"
+    assert "GIT_DIR" not in captured_environment
+    assert "GIT_WORK_TREE" not in captured_environment
+    assert captured_environment["GIT_CONFIG_NOSYSTEM"] == "1"
+    assert captured_environment["GIT_CONFIG_GLOBAL"] == os.devnull
+    assert captured_environment["GIT_CONFIG_SYSTEM"] == os.devnull
     trusted_status = subprocess.run(
         [
             "/usr/bin/git",

@@ -161,6 +161,7 @@ def _trusted_git_environment() -> dict[str, str]:
             env.pop(key, None)
     env.update(
         {
+            "PATH": "/usr/bin:/bin",
             "GIT_CONFIG_NOSYSTEM": "1",
             "GIT_CONFIG_GLOBAL": os.devnull,
             "GIT_CONFIG_SYSTEM": os.devnull,
