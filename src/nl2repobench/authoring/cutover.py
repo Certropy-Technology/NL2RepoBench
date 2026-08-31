@@ -19,7 +19,7 @@ from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from .backup import (
     activate_database,
@@ -47,6 +47,7 @@ _INVENTORY_VOLATILE_ROOTS = frozenset(
     {"logs", "pids", "results", "sessions", "tmp", "worktrees"}
 )
 _INVENTORY_MISSING_MARKER = b"missing\0"
+_PF_KTHREAD = 0x00200000
 
 
 @dataclass(frozen=True)
@@ -61,6 +62,14 @@ class ProcessRecord:
     cwd: str
     cgroup: str
     role: str
+
+
+@dataclass(frozen=True)
+class _ProcStat:
+    pid: int
+    state: str
+    flags: int
+    starttime_ticks: int
 
 
 def _atomic_json(path: Path, value: Any) -> None:
@@ -281,22 +290,90 @@ def _read_parent_pid(pid: int) -> int:
     return parent_pid
 
 
+def _parse_proc_stat(value: bytes, expected_pid: int) -> _ProcStat:
+    closing_paren = value.rfind(b")")
+    opening_paren = value.find(b"(")
+    if opening_paren < 0 or closing_paren < opening_paren:
+        raise ValueError("malformed process stat command")
+    pid = int(value[:opening_paren].strip())
+    fields = value[closing_paren + 1 :].split()
+    if pid != expected_pid or len(fields) <= 19 or len(fields[0]) != 1:
+        raise ValueError("malformed process stat identity")
+    flags = int(fields[6])
+    starttime_ticks = int(fields[19])
+    if flags < 0 or starttime_ticks < 0:
+        raise ValueError("invalid process stat identity")
+    return _ProcStat(pid, fields[0].decode("ascii"), flags, starttime_ticks)
+
+
+def _proc_entry_identity(entry: Path) -> tuple[int, int]:
+    info = entry.stat(follow_symlinks=False)
+    if not stat.S_ISDIR(info.st_mode):
+        raise ValueError("process entry is not a directory")
+    return info.st_dev, info.st_ino
+
+
+def _proc_entry_gone(entry: Path) -> bool:
+    try:
+        entry.stat(follow_symlinks=False)
+    except FileNotFoundError:
+        return True
+    except OSError:
+        return False
+    return False
+
+
+def _is_harmless_process(stat_record: _ProcStat) -> bool:
+    return stat_record.state == "Z" or bool(stat_record.flags & _PF_KTHREAD)
+
+
+def _uninspectable_process_status(
+    entry: Path, pid: int
+) -> Literal["gone", "harmless", "unsafe"]:
+    try:
+        initial_entry = _proc_entry_identity(entry)
+        initial_stat = _parse_proc_stat((entry / "stat").read_bytes(), pid)
+    except (OSError, UnicodeError, ValueError):
+        return "gone" if _proc_entry_gone(entry) else "unsafe"
+    if not _is_harmless_process(initial_stat):
+        return "unsafe"
+
+    try:
+        checked_entry = _proc_entry_identity(entry)
+        checked_stat = _parse_proc_stat((entry / "stat").read_bytes(), pid)
+        final_entry = _proc_entry_identity(entry)
+    except (OSError, UnicodeError, ValueError):
+        return "gone" if _proc_entry_gone(entry) else "unsafe"
+    same_process = (
+        initial_entry == checked_entry == final_entry
+        and initial_stat.pid == checked_stat.pid
+        and initial_stat.starttime_ticks == checked_stat.starttime_ticks
+    )
+    if not same_process or not _is_harmless_process(checked_stat):
+        return "unsafe"
+    return "harmless"
+
+
 def _under(path: str, root: Path) -> bool:
     value = Path(path).resolve()
     expected = root.resolve()
     return value == expected or expected in value.parents
 
 
-def _authoring_processes(repository: Path, live_root: Path) -> list[ProcessRecord]:
+def _authoring_processes(
+    repository: Path, live_root: Path, *, proc_root: Path = Path("/proc")
+) -> list[ProcessRecord]:
     records: list[ProcessRecord] = []
     repository = repository.resolve()
     live_root = live_root.resolve()
-    for entry in Path("/proc").iterdir():
+    for entry in proc_root.iterdir():
         if not entry.name.isdigit() or int(entry.name) == os.getpid():
             continue
-        record = _read_process(int(entry.name))
+        pid = int(entry.name)
+        record = _read_process(pid)
         if record is None:
-            if entry.exists():
+            status = _uninspectable_process_status(entry, pid)
+            if status == "unsafe":
                 raise MigrationError(f"cannot inspect live process identity: {entry.name}")
             continue
         scoped = _scope_process(record, repository, live_root)

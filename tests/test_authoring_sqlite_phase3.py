@@ -1720,6 +1720,136 @@ def _cutover_process(
     )
 
 
+def _write_proc_stat(
+    proc_root: Path,
+    pid: int,
+    *,
+    state: str = "S",
+    flags: int = 0,
+    starttime_ticks: int = 10,
+) -> Path:
+    entry = proc_root / str(pid)
+    entry.mkdir(parents=True)
+    fields = ["0"] * 50
+    fields[0] = state
+    fields[6] = str(flags)
+    fields[19] = str(starttime_ticks)
+    (entry / "stat").write_text(
+        f"{pid} (worker ) thread) {' '.join(fields)}\n", encoding="utf-8"
+    )
+    return entry
+
+
+def test_cutover_process_scan_skips_revalidated_kernel_thread(
+    tmp_path: Path, monkeypatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    _write_proc_stat(proc_root, 901, flags=0x00200000)
+    monkeypatch.setattr(cutover, "_read_process", lambda _pid: None)
+
+    assert cutover._authoring_processes(
+        tmp_path / "repository", tmp_path / "live", proc_root=proc_root
+    ) == []
+
+
+def test_cutover_process_scan_skips_revalidated_zombie(
+    tmp_path: Path, monkeypatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    _write_proc_stat(proc_root, 902, state="Z")
+    monkeypatch.setattr(cutover, "_read_process", lambda _pid: None)
+
+    assert cutover._authoring_processes(
+        tmp_path / "repository", tmp_path / "live", proc_root=proc_root
+    ) == []
+
+
+def test_cutover_process_scan_blocks_pid_change_during_revalidation(
+    tmp_path: Path, monkeypatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    entry = _write_proc_stat(proc_root, 907, flags=0x00200000)
+    stat_path = entry / "stat"
+    initial = stat_path.read_bytes()
+    prefix, raw_fields = initial.rsplit(b")", 1)
+    changed_fields = raw_fields.split()
+    changed_fields[19] = b"11"
+    changed = prefix + b") " + b" ".join(changed_fields) + b"\n"
+    reads = iter((initial, changed))
+    original_read_bytes = Path.read_bytes
+
+    def changing_stat(path: Path) -> bytes:
+        return next(reads) if path == stat_path else original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", changing_stat)
+    monkeypatch.setattr(cutover, "_read_process", lambda _pid: None)
+
+    with pytest.raises(MigrationError, match="cannot inspect live process identity: 907"):
+        cutover._authoring_processes(
+            tmp_path / "repository", tmp_path / "live", proc_root=proc_root
+        )
+
+
+def test_cutover_process_scan_blocks_uninspectable_ordinary_process(
+    tmp_path: Path, monkeypatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    _write_proc_stat(proc_root, 903)
+    monkeypatch.setattr(cutover, "_read_process", lambda _pid: None)
+
+    with pytest.raises(MigrationError, match="cannot inspect live process identity: 903"):
+        cutover._authoring_processes(
+            tmp_path / "repository", tmp_path / "live", proc_root=proc_root
+        )
+
+
+def test_cutover_process_scan_blocks_malformed_stat(tmp_path: Path, monkeypatch) -> None:
+    proc_root = tmp_path / "proc"
+    entry = proc_root / "904"
+    entry.mkdir(parents=True)
+    (entry / "stat").write_text("904 malformed\n", encoding="utf-8")
+    monkeypatch.setattr(cutover, "_read_process", lambda _pid: None)
+
+    with pytest.raises(MigrationError, match="cannot inspect live process identity: 904"):
+        cutover._authoring_processes(
+            tmp_path / "repository", tmp_path / "live", proc_root=proc_root
+        )
+
+
+def test_cutover_process_scan_skips_disappeared_pid(tmp_path: Path, monkeypatch) -> None:
+    proc_root = tmp_path / "proc"
+    entry = _write_proc_stat(proc_root, 905)
+
+    def disappear(_pid: int):
+        (entry / "stat").unlink()
+        entry.rmdir()
+        return None
+
+    monkeypatch.setattr(cutover, "_read_process", disappear)
+
+    assert cutover._authoring_processes(
+        tmp_path / "repository", tmp_path / "live", proc_root=proc_root
+    ) == []
+
+
+def test_cutover_process_scan_preserves_scoped_user_actor_behavior(
+    tmp_path: Path, monkeypatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    _write_proc_stat(proc_root, 906)
+    repository = tmp_path / "repository"
+    actor = _cutover_process(906, repository, "other")
+    monkeypatch.setattr(cutover, "_read_process", lambda _pid: actor)
+
+    records = cutover._authoring_processes(
+        repository, tmp_path / "live", proc_root=proc_root
+    )
+
+    assert len(records) == 1
+    assert records[0].pid == 906
+    assert records[0].role == "generic"
+
+
 def test_cutover_allows_parent_pi_ancestor(tmp_path: Path, monkeypatch) -> None:
     parent = _cutover_process(200, tmp_path, "pi")
     monkeypatch.setattr(cutover.os, "getpid", lambda: 100)
