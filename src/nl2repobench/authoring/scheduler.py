@@ -31,6 +31,24 @@ LANGUAGES = ("python", "node", "go")
 # v4 is the only accepted version and there is no in-place upgrade path.
 SCHEMA_VERSION = "4"
 STATUS_SCHEMA_VERSION = "authoring-scheduler/v4"
+# Every relation ``init`` fences and every relation the status envelope reads.
+_REQUIRED_SCHEMA_RELATIONS = frozenset(
+    {
+        "schema_meta",
+        "lanes",
+        "tasks",
+        "controllers",
+        "events",
+        "runtime_config",
+        "resource_policy",
+        "cutover_barrier",
+        "legacy_archive_evidence",
+        "scheduler_leases",
+        "capacity_rows",
+        "current_runtime_config",
+        "current_resource_policy",
+    }
+)
 
 
 class SchedulerError(Exception):
@@ -55,6 +73,31 @@ class BusyError(SchedulerError):
 
 class CorruptionError(SchedulerError):
     pass
+
+
+def _validate_stored_schema(db: sqlite3.Connection) -> None:
+    """Fail closed unless ``db`` carries exactly the complete current schema.
+
+    A ``STATUS_SCHEMA_VERSION`` envelope may only be emitted by a database that
+    proves it is ``SCHEMA_VERSION``, and the same proof must gate ``init``:
+    otherwise a structurally readable v3 file would be reported as v4.
+    """
+    try:
+        row = db.execute(
+            "SELECT value FROM schema_meta WHERE key='schema_version'"
+        ).fetchone()
+    except sqlite3.OperationalError as exc:
+        raise ValidationError("incompatible scheduler database") from exc
+    if row is None or row[0] != SCHEMA_VERSION:
+        raise ValidationError("incompatible scheduler schema version")
+    actual = {
+        str(r[0])
+        for r in db.execute(
+            "SELECT name FROM sqlite_master WHERE type IN ('table','view')"
+        )
+    }
+    if not _REQUIRED_SCHEMA_RELATIONS <= actual:
+        raise ValidationError("incomplete scheduler schema")
 
 
 class _LockedConnection(sqlite3.Connection):
@@ -422,29 +465,7 @@ class Scheduler:
         if self.path.exists() and self.path.stat().st_size:
             try:
                 with self.connect() as existing:
-                    row = existing.execute(
-                        "SELECT value FROM schema_meta WHERE key='schema_version'"
-                    ).fetchone()
-                    if row is None or row[0] != SCHEMA_VERSION:
-                        raise ValidationError("incompatible scheduler schema version")
-                    required = {
-                        "lanes",
-                        "tasks",
-                        "controllers",
-                        "events",
-                        "runtime_config",
-                        "resource_policy",
-                        "cutover_barrier",
-                        "legacy_archive_evidence",
-                    }
-                    actual = {
-                        str(r[0])
-                        for r in existing.execute(
-                            "SELECT name FROM sqlite_master WHERE type='table'"
-                        )
-                    }
-                    if not required <= actual:
-                        raise ValidationError("incomplete scheduler schema")
+                    _validate_stored_schema(existing)
                     return
             except sqlite3.DatabaseError as exc:
                 raise ValidationError("incompatible scheduler database") from exc
@@ -2814,6 +2835,7 @@ class Scheduler:
 
     @staticmethod
     def _status_from(db: sqlite3.Connection, path: Path) -> dict[str, Any]:
+        _validate_stored_schema(db)
         config = db.execute("SELECT * FROM current_runtime_config").fetchone()
         resource_policy = db.execute("SELECT * FROM current_resource_policy").fetchone()
         cutover = db.execute("SELECT * FROM cutover_barrier WHERE barrier_id=1").fetchone()

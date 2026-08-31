@@ -272,7 +272,12 @@ CREATE TABLE legacy_archive_evidence (
   canonical_evidence INTEGER NOT NULL DEFAULT 0 CHECK(canonical_evidence IN (0,1)),
   receipt_json TEXT NOT NULL,
   recorded_at TEXT NOT NULL,
-  PRIMARY KEY(task_id, archive_identity)
+  PRIMARY KEY(task_id, archive_identity),
+  -- The importer's own eligibility rule is a table invariant: a canonical row
+  -- certifies a handoff digest and a recomputed source-snapshot digest, so a
+  -- marker without both digests is rejected, while historical rows may omit
+  -- either (workspace-only receipts legitimately carry neither).
+  CHECK(canonical_evidence = 0 OR (handoff_sha256 IS NOT NULL AND source_snapshot_sha256 IS NOT NULL))
 );
 CREATE UNIQUE INDEX legacy_archive_one_canonical ON legacy_archive_evidence(task_id) WHERE canonical_evidence = 1;
 CREATE TRIGGER legacy_archive_evidence_immutable UPDATE ON legacy_archive_evidence

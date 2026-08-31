@@ -520,6 +520,45 @@ def test_archive_receipt_source_snapshot_is_recomputed_and_declared_must_agree()
     assert _validate(_workspace_only_receipt()).source_snapshot_sha256 is None
 
 
+@pytest.mark.parametrize("wrong", [1.0, 1, True, None, "1.1", "", " "])
+def test_archive_receipt_requires_the_literal_string_schema_version(wrong: object) -> None:
+    """The frozen contract is the string ``"1.0"``, never a coerced number.
+
+    ``str(1.0) == "1.0"`` passed the old check, so a receipt whose writer
+    emitted the JSON number would have been retained as if it were canonical
+    contract bytes; only the exact string is admissible.
+    """
+    with pytest.raises(MigrationError, match="unsupported schema_version"):
+        _validate(_archive_receipt_body(schema_version=wrong))
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "catalog//sources/x/y.txt",     # empty segment
+        "catalog/./sources/x/y.txt",    # current-directory segment
+        "catalog/sources/x/../y.txt",   # parent segment (kept regression)
+        "catalog/sources/x/y.txt/",     # trailing empty segment
+        "./catalog/sources/x/y.txt",    # leading current-directory segment
+    ],
+)
+def test_archive_receipt_rejects_unnormalized_relative_object_paths(relative: str) -> None:
+    """Only writer-normalized relative paths are admissible evidence.
+
+    Empty, ``.``, and ``..`` segments alias one file to a second spelling and
+    fork the recomputed source-snapshot digest, so the validator rejects every
+    path a normalized ``ArchiveFile.relative`` could not have emitted.
+    """
+    base = (
+        f"nl2repobench/authoring-live/archive/{ARCHIVE_LANGUAGE}/{ARCHIVE_PACKAGE}/"
+        f"{ARCHIVE_IDENTITY}/"
+    )
+    objects = _archive_objects()
+    objects[0]["key"] = base + relative
+    with pytest.raises(MigrationError, match="out-of-contract object key"):
+        _validate(_archive_receipt_body(objects=objects))
+
+
 def test_import_retains_archive_receipts_as_evidence_not_operation_attempts(tmp_path: Path) -> None:
     """A frozen receipt becomes task-scoped evidence and keeps the legacy handoff state."""
     root = _live_case(tmp_path, "archive-evidence")
@@ -634,21 +673,33 @@ def test_archive_evidence_rows_are_immutable_and_one_canonical_per_task(tmp_path
         "SELECT task_id, receipt_json, recorded_at FROM legacy_archive_evidence",
     ).fetchone()
 
-    def add(identity: str, canonical: int) -> None:
+    def add(
+        identity: str,
+        canonical: int,
+        *,
+        handoff: str | None = None,
+        snapshot: str | None = None,
+    ) -> None:
         db.execute(
             "INSERT INTO legacy_archive_evidence(task_id,archive_identity,source_path,source_sha256,"
-            "package,language,object_count,byte_count,workspace_policy,canonical_evidence,receipt_json,"
-            "recorded_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+            "package,language,object_count,byte_count,workspace_policy,canonical_evidence,"
+            "handoff_sha256,source_snapshot_sha256,receipt_json,recorded_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (task_id, identity, f"archive-receipts/python/guard-{identity[:16]}.json", "0" * 64,
              ARCHIVE_PACKAGE, ARCHIVE_LANGUAGE, 1, 1, "artifacts/workspace included", canonical,
-             receipt_json, recorded_at),
+             handoff, snapshot, receipt_json, recorded_at),
         )
 
-    add("f" * 64, 1)
+    # A canonical marker must certify the two digests the importer's eligibility
+    # rule requires; this CHECK fires even with no other canonical row present.
+    with pytest.raises(sqlite3.IntegrityError, match="CHECK constraint failed"):
+        add("e" * 64, 1)
+    add("f" * 64, 1, handoff="c" * 64, snapshot="d" * 64)
     # Only the partial one-canonical index names task_id alone; the primary key
     # would report both "task_id" and "archive_identity".
     with pytest.raises(sqlite3.IntegrityError, match=r"legacy_archive_evidence\.task_id$"):
-        add("d" * 64, 1)
+        add("d" * 64, 1, handoff="c" * 64, snapshot="e" * 64)
+    # Historical rows are unaffected by the marker invariant.
+    add("a" * 64, 0)
     with pytest.raises(sqlite3.IntegrityError, match="immutable"):
         db.execute("UPDATE legacy_archive_evidence SET object_count=object_count+1")
     with pytest.raises(sqlite3.IntegrityError, match="immutable"):
@@ -679,6 +730,37 @@ def test_import_keeps_a_historical_collision_as_blocker_not_archive_attempt(tmp_
     assert list(db.execute(
         "SELECT count(*) FROM orphan_claim_evidence WHERE classification='unmapped-claim'",
     ))[0][0] == 1
+
+
+def test_import_collision_blocks_even_a_full_embedded_receipt_chain(tmp_path: Path) -> None:
+    """Precedence: frozen collision evidence outranks an otherwise closable chain.
+
+    The chain is still retained as operation receipts, but a task that carries
+    both the full embedded chain and a collision record was never resolved by
+    the legacy tree, so it blocks instead of completing, and no canonical
+    evidence marker can be attached to a non-complete task.
+    """
+    root = _live_case(tmp_path, "collision-chain")
+    _frozen_state(root, ARCHIVE_LANGUAGE, updated_at="2026-08-30T00:00:00+00:00",
+                  receipts=_final_chain("collision-chain-python"))
+    _write_archive_receipt(root, _archive_receipt_body())
+    failures = root / "supervisor" / "integration-failures.json"
+    failures.write_text(
+        json.dumps({ARCHIVE_PACKAGE: {"reason": "remote object collision, cleanup forbidden"}}),
+        encoding="utf-8",
+    )
+
+    report, db = _import_archive_case(root, "collision-chain")
+
+    state, reason = db.execute(
+        "SELECT state, terminal_reason FROM tasks WHERE task_id=?", (PYTHON_TASK,),
+    ).fetchone()
+    assert (state, reason) == ("blocked", "historical integration collision")
+    assert {tuple(row) for row in db.execute(
+        "SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (PYTHON_TASK,),
+    )} == {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")}
+    assert report["retained"] == 1
+    assert report["canonical"] == 0 and report["complete_without_evidence"] == 0
 
 
 def test_backup_verify_tamper_restore_dry_run_and_activation_guard(tmp_path: Path) -> None:

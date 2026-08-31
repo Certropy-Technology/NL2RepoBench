@@ -22,6 +22,7 @@ from nl2repobench.authoring.scheduler import (
     LostLeaseError,
     Scheduler,
     ValidationError,
+    readonly_status,
 )
 
 
@@ -499,6 +500,58 @@ def test_cli_success_and_error_envelopes_share_the_status_schema_version(
     failure = json.loads(capsys.readouterr().out)
     assert failure["schema_version"] == "authoring-scheduler/v4"
     assert failure["error"] == "database must be under supplied root"
+
+
+def _cli_module():
+    path = Path(__file__).parents[1] / "scripts/authoring_scheduler.py"
+    spec = importlib.util.spec_from_file_location("authoring_scheduler_cli_status", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_readonly_status_and_init_share_the_stored_schema_gate(tmp_path: Path) -> None:
+    """A v4 envelope may only come from a DB that proves it is v4.
+
+    ``init`` already fenced the stored version, but the read-only status path
+    is a separate emitter: without the same gate a structurally readable v3
+    file would be reported under ``authoring-scheduler/v4``.
+    """
+    database = tmp_path / "state/scheduler.sqlite3"
+    scheduler = Scheduler(database, supplied_root=tmp_path)
+    scheduler.init()
+    with scheduler.connect() as db:
+        db.execute("UPDATE schema_meta SET value='3' WHERE key='schema_version'")
+    for observe in (readonly_status, lambda path: Scheduler(path, supplied_root=tmp_path).status()):
+        with pytest.raises(ValidationError, match="incompatible scheduler schema version"):
+            observe(database)
+    with pytest.raises(ValidationError, match="incompatible scheduler schema version"):
+        scheduler.init()
+    with scheduler.connect() as db:
+        db.execute("UPDATE schema_meta SET value='4' WHERE key='schema_version'")
+        db.execute("DROP TABLE legacy_archive_evidence")
+    with pytest.raises(ValidationError, match="incomplete scheduler schema"):
+        readonly_status(database)
+    with pytest.raises(ValidationError, match="incomplete scheduler schema"):
+        scheduler.init()
+
+
+def test_cli_status_reports_typed_error_for_a_v3_database(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """CLI ``status`` bypasses ``init``, so its own rejection must be typed."""
+    module = _cli_module()
+    database = tmp_path / "state/scheduler.sqlite3"
+    assert module.main(["--root", str(tmp_path), "--db", str(database), "init"]) == 0
+    capsys.readouterr()
+    with sqlite3.connect(database) as db:
+        db.execute("UPDATE schema_meta SET value='3' WHERE key='schema_version'")
+    assert module.main(["--root", str(tmp_path), "--db", str(database), "status"]) == 2
+    envelope = json.loads(capsys.readouterr().out)
+    assert envelope["error"] == "incompatible scheduler schema version"
+    assert envelope["schema_version"] == STATUS_SCHEMA_VERSION
+    assert envelope["data"] == {}
 
 
 def test_receipt_idempotency_checks_context_and_failure_is_conditional(tmp_path: Path) -> None:

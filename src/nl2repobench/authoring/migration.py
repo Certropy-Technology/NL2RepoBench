@@ -245,7 +245,10 @@ def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
     parts = relative_path.split("/")
     if len(parts) != 3 or parts[0] != ARCHIVE_RECEIPT_ROOT.removesuffix("/"):
         raise MigrationError(f"{where} is not an archive-receipts path")
-    if str(body.get("schema_version")) != ARCHIVE_RECEIPT_SCHEMA:
+    # The frozen contract is the literal string "1.0": ``str()`` coercion would
+    # accept the JSON number 1.0, which is not the shape any writer emitted.
+    schema_version = body.get("schema_version")
+    if not isinstance(schema_version, str) or schema_version != ARCHIVE_RECEIPT_SCHEMA:
         raise MigrationError(f"{where} has unsupported schema_version")
     language = _require_text(body.get("language"), "language", where, limit=16)
     if language not in {"python", "node", "go"}:
@@ -290,7 +293,12 @@ def validate_archive_receipt(relative_path: str, raw: bytes) -> ArchiveReceipt:
             raise MigrationError(f"{where} repeats an object key: {key}")
         seen_keys.add(key)
         match = _ARCHIVE_OBJECT_KEY.match(key)
-        if match is None or any(part == ".." for part in match.group("relative").split("/")):
+        if match is None or any(
+            part in {"", ".", ".."} for part in match.group("relative").split("/")
+        ):
+            # Empty, ``.`` and ``..`` segments are the spellings a normalized
+            # ``ArchiveFile.relative`` can never emit: they alias one file to a
+            # second key and fork the recomputed source-snapshot digest.
             raise MigrationError(f"{where} has an out-of-contract object key: {key}")
         if match.group("language") != language or match.group("slug") != slug:
             raise MigrationError(f"{where} object key disagrees with its package or language")
@@ -1094,7 +1102,8 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
         # attempts: one package legitimately carries several heterogeneous blobs
         # and none of them holds an actor lease or attempt ordinal.  Validation
         # happens here, before any terminal decision, so a contradiction cannot
-        # be half-imported.
+        # be half-imported, and a collision blocker already outranks any
+        # complete-chain closure above.
         archive_evidence, archive_malformed = collect_archive_evidence(
             conn, root, manifest, frozen_bounds
         )
@@ -1108,21 +1117,24 @@ def import_manifest(manifest: dict[str, Any], live_root: Path | str, *, db_path:
             "WHERE status IN ('pushed','verified','applied','failed','collision')"
         )
         for task_id in complete_candidates:
-            # Only a genuine embedded pushed+verified+applied chain recorded as
-            # real operation receipts may close a legacy task.  Retained archive
-            # evidence has no terminal authority, and a collision blocker applies
-            # only when no such chain exists.
+            # Frozen collision evidence blocks before any terminal decision: a
+            # legacy task carrying both a valid embedded chain and a collision
+            # record was never resolved by the legacy tree, so the collision
+            # wins.  Only without a collision may a genuine embedded
+            # pushed+verified+applied chain close a task; retained archive
+            # evidence has no terminal authority.
+            if task_id in collision_tasks:
+                conn.execute(
+                    "UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?",
+                    (task_id,),
+                )
+                continue
             chain = {tuple(row) for row in conn.execute("SELECT operation_kind,status FROM operation_receipts WHERE task_id=?", (task_id,))}
             if {("integration", "pushed"), ("archive", "verified"), ("cleanup", "applied")} <= chain:
                 conn.execute("UPDATE tasks SET state='integrating' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='archiving' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='cleaning' WHERE task_id=?", (task_id,))
                 conn.execute("UPDATE tasks SET state='complete',terminal_reason='historical receipt chain verified' WHERE task_id=?", (task_id,))
-            elif task_id in collision_tasks:
-                conn.execute(
-                    "UPDATE tasks SET state='blocked',terminal_reason='historical integration collision' WHERE task_id=?",
-                    (task_id,),
-                )
         # Canonical marking is computed after the terminal decision so it can only
         # describe evidence quality for an already-complete task, never cause it.
         archive_counts = record_archive_evidence(conn, archive_evidence, archive_malformed)
