@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import multiprocessing
 import os
 import sqlite3
@@ -13,6 +14,7 @@ from pathlib import Path
 import pytest
 
 from nl2repobench.authoring.scheduler import (
+    STATUS_SCHEMA_VERSION,
     ActorFence,
     BusyError,
     ConflictError,
@@ -474,6 +476,29 @@ def test_cli_derives_current_process_identity_and_exposes_generation() -> None:
     assert pid == os.getpid() and starttime > 0 and boot_id
     args = module.parser().parse_args(["--root", "/tmp", "--db", "/tmp/scheduler.sqlite3", "heartbeat", "--claim", "c", "--controller", "x", "--owner", "o", "--generation", "4"])
     assert args.generation == 4
+
+
+def test_cli_success_and_error_envelopes_share_the_status_schema_version(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    path = Path(__file__).parents[1] / "scripts/authoring_scheduler.py"
+    spec = importlib.util.spec_from_file_location("authoring_scheduler_cli", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    database = tmp_path / "state/scheduler.sqlite3"
+    assert module.main(["--root", str(tmp_path), "--db", str(database), "init"]) == 0
+    envelope = json.loads(capsys.readouterr().out)
+    assert envelope["schema_version"] == STATUS_SCHEMA_VERSION == "authoring-scheduler/v4"
+    assert envelope["command"] == "init" and envelope["error"] is None
+    assert module.main(["--root", str(tmp_path), "--db", str(database), "status"]) == 0
+    status = json.loads(capsys.readouterr().out)
+    assert status["schema_version"] == "authoring-scheduler/v4"
+    assert status["data"]["schema_version"] == "authoring-scheduler/v4"
+    assert module.main(["--root", str(tmp_path), "--db", "/outside/scheduler.sqlite3", "init"]) == 2
+    failure = json.loads(capsys.readouterr().out)
+    assert failure["schema_version"] == "authoring-scheduler/v4"
+    assert failure["error"] == "database must be under supplied root"
 
 
 def test_receipt_idempotency_checks_context_and_failure_is_conditional(tmp_path: Path) -> None:

@@ -21,7 +21,12 @@ from nl2repobench.authoring import cutover
 from nl2repobench.authoring import migration as authoring_migration
 from nl2repobench.authoring.migration import MigrationError
 from nl2repobench.authoring.runtime import SingletonActor, process_identity
-from nl2repobench.authoring.scheduler import Identity, LostLeaseError, Scheduler
+from nl2repobench.authoring.scheduler import (
+    STATUS_SCHEMA_VERSION,
+    Identity,
+    LostLeaseError,
+    Scheduler,
+)
 
 
 def _script(name: str):
@@ -241,6 +246,98 @@ def test_db_loop_never_reads_legacy_json_authorities(tmp_path: Path, monkeypatch
 
     assert result["authority"] == "sqlite"
     assert result["results"] == [{"task_id": "task", "status": "complete"}]
+
+
+def test_db_run_envelope_reports_the_shared_scheduler_schema_version(
+    tmp_path: Path, monkeypatch
+) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    monkeypatch.setattr(loop, "TMPFS_ROOTS", ())
+    monkeypatch.setattr(
+        loop,
+        "_prepare_db_claim",
+        lambda _args, _scheduler, claim, **_kwargs: {"claim": claim},
+    )
+    def complete(_args, db, identity, context):
+        claim = context["claim"]
+        db.prepare(
+            claim.claim_id,
+            owner,
+            controller,
+            claim.generation,
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        )
+        db.start(
+            claim.claim_id,
+            owner,
+            controller,
+            claim.generation,
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+            child_pid=os.getpid(),
+            child_starttime_ticks=identity[1],
+        )
+        db.finish(
+            claim.claim_id,
+            owner,
+            controller,
+            claim.generation,
+            success=True,
+            pid=identity[0],
+            process_starttime_ticks=identity[1],
+            boot_id=identity[2],
+        )
+        return {"task_id": claim.task_id, "status": "complete"}
+
+    monkeypatch.setattr(loop, "_run_db_claim", complete)
+    args = SimpleNamespace(
+        scheduler_db=scheduler.path,
+        controller_id=controller,
+        owner=owner,
+        state_root=tmp_path / "state",
+        worktree_root=tmp_path / "worktrees",
+    )
+    result = loop.run_db(args)
+    assert result["schema_version"] == STATUS_SCHEMA_VERSION == "authoring-scheduler/v4"
+
+
+def test_db_claim_brief_envelope_reports_the_shared_scheduler_schema_version(
+    tmp_path: Path, monkeypatch
+) -> None:
+    scheduler, owner, controller = _scheduler(tmp_path)
+    monkeypatch.setattr(loop, "TMPFS_ROOTS", ())
+    monkeypatch.setattr(loop, "_worktree", lambda _path: "created")
+    monkeypatch.setattr(
+        loop, "_write_authoring_settings", lambda _worktree: tmp_path / "settings.json"
+    )
+    pid, starttime, boot_id = process_identity()
+    claim = scheduler.claim_next(
+        controller,
+        owner,
+        pid=pid,
+        process_starttime_ticks=starttime,
+        boot_id=boot_id,
+    )[0]
+    context = loop._prepare_db_claim(
+        SimpleNamespace(session_root=tmp_path / "sessions"),
+        scheduler,
+        claim,
+        state_root=tmp_path / "state",
+        worktree_root=tmp_path / "worktrees",
+    )
+    envelopes = [
+        json.loads(Path(context["brief"]).read_text(encoding="utf-8")),
+        json.loads(Path(context["worktree_claim"]).read_text(encoding="utf-8")),
+    ]
+    assert envelopes[0] == envelopes[1]
+    for brief in envelopes:
+        assert brief["schema_version"] == STATUS_SCHEMA_VERSION == "authoring-scheduler/v4"
+        assert brief["task_id"] == claim.task_id
+        assert brief["claim_id"] == claim.claim_id
+        assert brief["package"] == "demo"
 
 
 def test_prestart_abort_is_classified_and_closes_claim(tmp_path: Path) -> None:

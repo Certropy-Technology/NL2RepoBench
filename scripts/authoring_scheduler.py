@@ -19,6 +19,7 @@ from typing import Any
 from nl2repobench.authoring.backup import backup_database, restore_database, verify_backup
 from nl2repobench.authoring.migration import validate_manifest
 from nl2repobench.authoring.scheduler import (
+    STATUS_SCHEMA_VERSION,
     BusyError,
     ConflictError,
     CorruptionError,
@@ -33,7 +34,7 @@ def _output(command: str, data: dict[str, Any], error: str | None = None) -> Non
     print(
         json.dumps(
             {
-                "schema_version": "authoring-scheduler/v3",
+                "schema_version": STATUS_SCHEMA_VERSION,
                 "command": command,
                 "observed_at": datetime.now(UTC).isoformat(),
                 "data": data,

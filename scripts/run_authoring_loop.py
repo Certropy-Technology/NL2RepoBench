@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from nl2repobench.authoring.runtime import process_identity, scheduler_for
-from nl2repobench.authoring.scheduler import Claim, Scheduler
+from nl2repobench.authoring.scheduler import STATUS_SCHEMA_VERSION, Claim, Scheduler
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 SAFE_PACKAGE = re.compile(
@@ -1048,7 +1048,7 @@ def _prepare_db_claim(
     brief_path = state_root / str(context["batch_id"]) / "claims" / f"{package_filename}.json"
     brief_path.parent.mkdir(parents=True, exist_ok=True)
     brief = {
-        "schema_version": "authoring-scheduler/v3",
+        "schema_version": STATUS_SCHEMA_VERSION,
         "task_id": claim.task_id,
         "trial_id": claim.trial_id,
         "claim_id": claim.claim_id,
@@ -1271,7 +1271,7 @@ def run_db(args: argparse.Namespace) -> dict[str, Any]:
                 boot_id=identity[2],
             )
     return {
-        "schema_version": "authoring-scheduler/v3",
+        "schema_version": STATUS_SCHEMA_VERSION,
         "authority": "sqlite",
         "database": args.scheduler_db.name,
         "owner": args.owner,
