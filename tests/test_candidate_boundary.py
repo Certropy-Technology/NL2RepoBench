@@ -565,8 +565,21 @@ def test_candidate_call_maps_transport_failure(monkeypatch: pytest.MonkeyPatch) 
     assert "cleanup failed" in (result.exception_message or "")
 
 
-def test_candidate_install_maps_transport_failure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize(
+    ("returncode", "expected_outcome"),
+    [
+        (64, "internal-error"),
+        (70, "internal-error"),
+        (75, "internal-error"),
+        (2, "candidate-failure"),
+    ],
+    ids=["malformed-transport", "verifier-internal", "cleanup-failure", "candidate"],
+)
+def test_candidate_install_preserves_transport_and_candidate_mapping(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    returncode: int,
+    expected_outcome: str,
 ) -> None:
     source = tmp_path / "source"
     source.write_bytes(b"source")
@@ -579,12 +592,12 @@ def test_candidate_install_maps_transport_failure(
     monkeypatch.setattr(
         "nl2repobench.verification.candidate_client._run_cli_request",
         lambda *args, **kwargs: candidate_client._TransportResult(  # noqa: SLF001
-            candidate_client.CandidateProcessResult(2, "", "pip failed")
+            candidate_client.CandidateProcessResult(returncode, "", "transport or pip failure")
         ),
     )
     result = candidate_install.install_candidate(source, target, 1)
-    assert result["outcome"] == "candidate-failure"
-    assert result["returncode"] == 2
+    assert result["outcome"] == expected_outcome
+    assert result["returncode"] == returncode
 
 
 def test_python_candidate_runtime_has_no_direct_spawn_or_address_space_limits() -> None:
@@ -618,7 +631,11 @@ def test_candidate_build_environment_allows_only_safe_shell_names() -> None:
 
 @pytest.mark.parametrize(
     ("outcome", "expected_exit"),
-    [("success", None), ("timeout", candidate_install.CANDIDATE_FAILURE_EXIT)],
+    [
+        ("success", None),
+        ("timeout", candidate_install.CANDIDATE_FAILURE_EXIT),
+        ("internal-error", candidate_install.INTERNAL_ERROR_EXIT),
+    ],
 )
 def test_candidate_install_cli_writes_status(
     tmp_path: Path,

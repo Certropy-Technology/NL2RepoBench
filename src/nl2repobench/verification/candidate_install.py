@@ -121,7 +121,12 @@ def install_candidate(
         ],
     )
     process = transport.process
-    if transport.timed_out or process.returncode == 124:
+    if process.returncode in {64, 70, 75}:
+        # These codes belong to the trusted transport, not to pip.  In
+        # particular, a malformed or oversized trusted result must not become
+        # a candidate installation failure/model zero.
+        outcome = "internal-error"
+    elif transport.timed_out or process.returncode == 124:
         outcome = "timeout"
     elif transport.output_limit_exceeded or process.returncode == 125:
         outcome = "storage-limit"
@@ -162,6 +167,8 @@ def main() -> None:
         )
         raise SystemExit(INTERNAL_ERROR_EXIT) from None
     args.status.write_text(json.dumps(result, sort_keys=True) + "\n", encoding="utf-8")
+    if result["outcome"] == "internal-error":
+        raise SystemExit(INTERNAL_ERROR_EXIT)
     if result["outcome"] != "success":
         raise SystemExit(CANDIDATE_FAILURE_EXIT)
 
