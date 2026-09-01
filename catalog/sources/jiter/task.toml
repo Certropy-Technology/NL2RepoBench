@@ -18,13 +18,11 @@ source_digest = "sha256:093d45e8a53c7d8be9472abbc0e6ff822b9d6987ce17a61bcb75092a
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked setuptools build dependency during image construction"
 
 [environment.network_policy]
@@ -34,22 +32,19 @@ reference_source_fetch = "forbidden"
 reason = "The candidate uses a pure-Python JSON adaptation with a hash-locked build dependency installed during image construction. Agent and verifier execution have no egress; only the trusted Oracle receives the exact upstream source host."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = ["setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/cases.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -81,6 +76,6 @@ uri = "artifact://private/sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-wave2-20260828-jiter"
-reason = "Source freeze, private verifier, dependency closure, and Oracle bundle are prepared; production compile and Harbor gates remain task-local authoring work."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: source freeze, private verifier, dependency closure, and Oracle bundle are prepared; production compile and Harbor gates remain task-local authoring work."

@@ -18,13 +18,11 @@ source_digest = "sha256:4c3f9931ea112ae1f06448efe329ab40a700ed8f484cf32431e2cb66
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install candidate and verifier dependencies during image build from the private hash lock"
 
 [environment.network_policy]
@@ -34,22 +32,19 @@ reference_source_fetch = "forbidden"
 reason = "Candidate and verifier dependencies are installed during Docker build from a private hash lock; agent and verifier runs are network-isolated, and only the trusted Oracle receives a run-scoped exact source-host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = ["more-itertools==10.8.0", "setuptools==84.0.0"]
-lock_artifact = { digest = "sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e", size_bytes = 619, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 23
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -81,6 +76,6 @@ uri = "artifact://private/sha256:38a7e07a2908cc3f9e23bd983b4c6bfee29ea7d7197f8bd
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "Current production compile, one official Harbor Oracle run, empty/stub/forgery controls, timeout control, workspace-ingestion control, and offline network probes completed successfully; awaiting an independent model Agent Run."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: current production compile, one official Harbor Oracle run, empty/stub/forgery controls, timeout control, workspace-ingestion control, and offline network probes completed successfully; awaiting an independent model Agent Run."

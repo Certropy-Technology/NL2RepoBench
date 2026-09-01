@@ -18,12 +18,10 @@ source_digest = "sha256:9f05c7eabad5785cddefcb84a85230194b42dccb20b349027135854d
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.14-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
 build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt"
 
 [environment.network_policy]
@@ -33,22 +31,19 @@ reference_source_fetch = "forbidden"
 reason = "Build-time dependencies are installed from a private hash-locked lock artifact; candidate and verifier runs have no egress. Only the trusted Oracle receives a run-scoped authorization for the frozen GitHub source host."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = ["flit_core==3.12.0"]
-lock_artifact = { digest = "sha256:9ebd5cfcb72a1f3e0e0f3bc3d2586b0ca18a3c7db81163f90f73b7f4358cc444", size_bytes = 188, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9ebd5cfcb72a1f3e0e0f3bc3d2586b0ca18a3c7db81163f90f73b7f4358cc444", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 25
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -80,6 +75,6 @@ uri = "artifact://private/sha256:521add0689c5575295f3018cdd46e18b5ff30f7cfb5dfb9
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "Production Harbor compile passed; Oracle was valid at 25/25 reward 1.0, and stub, forgery, install-hang, call-hang, and offline controls completed with bounded low scores. Review and model Agent Run remain separate stages."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: production Harbor compile passed; Oracle was valid at 25/25 reward 1.0, and stub, forgery, install-hang, call-hang, and offline controls completed with bounded low scores. Review and model Agent Run remain separate stages."

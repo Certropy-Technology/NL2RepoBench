@@ -18,13 +18,11 @@ source_digest = "sha256:50b897e1c615278d8f9add946f74635564c500d01503793a0663f615
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = ["ca-certificates", "git"]
-network_mode = "no-network"
 build_command = "install hash-locked build and verifier dependencies during Docker build"
 
 [environment.network_policy]
@@ -34,16 +32,15 @@ reference_source_fetch = "forbidden"
 reason = "Build dependencies are installed from the private hash lock. Agent and separate verifier execution has no egress; only the trusted Oracle receives a run-scoped authorization for github.com."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = ["packaging==26.3", "setuptools==80.9.0", "setuptools-scm==9.2.0"]
-lock_artifact = { digest = "sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08", size_bytes = 1124, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 34
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
 
 [verifier]
 protocol = "custom-json-v1"
@@ -54,7 +51,6 @@ environment = {}
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -80,6 +76,6 @@ uri = "artifact://private/sha256:d22e6816f133b771600a58feb26e4904f7b9103f75779f3
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "Current production compile, Oracle receipt, and empty/stub/forgery/install-hang/call-hang/offline controls are recorded in production-evidence.json; handoff remains awaiting-agent-run."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: current production compile, Oracle receipt, and empty/stub/forgery/install-hang/call-hang/offline controls are recorded in production-evidence.json; handoff remains awaiting-agent-run."

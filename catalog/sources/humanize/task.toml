@@ -17,12 +17,10 @@ license_spdx = 'MIT'
 source_digest = 'sha256:23c29f074162ab33862b66c6b94056987230b9527efeb502ed20031fc4bddbd6'
 
 [environment]
-status = "known"
-python_version = "3.12"
+status = "unknown"
 os_name = "debian-12"
 base_image = 'python:3.12-slim'
 base_image_digest = 'sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a'
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,19 +30,18 @@ reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unk
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 607
 expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

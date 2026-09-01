@@ -18,13 +18,11 @@ source_digest = "sha256:7ef01289b53574ed426a959b34621ae611bf415d17b03bb9b807f5c8
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked candidate closure during Docker build"
 
 [environment.network_policy]
@@ -34,8 +32,8 @@ reference_source_fetch = "forbidden"
 reason = "Candidate and separate verifier dependencies are installed during the Docker build with hashes; Agent and verifier execution has no egress, and the Oracle consumes a locally bundled digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
   "more-itertools==11.1.0",
   "packaging==26.3",
@@ -43,14 +41,12 @@ packages = [
   "setuptools-scm==10.2.1",
   "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:92b30ae17afb26ddd7397ec510c14201dc1182cd39819b7fbf0fb3a30221d3dc", size_bytes = 1306, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:92b30ae17afb26ddd7397ec510c14201dc1182cd39819b7fbf0fb3a30221d3dc", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 35
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
 
 [verifier]
 protocol = "custom-json-v1"
@@ -61,7 +57,6 @@ environment = { SETUPTOOLS_SCM_PRETEND_VERSION_FOR_JARACO_FUNCTOOLS = "4.6.0" }
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -80,9 +75,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-archive-r2-c3"
-reason = "The production bundle passed Harbor Oracle 35/35 with reward 1.0; empty, stub, forgery, call-timeout, and offline controls produced verifier-owned reports. No Harbor model Agent Run was started."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: the production bundle passed Harbor Oracle 35/35 with reward 1.0; empty, stub, forgery, call-timeout, and offline controls produced verifier-owned reports. No Harbor model Agent Run was started."
 
 [oracle_bundle]
 digest = "sha256:eadd678e5d943a3fbe5125f7d440daff211268b78e8053590917da36e8afa4c8"

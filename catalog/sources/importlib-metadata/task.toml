@@ -18,13 +18,11 @@ source_digest = "sha256:921c3509959fd9a207da52966da0d4fb2da167e51a9b7a4abb8eff4f
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_IMPORTLIB_METADATA=8.9.1.dev28+g9757b400e python -m pip install --no-deps --no-build-isolation ."
 
 [environment.network_policy]
@@ -34,8 +32,8 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked build and zipp runtime closure is installed during Docker build. Agent and separate verifier execution have no egress; only the trusted Oracle receives the exact source-host authorization for its pinned revision fetch."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
   "coherent-licensed==0.5.2",
   "packaging==26.3",
@@ -44,19 +42,16 @@ packages = [
   "vcs-versioning==2.3.1",
   "zipp==4.1.0",
 ]
-lock_artifact = { digest = "sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf", size_bytes = 1628, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -88,6 +83,6 @@ uri = "artifact://private/sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950c
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "Final production Harbor 0.21.0 bundle passed the Oracle at 30/30 with reward 1.0; empty, stub, forgery, timeout, workspace, call-timeout, and explicit offline controls completed with verifier-owned reports and no public egress. Review, pilot, publication, and model Agent Run remain separate integrator stages."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: final production Harbor 0.21.0 bundle passed the Oracle at 30/30 with reward 1.0; empty, stub, forgery, timeout, workspace, call-timeout, and explicit offline controls completed with verifier-owned reports and no public egress. Review, pilot, publication, and model Agent Run remain separate integrator stages."

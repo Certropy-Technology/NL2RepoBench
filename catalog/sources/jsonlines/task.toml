@@ -18,14 +18,12 @@ source_digest = "sha256:fd839af51a766d70dccb95db84e6bcf741f55b01ed756b817be4838f
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 build_command = "pip install --no-deps --no-build-isolation"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,17 +32,15 @@ reference_source_fetch = "forbidden"
 reason = "The attrs runtime dependency and setuptools/wheel build closure are hash-locked and installed during Docker build. Agent and separate verifier runs have no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = ["attrs==25.4.0", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034", size_bytes = 558, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
 
 [verifier]
 protocol = "custom-json-v1"
@@ -55,7 +51,6 @@ environment = {}
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -81,6 +76,6 @@ uri = "artifact://private/sha256:823aa329652e4b1ed29375c82b7abbddc0aaea2c87c6fcf
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/jsonlines"
-reason = "Harbor 0.21.0 production gates passed with exact 30-leaf collection: Oracle 30/30, empty 0, stub 1/30, and forgery 1/30; all verifier-owned network receipts prove no public egress. Reviews and pilots remain out of scope."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: Harbor 0.21.0 production gates passed with exact 30-leaf collection: Oracle 30/30, empty 0, stub 1/30, and forgery 1/30; all verifier-owned network receipts prove no public egress. Reviews and pilots remain out of scope."

@@ -19,7 +19,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -29,19 +28,18 @@ reason = "The legacy fixture has an unapproved packaging/line-ending overlay and
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = ["pytest, Jupyter, notebook, and native test dependencies are not a hash-locked offline closure"]
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

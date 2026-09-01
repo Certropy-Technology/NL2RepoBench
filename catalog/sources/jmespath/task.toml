@@ -19,7 +19,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -29,19 +28,18 @@ reason = "The candidate has no approved private test/command artifact or complet
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = ["pytest and verifier dependencies are not a frozen private lock"]
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

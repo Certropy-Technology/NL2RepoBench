@@ -18,13 +18,11 @@ source_digest = "sha256:b8c8d892b6c6557f7ffebf2dd28a14b2d4b12b30ff2c6f110736e7f5
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = ["util-linux"]
-network_mode = "no-network"
 build_command = "install the hash-locked httpx and setuptools build closure during image build; candidate installation uses pip --no-build-isolation"
 
 [environment.network_policy]
@@ -34,8 +32,8 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked httpx runtime and setuptools build backend are installed during image build. Candidate and separate verifier phases have no egress; only the trusted Oracle receives the exact upstream source archive from the frozen revision."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
   "anyio==4.14.2",
   "certifi==2026.7.22",
@@ -48,14 +46,12 @@ packages = [
   "typing-extensions==4.16.0",
   "wheel==0.46.1",
 ]
-lock_artifact = { digest = "sha256:c040982d796cdcbcccba3aca9e8abc7f0353f4220a9d9b98fda1650b37a74adf", size_bytes = 2336, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:c040982d796cdcbcccba3aca9e8abc7f0353f4220a9d9b98fda1650b37a74adf", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 26
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [verifier]
 protocol = "custom-json-v1"
@@ -66,7 +62,6 @@ environment = {}
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -93,6 +88,6 @@ uri = "artifact://private/sha256:c52c9b1ff5d137611d0b4cdc84cae61f4e466120b7619e2
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "The exact source archive, hash-locked dependency closure, separate 26-leaf verifier, and production bundle passed Harbor Oracle, empty, stub, forgery, install-timeout, call-timeout, and offline controls. Independent review, immutable agent-image restoration, model Agent Run, and publication remain outside this lane."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: the exact source archive, hash-locked dependency closure, separate 26-leaf verifier, and production bundle passed Harbor Oracle, empty, stub, forgery, install-timeout, call-timeout, and offline controls. Independent review, immutable agent-image restoration, model Agent Run, and publication remain outside this lane."

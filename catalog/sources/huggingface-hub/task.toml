@@ -18,13 +18,11 @@ source_digest = "sha256:64d379d7374b8afb92dbade7829d328982633d137941ea0aa088d175
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
 
 [environment.network_policy]
@@ -34,8 +32,8 @@ reference_source_fetch = "forbidden"
 reason = "Candidate and verifier dependencies are installed during image build from a private hash lock; agent and verifier runs are network-isolated. Only the trusted Oracle receives the exact upstream host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
   "click==8.4.2",
   "filelock==3.32.3",
@@ -48,14 +46,12 @@ packages = [
   "setuptools==84.0.0",
   "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", size_bytes = 9451, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 40
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
 
 [verifier]
 protocol = "custom-json-v1"
@@ -66,7 +62,6 @@ environment = {}
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -92,6 +87,6 @@ media_type = "application/vnd.nl2repobench.oracle+tar"
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Production compile passed; Harbor 0.21.0 Oracle is valid at 40/40 reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed. Awaiting the independent Agent Run; no model Agent Run was started from this lane."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: production compile passed; Harbor 0.21.0 Oracle is valid at 40/40 reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed. Awaiting the independent Agent Run; no model Agent Run was started from this lane."

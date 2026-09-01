@@ -18,13 +18,11 @@ source_digest = "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
 system_packages = []
-network_mode = "no-network"
 build_command = "Install the hash-locked setuptools/setuptools_scm/coherent.licensed build closure during image build; candidate installation uses pip --target --no-deps --no-build-isolation."
 
 [environment.network_policy]
@@ -34,8 +32,8 @@ reference_source_fetch = "forbidden"
 reason = "The build backend closure is installed from the private hash lock during image build. Agent and separate verifier execution are offline; only the trusted Oracle receives a run-scoped GitHub source-host exception and verifies the local archive digest before restoring it."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
   "coherent-licensed==0.5.2",
   "packaging==26.3",
@@ -43,14 +41,12 @@ packages = [
   "setuptools-scm==10.2.1",
   "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551", size_bytes = 955, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 43
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [verifier]
 protocol = "custom-json-v1"
@@ -61,7 +57,6 @@ environment = {}
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -87,6 +82,6 @@ uri = "artifact://private/sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dca
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "The frozen source, hash-locked build closure, private custom verifier, digest-checked Oracle, and controls are authored; direct reference and image probes passed. Harbor Oracle and controls remain for the separate Agent Run loop."
+reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: the frozen source, hash-locked build closure, private custom verifier, digest-checked Oracle, and controls are authored; direct reference and image probes passed. Harbor Oracle and controls remain for the separate Agent Run loop."
