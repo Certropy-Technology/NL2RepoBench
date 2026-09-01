@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import stat
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -29,6 +30,95 @@ from .bundle_io import BundleLimits, BundleTreeError, BundleTreeSourceError, cop
 
 class TaskWriterError(ValueError):
     """A shared task-tree operation could not be completed safely."""
+
+
+RUNTIME_DIGEST_ALGORITHM = "sha256:path-nul-raw-file-sha256-v1"
+
+
+def canonical_runtime_digest(root: Path, relative_paths: tuple[str, ...]) -> str:
+    """Hash a closed regular-file tree using the runtime's canonical encoding."""
+
+    digest = hashlib.sha256()
+    for relative in sorted(relative_paths, key=lambda value: value.encode("utf-8")):
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts or str(path) in {"", "."}:
+            raise TaskWriterError(f"runtime path is unsafe: {relative}")
+        source = root / path
+        try:
+            metadata = source.lstat()
+        except OSError as exc:
+            raise TaskWriterError(f"runtime file is missing: {relative}") from exc
+        if not stat.S_ISREG(metadata.st_mode) or stat.S_ISLNK(metadata.st_mode):
+            raise TaskWriterError(f"runtime file must be a regular non-link: {relative}")
+        if metadata.st_nlink != 1:
+            raise TaskWriterError(f"runtime hardlink is forbidden: {relative}")
+        data = source.read_bytes()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(data).digest())
+    return f"sha256:{digest.hexdigest()}"
+
+
+def python_runtime_manifest(
+    root: Path,
+    *,
+    runtime_root: str = "/usr/local/lib/python/site-packages/nl2repobench",
+) -> dict[str, object]:
+    """Return the closed manifest for the exact shared Python verifier tree."""
+
+    entries: list[dict[str, object]] = []
+    for relative in sorted(_PYTHON_VERIFIER_FILES, key=lambda value: value.encode("utf-8")):
+        path = root / relative
+        try:
+            metadata = path.lstat()
+        except OSError as exc:
+            raise TaskWriterError(f"runtime file is missing: {relative}") from exc
+        if (
+            not stat.S_ISREG(metadata.st_mode)
+            or stat.S_ISLNK(metadata.st_mode)
+            or metadata.st_nlink != 1
+        ):
+            raise TaskWriterError(f"runtime entry is not a regular unique file: {relative}")
+        data = path.read_bytes()
+        entries.append(
+            {
+                "path": relative,
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "size_bytes": len(data),
+                "mode": stat.S_IMODE(metadata.st_mode),
+                "type": "file",
+            }
+        )
+    return {
+        "schema_version": "1.0",
+        "runtime_root": runtime_root,
+        "digest_algorithm": RUNTIME_DIGEST_ALGORITHM,
+        "files": entries,
+        "runtime_sha256": canonical_runtime_digest(root, _PYTHON_VERIFIER_FILES),
+    }
+
+
+def validate_python_runtime_manifest(root: Path, manifest: Mapping[str, object]) -> None:
+    """Fail closed when a copied runtime has missing, extra, or altered files."""
+
+    expected = python_runtime_manifest(root)
+    if dict(manifest) != expected:
+        raise TaskWriterError("Python verifier runtime manifest does not match the closed tree")
+    actual: set[str] = set()
+    for path in root.rglob("*"):
+        try:
+            metadata = path.lstat()
+        except OSError as exc:
+            raise TaskWriterError(f"cannot inspect Python verifier runtime: {path}") from exc
+        if stat.S_ISLNK(metadata.st_mode):
+            raise TaskWriterError(f"Python verifier runtime contains a symlink: {path}")
+        if stat.S_ISDIR(metadata.st_mode):
+            continue
+        if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+            raise TaskWriterError(f"Python verifier runtime contains an unsafe file: {path}")
+        actual.add(path.relative_to(root).as_posix())
+    if actual != set(_PYTHON_VERIFIER_FILES):
+        raise TaskWriterError("Python verifier runtime contains an extra or missing file")
 
 
 def write_instruction(source_dir: Path, relative: str, task_root: Path) -> None:
@@ -118,6 +208,9 @@ __all__ = [
     "extract_private_bundle",
     "write_file_manifest",
     "write_instruction",
+    "canonical_runtime_digest",
+    "python_runtime_manifest",
+    "validate_python_runtime_manifest",
 ]
 
 
@@ -137,6 +230,7 @@ _PYTHON_VERIFIER_FILES = (
     "verification/cli.py",
     "verification/candidate_client.py",
     "verification/candidate_install.py",
+    "verification/candidate_process_cli.py",
     "verification/candidate_runner.py",
     "verification/command_plan.py",
     "verification/custom_verifier.py",
@@ -157,6 +251,7 @@ _PYTHON_VERIFIER_FILES = (
     "verification/pytest_plugin.py",
     "verification/registry.py",
     "verification/run_pytest.py",
+    "verification/subprocess_supervisor.py",
     "verification/taxonomy.py",
     "verification/workspace_copy.py",
     "verification/normalize/__init__.py",
@@ -170,13 +265,44 @@ def copy_python_verifier_runtime(destination: Path) -> None:
     """Copy the complete trusted Python normalization/evaluation runtime."""
 
     package_root = Path(__file__).parents[1]
+    destination.mkdir(parents=True, exist_ok=True)
+    for path in destination.rglob("*"):
+        try:
+            metadata = path.lstat()
+        except OSError as exc:
+            raise TaskWriterError(f"cannot inspect verifier runtime destination: {path}") from exc
+        if stat.S_ISLNK(metadata.st_mode):
+            raise TaskWriterError(f"destination contains a verifier runtime symlink: {path}")
+        if not stat.S_ISDIR(metadata.st_mode) and (
+            not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1
+        ):
+            raise TaskWriterError(f"destination contains an unsafe verifier runtime file: {path}")
+        if stat.S_ISREG(metadata.st_mode):
+            relative = path.relative_to(destination).as_posix()
+            if relative.removeprefix("nl2repobench/") not in set(_PYTHON_VERIFIER_FILES):
+                raise TaskWriterError("destination contains an unlisted verifier runtime file")
     for relative in _PYTHON_VERIFIER_FILES:
         source = package_root / relative
-        if not source.is_file():
+        try:
+            metadata = source.lstat()
+        except OSError as exc:
+            raise TaskWriterError(
+                f"canonical verifier runtime file is missing: {relative}"
+            ) from exc
+        if (
+            not stat.S_ISREG(metadata.st_mode)
+            or stat.S_ISLNK(metadata.st_mode)
+            or metadata.st_nlink != 1
+        ):
             raise TaskWriterError(f"canonical verifier runtime file is missing: {relative}")
         target = destination / "nl2repobench" / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         atomic_write(target, source.read_bytes())
+        target.chmod(0o555)
+    package_destination = destination / "nl2repobench"
+    validate_python_runtime_manifest(
+        package_destination, python_runtime_manifest(package_destination)
+    )
 
 
 __all__.append("copy_python_verifier_runtime")

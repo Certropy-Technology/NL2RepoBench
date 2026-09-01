@@ -94,7 +94,7 @@ def install_candidate(
         environment.append(f"PYTHONPATH={dependency_root}")
     environment.extend(_parse_build_environment(build_environment))
     command = [
-        os.environ.get("NL2REPO_PYTHON", "/usr/local/bin/python"),
+        "/usr/local/bin/python",
         "-B",
         "-m",
         "pip",

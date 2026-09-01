@@ -24,6 +24,7 @@ from .subprocess_supervisor import (
 CANDIDATE_SITE = "/tmp/candidate-site"
 CANDIDATE_STAGING_ROOT = Path("/tmp")
 CANDIDATE_BUILD_ROOT = Path("/tmp/candidate-build")
+PYTHON_RUNTIME_ROOT = str(Path(__file__).resolve().parents[2])
 DEFAULT_TIMEOUT_SEC = 10.0
 DEFAULT_TOTAL_TIMEOUT_SEC = 300.0
 _TOTAL_TIMEOUT_SEC = float(
@@ -31,6 +32,12 @@ _TOTAL_TIMEOUT_SEC = float(
 )
 _CANDIDATE_DEADLINE = time.monotonic() + _TOTAL_TIMEOUT_SEC
 _CLI_RESULT_LIMIT = 20 * 1024 * 1024
+
+
+def _trusted_python() -> str:
+    """Return the fixed interpreter provisioned by the verifier image."""
+
+    return "/usr/local/bin/python"
 
 
 @dataclass(frozen=True)
@@ -60,12 +67,18 @@ class _TransportResult:
 def _command(arguments: list[str]) -> list[str]:
     """Build the candidate-runner argv; execution is delegated to the CLI."""
 
+    bootstrap = (
+        "import sys;sys.path.insert(0, "
+        + repr(PYTHON_RUNTIME_ROOT)
+        + ");from nl2repobench.verification.candidate_runner import main;"
+        + "raise SystemExit(main())"
+    )
     return [
-        os.environ.get("NL2REPO_PYTHON", "/usr/local/bin/python"),
+        _trusted_python(),
         "-I",
         "-B",
-        "-m",
-        "nl2repobench.verification.candidate_runner",
+        "-c",
+        bootstrap,
         "--candidate-site",
         CANDIDATE_SITE,
         *arguments,
@@ -165,11 +178,18 @@ def _decode_bounded(value: object, label: str) -> bytes:
 
 
 def _invoke_cli(request_id: str, encoded: bytes, timeout_sec: float) -> _TransportResult:
+    bootstrap = (
+        "import sys;sys.path.insert(0, "
+        + repr(PYTHON_RUNTIME_ROOT)
+        + ");from nl2repobench.verification.candidate_process_cli import main;"
+        + "raise SystemExit(main())"
+    )
     command = [
-        os.environ.get("NL2REPO_PYTHON", "/usr/local/bin/python"),
+        _trusted_python(),
         "-I",
-        "-m",
-        "nl2repobench.verification.candidate_process_cli",
+        "-B",
+        "-c",
+        bootstrap,
     ]
     try:
         completed = subprocess.run(
@@ -178,6 +198,7 @@ def _invoke_cli(request_id: str, encoded: bytes, timeout_sec: float) -> _Transpo
             capture_output=True,
             timeout=min(max(timeout_sec, 0.001) + 2.0, HARD_TIMEOUT_SEC + 2.0),
             check=False,
+            env={"PATH": "/usr/bin:/bin", "HOME": "/nonexistent"},
         )
     except subprocess.TimeoutExpired as exc:
         return _TransportResult(CandidateProcessResult(124, "", str(exc)), timed_out=True)

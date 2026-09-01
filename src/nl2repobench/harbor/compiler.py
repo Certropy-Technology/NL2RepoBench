@@ -46,6 +46,7 @@ from .task_writer import (
     copy_python_verifier_runtime,
     copy_tree,
     extract_private_bundle,
+    python_runtime_manifest,
     write_file_manifest,
     write_instruction,
 )
@@ -289,6 +290,22 @@ RUN python -m pip install --no-cache-dir --no-index --require-hashes \\
         tests_root = task_root / "tests"
         tests_root.mkdir(parents=True)
         self._copy_verifier_runtime(tests_root / "runtime")
+        python_minor = self._site_packages_minor(manifest, allow_incomplete)
+        installed_runtime_root = (
+            f"/usr/local/lib/python{python_minor}/site-packages/nl2repobench"
+        )
+        atomic_write(
+            tests_root / "runtime-manifest.json",
+            json.dumps(
+                python_runtime_manifest(
+                    tests_root / "runtime/nl2repobench",
+                    runtime_root=installed_runtime_root,
+                ),
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+            + b"\n",
+        )
         requirements = self.toolchain_path.parent / self.toolchain.verifier.requirements_lock
         if not requirements.is_file():
             raise HarborCompileError(f"verifier requirements lock is missing: {requirements}")
@@ -325,9 +342,7 @@ RUN python -m pip install --no-cache-dir --no-index --require-hashes \\
             self._copy_tree(source_dir / "harbor/tests", private_root)
         else:
             raise HarborCompileError("production task requires tests.test_bundle")
-
         image = self._verifier_image(manifest, allow_incomplete)
-        python_minor = self._site_packages_minor(manifest, allow_incomplete)
         candidate_dependency_install = "RUN mkdir -p /opt/candidate-dependencies/site\n"
         if manifest.dependency_bundle.package_manager is not PackageManager.NONE:
             candidate_dependency_install = """\
@@ -339,6 +354,41 @@ RUN python -m pip install \\
   --require-hashes \\
   -r /tmp/candidate-requirements.lock.txt
 """
+        runtime_validation_lines = [
+            "import hashlib,json,pathlib,stat",
+            'manifest=json.loads(pathlib.Path("/tests/runtime-manifest.json").read_text())',
+            'root=pathlib.Path(manifest["runtime_root"])',
+            f'assert root == pathlib.Path("{installed_runtime_root}")',
+            'entries=manifest["files"]',
+            "assert isinstance(entries,list) and all(isinstance(entry,dict) for entry in entries)",
+            'declared={entry["path"] for entry in entries}',
+            "assert len(declared) == len(entries)",
+            "actual=set()",
+            "for path in root.rglob(\"*\"):",
+            " metadata=path.lstat(); assert not stat.S_ISLNK(metadata.st_mode)",
+            " if stat.S_ISDIR(metadata.st_mode): continue",
+            " assert stat.S_ISREG(metadata.st_mode) and metadata.st_nlink == 1; "
+            "actual.add(path.relative_to(root).as_posix())",
+            "assert actual == declared; digest=hashlib.sha256()",
+            'for entry in sorted(entries,key=lambda item:item["path"].encode("utf-8")):',
+            ' relative=pathlib.PurePosixPath(entry["path"]); '
+            'assert not relative.is_absolute() and ".." not in relative.parts '
+            'and entry["path"] not in {"","."}; path=root/relative; '
+            'metadata=path.lstat(); data=path.read_bytes()',
+            " assert stat.S_ISREG(metadata.st_mode) and metadata.st_nlink == 1; "
+            'assert entry["size_bytes"] == len(data) and '
+            'entry["mode"] == stat.S_IMODE(metadata.st_mode); '
+            'file_digest=hashlib.sha256(data).hexdigest(); '
+            'assert entry["sha256"] == file_digest; '
+            'digest.update(entry["path"].encode("utf-8")); '
+            'digest.update(b"\\0"); digest.update(bytes.fromhex(file_digest))',
+            'assert manifest["runtime_sha256"] == "sha256:" + digest.hexdigest()',
+        ]
+        runtime_validation = (
+            "RUN python -I -c 'exec("
+            + json.dumps("\\n".join(runtime_validation_lines))
+            + ")'\n"
+        )
         dockerfile = f"""FROM --platform=linux/amd64 {image}
 
 {self._system_packages_install(manifest)}\
@@ -349,7 +399,9 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 
 {candidate_dependency_install}
 
+COPY runtime-manifest.json /tests/runtime-manifest.json
 COPY runtime/nl2repobench /usr/local/lib/python{python_minor}/site-packages/nl2repobench
+{runtime_validation}
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0555 test.sh /tests/test.sh
 """
@@ -617,7 +669,6 @@ WORKDIR /tests
         metric = shlex.quote(manifest.metric.contract_id)
         profile = self._effective_profile(manifest)
         python_minor = self._site_packages_minor(manifest, allow_incomplete)
-        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
         command_identity, command_report = self._command_plan_semantics(manifest)
@@ -687,7 +738,6 @@ python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate \
   --target /tmp/candidate-site \
   --timeout-sec {install_timeout} \
-  --address-space-bytes {verifier_memory_bytes} \
   --cflags '-O0 -g0' \
   --status /logs/verifier/candidate-install.json \
   > /logs/verifier/install-stdout.txt \
@@ -777,7 +827,6 @@ exit 0
             f"--build-env {shlex.quote(f'{name}={value}')}"
             for name, value in sorted(manifest.verifier.environment.items())
         )
-        verifier_memory_bytes = max(1024, profile.memory_mb // 2) * 1024 * 1024
         command_identity, command_report = self._command_plan_semantics(manifest)
         return f"""#!/usr/bin/env bash
 set -uo pipefail
@@ -821,7 +870,6 @@ chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
 python -I -B -m nl2repobench.verification.candidate_install \
   --source /tmp/candidate --target /tmp/candidate-site \
   --timeout-sec {profile.candidate_install_timeout_sec} \
-  --address-space-bytes {verifier_memory_bytes} \
   --cflags '-O0 -g0' \
   {build_environment_args} \
   --status /logs/verifier/candidate-install.json
