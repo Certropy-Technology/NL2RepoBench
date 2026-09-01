@@ -20,33 +20,36 @@ source_digest = "sha256:e24d1eb2f3787e8e47cacff5c9ef5e7286ef6406a22da2da036fd2a1
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "private-artifact"
+offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
-reason = "The candidate and verifier run without network; private build artifacts are materialized before the run."
+reason = "The legacy module_bundle is not a canonical lock/offline-store/inventory closure, so dependency artifacts remain unavailable; candidate, verifier, and future Oracle execution must remain offline until the canonical closure and command plan are prepared."
 
 [dependencies]
-status = "known"
-installer = "system"
-module_bundle = { digest = "sha256:c37e4b325aea1739f2cd129def35c1a5accdbe4b4c8952bf26e214bb18051e0c", size_bytes = 505, uri = "artifact://private/sha256:c37e4b325aea1739f2cd129def35c1a5accdbe4b4c8952bf26e214bb18051e0c", visibility = "private" }
+status = "unknown"
+package_manager = "go-modules"
 packages = []
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -65,9 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "go-author-remediation-20260826-r1"
-reason = "Three stable Oracle runs and the required separate-verifier controls passed; awaiting independent review and pilot."
+reason = "Canonical source migration preserved the frozen source, typed bridge, instruction, Harbor fixture, Oracle, and verifier references, but no canonical private dependency closure or frozen command-plan artifact is declared. Mint and validate those canonical artifacts before compile, Oracle, controls, and release."
 
 [verifier]
 protocol = "custom-json-v1"

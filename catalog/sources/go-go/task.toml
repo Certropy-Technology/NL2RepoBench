@@ -21,33 +21,36 @@ submodules = []
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "private-artifact"
+offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
-reason = "Candidate and verifier execution uses a private zero-dependency Go module closure and remains offline; only the trusted Oracle receives a run-scoped github.com authorization for the pinned source revision."
+reason = "The legacy module_bundle is not a canonical lock/offline-store/inventory closure, so dependency artifacts remain unavailable; candidate, verifier, and future Oracle execution must remain offline until the canonical closure and command plan are prepared."
 
 [dependencies]
-status = "known"
-installer = "system"
+status = "unknown"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", size_bytes = 10240, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -67,9 +70,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "go-author-wave2-20260828"
-reason = "Frozen source, typed bridge, private zero-dependency closure, production compile, Oracle, denominator-preserving controls, and positive offline verifier replay passed; awaiting integrator review and model Agent Run."
+reason = "Canonical source migration preserved the frozen source, typed bridge, instruction, Harbor fixture, Oracle, and verifier references, but no canonical private dependency closure or frozen command-plan artifact is declared. Mint and validate those canonical artifacts before compile, Oracle, controls, and release."
 
 [verifier]
 protocol = "custom-json-v1"
