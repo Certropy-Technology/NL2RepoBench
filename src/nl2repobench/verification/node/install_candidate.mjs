@@ -10,20 +10,10 @@ const cache = value("--cache");
 if (!source || !target || !cache) process.exit(64);
 
 function run(command, commandArgs, cwd) {
-  const result = spawnSync("/usr/bin/timeout", [
-    "--kill-after=5s",
-    "90s",
-    "/usr/bin/prlimit",
-    "--cpu=90",
-    "--nproc=4096",
-    "--nofile=128",
-    "--",
-    command,
-    ...commandArgs,
-  ], {
+  const result = spawnSync(command, commandArgs, {
     cwd,
     env: {
-      PATH: "/usr/local/bin:/usr/bin:/bin",
+      PATH: "/usr/bin:/bin",
       HOME: join(target, "home"),
       TMPDIR: join(target, "tmp"),
       npm_config_cache: cache,
@@ -42,12 +32,15 @@ function run(command, commandArgs, cwd) {
   }
 }
 
-run("/usr/local/bin/npm", ["ci", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`], source);
-run("/usr/local/bin/npm", ["pack", "--ignore-scripts", "--pack-destination", target], source);
+const NODE_ROOT = "/opt/nl2repobench-node";
+const NODE = `${NODE_ROOT}/bin/node`;
+const NPM = `${NODE_ROOT}/lib/npm/bin/npm-cli.js`;
+run(NODE, [NPM, "ci", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`], source);
+run(NODE, [NPM, "pack", "--ignore-scripts", "--pack-destination", target], source);
 const tarballs = readdirSync(target).filter((name) => name.endsWith(".tgz"));
 if (tarballs.length !== 1) process.exit(71);
-run("/usr/local/bin/node", ["/tests/runtime/node/validate-package.mjs", join(target, tarballs[0])], target);
-run("/usr/local/bin/npm", ["install", join(target, tarballs[0]), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`, "--prefix", target], source);
+run(NODE, ["/tests/runtime/node/validate-package.mjs", join(target, tarballs[0])], target);
+run(NODE, [NPM, "install", join(target, tarballs[0]), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`, "--prefix", target], source);
 // npm installs the packed dependency tree but may not create a package root
 // descriptor for an empty prefix. Keep the resolver's cwd contract explicit
 // without giving the candidate site the candidate's self-referencing name.

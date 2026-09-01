@@ -1,5 +1,7 @@
 """Node/npm Harbor compiler for canonical task sources."""
 
+# ruff: noqa: E501
+
 from __future__ import annotations
 
 import hashlib
@@ -49,11 +51,16 @@ from .task_writer import (
     copy_python_verifier_runtime,
     copy_tree,
     extract_private_bundle,
+    python_runtime_manifest,
     write_file_manifest,
     write_instruction,
 )
 
 NODE_BUNDLE_MANIFEST_SCHEMA = "2.0"
+NODE_RUNTIME_ROOT = "/opt/nl2repobench-node"
+NODE_EXECUTABLE = f"{NODE_RUNTIME_ROOT}/bin/node"
+NPM_LAUNCHER = f"{NODE_RUNTIME_ROOT}/lib/npm/bin/npm-cli.js"
+PNPM_LAUNCHER = f"{NODE_RUNTIME_ROOT}/lib/pnpm/bin/pnpm.cjs"
 
 
 class NodeHarborCompileError(ValueError):
@@ -263,18 +270,21 @@ class NodeHarborCompiler:
         dependency_setup = self._agent_dependency_setup()
         dockerfile = f"""FROM --platform=linux/amd64 {node_image} AS node-runtime
 
+RUN test -f /usr/local/bin/node \\
+  && test "$(/usr/local/bin/node --version)" = "v{self.toolchain.runtime.runtime_version}"
+
 FROM --platform=linux/amd64 {agent_image}
 
 LABEL org.nl2repobench.agent-runtime-image="{agent_image}" \\
   org.nl2repobench.agent-runtime-image-id="{self.toolchain.agent_runtime.image_id}" \\
   org.nl2repobench.agent-dependency-build="npm-offline-bundle-v1"
 
-COPY --from=node-runtime /usr/local/bin/node /usr/local/bin/node
-COPY --from=node-runtime /usr/local/lib/node_modules /usr/local/lib/node_modules
-RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
-  && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
-  && test "$(node --version)" = "v{self.toolchain.runtime.runtime_version}" \
-  && test "$(npm --version)" = "{self.toolchain.runtime.npm_version}" \
+COPY --from=node-runtime /usr/local/bin/node {NODE_EXECUTABLE}
+COPY --from=node-runtime /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm
+RUN chmod 0555 {NODE_EXECUTABLE} \
+  && chmod -R a-w {NODE_RUNTIME_ROOT} \
+  && test "$( {NODE_EXECUTABLE} --version)" = "v{self.toolchain.runtime.runtime_version}" \
+  && test "$( {NODE_EXECUTABLE} {NPM_LAUNCHER} --version)" = "{self.toolchain.runtime.npm_version}" \
   && test -x /opt/openhands-sdk-venv/bin/python
 
 {system_checks}{dependency_setup}
@@ -379,8 +389,9 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
         dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
 FROM --platform=linux/amd64 {python_image}
 
-COPY --from=node-runtime /usr/local/bin/node /usr/local/bin/node
-COPY --from=node-runtime /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node-runtime /usr/local/bin/node {NODE_EXECUTABLE}
+COPY --from=node-runtime /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm
+RUN chmod 0555 {NODE_EXECUTABLE} && chmod -R a-w {NODE_RUNTIME_ROOT}
 RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \\
   && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
@@ -471,6 +482,15 @@ WORKDIR /tests
             copy_python_verifier_runtime(tests_root / "python-runtime")
         except TaskWriterError as exc:
             raise NodeHarborCompileError(str(exc)) from exc
+        atomic_write(
+            tests_root / "python-runtime-manifest.json",
+            json.dumps(
+                python_runtime_manifest(tests_root / "python-runtime/nl2repobench"),
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+            + b"\n",
+        )
         atomic_write(
             tests_root / "verifier-requirements.lock.txt",
             self.verifier_requirements_path.read_bytes(),
@@ -602,13 +622,13 @@ NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()
 python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json
 network_exit=$?
 if [[ "$network_exit" -eq 1 ]]; then
-  node /tests/runtime/node/grade-report.mjs \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason verifier-network-available \\
     --output /logs/verifier
   exit 0
 elif [[ "$network_exit" -ne 0 ]]; then
-  node /tests/runtime/node/grade-report.mjs \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason verifier-internal-error \\
     --output /logs/verifier
@@ -619,10 +639,10 @@ install -d -o candidate -g candidate -m 0700 /tmp/npm-cache
 cp -a /opt/npm-bundle/npm-cache/. /tmp/npm-cache/
 chown -R candidate:candidate /tmp/npm-cache
 
-if ! node /tests/runtime/node/copy_workspace.mjs \\
+if ! {NODE_EXECUTABLE} /tests/runtime/node/copy_workspace.mjs \\
   --source /workspace \\
   --destination /tmp/candidate-source; then
-  node /tests/runtime/node/grade-report.mjs \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason candidate-workspace-rejected \\
     --output /logs/verifier
@@ -630,21 +650,19 @@ if ! node /tests/runtime/node/copy_workspace.mjs \\
 fi
 mkdir -p /tmp/candidate-site /tmp/candidate-site/home /tmp/candidate-site/tmp
 chown -R candidate:candidate /tmp/candidate-source /tmp/candidate-site
-if ! runuser -u candidate -- \\
-  env PATH=/usr/local/bin:/usr/bin:/bin \\
-  /usr/local/bin/node /tests/runtime/node/install_candidate.mjs \\
+if ! {NODE_EXECUTABLE} /tests/runtime/node/install_candidate.mjs \\
     --source /tmp/candidate-source \\
     --target /tmp/candidate-site \\
     --cache /tmp/npm-cache; then
-  node /tests/runtime/node/grade-report.mjs \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason candidate-installation-failed \\
     --output /logs/verifier
   exit 0
 fi
 tarball=$(find /tmp/candidate-site -maxdepth 1 -name '*.tgz' -type f | head -1)
-if [[ -z "$tarball" ]] || ! node /tests/runtime/node/validate-package.mjs "$tarball"; then
-  node /tests/runtime/node/grade-report.mjs \\
+if [[ -z "$tarball" ]] || ! {NODE_EXECUTABLE} /tests/runtime/node/validate-package.mjs "$tarball"; then
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason candidate-installation-failed \\
     --output /logs/verifier
@@ -653,28 +671,28 @@ fi
 
 export NODE_CANDIDATE_SITE=/tmp/candidate-site
 export NODE_TEST_CLIENT=/tests/private/test_client.mjs
-if ! node /tests/runtime/node/validate-command-plan.mjs \\
+if ! {NODE_EXECUTABLE} /tests/runtime/node/validate-command-plan.mjs \\
   --path /tests/command-plan.json; then
-  node /tests/runtime/node/grade-report.mjs \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason verifier-internal-error \\
     --output /logs/verifier
   exit 0
 fi
 runner_exit_code=0
-node /tests/runtime/node/run_tests.mjs \\
+{NODE_EXECUTABLE} /tests/runtime/node/run_tests.mjs \\
   --tests /tests/private \\
   --candidate /tmp/candidate-site \\
   --expected {expected} \\
   --output /logs/verifier/report.json || runner_exit_code=$?
 if [[ "$runner_exit_code" -eq 70 ]]; then
-  node /tests/runtime/node/grade-report.mjs \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason candidate-call-failed \\
     --output /logs/verifier
   exit 0
 fi
-node /tests/runtime/node/grade-report.mjs \\
+{NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
   --expected {expected} \\
   --report /logs/verifier/report.json \\
   --runner-exit-code "$runner_exit_code" \\

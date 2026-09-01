@@ -1,5 +1,7 @@
 """Node Harbor compiler composed with the pnpm package-manager adapter."""
 
+# ruff: noqa: E501
+
 from __future__ import annotations
 
 import hashlib
@@ -17,7 +19,13 @@ from nl2repobench.storage.artifacts import LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.storage.materialize import ArchiveKind
 
-from .node_compiler import NodeHarborCompileError, NodeHarborCompiler
+from .node_compiler import (
+    NODE_EXECUTABLE,
+    NODE_RUNTIME_ROOT,
+    PNPM_LAUNCHER,
+    NodeHarborCompileError,
+    NodeHarborCompiler,
+)
 
 
 class PnpmHarborCompiler(NodeHarborCompiler):
@@ -95,15 +103,16 @@ class PnpmHarborCompiler(NodeHarborCompiler):
 
         image = self.toolchain.images.verifier_base
         python_image = self.toolchain.images.verifier_python_base
+        self._write_pnpm_runtime(task_root)
         dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
 FROM --platform=linux/amd64 {python_image}
 
-COPY --from=node-runtime /usr/local/bin/node /usr/local/bin/node
-COPY --from=node-runtime /usr/local/lib/node_modules /usr/local/lib/node_modules
-RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \\
-  && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
-
-RUN npm install --global pnpm@{self.pnpm_version}
+COPY --from=node-runtime /usr/local/bin/node {NODE_EXECUTABLE}
+COPY --from=node-runtime /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm
+COPY pnpm-runtime {NODE_RUNTIME_ROOT}/lib/pnpm
+RUN chmod 0555 {NODE_EXECUTABLE} \\
+  && chmod -R a-w {NODE_RUNTIME_ROOT} \\
+  && test "$({NODE_EXECUTABLE} {PNPM_LAUNCHER} --version)" = "{self.pnpm_version}"
 COPY python-runtime /opt/nl2repobench-runtime
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes \\
@@ -128,12 +137,20 @@ WORKDIR /tests
         os.chmod(tests_root / "test.sh", 0o755)
 
     def _agent_dependency_setup(self) -> str:
-        return f"""RUN npm install --global pnpm@{self.pnpm_version}
+        return f"""COPY pnpm-runtime {NODE_RUNTIME_ROOT}/lib/pnpm
 COPY pnpm-bundle /opt/pnpm-bundle
 ENV PNPM_HOME=/usr/local/share/pnpm \\
     npm_config_offline=true \\
     npm_config_ignore_scripts=true
 """
+
+    def _write_pnpm_runtime(self, task_root: Path) -> None:
+        """Stage the host's packaged pnpm closure for development builds."""
+
+        source = Path("/usr/lib/node_modules/pnpm")
+        if not source.is_dir():
+            raise NodeHarborCompileError("packaged pnpm closure is unavailable")
+        self._copy_tree(source, task_root / "environment/pnpm-runtime")
 
     def _write_empty_pnpm_bundle(self, root: Path) -> None:
         lock = b"""lockfileVersion: '9.0'
@@ -190,49 +207,49 @@ NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()
 python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json
 network_exit=$?
 if [[ "$network_exit" -eq 1 ]]; then
-  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason verifier-network-available --output /logs/verifier
   exit 0
 elif [[ "$network_exit" -ne 0 ]]; then
-  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason verifier-internal-error --output /logs/verifier
   exit 0
 fi
 install -d -o candidate -g candidate -m 0700 /tmp/pnpm-store
 cp -a /opt/pnpm-bundle/pnpm-store/. /tmp/pnpm-store/
 chown -R candidate:candidate /tmp/pnpm-store
-if ! node /tests/runtime/node/copy_workspace.mjs \\
+if ! {NODE_EXECUTABLE} /tests/runtime/node/copy_workspace.mjs \\
   --source /workspace --destination /tmp/candidate-source; then
-  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason candidate-workspace-rejected --output /logs/verifier
   exit 0
 fi
-if ! node /tests/runtime/node/validate-pnpm-command-plan.mjs \\
+if ! {NODE_EXECUTABLE} /tests/runtime/node/validate-pnpm-command-plan.mjs \\
   --path /tests/command-plan.json; then
-  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason verifier-internal-error --output /logs/verifier
   exit 0
 fi
 mkdir -p /tmp/candidate-site /tmp/candidate-site/home /tmp/candidate-site/tmp
 chown -R candidate:candidate /tmp/candidate-source /tmp/candidate-site
-if ! runuser -u candidate -- env PATH=/usr/local/bin:/usr/bin:/bin \\
-  /usr/local/bin/node /tests/runtime/node/install_candidate_pnpm.mjs \\
+if ! {NODE_EXECUTABLE} /tests/runtime/node/install_candidate_pnpm.mjs \\
   --source /tmp/candidate-source --target /tmp/candidate-site --store /tmp/pnpm-store; then
-  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason candidate-installation-failed --output /logs/verifier
   exit 0
 fi
 export NODE_CANDIDATE_SITE=/tmp/candidate-site
 export NODE_TEST_CLIENT=/tests/private/test_client.mjs
 runner_exit_code=0
-node /tests/runtime/node/run_tests.mjs --tests /tests/private --candidate /tmp/candidate-site \\
+{NODE_EXECUTABLE} /tests/runtime/node/run_tests.mjs \\
+  --tests /tests/private --candidate /tmp/candidate-site \\
   --expected {expected} --output /logs/verifier/report.json || runner_exit_code=$?
 if [[ "$runner_exit_code" -eq 70 ]]; then
-  node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason candidate-call-failed --output /logs/verifier
   exit 0
 fi
-node /tests/runtime/node/grade-report.mjs --expected {expected} \\
+{NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
   --report /logs/verifier/report.json \\
   --runner-exit-code "$runner_exit_code" --output /logs/verifier
 exit 0

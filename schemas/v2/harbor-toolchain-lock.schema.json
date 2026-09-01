@@ -150,7 +150,7 @@
       "additionalProperties": false,
       "properties": {
         "executable": {
-          "default": "/usr/local/bin/node",
+           "default": "/opt/nl2repobench-node/bin/node",
           "title": "Executable",
           "type": "string"
         },
@@ -163,7 +163,7 @@
           "type": "string"
         },
         "npm_executable": {
-          "default": "/usr/local/bin/npm",
+           "default": "/opt/nl2repobench-node/lib/npm/bin/npm-cli.js",
           "title": "Npm Executable",
           "type": "string"
         },
@@ -185,7 +185,18 @@
           "default": null,
           "title": "Pnpm Version"
         },
-        "runtime_version": {
+         "pnpm_executable": {
+           "anyOf": [{"type": "string"}, {"type": "null"}],
+           "default": null,
+           "title": "Pnpm Executable"
+         },
+         "runtime_root": {
+           "const": "/opt/nl2repobench-node",
+           "default": "/opt/nl2repobench-node",
+           "title": "Runtime Root",
+           "type": "string"
+         },
+         "runtime_version": {
           "pattern": "^(?:22|24)\\.[0-9]+\\.[0-9]+$",
           "title": "Runtime Version",
           "type": "string"

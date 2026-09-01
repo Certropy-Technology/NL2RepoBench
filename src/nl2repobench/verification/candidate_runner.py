@@ -33,6 +33,8 @@ def _json_default(value: object) -> object:
 
 
 def _apply_limits() -> None:
+    """Apply the bounded non-memory limits for direct candidate runner use."""
+
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     resource.setrlimit(resource.RLIMIT_CPU, (8, 8))
     resource.setrlimit(resource.RLIMIT_FSIZE, (MAX_OUTPUT_BYTES, MAX_OUTPUT_BYTES))
