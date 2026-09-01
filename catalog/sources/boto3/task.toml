@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "aws-sdk"
-tags = ["python", "aws", "sdk", "sessions", "clients", "resources", "stubbing", "separate-verifier"]
+tags = [
+    "python",
+    "aws",
+    "sdk",
+    "sessions",
+    "clients",
+    "resources",
+    "stubbing",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +27,11 @@ source_digest = "sha256:2b56d8a2d4193499e3c3ed6685622e5c75af11c0cfa1e6173d59f100
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "pip install --no-deps --no-build-isolation"
 
 [environment.network_policy]
@@ -34,34 +41,55 @@ reference_source_fetch = "forbidden"
 reason = "The exact third-party runtime, test, and build closure is hash-locked and installed during image build. Agent and verifier runs have no network; only the trusted Oracle receives its private digest-verified reference bundle."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["botocore==1.43.78", "jmespath==1.0.1", "s3transfer==0.19.0", "pytest==8.4.2", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:b60bc17b2558fc212aaa469f7d26d9cdb8f72803a6acc9b96326fd6d028187c8", size_bytes = 3580, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b60bc17b2558fc212aaa469f7d26d9cdb8f72803a6acc9b96326fd6d028187c8", visibility = "private" }
+status = "unknown"
+packages = [
+    "botocore==1.43.78",
+    "jmespath==1.0.1",
+    "s3transfer==0.19.0",
+    "pytest==8.4.2",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 552
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/report_plugin.py", "/tests/verifier/suite"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:25a7aa233c2bb49f69e9a34c4adcaf4fdebb37150755edadc8e86c3bd2c66013", size_bytes = 44802, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:25a7aa233c2bb49f69e9a34c4adcaf4fdebb37150755edadc8e86c3bd2c66013", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:25a7aa233c2bb49f69e9a34c4adcaf4fdebb37150755edadc8e86c3bd2c66013"
+size_bytes = 44802
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:25a7aa233c2bb49f69e9a34c4adcaf4fdebb37150755edadc8e86c3bd2c66013"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned boto3 AWS SDK for Python from an empty workspace and satisfy its deterministic unit contract for sessions, clients, resources, service models, documenters, utilities, transfers, and error behavior without contacting AWS."
-keywords = ["python", "aws-sdk", "sessions", "clients", "resources", "stubbing", "separate-verifier"]
+keywords = [
+    "python",
+    "aws-sdk",
+    "sessions",
+    "clients",
+    "resources",
+    "stubbing",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -81,6 +109,6 @@ uri = "artifact://private/sha256:59f6317dbeda7cb869a2de5051f07894ded80449ad3f8ff
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-next-20260826-r1"
-reason = "Source, dependency closure, verifier, and bounded controls are recorded in task-local evidence; agent run and blind review remain separate publication stages."
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Source, dependency closure, verifier, and bounded controls are recorded in task-local evidence; agent run and blind review remain separate publication stages."

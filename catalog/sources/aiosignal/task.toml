@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "async-callback-library"
-tags = ["python", "asyncio", "callbacks", "frozenlist", "separate-verifier"]
+tags = [
+    "python",
+    "asyncio",
+    "callbacks",
+    "frozenlist",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +24,11 @@ source_digest = "sha256:3cce05c57a65da0028ebd03992845c571d9d5368524529acd422a77e
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked candidate and verifier dependencies during image build"
 
 [environment.network_policy]
@@ -34,46 +38,58 @@ reference_source_fetch = "forbidden"
 reason = "Candidate and verifier dependencies are installed during image build from the private hash lock. Agent and verifier execution is network-isolated; only the trusted Oracle receives the exact upstream host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "coverage==7.15.4",
-  "frozenlist==1.8.0",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "pytest-asyncio==1.4.0",
-  "pytest-cov==7.1.0",
-  "setuptools==84.0.0",
-  "typing-extensions==4.16.0",
+    "coverage==7.15.4",
+    "frozenlist==1.8.0",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "pytest-cov==7.1.0",
+    "setuptools==84.0.0",
+    "typing-extensions==4.16.0",
 ]
-lock_artifact = { digest = "sha256:4d1de95a0e21f5796f116eaa9dcf415bdb831e8daac34d42d955f8eeb7c93d31", size_bytes = 23607, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:4d1de95a0e21f5796f116eaa9dcf415bdb831e8daac34d42d955f8eeb7c93d31", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 13
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:6decbbda752e19fd1319e62280baf20c37b992c74ff8ff876223e4bff0ed8b71", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6decbbda752e19fd1319e62280baf20c37b992c74ff8ff876223e4bff0ed8b71", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:6decbbda752e19fd1319e62280baf20c37b992c74ff8ff876223e4bff0ed8b71"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:6decbbda752e19fd1319e62280baf20c37b992c74ff8ff876223e4bff0ed8b71"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build aiosignal from an empty workspace and satisfy a bounded asynchronous signal contract through a separate child-side JSON verifier."
-keywords = ["python", "asyncio", "callbacks", "frozenlist", "separate-verifier"]
+keywords = [
+    "python",
+    "asyncio",
+    "callbacks",
+    "frozenlist",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -93,6 +109,6 @@ uri = "artifact://private/sha256:99c67b3b14645de6820b12ae620535504fd7a4c29d9cfb8
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-wave2-20260828-c3"
-reason = "Source, dependency closure, custom verifier, controls, and digest-checked Oracle bundle are prepared. Production compile and local behavior smokes passed; Harbor Oracle and control runs are intentionally deferred to the separate Agent Run loop."
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: packaged: Source, dependency closure, custom verifier, controls, and digest-checked Oracle bundle are prepared. Production compile and local behavior smokes passed; Harbor Oracle and control runs are intentionally deferred to the separate Agent Run loop."

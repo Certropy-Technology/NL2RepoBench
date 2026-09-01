@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "asyncio-networking"
-tags = ["python", "asyncio", "tcp", "happy-eyeballs", "socket", "separate-verifier"]
+tags = [
+    "python",
+    "asyncio",
+    "tcp",
+    "happy-eyeballs",
+    "socket",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +25,11 @@ source_digest = "sha256:1bd56621359406cb343f099072ea4e52b75277a6e097a9a6fc57c86b
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked poetry-core build backend during image build; candidate installation uses pip --no-build-isolation and no runtime dependencies"
 
 [environment.network_policy]
@@ -34,34 +39,49 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked poetry-core build backend is installed during image builds. Agent and separate verifier phases have no egress; the trusted Oracle only restores the digest-verified private frozen source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["poetry-core==2.4.1"]
-lock_artifact = { digest = "sha256:6cd136db8707ec7b4e0a85ff51d2d3e3ae7ae35b93c9f57db8b51acf7add9cf2", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6cd136db8707ec7b4e0a85ff51d2d3e3ae7ae35b93c9f57db8b51acf7add9cf2", visibility = "private" }
+status = "unknown"
+packages = [
+    "poetry-core==2.4.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 17
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/probe.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:ba1ef6e1359836ec27e3066922c0020e30985b1b8c3ecad305d0490da27188b6", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ba1ef6e1359836ec27e3066922c0020e30985b1b8c3ecad305d0490da27188b6", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:ba1ef6e1359836ec27e3066922c0020e30985b1b8c3ecad305d0490da27188b6"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:ba1ef6e1359836ec27e3066922c0020e30985b1b8c3ecad305d0490da27188b6"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build aiohappyeyeballs 2.7.1 from an empty workspace and reproduce deterministic asyncio TCP connection and address-info helper behavior through a separate child-side JSON adapter."
-keywords = ["python", "asyncio", "tcp", "happy-eyeballs", "socket", "separate-verifier"]
+keywords = [
+    "python",
+    "asyncio",
+    "tcp",
+    "happy-eyeballs",
+    "socket",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 300.0
 candidate_install_timeout_sec = 60.0
@@ -82,6 +102,6 @@ uri = "artifact://private/sha256:a05d5c48cd83e52e8b27b38c99bf797ebb3016c5f6a0887
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "Harbor 0.21 Oracle passed the frozen 17-leaf contract at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate no-network verifier."
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Harbor 0.21 Oracle passed the frozen 17-leaf contract at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate no-network verifier."

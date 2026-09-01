@@ -6,7 +6,14 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "security-scanning"
-tags = ["python", "aws", "lambda", "yara", "native-dependencies", "blocked"]
+tags = [
+    "python",
+    "aws",
+    "lambda",
+    "yara",
+    "native-dependencies",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,11 +26,9 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.7.9"
 os_name = "linux/amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/binaryalert@sha256:63d558916bbd258b98507ad99bcab5022dfc38f92e1b39eb66e3cb265f4dd392"
 base_image_digest = "sha256:63d558916bbd258b98507ad99bcab5022dfc38f92e1b39eb66e3cb265f4dd392"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,25 +38,35 @@ reason = "The frozen image uses networked, partly unpinned dependencies and nati
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["legacy image requirements and native yara/libarchive artifacts are not a reproducible lock"]
+packages = [
+    "legacy image requirements and native yara/libarchive artifacts are not a reproducible lock",
+]
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked candidate: the frozen BinaryAlert image contains unapproved source/test overlays and lacks an offline separate-verifier contract."
-keywords = ["python", "aws", "lambda", "yara", "native-dependencies", "blocked"]
+keywords = [
+    "python",
+    "aws",
+    "lambda",
+    "yara",
+    "native-dependencies",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0

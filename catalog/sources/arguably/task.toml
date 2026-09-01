@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "cli", "argparse", "repository-generation", "pytest"]
+tags = [
+    "python",
+    "cli",
+    "argparse",
+    "repository-generation",
+    "pytest",
+]
 language = "python"
 
 [source]
@@ -17,12 +23,10 @@ license_spdx = "MIT"
 source_digest = "sha256:125938624742c388ef9130408a620769742b5388b5ce1a04d028751224f6650e"
 
 [environment]
-status = "known"
-python_version = "3.12"
+status = "unknown"
 os_name = "debian-12"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,41 +35,53 @@ reference_source_fetch = "forbidden"
 reason = "All candidate and verifier dependencies are installed during image build from a hash-locked package-index requirements file; run-time egress is disabled."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", size_bytes = 707, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 70
 expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/fixture"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:82d7d5fa8586372994b805b30433069c4b9a2e76095bb64fafc0ee7d486596c4", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:82d7d5fa8586372994b805b30433069c4b9a2e76095bb64fafc0ee7d486596c4", visibility = "private" }
+
+[verifier.bundle]
+digest = "sha256:82d7d5fa8586372994b805b30433069c4b9a2e76095bb64fafc0ee7d486596c4"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:82d7d5fa8586372994b805b30433069c4b9a2e76095bb64fafc0ee7d486596c4"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the arguably command-line argument parsing library from an empty workspace."
-keywords = ["python", "cli", "argparse", "pytest", "separate-verifier", "no-network"]
+keywords = [
+    "python",
+    "cli",
+    "argparse",
+    "pytest",
+    "separate-verifier",
+    "no-network",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -79,7 +95,7 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Production compile is blocked because the registered private Oracle bundle does not contain the required solve.sh entrypoint. The 70-test denominator and subprocess verifier therefore remain unvalidated in Harbor. Rebuild the Oracle bundle from the frozen source with solve.sh at its root, update the artifact reference, compile without --allow-incomplete, and run Oracle plus controls before promotion."
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: blocked: Production compile is blocked because the registered private Oracle bundle does not contain the required solve.sh entrypoint. The 70-test denominator and subprocess verifier therefore remain unvalidated in Harbor. Rebuild the Oracle bundle from the frozen source with solve.sh at its root, update the artifact reference, compile without --allow-incomplete, and run Oracle plus controls before promotion."
 
 [oracle_bundle]
 digest = "sha256:01012df1d872f76ad260d17138c5e56062c9a1d347720318c9138a8ccaba6843"

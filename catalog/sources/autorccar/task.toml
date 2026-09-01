@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "robotics-system"
-tags = ["python", "robotics", "machine-learning", "model-api", "separate-verifier"]
+tags = [
+    "python",
+    "robotics",
+    "machine-learning",
+    "model-api",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,12 +23,10 @@ license_spdx = "BSD-2-Clause"
 source_digest = "sha256:730b441114359e818cd90349868c1a23550c8afc2a8522aaaba71b5d919fb9d9"
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12"
 base_image = "python:3.12-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,31 +36,37 @@ reason = "The bounded model API uses build-time hash-locked dependencies; model 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = [
-  "numpy==2.2.6",
-  "opencv-python-headless==4.12.0.88",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "numpy==2.2.6",
+    "opencv-python-headless==4.12.0.88",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 10
 expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/fixture"]
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the hardware-independent AutoRCCar model and training-data API from an empty workspace."
-keywords = ["python", "robotics", "machine-learning", "model-api", "separate-verifier"]
+keywords = [
+    "python",
+    "robotics",
+    "machine-learning",
+    "model-api",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0

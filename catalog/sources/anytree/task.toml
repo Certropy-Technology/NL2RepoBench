@@ -7,14 +7,14 @@ instruction = "instruction.md"
 difficulty = "medium"
 category = "tree-data-structure"
 tags = [
-  "python",
-  "tree",
-  "iterators",
-  "rendering",
-  "json",
-  "mermaid",
-  "scenario-adapter",
-  "separate-verifier",
+    "python",
+    "tree",
+    "iterators",
+    "rendering",
+    "json",
+    "mermaid",
+    "scenario-adapter",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -27,13 +27,11 @@ source_digest = "sha256:bc253cb8287fdbeae24cf78801f81024fcc4317541a6334419582378
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -42,44 +40,57 @@ reference_source_fetch = "forbidden"
 reason = "Build-time dependencies are installed from the private hash lock; agent and verifier runs are network-isolated. Oracle receives only the private digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "annotated-doc==0.0.4",
-  "markdown-it-py==4.0.0",
-  "mdurl==0.1.2",
-  "pdm-backend==2.4.9",
-  "pygments==2.20.0",
-  "rich==15.0.0",
-  "setuptools==80.9.0",
-  "shellingham==1.5.4",
-  "wheel==0.45.1",
+    "annotated-doc==0.0.4",
+    "markdown-it-py==4.0.0",
+    "mdurl==0.1.2",
+    "pdm-backend==2.4.9",
+    "pygments==2.20.0",
+    "rich==15.0.0",
+    "setuptools==80.9.0",
+    "shellingham==1.5.4",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", size_bytes = 922, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 19
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build anytree from an empty workspace and satisfy a bounded JSON scenario suite for its public tree, traversal, path, rendering, and import-export APIs."
-keywords = ["python", "tree", "iterators", "scenario-adapter", "json", "separate-verifier"]
+keywords = [
+    "python",
+    "tree",
+    "iterators",
+    "scenario-adapter",
+    "json",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -99,6 +110,6 @@ uri = "artifact://private/sha256:dede9730f20ed93e4114a6425ce14f7b9443ac161d7d66f
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "repair/anytree"
-reason = "Production Harbor compile passed; Oracle was valid at 19/19 reward 1.0, nop was valid model-zero, and stub/forgery controls were valid at 0/19. Review and publication remain pending."
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Production Harbor compile passed; Oracle was valid at 19/19 reward 1.0, nop was valid model-zero, and stub/forgery controls were valid at 0/19. Review and publication remain pending."

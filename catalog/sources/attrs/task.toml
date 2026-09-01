@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "data-model"
-tags = ["python", "data-model", "dataclass-transform", "validators", "converters", "repository-generation", "pytest", "separate-verifier"]
+tags = [
+    "python",
+    "data-model",
+    "dataclass-transform",
+    "validators",
+    "converters",
+    "repository-generation",
+    "pytest",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -14,17 +23,14 @@ status = "known"
 upstream_url = "https://github.com/python-attrs/attrs"
 revision = "c1dc5dcba16ed827aa6dcad896b41a3afedb4e32"
 license_spdx = "MIT"
-# Unprefixed `git archive --format=tar HEAD` from the detached revision.
 source_digest = "sha256:c7ebd671099d268790f83a2bc3e51b0dc3844bafd41a71b9768567e656538fac"
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,38 +39,45 @@ reference_source_fetch = "forbidden"
 reason = "The candidate build closure is installed during Docker build; the agent and separate verifier run without egress, and the Oracle consumes a locally bundled archive of the pinned revision."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "hatch-fancy-pypi-readme==25.1.0",
-  "hatch-vcs==0.5.0",
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "trove-classifiers==2026.6.1.19",
-  "vcs-versioning==2.3.1",
+    "hatch-fancy-pypi-readme==25.1.0",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:1cf14dce7bdbfee65cfc65d14a519fa3084f0b9e09223a6e8668225f6610c201", size_bytes = 2377, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1cf14dce7bdbfee65cfc65d14a519fa3084f0b9e09223a6e8668225f6610c201", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned attrs class-building library from an empty workspace; grading uses deterministic allowlisted JSON class, conversion, validation, and introspection scenarios."
-keywords = ["python", "data-model", "validators", "converters", "json-scenarios", "separate-verifier"]
+keywords = [
+    "python",
+    "data-model",
+    "validators",
+    "converters",
+    "json-scenarios",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -78,9 +91,16 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
 digest = "sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf06172f3def30ed932"
@@ -90,6 +110,6 @@ uri = "artifact://private/sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "integrator"
-reason = "Production bundle passed the required Oracle gate and empty, stub, and forgery controls; review and pilot remain separate publication stages."
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Production bundle passed the required Oracle gate and empty, stub, and forgery controls; review and pilot remain separate publication stages."
