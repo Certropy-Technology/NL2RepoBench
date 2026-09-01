@@ -32,6 +32,9 @@ MAX_MEMBERS = 100_000
 MAX_MEMBER_BYTES = 512 * 1024 * 1024
 MAX_TOTAL_BYTES = 2 * 1024**3
 MAX_PATH_BYTES = 255
+EXECUTABLE_MEMBER_NAMES = frozenset(
+    {"test.sh", "solve.sh", "run.py", "contract.sh", "verifier.sh"}
+)
 
 
 class PrivateArchiveMigrationError(ValueError):
@@ -285,6 +288,10 @@ def migrate_private_archive(
                         continue
                     if member.sparse:
                         raise PrivateArchiveMigrationError("sparse files are not supported")
+                    if member.mode & 0o111 and Path(path).name not in EXECUTABLE_MEMBER_NAMES:
+                        raise PrivateArchiveMigrationError(
+                            f"executable archive member is not allowlisted: {path}"
+                        )
                     if member.size < 0 or member.size > bounded.max_member_bytes:
                         raise PrivateArchiveMigrationError("archive member exceeds size limit")
                     if total_bytes + member.size > bounded.max_total_bytes:
@@ -376,6 +383,8 @@ def _write_regular(path: Path, data: bytes) -> None:
     parent.mkdir(parents=True, exist_ok=True)
     if path.is_symlink():
         raise PrivateArchiveMigrationError("output must not be a symlink")
+    if path.exists():
+        raise PrivateArchiveMigrationError(f"output already exists: {path}")
     descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}-", dir=parent)
     try:
         with os.fdopen(descriptor, "wb") as handle:
@@ -383,7 +392,11 @@ def _write_regular(path: Path, data: bytes) -> None:
             handle.write(data)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        try:
+            os.link(temporary, path)
+        except FileExistsError as exc:
+            raise PrivateArchiveMigrationError(f"output already exists: {path}") from exc
+        os.unlink(temporary)
     finally:
         if descriptor != -1:
             os.close(descriptor)

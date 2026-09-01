@@ -25,6 +25,7 @@ from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
 from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.canonical_ustar import decode_archive, encode_files, tree_digest
 from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
+from nl2repobench.verification.node_command_plan import load_node_command_plan
 
 _MIGRATOR_PATH = Path(__file__).with_name("migrate_private_archive.py")
 _MIGRATOR_SPEC = importlib.util.spec_from_file_location("private_archive_migration", _MIGRATOR_PATH)
@@ -44,6 +45,20 @@ VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$")
 
 class PrivateReleasePreparationError(ValueError):
     """Raised when a release cannot be safely staged."""
+
+
+def _assert_no_symlink_ancestors(path: Path, label: str) -> None:
+    """Reject a path whose existing lexical ancestors contain a symlink."""
+
+    cursor = Path(os.path.abspath(path))
+    while True:
+        if cursor.is_symlink():
+            raise PrivateReleasePreparationError(
+                f"{label} and its ancestors must not contain symlinks: {path}"
+            )
+        if cursor == cursor.parent:
+            return
+        cursor = cursor.parent
 
 
 def _digest_bytes(data: bytes) -> str:
@@ -166,6 +181,7 @@ def _write_staging_metadata(path: Path, data: bytes) -> None:
         raise PrivateReleasePreparationError("staging metadata exceeds size limit")
     if path.is_symlink():
         raise PrivateReleasePreparationError(f"staging metadata must not be a symlink: {path}")
+    _assert_no_symlink_ancestors(path, "staging metadata")
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         current = _safe_regular(path, max_bytes=MAX_METADATA_BYTES)
@@ -228,6 +244,64 @@ def _source_update_plan(
     }
 
 
+def _migrate_command_artifact(
+    data: bytes,
+    reference: ArtifactRef,
+) -> tuple[bytes, str, str]:
+    """Extract and validate the canonical Node command plan from legacy bytes."""
+
+    def canonicalize(plan_data: bytes) -> bytes:
+        try:
+            payload = json.loads(plan_data)
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise PrivateReleasePreparationError("command-plan.json is not valid JSON") from exc
+        if not isinstance(payload, dict):
+            raise PrivateReleasePreparationError("command-plan.json must be a JSON object")
+        # Historical Node plans used the old record shape but already carried
+        # the exact runner contract. Only the shape version and omitted
+        # canonical defaults are migrated; no command semantics are invented.
+        normalized = dict(payload)
+        if normalized.get("schema_version") == "2.0":
+            normalized["schema_version"] = "1.0"
+        normalized.setdefault("identity", "node+npm")
+        normalized.setdefault("steps", [])
+        try:
+            plan = load_node_command_plan(
+                _canonical_json(normalized),
+                candidate_install="npm-pack-offline-v1",
+            )
+        except ValueError as exc:
+            raise PrivateReleasePreparationError("command-plan.json is invalid") from exc
+        return _canonical_json(plan.model_dump(mode="json"))
+
+    if reference.media_type == "application/vnd.nl2repobench.command-plan+json":
+        return (
+            canonicalize(data),
+            "application/vnd.nl2repobench.command-plan+json",
+            "json",
+        )
+
+    try:
+        result = migrate_private_archive(data, ArchiveKind.TEST_BUNDLE)
+        members = decode_archive(result.archive)
+    except (PrivateArchiveMigrationError, TypeError, ValueError) as exc:
+        raise PrivateReleasePreparationError("cannot migrate commands artifact") from exc
+    command_members = [
+        member
+        for member in members
+        if member.entry.type == "file" and member.entry.path == "command-plan.json"
+    ]
+    if len(command_members) != 1 or command_members[0].data is None:
+        raise PrivateReleasePreparationError(
+            "legacy commands artifact must contain exactly command-plan.json"
+        )
+    return (
+        canonicalize(command_members[0].data),
+        "application/vnd.nl2repobench.command-plan+json",
+        "archive",
+    )
+
+
 def prepare_private_release(
     *,
     task_root: Path,
@@ -280,11 +354,12 @@ def prepare_private_release(
             "dependency migration requires the explicit --empty-npm-closure assertion"
         )
     if (
-        source.dependencies.package_manager is not PackageManager.NPM
+        source.dependencies.status != "unknown"
+        or source.dependencies.package_manager is not PackageManager.NPM
         or source.dependencies.packages
     ):
         raise PrivateReleasePreparationError(
-            "--empty-npm-closure is only valid for an npm task with an empty packages list"
+            "--empty-npm-closure requires dependencies.status=unknown and an empty npm package list"
         )
     toolchain_data = _safe_regular(toolchain, max_bytes=MAX_METADATA_BYTES)
     toolchain_digest = _digest_bytes(toolchain_data)
@@ -305,26 +380,57 @@ def prepare_private_release(
     for role, reference, _kind in refs:
         if reference.visibility is not Visibility.PRIVATE:
             raise PrivateReleasePreparationError(f"{role} artifact must remain private")
-    if staging_root.is_symlink():
-        raise PrivateReleasePreparationError("staging root must not be a symlink")
+    _assert_no_symlink_ancestors(staging_root, "staging root")
     artifact_store = FileArtifactStore(staging_root / "artifacts")
     artifact_records: list[dict[str, object]] = []
     new_refs: dict[str, ArtifactRef] = {}
     for role, reference, kind in refs:
         old_data = _read_cas(cas_root, reference)
-        try:
-            result = migrate_private_archive(old_data, kind)
-        except (PrivateArchiveMigrationError, TypeError, ValueError) as exc:
-            raise PrivateReleasePreparationError(f"cannot migrate {role} artifact") from exc
-        if result.new_sha256 == result.old_sha256:
-            raise PrivateReleasePreparationError(f"{role} migration did not mint a new digest")
+        if role == "commands":
+            command_data, command_media_type, _command_shape = _migrate_command_artifact(
+                old_data, reference
+            )
+            result = None
+            old_sha256 = _digest_bytes(old_data)
+            new_sha256 = _digest_bytes(command_data)
+            new_size = len(command_data)
+            file_count = 1
+            artifact_media_type = command_media_type
+            tree = None
+        else:
+            try:
+                result = migrate_private_archive(old_data, kind)
+            except (PrivateArchiveMigrationError, TypeError, ValueError) as exc:
+                raise PrivateReleasePreparationError(f"cannot migrate {role} artifact") from exc
+            if result.new_sha256 == result.old_sha256:
+                raise PrivateReleasePreparationError(f"{role} migration did not mint a new digest")
+            old_sha256 = result.old_sha256
+            new_sha256 = result.new_sha256
+            new_size = result.new_size
+            file_count = result.file_count
+            artifact_media_type = result.media_type
+            tree = result.tree_digest
+            command_data = result.archive
         new_ref = artifact_store.put_bytes(
-            result.archive,
-            media_type=result.media_type,
+            command_data,
+            media_type=artifact_media_type,
             visibility=Visibility.PRIVATE,
         )
         new_refs[role] = new_ref
-        artifact_records.append(_artifact_record(role, reference, result, new_ref))
+        artifact_records.append(
+            {
+                "role": role,
+                "old_ref": reference.uri,
+                "old_sha256": old_sha256,
+                "old_size": len(old_data),
+                "new_ref": new_ref.uri,
+                "new_sha256": new_sha256,
+                "new_size": new_size,
+                "media_type": new_ref.media_type,
+                "file_count": file_count,
+                "tree_digest": tree,
+            }
+        )
 
     lock_data = _canonical_json({"lockfileVersion": 3, "packages": {"": {}}})
     lock_archive = encode_files({"package-lock.json": lock_data})
@@ -346,7 +452,7 @@ def prepare_private_release(
         "toolchain_digest": toolchain_digest,
         "lock": _inventory_section("dependency-lock", lock_ref.digest, lock_archive),
         "store": _inventory_section("offline-store", store_ref.digest, store_archive),
-        "offline_smoke": {"status": "passed", "command_id": "npm-empty-closure-v1"},
+        "offline_smoke": {"status": "not-run", "command_id": "node-npm-offline-install-v1"},
     }
     inventory_data = _canonical_json(inventory_payload)
     inventory_ref = artifact_store.put_bytes(

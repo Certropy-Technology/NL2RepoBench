@@ -41,7 +41,7 @@ def test_helper_migrates_gzip_tar_and_preserves_executable_class() -> None:
     output = io.BytesIO()
     with tarfile.open(fileobj=output, mode="w:gz", format=tarfile.GNU_FORMAT) as archive:
         for name, payload, mode in (
-            ("./run.sh", b"#!/bin/sh\n", 0o700),
+            ("./solve.sh", b"#!/bin/sh\n", 0o700),
             ("data/value.txt", b"value", 0o644),
         ):
             info = tarfile.TarInfo(name)
@@ -56,8 +56,14 @@ def test_helper_migrates_gzip_tar_and_preserves_executable_class() -> None:
     assert [(member.entry.path, member.entry.mode, member.data) for member in members] == [
         ("data", 0o555, None),
         ("data/value.txt", 0o444, b"value"),
-        ("run.sh", 0o555, b"#!/bin/sh\n"),
+        ("solve.sh", 0o555, b"#!/bin/sh\n"),
     ]
+
+
+def test_helper_rejects_executable_non_entrypoint() -> None:
+    legacy = _legacy_tar(("bin/tool", b"#!/bin/sh\n", 0o755, "file"))
+    with pytest.raises(_MODULE.PrivateArchiveMigrationError, match="allowlisted"):
+        _MODULE.migrate_private_archive(legacy, "test-bundle")
 
 
 def test_helper_accepts_gnu_tar_root_directory_marker() -> None:
@@ -157,3 +163,29 @@ def test_cli_emits_only_metadata_json_and_writes_canonical_archive(tmp_path: Pat
     }
     assert b"private payload" not in completed.stdout.encode()
     assert decode_archive(destination.read_bytes())[0].data == b"private payload"
+
+
+def test_cli_refuses_to_overwrite_existing_output(tmp_path: Path) -> None:
+    legacy = _legacy_tar(("file.txt", b"private payload", 0o644, "file"))
+    source = tmp_path / "legacy.tar"
+    destination = tmp_path / "canonical.tar"
+    source.write_bytes(legacy)
+    destination.write_bytes(b"keep")
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(_SCRIPT),
+            "--input",
+            str(source),
+            "--output",
+            str(destination),
+            "--kind",
+            "test-bundle",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 1
+    assert json.loads(completed.stdout)["error"] == f"output already exists: {destination}"
+    assert destination.read_bytes() == b"keep"
