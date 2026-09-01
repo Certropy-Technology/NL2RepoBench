@@ -80,9 +80,11 @@ class PnpmHarborCompiler(NodeHarborCompiler):
         tests_root.mkdir(parents=True)
         runtime_root = tests_root / "runtime"
         runtime_root.mkdir()
-        node_runtime = Path(__file__).parents[1] / "verification/node"
-        self._copy_tree(node_runtime, runtime_root / "node")
+        self._write_node_runtime(runtime_root / "node")
         self._write_python_verifier_runtime(tests_root)
+        self._write_node_python_adapter(tests_root / "python-adapter")
+        self._write_python_runtime_manifest_check(tests_root)
+        self._write_pnpm_adapter(runtime_root / "node/install_pnpm.py")
         command_plan = self._resolve_node_command_plan(manifest, allow_incomplete)
         atomic_write(
             tests_root / "command-plan.json",
@@ -130,7 +132,7 @@ class PnpmHarborCompiler(NodeHarborCompiler):
             json.dumps(runtime_manifest, sort_keys=True, separators=(",", ":")).encode()
             + b"\n",
         )
-        runtime_manifest_check = self._runtime_manifest_check()
+        runtime_manifest_check = self._runtime_manifest_check(image)
         runtime_manifest_stage = self._runtime_manifest_stage(image, allow_incomplete)
         runtime_manifest_final = (
             "" if allow_incomplete else "COPY node-runtime.manifest.json "
@@ -159,7 +161,12 @@ RUN test -f {NODE_RUNTIME_ROOT}/runtime.manifest.json \\
   && test "$({NODE_EXECUTABLE} {PNPM_LAUNCHER} --version)" = "{self.pnpm_version}"
 {runtime_manifest_check}
 COPY python-runtime /opt/nl2repobench-runtime
+COPY python-runtime-manifest.json /tests/python-runtime-manifest.json
+COPY python-runtime-manifest-check.py /tests/python-runtime-manifest-check.py
+COPY python-adapter /opt/nl2repobench-node-adapter
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
+RUN /usr/local/bin/python3 -I -B /tests/python-runtime-manifest-check.py \\
+  --root /opt/nl2repobench-runtime/nl2repobench --manifest /tests/python-runtime-manifest.json
 RUN python -m pip install --no-cache-dir --require-hashes \\
   -r /tmp/verifier-requirements.lock.txt
 COPY dependencies /opt/pnpm-bundle
@@ -169,6 +176,7 @@ COPY --chmod=0500 private /tests/private
 COPY --chmod=0555 test.sh /tests/test.sh
 RUN useradd --uid 10001 --create-home candidate \\
   && chmod -R 0555 /opt/nl2repobench-runtime \\
+  && chmod -R 0555 /opt/nl2repobench-node-adapter \\
   && chmod -R 0500 /tests/private \\
   && chmod -R 0555 /tests/runtime
 WORKDIR /tests
@@ -277,8 +285,14 @@ if ! {NODE_EXECUTABLE} /tests/runtime/node/validate-pnpm-command-plan.mjs \\
 fi
 mkdir -p /tmp/candidate-site /tmp/candidate-site/home /tmp/candidate-site/tmp
 chown -R candidate:candidate /tmp/candidate-source /tmp/candidate-site
-if ! {NODE_EXECUTABLE} /tests/runtime/node/install_candidate_pnpm.mjs \\
-  --source /tmp/candidate-source --target /tmp/candidate-site --store /tmp/pnpm-store; then
+install_exit=0
+/usr/local/bin/python3 -I -B /tests/runtime/node/install_pnpm.py \\
+  --source /tmp/candidate-source --target /tmp/candidate-site --store /tmp/pnpm-store || install_exit=$?
+if [[ "$install_exit" -eq 70 ]]; then
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
+    --reason verifier-internal-error --output /logs/verifier
+  exit 0
+elif [[ "$install_exit" -ne 0 ]]; then
   {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
     --reason candidate-installation-failed --output /logs/verifier
   exit 0

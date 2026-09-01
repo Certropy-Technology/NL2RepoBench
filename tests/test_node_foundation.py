@@ -284,7 +284,10 @@ def test_canonical_development_compiler_is_deterministic_and_hides_private_fixtu
         '"' in agent_dockerfile
     )
     assert " AS node-runtime" in agent_dockerfile
-    assert f"COPY --from=node-runtime /opt/nl2repobench-node /opt/nl2repobench-node" in agent_dockerfile
+    assert (
+        "COPY --from=node-runtime /opt/nl2repobench-node /opt/nl2repobench-node"
+        in agent_dockerfile
+    )
     assert "cp --dereference" in agent_dockerfile
     assert "runtime.manifest.json" in agent_dockerfile
     assert "/usr/local/bin/npm" not in agent_dockerfile
@@ -292,7 +295,8 @@ def test_canonical_development_compiler_is_deterministic_and_hides_private_fixtu
     assert "npm_config_offline=true" in agent_dockerfile
     assert not list((first / "environment").rglob("solution"))
     generated_test_script = (first / "tests/test.sh").read_text()
-    assert "install_candidate.mjs" in generated_test_script
+    assert "install_candidate.mjs" not in generated_test_script
+    assert "install_npm.py" in generated_test_script
     assert "NODE_CANDIDATE_SITE=/tmp/candidate-site" in generated_test_script
     assert "NODE_TEST_CLIENT=/tests/private/test_client.mjs" in generated_test_script
     assert "candidate-installation-failed" in generated_test_script
@@ -1001,6 +1005,11 @@ def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.Mon
     pnpm_script = (
         ROOT / "src/nl2repobench/verification/node/install_candidate_pnpm.mjs"
     ).read_text()
+    pnpm_compiler = (
+        ROOT / "src/nl2repobench/harbor/pnpm_compiler.py"
+    ).read_text()
+    assert "install_candidate_pnpm.mjs" not in pnpm_compiler
+    assert "install_pnpm.py" in pnpm_compiler
     assert 'const NODE_ROOT = "/opt/nl2repobench-node"' in pnpm_script
     assert 'const PNPM = `${NODE_ROOT}/lib/pnpm/bin/pnpm.cjs`' in pnpm_script
     assert "/usr/local/bin/pnpm" not in pnpm_script

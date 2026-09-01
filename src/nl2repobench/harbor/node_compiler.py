@@ -47,6 +47,7 @@ from .node_dependencies import (
 from .node_toolchain import NodeRuntimeManifest, load_node_toolchain_lock
 from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
+    _PYTHON_VERIFIER_FILES,
     TaskWriterError,
     copy_python_verifier_runtime,
     copy_tree,
@@ -61,6 +62,16 @@ NODE_RUNTIME_ROOT = "/opt/nl2repobench-node"
 NODE_EXECUTABLE = f"{NODE_RUNTIME_ROOT}/bin/node"
 NPM_LAUNCHER = f"{NODE_RUNTIME_ROOT}/lib/npm/bin/npm-cli.js"
 PNPM_LAUNCHER = f"{NODE_RUNTIME_ROOT}/lib/pnpm/bin/pnpm.cjs"
+NODE_VERIFIER_FILES = (
+    "candidate_runner.mjs",
+    "copy_workspace.mjs",
+    "grade-report.mjs",
+    "run_tests.mjs",
+    "validate-command-plan.mjs",
+    "validate-package.mjs",
+    "validate-pnpm-command-plan.mjs",
+)
+NODE_PYTHON_ADAPTER_ROOT = "/opt/nl2repobench-node-adapter"
 
 
 class NodeHarborCompileError(ValueError):
@@ -255,6 +266,171 @@ class NodeHarborCompiler:
         if controls.is_dir():
             self._copy_tree(controls, task_root / "controls")
 
+    def _write_node_runtime(self, destination: Path) -> None:
+        """Copy only verifier-owned Node scripts; candidate installers stay Python."""
+
+        source = Path(__file__).parents[1] / "verification/node"
+        for relative in NODE_VERIFIER_FILES:
+            path = source / relative
+            if path.is_symlink() or not path.is_file():
+                raise NodeHarborCompileError(f"Node verifier runtime file is missing: {relative}")
+            target = destination / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            atomic_write(target, path.read_bytes())
+
+    def _write_node_python_adapter(self, destination: Path) -> None:
+        """Package the reviewed Python Node installer and its minimal dependencies."""
+
+        files = tuple(_PYTHON_VERIFIER_FILES) + (
+            "verification/node_candidate_client.py",
+            "verification/node_candidate_install.py",
+            "harbor/node_dependencies.py",
+            "harbor/__init__.py",
+            "storage/files.py",
+            "storage/__init__.py",
+        )
+        package_root = Path(__file__).parents[1]
+        for relative in files:
+            source = package_root / relative
+            if source.is_symlink() or not source.is_file():
+                raise NodeHarborCompileError(f"Node Python adapter file is missing: {relative}")
+            target = destination / "nl2repobench" / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            atomic_write(target, source.read_bytes())
+
+    @staticmethod
+    def _write_npm_adapter(destination: Path) -> None:
+        """Write the fixed Python entrypoint for npm candidate installation."""
+
+        atomic_write(
+            destination,
+            b'''#!/usr/bin/env python3
+import argparse
+from pathlib import Path
+import sys
+
+sys.path.insert(0, "/opt/nl2repobench-node-adapter")
+from nl2repobench.verification.node_candidate_install import install_candidate
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--source", type=Path, required=True)
+parser.add_argument("--target", type=Path, required=True)
+parser.add_argument("--cache", type=Path, required=True)
+args = parser.parse_args()
+result = install_candidate(args.source, args.target, cache=args.cache)
+raise SystemExit(0 if result.get("outcome") == "success" else (70 if result.get("outcome") == "internal-error" else 71))
+''',
+        )
+
+    @staticmethod
+    def _write_python_runtime_manifest_check(tests_root: Path) -> None:
+        """Write the fixed image-side checker for the shared Python runtime."""
+
+        atomic_write(
+            tests_root / "python-runtime-manifest-check.py",
+            b'''#!/usr/bin/env python3
+import argparse
+import hashlib
+import json
+import stat
+from pathlib import Path, PurePosixPath
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--root", type=Path, required=True)
+parser.add_argument("--manifest", type=Path, required=True)
+args = parser.parse_args()
+manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+root = args.root
+if manifest.get("schema_version") != "1.0" or manifest.get("digest_algorithm") != "sha256:path-nul-raw-file-sha256-v1":
+    raise SystemExit("invalid Python runtime manifest identity")
+if manifest.get("runtime_root") != str(root):
+    raise SystemExit("Python runtime manifest root mismatch")
+entries = manifest.get("files")
+if not isinstance(entries, list):
+    raise SystemExit("Python runtime manifest files must be a list")
+declared = set()
+digest = hashlib.sha256()
+for entry in entries:
+    if not isinstance(entry, dict):
+        raise SystemExit("invalid Python runtime manifest entry")
+    relative = entry.get("path")
+    if not isinstance(relative, str) or relative in declared:
+        raise SystemExit("invalid or duplicate Python runtime path")
+    path = PurePosixPath(relative)
+    if path.is_absolute() or not relative or ".." in path.parts:
+        raise SystemExit("Python runtime path escapes root")
+    declared.add(relative)
+    target = root / Path(*path.parts)
+    metadata = target.lstat()
+    if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+        raise SystemExit("Python runtime entry is not a regular unique file")
+    data = target.read_bytes()
+    if (entry.get("type") != "file" or len(data) != entry.get("size_bytes") or
+            stat.S_IMODE(metadata.st_mode) != entry.get("mode") or
+            hashlib.sha256(data).hexdigest() != entry.get("sha256")):
+        raise SystemExit("Python runtime entry metadata or digest mismatch")
+    digest.update(relative.encode("utf-8"))
+    digest.update(b"\\0")
+    digest.update(hashlib.sha256(data).digest())
+actual = set()
+for path in root.rglob("*"):
+    metadata = path.lstat()
+    if stat.S_ISDIR(metadata.st_mode):
+        continue
+    if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+        raise SystemExit("Python runtime contains an unsafe unlisted entry")
+    actual.add(path.relative_to(root).as_posix())
+if actual != declared or manifest.get("runtime_sha256") != "sha256:" + digest.hexdigest():
+    raise SystemExit("Python runtime closed-tree digest mismatch")
+''',
+        )
+
+    @staticmethod
+    def _write_pnpm_adapter(destination: Path) -> None:
+        """Write a trusted Python adapter using the shared Node supervisor."""
+
+        atomic_write(
+            destination,
+            b'''#!/usr/bin/env python3
+import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, "/opt/nl2repobench-node-adapter")
+from nl2repobench.verification.node_candidate_client import run_node_command
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--source", type=Path, required=True)
+parser.add_argument("--target", type=Path, required=True)
+parser.add_argument("--store", type=Path, required=True)
+args = parser.parse_args()
+node = "/opt/nl2repobench-node/bin/node"
+pnpm = "/opt/nl2repobench-node/lib/pnpm/bin/pnpm.cjs"
+environment = {
+    "HOME": str(args.target / "home"),
+    "TMPDIR": str(args.target / "tmp"),
+    "npm_config_cache": str(args.store),
+    "npm_config_ignore_scripts": "true",
+    "npm_config_offline": "true",
+    "npm_config_auto_install_peers": "false",
+    "npm_config_exclude_links_from_lockfile": "false",
+}
+def run(arguments: list[str], cwd: Path) -> None:
+    result = run_node_command([node, pnpm, *arguments], cwd=cwd, write_root=args.target,
+                              timeout_sec=90.0, environment=environment, context="install")
+    if result.verifier_invalid:
+        raise SystemExit(70)
+    if result.returncode != 0:
+        raise SystemExit(71)
+run(["install", "--offline", "--frozen-lockfile", "--ignore-scripts", f"--store-dir={args.store}"], args.source)
+run(["pack", "--pack-destination", str(args.target)], args.source)
+tarballs = sorted(args.target.glob("*.tgz"))
+if len(tarballs) != 1:
+    raise SystemExit(71)
+run(["install", str(tarballs[0]), "--offline", "--ignore-scripts", f"--store-dir={args.store}", f"--dir={args.target}"], args.target)
+''',
+        )
+
     def _write_instruction(self, source_dir: Path, relative: str, task_root: Path) -> None:
         try:
             write_instruction(source_dir, relative, task_root)
@@ -270,7 +446,7 @@ class NodeHarborCompiler:
         runtime_manifest = self._runtime_manifest_payload(
             node_image, allow_incomplete=allow_incomplete
         )
-        runtime_manifest_check = self._runtime_manifest_check()
+        runtime_manifest_check = self._runtime_manifest_check(node_image)
         atomic_write(
             task_root / "environment/node-runtime.manifest.json",
             json.dumps(runtime_manifest, sort_keys=True, separators=(",", ":")).encode()
@@ -369,13 +545,35 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
         )
         return f"RUN {NODE_EXECUTABLE} -e {shlex.quote(script)}\n"
 
-    @staticmethod
-    def _runtime_manifest_check() -> str:
+    def _runtime_manifest_check(self, source_image: str) -> str:
         """Validate every staged file and the canonical tree digest in Docker."""
 
+        expected = json.dumps(
+            {
+                "ecosystem": "node",
+                "platform": "linux/amd64",
+                "root": NODE_RUNTIME_ROOT,
+                "source_image": source_image,
+                "runtime_version": self.toolchain.runtime.runtime_version,
+                "npm_version": self.toolchain.runtime.npm_version,
+                "pnpm_version": self.toolchain.runtime.pnpm_version,
+                "digest_algorithm": "sha256",
+                "executables": [{"name": "node", "path": "bin/node"}],
+                "launchers": [
+                    {"name": "npm", "path": "lib/npm/bin/npm-cli.js"},
+                    *(
+                        [{"name": "pnpm", "path": "lib/pnpm/bin/pnpm.cjs"}]
+                        if self.toolchain.runtime.pnpm_version is not None
+                        else []
+                    ),
+                ],
+            },
+            separators=(",", ":"),
+        )
         check = (
             "const fs=require('fs'),c=require('crypto'),r='/opt/nl2repobench-node',"
-            "m=JSON.parse(fs.readFileSync(r+'/runtime.manifest.json')),a=[];"
+            f"m=JSON.parse(fs.readFileSync(r+'/runtime.manifest.json')),e={expected},a=[];"
+            "for(const k of ['ecosystem','platform','root','source_image','runtime_version','npm_version','pnpm_version','digest_algorithm'])if(m[k]!==e[k])throw Error('runtime manifest identity mismatch: '+k);"
             "const w=(d,p)=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){"
             "const q=d+'/'+e.name,x=p?p+'/'+e.name:e.name,s=fs.lstatSync(q);"
             "if(x==='runtime.manifest.json')continue;if(e.isDirectory())w(q,x);else{if(!e.isFile()||s.nlink!==1||(s.mode&0o6000))"
@@ -387,6 +585,8 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
             "(s.mode&0o777)!==x.mode)throw Error('runtime manifest file digest mismatch: '+x.path);"
             "h.update(Buffer.from(x.path));h.update(Buffer.from([0]));h.update(Buffer.from(z,'hex'))}"
             "if('sha256:'+h.digest('hex')!==m.tree_sha256)throw Error('runtime manifest tree digest mismatch');"
+            "const identity=(x)=>x.map(y=>y.name+':'+y.path).sort().join(',');"
+            "if(identity(m.executables||[])!==identity(e.executables)||identity(m.launchers||[])!==identity(e.launchers))throw Error('runtime manifest launcher identity mismatch');"
             "for(const x of [...(m.executables||[]),...(m.launchers||[])])if(!f.includes(x.path))"
             "throw Error('runtime identity is not in tree')"
         )
@@ -431,9 +631,12 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
         tests_root.mkdir(parents=True)
         runtime_root = tests_root / "runtime"
         runtime_root.mkdir()
-        node_runtime = Path(__file__).parents[1] / "verification/node"
-        self._copy_tree(node_runtime, runtime_root / "node")
+        self._write_node_runtime(runtime_root / "node")
         self._write_python_verifier_runtime(tests_root)
+        self._write_node_python_adapter(tests_root / "python-adapter")
+        self._write_python_runtime_manifest_check(tests_root)
+        self._write_npm_adapter(runtime_root / "node/install_npm.py")
+        self._write_pnpm_adapter(runtime_root / "node/install_pnpm.py")
         command_plan = self._resolve_node_command_plan(manifest, allow_incomplete)
         atomic_write(
             tests_root / "command-plan.json",
@@ -504,7 +707,12 @@ RUN test -f {NODE_RUNTIME_ROOT}/runtime.manifest.json \\
   && test "$( {NODE_EXECUTABLE} {NPM_LAUNCHER} --version)" = "{self.toolchain.runtime.npm_version}"
 
 COPY python-runtime /opt/nl2repobench-runtime
+COPY python-runtime-manifest.json /tests/python-runtime-manifest.json
+COPY python-runtime-manifest-check.py /tests/python-runtime-manifest-check.py
+COPY python-adapter /opt/nl2repobench-node-adapter
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
+RUN /usr/local/bin/python3 -I -B /tests/python-runtime-manifest-check.py \
+  --root /opt/nl2repobench-runtime/nl2repobench --manifest /tests/python-runtime-manifest.json
 RUN python -m pip install --no-cache-dir --require-hashes \\
   -r /tmp/verifier-requirements.lock.txt
 COPY dependencies /opt/npm-bundle
@@ -514,6 +722,7 @@ COPY --chmod=0500 private /tests/private
 COPY --chmod=0555 test.sh /tests/test.sh
 RUN useradd --uid 10001 --create-home candidate \\
   && chmod -R 0555 /opt/nl2repobench-runtime \\
+  && chmod -R 0555 /opt/nl2repobench-node-adapter \\
   && chmod -R 0500 /tests/private \\
   && chmod -R 0555 /tests/runtime
 WORKDIR /tests
@@ -648,7 +857,10 @@ WORKDIR /tests
         atomic_write(
             tests_root / "python-runtime-manifest.json",
             json.dumps(
-                python_runtime_manifest(tests_root / "python-runtime/nl2repobench"),
+                python_runtime_manifest(
+                    tests_root / "python-runtime/nl2repobench",
+                    runtime_root="/opt/nl2repobench-runtime/nl2repobench",
+                ),
                 sort_keys=True,
                 separators=(",", ":"),
             ).encode()
@@ -813,10 +1025,16 @@ if ! {NODE_EXECUTABLE} /tests/runtime/node/copy_workspace.mjs \\
 fi
 mkdir -p /tmp/candidate-site /tmp/candidate-site/home /tmp/candidate-site/tmp
 chown -R candidate:candidate /tmp/candidate-source /tmp/candidate-site
-if ! {NODE_EXECUTABLE} /tests/runtime/node/install_candidate.mjs \\
-    --source /tmp/candidate-source \\
-    --target /tmp/candidate-site \\
-    --cache /tmp/npm-cache; then
+install_exit=0
+/usr/local/bin/python3 -I -B /tests/runtime/node/install_npm.py \\
+  --source /tmp/candidate-source --target /tmp/candidate-site --cache /tmp/npm-cache || install_exit=$?
+if [[ "$install_exit" -eq 70 ]]; then
+  {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
+    --expected {expected} \\
+    --reason verifier-internal-error \\
+    --output /logs/verifier
+  exit 0
+elif [[ "$install_exit" -ne 0 ]]; then
   {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs \\
     --expected {expected} \\
     --reason candidate-installation-failed \\
