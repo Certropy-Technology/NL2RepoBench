@@ -60,6 +60,12 @@ def test_helper_migrates_gzip_tar_and_preserves_executable_class() -> None:
     ]
 
 
+def test_helper_accepts_gnu_tar_root_directory_marker() -> None:
+    legacy = _legacy_tar(("./", None, 0o755, "directory"))
+    result = _MODULE.migrate_private_archive(legacy, "test-bundle")
+    assert decode_archive(result.archive) == ()
+
+
 @pytest.mark.parametrize(
     "name",
     ["/absolute", "../parent", "a/../b", "a//b", "a/./b", "././nested", ""],

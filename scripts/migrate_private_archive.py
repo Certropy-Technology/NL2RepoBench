@@ -262,6 +262,13 @@ def migrate_private_archive(
                         member_type = "file"
                     else:
                         raise PrivateArchiveMigrationError("archive contains an unsafe member type")
+                    # GNU tar commonly emits ``./`` as a container marker.
+                    # It has no representable path in the canonical tree.
+                    if member_type == "directory" and member.name in {".", "./"}:
+                        member_ends.append(
+                            member.offset + 512 + ((member.size + 511) // 512) * 512
+                        )
+                        continue
                     path = _normalize_member_name(
                         member.name,
                         directory=member_type == "directory",
