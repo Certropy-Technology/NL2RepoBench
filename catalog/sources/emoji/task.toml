@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "unicode-text-library"
-tags = ["python", "unicode", "emoji", "lookup", "tokenization", "separate-verifier"]
+tags = [
+    "python",
+    "unicode",
+    "emoji",
+    "lookup",
+    "tokenization",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +25,11 @@ source_digest = "sha256:0ab5a04e57bc580c66c78743cbfa413612f305bf151755ea72bddf5c
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked setuptools build dependency during Docker build"
 
 [environment.network_policy]
@@ -34,34 +39,36 @@ reference_source_fetch = "forbidden"
 reason = "The sole third-party build dependency is installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle uses a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2"]
-lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 25
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:105436531e84163bd64fcb6ceb78ed61f58bd278773dafba35abf5f4c809c395", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:105436531e84163bd64fcb6ceb78ed61f58bd278773dafba35abf5f4c809c395", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build emoji 2.15.0 from an empty workspace and satisfy a bounded Unicode conversion, lookup, tokenization, version, and public API contract through a separate subprocess verifier."
-keywords = ["python", "unicode", "emoji", "lookup", "tokenization", "separate-verifier"]
+keywords = [
+    "python",
+    "unicode",
+    "emoji",
+    "lookup",
+    "tokenization",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,17 +80,27 @@ memory_mb = 3072
 storage_mb = 6144
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:105436531e84163bd64fcb6ceb78ed61f58bd278773dafba35abf5f4c809c395"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:105436531e84163bd64fcb6ceb78ed61f58bd278773dafba35abf5f4c809c395"
+visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "worker/emoji"
+reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 25/25 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress."
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:04d36781723688e76879958d44cefa8957a658970c2abbf1eba7ec3a5c40e117"
 size_bytes = 4864000
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:04d36781723688e76879958d44cefa8957a658970c2abbf1eba7ec3a5c40e117"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "worker/emoji"
-reason = "Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 25/25 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress. Reviews and pilots remain out of scope."
-evidence = [
-  { digest = "sha256:680a0d08619f6dc1440d18048be4ef1c0e471807046cbf3324b798c22cc10e18", size_bytes = 2671, media_type = "application/json", uri = "artifact://private/sha256:680a0d08619f6dc1440d18048be4ef1c0e471807046cbf3324b798c22cc10e18", visibility = "private" },
-]

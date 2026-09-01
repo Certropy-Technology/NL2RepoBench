@@ -4,11 +4,17 @@ version = "0.1.0"
 instruction = "instruction.md"
 
 [metadata]
-# The discovery report used "severity medium" for authoring risk, not a task
-# difficulty label. No production difficulty is assigned in this blocked lane.
 difficulty = "unknown"
 category = "task-automation"
-tags = ["python", "cli", "task-runner", "build-automation", "subprocess", "plugins", "separate-verifier"]
+tags = [
+    "python",
+    "cli",
+    "task-runner",
+    "build-automation",
+    "subprocess",
+    "plugins",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -16,17 +22,12 @@ status = "known"
 upstream_url = "https://github.com/pydoit/doit"
 revision = "1f9cbbce78a93f96a35abf2db5425361e2abf142"
 license_spdx = "MIT"
-# Unprefixed `git archive --format=tar HEAD`; two independent archives match.
 source_digest = "sha256:d9765a508bc4ba6a61c586883de7fa9cc38abc7acdc8caf32c98d64834c2cfcd"
 submodules = []
 
 [environment]
-# The source declaration and static probes are recorded in audit.md. No final
-# OS, base image, shell, filesystem, locale, DBM, or process policy is frozen.
 status = "unknown"
-python_version = ">=3.10"
 os_name = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -35,41 +36,36 @@ reference_source_fetch = "forbidden"
 reason = "The package and tool dependency closure is not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# doit declares no runtime requirements. These are its unpinned build/dev and
-# behavior-changing optional requirements, plus pytest from the provisional
-# collection probe. They are observations, not an offline dependency closure.
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "setuptools>=68.0",
-  "build",
-  "twine",
-  "pyflakes>=3.0",
-  "pycodestyle>=2.10",
-  "rut>=0.3",
-  "coverage>=7.0",
-  "tomli; python_version < '3.11'",
-  "cloudpickle; platform_python_implementation != 'PyPy'",
-  "pytest",
+    "setuptools>=68.0",
+    "build",
+    "twine",
+    "pyflakes>=3.0",
+    "pycodestyle>=2.10",
+    "rut>=0.3",
+    "coverage>=7.0",
+    "tomli; python_version < '3.11'",
+    "cloudpickle; platform_python_implementation != 'PyPy'",
+    "pytest",
 ]
 
 [tests]
 framework = "pytest"
-# CPython 3.12.11/pytest 9.1.1 and a separate CPython 3.14.6 unittest
-# discovery each observed 891 nodes. This is not a frozen denominator.
+report_format = "pytest-junit-xml-v1"
 expected_total = 891
 expected_total_source = "unknown"
-commands = ["python -m pip install -e .", "python -m pytest --continue-on-collection-errors -q tests"]
-protected_paths = ["tests"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "authoring-worker"
-reason = "The exact source, repeatable archive, MIT license, package/API inventory, provisional collection, dependency declarations, CLI/task-runner tests, and timestamp/subprocess/plugin risks are audited. Publication is blocked because no final environment or hash-locked offline dependency bundle exists, the source suite directly imports candidate internals and has platform-dependent skips, and no reviewed doit-specific subprocess scenario adapter, private verifier artifacts, frozen denominator, or Oracle/control evidence exists; this static lane creates no Harbor assets."
+reason = "Canonical migration completed; production remains blocked pending exact runtime, dependency closure, verifier adapter and frozen collection. Previous lifecycle reason: The exact source, repeatable archive, MIT license, package/API inventory, provisional collection, dependency declarations, CLI/task-runner tests, and timestamp/subprocess/plugin risks are audited."

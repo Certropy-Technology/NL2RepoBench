@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "validation-library"
-tags = ["python", "email", "rfc", "unicode", "idna", "dns-adapter", "separate-verifier"]
+tags = [
+    "python",
+    "email",
+    "rfc",
+    "unicode",
+    "idna",
+    "dns-adapter",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +26,14 @@ source_digest = "sha256:6645b1719e7183f35d0ec20900e67391d0a3c2d570f442957203d647
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,34 +42,38 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked dnspython and idna closure is installed during image build. Agent and separate verifier phases have no egress; the trusted Oracle receives a digest-verified archive of the frozen revision."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["dnspython==2.8.0", "idna==3.15"]
-lock_artifact = { digest = "sha256:0a5d43ff7f54ed8301e6a986794e53b1632f48db0d05975173298f0bf9b3e361", size_bytes = 877, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0a5d43ff7f54ed8301e6a986794e53b1632f48db0d05975173298f0bf9b3e361", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "dnspython==2.8.0",
+    "idna==3.15",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:bc630e7ae0c9272d9293c6f36227385c90e1060535b177e410ec29b915a9a290", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bc630e7ae0c9272d9293c6f36227385c90e1060535b177e410ec29b915a9a290", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build an email address syntax and normalization library from an empty Python workspace."
-keywords = ["python", "email", "unicode", "idna", "dns", "validation", "separate-verifier"]
+keywords = [
+    "python",
+    "email",
+    "unicode",
+    "idna",
+    "dns",
+    "validation",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -73,14 +86,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:bc630e7ae0c9272d9293c6f36227385c90e1060535b177e410ec29b915a9a290"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bc630e7ae0c9272d9293c6f36227385c90e1060535b177e410ec29b915a9a290"
+visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828"
+reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Production compile, one direct Oracle verifier run, and empty, stub, forgery, install-timeout, and offline controls passed. Independent review, model-agent run, and publication remain pending."
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:f5576dbabd237dd03b4ae43c888b7514f6efcc1b512e9ce41f80028fc9f3b764"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:f5576dbabd237dd03b4ae43c888b7514f6efcc1b512e9ce41f80028fc9f3b764"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-20260828"
-reason = "Production compile, one direct Oracle verifier run, and empty, stub, forgery, install-timeout, and offline controls passed. Independent review, model-agent run, and publication remain pending."

@@ -6,11 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "web-application"
-tags = ["python", "flask", "sqlalchemy", "rest-api", "web-application", "repository-generation"]
+tags = [
+    "python",
+    "flask",
+    "sqlalchemy",
+    "rest-api",
+    "web-application",
+    "repository-generation",
+]
 language = "python"
 
-# The source and license are locked in provenance.md. The verifier image is
-# the immutable image assigned by the conversion loop.
 [source]
 status = "known"
 upstream_url = "https://github.com/miguelgrinberg/flasky"
@@ -20,85 +25,88 @@ source_digest = "sha256:d70278ce85aadc6127ef9f997c0410076488b744c01631a45499dc03
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.9.23"
+status = "unknown"
 os_name = "debian-13"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/flasky"
 base_image_digest = "sha256:dd7c1ab35038eb22f5637d7fb8d210d2a6bf080d65ca72c89b4ac31af3e0c342"
-network_mode = "no-network"
-
-# The immutable verifier image contains the benchmark dependency closure.
-# A standalone hash-locked requirements artifact has not been authored in this static pass.
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "alembic==0.9.3",
-  "bleach==2.0.0",
-  "blinker==1.4",
-  "click==6.7",
-  "dominate==2.3.1",
-  "Flask==0.12.2",
-  "Flask-Bootstrap==3.3.7.1",
-  "Flask-HTTPAuth==3.2.3",
-  "Flask-Login==0.4.0",
-  "Flask-Mail==0.9.1",
-  "Flask-Migrate==2.0.4",
-  "Flask-Moment==0.5.1",
-  "Flask-PageDown==0.2.2",
-  "Flask-SQLAlchemy==2.5.1",
-  "Flask-WTF==0.14.2",
-  "html5lib==0.999999999",
-  "itsdangerous==0.24",
-  "Jinja2==2.9.6",
-  "Mako==1.0.7",
-  "Markdown==2.6.8",
-  "MarkupSafe==1.1.1",
-  "python-dateutil==2.6.1",
-  "python-dotenv==0.6.5",
-  "python-editor==1.0.3",
-  "six==1.10.0",
-  "SQLAlchemy==1.4.46",
-  "visitor==0.1.3",
-  "webencodings==0.5.1",
-  "Werkzeug==0.12.2",
-  "WTForms==2.1",
-  "certifi==2017.7.27.1",
-  "chardet==3.0.4",
-  "coverage==4.4.1",
-  "Faker==0.7.18",
-  "httpie==0.9.9",
-  "idna==2.5",
-  "Pygments==2.2.0",
-  "requests==2.18.2",
-  "selenium==3.141.0",
-  "urllib3==1.22",
-  "pytest==8.4.1",
+    "alembic==0.9.3",
+    "bleach==2.0.0",
+    "blinker==1.4",
+    "click==6.7",
+    "dominate==2.3.1",
+    "Flask==0.12.2",
+    "Flask-Bootstrap==3.3.7.1",
+    "Flask-HTTPAuth==3.2.3",
+    "Flask-Login==0.4.0",
+    "Flask-Mail==0.9.1",
+    "Flask-Migrate==2.0.4",
+    "Flask-Moment==0.5.1",
+    "Flask-PageDown==0.2.2",
+    "Flask-SQLAlchemy==2.5.1",
+    "Flask-WTF==0.14.2",
+    "html5lib==0.999999999",
+    "itsdangerous==0.24",
+    "Jinja2==2.9.6",
+    "Mako==1.0.7",
+    "Markdown==2.6.8",
+    "MarkupSafe==1.1.1",
+    "python-dateutil==2.6.1",
+    "python-dotenv==0.6.5",
+    "python-editor==1.0.3",
+    "six==1.10.0",
+    "SQLAlchemy==1.4.46",
+    "visitor==0.1.3",
+    "webencodings==0.5.1",
+    "Werkzeug==0.12.2",
+    "WTForms==2.1",
+    "certifi==2017.7.27.1",
+    "chardet==3.0.4",
+    "coverage==4.4.1",
+    "Faker==0.7.18",
+    "httpie==0.9.9",
+    "idna==2.5",
+    "Pygments==2.2.0",
+    "requests==2.18.2",
+    "selenium==3.141.0",
+    "urllib3==1.22",
+    "pytest==8.4.1",
 ]
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 34
-expected_total_source = "legacy-file"
-commands = ["pytest --continue-on-collection-errors tests"]
-protected_paths = ["tests"]
+expected_total_source = "unknown"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the Flasky Flask social blogging application from an empty workspace."
-keywords = ["python", "flask", "sqlalchemy", "rest-api", "web-application", "repository-generation"]
+keywords = [
+    "python",
+    "flask",
+    "sqlalchemy",
+    "rest-api",
+    "web-application",
+    "repository-generation",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -113,4 +121,4 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "integrator"
-reason = "Production integration stopped after the dependency-lock image-install process exceeded the bounded 587-second authoring window. No production bundle or Oracle result is valid; the generated runtime was removed and controls were not run."
+reason = "Canonical migration completed; production remains blocked pending a supported dependency closure and current verifier evidence. Previous lifecycle reason: Production integration stopped after the dependency-lock image-install process exceeded the bounded 587-second authoring window. No production bundle or Oracle result is valid; the generated runtime was removed and controls were not run."

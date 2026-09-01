@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "sequence-library"
-tags = ["python", "mutable-sequence", "cython", "typing", "copy", "separate-verifier"]
+tags = [
+    "python",
+    "mutable-sequence",
+    "cython",
+    "typing",
+    "copy",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +25,13 @@ source_digest = "sha256:0fa249ef870bbbd9267b5427dbcbe7d5a3dc92d439ab677c1f9f6f84
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
-system_packages = ["build-essential"]
-network_mode = "no-network"
+system_packages = [
+    "build-essential",
+]
 build_command = "install the hash-locked candidate build and verifier dependencies during image build"
 
 [environment.network_policy]
@@ -34,45 +41,45 @@ reference_source_fetch = "forbidden"
 reason = "The candidate build closure is installed during the image build; agent and verifier execution are network-isolated, and only the trusted Oracle receives the exact upstream source-host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "coverage==7.15.4",
-  "cython==3.3.0",
-  "expandvars==1.1.2",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "pytest-cov==7.1.0",
-  "setuptools==84.0.0",
+    "coverage==7.15.4",
+    "cython==3.3.0",
+    "expandvars==1.1.2",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "setuptools==84.0.0",
 ]
-lock_artifact = { digest = "sha256:0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc", size_bytes = 15460, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 21
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:8b00cb2ab3fab7ed88ecc2c642c635f3ba395541010b206e7d62bb13c08b6d27", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:8b00cb2ab3fab7ed88ecc2c642c635f3ba395541010b206e7d62bb13c08b6d27", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
 [harbor]
 description = "Build the pinned frozenlist sequence library from an empty workspace and satisfy a deterministic public API contract through a separate child-side verifier."
-keywords = ["python", "mutable-sequence", "cython", "typing", "copy", "separate-verifier"]
+keywords = [
+    "python",
+    "mutable-sequence",
+    "cython",
+    "typing",
+    "copy",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 180.0
@@ -84,14 +91,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:8b00cb2ab3fab7ed88ecc2c642c635f3ba395541010b206e7d62bb13c08b6d27"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8b00cb2ab3fab7ed88ecc2c642c635f3ba395541010b206e7d62bb13c08b6d27"
+visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828"
+reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: The exact source, hash-locked build closure, custom child-side verifier, digest-checking Oracle, controls, and deterministic production compile are prepared; the official Harbor Oracle and controls remain deferred to the integration loop."
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:f71c7c8c2da60e56dc3619c696421690a7458f675f9e814d04ba7decc12b03e7"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:f71c7c8c2da60e56dc3619c696421690a7458f675f9e814d04ba7decc12b03e7"
 visibility = "private"
-
-[lifecycle]
-status = "packaged"
-owner = "python-author-wave2-20260828"
-reason = "The exact source, hash-locked build closure, custom child-side verifier, digest-checking Oracle, controls, and deterministic production compile are prepared; the official Harbor Oracle and controls remain deferred to the integration loop."

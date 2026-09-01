@@ -6,7 +6,14 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "front-matter-parser"
-tags = ["python", "yaml", "toml", "frontmatter", "packaging", "blocked"]
+tags = [
+    "python",
+    "yaml",
+    "toml",
+    "frontmatter",
+    "packaging",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -16,7 +23,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -26,25 +32,32 @@ reason = "The frozen verifier image and source/test mapping are unavailable; no 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked candidate: the frozen image/source boundary, dependency closure, and separate verifier for frontmatter are unavailable."
-keywords = ["python", "yaml", "toml", "frontmatter", "blocked"]
+keywords = [
+    "python",
+    "yaml",
+    "toml",
+    "frontmatter",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -59,4 +72,4 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/frontmatter"
-reason = "The conversion-loop state and immutable verifier image lock are absent, the legacy denominator 55 is not a frozen collection, and the candidate revision/license/archive cannot be tied to the missing image. No catalog/tasks/frontmatter runtime exists."
+reason = "Canonical migration completed; production remains blocked pending immutable source authority, image lock, dependency closure and verifier evidence. Previous lifecycle reason: The conversion-loop state and immutable verifier image lock are absent, the legacy denominator 55 is not a frozen collection, and the candidate revision/license/archive cannot be tied to the missing image."
