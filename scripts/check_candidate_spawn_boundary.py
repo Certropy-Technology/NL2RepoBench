@@ -185,8 +185,108 @@ def _string_shell_violation(token: tokenize.TokenInfo) -> bool:
     return any(re.search(rf"(?<![a-z0-9_-]){re.escape(word)}(?![a-z0-9_-])", value) for word in _SHELL_WORDS)
 
 
-def _python_trusted_call(relative: str, node: ast.Call, text: str) -> bool:
-    """Allow one exact trusted subprocess shape, never a whole-file marker."""
+def _ast_assignment(tree: ast.AST, name: str) -> ast.AST | None:
+    for candidate in ast.walk(tree):
+        if isinstance(candidate, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == name for target in candidate.targets
+        ):
+            return candidate.value
+        if isinstance(candidate, ast.AnnAssign) and isinstance(candidate.target, ast.Name):
+            if candidate.target.id == name:
+                return candidate.value
+    return None
+
+
+def _bootstrap_assignment(tree: ast.AST, name: str) -> ast.AST | None:
+    """Select the named bootstrap that actually imports the requested CLI."""
+
+    candidates: list[ast.AST] = []
+    for candidate in ast.walk(tree):
+        value: ast.AST | None = None
+        if isinstance(candidate, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == name for target in candidate.targets
+        ):
+            value = candidate.value
+        elif isinstance(candidate, ast.AnnAssign) and isinstance(candidate.target, ast.Name):
+            if candidate.target.id == name:
+                value = candidate.value
+        if value is not None:
+            candidates.append(value)
+    return next(
+        (value for value in candidates if "candidate_process_cli" in ast.unparse(value)),
+        candidates[0] if candidates else None,
+    )
+
+
+def _string_value(node: ast.AST | None) -> str | None:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    return None
+
+
+def _trusted_bootstrap(value: ast.AST | None, tree: ast.AST) -> bool:
+    """Prove a bootstrap names the fixed runtime and candidate CLI."""
+
+    if value is None:
+        return False
+    rendered = ast.unparse(value)
+    if isinstance(value, ast.Call) and isinstance(value.func, ast.Name):
+        if value.func.id in {"_trusted_cli_command", "_trusted_python"}:
+            return all(
+                marker in ast.unparse(tree)
+                for marker in ("candidate_process_cli", "PYTHON_RUNTIME_ROOT", "sys.path.insert")
+            )
+    if "candidate_process_cli" not in rendered:
+        return False
+    runtime_marker = "PYTHON_RUNTIME_ROOT" in rendered or "runtime_root" in rendered
+    if not runtime_marker:
+        return False
+    if "sys.path.insert" not in rendered and "sys.path.insert" not in ast.unparse(tree):
+        return False
+    return True
+
+
+def _python_transport_command(value: ast.AST | None, tree: ast.AST) -> bool:
+    if isinstance(value, ast.Name):
+        value = _ast_assignment(tree, value.id)
+    if not isinstance(value, (ast.List, ast.Tuple)) or len(value.elts) != 5:
+        return False
+    first, isolate, bytecode, mode, bootstrap = value.elts
+    if not (
+        isinstance(first, ast.Call)
+        and isinstance(first.func, ast.Name)
+        and first.func.id in {"_trusted_python", "_trusted_cli_command"}
+    ):
+        # A literal is accepted only for hermetic test fixtures and must still
+        # be an absolute interpreter path.
+        if _string_value(first) not in {"/usr/local/bin/python", "/usr/local/bin/python3"}:
+            return False
+    if _string_value(isolate) != "-I" or _string_value(bytecode) != "-B":
+        return False
+    if _string_value(mode) != "-c":
+        return False
+    if isinstance(bootstrap, ast.Name):
+        bootstrap = _bootstrap_assignment(tree, bootstrap.id)
+    return _trusted_bootstrap(bootstrap, tree)
+
+
+def _clean_environment(value: ast.AST | None) -> bool:
+    if not isinstance(value, ast.Dict):
+        return False
+    keys = {_string_value(key) for key in value.keys}
+    if None in keys or not keys <= {"PATH", "HOME", "PYTHONDONTWRITEBYTECODE"}:
+        return False
+    for key, item in zip(value.keys, value.values, strict=True):
+        name = _string_value(key)
+        if name == "PATH" and _string_value(item) not in {"/usr/bin:/bin", "/usr/local/bin:/usr/bin:/bin"}:
+            return False
+        if name == "HOME" and _string_value(item) != "/nonexistent":
+            return False
+    return True
+
+
+def _python_trusted_call(relative: str, node: ast.Call, tree: ast.AST) -> bool:
+    """Allow one exact trusted transport call, never a whole-file marker."""
 
     if relative not in _TRUSTED_FILES:
         return False
@@ -198,15 +298,24 @@ def _python_trusted_call(relative: str, node: ast.Call, text: str) -> bool:
         "src/nl2repobench/verification/node_candidate_client.py",
         "src/nl2repobench/verification/go_supervisor.py",
     }:
-        argument = node.args[0]
-        expected_argument = (
-            isinstance(argument, ast.Name) and argument.id == "command"
-        ) or isinstance(argument, (ast.List, ast.Tuple, ast.Call))
-        return bool(node.args) and expected_argument and {"input", "capture_output", "timeout", "check", "env"} <= keywords and "candidate_process_cli" in text and "-I" in text and "check=False" in text
+        if not node.args or {"input", "capture_output", "timeout", "check", "env"} - keywords:
+            return False
+        if not _python_transport_command(node.args[0], tree):
+            return False
+        keyword_values = {keyword.arg: keyword.value for keyword in node.keywords}
+        if not (
+            isinstance(keyword_values["capture_output"], ast.Constant)
+            and keyword_values["capture_output"].value is True
+            and isinstance(keyword_values["check"], ast.Constant)
+            and keyword_values["check"].value is False
+        ):
+            return False
+        return _clean_environment(keyword_values["env"])
     if relative == "src/nl2repobench/verification/custom_verifier.py":
-        return bool(node.args) and "entrypoint" in text and "-I" in text
+        return bool(node.args) and "-I" in ast.unparse(node)
     if relative == "src/nl2repobench/verification/go_contract_runner.py":
-        return bool(node.args) and "/bin/bash" in text and "args.script" in text and "args.bridge" in text
+        rendered = ast.unparse(node)
+        return bool(node.args) and "/bin/bash" in rendered and "args.script" in rendered and "args.bridge" in rendered
     return False
 
 
@@ -250,7 +359,7 @@ def _scan_python(relative: str, text: str) -> list[dict[str, object]]:
         if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
             module, member = node.func.value.id, node.func.attr
             if module in subprocess_modules:
-                if member in _PYTHON_SUBPROCESS_CALLS and not _python_trusted_call(relative, node, text):
+                if member in _PYTHON_SUBPROCESS_CALLS and not _python_trusted_call(relative, node, tree):
                     violations.append(_violation(relative, line, "python-direct-spawn", f"subprocess.{member}"))
             elif module in os_modules and member in _PYTHON_OS_CALLS:
                 if not (relative == "src/nl2repobench/verification/subprocess_supervisor.py" and member in _SUPERVISOR_OS_CALLS):
@@ -267,7 +376,7 @@ def _scan_python(relative: str, text: str) -> list[dict[str, object]]:
         elif isinstance(node.func, ast.Name) and node.func.id in imported_calls:
             imported_module, imported_name = imported_calls[node.func.id]
             if imported_module == "subprocess" and imported_name in _PYTHON_SUBPROCESS_CALLS:
-                if not _python_trusted_call(relative, node, text):
+                if not _python_trusted_call(relative, node, tree):
                     violations.append(_violation(relative, line, "python-direct-spawn", f"from subprocess import {imported_name}"))
             elif imported_module == "os" and imported_name in _PYTHON_OS_CALLS:
                 if not (relative == "src/nl2repobench/verification/subprocess_supervisor.py" and imported_name in _SUPERVISOR_OS_CALLS):
@@ -356,35 +465,101 @@ def _js_aliases(tokens: list[_Token]) -> tuple[set[str], set[str]]:
     return aliases, module_aliases
 
 
-def _node_call_text(tokens: list[_Token], index: int) -> str:
-    """Return one bounded call statement without trusting unrelated file text."""
+def _js_assignment_tokens(tokens: list[_Token], name: str) -> list[_Token]:
+    for index, token in enumerate(tokens[:-1]):
+        if token.value != name or tokens[index + 1].value != "=":
+            continue
+        result: list[_Token] = []
+        depth = 0
+        for item in tokens[index + 2 :]:
+            if item.value in {"[", "{", "("}:
+                depth += 1
+            elif item.value in {"]",
+                "}",
+                ")",
+            }:
+                depth -= 1
+            if item.value == ";" and depth == 0:
+                break
+            result.append(item)
+        return result
+    return []
 
-    values: list[str] = []
-    for token in tokens[index : index + 80]:
-        values.append(token.value)
-        if token.value == ";":
-            break
-    return "".join(values)
+
+def _js_call_arguments(tokens: list[_Token], index: int) -> list[list[_Token]]:
+    if index + 1 >= len(tokens) or tokens[index + 1].value != "(":
+        return []
+    arguments: list[list[_Token]] = []
+    current: list[_Token] = []
+    stack = ["("]
+    for token in tokens[index + 2 :]:
+        if token.value in {"(", "[", "{"}:
+            stack.append(token.value)
+        elif token.value in {")",
+            "]",
+            "}",
+        }:
+            if len(stack) == 1:
+                if current:
+                    arguments.append(current)
+                return arguments
+            stack.pop()
+        if token.value == "," and len(stack) == 1:
+            arguments.append(current)
+            current = []
+        else:
+            current.append(token)
+    return []
 
 
-def _node_trusted_call(relative: str, tokens: list[_Token], index: int, text: str) -> bool:
+def _js_has_sequence(argument: list[_Token], sequence: tuple[str, ...]) -> bool:
+    values = tuple(token.value for token in argument)
+    return any(values[index : index + len(sequence)] == sequence for index in range(len(values)))
+
+
+def _js_string(argument: list[_Token], value: str) -> bool:
+    return any(token.kind == "string" and token.value[1:-1] == value for token in argument)
+
+
+def _node_trusted_call(relative: str, tokens: list[_Token], index: int) -> bool:
     if relative not in _TRUSTED_FILES:
         return False
-    call = _node_call_text(tokens, index)
+    arguments = _js_call_arguments(tokens, index)
+    if not arguments:
+        return False
     if relative == "src/nl2repobench/verification/node/run_tests.mjs":
         return (
-            call.startswith("spawnSync(")
-            and "process.execPath" in call
-            and "--test" in call
-            and "file" in call
-            and "NODE_TEST_CLIENT" in text
+            len(arguments) >= 3
+            and _js_has_sequence(arguments[0], ("process", ".", "execPath"))
+            and _js_has_sequence(arguments[1], ("[",))
+            and _js_string(arguments[1], "--test")
+            and any(token.value == "file" for token in arguments[1])
+            and any(token.value == "NODE_TEST_CLIENT" for token in arguments[2])
+            and any(token.value == "cwd" for token in arguments[2])
+            and any(token.value == "env" for token in arguments[2])
         )
     if relative == "src/nl2repobench/verification/node/validate-package.mjs":
         return (
-            call.startswith("spawnSync(")
-            and ("/usr/bin/tar" in call or "'/usr/bin/tar'" in call)
-            and ("-tvzf" in call or "-xOzf" in call)
-            and "archive" in call
+            len(arguments) >= 3
+            and any(token.value in {'"/usr/bin/tar"', "'/usr/bin/tar'"} for token in arguments[0])
+            and any(token.value in {'"-tvzf"', '"-xOzf"', "'-tvzf'", "'-xOzf'"} for token in arguments[1])
+            and any(token.value == "archive" for token in arguments[1])
+            and any(token.value == "encoding" for token in arguments[2])
+            and any(token.value == "maxBuffer" for token in arguments[2])
+        )
+    if relative == "src/nl2repobench/verification/node/grade-report.mjs":
+        python_args = _js_assignment_tokens(tokens, "pythonArgs")
+        return (
+            len(arguments) >= 3
+            and any(token.value == "python" for token in arguments[0])
+            and any(token.value == "pythonArgs" for token in arguments[1])
+            and _js_string(python_args, "-I")
+            and _js_string(python_args, "-B")
+            and any(token.value == "runtime" for token in python_args)
+            and any(token.value == "nl2repobench" for token in python_args)
+            and any(token.value == "stdio" for token in arguments[2])
+            and any(token.value == "env" for token in arguments[2])
+            and any(token.value == "timeout" for token in arguments[2])
         )
     return False
 
@@ -400,19 +575,19 @@ def _scan_node(relative: str, text: str) -> list[dict[str, object]]:
         ):
             violations.append(_violation(relative, token.line, "forbidden-shell-token"))
         if token.value in _NODE_CHILD_CALLS and index + 1 < len(tokens) and tokens[index + 1].value == "(":
-            if not _node_trusted_call(relative, tokens, index, text):
+            if not _node_trusted_call(relative, tokens, index):
                 violations.append(_violation(relative, token.line, "node-direct-spawn", token.value))
         if token.value in aliases and index + 1 < len(tokens) and tokens[index + 1].value == "(":
-            if not _node_trusted_call(relative, tokens, index, text):
+            if not _node_trusted_call(relative, tokens, index):
                 violations.append(_violation(relative, token.line, "node-direct-spawn", token.value))
         if token.value in module_aliases and index + 2 < len(tokens):
             if tokens[index + 1].value == "." and tokens[index + 2].value in _NODE_CHILD_CALLS:
-                if not _node_trusted_call(relative, tokens, index + 2, text):
+                if not _node_trusted_call(relative, tokens, index + 2):
                     violations.append(_violation(relative, tokens[index + 2].line, "node-direct-spawn", tokens[index + 2].value))
         if token.value == "require" and index + 4 < len(tokens):
             if tokens[index + 1].value == "(" and "child_process" in tokens[index + 2].value:
                 if tokens[index + 3].value == "." and tokens[index + 4].value in _NODE_CHILD_CALLS:
-                    if not _node_trusted_call(relative, tokens, index + 4, text):
+                    if not _node_trusted_call(relative, tokens, index + 4):
                         violations.append(_violation(relative, tokens[index + 4].line, "node-direct-spawn", tokens[index + 4].value))
     return violations
 

@@ -61,10 +61,12 @@ def test_exact_candidate_transport_exception_is_path_bound(tmp_path: Path) -> No
         "src/nl2repobench/verification/candidate_client.py",
         "import subprocess\n"
         "def invoke():\n"
-        "    command = ['python', '-I', 'candidate_process_cli']\n"
+        "    command = ['/usr/local/bin/python3', '-I', '-B', '-c',\n"
+        "               'import sys;sys.path.insert(0, PYTHON_RUNTIME_ROOT); '\n"
+        "               'candidate_process_cli']\n"
         "    return subprocess.run(\n"
         "        command, input=b'{}', capture_output=True, timeout=1, check=False,\n"
-        "        env={'HOME': '/nonexistent'}\n"
+        "        env={'PATH': '/usr/bin:/bin', 'HOME': '/nonexistent'}\n"
         "    )\n",
     )
     assert report["passed"] is True
@@ -126,9 +128,40 @@ def test_exact_node_verifier_exception_is_path_bound(tmp_path: Path) -> None:
         "import { spawnSync } from 'node:child_process';\n"
         "const client = process.env.NODE_TEST_CLIENT;\n"
         "const file = client;\n"
-        "spawnSync(process.execPath, ['--test', file]);\n",
+        "spawnSync(process.execPath, ['--test', file], { cwd: '.', "
+        "env: { NODE_TEST_CLIENT: client } });\n",
     )
     assert report["passed"] is True
+
+
+def test_altered_python_trusted_transport_call_is_blocked(tmp_path: Path) -> None:
+    report = _scan_file(
+        tmp_path,
+        "src/nl2repobench/verification/candidate_client.py",
+        "import subprocess\n"
+        "def invoke():\n"
+        "    command = ['/tmp/python', '-I', '-B', '-c', "
+        "'PYTHON_RUNTIME_ROOT; candidate_process_cli']\n"
+        "    return subprocess.run(command, input=b'{}', capture_output=True, "
+        "timeout=1, check=False, env={'PATH': '/usr/bin:/bin', "
+        "'HOME': '/nonexistent'})\n",
+    )
+    assert report["passed"] is False
+    assert any(item["reason"] == "python-direct-spawn" for item in report["violations"])
+
+
+def test_altered_node_trusted_call_is_blocked(tmp_path: Path) -> None:
+    report = _scan_file(
+        tmp_path,
+        "src/nl2repobench/verification/node/run_tests.mjs",
+        "import { spawnSync } from 'node:child_process';\n"
+        "const client = process.env.NODE_TEST_CLIENT;\n"
+        "const file = client;\n"
+        "spawnSync('/bin/sh', ['--test', file], { cwd: '.', "
+        "env: { NODE_TEST_CLIENT: client } });\n",
+    )
+    assert report["passed"] is False
+    assert any(item["reason"] == "node-direct-spawn" for item in report["violations"])
 
 
 def test_node_trusted_file_rejects_extra_arbitrary_spawn(tmp_path: Path) -> None:
