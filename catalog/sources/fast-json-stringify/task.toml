@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "fast-json-stringify"
 version = "0.1.0"
 instruction = "blocked.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm-amd64"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +29,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -41,14 +38,7 @@ reason = "Agent and verifier runs must remain offline; the exact revision has no
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = ["runtime dependency ranges observed but no committed lockfile or content-addressed npm cache"]
 
 [tests]
@@ -58,7 +48,7 @@ expected_total = 0
 expected_total_source = "unknown"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]

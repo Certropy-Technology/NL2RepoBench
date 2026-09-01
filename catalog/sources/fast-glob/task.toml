@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "fast-glob"
 version = "0.1.0"
 instruction = "instruction.md"
@@ -23,7 +23,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -37,8 +36,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 # The npm v3 lock/cache closure is generated during the authoring build phase
 # and shipped as a private artifact, so `npm ci --offline` needs no egress. The
@@ -46,16 +43,8 @@ libc = "glibc"
 
 [dependencies]
 # Content-addressed npm v3 cache closure verified under Node 24.19/npm 11.17.
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b", size_bytes = 1423360, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:4ff767f70cfda06d60fbd4e9ee866c75437de276004a049c2925041101e9ca0b", visibility = "private" }
+status = "unknown"
 packages = [
   "@nodelib/fs.stat",
   "@nodelib/fs.walk",
@@ -77,7 +66,7 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "integrator"
 reason = "Fresh Node 24 production revalidation passed: Oracle 36/36 reward 1.0; empty reward 0.0; stub and forgery each 2/36 reward 0.05555555555555555; every verifier emitted expected_total=36 and a fresh network.json with public_network_available=false. Review and pilot remain publication-stage work."
 

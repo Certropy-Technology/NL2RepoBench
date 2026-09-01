@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "decamelize"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:e16423d8e1c7aa8f5725627f35f7d9d37e4ab1046fc96f9dca0c9f5b999a3fe9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:e16423d8e1c7aa8f5725627f35f7d9d37e4ab1046fc96f9dca0c9f5b999a3fe9", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5
 test_bundle = { digest = "sha256:cd1a5cd2362807ace4a6dc531bae7e0554e31986600d1138dec95457b5117915", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:cd1a5cd2362807ace4a6dc531bae7e0554e31986600d1138dec95457b5117915", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -87,6 +76,6 @@ uri = "artifact://private/sha256:bbd4f73308982c546ed72715ba772bdb5ef08d8686060c6
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828-c3"
 reason = "Production compile and Harbor 0.21 gates passed: Oracle 24/24 reward 1.0; empty, offline, install-script, hang, loader-hook, and oversized-output controls scored 0; stub 1/24; forgery 3/24 with verifier-owned reward. Review, pilot, and publication remain separate stages."

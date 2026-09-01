@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "cookie"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:0465771fa2162c197c01e0fbf91097cb083e1d34df867386add3c2b9399c6d34", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:0465771fa2162c197c01e0fbf91097cb083e1d34df867386add3c2b9399c6d34", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc
 test_bundle = { digest = "sha256:fafcf9cc348d7b2d39d38862563860fc16e7dfb8968f01bd254453930bc08587", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:fafcf9cc348d7b2d39d38862563860fc16e7dfb8968f01bd254453930bc08587", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -79,7 +68,7 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "cookie-repair"
 reason = "Hash-bound Harbor 0.21 evidence is complete for the current source and locked Node toolchain: Oracle passed 32/32; empty failed closed at reward 0; the isolated committed-dispatch stub collected 32 and scored 1/32; forgery collected 32 and scored 1/32 despite a forged workspace reward; and every gate has a verifier-owned no-egress network receipt. Reviews and pilots remain pending."
 

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "espree"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm-amd64"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
+status = "unknown"
 packages = ["acorn", "acorn-jsx", "eslint-visitor-keys"]
-artifact = { digest = "sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808", size_bytes = 757760, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -73,7 +62,7 @@ uri = "artifact://private/sha256:2d797f79cfb983d20fe93d8d2fce484466a40f0e7dec711
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -92,7 +81,7 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828-c3"
 reason = "Production Harbor 0.21.0 compile and one-run Oracle gate passed with 24/24 and reward 1.0; empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned grading and public_network_available=false. Review, model pilot, dataset integration, and publication remain integrator stages."
 

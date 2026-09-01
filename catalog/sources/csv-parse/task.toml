@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "csv-parse"
 version = "0.1.0"
 instruction = "blocked.md"
@@ -19,7 +19,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -27,8 +26,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -38,14 +35,7 @@ reason = "Agent and verifier runs must remain offline; the upstream monorepo loc
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = ["csv-parse sync runtime has no third-party imports, but the isolated build/test closure and generated dist provenance are not frozen"]
 
 [tests]
@@ -55,7 +45,7 @@ expected_total = 0
 expected_total_source = "unknown"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]

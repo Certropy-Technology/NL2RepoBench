@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "execa"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,20 +35,10 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:bbbc601a828344afcee2ef02b102c499119b50e651632436babf6c2112a9e827", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:bbbc601a828344afcee2ef02b102c499119b50e651632436babf6c2112a9e827", visibility = "private" }
+status = "unknown"
 packages = []
 
 [tests]
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:0479e4c2b2bf86642c6fe36b0a86ca6cb5d26cc06
 test_bundle = { digest = "sha256:a8fbcf849703077772683bf66bfab21eec023148d3ca959fa31b4765b0c7affc", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a8fbcf849703077772683bf66bfab21eec023148d3ca959fa31b4765b0c7affc", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "eslint"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,20 +35,10 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", size_bytes = 11806720, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", visibility = "private" }
 packages = ["@eslint-community/eslint-utils", "@eslint-community/regexpp", "@eslint/config-array", "@eslint/config-helpers", "@eslint/core", "@eslint/plugin-kit", "@humanfs/node", "@humanwhocodes/module-importer", "@humanwhocodes/retry", "@types/estree", "ajv", "cross-spawn", "debug", "escape-string-regexp", "eslint-scope", "eslint-visitor-keys", "espree", "esquery", "esutils", "fast-deep-equal", "file-entry-cache", "find-up", "glob-parent", "ignore", "imurmurhash", "is-glob", "json-stable-stringify-without-jsonify", "minimatch", "natural-compare", "optionator"]
 
 [tests]
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:5dfd03f3f2b3b9277e32bdbb3b3f39f0d228aca27
 test_bundle = { digest = "sha256:924a6b6366e3a63f56c4d3e2fa5e3cc209bcd2098492072221974e87765bd073", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:924a6b6366e3a63f56c4d3e2fa5e3cc209bcd2098492072221974e87765bd073", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -79,7 +68,7 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "repair/eslint"
 reason = "Production compile, frozen 20-leaf Oracle, stub/forgery controls, and separate-verifier offline network proof completed; integrator review and model pilot remain pending."
 

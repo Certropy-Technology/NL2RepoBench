@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "date-fns"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:bc8d726cdecb4dce06810a51b20e015f84a217cc5505f2fb30a1c7b2e8ce3b0a", size_bytes = 404, media_type = "application/gzip", uri = "artifact://private/sha256:bc8d726cdecb4dce06810a51b20e015f84a217cc5505f2fb30a1c7b2e8ce3b0a", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:0df9143bc8e836628f15571002ebfddd1e55d0a77
 test_bundle = { digest = "sha256:bd93ea0d4c5f93acc0ebe48bbf27f7f21399ef99bb5e3a1dee35605bb517036d", size_bytes = 2902, media_type = "application/gzip", uri = "artifact://private/sha256:bd93ea0d4c5f93acc0ebe48bbf27f7f21399ef99bb5e3a1dee35605bb517036d", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -79,7 +68,7 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "repair/date-fns"
 reason = "The exact source, zero-runtime-dependency npm closure, private subprocess tests, digest-checking Oracle, production compilation, Oracle verification, and bounded controls are frozen. The task is ready for independent review and a future model Agent Run."
 
