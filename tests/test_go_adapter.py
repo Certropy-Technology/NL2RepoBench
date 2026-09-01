@@ -47,8 +47,28 @@ from nl2repobench.verification.go_command_plan import (
     validate_go_command_plan,
 )
 from nl2repobench.verification.go_grader import grade_go_report
-from nl2repobench.verification.go_supervisor import run_go_bridge
+from nl2repobench.verification.go_supervisor import run_go_bridge, run_go_build
 from nl2repobench.verification.taxonomy import VerificationReason
+
+_PRODUCTION_TRUSTED_CLI_COMMAND = go_supervisor._trusted_cli_command  # noqa: SLF001
+
+
+@pytest.fixture(autouse=True)
+def _source_tree_trusted_cli(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Use the test runner only as a source-tree test transport fixture."""
+
+    source_runtime = str(Path(__file__).parents[1] / "src")
+    monkeypatch.setattr(go_supervisor, "PYTHON_RUNTIME_ROOT", source_runtime)
+    test_interpreter = sys.executable
+
+    def source_tree_command() -> list[str]:
+        production_command = _PRODUCTION_TRUSTED_CLI_COMMAND()
+        # ``-I`` intentionally drops the test virtualenv's dependencies. The
+        # production command is tested separately with a mocked subprocess;
+        # behavioral source tests use this controlled interpreter fixture.
+        return [test_interpreter, "-B", "-c", production_command[4]]
+
+    monkeypatch.setattr(go_supervisor, "_trusted_cli_command", source_tree_command)
 
 
 def _current_locked_go_toolchain(root: Path, destination: Path) -> Path:
@@ -358,6 +378,126 @@ def test_go_supervisor_caps_stdout_and_stderr_together() -> None:
     )
     assert result.output_limit_exceeded is True
     assert len(result.stdout) + len(result.stderr) <= 1024
+
+
+def _trusted_transport_response(encoded: bytes) -> bytes:
+    request = json.loads(encoded)
+    return (
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "request_id": request["request_id"],
+                "returncode": 0,
+                "stdout_base64": "",
+                "stderr_base64": "",
+                "timed_out": False,
+                "output_limit_exceeded": False,
+                "cleanup_complete": True,
+                "spawn_error": None,
+                "cleanup_error": None,
+            }
+        )
+        + "\n"
+    ).encode()
+
+
+def _assert_fixed_trusted_transport(
+    command: list[str], kwargs: dict[str, object]
+) -> None:
+    assert command == _PRODUCTION_TRUSTED_CLI_COMMAND()
+    assert command[0] == "/usr/bin/python3"
+    assert command[1:4] == ["-I", "-B", "-c"]
+    assert "from nl2repobench.verification.candidate_process_cli import main" in command[4]
+    assert kwargs["env"] == {
+        "PATH": "/usr/bin:/bin",
+        "PYTHONDONTWRITEBYTECODE": "1",
+    }
+    assert not {
+        "PYTHONPATH",
+        "PYTHONHOME",
+        "LD_PRELOAD",
+        "LD_LIBRARY_PATH",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+    } & set(kwargs["env"])
+
+
+def test_go_supervisor_trusted_bridge_uses_fixed_interpreter_and_clean_env(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        go_supervisor, "_trusted_cli_command", _PRODUCTION_TRUSTED_CLI_COMMAND
+    )
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def fake_run(command, **kwargs):
+        calls.append((command, kwargs))
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=_trusted_transport_response(kwargs["input"]),
+            stderr=b"",
+        )
+
+    monkeypatch.setattr(go_supervisor.subprocess, "run", fake_run)
+    result = run_go_bridge(("/usr/bin/true",), b"")
+
+    assert result.returncode == 0
+    assert len(calls) == 1
+    _assert_fixed_trusted_transport(*calls[0])
+
+
+def test_go_supervisor_trusted_build_uses_fixed_interpreter_and_clean_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    (source_root / "go.mod").write_text("module example.com/bridge\n", encoding="utf-8")
+    fake_go = tmp_path / "go"
+    fake_go.write_bytes(b"go")
+    fake_go.chmod(0o755)
+    monkeypatch.setattr(
+        go_supervisor, "_trusted_cli_command", _PRODUCTION_TRUSTED_CLI_COMMAND
+    )
+    original_run_generic = go_supervisor._run_generic_command  # noqa: SLF001
+
+    def run_generic_with_fixture(command, **kwargs):
+        assert command[0] == "/usr/local/go/bin/go"
+        return original_run_generic((str(fake_go), *command[1:]), **kwargs)
+
+    monkeypatch.setattr(
+        go_supervisor, "_run_generic_command", run_generic_with_fixture
+    )
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    def fake_run(command, **kwargs):
+        calls.append((command, kwargs))
+        (Path(kwargs["cwd"]) / "workspace" / "bridge").write_bytes(b"bridge")
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=_trusted_transport_response(kwargs["input"]),
+            stderr=b"",
+        )
+
+    monkeypatch.setattr(go_supervisor.subprocess, "run", fake_run)
+    output = tmp_path / "output" / "bridge"
+    result = run_go_build(source_root, output)
+
+    assert result.returncode == 0
+    assert output.read_bytes() == b"bridge"
+    assert len(calls) == 1
+    _assert_fixed_trusted_transport(*calls[0])
+
+
+def test_go_supervisor_source_has_no_interpreter_fallback() -> None:
+    source = (
+        Path(__file__).parents[1] / "src/nl2repobench/verification/go_supervisor.py"
+    ).read_text(encoding="utf-8")
+    assert "sys.executable" not in source
+    assert "PYTHON_INTERPRETER = \"/usr/bin/python3\"" in source
+    assert 'PYTHON_RUNTIME_ROOT = "/opt/nl2repobench-runtime"' in source
 
 
 def test_go_supervisor_preserves_nonzero_stdout_and_stderr(tmp_path: Path) -> None:

@@ -10,7 +10,6 @@ import secrets
 import shutil
 import stat
 import subprocess
-import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,9 +28,8 @@ from .subprocess_supervisor import (
 )
 
 VERIFIER_STAGING_PARENT = Path("/var/lib/nl2repobench/verifier-staging")
-# The copied runtime is rooted at /opt/nl2repobench-runtime in images. During
-# source-tree tests this resolves to the checked-out trusted package root.
-PYTHON_RUNTIME_ROOT = str(Path(__file__).resolve().parents[2])
+# The compiler copies this immutable runtime into every Go verifier image.
+PYTHON_RUNTIME_ROOT = "/opt/nl2repobench-runtime"
 PYTHON_INTERPRETER = "/usr/bin/python3"
 
 
@@ -42,14 +40,7 @@ def _trusted_cli_command() -> list[str]:
         + ");from nl2repobench.verification.candidate_process_cli import main;"
         + "raise SystemExit(main())"
     )
-    # Source-tree tests use the project interpreter, while verifier images use
-    # the locked system interpreter installed by the Go Dockerfile.
-    interpreter = (
-        sys.executable
-        if PYTHON_RUNTIME_ROOT != "/opt/nl2repobench-runtime"
-        else PYTHON_INTERPRETER
-    )
-    return [interpreter, "-I", "-B", "-c", bootstrap]
+    return [PYTHON_INTERPRETER, "-I", "-B", "-c", bootstrap]
 
 
 @dataclass(frozen=True)
