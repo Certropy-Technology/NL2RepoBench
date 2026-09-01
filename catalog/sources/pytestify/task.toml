@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "unknown"
 category = "pytest-plugin-boundary"
-tags = ["python", "pytest", "code-generation", "plugin-boundary", "blocked"]
+tags = [
+    "python",
+    "pytest",
+    "code-generation",
+    "plugin-boundary",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,9 +25,7 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.9.23"
 os_name = "linux-amd64"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,33 +35,30 @@ reason = "Agent and verifier runs must remain offline. The audit has no approved
 
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = [
-  "tokenize-rt>=4.0.0",
-  "pytest==8.4.1",
-  "pytest-xdist==3.8.0",
-  "setuptools==58.1.0",
-  "wheel==0.45.1",
+    "tokenize-rt>=4.0.0",
+    "pytest==8.4.1",
+    "pytest-xdist==3.8.0",
+    "setuptools==58.1.0",
+    "wheel==0.45.1",
 ]
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 122
 expected_total_source = "unknown"
-commands = [
-  "pip install -e .",
-  "pytest --continue-on-collection-errors tests",
-]
-protected_paths = ["tests"]
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "pytestify-authoring"
-reason = "Failure class: verifier. The audit records exact upstream provenance and static test shape, but the in-process private tests have no approved candidate-client/RPC adapter or trusted report boundary. The final environment, hash-locked dependency closure, source materialization proof, frozen collection, Oracle, controls, and Harbor runtime are absent. Next step: implement and review the pytestify-specific child-side verifier boundary, then freeze the final image/dependencies and rerun collection, Oracle, controls, and production compilation."
+reason = "Failure class: verifier. The audit records exact upstream provenance and static test shape, but the in-process private tests have no approved candidate-client/RPC adapter or trusted report boundary. The final environment, hash-locked dependency closure, source materialization proof, frozen collection, Oracle, controls, and Harbor runtime are absent. Next step: implement and review the pytestify-specific child-side verifier boundary, then freeze the final image/dependencies and rerun collection, Oracle, controls, and production compilation. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

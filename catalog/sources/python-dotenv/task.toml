@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "environment-configuration"
-tags = ["python", "dotenv", "parsing", "environment", "cli", "separate-verifier"]
+tags = [
+    "python",
+    "dotenv",
+    "parsing",
+    "environment",
+    "cli",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +25,12 @@ source_digest = "sha256:e6ec01e11aa990e59b45e40b3f44b597cef8d107fc270e261974ab15
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 build_command = "python -m pip install --no-deps --no-build-isolation"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +39,51 @@ reference_source_fetch = "forbidden"
 reason = "Click plus the setuptools/wheel build closure are installed from a hash-locked requirement during Docker build. Candidate and separate-verifier runtime phases have no egress, and the Oracle uses only a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["click==8.4.2", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:84b7960ac5889a6173ec11d0a5fe8cf135e213336ece4607548886ea998d793e", size_bytes = 631, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:84b7960ac5889a6173ec11d0a5fe8cf135e213336ece4607548886ea998d793e", visibility = "private" }
+status = "unknown"
+packages = [
+    "click==8.4.2",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 33
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:71f35bcf2aeb44cb0ecfc43e671e6ab1540deea35e81307c5aaffe88472b99ac", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:71f35bcf2aeb44cb0ecfc43e671e6ab1540deea35e81307c5aaffe88472b99ac", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:71f35bcf2aeb44cb0ecfc43e671e6ab1540deea35e81307c5aaffe88472b99ac"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:71f35bcf2aeb44cb0ecfc43e671e6ab1540deea35e81307c5aaffe88472b99ac"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build python-dotenv 1.1.1 from an empty workspace and satisfy a bounded parse, interpolation, discovery, loading, file-mutation, and module-CLI contract."
-keywords = ["python", "dotenv", "parsing", "environment", "cli", "separate-verifier"]
+keywords = [
+    "python",
+    "dotenv",
+    "parsing",
+    "environment",
+    "cli",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -81,6 +103,6 @@ uri = "artifact://private/sha256:56b99ec5c42ed681a8aa60e4e3fd33b3fd848b66d2a3680
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/python-dotenv"
-reason = "Harbor 0.21.0 production gates passed with a fixed 33-leaf contract: Oracle 33/33, empty 0, stub 2/33, and forgery 2/33. All four verifier network receipts prove no public connectivity. Reviews, pilots, dataset integration, commit, and push remain outside this task."
+reason = "Harbor 0.21.0 production gates passed with a fixed 33-leaf contract: Oracle 33/33, empty 0, stub 2/33, and forgery 2/33. All four verifier network receipts prove no public connectivity. Reviews, pilots, dataset integration, commit, and push remain outside this task. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

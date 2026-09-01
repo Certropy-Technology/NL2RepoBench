@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-tooling"
-tags = ["python", "interpreter-discovery", "version-specifiers", "caching", "filesystem", "separate-verifier"]
+tags = [
+    "python",
+    "interpreter-discovery",
+    "version-specifiers",
+    "caching",
+    "filesystem",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +25,11 @@ source_digest = "sha256:6feb569ab3927bf2a958b4b02a667916e577b7e8565a609d9472c930
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "python -m pip install --no-cache-dir --require-hashes -r /tmp/candidate-requirements.lock.txt"
 
 [environment.network_policy]
@@ -34,44 +39,56 @@ reference_source_fetch = "forbidden"
 reason = "Build dependencies are installed from a private hash-locked requirements artifact during image construction; Agent and verifier runs are network-isolated. Only the trusted Oracle receives scoped access to the frozen upstream host."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "filelock==3.32.3",
-  "hatch-vcs==0.5.0",
-  "hatchling==1.28.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "trove-classifiers==2026.6.1.19",
-  "vcs-versioning==2.3.1",
+    "filelock==3.32.3",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.28.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:d74a9e86b1d99df47ebb7d7de1d55c9f5c76629127a0659e8ac34c7c1282e005", size_bytes = 2590, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d74a9e86b1d99df47ebb7d7de1d55c9f5c76629127a0659e8ac34c7c1282e005", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:15bb7e1bb72457b16c77a6836a0c94cec2623efa5c5258797b860a069fee5096", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:15bb7e1bb72457b16c77a6836a0c94cec2623efa5c5258797b860a069fee5096", visibility = "private" }
 entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:15bb7e1bb72457b16c77a6836a0c94cec2623efa5c5258797b860a069fee5096"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:15bb7e1bb72457b16c77a6836a0c94cec2623efa5c5258797b860a069fee5096"
+visibility = "private"
 
 [harbor]
 description = "Build python-discovery from an empty workspace and implement deterministic interpreter metadata, version specification, cache, PATH, and discovery behavior."
-keywords = ["python", "interpreter-discovery", "version-specifiers", "caching", "filesystem", "separate-verifier"]
+keywords = [
+    "python",
+    "interpreter-discovery",
+    "version-specifiers",
+    "caching",
+    "filesystem",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -91,6 +108,6 @@ uri = "artifact://private/sha256:6c98de5ab393e19b3d8184b54fab74129e7d93f9df3dd2d
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-archive-r2-c2"
-reason = "The fixed-revision Oracle passed all 32 leaves and empty, stub, forgery, install-timeout, call-timeout, and offline controls completed with verifier-owned reports."
+reason = "The fixed-revision Oracle passed all 32 leaves and empty, stub, forgery, install-timeout, call-timeout, and offline controls completed with verifier-owned reports. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

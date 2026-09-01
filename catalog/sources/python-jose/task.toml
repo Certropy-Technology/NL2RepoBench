@@ -6,7 +6,14 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "jwt-library"
-tags = ["python", "jose", "jwt", "crypto", "overlay", "blocked"]
+tags = [
+    "python",
+    "jose",
+    "jwt",
+    "crypto",
+    "overlay",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,7 +26,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -29,23 +35,26 @@ reason = "The immutable verifier image differs from upstream in 18 paths and no 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["crypto backends and test dependencies are not a hash-locked offline closure"]
+packages = [
+    "crypto backends and test dependencies are not a hash-locked offline closure",
+]
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "repair/python-jose"
-reason = "The exact source and MIT archive/license evidence are known, but the immutable image contains 18 changed paths without an approved overlay manifest, the legacy denominator is not a structured collection, and no hash-locked crypto closure, separate verifier, Oracle, or controls exist."
+reason = "The exact source and MIT archive/license evidence are known, but the immutable image contains 18 changed paths without an approved overlay manifest, the legacy denominator is not a structured collection, and no hash-locked crypto closure, separate verifier, Oracle, or controls exist. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

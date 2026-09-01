@@ -6,7 +6,10 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "unknown"
 category = "design-pattern-library"
-tags = ["python", "blocked"]
+tags = [
+    "python",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -17,7 +20,6 @@ source_digest = "sha256:ef6b1889cfcf826ebcbee0b4b6a809b954dd0ecda96ef5ef310d73aa
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -27,23 +29,24 @@ reason = "No hash-locked offline build and test dependency closure is available.
 
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "repair/python-patterns"
-reason = "The immutable upstream revision has no verified redistributable license evidence."
+reason = "The immutable upstream revision has no verified redistributable license evidence. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

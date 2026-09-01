@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "pytest-plugin"
-tags = ["python", "pytest", "testing", "plugin", "blocked"]
+tags = [
+    "python",
+    "pytest",
+    "testing",
+    "plugin",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -18,12 +24,10 @@ source_digest = "sha256:8dbc7cde28a6b0ac1b6f5ad16e0223f3bf1e29ce4de6b3afdb1d997f
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.4"
+status = "unknown"
 os_name = "linux/amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/python-pytest-cases@sha256:327e70a15c0c033f5186e9b3e8575ddd16c7ae999e6d3b692d29e7384d90b68b"
 base_image_digest = "sha256:327e70a15c0c033f5186e9b3e8575ddd16c7ae999e6d3b692d29e7384d90b68b"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,26 +37,32 @@ reason = "The candidate and verifier must remain offline, but no hash-locked dep
 
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors"]
-protected_paths = ["tests"]
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked pytest-cases candidate: the legacy test tree has no frozen effective denominator and its in-process pytest interactions have no separate candidate verifier boundary."
-keywords = ["python", "pytest", "testing", "plugin", "blocked"]
+keywords = [
+    "python",
+    "pytest",
+    "testing",
+    "plugin",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -66,4 +76,4 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "The upstream revision, archive digest, BSD-3-Clause license, and immutable image identity are known, but the image carries packaging and test overlays, the historical cache records 1491 nodes without a valid effective denominator, dependencies are not hash-locked, and the pytest object interactions cannot cross a separate candidate verifier boundary. No Oracle, controls, or catalog/tasks/python-pytest-cases runtime exists."
+reason = "The upstream revision, archive digest, BSD-3-Clause license, and immutable image identity are known, but the image carries packaging and test overlays, the historical cache records 1491 nodes without a valid effective denominator, dependencies are not hash-locked, and the pytest object interactions cannot cross a separate candidate verifier boundary. No Oracle, controls, or catalog/tasks/python-pytest-cases runtime exists. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "python-library"
-tags = ["python", "vector-math", "fixture-adapter", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "vector-math",
+    "fixture-adapter",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,12 +24,10 @@ source_digest = "sha256:c47d5545686d207763d3c21aafd6eb26b575dcc02ef62159fa21011c
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,40 +36,48 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress, and the Oracle bundle ships the frozen source archive locally so even an Oracle run needs no host authorization. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 
 [dependencies]
-# setuptools/wheel supply the declared setuptools.build_meta backend because the
-# candidate install runs `pip install --no-deps --no-build-isolation`; numpy is
-# the upstream runtime dependency.
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
-  "numpy==2.2.6",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+    "numpy==2.2.6",
 ]
-lock_artifact = { digest = "sha256:0f3dedf79c6b58611093e452fea6fcd7067db300460a789c86c3577366cf6aa9", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0f3dedf79c6b58611093e452fea6fcd7067db300460a789c86c3577366cf6aa9", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 36
 expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/client.py", "/tests/verifier/cases.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822", visibility = "private" }
 entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:6fe83e083885b325f7b5b009b028077a492393a2180db38db1759d560eff3822"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the FastVector two-dimensional vector package from an empty workspace."
-keywords = ["python", "vector-math", "fixture-adapter", "repository-generation", "separate-verifier"]
+keywords = [
+    "python",
+    "vector-math",
+    "fixture-adapter",
+    "repository-generation",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -78,8 +90,8 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-reason = "Generic private-bundle compiled Oracle passed 36/36 with reward 1.0 on the re-based python:3.12.14-slim-bookworm verifier base; the 36-item frozen collection was re-confirmed on that base. Stub 0.194, forgery 0.194 (byte-identical to stub, so tampering had no effect) and empty 0.0 controls pass. Blind/traceability review and pilot remain pending."
+status = "blocked"
+reason = "Generic private-bundle compiled Oracle passed 36/36 with reward 1.0 on the re-based python:3.12.14-slim-bookworm verifier base; the 36-item frozen collection was re-confirmed on that base. Stub 0.194, forgery 0.194 (byte-identical to stub, so tampering had no effect) and empty 0.0 controls pass. Blind/traceability review and pilot remain pending. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
 
 [oracle_bundle]
 digest = "sha256:168be0421ca55010bbdfc62cd755affaf94f23cb6467bab809ad7368fdcf4f63"

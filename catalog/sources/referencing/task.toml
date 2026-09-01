@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-library"
-tags = ["python", "json", "json-reference", "json-schema", "registry", "resolver", "separate-verifier"]
+tags = [
+    "python",
+    "json",
+    "json-reference",
+    "json-schema",
+    "registry",
+    "resolver",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -15,15 +23,15 @@ upstream_url = "https://github.com/python-jsonschema/referencing"
 revision = "b081312fdf2567324d0c11fb07b630d7fcecea35"
 license_spdx = "MIT"
 source_digest = "sha256:b8edfe7c6ddc3e90be5a73f4fd4a72e3d9f54b60deb14bb2b55081775bb49fba"
-submodules = ["referencing-suite@e70fee8c4d4a1c128f5c55e395ce154ed87e1f24"]
+submodules = [
+    "referencing-suite@e70fee8c4d4a1c128f5c55e395ce154ed87e1f24",
+]
 
 [environment]
-status = "known"
-python_version = "3.13.15"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.13-slim-bookworm"
 base_image_digest = "sha256:b6bd71b0dd3811ddbcbc523ec2965fd1e1bcfdf7a20ab24679273d3bee726129"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,32 +40,55 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and verifier dependencies are installed during Docker build from a hash-locked requirements artifact; Agent and separate verifier runs have no egress. The trusted Oracle receives only its run-scoped source-host authorization."
 
 [dependencies]
-status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:d856eea398d73acc1a1d34cbf986a11757f77046083ea43119bad8c3a9f786f8", size_bytes = 11959, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d856eea398d73acc1a1d34cbf986a11757f77046083ea43119bad8c3a9f786f8", visibility = "private" }
-packages = ["attrs==26.1.0", "hatchling==1.32.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "rpds-py==2026.6.3", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19"]
+status = "unknown"
+packages = [
+    "attrs==26.1.0",
+    "hatchling==1.32.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "rpds-py==2026.6.3",
+    "tomlkit==0.15.1",
+    "trove-classifiers==2026.6.1.19",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:d6fdc4865c961172767f26decd99b4c04a04c4e13ce2c1ed2f2682f8391e49d0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d6fdc4865c961172767f26decd99b4c04a04c4e13ce2c1ed2f2682f8391e49d0", visibility = "private" }
 entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:d6fdc4865c961172767f26decd99b4c04a04c4e13ce2c1ed2f2682f8391e49d0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d6fdc4865c961172767f26decd99b4c04a04c4e13ce2c1ed2f2682f8391e49d0"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned referencing JSON reference resolver from an empty workspace with immutable registries, specification-aware resources, JSON Pointer and anchor lookup, JSON Schema dialect support, and deterministic retrieval helpers."
-keywords = ["python", "json", "json-schema", "resolver", "registry", "anchors", "separate-verifier"]
+keywords = [
+    "python",
+    "json",
+    "json-schema",
+    "resolver",
+    "registry",
+    "anchors",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -77,6 +108,6 @@ uri = "artifact://private/sha256:90f17ff6c785ac30c1f2d4ca681bbd9dc14c6167dc04863
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-next-20260826-r1"
-reason = "Production bundle compiled with private artifacts. The no-network Oracle scored 20/20; empty, stub, forged-reward, and install-timeout controls scored 0.0. Review and model pilot remain separate stages."
+reason = "Production bundle compiled with private artifacts. The no-network Oracle scored 20/20; empty, stub, forged-reward, and install-timeout controls scored 0.0. Review and model pilot remain separate stages. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

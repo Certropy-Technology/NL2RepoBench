@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "constraint-solving"
-tags = ["python", "constraint-satisfaction", "backtracking", "scenario-adapter", "separate-verifier"]
+tags = [
+    "python",
+    "constraint-satisfaction",
+    "backtracking",
+    "scenario-adapter",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +24,13 @@ source_digest = "sha256:c15171bf0b6e8271e099566d5acef4c322e2d2efa13dd1f92cb3370b
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["build-essential"]
-network_mode = "no-network"
+system_packages = [
+    "build-essential",
+]
 build_command = "pip install --no-deps --no-build-isolation"
 
 [environment.network_policy]
@@ -34,28 +40,38 @@ reference_source_fetch = "forbidden"
 reason = "Build dependencies are hash-locked and installed during image build; agent and verifier runs have no network. Oracle restores a local digest-verified source archive and never fetches reference source."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["poetry-core==2.4.1", "setuptools==84.0.0", "Cython==3.2.9"]
-lock_artifact = { digest = "sha256:8038048d90f59b9ee0d37831390154d39aa557536df542a977941ec842954022", size_bytes = 4289, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8038048d90f59b9ee0d37831390154d39aa557536df542a977941ec842954022", visibility = "private" }
+status = "unknown"
+packages = [
+    "poetry-core==2.4.1",
+    "setuptools==84.0.0",
+    "Cython==3.2.9",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 16
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build python-constraint2 from an empty workspace and satisfy a bounded child-side finite-domain constraint scenario suite."
-keywords = ["python", "constraint-solving", "backtracking", "stateful-adapter", "generators", "separate-verifier"]
+keywords = [
+    "python",
+    "constraint-solving",
+    "backtracking",
+    "stateful-adapter",
+    "generators",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -69,9 +85,16 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:bd469a7507cffe3007cef6ee8067736b947bb3ed5cde3444984e845e431a15a0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bd469a7507cffe3007cef6ee8067736b947bb3ed5cde3444984e845e431a15a0", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:bd469a7507cffe3007cef6ee8067736b947bb3ed5cde3444984e845e431a15a0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bd469a7507cffe3007cef6ee8067736b947bb3ed5cde3444984e845e431a15a0"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
 digest = "sha256:652b067acd0267e78f7e364df9c29e79ecf58047df344c7c677daf8fa09dc2f1"
@@ -81,7 +104,13 @@ uri = "artifact://private/sha256:652b067acd0267e78f7e364df9c29e79ecf58047df344c7
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "repair/python-constraint"
-reason = "Strict compiler output includes the declared build-essential package in the separate verifier image. Official Harbor 0.21.0 Oracle passed 16/16 at reward 1.0; empty, stub, forgery, and offline controls passed with hash-bound receipts."
-evidence = [{ digest = "sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a", size_bytes = 1337, media_type = "application/json", uri = "artifact://private/sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a", visibility = "private" }]
+reason = "Strict compiler output includes the declared build-essential package in the separate verifier image. Official Harbor 0.21.0 Oracle passed 16/16 at reward 1.0; empty, stub, forgery, and offline controls passed with hash-bound receipts. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+
+[[lifecycle.evidence]]
+digest = "sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a"
+size_bytes = 1337
+media_type = "application/json"
+uri = "artifact://private/sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a"
+visibility = "private"

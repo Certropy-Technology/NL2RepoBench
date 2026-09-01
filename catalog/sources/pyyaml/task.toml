@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "serialization-library"
-tags = ["python", "yaml", "parser", "serializer", "safe-loader", "events", "nodes", "separate-verifier"]
+tags = [
+    "python",
+    "yaml",
+    "parser",
+    "serializer",
+    "safe-loader",
+    "events",
+    "nodes",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +27,11 @@ source_digest = "sha256:18387c6163aa3de3221240cade5f77768963c1096061119d67503462
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked build and test closure during image build; install the candidate with pip --no-deps"
 
 [environment.network_policy]
@@ -34,37 +41,43 @@ reference_source_fetch = "forbidden"
 reason = "PyYAML is built and tested from a preinstalled hash-locked closure. Agent and verifier execution have no network; only the trusted Oracle receives the exact upstream host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "Cython==3.0.12",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "setuptools==84.0.0",
-  "wheel==0.48.0",
+    "Cython==3.0.12",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "setuptools==84.0.0",
+    "wheel==0.48.0",
 ]
-lock_artifact = { digest = "sha256:d226ffcdb54f7b30c35189714c0af444c46d3697c23efcb1f838808e1c3a05e9", size_bytes = 7323, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d226ffcdb54f7b30c35189714c0af444c46d3697c23efcb1f838808e1c3a05e9", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 64
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build PyYAML from an empty workspace and satisfy the deterministic YAML parsing, serialization, event, node, merge, extension, and error contract through a separate child-side verifier."
-keywords = ["python", "yaml", "parser", "serializer", "safe-loader", "separate-verifier"]
+keywords = [
+    "python",
+    "yaml",
+    "parser",
+    "serializer",
+    "safe-loader",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 30.0
@@ -78,9 +91,16 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:322fe75d26fc55d3ce7654099ed86cf4c03db7ddb7442e3005a8265a65542bec", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:322fe75d26fc55d3ce7654099ed86cf4c03db7ddb7442e3005a8265a65542bec", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:322fe75d26fc55d3ce7654099ed86cf4c03db7ddb7442e3005a8265a65542bec"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:322fe75d26fc55d3ce7654099ed86cf4c03db7ddb7442e3005a8265a65542bec"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
 digest = "sha256:ea0ab401f6de6ec4f6f71a5d7526d800c3a797cb881cfa4233f414375954063e"
@@ -90,6 +110,6 @@ uri = "artifact://private/sha256:ea0ab401f6de6ec4f6f71a5d7526d800c3a797cb881cfa4
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Harbor 0.21.0 Oracle and task-local controls passed against the final production compile; integrator must generate the checked-in catalog/tasks projection and complete review/pilot/publication separately."
+reason = "Harbor 0.21.0 Oracle and task-local controls passed against the final production compile; integrator must generate the checked-in catalog/tasks projection and complete review/pilot/publication separately. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."

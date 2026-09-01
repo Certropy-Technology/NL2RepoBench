@@ -3,12 +3,24 @@ task_id = "python-fire"
 version = "0.2.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:2e4154d2e56a701223b7c69d98ba99b6e326a05a3522ea89414149d161061a86", size_bytes = 522240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2e4154d2e56a701223b7c69d98ba99b6e326a05a3522ea89414149d161061a86", visibility = "private" }
+[oracle_bundle]
+digest = "sha256:2e4154d2e56a701223b7c69d98ba99b6e326a05a3522ea89414149d161061a86"
+size_bytes = 522240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2e4154d2e56a701223b7c69d98ba99b6e326a05a3522ea89414149d161061a86"
+visibility = "private"
 
 [metadata]
 difficulty = "hard"
 category = "cli"
-tags = ["python", "cli", "reflection", "help-text", "unicode", "separate-verifier"]
+tags = [
+    "python",
+    "cli",
+    "reflection",
+    "help-text",
+    "unicode",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -20,12 +32,10 @@ source_digest = "sha256:a0254d68a6e3b4aef32ce2f9fd1b10f45755149a1194b683897809d8
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,27 +44,38 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0", "termcolor==3.1.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:323fe7d38c9cde4d4ff2fe22a00f73b845101ec779040127f86cafd149e1a709", size_bytes = 305, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:323fe7d38c9cde4d4ff2fe22a00f73b845101ec779040127f86cafd149e1a709", visibility = "private" }
+status = "unknown"
+packages = [
+    "setuptools==80.9.0",
+    "termcolor==3.1.0",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned python-fire noninteractive CLI and help-text slice from an empty workspace."
-keywords = ["python", "cli", "reflection", "help-text", "unicode", "separate-verifier"]
+keywords = [
+    "python",
+    "cli",
+    "reflection",
+    "help-text",
+    "unicode",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -68,11 +89,18 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:986bde95d5e3c334325cf592da2da09d116f5252e1ca6735f4591c6ffbe9a25f", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:986bde95d5e3c334325cf592da2da09d116f5252e1ca6735f4591c6ffbe9a25f", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:986bde95d5e3c334325cf592da2da09d116f5252e1ca6735f4591c6ffbe9a25f"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:986bde95d5e3c334325cf592da2da09d116f5252e1ca6735f4591c6ffbe9a25f"
+visibility = "private"
+
+[verifier.environment]
 
 [lifecycle]
-status = "oracle-passed"
+status = "blocked"
 owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
