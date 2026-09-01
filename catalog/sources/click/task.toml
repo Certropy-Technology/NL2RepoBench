@@ -1,12 +1,18 @@
-schema_version = "1.0"
 task_id = "click"
 version = "0.1.0"
 instruction = "blocked.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "cli-framework"
-tags = ["python", "cli", "click", "subprocess", "blocked"]
+tags = [
+    "python",
+    "cli",
+    "click",
+    "subprocess",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -17,39 +23,15 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:1e48394d9815df68dd94d614c90e16f509532a28f906e745da396d929f1eadc1"
 submodules = []
 
-[environment]
-status = "unknown"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "Flit build backend and test closure are not hash-locked; candidate and verifier runs must remain offline."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = ["flit_core>=3.11,<4", "pytest==9.0.2", "iniconfig", "packaging", "pluggy"]
-
-[tests]
-framework = "pytest"
-expected_total = 0
-expected_total_source = "unknown"
-commands = []
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [harbor]
 description = "Blocked candidate: Click has no approved offline build closure or JSON-safe separate verifier for its stateful callback, stream, and subprocess API."
-keywords = ["python", "cli", "click", "subprocess", "blocked"]
+keywords = [
+    "python",
+    "cli",
+    "click",
+    "subprocess",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -61,7 +43,42 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Flit build backend and test closure are not hash-locked; candidate and verifier runs must remain offline."
+
+[dependencies]
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "flit_core>=3.11,<4",
+    "pytest==9.0.2",
+    "iniconfig",
+    "packaging",
+    "pluggy",
+]
+
+[tests]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/click"
-reason = "Immutable Click source and BSD-3-Clause archive evidence are known, but Flit build/test dependencies are not closed offline, collection denominator is not frozen, and the upstream callback/stream/subprocess surface lacks a separate JSON-safe verifier. No catalog/tasks/click runtime exists."
+reason = "Immutable Click source and BSD-3-Clause archive evidence are known, but Flit build/test dependencies are not closed offline, collection denominator is not frozen, and the upstream callback/stream/subprocess surface lacks a separate JSON-safe verifier. No catalog/tasks/click runtime exists. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."

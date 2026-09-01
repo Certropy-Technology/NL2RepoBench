@@ -1,12 +1,19 @@
-schema_version = "1.0"
 task_id = "cachetools"
 version = "1.0.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "easy"
 category = "caching"
-tags = ["python", "caching", "memoization", "cache-policies", "ttl", "separate-verifier"]
+tags = [
+    "python",
+    "caching",
+    "memoization",
+    "cache-policies",
+    "ttl",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,51 +24,29 @@ license_spdx = "MIT"
 source_digest = "sha256:67fe3a54397f9d1437464dfd149bdf54520a0c5a894eb4ab66eb1f37ea100449"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked build backend during image build; Oracle verifies the pinned source archive before copying src/cachetools"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The hash-locked build closure is installed during Docker image build. Agent and verifier runs require no egress, while the Oracle uses only a local private source archive after checking the frozen revision digest."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 18
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.bundle]
+digest = "sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build cachetools 7.1.7 from an empty workspace and reproduce deterministic cache, TTL, LRU, LFU, MRU-trace, random-replacement, key, and memoization behavior through a separate child-side JSON adapter."
-keywords = ["python", "caching", "cache-policies", "ttl", "memoization", "separate-verifier"]
+keywords = [
+    "python",
+    "caching",
+    "cache-policies",
+    "ttl",
+    "memoization",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
@@ -80,7 +65,43 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:da5fc086e99abf5b3ea91e19f0dedb209eeec8aab999e595899fa0f445bbff3d"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "install the hash-locked build backend during image build; Oracle verifies the pinned source archive before copying src/cachetools"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build closure is installed during Docker image build. Agent and verifier runs require no egress, while the Oracle uses only a local private source archive after checking the frozen revision digest."
+
+[dependencies]
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[tests]
+framework = "custom"
+report_format = "custom-json-v1"
+expected_total = 18
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker"
-reason = "Official Harbor Oracle passed 18/18 with reward 1.0; empty, stub, and forgery controls each scored 0.0 under the no-network separate verifier."
+reason = "Official Harbor Oracle passed 18/18 with reward 1.0; empty, stub, and forgery controls each scored 0.0 under the no-network separate verifier. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."

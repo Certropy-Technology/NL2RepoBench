@@ -1,12 +1,18 @@
-schema_version = "1.0"
 task_id = "dataclasses-json"
 version = "0.1.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "dataclasses", "json", "serialization", "separate-verifier"]
+tags = [
+    "python",
+    "dataclasses",
+    "json",
+    "serialization",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,49 +23,29 @@ license_spdx = "MIT"
 source_digest = "sha256:113c90da5957f13cc49f80d535cde965e66850f72559498a9ebfd934c4db449f"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
-
-[dependencies]
-status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", size_bytes = 1374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", visibility = "private" }
-packages = ["dataclasses-json", "pytest"]
-
-[tests]
-framework = "pytest"
-expected_total = 24
-expected_total_source = "frozen-collection"
-commands = ["python -m pytest /tests/private/test_contract.py --junitxml=/logs/verifier/junit.xml"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153", visibility = "private" }
 entrypoint = "run.py"
-environment = { POETRY_DYNAMIC_VERSIONING_BYPASS = "0.0.0" }
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.bundle]
+digest = "sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153"
+visibility = "private"
+
+[verifier.environment]
+POETRY_DYNAMIC_VERSIONING_BYPASS = "0.0.0"
 
 [harbor]
 description = "Build a JSON serialization library for Python dataclasses from an empty workspace."
-keywords = ["python", "repository-generation", "dataclasses", "json", "separate-verifier"]
+keywords = [
+    "python",
+    "repository-generation",
+    "dataclasses",
+    "json",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -71,14 +57,52 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-gpt56-wide-20260826-r2"
-reason = "Task-local production bundle passed direct no-network Oracle-equivalent grading and empty, stub, forgery, and install-timeout controls; independent review and Harbor trial execution remain pending."
-
 [oracle_bundle]
 digest = "sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78"
 visibility = "private"
+
+[environment]
+status = "unknown"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+
+[dependencies]
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "dataclasses-json",
+    "pytest",
+]
+
+[tests]
+framework = "custom"
+report_format = "custom-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "python-author-gpt56-wide-20260826-r2"
+reason = "Task-local production bundle passed direct no-network Oracle-equivalent grading and empty, stub, forgery, and install-timeout controls; independent review and Harbor trial execution remain pending. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."

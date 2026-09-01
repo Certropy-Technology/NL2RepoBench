@@ -1,47 +1,32 @@
-schema_version = "1.0"
 task_id = "dateparser"
 version = "0.1.0"
 instruction = "audit.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "date-time-parsing"
-tags = ["python", "date-time", "localization", "time-zones", "blocked"]
+tags = [
+    "python",
+    "date-time",
+    "localization",
+    "time-zones",
+    "blocked",
+]
 language = "python"
 
 [source]
 status = "unknown"
 
-[environment]
-status = "unknown"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "Source freeze and dependency/data closure were not established; no runtime or Oracle source is authorized."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = []
-
-[tests]
-framework = "pytest"
-expected_total_source = "unknown"
-commands = []
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [harbor]
 description = "Blocked candidate: dateparser cannot enter production until immutable source, locale/time-zone data, dependency closure, and a separate verifier contract are frozen."
-keywords = ["python", "date-time", "localization", "time-zones", "blocked"]
+keywords = [
+    "python",
+    "date-time",
+    "localization",
+    "time-zones",
+    "blocked",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -53,7 +38,35 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[environment]
+status = "unknown"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Source freeze and dependency/data closure were not established; no runtime or Oracle source is authorized."
+
+[dependencies]
+status = "unknown"
+package_manager = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/dateparser"
-reason = "Source-freeze remediation stopped at discovery: catalog/sources/dateparser/audit.md records unresolved upstream identity, full revision, license/archive, locale/time-zone closure, deterministic test collection, offline dependency closure, and separate-verifier design. No catalog/tasks/dateparser runtime is present."
+reason = "Source-freeze remediation stopped at discovery: catalog/sources/dateparser/audit.md records unresolved upstream identity, full revision, license/archive, locale/time-zone closure, deterministic test collection, offline dependency closure, and separate-verifier design. No catalog/tasks/dateparser runtime is present. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."

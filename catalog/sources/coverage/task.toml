@@ -1,12 +1,20 @@
-schema_version = "1.0"
 task_id = "coverage"
 version = "0.1.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "developer-tool"
-tags = ["python", "coverage", "tracing", "sqlite", "reporting", "cli", "separate-verifier"]
+tags = [
+    "python",
+    "coverage",
+    "tracing",
+    "sqlite",
+    "reporting",
+    "cli",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,43 +25,17 @@ license_spdx = "Apache-2.0"
 source_digest = "sha256:d4c34fff118dcfe6e22a637411cdd5c5a7605dd2e65ed510560637ee94467e56"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.4"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The candidate dependency closure is installed during Docker build from a hash-locked requirements artifact. Agent and verifier phases are offline; only the trusted Oracle receives run-scoped authorization for github.com."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==84.0.0"]
-lock_artifact = { digest = "sha256:9415ac080e4169856325998ab71d3258c16c02a1d0d3cfa837bfca1290faa8db", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9415ac080e4169856325998ab71d3258c16c02a1d0d3cfa837bfca1290faa8db", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 12
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [harbor]
 description = "Build coverage.py from an empty workspace with deterministic line, branch, data, reporting, plugin, and CLI behavior."
-keywords = ["python", "coverage", "tracing", "sqlite", "reporting", "cli", "separate-verifier"]
+keywords = [
+    "python",
+    "coverage",
+    "tracing",
+    "sqlite",
+    "reporting",
+    "cli",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -67,9 +49,17 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:83eb2e804dedb30a926470414593c388664f125652792bd5bc8028ec02c29695", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:83eb2e804dedb30a926470414593c388664f125652792bd5bc8028ec02c29695", visibility = "private" }
 entrypoint = "run.py"
-environment = { COVERAGE_DISABLE_EXTENSION = "1" }
+
+[verifier.bundle]
+digest = "sha256:83eb2e804dedb30a926470414593c388664f125652792bd5bc8028ec02c29695"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:83eb2e804dedb30a926470414593c388664f125652792bd5bc8028ec02c29695"
+visibility = "private"
+
+[verifier.environment]
+COVERAGE_DISABLE_EXTENSION = "1"
 
 [oracle_bundle]
 digest = "sha256:2d45f7b66bb07b2dc39b7c3bf032721577cc97e0c38bf03f89588be6e688da90"
@@ -78,7 +68,44 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:2d45f7b66bb07b2dc39b7c3bf032721577cc97e0c38bf03f89588be6e688da90"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate dependency closure is installed during Docker build from a hash-locked requirements artifact. Agent and verifier phases are offline; only the trusted Oracle receives run-scoped authorization for github.com."
+
+[dependencies]
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==84.0.0",
+]
+
+[tests]
+framework = "custom"
+report_format = "custom-json-v1"
+expected_total = 12
+expected_total_source = "frozen-collection"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Production bundle passed the required Oracle, empty, stub, forgery, install-timeout, and offline verifier controls; independent review, pilot, and publication remain separate stages."
+reason = "Production bundle passed the required Oracle, empty, stub, forgery, install-timeout, and offline verifier controls; independent review, pilot, and publication remain separate stages. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."

@@ -1,12 +1,19 @@
-schema_version = "1.0"
 task_id = "cattrs"
 version = "0.1.0"
 instruction = "blocked.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "serialization-and-validation"
-tags = ["python", "attrs", "dataclasses", "serialization", "validation", "blocked"]
+tags = [
+    "python",
+    "attrs",
+    "dataclasses",
+    "serialization",
+    "validation",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -17,37 +24,15 @@ license_spdx = "MIT"
 source_digest = "sha256:fa31f0fd7b0764cd9f142e70988113e2b2852790144b7cb81064614170c5e470"
 submodules = []
 
-[environment]
-status = "unknown"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "The exact source archive is frozen, but the optional backend/test dependency closure and separate verifier contract are not approved; agent and verifier runs remain offline."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = ["attrs>=25.4.0", "typing-extensions>=4.14.0", "exceptiongroup>=1.1.1; python_version < '3.11'", "pymongo", "cbor2", "msgpack", "msgspec", "orjson", "PyYAML", "tomlkit", "tomli", "ujson", "hypothesis", "pytest", "pytest-typing", "mypy", "pytest-benchmark", "immutables"]
-
-[tests]
-framework = "pytest"
-expected_total = 0
-expected_total_source = "unknown"
-commands = []
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [harbor]
 description = "Blocked cattrs candidate: exact source is frozen, but the broad attrs/backend serialization surface has no approved offline verifier contract."
-keywords = ["python", "attrs", "serialization", "validation", "blocked"]
+keywords = [
+    "python",
+    "attrs",
+    "serialization",
+    "validation",
+    "blocked",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -59,7 +44,54 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[environment]
+status = "unknown"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The exact source archive is frozen, but the optional backend/test dependency closure and separate verifier contract are not approved; agent and verifier runs remain offline."
+
+[dependencies]
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "attrs>=25.4.0",
+    "typing-extensions>=4.14.0",
+    "exceptiongroup>=1.1.1; python_version < '3.11'",
+    "pymongo",
+    "cbor2",
+    "msgpack",
+    "msgspec",
+    "orjson",
+    "PyYAML",
+    "tomlkit",
+    "tomli",
+    "ujson",
+    "hypothesis",
+    "pytest",
+    "pytest-typing",
+    "mypy",
+    "pytest-benchmark",
+    "immutables",
+]
+
+[tests]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/cattrs"
-reason = "Immutable cattrs revision and MIT license/archive evidence are available, but the broad modern and legacy API surface, optional serialization backends, dependency closure, frozen collection, separate verifier, Oracle, and controls were not completed. No catalog/tasks/cattrs runtime exists."
+reason = "Immutable cattrs revision and MIT license/archive evidence are available, but the broad modern and legacy API surface, optional serialization backends, dependency closure, frozen collection, separate verifier, Oracle, and controls were not completed. No catalog/tasks/cattrs runtime exists. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
