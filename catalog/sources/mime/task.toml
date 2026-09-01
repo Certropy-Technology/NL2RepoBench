@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "mime"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "mime-type-library"
-tags = ["node", "npm", "esm", "mime", "parser", "cli", "json"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "mime",
+    "parser",
+    "cli",
+    "json",
+]
 language = "node"
 
 [source]
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +37,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,23 +45,9 @@ reference_source_fetch = "forbidden"
 reason = "mime has no runtime dependency roots; the npm v3 lock and empty integrity-checked cache are frozen for offline installation, while the pinned source is available only to the trusted Oracle bundle."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-
-[dependencies.artifact]
-digest = "sha256:3705c717f949ecf4d9cc50887c243f0996d903b0cafa636c61ffad50992de13d"
-size_bytes = 491
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:3705c717f949ecf4d9cc50887c243f0996d903b0cafa636c61ffad50992de13d"
-visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -79,12 +70,25 @@ uri = "artifact://private/sha256:a8d3d6d3ae9e5c3a2a3448255f1224fe0da6c0cce7260a1
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "mime-authoring"
+reason = "Production Node bundle compiled reproducibly; current Harbor 0.21.0 Oracle passed 32/32, and empty, stub, forgery, install-script, loader-hook, hang, and offline controls passed their bounded gates. Independent model Agent Run and review/pilot stages remain pending. Canonical dependency closure and versioned private-artifact migration remain required."
 
 [harbor]
 description = "Build the mime ESM package with a deterministic MIME lookup and CLI contract."
-keywords = ["node", "npm", "esm", "mime", "parser", "cli", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "mime",
+    "parser",
+    "cli",
+    "json",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -95,11 +99,6 @@ cpus = 1
 memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "mime-authoring"
-reason = "Production Node bundle compiled reproducibly; current Harbor 0.21.0 Oracle passed 32/32, and empty, stub, forgery, install-script, loader-hook, hang, and offline controls passed their bounded gates. Independent model Agent Run and review/pilot stages remain pending."
 
 [oracle_bundle]
 digest = "sha256:d35f9716b8601c24965ed88d67febb2b0e6acd59d0c5f20c194aa1ce4ef0d2ba"

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "p-queue"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "async-control"
-tags = ["node", "npm", "esm", "promise", "queue", "concurrency", "priority", "rate-limit"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "promise",
+    "queue",
+    "concurrency",
+    "priority",
+    "rate-limit",
+]
 language = "node"
 
 [source]
@@ -22,7 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +44,55 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["eventemitter3", "p-timeout"]
-artifact = { digest = "sha256:a5b2e71f921ab4178915df8c9f97e28f7f249afdc0e7da9fdaca9390e9709629", size_bytes = 204800, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:a5b2e71f921ab4178915df8c9f97e28f7f249afdc0e7da9fdaca9390e9709629", visibility = "private" }
+packages = [
+    "eventemitter3",
+    "p-timeout",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 46
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", visibility = "private" }
-test_bundle = { digest = "sha256:c6b3310a0d30b62a2213516abd0baaaa1dc2f75a946e2e253c1a11ae90b08948", size_bytes = 40960, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:c6b3310a0d30b62a2213516abd0baaaa1dc2f75a946e2e253c1a11ae90b08948", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:c6b3310a0d30b62a2213516abd0baaaa1dc2f75a946e2e253c1a11ae90b08948"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:c6b3310a0d30b62a2213516abd0baaaa1dc2f75a946e2e253c1a11ae90b08948"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
+[lifecycle]
+status = "blocked"
+owner = "node-author-discovery-restart-20260826-r3"
+reason = "The exact revision, MIT license, reproducible TypeScript output, Node 24/npm 11 runtime, exact two-package offline closure, 46-leaf separate verifier, Oracle, and negative controls are bound by task-local evidence. Blind review and model pilot remain publication-stage work. Canonical dependency closure and versioned private-artifact migration remain required."
+
 [harbor]
 description = "Build the p-queue 9.3.3 ESM promise queue with concurrency, priority, timeout, abort, and interval controls."
-keywords = ["node", "npm", "promise", "queue", "concurrency", "priority", "rate-limit"]
+keywords = [
+    "node",
+    "npm",
+    "promise",
+    "queue",
+    "concurrency",
+    "priority",
+    "rate-limit",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 90.0
@@ -78,11 +104,6 @@ cpus = 2
 memory_mb = 2048
 storage_mb = 8192
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-discovery-restart-20260826-r3"
-reason = "The exact revision, MIT license, reproducible TypeScript output, Node 24/npm 11 runtime, exact two-package offline closure, 46-leaf separate verifier, Oracle, and negative controls are bound by task-local evidence. Blind review and model pilot remain publication-stage work."
 
 [oracle_bundle]
 digest = "sha256:8d2e87d889edae1564656cac5f22984d7a2f282543589dd34386901dea39ecb0"

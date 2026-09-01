@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "postcss"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "css-processor"
-tags = ["node", "npm", "commonjs", "esm", "css", "parser", "ast", "plugin"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "css",
+    "parser",
+    "ast",
+    "plugin",
+]
 language = "node"
 
 [source]
@@ -22,7 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +38,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,23 +46,13 @@ reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier run without egress. Exact npm v3 cache entries provide only the declared runtime closure; the pinned upstream archive is private to the trusted Oracle bundle."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["nanoid@3.3.18", "picocolors@1.1.1", "source-map-js@1.2.1"]
-
-[dependencies.artifact]
-digest = "sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35"
-size_bytes = 542720
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35"
-visibility = "private"
+packages = [
+    "nanoid@3.3.18",
+    "picocolors@1.1.1",
+    "source-map-js@1.2.1",
+]
 
 [tests]
 framework = "node:test"
@@ -79,13 +75,27 @@ uri = "artifact://private/sha256:edb020f278c59bf35768d9490f8c9e4e13081152dfcb4d5
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828"
+reason = "Production Node bundle compiled with the locked toolchain; the final Harbor Oracle passed 32/32 with reward 1.0, and empty, stub, forgery, offline, install-script, loader-hook, and hang controls completed. Independent Agent Run, review, pilot, and publication remain out of scope for this lane. Canonical dependency closure and versioned private-artifact migration remain required."
+
 [harbor]
 description = "Build an offline PostCSS-compatible CSS parser, mutable syntax tree, stringifier, and bounded plugin processor."
-keywords = ["node", "npm", "commonjs", "esm", "css", "parser", "ast", "plugin"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "css",
+    "parser",
+    "ast",
+    "plugin",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -96,11 +106,6 @@ cpus = 2
 memory_mb = 2048
 storage_mb = 4096
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828"
-reason = "Production Node bundle compiled with the locked toolchain; the final Harbor Oracle passed 32/32 with reward 1.0, and empty, stub, forgery, offline, install-script, loader-hook, and hang controls completed. Independent Agent Run, review, pilot, and publication remain out of scope for this lane."
 
 [oracle_bundle]
 digest = "sha256:3b7a0559065f1d69eab0823ad16440659581b7d7371eb997a28d2e9a72c8eb1c"
