@@ -255,9 +255,12 @@ mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json /logs/verifier/report.json
 rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/pnpm-store
+PYTHON=/usr/local/bin/python3
+PYTHON_ENV=(env -i PATH=/usr/bin:/bin HOME=/nonexistent PYTHONDONTWRITEBYTECODE=1)
 NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
 NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
-python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json
+"${{PYTHON_ENV[@]}}" "$PYTHON" -I -B -c "$NETWORK_CHECK" \
+  --output /logs/verifier/network.json
 network_exit=$?
 if [[ "$network_exit" -eq 1 ]]; then
   {NODE_EXECUTABLE} /tests/runtime/node/grade-report.mjs --expected {expected} \\
