@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+import base64
 import io
 import json
 import os
 import shutil
+import subprocess
 import sys
 from collections.abc import Iterator
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
@@ -76,19 +77,50 @@ def main():
         encoding="utf-8",
     )
 
-    def direct_command(arguments: list[str]) -> list[str]:
-        return [
-            sys.executable,
-            "-I",
-            "-m",
-            "nl2repobench.verification.candidate_runner",
-            "--candidate-site",
-            str(CANDIDATE_SITE),
-            *arguments,
-        ]
+    def fake_invoke(request_id: str, encoded: bytes, timeout_sec: float):
+        del timeout_sec
+        envelope = json.loads(encoded)
+        command = envelope["command"]["argv"]
+        arguments = command[command.index("--candidate-site") + 2 :]
+        operation = arguments[0]
+        if operation == "call":
+            request = json.loads(base64.b64decode(envelope["stdin_base64"]))
+            if request["attribute"] == "stop":
+                return candidate_client._TransportResult(  # noqa: SLF001
+                    candidate_client.CandidateProcessResult(0, "", "")
+                )
+            if request["operation"] == "call" and request["attribute"] == "add":
+                payload = {"ok": True, "value": sum(request["args"])}
+            elif request["operation"] == "call" and request["attribute"] == "fail":
+                payload = {
+                    "exception_type": "builtins.ValueError",
+                    "exception_message": "expected failure",
+                    "ok": False,
+                }
+            elif request["operation"] == "get":
+                payload = {"ok": True, "value": 7}
+            elif request["operation"] == "call_method":
+                if request["member"] == "same":
+                    value = True
+                else:
+                    value = 3 + request["args"][0] if request["invoke"] else 3
+                payload = {"ok": True, "value": value}
+            else:
+                payload = {"ok": False}
+            output = candidate_runner.RESULT_PREFIX + json.dumps(payload) + "\n"
+        elif operation == "module":
+            output = "module:" + ",".join(arguments[2:]) + "\n"
+        elif operation == "console":
+            output = "console:" + ",".join(arguments[2:]) + "\n"
+        elif operation == "metadata-requires":
+            output = candidate_runner.RESULT_PREFIX + '{"ok":true,"value":null}\n'
+        else:
+            output = ""
+        return candidate_client._TransportResult(  # noqa: SLF001
+            candidate_client.CandidateProcessResult(0, output, "")
+        )
 
-    monkeypatch.setattr(candidate_client, "_command", direct_command)
-    monkeypatch.setattr(candidate_client, "terminate_uid_processes", lambda uid: None)
+    monkeypatch.setattr(candidate_client, "_invoke_cli", fake_invoke)
     try:
         yield CANDIDATE_SITE
     finally:
@@ -414,6 +446,166 @@ def test_candidate_tree_usage_is_bounded_summary(tmp_path: Path) -> None:
     assert total_bytes == 6
 
 
+def _cli_response(
+    request_id: str = "a" * 32,
+    *,
+    returncode: int = 0,
+    cleanup_complete: bool = True,
+    stdout: bytes = b"",
+    stderr: bytes = b"",
+    timed_out: bool = False,
+    output_limit_exceeded: bool = False,
+) -> bytes:
+    return json.dumps(
+        {
+            "cleanup_complete": cleanup_complete,
+            "output_limit_exceeded": output_limit_exceeded,
+            "request_id": request_id,
+            "returncode": returncode,
+            "schema_version": "1.0",
+            "stderr_base64": base64.b64encode(stderr).decode("ascii"),
+            "stdout_base64": base64.b64encode(stdout).decode("ascii"),
+            "timed_out": timed_out,
+        },
+        separators=(",", ":"),
+    ).encode()
+
+
+def test_candidate_cli_transport_success_and_nonzero(monkeypatch: pytest.MonkeyPatch) -> None:
+    expected = candidate_client.CandidateProcessResult(0, "out", "err")
+    monkeypatch.setattr(
+        candidate_client.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(
+            args[0], 0, _cli_response(stdout=b"out", stderr=b"err"), b""
+        ),
+    )
+    result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+    assert result.process == expected
+    monkeypatch.setattr(
+        candidate_client.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(
+            args[0], 0, _cli_response(returncode=3, stderr=b"failed"), b""
+        ),
+    )
+    nonzero = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+    assert nonzero.process.returncode == 3
+    assert nonzero.process.stderr == "failed"
+
+
+def test_candidate_cli_transport_rejects_timeout_and_exit_contract(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def timeout(*args, **kwargs):
+        raise subprocess.TimeoutExpired(args[0], 1)
+
+    monkeypatch.setattr(candidate_client.subprocess, "run", timeout)
+    timed = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+    assert timed.process.returncode == 124
+    assert timed.timed_out is True
+    for exit_code in (64, 70, 75):
+        monkeypatch.setattr(
+            candidate_client.subprocess,
+            "run",
+            lambda *args, code=exit_code, **kwargs: subprocess.CompletedProcess(
+                args[0], code, b"", b"bad transport"
+            ),
+        )
+        result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+        assert result.process.returncode == exit_code
+        assert result.process.stderr == "bad transport"
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        b"not-json",
+        _cli_response(request_id="b" * 32),
+        _cli_response(cleanup_complete=False),
+    ],
+    ids=["malformed", "request-id-mismatch", "cleanup-failure"],
+)
+def test_candidate_cli_transport_rejects_malformed_result(
+    monkeypatch: pytest.MonkeyPatch, response: bytes
+) -> None:
+    monkeypatch.setattr(
+        candidate_client.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, response, b""),
+    )
+    result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+    assert result.process.returncode == 70
+    assert "invalid candidate CLI result" in result.process.stderr
+
+
+def test_candidate_cli_transport_rejects_result_flood(monkeypatch: pytest.MonkeyPatch) -> None:
+    flood = b"x" * (20 * 1024 * 1024 + 1)
+    monkeypatch.setattr(
+        candidate_client.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, flood, b""),
+    )
+    result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+    assert result.process.returncode == 70
+    assert result.output_limit_exceeded is True
+
+
+def test_candidate_call_maps_transport_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        candidate_client,
+        "_invoke_cli",
+        lambda *args, **kwargs: candidate_client._TransportResult(  # noqa: SLF001
+            candidate_client.CandidateProcessResult(75, "", "cleanup failed")
+        ),
+    )
+    result = candidate_client.call("demo", "add", 1, 2)
+    assert result.ok is False
+    assert result.exception_type == "CandidateProcessError"
+    assert "cleanup failed" in (result.exception_message or "")
+
+
+def test_candidate_install_maps_transport_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "source"
+    source.write_bytes(b"source")
+    target = tmp_path / "target"
+    monkeypatch.setattr(
+        candidate_install,
+        "tree_usage",
+        lambda paths: (0, 0),
+    )
+    monkeypatch.setattr(
+        "nl2repobench.verification.candidate_client._run_cli_request",
+        lambda *args, **kwargs: candidate_client._TransportResult(  # noqa: SLF001
+            candidate_client.CandidateProcessResult(2, "", "pip failed")
+        ),
+    )
+    result = candidate_install.install_candidate(source, target, 1)
+    assert result["outcome"] == "candidate-failure"
+    assert result["returncode"] == 2
+
+
+def test_python_candidate_runtime_has_no_direct_spawn_or_address_space_limits() -> None:
+    root = Path(__file__).parents[1] / "src/nl2repobench/verification"
+    owned = "\n".join(
+        (root / name).read_text(encoding="utf-8")
+        for name in ("candidate_client.py", "candidate_install.py", "candidate_runner.py")
+    )
+    for forbidden in (
+        "RLIMIT_AS",
+        "address-space",
+        "prlimit",
+        "subprocess.Popen",
+        "runuser",
+        "killpg",
+        "preexec_fn",
+        "terminate_uid_processes",
+    ):
+        assert forbidden not in owned
+
+
 def test_candidate_build_environment_allows_only_safe_shell_names() -> None:
     assert candidate_install._parse_build_environment(("BUILD_VERSION=0.0.0",)) == (  # noqa: SLF001
         "BUILD_VERSION=0.0.0",
@@ -488,12 +680,3 @@ def test_candidate_install_cli_records_internal_error(
 
     assert raised.value.code == candidate_install.INTERNAL_ERROR_EXIT
     assert json.loads(status.read_text())["outcome"] == "internal-error"
-
-
-def test_candidate_install_kills_process_group(monkeypatch: pytest.MonkeyPatch) -> None:
-    killed: list[tuple[int, int]] = []
-    monkeypatch.setattr(os, "killpg", lambda pid, sig: killed.append((pid, sig)))
-
-    candidate_install._kill_group(SimpleNamespace(pid=123))  # type: ignore[arg-type]  # noqa: SLF001
-
-    assert killed == [(123, candidate_install.signal.SIGKILL)]
