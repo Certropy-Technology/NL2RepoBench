@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "dataclass-serialization"
-tags = ["python", "dataclass", "serialization", "code-generation", "blocked"]
+tags = [
+    "python",
+    "dataclass",
+    "serialization",
+    "code-generation",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,7 +25,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -27,27 +32,48 @@ offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The post-release source requires an approved platform-specific dependency closure, final image, and task-specific verifier before offline execution."
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "unknown"
+package_manager = "pip"
+package_manager_version = "unknown"
+
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["codec and test dependencies are not a hash-locked offline closure"]
+package_manager = "pip"
+packages = [
+    "codec and test dependencies are not a hash-locked offline closure",
+]
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+owner = "repair/mashumaro"
+reason = "The exact post-v3.22 source and Apache-2.0 archive/license evidence are known, but registry release artifacts differ, no hash-locked closure/final image or frozen collection exists, and generated class/type/callable behavior lacks a reviewed child-side verifier. No runtime task is generated. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
+
 [harbor]
 description = "Blocked candidate: stateful generated dataclass serialization lacks a reviewed bounded verifier and offline dependency closure."
-keywords = ["python", "dataclass", "serialization", "code-generation", "blocked"]
+keywords = [
+    "python",
+    "dataclass",
+    "serialization",
+    "code-generation",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -58,8 +84,3 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "blocked"
-owner = "repair/mashumaro"
-reason = "The exact post-v3.22 source and Apache-2.0 archive/license evidence are known, but registry release artifacts differ, no hash-locked closure/final image or frozen collection exists, and generated class/type/callable behavior lacks a reviewed child-side verifier. No runtime task is generated."

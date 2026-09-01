@@ -6,7 +6,17 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "markdown-parser"
-tags = ["python", "markdown", "commonmark", "parser", "renderers", "plugins", "security", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "markdown",
+    "commonmark",
+    "parser",
+    "renderers",
+    "plugins",
+    "security",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -14,17 +24,12 @@ status = "known"
 upstream_url = "https://github.com/lepture/mistune"
 revision = "a1b50bc12e066e5707ff797f821829bfcdab03b5"
 license_spdx = "BSD-3-Clause"
-# Unprefixed `git archive --format=tar HEAD`; two archives were byte-identical.
 source_digest = "sha256:a3212a1b25c6c883ad17c4a6b7eff439016378acb325f105d3fcefe6b1709459"
 submodules = []
 
 [environment]
-# CPython 3.10, 3.12, and 3.14 source probes are recorded in audit.md. No
-# final base image, OS policy, or verifier image digest has been approved.
 status = "unknown"
-python_version = ">=3.10"
 os_name = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,38 +37,39 @@ offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The parser dependency closure and bounded verifier are not frozen; candidate and verifier execution remain network-isolated."
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "unknown"
+package_manager = "uv"
+package_manager_version = "unknown"
+
 [dependencies]
-# The runtime dependency is conditional typing-extensions below Python 3.11.
-# The exact test-group versions come from uv.lock, while setuptools is an
-# unbounded build requirement and no portable offline bundle is stored here.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "setuptools",
-  "typing-extensions==4.16.0; python_version < '3.11'",
-  "pytest==9.1.1",
-  "pytest-cov==7.1.0",
-  "mypy==2.3.0",
-  "ruff==0.15.22",
+    "setuptools",
+    "typing-extensions==4.16.0; python_version < '3.11'",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "mypy==2.3.0",
+    "ruff==0.15.22",
 ]
 
 [tests]
-framework = "pytest"
-# Pytest collected 1,158 item node IDs, but its JUnit suite summary reports
-# 1,164 because six unittest subtests are counted without separate testcase
-# elements. This is source evidence, not a frozen production denominator.
 expected_total = 1158
 expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q tests"]
-protected_paths = ["tests"]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "The exact source revision/archive, BSD-3-Clause license, runtime LOC, public Markdown and security behavior, dependency metadata, cross-version collection, source baselines, and cache-backed offline install probes are recorded. Publication is blocked because no immutable final image or content-addressed dependency bundle exists, setuptools is not pinned by the source lock, the 1,158-item versus 1,164-JUnit subtest denominator policy is unresolved, private test/command and Oracle artifacts are absent, and Mistune needs a task-specific child adapter for parser instances, plugins, callbacks, hooks, state, directives, filesystem reads, and timing checks."
+reason = "The exact source revision/archive, BSD-3-Clause license, runtime LOC, public Markdown and security behavior, dependency metadata, cross-version collection, source baselines, and cache-backed offline install probes are recorded. Publication is blocked because no immutable final image or content-addressed dependency bundle exists, setuptools is not pinned by the source lock, the 1,158-item versus 1,164-JUnit subtest denominator policy is unresolved, private test/command and Oracle artifacts are absent, and Mistune needs a task-specific child adapter for parser instances, plugins, callbacks, hooks, state, directives, filesystem reads, and timing checks. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."

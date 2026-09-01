@@ -6,7 +6,13 @@ instruction = "audit.md"
 [metadata]
 difficulty = "hard"
 category = "logging-and-observability"
-tags = ["python", "logging", "stateful", "blocked", "provenance-audit"]
+tags = [
+    "python",
+    "logging",
+    "stateful",
+    "blocked",
+    "provenance-audit",
+]
 language = "python"
 
 [source]
@@ -16,9 +22,7 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.12.14"
 os_name = "debian-12-amd64"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -26,25 +30,33 @@ offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "No immutable upstream revision, source archive digest, license evidence, or dependency closure was established by the bounded audit; source retrieval is forbidden for any future task runtime."
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "unknown"
+
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = ["not run: source freeze and collection prerequisites are absent"]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "repair/loguru"
-reason = "Blocked before source freeze: catalog/sources/loguru/audit.md records that immutable revision, license/archive hashes, dependency closure, official collection, separate verifier, Oracle, and controls were not established. The source tree SHA1 is only a historical inventory key and is not a revision substitute. No catalog/tasks/loguru runtime exists."
+reason = "Blocked before source freeze: catalog/sources/loguru/audit.md records that immutable revision, license/archive hashes, dependency closure, official collection, separate verifier, Oracle, and controls were not established. The source tree SHA1 is only a historical inventory key and is not a revision substitute. No catalog/tasks/loguru runtime exists. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."

@@ -6,7 +6,14 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "easy"
 category = "text-extraction"
-tags = ["python", "html", "text", "lxml", "legacy-overlay", "blocked"]
+tags = [
+    "python",
+    "html",
+    "text",
+    "lxml",
+    "legacy-overlay",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,11 +26,9 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.11.7"
 os_name = "linux-amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/justext@sha256:8f5f01415624b39a05c64ea288f714f8be74ea4d58c2e0149dc02b148da67082"
 base_image_digest = "sha256:8f5f01415624b39a05c64ea288f714f8be74ea4d58c2e0149dc02b148da67082"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,27 +36,47 @@ offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The immutable verifier image contains an unapproved functional source overlay, and no approved hash-locked dependency or separate-verifier closure exists."
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.11.7"
+package_manager = "pip"
+package_manager_version = "unknown"
+
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+owner = "repair/justext"
+reason = "The exact upstream archive is reproducible, but the immutable verifier image changes STOPWORDS_LOW_DEFAULT, STOPWORDS_HIGH_DEFAULT, and PARAGRAPH_TAGS without an approved patch manifest. The legacy count 61 is only a static function count, and no locked dependencies, separate verifier, Oracle, controls, or runtime task exist. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
+
 [harbor]
 description = "Blocked legacy jusText candidate: the immutable verifier image changes extraction thresholds and paragraph boundaries without an approved source patch manifest."
-keywords = ["python", "html", "text", "lxml", "legacy-overlay", "blocked"]
+keywords = [
+    "python",
+    "html",
+    "text",
+    "lxml",
+    "legacy-overlay",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -62,8 +87,3 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "blocked"
-owner = "repair/justext"
-reason = "The exact upstream archive is reproducible, but the immutable verifier image changes STOPWORDS_LOW_DEFAULT, STOPWORDS_HIGH_DEFAULT, and PARAGRAPH_TAGS without an approved patch manifest. The legacy count 61 is only a static function count, and no locked dependencies, separate verifier, Oracle, controls, or runtime task exist."

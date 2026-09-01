@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "authentication-library"
-tags = ["python", "oauth2", "openid-connect", "token-cache", "security", "offline", "separate-verifier"]
+tags = [
+    "python",
+    "oauth2",
+    "openid-connect",
+    "token-cache",
+    "security",
+    "offline",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,13 +27,14 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.11"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
+system_packages = [
+    "git",
+    "ca-certificates",
+]
 build_command = "install the hash-locked dependency closure during the Docker build; the Oracle verifies the fixed source archive before installing it"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,35 +42,58 @@ offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier run offline. Dependencies are installed only during the image build from the private hash-locked requirements artifact; the trusted Oracle receives a run-scoped exact source-host exception."
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.11"
+package_manager = "pip"
+package_manager_version = "unknown"
+
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["certifi==2026.7.22", "cffi==2.1.1", "charset-normalizer==3.5.1", "cryptography==50.0.0", "idna==3.19", "pycparser==3.0", "PyJWT==2.13.0", "requests==2.34.2", "urllib3==2.7.0"]
-lock_artifact = { digest = "sha256:1073c1bd5ad52fbdf3ced009f7ba7f564cccdf4cfb14775835c6a5e49c4cbe6d", size_bytes = 28469, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1073c1bd5ad52fbdf3ced009f7ba7f564cccdf4cfb14775835c6a5e49c4cbe6d", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "charset-normalizer==3.5.1",
+    "cryptography==50.0.0",
+    "idna==3.19",
+    "pycparser==3.0",
+    "PyJWT==2.13.0",
+    "requests==2.34.2",
+    "urllib3==2.7.0",
+]
 
 [tests]
-framework = "pytest"
 expected_total = 36
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:21d68e04aa85bbaf25fc426bd7ca842aeb7771b8310f0a6daffb6b7429c564fd", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:21d68e04aa85bbaf25fc426bd7ca842aeb7771b8310f0a6daffb6b7429c564fd", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
+framework = "custom"
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828"
+reason = "Production compile, one Harbor Oracle gate, and required empty/stub/forgery/offline controls passed. The independent Agent Run loop owns model execution, review, and publication. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
+
 [harbor]
 description = "Build a bounded, deterministic MSAL Python OAuth/OIDC and token-cache library from an empty workspace; grading uses a separate offline JSON adapter."
-keywords = ["python", "oauth2", "openid-connect", "token-cache", "security", "offline", "separate-verifier"]
+keywords = [
+    "python",
+    "oauth2",
+    "openid-connect",
+    "token-cache",
+    "security",
+    "offline",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -74,11 +106,6 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-20260828"
-reason = "Production compile, one Harbor Oracle gate, and required empty/stub/forgery/offline controls passed. The independent Agent Run loop owns model execution, review, and publication."
-
 [oracle_bundle]
 digest = "sha256:3896496daa2f706463aece4fcb65439ac50f53a2374fb34e7faaf26195371a52"
 size_bytes = 10240
@@ -86,3 +113,15 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:3896496daa2f706463aece4fcb65439ac50f53a2374fb34e7faaf26195371a52"
 visibility = "private"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:21d68e04aa85bbaf25fc426bd7ca842aeb7771b8310f0a6daffb6b7429c564fd"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:21d68e04aa85bbaf25fc426bd7ca842aeb7771b8310f0a6daffb6b7429c564fd"
+visibility = "private"
+
+[verifier.environment]

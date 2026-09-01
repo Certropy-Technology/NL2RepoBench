@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "market-data-client"
-tags = ["python", "finance", "market-data", "network", "blocked"]
+tags = [
+    "python",
+    "finance",
+    "market-data",
+    "network",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,11 +25,9 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.11.7"
 os_name = "linux/amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/mootdx@sha256:3250e7d6ef515f288f6307957d93b05a4d66889dbb2b3de3844f612f9457ddaf"
 base_image_digest = "sha256:3250e7d6ef515f288f6307957d93b05a4d66889dbb2b3de3844f612f9457ddaf"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,39 +35,57 @@ offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The final legacy test path requires mutable finance endpoints and current-date/cache behavior; its complete deterministic dependency and verifier closure is not available, so no agent or verifier source retrieval is permitted."
 
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.11.7"
+package_manager = "pip"
+package_manager_version = "unknown"
+
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "httpx==0.25.0",
-  "mini-racer==0.12.0",
-  "numpy==1.24.3",
-  "pandas==1.5.3",
-  "tdxpy==0.2.6",
-  "tenacity==8.2.2",
-  "pytest-datadir",
-  "pytest-cov",
-  "pytest",
-  "freezegun",
-  "requests (unversioned legacy setup command)",
+    "httpx==0.25.0",
+    "mini-racer==0.12.0",
+    "numpy==1.24.3",
+    "pandas==1.5.3",
+    "tdxpy==0.2.6",
+    "tenacity==8.2.2",
+    "pytest-datadir",
+    "pytest-cov",
+    "pytest",
+    "freezegun",
+    "requests (unversioned legacy setup command)",
 ]
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+reason = "The exact upstream source and legacy image are recorded, but the final test contract cannot produce a deterministic no-network evaluation because it exercises mutable finance services and current-date/cache behavior. The final test-tree collection is not frozen, and no separate verifier, Oracle, controls, or catalog/tasks/mootdx runtime exists. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
+
 [harbor]
 description = "Blocked candidate: live financial services, an unfrozen final test tree, and no separate verifier prevent a deterministic production bundle."
-keywords = ["python", "finance", "market-data", "network", "blocked"]
+keywords = [
+    "python",
+    "finance",
+    "market-data",
+    "network",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -74,7 +96,3 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "blocked"
-reason = "The exact upstream source and legacy image are recorded, but the final test contract cannot produce a deterministic no-network evaluation because it exercises mutable finance services and current-date/cache behavior. The final test-tree collection is not frozen, and no separate verifier, Oracle, controls, or catalog/tasks/mootdx runtime exists."
