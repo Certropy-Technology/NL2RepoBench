@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -41,6 +42,7 @@ from .task_writer import (
     copy_python_verifier_runtime,
     copy_tree,
     extract_private_bundle,
+    python_runtime_manifest,
     write_file_manifest,
     write_instruction,
 )
@@ -60,17 +62,52 @@ def go_network_failure_reason(exit_code: int) -> str | None:
     return "verifier-internal-error"
 
 
-GO_RUNTIME_LOCK_FILES = (
+GO_RUNTIME_LOCK_FILES = tuple(sorted((
+    "src/nl2repobench/__init__.py",
     "src/nl2repobench/domain/command_plan.py",
+    "src/nl2repobench/domain/__init__.py",
+    "src/nl2repobench/domain/canonical.py",
+    "src/nl2repobench/domain/canonical_contract.py",
+    "src/nl2repobench/domain/canonical_models.py",
+    "src/nl2repobench/domain/network_policy.py",
+    "src/nl2repobench/domain/runtime.py",
+    "src/nl2repobench/package_managers/__init__.py",
+    "src/nl2repobench/package_managers/base.py",
+    "src/nl2repobench/package_managers/go_modules.py",
+    "src/nl2repobench/verification/__init__.py",
+    "src/nl2repobench/verification/cli.py",
+    "src/nl2repobench/verification/candidate_client.py",
+    "src/nl2repobench/verification/candidate_install.py",
+    "src/nl2repobench/verification/candidate_process_cli.py",
+    "src/nl2repobench/verification/candidate_runner.py",
+    "src/nl2repobench/verification/command_plan.py",
+    "src/nl2repobench/verification/custom_verifier.py",
+    "src/nl2repobench/verification/evaluator.py",
     "src/nl2repobench/verification/go_bridge.py",
     "src/nl2repobench/verification/go_bridge_proxy.py",
-    "src/nl2repobench/verification/go_contract_runner.py",
     "src/nl2repobench/verification/go_command_plan.py",
+    "src/nl2repobench/verification/go_contract_runner.py",
     "src/nl2repobench/verification/go_grader.py",
     "src/nl2repobench/verification/go_supervisor.py",
+    "src/nl2repobench/verification/grader.py",
+    "src/nl2repobench/verification/integrity.py",
+    "src/nl2repobench/verification/junit.py",
+    "src/nl2repobench/verification/leaf_report.py",
+    "src/nl2repobench/verification/metric_contract.py",
+    "src/nl2repobench/verification/network_check.py",
+    "src/nl2repobench/verification/node_grader.py",
     "src/nl2repobench/verification/normalize/go_json.py",
-    "src/nl2repobench/package_managers/go_modules.py",
-)
+    "src/nl2repobench/verification/normalize/__init__.py",
+    "src/nl2repobench/verification/normalize/node_test_json.py",
+    "src/nl2repobench/verification/normalize/pytest_junit.py",
+    "src/nl2repobench/verification/process_cleanup.py",
+    "src/nl2repobench/verification/pytest_plugin.py",
+    "src/nl2repobench/verification/registry.py",
+    "src/nl2repobench/verification/run_pytest.py",
+    "src/nl2repobench/verification/subprocess_supervisor.py",
+    "src/nl2repobench/verification/taxonomy.py",
+    "src/nl2repobench/verification/workspace_copy.py",
+)))
 
 
 class GoHarborCompiler:
@@ -331,6 +368,19 @@ WORKDIR /workspace
             copy_python_verifier_runtime(tests_root / "runtime")
         except TaskWriterError as exc:
             raise GoHarborCompileError(str(exc)) from exc
+        runtime_manifest = python_runtime_manifest(
+            tests_root / "runtime/nl2repobench"
+        )
+        runtime_manifest["runtime_root"] = "/opt/nl2repobench-runtime/nl2repobench"
+        atomic_write(
+            tests_root / "runtime-manifest.json",
+            json.dumps(runtime_manifest, sort_keys=True, separators=(",", ":")).encode()
+            + b"\n",
+        )
+        atomic_write(
+            tests_root / "runtime-manifest-check.py",
+            self._runtime_manifest_check().encode(),
+        )
         if not self.requirements_path.is_file():
             raise GoHarborCompileError(
                 f"verifier requirements lock is missing: {self.requirements_path}"
@@ -345,10 +395,15 @@ WORKDIR /workspace
 
 RUN apt-get update \\
   && apt-get install -y --no-install-recommends python3 python3-pip \\
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \\
+  && test -x /usr/bin/python3
 COPY runtime /opt/nl2repobench-runtime
+COPY runtime-manifest.json /tests/runtime-manifest.json
+COPY runtime-manifest-check.py /tmp/runtime-manifest-check.py
+RUN /usr/bin/python3 -I /tmp/runtime-manifest-check.py \\
+  /opt/nl2repobench-runtime/nl2repobench /tests/runtime-manifest.json
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
-RUN python3 -m pip install --break-system-packages --no-cache-dir --require-hashes \\
+RUN /usr/bin/python3 -m pip install --break-system-packages --no-cache-dir --require-hashes \\
   -r /tmp/verifier-requirements.lock.txt
 COPY --chmod=0500 private /tests/private
 COPY command-plan.json /tests/command-plan.json
@@ -365,6 +420,60 @@ WORKDIR /tests
             b"services:\n  main:\n    network_mode: none\n",
         )
         os.chmod(tests_root / "test.sh", 0o755)
+
+    @staticmethod
+    def _runtime_manifest_check() -> str:
+        """Return the hermetic verifier-image check for the shared runtime tree."""
+
+        return '''#!/usr/bin/env python3
+import hashlib
+import json
+import stat
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+manifest_path = Path(sys.argv[2])
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+if manifest.get("schema_version") != "1.0":
+    raise SystemExit("unsupported runtime manifest schema")
+entries = manifest.get("files")
+if not isinstance(entries, list):
+    raise SystemExit("runtime manifest files must be a list")
+seen = set()
+digest = hashlib.sha256()
+for entry in entries:
+    if not isinstance(entry, dict):
+        raise SystemExit("runtime manifest entry is not an object")
+    relative = entry.get("path")
+    if not isinstance(relative, str) or relative in seen:
+        raise SystemExit("runtime manifest path is invalid or duplicated")
+    path = Path(relative)
+    if path.is_absolute() or ".." in path.parts or not relative:
+        raise SystemExit("runtime manifest path escapes root")
+    seen.add(relative)
+    target = root / path
+    metadata = target.lstat()
+    if not stat.S_ISREG(metadata.st_mode) or stat.S_ISLNK(metadata.st_mode):
+        raise SystemExit("runtime manifest entry is not a regular file")
+    if metadata.st_nlink != 1:
+        raise SystemExit("runtime manifest entry is a hardlink")
+    data = target.read_bytes()
+    if hashlib.sha256(data).hexdigest() != entry.get("sha256"):
+        raise SystemExit("runtime manifest file digest mismatch")
+    if len(data) != entry.get("size_bytes") or stat.S_IMODE(metadata.st_mode) != entry.get("mode"):
+        raise SystemExit("runtime manifest file metadata mismatch")
+    digest.update(relative.encode("utf-8"))
+    digest.update(b"\\0")
+    digest.update(hashlib.sha256(data).digest())
+actual = {
+    path.relative_to(root).as_posix()
+    for path in root.rglob("*")
+    if not stat.S_ISDIR(path.lstat().st_mode)
+}
+if actual != seen or manifest.get("runtime_sha256") != "sha256:" + digest.hexdigest():
+    raise SystemExit("runtime manifest tree digest or closed-world set mismatch")
+'''
 
     def _write_command_plan(
         self,
@@ -579,16 +688,17 @@ WORKDIR /tests
     def _test_script(self) -> str:
         return """#!/usr/bin/env bash
 set -uo pipefail
+PYTHON=/usr/bin/python3
 PYTHON_ROOT='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime")'
 NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
 NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
 grade() {
-  python3 -I -c "$PYTHON_ROOT; from nl2repobench.verification.cli import main; main()" \
+  $PYTHON -I -B -c "$PYTHON_ROOT; from nl2repobench.verification.cli import main; main()" \
     --runtime go --expected 1 --metric-contract fixed-test-pass-rate-v1 --output /logs/verifier "$@"
 }
 mkdir -p /logs/verifier
 network_exit=0
-python3 -I -c "$NETWORK_CHECK" \
+$PYTHON -I -B -c "$NETWORK_CHECK" \
   --output /logs/verifier/network.json || network_exit=$?
 if [[ "$network_exit" -eq 1 ]]; then
   grade --reason verifier-network-available
@@ -600,12 +710,12 @@ if [[ "$network_exit" -ne 0 ]]; then
 fi
 VALIDATE_PLAN='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
 VALIDATE_PLAN+='from nl2repobench.verification.go_command_plan import main; main()'
-if ! python3 -I -c "$VALIDATE_PLAN" --path /tests/command-plan.json; then
+if ! $PYTHON -I -B -c "$VALIDATE_PLAN" --path /tests/command-plan.json; then
   grade --reason verifier-internal-error
   exit 0
 fi
 COPY_WORKSPACE='from nl2repobench.verification.workspace_copy import main; main()'
-if ! python3 -I -c "$PYTHON_ROOT; $COPY_WORKSPACE" \
+if ! $PYTHON -I -B -c "$PYTHON_ROOT; $COPY_WORKSPACE" \
   --source /workspace --destination /tmp/go-candidate; then
   grade --reason candidate-workspace-rejected
   exit 0
@@ -622,24 +732,26 @@ GoModulesPackageManager().validate_lock(
 )
 PY
 )
-if ! runuser -u candidate -- python3 -I -c "$PYTHON_ROOT; $GO_VALIDATE"; then
+if ! $PYTHON -I -B -c "$PYTHON_ROOT; $GO_VALIDATE"; then
   grade --reason candidate-installation-failed
   exit 0
 fi
 install -m 0444 /tests/private/bridge.go /tmp/go-candidate/bridge.go
 mkdir -p /tmp/go-candidate/cmd/bridge
 mv /tmp/go-candidate/bridge.go /tmp/go-candidate/cmd/bridge/main.go
-if ! runuser -u candidate -- sh -c 'cd /tmp/go-candidate && \\
-  env PATH=/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin \\
-  GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off \\
-  GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local \\
-  /usr/local/go/bin/go build -mod=vendor -o /tmp/go-candidate/bridge ./cmd/bridge'; then
+BUILD='from pathlib import Path;'
+BUILD+='import sys;'
+BUILD+='from nl2repobench.verification.go_supervisor import run_go_build;'
+BUILD+='result=run_go_build(Path("/tmp/go-candidate"), Path("/tmp/go-candidate/bridge"));'
+BUILD+='sys.stderr.buffer.write(result.stderr);'
+BUILD+='raise SystemExit(0 if result.returncode == 0 and not result.verifier_invalid else 1)'
+if ! $PYTHON -I -B -c "$PYTHON_ROOT; $BUILD"; then
   grade --reason candidate-installation-failed
   exit 0
 fi
 RUN_CONTRACT='from nl2repobench.verification.go_contract_runner import main;'
 RUN_CONTRACT+='raise SystemExit(main())'
-if ! /usr/bin/python3 -I -c "$PYTHON_ROOT; $RUN_CONTRACT" \\
+if ! $PYTHON -I -B -c "$PYTHON_ROOT; $RUN_CONTRACT" \\
   --script /tests/private/contract.sh --bridge /tmp/go-candidate/bridge \\
   --proxy /opt/nl2repobench-runtime/nl2repobench/verification/go_bridge_proxy.py \\
   > /logs/verifier/result.json; then

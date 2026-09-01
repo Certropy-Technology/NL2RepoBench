@@ -29,6 +29,27 @@ from .subprocess_supervisor import (
 )
 
 VERIFIER_STAGING_PARENT = Path("/var/lib/nl2repobench/verifier-staging")
+# The copied runtime is rooted at /opt/nl2repobench-runtime in images. During
+# source-tree tests this resolves to the checked-out trusted package root.
+PYTHON_RUNTIME_ROOT = str(Path(__file__).resolve().parents[2])
+PYTHON_INTERPRETER = "/usr/bin/python3"
+
+
+def _trusted_cli_command() -> list[str]:
+    bootstrap = (
+        "import sys;sys.path.insert(0, "
+        + repr(PYTHON_RUNTIME_ROOT)
+        + ");from nl2repobench.verification.candidate_process_cli import main;"
+        + "raise SystemExit(main())"
+    )
+    # Source-tree tests use the project interpreter, while verifier images use
+    # the locked system interpreter installed by the Go Dockerfile.
+    interpreter = (
+        sys.executable
+        if PYTHON_RUNTIME_ROOT != "/opt/nl2repobench-runtime"
+        else PYTHON_INTERPRETER
+    )
+    return [interpreter, "-I", "-B", "-c", bootstrap]
 
 
 @dataclass(frozen=True)
@@ -174,6 +195,185 @@ def _request(
     return request_id, encoded
 
 
+def _run_generic_command(
+    command: tuple[str, ...],
+    *,
+    request: bytes = b"",
+    cwd: Path,
+    write_root: Path,
+    staging_root: Path,
+    timeout_sec: float,
+    max_output_bytes: int = 8 * 1024 * 1024,
+    environment: dict[str, str] | None = None,
+) -> GoBridgeResult:
+    """Run a non-bridge candidate command through the shared CLI boundary."""
+
+    if not command:
+        return _error_result("candidate command is empty")
+    executable = Path(command[0])
+    if executable.is_symlink() or not executable.is_file():
+        return _error_result("candidate command executable is unavailable")
+    try:
+        relative_cwd = cwd.resolve().relative_to(staging_root.resolve()).as_posix() or "."
+        staged_command = _stage_executable(command, staging_root)
+        request_id = secrets.token_hex(16)
+        command_payload: dict[str, Any] = {
+            "schema_version": "1.0",
+            "request_id": request_id,
+            "context": "install",
+            "command": {
+                "argv": list(staged_command),
+                "cwd": relative_cwd,
+                "environment": [
+                    [name, value]
+                    for name, value in sorted((environment or {}).items())
+                ],
+            },
+            "limits": {
+                "timeout_sec": timeout_sec,
+                "cpu_sec": max(1, min(int(timeout_sec), 600)),
+                "max_stdin_bytes": HARD_STDIN_BYTES,
+                "max_output_bytes": max_output_bytes,
+                "max_file_bytes": HARD_FILE_BYTES,
+                "max_open_files": HARD_OPEN_FILES,
+                "uid": CANDIDATE_UID,
+                "gid": CANDIDATE_GID,
+                "max_processes": HARD_PROCESSES,
+            },
+            "policy": {
+                "task_id": "go-candidate-command",
+                "staging_root": str(staging_root),
+                "read_only_roots": [],
+                "write_root": str(write_root),
+                "allowed_executable_roots": [str(staging_root / "executable")],
+                "allowed_environment_names": sorted(environment or {}),
+                "require_no_new_privs": True,
+                "require_empty_capabilities": True,
+            },
+            "stdin_base64": base64.b64encode(request).decode("ascii"),
+        }
+        encoded = json.dumps(command_payload, sort_keys=True, separators=(",", ":")).encode()
+        completed = subprocess.run(
+            _trusted_cli_command(),
+            input=encoded,
+            capture_output=True,
+            cwd=staging_root,
+            env={"PATH": "/usr/bin:/bin", "PYTHONDONTWRITEBYTECODE": "1"},
+            timeout=timeout_sec + 5.0,
+            check=False,
+        )
+        if completed.returncode in {64, 70}:
+            return _error_result(
+                completed.stderr.decode("utf-8", errors="replace")
+                or "candidate process CLI rejected command"
+            )
+        result = _decode_result(
+            completed.stdout,
+            request_id=request_id,
+            max_output_bytes=max_output_bytes,
+        )
+        if completed.returncode == 75:
+            return GoBridgeResult(
+                result.returncode,
+                result.stdout,
+                result.stderr,
+                result.timed_out,
+                result.output_limit_exceeded,
+                cleanup_complete=False,
+                verifier_invalid=True,
+            )
+        if completed.returncode != 0:
+            return _error_result(
+                completed.stderr.decode("utf-8", errors="replace")
+                or "candidate process CLI failed"
+            )
+        return result
+    except subprocess.TimeoutExpired as exc:
+        return _error_result(f"candidate CLI exceeded wrapper deadline: {exc}")
+    except (OSError, ProcessContractError, ValueError) as exc:
+        return _error_result(str(exc))
+
+
+def _copy_regular_tree(source: Path, destination: Path) -> None:
+    """Copy a candidate workspace while rejecting links and special files."""
+
+    shutil.copytree(source, destination, symlinks=True)
+    for path in (destination, *destination.rglob("*")):
+        metadata = path.lstat()
+        if stat.S_ISLNK(metadata.st_mode) or not (
+            stat.S_ISDIR(metadata.st_mode) or stat.S_ISREG(metadata.st_mode)
+        ):
+            raise ProcessContractError(f"Go build workspace contains unsafe path: {path}")
+        if stat.S_ISREG(metadata.st_mode) and metadata.st_nlink != 1:
+            raise ProcessContractError(f"Go build workspace contains a hardlink: {path}")
+
+
+def _chown_candidate_tree(root: Path) -> None:
+    """Give the fixed candidate identity write access to a temporary build tree."""
+
+    for path in (root, *root.rglob("*")):
+        if os.geteuid() == 0:
+            os.chown(path, CANDIDATE_UID, CANDIDATE_GID)
+        if path.is_dir():
+            path.chmod(0o755)
+        else:
+            path.chmod(0o644)
+
+
+def run_go_build(
+    source_root: Path,
+    output: Path,
+    *,
+    timeout_sec: float = 90.0,
+) -> GoBridgeResult:
+    """Build the candidate bridge through the generic UID-isolated supervisor."""
+
+    if timeout_sec <= 0 or timeout_sec > HARD_TIMEOUT_SEC:
+        return _error_result("Go build timeout exceeds hard limit")
+    try:
+        parent = _trusted_staging_parent()
+        with tempfile.TemporaryDirectory(prefix="nl2repo-go-build-", dir=parent) as temporary:
+            staging_root = Path(temporary)
+            workspace = staging_root / "workspace"
+            _copy_regular_tree(source_root, workspace)
+            _chown_candidate_tree(workspace)
+            result = _run_generic_command(
+                (
+                    "/usr/local/go/bin/go",
+                    "build",
+                    "-mod=vendor",
+                    "-o",
+                    "bridge",
+                    "./cmd/bridge",
+                ),
+                cwd=workspace,
+                write_root=workspace,
+                staging_root=staging_root,
+                timeout_sec=timeout_sec,
+                environment={
+                    "GOROOT": "/usr/local/go",
+                    "GOOS": "linux",
+                    "GOARCH": "amd64",
+                    "CGO_ENABLED": "0",
+                    "GOWORK": "off",
+                    "GOPROXY": "off",
+                    "GOSUMDB": "off",
+                    "GOTOOLCHAIN": "local",
+                    "GOCACHE": str(workspace / ".cache"),
+                },
+            )
+            if result.returncode == 0 and not result.verifier_invalid:
+                built = workspace / "bridge"
+                if not built.is_file() or built.is_symlink():
+                    return _error_result("Go build did not produce a regular bridge")
+                output.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(built, output)
+                output.chmod(0o555)
+            return result
+    except (OSError, ProcessContractError, shutil.Error) as exc:
+        return _error_result(str(exc))
+
+
 def _stage_executable(command: tuple[str, ...], staging_root: Path) -> tuple[str, ...]:
     """Copy the bridge into a root-owned, symlink-free executable root."""
 
@@ -304,13 +504,12 @@ def run_go_bridge(
                 staging_root=staging_root,
             )
             completed = subprocess.run(
-                [sys.executable, "-m", "nl2repobench.verification.candidate_process_cli"],
+                _trusted_cli_command(),
                 input=encoded,
                 capture_output=True,
                 cwd=staging_root,
                 env={
                     "PATH": "/usr/bin:/bin",
-                    "PYTHONPATH": os.environ.get("PYTHONPATH", ""),
                     "PYTHONDONTWRITEBYTECODE": "1",
                 },
                 timeout=timeout_sec + 5.0,
@@ -348,4 +547,4 @@ def run_go_bridge(
         return _error_result(str(exc))
 
 
-__all__ = ["GoBridgeResult", "run_go_bridge"]
+__all__ = ["GoBridgeResult", "run_go_bridge", "run_go_build"]
