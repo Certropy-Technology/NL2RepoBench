@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import io
 import json
@@ -8,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -20,6 +22,7 @@ from nl2repobench.domain.canonical_models import Visibility
 from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.go_compiler import (
+    GO_RUNTIME_LOCK_FILES,
     GoHarborCompileError,
     GoHarborCompiler,
     go_network_failure_reason,
@@ -45,6 +48,30 @@ from nl2repobench.verification.go_command_plan import (
 from nl2repobench.verification.go_grader import grade_go_report
 from nl2repobench.verification.go_supervisor import run_go_bridge
 from nl2repobench.verification.taxonomy import VerificationReason
+
+
+def _current_locked_go_toolchain(root: Path, destination: Path) -> Path:
+    """Build a temporary locked fixture whose runtime digest matches this lane."""
+
+    lock = tomllib.loads((root / "toolchain.go.lock.toml").read_text(encoding="utf-8"))
+    for relative in (
+        *GO_RUNTIME_LOCK_FILES,
+        "verifier/requirements.lock.txt",
+        "harbor-runner/uv.lock",
+    ):
+        source = root / relative
+        target = destination.parent / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    digest = hashlib.sha256()
+    for relative in GO_RUNTIME_LOCK_FILES:
+        path = root / relative
+        digest.update(relative.removeprefix("src/nl2repobench/").encode())
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    lock["go_runtime_sha256"] = f"sha256:{digest.hexdigest()}"
+    destination.write_text(tomli_w.dumps(lock), encoding="utf-8")
+    return destination
 
 
 def _go_bundle(root) -> None:
@@ -294,7 +321,7 @@ def test_typed_go_bridge_compiles_and_calls_public_string_api(tmp_path) -> None:
 
 def test_go_supervisor_caps_output_flood() -> None:
     result = run_go_bridge(
-        (sys.executable, "-c", "import sys; sys.stdout.write('x' * 1000000)"),
+        (str(Path(sys.executable).resolve()), "-c", "import sys; sys.stdout.write('x' * 1000000)"),
         b"",
         timeout_sec=5,
         max_output_bytes=1024,
@@ -304,10 +331,23 @@ def test_go_supervisor_caps_output_flood() -> None:
     assert len(result.stdout) <= 1024
 
 
+def _python_script(tmp_path: Path, body: str) -> str:
+    script = tmp_path / "bridge.sh"
+    encoded = base64.b64encode(body.encode()).decode("ascii")
+    script.write_text(
+        "#!/bin/sh\n"
+        f"exec {Path(sys.executable).resolve()} -c "
+        f"\"import base64; exec(base64.b64decode('{encoded}'))\"\n",
+        encoding="utf-8",
+    )
+    script.chmod(0o755)
+    return str(script)
+
+
 def test_go_supervisor_caps_stdout_and_stderr_together() -> None:
     result = run_go_bridge(
         (
-            sys.executable,
+            str(Path(sys.executable).resolve()),
             "-c",
             "import sys; sys.stdout.write('o' * 800); sys.stderr.write('e' * 800)",
         ),
@@ -317,6 +357,113 @@ def test_go_supervisor_caps_stdout_and_stderr_together() -> None:
     )
     assert result.output_limit_exceeded is True
     assert len(result.stdout) + len(result.stderr) <= 1024
+
+
+def test_go_supervisor_preserves_nonzero_stdout_and_stderr(tmp_path: Path) -> None:
+    result = run_go_bridge(
+        (
+            _python_script(
+                tmp_path,
+                "import sys; sys.stdout.buffer.write(b'out'); "
+                "sys.stderr.buffer.write(b'err'); sys.exit(3)",
+            ),
+        ),
+        b"",
+        timeout_sec=5,
+    )
+    assert result.returncode == 3
+    assert result.stdout == b"out"
+    assert result.stderr == b"err"
+    assert result.verifier_invalid is False
+
+
+def test_go_supervisor_maps_timeout_to_legacy_returncode(tmp_path: Path) -> None:
+    result = run_go_bridge(
+        (_python_script(tmp_path, "import time; time.sleep(30)"),),
+        b"",
+        timeout_sec=1,
+    )
+    assert result.returncode == 124
+    assert result.timed_out is True
+    assert result.output_limit_exceeded is False
+
+
+def test_go_supervisor_rejects_malformed_generic_transport(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def malformed(*args, **kwargs):
+        del args, kwargs
+        return subprocess.CompletedProcess([], 0, stdout=b"not-json\n", stderr=b"")
+
+    monkeypatch.setattr("nl2repobench.verification.go_supervisor.subprocess.run", malformed)
+    result = run_go_bridge(("/usr/bin/true",), b"")
+    assert result.returncode == 70
+    assert result.verifier_invalid is True
+    assert b"invalid generic bridge result" in result.stderr
+
+
+def test_go_supervisor_marks_cleanup_failure_as_verifier_invalid(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = {
+        "schema_version": "1.0",
+        "request_id": "0" * 32,
+        "returncode": 0,
+        "stdout_base64": base64.b64encode(b"out").decode(),
+        "stderr_base64": "",
+        "timed_out": False,
+        "output_limit_exceeded": False,
+        "cleanup_complete": False,
+        "spawn_error": None,
+        "cleanup_error": {
+            "code": "cleanup-residue",
+            "stage": "cleanup",
+            "message": "residue",
+            "pids": [123],
+        },
+    }
+
+    def cleanup_failure(*args, **kwargs):
+        del args, kwargs
+        return subprocess.CompletedProcess(
+            [], 75, stdout=(json.dumps(payload) + "\n").encode(), stderr=b""
+        )
+
+    monkeypatch.setattr("nl2repobench.verification.go_supervisor.subprocess.run", cleanup_failure)
+    monkeypatch.setattr(
+        "nl2repobench.verification.go_supervisor.secrets.token_hex",
+        lambda size: "0" * (size * 2),
+    )
+    result = run_go_bridge(("/usr/bin/true",), b"")
+    assert result.cleanup_complete is False
+    assert result.verifier_invalid is True
+    assert result.returncode == 0
+
+
+def test_go_supervisor_cleans_escaped_session_child(tmp_path: Path) -> None:
+    result = run_go_bridge(
+        (
+            _python_script(
+                tmp_path,
+                "import os,time; child=os.fork(); time.sleep(30) if child == 0 else None",
+            ),
+        ),
+        b"",
+        timeout_sec=1,
+    )
+    assert result.returncode == 124
+    assert result.timed_out is True
+
+
+def test_go_candidate_boundary_has_no_independent_spawn_or_address_limit() -> None:
+    root = Path(__file__).parents[1] / "src/nl2repobench/verification"
+    source = "\n".join((root / name).read_text(encoding="utf-8") for name in (
+        "go_supervisor.py", "go_bridge_proxy.py", "go_contract_runner.py"
+    ))
+    assert "preexec_fn" not in source
+    assert "RLIMIT_AS" not in source
+    assert "subprocess.Popen" not in source
+    assert "candidate_process_cli" in (root / "go_supervisor.py").read_text(encoding="utf-8")
 
 
 def test_go_compiler_writes_separate_bridge_task(tmp_path) -> None:
@@ -380,7 +527,9 @@ def test_go_compiler_rejects_missing_control_script(tmp_path: Path) -> None:
 def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path) -> None:
     root = Path(__file__).parents[1]
     development = GoHarborCompiler(root / "toolchain.go.dev.lock.toml")
-    locked = GoHarborCompiler(root / "toolchain.go.lock.toml")
+    locked = GoHarborCompiler(
+        _current_locked_go_toolchain(root, tmp_path / "toolchain.go.lock.toml")
+    )
     development_source = _canonical_go_source(root, tmp_path / "development-source")
 
     with pytest.raises(GoHarborCompileError, match="toolchain.go.lock.toml"):
@@ -449,7 +598,7 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         staging_root=authorization.staging_root,
     )
     production = GoHarborCompiler(
-        root / "toolchain.go.lock.toml",
+        _current_locked_go_toolchain(root, tmp_path / "toolchain.go.lock.toml"),
         artifact_resolver=resolver,
     )
     assert production._resolve_go_command_plan(commands) == CommandPlan.model_validate(  # noqa: SLF001
@@ -506,7 +655,10 @@ def test_go_compiler_requires_private_authorized_command_plan_media(tmp_path: Pa
         purpose=authorization.purpose,
         staging_root=authorization.staging_root,
     )
-    compiler = GoHarborCompiler(root / "toolchain.go.lock.toml", artifact_resolver=resolver)
+    compiler = GoHarborCompiler(
+        _current_locked_go_toolchain(root, tmp_path / "toolchain.go.lock.toml"),
+        artifact_resolver=resolver,
+    )
 
     wrong_media = commands.model_copy(update={"media_type": "application/json"})
     with pytest.raises(GoHarborCompileError, match="command-plan media type"):

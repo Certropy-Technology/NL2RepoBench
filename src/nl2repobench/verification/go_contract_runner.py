@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import argparse
 import os
-import shlex
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -19,10 +19,10 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="nl2repo-go-contract-") as temp:
         proxy = Path(temp) / "bridge-proxy"
         proxy.write_text(
-            "#!/bin/sh\n"
-            "exec /usr/bin/python3 "
-            f"{shlex.quote(str(args.proxy))} "
-            '"$1"\n',
+            "#!/usr/bin/python3\n"
+            "import runpy, sys\n"
+            f"sys.argv = [{str(args.proxy)!r}, *sys.argv[1:]]\n"
+            f"runpy.run_path({str(args.proxy)!r}, run_name='__main__')\n",
             encoding="utf-8",
         )
         os.chmod(proxy, 0o555)
@@ -34,11 +34,11 @@ def main() -> int:
             timeout=35.0,
         )
         print(result.stdout, end="")
-        print(result.stderr, end="", file=__import__("sys").stderr)
+        print(result.stderr, end="", file=sys.stderr)
         if result.returncode != 0 and not result.stderr:
             print(
                 f"Go contract exited {result.returncode} without diagnostics",
-                file=__import__("sys").stderr,
+                file=sys.stderr,
             )
         return result.returncode
 

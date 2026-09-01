@@ -1,15 +1,31 @@
-"""Bounded subprocess supervisor for generated Go bridges."""
+"""Thin Go bridge adapter over the shared candidate process boundary."""
 
 from __future__ import annotations
 
+import base64
+import binascii
+import json
 import os
-import resource
-import selectors
-import signal
+import secrets
+import shutil
 import subprocess
-import time
+import sys
+import tempfile
 from dataclasses import dataclass
-from typing import IO, cast
+from pathlib import Path
+from typing import Any
+
+from .subprocess_supervisor import (
+    CANDIDATE_GID,
+    CANDIDATE_UID,
+    HARD_FILE_BYTES,
+    HARD_OPEN_FILES,
+    HARD_PROCESSES,
+    HARD_STDIN_BYTES,
+    HARD_TIMEOUT_SEC,
+    ProcessContractError,
+    ProcessError,
+)
 
 
 @dataclass(frozen=True)
@@ -19,6 +35,155 @@ class GoBridgeResult:
     stderr: bytes
     timed_out: bool = False
     output_limit_exceeded: bool = False
+    cleanup_complete: bool = True
+    verifier_invalid: bool = False
+
+
+def _error_result(message: str, *, returncode: int = 70) -> GoBridgeResult:
+    return GoBridgeResult(
+        returncode=returncode,
+        stdout=b"",
+        stderr=message.encode("utf-8", errors="replace")[:4096],
+        verifier_invalid=True,
+    )
+
+
+def _decode_result(
+    raw: bytes,
+    *,
+    request_id: str,
+    max_output_bytes: int,
+) -> GoBridgeResult:
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError("generic result is not an object")
+        if payload.get("schema_version") != "1.0":
+            raise ValueError("unsupported generic result schema")
+        if payload.get("request_id") != request_id:
+            raise ValueError("generic result request_id mismatch")
+        stdout = base64.b64decode(payload["stdout_base64"], validate=True)
+        stderr = base64.b64decode(payload["stderr_base64"], validate=True)
+        if any(not isinstance(payload[key], bool) for key in (
+            "timed_out", "output_limit_exceeded", "cleanup_complete"
+        )):
+            raise ValueError("generic result flags must be booleans")
+        timed_out = payload["timed_out"]
+        output_limit = payload["output_limit_exceeded"]
+        cleanup_complete = payload["cleanup_complete"]
+        if timed_out and output_limit:
+            raise ValueError("generic result has conflicting timeout and output flags")
+        if len(stdout) + len(stderr) > max_output_bytes:
+            raise ValueError("decoded bridge output exceeds limit")
+        spawn_error = payload.get("spawn_error")
+        cleanup_error = payload.get("cleanup_error")
+        if spawn_error is not None and not isinstance(spawn_error, dict):
+            raise ValueError("invalid spawn_error")
+        if cleanup_error is not None and not isinstance(cleanup_error, dict):
+            raise ValueError("invalid cleanup_error")
+        if spawn_error is not None:
+            ProcessError(**spawn_error)
+        if cleanup_error is not None:
+            ProcessError(**cleanup_error)
+        if cleanup_complete and cleanup_error is not None:
+            raise ValueError("cleanup error with complete cleanup")
+        if not cleanup_complete and cleanup_error is None:
+            raise ValueError("incomplete cleanup without cleanup error")
+        raw_returncode = payload["returncode"]
+        if isinstance(raw_returncode, bool) or not isinstance(raw_returncode, int):
+            raise ValueError("generic result returncode must be an integer")
+        returncode = raw_returncode
+        if timed_out:
+            returncode = 124
+        elif output_limit:
+            returncode = 125
+        elif spawn_error is not None:
+            returncode = 127
+        return GoBridgeResult(
+            returncode=returncode,
+            stdout=stdout,
+            stderr=stderr,
+            timed_out=timed_out,
+            output_limit_exceeded=output_limit,
+            cleanup_complete=cleanup_complete,
+            verifier_invalid=not cleanup_complete,
+        )
+    except (KeyError, TypeError, ValueError, binascii.Error, json.JSONDecodeError) as exc:
+        return _error_result(f"invalid generic bridge result: {exc}")
+
+
+def _request(
+    command: tuple[str, ...],
+    request: bytes,
+    *,
+    timeout_sec: float,
+    max_output_bytes: int,
+    staging_root: Path,
+) -> tuple[str, bytes]:
+    if not command or any(not isinstance(item, str) or not item for item in command):
+        raise ProcessContractError("bridge command must be non-empty strings")
+    executable = Path(command[0])
+    if not executable.is_absolute() or executable.is_symlink() or not executable.is_file():
+        raise ProcessContractError("bridge executable must be an existing absolute file")
+    if len(request) > HARD_STDIN_BYTES:
+        raise ProcessContractError("bridge request exceeds stdin limit")
+    if timeout_sec <= 0 or timeout_sec > HARD_TIMEOUT_SEC:
+        raise ProcessContractError("bridge timeout exceeds hard limit")
+    if max_output_bytes <= 0 or max_output_bytes > 8 * 1024 * 1024:
+        raise ProcessContractError("bridge output limit exceeds hard limit")
+    request_id = secrets.token_hex(16)
+    write_root = staging_root / "write"
+    write_root.mkdir()
+    write_root.chmod(0o777)
+    payload: dict[str, Any] = {
+        "schema_version": "1.0",
+        "request_id": request_id,
+        "context": "bridge",
+        "command": {
+            "argv": list(command),
+            "cwd": ".",
+            "environment": [],
+        },
+        "limits": {
+            "timeout_sec": timeout_sec,
+            "cpu_sec": max(1, min(int(timeout_sec), 600)),
+            "max_stdin_bytes": HARD_STDIN_BYTES,
+            "max_output_bytes": max_output_bytes,
+            "max_file_bytes": HARD_FILE_BYTES,
+            "max_open_files": HARD_OPEN_FILES,
+            "uid": CANDIDATE_UID,
+            "gid": CANDIDATE_GID,
+            "max_processes": HARD_PROCESSES,
+        },
+        "policy": {
+            "task_id": "go-bridge",
+            "staging_root": str(staging_root),
+            "read_only_roots": [],
+            "write_root": str(write_root),
+            "allowed_executable_roots": [str(executable.parent)],
+            "allowed_environment_names": [],
+            "require_no_new_privs": True,
+            "require_empty_capabilities": True,
+        },
+        "stdin_base64": base64.b64encode(request).decode("ascii"),
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return request_id, encoded
+
+
+def _stage_executable(command: tuple[str, ...], staging_root: Path) -> tuple[str, ...]:
+    """Copy the bridge into a root-owned, symlink-free executable root."""
+
+    source = Path(command[0])
+    if not source.is_absolute() or source.is_symlink() or not source.is_file():
+        raise ProcessContractError("bridge executable must be an existing absolute file")
+    source = source.resolve()
+    executable_root = staging_root / "executable"
+    executable_root.mkdir()
+    staged = executable_root / source.name
+    shutil.copyfile(source, staged)
+    staged.chmod(source.stat().st_mode & 0o777)
+    return (str(staged), *command[1:])
 
 
 def run_go_bridge(
@@ -27,125 +192,67 @@ def run_go_bridge(
     *,
     timeout_sec: float = 30.0,
     max_output_bytes: int = 256 * 1024,
-    uid: int = 10001,
+    uid: int = CANDIDATE_UID,
 ) -> GoBridgeResult:
-    """Run a bridge with bounded output and process/resource cleanup."""
+    """Run a bridge through the shared UID-isolated JSON process boundary."""
 
-    if not command or timeout_sec <= 0 or max_output_bytes <= 0:
-        raise ValueError("bridge command and limits must be positive")
-    if len(request) > max_output_bytes:
-        raise ValueError("bridge request exceeds output limit")
-
-    def limits() -> None:
-        resource.setrlimit(resource.RLIMIT_CPU, (int(timeout_sec), int(timeout_sec) + 1))
-        resource.setrlimit(resource.RLIMIT_FSIZE, (max_output_bytes, max_output_bytes))
-        resource.setrlimit(resource.RLIMIT_NOFILE, (128, 128))
-        if os.geteuid() == 0:
-            os.setuid(uid)
-
+    if uid != CANDIDATE_UID:
+        return _error_result("bridge UID must use the fixed candidate identity")
     try:
-        process = subprocess.Popen(
-            command,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            start_new_session=True,
-            preexec_fn=limits,
-        )
-    except OSError as exc:
-        return GoBridgeResult(returncode=127, stdout=b"", stderr=str(exc).encode())
-    assert process.stdin is not None
-    assert process.stdout is not None
-    assert process.stderr is not None
-    selector = selectors.DefaultSelector()
-    streams = {process.stdout: bytearray(), process.stderr: bytearray()}
-    for registered_stream in streams:
-        os.set_blocking(registered_stream.fileno(), False)
-        selector.register(registered_stream, selectors.EVENT_READ)
-    deadline = time.monotonic() + timeout_sec
-    timed_out = False
-    output_limit_exceeded = False
-    captured_total = 0
-    request_offset = 0
-    os.set_blocking(process.stdin.fileno(), False)
-    selector.register(process.stdin, selectors.EVENT_WRITE)
-    while selector.get_map():
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            timed_out = True
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            break
-        for key, _ in selector.select(min(remaining, 0.25)):
-            selected_file = key.fileobj
-            if selected_file is process.stdin:
-                try:
-                    written = os.write(process.stdin.fileno(), request[request_offset:])
-                except BlockingIOError:
-                    continue
-                except (BrokenPipeError, ConnectionResetError):
-                    written = len(request) - request_offset
-                request_offset += written
-                if request_offset == len(request):
-                    selector.unregister(process.stdin)
-                    process.stdin.close()
-                continue
-            if selected_file is process.stdout:
-                output_stream = process.stdout
-            elif selected_file is process.stderr:
-                output_stream = process.stderr
-            else:
-                raise RuntimeError("unexpected bridge selector stream")
-            data = os.read(output_stream.fileno(), 64 * 1024)
-            if not data:
-                selector.unregister(output_stream)
-                output_stream.close()
-                continue
-            target = streams[output_stream]
-            remaining_output = max_output_bytes - captured_total
-            if len(data) > remaining_output:
-                if remaining_output > 0:
-                    target.extend(data[:remaining_output])
-                    captured_total += remaining_output
-                output_limit_exceeded = True
-                try:
-                    os.killpg(process.pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-                selector.unregister(output_stream)
-                output_stream.close()
-                break
-            target.extend(data)
-            captured_total += len(data)
-        if timed_out or output_limit_exceeded:
-            break
-    for key in list(selector.get_map().values()):
-        try:
-            selector.unregister(key.fileobj)
-            if isinstance(key.fileobj, int):
-                os.close(key.fileobj)
-            else:
-                cast(IO[bytes], key.fileobj).close()
-        except (OSError, ValueError):
-            pass
-    selector.close()
-    try:
-        process.wait(timeout=5)
-    except subprocess.TimeoutExpired:
-        try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        process.wait()
-    return GoBridgeResult(
-        returncode=124 if timed_out else (125 if output_limit_exceeded else process.returncode),
-        stdout=bytes(streams[process.stdout]),
-        stderr=bytes(streams[process.stderr]),
-        timed_out=timed_out,
-        output_limit_exceeded=output_limit_exceeded,
-    )
+        with tempfile.TemporaryDirectory(prefix="nl2repo-go-bridge-") as temporary:
+            staging_root = Path(temporary)
+            staging_root.chmod(0o755)
+            staged_command = _stage_executable(command, staging_root)
+            request_id, encoded = _request(
+                staged_command,
+                request,
+                timeout_sec=timeout_sec,
+                max_output_bytes=max_output_bytes,
+                staging_root=staging_root,
+            )
+            completed = subprocess.run(
+                [sys.executable, "-m", "nl2repobench.verification.candidate_process_cli"],
+                input=encoded,
+                capture_output=True,
+                cwd=staging_root,
+                env={
+                    "PATH": "/usr/bin:/bin",
+                    "PYTHONPATH": os.environ.get("PYTHONPATH", ""),
+                    "PYTHONDONTWRITEBYTECODE": "1",
+                },
+                timeout=timeout_sec + 5.0,
+                check=False,
+            )
+            if completed.returncode in {64, 70}:
+                return _error_result(
+                    completed.stderr.decode("utf-8", errors="replace")
+                    or "candidate process CLI rejected bridge request"
+                )
+            result = _decode_result(
+                completed.stdout,
+                request_id=request_id,
+                max_output_bytes=max_output_bytes,
+            )
+            if completed.returncode == 75:
+                return GoBridgeResult(
+                    result.returncode,
+                    result.stdout,
+                    result.stderr,
+                    result.timed_out,
+                    result.output_limit_exceeded,
+                    cleanup_complete=False,
+                    verifier_invalid=True,
+                )
+            if completed.returncode != 0:
+                return _error_result(
+                    completed.stderr.decode("utf-8", errors="replace")
+                    or "candidate process CLI failed"
+                )
+            return result
+    except subprocess.TimeoutExpired as exc:
+        return _error_result(f"bridge CLI exceeded wrapper deadline: {exc}")
+    except (OSError, ProcessContractError, ValueError) as exc:
+        return _error_result(str(exc))
 
 
 __all__ = ["GoBridgeResult", "run_go_bridge"]

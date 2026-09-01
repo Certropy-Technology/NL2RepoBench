@@ -15,9 +15,11 @@ else:
 def main() -> int:
     if len(sys.argv) < 2:
         return 64
-    result = run_go_bridge((sys.argv[-1],), sys.stdin.buffer.read())
+    result = run_go_bridge(tuple(sys.argv[1:]), sys.stdin.buffer.read())
     sys.stdout.buffer.write(result.stdout)
     sys.stderr.buffer.write(result.stderr)
+    if result.verifier_invalid:
+        return 70
     return result.returncode
 
 
