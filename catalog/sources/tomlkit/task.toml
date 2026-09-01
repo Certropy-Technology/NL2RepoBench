@@ -2,11 +2,18 @@ schema_version = "1.0"
 task_id = "tomlkit"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 difficulty = "hard"
 category = "toml-library"
-tags = ["python", "toml", "mutable-document", "blocked"]
+tags = [
+    "python",
+    "toml",
+    "mutable-document",
+    "blocked",
+]
 language = "python"
+
 [source]
 status = "known"
 upstream_url = "https://github.com/python-poetry/tomlkit"
@@ -14,29 +21,35 @@ revision = "d8ed1e3cdb024dfc2c6f12b45a0dfd4d4d91f727"
 license_spdx = "MIT"
 source_digest = "sha256:16c73ff25629e5975f1b64579d8b78d0f3c1831c1a94fa59509238afe6a3f07c"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "Rich mutable internals and test dependencies lack a frozen offline verifier contract."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
+
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
+
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/tomlkit"

@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "typing-runtime-library"
-tags = ["python", "typing", "runtime-introspection", "protocols", "typed-dict", "separate-verifier"]
+tags = [
+    "python",
+    "typing",
+    "runtime-introspection",
+    "protocols",
+    "typed-dict",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +25,7 @@ source_digest = "sha256:34f3316e0c4d93aefe33a10ceb5ba35487f14b9e7751e00aed323b7c
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked flit_core build dependency during Docker build"
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +34,49 @@ reference_source_fetch = "forbidden"
 reason = "The sole third-party build dependency is installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["flit_core==3.12.0"]
-lock_artifact = { digest = "sha256:bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe", size_bytes = 381, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe", visibility = "private" }
+status = "unknown"
+packages = [
+    "flit_core==3.12.0",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:bd64e1af7e8f0a615bd8b3688b687f5afa18f5699fe5669bd258deabd4505754", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bd64e1af7e8f0a615bd8b3688b687f5afa18f5699fe5669bd258deabd4505754", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:bd64e1af7e8f0a615bd8b3688b687f5afa18f5699fe5669bd258deabd4505754"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bd64e1af7e8f0a615bd8b3688b687f5afa18f5699fe5669bd258deabd4505754"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build typing_extensions 4.14.1 from an empty workspace and satisfy a bounded Python 3.12 runtime export, introspection, protocol, TypedDict, decorator, and helper contract through a separate subprocess verifier."
-keywords = ["python", "typing", "runtime-introspection", "protocols", "typed-dict", "separate-verifier"]
+keywords = [
+    "python",
+    "typing",
+    "runtime-introspection",
+    "protocols",
+    "typed-dict",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -81,6 +96,6 @@ uri = "artifact://private/sha256:61c452fd43b27d3de8a039fe95b2ecbd827f19263b2e3f5
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/typing-extensions"
-reason = "Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 32/32 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress. Static typechecker parity is outside the contract, and reviews and pilots remain out of scope."
+reason = "Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 32/32 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress. Static typechecker parity is outside the contract, and reviews and pilots remain out of scope. Canonical dependency closure and exact runtime identity require separate remediation."

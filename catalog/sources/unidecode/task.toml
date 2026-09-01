@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "text-transliteration"
-tags = ["python", "unicode", "transliteration", "lazy-cache", "separate-verifier"]
+tags = [
+    "python",
+    "unicode",
+    "transliteration",
+    "lazy-cache",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +24,7 @@ source_digest = "sha256:a33c1751226d4cca24d0b3cf457a31932ee496f161713d654cfc07c1
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked setuptools build dependency during Docker build"
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +33,48 @@ reference_source_fetch = "forbidden"
 reason = "The sole third-party build dependency is installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2"]
-lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
+status = "unknown"
+packages = [
+    "setuptools==80.10.2",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:577d74244039893a732d831ccd4bea93a2bc410513d4dfb75f8440c8452f3a07", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:577d74244039893a732d831ccd4bea93a2bc410513d4dfb75f8440c8452f3a07", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:577d74244039893a732d831ccd4bea93a2bc410513d4dfb75f8440c8452f3a07"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:577d74244039893a732d831ccd4bea93a2bc410513d4dfb75f8440c8452f3a07"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build Unidecode 1.4.0 from an empty workspace and satisfy a bounded transliteration, error-policy, lazy-cache, API, packaging, and CLI contract."
-keywords = ["python", "unicode", "transliteration", "lazy-cache", "separate-verifier"]
+keywords = [
+    "python",
+    "unicode",
+    "transliteration",
+    "lazy-cache",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -81,6 +94,6 @@ uri = "artifact://private/sha256:1228215903cccbf3887421ac98d2bee1230d48b973aeaf2
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/unidecode"
-reason = "Official Harbor 0.21.0 production gates passed: the local digest-checked Oracle passed 20/20 at reward 1.0; empty scored 0.0; stub and forgery each passed 3/20 at reward 0.15; all verifier network receipts proved no public egress. Reviews, pilots, and publication remain out of scope."
+reason = "Official Harbor 0.21.0 production gates passed: the local digest-checked Oracle passed 20/20 at reward 1.0; empty scored 0.0; stub and forgery each passed 3/20 at reward 0.15; all verifier network receipts proved no public egress. Reviews, pilots, and publication remain out of scope. Canonical dependency closure and exact runtime identity require separate remediation."

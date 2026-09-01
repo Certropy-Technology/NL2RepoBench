@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "validation"
-tags = ["python", "validation", "internationalization", "network-identifiers", "repository-generation", "pytest"]
+tags = [
+    "python",
+    "validation",
+    "internationalization",
+    "network-identifiers",
+    "repository-generation",
+    "pytest",
+]
 language = "python"
 
 [source]
@@ -19,9 +26,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = ">=3.9"
-os_name = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,24 +35,25 @@ reason = "The callable/rich-object verifier and dependency closure are not froze
 
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = [
     "pytest==8.3.2",
     "eth-hash[pycryptodome]==0.7.0",
     "pycryptodome==3.20.0",
     "setuptools",
 ]
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
 expected_total = 895
 expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q"]
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-http-library"
-tags = ["python", "http", "urllib3", "url-parsing", "headers", "retry", "separate-verifier"]
+tags = [
+    "python",
+    "http",
+    "urllib3",
+    "url-parsing",
+    "headers",
+    "retry",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +26,7 @@ source_digest = "sha256:3a5d7d03213b00b8e8f18be2df77b38bc55829380ffe91302c0cca68
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked build and verifier closure during image build; candidate installs from a writable staged workspace with a fixed SCM version"
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +35,54 @@ reference_source_fetch = "forbidden"
 reason = "urllib3 runtime behavior is locally deterministic. Build dependencies are installed from the private hash lock during image construction; Agent and verifier runs have no egress. Only the trusted Oracle receives the exact upstream host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["hatch-vcs==0.5.0", "hatchling==1.32.0", "setuptools-scm==10.2.1"]
-lock_artifact = { digest = "sha256:a7d9c8379c1a6529ab2f34abc12a6e5fc926af7b133b6be5dfa40f2684a69a40", size_bytes = 2775, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a7d9c8379c1a6529ab2f34abc12a6e5fc926af7b133b6be5dfa40f2684a69a40", visibility = "private" }
+status = "unknown"
+packages = [
+    "hatch-vcs==0.5.0",
+    "hatchling==1.32.0",
+    "setuptools-scm==10.2.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:d853f10a23d06184b00a5ccf37ce656ac41ab87c021ba29efdc37fead4cc3611", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d853f10a23d06184b00a5ccf37ce656ac41ab87c021ba29efdc37fead4cc3611", visibility = "private" }
-environment = { SETUPTOOLS_SCM_PRETEND_VERSION = "2.7.1.dev42", SETUPTOOLS_SCM_PRETEND_VERSION_FOR_URLLIB3 = "2.7.1.dev42" }
+
+[verifier.bundle]
+digest = "sha256:d853f10a23d06184b00a5ccf37ce656ac41ab87c021ba29efdc37fead4cc3611"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d853f10a23d06184b00a5ccf37ce656ac41ab87c021ba29efdc37fead4cc3611"
+visibility = "private"
+
+[verifier.environment]
+SETUPTOOLS_SCM_PRETEND_VERSION = "2.7.1.dev42"
+SETUPTOOLS_SCM_PRETEND_VERSION_FOR_URLLIB3 = "2.7.1.dev42"
 
 [harbor]
 description = "Build urllib3 from an empty workspace and satisfy a deterministic local HTTP utility contract covering URL parsing, headers, retries, timeouts, multipart encoding, response decoding, and package exports."
-keywords = ["python", "http", "urllib3", "url-parsing", "headers", "retry", "separate-verifier"]
+keywords = [
+    "python",
+    "http",
+    "urllib3",
+    "url-parsing",
+    "headers",
+    "retry",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -74,9 +95,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Current production compile, local separate-verifier Oracle replay, empty/stub/forgery controls, install-timeout control, source network lint, and generated network lint passed. Harbor Agent Run, blind review, pilot, and publication remain integrator-owned."
+reason = "Current production compile, local separate-verifier Oracle replay, empty/stub/forgery controls, install-timeout control, source network lint, and generated network lint passed. Harbor Agent Run, blind review, pilot, and publication remain integrator-owned. Canonical dependency closure and exact runtime identity require separate remediation."
 
 [oracle_bundle]
 digest = "sha256:964f69b6414f9c65f20feabc844ecdefa7c3e2e14886f7d9ee9cf399790664b4"

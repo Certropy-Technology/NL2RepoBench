@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "timezone-data-package"
-tags = ["python", "timezone", "iana", "resources", "zoneinfo", "packaging", "offline", "separate-verifier"]
+tags = [
+    "python",
+    "timezone",
+    "iana",
+    "resources",
+    "zoneinfo",
+    "packaging",
+    "offline",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +27,7 @@ source_digest = "sha256:5b4ac0fb237db87b95008d329ec1d038b3e86513ee6c11c51098f7bc
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-13-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "Install the hash-locked setuptools/wheel closure during the image build; install the candidate with pip --no-deps --no-build-isolation. Only the trusted Oracle fetches and verifies the exact Git revision under a run-scoped source-host authorization."
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +36,51 @@ reference_source_fetch = "forbidden"
 reason = "The Python build closure is installed from a hash-locked package-index requirements file during Docker build. Agent and verifier phases require no registry or source access; only the trusted Oracle receives a run-scoped exact source-host authorization."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", visibility = "private" }
+status = "unknown"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 53
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:62211009c3d11f1feb486ee9f2a899f9674243d0c0f81aec7975a9cbee9293d9", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:62211009c3d11f1feb486ee9f2a899f9674243d0c0f81aec7975a9cbee9293d9", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:62211009c3d11f1feb486ee9f2a899f9674243d0c0f81aec7975a9cbee9293d9"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:62211009c3d11f1feb486ee9f2a899f9674243d0c0f81aec7975a9cbee9293d9"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the frozen tzdata 2026c Python distribution from an empty workspace and reproduce its package metadata, importlib resource hierarchy, TZif data, aliases, and zoneinfo fallback behavior through a separate offline verifier."
-keywords = ["python", "tzdata", "iana", "zoneinfo", "resources", "offline", "repository-generation"]
+keywords = [
+    "python",
+    "tzdata",
+    "iana",
+    "zoneinfo",
+    "resources",
+    "offline",
+    "repository-generation",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 300.0
 candidate_install_timeout_sec = 90.0
@@ -81,6 +100,6 @@ uri = "artifact://private/sha256:725c09c346827cd980bc1a3682719b93030f5b72aaf97ce
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-tzdata"
-reason = "Production compilation and one official Harbor Oracle completed with 53/53 and reward 1.0. Empty, stub, forgery, invalid-workspace, install-timeout, call-timeout, and offline verifier controls completed with verifier-owned zero rewards and public_network_available=false. Integrator review and model Agent Run remain pending."
+reason = "Production compilation and one official Harbor Oracle completed with 53/53 and reward 1.0. Empty, stub, forgery, invalid-workspace, install-timeout, call-timeout, and offline verifier controls completed with verifier-owned zero rewards and public_network_available=false. Integrator review and model Agent Run remain pending. Canonical dependency closure and exact runtime identity require separate remediation."

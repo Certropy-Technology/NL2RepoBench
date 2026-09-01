@@ -3,12 +3,23 @@ task_id = "typer"
 version = "0.2.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:3575f2f224eac1470eae421110547236c6f62ac9142f5b13e4d614b070f75180", size_bytes = 2734080, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3575f2f224eac1470eae421110547236c6f62ac9142f5b13e4d614b070f75180", visibility = "private" }
+[oracle_bundle]
+digest = "sha256:3575f2f224eac1470eae421110547236c6f62ac9142f5b13e4d614b070f75180"
+size_bytes = 2734080
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:3575f2f224eac1470eae421110547236c6f62ac9142f5b13e4d614b070f75180"
+visibility = "private"
 
 [metadata]
 difficulty = "hard"
 category = "cli"
-tags = ["python", "cli", "type-hints", "argument-parsing", "separate-verifier"]
+tags = [
+    "python",
+    "cli",
+    "type-hints",
+    "argument-parsing",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -20,12 +31,7 @@ source_digest = "sha256:4713273f314d75895e287e1dfed01cd97d1d1c6ec643ebb9e379ff5e
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-network_mode = "no-network"
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,43 +40,56 @@ reference_source_fetch = "forbidden"
 reason = "The full runtime, build and adapter closure is pinned in the private hash-locked requirements artifact and installed at image build time. The Oracle extracts the frozen source archive from its private bundle, so no run-time fetch of upstream source is required. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "annotated-doc==0.0.4",
-  "markdown-it-py==4.0.0",
-  "mdurl==0.1.2",
-  "pdm-backend==2.4.9",
-  "pygments==2.20.0",
-  "rich==15.0.0",
-  "setuptools==80.9.0",
-  "shellingham==1.5.4",
-  "wheel==0.45.1",
+    "annotated-doc==0.0.4",
+    "markdown-it-py==4.0.0",
+    "mdurl==0.1.2",
+    "pdm-backend==2.4.9",
+    "pygments==2.20.0",
+    "rich==15.0.0",
+    "setuptools==80.9.0",
+    "shellingham==1.5.4",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", size_bytes = 922, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 23
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:fcec1fcdb8dda6894cf2c9c402aca5f7ece1dd71d7bb2fdb5520b3ab96935fb8", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:fcec1fcdb8dda6894cf2c9c402aca5f7ece1dd71d7bb2fdb5520b3ab96935fb8", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:fcec1fcdb8dda6894cf2c9c402aca5f7ece1dd71d7bb2fdb5520b3ab96935fb8"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:fcec1fcdb8dda6894cf2c9c402aca5f7ece1dd71d7bb2fdb5520b3ab96935fb8"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned typer type-hint CLI framework slice from an empty workspace."
-keywords = ["python", "cli", "type-hints", "argument-parsing", "separate-verifier"]
+keywords = [
+    "python",
+    "cli",
+    "type-hints",
+    "argument-parsing",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -83,6 +102,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
+status = "blocked"
 owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 23/23 with reward 1.0; empty/stub/forgery controls passed and review remains pending."
+reason = "Generic private-bundle compiled Oracle passed 23/23 with reward 1.0; empty/stub/forgery controls passed and review remains pending. Canonical dependency closure and exact runtime identity require separate remediation."

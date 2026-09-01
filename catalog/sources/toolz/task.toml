@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "functional-utilities"
-tags = ["python", "functional-programming", "iterators", "higher-order-functions", "dict-utilities", "pure-python", "pytest", "separate-verifier"]
+tags = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "higher-order-functions",
+    "dict-utilities",
+    "pure-python",
+    "pytest",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,12 +27,7 @@ source_digest = "sha256:1f0ef83ae7991a23a6fb664180354551bd4ea24ce5de1472d91e6906
 submodules = []
 
 [environment]
-# The source supports Python >=3.9, but no immutable verifier image or final
-# OS/interpreter policy has been approved in this static authoring lane.
 status = "unknown"
-python_version = ">=3.9"
-os_name = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,30 +36,25 @@ reference_source_fetch = "forbidden"
 reason = "The package dependency closure and bounded verifier are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# Runtime imports are standard-library/local only. These are the unpinned
-# PEP 517 build and source-test requirements, not an offline closure.
 status = "unknown"
-installer = "uv"
 packages = [
-  "setuptools>=77",
-  "setuptools-git-versioning>=2.0",
-  "pytest>=6.0",
+    "setuptools>=77",
+    "setuptools-git-versioning>=2.0",
+    "pytest>=6.0",
 ]
+package_manager = "pip"
 
 [tests]
 framework = "pytest"
-# CPython 3.12.11 and 3.14.6, pytest 9.1.1, and plugin autoload disabled
-# each collected 186 items. This is repeated source evidence, not a frozen
-# production denominator.
 expected_total = 186
 expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q"]
-protected_paths = ["toolz/tests", "toolz/sandbox/tests"]
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 

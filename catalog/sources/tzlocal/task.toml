@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "time-zone-discovery"
-tags = ["python", "datetime", "timezone", "zoneinfo", "filesystem", "separate-verifier"]
+tags = [
+    "python",
+    "datetime",
+    "timezone",
+    "zoneinfo",
+    "filesystem",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +25,7 @@ source_digest = "sha256:c1466d3636fa00320760c2e5ae8f287c10f978a80b529690b6afb4bc
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "python -m pip install --no-deps --no-build-isolation --target /tmp/candidate-site /tmp/candidate"
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +34,49 @@ reference_source_fetch = "forbidden"
 reason = "The exact setuptools build backend is installed from a private hash-locked requirements file during image build. Candidate and verifier execution have no egress; only the trusted Oracle receives an exact run-scoped github.com authorization to fetch and verify the frozen source revision."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9", size_bytes = 634, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9", visibility = "private" }
+status = "unknown"
+packages = [
+    "setuptools==80.9.0",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-environment = {}
-bundle = { digest = "sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0", visibility = "private" }
+
+[verifier.environment]
+
+[verifier.bundle]
+digest = "sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9a3389f4246fd5933c39d4987fedf1601e7c4dc825ab57a16674fe8887d6d3a0"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build tzlocal from an empty workspace and reproduce deterministic zone discovery, cache, reload, offset, and packaging behavior through a separate child-side verifier."
-keywords = ["python", "datetime", "timezone", "zoneinfo", "filesystem", "separate-verifier"]
+keywords = [
+    "python",
+    "datetime",
+    "timezone",
+    "zoneinfo",
+    "filesystem",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 90.0
@@ -82,6 +97,6 @@ uri = "artifact://private/sha256:e1974f87c28a5d200f687bc47c5988272b1cd731ba147bc
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828/tzlocal"
-reason = "The final production bundle passed the 30/30 Oracle verifier plus empty, stub, forgery, install-hang, call-hang, and direct offline controls. The locked OpenHands runtime image must be restored before the independent model Agent Run."
+reason = "The final production bundle passed the 30/30 Oracle verifier plus empty, stub, forgery, install-hang, call-hang, and direct offline controls. The locked OpenHands runtime image must be restored before the independent model Agent Run. Canonical dependency closure and exact runtime identity require separate remediation."

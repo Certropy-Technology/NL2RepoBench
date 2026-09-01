@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-progress-library"
-tags = ["python", "iterators", "formatting", "progress", "separate-verifier"]
+tags = [
+    "python",
+    "iterators",
+    "formatting",
+    "progress",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +24,7 @@ source_digest = "sha256:18f09bc025cda9d6d267268c4325c6ceb937518629810d7d5a6b41e4
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked setuptools build dependency during Docker build"
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +33,49 @@ reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier run without network access. Oracle uses a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2"]
-lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
+status = "unknown"
+packages = [
+    "setuptools==80.10.2",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 8
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:462f88a9d5fead3f7055033170f2d3b814a55dc54e2135d75c694b1a9069e51a", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:462f88a9d5fead3f7055033170f2d3b814a55dc54e2135d75c694b1a9069e51a", visibility = "private" }
 entrypoint = "run.py"
-environment = { NL2REPO_TQDM_CANDIDATE_SITE = "/tmp/candidate-site" }
+
+[verifier.bundle]
+digest = "sha256:462f88a9d5fead3f7055033170f2d3b814a55dc54e2135d75c694b1a9069e51a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:462f88a9d5fead3f7055033170f2d3b814a55dc54e2135d75c694b1a9069e51a"
+visibility = "private"
+
+[verifier.environment]
+NL2REPO_TQDM_CANDIDATE_SITE = "/tmp/candidate-site"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build tqdm from an empty workspace and satisfy a deterministic progress and iterator contract through a separate subprocess verifier."
-keywords = ["python", "iterators", "formatting", "progress", "separate-verifier"]
+keywords = [
+    "python",
+    "iterators",
+    "formatting",
+    "progress",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0

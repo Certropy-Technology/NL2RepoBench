@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "runtime-type-introspection"
-tags = ["python", "typing", "annotations", "introspection", "pep", "separate-verifier"]
+tags = [
+    "python",
+    "typing",
+    "annotations",
+    "introspection",
+    "pep",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +25,7 @@ source_digest = "sha256:ae6f6606c1f75628cae5254817e4448da25225123f70ae06ae7e406d
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-13-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "Install the hash-locked Hatchling, typing-extensions, setuptools, and wheel closure during image build; install the submitted project with pip --no-build-isolation in the separate verifier."
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,43 +34,56 @@ reference_source_fetch = "forbidden"
 reason = "The pure-Python build/runtime closure is installed from the private hash lock during image construction. Candidate and separate-verifier phases have no egress; only the trusted Oracle receives a run-scoped exact upstream-host authorization."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "hatchling==1.28.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==80.9.0",
-  "trove-classifiers==2026.6.1.19",
-  "typing-extensions==4.15.0",
-  "wheel==0.45.1",
+    "hatchling==1.28.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:de73ddf89ab1141d8f54290bd6030dc93e6186936fd9892ff444c8aacdd2d1a5", size_bytes = 2371, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:de73ddf89ab1141d8f54290bd6030dc93e6186936fd9892ff444c8aacdd2d1a5", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:37c57adfde4e45870ace5fa7221d23e347a625bfd8fba98b9023a85b1b056abe", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:37c57adfde4e45870ace5fa7221d23e347a625bfd8fba98b9023a85b1b056abe", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:37c57adfde4e45870ace5fa7221d23e347a625bfd8fba98b9023a85b1b056abe"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:37c57adfde4e45870ace5fa7221d23e347a625bfd8fba98b9023a85b1b056abe"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build typing-inspection 0.4.4 from an empty workspace and reproduce its deterministic runtime typing-object and annotation-introspection contract."
-keywords = ["python", "typing", "annotations", "introspection", "separate-verifier", "no-network"]
+keywords = [
+    "python",
+    "typing",
+    "annotations",
+    "introspection",
+    "separate-verifier",
+    "no-network",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 300.0
 candidate_install_timeout_sec = 30.0
@@ -91,6 +104,6 @@ uri = "artifact://private/sha256:85d6f3ac633e1876c716f0da692ffb1eb340a1c7289e3d7
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-typing-inspection"
-reason = "Final production bundle compiled deterministically. The separate no-network verifier passed the exact-revision Oracle 32/32 with reward 1.0; empty, stub, forgery, workspace-boundary, install-timeout, and call-timeout controls completed with verifier-owned outcomes. No Harbor model Agent Run was started in this lane."
+reason = "Final production bundle compiled deterministically. The separate no-network verifier passed the exact-revision Oracle 32/32 with reward 1.0; empty, stub, forgery, workspace-boundary, install-timeout, and call-timeout controls completed with verifier-owned outcomes. No Harbor model Agent Run was started in this lane. Canonical dependency closure and exact runtime identity require separate remediation."

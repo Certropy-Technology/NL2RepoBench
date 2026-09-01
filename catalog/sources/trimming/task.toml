@@ -2,39 +2,52 @@ schema_version = "1.0"
 task_id = "trimming"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 difficulty = "medium"
 category = "csv-cleaning"
-tags = ["python", "csv", "data-cleaning", "blocked"]
+tags = [
+    "python",
+    "csv",
+    "data-cleaning",
+    "blocked",
+]
 language = "python"
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/LucaCappelletti94/csv_trimming"
 revision = "7ff2df6498037b927479e78d1bfe07dbc1ea5ab7"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The audit lacks a locked dependency/image closure and separate verifier."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
+
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
+
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/trimming"

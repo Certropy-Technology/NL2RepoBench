@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "static-data-library"
-tags = ["python", "packaging", "classifiers", "metadata", "cli", "offline", "separate-verifier"]
+tags = [
+    "python",
+    "packaging",
+    "classifiers",
+    "metadata",
+    "cli",
+    "offline",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +26,7 @@ source_digest = "sha256:cf3257e1a57e7dddf0e883955c5bfb579fcd5bea3d154b6ab43748b7
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-13-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "Install the hash-locked setuptools/calver/wheel closure during image build; install the candidate with pip --no-deps --no-build-isolation and SOURCE_DATE_EPOCH=1780342838. Only the trusted Oracle fetches and verifies the exact Git revision under a run-scoped source-host authorization."
+status = "unknown"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +35,53 @@ reference_source_fetch = "forbidden"
 reason = "The complete Python build closure is installed from a hash-locked requirements file during Docker build. Agent and separate verifier phases require no registry or source access; only the trusted Oracle receives a run-scoped exact github.com authorization."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["calver==2025.10.20", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:14727b57e136ea76fe6adb916c5caf91cabae9f0213255455cee18364d54049e", size_bytes = 1223, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:14727b57e136ea76fe6adb916c5caf91cabae9f0213255455cee18364d54049e", visibility = "private" }
+status = "unknown"
+packages = [
+    "calver==2025.10.20",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 35
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:23e483c7563a0af5947946344ba6a4e1cf918767f5f3ff21f9e069ce13b7a939", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:23e483c7563a0af5947946344ba6a4e1cf918767f5f3ff21f9e069ce13b7a939", visibility = "private" }
 entrypoint = "run.py"
-environment = { SOURCE_DATE_EPOCH = "1780342838" }
+
+[verifier.bundle]
+digest = "sha256:23e483c7563a0af5947946344ba6a4e1cf918767f5f3ff21f9e069ce13b7a939"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:23e483c7563a0af5947946344ba6a4e1cf918767f5f3ff21f9e069ce13b7a939"
+visibility = "private"
+
+[verifier.environment]
+SOURCE_DATE_EPOCH = "1780342838"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the frozen trove-classifiers package from an empty workspace and reproduce its typed classifier containers, deprecation mapping, packaging metadata, and equivalent module/console CLI through a separate offline verifier."
-keywords = ["python", "trove-classifiers", "packaging", "metadata", "cli", "custom-json-v1", "offline"]
+keywords = [
+    "python",
+    "trove-classifiers",
+    "packaging",
+    "metadata",
+    "cli",
+    "custom-json-v1",
+    "offline",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 420.0
 candidate_install_timeout_sec = 30.0
@@ -82,6 +102,6 @@ uri = "artifact://private/sha256:b89e066f685eb6796cb6613b8c430e37dbf04ddde8c3558
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828/trove-classifiers"
-reason = "Harbor 0.21.0 diagnostic gates pass with a fixed 35-leaf child-process contract: Oracle 35/35 at reward 1.0; valid stub, forgery, and call-hang controls at 1/35; bounded empty and install-hang installation exceptions at reward 0; all separate-verifier network probes report public_network_available=false. Final canonical evidence is bound after this lifecycle promotion."
+reason = "Harbor 0.21.0 diagnostic gates pass with a fixed 35-leaf child-process contract: Oracle 35/35 at reward 1.0; valid stub, forgery, and call-hang controls at 1/35; bounded empty and install-hang installation exceptions at reward 0; all separate-verifier network probes report public_network_available=false. Final canonical evidence is bound after this lifecycle promotion. Canonical dependency closure and exact runtime identity require separate remediation."
