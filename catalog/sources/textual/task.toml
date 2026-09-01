@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-library"
-tags = ["python", "tui", "text-processing", "geometry", "separate-verifier"]
+tags = [
+    "python",
+    "tui",
+    "text-processing",
+    "geometry",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +24,15 @@ source_digest = "sha256:481fcda705dcc2e3addded9d53b64c78232a7f46607621c9d0a33c4a
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-13"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
+system_packages = [
+    "git",
+    "ca-certificates",
+]
 build_command = "python -m pip install ."
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,32 +41,55 @@ reference_source_fetch = "forbidden"
 reason = "Hash-locked Python dependencies are installed during Docker build; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["linkify-it-py==2.1.0", "markdown-it-py==4.2.0", "mdit-py-plugins==0.6.1", "mdurl==0.1.2", "platformdirs==4.11.3", "poetry-core==2.2.1", "pygments==2.21.0", "rich==15.0.0", "typing-extensions==4.16.0", "uc-micro-py==2.0.0"]
-lock_artifact = { digest = "sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09", size_bytes = 3011, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09", visibility = "private" }
+status = "unknown"
+packages = [
+    "linkify-it-py==2.1.0",
+    "markdown-it-py==4.2.0",
+    "mdit-py-plugins==0.6.1",
+    "mdurl==0.1.2",
+    "platformdirs==4.11.3",
+    "poetry-core==2.2.1",
+    "pygments==2.21.0",
+    "rich==15.0.0",
+    "typing-extensions==4.16.0",
+    "uc-micro-py==2.0.0",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands = ["python -I -m nl2repobench.verification.custom_verifier --entrypoint /tests/verifier/run.py --expected 24 --junit /logs/verifier/junit.xml --collection /logs/verifier/collection.json --timeout-sec 300"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979", visibility = "private" }
+
+[verifier.bundle]
+digest = "sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:82274d8bc613a568b7ff710eb47976bf1d168f480437800f5faa0a8b78bac979"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the deterministic text, color, geometry, markup, and validation core of Textual from an empty workspace."
-keywords = ["python", "tui", "text-processing", "geometry", "separate-verifier"]
+keywords = [
+    "python",
+    "tui",
+    "text-processing",
+    "geometry",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -72,9 +102,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-gpt56-wide-recovery-20260826-r1"
-reason = "Private dependency, verifier, and Oracle artifacts were restored by digest; production compilation and deterministic control receipts are recorded in task-local evidence. Blind review and the downstream model Agent Run remain integrator-owned."
+reason = "Private dependency, verifier, and Oracle artifacts were restored by digest; production compilation and deterministic control receipts are recorded in task-local evidence. Blind review and the downstream model Agent Run remain integrator-owned. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
 
 [oracle_bundle]
 digest = "sha256:3c671a8fc7a755d8bc0dfbdd7a2037ed6b70ffce361dadca92d30ba3dd32e63a"

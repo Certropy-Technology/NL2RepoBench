@@ -6,7 +6,17 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "nlp-tokenization"
-tags = ["python", "rust-extension", "tokenization", "bpe", "wordpiece", "training", "serialization", "offline", "separate-verifier"]
+tags = [
+    "python",
+    "rust-extension",
+    "tokenization",
+    "bpe",
+    "wordpiece",
+    "training",
+    "serialization",
+    "offline",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +28,15 @@ source_digest = "sha256:ee078d644cd1e414f7a27a3085124577584dccbdeb4bc3f0addc4b06
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-13-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["ca-certificates", "cargo", "rustc"]
-network_mode = "no-network"
+system_packages = [
+    "ca-certificates",
+    "cargo",
+    "rustc",
+]
 build_command = "The candidate build closure is installed during image build with pip --require-hashes. Native builds use the image cargo/rustc toolchain; candidate and verifier phases have no network."
 
 [environment.network_policy]
@@ -34,33 +46,68 @@ reference_source_fetch = "forbidden"
 reason = "Candidate build and runtime dependencies are installed from a hash-locked closure during the image build. Agent and verifier phases have no egress; only the trusted Oracle consumes the private archive and prebuilt wheel for the exact revision."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["maturin==1.15.0", "setuptools==80.10.2", "huggingface-hub==1.27.0", "numpy==2.3.2", "anyio==4.14.2", "certifi==2026.7.22", "click==8.5.0", "filelock==3.32.4", "fsspec==2026.7.0", "h11==0.16.0", "hf-xet==1.6.0", "httpcore==1.0.9", "httpx==0.28.1", "idna==3.19", "packaging==26.3", "pyyaml==6.0.3", "tqdm==4.70.0", "typing-extensions==4.16.0"]
-lock_artifact = { digest = "sha256:6e11d375b53cfece00b9329b579c66249974f9dccc913c3245241df0e7bfd2c6", size_bytes = 18345, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6e11d375b53cfece00b9329b579c66249974f9dccc913c3245241df0e7bfd2c6", visibility = "private" }
+status = "unknown"
+packages = [
+    "maturin==1.15.0",
+    "setuptools==80.10.2",
+    "huggingface-hub==1.27.0",
+    "numpy==2.3.2",
+    "anyio==4.14.2",
+    "certifi==2026.7.22",
+    "click==8.5.0",
+    "filelock==3.32.4",
+    "fsspec==2026.7.0",
+    "h11==0.16.0",
+    "hf-xet==1.6.0",
+    "httpcore==1.0.9",
+    "httpx==0.28.1",
+    "idna==3.19",
+    "packaging==26.3",
+    "pyyaml==6.0.3",
+    "tqdm==4.70.0",
+    "typing-extensions==4.16.0",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:9e3527bf783aa7f3ecc9bd695cf78e47c21c3047306a27ada47fe739c21ec5fc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9e3527bf783aa7f3ecc9bd695cf78e47c21c3047306a27ada47fe739c21ec5fc", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:9e3527bf783aa7f3ecc9bd695cf78e47c21c3047306a27ada47fe739c21ec5fc"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9e3527bf783aa7f3ecc9bd695cf78e47c21c3047306a27ada47fe739c21ec5fc"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build the frozen Hugging Face tokenizers Python package from an empty workspace and reproduce deterministic tokenizer construction, encoding, training, padding, truncation, serialization, and provided-tokenizer contracts through a separate offline verifier."
-keywords = ["python", "tokenizers", "bpe", "wordpiece", "unigram", "rust", "json", "offline"]
+keywords = [
+    "python",
+    "tokenizers",
+    "bpe",
+    "wordpiece",
+    "unigram",
+    "rust",
+    "json",
+    "offline",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 720.0
 candidate_install_timeout_sec = 240.0
@@ -80,6 +127,6 @@ uri = "artifact://private/sha256:c972e5dd4b22aea96ac7abf9b8b13a694a029b1fef700a2
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Source, native build environment, hash-locked Python closure, separate verifier, and Oracle/control bundles are authored; Harbor Oracle and controls remain to be run from the compiled bundle."
+reason = "Source, native build environment, hash-locked Python closure, separate verifier, and Oracle/control bundles are authored; Harbor Oracle and controls remain to be run from the compiled bundle. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated. Tracked wheel vendor-install blocker remains explicit: catalog/tasks/tokenizers/solution/tokenizers-0.23.2.dev0-cp310-abi3-manylinux_2_34_x86_64.whl."

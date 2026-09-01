@@ -2,40 +2,53 @@ schema_version = "1.0"
 task_id = "sqlite-utils"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 difficulty = "hard"
 category = "sqlite-cli"
-tags = ["python", "sqlite", "cli", "blocked"]
+tags = [
+    "python",
+    "sqlite",
+    "cli",
+    "blocked",
+]
 language = "python"
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/simonw/sqlite-utils"
 revision = "56dd09702fdb9e899f577ffd51693c1f2176cb08"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "No immutable environment, SQLite/native dependency closure, structured collection, or separate verifier is frozen."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
+
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
+
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/sqlite-utils"
-reason = "Static audit records unresolved native/environment and verifier gates; no runtime is authorized."
+reason = "Static audit records unresolved native/environment and verifier gates; no runtime is authorized. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."

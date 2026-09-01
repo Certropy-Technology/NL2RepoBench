@@ -2,40 +2,53 @@ schema_version = "1.0"
 task_id = "synthetic"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 difficulty = "hard"
 category = "synthetic-data"
-tags = ["python", "data", "llm", "blocked"]
+tags = [
+    "python",
+    "data",
+    "llm",
+    "blocked",
+]
 language = "python"
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/meta-llama/synthetic-data-kit"
 revision = "69db1a2d749d8c6aa1b467cd209b5b2930f053a2"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The static audit does not establish a frozen model/data dependency closure or deterministic verifier boundary."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
+
 [tests]
 framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+report_format = "pytest-junit-xml-v1"
+
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/synthetic"
-reason = "Model/data/network, dependency, collection, verifier, Oracle, and controls gates are not established."
+reason = "Model/data/network, dependency, collection, verifier, Oracle, and controls gates are not established. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."

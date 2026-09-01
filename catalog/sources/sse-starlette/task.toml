@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "server-sent-events"
-tags = ["python", "async", "asgi", "sse", "streaming", "timeouts", "separate-verifier"]
+tags = [
+    "python",
+    "async",
+    "asgi",
+    "sse",
+    "streaming",
+    "timeouts",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +26,11 @@ source_digest = "sha256:9945c5a862cd5d6cd5182347c2dad4a633caea80a4bcd21d7b82fcc0
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 build_command = "install candidate and verifier dependencies during image build from the private hash lock"
 
 [environment.network_policy]
@@ -34,47 +40,61 @@ reference_source_fetch = "forbidden"
 reason = "Starlette, AnyIO, pytest, and the setuptools build backend are installed during image construction from a private hash lock. Candidate and verifier runs have no egress; only the trusted Oracle receives the exact upstream source host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "anyio==4.14.2",
-  "idna==3.19",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.20.0",
-  "pytest==9.1.1",
-  "pytest-asyncio==1.4.0",
-  "setuptools==80.9.0",
-  "starlette==0.49.3",
-  "typing-extensions==4.16.0",
-  "wheel==0.45.1",
+    "anyio==4.14.2",
+    "idna==3.19",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.20.0",
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "setuptools==80.9.0",
+    "starlette==0.49.3",
+    "typing-extensions==4.16.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:33b43814cf359ad02c46c1e5289cd4b8a8e268435a113a9c88f7ef0a09981fb2", size_bytes = 2242, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:33b43814cf359ad02c46c1e5289cd4b8a8e268435a113a9c88f7ef0a09981fb2", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 28
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:1b5ab552d1b2ba5510cdbd3c38689d388ab65cbcc7be65ea8de3559088115719", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:1b5ab552d1b2ba5510cdbd3c38689d388ab65cbcc7be65ea8de3559088115719", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:1b5ab552d1b2ba5510cdbd3c38689d388ab65cbcc7be65ea8de3559088115719"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1b5ab552d1b2ba5510cdbd3c38689d388ab65cbcc7be65ea8de3559088115719"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build sse-starlette 3.4.8 from an empty workspace and satisfy a bounded JSON-safe SSE event and ASGI response contract without network access."
-keywords = ["python", "async", "asgi", "sse", "streaming", "timeouts", "separate-verifier"]
+keywords = [
+    "python",
+    "async",
+    "asgi",
+    "sse",
+    "streaming",
+    "timeouts",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -95,6 +115,6 @@ uri = "artifact://private/sha256:5ee519dc5693db138b565cab5fd866fcd4660495585cbad
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-sse-starlette"
-reason = "Frozen source, hash-locked closure, production compile, local Oracle replay, and task-local empty/stub/forgery/install-timeout controls passed. Official Harbor Agent Run, immutable agent-image restoration, review, pilot, and publication remain integrator-owned."
+reason = "Frozen source, hash-locked closure, production compile, local Oracle replay, and task-local empty/stub/forgery/install-timeout controls passed. Official Harbor Agent Run, immutable agent-image restoration, review, pilot, and publication remain integrator-owned. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."

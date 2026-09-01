@@ -7,13 +7,13 @@ instruction = "instruction.md"
 difficulty = "medium"
 category = "embedded-document-database"
 tags = [
-  "python",
-  "document-database",
-  "json-storage",
-  "queries",
-  "middleware",
-  "lru-cache",
-  "separate-verifier",
+    "python",
+    "document-database",
+    "json-storage",
+    "queries",
+    "middleware",
+    "lru-cache",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -26,14 +26,12 @@ source_digest = "sha256:13f1c7b200e863ebd48ee328ecfa90cf844f746b4f9bba70d8008b62
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 build_command = "pip install --no-deps --no-build-isolation"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -42,50 +40,52 @@ reference_source_fetch = "forbidden"
 reason = "The complete Hatchling build closure is hash-locked and installed during Docker build. Candidate and separate verifier runtime phases have no egress, and the Oracle restores only a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
 ]
-lock_artifact = { digest = "sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4", size_bytes = 945, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 36
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = [
-  "/tests/verifier/run.py",
-  "/tests/verifier/adapter.py",
-  "/tests/verifier/expected.json",
-]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:52799e7a572abac041f9fb470f0b61df8e443fdcc842de9df53ef565bd61fa93", size_bytes = 51200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:52799e7a572abac041f9fb470f0b61df8e443fdcc842de9df53ef565bd61fa93", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:52799e7a572abac041f9fb470f0b61df8e443fdcc842de9df53ef565bd61fa93"
+size_bytes = 51200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:52799e7a572abac041f9fb470f0b61df8e443fdcc842de9df53ef565bd61fa93"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build TinyDB 4.9.0 from an empty workspace and satisfy a bounded storage, query, table, update, middleware, and cache contract."
 keywords = [
-  "python",
-  "document-database",
-  "json-storage",
-  "query-builder",
-  "middleware",
-  "separate-verifier",
+    "python",
+    "document-database",
+    "json-storage",
+    "query-builder",
+    "middleware",
+    "separate-verifier",
 ]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
@@ -106,6 +106,6 @@ uri = "artifact://private/sha256:e8493c16b381ce3de7e4fb1be38882302e74f41319c9a92
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/tinydb"
-reason = "Strict Harbor 0.21.0 production gates passed with the bounded subprocess verifier: Oracle 36/36 at reward 1.0, empty 0, stub 2/36, and forgery 2/36 with verifier-owned reward. All four network receipts prove no public egress. Reviews and pilots remain out of scope."
+reason = "Strict Harbor 0.21.0 production gates passed with the bounded subprocess verifier: Oracle 36/36 at reward 1.0, empty 0, stub 2/36, and forgery 2/36 with verifier-owned reward. All four network receipts prove no public egress. Reviews and pilots remain out of scope. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."

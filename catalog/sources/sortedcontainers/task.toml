@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "data-structures"
-tags = ["python", "sorted-containers", "sequences", "sets", "mappings", "separate-verifier"]
+tags = [
+    "python",
+    "sorted-containers",
+    "sequences",
+    "sets",
+    "mappings",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +25,11 @@ source_digest = "sha256:5044ecd7cf9c94fda3eb3120b8400d335eb2df75a4c1a8c6d85dd10b
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "pip install --no-deps --no-build-isolation"
 
 [environment.network_policy]
@@ -34,28 +39,36 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked setuptools build dependency is installed during Docker build. Agent and separate verifier runs have no egress, and the Oracle restores a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==84.0.0"]
-lock_artifact = { digest = "sha256:1131088e92e1d95ea433c538a636bbd1be03bdc2f568d1c4807ba646bf84694a", size_bytes = 272, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1131088e92e1d95ea433c538a636bbd1be03bdc2f568d1c4807ba646bf84694a", visibility = "private" }
+status = "unknown"
+packages = [
+    "setuptools==84.0.0",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build sortedcontainers 2.4.0 from an empty workspace and satisfy a bounded sorted list, set, dictionary, and view scenario suite."
-keywords = ["python", "sorted-list", "sorted-set", "sorted-dict", "stateful-api", "separate-verifier"]
+keywords = [
+    "python",
+    "sorted-list",
+    "sorted-set",
+    "sorted-dict",
+    "stateful-api",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 90.0
@@ -69,9 +82,16 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
 digest = "sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273ec9042b2d445dc644"
@@ -81,9 +101,13 @@ uri = "artifact://private/sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/sortedcontainers"
-reason = "Strict Harbor 0.21.0 Oracle passed 30/30 at reward 1.0; empty, stub, forgery, and offline controls passed with path- and SHA-bound canonical evidence. Reviews and pilots remain separate stages."
-evidence = [
-  { digest = "sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5", size_bytes = 3726, media_type = "application/json", uri = "artifact://private/sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5", visibility = "private" },
-]
+reason = "Strict Harbor 0.21.0 Oracle passed 30/30 at reward 1.0; empty, stub, forgery, and offline controls passed with path- and SHA-bound canonical evidence. Reviews and pilots remain separate stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+
+[[lifecycle.evidence]]
+digest = "sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5"
+size_bytes = 3726
+media_type = "application/json"
+uri = "artifact://private/sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5"
+visibility = "private"

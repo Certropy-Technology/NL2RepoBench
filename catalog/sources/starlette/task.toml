@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "asgi-web-framework"
-tags = ["python", "asgi", "http", "routing", "responses", "middleware", "separate-verifier"]
+tags = [
+    "python",
+    "asgi",
+    "http",
+    "routing",
+    "responses",
+    "middleware",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +26,11 @@ source_digest = "sha256:044f15d81b61b252cca22d4ea0893626dbbbbe56f3400090b304c083
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim-bookworm"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the candidate and verifier closures during image build from private hash-locked requirements"
 
 [environment.network_policy]
@@ -34,43 +40,56 @@ reference_source_fetch = "forbidden"
 reason = "Candidate and separate verifier dependencies are installed during the image build from a private hash lock; only the trusted Oracle may receive a run-scoped exact GitHub host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "anyio==4.14.2",
-  "hatchling==1.27.0",
-  "idna==3.19",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
-  "typing-extensions==4.15.0",
+    "anyio==4.14.2",
+    "hatchling==1.27.0",
+    "idna==3.19",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
 ]
-lock_artifact = { digest = "sha256:eae0b61331efd96e46f5a698c066ced450b0cb31479b4a42fe7318a87b1312d8", size_bytes = 2201, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:eae0b61331efd96e46f5a698c066ced450b0cb31479b4a42fe7318a87b1312d8", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:b1a0a28c896ccc329678cd432f4c7432acf6a7103251257073b6ae1c65f66877", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b1a0a28c896ccc329678cd432f4c7432acf6a7103251257073b6ae1c65f66877", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:b1a0a28c896ccc329678cd432f4c7432acf6a7103251257073b6ae1c65f66877"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b1a0a28c896ccc329678cd432f4c7432acf6a7103251257073b6ae1c65f66877"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build the Starlette ASGI toolkit from an empty workspace and satisfy a deterministic local HTTP contract through a separate verifier."
-keywords = ["python", "asgi", "http", "routing", "responses", "middleware"]
+keywords = [
+    "python",
+    "asgi",
+    "http",
+    "routing",
+    "responses",
+    "middleware",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -90,6 +109,6 @@ uri = "artifact://private/sha256:c94f001ee627dd1c62f7d0e10e0e53bed34ea54b292d16c
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, timeout probes, and offline network checks passed. Model Agent Run, review, pilot, and publication remain separate stages."
+reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, timeout probes, and offline network checks passed. Model Agent Run, review, pilot, and publication remain separate stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."

@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "sql-parser-formatter"
-tags = ["python", "sql", "parser", "tokenizer", "formatter", "scenario-adapter", "separate-verifier"]
+tags = [
+    "python",
+    "sql",
+    "parser",
+    "tokenizer",
+    "formatter",
+    "scenario-adapter",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,14 +26,12 @@ source_digest = "sha256:215f55a40819101b2ca1d0c2c983ac9182539c6c32fc8bcb93a889b2
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 build_command = "Install the hash-locked Hatchling closure during image build; candidate installation uses pip --target --no-deps --no-build-isolation."
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,40 +40,53 @@ reference_source_fetch = "forbidden"
 reason = "The build backend closure is installed from the private hash lock during Docker build. Agent and separate verifier runs need no registry or source egress; the Oracle restores only a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
 packages = [
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
 ]
-lock_artifact = { digest = "sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4", size_bytes = 945, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4", visibility = "private" }
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
+framework = "custom"
 expected_total = 26
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+report_format = "custom-json-v1"
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:630e19d835f1a5d90bf013cbbd4d97421f06ec61acf117f6986486db7d01cf04", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:630e19d835f1a5d90bf013cbbd4d97421f06ec61acf117f6986486db7d01cf04", visibility = "private" }
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:630e19d835f1a5d90bf013cbbd4d97421f06ec61acf117f6986486db7d01cf04"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:630e19d835f1a5d90bf013cbbd4d97421f06ec61acf117f6986486db7d01cf04"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build sqlparse 0.5.4.dev0 from an empty workspace and satisfy a bounded parsing, formatting, splitting, tokenization, grouping, and lexer-customization contract through a separate subprocess adapter."
-keywords = ["python", "sql", "parser", "tokenizer", "formatter", "separate-verifier"]
+keywords = [
+    "python",
+    "sql",
+    "parser",
+    "tokenizer",
+    "formatter",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -87,6 +106,6 @@ uri = "artifact://private/sha256:00754abe0e9f5bbb5820406043c6eb9403eb8fa902e8859
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker/sqlparse"
-reason = "Production compile succeeded without --allow-incomplete. Harbor 0.21.0 Oracle was valid at 26/26 with reward 1.0; empty, stub, and forgery controls were valid at reward 0.0; all verifier network probes confirmed no public connectivity. Reviews and pilots remain pending."
+reason = "Production compile succeeded without --allow-incomplete. Harbor 0.21.0 Oracle was valid at 26/26 with reward 1.0; empty, stub, and forgery controls were valid at reward 0.0; all verifier network probes confirmed no public connectivity. Reviews and pilots remain pending. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
