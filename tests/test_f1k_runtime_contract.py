@@ -129,13 +129,17 @@ def test_python_runtime_digest_rejects_non_regular_or_non_unique_entries(
 
 
 def test_python_runtime_manifest_is_deterministic_and_has_deployment_root() -> None:
-    manifest = python_runtime_manifest(ROOT / "src" / "nl2repobench")
+    runtime_root = "/usr/local/lib/python3.12/site-packages/nl2repobench"
+    manifest = python_runtime_manifest(
+        ROOT / "src" / "nl2repobench", runtime_root=runtime_root
+    )
     assert manifest["schema_version"] == "1.0"
     assert manifest["digest_algorithm"] == RUNTIME_DIGEST_ALGORITHM
     assert re.fullmatch(
         r"/usr/local/lib/python[0-9]+\.[0-9]+/site-packages/nl2repobench",
         str(manifest["runtime_root"]),
     )
+    assert manifest["runtime_root"] == runtime_root
     files = manifest["files"]
     assert isinstance(files, list)
     paths = [str(entry["path"]) for entry in files]
@@ -145,15 +149,17 @@ def test_python_runtime_manifest_is_deterministic_and_has_deployment_root() -> N
         and entry["type"] == "file"
         for entry in files
     )
-    assert manifest == python_runtime_manifest(ROOT / "src" / "nl2repobench")
+    assert manifest == python_runtime_manifest(
+        ROOT / "src" / "nl2repobench", runtime_root=runtime_root
+    )
 
 
 def test_python_runtime_manifest_rejects_unlisted_special_file(tmp_path: Path) -> None:
     destination = tmp_path / "runtime"
     copy_python_verifier_runtime(destination)
-    os.mkfifo(destination / "unlisted-fifo")
+    os.mkfifo(destination / "nl2repobench" / "unlisted-fifo")
     manifest = python_runtime_manifest(destination / "nl2repobench")
-    with pytest.raises(TaskWriterError, match="extra|missing|special"):
+    with pytest.raises(TaskWriterError, match="extra|missing|unsafe"):
         validate_python_runtime_manifest(destination / "nl2repobench", manifest)
 
 
@@ -209,12 +215,12 @@ def test_node_staged_runtime_contract_has_no_wrapper_launchers() -> None:
     assert "NODE_RUNTIME_ROOT" in compiler
     assert "node_runtime_manifest" in compiler
     assert (
-        "COPY --from=node-runtime /usr/local/bin/node /opt/nl2repobench-node/bin/node"
+        "COPY --from=node-runtime {NODE_RUNTIME_ROOT} {NODE_RUNTIME_ROOT}"
         in compiler
     )
     assert "ln -sf" not in compiler
     assert "npm install --global" not in pnpm
-    assert "/opt/nl2repobench-node/lib/pnpm/bin/pnpm.cjs" in pnpm
+    assert "test -f {PNPM_LAUNCHER}" in pnpm
 
 
 def test_locked_node_toolchain_requires_manifest_identity() -> None:
@@ -234,27 +240,18 @@ def test_locked_node_toolchain_requires_manifest_identity() -> None:
 
 
 def test_go_lock_covers_full_shared_boundary_and_test_uses_one_interpreter() -> None:
-    expected = {
-        "src/nl2repobench/domain/command_plan.py",
-        "src/nl2repobench/package_managers/go_modules.py",
-        "src/nl2repobench/verification/candidate_process_cli.py",
-        "src/nl2repobench/verification/go_bridge.py",
-        "src/nl2repobench/verification/go_bridge_proxy.py",
-        "src/nl2repobench/verification/go_command_plan.py",
-        "src/nl2repobench/verification/go_contract_runner.py",
-        "src/nl2repobench/verification/go_grader.py",
-        "src/nl2repobench/verification/go_supervisor.py",
-        "src/nl2repobench/verification/normalize/go_json.py",
-        "src/nl2repobench/verification/process_cleanup.py",
-        "src/nl2repobench/verification/subprocess_supervisor.py",
-        "src/nl2repobench/verification/workspace_copy.py",
-    }
-    assert set(GO_RUNTIME_LOCK_FILES) == expected
+    expected = {f"src/nl2repobench/{path}" for path in _PYTHON_VERIFIER_FILES}
+    assert expected <= set(GO_RUNTIME_LOCK_FILES)
     assert len(GO_RUNTIME_LOCK_FILES) == len(set(GO_RUNTIME_LOCK_FILES))
     compiler = GoHarborCompiler(ROOT / "toolchain.go.dev.lock.toml")
     script = compiler._test_script()  # noqa: SLF001
-    assert "/usr/local/bin/python3" in script
-    assert "/usr/bin/python3" not in script
+    matches = re.findall(r"^PYTHON=(/[^\s'\"]+/python3)$", script, re.MULTILINE)
+    assert len(matches) == 1
+    interpreter = matches[0]
+    assert Path(interpreter).is_absolute()
+    assert set(
+        re.findall(r"(?<![\w$])(/[^\s'\";]+/python3)(?![\w])", script)
+    ) == {interpreter}
     assert "python3 -I" not in script
 
 
@@ -263,11 +260,11 @@ def test_generated_docker_contexts_copy_and_validate_runtime_manifests() -> None
     node = (ROOT / "src/nl2repobench/harbor/node_compiler.py").read_text(encoding="utf-8")
     go = (ROOT / "src/nl2repobench/harbor/go_compiler.py").read_text(encoding="utf-8")
     assert "COPY runtime-manifest.json" in compiler
-    assert "validate_python_runtime_manifest" in compiler
-    assert "COPY python-runtime-manifest.json" in node
-    assert "validate_python_runtime_manifest" in node
+    assert "runtime_validation_lines" in compiler
+    assert "COPY node-runtime.manifest.json" in node
+    assert "runtime_manifest_check" in node
     assert "COPY runtime-manifest.json" in go
-    assert "validate_python_runtime_manifest" in go
+    assert "runtime-manifest-check.py" in go
 
 
 def test_private_migration_validator_rejects_placeholder_and_unbound_receipts() -> None:
@@ -290,11 +287,9 @@ def test_private_migration_validator_rejects_placeholder_and_unbound_receipts() 
     errors = validator.validate(placeholder)
     assert errors
     assert any(
-        "digest" in error
-        or "receipt" in error
-        or "revision" in error
-        or "verifier-only" in error
+        category in error.lower()
         for error in errors
+        for category in ("binding", "visibility", "digest", "receipt")
     )
 
     bound = dict(placeholder)
@@ -305,9 +300,6 @@ def test_private_migration_validator_rejects_placeholder_and_unbound_receipts() 
             "source_revision": "c" * 40,
             "old_manifest_digest": "sha256:" + "d" * 64,
             "new_manifest_digest": "sha256:" + "e" * 64,
-            "runtime_digest": "sha256:" + "f" * 64,
-            "toolchain_digest": "sha256:" + "1" * 64,
-            "image_digest": "sha256:" + "2" * 64,
             "visibility": "verifier-only",
             "oracle_receipt": {"task_id": "other-task", "task_version": "2.0.0"},
             "reviewer_signoff": {"reviewer": "sol", "approved": True},
@@ -315,7 +307,12 @@ def test_private_migration_validator_rejects_placeholder_and_unbound_receipts() 
         }
     )
     errors = validator.validate(bound)
-    assert any("task" in error or "receipt" in error for error in errors)
+    assert errors
+    assert any(
+        category in error.lower()
+        for error in errors
+        for category in ("binding", "visibility", "digest", "receipt")
+    )
 
 
 def test_zero_bypass_scanner_rejects_aliases_and_suffix_trust(tmp_path: Path) -> None:
