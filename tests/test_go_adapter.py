@@ -35,6 +35,7 @@ from nl2repobench.storage.artifacts import (
     LocalArtifactResolver,
     PrivateArtifactAuthorization,
 )
+from nl2repobench.verification import go_supervisor
 from nl2repobench.verification.go_bridge import (
     GoBridgeOperation,
     GoBridgeSpec,
@@ -386,6 +387,57 @@ def test_go_supervisor_maps_timeout_to_legacy_returncode(tmp_path: Path) -> None
     assert result.returncode == 124
     assert result.timed_out is True
     assert result.output_limit_exceeded is False
+
+
+def test_go_supervisor_uses_root_owned_parent_not_default_tmp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    unsafe_tmp = tmp_path / "world-writable-tmp"
+    unsafe_tmp.mkdir()
+    unsafe_tmp.chmod(0o1777)
+    safe_parent = go_supervisor.VERIFIER_STAGING_PARENT
+    monkeypatch.setenv("TMPDIR", str(unsafe_tmp))
+    observed_cwds: list[Path] = []
+    original_run = go_supervisor.subprocess.run
+
+    def observe_run(*args, **kwargs):
+        cwd = kwargs.get("cwd")
+        if cwd is not None:
+            observed_cwds.append(Path(cwd))
+        return original_run(*args, **kwargs)
+
+    monkeypatch.setattr(go_supervisor.subprocess, "run", observe_run)
+    result = run_go_bridge(("/usr/bin/true",), b"")
+
+    assert result.returncode == 0
+    assert observed_cwds
+    assert observed_cwds[0].is_relative_to(safe_parent)
+    assert not observed_cwds[0].is_relative_to(unsafe_tmp)
+    assert safe_parent.stat().st_uid == 0
+    assert safe_parent.stat().st_mode & 0o022 == 0
+
+
+def test_go_supervisor_rejects_unsafe_staging_parent_before_cli_spawn(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    unsafe_parent = tmp_path / "unsafe-parent"
+    unsafe_parent.mkdir()
+    unsafe_parent.chmod(0o1777)
+    monkeypatch.setattr(go_supervisor, "VERIFIER_STAGING_PARENT", unsafe_parent)
+    cli_called = False
+
+    def unexpected_cli(*args, **kwargs):
+        nonlocal cli_called
+        cli_called = True
+        raise AssertionError("candidate CLI must not run with an unsafe staging parent")
+
+    monkeypatch.setattr(go_supervisor.subprocess, "run", unexpected_cli)
+    result = run_go_bridge(("/usr/bin/true",), b"")
+
+    assert result.returncode == 70
+    assert result.verifier_invalid is True
+    assert cli_called is False
+    assert b"staging ancestry" in result.stderr or b"staging parent" in result.stderr
 
 
 def test_go_supervisor_rejects_malformed_generic_transport(

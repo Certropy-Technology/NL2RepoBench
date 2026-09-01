@@ -8,6 +8,7 @@ import json
 import os
 import secrets
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -26,6 +27,8 @@ from .subprocess_supervisor import (
     ProcessContractError,
     ProcessError,
 )
+
+VERIFIER_STAGING_PARENT = Path("/var/lib/nl2repobench/verifier-staging")
 
 
 @dataclass(frozen=True)
@@ -186,6 +189,93 @@ def _stage_executable(command: tuple[str, ...], staging_root: Path) -> tuple[str
     return (str(staged), *command[1:])
 
 
+def _trusted_staging_parent() -> Path:
+    """Create and validate the root-owned parent used for bridge staging.
+
+    The system temporary directory is intentionally excluded: it is commonly
+    world-writable, while the shared supervisor validates every executable-root
+    ancestor before forking.  Only this fixed verifier-owned root may be
+    created, and every ancestor is checked before and after creation.
+    """
+
+    parent = VERIFIER_STAGING_PARENT
+    if not parent.is_absolute() or any(part in {"", ".", ".."} for part in parent.parts):
+        raise ProcessContractError("bridge staging parent must be a canonical absolute path")
+
+    missing: list[Path] = []
+    current = parent
+    while True:
+        try:
+            metadata = current.lstat()
+        except FileNotFoundError:
+            missing.append(current)
+            ancestor = current.parent
+            if ancestor == current:
+                raise ProcessContractError(
+                    "bridge staging parent has no existing safe ancestor"
+                ) from None
+            current = ancestor
+            continue
+        except OSError as exc:
+            raise ProcessContractError("cannot inspect bridge staging parent") from exc
+        if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISDIR(metadata.st_mode):
+            raise ProcessContractError("bridge staging parent contains an unsafe ancestor")
+        break
+
+    while True:
+        try:
+            metadata = current.lstat()
+        except OSError as exc:
+            raise ProcessContractError("cannot inspect bridge staging ancestry") from exc
+        if (
+            stat.S_ISLNK(metadata.st_mode)
+            or not stat.S_ISDIR(metadata.st_mode)
+            or metadata.st_uid != 0
+            or metadata.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+            or not metadata.st_mode & stat.S_IXOTH
+        ):
+            raise ProcessContractError("bridge staging ancestry is not trusted-owned/traversable")
+        if current == Path(current.anchor):
+            break
+        current = current.parent
+
+    for directory in reversed(missing):
+        try:
+            directory.mkdir()
+        except FileExistsError:
+            pass
+        try:
+            directory.chmod(0o755)
+            metadata = directory.lstat()
+        except OSError as exc:
+            raise ProcessContractError("cannot create bridge staging parent") from exc
+        if (
+            stat.S_ISLNK(metadata.st_mode)
+            or not stat.S_ISDIR(metadata.st_mode)
+            or metadata.st_uid != 0
+            or metadata.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+            or not metadata.st_mode & stat.S_IXOTH
+        ):
+            raise ProcessContractError("created bridge staging parent is unsafe")
+    try:
+        parent.chmod(0o755)
+    except OSError as exc:
+        raise ProcessContractError("cannot make bridge staging parent traversable") from exc
+    try:
+        metadata = parent.lstat()
+    except OSError as exc:
+        raise ProcessContractError("cannot inspect bridge staging parent") from exc
+    if (
+        stat.S_ISLNK(metadata.st_mode)
+        or not stat.S_ISDIR(metadata.st_mode)
+        or metadata.st_uid != 0
+        or metadata.st_mode & (stat.S_IWGRP | stat.S_IWOTH)
+        or not metadata.st_mode & stat.S_IXOTH
+    ):
+        raise ProcessContractError("bridge staging parent is unsafe")
+    return parent
+
+
 def run_go_bridge(
     command: tuple[str, ...],
     request: bytes,
@@ -199,7 +289,10 @@ def run_go_bridge(
     if uid != CANDIDATE_UID:
         return _error_result("bridge UID must use the fixed candidate identity")
     try:
-        with tempfile.TemporaryDirectory(prefix="nl2repo-go-bridge-") as temporary:
+        staging_parent = _trusted_staging_parent()
+        with tempfile.TemporaryDirectory(
+            prefix="nl2repo-go-bridge-", dir=staging_parent
+        ) as temporary:
             staging_root = Path(temporary)
             staging_root.chmod(0o755)
             staged_command = _stage_executable(command, staging_root)
