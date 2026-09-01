@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "github-api-utilities"
-tags = ["python", "github", "api-client", "pagination", "dependency-graph", "deterministic", "separate-verifier"]
+tags = [
+    "python",
+    "github",
+    "api-client",
+    "pagination",
+    "dependency-graph",
+    "deterministic",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,13 +27,18 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 build_command = "install candidate and verifier dependencies during image build from the private hash lock"
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,50 +47,50 @@ reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier use a build-time hash-locked dependency closure; only the trusted Oracle receives a run-scoped exact upstream host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "anyio==4.14.2",
-  "fastcore==2.2.16",
-  "fastspec==0.2.3",
-  "fasttransport==0.0.1",
-  "h11==0.16.0",
-  "httpcore2==2.12.0",
-  "httpx2==2.12.0",
-  "idna==3.19",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "truststore==0.10.4",
-  "typing-extensions==4.16.0",
+    "anyio==4.14.2",
+    "fastcore==2.2.16",
+    "fastspec==0.2.3",
+    "fasttransport==0.0.1",
+    "h11==0.16.0",
+    "httpcore2==2.12.0",
+    "httpx2==2.12.0",
+    "idna==3.19",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "truststore==0.10.4",
+    "typing-extensions==4.16.0",
 ]
-lock_artifact = { digest = "sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68", size_bytes = 3326, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 18
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:5377e8e6eef79f931a6ca76e64a91355a7024c6c4033dd4f90d5bffb5aeef021", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:5377e8e6eef79f931a6ca76e64a91355a7024c6c4033dd4f90d5bffb5aeef021", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
 [harbor]
 description = "Build ghapi's deterministic local utility surface from an empty workspace and satisfy a separate JSON verifier without contacting GitHub."
-keywords = ["python", "github", "api-client", "pagination", "dependency-graph", "json-scenarios"]
+keywords = [
+    "python",
+    "github",
+    "api-client",
+    "pagination",
+    "dependency-graph",
+    "json-scenarios",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -89,14 +102,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828-c3"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Frozen source, hash-locked closure, production compile, Oracle, stub, forgery, and no-network receipts passed. Model Agent Run, review, pilot, and publication remain separate stages."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:5377e8e6eef79f931a6ca76e64a91355a7024c6c4033dd4f90d5bffb5aeef021"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:5377e8e6eef79f931a6ca76e64a91355a7024c6c4033dd4f90d5bffb5aeef021"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:f5c49e739eb6e6d64470a600aedca804a79c7388bc2057d4735af92464e131a7"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:f5c49e739eb6e6d64470a600aedca804a79c7388bc2057d4735af92464e131a7"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-20260828-c3"
-reason = "Frozen source, hash-locked closure, production compile, Oracle, stub, forgery, and no-network receipts passed. Model Agent Run, review, pilot, and publication remain separate stages."

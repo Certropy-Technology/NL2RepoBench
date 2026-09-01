@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "git-object-database"
-tags = ["python", "git", "object-database", "streams", "filesystem", "separate-verifier"]
+tags = [
+    "python",
+    "git",
+    "object-database",
+    "streams",
+    "filesystem",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -15,17 +22,24 @@ upstream_url = "https://github.com/gitpython-developers/gitdb"
 revision = "009e227ffa19a2b84704c14e3a99fb1fbd937d5b"
 license_spdx = "BSD-3-Clause"
 source_digest = "sha256:a026ca9823f88bfb5344472d380d03946cd863265560d9545eb0a27695ea73fc"
-submodules = ["gitdb/ext/smmap:uninitialized; external smmap is installed from the declared PyPI lock"]
+submodules = [
+    "gitdb/ext/smmap:uninitialized; external smmap is installed from the declared PyPI lock",
+]
 
 [environment]
 status = "known"
-python_version = "3.12.14"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
-network_mode = "no-network"
 build_command = "python -m pip install --no-deps --no-build-isolation ."
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +48,37 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked setuptools build backend and smmap runtime are installed during Docker build; agent and verifier execution are network-isolated."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0", "smmap==5.0.3"]
-lock_artifact = { digest = "sha256:00715ac5bf2a20051b68e61d9da975ef60c7a89f4cd0e57b7ee775dd1ca8c48f", size_bytes = 372, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:00715ac5bf2a20051b68e61d9da975ef60c7a89f4cd0e57b7ee775dd1ca8c48f", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==80.9.0",
+    "smmap==5.0.3",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 16
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:4605a78afda663f8bdf69934bd89c40aaefd87e7d923436f00dd7269da5bb367", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4605a78afda663f8bdf69934bd89c40aaefd87e7d923436f00dd7269da5bb367", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
 [harbor]
 description = "Build GitDB from an empty workspace and satisfy deterministic local object-record, stream, memory, loose-object filesystem, and Git database scenarios."
-keywords = ["python", "git", "object-database", "streams", "filesystem", "separate-verifier"]
+keywords = [
+    "python",
+    "git",
+    "object-database",
+    "streams",
+    "filesystem",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,14 +90,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: The final production bundle passed Harbor Oracle 16/16 and the empty, stub, forgery, install-timeout, workspace-rejection, call-timeout, and explicit no-network controls. Review, model pilot, and publication remain separate integrator stages."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:4605a78afda663f8bdf69934bd89c40aaefd87e7d923436f00dd7269da5bb367"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4605a78afda663f8bdf69934bd89c40aaefd87e7d923436f00dd7269da5bb367"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:9729ed00ffedf0c454764a00a72f79be84054850e0589015c2ad75738caa3f8c"
 size_bytes = 686080
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:9729ed00ffedf0c454764a00a72f79be84054850e0589015c2ad75738caa3f8c"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-20260828"
-reason = "The final production bundle passed Harbor Oracle 16/16 and the empty, stub, forgery, install-timeout, workspace-rejection, call-timeout, and explicit no-network controls. Review, model pilot, and publication remain separate integrator stages."

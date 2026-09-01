@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "generative-ai-sdk"
-tags = ["python", "pydantic", "sdk", "serialization", "separate-verifier"]
+tags = [
+    "python",
+    "pydantic",
+    "sdk",
+    "serialization",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,12 +25,20 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
 os_name = "debian-13"
 base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,60 +47,61 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked Python closure is installed during image build; candidate and verifier execution require no egress, and only the trusted Oracle receives an exact github.com source-host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:d2ef79f7a68c430c7193acf86f4044d3bad95d269206da01353071843036a7bf", size_bytes = 48729, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d2ef79f7a68c430c7193acf86f4044d3bad95d269206da01353071843036a7bf", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "annotated-types==0.8.0",
-  "anyio==4.14.2",
-  "certifi==2026.7.22",
-  "cffi==2.1.1",
-  "charset-normalizer==3.5.1",
-  "cryptography==50.0.1",
-  "distro==1.9.0",
-  "google-auth==2.56.0",
-  "h11==0.16.0",
-  "httpcore==1.0.9",
-  "httpx==0.28.1",
-  "idna==3.19",
-  "packaging==26.3",
-  "pyasn1==0.6.4",
-  "pyasn1-modules==0.4.2",
-  "pycparser==3.0",
-  "pydantic==2.13.4",
-  "pydantic-core==2.46.4",
-  "requests==2.32.4",
-  "setuptools==84.0.0",
-  "sniffio==1.3.1",
-  "tenacity==8.2.3",
-  "typing-extensions==4.16.0",
-  "typing-inspection==0.4.4",
-  "urllib3==2.7.0",
-  "websockets==16.0",
-  "wheel==0.48.0",
+    "annotated-types==0.8.0",
+    "anyio==4.14.2",
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "charset-normalizer==3.5.1",
+    "cryptography==50.0.1",
+    "distro==1.9.0",
+    "google-auth==2.56.0",
+    "h11==0.16.0",
+    "httpcore==1.0.9",
+    "httpx==0.28.1",
+    "idna==3.19",
+    "packaging==26.3",
+    "pyasn1==0.6.4",
+    "pyasn1-modules==0.4.2",
+    "pycparser==3.0",
+    "pydantic==2.13.4",
+    "pydantic-core==2.46.4",
+    "requests==2.32.4",
+    "setuptools==84.0.0",
+    "sniffio==1.3.1",
+    "tenacity==8.2.3",
+    "typing-extensions==4.16.0",
+    "typing-inspection==0.4.4",
+    "urllib3==2.7.0",
+    "websockets==16.0",
+    "wheel==0.48.0",
 ]
 
 [tests]
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 40
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["tests", "google/genai/tests"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:35ab4da3f82d8cc23b51af96551f25b9613082dabcbfa8ab61d9cd80ada1722c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:35ab4da3f82d8cc23b51af96551f25b9613082dabcbfa8ab61d9cd80ada1722c", visibility = "private" }
-entrypoint = "run.py"
-
 [harbor]
 description = "Build the deterministic typed-content and local state core of google-genai from an empty workspace."
-keywords = ["python", "pydantic", "sdk", "serialization", "separate-verifier"]
+keywords = [
+    "python",
+    "pydantic",
+    "sdk",
+    "serialization",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 420.0
 candidate_install_timeout_sec = 120.0
@@ -99,8 +114,19 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-reason = "Production compile is deterministic; Harbor 0.21.0 Oracle passed 40/40 with reward 1.0, empty/stub/forgery controls stayed low, bounded workspace/install/call controls completed, and every verifier network probe reported no public access."
+status = "blocked"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Production compile is deterministic; Harbor 0.21.0 Oracle passed 40/40 with reward 1.0, empty/stub/forgery controls stayed low, bounded workspace/install/call controls completed, and every verifier network probe reported no public access."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:35ab4da3f82d8cc23b51af96551f25b9613082dabcbfa8ab61d9cd80ada1722c"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:35ab4da3f82d8cc23b51af96551f25b9613082dabcbfa8ab61d9cd80ada1722c"
+visibility = "private"
 
 [oracle_bundle]
 digest = "sha256:f112beb65f0e9365fd117b0e72f2c357d1539148fdf2d9a79100ba41408007c4"

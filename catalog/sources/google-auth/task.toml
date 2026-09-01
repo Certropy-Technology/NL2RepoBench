@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "authentication-library"
-tags = ["python", "oauth2", "jwt", "credentials", "cryptography", "separate-verifier"]
+tags = [
+    "python",
+    "oauth2",
+    "jwt",
+    "credentials",
+    "cryptography",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,12 +26,20 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
 os_name = "debian-13"
 base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,43 +48,42 @@ reference_source_fetch = "forbidden"
 reason = "Hash-locked Python dependencies are installed during Docker build; candidate and verifier phases require no egress, and only Oracle receives the pinned source bundle."
 
 [dependencies]
-status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:dbb0487545ec7c74e5deaa0f4a3f4e7ef31a62d8820128dfb499c1751ba1b1c6", size_bytes = 712, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:dbb0487545ec7c74e5deaa0f4a3f4e7ef31a62d8820128dfb499c1751ba1b1c6", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "cryptography==50.0.0",
-  "pyasn1==0.6.4",
-  "pyasn1-modules==0.4.2",
-  "cffi==2.1.1",
-  "pycparser==3.0",
-  "setuptools==80.9.0",
-  "wheel==0.45.1",
+    "cryptography==50.0.0",
+    "pyasn1==0.6.4",
+    "pyasn1-modules==0.4.2",
+    "cffi==2.1.1",
+    "pycparser==3.0",
+    "setuptools==80.9.0",
+    "wheel==0.45.1",
 ]
 
-# NOTE: tests.framework has no custom-adapter value in the shared schema, so it
-# stays at the schema default. The authoritative runner descriptor for this task
-# is verifier.protocol = "custom-json-v1" with entrypoint test.sh.
 [tests]
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands = ["python /tests/verifier/run.py"]
-protected_paths = ["tests", "system_tests"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:b809ff4081afa8ad1c7161ad7e7e4953a7d43cf1c35b9e382265e438f802eb2d", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b809ff4081afa8ad1c7161ad7e7e4953a7d43cf1c35b9e382265e438f802eb2d", visibility = "private" }
-entrypoint = "run.py"
-
 [harbor]
 description = "Build the deterministic core of the google-auth credential and token library from an empty workspace."
-keywords = ["python", "oauth2", "jwt", "credentials", "cryptography", "separate-verifier"]
+keywords = [
+    "python",
+    "oauth2",
+    "jwt",
+    "credentials",
+    "cryptography",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -82,8 +96,19 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-reason = "Frozen source and license are bound to immutable digests; production Harbor 0.21.0 compile succeeded with private hash-locked artifacts, Oracle passed 32/32, and nop/stub/forgery/workspace-invalid/install-hang/call-hang controls all completed valid at 0/32 under no-network verification."
+status = "blocked"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Frozen source and license are bound to immutable digests; production Harbor 0.21.0 compile succeeded with private hash-locked artifacts, Oracle passed 32/32, and nop/stub/forgery/workspace-invalid/install-hang/call-hang controls all completed valid at 0/32 under no-network verification."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:b809ff4081afa8ad1c7161ad7e7e4953a7d43cf1c35b9e382265e438f802eb2d"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b809ff4081afa8ad1c7161ad7e7e4953a7d43cf1c35b9e382265e438f802eb2d"
+visibility = "private"
 
 [oracle_bundle]
 digest = "sha256:24795a7aedebd541803cf4243a7d52af575c325d7d8f2eeb79b92f0a04a13dd0"

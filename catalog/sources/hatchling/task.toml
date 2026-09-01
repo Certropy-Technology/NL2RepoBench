@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-build-backend"
-tags = ["python", "packaging", "pep517", "wheel", "sdist", "metadata", "separate-verifier"]
+tags = [
+    "python",
+    "packaging",
+    "pep517",
+    "wheel",
+    "sdist",
+    "metadata",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,13 +27,18 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 build_command = "Install the hash-locked packaging/runtime and setuptools build closure during Docker build; candidate installation uses pip --target --no-deps --no-build-isolation."
-network_mode = "no-network"
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,42 +47,42 @@ reference_source_fetch = "forbidden"
 reason = "The Python packaging/runtime and candidate build tools are installed from a hash-locked package-index closure during Docker build. Agent and separate verifier runtime phases need no registry or source egress. The trusted Oracle alone receives a run-scoped github.com authorization, fetches the exact declared commit, and verifies the frozen backend subtree archive digest."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==80.10.2",
-  "tomlkit==0.13.3",
-  "trove-classifiers==2026.6.1.19",
-  "wheel==0.45.1",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.10.2",
+    "tomlkit==0.13.3",
+    "trove-classifiers==2026.6.1.19",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:1c65ec786efe51baa5f9ff90c60c963719c41216451db6f18842eb89ba231a42", size_bytes = 1317, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1c65ec786efe51baa5f9ff90c60c963719c41216451db6f18842eb89ba231a42", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 21
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:c0254a2120208a601926f00aef1bf192b5bf7dae057b8b491d5056697c151576", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c0254a2120208a601926f00aef1bf192b5bf7dae057b8b491d5056697c151576", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build Hatchling 1.32.0 from an empty workspace and satisfy a bounded PEP 517 metadata, wheel, sdist, version, plugin, normalization, and reproducibility contract through a separate subprocess verifier."
-keywords = ["python", "packaging", "pep517", "wheel", "sdist", "separate-verifier"]
+keywords = [
+    "python",
+    "packaging",
+    "pep517",
+    "wheel",
+    "sdist",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -82,14 +95,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[lifecycle]
+status = "blocked"
+owner = "worker/hatchling"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: The frozen Hatchling backend subtree, 21-leaf separate verifier, hash-locked build closure, and Oracle fetch contract compile as a production bundle. Harbor 0.21.0 recorded Oracle 21/21 with reward 1.0; empty, stub, forgery, call-timeout, install-timeout, and offline controls produced valid verifier-owned outcomes. Model pilot, review, dataset integration, and publication remain outside this lane."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:c0254a2120208a601926f00aef1bf192b5bf7dae057b8b491d5056697c151576"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c0254a2120208a601926f00aef1bf192b5bf7dae057b8b491d5056697c151576"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:12ca5c724acddde911ed75dc767b5525b3feda3f2f9874153ae60167ebd1e65f"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:12ca5c724acddde911ed75dc767b5525b3feda3f2f9874153ae60167ebd1e65f"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "worker/hatchling"
-reason = "The frozen Hatchling backend subtree, 21-leaf separate verifier, hash-locked build closure, and Oracle fetch contract compile as a production bundle. Harbor 0.21.0 recorded Oracle 21/21 with reward 1.0; empty, stub, forgery, call-timeout, install-timeout, and offline controls produced valid verifier-owned outcomes. Model pilot, review, dataset integration, and publication remain outside this lane."

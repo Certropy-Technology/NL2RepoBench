@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "data-transformation"
-tags = ["python", "glom", "specification", "streaming", "matching", "mutation", "separate-verifier"]
+tags = [
+    "python",
+    "glom",
+    "specification",
+    "streaming",
+    "matching",
+    "mutation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,13 +27,18 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked setuptools build dependency during image build"
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.14"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +47,40 @@ reference_source_fetch = "forbidden"
 reason = "The candidate dependency closure is installed during the Docker build from a private hash lock. Agent and verifier runs are network-isolated; only the trusted Oracle receives the local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["attrs==25.4.0", "boltons==25.0.0", "face==24.0.0", "setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:b3ab4f35abc257efe0ca5a002ef1e5164ea72147ea01a791f669ddf8fecb8a47", size_bytes = 1410, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b3ab4f35abc257efe0ca5a002ef1e5164ea72147ea01a791f669ddf8fecb8a47", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "attrs==25.4.0",
+    "boltons==25.0.0",
+    "face==24.0.0",
+    "setuptools==80.9.0",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 28
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:362b1b78dc3301ae88d530e55dc718cf7e4569ac2fc67bc640b1686bbd764481", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:362b1b78dc3301ae88d530e55dc718cf7e4569ac2fc67bc640b1686bbd764481", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build glom from an empty workspace and reproduce deterministic specification evaluation, matching, mutation, streaming, reduction, grouping, registry, and CLI behavior through a separate child-side JSON adapter."
-keywords = ["python", "glom", "specification", "streaming", "matching", "mutation", "separate-verifier"]
+keywords = [
+    "python",
+    "glom",
+    "specification",
+    "streaming",
+    "matching",
+    "mutation",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,14 +92,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[lifecycle]
+status = "blocked"
+owner = "worker/glom"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Frozen glom revision and license, hash-locked dependency closure, production compile, Oracle, empty, stub, forgery, install-timeout, and offline verifier controls all passed. Review, model Agent Run, and publication remain integrator-owned stages."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:362b1b78dc3301ae88d530e55dc718cf7e4569ac2fc67bc640b1686bbd764481"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:362b1b78dc3301ae88d530e55dc718cf7e4569ac2fc67bc640b1686bbd764481"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:d662a26a184f876df3434a440c9b5f6c08258c2736e820987bc4cbd6adec2587"
 size_bytes = 563200
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:d662a26a184f876df3434a440c9b5f6c08258c2736e820987bc4cbd6adec2587"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "worker/glom"
-reason = "Frozen glom revision and license, hash-locked dependency closure, production compile, Oracle, empty, stub, forgery, install-timeout, and offline verifier controls all passed. Review, model Agent Run, and publication remain integrator-owned stages."

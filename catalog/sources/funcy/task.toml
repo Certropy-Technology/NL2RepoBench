@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "functional-utilities"
-tags = ["python", "functional-programming", "iterators", "collections", "memoization", "separate-verifier"]
+tags = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "collections",
+    "memoization",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,13 +26,18 @@ submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked setuptools build dependency during image build"
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12"
+package_manager = "pip"
+package_manager_version = "26.0.1"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,34 +46,36 @@ reference_source_fetch = "forbidden"
 reason = "The sole third-party build dependency is installed from a hash-locked requirement during image build. Agent and separate verifier runs need no egress, and the Oracle uses only a local digest-verified source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2"]
-lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 40
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:d348504af1cd511b21b4ab8e075a66679906b7847c77870228b11ac81161ffed", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d348504af1cd511b21b4ab8e075a66679906b7847c77870228b11ac81161ffed", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build funcy 2.0 from an empty workspace and reproduce deterministic sequence, lazy iterator, collection, higher-order function, and caching behavior through a separate child-side JSON adapter with a named callback vocabulary."
-keywords = ["python", "functional-programming", "iterators", "collections", "memoization", "separate-verifier"]
+keywords = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "collections",
+    "memoization",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
@@ -73,14 +87,27 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[lifecycle]
+status = "blocked"
+owner = "worker/funcy"
+reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Official Harbor 0.21.0 gates passed: Oracle was valid at 40/40 and reward 1.0; empty and forgery were valid at reward 0.0; the packaging stub was valid at 1/40 and reward 0.025; every verifier network receipt proved no public egress."
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:d348504af1cd511b21b4ab8e075a66679906b7847c77870228b11ac81161ffed"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d348504af1cd511b21b4ab8e075a66679906b7847c77870228b11ac81161ffed"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:9a14f46490d30429f42e7b9cf0fcb2d89623c7fd0451cba396c88d1dd4696f4b"
 size_bytes = 348160
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:9a14f46490d30429f42e7b9cf0fcb2d89623c7fd0451cba396c88d1dd4696f4b"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "worker/funcy"
-reason = "Official Harbor 0.21.0 gates passed: Oracle was valid at 40/40 and reward 1.0; empty and forgery were valid at reward 0.0; the packaging stub was valid at 1/40 and reward 0.025; every verifier network receipt proved no public egress."

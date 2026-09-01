@@ -6,7 +6,14 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "image-download"
-tags = ["python", "images", "google", "selenium", "browser", "blocked"]
+tags = [
+    "python",
+    "images",
+    "google",
+    "selenium",
+    "browser",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,7 +26,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -29,25 +35,35 @@ reason = "The candidate exercises live Google/Selenium behavior and requires a b
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["browser, driver, Selenium, and package dependencies are not a frozen offline closure"]
+package_manager = "pip"
+packages = [
+    "browser, driver, Selenium, and package dependencies are not a frozen offline closure",
+]
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked candidate: the image-download task depends on live browser/network behavior and an unapproved native closure."
-keywords = ["python", "images", "google", "selenium", "browser", "blocked"]
+keywords = [
+    "python",
+    "images",
+    "google",
+    "selenium",
+    "browser",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
